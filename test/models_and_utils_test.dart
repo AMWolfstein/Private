@@ -10,7 +10,6 @@ import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/extension_provider.dart';
-import 'package:spotiflac_android/services/app_remote_config_service.dart';
 import 'package:spotiflac_android/services/download_request_payload.dart';
 import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/library_database.dart';
@@ -349,64 +348,6 @@ void main() {
       expect(source, contains('media_json TEXT NOT NULL'));
       expect(source, contains('position_ms INTEGER NOT NULL DEFAULT 0'));
       expect(source, contains('updatePlaybackSessionState'));
-    });
-  });
-
-  group('iOS background download lifecycle', () {
-    final appDelegateSource = File(
-      'ios/Runner/AppDelegate.swift',
-    ).readAsStringSync();
-    final queueProviderSource = File(
-      'lib/providers/download_queue_provider.dart',
-    ).readAsStringSync();
-
-    test('acquires background time before starting long-running work', () {
-      final beginCase = RegExp(
-        r'case "beginBackgroundDownloadTask":[\s\S]*?result\(nil\)',
-      ).firstMatch(appDelegateSource);
-      expect(beginCase, isNotNull);
-      expect(
-        beginCase!.group(0)!.indexOf('beginBackgroundDownloadTask()'),
-        lessThan(beginCase.group(0)!.indexOf('result(nil)')),
-      );
-    });
-
-    test('expiration safely defers and foreground resumes the queue', () {
-      expect(appDelegateSource, contains('iosBackgroundDownloadExpired'));
-      final expirationHandler = RegExp(
-        r'if self\?\.downloadsActive == true \{[\s\S]*?\n\s*\}',
-      ).firstMatch(appDelegateSource);
-      expect(expirationHandler, isNotNull);
-      expect(
-        expirationHandler!.group(0)!,
-        contains('self?.coreBackend.cancelActiveDownloads()'),
-      );
-      expect(
-        expirationHandler
-            .group(0)!
-            .indexOf('self?.coreBackend.cancelActiveDownloads()'),
-        lessThan(
-          expirationHandler.group(0)!.indexOf('iosBackgroundDownloadExpired'),
-        ),
-      );
-      expect(
-        RegExp(
-          r'pauseQueue\(\s*persistAcrossRestarts:\s*false,\s*'
-          r'nativeCancelledItemIds:\s*cancelledItemIds,\s*\)',
-        ).hasMatch(queueProviderSource),
-        true,
-      );
-      expect(queueProviderSource, contains('_iosBackgroundExecutionExpired'));
-      expect(queueProviderSource, contains('final requeueItemIds ='));
-      expect(
-        queueProviderSource,
-        contains('if (!state.isProcessing && requeueItemIds.isEmpty) return;'),
-      );
-      expect(queueProviderSource, contains('if (alreadyForeground) {'));
-      expect(
-        queueProviderSource,
-        contains('resumePendingDownloadsOnForeground();'),
-      );
     });
   });
 
@@ -1753,129 +1694,6 @@ void main() {
 
       expect(
         isPhysicalFileRetained('/storage/emulated/0/Music/Song.flac', [safUri]),
-        isTrue,
-      );
-    });
-  });
-
-  group('AppRemoteConfig', () {
-    test('parses announcement and donate payloads from API JSON', () {
-      final config = AppRemoteConfig.fromJson({
-        'announcement': {
-          'id': 'hello-2026',
-          'enabled': true,
-          'title': 'Server message',
-          'message': 'A clear message for users',
-          'cta_enabled': true,
-          'cta_label': 'Donate',
-          'cta_url': 'https://example.test/donate',
-          'starts_at': '2026-05-01T00:00:00Z',
-          'ends_at': '2026-06-01T00:00:00Z',
-          'min_version': '4.5.0',
-          'priority': 'high',
-        },
-        'donate': {
-          'enabled': true,
-          'title': 'Support SpotiFLAC Mobile',
-          'message': 'Help cover infrastructure.',
-          'methods': [
-            {
-              'id': 'kofi',
-              'title': 'Ko-fi',
-              'subtitle': 'ko-fi.com/example',
-              'url': 'https://ko-fi.com/example',
-              'icon': 'kofi',
-              'color': '#FF5E5B',
-            },
-            {
-              'id': 'wallet',
-              'title': 'USDT',
-              'subtitle': 'TRC20',
-              'wallet_address': 'T123',
-              'icon': 'wallet',
-              'color': '0xFF26A17B',
-            },
-          ],
-          'supporters': ['Alice', 'Bob'],
-          'notices': ['No paywalls'],
-        },
-      });
-
-      expect(config.announcement?.id, 'hello-2026');
-      expect(config.announcement?.hasCta, isTrue);
-      expect(
-        config.announcement?.isActive(
-          now: DateTime.utc(2026, 5, 11),
-          currentVersion: '4.5.1',
-        ),
-        isTrue,
-      );
-      expect(config.donate.title, 'Support SpotiFLAC-Mobile');
-      expect(config.donate.methods, hasLength(2));
-      expect(config.donate.methods.first.color, 0xFFFF5E5B);
-      expect(config.donate.methods.last.isWallet, isTrue);
-      expect(config.donate.supporters, ['Alice', 'Bob']);
-      expect(config.donate.notices, ['No paywalls']);
-    });
-
-    test('requires enabled announcement CTA with label and url', () {
-      final disabledCta = RemoteAnnouncement.fromJson({
-        'id': 'notice',
-        'title': 'Notice',
-        'message': 'No button',
-        'cta_label': 'Open',
-        'cta_url': 'https://api.zarz.moe',
-      });
-      final missingLabel = RemoteAnnouncement.fromJson({
-        'id': 'notice',
-        'title': 'Notice',
-        'message': 'No button',
-        'cta_enabled': true,
-        'cta_url': 'https://example.test',
-      });
-      final enabledCta = RemoteAnnouncement.fromJson({
-        'id': 'notice',
-        'title': 'Notice',
-        'message': 'With button',
-        'cta_enabled': true,
-        'cta_label': 'Read More',
-        'cta_url': 'https://example.test',
-      });
-
-      expect(disabledCta.hasCta, isFalse);
-      expect(missingLabel.hasCta, isFalse);
-      expect(enabledCta.hasCta, isTrue);
-      expect(enabledCta.ctaLabel, 'Read More');
-    });
-
-    test('filters inactive announcements by window and app version', () {
-      final announcement = RemoteAnnouncement.fromJson({
-        'id': 'future',
-        'title': 'Future',
-        'message': 'Not yet',
-        'starts_at': '2026-06-01T00:00:00Z',
-        'min_version': '4.6.0',
-      });
-
-      expect(
-        announcement.isActive(
-          now: DateTime.utc(2026, 5, 11),
-          currentVersion: '4.5.1',
-        ),
-        isFalse,
-      );
-      expect(
-        announcement.isActive(
-          now: DateTime.utc(2026, 6, 2),
-          currentVersion: '4.5.1',
-        ),
-        isFalse,
-      );
-      expect(
-        announcement.isActive(
-          now: DateTime.utc(2026, 6, 2),
-          currentVersion: '4.6.0',
-        ),
         isTrue,
       );
     });

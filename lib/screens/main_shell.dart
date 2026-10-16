@@ -9,9 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/screens/upgrade_intro_screen.dart';
-import 'package:spotiflac_android/services/upgrade_intro_service.dart';
 import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -30,12 +27,8 @@ import 'package:spotiflac_android/services/share_intent_service.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
-import 'package:spotiflac_android/services/app_remote_config_service.dart';
-import 'package:spotiflac_android/services/update_checker.dart';
-import 'package:spotiflac_android/widgets/app_announcement_dialog.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/download_queue_feedback.dart';
-import 'package:spotiflac_android/widgets/update_dialog.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
@@ -76,8 +69,6 @@ class _MainShellState extends ConsumerState<MainShell>
     begin: 0.985,
     end: 1,
   ).animate(_tabJumpOpacity);
-  bool _hasCheckedUpdate = false;
-  bool _hasCheckedAppAnnouncement = false;
   bool _initialSafRepairComplete = false;
   bool _safRepairDialogVisible = false;
   bool _usbVolumeWarningShown = false;
@@ -157,14 +148,8 @@ class _MainShellState extends ConsumerState<MainShell>
       _initialSafRepairComplete = true;
       if (!mounted) return;
       unawaited(ref.read(musicPlayerRuntimeProvider).restoreSession());
-      await _checkUpgradeIntro();
-      if (!mounted) return;
       _setupShareListener();
       await _checkSafMigration();
-      final updateDialogShown = await _checkForUpdates();
-      if (!updateDialogShown) {
-        await _checkAppAnnouncement();
-      }
     });
   }
 
@@ -372,83 +357,6 @@ class _MainShellState extends ConsumerState<MainShell>
         ),
       );
     }
-  }
-
-  Future<void> _checkUpgradeIntro() async {
-    try {
-      final preferences = await SharedPreferences.getInstance();
-      if (!mounted) return;
-      final existingInstallation = !ref
-          .read(initialSettingsProvider)
-          .isFirstLaunch;
-      if (UpgradeIntroService.shouldShow(
-        preferences,
-        version: AppInfo.version,
-        existingInstallation: existingInstallation,
-      )) {
-        await Navigator.of(context, rootNavigator: true).push<void>(
-          MaterialPageRoute(
-            builder: (_) => const UpgradeIntroScreen(),
-            fullscreenDialog: true,
-          ),
-        );
-        await UpgradeIntroService.markSeen(preferences);
-      } else if (!existingInstallation) {
-        // Fresh installs already have their own setup tutorial.
-        await UpgradeIntroService.markSeen(preferences);
-      }
-    } catch (error) {
-      _log.w('Could not present upgrade introduction: $error');
-    }
-  }
-
-  Future<bool> _checkForUpdates() async {
-    if (_hasCheckedUpdate) return false;
-    _hasCheckedUpdate = true;
-
-    final settings = ref.read(settingsProvider);
-
-    // The check runs even when the user disabled update prompts: versions
-    // that fall forceUpdateThreshold stable releases behind must update, and
-    // that enforcement cannot be opted out of.
-    final updateInfo = await UpdateChecker().checkForUpdate(
-      channel: settings.updateChannel,
-    );
-    if (updateInfo == null || !mounted) return false;
-
-    final forced =
-        updateInfo.releasesBehind >= UpdateChecker.forceUpdateThreshold;
-    if (!forced && !settings.checkForUpdates) return false;
-
-    showUpdateDialog(
-      context,
-      updateInfo: updateInfo,
-      forced: forced,
-      onDisableUpdates: () {
-        ref.read(settingsProvider.notifier).setCheckForUpdates(false);
-      },
-    );
-    return true;
-  }
-
-  Future<void> _checkAppAnnouncement() async {
-    if (_hasCheckedAppAnnouncement) return;
-    _hasCheckedAppAnnouncement = true;
-
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final remoteConfigService = AppRemoteConfigService();
-    final announcement = await remoteConfigService.fetchActiveAnnouncement(
-      locale: locale,
-    );
-    if (announcement == null || !mounted) return;
-
-    showAppAnnouncementDialog(
-      context,
-      announcement: announcement,
-      onDismiss: () {
-        remoteConfigService.markAnnouncementDismissed(announcement.id);
-      },
-    );
   }
 
   static const _safMigrationShownKey = 'saf_migration_prompt_shown';

@@ -46,23 +46,6 @@ class AppSettingsPage extends ConsumerWidget {
                         .read(settingsProvider.notifier)
                         .setExtensionVerificationBrowserMode(mode),
                   ),
-                  SettingsSwitchItem(
-                    icon: Icons.system_update,
-                    title: context.l10n.optionsCheckUpdates,
-                    subtitle: context.l10n.optionsCheckUpdatesSubtitle,
-                    value: settings.checkForUpdates,
-                    onChanged: (v) => ref
-                        .read(settingsProvider.notifier)
-                        .setCheckForUpdates(v),
-                    showDivider: settings.checkForUpdates,
-                  ),
-                  if (settings.checkForUpdates)
-                    _UpdateChannelSelector(
-                      currentChannel: settings.updateChannel,
-                      onChanged: (v) => ref
-                          .read(settingsProvider.notifier)
-                          .setUpdateChannel(v),
-                    ),
                 ],
               ),
             ),
@@ -259,102 +242,6 @@ class AppSettingsPage extends ConsumerWidget {
         );
       }
     }
-  }
-}
-
-class _UpdateChannelSelector extends StatelessWidget {
-  final String currentChannel;
-  final ValueChanged<String> onChanged;
-  const _UpdateChannelSelector({
-    required this.currentChannel,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    final content = Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                context.adaptiveIcon(Icons.new_releases),
-                color: context.isMornye
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
-                size: 24,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.optionsUpdateChannel,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      currentChannel == 'preview'
-                          ? context.l10n.optionsUpdateChannelPreview
-                          : context.l10n.optionsUpdateChannelStable,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              SettingsChoiceChip(
-                expand: true,
-                label: context.l10n.channelStable,
-                isSelected: currentChannel == 'stable',
-                onTap: () => onChanged('stable'),
-              ),
-              const SizedBox(width: 8),
-              SettingsChoiceChip(
-                expand: true,
-                label: context.l10n.channelPreview,
-                isSelected: currentChannel == 'preview',
-                onTap: () => onChanged('preview'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Icon(
-                Icons.info_outline,
-                size: 16,
-                color: colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  context.l10n.optionsUpdateChannelWarning,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-    return SettingsSearchTarget(
-      label: context.l10n.optionsUpdateChannel,
-      child: content,
-    );
   }
 }
 

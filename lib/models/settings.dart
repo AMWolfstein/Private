@@ -63,8 +63,6 @@ class AppSettings {
   final bool autoplay;
   final bool autoplayPersonalization;
   final bool isFirstLaunch;
-  final bool checkForUpdates;
-  final String updateChannel;
   final bool hasSearchedBefore;
   final String folderOrganization;
   final bool createPlaylistFolder;
@@ -195,8 +193,6 @@ class AppSettings {
     this.autoplay = false,
     this.autoplayPersonalization = false,
     this.isFirstLaunch = true,
-    this.checkForUpdates = true,
-    this.updateChannel = 'stable',
     this.hasSearchedBefore = false,
     this.folderOrganization = 'none',
     this.createPlaylistFolder = false,
@@ -302,8 +298,6 @@ class AppSettings {
     bool? autoplay,
     bool? autoplayPersonalization,
     bool? isFirstLaunch,
-    bool? checkForUpdates,
-    String? updateChannel,
     bool? hasSearchedBefore,
     String? folderOrganization,
     bool? createPlaylistFolder,
@@ -408,8 +402,6 @@ class AppSettings {
       autoplayPersonalization:
           autoplayPersonalization ?? this.autoplayPersonalization,
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
-      checkForUpdates: checkForUpdates ?? this.checkForUpdates,
-      updateChannel: updateChannel ?? this.updateChannel,
       hasSearchedBefore: hasSearchedBefore ?? this.hasSearchedBefore,
       folderOrganization: folderOrganization ?? this.folderOrganization,
       createPlaylistFolder: createPlaylistFolder ?? this.createPlaylistFolder,
