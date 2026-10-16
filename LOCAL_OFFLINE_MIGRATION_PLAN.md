@@ -19,8 +19,8 @@ Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backen
 
 _Last updated: 2026-10-17_
 
-**Status:** IN PROGRESS. Phases 1-3 committed; Phase 4 complete (pending commit). Vision
-refinements V1-V4 captured.
+**Status:** IN PROGRESS. Phases 1-4 committed; Phase 5 split into 5a/5b/5c — 5a committed.
+Vision refinements V1-V4 captured.
 
 **Committed:**
 - `f0a1b45` — graphify baseline (graph + report).
@@ -37,6 +37,13 @@ refinements V1-V4 captured.
   branches (player service/runtime, playback, hires check, audio analysis, file access),
   `networkDownloadFolder/Label` settings (model/generated/provider/codec/UI), l10n keys (en/id),
   `dart_smb2` dep + `libsmb2.txt` license, and all `network_*` tests + 2 Python SMB fixtures.
+- `05bf2fe` — Phase 5a: extension store / repo tab / provider-priority settings removed
+  (`RepoTab`/`repoProvider`, extension store + detail + repo card/row widgets, extensions /
+  download-fallback-extensions / lyrics+metadata+provider priority / profile-priority-list
+  settings pages, `showExtensionStore` setting, settings-search + download/lyrics/metadata rows);
+  `main_shell`/`ShellTab` renumbered without the repository tab. **Kept** the local profile
+  feature (`ProfileSettingsPage` + settings profile card) and the extension *registry* +
+  `ExtensionStorageService` (removed later in 5b).
 
 **Environment / toolchain:**
 - Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
@@ -54,7 +61,9 @@ exists (remove `cache/` or add one).
 test, unrelated to migration). Post-Phase-4 full suite: 2215 passed, 3 skipped, 1 failed (that
 same perf test). `flutter analyze` → No issues found.
 
-**Next step:** Phase 5 — extension system + online providers + online search (Dart) removal.
+**Next step:** Phase 5b — online metadata + search removal (track/metadata providers,
+autofill, re-enrich, redownload, cross-extension share, hires check, preview player, download
+service picker), then 5c — explore/weekly/concerts + motion artwork + extension registry.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
