@@ -20,8 +20,6 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/player_motion_artwork_provider.dart';
 import 'package:spotiflac_android/providers/player_artwork_video_provider.dart';
 import 'package:spotiflac_android/services/motion_artwork_store.dart';
-import 'package:spotiflac_android/services/network_metadata_service.dart';
-import 'package:spotiflac_android/services/network_storage_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:spotiflac_android/screens/now_playing_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -2928,46 +2926,6 @@ void main() {
     await settlePlayer(tester);
     expect(tester.getRect(artwork), fullArtwork);
     expect(find.text('Second lyric').hitTestable(), findsNothing);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('network lyrics use shared metadata instead of the audio URL', (
-    tester,
-  ) async {
-    final storage = NetworkStorageService.instance;
-    final source = NetworkStorageService.source('lyrics-test', 'song.flac');
-    await tester.runAsync(() async {
-      await storage.save(
-        const NetworkConnection(
-          id: 'lyrics-test',
-          name: 'Lyrics test',
-          protocol: NetworkProtocol.http,
-          address: 'https://nas.test/music/',
-        ),
-      );
-      await NetworkMetadataService.instance.read(source);
-    });
-    addTearDown(() async {
-      await storage.remove('lyrics-test');
-      await storage.dispose();
-    });
-    expect(metadataReads, hasLength(1));
-    await pumpNowPlaying(tester);
-    mediaItems.add(
-      MediaItem(
-        id: source,
-        title: 'Network song',
-        extras: {
-          'source': source,
-          'resolvedSource': 'http://127.0.0.1:9999/playback-only',
-        },
-      ),
-    );
-    await settlePlayer(tester);
-    await tester.tap(find.byKey(const ValueKey('material-lyrics-toggle')));
-    await settlePlayer(tester);
-    expect(find.text('First lyric'), findsOneWidget);
-    expect(metadataReads, hasLength(1));
     expect(tester.takeException(), isNull);
   });
 

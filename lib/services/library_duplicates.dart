@@ -3,32 +3,17 @@ import 'package:spotiflac_android/services/library_database_models.dart';
 import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/utils/path_match_keys.dart';
 
-/// Review physical copies, not index rows. History remains intact when a NAS
-/// source is disabled, but must not suggest deleting its replacement SAF copy.
+/// Review physical copies, not index rows, so duplicates are grouped by the
+/// file on disk rather than by how it was indexed.
 Future<List<IsrcDuplicateGroup>> readIsrcDuplicateGroups(
   DatabaseExecutor db,
 ) async {
   final rows = await db.rawQuery('''
-    WITH active_history AS (
-      SELECT h.* FROM history_db.history h
-      WHERE NOT (
-        h.file_path LIKE 'network://%'
-        AND EXISTS (
-          SELECT 1 FROM library_sources s
-          WHERE (s.enabled = 0 OR s.available = 0)
-            AND substr(h.file_path, 1, length(s.path)) = s.path
-        )
-        AND NOT EXISTS (
-          SELECT 1 FROM library_sources s
-          WHERE s.enabled = 1 AND s.available = 1
-            AND substr(h.file_path, 1, length(s.path)) = s.path
-        )
-      )
-    ), merged AS (
+    WITH merged AS (
       SELECT h.id, 'downloaded' AS source, h.track_name, h.artist_name,
              h.album_name, h.file_path, UPPER(TRIM(h.isrc)) AS isrc_key,
              h.bit_depth, h.sample_rate, h.bitrate, h.format
-      FROM active_history h
+      FROM history_db.history h
       WHERE h.isrc IS NOT NULL AND TRIM(h.isrc) != ''
       UNION ALL
       SELECT l.id, 'local' AS source, l.track_name, l.artist_name,

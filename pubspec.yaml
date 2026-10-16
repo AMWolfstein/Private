@@ -75,7 +75,6 @@ dependencies:
 
   xml: ^7.1.0
   html: ^0.15.7
-  dart_smb2: 0.1.3
   synchronized: ^3.4.0
 
   # Notifications
@@ -129,7 +128,6 @@ flutter:
     - assets/licenses/usb.txt
     - assets/licenses/oboe.txt
     - assets/licenses/wavpack.txt
-    - assets/licenses/libsmb2.txt
     - assets/licenses/native_palette.txt
     - assets/licenses/native_data_jobs.txt
 

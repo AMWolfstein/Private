@@ -24,7 +24,6 @@ DownloadItem _item(
   service: 'extension.example',
   status: status,
   createdAt: DateTime.utc(2026).add(Duration(seconds: index)),
-  networkDownloadFolder: 'Albums',
   qualityOverride: 'HI_RES',
   preserveQualityVariant: true,
   playlistName: 'Playlist',

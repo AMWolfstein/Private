@@ -54,8 +54,8 @@ void main() {
       expect((await counts()).map((row) => row['ref_count']), [1, 1, 2]);
       await db.insert('library_sources', {
         'id': 'nas',
-        'path': 'network://nas/music',
-        'display_name': 'NAS',
+        'path': '/storage/emulated/0/Music',
+        'display_name': 'Music',
       });
       await db.update(
         'library',

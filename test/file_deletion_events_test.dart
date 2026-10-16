@@ -107,7 +107,7 @@ void main() {
   }
 
   test(
-    'invalid, network and virtual CUE paths never publish deletions',
+    'invalid and virtual CUE paths never publish deletions',
     () async {
       final directory = await Directory.systemTemp.createTemp('cue-deletion-');
       addTearDown(() => directory.delete(recursive: true));
@@ -121,7 +121,6 @@ void main() {
         null,
         '',
         'EXISTS:',
-        'network://song',
         '${cue.path}#track01',
       ]) {
         expect(await deleteFile(path, deletionEvents: events), isFalse);

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
@@ -119,68 +118,6 @@ Uint8List _flac({String title = 'Native song', Uint8List? picture}) {
   if (picture != null) block(6, picture, last: true);
   output.add([0xff, 0xf8, ...utf8.encode('unchanged native audio payload')]);
   return output.takeBytes();
-}
-
-class _ProxyFixture {
-  _ProxyFixture(this.bytes, {this.pause});
-  final Uint8List bytes;
-  final Completer<void>? pause;
-  final requested = Completer<void>();
-  late HttpServer server;
-  static const token = '0123456789abcdef0123456789abcdef0123456789abcdef';
-  String get url => 'http://127.0.0.1:${server.port}/$token';
-
-  Future<void> start() async {
-    server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-    server.listen((request) async {
-      try {
-        if (request.uri.path != '/$token') {
-          request.response.statusCode = 404;
-          return;
-        }
-        final range = request.headers.value(HttpHeaders.rangeHeader);
-        var start = 0;
-        var end = bytes.length;
-        if (range != null) {
-          final match = RegExp(r'^bytes=(\d+)-(\d*)$').firstMatch(range)!;
-          start = int.parse(match[1]!);
-          end = match[2]!.isEmpty
-              ? bytes.length
-              : math.min(bytes.length, int.parse(match[2]!) + 1);
-          request.response.statusCode = 206;
-          request.response.headers.set(
-            HttpHeaders.contentRangeHeader,
-            'bytes $start-${end - 1}/${bytes.length}',
-          );
-        }
-        request.response.contentLength = end - start;
-        request.response.headers.set(HttpHeaders.acceptRangesHeader, 'bytes');
-        request.response.headers.contentType = ContentType('audio', 'flac');
-        if (request.method == 'GET') {
-          if (!requested.isCompleted) requested.complete();
-          if (pause != null) {
-            request.response.add(bytes.sublist(start, start + 1));
-            await request.response.flush();
-            await pause!.future;
-            request.response.add(bytes.sublist(start + 1, end));
-          } else {
-            request.response.add(bytes.sublist(start, end));
-          }
-        }
-      } catch (_) {
-        // A cancelled native lease can close its stream before our fixture.
-      } finally {
-        try {
-          await request.response.close();
-        } catch (_) {}
-      }
-    });
-  }
-
-  Future<void> close() async {
-    if (pause != null && !pause!.isCompleted) pause!.complete();
-    await server.close(force: true);
-  }
 }
 
 void main() {
@@ -409,45 +346,6 @@ void main() {
         await File(output).readAsString(),
         '#EXTM3U\n#EXTINF:180,Artist - Song\nfolder/a.flac\n#EXTINF:-1,Unknown length\nb.flac\n',
       );
-      final listing = await _job(
-        'parse_network_listing',
-        {'protocol': 'http', 'base_url': 'https://nas.test/music/', 'path': ''},
-        bytes: Uint8List.fromList(
-          utf8.encode(
-            "<a href='../'>parent</a><a href='Folder/'>folder</a><a href='A%20%2B%23%25.flac'>audio</a><a href='nested/a.flac'>nested</a><a href='https://other.test/music/b.flac'>other</a>",
-          ),
-        ),
-      );
-      expect(listing['entries'], [
-        {'path': 'Folder/', 'name': 'Folder', 'directory': true, 'size': null},
-        {
-          'path': 'A +#%.flac',
-          'name': 'A +#%.flac',
-          'directory': false,
-          'size': null,
-        },
-      ]);
-      final dav = await _job(
-        'parse_network_listing',
-        {
-          'protocol': 'webdav',
-          'base_url': 'https://nas.test/dav/Album/',
-          'path': 'Album/',
-        },
-        bytes: Uint8List.fromList(
-          utf8.encode(
-            "<d:multistatus xmlns:d='DAV:'><d:response><d:href>/dav/Album/A%20B.flac</d:href><d:propstat><d:prop><d:getcontentlength>123</d:getcontentlength></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>",
-          ),
-        ),
-      );
-      expect(dav['entries'], [
-        {
-          'path': 'Album/A B.flac',
-          'name': 'A B.flac',
-          'directory': false,
-          'size': 123,
-        },
-      ]);
     },
   );
 
@@ -490,109 +388,6 @@ void main() {
         false,
       );
       expect(await file.readAsBytes(), unsupported);
-    },
-  );
-
-  testWidgets(
-    'loopback metadata caches/promotes artwork and verifies upload bytes',
-    (tester) async {
-      final png = base64Decode(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==',
-      );
-      final cover = await File('${root.path}/cover.png').writeAsBytes(png);
-      final picture = await _job('build_metadata_picture', {
-        'file_path': cover.path,
-      });
-      final payload = _flac(
-        picture: base64Decode(picture['picture'] as String),
-      );
-      final proxy = _ProxyFixture(payload);
-      await proxy.start();
-      addTearDown(proxy.close);
-      final result = await _job('network_metadata', {
-        'url': proxy.url,
-        'display_name': 'song.flac',
-        'cache_directory': '${root.path}/covers',
-      });
-      final metadata = result['metadata'] as Map;
-      expect(metadata['title'], 'Native song');
-      expect(metadata['artist'], 'Native artist');
-      expect(metadata['cover_base64'], isNull);
-      final cached = File(metadata['cover_path'] as String);
-      expect(await cached.readAsBytes(), png);
-      expect(metadata['cover_sha256'], sha256.convert(png).toString());
-      final promoted = await _job('promote_network_cover', {
-        'path': cached.path,
-        'directory': '${root.path}/permanent-covers',
-      });
-      expect(await File(promoted['cover_path'] as String).readAsBytes(), png);
-      final local = await File(
-        '${root.path}/upload.flac',
-      ).writeAsBytes(payload);
-      final request = {
-        'url': proxy.url,
-        'path': local.path,
-        'length': payload.length,
-        'idle_timeout_ms': 20000,
-      };
-      expect((await _job('matches_network_upload', request))['matches'], true);
-      final different = Uint8List.fromList(payload)..[payload.length - 1] ^= 1;
-      await local.writeAsBytes(different);
-      expect((await _job('matches_network_upload', request))['matches'], false);
-      expect(
-        (await _job('matches_network_upload', {
-          ...request,
-          'length': payload.length + 1,
-        }))['matches'],
-        false,
-      );
-    },
-  );
-
-  testWidgets(
-    'native lease cancellation keeps the UI isolate responsive during a stream',
-    (tester) async {
-      final payload = Uint8List.fromList(
-        List.generate(4 * 1024 * 1024, (i) => i % 251),
-      );
-      final pause = Completer<void>();
-      final proxy = _ProxyFixture(payload, pause: pause);
-      await proxy.start();
-      addTearDown(proxy.close);
-      final file = await File('${root.path}/cancel.bin').writeAsBytes(payload);
-      const id = 'integration-cancel-upload';
-      var heartbeats = 0;
-      final timer = Timer.periodic(
-        const Duration(milliseconds: 20),
-        (_) => heartbeats++,
-      );
-      try {
-        final job = _job('matches_network_upload', {
-          'url': proxy.url,
-          'path': file.path,
-          'length': payload.length,
-          'idle_timeout_ms': 20000,
-        }, requestId: id);
-        final cancelled = expectLater(
-          job,
-          throwsA(
-            isA<PlatformException>().having(
-              (error) => error.message,
-              'cancellation reason',
-              contains('cancelled'),
-            ),
-          ),
-        );
-        await proxy.requested.future.timeout(const Duration(seconds: 10));
-        await Future<void>.delayed(const Duration(milliseconds: 140));
-        expect(heartbeats, greaterThanOrEqualTo(3));
-        await PlatformBridge.cancelNativeDataJob(id);
-        pause.complete();
-        await cancelled.timeout(const Duration(seconds: 10));
-        expect(await file.length(), payload.length);
-      } finally {
-        timer.cancel();
-      }
     },
   );
 

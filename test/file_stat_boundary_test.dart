@@ -84,17 +84,13 @@ void main() {
   });
 
   test(
-    'network identity and empty paths avoid filesystem/provider calls',
+    'empty paths avoid filesystem/provider calls',
     () async {
       messenger.setMockMethodCallHandler(channel, (_) async {
-        fail('Network identities must not query SAF');
+        fail('Empty paths must not query SAF');
       });
       expect(await fileStat(null), isNull);
       expect(await fileStat(''), isNull);
-      final result = await fileStat('network://provider/track');
-      expect(result, isA<FileAccessStat>());
-      expect(result?.size, isNull);
-      expect(result?.modified, isNull);
     },
   );
 

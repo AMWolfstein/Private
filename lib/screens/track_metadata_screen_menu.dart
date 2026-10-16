@@ -11,7 +11,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
   }) {
     Widget buildMenu(BuildContext sheetContext) {
       final l10n = sheetContext.l10n;
-      final canEditFile = _fileExists && !_isNetworkItem;
+      final canEditFile = _fileExists;
 
       final options = <_MetadataOption>[
         if (_fileExists)
@@ -109,19 +109,16 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
               isrc: isrc ?? '',
             ),
           ),
-        if (!_isNetworkItem)
-          _MetadataOption(
-            icon: Icons.share_outlined,
-            label: l10n.trackMetadataShare,
-            dividerAbove: _spotifyId == null && !(isrc?.isNotEmpty ?? false),
-            onTap: () => _shareFile(screenContext),
-          ),
+        _MetadataOption(
+          icon: Icons.share_outlined,
+          label: l10n.trackMetadataShare,
+          dividerAbove: _spotifyId == null && !(isrc?.isNotEmpty ?? false),
+          onTap: () => _shareFile(screenContext),
+        ),
         if (_canDeleteFile)
           _MetadataOption(
             icon: Icons.delete_outline,
-            label: _isNetworkItem
-                ? l10n.trackMetadataDelete
-                : l10n.trackRemoveFromDevice,
+            label: l10n.trackRemoveFromDevice,
             destructive: true,
             onTap: () => _confirmDelete(screenContext, ref, colorScheme),
           ),
@@ -158,15 +155,14 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
                 ),
               ),
             ],
-            if (!_isNetworkItem)
-              MornyeMenuAction(
-                icon: CupertinoIcons.share_solid,
-                label: l10n.trackMetadataShare,
-                onPressed: () => _closeOptionsMenuAndRun(
-                  sheetContext,
-                  () => _shareFile(screenContext),
-                ),
+            MornyeMenuAction(
+              icon: CupertinoIcons.share_solid,
+              label: l10n.trackMetadataShare,
+              onPressed: () => _closeOptionsMenuAndRun(
+                sheetContext,
+                () => _shareFile(screenContext),
               ),
+            ),
           ],
           groups: groups,
         );

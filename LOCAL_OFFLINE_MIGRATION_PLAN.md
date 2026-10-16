@@ -17,9 +17,10 @@ Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backen
 
 ## Progress
 
-_Last updated: 2026-10-16_
+_Last updated: 2026-10-17_
 
-**Status:** IN PROGRESS. Phases 1-2 committed; Phase 3 next. Vision refinements V1-V4 captured.
+**Status:** IN PROGRESS. Phases 1-3 committed; Phase 4 complete (pending commit). Vision
+refinements V1-V4 captured.
 
 **Committed:**
 - `f0a1b45` — graphify baseline (graph + report).
@@ -31,6 +32,11 @@ _Last updated: 2026-10-16_
 - `757ebcc` — Phase 3: updater / remote-config / announcements / donations removed
   (services, dialogs, upgrade-intro screen, donate page, settings keys + UI, install permission,
   APK FileProvider, tests).
+- Phase 4 (this commit) — network storage (SMB/WebDAV/NAS) full rip-out: 10
+  `lib/services/network_*.dart`, `network_storage_screen.dart`, `network://` URI scheme +
+  branches (player service/runtime, playback, hires check, audio analysis, file access),
+  `networkDownloadFolder/Label` settings (model/generated/provider/codec/UI), l10n keys (en/id),
+  `dart_smb2` dep + `libsmb2.txt` license, and all `network_*` tests + 2 Python SMB fixtures.
 
 **Environment / toolchain:**
 - Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
@@ -45,9 +51,10 @@ _Last updated: 2026-10-16_
 exists (remove `cache/` or add one).
 
 **Known flaky:** `test/library_browse_sqlite_paging_test.dart` times out at 30s here (pure perf
-test, unrelated to migration). Full suite otherwise green (2349 passed, 7 skipped).
+test, unrelated to migration). Post-Phase-4 full suite: 2215 passed, 3 skipped, 1 failed (that
+same perf test). `flutter analyze` → No issues found.
 
-**Next step:** Phase 4 — network storage (SMB/WebDAV/NAS) removal.
+**Next step:** Phase 5 — extension system + online providers + online search (Dart) removal.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 

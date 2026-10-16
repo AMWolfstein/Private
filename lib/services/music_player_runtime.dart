@@ -11,8 +11,6 @@ import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/network_metadata_service.dart';
-import 'package:spotiflac_android/services/network_storage_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/playback_notification.dart';
 import 'package:spotiflac_android/services/player_widget_service.dart';
@@ -29,8 +27,6 @@ class PlaybackDependencies {
     this.createDeck = _createDeck,
     this.audioSession = _getAudioSession,
     this.readMetadata = PlatformBridge.readFileMetadata,
-    this.readNetworkMetadata = _readNetworkMetadata,
-    this.resolveNetworkSource = _resolveNetworkSource,
     this.initializeHandler = _initializeAudioHandler,
     this.createPersonalization = AutoplayPersonalization.new,
     AppStateDatabase? sessionDatabase,
@@ -55,8 +51,6 @@ class PlaybackDependencies {
   final Future<AudioSession> Function() audioSession;
   final Future<Map<String, dynamic>> Function(String, {String? displayName})
   readMetadata;
-  final Future<Map<String, dynamic>> Function(String) readNetworkMetadata;
-  final Future<String> Function(String) resolveNetworkSource;
   final Future<MusicPlayerHandler> Function(MusicPlayerHandler Function())
   initializeHandler;
   final MethodChannel notificationChannel;
@@ -83,10 +77,6 @@ class PlaybackDependencies {
   static MusicPlaybackDeck _createDeck(String playerId) =>
       MusicPlaybackDeck(playerId: playerId);
   static Future<AudioSession> _getAudioSession() => AudioSession.instance;
-  static Future<Map<String, dynamic>> _readNetworkMetadata(String source) =>
-      NetworkMetadataService.instance.read(source);
-  static Future<String> _resolveNetworkSource(String source) =>
-      NetworkStorageService.instance.resolve(source);
   static Future<MusicPlayerHandler> _initializeAudioHandler(
     MusicPlayerHandler Function() builder,
   ) => AudioService.init(

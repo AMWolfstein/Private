@@ -33,7 +33,6 @@ class _Settings extends SettingsNotifier {
     filenameFormat: '{track} - {title}',
     singleFilenameFormat: '{title}',
     allowQualityVariants: true,
-    networkDownloadFolder: 'smb://example.test/music',
   );
 }
 
@@ -162,7 +161,6 @@ void main() {
               expect(item.fromBatch, false);
               expect(item.service, 'example');
               expect(item.preserveQualityVariant, true);
-              expect(item.networkDownloadFolder, 'smb://example.test/music');
               expect(item.playlistName, isNull);
               expect(item.playlistPosition, isNull);
               expect(
@@ -311,7 +309,6 @@ void main() {
               expect(item.qualityOverride, 'HIGH');
               expect(item.service, 'example');
               expect(item.preserveQualityVariant, true);
-              expect(item.networkDownloadFolder, 'smb://example.test/music');
               expect(
                 jsonEncode(item.track.toJson()),
                 jsonEncode(expectedTracks[i].toJson()),

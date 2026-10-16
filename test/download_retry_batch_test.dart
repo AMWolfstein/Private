@@ -60,7 +60,6 @@ DownloadItem _item(String id, DownloadStatus status, DownloadErrorType? type) =>
       playlistName: 'Playlist',
       playlistPosition: 7,
       fromBatch: true,
-      networkDownloadFolder: 'smb://example.test/music',
     );
 
 void main() {
@@ -230,7 +229,6 @@ void main() {
               expect(after.playlistName, before.playlistName);
               expect(after.playlistPosition, before.playlistPosition);
               expect(after.fromBatch, before.fromBatch);
-              expect(after.networkDownloadFolder, before.networkDownloadFolder);
             }
             await queue.flushQueuePersistence();
           } finally {
@@ -339,7 +337,7 @@ void main() {
               0 => DownloadStatus.queued,
               1 => DownloadStatus.downloading,
               _ => DownloadStatus.finalizing,
-            }, null).copyWith(networkDownloadFolder: ''),
+            }, null),
           for (final status in [
             DownloadStatus.completed,
             DownloadStatus.failed,
@@ -349,7 +347,7 @@ void main() {
               status.name,
               status,
               null,
-            ).copyWith(networkDownloadFolder: ''),
+            ),
         ];
         final container = ProviderContainer(
           overrides: [

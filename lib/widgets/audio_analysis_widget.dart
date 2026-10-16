@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/services/audio_analysis_jobs.dart';
 import 'package:spotiflac_android/services/audio_analysis_cache.dart';
-import 'package:spotiflac_android/services/network_audio_analysis_input.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_content_card.dart';
 import 'package:spotiflac_android/widgets/app_choice_chip.dart';
@@ -610,7 +609,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
   bool _spectrogramChannelLoading = false;
   int _spectrogramRequestId = 0;
   String? _unsupportedCodec;
-  final _networkInput = NetworkAudioAnalysisInput();
   final _analysisJobs = AudioAnalysisJobs<FFmpegSession>(
     start: (arguments) async {
       final completed = Completer<FFmpegSession>();
@@ -699,7 +697,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
 
     _spectrogramRequestId++;
     _analysisJobs.invalidate();
-    _networkInput.cancel();
     _cancelNativeAnalysis();
     _spectrogramImage?.dispose();
     _spectrogramImage = null;
@@ -720,7 +717,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
   void dispose() {
     _spectrogramRequestId++;
     _analysisJobs.dispose();
-    _networkInput.cancel();
     _cancelNativeAnalysis();
     _spectrogramImage?.dispose();
     super.dispose();
@@ -757,10 +753,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
           expectedPath,
           channel: _spectrogramChannel,
         );
-        if (image == null &&
-            NetworkAudioAnalysisInput.isNetwork(expectedPath)) {
-          return; // Opening metadata must not fetch the complete remote audio.
-        }
         image ??= await _generateAndCacheSpectrogram(
           filePath: expectedPath,
           analysisData: cached,
@@ -814,7 +806,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     final releaseCache = _cacheBudget.retain(_cacheKey(sourcePath));
     final requestId = ++_spectrogramRequestId;
     _analysisJobs.invalidate();
-    _networkInput.cancel();
     _cancelNativeAnalysis();
     setState(() {
       _analyzing = true;
@@ -962,10 +953,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       }
       final cachedSize = json['fileSize'] as int;
 
-      if (NetworkAudioAnalysisInput.isNetwork(filePath)) {
-        final currentSize = await _networkInput.length(filePath);
-        if (currentSize <= 0 || currentSize != cachedSize) return null;
-      } else if (!filePath.startsWith('content://')) {
+      if (!filePath.startsWith('content://')) {
         final currentSize = await File(filePath).length();
         if (currentSize != cachedSize) return null;
       } else {
@@ -1043,12 +1031,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     String? sourcePath,
   }) async {
     _checkAnalysisRequest(requestId);
-    if (NetworkAudioAnalysisInput.isNetwork(filePath)) {
-      return _networkInput.withFile(
-        filePath,
-        (path) => _runAnalysis(path, requestId, sourcePath: filePath),
-      );
-    }
     String workingPath = filePath;
     String? tempCopy;
     if (filePath.startsWith('content://')) {
@@ -1145,19 +1127,6 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     int? channels,
   }) async {
     _checkAnalysisRequest(requestId);
-    if (NetworkAudioAnalysisInput.isNetwork(filePath)) {
-      return _networkInput.withFile(
-        filePath,
-        (path) => _generateSpectrogramForFile(
-          path,
-          requestId: requestId,
-          channel: channel,
-          durationSeconds: durationSeconds,
-          sampleRate: sampleRate,
-          channels: channels,
-        ),
-      );
-    }
     String workingPath = filePath;
     String? tempCopy;
     if (filePath.startsWith('content://')) {

@@ -46,7 +46,6 @@ DownloadItem _item(int index, DownloadStatus status) => DownloadItem(
   qualityOverride: 'HIGH',
   fromBatch: true,
   preserveQualityVariant: true,
-  networkDownloadFolder: index.isEven ? 'smb://example.test/music' : '',
 );
 
 void main() {

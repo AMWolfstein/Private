@@ -27,7 +27,6 @@ DownloadItem _$DownloadItemFromJson(Map<String, dynamic> json) => DownloadItem(
   playlistPosition: (json['playlistPosition'] as num?)?.toInt(),
   fromBatch: json['fromBatch'] as bool? ?? false,
   preserveQualityVariant: json['preserveQualityVariant'] as bool? ?? false,
-  networkDownloadFolder: json['networkDownloadFolder'] as String? ?? '',
 );
 
 Map<String, dynamic> _$DownloadItemToJson(DownloadItem instance) =>
@@ -50,7 +49,6 @@ Map<String, dynamic> _$DownloadItemToJson(DownloadItem instance) =>
       'playlistPosition': instance.playlistPosition,
       'fromBatch': instance.fromBatch,
       'preserveQualityVariant': instance.preserveQualityVariant,
-      'networkDownloadFolder': instance.networkDownloadFolder,
     };
 
 const _$DownloadStatusEnumMap = {

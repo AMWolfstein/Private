@@ -123,7 +123,6 @@ bool _largeItems(List<DownloadItem> items) {
         (item.error?.length ?? 0) +
         (item.qualityOverride?.length ?? 0) +
         (item.playlistName?.length ?? 0) +
-        item.networkDownloadFolder.length +
         track.id.length +
         track.name.length +
         track.artistName.length +

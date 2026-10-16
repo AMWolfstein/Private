@@ -16,7 +16,6 @@ const _settings = AppSettings(
   audioQuality: 'HIGH',
   autoFallback: false,
   allowQualityVariants: true,
-  networkDownloadFolder: 'smb://example.test/music',
 );
 const _tracks = [
   Track(
@@ -328,10 +327,6 @@ void main() {
           expect(
             added.map((item) => item.preserveQualityVariant),
             everyElement(true),
-          );
-          expect(
-            added.map((item) => item.networkDownloadFolder),
-            everyElement(_settings.networkDownloadFolder),
           );
           mutable.clear();
           batches.clear();

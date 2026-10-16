@@ -146,14 +146,6 @@ class MusicPlaybackDeck {
     if (!_direct) await _ordinary.setPlaybackRate(rate);
   }
 
-  Future<void> setNetworkSource(String url) async {
-    await stop();
-    _source = null;
-    _routeLost = false;
-    _nativeStarted = false;
-    await _setOrdinarySource(UrlSource(url));
-  }
-
   Future<void> setSource(
     DeviceFileSource source, {
     bool preferBitPerfect = false,

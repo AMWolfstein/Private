@@ -162,9 +162,7 @@ class PlayerMetadataController extends ChangeNotifier {
   }
 
   String _metadataPath(String source, String? resolved) =>
-      !source.startsWith('network://') && resolved?.isNotEmpty == true
-      ? resolved!
-      : source;
+      resolved?.isNotEmpty == true ? resolved! : source;
 
   Map<String, dynamic> detailsSnapshot(MediaItem? item) {
     if (item == null) return const {};

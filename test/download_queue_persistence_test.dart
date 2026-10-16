@@ -27,7 +27,6 @@ DownloadItem _item(
   service: 'extension.example',
   status: status,
   createdAt: DateTime.utc(2026),
-  networkDownloadFolder: 'Albums',
   qualityOverride: 'HI_RES',
   preserveQualityVariant: true,
 );
@@ -190,7 +189,6 @@ void main() {
       expect(items.first.status, DownloadStatus.queued);
       expect(items.first.progress, 0);
       expect(items[1].status, DownloadStatus.skipped);
-      expect(items.first.networkDownloadFolder, 'Albums');
       expect(items.first.qualityOverride, 'HI_RES');
       expect(items.first.preserveQualityVariant, isTrue);
       await persistence.flush();

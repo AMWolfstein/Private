@@ -130,11 +130,7 @@ extension _TrackMetadataFileActions on _TrackMetadataScreenState {
       context: screenContext,
       builder: (dialogContext) => AppAlertDialog(
         title: Text(dialogContext.l10n.trackDeleteConfirmTitle),
-        content: Text(
-          _isNetworkItem
-              ? dialogContext.l10n.trackDeleteNetworkConfirmMessage
-              : dialogContext.l10n.trackDeleteConfirmMessage,
-        ),
+        content: Text(dialogContext.l10n.trackDeleteConfirmMessage),
         actions: [
           AppDialogAction(
             onPressed: () => Navigator.pop(dialogContext, false),

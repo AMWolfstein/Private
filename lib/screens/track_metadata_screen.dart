@@ -12,7 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/services/conversion_library_service.dart';
 import 'package:spotiflac_android/services/deleted_library_files.dart';
 import 'package:spotiflac_android/services/file_access_check.dart';
-import 'package:spotiflac_android/services/network_storage_service.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/re_enrich_result.dart';
@@ -156,9 +155,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
 
   FileAccessCheck? _fileAccess;
   bool get _fileExists => _fileAccess is FileAccessFound;
-  bool get _isNetworkItem => cleanFilePath.startsWith('network://');
-  bool _networkFileDeletable = false;
-  bool get _canDeleteFile => !_isNetworkItem || _networkFileDeletable;
+  bool get _canDeleteFile => true;
   bool _isDeleting = false;
   int? get _fileSize => switch (_fileAccess) {
     FileAccessFound(:final stat) => stat.size,
@@ -227,9 +224,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
     final filePath = cleanFilePath;
 
     final check = await checkFileAccess(filePath);
-    final networkFileDeletable =
-        filePath.startsWith('network://') &&
-        await NetworkStorageService.instance.canDeleteFile(filePath);
     if (!mounted ||
         generation != _metadataLoadGeneration ||
         filePath != cleanFilePath) {
@@ -240,7 +234,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
     }
     setState(() {
       _fileAccess = check;
-      _networkFileDeletable = networkFileDeletable;
     });
     if (!_fileExists) return;
 
@@ -250,7 +243,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
     if (!_isCueVirtualTrack && !_hasLoadedResolvedAudioMetadata) {
       unawaited(_refreshResolvedAudioMetadataFromFile());
     }
-    if (!_isNetworkItem && !_hasPath(_embeddedCoverPreviewPath)) {
+    if (!_hasPath(_embeddedCoverPreviewPath)) {
       // The information card reports artwork embedded in the audio file, not
       // a resized Library thumbnail or remote cover. The shared resolver owns
       // extraction; this screen only caches validation data and dimensions.
@@ -294,9 +287,9 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
     _hasLoadedResolvedAudioMetadata = true;
 
     try {
-      final metadata = _isNetworkItem
-          ? await readPlaybackFileMetadataWithRetry(sourcePath)
-          : await PlatformBridge.readDisplayAudioMetadata(sourcePath);
+      final metadata = await PlatformBridge.readDisplayAudioMetadata(
+        sourcePath,
+      );
       if (!mounted ||
           generation != _metadataLoadGeneration ||
           sourcePath != cleanFilePath) {
@@ -651,7 +644,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
           _currentLocalLibraryItem = widget.localNavigationItems![targetIndex];
         }
         _fileAccess = null;
-        _networkFileDeletable = false;
         _lyrics = null;
         _rawLyrics = null;
         _lyricsLoading = false;

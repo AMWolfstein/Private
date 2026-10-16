@@ -110,7 +110,6 @@ List<DownloadItem> _fixtureItems(int count) => List.generate(count, (index) {
     playlistPosition: index + 1,
     fromBatch: true,
     preserveQualityVariant: true,
-    networkDownloadFolder: 'Music/Albums',
   );
 });
 
