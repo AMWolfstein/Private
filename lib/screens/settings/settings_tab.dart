@@ -13,7 +13,6 @@ import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart
 import 'package:spotiflac_android/screens/settings/backup_restore_page.dart';
 import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
 import 'package:spotiflac_android/screens/settings/download_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/extensions_page.dart';
 import 'package:spotiflac_android/screens/settings/files_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/log_screen.dart';
@@ -111,15 +110,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     final groups = [
       _Group(
         destinations: [
-          _Destination(
-            icon: Icons.extension_outlined,
-            iconColor: Colors.teal,
-            title: l10n.settingsExtensions,
-            subtitle: l10n.settingsExtensionsSubtitle,
-            keywords: const ['plugin', 'provider', 'priority', 'store'],
-            searchEntries: searchCatalog.extensions,
-            pageBuilder: () => const ExtensionsPage(),
-          ),
           _Destination(
             icon: Icons.palette_outlined,
             iconColor: Colors.purple,

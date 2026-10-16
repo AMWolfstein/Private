@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
-import 'package:spotiflac_android/screens/settings/metadata_provider_priority_page.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
@@ -79,30 +78,6 @@ class MetadataSettingsPage extends ConsumerWidget {
                       showDivider: false,
                     ),
                   ],
-                ],
-              ),
-            ),
-
-            SliverToBoxAdapter(
-              child: SettingsSectionHeader(
-                title: context.l10n.sectionMetadataProviders,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  SettingsItem(
-                    icon: Icons.source_outlined,
-                    title: context.l10n.metadataProvidersTitle,
-                    subtitle: context.l10n.metadataProvidersSubtitle,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (_) => const MetadataProviderPriorityPage(),
-                      ),
-                    ),
-                    showDivider: false,
-                  ),
                 ],
               ),
             ),

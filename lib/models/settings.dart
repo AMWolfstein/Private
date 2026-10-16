@@ -87,7 +87,6 @@ class AppSettings {
   final bool separateSingles;
   final String singleFilenameFormat;
   final String albumFolderStructure;
-  final bool showExtensionStore;
 
   /// Shared-element (Hero) flights, e.g. the mini player artwork expanding
   /// into the full player. Off skips the flights entirely.
@@ -209,7 +208,6 @@ class AppSettings {
     this.separateSingles = false,
     this.singleFilenameFormat = '{title} - {artist}',
     this.albumFolderStructure = 'artist_album',
-    this.showExtensionStore = true,
     this.heroAnimationsEnabled = true,
     this.forceBackdropBlur = false,
     this.extensionVerificationBrowserMode = 'in_app_first',
@@ -315,7 +313,6 @@ class AppSettings {
     bool? separateSingles,
     String? singleFilenameFormat,
     String? albumFolderStructure,
-    bool? showExtensionStore,
     bool? heroAnimationsEnabled,
     bool? forceBackdropBlur,
     String? extensionVerificationBrowserMode,
@@ -425,7 +422,6 @@ class AppSettings {
       separateSingles: separateSingles ?? this.separateSingles,
       singleFilenameFormat: singleFilenameFormat ?? this.singleFilenameFormat,
       albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,
-      showExtensionStore: showExtensionStore ?? this.showExtensionStore,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       forceBackdropBlur: forceBackdropBlur ?? this.forceBackdropBlur,

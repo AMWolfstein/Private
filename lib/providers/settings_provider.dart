@@ -885,11 +885,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setShowExtensionStore(bool enabled) {
-    state = state.copyWith(showExtensionStore: enabled);
-    _saveSettings();
-  }
-
   void setHeroAnimationsEnabled(bool enabled) {
     state = state.copyWith(heroAnimationsEnabled: enabled);
     _saveSettings();

@@ -51,44 +51,7 @@ class SettingsSearchQuery {
 /// Localized index of controls found inside every first-level settings page.
 class SettingsSearchCatalog {
   SettingsSearchCatalog(AppLocalizations l10n, {bool androidAudio = false})
-    : extensions = [
-        SettingsSearchEntry(
-          icon: Icons.low_priority,
-          title: l10n.extensionsDownloadPriority,
-          subtitle: l10n.extensionsDownloadPrioritySubtitle,
-          keywords: const ['provider order', 'service order'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.alt_route,
-          title: l10n.extensionsFallbackTitle,
-          subtitle: l10n.extensionsFallbackSubtitle,
-          keywords: const ['provider fallback'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.manage_search,
-          title: l10n.extensionsMetadataPriority,
-          subtitle: l10n.extensionsMetadataPrioritySubtitle,
-          keywords: const ['metadata provider order'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.search,
-          title: l10n.extensionsSearchProvider,
-          subtitle: l10n.extensionsSearchProviderDescription,
-          keywords: const ['home search source'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.explore_outlined,
-          title: l10n.extensionsHomeFeedProvider,
-          subtitle: l10n.extensionsHomeFeedDescription,
-          keywords: const ['home provider', 'feed source'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.add,
-          title: l10n.extensionsInstallButton,
-          keywords: const ['add plugin', 'import extension'],
-        ),
-      ],
-      appearance = [
+    : appearance = [
         SettingsSearchEntry(
           icon: Icons.rounded_corner,
           title: l10n.appearanceGlassOutlines,
@@ -349,12 +312,6 @@ class SettingsSearchCatalog {
           keywords: const ['volume normalization', 'loudness'],
         ),
         SettingsSearchEntry(
-          icon: Icons.source_outlined,
-          title: l10n.metadataProvidersTitle,
-          subtitle: l10n.metadataProvidersSubtitle,
-          keywords: const ['metadata priority', 'tag provider'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.filter_list_outlined,
           title: l10n.downloadDeduplication,
           keywords: const ['duplicate download', 'same song'],
@@ -382,11 +339,6 @@ class SettingsSearchCatalog {
           icon: Icons.lyrics_outlined,
           title: l10n.lyricsMode,
           keywords: const ['synced', 'plain', 'lyrics type'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.source_outlined,
-          title: l10n.lyricsProvidersTitle,
-          keywords: const ['lyrics priority', 'lyrics source'],
         ),
         SettingsSearchEntry(
           icon: Icons.translate_outlined,
@@ -497,12 +449,6 @@ class SettingsSearchCatalog {
           keywords: const ['automatic provider fallback'],
         ),
         SettingsSearchEntry(
-          icon: Icons.extension_outlined,
-          title: l10n.downloadFallbackExtensions,
-          subtitle: l10n.downloadFallbackExtensionsSubtitle,
-          keywords: const ['provider order'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.public,
           title: l10n.downloadSongLinkRegion,
           keywords: const ['country', 'region'],
@@ -578,12 +524,6 @@ class SettingsSearchCatalog {
         ),
       ],
       app = [
-        SettingsSearchEntry(
-          icon: Icons.extension,
-          title: l10n.optionsExtensionStore,
-          subtitle: l10n.optionsExtensionStoreSubtitle,
-          keywords: const ['repository', 'plugin store'],
-        ),
         SettingsSearchEntry(
           icon: Icons.open_in_browser,
           title: l10n.extensionVerificationBrowserTitle,
@@ -780,7 +720,6 @@ class SettingsSearchCatalog {
         ),
       ];
 
-  final List<SettingsSearchEntry> extensions;
   final List<SettingsSearchEntry> appearance;
   final List<SettingsSearchEntry> library;
   final List<SettingsSearchEntry> playback;

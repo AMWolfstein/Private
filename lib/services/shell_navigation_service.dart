@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-enum ShellTab { home, library, repository, settings, search }
+enum ShellTab { home, library, settings, search }
 
 class ShellNavigationService {
   static final searchRequests = ValueNotifier<int>(0);
@@ -61,7 +61,7 @@ class ShellNavigationService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (generation != _searchGeneration ||
           !identical(owner, _tabSelectionOwner) ||
-          _currentTabIndex != (_showSearchTab ? (_showRepoTab ? 3 : 2) : 0)) {
+          _currentTabIndex != (_showSearchTab ? 2 : 0)) {
         return;
       }
       final navigatorKey = _showSearchTab
@@ -80,13 +80,10 @@ class ShellNavigationService {
       GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> libraryTabNavigatorKey =
       GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> repoTabNavigatorKey =
-      GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> searchTabNavigatorKey =
       GlobalKey<NavigatorState>();
 
   static int _currentTabIndex = 0;
-  static bool _showRepoTab = false;
   static bool _showSearchTab = false;
   static Object? _tabSelectionOwner;
   static ValueChanged<ShellTab>? _tabSelectionHandler;
@@ -114,16 +111,13 @@ class ShellNavigationService {
 
   static void syncState({
     required int currentTabIndex,
-    required bool showRepoTab,
     bool showSearchTab = false,
   }) {
     if (_currentTabIndex == currentTabIndex &&
-        _showRepoTab == showRepoTab &&
         _showSearchTab == showSearchTab) {
       return;
     }
     _currentTabIndex = currentTabIndex;
-    _showRepoTab = showRepoTab;
     _showSearchTab = showSearchTab;
     _scheduleChromeUpdate();
   }
@@ -131,10 +125,7 @@ class ShellNavigationService {
   static GlobalKey<NavigatorState>? _activeTabNavigatorKey() {
     if (_currentTabIndex == 0) return homeTabNavigatorKey;
     if (_currentTabIndex == 1) return libraryTabNavigatorKey;
-    if (_showRepoTab && _currentTabIndex == 2) {
-      return repoTabNavigatorKey;
-    }
-    if (_showSearchTab && _currentTabIndex == (_showRepoTab ? 3 : 2)) {
+    if (_showSearchTab && _currentTabIndex == 2) {
       return searchTabNavigatorKey;
     }
     return null;

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/extension_provider.dart';
-import 'package:spotiflac_android/screens/settings/download_fallback_extensions_page.dart';
 import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
@@ -250,17 +249,6 @@ class _DownloadSettingsPageState extends ConsumerState<DownloadSettingsPage> {
                     value: settings.autoFallback,
                     onChanged: (v) =>
                         ref.read(settingsProvider.notifier).setAutoFallback(v),
-                  ),
-                  SettingsItem(
-                    icon: Icons.extension_outlined,
-                    title: context.l10n.downloadFallbackExtensions,
-                    subtitle: context.l10n.downloadFallbackExtensionsSubtitle,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (_) => const DownloadFallbackExtensionsPage(),
-                      ),
-                    ),
                     showDivider: false,
                   ),
                 ],

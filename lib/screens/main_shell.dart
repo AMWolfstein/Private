@@ -13,12 +13,10 @@ import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/playback_notification_provider.dart';
-import 'package:spotiflac_android/providers/repo_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/track_provider.dart';
 import 'package:spotiflac_android/providers/preview_player_provider.dart';
 import 'package:spotiflac_android/screens/home_tab.dart';
-import 'package:spotiflac_android/screens/repo_tab.dart';
 import 'package:spotiflac_android/screens/queue_tab.dart';
 import 'package:spotiflac_android/screens/settings/settings_tab.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -78,14 +76,11 @@ class _MainShellState extends ConsumerState<MainShell>
       ShellNavigationService.homeTabNavigatorKey;
   final GlobalKey<NavigatorState> _libraryTabNavigatorKey =
       ShellNavigationService.libraryTabNavigatorKey;
-  final GlobalKey<NavigatorState> _repoTabNavigatorKey =
-      ShellNavigationService.repoTabNavigatorKey;
   final GlobalKey<NavigatorState> _searchTabNavigatorKey =
       ShellNavigationService.searchTabNavigatorKey;
 
   late final _PreviewStopNavigatorObserver _homePreviewStopObserver;
   late final _PreviewStopNavigatorObserver _libraryPreviewStopObserver;
-  late final _PreviewStopNavigatorObserver _repoPreviewStopObserver;
   late final _PreviewStopNavigatorObserver _searchPreviewStopObserver;
 
   @override
@@ -121,9 +116,6 @@ class _MainShellState extends ConsumerState<MainShell>
     _libraryPreviewStopObserver = _PreviewStopNavigatorObserver(
       () => ref.read(previewPlayerProvider.notifier).stop(),
     );
-    _repoPreviewStopObserver = _PreviewStopNavigatorObserver(
-      () => ref.read(previewPlayerProvider.notifier).stop(),
-    );
     _searchPreviewStopObserver = _PreviewStopNavigatorObserver(
       () => ref.read(previewPlayerProvider.notifier).stop(),
     );
@@ -137,10 +129,7 @@ class _MainShellState extends ConsumerState<MainShell>
       owner: this,
       handler: _onShellTabRequested,
     );
-    ShellNavigationService.syncState(
-      currentTabIndex: _currentIndex,
-      showRepoTab: false,
-    );
+    ShellNavigationService.syncState(currentTabIndex: _currentIndex);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _repairSafAccessIfNeeded(
         knownLost: ref.read(initialSafAccessLostProvider),
@@ -455,10 +444,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
   void _resetHomeToMain() {
     ref.read(previewPlayerProvider.notifier).stop();
-    final showStore = ref.read(
-      settingsProvider.select((s) => s.showExtensionStore),
-    );
-    final homeNavigator = _navigatorForTab(0, showStore);
+    final homeNavigator = _navigatorForTab(0);
     homeNavigator?.popUntil((route) => route.isFirst);
     // Unfocus BEFORE clear so _onTrackStateChanged can properly
     // clear _urlController (it checks !_searchFocusNode.hasFocus)
@@ -471,17 +457,13 @@ class _MainShellState extends ConsumerState<MainShell>
       unawaited(_openProfileSettings());
       return;
     }
-    final showStore = ref.read(
-      settingsProvider.select((s) => s.showExtensionStore),
-    );
     final index = switch (tab) {
       ShellTab.home => 0,
-      ShellTab.search => context.isMornye ? (showStore ? 3 : 2) : 0,
+      ShellTab.search => context.isMornye ? 2 : 0,
       ShellTab.library => 1,
-      ShellTab.repository => showStore ? 2 : null,
-      ShellTab.settings => showStore ? 3 : 2,
+      ShellTab.settings => 2,
     };
-    if (index != null) _onNavTap(index, resetHome: tab != ShellTab.search);
+    _onNavTap(index, resetHome: tab != ShellTab.search);
   }
 
   bool _settingsPageOpen = false;
@@ -503,9 +485,6 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _onNavTap(int index, {bool resetHome = true}) {
-    final showStore = ref.read(
-      settingsProvider.select((s) => s.showExtensionStore),
-    );
     _mornyeChrome.expand();
     if (index == 0 && resetHome && (context.isMornye || _currentIndex == 0)) {
       _resetHomeToMain();
@@ -524,7 +503,6 @@ class _MainShellState extends ConsumerState<MainShell>
       setState(() => _currentIndex = index);
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
-        showRepoTab: showStore,
         showSearchTab: context.isMornye,
       );
       FocusManager.instance.primaryFocus?.unfocus();
@@ -553,12 +531,8 @@ class _MainShellState extends ConsumerState<MainShell>
     if (_currentIndex != index) {
       ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
-      final showStore = ref.read(
-        settingsProvider.select((s) => s.showExtensionStore),
-      );
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
-        showRepoTab: showStore,
         showSearchTab: context.isMornye,
       );
       FocusManager.instance.primaryFocus?.unfocus();
@@ -573,10 +547,7 @@ class _MainShellState extends ConsumerState<MainShell>
       return;
     }
 
-    final showStore = ref.read(
-      settingsProvider.select((s) => s.showExtensionStore),
-    );
-    final currentNavigator = _navigatorForTab(_currentIndex, showStore);
+    final currentNavigator = _navigatorForTab(_currentIndex);
     final handledByCurrentNavigator =
         await currentNavigator?.maybePop() ?? false;
     if (handledByCurrentNavigator) {
@@ -587,8 +558,7 @@ class _MainShellState extends ConsumerState<MainShell>
     if (!mounted) return;
 
     final trackState = ref.read(trackProvider);
-    final isSearchTab =
-        _currentIndex == (context.isMornye ? (showStore ? 3 : 2) : 0);
+    final isSearchTab = _currentIndex == (context.isMornye ? 2 : 0);
 
     final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
@@ -654,11 +624,10 @@ class _MainShellState extends ConsumerState<MainShell>
     }
   }
 
-  NavigatorState? _navigatorForTab(int index, bool showStore) {
+  NavigatorState? _navigatorForTab(int index) {
     if (index == 0) return _homeTabNavigatorKey.currentState;
     if (index == 1) return _libraryTabNavigatorKey.currentState;
-    if (showStore && index == 2) return _repoTabNavigatorKey.currentState;
-    if (context.isMornye && index == (showStore ? 3 : 2)) {
+    if (context.isMornye && index == 2) {
       return _searchTabNavigatorKey.currentState;
     }
     return null;
@@ -684,19 +653,12 @@ class _MainShellState extends ConsumerState<MainShell>
     final queueState = ref.watch(
       downloadQueueProvider.select((s) => s.queuedCount),
     );
-    final showStore = ref.watch(
-      settingsProvider.select((s) => s.showExtensionStore),
-    );
     final heroAnimationsEnabled = ref.watch(
       settingsProvider.select((s) => s.heroAnimationsEnabled),
     );
     ShellNavigationService.syncState(
       currentTabIndex: _currentIndex,
-      showRepoTab: showStore,
       showSearchTab: context.isMornye,
-    );
-    final repoUpdatesCount = ref.watch(
-      repoProvider.select((s) => s.updatesAvailableCount),
     );
 
     final tabs = <Widget>[
@@ -721,14 +683,6 @@ class _MainShellState extends ConsumerState<MainShell>
           isTabActive: _currentIndex == 1,
         ),
       ),
-      if (showStore)
-        _TabNavigator(
-          key: const ValueKey('tab-repo'),
-          navigatorKey: _repoTabNavigatorKey,
-          observers: [_repoPreviewStopObserver],
-          heroAnimationsEnabled: heroAnimationsEnabled,
-          child: const RepoTab(),
-        ),
       if (!context.isMornye) const SettingsTab(),
       if (context.isMornye)
         _TabNavigator(
@@ -775,33 +729,6 @@ class _MainShellState extends ConsumerState<MainShell>
         ),
         label: l10n.navLibrary,
       ),
-      if (showStore)
-        NavigationDestination(
-          icon: context.isMornye
-              ? MornyeNavigationIcon(
-                  icon: CupertinoIcons.square_grid_2x2,
-                  badgeCount: repoUpdatesCount,
-                )
-              : AnimatedBadge(
-                  count: repoUpdatesCount,
-                  child: Badge(
-                    isLabelVisible: repoUpdatesCount > 0,
-                    label: Text('$repoUpdatesCount'),
-                    child: const Icon(Icons.extension_outlined),
-                  ),
-                ),
-          selectedIcon: BouncingIcon(
-            child: AnimatedBadge(
-              count: repoUpdatesCount,
-              child: Badge(
-                isLabelVisible: repoUpdatesCount > 0,
-                label: Text('$repoUpdatesCount'),
-                child: const Icon(Icons.extension),
-              ),
-            ),
-          ),
-          label: l10n.navStore,
-        ),
       if (!context.isMornye)
         NavigationDestination(
           icon: const Icon(Icons.settings_outlined),
@@ -1117,14 +1044,10 @@ class _LibraryTabRoot extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showStore = ref.watch(
-      settingsProvider.select((s) => s.showExtensionStore),
-    );
     return QueueTab(
       isTabActive: isTabActive,
       parentPageController: parentPageController,
       parentPageIndex: 1,
-      nextPageIndex: showStore ? 2 : 3,
     );
   }
 }

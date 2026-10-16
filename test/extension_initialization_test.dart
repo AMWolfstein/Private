@@ -9,7 +9,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/extension_provider.dart';
-import 'package:spotiflac_android/providers/repo_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/extension_storage_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -165,7 +164,7 @@ void main() {
   );
 
   test(
-    'delayed settings load gates startup, install, upgrade, and repository init',
+    'delayed settings load gates startup, install and upgrade',
     () async {
       SharedPreferences.setMockInitialValues({});
       final settings = _DelayedSettingsNotifier();
@@ -195,9 +194,6 @@ void main() {
       final upgrade = notifier.upgradeExtension(
         '/cache/example-extension.sflx',
       );
-      final repository = container
-          .read(repoProvider.notifier)
-          .initialize('/cache/store');
       await Future<void>.delayed(Duration.zero);
 
       expect(settings._loads, 1);
@@ -214,17 +210,11 @@ void main() {
       await startup;
       expect(await install, isTrue);
       expect(await upgrade, isTrue);
-      await repository;
-      expect(container.read(repoProvider).isInitialized, isTrue);
       expect(settings._loads, 1);
       expect(notifier._initializations, 1);
       expect(
         calls,
-        containsAll([
-          'loadExtensionFromPath',
-          'upgradeExtension',
-          'initExtensionRepo',
-        ]),
+        containsAll(['loadExtensionFromPath', 'upgradeExtension']),
       );
     },
   );
@@ -304,118 +294,6 @@ void main() {
       expect(await notifier.installExtension('/cache/example.sflx'), isTrue);
       expect(installs, 1);
       expect(notifier._initializations, 2);
-    },
-  );
-
-  test('repository waits for a successful owner and retries failure', () async {
-    SharedPreferences.setMockInitialValues({});
-    final notifier = _DelayedExtensionNotifier().._failInitialization = true;
-    notifier._ready.complete();
-    final container = ProviderContainer(
-      overrides: [extensionProvider.overrideWith(() => notifier)],
-    );
-    addTearDown(container.dispose);
-    var repositoryInitializations = 0;
-    messenger.setMockMethodCallHandler(backend, (call) async {
-      if (call.method == 'setLoggingEnabled') return null;
-      expect(call.method, 'initExtensionRepo');
-      expect(container.read(extensionProvider).isInitialized, isTrue);
-      repositoryInitializations++;
-      return null;
-    });
-    final repository = container.read(repoProvider.notifier);
-    await repository.initialize('/cache/store');
-    expect(repositoryInitializations, 0);
-    expect(container.read(repoProvider).isInitialized, isFalse);
-    expect(
-      container.read(repoProvider).error,
-      contains('Native initialization failed'),
-    );
-    notifier._failInitialization = false;
-    await repository.initialize('/cache/store');
-    expect(repositoryInitializations, 1);
-    expect(container.read(repoProvider).isInitialized, isTrue);
-    expect(container.read(repoProvider).error, isNull);
-  });
-
-  test(
-    'adding a repository retries initialization before changing the URL',
-    () async {
-      SharedPreferences.setMockInitialValues({});
-      final notifier = _DelayedExtensionNotifier().._failInitialization = true;
-      notifier._ready.complete();
-      final container = ProviderContainer(
-        overrides: [extensionProvider.overrideWith(() => notifier)],
-      );
-      addTearDown(container.dispose);
-      final calls = <String>[];
-      const url = 'https://example.com/registry.json';
-      messenger.setMockMethodCallHandler(backend, (call) async {
-        if (call.method == 'setLoggingEnabled') return null;
-        calls.add(call.method);
-        switch (call.method) {
-          case 'initExtensionRepo':
-            expect(container.read(extensionProvider).isInitialized, isTrue);
-            return null;
-          case 'setRepoRegistryUrl':
-            expect(container.read(repoProvider).isInitialized, isTrue);
-            return null;
-          case 'getRepoRegistryUrl':
-            return url;
-          case 'getRepoExtensions':
-            return <Map<String, dynamic>>[];
-          default:
-            throw StateError('Unexpected backend call: ${call.method}');
-        }
-      });
-      final repository = container.read(repoProvider.notifier);
-      await repository.initialize('/cache/store');
-      await repository.setRegistryUrl(url);
-      expect(
-        container.read(repoProvider).error,
-        contains('Native initialization failed'),
-      );
-      expect(calls, isEmpty);
-      notifier._failInitialization = false;
-      await repository.setRegistryUrl(url);
-      expect(calls, [
-        'initExtensionRepo',
-        'setRepoRegistryUrl',
-        'getRepoRegistryUrl',
-        'getRepoExtensions',
-      ]);
-      expect(container.read(repoProvider).registryUrl, url);
-      expect(container.read(repoProvider).error, isNull);
-      expect(
-        (await SharedPreferences.getInstance()).getString('store_registry_url'),
-        url,
-      );
-    },
-  );
-
-  test(
-    'concurrent repository startup shares one native initialization',
-    () async {
-      SharedPreferences.setMockInitialValues({});
-      final notifier = _DelayedExtensionNotifier();
-      final container = ProviderContainer(
-        overrides: [extensionProvider.overrideWith(() => notifier)],
-      );
-      addTearDown(container.dispose);
-      var initializations = 0;
-      messenger.setMockMethodCallHandler(backend, (call) async {
-        if (call.method == 'initExtensionRepo') initializations++;
-        return null;
-      });
-      final repository = container.read(repoProvider.notifier);
-      final first = repository.initialize('/cache/store');
-      expect(identical(first, repository.initialize('/cache/store')), isTrue);
-      await notifier._started.future;
-      expect(initializations, 0);
-      notifier._ready.complete();
-      await first;
-      expect(initializations, 1);
-      expect(container.read(repoProvider).isInitialized, isTrue);
     },
   );
 

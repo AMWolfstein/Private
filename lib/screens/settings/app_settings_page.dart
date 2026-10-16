@@ -31,15 +31,6 @@ class AppSettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  SettingsSwitchItem(
-                    icon: Icons.extension,
-                    title: context.l10n.optionsExtensionStore,
-                    subtitle: context.l10n.optionsExtensionStoreSubtitle,
-                    value: settings.showExtensionStore,
-                    onChanged: (v) => ref
-                        .read(settingsProvider.notifier)
-                        .setShowExtensionStore(v),
-                  ),
                   _VerificationBrowserModeSelector(
                     currentMode: settings.extensionVerificationBrowserMode,
                     onChanged: (mode) => ref

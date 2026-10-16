@@ -9,7 +9,6 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_switch.dart';
-import 'package:spotiflac_android/widgets/extension_repo_card.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_selection_pill.dart';
 
@@ -374,7 +373,6 @@ void main() {
                   samplesBackdrop: false,
                   child: SizedBox(width: 200, height: 40),
                 ),
-                ExtensionRepoCard(child: SizedBox(width: 200, height: 40)),
               ],
             ),
           ),
@@ -391,13 +389,6 @@ void main() {
     );
     expect(
       find.descendant(of: plain, matching: find.byType(BackdropFilter)),
-      findsNothing,
-    );
-    expect(
-      find.descendant(
-        of: find.byType(ExtensionRepoCard),
-        matching: find.byType(BackdropFilter),
-      ),
       findsNothing,
     );
     // Same translucent material, so the page looks identical behind it.

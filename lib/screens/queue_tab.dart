@@ -215,7 +215,6 @@ class QueueTab extends ConsumerStatefulWidget {
   final bool isTabActive;
   final PageController? parentPageController;
   final int parentPageIndex;
-  final int? nextPageIndex;
 
   const QueueTab({
     super.key,
@@ -223,7 +222,6 @@ class QueueTab extends ConsumerStatefulWidget {
     this.isTabActive = true,
     this.parentPageController,
     this.parentPageIndex = 1,
-    this.nextPageIndex,
   });
 
   @override
