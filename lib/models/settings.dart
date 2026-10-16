@@ -55,7 +55,6 @@ class AppSettings {
     echo: autoMixEcho,
     lowPass: autoMixLowPass,
   );
-  final bool discordRichPresenceEnabled;
   final bool usbBitPerfect;
   final bool usbDirect;
   final bool usbDsdOverPcm;
@@ -188,7 +187,6 @@ class AppSettings {
     this.autoMixPitch = 0,
     this.autoMixEcho = false,
     this.autoMixLowPass = false,
-    this.discordRichPresenceEnabled = false,
     this.usbBitPerfect = false,
     this.usbDirect = false,
     this.usbDsdOverPcm = false,
@@ -296,7 +294,6 @@ class AppSettings {
     double? autoMixPitch,
     bool? autoMixEcho,
     bool? autoMixLowPass,
-    bool? discordRichPresenceEnabled,
     bool? usbBitPerfect,
     bool? usbDirect,
     bool? usbDsdOverPcm,
@@ -402,8 +399,6 @@ class AppSettings {
       autoMixPitch: autoMixPitch ?? this.autoMixPitch,
       autoMixEcho: autoMixEcho ?? this.autoMixEcho,
       autoMixLowPass: autoMixLowPass ?? this.autoMixLowPass,
-      discordRichPresenceEnabled:
-          discordRichPresenceEnabled ?? this.discordRichPresenceEnabled,
       usbBitPerfect: usbBitPerfect ?? this.usbBitPerfect,
       usbDirect: usbDirect ?? this.usbDirect,
       usbDsdOverPcm: usbDsdOverPcm ?? this.usbDsdOverPcm,

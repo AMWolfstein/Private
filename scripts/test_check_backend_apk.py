@@ -1,4 +1,4 @@
-"""Verify native backend payloads and optional Discord SDKs in release APKs."""
+"""Verify native backend payloads in release APKs."""
 
 import struct
 import tempfile
@@ -24,11 +24,11 @@ class BackendApkAuditTest(unittest.TestCase):
             ):
                 self.entries[f"lib/{abi}/{library}"] = bytes(header)
 
-    def audit(self, abis=("arm64-v8a", "armeabi-v7a"), discord_sdk=False):
+    def audit(self, abis=("arm64-v8a", "armeabi-v7a")):
         with zipfile.ZipFile(self.apk, "w") as zf:
             for name, data in self.entries.items():
                 zf.writestr(name, data)
-        return checker.audit(self.apk, "rust", abis, discord_sdk)
+        return checker.audit(self.apk, "rust", abis)
 
     def test_universal_passes(self):
         self.assertEqual(len(self.audit()), 64)
@@ -96,23 +96,6 @@ class BackendApkAuditTest(unittest.TestCase):
         ]
         with self.assertRaisesRegex(checker.AuditError, "ELF class"):
             self.audit()
-
-    def test_disabled_sdk_cannot_leak_from_build_cache(self):
-        for abi in checker.ABI_LAYOUT:
-            path = f"lib/{abi}/libdiscord_partner_sdk.so"
-            self.entries[path] = self.entries[f"lib/{abi}/libapp.so"]
-            with self.assertRaisesRegex(checker.AuditError, "unexpectedly contains Discord"):
-                self.audit()
-            del self.entries[path]
-
-    def test_enabled_sdk_requires_both_libraries_for_each_abi(self):
-        for abi in checker.ABI_LAYOUT:
-            for library in checker.DISCORD_LIBRARIES:
-                self.entries[f"lib/{abi}/{library}"] = self.entries[f"lib/{abi}/libapp.so"]
-        self.assertEqual(len(self.audit(discord_sdk=True)), 64)
-        del self.entries["lib/armeabi-v7a/libdiscord_partner_sdk.so"]
-        with self.assertRaisesRegex(checker.AuditError, "missing APK entry"):
-            self.audit(discord_sdk=True)
 
 
 if __name__ == "__main__":

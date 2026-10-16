@@ -29,7 +29,6 @@ import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/services/share_intent_service.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/services/discord_presence_service.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
 import 'package:spotiflac_android/services/app_remote_config_service.dart';
 import 'package:spotiflac_android/services/update_checker.dart';
@@ -110,11 +109,6 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     final settings = ref.read(settingsProvider);
     playback.configure(settings);
-    unawaited(
-      DiscordPresenceService.instance.setEnabled(
-        settings.discordRichPresenceEnabled,
-      ),
-    );
     listeningRecorder.setEnabled(settings.listeningStatisticsEnabled);
     // Deezer & co. localize artist/genre names by IP unless told the app's
     // language (issue #480).
@@ -774,12 +768,6 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     ref.listen(settingsProvider, (_, settings) {
       ref.read(musicPlayerRuntimeProvider).configure(settings);
-    });
-    ref.listen(settingsProvider.select((s) => s.discordRichPresenceEnabled), (
-      _,
-      enabled,
-    ) {
-      unawaited(DiscordPresenceService.instance.setEnabled(enabled));
     });
     ref.listen(
       settingsProvider.select((s) => s.listeningStatisticsEnabled),

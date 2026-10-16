@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/services/app_state_database.dart';
 import 'package:spotiflac_android/services/autoplay_personalization.dart';
-import 'package:spotiflac_android/services/discord_presence_service.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
@@ -249,7 +248,6 @@ class MusicPlayerRuntime {
       _handlers.add(handler);
       if (dependencies.isAndroid || dependencies.isIOS) {
         PlayerWidgetService.instance.bind(handler);
-        DiscordPresenceService.instance.bind(handler);
       }
       return handler;
     } catch (error, stack) {

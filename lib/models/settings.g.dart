@@ -46,8 +46,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
       : autoMixPitchFromJson(json['autoMixPitch']),
   autoMixEcho: json['autoMixEcho'] as bool? ?? false,
   autoMixLowPass: json['autoMixLowPass'] as bool? ?? false,
-  discordRichPresenceEnabled:
-      json['discordRichPresenceEnabled'] as bool? ?? false,
   usbBitPerfect: json['usbBitPerfect'] as bool? ?? false,
   usbDirect: json['usbDirect'] as bool? ?? false,
   usbDsdOverPcm: json['usbDsdOverPcm'] as bool? ?? false,
@@ -168,7 +166,6 @@ Map<String, dynamic> _$AppSettingsToJson(
   'autoMixPitch': instance.autoMixPitch,
   'autoMixEcho': instance.autoMixEcho,
   'autoMixLowPass': instance.autoMixLowPass,
-  'discordRichPresenceEnabled': instance.discordRichPresenceEnabled,
   'usbBitPerfect': instance.usbBitPerfect,
   'usbDirect': instance.usbDirect,
   'usbDsdOverPcm': instance.usbDsdOverPcm,
