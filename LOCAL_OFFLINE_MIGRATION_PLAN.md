@@ -27,6 +27,10 @@ _Last updated: 2026-10-16_
   trimmed `analysis_options.yaml` platform excludes.
 - `91240e2` — Phase 2: Discord rich presence removed (Dart settings/model/l10n, widget, gradle,
   AndroidManifest, build/audit scripts + tests, ios/discord scripts).
+- `b038493` — docs: migration plan + progress tracker.
+- `757ebcc` — Phase 3: updater / remote-config / announcements / donations removed
+  (services, dialogs, upgrade-intro screen, donate page, settings keys + UI, install permission,
+  APK FileProvider, tests).
 
 **Environment / toolchain:**
 - Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
@@ -40,7 +44,10 @@ _Last updated: 2026-10-16_
 `lib/l10n/app_localizations*.dart` (regenerated), `graphify-out/cache/`. No root `.gitignore`
 exists (remove `cache/` or add one).
 
-**Next step:** Phase 3 — updater / remote-config / announcements removal.
+**Known flaky:** `test/library_browse_sqlite_paging_test.dart` times out at 30s here (pure perf
+test, unrelated to migration). Full suite otherwise green (2349 passed, 7 skipped).
+
+**Next step:** Phase 4 — network storage (SMB/WebDAV/NAS) removal.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
