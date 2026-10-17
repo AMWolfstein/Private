@@ -1,0 +1,27 @@
+# Flutter / Dart generated (from `flutter pub get` / builds)
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+pubspec.lock.bak
+
+# Generated localizations (regenerate with `flutter gen-l10n` / `flutter pub get`)
+lib/l10n/app_localizations*.dart
+
+# Android build output
+android/.gradle/
+android/local.properties
+android/app/.cxx/
+*.apk
+*.aab
+
+# IDE / editor
+.idea/
+*.iml
+.vscode/
+
+# graphify generated caches, snapshots and signatures
+graphify-out/cache/
+graphify-out/20*/
+graphify-out/.graphify_labels.json.sig
