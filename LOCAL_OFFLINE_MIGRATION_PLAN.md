@@ -43,7 +43,13 @@ Vision refinements V1-V4 captured.
   settings pages, `showExtensionStore` setting, settings-search + download/lyrics/metadata rows);
   `main_shell`/`ShellTab` renumbered without the repository tab. **Kept** the local profile
   feature (`ProfileSettingsPage` + settings profile card) and the extension *registry* +
-  `ExtensionStorageService` (removed later in 5b).
+  `ExtensionStorageService` (keep until the download engine goes in Phase 6).
+- `0567a80` — Phase 5b: online metadata autofill, batch re-enrich, local-track redownload,
+  cross-extension share, open-on-platform, hi-res check, audio preview removed
+  (services/widgets/providers + track-metadata, queue/library, download picker, `main_shell`
+  preview observers). Downloads now resolve the default service directly. **Deferred to Phase 6**
+  (removed with the download engine): the extension *registry* (`extension_provider`),
+  `track_provider` + Mornye home search, and motion artwork.
 
 **Environment / toolchain:**
 - Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
@@ -61,9 +67,9 @@ exists (remove `cache/` or add one).
 test, unrelated to migration). Post-Phase-4 full suite: 2215 passed, 3 skipped, 1 failed (that
 same perf test). `flutter analyze` → No issues found.
 
-**Next step:** Phase 5b — online metadata + search removal (track/metadata providers,
-autofill, re-enrich, redownload, cross-extension share, hires check, preview player, download
-service picker), then 5c — explore/weekly/concerts + motion artwork + extension registry.
+**Next step:** Phase 5c — explore / weekly releases / artist concerts / motion artwork removal.
+Then Phase 6 (download engine removal + player re-point), which also removes the extension
+registry, `track_provider` and Mornye home search.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
