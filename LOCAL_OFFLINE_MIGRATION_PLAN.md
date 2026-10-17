@@ -19,8 +19,8 @@ Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backen
 
 _Last updated: 2026-10-17_
 
-**Status:** IN PROGRESS. Phases 1-4 committed; Phase 5 split into 5a/5b/5c — 5a committed.
-Vision refinements V1-V4 captured.
+**Status:** IN PROGRESS. Phases 1-5 committed (Phase 5 removed the online UI/provider layer in
+sub-phases 5a/5b/5c). Phase 6 next. Vision refinements V1-V4 captured.
 
 **Committed:**
 - `f0a1b45` — graphify baseline (graph + report).
@@ -50,6 +50,18 @@ Vision refinements V1-V4 captured.
   preview observers). Downloads now resolve the default service directly. **Deferred to Phase 6**
   (removed with the download engine): the extension *registry* (`extension_provider`),
   `track_provider` + Mornye home search, and motion artwork.
+- `83a02c4` — Phase 5c: explore home feed, weekly releases, artist concerts, motion artwork
+  removed (`explore_provider` + featured section + `home_tab_explore` part; weekly-releases
+  provider/service/screen; artist-concerts screens/button/model; motion-artwork download/proxy/
+  store + motion header banner + player artwork video/motion providers + download motion source;
+  `track_provider.artistConcerts`; motion-artwork rendering in now-playing / mini-player / album
+  screens / cache management; motion+home-feed settings). Home tab keeps local recent/import
+  sections and home search. Phase 5 complete.
+
+**Phase 5 summary:** the entire online extension/provider/search UI layer is gone; what remains
+online-coupled (`extension_provider` registry, `track_provider`, Mornye home search) is consumed
+only by the download engine and is removed with it in Phase 6. Two now-dead settings
+(`homeFeedProvider`, explore-feed cache row) are deferred to the Phase 8 settings purge (V4).
 
 **Environment / toolchain:**
 - Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
@@ -64,12 +76,11 @@ Vision refinements V1-V4 captured.
 exists (remove `cache/` or add one).
 
 **Known flaky:** `test/library_browse_sqlite_paging_test.dart` times out at 30s here (pure perf
-test, unrelated to migration). Post-Phase-4 full suite: 2215 passed, 3 skipped, 1 failed (that
+test, unrelated to migration). Post-Phase-5 full suite: 2034 passed, 3 skipped, 1 failed (that
 same perf test). `flutter analyze` → No issues found.
 
-**Next step:** Phase 5c — explore / weekly releases / artist concerts / motion artwork removal.
-Then Phase 6 (download engine removal + player re-point), which also removes the extension
-registry, `track_provider` and Mornye home search.
+**Next step:** Phase 6 — download engine removal + player re-point to the local library (D1).
+This also removes the extension registry, `track_provider` and Mornye home search.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
