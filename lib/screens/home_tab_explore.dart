@@ -528,34 +528,19 @@ extension _HomeTabExploreUI on _HomeTabState {
       explicit: item.explicit,
     );
 
-    if (settings.askQualityBeforeDownload || settings.allowQualityVariants) {
-      DownloadServicePicker.show(
-        context,
-        trackName: track.name,
-        artistName: track.artistName,
-        coverUrl: track.coverUrl,
-        onSelect: (quality, service) {
-          ref
-              .read(downloadQueueProvider.notifier)
-              .addToQueue(track, service, qualityOverride: quality);
-          showAddedToQueueSnackBar(context, track.name);
-        },
+    final extensionState = ref.read(extensionProvider);
+    final service = resolveEffectiveDownloadService(
+      settings.defaultService,
+      extensionState,
+    );
+    if (service.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
       );
-    } else {
-      final extensionState = ref.read(extensionProvider);
-      final service = resolveEffectiveDownloadService(
-        settings.defaultService,
-        extensionState,
-      );
-      if (service.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
-        );
-        return;
-      }
-      ref.read(downloadQueueProvider.notifier).addToQueue(track, service);
-      showAddedToQueueSnackBar(context, track.name);
+      return;
     }
+    ref.read(downloadQueueProvider.notifier).addToQueue(track, service);
+    showAddedToQueueSnackBar(context, track.name);
   }
 
   Future<void> _navigateToTrackAlbum(ExploreItem item) async {

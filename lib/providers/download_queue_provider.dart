@@ -32,7 +32,6 @@ import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/download_request_payload.dart';
 import 'package:spotiflac_android/services/download_motion_artwork_source.dart';
 import 'package:spotiflac_android/services/ffmpeg_service.dart';
-import 'package:spotiflac_android/services/hires_check_service.dart';
 import 'package:spotiflac_android/services/replaygain_service.dart';
 import 'package:spotiflac_android/services/album_replaygain_readiness.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
@@ -71,7 +70,6 @@ part 'download_queue_provider_finalization.dart';
 part 'download_queue_provider_replaygain.dart';
 part 'download_queue_provider_embedding.dart';
 part 'download_queue_provider_single_item.dart';
-part 'download_queue_provider_hires_check.dart';
 
 final _log = AppLogger('DownloadQueue');
 

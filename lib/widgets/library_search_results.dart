@@ -14,7 +14,6 @@ import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/library_search.dart';
 import 'package:spotiflac_android/services/local_track_batch_actions.dart';
-import 'package:spotiflac_android/services/local_track_redownload_service.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_choice_chip.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
@@ -150,12 +149,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     final visibleIds = _visibleSongs.map(_itemId).toSet();
     final allSelected =
         visibleIds.isNotEmpty && visibleIds.every(_selected.containsKey);
-    final flacEligible = items.every((item) => item.localItem != null)
-        ? items
-              .map((item) => item.localItem!)
-              .where(LocalTrackRedownloadService.isFlacUpgradeEligible)
-              .toList(growable: false)
-        : const <LocalLibraryItem>[];
     return LibraryTrackSelectionBar(
       playbackActions: LibrarySelectionPlaybackActions(
         items: items,
@@ -166,23 +159,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       onClose: _exitSelection,
       onToggleSelectAll: allSelected ? _exitSelection : _selectAllVisible,
       bottomPadding: MediaQuery.paddingOf(context).bottom,
-      flacEligibleCount: flacEligible.length,
-      onQueueFlac: () => queueLocalTracksAsFlac(
-        context,
-        ref,
-        flacEligible,
-        isActive: () => mounted,
-        onComplete: _exitSelection,
-      ),
-      onReEnrich: () => reEnrichLibraryTracks(
-        context,
-        ref,
-        items,
-        isActive: () => mounted,
-        onSelectionHide: () async => _hideSelectionBar(),
-        onSelectionRestore: _restoreSelectionBar,
-        onComplete: _finishSelectionAction,
-      ),
       onConvert: () => showBatchConvertSheet(
         context,
         ref,

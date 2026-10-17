@@ -84,16 +84,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
         actions: isSelectionMode
             ? const []
             : [
-                HeaderCircleButton(
-                  icon: CupertinoIcons.square_arrow_up,
-                  buttonSize: 50,
-                  iconSize: 24,
-                  iconColor: colorScheme.primary,
-                  glassTintColor: Colors.white,
-                  glassTintOpacity: 0.10,
-                  tooltip: context.l10n.openInOtherServices,
-                  onPressed: () => _showShareSheet(context),
-                ),
                 if (_isLoadingDiscography)
                   const ShimmerLoading(
                     child: SkeletonBox(width: 74, height: 74, borderRadius: 37),
@@ -375,23 +365,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
         ),
       ),
       actionsPadding: EdgeInsets.only(right: edgeInset),
-      actions: [
-        HeaderCircleButton(
-          icon: Icons.open_in_new_rounded,
-          tooltip: context.l10n.openInOtherServices,
-          onPressed: () => _showShareSheet(context),
-        ),
-      ],
-    );
-  }
-
-  void _showShareSheet(BuildContext context) {
-    CrossExtensionShareSheet.show(
-      context,
-      name: widget.artistName,
-      artists: '',
-      type: 'artist',
-      sourceExtensionId: _directMetadataProviderId() ?? '',
+      actions: const [],
     );
   }
 
@@ -765,18 +739,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
           .read(downloadQueueProvider.notifier)
           .addToQueue(track, service, qualityOverride: quality);
       showAddedToQueueSnackBar(context, track.name);
-    }
-
-    if (settings.askQualityBeforeDownload || settings.allowQualityVariants) {
-      DownloadServicePicker.show(
-        context,
-        recommendedService: _recommendedDownloadService(),
-        onSelect: (quality, service) {
-          if (!mounted) return;
-          enqueue(service, quality: quality);
-        },
-      );
-      return;
     }
 
     final extensionState = ref.read(extensionProvider);

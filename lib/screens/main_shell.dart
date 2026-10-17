@@ -15,7 +15,6 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/playback_notification_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/track_provider.dart';
-import 'package:spotiflac_android/providers/preview_player_provider.dart';
 import 'package:spotiflac_android/screens/home_tab.dart';
 import 'package:spotiflac_android/screens/queue_tab.dart';
 import 'package:spotiflac_android/screens/settings/settings_tab.dart';
@@ -79,10 +78,6 @@ class _MainShellState extends ConsumerState<MainShell>
   final GlobalKey<NavigatorState> _searchTabNavigatorKey =
       ShellNavigationService.searchTabNavigatorKey;
 
-  late final _PreviewStopNavigatorObserver _homePreviewStopObserver;
-  late final _PreviewStopNavigatorObserver _libraryPreviewStopObserver;
-  late final _PreviewStopNavigatorObserver _searchPreviewStopObserver;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -110,15 +105,6 @@ class _MainShellState extends ConsumerState<MainShell>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     usbAudioStatus.addListener(_onUsbAudioStatusChanged);
-    _homePreviewStopObserver = _PreviewStopNavigatorObserver(
-      () => ref.read(previewPlayerProvider.notifier).stop(),
-    );
-    _libraryPreviewStopObserver = _PreviewStopNavigatorObserver(
-      () => ref.read(previewPlayerProvider.notifier).stop(),
-    );
-    _searchPreviewStopObserver = _PreviewStopNavigatorObserver(
-      () => ref.read(previewPlayerProvider.notifier).stop(),
-    );
     _pageController = PageController(initialPage: _currentIndex);
     _tabJumpTransitionController = AnimationController(
       vsync: this,
@@ -443,7 +429,6 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _resetHomeToMain() {
-    ref.read(previewPlayerProvider.notifier).stop();
     final homeNavigator = _navigatorForTab(0);
     homeNavigator?.popUntil((route) => route.isFirst);
     // Unfocus BEFORE clear so _onTrackStateChanged can properly
@@ -472,7 +457,6 @@ class _MainShellState extends ConsumerState<MainShell>
     if (_settingsPageOpen) return;
     _settingsPageOpen = true;
     FocusManager.instance.primaryFocus?.unfocus();
-    ref.read(previewPlayerProvider.notifier).stop();
     try {
       await Navigator.of(context).push(
         slidePageRoute<void>(
@@ -497,9 +481,6 @@ class _MainShellState extends ConsumerState<MainShell>
       final previousIndex = _currentIndex;
       final isNonAdjacentJump = (previousIndex - index).abs() > 1;
       HapticFeedback.selectionClick();
-      // Stop any preview snippet when leaving the current tab. (_onPageChanged
-      // cannot do this because _currentIndex is already updated below.)
-      ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
@@ -529,7 +510,6 @@ class _MainShellState extends ConsumerState<MainShell>
   void _onPageChanged(int index) {
     _mornyeChrome.expand();
     if (_currentIndex != index) {
-      ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
@@ -567,7 +547,6 @@ class _MainShellState extends ConsumerState<MainShell>
         !trackState.isLoading &&
         (trackState.hasSearchText || trackState.hasContent)) {
       FocusManager.instance.primaryFocus?.unfocus();
-      ref.read(previewPlayerProvider.notifier).stop();
       ref.read(trackProvider.notifier).clear();
       _lastBackPress = null;
       return;
@@ -586,7 +565,6 @@ class _MainShellState extends ConsumerState<MainShell>
       // Unfocus BEFORE clear so _onTrackStateChanged can properly
       // clear _urlController (it checks !_searchFocusNode.hasFocus)
       FocusManager.instance.primaryFocus?.unfocus();
-      ref.read(previewPlayerProvider.notifier).stop();
       ref.read(trackProvider.notifier).clear();
       _lastBackPress = null;
       return;
@@ -665,7 +643,6 @@ class _MainShellState extends ConsumerState<MainShell>
       _TabNavigator(
         key: const ValueKey('tab-home'),
         navigatorKey: _homeTabNavigatorKey,
-        observers: [_homePreviewStopObserver],
         heroAnimationsEnabled: heroAnimationsEnabled,
         child: Builder(
           builder: (context) => HomeTab(
@@ -676,7 +653,6 @@ class _MainShellState extends ConsumerState<MainShell>
       _TabNavigator(
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
-        observers: [_libraryPreviewStopObserver],
         heroAnimationsEnabled: heroAnimationsEnabled,
         child: _LibraryTabRoot(
           parentPageController: _pageController,
@@ -688,7 +664,6 @@ class _MainShellState extends ConsumerState<MainShell>
         _TabNavigator(
           key: const ValueKey('tab-search'),
           navigatorKey: _searchTabNavigatorKey,
-          observers: [_searchPreviewStopObserver],
           heroAnimationsEnabled: heroAnimationsEnabled,
           child: const HomeTab(mode: HomeTabMode.search),
         ),
@@ -966,14 +941,12 @@ class _MainShellState extends ConsumerState<MainShell>
 class _TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
-  final List<NavigatorObserver> observers;
   final bool heroAnimationsEnabled;
 
   const _TabNavigator({
     super.key,
     required this.navigatorKey,
     required this.child,
-    this.observers = const [],
     required this.heroAnimationsEnabled,
   });
 
@@ -1004,32 +977,11 @@ class _TabNavigatorState extends State<_TabNavigator> {
       observers: [
         _chromeObserver,
         if (widget.heroAnimationsEnabled) _heroController,
-        ...widget.observers,
       ],
       onGenerateInitialRoutes: (_, _) => [
         MaterialPageRoute<void>(builder: (_) => widget.child),
       ],
     );
-  }
-}
-
-class _PreviewStopNavigatorObserver extends NavigatorObserver {
-  _PreviewStopNavigatorObserver(this._onNavigate);
-
-  final VoidCallback _onNavigate;
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    super.didPush(route, previousRoute);
-    if (previousRoute != null) {
-      _onNavigate();
-    }
-  }
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    super.didPop(route, previousRoute);
-    _onNavigate();
   }
 }
 

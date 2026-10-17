@@ -65,7 +65,6 @@ void main() {
                     onClose: () => closed = true,
                     onToggleSelectAll: () {},
                     bottomPadding: 0,
-                    onReEnrich: () {},
                     onConvert: () {},
                     onReplayGain: ({required remove}) {},
                     onDelete: () {},

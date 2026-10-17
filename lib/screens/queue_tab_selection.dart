@@ -276,29 +276,12 @@ extension _QueueTabSelectionActions on _QueueTabState {
       );
     }
 
-    if (settings.askQualityBeforeDownload || settings.allowQualityVariants) {
-      DownloadServicePicker.show(
-        context,
-        trackName: context.l10n.tracksCount(totalTracks),
-        artistName: context.l10n.playlistsCount(selectedPlaylists.length),
-        onSelect: (quality, service) {
-          enqueueAll(qualityOverride: quality, service: service);
-          if (!mounted) return;
-          _exitPlaylistSelectionMode();
-          showAppSnackBar(
-            context,
-            content: Text(context.l10n.snackbarAddedTracksToQueue(totalTracks)),
-          );
-        },
-      );
-    } else {
-      enqueueAll();
-      _exitPlaylistSelectionMode();
-      showAppSnackBar(
-        context,
-        content: Text(context.l10n.snackbarAddedTracksToQueue(totalTracks)),
-      );
-    }
+    enqueueAll();
+    _exitPlaylistSelectionMode();
+    showAppSnackBar(
+      context,
+      content: Text(context.l10n.snackbarAddedTracksToQueue(totalTracks)),
+    );
   }
 
   Future<void> _deleteSelectedPlaylists(BuildContext context) async {

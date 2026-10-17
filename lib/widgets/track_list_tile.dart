@@ -9,7 +9,6 @@ import 'package:spotiflac_android/utils/local_playback.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/track_card.dart';
 import 'package:spotiflac_android/widgets/in_library_badge.dart';
-import 'package:spotiflac_android/widgets/preview_button.dart';
 import 'package:spotiflac_android/widgets/track_collection_quick_actions.dart';
 
 /// Track row shared by the album and playlist screens. Tap offers another
@@ -106,7 +105,6 @@ class TrackListTile extends ConsumerWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          PreviewButton(track: track),
           TrackCollectionQuickActions(
             track: track,
             hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,

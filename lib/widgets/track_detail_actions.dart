@@ -9,13 +9,11 @@ import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/widgets/download_service_picker.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/view_queue_snackbar_action.dart';
 
-/// Shared single-track "add to queue" flow for detail screens: shows the
-/// quality/service picker when the user opted into it, otherwise resolves
-/// the default service and enqueues directly.
+/// Shared single-track "add to queue" flow for detail screens: resolves the
+/// default service and enqueues directly.
 void downloadSingleTrack(
   BuildContext context,
   WidgetRef ref,
@@ -31,51 +29,27 @@ void downloadSingleTrack(
     showAddedToQueueSnackBar(context, track.name);
   }
 
-  if (settings.askQualityBeforeDownload || forceQualityPicker) {
-    // A context menu may be disposed before the quality picker is submitted.
-    final container = ProviderScope.containerOf(context, listen: false);
-    DownloadServicePicker.show(
-      context,
-      trackName: track.name,
-      artistName: track.artistName,
-      coverUrl: track.coverUrl,
-      recommendedService: recommendedService,
-      onSelect: (quality, service) {
-        container
-            .read(downloadQueueProvider.notifier)
-            .addToQueue(
-              track,
-              service,
-              qualityOverride: quality,
-              playlistName: playlistName,
-              playlistPosition: playlistPosition,
-            );
-        notifyQueued();
-      },
+  final extensionState = ref.read(extensionProvider);
+  final service = resolveEffectiveDownloadService(
+    settings.defaultService,
+    extensionState,
+  );
+  if (service.isEmpty) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
     );
-  } else {
-    final extensionState = ref.read(extensionProvider);
-    final service = resolveEffectiveDownloadService(
-      settings.defaultService,
-      extensionState,
-    );
-    if (service.isEmpty) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
-      );
-      return;
-    }
-    ref
-        .read(downloadQueueProvider.notifier)
-        .addToQueue(
-          track,
-          service,
-          playlistName: playlistName,
-          playlistPosition: playlistPosition,
-        );
-    notifyQueued();
+    return;
   }
+  ref
+      .read(downloadQueueProvider.notifier)
+      .addToQueue(
+        track,
+        service,
+        playlistName: playlistName,
+        playlistPosition: playlistPosition,
+      );
+  notifyQueued();
 }
 
 /// Shared "download all" confirmation dialog for detail screens
@@ -121,23 +95,14 @@ void showQueuedSnackbar(BuildContext context, int added, int skipped) {
   showAppSnackBar(context, content: Text(message));
 }
 
-bool shouldShowBatchDownloadPicker({
-  required bool forceQualityPicker,
-  required bool askQualityBeforeDownload,
-  required bool allowQualityVariants,
-}) => forceQualityPicker || askQualityBeforeDownload || allowQualityVariants;
-
 /// Shared batch "add to queue" flow for detail screens: skips tracks already
-/// present in download history or the local library, then either shows the
-/// quality/service picker or resolves a default service, before enqueueing
-/// the rest.
+/// present in download history or the local library, then resolves a default
+/// service before enqueueing the rest.
 ///
 /// Set [resolveDefaultService] to false to match screens that pass
 /// `settings.defaultService` straight through without resolving it against
 /// enabled extensions (playlist / library-folder screens do this today).
-/// [forceQualityPicker] lets an explicit multi-select action choose one
-/// provider and quality for the complete batch. [onQueued] runs only after
-/// tracks are actually added, not when the picker is merely opened.
+/// [onQueued] runs only after tracks are actually added.
 Future<void> queueTracksSkippingDownloaded(
   BuildContext context,
   WidgetRef ref,
@@ -208,32 +173,6 @@ Future<void> queueTracksSkippingDownloaded(
           context.l10n.discographySkippedDownloaded(0, skippedCount),
         ),
       ),
-    );
-    return;
-  }
-
-  if (shouldShowBatchDownloadPicker(
-    forceQualityPicker: forceQualityPicker,
-    askQualityBeforeDownload: settings.askQualityBeforeDownload,
-    allowQualityVariants: settings.allowQualityVariants,
-  )) {
-    DownloadServicePicker.show(
-      context,
-      trackName: '${tracksToQueue.length} tracks',
-      artistName: artistNameForPicker,
-      recommendedService: recommendedService,
-      onSelect: (quality, service) {
-        ref
-            .read(downloadQueueProvider.notifier)
-            .addMultipleToQueue(
-              tracksToQueue,
-              service,
-              qualityOverride: quality,
-              playlistName: playlistName,
-            );
-        onQueued?.call();
-        showQueuedSnackbar(context, tracksToQueue.length, skippedCount);
-      },
     );
     return;
   }

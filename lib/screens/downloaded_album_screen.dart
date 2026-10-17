@@ -9,7 +9,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/services/deleted_library_files.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/services/local_track_batch_actions.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
 import 'package:spotiflac_android/models/album_track_order.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -636,24 +635,6 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     );
   }
 
-  Future<void> _reEnrichSelected(List<DownloadHistoryItem> allTracks) async {
-    await reEnrichLibraryTracks(
-      context,
-      ref,
-      _selectedUnifiedItems(allTracks),
-      isActive: () => mounted,
-      onSelectionHide: () async {
-        setState(() => isSelectionMode = false);
-        await Future<void>.delayed(const Duration(milliseconds: 300));
-      },
-      onSelectionRestore: () => setState(() => isSelectionMode = true),
-      onComplete: () {
-        _onEmbeddedCoverChanged();
-        exitSelectionMode();
-      },
-    );
-  }
-
   List<UnifiedLibraryItem> _selectedUnifiedItems(
     List<DownloadHistoryItem> tracks,
   ) {
@@ -701,14 +682,6 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
             final itemWidth =
                 (constraints.maxWidth - spacing * (columns - 1)) / columns;
             final actions = <Widget>[
-              SelectionActionButton(
-                icon: Icons.auto_fix_high_outlined,
-                label: '${context.l10n.trackReEnrich} ($selectedCount)',
-                onPressed: selectedCount > 0
-                    ? () => _reEnrichSelected(tracks)
-                    : null,
-                colorScheme: colorScheme,
-              ),
               SelectionActionButton(
                 icon: Icons.swap_horiz,
                 label: context.l10n.selectionConvertCount(selectedCount),

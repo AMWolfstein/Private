@@ -1039,10 +1039,4 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         .whereType<UnifiedLibraryItem>()
         .toList(growable: false);
   }
-
-  bool _isLocalOnlySelection(List<UnifiedLibraryItem> allItems) {
-    final selectedItems = _selectedItemsFromAll(allItems);
-    return selectedItems.isNotEmpty &&
-        selectedItems.every((item) => item.localItem != null);
-  }
 }

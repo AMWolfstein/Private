@@ -202,55 +202,30 @@ extension _HomeTabCsvImport on _HomeTabState {
 
         if (!mounted) return;
 
-        if (settings.askQualityBeforeDownload ||
-            settings.allowQualityVariants) {
-          DownloadServicePicker.show(
-            this.context,
-            trackName: l10n.csvImportTracks(tracksToQueue.length),
-            artistName: l10n.dialogImportPlaylistTitle,
-            onSelect: (quality, service) {
-              ref
-                  .read(downloadQueueProvider.notifier)
-                  .addMultipleToQueue(
-                    tracksToQueue,
-                    service,
-                    qualityOverride: quality,
-                  );
-              if (mounted) {
-                showAppSnackBar(
-                  this.context,
-                  content: Text(queueSnackbarMessage),
-                  action: buildViewQueueSnackBarAction(this.context),
-                );
-              }
-            },
-          );
-        } else {
-          final extensionState = ref.read(extensionProvider);
-          final service = resolveEffectiveDownloadService(
-            settings.defaultService,
-            extensionState,
-          );
-          if (service.isEmpty) {
-            if (mounted) {
-              ScaffoldMessenger.of(this.context).showSnackBar(
-                SnackBar(
-                  content: Text(this.context.l10n.extensionsNoDownloadProvider),
-                ),
-              );
-            }
-            return;
-          }
-          ref
-              .read(downloadQueueProvider.notifier)
-              .addMultipleToQueue(tracksToQueue, service);
+        final extensionState = ref.read(extensionProvider);
+        final service = resolveEffectiveDownloadService(
+          settings.defaultService,
+          extensionState,
+        );
+        if (service.isEmpty) {
           if (mounted) {
-            showAppSnackBar(
-              this.context,
-              content: Text(queueSnackbarMessage),
-              action: buildViewQueueSnackBarAction(this.context),
+            ScaffoldMessenger.of(this.context).showSnackBar(
+              SnackBar(
+                content: Text(this.context.l10n.extensionsNoDownloadProvider),
+              ),
             );
           }
+          return;
+        }
+        ref
+            .read(downloadQueueProvider.notifier)
+            .addMultipleToQueue(tracksToQueue, service);
+        if (mounted) {
+          showAppSnackBar(
+            this.context,
+            content: Text(queueSnackbarMessage),
+            action: buildViewQueueSnackBarAction(this.context),
+          );
         }
       }
     } finally {

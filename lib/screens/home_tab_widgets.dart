@@ -343,7 +343,6 @@ class _TrackItemWithStatus extends ConsumerWidget {
                     ],
                   ),
                 ),
-                PreviewButton(track: track),
                 TrackCollectionQuickActions(
                   track: track,
                   hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,

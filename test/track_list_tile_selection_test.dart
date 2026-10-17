@@ -7,21 +7,9 @@ import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/screens/album_screen.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 import 'package:spotiflac_android/widgets/track_list_tile.dart';
 
 void main() {
-  test('explicit batch selection forces one provider and quality picker', () {
-    expect(
-      shouldShowBatchDownloadPicker(
-        forceQualityPicker: true,
-        askQualityBeforeDownload: false,
-        allowQualityVariants: false,
-      ),
-      isTrue,
-    );
-  });
-
   const track = Track(
     id: 'track-1',
     name: 'Selected song',

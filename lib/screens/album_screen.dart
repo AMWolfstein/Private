@@ -30,7 +30,6 @@ import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
-import 'package:spotiflac_android/widgets/cross_extension_share_sheet.dart';
 import 'package:spotiflac_android/widgets/track_list_tile.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/motion_header_banner.dart';
@@ -660,15 +659,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
               onPressed: exitSelectionMode,
             )
           : null,
-      appBarActions: isSelectionMode
-          ? const []
-          : [
-              HeaderCircleButton(
-                icon: Icons.open_in_new_rounded,
-                tooltip: context.l10n.openInOtherServices,
-                onPressed: () => _showShareSheet(context, tracks, artistName),
-              ),
-            ],
+      appBarActions: const [],
     );
   }
 
@@ -906,27 +897,6 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
       onPressed: _tracks == null || _tracks!.isEmpty
           ? null
           : () => showAddTracksToPlaylistSheet(context, ref, _tracks!),
-    );
-  }
-
-  void _showShareSheet(
-    BuildContext context,
-    List<Track> tracks,
-    String? artistName,
-  ) {
-    final sourceExtensionId = _directMetadataProviderId() ?? '';
-    final resolvedArtists =
-        artistName ??
-        tracks.firstOrNull?.albumArtist ??
-        tracks.firstOrNull?.artistName ??
-        '';
-
-    CrossExtensionShareSheet.show(
-      context,
-      name: widget.albumName,
-      artists: resolvedArtists,
-      type: 'album',
-      sourceExtensionId: sourceExtensionId,
     );
   }
 

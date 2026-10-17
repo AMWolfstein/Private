@@ -35,7 +35,6 @@ import 'package:spotiflac_android/screens/album_screen.dart';
 import 'package:spotiflac_android/screens/home_tab.dart'
     show ExtensionAlbumScreen;
 import 'package:spotiflac_android/utils/local_playback.dart';
-import 'package:spotiflac_android/widgets/download_service_picker.dart';
 import 'package:spotiflac_android/widgets/error_card.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/in_library_badge.dart';
@@ -46,7 +45,6 @@ import 'package:spotiflac_android/utils/clickable_metadata.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/widgets/motion_header_banner.dart';
-import 'package:spotiflac_android/widgets/cross_extension_share_sheet.dart';
 import 'package:spotiflac_android/widgets/view_queue_snackbar_action.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/downloadable_cover.dart';
@@ -209,10 +207,6 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
     final tileSize = _artistAlbumTileSize();
     final textScale = _effectiveTextScale();
     return tileSize + 64 + ((textScale - 1) * 14);
-  }
-
-  String? _recommendedDownloadService() {
-    return _directMetadataProviderId();
   }
 
   String _effectiveMetadataProviderIdFromArtistId() {
@@ -1019,17 +1013,7 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
     List<ArtistAlbum> albums,
   ) async {
     final settings = ref.read(settingsProvider);
-    if (settings.askQualityBeforeDownload || settings.allowQualityVariants) {
-      DownloadServicePicker.show(
-        context,
-        recommendedService: _recommendedDownloadService(),
-        onSelect: (quality, service) {
-          _fetchAndQueueAlbums(albums, service, quality);
-        },
-      );
-    } else {
-      _fetchAndQueueAlbums(albums, settings.defaultService, null);
-    }
+    _fetchAndQueueAlbums(albums, settings.defaultService, null);
   }
 
   Future<void> _downloadSelectedAlbums(

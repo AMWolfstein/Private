@@ -49,7 +49,6 @@ import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/utils/editorial_notes.dart';
 import 'package:spotiflac_android/screens/playlist_screen.dart';
 import 'package:spotiflac_android/screens/downloaded_album_screen.dart';
-import 'package:spotiflac_android/widgets/download_service_picker.dart';
 import 'package:spotiflac_android/widgets/track_collection_quick_actions.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
@@ -57,7 +56,6 @@ import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:spotiflac_android/widgets/error_card.dart';
 import 'package:spotiflac_android/widgets/in_library_badge.dart';
-import 'package:spotiflac_android/widgets/preview_button.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/widgets/view_queue_snackbar_action.dart';
 import 'package:spotiflac_android/widgets/profile_avatar.dart';
@@ -715,36 +713,19 @@ class _HomeTabState extends ConsumerState<HomeTab>
       final track = trackState.tracks[index];
       final settings = ref.read(settingsProvider);
 
-      if (settings.askQualityBeforeDownload || forceQualityPicker) {
-        DownloadServicePicker.show(
-          context,
-          trackName: track.name,
-          artistName: track.artistName,
-          coverUrl: track.coverUrl,
-          recommendedService:
-              trackState.searchExtensionId ?? trackState.searchSource,
-          onSelect: (quality, service) {
-            ref
-                .read(downloadQueueProvider.notifier)
-                .addToQueue(track, service, qualityOverride: quality);
-            showAddedToQueueSnackBar(context, track.name);
-          },
+      final extensionState = ref.read(extensionProvider);
+      final service = resolveEffectiveDownloadService(
+        settings.defaultService,
+        extensionState,
+      );
+      if (service.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
         );
-      } else {
-        final extensionState = ref.read(extensionProvider);
-        final service = resolveEffectiveDownloadService(
-          settings.defaultService,
-          extensionState,
-        );
-        if (service.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
-          );
-          return;
-        }
-        ref.read(downloadQueueProvider.notifier).addToQueue(track, service);
-        showAddedToQueueSnackBar(context, track.name);
+        return;
       }
+      ref.read(downloadQueueProvider.notifier).addToQueue(track, service);
+      showAddedToQueueSnackBar(context, track.name);
     }
   }
 

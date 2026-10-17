@@ -5,7 +5,6 @@ import 'package:spotiflac_android/services/deleted_library_files.dart';
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/services/local_track_batch_actions.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -19,7 +18,6 @@ import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/models/album_track_order.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/services/local_track_redownload_service.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
@@ -555,44 +553,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     );
   }
 
-  List<LocalLibraryItem> _selectedFlacEligibleItems(
-    List<LocalLibraryItem> allTracks,
-  ) {
-    final tracksById = {for (final t in allTracks) t.id: t};
-    return selectedIds
-        .map((id) => tracksById[id])
-        .whereType<LocalLibraryItem>()
-        .where(LocalTrackRedownloadService.isFlacUpgradeEligible)
-        .toList(growable: false);
-  }
-
-  Future<void> _queueSelectedAsFlac(List<LocalLibraryItem> allTracks) =>
-      queueLocalTracksAsFlac(
-        context,
-        ref,
-        _selectedFlacEligibleItems(allTracks),
-        isActive: () => mounted,
-        onComplete: exitSelectionMode,
-      );
-
-  Future<void> _reEnrichSelected(List<LocalLibraryItem> allTracks) async {
-    final tracksById = {for (final track in allTracks) track.id: track};
-    final selected = [for (final id in selectedIds) ?tracksById[id]];
-    await reEnrichLocalTracks(
-      context,
-      ref,
-      selected,
-      isActive: () => mounted,
-      onSelectionHide: () async {
-        setState(() => isSelectionMode = false);
-        // Allow the selection bar's 250 ms slide-out to finish.
-        await Future<void>.delayed(const Duration(milliseconds: 300));
-      },
-      onSelectionRestore: () => setState(() => isSelectionMode = true),
-      onComplete: exitSelectionMode,
-    );
-  }
-
   List<UnifiedLibraryItem> _selectedUnifiedItems(
     List<LocalLibraryItem> tracks,
   ) {
@@ -610,7 +570,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     double bottomPadding,
   ) {
     final selectedCount = selectedIds.length;
-    final flacEligibleCount = _selectedFlacEligibleItems(tracks).length;
     final allSelected = selectedCount == tracks.length && tracks.isNotEmpty;
 
     return SelectionBottomBar(
@@ -641,28 +600,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
             final itemWidth =
                 (constraints.maxWidth - spacing * (columns - 1)) / columns;
             final actions = <Widget>[];
-
-            if (flacEligibleCount > 0) {
-              actions.add(
-                SelectionActionButton(
-                  icon: Icons.download_for_offline_outlined,
-                  label: '${context.l10n.queueFlacAction} ($flacEligibleCount)',
-                  onPressed: () => _queueSelectedAsFlac(tracks),
-                  colorScheme: colorScheme,
-                ),
-              );
-            }
-
-            actions.add(
-              SelectionActionButton(
-                icon: Icons.auto_fix_high_outlined,
-                label: '${context.l10n.trackReEnrich} ($selectedCount)',
-                onPressed: selectedCount > 0
-                    ? () => _reEnrichSelected(tracks)
-                    : null,
-                colorScheme: colorScheme,
-              ),
-            );
 
             actions.add(
               SelectionActionButton(
