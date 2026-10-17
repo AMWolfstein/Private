@@ -1,20 +1,14 @@
-import 'dart:async';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/player_artwork_video_provider.dart';
-import 'package:spotiflac_android/providers/player_motion_artwork_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/services/motion_artwork_store.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/overflow_marquee.dart';
-import 'package:video_player/video_player.dart';
 
 void main() {
   const longTitle = 'A long song title with enough words to leave the viewport';
@@ -278,58 +272,6 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
-
-  for (final liquid in [false, true]) {
-    testWidgets(
-      'Mornye mini player prepares the motion cover only with liquid glass '
-      '(liquid: $liquid)',
-      (tester) async {
-        final prepared = <String>[];
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              currentMediaItemProvider.overrideWith(
-                (ref) => Stream.value(
-                  const MediaItem(
-                    id: 'track',
-                    title: 'Song',
-                    album: 'Album',
-                    artist: 'Artist',
-                  ),
-                ),
-              ),
-              playbackStateProvider.overrideWith((ref) => const Stream.empty()),
-              deviceSupportsLiquidGlassProvider.overrideWithValue(liquid),
-              backdropBlurEnabledProvider.overrideWithValue(false),
-              playerMotionArtworkProvider.overrideWith(
-                (ref, album) async =>
-                    const MotionArtwork('file:///cover.mp4', aspectRatio: 1),
-              ),
-              playerArtworkVideoProvider.overrideWith((ref, source) {
-                prepared.add(source);
-                return Completer<VideoPlayerController>().future;
-              }),
-            ],
-            child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const Scaffold(
-                body: Center(child: SizedBox(width: 320, child: MiniPlayer())),
-              ),
-            ),
-          ),
-        );
-        for (var i = 0; i < 4; i++) {
-          await tester.pump();
-        }
-        expect(find.text('Song'), findsWidgets);
-        expect(prepared, liquid ? ['file:///cover.mp4'] : isEmpty);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-      },
-    );
-  }
 
   for (final mornye in [false, true]) {
     for (final compact in [false, true]) {

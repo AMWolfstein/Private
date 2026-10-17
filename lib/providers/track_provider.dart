@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/models/artist_concert.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
@@ -33,7 +32,6 @@ class TrackState {
   final int? monthlyListeners;
   final List<ArtistAlbum>? artistAlbums;
   final List<Track>? artistTopTracks;
-  final List<ArtistConcert> artistConcerts;
   final bool hasSearchText;
   final bool isShowingRecentAccess;
   final String? searchExtensionId;
@@ -59,7 +57,6 @@ class TrackState {
     this.monthlyListeners,
     this.artistAlbums,
     this.artistTopTracks,
-    this.artistConcerts = const [],
     this.hasSearchText = false,
     this.isShowingRecentAccess = false,
     this.searchExtensionId,
@@ -88,7 +85,6 @@ class TrackState {
     int? monthlyListeners,
     List<ArtistAlbum>? artistAlbums,
     List<Track>? artistTopTracks,
-    List<ArtistConcert>? artistConcerts,
     bool? hasSearchText,
     bool? isShowingRecentAccess,
     String? searchExtensionId,
@@ -116,7 +112,6 @@ class TrackState {
       monthlyListeners: monthlyListeners ?? this.monthlyListeners,
       artistAlbums: artistAlbums ?? this.artistAlbums,
       artistTopTracks: artistTopTracks ?? this.artistTopTracks,
-      artistConcerts: artistConcerts ?? this.artistConcerts,
       hasSearchText: hasSearchText ?? this.hasSearchText,
       isShowingRecentAccess:
           isShowingRecentAccess ?? this.isShowingRecentAccess,
@@ -325,7 +320,6 @@ class TrackNotifier extends Notifier<TrackState> {
             artistAlbumsNext: artistData['albums_next'] as String?,
             artistAlbums: albums,
             artistTopTracks: topTracks.isNotEmpty ? topTracks : null,
-            artistConcerts: ArtistConcert.parseList(artistData['concerts']),
             searchExtensionId: extensionId,
           );
           return;

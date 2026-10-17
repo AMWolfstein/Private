@@ -32,7 +32,6 @@ import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
 import 'package:spotiflac_android/widgets/track_list_tile.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/motion_header_banner.dart';
 import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 import 'package:spotiflac_android/widgets/selection_action_button.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
@@ -535,9 +534,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
             ),
           );
 
-    final Widget background = hasMotion
-        ? MotionHeaderBanner(videoUrl: motionUrl, fallback: headerBgImage())
-        : headerBgImage();
+    final Widget background = headerBgImage();
 
     return AlbumDetailHeader(
       title: widget.albumName,

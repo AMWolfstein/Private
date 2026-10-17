@@ -20,7 +20,6 @@ import 'package:spotiflac_android/utils/provider_resource_ids.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:spotiflac_android/widgets/motion_header_banner.dart';
 import 'package:spotiflac_android/widgets/track_list_tile.dart';
 import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 import 'package:spotiflac_android/screens/collapsing_header_scroll_mixin.dart';
@@ -328,9 +327,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
       squareArtwork: !hasMotion,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
-      background: hasMotion
-          ? MotionHeaderBanner(videoUrl: motionUrl, fallback: coverImage)
-          : coverImage,
+      background: coverImage,
       paletteSource: _coverUrl,
       blurAndScrimBackground: !hasMotion && _coverUrl != null,
       coverBuilder: hasMotion

@@ -1331,7 +1331,6 @@ class _ExtensionArtistScreenState extends ConsumerState<ExtensionArtistScreen>
   String? _headerImageUrl;
   String? _headerVideoUrl;
   String? _headerLogoUrl;
-  List<ArtistConcert> _concerts = const [];
   String? _albumsNext;
   int? _monthlyListeners;
   bool _isLoading = true;
@@ -1400,9 +1399,6 @@ class _ExtensionArtistScreenState extends ConsumerState<ExtensionArtistScreen>
         _headerImageUrl = headerImage;
         _headerVideoUrl = headerVideo;
         _headerLogoUrl = headerLogo;
-        _concerts = ArtistConcert.parseList(
-          artistInfo['concerts'] ?? result['concerts'],
-        );
         _albumsNext = artistInfo['albums_next'] as String?;
         _monthlyListeners = listeners;
         _isLoading = false;
@@ -1470,215 +1466,11 @@ class _ExtensionArtistScreenState extends ConsumerState<ExtensionArtistScreen>
         headerImageUrl: _headerImageUrl,
         headerVideoUrl: _headerVideoUrl,
         headerLogoUrl: _headerLogoUrl,
-        concerts: _concerts,
         albumsNext: _albumsNext,
         monthlyListeners: _monthlyListeners,
         albums: _albums,
         topTracks: _topTracks,
         extensionId: widget.extensionId, // Skip Spotify/Deezer fetch
-      ),
-    );
-  }
-}
-
-/// Swipeable Quick Picks widget with page indicator
-class _QuickPicksPageView extends StatefulWidget {
-  final ExploreSection section;
-  final ColorScheme colorScheme;
-  final int itemsPerPage;
-  final int totalPages;
-  final void Function(ExploreItem, BuildContext) onItemTap;
-  final void Function(ExploreItem, BuildContext) onItemMenu;
-
-  const _QuickPicksPageView({
-    required this.section,
-    required this.colorScheme,
-    required this.itemsPerPage,
-    required this.totalPages,
-    required this.onItemTap,
-    required this.onItemMenu,
-  });
-
-  @override
-  State<_QuickPicksPageView> createState() => _QuickPicksPageViewState();
-}
-
-class _QuickPicksPageViewState extends State<_QuickPicksPageView> {
-  int _currentPage = 0;
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Text(
-            widget.section.title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: widget.itemsPerPage * 64.0,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.totalPages,
-            onPageChanged: (page) {
-              setState(() => _currentPage = page);
-            },
-            itemBuilder: (context, pageIndex) {
-              final startIndex = pageIndex * widget.itemsPerPage;
-              final endIndex = (startIndex + widget.itemsPerPage).clamp(
-                0,
-                widget.section.items.length,
-              );
-              final pageItemCount = endIndex - startIndex;
-
-              return Column(
-                children: List.generate(pageItemCount, (index) {
-                  final item = widget.section.items[startIndex + index];
-                  return KeyedSubtree(
-                    key: ValueKey(
-                      'quick-pick-${item.type}-${item.id}-${item.uri}',
-                    ),
-                    child: Builder(
-                      builder: (itemContext) =>
-                          _buildQuickPickItem(itemContext, item),
-                    ),
-                  );
-                }),
-              );
-            },
-          ),
-        ),
-        if (widget.totalPages > 1)
-          Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.totalPages, (index) {
-                final isActive = index == _currentPage;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: isActive ? 8 : 6,
-                  height: isActive ? 8 : 6,
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isActive
-                        ? widget.colorScheme.primary
-                        : widget.colorScheme.onSurfaceVariant.withValues(
-                            alpha: 0.3,
-                          ),
-                  ),
-                );
-              }),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildQuickPickItem(BuildContext itemContext, ExploreItem item) {
-    return InkWell(
-      onTap: () => widget.onItemTap(item, itemContext),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            DownloadableCover(
-              coverUrl: item.coverUrl,
-              baseName: '${item.artists} - ${item.name}',
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: item.coverUrl != null && item.coverUrl!.isNotEmpty
-                    ? CachedCoverImage(
-                        imageUrl: item.coverUrl!,
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Container(
-                          width: 48,
-                          height: 48,
-                          color: widget.colorScheme.surfaceContainerHighest,
-                          child: Icon(
-                            Icons.music_note,
-                            color: widget.colorScheme.onSurfaceVariant,
-                            size: 24,
-                          ),
-                        ),
-                      )
-                    : Container(
-                        width: 48,
-                        height: 48,
-                        color: widget.colorScheme.surfaceContainerHighest,
-                        child: Icon(
-                          Icons.music_note,
-                          color: widget.colorScheme.onSurfaceVariant,
-                          size: 24,
-                        ),
-                      ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ExplicitTrackTitle(
-                    title: item.name,
-                    explicit: item.explicit == true,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: widget.colorScheme.onSurface,
-                    ),
-                  ),
-                  if (item.artists.isNotEmpty)
-                    ClickableArtistName(
-                      artistName: item.artists,
-                      coverUrl: item.coverUrl,
-                      extensionId: item.providerId,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: widget.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            Builder(
-              builder: (buttonContext) => IconButton(
-                tooltip: MaterialLocalizations.of(context).showMenuTooltip,
-                icon: Icon(
-                  Icons.more_vert,
-                  color: widget.colorScheme.onSurfaceVariant,
-                  size: 20,
-                ),
-                onPressed: () => widget.onItemMenu(item, buttonContext),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

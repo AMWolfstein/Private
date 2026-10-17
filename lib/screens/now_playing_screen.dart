@@ -39,8 +39,6 @@ import 'package:spotiflac_android/widgets/mornye_player_background.dart';
 import 'package:spotiflac_android/widgets/mornye_artwork_contrast.dart';
 import 'package:spotiflac_android/widgets/mornye_player_actions_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
-import 'package:spotiflac_android/widgets/mornye_player_artwork.dart';
-import 'package:spotiflac_android/providers/player_motion_artwork_provider.dart';
 
 export 'package:spotiflac_android/routes/now_playing_route.dart';
 
@@ -79,9 +77,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   int _currentPage = 0;
   bool _landscape = false;
   bool _queueSheetShowing = false;
-  String? _measuredMotionSource;
-  double? _motionAspectRatio;
-  String? _failedMotionSource;
   bool _lyricsControlsHidden = false;
   bool _lyricsOptionsOpen = false;
   bool _audioOutputOpen = false;
@@ -94,7 +89,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   final _artworkVolumeKey = GlobalKey();
   final _expandedArtworkKey = GlobalKey();
   final _compactArtworkKey = GlobalKey();
-  final _motionArtworkKey = GlobalKey();
   final _artworkForeground = ValueNotifier<Map<String, Color>>({});
   final _seekPreview = PlaybackSeekPreview();
   NowPlayingRoute? _artworkRoute;
@@ -186,51 +180,16 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     }
 
     final source = mediaItem.extras?['source']?.toString() ?? '';
-    final motionState =
-        mornye &&
-            ref.watch(settingsProvider.select((s) => s.motionArtworkEnabled)) &&
-            !MediaQuery.disableAnimationsOf(context)
-        ? ref.watch(
-            playerMotionArtworkProvider((
-              album: mediaItem.album ?? '',
-              artist: mediaItem.artist ?? '',
-            )),
-          )
-        : null;
-    final resolvedMotion = motionState?.value;
-    final motionArtwork = resolvedMotion?.source == _failedMotionSource
-        ? null
-        : resolvedMotion;
-    final motionRatio =
-        motionArtwork?.aspectRatio ??
-        (_measuredMotionSource == motionArtwork?.source
-            ? _motionAspectRatio
-            : null);
-    final squareArtwork =
-        motionArtwork == null || (motionRatio != null && motionRatio >= 0.95);
-    if (motionArtwork == null && _artworkForeground.value.isNotEmpty) {
-      _artworkForeground.value = {};
-    }
-    Widget artwork() => MornyePlayerArtwork(
-      mediaItem: mediaItem,
-      videoUrl: motionArtwork?.source,
-      resolvingVideo: motionState?.isLoading == true,
-      onAspectRatioChanged: (ratio) {
-        if (!mounted ||
-            (_measuredMotionSource == motionArtwork?.source &&
-                _motionAspectRatio == ratio)) {
-          return;
-        }
-        setState(() {
-          _measuredMotionSource = motionArtwork?.source;
-          _motionAspectRatio = ratio;
-        });
-      },
-      onError: () {
-        if (mounted) {
-          setState(() => _failedMotionSource = motionArtwork?.source);
-        }
-      },
+    Widget artwork() => Align(
+      alignment: Alignment.topCenter,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: PlayerArtwork(
+          artUri: mediaItem.artUri?.toString(),
+          colorScheme: colorScheme,
+          cacheWidth: PlayerArtwork.transitionCacheWidth(context),
+        ),
+      ),
     );
 
     // The Mornye route moves the entire player together. A second,
@@ -248,8 +207,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             ? _expandedArtworkKey
             : _currentPage != 0
             ? _compactArtworkKey
-            : motionArtwork != null
-            ? _motionArtworkKey
             : _expandedArtworkKey;
         final box = key.currentContext?.findRenderObject();
         if (box is! RenderBox || !box.attached || !box.hasSize) return null;
@@ -259,7 +216,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             box.getTransformTo(overlay),
             Offset.zero & box.size,
           ),
-          fullBleed: key == _motionArtworkKey,
+          fullBleed: false,
           child: Theme(
             data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
             child: key == _compactArtworkKey
@@ -357,8 +314,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                           colorScheme: colorScheme,
                           page: _currentPage,
                           motionArtwork: artwork(),
-                          artworkAspectRatio: motionRatio,
-                          insetArtwork: motionArtwork == null,
+                          insetArtwork: true,
                           artworkTopInset:
                               MediaQuery.paddingOf(context).top + 36,
                           artworkKeys: (
@@ -499,8 +455,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           fit: StackFit.expand,
           children: [
             MornyeArtworkContrast(
-              enabled:
-                  motionArtwork != null && !_landscape && _currentPage == 0,
+              enabled: false,
               targets: {
                 'header': _artworkHeaderKey,
                 'controls': _artworkControlsKey,
@@ -510,21 +465,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                 if (!mounted) return;
                 _artworkForeground.value = colors;
               },
-              child: MornyePlayerBackground(
-                artUri: mediaItem.artUri,
-                squareArtwork: squareArtwork,
-                artworkAspectRatio: motionRatio,
-                artwork:
-                    motionArtwork != null && !_landscape && _currentPage == 0
-                    ? PlayerTransitionArtwork(
-                        artworkKey: _motionArtworkKey,
-                        child: Hero(
-                          tag: kNowPlayingArtworkHeroTag,
-                          child: artwork(),
-                        ),
-                      )
-                    : null,
-              ),
+              child: MornyePlayerBackground(artUri: mediaItem.artUri),
             ),
             Listener(
               behavior: HitTestBehavior.translucent,

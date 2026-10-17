@@ -101,7 +101,6 @@ class AppSettings {
   final String locale;
   final String lyricsMode;
   final bool keepScreenOnLyrics;
-  final bool motionArtworkEnabled;
   final bool listeningStatisticsEnabled;
   final bool autoConvertDownloads;
   // Re-download a Hi-Res request at LOSSLESS when the file measures as fake.
@@ -214,7 +213,6 @@ class AppSettings {
     this.locale = 'system',
     this.lyricsMode = 'embed',
     this.keepScreenOnLyrics = true,
-    this.motionArtworkEnabled = true,
     this.listeningStatisticsEnabled = true,
     this.autoConvertDownloads = false,
     this.redownloadFakeHiRes = false,
@@ -319,7 +317,6 @@ class AppSettings {
     String? locale,
     String? lyricsMode,
     bool? keepScreenOnLyrics,
-    bool? motionArtworkEnabled,
     bool? listeningStatisticsEnabled,
     bool? autoConvertDownloads,
     bool? redownloadFakeHiRes,
@@ -431,7 +428,6 @@ class AppSettings {
       locale: locale ?? this.locale,
       lyricsMode: lyricsMode ?? this.lyricsMode,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
-      motionArtworkEnabled: motionArtworkEnabled ?? this.motionArtworkEnabled,
       listeningStatisticsEnabled:
           listeningStatisticsEnabled ?? this.listeningStatisticsEnabled,
       autoConvertDownloads: autoConvertDownloads ?? this.autoConvertDownloads,

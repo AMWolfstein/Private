@@ -15,15 +15,15 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/widgets/mornye_player_artwork.dart';
 import 'package:spotiflac_android/widgets/mornye_player_layout.dart';
+import 'package:spotiflac_android/widgets/player_artwork.dart';
 import 'package:spotiflac_android/widgets/mornye_volume_control.dart';
 
 import 'performance_probe.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(motionArtworkEnabled: false);
+  AppSettings build() => const AppSettings();
 }
 
 class _Collections extends LibraryCollectionsNotifier {
@@ -131,7 +131,10 @@ void main() {
                   seekPreview: seek,
                   colorScheme: theme.colorScheme,
                   page: value,
-                  motionArtwork: MornyePlayerArtwork(mediaItem: item),
+                  motionArtwork: PlayerArtwork(
+                    artUri: item.artUri?.toString(),
+                    colorScheme: theme.colorScheme,
+                  ),
                   insetArtwork: true,
                   artworkTopInset: 0,
                   artworkKeys: keys,

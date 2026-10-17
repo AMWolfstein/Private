@@ -3,9 +3,6 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/player_motion_artwork_provider.dart';
-import 'package:spotiflac_android/providers/player_artwork_video_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -70,22 +67,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     // re-filters the blurred chrome around it.
     final fullEffects = !mornye || ref.watch(mornyeLiquidGlassProvider);
     final marqueeCycles = fullEffects ? null : 2;
-    if (mornye &&
-        fullEffects &&
-        ref.watch(settingsProvider.select((s) => s.motionArtworkEnabled)) &&
-        !MediaQuery.disableAnimationsOf(context)) {
-      final artwork = ref
-          .watch(
-            playerMotionArtworkProvider((
-              album: mediaItem.album ?? '',
-              artist: mediaItem.artist ?? '',
-            )),
-          )
-          .value;
-      if (artwork != null) {
-        ref.watch(playerArtworkVideoProvider(artwork.source));
-      }
-    }
 
     final player = Dismissible(
       key: ValueKey('mini-player-${mediaItem.id}'),

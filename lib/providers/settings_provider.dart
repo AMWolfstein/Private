@@ -684,11 +684,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setMotionArtworkEnabled(bool enabled) {
-    state = state.copyWith(motionArtworkEnabled: enabled);
-    _saveSettings();
-  }
-
   void setListeningStatisticsEnabled(bool enabled) {
     state = state.copyWith(listeningStatisticsEnabled: enabled);
     _saveSettings();

@@ -49,7 +49,6 @@ class _Settings extends SettingsNotifier {
     concurrentDownloads: _concurrency,
     autoFallback: false,
     lyricsProviders: const [],
-    motionArtworkEnabled: false,
   );
 }
 

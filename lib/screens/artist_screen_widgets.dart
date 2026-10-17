@@ -2,13 +2,6 @@
 part of 'artist_screen.dart';
 
 extension _ArtistScreenSections on _ArtistScreenState {
-  Widget _concertsButton() => ArtistConcertsButton(
-    artistName: widget.artistName,
-    concerts: _concerts,
-    coverUrl: widget.coverUrl ?? _headerImageUrl,
-    providerId: _directMetadataProviderId(),
-  );
-
   List<Widget> _buildHeader(
     BuildContext context,
     ColorScheme colorScheme, {
@@ -27,15 +20,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
         imageUrl != null &&
         imageUrl.isNotEmpty &&
         Uri.tryParse(imageUrl)?.hasAuthority == true;
-
-    String? headerVideoUrl = _headerVideoUrl;
-    if (headerVideoUrl == null || headerVideoUrl.isEmpty) {
-      headerVideoUrl = widget.headerVideoUrl;
-    }
-    final hasMotionBanner =
-        headerVideoUrl != null &&
-        headerVideoUrl.isNotEmpty &&
-        Uri.tryParse(headerVideoUrl)?.hasAuthority == true;
 
     String? listenersText;
     final listeners = _monthlyListeners ?? widget.monthlyListeners;
@@ -75,12 +59,9 @@ extension _ArtistScreenSections on _ArtistScreenState {
       return MornyeArtistHeader(
         name: widget.artistName,
         logoUrl: _headerLogoUrl ?? widget.headerLogoUrl,
-        badge: _concerts.isEmpty || isSelectionMode ? null : _concertsButton(),
         listeners: listenersText,
         showTitle: _showTitleInAppBar,
-        artwork: hasMotionBanner
-            ? MotionHeaderBanner(videoUrl: headerVideoUrl, fallback: artwork)
-            : artwork,
+        artwork: artwork,
         actions: isSelectionMode
             ? const []
             : [
@@ -135,8 +116,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
           hasDiscography: hasDiscography,
           imageUrl: imageUrl,
           hasValidImage: hasValidImage,
-          headerVideoUrl: headerVideoUrl,
-          hasMotionBanner: hasMotionBanner,
           listenersText: listenersText,
           isFavoriteArtist: isFavoriteArtist,
         ),
@@ -152,8 +131,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
     required bool hasDiscography,
     required String? imageUrl,
     required bool hasValidImage,
-    required String? headerVideoUrl,
-    required bool hasMotionBanner,
     required String? listenersText,
     required bool isFavoriteArtist,
   }) {
@@ -183,41 +160,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            if (hasMotionBanner)
-              MotionHeaderBanner(
-                videoUrl: headerVideoUrl!,
-                fallback: hasValidImage
-                    ? DownloadableCover(
-                        coverUrl: imageUrl,
-                        baseName: widget.artistName,
-                        child: CachedCoverImage(
-                          imageUrl: imageUrl!,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          memCacheWidth: 800,
-                          placeholder: (context, url) => Container(
-                            color: colorScheme.surfaceContainerHighest,
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            color: colorScheme.surfaceContainerHighest,
-                            child: Icon(
-                              Icons.person,
-                              size: 80,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        color: colorScheme.surfaceContainerHighest,
-                        child: Icon(
-                          Icons.person,
-                          size: 80,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-              )
-            else if (hasValidImage)
+            if (hasValidImage)
               DownloadableCover(
                 coverUrl: imageUrl,
                 baseName: widget.artistName,
@@ -274,10 +217,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (_concerts.isNotEmpty && !isSelectionMode) ...[
-                          _concertsButton(),
-                          const SizedBox(height: 8),
-                        ],
                         Text(
                           widget.artistName,
                           style: Theme.of(context).textTheme.headlineLarge

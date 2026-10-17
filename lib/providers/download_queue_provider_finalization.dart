@@ -44,47 +44,6 @@ extension _DownloadQueueFinalization on DownloadQueueNotifier {
     info: _log.i,
   );
 
-  Future<void> _saveDownloadedMotionArtwork(
-    Ref ref,
-    DownloadItem item,
-    Track track,
-    Map<String, dynamic> result,
-  ) async {
-    // Store independently of history preferences and the selected UI theme.
-    // A later switch to Mornye must still work without network access.
-    try {
-      final album = (
-        album:
-            _resolveMetadataText(
-              track.albumName,
-              result['album']?.toString(),
-            ) ??
-            item.track.albumName,
-        artist:
-            _resolveMetadataText(
-              track.artistName,
-              result['artist']?.toString(),
-            ) ??
-            item.track.artistName,
-      );
-      final store = ref.read(motionArtworkStoreProvider);
-      final artwork = await store.save(
-        album,
-        resolveSource: () => resolveDownloadMotionArtworkSource(
-          original: item.track,
-          downloaded: track,
-          result: result,
-          getMetadata: PlatformBridge.getProviderMetadata,
-        ),
-      );
-      if (artwork != null && ref.mounted) {
-        ref.invalidate(playerMotionArtworkProvider(album));
-      }
-    } catch (error) {
-      _log.w('Optional motion artwork was not saved: ${error.runtimeType}');
-    }
-  }
-
   Future<DownloadConversionOutcome> _autoConvertDownloadedFile({
     required String itemId,
     required String filePath,

@@ -777,8 +777,8 @@ class _MainShellState extends ConsumerState<MainShell>
                   onPageChanged: _onPageChanged,
                   physics: const NeverScrollableScrollPhysics(),
                   // TickerMode mutes animations and lets visibility-aware widgets
-                  // (e.g. MotionHeaderBanner) pause when their tab is hidden —
-                  // kept-alive pages otherwise keep running offscreen.
+                  // pause when their tab is hidden — kept-alive pages otherwise
+                  // keep running offscreen.
                   itemBuilder: (context, index) => _KeepAliveTabPage(
                     key: ValueKey('page-$index'),
                     child: TickerMode(

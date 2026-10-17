@@ -12,7 +12,6 @@ import 'package:spotiflac_android/widgets/app_loading_indicator.dart';
 import 'package:spotiflac_android/widgets/expressive_button.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
@@ -21,16 +20,12 @@ import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/models/artist_concert.dart';
 import 'package:spotiflac_android/providers/track_provider.dart';
 import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/providers/recent_access_provider.dart';
-import 'package:spotiflac_android/providers/explore_provider.dart';
-import 'package:spotiflac_android/widgets/explore_featured_section.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/screens/album_screen.dart';
@@ -62,7 +57,6 @@ import 'package:spotiflac_android/widgets/profile_avatar.dart';
 import 'package:spotiflac_android/widgets/downloadable_cover.dart';
 
 part 'home_tab_helpers.dart';
-part 'home_tab_explore.dart';
 part 'home_tab_recent.dart';
 part 'home_tab_import.dart';
 part 'home_tab_search_results.dart';
@@ -92,8 +86,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
   String? _activeSearchInput;
   bool _isResettingSearchSurface = false;
   late final ProviderSubscription<TrackState> _trackStateSub;
-  late final ProviderSubscription<bool> _extensionInitSub;
-  late final ProviderSubscription<bool> _homeFeedExtSub;
 
   Timer? _liveSearchDebounce;
   int _searchGeneration = 0;
@@ -158,21 +150,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
     return coverSize + 28 + ((textScale - 1) * 8);
   }
 
-  double _exploreCardSize(BuildContext context) {
-    // Six phone-sized cards across an iPad made the feed look like a desktop
-    // page zoomed out. A higher tablet cap gives roughly five generous cards
-    // in portrait while leaving all phone sizes unchanged.
-    final scale = _responsiveScale(context: context, min: 0.82, max: 1.32);
-    final textScale = _effectiveTextScale(context);
-    return 145 * scale * (1 + (textScale - 1) * 0.12);
-  }
-
-  double _exploreSectionHeight(BuildContext context) {
-    final cardSize = _exploreCardSize(context);
-    final textScale = _effectiveTextScale(context);
-    return cardSize + 58 + ((textScale - 1) * 12);
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -182,12 +159,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
     _urlController.addListener(_onSearchChanged);
     _searchFocusNode.addListener(_onSearchFocusChanged);
     ShellNavigationService.searchRequests.addListener(_focusSearchFromShell);
-
-    // Run an initial fetch check in case extensions were already initialized
-    // before HomeTab was mounted (e.g. auto-installed during first setup).
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _fetchExploreIfNeeded();
-    });
 
     _trackStateSub = ref.listenManual<TrackState>(trackProvider, (
       previous,
@@ -202,54 +173,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
         _navigateToDetailIfNeeded();
       }
     });
-
-    _extensionInitSub = ref.listenManual<bool>(
-      extensionProvider.select((s) => s.isInitialized),
-      (previous, next) {
-        if (next == true && previous != true) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _fetchExploreIfNeeded();
-          });
-        }
-      },
-    );
-
-    _homeFeedExtSub = ref.listenManual<bool>(
-      extensionProvider.select(
-        (s) => s.extensions.any((e) => e.enabled && e.hasHomeFeed),
-      ),
-      (previous, next) {
-        if (next == true && previous != true) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && _showsHome) {
-              ref
-                  .read(exploreProvider.notifier)
-                  .fetchHomeFeed(forceRefresh: true);
-            }
-          });
-        }
-      },
-    );
-  }
-
-  void _fetchExploreIfNeeded() {
-    if (!_showsHome) return;
-    if (ref.read(settingsProvider).homeFeedProvider ==
-        AppSettings.homeFeedProviderOff) {
-      ref.read(exploreProvider.notifier).clear();
-      return;
-    }
-
-    final extState = ref.read(extensionProvider);
-    final exploreState = ref.read(exploreProvider);
-    final hasHomeFeedExtension = extState.extensions.any(
-      (e) => e.enabled && e.hasHomeFeed,
-    );
-    if (hasHomeFeedExtension &&
-        !exploreState.hasContent &&
-        !exploreState.isLoading) {
-      ref.read(exploreProvider.notifier).fetchHomeFeed();
-    }
   }
 
   @override
@@ -258,8 +181,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
     _homeScrollController.dispose();
     _liveSearchDebounce?.cancel();
     _trackStateSub.close();
-    _extensionInitSub.close();
-    _homeFeedExtSub.close();
     _urlController.removeListener(_onSearchChanged);
     _searchFocusNode.removeListener(_onSearchFocusChanged);
     _urlController.dispose();
@@ -693,7 +614,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
             headerImageUrl: trackState.headerImageUrl,
             headerVideoUrl: trackState.headerVideoUrl,
             headerLogoUrl: trackState.headerLogoUrl,
-            concerts: trackState.artistConcerts,
             albumsNext: trackState.artistAlbumsNext,
             albums: trackState.artistAlbums!,
             topTracks: trackState.artistTopTracks,
@@ -757,23 +677,11 @@ class _HomeTabState extends ConsumerState<HomeTab>
       ),
     );
 
-    final hasExploreContent =
-        _showsHome &&
-        ref.watch(exploreProvider.select((s) => s.sections.isNotEmpty));
-    final exploreLoading =
-        _showsHome && ref.watch(exploreProvider.select((s) => s.isLoading));
     final hasHomeFeedExtension =
         _showsHome &&
         ref.watch(
           extensionProvider.select(
             (s) => s.extensions.any((e) => e.enabled && e.hasHomeFeed),
-          ),
-        );
-    final homeFeedDisabled =
-        _showsHome &&
-        ref.watch(
-          settingsProvider.select(
-            (s) => s.homeFeedProvider == AppSettings.homeFeedProviderOff,
           ),
         );
 
@@ -830,25 +738,15 @@ class _HomeTabState extends ConsumerState<HomeTab>
               hasSearchProvider: hasSearchProvider,
               isSearchProviderLoading: isSearchProviderLoading,
               hasHomeFeedExtension: hasHomeFeedExtension,
-              hasExploreContent: hasExploreContent,
+              hasExploreContent: false,
               hasSearchInput: hasSearchInput,
             ));
     final hasResults =
         hasSearchInput || hasActualResults || isLoading || showRecentAccess;
-    final showExplore =
-        _showsHome &&
-        !hasActualResults &&
-        !isLoading &&
-        !hasActiveSearchSurface &&
-        !showRecentAccess &&
-        !homeFeedDisabled &&
-        (hasHomeFeedExtension || hasExploreContent) &&
-        hasExploreContent;
     final showEmptyHomeState =
         !isSearchProviderLoading &&
         !hasSearchProvider &&
         !hasHomeFeedExtension &&
-        !hasExploreContent &&
         !hasResults;
 
     ref.listen<String>(settingsProvider.select((s) => s.defaultSearchTab), (
@@ -894,8 +792,8 @@ class _HomeTabState extends ConsumerState<HomeTab>
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
         body: RefreshIndicator(
-          onRefresh: () => ref.read(exploreProvider.notifier).refresh(),
-          notificationPredicate: (notification) => showExplore,
+          onRefresh: () =>
+              ref.read(downloadHistoryProvider.notifier).reloadFromStorage(),
           child: CustomScrollView(
             controller: _homeScrollController,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -913,7 +811,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
                 child: AnimatedSize(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeOut,
-                  child: (hasResults || showExplore || !_showsHome)
+                  child: (hasResults || !_showsHome)
                       ? const SizedBox.shrink()
                       : _buildHomeIntro(
                           colorScheme: colorScheme,
@@ -928,9 +826,9 @@ class _HomeTabState extends ConsumerState<HomeTab>
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(
                       16,
-                      (hasResults || showExplore) ? 8 : 32,
+                      hasResults ? 8 : 32,
                       16,
-                      (hasResults || showExplore) ? 8 : 16,
+                      hasResults ? 8 : 16,
                     ),
                     child: _buildSearchBar(),
                   ),
@@ -991,7 +889,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
                       (!_showsHome ||
                           hasResults ||
                           showRecentAccess ||
-                          showExplore ||
                           showEmptyHomeState)
                       ? const SizedBox.shrink()
                       : Column(
@@ -1032,43 +929,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
                         ),
                 ),
               ),
-
-              if (showExplore)
-                Consumer(
-                  builder: (context, ref, _) {
-                    final exploreSections = ref.watch(
-                      exploreProvider.select((s) => s.sections),
-                    );
-                    final exploreGreeting = ref.watch(
-                      exploreProvider.select((s) => s.greeting),
-                    );
-                    return SliverMainAxisGroup(
-                      slivers: _buildExploreSections(
-                        exploreSections,
-                        exploreGreeting,
-                        colorScheme,
-                      ),
-                    );
-                  },
-                ),
-
-              if (_showsHome &&
-                  hasHomeFeedExtension &&
-                  !homeFeedDisabled &&
-                  !hasActualResults &&
-                  !isLoading &&
-                  exploreLoading)
-                SliverToBoxAdapter(
-                  child: ShimmerLoading(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildExploreSectionSkeleton(isArtist: false),
-                        _buildExploreSectionSkeleton(isArtist: true),
-                      ],
-                    ),
-                  ),
-                ),
 
               if (_showsSearch)
                 Consumer(
