@@ -374267,7 +374267,7 @@
       "node_kind": "heading",
       "norm_label": "1. target architecture (what remains)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L78"
+      "source_location": "L89"
     },
     {
       "id": "local_offline_migration_plan_2_key_findings_dependency_grounded",
@@ -374279,7 +374279,7 @@
       "node_kind": "heading",
       "norm_label": "2. key findings (dependency-grounded)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L101"
+      "source_location": "L112"
     },
     {
       "id": "local_offline_migration_plan_3_decisions_resolved",
@@ -374291,7 +374291,7 @@
       "node_kind": "heading",
       "norm_label": "3. decisions (resolved)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L143"
+      "source_location": "L154"
     },
     {
       "id": "local_offline_migration_plan_4_phased_plan_one_commit_per_phase",
@@ -374303,7 +374303,7 @@
       "node_kind": "heading",
       "norm_label": "4. phased plan (one commit per phase)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L171"
+      "source_location": "L182"
     },
     {
       "id": "local_offline_migration_plan_5_risks",
@@ -374315,7 +374315,7 @@
       "node_kind": "heading",
       "norm_label": "5. risks",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L278"
+      "source_location": "L289"
     },
     {
       "id": "local_offline_migration_plan_local_offline_android_only_migration_plan",
@@ -374339,7 +374339,7 @@
       "node_kind": "heading",
       "norm_label": "phase 1 \u2014 platform & repo-hygiene trim (no dart code impact)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L173"
+      "source_location": "L184"
     },
     {
       "id": "local_offline_migration_plan_phase_2_discord_removal_dart_pubspec_gradle_manifest",
@@ -374351,7 +374351,7 @@
       "node_kind": "heading",
       "norm_label": "phase 2 \u2014 discord removal (dart + pubspec + gradle + manifest)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L183"
+      "source_location": "L194"
     },
     {
       "id": "local_offline_migration_plan_phase_3_updater_remote_config_announcements",
@@ -374363,7 +374363,7 @@
       "node_kind": "heading",
       "norm_label": "phase 3 \u2014 updater / remote-config / announcements",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L194"
+      "source_location": "L205"
     },
     {
       "id": "local_offline_migration_plan_phase_4_network_storage_smb_webdav_removal",
@@ -374375,7 +374375,7 @@
       "node_kind": "heading",
       "norm_label": "phase 4 \u2014 network storage (smb/webdav) removal",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L202"
+      "source_location": "L213"
     },
     {
       "id": "local_offline_migration_plan_phase_5_extension_system_online_providers_online_search_dart",
@@ -374387,7 +374387,7 @@
       "node_kind": "heading",
       "norm_label": "phase 5 \u2014 extension system + online providers + online search (dart)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L213"
+      "source_location": "L224"
     },
     {
       "id": "local_offline_migration_plan_phase_6_download_engine_removal_player_re_point_largest_dart_phase_depends_on_d1",
@@ -374399,7 +374399,7 @@
       "node_kind": "heading",
       "norm_label": "phase 6 \u2014 download engine removal + player re-point  (largest dart phase; depends on d1)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L233"
+      "source_location": "L244"
     },
     {
       "id": "local_offline_migration_plan_phase_7_rust_backend_reduction_riskiest_itself_sub_phased",
@@ -374411,7 +374411,7 @@
       "node_kind": "heading",
       "norm_label": "phase 7 \u2014 rust backend reduction  (riskiest; itself sub-phased)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L247"
+      "source_location": "L258"
     },
     {
       "id": "local_offline_migration_plan_phase_8_dependencies_l10n_docs_final_polish",
@@ -374423,7 +374423,7 @@
       "node_kind": "heading",
       "norm_label": "phase 8 \u2014 dependencies, l10n, docs, final polish",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L266"
+      "source_location": "L277"
     },
     {
       "id": "local_offline_migration_plan_progress",
@@ -374447,7 +374447,7 @@
       "node_kind": "heading",
       "norm_label": "vision refinements (user, 2026-10-16)",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L153"
+      "source_location": "L164"
     },
     {
       "id": "rust_backend_crates_extensions_src_backend_lyrics",
@@ -968951,7 +968951,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L153",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
@@ -968962,7 +968962,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L173",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -968973,7 +968973,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L183",
+      "source_location": "L194",
       "weight": 1.0
     },
     {
@@ -968984,7 +968984,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L194",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
@@ -968995,7 +968995,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L202",
+      "source_location": "L213",
       "weight": 1.0
     },
     {
@@ -969006,7 +969006,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L213",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -969017,7 +969017,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L233",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -969028,7 +969028,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L247",
+      "source_location": "L258",
       "weight": 1.0
     },
     {
@@ -969039,7 +969039,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L266",
+      "source_location": "L277",
       "weight": 1.0
     },
     {
@@ -969050,7 +969050,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L101",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -969061,18 +969061,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L143",
-      "weight": 1.0
-    },
-    {
-      "source": "local_offline_migration_plan_local_offline_android_only_migration_plan",
-      "target": "local_offline_migration_plan_4_phased_plan_one_commit_per_phase",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L171",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -969088,13 +969077,24 @@
     },
     {
       "source": "local_offline_migration_plan_local_offline_android_only_migration_plan",
+      "target": "local_offline_migration_plan_4_phased_plan_one_commit_per_phase",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
+      "source_location": "L182",
+      "weight": 1.0
+    },
+    {
+      "source": "local_offline_migration_plan_local_offline_android_only_migration_plan",
       "target": "local_offline_migration_plan_5_risks",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L278",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -969105,7 +969105,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L78",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -1613232,7 +1613232,7 @@
       "confidence_score": 0.95,
       "context": "BackgroundWorkService",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L245",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -1613244,7 +1613244,7 @@
       "confidence_score": 0.95,
       "context": "lyrics",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L93",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -1613280,7 +1613280,7 @@
       "confidence_score": 0.95,
       "context": "text",
       "source_file": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
-      "source_location": "L93",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -1615600,5 +1615600,5 @@
       "source_file": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_fast_forward.png"
     }
   ],
-  "built_at_commit": "c8f596258eb753454f1280f4e66c984d77fb0fe6"
+  "built_at_commit": "bc52d55332a3bab879258ebb753c125b7caf29b6"
 }
