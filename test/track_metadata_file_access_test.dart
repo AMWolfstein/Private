@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
+import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 
@@ -27,14 +27,13 @@ void main() {
           return null;
         });
         addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
-        final item = DownloadHistoryItem(
+        final item = LocalLibraryItem(
           id: 'provider-track',
           trackName: 'Track',
           artistName: 'Artist',
           albumName: 'Album',
           filePath: 'content://provider/music/track.flac',
-          service: 'provider-a',
-          downloadedAt: DateTime(2026),
+          scannedAt: DateTime(2026),
         );
         await tester.pumpWidget(
           ProviderScope(
@@ -44,7 +43,7 @@ void main() {
                   : ThemeData.dark(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: TrackMetadataScreen(item: item),
+              home: TrackMetadataScreen(localItem: item),
             ),
           ),
         );

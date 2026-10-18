@@ -10,7 +10,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/cover_cache_manager.dart';
@@ -337,9 +336,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
 
   Future<void> _cleanupUnusedData() async {
     await _runAction('cleanup_unused', () async {
-      final orphanedDownloads = await ref
-          .read(downloadHistoryProvider.notifier)
-          .cleanupOrphanedDownloads();
       final iosBookmark = ref.read(settingsProvider).localLibraryBookmark;
       final missingLibraryEntries = await ref
           .read(localLibraryProvider.notifier)
@@ -351,10 +347,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            context.l10n.cacheCleanupResult(
-              orphanedDownloads,
-              missingLibraryEntries,
-            ),
+            context.l10n.libraryRemovedMissingFiles(missingLibraryEntries),
           ),
         ),
       );

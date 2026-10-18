@@ -8,12 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/routes/now_playing_route.dart';
-import 'package:spotiflac_android/screens/downloaded_album_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
@@ -762,10 +760,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     );
     if (!mounted) return;
     if (action == 'album') {
-      await _goToCurrentAlbum(
-        mediaItem: mediaItem,
-        source: mediaItem.extras?['source']?.toString() ?? '',
-      );
+      await _goToCurrentAlbum(mediaItem: mediaItem);
     } else if (action == 'artist') {
       await _goToCurrentArtist(mediaItem);
     }
@@ -777,7 +772,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       context,
       artistName: mediaItem.artist ?? '',
       artistId: track?.artistId,
-      extensionId: track?.source,
     );
   }
 
@@ -904,7 +898,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         );
         break;
       case 'album':
-        await _goToCurrentAlbum(mediaItem: mediaItem, source: source);
+        await _goToCurrentAlbum(mediaItem: mediaItem);
         break;
       case 'details':
         unawaited(
@@ -983,39 +977,9 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     );
   }
 
-  Future<void> _goToCurrentAlbum({
-    required MediaItem mediaItem,
-    required String source,
-  }) async {
+  Future<void> _goToCurrentAlbum({required MediaItem mediaItem}) async {
     final albumName = (mediaItem.album ?? '').trim();
     if (albumName.isEmpty) return;
-
-    // Prefer the stored collection so this action remains useful offline and
-    // opens the exact files the user is currently playing.
-    try {
-      final historyItem = source.isEmpty
-          ? null
-          : await ref
-                .read(downloadHistoryProvider.notifier)
-                .getByFilePathAsync(source);
-      if (!mounted) return;
-      if (historyItem != null) {
-        final albumArtist = (historyItem.albumArtist ?? '').trim();
-        pushViaPreferredNavigator(
-          context,
-          (_) => DownloadedAlbumScreen(
-            albumName: historyItem.albumName,
-            artistName: albumArtist.isNotEmpty
-                ? albumArtist
-                : historyItem.artistName,
-            coverUrl: historyItem.coverUrl,
-          ),
-        );
-        return;
-      }
-    } catch (e) {
-      _log.w('Failed to resolve downloaded album: $e');
-    }
 
     try {
       final album = await ref

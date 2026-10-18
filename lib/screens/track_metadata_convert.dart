@@ -565,8 +565,7 @@ extension _TrackMetadataConvertAndCueSplit on _TrackMetadataScreenState {
 
   Future<Directory> _resolvePersistentCueSplitOutputDir() async {
     final settings = ref.read(settingsProvider);
-    final queueState = ref.read(downloadQueueProvider);
-    final configuredOutputDir = queueState.outputDir.trim();
+    final configuredOutputDir = settings.downloadDirectory.trim();
     if (settings.storageMode != 'saf' &&
         configuredOutputDir.isNotEmpty &&
         !isContentUri(configuredOutputDir)) {
@@ -645,12 +644,8 @@ extension _TrackMetadataConvertAndCueSplit on _TrackMetadataScreenState {
       }
 
       final String outputDir;
-      final treeUri = !_isLocalItem
-          ? (_downloadItem?.downloadTreeUri ?? '')
-          : '';
-      final relativeDir = !_isLocalItem
-          ? (_downloadItem?.safRelativeDir ?? '')
-          : '';
+      const String treeUri = '';
+      const String relativeDir = '';
       final writeBackToSaf = isSafSource && treeUri.isNotEmpty;
       if (writeBackToSaf) {
         final tempDir = await getTemporaryDirectory();
@@ -861,7 +856,6 @@ extension _TrackMetadataConvertAndCueSplit on _TrackMetadataScreenState {
   }) async {
     if (_isConverting) return;
     _setState(() => _isConverting = true);
-    final losslessLabels = context.l10n.losslessConversionLabels;
     String? coverPath;
     String? safTempPath;
     String? convertedSafTempPath;
@@ -980,34 +974,15 @@ extension _TrackMetadataConvertAndCueSplit on _TrackMetadataScreenState {
         convertedBitDepth ??= losslessQuality.effectiveBitDepth(bitDepth);
         convertedSampleRate ??= losslessQuality.effectiveSampleRate(sampleRate);
       }
-      final newQuality = convertedAudioQualityLabel(
-        targetFormat: targetFormat,
-        bitrate: bitrate,
-        labels: losslessLabels,
-        losslessQuality: losslessQuality,
-        actualBitDepth: convertedBitDepth,
-        actualSampleRate: convertedSampleRate,
-      );
-
       if (isSaf) {
         String? treeUri;
         String relativeDir = '';
         String oldFileName = '';
-        if (_isLocalItem) {
-          final location = resolveSafDocumentLocation(cleanFilePath);
-          if (location != null) {
-            treeUri = location.treeUri;
-            relativeDir = location.relativeDir;
-            oldFileName = location.fileName;
-          }
-        } else {
-          treeUri = _downloadItem?.downloadTreeUri;
-          relativeDir = _downloadItem?.safRelativeDir ?? '';
-          oldFileName =
-              (_downloadItem?.safFileName != null &&
-                  _downloadItem!.safFileName!.isNotEmpty)
-              ? _downloadItem!.safFileName!
-              : _extractFileNameFromPathOrUri(cleanFilePath);
+        final location = resolveSafDocumentLocation(cleanFilePath);
+        if (location != null) {
+          treeUri = location.treeUri;
+          relativeDir = location.relativeDir;
+          oldFileName = location.fileName;
         }
         if (treeUri == null || treeUri.isEmpty) {
           try {
@@ -1066,31 +1041,16 @@ extension _TrackMetadataConvertAndCueSplit on _TrackMetadataScreenState {
           }
         }
 
-        if (!_isLocalItem) {
-          await ConversionLibraryService.persistHistoryConversion(
-            source: _downloadItem!,
-            newFilePath: safUri,
-            newQuality: newQuality,
-            targetFormat: targetFormat,
-            bitrate: bitrate,
-            bitDepth: convertedBitDepth,
-            sampleRate: convertedSampleRate,
-            keepOriginal: keepOriginal,
-            newSafFileName: published!.fileName,
-          );
-          await ref.read(downloadHistoryProvider.notifier).reloadFromStorage();
-        } else {
-          await LibraryDatabase.instance.replaceWithConvertedItem(
-            item: _localLibraryItem!,
-            newFilePath: safUri,
-            targetFormat: targetFormat,
-            bitrate: bitrate,
-            bitDepth: convertedBitDepth,
-            sampleRate: convertedSampleRate,
-            keepOriginal: keepOriginal,
-          );
-          await ref.read(localLibraryProvider.notifier).reloadFromStorage();
-        }
+        await LibraryDatabase.instance.replaceWithConvertedItem(
+          item: _localLibraryItem!,
+          newFilePath: safUri,
+          targetFormat: targetFormat,
+          bitrate: bitrate,
+          bitDepth: convertedBitDepth,
+          sampleRate: convertedSampleRate,
+          keepOriginal: keepOriginal,
+        );
+        await ref.read(localLibraryProvider.notifier).reloadFromStorage();
 
         try {
           await File(newPath).delete();
@@ -1101,30 +1061,16 @@ extension _TrackMetadataConvertAndCueSplit on _TrackMetadataScreenState {
           } catch (_) {}
         }
       } else {
-        if (!_isLocalItem) {
-          await ConversionLibraryService.persistHistoryConversion(
-            source: _downloadItem!,
-            newFilePath: newPath,
-            newQuality: newQuality,
-            targetFormat: targetFormat,
-            bitrate: bitrate,
-            bitDepth: convertedBitDepth,
-            sampleRate: convertedSampleRate,
-            keepOriginal: keepOriginal,
-          );
-          await ref.read(downloadHistoryProvider.notifier).reloadFromStorage();
-        } else {
-          await LibraryDatabase.instance.replaceWithConvertedItem(
-            item: _localLibraryItem!,
-            newFilePath: newPath,
-            targetFormat: targetFormat,
-            bitrate: bitrate,
-            bitDepth: convertedBitDepth,
-            sampleRate: convertedSampleRate,
-            keepOriginal: keepOriginal,
-          );
-          await ref.read(localLibraryProvider.notifier).reloadFromStorage();
-        }
+        await LibraryDatabase.instance.replaceWithConvertedItem(
+          item: _localLibraryItem!,
+          newFilePath: newPath,
+          targetFormat: targetFormat,
+          bitrate: bitrate,
+          bitDepth: convertedBitDepth,
+          sampleRate: convertedSampleRate,
+          keepOriginal: keepOriginal,
+        );
+        await ref.read(localLibraryProvider.notifier).reloadFromStorage();
       }
 
       if (mounted) {

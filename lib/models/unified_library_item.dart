@@ -1,14 +1,13 @@
 import 'package:spotiflac_android/models/library_collections.dart';
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/models/download_history.dart';
 import 'package:spotiflac_android/services/library_database_models.dart';
 import 'package:spotiflac_android/utils/audio_quality_badge_policy.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 
-enum LibraryItemSource { downloaded, local }
+enum LibraryItemSource { local }
 
-/// A library track backed by either a download-history record or a
-/// local-library scan record, unified for shared list and batch handling.
+/// A library track backed by a local-library scan record, unified for shared
+/// list and batch handling.
 class UnifiedLibraryItem {
   final String id;
   final String trackName;
@@ -21,7 +20,6 @@ class UnifiedLibraryItem {
   final DateTime addedAt;
   final LibraryItemSource source;
 
-  final DownloadHistoryItem? historyItem;
   final LocalLibraryItem? localItem;
 
   UnifiedLibraryItem({
@@ -35,39 +33,8 @@ class UnifiedLibraryItem {
     this.quality,
     required this.addedAt,
     required this.source,
-    this.historyItem,
     this.localItem,
   });
-
-  factory UnifiedLibraryItem.fromDownloadHistory(DownloadHistoryItem item) {
-    String? quality;
-    if (item.bitrate != null && item.bitrate! > 0) {
-      quality = buildDisplayAudioQuality(
-        bitrateKbps: item.bitrate,
-        format: item.format,
-      );
-    } else if (item.bitDepth != null &&
-        item.bitDepth! > 0 &&
-        item.sampleRate != null) {
-      quality = buildDisplayAudioQuality(
-        bitDepth: item.bitDepth,
-        sampleRate: item.sampleRate,
-      );
-    }
-    quality ??= item.quality;
-    return UnifiedLibraryItem(
-      id: 'dl_${item.id}',
-      trackName: item.trackName,
-      artistName: item.artistName,
-      albumName: item.albumName,
-      coverUrl: item.coverUrl,
-      filePath: item.filePath,
-      quality: quality,
-      addedAt: item.downloadedAt,
-      source: LibraryItemSource.downloaded,
-      historyItem: item,
-    );
-  }
 
   factory UnifiedLibraryItem.fromLocalLibrary(LocalLibraryItem item) {
     String? quality;
@@ -106,20 +73,6 @@ class UnifiedLibraryItem {
       (localCoverPath != null && localCoverPath!.isNotEmpty);
 
   String? qualityForMode(String mode) {
-    final history = historyItem;
-    if (history != null) {
-      return buildLibraryAudioQualityLabel(
-        mode: mode,
-        format: history.format,
-        filePath: history.filePath,
-        fileName: history.safFileName,
-        bitrateKbps: history.bitrate,
-        bitDepth: history.bitDepth,
-        sampleRate: history.sampleRate,
-        storedQuality: history.quality ?? quality,
-      );
-    }
-
     final local = localItem;
     if (local != null) {
       return buildLibraryAudioQualityLabel(
@@ -136,19 +89,19 @@ class UnifiedLibraryItem {
     return quality;
   }
 
-  String? get albumArtist => historyItem?.albumArtist ?? localItem?.albumArtist;
+  String? get albumArtist => localItem?.albumArtist;
 
-  String? get releaseDate => historyItem?.releaseDate ?? localItem?.releaseDate;
+  String? get releaseDate => localItem?.releaseDate;
 
-  String? get genre => historyItem?.genre ?? localItem?.genre;
+  String? get genre => localItem?.genre;
 
-  int? get trackNumber => historyItem?.trackNumber ?? localItem?.trackNumber;
+  int? get trackNumber => localItem?.trackNumber;
 
-  int? get discNumber => historyItem?.discNumber ?? localItem?.discNumber;
+  int? get discNumber => localItem?.discNumber;
 
-  String? get isrc => historyItem?.isrc ?? localItem?.isrc;
+  String? get isrc => localItem?.isrc;
 
-  String? get label => historyItem?.label ?? localItem?.label;
+  String? get label => localItem?.label;
 
   String get searchKey =>
       '${trackName.toLowerCase()}|${artistName.toLowerCase()}|${albumName.toLowerCase()}';
@@ -158,13 +111,6 @@ class UnifiedLibraryItem {
   /// Returns the collection key used to match this item against playlist
   /// entries: prefer ISRC, fall back to source:id.
   String get collectionKey {
-    if (historyItem != null) {
-      return libraryTrackCollectionKey(
-        id: historyItem!.id,
-        source: historyItem!.service,
-        isrc: historyItem!.isrc,
-      );
-    }
     if (localItem != null) {
       return libraryTrackCollectionKey(
         id: localItem!.id,
@@ -176,23 +122,6 @@ class UnifiedLibraryItem {
   }
 
   Track toTrack() {
-    if (historyItem != null) {
-      final h = historyItem!;
-      return Track(
-        id: h.id,
-        name: h.trackName,
-        artistName: h.artistName,
-        albumName: h.albumName,
-        albumArtist: h.albumArtist,
-        coverUrl: h.coverUrl,
-        isrc: h.isrc,
-        duration: h.duration ?? 0,
-        trackNumber: h.trackNumber,
-        discNumber: h.discNumber,
-        releaseDate: h.releaseDate,
-        source: h.service,
-      );
-    }
     if (localItem != null) {
       final l = localItem!;
       return Track(

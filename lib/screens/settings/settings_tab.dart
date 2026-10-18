@@ -12,7 +12,6 @@ import 'package:spotiflac_android/screens/settings/app_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/backup_restore_page.dart';
 import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
-import 'package:spotiflac_android/screens/settings/download_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/files_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/log_screen.dart';
@@ -174,23 +173,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       _Group(
         destinations: [
           _Destination(
-            icon: Icons.download_outlined,
-            iconColor: Colors.green,
-            title: l10n.settingsDownload,
-            subtitle: l10n.settingsDownloadSubtitle,
-            keywords: const [
-              'quality',
-              'flac',
-              'concurrent',
-              'network',
-              'wifi',
-              'service',
-              'region',
-            ],
-            searchEntries: searchCatalog.download,
-            pageBuilder: () => const DownloadSettingsPage(),
-          ),
-          _Destination(
             icon: Icons.folder_outlined,
             iconColor: Colors.orange,
             title: l10n.settingsFiles,
@@ -199,7 +181,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
               'saf',
               'storage',
               'folder',
-              'filename',
               'path',
               'permission',
             ],

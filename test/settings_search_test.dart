@@ -30,15 +30,12 @@ void main() {
   testWidgets('finds controls nested inside a settings page', (tester) async {
     await pumpSettings(tester);
 
-    await tester.enterText(find.byType(TextField), 'parallel downloads');
+    await tester.enterText(find.byType(TextField), 'replaygain');
     await tester.pump();
 
-    expect(find.text('Concurrent downloads'), findsOneWidget);
-    expect(find.text('Download'), findsOneWidget);
-    expect(
-      find.text('No settings found for "parallel downloads"'),
-      findsNothing,
-    );
+    expect(find.text('Volume normalization'), findsOneWidget);
+    expect(find.text('Playback'), findsWidgets);
+    expect(find.text('No settings found for "replaygain"'), findsNothing);
   });
 
   testWidgets(

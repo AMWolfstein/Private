@@ -1,6 +1,13 @@
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/services/history_database.dart';
+
+/// Builds the download-history lookup key for a backend track.
+HistoryLookupRequest historyLookupForTrack(Track track) => HistoryLookupRequest(
+  spotifyId: track.id,
+  isrc: track.isrc,
+  trackName: track.name,
+  artistName: track.artistName,
+);
 
 /// Retains derived lookups while the immutable source list is unchanged.
 /// Callers replace their list for metadata, order, or filter changes.

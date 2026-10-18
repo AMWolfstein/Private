@@ -7,13 +7,6 @@ import 'package:spotiflac_android/utils/logger.dart';
 const _maxRecentItems = 20;
 final _log = AppLogger('RecentAccess');
 
-bool isRecentDownloadAfterClear(
-  DateTime downloadedAt,
-  DateTime? downloadsClearedAt,
-) {
-  return downloadsClearedAt == null || downloadedAt.isAfter(downloadsClearedAt);
-}
-
 enum RecentAccessType { artist, album, track, playlist }
 
 class RecentAccessItem {
@@ -75,27 +68,16 @@ class RecentAccessItem {
 
 class RecentAccessState {
   final List<RecentAccessItem> items;
-  final Set<String> hiddenDownloadIds;
-  final DateTime? downloadsClearedAt;
   final bool isLoaded;
 
-  const RecentAccessState({
-    this.items = const [],
-    this.hiddenDownloadIds = const {},
-    this.downloadsClearedAt,
-    this.isLoaded = false,
-  });
+  const RecentAccessState({this.items = const [], this.isLoaded = false});
 
   RecentAccessState copyWith({
     List<RecentAccessItem>? items,
-    Set<String>? hiddenDownloadIds,
-    DateTime? downloadsClearedAt,
     bool? isLoaded,
   }) {
     return RecentAccessState(
       items: items ?? this.items,
-      hiddenDownloadIds: hiddenDownloadIds ?? this.hiddenDownloadIds,
-      downloadsClearedAt: downloadsClearedAt ?? this.downloadsClearedAt,
       isLoaded: isLoaded ?? this.isLoaded,
     );
   }
@@ -146,11 +128,6 @@ class RecentAccessNotifier extends Notifier<RecentAccessState> {
         limit: _maxRecentItems,
       );
       if (!ref.mounted) return;
-      final hiddenIds = await _appStateDb.getHiddenRecentDownloadIds();
-      if (!ref.mounted) return;
-      final downloadsClearedAt = await _appStateDb
-          .getRecentDownloadsClearedAt();
-      if (!ref.mounted) return;
 
       final items = <RecentAccessItem>[];
       for (final row in rows) {
@@ -167,12 +144,7 @@ class RecentAccessNotifier extends Notifier<RecentAccessState> {
         }
       }
 
-      var loaded = RecentAccessState(
-        items: items,
-        hiddenDownloadIds: hiddenIds,
-        downloadsClearedAt: downloadsClearedAt,
-        isLoaded: true,
-      );
+      var loaded = RecentAccessState(items: items, isLoaded: true);
       for (final edit in _loadingEdits) {
         loaded = edit(loaded);
       }
@@ -286,29 +258,14 @@ class RecentAccessNotifier extends Notifier<RecentAccessState> {
     );
   }
 
-  void hideDownloadFromRecents(String downloadId) {
-    _editState(
-      (current) => current.copyWith(
-        hiddenDownloadIds: {...current.hiddenDownloadIds, downloadId},
-      ),
-    );
-    unawaited(
-      _enqueueWrite(() => _appStateDb.addHiddenRecentDownloadId(downloadId)),
-    );
-  }
-
   Future<void> clearHistory() async {
     final laterEdits = <RecentAccessState Function(RecentAccessState)>[];
     _clearingEdits.add(laterEdits);
     try {
       await _enqueueWrite(() async {
-        final clearedAt = await _appStateDb.clearAllRecentAccess();
+        await _appStateDb.clearAllRecentAccess();
         if (!ref.mounted) return;
-        var cleared = state.copyWith(
-          items: [],
-          hiddenDownloadIds: {},
-          downloadsClearedAt: clearedAt,
-        );
+        var cleared = state.copyWith(items: []);
         for (final edit in laterEdits) {
           cleared = edit(cleared);
         }
@@ -317,11 +274,6 @@ class RecentAccessNotifier extends Notifier<RecentAccessState> {
     } finally {
       _clearingEdits.remove(laterEdits);
     }
-  }
-
-  void clearHiddenDownloads() {
-    _editState((current) => current.copyWith(hiddenDownloadIds: {}));
-    unawaited(_enqueueWrite(_appStateDb.clearHiddenRecentDownloadIds));
   }
 }
 

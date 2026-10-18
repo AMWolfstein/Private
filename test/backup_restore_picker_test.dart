@@ -50,14 +50,7 @@ void main() {
       final switches = tester
           .widgetList<SettingsSwitchItem>(find.byType(SettingsSwitchItem))
           .toList();
-      expect(switches.map((item) => item.value), [
-        true,
-        false,
-        false,
-        false,
-        false,
-      ]);
-      expect(switches.last.onChanged, isNull);
+      expect(switches.map((item) => item.value), [true, false, false]);
       switches.first.onChanged!(false);
       await tester.pumpAndSettle();
       final export = tester

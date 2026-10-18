@@ -9,12 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/playback_notification_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/providers/track_provider.dart';
 import 'package:spotiflac_android/screens/home_tab.dart';
 import 'package:spotiflac_android/screens/queue_tab.dart';
 import 'package:spotiflac_android/screens/settings/settings_tab.dart';
@@ -25,7 +23,6 @@ import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/widgets/download_queue_feedback.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
@@ -296,41 +293,14 @@ class _MainShellState extends ConsumerState<MainShell>
         ? _searchTabNavigatorKey
         : _homeTabNavigatorKey;
     searchNavigator.currentState?.popUntil((route) => route.isFirst);
-    // Mount the lazy Search page before the metadata listener handles the link.
+    // Mount the lazy Search page before focusing the field.
     await WidgetsBinding.instance.endOfFrame;
     if (!mounted) return;
-    ref.read(settingsProvider.notifier).setHasSearchedBefore();
+    ShellNavigationService.requestSearch();
     if (mounted) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(context.l10n.loadingSharedLink)));
-    }
-    await ref.read(trackProvider.notifier).fetchFromUrl(url);
-    final trackState = ref.read(trackProvider);
-    if (trackState.error != null && mounted) {
-      final l10n = context.l10n;
-      final errorMsg = trackState.error!;
-      final isRateLimit =
-          errorMsg.contains('429') ||
-          errorMsg.toLowerCase().contains('rate limit') ||
-          errorMsg.toLowerCase().contains('too many requests');
-      final displayMessage = errorMsg == 'url_not_recognized'
-          ? l10n.errorUrlNotRecognizedMessage
-          : isRateLimit
-          ? l10n.errorRateLimitedMessage
-          : l10n.errorUrlFetchFailed;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(displayMessage),
-          // Retrying an unrecognized URL is deterministic; skip the action.
-          action: errorMsg == 'url_not_recognized'
-              ? null
-              : SnackBarAction(
-                  label: l10n.dialogRetry,
-                  onPressed: () => _handleSharedUrl(url),
-                ),
-        ),
-      );
     }
   }
 
@@ -431,10 +401,7 @@ class _MainShellState extends ConsumerState<MainShell>
   void _resetHomeToMain() {
     final homeNavigator = _navigatorForTab(0);
     homeNavigator?.popUntil((route) => route.isFirst);
-    // Unfocus BEFORE clear so _onTrackStateChanged can properly
-    // clear _urlController (it checks !_searchFocusNode.hasFocus)
     FocusManager.instance.primaryFocus?.unfocus();
-    if (!context.isMornye) ref.read(trackProvider.notifier).clear();
   }
 
   void _onShellTabRequested(ShellTab tab) {
@@ -537,38 +504,9 @@ class _MainShellState extends ConsumerState<MainShell>
 
     if (!mounted) return;
 
-    final trackState = ref.read(trackProvider);
     final isSearchTab = _currentIndex == (context.isMornye ? 2 : 0);
 
     final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
-
-    if (isSearchTab &&
-        trackState.isShowingRecentAccess &&
-        !trackState.isLoading &&
-        (trackState.hasSearchText || trackState.hasContent)) {
-      FocusManager.instance.primaryFocus?.unfocus();
-      ref.read(trackProvider.notifier).clear();
-      _lastBackPress = null;
-      return;
-    }
-
-    if (isSearchTab && trackState.isShowingRecentAccess) {
-      ref.read(trackProvider.notifier).setShowingRecentAccess(false);
-      FocusManager.instance.primaryFocus?.unfocus();
-      _lastBackPress = null;
-      return;
-    }
-
-    if (isSearchTab &&
-        !trackState.isLoading &&
-        (trackState.hasSearchText || trackState.hasContent)) {
-      // Unfocus BEFORE clear so _onTrackStateChanged can properly
-      // clear _urlController (it checks !_searchFocusNode.hasFocus)
-      FocusManager.instance.primaryFocus?.unfocus();
-      ref.read(trackProvider.notifier).clear();
-      _lastBackPress = null;
-      return;
-    }
 
     if (isSearchTab && isKeyboardVisible) {
       FocusManager.instance.primaryFocus?.unfocus();
@@ -579,10 +517,6 @@ class _MainShellState extends ConsumerState<MainShell>
     if (_currentIndex != 0) {
       _onNavTap(0);
       _lastBackPress = null;
-      return;
-    }
-
-    if (isSearchTab && trackState.isLoading) {
       return;
     }
 
@@ -627,9 +561,6 @@ class _MainShellState extends ConsumerState<MainShell>
     ref.listen(
       settingsProvider.select((s) => s.listeningStatisticsEnabled),
       (_, enabled) => listeningRecorder.setEnabled(enabled),
-    );
-    final queueState = ref.watch(
-      downloadQueueProvider.select((s) => s.queuedCount),
     );
     final heroAnimationsEnabled = ref.watch(
       settingsProvider.select((s) => s.heroAnimationsEnabled),
@@ -680,28 +611,17 @@ class _MainShellState extends ConsumerState<MainShell>
       ),
       NavigationDestination(
         icon: context.isMornye
-            ? MornyeNavigationIcon(
+            ? const MornyeNavigationIcon(
                 icon: CupertinoIcons.square_stack_fill,
-                badgeCount: queueState,
+                badgeCount: 0,
               )
-            : AnimatedBadge(
-                count: queueState,
-                child: Badge(
-                  isLabelVisible: queueState > 0,
-                  label: Text('$queueState'),
-                  child: const Icon(Icons.library_music_outlined),
-                ),
-              ),
-        selectedIcon: SlidingIcon(
-          child: AnimatedBadge(
-            count: queueState,
-            child: Badge(
-              isLabelVisible: queueState > 0,
-              label: Text('$queueState'),
-              child: const Icon(Icons.library_music),
-            ),
-          ),
-        ),
+            : const Icon(Icons.library_music_outlined),
+        selectedIcon: context.isMornye
+            ? const MornyeNavigationIcon(
+                icon: CupertinoIcons.square_stack_fill,
+                badgeCount: 0,
+              )
+            : const Icon(Icons.library_music),
         label: l10n.navLibrary,
       ),
       if (!context.isMornye)
@@ -934,7 +854,7 @@ class _MainShellState extends ConsumerState<MainShell>
         ),
       ),
     );
-    return DownloadQueueFeedback(child: shell);
+    return shell;
   }
 }
 

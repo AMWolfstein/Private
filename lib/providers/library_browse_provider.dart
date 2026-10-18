@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
@@ -164,7 +163,6 @@ class LibraryBrowseNotifier extends AsyncNotifier<LibraryBrowseState> {
     _includeLocal = ref.watch(
       settingsProvider.select((s) => s.localLibraryEnabled),
     );
-    ref.watch(downloadHistoryProvider.select((s) => s.loadedIndexVersion));
     if (_includeLocal) {
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
     }

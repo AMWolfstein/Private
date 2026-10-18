@@ -1,44 +1,39 @@
 part of 'home_tab.dart';
 
 extension _HomeTabRecentUI on _HomeTabState {
-  Widget _buildRecentAccess(_RecentAccessView view, ColorScheme colorScheme) {
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(child: _buildRecentAccessHeader(view, colorScheme)),
-        if (view.uniqueItems.isNotEmpty)
-          SliverPadding(
-            padding:
-                const EdgeInsets.fromLTRB(16, 0, 16, 8) +
-                EdgeInsets.symmetric(horizontal: wideListInset(context)),
-            sliver: SliverList.builder(
-              itemCount: view.uniqueItems.length,
-              itemBuilder: (context, index) {
-                final item = view.uniqueItems[index];
-                return KeyedSubtree(
-                  key: ValueKey('${item.type.name}:${item.id}'),
-                  child: _buildRecentAccessItem(
-                    item,
-                    colorScheme,
-                    view.downloadFilePathByRecentKey,
-                  ),
-                );
-              },
-            ),
+  List<Widget> _buildRecentAccess(ColorScheme colorScheme) {
+    final items = ref.watch(recentAccessViewProvider).uniqueItems;
+
+    return [
+      SliverToBoxAdapter(
+        child: _buildRecentAccessHeader(items, colorScheme),
+      ),
+      if (items.isNotEmpty)
+        SliverPadding(
+          padding:
+              const EdgeInsets.fromLTRB(16, 0, 16, 8) +
+              EdgeInsets.symmetric(horizontal: wideListInset(context)),
+          sliver: SliverList.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return KeyedSubtree(
+                key: ValueKey('${item.type.name}:${item.id}'),
+                child: _buildRecentAccessItem(item, colorScheme),
+              );
+            },
           ),
-      ],
-    );
+        ),
+    ];
   }
 
   Widget _buildRecentAccessHeader(
-    _RecentAccessView view,
+    List<RecentAccessItem> items,
     ColorScheme colorScheme,
   ) {
-    final uniqueItems = view.uniqueItems;
-    final hasHiddenDownloads = view.hasHiddenDownloads;
-
     return Padding(
       padding:
-          EdgeInsets.fromLTRB(16, 8, 16, uniqueItems.isEmpty ? 8 : 0) +
+          EdgeInsets.fromLTRB(16, 16, 16, items.isEmpty ? 8 : 0) +
           EdgeInsets.symmetric(horizontal: wideListInset(context)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,36 +47,9 @@ extension _HomeTabRecentUI on _HomeTabState {
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              if (uniqueItems.isNotEmpty)
+              if (items.isNotEmpty)
                 TextButton(
-                  onPressed: () async {
-                    // Clearing history is not undoable, so ask first.
-                    final confirmed = await showAppDialog<bool>(
-                      context: context,
-                      builder: (dialogContext) => AppAlertDialog(
-                        title: Text(dialogContext.l10n.dialogClearAll),
-                        content: Text(dialogContext.l10n.recentClearAllMessage),
-                        actions: [
-                          AppDialogAction(
-                            onPressed: () =>
-                                Navigator.of(dialogContext).pop(false),
-                            child: Text(dialogContext.l10n.dialogCancel),
-                          ),
-                          AppDialogAction(
-                            filled: true,
-                            isDestructive: true,
-                            onPressed: () =>
-                                Navigator.of(dialogContext).pop(true),
-                            child: Text(dialogContext.l10n.dialogClearAll),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirmed != true) return;
-                    await ref
-                        .read(recentAccessProvider.notifier)
-                        .clearHistory();
-                  },
+                  onPressed: () => _confirmClearHistory(),
                   child: Text(
                     context.l10n.dialogClearAll,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -92,7 +60,7 @@ extension _HomeTabRecentUI on _HomeTabState {
             ],
           ),
           const SizedBox(height: 8),
-          if (uniqueItems.isEmpty)
+          if (items.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: SizedBox(
@@ -101,7 +69,7 @@ extension _HomeTabRecentUI on _HomeTabState {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
-                      hasHiddenDownloads ? Icons.visibility_off : Icons.history,
+                      Icons.history,
                       size: 48,
                       color: colorScheme.onSurfaceVariant.withValues(
                         alpha: 0.5,
@@ -115,18 +83,6 @@ extension _HomeTabRecentUI on _HomeTabState {
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    if (hasHiddenDownloads) ...[
-                      const SizedBox(height: 16),
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          ref
-                              .read(recentAccessProvider.notifier)
-                              .clearHiddenDownloads();
-                        },
-                        icon: const Icon(Icons.visibility, size: 18),
-                        label: Text(context.l10n.recentShowAllDownloads),
-                      ),
-                    ],
                   ],
                 ),
               ),
@@ -136,15 +92,36 @@ extension _HomeTabRecentUI on _HomeTabState {
     );
   }
 
+  Future<void> _confirmClearHistory() async {
+    final confirmed = await showAppDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AppAlertDialog(
+        title: Text(dialogContext.l10n.dialogClearAll),
+        content: Text(dialogContext.l10n.recentClearAllMessage),
+        actions: [
+          AppDialogAction(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(dialogContext.l10n.dialogCancel),
+          ),
+          AppDialogAction(
+            filled: true,
+            isDestructive: true,
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(dialogContext.l10n.dialogClearAll),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(recentAccessProvider.notifier).clearHistory();
+  }
+
   Widget _buildRecentAccessItem(
     RecentAccessItem item,
     ColorScheme colorScheme,
-    Map<String, String> downloadFilePathByRecentKey,
   ) {
-    IconData typeIcon;
-    String typeLabel;
-    final isDownloaded = item.providerId == 'download';
-
+    final IconData typeIcon;
+    final String typeLabel;
     switch (item.type) {
       case RecentAccessType.artist:
         typeIcon = Icons.person;
@@ -169,24 +146,16 @@ extension _HomeTabRecentUI on _HomeTabState {
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           child: Row(
             children: [
-              DownloadableCover(
-                coverUrl: item.imageUrl,
-                baseName: item.subtitle == null
-                    ? item.name
-                    : '${item.subtitle} - ${item.name}',
-                child: _DownloadedOrRemoteCover(
-                  downloadedFilePath: isDownloaded
-                      ? downloadFilePathByRecentKey['${item.type.name}:${item.id}']
-                      : null,
-                  imageUrl: item.imageUrl,
-                  width: 56,
-                  height: 56,
-                  borderRadius: BorderRadius.circular(
-                    item.type == RecentAccessType.artist ? 28 : 4,
-                  ),
-                  fallbackIcon: typeIcon,
-                  colorScheme: colorScheme,
+              _DownloadedOrRemoteCover(
+                downloadedFilePath: null,
+                imageUrl: item.imageUrl,
+                width: 56,
+                height: 56,
+                borderRadius: BorderRadius.circular(
+                  item.type == RecentAccessType.artist ? 28 : 4,
                 ),
+                fallbackIcon: typeIcon,
+                colorScheme: colorScheme,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -203,19 +172,13 @@ extension _HomeTabRecentUI on _HomeTabState {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      isDownloaded
-                          ? (item.subtitle != null
-                                ? '${context.l10n.recentTypeSong} • ${item.subtitle}'
-                                : context.l10n.recentTypeSong)
-                          : (item.subtitle != null
-                                ? '$typeLabel • ${item.subtitle}'
-                                : typeLabel),
+                      item.subtitle != null && item.subtitle!.isNotEmpty
+                          ? '$typeLabel • ${item.subtitle}'
+                          : typeLabel,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDownloaded
-                            ? colorScheme.primary
-                            : colorScheme.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -228,15 +191,8 @@ extension _HomeTabRecentUI on _HomeTabState {
                   size: 20,
                   color: colorScheme.onSurfaceVariant,
                 ),
-                onPressed: () {
-                  if (item.providerId == 'download') {
-                    ref
-                        .read(recentAccessProvider.notifier)
-                        .hideDownloadFromRecents(item.id);
-                  } else {
-                    ref.read(recentAccessProvider.notifier).removeItem(item);
-                  }
-                },
+                onPressed: () =>
+                    ref.read(recentAccessProvider.notifier).removeItem(item),
               ),
             ],
           ),
@@ -245,174 +201,79 @@ extension _HomeTabRecentUI on _HomeTabState {
     );
   }
 
-  bool _isEnabledMetadataExtension(String? providerId) {
-    final normalized = providerId?.trim();
-    if (normalized == null || normalized.isEmpty) return false;
-
-    return ref
-        .read(extensionProvider)
-        .extensions
-        .any(
-          (ext) =>
-              ext.enabled && ext.hasMetadataProvider && ext.id == normalized,
-        );
-  }
-
   Future<void> _navigateToRecentItem(RecentAccessItem item) async {
     _searchFocusNode.unfocus();
 
     switch (item.type) {
       case RecentAccessType.artist:
-        if (_isEnabledMetadataExtension(item.providerId)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => ExtensionArtistScreen(
-                extensionId: item.providerId!,
-                artistId: item.id,
-                artistName: item.name,
-                coverUrl: item.imageUrl,
-              ),
-            ),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => ArtistScreen(
-                artistId: item.id,
-                artistName: item.name,
-                coverUrl: item.imageUrl,
-              ),
-            ),
-          );
-        }
+        _openArtist(item.name);
         return;
       case RecentAccessType.album:
-        if (item.providerId == 'download') {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => DownloadedAlbumScreen(
-                albumName: item.name,
-                artistName: item.subtitle ?? '',
-                coverUrl: item.imageUrl,
-              ),
-            ),
-          );
-        } else if (_isEnabledMetadataExtension(item.providerId)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => ExtensionAlbumScreen(
-                extensionId: item.providerId!,
-                albumId: item.id,
-                albumName: item.name,
-                coverUrl: item.imageUrl,
-              ),
-            ),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => AlbumScreen(
-                albumId: item.id,
-                albumName: item.name,
-                coverUrl: item.imageUrl,
-              ),
-            ),
-          );
+        final rows = await LibraryDatabase.instance.getAll();
+        final artist = item.subtitle ?? '';
+        final tracks = rows
+            .map(LocalLibraryItem.fromJson)
+            .where(
+              (track) =>
+                  track.albumName == item.name &&
+                  (artist.isEmpty ||
+                      track.artistName == artist ||
+                      track.albumArtist == artist),
+            )
+            .toList();
+        if (!mounted) return;
+        if (tracks.isEmpty) {
+          _showSnack(item.name);
+          return;
         }
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => LocalAlbumScreen(
+              albumName: item.name,
+              artistName: artist,
+              coverPath: tracks.first.coverPath,
+              tracks: tracks,
+            ),
+          ),
+        );
         return;
       case RecentAccessType.track:
-        final historyItem = await ref
-            .read(downloadHistoryProvider.notifier)
-            .getBySpotifyIdAsync(item.id);
+        final localItem = await ref
+            .read(localLibraryProvider.notifier)
+            .findExistingAsync(
+              id: item.id,
+              trackName: item.name,
+              artistName: item.subtitle,
+            );
         if (!mounted) return;
-        if (historyItem != null) {
-          _navigateToMetadataScreen(historyItem);
-        } else {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(item.name)));
+        if (localItem == null) {
+          _showSnack(item.name);
+          return;
         }
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => TrackMetadataScreen(localItem: localItem),
+          ),
+        );
         return;
       case RecentAccessType.playlist:
         if (item.id.trim().isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.recentPlaylistInfo(item.name))),
-          );
+          _showSnack(context.l10n.recentPlaylistInfo(item.name));
           return;
         }
-
-        if (_isEnabledMetadataExtension(item.providerId)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => ExtensionPlaylistScreen(
-                extensionId: item.providerId!,
-                playlistId: item.id,
-                playlistName: item.name,
-                coverUrl: item.imageUrl,
-              ),
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => LibraryTracksFolderScreen(
+              mode: LibraryTracksFolderMode.playlist,
+              playlistId: item.id,
             ),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => PlaylistScreen(
-                playlistName: item.name,
-                coverUrl: item.imageUrl,
-                tracks: const [],
-                playlistId: item.id,
-                metadataProviderId: item.providerId,
-              ),
-            ),
-          );
-        }
+          ),
+        );
         return;
     }
   }
 
-  Future<void> _navigateToMetadataScreen(
-    DownloadHistoryItem item, {
-    List<DownloadHistoryItem>? navigationItems,
-    int? navigationIndex,
-  }) async {
-    final navigator = Navigator.of(context);
-    final embeddedCoverPath =
-        await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-          item.filePath,
-          onChanged: _onEmbeddedCoverChanged,
-        );
-    if (!mounted) return;
-    final artworkSource = embeddedCoverPath ?? item.coverUrl;
-    if (embeddedCoverPath == null) {
-      precacheCoverImage(context, item.coverUrl);
-    }
-    final backdropReady = precacheMetadataBackdrop(context, artworkSource);
-    final beforeModTime =
-        await DownloadedEmbeddedCoverResolver.readFileModTimeMillis(
-          item.filePath,
-        );
-    await backdropReady;
-    if (!mounted) return;
-    final result = await navigator.push(
-      slidePageRoute<bool>(
-        page: TrackMetadataScreen(
-          item: item,
-          historyNavigationItems: navigationItems,
-          navigationIndex: navigationIndex,
-        ),
-      ),
-    );
-    await DownloadedEmbeddedCoverResolver.scheduleRefreshForPath(
-      item.filePath,
-      beforeModTime: beforeModTime,
-      force: result == true,
-      onChanged: _onEmbeddedCoverChanged,
-    );
+  void _showSnack(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }

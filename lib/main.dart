@@ -11,8 +11,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/app.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
-import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -29,7 +27,6 @@ import 'package:spotiflac_android/services/player_widget_service.dart';
 import 'package:spotiflac_android/screens/now_playing_screen.dart';
 import 'package:spotiflac_android/utils/local_library_scan_prefs.dart';
 import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/utils/extension_auth_launcher.dart';
 
 final _log = AppLogger('Main');
 _StartupBenchmark? _startupBenchmark;
@@ -160,22 +157,17 @@ class _StartupBenchmark {
     );
   }
 
-  void extensionsReady(ExtensionState state, AppSettings settings) {
+  // The extension registry used to gate this benchmark on extension readiness.
+  // The registry is gone; the local-app services init now closes the boundary.
+  void appReady(AppSettings settings) {
     final ready = _watch.elapsedMicroseconds;
-    unawaited(_report(state, settings, ready));
+    unawaited(_report(settings, ready));
   }
 
-  Future<void> _report(
-    ExtensionState state,
-    AppSettings settings,
-    int ready,
-  ) async {
+  Future<void> _report(AppSettings settings, int ready) async {
     try {
       if (!kReleaseMode) throw StateError('Startup benchmark requires release');
       final firstFrame = await _firstFrame.timeout(const Duration(seconds: 30));
-      if (!state.isInitialized || state.error != null) {
-        throw StateError('Extensions are not ready: ${state.error}');
-      }
       final backends = await PlatformBridge.getBackendImplementations();
       const backend = String.fromEnvironment('EXPECTED_CORE_BACKEND');
       if (!const ['go', 'rust'].contains(backend) ||
@@ -191,21 +183,13 @@ class _StartupBenchmark {
           'mode': 'release',
           'start_boundary': 'Dart main entry before bindings',
           'first_frame_boundary': 'first rasterized frame observed',
-          'ready_boundary': 'production ensureInitialized completed',
+          'ready_boundary': 'local app services initialized',
           'cache': 'fresh process; warm filesystem',
           'first_frame_us': firstFrame,
           'extensions_ready_us': ready,
           'settings_sha256': sha256
               .convert(utf8.encode(jsonEncode(settings.toJson())))
               .toString(),
-          'extensions': [
-            for (final extension in state.extensions)
-              {
-                'id': extension.id,
-                'enabled': extension.enabled,
-                'status': extension.status,
-              },
-          ],
         },
       });
     } catch (error) {
@@ -263,8 +247,8 @@ Future<bool> _detectInitialSafAccessLoss(AppSettings settings) async {
       settings.downloadTreeUri,
     ).timeout(const Duration(seconds: 2));
   } catch (e) {
-    // A transient bridge failure must not trap the user at launch. Download
-    // preflight validates strictly again before any write starts.
+    // A transient bridge failure must not trap the user at launch. Storage
+    // operations validate SAF access again before writing.
     _log.w('Failed to validate SAF access during startup: $e');
     return false;
   }
@@ -373,12 +357,9 @@ class EagerInitialization extends ConsumerStatefulWidget {
 class _EagerInitializationState extends ConsumerState<EagerInitialization>
     with WidgetsBindingObserver {
   ProviderSubscription<bool>? _localLibraryEnabledSub;
-  Timer? _downloadHistoryWarmupTimer;
   Timer? _localLibraryWarmupTimer;
   bool _localLibraryWarmupScheduled = false;
   bool _autoScanTriggeredOnLaunch = false;
-  StreamSubscription<void>? _verificationNotificationSubscription;
-  StreamSubscription<void>? _extensionAuthCallbackSubscription;
 
   @override
   void initState() {
@@ -386,16 +367,7 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _verificationNotificationSubscription =
-          PlatformBridge.verificationNotificationEvents().listen(
-            (_) => unawaited(_consumeVerificationNotification()),
-          );
-      _extensionAuthCallbackSubscription =
-          PlatformBridge.extensionAuthCallbackEvents().listen(
-            (_) => unawaited(_completeExtensionCallback()),
-          );
       _initializeAppServices();
-      _initializeExtensions();
       _initializeDeferredProviders();
     });
   }
@@ -405,26 +377,14 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
     WidgetsBinding.instance.removeObserver(this);
     CoverCacheManager.stopMaintenance();
     _localLibraryEnabledSub?.close();
-    _downloadHistoryWarmupTimer?.cancel();
     _localLibraryWarmupTimer?.cancel();
-    _verificationNotificationSubscription?.cancel();
-    _extensionAuthCallbackSubscription?.cancel();
-    NotificationService().verificationNotifications.setHandler(null);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      unawaited(_consumeVerificationNotification());
       CoverCacheManager.scheduleMaintenance();
-      // Native downloads can finish while Flutter is suspended. Refresh the
-      // persisted history even when no queued item remains to reconcile.
-      if (ref.exists(downloadHistoryProvider)) {
-        unawaited(
-          ref.read(downloadHistoryProvider.notifier).reloadFromStorage(),
-        );
-      }
       _maybeAutoScanLocalLibrary();
       if (ref.exists(localLibraryProvider)) {
         unawaited(
@@ -433,25 +393,8 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
               .refreshSourceAvailability(scanReconnected: true),
         );
       }
-      if (ref.exists(downloadQueueProvider)) {
-        ref
-            .read(downloadQueueProvider.notifier)
-            .resumePendingDownloadsOnForeground();
-      }
     } else if (state == AppLifecycleState.paused) {
       CoverCacheManager.stopMaintenance();
-      // Last reliable moment before the OS may kill the process: make sure
-      // any debounced download-queue persistence reaches disk.
-      if (ref.exists(downloadQueueProvider)) {
-        unawaited(
-          ref
-              .read(downloadQueueProvider.notifier)
-              .flushQueuePersistence()
-              .catchError((Object error) {
-                _log.e('Failed to flush background download queue: $error');
-              }),
-        );
-      }
       // Backgrounded: release idle native runtimes and connections.
       unawaited(PlatformBridge.releaseNativeMemory());
     }
@@ -471,10 +414,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
   }
 
   void _initializeDeferredProviders() {
-    _downloadHistoryWarmupTimer = _scheduleProviderWarmup(
-      const Duration(milliseconds: 400),
-      () => ref.read(downloadHistoryProvider),
-    );
     _maybeScheduleLocalLibraryWarmup(
       ref.read(
         settingsProvider.select((settings) => settings.localLibraryEnabled),
@@ -569,56 +508,9 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
         NotificationService().initialize(),
         ShareIntentService().initialize(),
       ]);
+      _startupBenchmark?.appReady(ref.read(settingsProvider));
     } catch (e) {
       debugPrint('Failed to initialize app services: $e');
-    }
-  }
-
-  Future<void> _initializeExtensions() async {
-    try {
-      await ref.read(extensionProvider.notifier).ensureInitialized();
-      _startupBenchmark?.extensionsReady(
-        ref.read(extensionProvider),
-        ref.read(settingsProvider),
-      );
-      if (!mounted) return;
-      NotificationService().verificationNotifications.setHandler((
-        target,
-      ) async {
-        if (!mounted) return;
-        try {
-          await ref
-              .read(downloadQueueProvider.notifier)
-              .handleVerificationNotificationTap(target);
-        } catch (error) {
-          _log.w('Could not open verification notification: $error');
-          if (mounted) showExtensionVerificationUnavailable(target.extensionId);
-        }
-      });
-      await _consumeVerificationNotification();
-    } catch (e) {
-      debugPrint('Failed to initialize extensions: $e');
-    }
-  }
-
-  Future<void> _consumeVerificationNotification() async {
-    if (!mounted || !Platform.isAndroid) return;
-    try {
-      final payload = await PlatformBridge.consumeVerificationNotification();
-      if (mounted) {
-        NotificationService().verificationNotifications.receive(payload);
-      }
-    } catch (error) {
-      _log.w('Could not read pending verification notification: $error');
-    }
-  }
-
-  Future<void> _completeExtensionCallback() async {
-    try {
-      await ref.read(extensionProvider.notifier).ensureInitialized();
-      await PlatformBridge.processPendingExtensionCallbacks();
-    } catch (error) {
-      _log.w('Could not complete extension verification: $error');
     }
   }
 

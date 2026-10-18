@@ -724,8 +724,9 @@ extension _TrackMetadataLyricsAndSaving on _TrackMetadataScreenState {
           return;
         }
 
-        final treeUri = _downloadItem?.downloadTreeUri;
-        final relativeDir = _downloadItem?.safRelativeDir ?? '';
+        final location = resolveSafDocumentLocation(cleanFilePath);
+        final treeUri = location?.treeUri;
+        final relativeDir = location?.relativeDir ?? '';
         if (treeUri != null && treeUri.isNotEmpty) {
           final safUri = await PlatformBridge.createSafFileFromPath(
             treeUri: treeUri,
@@ -876,8 +877,9 @@ extension _TrackMetadataLyricsAndSaving on _TrackMetadataScreenState {
           return;
         }
 
-        final treeUri = _downloadItem?.downloadTreeUri;
-        final relativeDir = _downloadItem?.safRelativeDir ?? '';
+        final location = resolveSafDocumentLocation(cleanFilePath);
+        final treeUri = location?.treeUri;
+        final relativeDir = location?.relativeDir ?? '';
         if (treeUri != null && treeUri.isNotEmpty) {
           final safUri = await PlatformBridge.createSafFileFromPath(
             treeUri: treeUri,
@@ -982,63 +984,25 @@ extension _TrackMetadataLyricsAndSaving on _TrackMetadataScreenState {
   Future<void> _syncDownloadHistoryMetadata({bool? hasLyrics}) async {
     final resolvedHasLyrics =
         hasLyrics ?? (_embeddedLyricsChecked ? _lyricsEmbedded : null);
-    if (_isLocalItem) {
-      final item = _localLibraryItem;
-      if (item == null) return;
-      try {
-        await LibraryDatabase.instance.updateAudioMetadata(
-          item.id,
-          explicit: isExplicit,
-          hasLyrics: resolvedHasLyrics,
-        );
-        if (mounted) {
-          _setState(() {
-            _currentLocalLibraryItem = item.withAudioMetadata(
-              explicit: isExplicit,
-              hasLyrics: resolvedHasLyrics,
-            );
-          });
-        }
-        await ref.read(localLibraryProvider.notifier).reloadFromStorage();
-      } catch (e) {
-        _log.w('Failed to sync local library explicit metadata: $e');
-      }
-      return;
-    }
-    if (_downloadItem == null) return;
-
-    String? normalizedOrNull(String? value) {
-      if (value == null) return null;
-      final trimmed = value.trim();
-      if (trimmed.isEmpty) return null;
-      return trimmed;
-    }
-
+    final item = _localLibraryItem;
+    if (item == null) return;
     try {
-      await ref
-          .read(downloadHistoryProvider.notifier)
-          .updateMetadataForItem(
-            id: _downloadItem!.id,
-            trackName: trackName,
-            artistName: artistName,
-            albumName: albumName,
-            albumArtist: normalizedOrNull(albumArtist),
-            isrc: normalizedOrNull(isrc),
-            trackNumber: trackNumber,
-            totalTracks: totalTracks,
-            discNumber: discNumber,
-            totalDiscs: totalDiscs,
-            releaseDate: normalizedOrNull(releaseDate),
-            genre: normalizedOrNull(genre),
-            composer: normalizedOrNull(composer),
-            label: normalizedOrNull(label),
-            copyright: normalizedOrNull(copyright),
+      await LibraryDatabase.instance.updateAudioMetadata(
+        item.id,
+        explicit: isExplicit,
+        hasLyrics: resolvedHasLyrics,
+      );
+      if (mounted) {
+        _setState(() {
+          _currentLocalLibraryItem = item.withAudioMetadata(
             explicit: isExplicit,
             hasLyrics: resolvedHasLyrics,
-            lyricsMetadataScanVersion: resolvedHasLyrics == null ? null : 1,
           );
+        });
+      }
+      await ref.read(localLibraryProvider.notifier).reloadFromStorage();
     } catch (e) {
-      _log.w('Failed to sync download history metadata: $e');
+      _log.w('Failed to sync local library explicit metadata: $e');
     }
   }
 }

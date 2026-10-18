@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
@@ -33,19 +32,6 @@ class _Library extends LocalLibraryNotifier {
   Future<int> cleanupMissingFiles({String? iosBookmark}) => _cleanup();
 
   void _beginScan() => state = state.copyWith(isScanning: true);
-}
-
-class _History extends DownloadHistoryNotifier {
-  _History(this._count, this._cleanup);
-
-  final int _count;
-  final Future<int> Function() _cleanup;
-
-  @override
-  DownloadHistoryState build() => DownloadHistoryState(totalCount: _count);
-
-  @override
-  Future<int> cleanupOrphanedDownloads() => _cleanup();
 }
 
 class _RetryLibrary extends _Library {
@@ -82,7 +68,6 @@ Future<void> _mount(
   WidgetTester tester, {
   required bool mornye,
   required _Library library,
-  required _History history,
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(430, 1000);
@@ -93,7 +78,6 @@ Future<void> _mount(
       overrides: [
         settingsProvider.overrideWith(_Settings.new),
         localLibraryProvider.overrideWith(() => library),
-        downloadHistoryProvider.overrideWith(() => history),
       ],
       child: MaterialApp(
         theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
@@ -114,12 +98,7 @@ void main() {
       tester,
     ) async {
       final library = _RetryLibrary();
-      await _mount(
-        tester,
-        mornye: mornye,
-        library: library,
-        history: _History(0, () async => 0),
-      );
+      await _mount(tester, mornye: mornye, library: library);
       await tester.scrollUntilVisible(find.text('Retry'), -300);
       await tester.pumpAndSettle();
       expect(
@@ -135,23 +114,17 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('cleanup works for download-only Library ($mornye)', (
+    testWidgets('cleanup removes missing local files ($mornye)', (
       tester,
     ) async {
       final localDone = Completer<int>();
-      final downloadsDone = Completer<int>();
       var localCalls = 0;
-      var downloadCalls = 0;
       await _mount(
         tester,
         mornye: mornye,
-        library: _Library(LocalLibraryState(), () {
+        library: _Library(LocalLibraryState(totalCount: 1), () {
           localCalls++;
           return localDone.future;
-        }),
-        history: _History(8, () {
-          downloadCalls++;
-          return downloadsDone.future;
         }),
       );
       expect(tester.widget<SettingsItem>(_cleanupRow).onTap, isNotNull);
@@ -169,10 +142,7 @@ void main() {
       await tester.tap(find.text('Cleanup Missing Files'));
       await tester.pump();
       expect(localCalls, 1);
-      localDone.complete(0);
-      await tester.pump();
-      expect(downloadCalls, 1);
-      downloadsDone.complete(2);
+      localDone.complete(2);
       await tester.pumpAndSettle();
       expect(find.text('Removed 2 missing files from library'), findsOneWidget);
       expect(tester.widget<SettingsItem>(_cleanupRow).onTap, isNotNull);
@@ -183,7 +153,6 @@ void main() {
       tester,
     ) async {
       var calls = 0;
-      var downloadCalls = 0;
       await _mount(
         tester,
         mornye: mornye,
@@ -192,24 +161,18 @@ void main() {
           if (calls == 1) throw StateError('cleanup failed');
           return 1;
         }),
-        history: _History(1, () async {
-          downloadCalls++;
-          return 2;
-        }),
       );
       await tester.tap(find.text('Cleanup Missing Files'));
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsOneWidget);
       expect(find.textContaining('Error:'), findsOneWidget);
-      expect(downloadCalls, 0);
       expect(tester.widget<SettingsItem>(_cleanupRow).onTap, isNotNull);
       await tester.tap(find.text('Cleanup Missing Files'));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 5));
       await tester.pumpAndSettle();
-      expect(find.text('Removed 3 missing files from library'), findsOneWidget);
+      expect(find.text('Removed 1 missing files from library'), findsOneWidget);
       expect(calls, 2);
-      expect(downloadCalls, 1);
       expect(tester.takeException(), isNull);
     });
 
@@ -234,7 +197,6 @@ void main() {
           ),
           () async => 0,
         ),
-        history: _History(0, () async => 0),
       );
       expect(tester.widget<SettingsItem>(_cleanupRow).onTap, isNotNull);
       await tester.tap(find.text('Cleanup Missing Files'));
@@ -245,20 +207,11 @@ void main() {
 
     testWidgets('cleanup cannot race an active scan ($mornye)', (tester) async {
       var localCalls = 0;
-      var downloadCalls = 0;
       final library = _Library(LocalLibraryState(totalCount: 1), () async {
         localCalls++;
         return 0;
       });
-      await _mount(
-        tester,
-        mornye: mornye,
-        library: library,
-        history: _History(1, () async {
-          downloadCalls++;
-          return 0;
-        }),
-      );
+      await _mount(tester, mornye: mornye, library: library);
       final originalTap = tester.widget<SettingsItem>(_cleanupRow).onTap!;
       library._beginScan();
       await tester.pump();
@@ -266,7 +219,6 @@ void main() {
       originalTap();
       await tester.pump();
       expect(localCalls, 0);
-      expect(downloadCalls, 0);
       expect(tester.takeException(), isNull);
     });
   }

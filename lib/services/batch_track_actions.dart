@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/conversion_library_service.dart';
@@ -56,15 +55,12 @@ Future<void> showBatchConvertSheet(
   final sourceSampleRates = <int?>[];
   for (final item in selectedItems) {
     final sourceFormat = convertibleAudioSourceFormat(
-      storedFormat: item.localItem?.format ?? item.historyItem?.format,
+      storedFormat: item.localItem?.format,
       filePath: item.filePath,
-      fileName: item.historyItem?.safFileName,
     );
     if (sourceFormat != null) sourceFormats.add(sourceFormat);
-    sourceBitDepths.add(item.historyItem?.bitDepth ?? item.localItem?.bitDepth);
-    sourceSampleRates.add(
-      item.historyItem?.sampleRate ?? item.localItem?.sampleRate,
-    );
+    sourceBitDepths.add(item.localItem?.bitDepth);
+    sourceSampleRates.add(item.localItem?.sampleRate);
   }
 
   final formats = audioConversionTargetFormats
@@ -144,9 +140,8 @@ Future<void> _performBatchConversion(
   final convertibleItems = <UnifiedLibraryItem>[];
   for (final item in selectedItems) {
     final sourceFormat = convertibleAudioSourceFormat(
-      storedFormat: item.localItem?.format ?? item.historyItem?.format,
+      storedFormat: item.localItem?.format,
       filePath: item.filePath,
-      fileName: item.historyItem?.safFileName,
     );
     if (sourceFormat == null ||
         !canConvertAudioFormat(
@@ -251,9 +246,7 @@ Future<void> _performBatchConversion(
         'TITLE': item.trackName,
         'ARTIST': item.artistName,
         'ALBUM': item.albumName,
-        if (item.historyItem?.explicit == true ||
-            item.localItem?.explicit == true)
-          'ITUNESADVISORY': '1',
+        if (item.localItem?.explicit == true) 'ITUNESADVISORY': '1',
       };
       try {
         final result = await PlatformBridge.readFileMetadata(item.filePath);
@@ -267,10 +260,8 @@ Future<void> _performBatchConversion(
         shouldEmbedLyrics: shouldEmbedLyrics,
         trackName: item.trackName,
         artistName: item.artistName,
-        spotifyId: item.historyItem?.spotifyId ?? '',
-        durationMs:
-            ((item.historyItem?.duration ?? item.localItem?.duration) ?? 0) *
-            1000,
+        spotifyId: '',
+        durationMs: (item.localItem?.duration ?? 0) * 1000,
       );
 
       try {
@@ -312,7 +303,7 @@ Future<void> _performBatchConversion(
         coverPath: coverPath,
         artistTagMode: settings.artistTagMode,
         deleteOriginal: !isSaf && !keepOriginal,
-        sourceBitDepth: item.historyItem?.bitDepth ?? item.localItem?.bitDepth,
+        sourceBitDepth: item.localItem?.bitDepth,
         losslessQuality: losslessQuality,
         losslessProcessing: losslessProcessing,
       );
@@ -325,10 +316,8 @@ Future<void> _performBatchConversion(
       }
       if (isSaf) convertedSafTempPath = newPath;
 
-      final sourceBitDepth =
-          item.historyItem?.bitDepth ?? item.localItem?.bitDepth;
-      final sourceSampleRate =
-          item.historyItem?.sampleRate ?? item.localItem?.sampleRate;
+      final sourceBitDepth = item.localItem?.bitDepth;
+      final sourceSampleRate = item.localItem?.sampleRate;
       final isLosslessOutput = isLosslessConversionTarget(targetFormat);
       int? convertedBitDepth;
       int? convertedSampleRate;
@@ -349,71 +338,8 @@ Future<void> _performBatchConversion(
           sourceSampleRate,
         );
       }
-      final newQuality = convertedAudioQualityLabel(
-        targetFormat: targetFormat,
-        bitrate: bitrate,
-        labels: losslessLabels,
-        losslessQuality: losslessQuality,
-        actualBitDepth: convertedBitDepth,
-        actualSampleRate: convertedSampleRate,
-      );
 
-      if (isSaf && item.historyItem != null) {
-        failureStage = 'publish SAF output';
-        final hi = item.historyItem!;
-        final treeUri = hi.downloadTreeUri;
-        final relativeDir = hi.safRelativeDir ?? '';
-        if (treeUri != null && treeUri.isNotEmpty) {
-          final oldFileName = hi.safFileName ?? '';
-          final published = await ConversionLibraryService.publishSafConversion(
-            treeUri: treeUri,
-            relativeDir: relativeDir,
-            originalFileName: oldFileName,
-            targetFormat: targetFormat,
-            sourcePath: newPath,
-            keepOriginal: keepOriginal,
-          );
-          final safUri = published?.uri;
-
-          if (safUri == null || safUri.isEmpty) {
-            throw const _BatchConversionFailure(
-              'publish SAF output',
-              'destination file was not created',
-            );
-          }
-
-          if (!keepOriginal && !isSameContentUri(item.filePath, safUri)) {
-            try {
-              await PlatformBridge.safDelete(item.filePath);
-            } catch (_) {}
-          }
-
-          await ConversionLibraryService.persistHistoryConversion(
-            source: hi,
-            newFilePath: safUri,
-            newQuality: newQuality,
-            targetFormat: targetFormat,
-            bitrate: bitrate,
-            bitDepth: convertedBitDepth,
-            sampleRate: convertedSampleRate,
-            keepOriginal: keepOriginal,
-            newSafFileName: published!.fileName,
-          );
-        } else {
-          throw const _BatchConversionFailure(
-            'publish SAF output',
-            'download folder permission is unavailable',
-          );
-        }
-        try {
-          await File(newPath).delete();
-        } catch (_) {}
-        if (safTempPath != null) {
-          try {
-            await File(safTempPath).delete();
-          } catch (_) {}
-        }
-      } else if (isSaf && item.localItem != null) {
+      if (isSaf) {
         failureStage = 'publish SAF output';
         final location = resolveSafDocumentLocation(item.filePath);
 
@@ -464,17 +390,6 @@ Future<void> _performBatchConversion(
             await File(safTempPath).delete();
           } catch (_) {}
         }
-      } else if (item.historyItem != null) {
-        await ConversionLibraryService.persistHistoryConversion(
-          source: item.historyItem!,
-          newFilePath: newPath,
-          newQuality: newQuality,
-          targetFormat: targetFormat,
-          bitrate: bitrate,
-          bitDepth: convertedBitDepth,
-          sampleRate: convertedSampleRate,
-          keepOriginal: keepOriginal,
-        );
       } else if (item.localItem != null) {
         await LibraryDatabase.instance.replaceWithConvertedItem(
           item: item.localItem!,
@@ -515,7 +430,6 @@ Future<void> _performBatchConversion(
     }
   }
 
-  await ref.read(downloadHistoryProvider.notifier).reloadFromStorage();
   await ref.read(localLibraryProvider.notifier).reloadFromStorage();
 
   onExitSelectionMode();
@@ -625,15 +539,6 @@ Future<void> runBatchReplayGain(
       if (ok) {
         successCount++;
         try {
-          if (item.historyItem case final history?) {
-            await container
-                .read(downloadHistoryProvider.notifier)
-                .updateAudioMetadataForItem(
-                  id: history.id,
-                  hasReplayGain: !remove,
-                  replayGainMetadataScanVersion: 1,
-                );
-          }
           if (item.localItem case final local?) {
             await LibraryDatabase.instance.updateAudioMetadata(
               local.id,

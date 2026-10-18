@@ -1,11 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/library_playlist_search.dart';
 import 'package:spotiflac_android/services/library_search.dart';
 
@@ -23,20 +21,11 @@ final librarySearchTrackProvider = FutureProvider.autoDispose
       ref,
       key,
     ) async {
-      if (key.source == 'local') {
-        final row = await LibraryDatabase.instance.getById(key.id);
-        return row == null
-            ? null
-            : UnifiedLibraryItem.fromLocalLibrary(
-                LocalLibraryItem.fromJson(row),
-              );
-      }
-      final row = await HistoryDatabase.instance.getById(key.id);
+      if (key.source != 'local') return null;
+      final row = await LibraryDatabase.instance.getById(key.id);
       return row == null
           ? null
-          : UnifiedLibraryItem.fromDownloadHistory(
-              DownloadHistoryItem.fromJson(row),
-            );
+          : UnifiedLibraryItem.fromLocalLibrary(LocalLibraryItem.fromJson(row));
     });
 
 final librarySearchProvider = FutureProvider.autoDispose
@@ -54,17 +43,12 @@ final librarySearchProvider = FutureProvider.autoDispose
           offset: request.offset,
         );
       }
-      final includeLocal = ref.watch(
-        settingsProvider.select((s) => s.localLibraryEnabled),
-      );
-      ref.watch(downloadHistoryProvider.select((s) => s.loadedIndexVersion));
-      if (includeLocal) {
-        ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
-      }
+      ref.watch(settingsProvider.select((s) => s.localLibraryEnabled));
+      ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
       return LibraryDatabase.instance.searchLibrary(
         query: request.query,
         kind: request.kind,
-        includeLocal: includeLocal,
+        includeLocal: true,
         limit: request.limit,
         offset: request.offset,
       );

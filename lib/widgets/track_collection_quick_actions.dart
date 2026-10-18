@@ -8,14 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/utils/local_playback.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:spotiflac_android/widgets/track_collection_action_policy.dart';
-import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
 
 class TrackCollectionQuickActions extends ConsumerWidget {
@@ -99,27 +96,11 @@ class _TrackOptionsSheet extends ConsumerWidget {
     final isInWishlist = ref.watch(
       libraryCollectionsProvider.select((state) => state.isInWishlist(track)),
     );
-    final allowQualityVariants = ref.watch(
-      settingsProvider.select((settings) => settings.allowQualityVariants),
-    );
-    final qualityVariantAction = resolveQualityVariantMenuAction(
-      allowQualityVariants: allowQualityVariants,
-      hasLocalPlaybackCandidate: hasLocalPlaybackCandidate,
-    );
 
     if (context.isMornye) {
       final l10n = context.l10n;
       return MornyeContextMenu(
         quickActions: [
-          MornyeMenuAction(
-            icon: CupertinoIcons.arrow_down_circle_fill,
-            label: l10n.dialogDownload,
-            onPressed: () {
-              final root = Navigator.of(context, rootNavigator: true).context;
-              Navigator.pop(context);
-              downloadSingleTrack(root, ref, track);
-            },
-          ),
           MornyeMenuAction(
             icon: CupertinoIcons.star_fill,
             label: isLoved ? l10n.mornyeFavorited : l10n.mornyeFavorite,
@@ -149,18 +130,11 @@ class _TrackOptionsSheet extends ConsumerWidget {
         ],
         groups: [
           [
-            if (qualityVariantAction == QualityVariantMenuAction.playLocal)
+            if (hasLocalPlaybackCandidate)
               MornyeMenuAction(
                 icon: CupertinoIcons.play,
                 label: l10n.trackMetadataPlay,
                 onPressed: () => _playLocal(context, ref),
-              ),
-            if (qualityVariantAction ==
-                QualityVariantMenuAction.downloadAnotherQuality)
-              MornyeMenuAction(
-                icon: CupertinoIcons.arrow_down_circle,
-                label: l10n.trackOptionDownloadQualityVariant,
-                onPressed: () => _downloadQualityVariant(context, ref),
               ),
             MornyeMenuAction(
               icon: CupertinoIcons.square_stack,
@@ -278,7 +252,6 @@ class _TrackOptionsSheet extends ConsumerWidget {
                                 artistName: track.artistName,
                                 artistId: track.artistId,
                                 coverUrl: track.coverUrl,
-                                extensionId: track.source,
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: colorScheme.onSurfaceVariant,
@@ -299,18 +272,11 @@ class _TrackOptionsSheet extends ConsumerWidget {
                 color: colorScheme.outlineVariant.withValues(alpha: 0.5),
               ),
 
-              if (qualityVariantAction == QualityVariantMenuAction.playLocal)
+              if (hasLocalPlaybackCandidate)
                 _OptionTile(
                   icon: Icons.play_arrow_rounded,
                   title: context.l10n.trackMetadataPlay,
                   onTap: () => _playLocal(context, ref),
-                )
-              else if (qualityVariantAction ==
-                  QualityVariantMenuAction.downloadAnotherQuality)
-                _OptionTile(
-                  icon: Icons.download_outlined,
-                  title: context.l10n.trackOptionDownloadQualityVariant,
-                  onTap: () => _downloadQualityVariant(context, ref),
                 ),
 
               _OptionTile(
@@ -407,12 +373,6 @@ class _TrackOptionsSheet extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _downloadQualityVariant(BuildContext context, WidgetRef ref) {
-    final rootContext = Navigator.of(context, rootNavigator: true).context;
-    Navigator.pop(context);
-    downloadSingleTrack(rootContext, ref, track, forceQualityPicker: true);
   }
 
   Future<void> _toggleCollection(

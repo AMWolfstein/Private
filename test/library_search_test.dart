@@ -52,17 +52,17 @@ def track(local, id, title, artist, album, path=None, enabled=1):
     db.execute('INSERT INTO '+fts+' (rowid, search_text) VALUES (?, ?)', (cur.lastrowid, fields['search_text']))
     paths = 'library_path_keys' if local else 'history_db.history_path_keys'
     db.execute('INSERT INTO '+paths+' VALUES (?, ?)', (id, path))
-track(False, '1', 'Lilac', 'Mrs. GREEN APPLE', 'Spring')
-track(False, '2', 'Blue', 'Mrs. GREEN APPLE', 'Spring')
-track(False, '3', 'Live Lilac', 'Someone Else', 'Concert')
+track(True, '1', 'Lilac', 'Mrs. GREEN APPLE', 'Spring')
+track(True, '2', 'Blue', 'Mrs. GREEN APPLE', 'Spring')
+track(True, '3', 'Live Lilac', 'Someone Else', 'Concert')
 track(True, 'local', 'Lilac acoustic', 'Mrs. GREEN APPLE', 'Acoustic')
 track(True, 'duplicate', 'Lilac', 'Mrs. GREEN APPLE', 'Spring', path='/1.flac')
 track(True, 'hidden', 'Lilac hidden', 'Hidden Artist', 'Hidden', enabled=0)
-track(False, '4', "Don't Stop", 'Artist', 'Night')
+track(True, '4', "Don't Stop", 'Artist', 'Night')
 track(True, '5', '夜の歌', '歌手', '夜空')
-track(False, '6', 'OR Nothing', 'Artist', 'Night')
+track(True, '6', 'OR Nothing', 'Artist', 'Night')
 for i in range(85):
-    track(False, 'page-'+str(i), 'Page '+str(i).zfill(3), 'Artist', 'Many')
+    track(True, 'page-'+str(i), 'Page '+str(i).zfill(3), 'Artist', 'Many')
 query = json.loads(sys.argv[1])
 for extra in query['extra_tracks']:
     track(extra['local'], extra['id'], extra['title'], 'Artist', extra['album'], path=extra['path'])
@@ -84,11 +84,7 @@ print(json.dumps([dict(row) for row in db.execute(query['sql'], query['args'])])
 void main() {
   for (final fts in [false, true]) {
     group('Library search (FTS: $fts)', () {
-      final store = LibrarySearchStore(
-        _SearchDatabase(),
-        historyFts: fts,
-        localFts: fts,
-      );
+      final store = LibrarySearchStore(_SearchDatabase(), localFts: fts);
       Future<List<LibrarySearchHit>> search(
         String query, {
         LibrarySearchKind kind = LibrarySearchKind.songs,
@@ -108,30 +104,30 @@ void main() {
         () async {
           expect((await search('green lil')).map((hit) => hit.id), [
             '1',
+            'duplicate',
             'local',
           ]);
           expect((await search('mrs.   APPLE lilac')).map((hit) => hit.id), [
             '1',
+            'duplicate',
             'local',
           ]);
         },
       );
       test(
-        'ranks exact title first and excludes hidden sources and duplicate paths',
+        'ranks exact titles first and excludes hidden sources',
         () async {
           expect((await search('lilac')).map((hit) => hit.id), [
             '1',
+            'duplicate',
             'local',
             '3',
           ]);
-          expect(
-            (await search('lilac', includeLocal: false)).map((hit) => hit.id),
-            ['1', '3'],
-          );
+          expect(await search('lilac', includeLocal: false), isEmpty);
         },
       );
       test(
-        'scan and download tree aliases appear as one search result',
+        'SAF tree paths remain searchable local results',
         () async {
           const provider = 'org.example.documents';
           const documentId = 'account:Music/Album/Tree Song.flac';
@@ -176,7 +172,6 @@ void main() {
                 ),
               ],
             ),
-            historyFts: fts,
             localFts: fts,
           );
           final hits = await treeStore.search(
@@ -184,7 +179,7 @@ void main() {
             kind: LibrarySearchKind.songs,
             includeLocal: true,
           );
-          expect(hits.map((hit) => hit.id), ['tree-download', 'tree-other']);
+          expect(hits.map((hit) => hit.id), ['tree-other', 'tree-scan']);
         },
       );
       test(
@@ -204,7 +199,7 @@ void main() {
             kind: LibrarySearchKind.albums,
           );
           expect(hits.single.title, 'Spring');
-          expect(hits.single.trackCount, 2);
+          expect(hits.single.trackCount, 3);
           expect(
             await search('lilac', kind: LibrarySearchKind.albums),
             isEmpty,
@@ -212,11 +207,11 @@ void main() {
         },
       );
       test(
-        'artists combine local and downloaded songs without counting duplicate files',
+        'artists group every matching local song',
         () async {
           final hits = await search('green', kind: LibrarySearchKind.artists);
           expect(hits.single.title, 'Mrs. GREEN APPLE');
-          expect(hits.single.trackCount, 3);
+          expect(hits.single.trackCount, 4);
         },
       );
       test(

@@ -5,7 +5,7 @@ import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
 import 'package:spotiflac_android/utils/library_format_filters.dart';
 
-// SQL builders for the queue tab's history+local union queries.
+// SQL builders for the queue tab's local-library queries.
 
 String confirmedMissingLyricsSqlPredicate({
   required String hasLyricsExpr,
@@ -15,6 +15,18 @@ String confirmedMissingLyricsSqlPredicate({
 String missingReplayGainSqlPredicate({required String hasReplayGainExpr}) =>
     'COALESCE($hasReplayGainExpr, 0) = 0';
 
+/// Album inventory for completeness assessment over scanned local tracks.
+/// Retained rows on disconnected sources still make the assessment unknown.
+String localAlbumInventorySql() {
+  return '''
+    SELECT l.album_key, LOWER(TRIM(l.track_name)) AS title,
+      l.track_number, l.total_tracks, l.disc_number, l.total_discs,
+      CASE WHEN source.available = 0 THEN 1 ELSE 0 END AS unavailable
+    FROM library l LEFT JOIN library_sources source ON source.id = l.source_id
+    WHERE COALESCE(source.enabled, 1) = 1
+  ''';
+}
+
 class _QueueOrderTerm {
   final String column;
   final bool descending;
@@ -22,17 +34,12 @@ class _QueueOrderTerm {
   const _QueueOrderTerm(this.column, {this.descending = false});
 }
 
-/// Queue reads against an already opened library with history attached.
+/// Queue reads against an already opened local library.
 class LibraryQueueStore {
   final Database _db;
-  final bool historyFts;
   final bool localFts;
 
-  const LibraryQueueStore(
-    this._db, {
-    required this.historyFts,
-    required this.localFts,
-  });
+  const LibraryQueueStore(this._db, {required this.localFts});
 
   Future<QueueLibraryDbPage> trackPage(QueueLibraryDbQuery request) async {
     final args = <Object?>[];
@@ -67,35 +74,8 @@ class LibraryQueueStore {
     final parts = <String>[];
     final args = <Object?>[];
 
-    if (request.source != 'local') {
-      final where = <String>[];
-      _appendQueueHistoryFilters(where, args, request);
-      parts.add('''
-        SELECT
-          COUNT(*) AS all_count,
-          COUNT(DISTINCT CASE WHEN grouped.track_count > ${isAlbumCompletenessFilter(request.metadata) ? 0 : 1} THEN h.album_key END) AS album_count,
-          COALESCE(SUM(CASE WHEN grouped.track_count = 1 THEN 1 ELSE 0 END), 0) AS single_count
-        FROM history_db.history h
-        JOIN (
-          SELECT album_key, COUNT(*) AS track_count
-          FROM history_db.history
-          GROUP BY album_key
-        ) grouped ON grouped.album_key = h.album_key
-        ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
-      ''');
-    }
-
     if (request.includeLocal && request.source != 'downloaded') {
-      final where = <String>[
-        '''
-        NOT EXISTS (
-          SELECT 1
-          FROM library_path_keys lpk
-          JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-          WHERE lpk.item_id = l.id
-        )
-        ''',
-      ];
+      final where = <String>[];
       _appendQueueLocalFilters(where, args, request);
       parts.add('''
         SELECT
@@ -106,15 +86,9 @@ class LibraryQueueStore {
         JOIN (
           SELECT album_key, COUNT(*) AS track_count
           FROM ${LibrarySchema.visibleView} candidate
-          WHERE NOT EXISTS (
-            SELECT 1
-            FROM library_path_keys lpk
-            JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-            WHERE lpk.item_id = candidate.id
-          )
           GROUP BY album_key
         ) grouped ON grouped.album_key = l.album_key
-        WHERE ${where.join(' AND ')}
+        ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
       ''');
     }
 
@@ -161,19 +135,6 @@ class LibraryQueueStore {
     }
 
     final parts = <String>[];
-    if (source != 'local') {
-      parts.add('''
-        SELECT
-          COALESCE(SUM(track_count), 0) AS all_count,
-          COALESCE(SUM(CASE WHEN track_count > 1 THEN 1 ELSE 0 END), 0) AS album_count,
-          COALESCE(SUM(CASE WHEN track_count = 1 THEN 1 ELSE 0 END), 0) AS single_count
-        FROM (
-          SELECT album_key, COUNT(*) AS track_count
-          FROM history_db.history
-          GROUP BY album_key
-        )
-      ''');
-    }
     if (request.includeLocal && source != 'downloaded') {
       parts.add('''
         SELECT
@@ -183,12 +144,6 @@ class LibraryQueueStore {
         FROM (
           SELECT l.album_key, COUNT(*) AS track_count
           FROM ${LibrarySchema.visibleView} l
-          WHERE NOT EXISTS (
-            SELECT 1
-            FROM library_path_keys lpk
-            JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-            WHERE lpk.item_id = l.id
-          )
           GROUP BY l.album_key
         )
       ''');
@@ -243,31 +198,14 @@ class LibraryQueueStore {
     );
   }
 
-  /// Album artists across downloaded and scanned music, without loading tracks
-  /// into Dart. Scanned paths already represented by downloads are excluded.
+  /// Album artists across the scanned local library, without loading tracks
+  /// into Dart.
   Future<List<Map<String, dynamic>>> artistPage(
     QueueLibraryDbQuery request,
   ) async {
-    final parts = <String>[
-      '''
-        SELECT sort_album_artist AS artist_key,
-          COALESCE(NULLIF(album_artist, ''), artist_name) AS artist_name,
-          cover_url, NULL AS cover_path, file_path AS sample_file_path
-        FROM history_db.history
-      ''',
-      if (request.includeLocal)
-        '''
-          SELECT album_artist_norm AS artist_key,
-            COALESCE(NULLIF(album_artist, ''), artist_name) AS artist_name,
-            NULL AS cover_url, cover_path, file_path AS sample_file_path
-          FROM ${LibrarySchema.visibleView} l
-          WHERE NOT EXISTS (
-            SELECT 1 FROM library_path_keys lpk
-            JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-            WHERE lpk.item_id = l.id
-          )
-        ''',
-    ];
+    if (!request.includeLocal || request.source == 'downloaded') {
+      return const [];
+    }
     final search = sqlite.normalizeLookupText(request.searchQuery);
     return _db.rawQuery(
       '''
@@ -276,7 +214,12 @@ class LibraryQueueStore {
         MAX(NULLIF(cover_path, '')) AS cover_path,
         MAX(sample_file_path) AS sample_file_path,
         COUNT(*) AS track_count
-      FROM (${parts.join(' UNION ALL ')})
+      FROM (
+        SELECT album_artist_norm AS artist_key,
+          COALESCE(NULLIF(album_artist, ''), artist_name) AS artist_name,
+          NULL AS cover_url, cover_path, file_path AS sample_file_path
+        FROM ${LibrarySchema.visibleView} l
+      )
       WHERE artist_key != '' ${search.isEmpty ? '' : "AND artist_key LIKE ? ESCAPE '\\'"}
       GROUP BY artist_key
       ORDER BY artist_key
@@ -304,103 +247,14 @@ class LibraryQueueStore {
     required bool usesCursor,
   }) {
     final parts = <String>[];
-    if (request.source != 'local') {
-      final where = <String>[];
-      _appendQueueHistoryFilters(where, args, request);
-      if (request.filterMode == 'singles') {
-        where.add('''
-          h.album_key IN (
-            SELECT album_key
-            FROM history_db.history
-            GROUP BY album_key
-            HAVING COUNT(*) = 1
-          )
-          ''');
-      }
-      final selectSql =
-          '''
-        SELECT
-          'downloaded' AS queue_source,
-          'dl_' || h.id AS unified_id,
-          h.id,
-          h.track_name,
-          h.artist_name,
-          h.album_name,
-          h.album_artist,
-          h.cover_url,
-          h.file_path,
-          h.storage_mode,
-          h.download_tree_uri,
-          h.saf_relative_dir,
-          h.saf_file_name,
-          h.saf_repaired,
-          h.service,
-          h.downloaded_at,
-          h.isrc,
-          h.spotify_id,
-          h.track_number,
-          h.total_tracks,
-          h.disc_number,
-          h.total_discs,
-          h.duration,
-          h.release_date,
-          h.quality,
-          h.bit_depth,
-          h.sample_rate,
-          h.genre,
-          h.composer,
-          h.label,
-          h.copyright,
-          NULL AS cover_path,
-          NULL AS scanned_at,
-          NULL AS file_mod_time,
-          h.bitrate,
-          h.format,
-          h.has_replaygain,
-          h.replaygain_metadata_scan_version,
-          h.sort_track,
-          h.sort_artist,
-          h.sort_album,
-          h.sort_genre,
-          h.sort_release,
-          h.sort_added
-        FROM history_db.history h
-        ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
-        ''';
-      parts.add(
-        _boundedQueuePart(
-          selectSql,
-          request,
-          args,
-          orderTerms,
-          usesCursor: usesCursor,
-        ),
-      );
-    }
-
     if (request.includeLocal && request.source != 'downloaded') {
-      final where = <String>[
-        '''
-        NOT EXISTS (
-          SELECT 1
-          FROM library_path_keys lpk
-          JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-          WHERE lpk.item_id = l.id
-        )
-        ''',
-      ];
+      final where = <String>[];
       _appendQueueLocalFilters(where, args, request);
       if (request.filterMode == 'singles') {
         where.add('''
           l.album_key IN (
             SELECT album_key
             FROM ${LibrarySchema.visibleView} candidate
-            WHERE NOT EXISTS (
-              SELECT 1
-              FROM library_path_keys lpk
-              JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-              WHERE lpk.item_id = candidate.id
-            )
             GROUP BY album_key
             HAVING COUNT(*) = 1
           )
@@ -537,79 +391,15 @@ class LibraryQueueStore {
     final minimumTracks =
         request.includeSingleTrackAlbums || assessesCompleteness ? 0 : 1;
     final completenessSql = assessesCompleteness
-        ? albumCompletenessSql(
-            albumInventorySql(includeLocal: request.includeLocal),
-          )
+        ? albumCompletenessSql(localAlbumInventorySql())
         : null;
     final completenessColumns = assessesCompleteness
         ? 'ac.album_completeness, ac.album_present_tracks, ac.album_expected_tracks,'
         : 'NULL AS album_completeness, NULL AS album_present_tracks, NULL AS album_expected_tracks,';
     final parts = <String>[];
-    if (request.source != 'local') {
-      final albumKey = unfiltered ? 'h.album_key' : 'c.album_key';
-      final where = <String>[];
-      _appendQueueHistoryFilters(
-        where,
-        args,
-        request,
-        hasCompletenessJoin: assessesCompleteness,
-      );
-      final selectSql =
-          '''
-        SELECT
-          'downloaded' AS queue_source,
-          $albumKey AS album_key,
-          MIN(h.album_name) AS album_name,
-          COALESCE(NULLIF(MIN(h.album_artist), ''), MIN(h.artist_name)) AS artist_name,
-          MAX(CASE WHEN h.cover_url IS NOT NULL AND h.cover_url != '' THEN h.cover_url END) AS cover_url,
-          NULL AS cover_path,
-          MAX(h.file_path) AS sample_file_path,
-          COUNT(*) AS track_count,
-          $completenessColumns
-          ${unfiltered ? 'MAX(COALESCE(h.sort_added, 0))' : 'c.latest_added'} AS sort_added,
-          MIN(COALESCE(h.sort_album, '')) AS sort_album,
-          MIN(COALESCE(h.sort_album_artist, '')) AS sort_artist,
-          COALESCE(MAX(h.release_date), '') AS sort_release,
-          COALESCE(MAX(h.sort_genre), '') AS sort_genre
-        FROM history_db.history h
-        ${unfiltered ? '' : '''JOIN (
-          SELECT
-            album_key,
-            COUNT(*) AS track_count,
-            MAX(COALESCE(sort_added, 0)) AS latest_added
-          FROM history_db.history
-          GROUP BY album_key
-          HAVING COUNT(*) > $minimumTracks
-        ) c
-          ON c.album_key = h.album_key'''}
-        ${assessesCompleteness ? 'JOIN ($completenessSql) ac ON ac.album_key = h.album_key' : ''}
-        ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
-        GROUP BY $albumKey
-        ${unfiltered ? 'HAVING $albumKey IS NOT NULL AND COUNT(*) > $minimumTracks' : ''}
-        ''';
-      parts.add(
-        _boundedQueuePart(
-          selectSql,
-          request,
-          args,
-          orderTerms,
-          usesCursor: usesCursor,
-        ),
-      );
-    }
-
     if (request.includeLocal && request.source != 'downloaded') {
       final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
-      final where = <String>[
-        '''
-        NOT EXISTS (
-          SELECT 1
-          FROM library_path_keys lpk
-          JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-          WHERE lpk.item_id = l.id
-        )
-        ''',
-      ];
+      final where = <String>[];
       _appendQueueLocalFilters(
         where,
         args,
@@ -640,12 +430,6 @@ class LibraryQueueStore {
             COUNT(*) AS track_count,
             MAX(COALESCE(sort_added, 0)) AS latest_added
           FROM ${LibrarySchema.visibleView} candidate
-          WHERE NOT EXISTS (
-            SELECT 1
-            FROM library_path_keys lpk
-            JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-            WHERE lpk.item_id = candidate.id
-          )
           GROUP BY album_key
           HAVING COUNT(*) > $minimumTracks
         ) c ON c.album_key = l.album_key'''}
@@ -688,62 +472,6 @@ class LibraryQueueStore {
       ''';
     }
     return parts.join(' UNION ALL ');
-  }
-
-  void _appendQueueHistoryFilters(
-    List<String> where,
-    List<Object?> args,
-    QueueLibraryDbQuery request, {
-    bool hasCompletenessJoin = false,
-  }) {
-    _appendAlbumCompletenessFilter(
-      where,
-      request,
-      albumKey: 'h.album_key',
-      hasJoin: hasCompletenessJoin,
-    );
-    if (request.albumArtist != null) {
-      where.add('h.sort_album_artist = ?');
-      args.add(sqlite.normalizeLookupText(request.albumArtist));
-    }
-    final query = sqlite.normalizeLookupText(request.searchQuery);
-    if (query.isNotEmpty) {
-      final ftsQuery = sqlite.ftsPhraseSearchQuery(query);
-      if (historyFts && ftsQuery != null) {
-        where.add('''
-          h.rowid IN (
-            SELECT rowid
-            FROM history_db.history_search_fts
-            WHERE history_search_fts MATCH ?
-          )
-          ''');
-        args.add(ftsQuery);
-      } else {
-        final like = '%${_escapeLikePattern(query)}%';
-        where.add("h.search_text LIKE ? ESCAPE '\\'");
-        args.add(like);
-      }
-    }
-    _appendQueueCommonFilters(
-      where,
-      args,
-      request,
-      filePathExpr: 'h.file_path',
-      formatExpr: 'h.format',
-      qualityExpr: 'h.quality',
-      bitDepthExpr: 'h.bit_depth',
-      artistExpr: 'h.artist_name',
-      albumArtistExpr: 'h.album_artist',
-      releaseDateExpr: 'h.release_date',
-      genreExpr: 'h.genre',
-      trackNumberExpr: 'h.track_number',
-      discNumberExpr: 'h.disc_number',
-      isrcExpr: 'h.isrc',
-      labelExpr: 'h.label',
-      hasLyricsExpr: 'h.has_lyrics',
-      lyricsKnownExpr: 'COALESCE(h.lyrics_metadata_scan_version, 0) >= 1',
-      hasReplayGainExpr: 'h.has_replaygain',
-    );
   }
 
   void _appendQueueLocalFilters(
@@ -819,9 +547,7 @@ class LibraryQueueStore {
       where.add("ac.album_completeness = '$status'");
       return;
     }
-    final assessment = albumCompletenessSql(
-      albumInventorySql(includeLocal: request.includeLocal),
-    );
+    final assessment = albumCompletenessSql(localAlbumInventorySql());
     where.add(
       "$albumKey IN (SELECT album_key FROM ($assessment) WHERE album_completeness = '$status')",
     );
@@ -992,73 +718,61 @@ class LibraryQueueStore {
       'oldest' => const [
         _QueueOrderTerm('sort_added'),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'a-z' => const [
         _QueueOrderTerm('sort_track'),
         _QueueOrderTerm('sort_artist'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'z-a' => const [
         _QueueOrderTerm('sort_track', descending: true),
         _QueueOrderTerm('sort_artist', descending: true),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'artist-asc' => const [
         _QueueOrderTerm('sort_artist'),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'artist-desc' => const [
         _QueueOrderTerm('sort_artist', descending: true),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'album-asc' => const [
         _QueueOrderTerm('sort_album'),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'album-desc' => const [
         _QueueOrderTerm('sort_album', descending: true),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'release-oldest' => const [
         _QueueOrderTerm('sort_release'),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'release-newest' => const [
         _QueueOrderTerm('sort_release', descending: true),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'genre-asc' => const [
         _QueueOrderTerm('sort_genre'),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       'genre-desc' => const [
         _QueueOrderTerm('sort_genre', descending: true),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
       _ => const [
         _QueueOrderTerm('sort_added', descending: true),
         _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('id'),
       ],
     };
@@ -1069,61 +783,51 @@ class LibraryQueueStore {
       'oldest' => const [
         _QueueOrderTerm('sort_added'),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'a-z' || 'album-asc' => const [
         _QueueOrderTerm('sort_album'),
         _QueueOrderTerm('sort_artist'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'z-a' || 'album-desc' => const [
         _QueueOrderTerm('sort_album', descending: true),
         _QueueOrderTerm('sort_artist', descending: true),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'artist-asc' => const [
         _QueueOrderTerm('sort_artist'),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'artist-desc' => const [
         _QueueOrderTerm('sort_artist', descending: true),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'release-oldest' => const [
         _QueueOrderTerm('sort_release'),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'release-newest' => const [
         _QueueOrderTerm('sort_release', descending: true),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'genre-asc' => const [
         _QueueOrderTerm('sort_genre'),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       'genre-desc' => const [
         _QueueOrderTerm('sort_genre', descending: true),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
       _ => const [
         _QueueOrderTerm('sort_added', descending: true),
         _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('queue_source'),
         _QueueOrderTerm('album_key'),
       ],
     };
@@ -1173,7 +877,7 @@ class LibraryQueueStore {
   }
 
   Map<String, dynamic> _queueTrackRowToJson(Map<String, dynamic> row) {
-    final source = row['queue_source'] as String? ?? '';
+    final source = row['queue_source'] as String? ?? 'local';
     final item = <String, dynamic>{
       'id': row['id'],
       'trackName': row['track_name'],
@@ -1198,24 +902,24 @@ class LibraryQueueStore {
       'composer': row['composer'],
       'label': row['label'],
       'copyright': row['copyright'],
-      if (source == 'local') ...{
-        'coverPath': row['cover_path'],
-        'scannedAt': row['scanned_at'],
-        'fileModTime': row['file_mod_time'],
-      } else ...{
-        'coverUrl': row['cover_url'],
-        'storageMode': row['storage_mode'],
-        'downloadTreeUri': row['download_tree_uri'],
-        'safRelativeDir': row['saf_relative_dir'],
-        'safFileName': row['saf_file_name'],
-        'safRepaired': row['saf_repaired'] == 1 || row['saf_repaired'] == true,
-        'service': row['service'],
-        'downloadedAt': row['downloaded_at'],
-        'spotifyId': row['spotify_id'],
-        'quality': row['quality'],
-        'replayGainMetadataScanVersion':
-            row['replaygain_metadata_scan_version'] ?? 0,
-      },
+      // Download-era keys stay present (null for local rows) so screens can
+      // drop them in parallel without any read path crashing.
+      'coverUrl': row['cover_url'],
+      'coverPath': row['cover_path'],
+      'scannedAt': row['scanned_at'],
+      'fileModTime': row['file_mod_time'],
+      'storageMode': row['storage_mode'],
+      'downloadTreeUri': row['download_tree_uri'],
+      'safRelativeDir': row['saf_relative_dir'],
+      'safFileName': row['saf_file_name'],
+      'safRepaired': row['saf_repaired'] == 1 || row['saf_repaired'] == true,
+      'service': row['service'],
+      // Downloaded rows kept this key; local rows fall back to the scan-time
+      // added timestamp until screens stop reading it.
+      'downloadedAt': row['downloaded_at'] ?? row['sort_added'],
+      'spotifyId': row['spotify_id'],
+      'quality': row['quality'],
+      'replayGainMetadataScanVersion': row['replaygain_metadata_scan_version'] ?? 0,
     };
     return {'source': source, 'item': item};
   }

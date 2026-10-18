@@ -6,21 +6,16 @@ part 'settings.g.dart';
 
 @JsonSerializable()
 class AppSettings {
-  static const String homeFeedProviderOff = '__off__';
   static const String libraryQualityLabelBitrate = 'bitrate';
   static const String libraryQualityLabelFileFormat = 'file_format';
   static const String libraryQualityLabelBitDepthOnly = 'bit_depth_only';
   static const String libraryQualityLabelBitDepth = 'bit_depth';
   static const String libraryQualityLabelBitDepthBitrate = 'bit_depth_bitrate';
 
-  final String defaultService;
-  final String audioQuality;
-  final String filenameFormat;
   final String downloadDirectory;
   final String downloadDirectoryBookmark;
   final String storageMode; // 'app' or 'saf'
   final String downloadTreeUri; // SAF persistable tree URI
-  final bool autoFallback;
   final bool embedMetadata;
 
   /// Maximum width or height of remotely fetched artwork before embedding.
@@ -62,11 +57,7 @@ class AppSettings {
   final bool autoplayPersonalization;
   final bool isFirstLaunch;
   final bool hasSearchedBefore;
-  final String folderOrganization;
-  final bool createPlaylistFolder;
-  final bool useAlbumArtistForFolders;
-  final bool usePrimaryArtistOnly; // Strip featured artists from folder name
-  final bool filterContributingArtistsInAlbumArtist;
+  final String albumFolderStructure;
   final String historyViewMode;
   final String historyFilterMode;
 
@@ -77,50 +68,17 @@ class AppSettings {
   /// Library badge text: measured bitrate, file format, bit depth,
   /// bit depth/sample rate, or the combined bit depth/bitrate label.
   final String libraryQualityLabelMode;
-  final bool askQualityBeforeDownload;
   final bool enableLogging;
-  final bool useExtensionProviders;
-  final List<String>? downloadFallbackExtensionIds;
-  final String? searchProvider;
-  final String defaultSearchTab;
-  final String? homeFeedProvider;
-  final bool separateSingles;
-  final String singleFilenameFormat;
-  final String albumFolderStructure;
-
-  /// Shared-element (Hero) flights, e.g. the mini player artwork expanding
-  /// into the full player. Off skips the flights entirely.
   final bool heroAnimationsEnabled;
 
   /// Forces the shell's backdrop blur on even when the startup runtime
   /// profile disabled it for this device tier. Off means "follow the
   /// device default".
   final bool forceBackdropBlur;
-  final String
-  extensionVerificationBrowserMode; // 'external_first' or 'in_app_first'
   final String locale;
   final String lyricsMode;
   final bool keepScreenOnLyrics;
   final bool listeningStatisticsEnabled;
-  final bool autoConvertDownloads;
-  // Re-download a Hi-Res request at LOSSLESS when the file measures as fake.
-  final bool redownloadFakeHiRes;
-  final String autoConvertFormat; // 'mp3', 'aac' (M4A), or 'opus'
-  final String autoConvertBitrate; // '128k', '192k', '256k', or '320k'
-  final bool
-  useAllFilesAccess; // Android 13+ only: enable MANAGE_EXTERNAL_STORAGE
-  final bool autoExportFailedDownloads;
-  final String
-  downloadNetworkMode; // 'any' = WiFi + Mobile, 'wifi_only' = WiFi only
-  final bool
-  networkCompatibilityMode; // Try HTTP + allow invalid TLS cert for API requests
-  final bool
-  allowLocalNetwork; // Allow requests to private/local network targets (local proxy / custom DNS)
-  final String
-  songLinkRegion; // SongLink userCountry region code used for platform lookup
-  final bool nativeDownloadWorkerEnabled; // Android service-owned worker
-  final int
-  concurrentDownloads; // Max simultaneous downloads in the Dart queue (1-3)
 
   final bool localLibraryEnabled;
   final String localLibraryPath;
@@ -147,23 +105,15 @@ class AppSettings {
   final String
   lastSeenVersion; // Last app version the user has acknowledged (e.g. '3.7.0')
 
-  final bool deduplicateDownloads;
-  final bool allowQualityVariants;
-  final bool saveDownloadHistory;
-
   final String playerMode;
   final bool playerShowPronunciation;
   final bool playerShowTranslation;
 
   const AppSettings({
-    this.defaultService = '',
-    this.audioQuality = 'LOSSLESS',
-    this.filenameFormat = '{title} - {artist}',
     this.downloadDirectory = '',
     this.downloadDirectoryBookmark = '',
     this.storageMode = 'app',
     this.downloadTreeUri = '',
-    this.autoFallback = true,
     this.embedMetadata = true,
     this.embeddedCoverMaxDimension = 0,
     this.artistTagMode = artistTagModeJoined,
@@ -188,44 +138,18 @@ class AppSettings {
     this.autoplayPersonalization = false,
     this.isFirstLaunch = true,
     this.hasSearchedBefore = false,
-    this.folderOrganization = 'none',
-    this.createPlaylistFolder = false,
-    this.useAlbumArtistForFolders = true,
-    this.usePrimaryArtistOnly = false,
-    this.filterContributingArtistsInAlbumArtist = false,
+    this.albumFolderStructure = 'artist_album',
     this.historyViewMode = 'grid',
     this.historyFilterMode = 'all',
     this.defaultLibraryView = 'last',
     this.libraryQualityLabelMode = AppSettings.libraryQualityLabelBitrate,
-    this.askQualityBeforeDownload = true,
     this.enableLogging = false,
-    this.useExtensionProviders = true,
-    this.downloadFallbackExtensionIds,
-    this.searchProvider,
-    this.defaultSearchTab = 'all',
-    this.homeFeedProvider,
-    this.separateSingles = false,
-    this.singleFilenameFormat = '{title} - {artist}',
-    this.albumFolderStructure = 'artist_album',
     this.heroAnimationsEnabled = true,
     this.forceBackdropBlur = false,
-    this.extensionVerificationBrowserMode = 'in_app_first',
     this.locale = 'system',
     this.lyricsMode = 'embed',
     this.keepScreenOnLyrics = true,
     this.listeningStatisticsEnabled = true,
-    this.autoConvertDownloads = false,
-    this.redownloadFakeHiRes = false,
-    this.autoConvertFormat = 'mp3',
-    this.autoConvertBitrate = '320k',
-    this.useAllFilesAccess = false,
-    this.autoExportFailedDownloads = false,
-    this.downloadNetworkMode = 'any',
-    this.networkCompatibilityMode = false,
-    this.allowLocalNetwork = false,
-    this.songLinkRegion = 'US',
-    this.nativeDownloadWorkerEnabled = false,
-    this.concurrentDownloads = 1,
     this.localLibraryEnabled = false,
     this.localLibraryPath = '',
     this.localLibraryBookmark = '',
@@ -239,9 +163,6 @@ class AppSettings {
     this.lyricsAppleElrcWordSync = true,
     this.musixmatchLanguage = '',
     this.lastSeenVersion = '',
-    this.deduplicateDownloads = true,
-    this.allowQualityVariants = false,
-    this.saveDownloadHistory = true,
     this.playerMode = 'internal',
     this.playerShowPronunciation = true,
     this.playerShowTranslation = true,
@@ -257,14 +178,10 @@ class AppSettings {
   };
 
   AppSettings copyWith({
-    String? defaultService,
-    String? audioQuality,
-    String? filenameFormat,
     String? downloadDirectory,
     String? downloadDirectoryBookmark,
     String? storageMode,
     String? downloadTreeUri,
-    bool? autoFallback,
     bool? embedMetadata,
     int? embeddedCoverMaxDimension,
     String? artistTagMode,
@@ -289,47 +206,18 @@ class AppSettings {
     bool? autoplayPersonalization,
     bool? isFirstLaunch,
     bool? hasSearchedBefore,
-    String? folderOrganization,
-    bool? createPlaylistFolder,
-    bool? useAlbumArtistForFolders,
-    bool? usePrimaryArtistOnly,
-    bool? filterContributingArtistsInAlbumArtist,
+    String? albumFolderStructure,
     String? historyViewMode,
     String? historyFilterMode,
     String? defaultLibraryView,
     String? libraryQualityLabelMode,
-    bool? askQualityBeforeDownload,
     bool? enableLogging,
-    bool? useExtensionProviders,
-    List<String>? downloadFallbackExtensionIds,
-    bool clearDownloadFallbackExtensionIds = false,
-    String? searchProvider,
-    bool clearSearchProvider = false,
-    String? defaultSearchTab,
-    String? homeFeedProvider,
-    bool clearHomeFeedProvider = false,
-    bool? separateSingles,
-    String? singleFilenameFormat,
-    String? albumFolderStructure,
     bool? heroAnimationsEnabled,
     bool? forceBackdropBlur,
-    String? extensionVerificationBrowserMode,
     String? locale,
     String? lyricsMode,
     bool? keepScreenOnLyrics,
     bool? listeningStatisticsEnabled,
-    bool? autoConvertDownloads,
-    bool? redownloadFakeHiRes,
-    String? autoConvertFormat,
-    String? autoConvertBitrate,
-    bool? useAllFilesAccess,
-    bool? autoExportFailedDownloads,
-    String? downloadNetworkMode,
-    bool? networkCompatibilityMode,
-    bool? allowLocalNetwork,
-    String? songLinkRegion,
-    bool? nativeDownloadWorkerEnabled,
-    int? concurrentDownloads,
     bool? localLibraryEnabled,
     String? localLibraryPath,
     String? localLibraryBookmark,
@@ -343,23 +231,16 @@ class AppSettings {
     bool? lyricsAppleElrcWordSync,
     String? musixmatchLanguage,
     String? lastSeenVersion,
-    bool? deduplicateDownloads,
-    bool? allowQualityVariants,
-    bool? saveDownloadHistory,
     String? playerMode,
     bool? playerShowPronunciation,
     bool? playerShowTranslation,
   }) {
     return AppSettings(
-      defaultService: defaultService ?? this.defaultService,
-      audioQuality: audioQuality ?? this.audioQuality,
-      filenameFormat: filenameFormat ?? this.filenameFormat,
       downloadDirectory: downloadDirectory ?? this.downloadDirectory,
       downloadDirectoryBookmark:
           downloadDirectoryBookmark ?? this.downloadDirectoryBookmark,
       storageMode: storageMode ?? this.storageMode,
       downloadTreeUri: downloadTreeUri ?? this.downloadTreeUri,
-      autoFallback: autoFallback ?? this.autoFallback,
       embedMetadata: embedMetadata ?? this.embedMetadata,
       embeddedCoverMaxDimension:
           embeddedCoverMaxDimension ?? this.embeddedCoverMaxDimension,
@@ -388,63 +269,21 @@ class AppSettings {
           autoplayPersonalization ?? this.autoplayPersonalization,
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
       hasSearchedBefore: hasSearchedBefore ?? this.hasSearchedBefore,
-      folderOrganization: folderOrganization ?? this.folderOrganization,
-      createPlaylistFolder: createPlaylistFolder ?? this.createPlaylistFolder,
-      useAlbumArtistForFolders:
-          useAlbumArtistForFolders ?? this.useAlbumArtistForFolders,
-      usePrimaryArtistOnly: usePrimaryArtistOnly ?? this.usePrimaryArtistOnly,
-      filterContributingArtistsInAlbumArtist:
-          filterContributingArtistsInAlbumArtist ??
-          this.filterContributingArtistsInAlbumArtist,
+      albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,
       historyViewMode: historyViewMode ?? this.historyViewMode,
       historyFilterMode: historyFilterMode ?? this.historyFilterMode,
       defaultLibraryView: defaultLibraryView ?? this.defaultLibraryView,
       libraryQualityLabelMode:
           libraryQualityLabelMode ?? this.libraryQualityLabelMode,
-      askQualityBeforeDownload:
-          askQualityBeforeDownload ?? this.askQualityBeforeDownload,
       enableLogging: enableLogging ?? this.enableLogging,
-      useExtensionProviders:
-          useExtensionProviders ?? this.useExtensionProviders,
-      downloadFallbackExtensionIds: clearDownloadFallbackExtensionIds
-          ? null
-          : (downloadFallbackExtensionIds ?? this.downloadFallbackExtensionIds),
-      searchProvider: clearSearchProvider
-          ? null
-          : (searchProvider ?? this.searchProvider),
-      defaultSearchTab: defaultSearchTab ?? this.defaultSearchTab,
-      homeFeedProvider: clearHomeFeedProvider
-          ? null
-          : (homeFeedProvider ?? this.homeFeedProvider),
-      separateSingles: separateSingles ?? this.separateSingles,
-      singleFilenameFormat: singleFilenameFormat ?? this.singleFilenameFormat,
-      albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       forceBackdropBlur: forceBackdropBlur ?? this.forceBackdropBlur,
-      extensionVerificationBrowserMode:
-          extensionVerificationBrowserMode ??
-          this.extensionVerificationBrowserMode,
       locale: locale ?? this.locale,
       lyricsMode: lyricsMode ?? this.lyricsMode,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       listeningStatisticsEnabled:
           listeningStatisticsEnabled ?? this.listeningStatisticsEnabled,
-      autoConvertDownloads: autoConvertDownloads ?? this.autoConvertDownloads,
-      redownloadFakeHiRes: redownloadFakeHiRes ?? this.redownloadFakeHiRes,
-      autoConvertFormat: autoConvertFormat ?? this.autoConvertFormat,
-      autoConvertBitrate: autoConvertBitrate ?? this.autoConvertBitrate,
-      useAllFilesAccess: useAllFilesAccess ?? this.useAllFilesAccess,
-      autoExportFailedDownloads:
-          autoExportFailedDownloads ?? this.autoExportFailedDownloads,
-      downloadNetworkMode: downloadNetworkMode ?? this.downloadNetworkMode,
-      networkCompatibilityMode:
-          networkCompatibilityMode ?? this.networkCompatibilityMode,
-      allowLocalNetwork: allowLocalNetwork ?? this.allowLocalNetwork,
-      songLinkRegion: songLinkRegion ?? this.songLinkRegion,
-      nativeDownloadWorkerEnabled:
-          nativeDownloadWorkerEnabled ?? this.nativeDownloadWorkerEnabled,
-      concurrentDownloads: concurrentDownloads ?? this.concurrentDownloads,
       localLibraryEnabled: localLibraryEnabled ?? this.localLibraryEnabled,
       localLibraryPath: localLibraryPath ?? this.localLibraryPath,
       localLibraryBookmark: localLibraryBookmark ?? this.localLibraryBookmark,
@@ -465,9 +304,6 @@ class AppSettings {
           lyricsAppleElrcWordSync ?? this.lyricsAppleElrcWordSync,
       musixmatchLanguage: musixmatchLanguage ?? this.musixmatchLanguage,
       lastSeenVersion: lastSeenVersion ?? this.lastSeenVersion,
-      deduplicateDownloads: deduplicateDownloads ?? this.deduplicateDownloads,
-      allowQualityVariants: allowQualityVariants ?? this.allowQualityVariants,
-      saveDownloadHistory: saveDownloadHistory ?? this.saveDownloadHistory,
       playerMode: playerMode ?? this.playerMode,
       playerShowPronunciation:
           playerShowPronunciation ?? this.playerShowPronunciation,

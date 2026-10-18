@@ -10,7 +10,6 @@ import 'package:spotiflac_android/constants/app_info.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/secure_storage_options.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
-import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
@@ -19,7 +18,6 @@ const _settingsCorruptBackupKey = 'app_settings_corrupt_backup';
 const _migrationVersionKey = 'settings_migration_version';
 const _currentMigrationVersion = 11;
 const _spotifyClientSecretKey = 'spotify_client_secret';
-const _retiredBuiltInProviderIds = {'deezer', 'qobuz', 'tidal', 'youtube'};
 final _log = AppLogger('SettingsProvider');
 
 /// Startup override used to render the correct route/locale on the first
@@ -62,7 +60,6 @@ AppSettings resetInstallationBoundSettings(AppSettings settings) {
     storageMode: 'app',
     downloadTreeUri: '',
     isFirstLaunch: true,
-    useAllFilesAccess: false,
     localLibraryEnabled: false,
     localLibraryPath: '',
     localLibraryBookmark: '',
@@ -94,24 +91,12 @@ class SettingsNotifier extends Notifier<AppSettings> {
   SettingsNotifier({Future<SharedPreferences> Function()? preferences})
     : _loadPreferences = preferences ?? SharedPreferences.getInstance;
 
-  static final RegExp _isoRegionPattern = RegExp(r'^[A-Z]{2}$');
-  static const Set<String> _searchTabValues = {
-    'all',
-    'track',
-    'artist',
-    'album',
-    'playlist',
-  };
   static const Set<String> _libraryViewValues = {
     'last',
     'all',
     'albums',
     'singles',
     'playlists',
-  };
-  static const Set<String> _extensionVerificationBrowserModeValues = {
-    'external_first',
-    'in_app_first',
   };
   static const Set<int> _embeddedCoverMaxDimensionValues = {
     0,
@@ -174,46 +159,20 @@ class SettingsNotifier extends Notifier<AppSettings> {
       }
 
       if (loaded != null) {
-        final sanitizedDownloadFallbackExtensionIds =
-            _sanitizeDownloadFallbackExtensionIds(
-              loaded.downloadFallbackExtensionIds,
-            );
-        final sanitizedDefaultSearchTab = _normalizeDefaultSearchTab(
-          loaded.defaultSearchTab,
-        );
         state = loaded.copyWith(
-          useExtensionProviders: true,
-          downloadFallbackExtensionIds: sanitizedDownloadFallbackExtensionIds,
-          clearDownloadFallbackExtensionIds:
-              loaded.downloadFallbackExtensionIds != null &&
-              sanitizedDownloadFallbackExtensionIds == null,
-          defaultSearchTab: sanitizedDefaultSearchTab,
           defaultLibraryView: _normalizeDefaultLibraryView(
             loaded.defaultLibraryView,
           ),
           libraryQualityLabelMode: _normalizeLibraryQualityLabelMode(
             loaded.libraryQualityLabelMode,
           ),
-          autoConvertFormat: normalizeAutoConvertFormat(
-            loaded.autoConvertFormat,
-          ),
-          autoConvertBitrate: normalizeAutoConvertBitrate(
-            loaded.autoConvertBitrate,
-          ),
           embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
             loaded.embeddedCoverMaxDimension,
           ),
-          defaultService: loaded.defaultService,
-          searchProvider: loaded.searchProvider,
-          extensionVerificationBrowserMode:
-              _normalizeExtensionVerificationBrowserMode(
-                loaded.extensionVerificationBrowserMode,
-              ),
         );
 
         await _runMigrations(prefs);
         await _normalizeIosDownloadDirectoryIfNeeded();
-        await _normalizeSongLinkRegionIfNeeded();
       }
     }
 
@@ -222,8 +181,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     LogBuffer.loggingEnabled = state.enableLogging;
 
     await syncLyricsSettingsToBackend();
-    await _syncNetworkCompatibilitySettingsToBackend();
-    await _syncExtensionFallbackSettingsToBackend();
   }
 
   void _syncLyricsSettingsToBackend() {
@@ -245,34 +202,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     } catch (e) {
       _log.w('Failed to sync lyrics fetch options to backend: $e');
     }
-  }
-
-  Future<void> _syncNetworkCompatibilitySettingsToBackend() async {
-    if (!PlatformBridge.supportsCoreBackend) return;
-
-    final compatibilityMode = state.networkCompatibilityMode;
-    await PlatformBridge.setNetworkCompatibilityOptions(
-      allowHttp: compatibilityMode,
-      insecureTls: false,
-    ).catchError((Object e) {
-      _log.w('Failed to sync network compatibility options to backend: $e');
-    });
-
-    await PlatformBridge.setAllowPrivateNetwork(
-      state.allowLocalNetwork,
-    ).catchError((Object e) {
-      _log.w('Failed to sync allow local network option to backend: $e');
-    });
-  }
-
-  Future<void> _syncExtensionFallbackSettingsToBackend() async {
-    if (!PlatformBridge.supportsCoreBackend) return;
-
-    await PlatformBridge.setDownloadFallbackExtensionIds(
-      state.downloadFallbackExtensionIds,
-    ).catchError((Object e) {
-      _log.w('Failed to sync extension fallback settings to backend: $e');
-    });
   }
 
   Future<void> _runMigrations(SharedPreferences prefs) async {
@@ -297,11 +226,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
         );
       }
       state = state.copyWith(lastSeenVersion: AppInfo.version);
-      // Migration 7/11: retired built-in services are now reconciled after
-      // extensions load so manifest-declared replacements can adopt old prefs.
-      if (!state.useExtensionProviders) {
-        state = state.copyWith(useExtensionProviders: true);
-      }
       await prefs.setInt(_migrationVersionKey, _currentMigrationVersion);
       await _saveSettings();
     }
@@ -356,8 +280,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     }
 
     state = restored.copyWith(
-      // Always keep extension providers enabled (matches _loadSettings).
-      useExtensionProviders: true,
       // Preserve this device's storage location; the backup's values point at
       // the original device and would not resolve here.
       downloadDirectory: current.downloadDirectory,
@@ -373,8 +295,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
     LogBuffer.loggingEnabled = state.enableLogging;
     _syncLyricsSettingsToBackend();
-    await _syncNetworkCompatibilitySettingsToBackend();
-    await _syncExtensionFallbackSettingsToBackend();
   }
 
   Future<void> _normalizeIosDownloadDirectoryIfNeeded() async {
@@ -401,18 +321,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await _saveSettings();
   }
 
-  String _normalizeSongLinkRegion(String region) {
-    final normalized = region.trim().toUpperCase();
-    if (_isoRegionPattern.hasMatch(normalized)) return normalized;
-    return 'US';
-  }
-
-  String _normalizeDefaultSearchTab(String value) {
-    final normalized = value.trim().toLowerCase();
-    if (_searchTabValues.contains(normalized)) return normalized;
-    return 'all';
-  }
-
   String _normalizeDefaultLibraryView(String value) {
     final normalized = value.trim().toLowerCase();
     if (_libraryViewValues.contains(normalized)) return normalized;
@@ -433,45 +341,8 @@ class SettingsNotifier extends Notifier<AppSettings> {
     };
   }
 
-  String _normalizeExtensionVerificationBrowserMode(String value) {
-    final normalized = value.trim().toLowerCase();
-    if (_extensionVerificationBrowserModeValues.contains(normalized)) {
-      return normalized;
-    }
-    return 'in_app_first';
-  }
-
   int _normalizeEmbeddedCoverMaxDimension(int value) {
     return _embeddedCoverMaxDimensionValues.contains(value) ? value : 0;
-  }
-
-  String? _sanitizeRetiredBuiltInProviderId(String? providerId) {
-    final normalized = providerId?.trim().toLowerCase();
-    if (normalized == null || normalized.isEmpty) return providerId;
-    return _retiredBuiltInProviderIds.contains(normalized) ? null : providerId;
-  }
-
-  Future<void> _normalizeSongLinkRegionIfNeeded() async {
-    final normalized = _normalizeSongLinkRegion(state.songLinkRegion);
-    if (normalized == state.songLinkRegion) return;
-    state = state.copyWith(songLinkRegion: normalized);
-    await _saveSettings();
-  }
-
-  List<String>? _sanitizeDownloadFallbackExtensionIds(List<String>? ids) {
-    if (ids == null) {
-      return null;
-    }
-
-    final result = <String>[];
-    for (final id in ids) {
-      final normalized = id.trim();
-      if (normalized.isEmpty || result.contains(normalized)) {
-        continue;
-      }
-      result.add(normalized);
-    }
-    return result;
   }
 
   Future<void> _cleanupRetiredSpotifySettings() async {
@@ -481,28 +352,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     if (storedSecret != null && storedSecret.isNotEmpty) {
       await _secureStorage.delete(key: _spotifyClientSecretKey);
     }
-  }
-
-  void setDefaultService(String service) {
-    state = state.copyWith(
-      defaultService: _sanitizeRetiredBuiltInProviderId(service) ?? '',
-    );
-    _saveSettings();
-  }
-
-  void setAudioQuality(String quality) {
-    state = state.copyWith(audioQuality: quality);
-    _saveSettings();
-  }
-
-  void setFilenameFormat(String format) {
-    state = state.copyWith(filenameFormat: format);
-    _saveSettings();
-  }
-
-  void setSingleFilenameFormat(String format) {
-    state = state.copyWith(singleFilenameFormat: format);
-    _saveSettings();
   }
 
   void setDownloadDirectory(String directory, {String? iosBookmark}) {
@@ -544,11 +393,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
           ? ''
           : state.downloadDirectoryBookmark,
     );
-    _saveSettings();
-  }
-
-  void setAutoFallback(bool enabled) {
-    state = state.copyWith(autoFallback: enabled);
     _saveSettings();
   }
 
@@ -770,31 +614,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     }
   }
 
-  void setFolderOrganization(String organization) {
-    state = state.copyWith(folderOrganization: organization);
-    _saveSettings();
-  }
-
-  void setCreatePlaylistFolder(bool enabled) {
-    state = state.copyWith(createPlaylistFolder: enabled);
-    _saveSettings();
-  }
-
-  void setUseAlbumArtistForFolders(bool enabled) {
-    state = state.copyWith(useAlbumArtistForFolders: enabled);
-    _saveSettings();
-  }
-
-  void setUsePrimaryArtistOnly(bool enabled) {
-    state = state.copyWith(usePrimaryArtistOnly: enabled);
-    _saveSettings();
-  }
-
-  void setFilterContributingArtistsInAlbumArtist(bool enabled) {
-    state = state.copyWith(filterContributingArtistsInAlbumArtist: enabled);
-    _saveSettings();
-  }
-
   void setHistoryViewMode(String mode) {
     state = state.copyWith(historyViewMode: mode);
     _saveSettings();
@@ -802,26 +621,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setHistoryFilterMode(String mode) {
     state = state.copyWith(historyFilterMode: mode);
-    _saveSettings();
-  }
-
-  void setAskQualityBeforeDownload(bool enabled) {
-    state = state.copyWith(askQualityBeforeDownload: enabled);
-    _saveSettings();
-  }
-
-  void setSearchProvider(String? provider) {
-    final sanitized = _sanitizeRetiredBuiltInProviderId(provider);
-    if (sanitized == null || sanitized.isEmpty) {
-      state = state.copyWith(clearSearchProvider: true);
-    } else {
-      state = state.copyWith(searchProvider: sanitized);
-    }
-    _saveSettings();
-  }
-
-  void setDefaultSearchTab(String tab) {
-    state = state.copyWith(defaultSearchTab: _normalizeDefaultSearchTab(tab));
     _saveSettings();
   }
 
@@ -839,40 +638,10 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setHomeFeedProvider(String? provider) {
-    if (provider == null || provider.isEmpty) {
-      state = state.copyWith(clearHomeFeedProvider: true);
-    } else {
-      state = state.copyWith(homeFeedProvider: provider);
-    }
-    _saveSettings();
-  }
-
   void setEnableLogging(bool enabled) {
     state = state.copyWith(enableLogging: enabled);
     _saveSettings();
     LogBuffer.loggingEnabled = enabled;
-  }
-
-  void setUseExtensionProviders(bool enabled) {
-    state = state.copyWith(useExtensionProviders: true);
-    _saveSettings();
-  }
-
-  void setDownloadFallbackExtensionIds(List<String>? extensionIds) {
-    final sanitized = _sanitizeDownloadFallbackExtensionIds(extensionIds);
-    state = state.copyWith(
-      downloadFallbackExtensionIds: sanitized,
-      clearDownloadFallbackExtensionIds:
-          extensionIds == null && state.downloadFallbackExtensionIds != null,
-    );
-    _saveSettings();
-    unawaited(_syncExtensionFallbackSettingsToBackend());
-  }
-
-  void setSeparateSingles(bool enabled) {
-    state = state.copyWith(separateSingles: enabled);
-    _saveSettings();
   }
 
   void setAlbumFolderStructure(String structure) {
@@ -890,83 +659,8 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setExtensionVerificationBrowserMode(String mode) {
-    state = state.copyWith(
-      extensionVerificationBrowserMode:
-          _normalizeExtensionVerificationBrowserMode(mode),
-    );
-    _saveSettings();
-  }
-
   void setLocale(String locale) {
     state = state.copyWith(locale: locale);
-    _saveSettings();
-  }
-
-  void setAutoConvertDownloads(bool enabled) {
-    state = state.copyWith(autoConvertDownloads: enabled);
-    _saveSettings();
-  }
-
-  void setRedownloadFakeHiRes(bool enabled) {
-    state = state.copyWith(redownloadFakeHiRes: enabled);
-    _saveSettings();
-  }
-
-  void setAutoConvertFormat(String format) {
-    state = state.copyWith(
-      autoConvertFormat: normalizeAutoConvertFormat(format),
-    );
-    _saveSettings();
-  }
-
-  void setAutoConvertBitrate(String bitrate) {
-    state = state.copyWith(
-      autoConvertBitrate: normalizeAutoConvertBitrate(bitrate),
-    );
-    _saveSettings();
-  }
-
-  void setUseAllFilesAccess(bool enabled) {
-    state = state.copyWith(useAllFilesAccess: enabled);
-    _saveSettings();
-  }
-
-  void setAutoExportFailedDownloads(bool enabled) {
-    state = state.copyWith(autoExportFailedDownloads: enabled);
-    _saveSettings();
-  }
-
-  void setDownloadNetworkMode(String mode) {
-    state = state.copyWith(downloadNetworkMode: mode);
-    _saveSettings();
-  }
-
-  void setConcurrentDownloads(int count) {
-    state = state.copyWith(concurrentDownloads: count.clamp(1, 3));
-    _saveSettings();
-  }
-
-  void setNetworkCompatibilityMode(bool enabled) {
-    state = state.copyWith(networkCompatibilityMode: enabled);
-    _saveSettings();
-    unawaited(_syncNetworkCompatibilitySettingsToBackend());
-  }
-
-  void setAllowLocalNetwork(bool enabled) {
-    state = state.copyWith(allowLocalNetwork: enabled);
-    _saveSettings();
-    unawaited(_syncNetworkCompatibilitySettingsToBackend());
-  }
-
-  void setSongLinkRegion(String region) {
-    final normalized = _normalizeSongLinkRegion(region);
-    state = state.copyWith(songLinkRegion: normalized);
-    _saveSettings();
-  }
-
-  void setNativeDownloadWorkerEnabled(bool enabled) {
-    state = state.copyWith(nativeDownloadWorkerEnabled: enabled);
     _saveSettings();
   }
 
@@ -1005,21 +699,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setTutorialComplete() {
     state = state.copyWith(hasCompletedTutorial: true);
-    _saveSettings();
-  }
-
-  void setDeduplicateDownloads(bool enabled) {
-    state = state.copyWith(deduplicateDownloads: enabled);
-    _saveSettings();
-  }
-
-  void setAllowQualityVariants(bool enabled) {
-    state = state.copyWith(allowQualityVariants: enabled);
-    _saveSettings();
-  }
-
-  void setSaveDownloadHistory(bool enabled) {
-    state = state.copyWith(saveDownloadHistory: enabled);
     _saveSettings();
   }
 

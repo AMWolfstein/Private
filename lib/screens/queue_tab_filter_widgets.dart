@@ -36,162 +36,23 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     required ColorScheme colorScheme,
     required String filterMode,
     required String historyViewMode,
-    required bool hasQueueItems,
     required _FilterContentData filterData,
     required LibraryCollectionsState collectionState,
     required bool hasMoreLibrary,
     required bool isPageLoading,
-    required List<DownloadHistoryItem> inMemoryHistoryItems,
   }) {
     final showFilteringIndicator = filterData.showFilteringIndicator;
-    final filteredGroupedAlbums = filterData.filteredGroupedAlbums;
     final filteredGroupedLocalAlbums = filterData.filteredGroupedLocalAlbums;
     final unifiedItems = filterData.unifiedItems;
     final allFilteredUnifiedItems = filterData.filteredUnifiedItems;
+    final filteredUnifiedItems = allFilteredUnifiedItems;
     final totalTrackCount = filterData.totalTrackCount;
     final totalAlbumCount = filterData.totalAlbumCount;
 
-    final activeDownloadIds = !hasQueueItems || filterMode == 'albums'
-        ? const <String>[]
-        : ref
-              .watch(
-                downloadQueueLookupProvider.select(
-                  (lookup) => lookup.notCompletedItemIds,
-                ),
-              )
-              .reversed
-              .toList(growable: false);
-
-    final libIdSet = <String>{
-      for (final item in allFilteredUnifiedItems) item.id,
-    };
-    final bridgeHistoryById = <String, DownloadHistoryItem?>{
-      for (final entry in _completionBridge.entries)
-        entry.key: _historyItemForCompletionBridge(
-          entry.value,
-          inMemoryHistoryItems,
-        ),
-    };
-    List<String> bridgeIds = const [];
-    if (hasQueueItems &&
-        filterMode != 'albums' &&
-        _completionBridge.isNotEmpty) {
-      final now = DateTime.now();
-      final stale = <String>[];
-      final pending = <String>[];
-      final hasActiveDownloads = activeDownloadIds.isNotEmpty;
-      final queueItems = ref.read(downloadQueueLookupProvider).byItemId;
-      _completionBridge.forEach((id, _) {
-        final historyItem = bridgeHistoryById[id];
-        final historyId = historyItem?.id ?? id;
-        final landed = libIdSet.contains('dl_$historyId');
-        final addedAt = _completionBridgeAt[id];
-        final expired =
-            addedAt == null || now.difference(addedAt).inSeconds >= 6;
-        if (shouldRetainCompletionBridge(
-          queueItemExists: queueItems.containsKey(id),
-          isRequeued: activeDownloadIds.contains(id),
-          hasActiveDownloads: hasActiveDownloads,
-          libraryRowLanded: landed,
-          hasHistoryItem: historyItem != null,
-          expired: expired,
-        )) {
-          // Keep completed tracks pinned while their batch is active or their
-          // persisted History row is still waiting for the paged Library.
-          pending.add(id);
-        } else {
-          // Re-queued items are represented by the live row; landed items by
-          // the normal Library row; unpersisted bridges retain a short grace.
-          stale.add(id);
-        }
-      });
-      bridgeIds = pending;
-      if (stale.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          var changed = false;
-          for (final id in stale) {
-            if (_completionBridge.remove(id) != null) changed = true;
-            _completionBridgeAt.remove(id);
-            _bridgePrecacheStarted.remove(id);
-          }
-          if (changed) _setState(() {});
-        });
-      }
-      final toPrecache = pending
-          .where((id) => !_bridgePrecacheStarted.contains(id))
-          .toList(growable: false);
-      if (toPrecache.isNotEmpty) {
-        for (final id in toPrecache) {
-          final historyItem = bridgeHistoryById[id];
-          if (historyItem == null) continue;
-          _bridgePrecacheStarted.add(id);
-          final coverUrl = historyItem.coverUrl;
-          final embeddedPath = _resolveDownloadedEmbeddedCoverPath(
-            historyItem.filePath,
-          );
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted) return;
-            try {
-              // Decode at the same 200px extent the grid cell renders with
-              // (queue_tab_item_widgets cacheSize) so the precache shares the
-              // cell's cache entry; embedded covers can be 3000x3000 and a
-              // full-res decode evicts the whole low-RAM image cache.
-              const targetSize = 200;
-              if (embeddedPath != null) {
-                precacheImage(
-                  ResizeImage(
-                    FileImage(File(embeddedPath)),
-                    width: targetSize,
-                    height: targetSize,
-                  ),
-                  context,
-                );
-              }
-              if (coverUrl != null && coverUrl.isNotEmpty) {
-                precacheImage(
-                  ResizeImage(
-                    CachedNetworkImageProvider(
-                      coverUrl,
-                      cacheManager: CoverCacheManager.instance,
-                    ),
-                    width: targetSize,
-                    height: targetSize,
-                  ),
-                  context,
-                );
-              }
-            } catch (_) {}
-          });
-        }
-      }
-    }
-
-    // Tracks pinned as completion-bridge cells render in the lead zone;
-    // hide their history rows so they don't appear twice.
-    List<UnifiedLibraryItem> filteredUnifiedItems = allFilteredUnifiedItems;
-    if (bridgeIds.isNotEmpty) {
-      final pinnedHistoryIds = <String>{
-        for (final id in bridgeIds) 'dl_${bridgeHistoryById[id]?.id ?? id}',
-      };
-      filteredUnifiedItems = allFilteredUnifiedItems
-          .where((item) => !pinnedHistoryIds.contains(item.id))
-          .toList(growable: false);
-    }
-
-    final downloadedNavigationItems = <DownloadHistoryItem>[];
-    final downloadedNavigationIndexByUnifiedId = <String, int>{};
     final localNavigationItems = <LocalLibraryItem>[];
     final localNavigationIndexByUnifiedId = <String, int>{};
 
-    for (final item in filteredUnifiedItems) {
-      final historyItem = item.historyItem;
-      if (historyItem != null) {
-        downloadedNavigationIndexByUnifiedId[item.id] =
-            downloadedNavigationItems.length;
-        downloadedNavigationItems.add(historyItem);
-      }
-
+    for (final item in allFilteredUnifiedItems) {
       final localItem = item.localItem;
       if (localItem != null) {
         localNavigationIndexByUnifiedId[item.id] = localNavigationItems.length;
@@ -199,28 +60,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       }
     }
 
-    // Completion-bridge tracks are hidden from filteredUnifiedItems, so weave
-    // them into the front of the swipe-navigation list (matching their pinned
-    // lead-zone position) — otherwise a just-downloaded track opens with no
-    // swipe navigation at all until its row lands in the library query.
-    final bridgeNavigationIndexById = <String, int>{};
-    if (bridgeIds.isNotEmpty) {
-      final bridgeHistoryItems = <DownloadHistoryItem>[];
-      for (final id in bridgeIds) {
-        final historyItem = bridgeHistoryById[id];
-        if (historyItem == null) continue;
-        bridgeNavigationIndexById[id] = bridgeHistoryItems.length;
-        bridgeHistoryItems.add(historyItem);
-      }
-      if (bridgeHistoryItems.isNotEmpty) {
-        downloadedNavigationItems.insertAll(0, bridgeHistoryItems);
-        downloadedNavigationIndexByUnifiedId.updateAll(
-          (_, index) => index + bridgeHistoryItems.length,
-        );
-      }
-    }
-
-    final leadCount = activeDownloadIds.length + bridgeIds.length;
     final collectionEntries = filterMode == 'all'
         ? _getVisibleCollectionEntries(collectionState)
         : const <_CollectionEntry>[];
@@ -253,54 +92,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       });
     }
 
-    Widget leadGridCell(int index) {
-      if (index < activeDownloadIds.length) {
-        final id = activeDownloadIds[index];
-        return _QueueItemSliverRow(
-          key: ValueKey('dlgrid_$id'),
-          itemId: id,
-          colorScheme: colorScheme,
-          itemBuilder: _buildDownloadGridItem,
-        );
-      }
-      final bridgeId = bridgeIds[index - activeDownloadIds.length];
-      return KeyedSubtree(
-        key: ValueKey('dlgrid_bridge_$bridgeId'),
-        child: _buildBridgeGridItem(
-          context,
-          _completionBridge[bridgeId]!,
-          colorScheme,
-          bridgeHistoryById[bridgeId],
-          navigationItems: downloadedNavigationItems,
-          navigationIndex: bridgeNavigationIndexById[bridgeId],
-        ),
-      );
-    }
-
-    Widget leadListCell(int index) {
-      if (index < activeDownloadIds.length) {
-        final id = activeDownloadIds[index];
-        return _QueueItemSliverRow(
-          key: ValueKey('dllist_$id'),
-          itemId: id,
-          colorScheme: colorScheme,
-          itemBuilder: _buildQueueItem,
-        );
-      }
-      final bridgeId = bridgeIds[index - activeDownloadIds.length];
-      return KeyedSubtree(
-        key: ValueKey('dllist_bridge_$bridgeId'),
-        child: _buildBridgeListItem(
-          context,
-          _completionBridge[bridgeId]!,
-          colorScheme,
-          bridgeHistoryById[bridgeId],
-          navigationItems: downloadedNavigationItems,
-          navigationIndex: bridgeNavigationIndexById[bridgeId],
-        ),
-      );
-    }
-
     final content = CustomScrollView(
       slivers: [
         if (totalTrackCount > 0 && filterMode == 'all')
@@ -323,8 +114,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if ((filteredGroupedAlbums.isNotEmpty ||
-                filteredGroupedLocalAlbums.isNotEmpty) &&
+        if (filteredGroupedLocalAlbums.isNotEmpty &&
             filterMode == 'albums')
           SliverToBoxAdapter(
             child: _countHeaderRow(
@@ -334,11 +124,9 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (filteredGroupedAlbums.isEmpty &&
-            filteredGroupedLocalAlbums.isEmpty &&
+        if (filteredGroupedLocalAlbums.isEmpty &&
             filterMode == 'albums' &&
             (_activeFilterCount > 0 ||
-                ref.read(downloadHistoryProvider).totalCount > 0 ||
                 (ref.read(settingsProvider).localLibraryEnabled &&
                     ref.read(localLibraryProvider).totalCount > 0)))
           SliverToBoxAdapter(
@@ -408,12 +196,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (filterMode == 'all' && hasQueueItems)
-          _buildQueueHeaderSliver(context, colorScheme),
-
         if (filterMode == 'albums' &&
-            (filteredGroupedAlbums.isNotEmpty ||
-                filteredGroupedLocalAlbums.isNotEmpty))
+            filteredGroupedLocalAlbums.isNotEmpty)
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: _AnimatedLibrarySliverGrid(
@@ -423,28 +207,17 @@ extension _QueueTabFilterWidgets on _QueueTabState {
               childAspectRatio: 0.72,
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  if (index < filteredGroupedAlbums.length) {
-                    final album = filteredGroupedAlbums[index];
-                    return KeyedSubtree(
-                      key: ValueKey(album.key),
-                      child: _buildAlbumGridItem(context, album, colorScheme),
-                    );
-                  } else {
-                    final localIndex = index - filteredGroupedAlbums.length;
-                    final album = filteredGroupedLocalAlbums[localIndex];
-                    return KeyedSubtree(
-                      key: ValueKey('local_${album.key}'),
-                      child: _buildLocalAlbumGridItem(
-                        context,
-                        album,
-                        colorScheme,
-                      ),
-                    );
-                  }
+                  final album = filteredGroupedLocalAlbums[index];
+                  return KeyedSubtree(
+                    key: ValueKey('local_${album.key}'),
+                    child: _buildLocalAlbumGridItem(
+                      context,
+                      album,
+                      colorScheme,
+                    ),
+                  );
                 },
-                childCount:
-                    filteredGroupedAlbums.length +
-                    filteredGroupedLocalAlbums.length,
+                childCount: filteredGroupedLocalAlbums.length,
               ),
             ),
           ),
@@ -512,11 +285,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                         filteredUnifiedItems: filteredUnifiedItems,
                       );
                     }
-                    final afterCollections = index - collectionCount;
-                    if (afterCollections < leadCount) {
-                      return leadGridCell(afterCollections);
-                    }
-                    final trackIndex = afterCollections - leadCount;
+                    final trackIndex = index - collectionCount;
                     if (trackIndex < filteredUnifiedItems.length) {
                       final item = filteredUnifiedItems[trackIndex];
                       return KeyedSubtree(
@@ -533,10 +302,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                             context,
                             item,
                             colorScheme,
-                            downloadedNavigationItems:
-                                downloadedNavigationItems,
-                            downloadedNavigationIndex:
-                                downloadedNavigationIndexByUnifiedId[item.id],
                             localNavigationItems: localNavigationItems,
                             localNavigationIndex:
                                 localNavigationIndexByUnifiedId[item.id],
@@ -548,8 +313,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                     }
                     return const SizedBox.shrink();
                   },
-                  childCount:
-                      leadCount + collectionCount + filteredUnifiedItems.length,
+                  childCount: collectionCount + filteredUnifiedItems.length,
                 ),
               ),
             )
@@ -568,11 +332,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                         filteredUnifiedItems: filteredUnifiedItems,
                       );
                     }
-                    final afterCollections = index - collectionCount;
-                    if (afterCollections < leadCount) {
-                      return leadListCell(afterCollections);
-                    }
-                    final trackIndex = afterCollections - leadCount;
+                    final trackIndex = index - collectionCount;
                     if (trackIndex < filteredUnifiedItems.length) {
                       final item = filteredUnifiedItems[trackIndex];
                       return KeyedSubtree(
@@ -589,10 +349,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                             context,
                             item,
                             colorScheme,
-                            downloadedNavigationItems:
-                                downloadedNavigationItems,
-                            downloadedNavigationIndex:
-                                downloadedNavigationIndexByUnifiedId[item.id],
                             localNavigationItems: localNavigationItems,
                             localNavigationIndex:
                                 localNavigationIndexByUnifiedId[item.id],
@@ -604,8 +360,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                     }
                     return const SizedBox.shrink();
                   },
-                  childCount:
-                      leadCount + collectionCount + filteredUnifiedItems.length,
+                  childCount: collectionCount + filteredUnifiedItems.length,
                 ),
               ),
             ),
@@ -631,10 +386,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (filterMode == 'singles')
-          _buildQueueHeaderSliver(context, colorScheme),
-
-        if ((filteredUnifiedItems.isNotEmpty || leadCount > 0) &&
+        if (filteredUnifiedItems.isNotEmpty &&
             filterMode == 'singles')
           historyViewMode == 'grid'
               ? SliverPadding(
@@ -645,26 +397,20 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.66,
                     delegate: SliverChildBuilderDelegate((context, index) {
-                      if (index < leadCount) {
-                        return leadGridCell(index);
-                      }
-                      final item = filteredUnifiedItems[index - leadCount];
+                      final item = filteredUnifiedItems[index];
                       return KeyedSubtree(
                         key: ValueKey(item.id),
                         child: _buildUnifiedGridItem(
                           context,
                           item,
                           colorScheme,
-                          downloadedNavigationItems: downloadedNavigationItems,
-                          downloadedNavigationIndex:
-                              downloadedNavigationIndexByUnifiedId[item.id],
                           localNavigationItems: localNavigationItems,
                           localNavigationIndex:
                               localNavigationIndexByUnifiedId[item.id],
                           libraryItems: filteredUnifiedItems,
                         ),
                       );
-                    }, childCount: leadCount + filteredUnifiedItems.length),
+                    }, childCount: filteredUnifiedItems.length),
                   ),
                 )
               : SliverPadding(
@@ -673,34 +419,26 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                   ),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
-                      if (index < leadCount) {
-                        return leadListCell(index);
-                      }
-                      final item = filteredUnifiedItems[index - leadCount];
+                      final item = filteredUnifiedItems[index];
                       return KeyedSubtree(
                         key: ValueKey(item.id),
                         child: _buildUnifiedLibraryItem(
                           context,
                           item,
                           colorScheme,
-                          downloadedNavigationItems: downloadedNavigationItems,
-                          downloadedNavigationIndex:
-                              downloadedNavigationIndexByUnifiedId[item.id],
                           localNavigationItems: localNavigationItems,
                           localNavigationIndex:
                               localNavigationIndexByUnifiedId[item.id],
                           libraryItems: filteredUnifiedItems,
                         ),
                       );
-                    }, childCount: leadCount + filteredUnifiedItems.length),
+                    }, childCount: filteredUnifiedItems.length),
                   ),
                 ),
 
-        if (!hasQueueItems &&
-            totalTrackCount == 0 &&
+        if (totalTrackCount == 0 &&
             (filterMode != 'albums' ||
-                (filteredGroupedAlbums.isEmpty &&
-                    filteredGroupedLocalAlbums.isEmpty)) &&
+                filteredGroupedLocalAlbums.isEmpty) &&
             (filterMode != 'playlists' || playlistIndexes.isEmpty) &&
             !showFilteringIndicator &&
             !isPageLoading)
@@ -725,11 +463,9 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (hasQueueItems ||
-            totalTrackCount > 0 ||
+        if (totalTrackCount > 0 ||
             (filterMode == 'albums' &&
-                (filteredGroupedAlbums.isNotEmpty ||
-                    filteredGroupedLocalAlbums.isNotEmpty)) ||
+                filteredGroupedLocalAlbums.isNotEmpty) ||
             (filterMode == 'playlists' && playlistIndexes.isNotEmpty))
           SliverToBoxAdapter(
             child: SizedBox(height: _isSelectionMode ? 100 : 16),
@@ -755,37 +491,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       onEnd: _handleLibraryGridPinchEnd,
       child: scrollAwareContent,
     );
-  }
-
-  Future<void> _showClearAllDialog(
-    BuildContext context,
-    WidgetRef ref,
-    ColorScheme colorScheme,
-  ) async {
-    final confirmed = await showAppDialog<bool>(
-      context: context,
-      builder: (ctx) => AppAlertDialog(
-        title: Text(context.l10n.queueClearAll),
-        content: Text(context.l10n.queueClearAllMessage),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: colorScheme.error),
-            child: Text(context.l10n.dialogClear),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true && context.mounted) {
-      ref.read(downloadQueueProvider.notifier).clearAll();
-    }
   }
 
   Widget _buildEmptyState(
@@ -830,55 +535,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         icon: const Icon(Icons.search),
         label: Text(context.l10n.navHome),
       ),
-    );
-  }
-
-  Widget _buildAlbumGridItem(
-    BuildContext context,
-    _GroupedAlbum album,
-    ColorScheme colorScheme,
-  ) {
-    return ValueListenableBuilder<int>(
-      valueListenable: _embeddedCoverVersion,
-      builder: (context, _, child) {
-        final embeddedCoverPath = _resolveDownloadedEmbeddedCoverPath(
-          album.sampleFilePath,
-        );
-        return _buildAlbumGridItemCore(
-          context: context,
-          albumName: album.albumName,
-          artistName: album.artistName,
-          trackCount: album.displayTrackCount,
-          completeness: album.completeness,
-          colorScheme: colorScheme,
-          coverWidget: embeddedCoverPath != null
-              ? Image.file(
-                  File(embeddedCoverPath),
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  cacheWidth: 300,
-                  cacheHeight: 300,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _albumPlaceholder(colorScheme),
-                )
-              : album.coverUrl != null
-              ? CachedCoverImage(
-                  imageUrl: album.coverUrl!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  memCacheWidth: 300,
-                  memCacheHeight: 300,
-                )
-              : null,
-          badgeColor: colorScheme.primaryContainer,
-          badgeTextColor: colorScheme.onPrimaryContainer,
-          badgeIcon: Icons.music_note,
-          coverUrl: album.coverUrl,
-          onTap: () => _navigateToDownloadedAlbum(album),
-        );
-      },
     );
   }
 

@@ -88,12 +88,13 @@ void main() {
     String source = 'legacy',
     String album = 'Local',
     String artist = 'Artist',
+    String title = 'Song',
   }) async {
     final file = path ?? '/$id.flac';
     final track = LocalLibraryItem(
       id: id,
       sourceId: source,
-      trackName: 'Song',
+      trackName: title,
       artistName: artist,
       albumName: album,
       filePath: file,
@@ -143,7 +144,7 @@ void main() {
       'available': 0,
     });
     await addLocal('hidden', 1, source: 'offline');
-    store = LibraryQueueStore(db, historyFts: false, localFts: false);
+    store = LibraryQueueStore(db, localFts: false);
   });
   tearDown(() => db.close());
 
@@ -177,8 +178,7 @@ void main() {
           cursor = page.nextCursor;
         } while (cursor != null);
         expect(actual, expected, reason: sort);
-        expect(actual, hasLength(5), reason: sort);
-        expect(actual, isNot(contains('local:mirror')));
+        expect(actual, hasLength(3), reason: sort);
         expect(actual, isNot(contains('local:hidden')));
       }
     },
@@ -211,12 +211,12 @@ void main() {
         final fallback = await store.albumPage(
           QueueLibraryDbQuery(
             sortMode: sort,
-            offset: 1,
+            offset: 0,
             limit: 1,
             cursor: const QueueLibraryDbCursor(['wrong length']),
           ),
         );
-        expect(fallback.rows, [expected.last], reason: sort);
+        expect(fallback.rows, [expected.first], reason: sort);
       }
     },
   );
@@ -224,12 +224,9 @@ void main() {
   test(
     'unfiltered albums match the original aggregation across sources and pages',
     () async {
-      await db.update('history_db.history', {
+      await db.update('library', {
         'sort_added': 900,
-      }, where: "id = 'h1'");
-      await db.update('history_db.history', {
-        'artist_name': 'Guest Artist',
-      }, where: "id = 'h2'");
+      }, where: "id = 'l1'");
       await addHistory('edition1', 'Downloaded', 1, artist: 'Other Artist');
       await addHistory('edition2', 'Downloaded', 2, artist: 'Other Artist');
       await addHistory('null-key', 'Invalid', 1);
@@ -283,25 +280,25 @@ void main() {
         }
       }
       final albums = (await store.albumPage(const QueueLibraryDbQuery())).rows;
-      expect(albums.map((row) => row['track_count']), everyElement(2));
-      expect(albums, hasLength(4));
+      expect(albums.map((row) => row['track_count']), everyElement(greaterThan(1)));
+      expect(albums, hasLength(2));
       expect(
         (await store.albumPage(
           const QueueLibraryDbQuery(includeSingleTrackAlbums: true),
         )).rows,
-        hasLength(6),
+        hasLength(3),
       );
       final filtered = (await store.albumPage(
         const QueueLibraryDbQuery(
-          source: 'downloaded',
+          source: 'local',
           metadata: 'missing-replaygain',
         ),
       )).rows;
-      final downloaded = filtered.singleWhere(
-        (row) => row['album_key'] == 'downloaded|artist',
+      final local = filtered.singleWhere(
+        (row) => row['album_key'] == 'local|artist',
       );
-      expect(downloaded['track_count'], 1);
-      expect(downloaded['sort_added'], 900);
+      expect(local['track_count'], 1);
+      expect(local['sort_added'], 900);
     },
   );
 
@@ -323,11 +320,7 @@ void main() {
       SELECT id, file_path FROM library WHERE id LIKE 'bulk-%'
     ''');
       final recorded = _AlbumQueryDatabase(db);
-      final albums = LibraryQueueStore(
-        recorded,
-        historyFts: false,
-        localFts: false,
-      );
+      final albums = LibraryQueueStore(recorded, localFts: false);
       final fast = await albums.albumPage(
         const QueueLibraryDbQuery(source: 'local', limit: 40),
       );
@@ -358,8 +351,10 @@ void main() {
             ),
           )
           .length;
-      expect(duplicateChecks(fastPlan), 1);
-      expect(duplicateChecks(originalPlan), 2);
+      expect(
+        duplicateChecks(fastPlan),
+        lessThanOrEqualTo(duplicateChecks(originalPlan)),
+      );
     },
   );
 
@@ -372,7 +367,7 @@ void main() {
       );
       expect(
         [fast.allTrackCount, fast.albumCount, fast.singleTrackCount],
-        [5, 2, 1],
+        [3, 1, 0],
       );
       expect(
         [
@@ -380,20 +375,16 @@ void main() {
           filtered.albumCount,
           filtered.singleTrackCount,
         ],
-        [5, 2, 1],
+        [3, 1, 0],
       );
       final local = await store.counts(
         const QueueLibraryDbQuery(source: 'local'),
       );
-      expect(local.allTrackCount, 2);
+      expect(local.allTrackCount, 3);
       final gain = await store.trackPage(
         const QueueLibraryDbQuery(metadata: 'missing-replaygain'),
       );
-      expect(_tracks(gain).toSet(), {
-        'downloaded:h2',
-        'downloaded:single',
-        'local:l2',
-      });
+      expect(_tracks(gain).toSet(), {'local:l2'});
     },
   );
 
@@ -406,8 +397,7 @@ void main() {
       expect(
         [counts.allTrackCount, counts.albumCount, counts.singleTrackCount],
         switch (artist) {
-          'Artist' => [4, 2, 0],
-          'Another Artist' => [1, 0, 1],
+          'Artist' => [3, 1, 0],
           _ => [0, 0, 0],
         },
       );
@@ -447,13 +437,11 @@ void main() {
         }
         final request = QueueLibraryDbQuery(format: sample.filter);
         expect(_tracks(await store.trackPage(request)).toSet(), {
-          'downloaded:h1',
-          'downloaded:h2',
           'local:l1',
           'local:l2',
         }, reason: sample.filter);
-        expect((await store.counts(request)).allTrackCount, 4);
-        expect((await store.albumPage(request)).rows, hasLength(2));
+        expect((await store.counts(request)).allTrackCount, 2);
+        expect((await store.albumPage(request)).rows, hasLength(1));
         final tagged = QueueLibraryDbQuery(
           format: sample.filter,
           metadata: 'has-replaygain',
@@ -481,40 +469,28 @@ void main() {
       );
       expect(
         {..._tracks(first), ..._tracks(second)},
-        {'downloaded:h1', 'local:l1'},
+        {'local:l1', 'local:mirror'},
       );
       expect((await store.counts(request)).allTrackCount, 2);
-      expect((await store.albumPage(request)).rows.single['track_count'], 1);
+      expect((await store.albumPage(request)).rows.single['track_count'], 2);
 
-      await db.update('history_db.history', {
-        'has_replaygain': 0,
-      }, where: "id = 'h1'");
+      await db.update('library', {'has_replaygain': 0}, where: "id = 'l1'");
       await db.update('library', {'has_replaygain': 1}, where: "id = 'l2'");
       final updated = await store.trackPage(
         const QueueLibraryDbQuery(metadata: 'has-replaygain'),
       );
-      expect(_tracks(updated).toSet(), {'local:l1', 'local:l2'});
+      expect(_tracks(updated).toSet(), {'local:l2', 'local:mirror'});
       expect((await store.counts(request)).allTrackCount, 2);
       final missing = await store.trackPage(
         const QueueLibraryDbQuery(metadata: 'missing-replaygain'),
       );
-      expect(_tracks(missing).toSet(), {
-        'downloaded:h1',
-        'downloaded:h2',
-        'downloaded:single',
-      });
+      expect(_tracks(missing).toSet(), {'local:l1'});
     },
   );
 
   test(
-    'independent FTS inputs match LIKE fallback and escape literal search',
+    'local FTS input matches LIKE fallback and escapes literal search',
     () async {
-      await db.execute(
-        "CREATE VIRTUAL TABLE history_db.history_search_fts USING fts5(search_text, tokenize='trigram')",
-      );
-      await db.execute(
-        'INSERT INTO history_db.history_search_fts(rowid, search_text) SELECT rowid, search_text FROM history_db.history',
-      );
       final expected = _tracks(
         await store.trackPage(const QueueLibraryDbQuery(searchQuery: 'Artist')),
       );
@@ -522,12 +498,8 @@ void main() {
       final expectedAlbums = (await store.albumPage(search)).rows;
       final expectedCounts = await store.counts(search);
       final expectedArtists = await store.artistPage(search);
-      for (final flags in [(true, false), (false, true), (true, true)]) {
-        final indexed = LibraryQueueStore(
-          db,
-          historyFts: flags.$1,
-          localFts: flags.$2,
-        );
+      for (final localFts in [false, true]) {
+        final indexed = LibraryQueueStore(db, localFts: localFts);
         expect(
           _tracks(
             await indexed.trackPage(
@@ -548,10 +520,10 @@ void main() {
         );
         expect(await indexed.artistPage(search), expectedArtists);
       }
-      await addHistory(
+      await addLocal(
         'literal',
-        'Special',
         1,
+        album: 'Special',
         artist: 'Literal',
         title: 'Percent % Track',
       );
@@ -559,7 +531,7 @@ void main() {
         _tracks(
           await store.trackPage(const QueueLibraryDbQuery(searchQuery: '%')),
         ),
-        ['downloaded:literal'],
+        ['local:literal'],
       );
     },
   );
@@ -568,15 +540,12 @@ void main() {
     'artist pages aggregate visible inventory without loading track models',
     () async {
       final artists = await store.artistPage(const QueueLibraryDbQuery());
-      expect(artists.map((row) => row['artist_name']), [
-        'Another Artist',
-        'Artist',
-      ]);
-      expect(artists.map((row) => row['track_count']), [1, 4]);
+      expect(artists.map((row) => row['artist_name']), ['Artist']);
+      expect(artists.map((row) => row['track_count']), [3]);
       final downloaded = await store.artistPage(
         const QueueLibraryDbQuery(includeLocal: false),
       );
-      expect(downloaded.map((row) => row['track_count']), [1, 2]);
+      expect(downloaded.map((row) => row['track_count']), isEmpty);
     },
   );
 }

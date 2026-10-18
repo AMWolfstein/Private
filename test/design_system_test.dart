@@ -951,10 +951,7 @@ void main() {
 
     test('every collection screen goes through the shared shell', () {
       const screens = [
-        'album_screen.dart',
-        'playlist_screen.dart',
         'local_album_screen.dart',
-        'downloaded_album_screen.dart',
         'library_tracks_folder_screen.dart',
       ];
       final offenders = <String>[];
@@ -977,16 +974,6 @@ void main() {
       );
     });
 
-    test('the playlist screen supports multi-select', () {
-      final playlist = _libSources().firstWhere(
-        (file) => _basename(file) == 'playlist_screen.dart',
-      );
-      final source = playlist.readAsStringSync();
-
-      expect(source, contains('SelectionModeMixin<PlaylistScreen>'));
-      expect(source, contains('SelectionBottomBar('));
-      expect(source, contains('isSelectionMode: isSelectionMode'));
-    });
   });
 
   group('settings components', () {

@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/download_item.dart';
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/download_queue_state.dart';
-import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/screens/home_search_logic.dart';
 import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
 import 'package:spotiflac_android/services/ffmpeg_models.dart';
@@ -95,101 +92,6 @@ void main() {
       expect(looksLikeUrlOrSpotifyUri('https://example.test/track'), isTrue);
       expect(looksLikeUrlOrSpotifyUri('spotify:track:123'), isTrue);
       expect(looksLikeUrlOrSpotifyUri('artist track title'), isFalse);
-    });
-
-    test('uses the primary enabled extension as the provider fallback', () {
-      final secondary = _searchExtension(id: 'secondary');
-      final primary = _searchExtension(id: 'primary', primary: true);
-      final disabled = _searchExtension(id: 'disabled', enabled: false);
-      final extensions = [secondary, primary, disabled];
-
-      expect(
-        HomeSearchProviderPolicy.resolveProvider(null, extensions),
-        'primary',
-      );
-      expect(
-        HomeSearchProviderPolicy.resolveProvider('secondary', extensions),
-        'secondary',
-      );
-      expect(
-        HomeSearchProviderPolicy.resolveProvider('disabled', extensions),
-        'primary',
-      );
-      expect(
-        HomeSearchProviderPolicy.hasProvider('missing', extensions),
-        isTrue,
-      );
-    });
-
-    test('keeps Search visible across transient provider reconciliation', () {
-      expect(
-        HomeSearchProviderPolicy.shouldShowSearchBar(
-          hasSearchProvider: false,
-          isSearchProviderLoading: false,
-          hasHomeFeedExtension: true,
-          hasExploreContent: true,
-          hasSearchInput: false,
-        ),
-        isTrue,
-      );
-      expect(
-        HomeSearchProviderPolicy.shouldShowSearchBar(
-          hasSearchProvider: false,
-          isSearchProviderLoading: false,
-          hasHomeFeedExtension: false,
-          hasExploreContent: false,
-          hasSearchInput: true,
-        ),
-        isTrue,
-      );
-      expect(
-        HomeSearchProviderPolicy.shouldShowSearchBar(
-          hasSearchProvider: false,
-          isSearchProviderLoading: false,
-          hasHomeFeedExtension: false,
-          hasExploreContent: false,
-          hasSearchInput: false,
-        ),
-        isFalse,
-      );
-    });
-
-    test('canonicalizes built-in and extension search filters', () {
-      final extension = _searchExtension(
-        id: 'provider',
-        filters: const [
-          SearchFilter(id: 'songs', label: 'Tracks', icon: 'music'),
-          SearchFilter(id: 'records', label: 'Albums', icon: 'album'),
-        ],
-      );
-
-      expect(
-        HomeSearchProviderPolicy.sanitizeFilter('Music', null, const []),
-        'track',
-      );
-      expect(
-        HomeSearchProviderPolicy.sanitizeFilter('track', 'provider', [
-          extension,
-        ]),
-        'songs',
-      );
-      expect(extension.searchBehavior?.filterIdForKind('track'), 'songs');
-      expect(extension.searchBehavior?.filterIdForKind('album'), 'records');
-      expect(
-        HomeSearchProviderPolicy.displayFilterSelection(
-          null,
-          'album',
-          'provider',
-          [extension],
-        ),
-        'records',
-      );
-      expect(
-        HomeSearchProviderPolicy.sanitizeFilter('podcast', 'provider', [
-          extension,
-        ]),
-        isNull,
-      );
     });
   });
 
@@ -358,29 +260,6 @@ void main() {
       expect(Id3v23Lyrics.writeUnsyncedLyrics(id3v24, 'Lyrics'), isNull);
     });
   });
-
-  test('queue state owns lookup rebuilding independently of notifier', () {
-    final queued = DownloadItem(
-      id: 'one',
-      track: track(id: 'track-one', name: 'One'),
-      service: 'extension.test',
-      createdAt: DateTime.utc(2026),
-    );
-    final completed = queued.copyWith(status: DownloadStatus.completed);
-
-    final initial = const DownloadQueueState().copyWith(items: [queued]);
-    final next = initial.copyWith(
-      items: [completed],
-      currentDownload: completed,
-    );
-    final cleared = next.copyWith(currentDownload: null);
-
-    expect(initial.queuedCount, 1);
-    expect(next.completedCount, 1);
-    expect(next.lookup.byItemId['one']?.status, DownloadStatus.completed);
-    expect(next.currentDownload, completed);
-    expect(cleared.currentDownload, isNull);
-  });
 }
 
 int _sequenceCount(Uint8List bytes, List<int> sequence) {
@@ -396,26 +275,4 @@ int _sequenceCount(Uint8List bytes, List<int> sequence) {
     if (matches) count++;
   }
   return count;
-}
-
-Extension _searchExtension({
-  required String id,
-  bool enabled = true,
-  bool primary = false,
-  List<SearchFilter> filters = const [],
-}) {
-  return Extension(
-    id: id,
-    name: id,
-    displayName: id,
-    version: '1.0.0',
-    description: 'test',
-    enabled: enabled,
-    status: 'loaded',
-    searchBehavior: SearchBehavior(
-      enabled: true,
-      primary: primary,
-      filters: filters,
-    ),
-  );
 }

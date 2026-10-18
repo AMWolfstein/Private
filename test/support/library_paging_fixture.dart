@@ -3,12 +3,13 @@ import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/services/library_queue_store.dart';
 import 'package:spotiflac_android/services/library_schema.dart';
 
-/// Real schema17 local rows, two-source album ties, mirrored paths and an
-/// unavailable source. The history read fixture uses the same named columns
-/// and covering album index as the app; no network or production DB is touched.
+/// Real schema17 local rows, album ties and an unavailable source. The history
+/// read fixture keeps the same named columns and covering album index as the
+/// app so the completeness join stays exercised; no network or production DB
+/// is touched.
 Future<LibraryQueueStore> createLibraryPagingFixture(
   Database db, {
-  int albumsPerSource = 500,
+  int albumsPerSource = 1000,
   String cover = '',
 }) async {
   await LibrarySchema.create(db, LibrarySchema.version);
@@ -103,7 +104,6 @@ Future<LibraryQueueStore> createLibraryPagingFixture(
       add(index, number, local: false);
       add(index, number, local: true);
     }
-    if (index % 10 == 0) add(index, 1, local: true, mirror: true);
   }
   batch.insert('library', {
     'id': 'hidden',
@@ -116,7 +116,7 @@ Future<LibraryQueueStore> createLibraryPagingFixture(
     'scanned_at': '2026-10-07T00:00:00Z',
   });
   await batch.commit(noResult: true);
-  return LibraryQueueStore(db, historyFts: false, localFts: false);
+  return LibraryQueueStore(db, localFts: false);
 }
 
 Future<LibraryBrowsePage> readLibraryPagingFixture(

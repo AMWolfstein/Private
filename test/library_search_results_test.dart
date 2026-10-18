@@ -9,7 +9,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/library_search_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
@@ -45,10 +44,9 @@ LibrarySearchHit _hit(
 
 void main() {
   for (final mornye in [false, true]) {
-    for (final local in [false, true]) {
-      testWidgets(
-        'search opens metadata; only Play starts audio ($mornye/$local)',
-        (tester) async {
+    testWidgets(
+      'search opens metadata; only Play starts audio ($mornye)',
+      (tester) async {
           SharedPreferences.setMockInitialValues({});
           FlutterSecureStorage.setMockInitialValues({});
           const channel = MethodChannel('com.zarz.spotiflac/backend');
@@ -70,28 +68,16 @@ void main() {
                 .setMockMethodCallHandler(channel, null),
           );
           const path = 'content://library/document/song.flac';
-          final item = local
-              ? UnifiedLibraryItem.fromLocalLibrary(
-                  LocalLibraryItem(
-                    id: 'chosen',
-                    trackName: 'Song',
-                    artistName: 'Artist',
-                    albumName: 'Album',
-                    filePath: path,
-                    scannedAt: DateTime(2026),
-                  ),
-                )
-              : UnifiedLibraryItem.fromDownloadHistory(
-                  DownloadHistoryItem(
-                    id: 'chosen',
-                    trackName: 'Song',
-                    artistName: 'Artist',
-                    albumName: 'Album',
-                    filePath: path,
-                    service: 'provider-a',
-                    downloadedAt: DateTime(2026),
-                  ),
-                );
+          final item = UnifiedLibraryItem.fromLocalLibrary(
+            LocalLibraryItem(
+              id: 'chosen',
+              trackName: 'Song',
+              artistName: 'Artist',
+              albumName: 'Album',
+              filePath: path,
+              scannedAt: DateTime(2026),
+            ),
+          );
           final player = _PlaybackRecorder();
           await tester.pumpWidget(
             ProviderScope(
@@ -105,16 +91,13 @@ void main() {
                             kind: LibrarySearchKind.songs,
                             id: 'chosen',
                             title: 'Song',
-                            source: local ? 'local' : 'history',
+                            source: 'local',
                           ),
                         ]
                       : [],
                 ),
                 librarySearchTrackProvider.overrideWith((ref, key) async {
-                  expect(key, (
-                    source: local ? 'local' : 'history',
-                    id: 'chosen',
-                  ));
+                  expect(key, (source: 'local', id: 'chosen'));
                   return item;
                 }),
               ],
@@ -144,7 +127,6 @@ void main() {
           final details = tester.widget<TrackMetadataScreen>(
             find.byType(TrackMetadataScreen),
           );
-          expect(details.item, item.historyItem);
           expect(details.localItem, item.localItem);
           expect(player.paths, isEmpty);
           tester.state<NavigatorState>(find.byType(Navigator).first).pop();
@@ -154,9 +136,8 @@ void main() {
           expect(player.paths, [path]);
           expect(find.byType(TrackMetadataScreen), findsNothing);
           expect(tester.takeException(), isNull);
-        },
-      );
-    }
+      },
+    );
   }
 
   for (final mornye in [false, true]) {

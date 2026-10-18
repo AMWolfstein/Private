@@ -82,43 +82,6 @@ class MetadataSettingsPage extends ConsumerWidget {
               ),
             ),
 
-            SliverToBoxAdapter(
-              child: SettingsSectionHeader(
-                title: context.l10n.sectionDuplicates,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  SettingsSwitchItem(
-                    icon: Icons.filter_list_outlined,
-                    title: context.l10n.downloadDeduplication,
-                    subtitle: settings.deduplicateDownloads
-                        ? settings.allowQualityVariants
-                              ? context
-                                    .l10n
-                                    .downloadDeduplicationWithQualityVariants
-                              : context.l10n.downloadDeduplicationEnabled
-                        : context.l10n.downloadDeduplicationDisabled,
-                    value: settings.deduplicateDownloads,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setDeduplicateDownloads(value),
-                  ),
-                  SettingsSwitchItem(
-                    icon: Icons.library_music_outlined,
-                    title: context.l10n.downloadQualityVariants,
-                    subtitle: context.l10n.downloadQualityVariantsDescription,
-                    value: settings.allowQualityVariants,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setAllowQualityVariants(value),
-                    showDivider: false,
-                  ),
-                ],
-              ),
-            ),
-
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
           ],
         ),

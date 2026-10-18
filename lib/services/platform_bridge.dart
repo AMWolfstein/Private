@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/services/download_request_payload.dart';
 import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
@@ -91,16 +90,6 @@ class LibraryScanNDJSONFile {
       if (await checkpoint.exists()) await checkpoint.delete();
     } catch (_) {}
   }
-}
-
-class ExtensionSessionGrantEvent {
-  final String extensionId;
-  final bool success;
-
-  const ExtensionSessionGrantEvent({
-    required this.extensionId,
-    required this.success,
-  });
 }
 
 /// Folder picked via the native iOS document picker: the filesystem path plus
@@ -291,9 +280,6 @@ class PlatformBridge {
   static const _persistentCacheMaxBytes = 2 * 1024 * 1024;
   static const _lookupCachePersistDebounce = Duration(milliseconds: 500);
   static const _metadataPersistentCacheKey = 'bridge_metadata_lookup_cache_v1';
-  static const _downloadProgressEvents = EventChannel(
-    'com.zarz.spotiflac/download_progress_stream',
-  );
   static const _libraryScanProgressEvents = EventChannel(
     'com.zarz.spotiflac/library_scan_progress_stream',
   );
@@ -313,40 +299,17 @@ class PlatformBridge {
   static Future<void>? _lookupCachePersistInFlight;
   static bool _lookupCachePersistDirty = false;
   static int _extensionRequestSequence = 0;
-  static final StreamController<ExtensionSessionGrantEvent>
-  _extensionSessionGrantEvents =
-      StreamController<ExtensionSessionGrantEvent>.broadcast();
   static final StreamController<void> _libraryStorageEvents =
-      StreamController<void>.broadcast();
-  static final StreamController<void> _verificationNotificationEvents =
       StreamController<void>.broadcast();
   static final StreamController<void> _setupFolderSelectionEvents =
       StreamController<void>.broadcast();
-  static final StreamController<void> _extensionAuthCallbackEvents =
-      StreamController<void>.broadcast();
-  static final StreamController<List<String>>
-  _iosBackgroundDownloadExpirationEvents =
-      StreamController<List<String>>.broadcast();
   static bool _backendEventHandlerInstalled = false;
 
   static bool get supportsCoreBackend => Platform.isAndroid || Platform.isIOS;
 
-  static bool get supportsExtensionSystem =>
-      Platform.isAndroid || Platform.isIOS;
-
-  static Stream<ExtensionSessionGrantEvent> extensionSessionGrantEvents() {
-    _ensureBackendEventHandler();
-    return _extensionSessionGrantEvents.stream;
-  }
-
   static Stream<void> libraryStorageEvents() {
     _ensureBackendEventHandler();
     return _libraryStorageEvents.stream;
-  }
-
-  static Stream<void> verificationNotificationEvents() {
-    _ensureBackendEventHandler();
-    return _verificationNotificationEvents.stream;
   }
 
   static Stream<void> setupFolderSelectionEvents() {
@@ -354,30 +317,11 @@ class PlatformBridge {
     return _setupFolderSelectionEvents.stream;
   }
 
-  static Stream<void> extensionAuthCallbackEvents() {
-    _ensureBackendEventHandler();
-    return _extensionAuthCallbackEvents.stream;
-  }
-
-  static Future<void> processPendingExtensionCallbacks() =>
-      _channel.invokeMethod<void>('processPendingExtensionCallbacks');
-
-  static Future<String?> consumeVerificationNotification() =>
-      _channel.invokeMethod<String>('consumeVerificationNotification');
-
-  static Stream<List<String>> iosBackgroundDownloadExpirationEvents() {
-    _ensureBackendEventHandler();
-    return _iosBackgroundDownloadExpirationEvents.stream;
-  }
-
   static void _ensureBackendEventHandler() {
     if (_backendEventHandlerInstalled) return;
     _backendEventHandlerInstalled = true;
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
-        case 'extensionAuthCallbackReceived':
-          _extensionAuthCallbackEvents.add(null);
-          return null;
         case 'setupFolderSelectionChanged':
           _setupFolderSelectionEvents.add(null);
           return null;
@@ -390,43 +334,8 @@ class PlatformBridge {
             AppLogger('LocalLibrary').e('$operation [$path]: $message');
           }
           return null;
-        case 'extensionSessionGrantCompleted':
-          final args = call.arguments;
-          if (args is Map) {
-            final extensionId = args['extension_id']?.toString().trim() ?? '';
-            if (extensionId.isNotEmpty) {
-              _extensionSessionGrantEvents.add(
-                ExtensionSessionGrantEvent(
-                  extensionId: extensionId,
-                  success: args['success'] != false,
-                ),
-              );
-            }
-          }
-          return null;
         case 'libraryStorageChanged':
           _libraryStorageEvents.add(null);
-          return null;
-        case 'extensionVerificationNotificationTapped':
-          _verificationNotificationEvents.add(null);
-          return null;
-        case 'iosBackgroundDownloadExpired':
-          final raw = call.arguments;
-          var itemIds = const <String>[];
-          try {
-            final decoded = raw is String ? jsonDecode(raw) : raw;
-            if (decoded is List) {
-              itemIds = decoded
-                  .map((value) => value.toString().trim())
-                  .where((value) => value.isNotEmpty)
-                  .toSet()
-                  .toList(growable: false);
-            }
-          } catch (_) {
-            // Older/native-mismatched builds may send no payload. The queue
-            // still pauses its currently visible active items below.
-          }
-          _iosBackgroundDownloadExpirationEvents.add(itemIds);
           return null;
         default:
           return null;
@@ -846,119 +755,8 @@ class PlatformBridge {
     return _metadataCache.length;
   }
 
-  static Future<Map<String, dynamic>> _invokeDownloadMethod(
-    String method,
-    DownloadRequestPayload payload,
-  ) {
-    return _invokeMap(method, jsonEncode(payload.toJson()));
-  }
-
-  static Future<Map<String, dynamic>> downloadByStrategy({
-    required DownloadRequestPayload payload,
-    bool? useExtensions,
-    bool? useFallback,
-  }) async {
-    final routedPayload = payload.withStrategy(
-      useExtensions: useExtensions,
-      useFallback: useFallback,
-    );
-    final response = await _invokeDownloadMethod(
-      'downloadByStrategy',
-      routedPayload,
-    );
-    if (response['success'] != true) {
-      final error = response['error'] ?? 'Unknown error';
-      final errorType = response['error_type'] ?? '';
-      _log.e('Download failed: $error (type: $errorType)');
-    }
-    return response;
-  }
-
-  static Future<Map<String, dynamic>> getAllDownloadProgress() async {
-    final result = await _channel.invokeMethod('getAllDownloadProgress');
-    return _decodeMapResult(result);
-  }
-
-  static Stream<Map<String, dynamic>> downloadProgressStream() {
-    return _downloadProgressEvents.receiveBroadcastStream().map(
-      _decodeMapResult,
-    );
-  }
-
   static Future<void> exitApp() async {
     await _channel.invokeMethod('exitApp');
-  }
-
-  static Future<void> clearItemProgress(String itemId) async {
-    await _channel.invokeMethod('clearItemProgress', {'item_id': itemId});
-  }
-
-  static Future<void> cancelDownload(String itemId) async {
-    await _channel.invokeMethod('cancelDownload', {'item_id': itemId});
-  }
-
-  /// Cancels the selected attempts and clears their native progress. Failures
-  /// are best effort, as for individual queue cancellation; later chunks still
-  /// run, without issuing thousands of concurrent channel requests.
-  static Future<void> cancelDownloads(Iterable<String> itemIds) async {
-    final ids = itemIds.toSet().toList(growable: false);
-    for (var start = 0; start < ids.length; start += 256) {
-      final end = start + 256 < ids.length ? start + 256 : ids.length;
-      try {
-        await _channel.invokeMethod('cancelDownloads', {
-          'item_ids': ids.sublist(start, end),
-        });
-      } catch (error) {
-        _log.w('Failed to cancel ${end - start} downloads: $error');
-      }
-    }
-  }
-
-  /// Drops a stale pre-registered cancel flag for an item with no active
-  /// download, so a user-initiated retry does not abort instantly.
-  static Future<void> resetDownloadCancel(String itemId) async {
-    await _channel.invokeMethod('resetDownloadCancel', {'item_id': itemId});
-  }
-
-  /// Returns only IDs whose native reset succeeded. Bound each request so a
-  /// large retry selection does not flood the channel or hold the native lock.
-  static Future<Set<String>> resetDownloadCancels(
-    Iterable<String> itemIds,
-  ) async {
-    final ids = itemIds.toSet().toList(growable: false);
-    final reset = <String>{};
-    for (var start = 0; start < ids.length; start += 256) {
-      final end = start + 256 < ids.length ? start + 256 : ids.length;
-      final chunk = ids.sublist(start, end);
-      try {
-        await _channel.invokeMethod('resetDownloadCancels', {
-          'item_ids': chunk,
-        });
-        reset.addAll(chunk);
-      } catch (error) {
-        _log.w(
-          'Failed to reset cancel flags for ${chunk.length} downloads: $error',
-        );
-      }
-    }
-    return reset;
-  }
-
-  /// iOS only: run a verification/OAuth page inside ASWebAuthenticationSession.
-  /// The session intercepts the callback scheme in-process, so the flow
-  /// completes even where the app's URL scheme is not registered with the OS
-  /// (e.g. sideload containers like LiveContainer). Returns true when the
-  /// session was presented; the callback is delivered through the native side
-  /// exactly like an OS deep link.
-  static Future<bool> startIosWebAuthSession(
-    String url, {
-    String callbackScheme = 'spotiflac',
-  }) async {
-    final result = await _channel.invokeMethod('startWebAuthSession', {
-      'url': url,
-      'callback_scheme': callbackScheme,
-    });
-    return result == true;
   }
 
   static Future<void> setDownloadDirectory(String path) async {
@@ -1561,22 +1359,6 @@ class PlatformBridge {
     return map['success'] == true;
   }
 
-  static Future<void> startDownloadService({
-    String trackName = '',
-    String artistName = '',
-    int queueCount = 0,
-  }) async {
-    await _channel.invokeMethod('startDownloadService', {
-      'track_name': trackName,
-      'artist_name': artistName,
-      'queue_count': queueCount,
-    });
-  }
-
-  static Future<void> stopDownloadService() async {
-    await _channel.invokeMethod('stopDownloadService');
-  }
-
   /// Keeps user-started work of [kind] alive with the screen off: an Android
   /// foreground service, or an iOS background-task grace period. Returns
   /// whether the platform accepted it.
@@ -1611,168 +1393,6 @@ class PlatformBridge {
 
   static Future<void> stopBackgroundWork(String kind) async {
     await _channel.invokeMethod('stopBackgroundWork', {'kind': kind});
-  }
-
-  static Future<void> updateDownloadServiceProgress({
-    required String trackName,
-    required String artistName,
-    required int progress,
-    required int total,
-    required int queueCount,
-    String status = 'downloading',
-  }) async {
-    await _channel.invokeMethod('updateDownloadServiceProgress', {
-      'track_name': trackName,
-      'artist_name': artistName,
-      'progress': progress,
-      'total': total,
-      'queue_count': queueCount,
-      'status': status,
-    });
-  }
-
-  static Future<bool> isDownloadServiceRunning() async {
-    final result = await _channel.invokeMethod('isDownloadServiceRunning');
-    return result as bool;
-  }
-
-  /// iOS only: keep in-flight downloads running briefly after backgrounding.
-  static Future<void> beginBackgroundDownloadTask() async {
-    if (!Platform.isIOS) return;
-    try {
-      await _channel.invokeMethod('beginBackgroundDownloadTask');
-    } catch (_) {}
-  }
-
-  /// iOS only: stop the background-time extension (queue finished or paused).
-  static Future<void> endBackgroundDownloadTask() async {
-    if (!Platform.isIOS) return;
-    try {
-      await _channel.invokeMethod('endBackgroundDownloadTask');
-    } catch (_) {}
-  }
-
-  static Future<void> startNativeDownloadWorker({
-    required List<Map<String, dynamic>> requests,
-    Map<String, dynamic> settings = const {},
-  }) async {
-    final requestsJson = jsonEncode(requests);
-    final settingsJson = jsonEncode(settings);
-    final payloadDir = await _nativeWorkerPayloadDir();
-    await _cleanupNativeWorkerPayloads(payloadDir);
-    final stamp = DateTime.now().microsecondsSinceEpoch;
-    final requestPath = '${payloadDir.path}/requests_$stamp.json';
-    final settingsPath = '${payloadDir.path}/settings_$stamp.json';
-    await File(requestPath).writeAsString(requestsJson, flush: true);
-    await File(settingsPath).writeAsString(settingsJson, flush: true);
-    try {
-      await _channel.invokeMethod('startNativeDownloadWorker', {
-        'requests_path': requestPath,
-        'settings_path': settingsPath,
-      });
-    } catch (_) {
-      unawaited(_deleteFileIfExists(requestPath));
-      unawaited(_deleteFileIfExists(settingsPath));
-      rethrow;
-    }
-  }
-
-  static Future<void> appendNativeDownloadWorkerRequests({
-    required String runId,
-    required List<Map<String, dynamic>> requests,
-  }) async {
-    if (requests.isEmpty) return;
-    final payloadDir = await _nativeWorkerPayloadDir();
-    final stamp = DateTime.now().microsecondsSinceEpoch;
-    final requestPath = '${payloadDir.path}/append_$stamp.json';
-    await File(requestPath).writeAsString(jsonEncode(requests), flush: true);
-    try {
-      await _channel.invokeMethod('appendNativeDownloadWorkerRequests', {
-        'run_id': runId,
-        'requests_path': requestPath,
-      });
-    } catch (_) {
-      unawaited(_deleteFileIfExists(requestPath));
-      rethrow;
-    }
-  }
-
-  static Future<void> finishNativeDownloadWorkerPreparation({
-    required String runId,
-  }) async {
-    await _channel.invokeMethod('finishNativeDownloadWorkerPreparation', {
-      'run_id': runId,
-    });
-  }
-
-  static Future<void> acknowledgeNativeDownloadWorkerItems({
-    required String runId,
-    required List<String> itemIds,
-  }) async {
-    if (runId.isEmpty || itemIds.isEmpty) return;
-    await _channel.invokeMethod('acknowledgeNativeDownloadWorkerItems', {
-      'run_id': runId,
-      'item_ids_json': jsonEncode(itemIds),
-    });
-  }
-
-  static Future<void> _deleteFileIfExists(String path) async {
-    try {
-      final file = File(path);
-      if (await file.exists()) {
-        await file.delete();
-      }
-    } catch (_) {}
-  }
-
-  static Future<Directory> _nativeWorkerPayloadDir() async {
-    final tempDir = await getTemporaryDirectory();
-    final payloadDir = Directory('${tempDir.path}/native_worker_payloads');
-    if (!await payloadDir.exists()) {
-      await payloadDir.create(recursive: true);
-    }
-    return payloadDir;
-  }
-
-  static Future<void> _cleanupNativeWorkerPayloads(Directory payloadDir) async {
-    final cutoff = DateTime.now().subtract(const Duration(days: 1));
-    try {
-      await for (final entity in payloadDir.list(followLinks: false)) {
-        if (entity is! File || !entity.path.endsWith('.json')) continue;
-        final stat = await entity.stat();
-        if (stat.modified.isBefore(cutoff)) {
-          try {
-            await entity.delete();
-          } catch (_) {}
-        }
-      }
-    } catch (_) {}
-  }
-
-  static Future<void> pauseNativeDownloadWorker() async {
-    await _channel.invokeMethod('pauseNativeDownloadWorker');
-  }
-
-  static Future<void> resumeNativeDownloadWorker() async {
-    await _channel.invokeMethod('resumeNativeDownloadWorker');
-  }
-
-  static Future<void> cancelNativeDownloadWorker() async {
-    await _channel.invokeMethod('cancelNativeDownloadWorker');
-  }
-
-  /// [sinceStateSerial]: pass the `state_serial` of the last fully-processed
-  /// snapshot; when the native state hasn't advanced past it, the heavy
-  /// per-item payload (which grows with every completed item) is omitted and
-  /// only compact progress fields are returned.
-  static Future<Map<String, dynamic>> getNativeDownloadWorkerSnapshot({
-    int sinceStateSerial = 0,
-  }) async {
-    final result = await _channel.invokeMethod(
-      'getNativeDownloadWorkerSnapshot',
-      {'since_state_serial': sinceStateSerial},
-    );
-    return _decodeMapResult(result);
   }
 
   static Future<int> getTrackCacheSize() async {
@@ -2090,50 +1710,6 @@ class PlatformBridge {
       'extension_id': extensionId,
     });
     return _decodeNullableMapResult(result, 'getExtensionPendingAuth');
-  }
-
-  static final Map<String, Future<bool>> _extensionSessionGrantCompletions =
-      <String, Future<bool>>{};
-
-  static Future<bool> completeExtensionSessionGrant(
-    String extensionId,
-    String grant,
-  ) {
-    final normalizedExtensionId = extensionId.trim();
-    final key = normalizedExtensionId.toLowerCase();
-    final activeCompletion = _extensionSessionGrantCompletions[key];
-    if (activeCompletion != null) {
-      _log.d(
-        'Joining active completeExtensionSessionGrant: $normalizedExtensionId',
-      );
-      return activeCompletion;
-    }
-
-    late final Future<bool> completion;
-    completion = _completeExtensionSessionGrant(normalizedExtensionId, grant)
-        .whenComplete(() {
-          if (identical(_extensionSessionGrantCompletions[key], completion)) {
-            _extensionSessionGrantCompletions.remove(key);
-          }
-        });
-    _extensionSessionGrantCompletions[key] = completion;
-    return completion;
-  }
-
-  static Future<bool> _completeExtensionSessionGrant(
-    String extensionId,
-    String grant,
-  ) async {
-    _log.d('completeExtensionSessionGrant: $extensionId');
-    final result = await _channel.invokeMethod(
-      'completeExtensionSessionGrant',
-      {'extension_id': extensionId, 'grant': grant},
-    );
-    final success = result != false;
-    _extensionSessionGrantEvents.add(
-      ExtensionSessionGrantEvent(extensionId: extensionId, success: success),
-    );
-    return success;
   }
 
   static Future<List<Map<String, dynamic>>> customSearchWithExtension(

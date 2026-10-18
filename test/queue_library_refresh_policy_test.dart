@@ -408,34 +408,4 @@ void main() {
       expect(() => first.removeListener(listener), returnsNormally);
     },
   );
-
-  test('completion bridge cards probe before showing Play or missing', () {
-    final source = File(
-      'lib/screens/queue_tab_collection_items.dart',
-    ).readAsStringSync();
-    final gridStart = source.indexOf('Widget _buildBridgeGridItem(');
-    final listStart = source.indexOf('Widget _buildBridgeListItem(');
-    final badgeStart = source.indexOf('Widget _buildLibraryQualityBadge(');
-
-    expect(gridStart, greaterThanOrEqualTo(0));
-    expect(listStart, greaterThan(gridStart));
-    expect(badgeStart, greaterThan(listStart));
-
-    final gridSource = source.substring(gridStart, listStart);
-    final listSource = source.substring(listStart, badgeStart);
-
-    expect(gridSource, contains('resolveCompletionBridgePlayablePath('));
-    expect(gridSource, contains('_completionBridgePlayableProbe.listenable('));
-    expect(gridSource, contains('CompletionBridgePlayableStatus.checking'));
-    expect(gridSource, contains('semanticsLabel:'));
-    expect(gridSource, contains('queueCheckingDownloadedFile'));
-    expect(gridSource, contains('_LibraryPlaybackButton('));
-    expect(gridSource, contains('grid: true'));
-    expect(listSource, contains('resolveCompletionBridgePlayablePath('));
-    expect(listSource, contains('_completionBridgePlayableProbe.listenable('));
-    expect(listSource, contains('CompletionBridgePlayableStatus.checking'));
-    expect(listSource, contains('semanticsLabel:'));
-    expect(listSource, contains('queueCheckingDownloadedFile'));
-    expect(listSource, contains('_LibraryPlaybackButton('));
-  });
 }

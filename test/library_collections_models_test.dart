@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/models/library_collections.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 
 Track _track(String id, {String? source, String? isrc}) => Track(
@@ -16,26 +15,8 @@ Track _track(String id, {String? source, String? isrc}) => Track(
 );
 
 void main() {
-  test('catalog and library collection identity agree across sources', () {
+  test('catalog and local library collection identity agree', () {
     for (final isrc in [null, '', ' ', ' us-example-1 ']) {
-      for (final service in ['example', ' Example ', ' ']) {
-        final downloaded = UnifiedLibraryItem.fromDownloadHistory(
-          DownloadHistoryItem(
-            id: 'song',
-            trackName: 'Song',
-            artistName: 'Artist',
-            albumName: 'Album',
-            filePath: '/music/song.flac',
-            downloadedAt: DateTime.utc(2026),
-            service: service,
-            isrc: isrc,
-          ),
-        );
-        expect(
-          downloaded.collectionKey,
-          trackCollectionKey(_track('song', source: service, isrc: isrc)),
-        );
-      }
       final local = UnifiedLibraryItem.fromLocalLibrary(
         LocalLibraryItem(
           id: 'song',

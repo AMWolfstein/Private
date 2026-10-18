@@ -18,10 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/services/m3u_playlist_service.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
-import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
@@ -38,7 +35,6 @@ import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/in_library_badge.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 
 String? _resolveRawCoverUrl(Track track) {
   final rawCover = track.coverUrl?.trim();
@@ -206,35 +202,6 @@ class _LibraryTracksFolderScreenState
     );
   }
 
-  void _downloadSelected(List<CollectionTrackEntry> entries) {
-    final settings = ref.read(settingsProvider);
-    final extensionState = ref.read(extensionProvider);
-    final service = resolveEffectiveDownloadService(
-      settings.defaultService,
-      extensionState,
-    );
-    if (service.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.extensionsNoDownloadProvider)),
-      );
-      return;
-    }
-    final queueNotifier = ref.read(downloadQueueProvider.notifier);
-    final tracks = entries
-        .where((entry) => selectedIds.contains(entry.key))
-        .map((entry) => entry.track)
-        .toList(growable: false);
-    queueNotifier.addIndividualTracksToQueue(tracks, service);
-    final count = tracks.length;
-
-    exitSelectionMode();
-
-    if (!mounted || count == 0) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.selectionSelected(count))),
-    );
-  }
-
   void _addSelectedToPlaylist(List<CollectionTrackEntry> entries) {
     final selectedTracks = entries
         .where((e) => selectedIds.contains(e.key))
@@ -304,10 +271,6 @@ class _LibraryTracksFolderScreenState
         context.l10n.collectionPlaylistEmptySubtitle,
     };
     final folderTracks = _folderData.tracks;
-    final historyLookups = _folderData.historyRequest.tracks;
-    final existingHistoryKeys = ref.watch(
-      downloadHistoryVisibleBatchExistsProvider(_folderData.historyRequest),
-    );
 
     final bottomPadding = isSelectionMode
         ? MediaQuery.paddingOf(context).bottom
@@ -340,9 +303,6 @@ class _LibraryTracksFolderScreenState
               delegate: SliverChildBuilderDelegate((context, index) {
                 final entry = entries[index];
                 final isSelected = selectedIds.contains(entry.key);
-                final isInHistory = existingHistoryKeys.contains(
-                  historyLookups[index].lookupKey,
-                );
                 return KeyedSubtree(
                   key: ValueKey(entry.key),
                   child: StaggeredListItem(
@@ -353,7 +313,6 @@ class _LibraryTracksFolderScreenState
                       playlistId: widget.playlistId,
                       folderTracks: folderTracks,
                       trackIndex: index,
-                      isInHistory: isInHistory,
                       isSelectionMode: isSelectionMode,
                       isSelected: isSelected,
                       onTap: isSelectionMode
@@ -380,7 +339,6 @@ class _LibraryTracksFolderScreenState
   ) {
     final selectedCount = selectedIds.length;
     final allSelected = selectedCount == entries.length && entries.isNotEmpty;
-    final isWishlist = widget.mode == LibraryTracksFolderMode.wishlist;
 
     return SelectionBottomBar(
       selectedCount: selectedCount,
@@ -397,18 +355,6 @@ class _LibraryTracksFolderScreenState
       children: [
         Row(
           children: [
-            if (isWishlist)
-              Expanded(
-                child: SelectionActionButton(
-                  icon: Icons.download,
-                  label: '${context.l10n.settingsDownload} ($selectedCount)',
-                  onPressed: selectedCount > 0
-                      ? () => _downloadSelected(entries)
-                      : null,
-                  colorScheme: colorScheme,
-                ),
-              ),
-            if (isWishlist) const SizedBox(width: 8),
             Expanded(
               child: SelectionActionButton(
                 icon: Icons.playlist_add,
@@ -625,8 +571,6 @@ class _LibraryTracksFolderScreenState
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(child: _buildPlayAllCenterButton(entries)),
-                const SizedBox(width: 8),
-                Flexible(child: _buildDownloadAllCenterButton(entries)),
               ],
             )
           : null,
@@ -714,15 +658,6 @@ class _LibraryTracksFolderScreenState
     );
   }
 
-  Widget _buildDownloadAllCenterButton(List<CollectionTrackEntry> entries) {
-    final tracks = entries.map((e) => e.track).toList(growable: false);
-    return HeaderFilledButton(
-      icon: Icons.download_rounded,
-      label: context.l10n.downloadAllCount(tracks.length),
-      onPressed: tracks.isEmpty ? null : () => _confirmDownloadAll(tracks),
-    );
-  }
-
   Future<void> _playAll(List<Track> tracks) async {
     if (tracks.isEmpty) return;
 
@@ -735,32 +670,6 @@ class _LibraryTracksFolderScreenState
         SnackBar(content: Text(context.l10n.snackbarCannotOpenFile('$e'))),
       );
     }
-  }
-
-  void _confirmDownloadAll(List<Track> tracks) {
-    confirmDownloadAllDialog(
-      context,
-      tracks.length,
-      () => _downloadAll(tracks),
-    );
-  }
-
-  Future<void> _downloadAll(List<Track> tracks) async {
-    final playlistName = widget.mode == LibraryTracksFolderMode.playlist
-        ? playlist?.name ?? context.l10n.collectionPlaylist
-        : null;
-    await queueTracksSkippingDownloaded(
-      context,
-      ref,
-      tracks,
-      artistNameForPicker: switch (widget.mode) {
-        LibraryTracksFolderMode.wishlist => context.l10n.collectionWishlist,
-        LibraryTracksFolderMode.loved => context.l10n.collectionLoved,
-        LibraryTracksFolderMode.playlist => context.l10n.collectionPlaylist,
-      },
-      playlistName: playlistName,
-      resolveDefaultService: false,
-    );
   }
 
   void _showCoverOptionsSheet(BuildContext context, bool hasCustomCover) {
@@ -913,7 +822,6 @@ class _CollectionTrackTile extends ConsumerWidget {
   final String? playlistId;
   final List<Track> folderTracks;
   final int trackIndex;
-  final bool isInHistory;
   final bool isSelectionMode;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -925,7 +833,6 @@ class _CollectionTrackTile extends ConsumerWidget {
     required this.playlistId,
     required this.folderTracks,
     required this.trackIndex,
-    required this.isInHistory,
     this.isSelectionMode = false,
     this.isSelected = false,
     this.onTap,
@@ -952,20 +859,8 @@ class _CollectionTrackTile extends ConsumerWidget {
         : null;
     final effectiveCoverUrl = rawCoverUrl ?? localCoverUrl;
 
-    // Fine-grained provider watches – only this tile rebuilds when its own
-    // history / local-library entry changes.
-    final inMemoryHistoryItem = ref.watch(
-      downloadHistoryProvider.select((state) {
-        final byId = state.getBySpotifyId(track.id);
-        if (byId != null) return byId;
-        final isrc = track.isrc?.trim();
-        if (isrc != null && isrc.isNotEmpty) {
-          final byIsrc = state.getByIsrc(isrc);
-          if (byIsrc != null) return byIsrc;
-        }
-        return state.findByTrackAndArtist(track.name, track.artistName);
-      }),
-    );
+    // Fine-grained provider watch – only this tile rebuilds when its own
+    // local-library entry changes.
     final showLocalLibraryIndicator = ref.watch(
       settingsProvider.select(
         (s) => s.localLibraryEnabled && s.localLibraryShowDuplicates,
@@ -984,28 +879,20 @@ class _CollectionTrackTile extends ConsumerWidget {
           )
         : false;
 
-    final heroTag = inMemoryHistoryItem != null
-        ? 'cover_${inMemoryHistoryItem.id}'
-        : null;
-
     return TrackCard(
       style: TrackCardStyle.flat,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      leading: HeroMode(
-        enabled: heroTag != null,
-        child: Builder(
-          builder: (context) {
-            final size = context.tokens.coverCompact;
-            final cover = ClipRRect(
-              borderRadius: context.tokens.borderRadiusThumb,
-              child: effectiveCoverUrl != null && effectiveCoverUrl.isNotEmpty
-                  ? _buildTrackCover(context, effectiveCoverUrl, size)
-                  : TrackCoverPlaceholder(size: size),
-            );
-            return heroTag != null ? Hero(tag: heroTag, child: cover) : cover;
-          },
-        ),
+      leading: Builder(
+        builder: (context) {
+          final size = context.tokens.coverCompact;
+          return ClipRRect(
+            borderRadius: context.tokens.borderRadiusThumb,
+            child: effectiveCoverUrl != null && effectiveCoverUrl.isNotEmpty
+                ? _buildTrackCover(context, effectiveCoverUrl, size)
+                : TrackCoverPlaceholder(size: size),
+          );
+        },
       ),
       title: track.name,
       subtitle: Row(
@@ -1018,13 +905,13 @@ class _CollectionTrackTile extends ConsumerWidget {
               style: TextStyle(color: colorScheme.onSurfaceVariant),
             ),
           ),
-          if (isInLocalLibrary || isInHistory) ...[
+          if (isInLocalLibrary) ...[
             const SizedBox(width: 6),
             const InLibraryBadge(),
           ],
         ],
       ),
-      trailing: isInHistory || isInLocalLibrary
+      trailing: isInLocalLibrary
           ? IconButton(
               tooltip: context.l10n.tooltipPlay,
               onPressed: () => _playFromHere(context, ref),
@@ -1037,16 +924,7 @@ class _CollectionTrackTile extends ConsumerWidget {
               ),
             )
           : null,
-      onTap: isSelectionMode
-          ? onTap
-          : () {
-              if (mode == LibraryTracksFolderMode.wishlist) {
-                _downloadTrack(context, ref);
-                return;
-              }
-
-              _navigateToMetadata(context, ref);
-            },
+      onTap: isSelectionMode ? onTap : () => _navigateToMetadata(context, ref),
       onLongPress: isSelectionMode ? onTap : onLongPress,
     );
   }
@@ -1082,44 +960,8 @@ class _CollectionTrackTile extends ConsumerWidget {
     );
   }
 
-  void _downloadTrack(BuildContext context, WidgetRef ref) {
-    downloadSingleTrack(context, ref, entry.track);
-  }
-
   Future<void> _navigateToMetadata(BuildContext context, WidgetRef ref) async {
     final track = entry.track;
-    final historyNotifier = ref.read(downloadHistoryProvider.notifier);
-
-    var historyItem = await historyNotifier.getBySpotifyIdAsync(track.id);
-    if (!context.mounted) return;
-
-    if (historyItem == null && track.isrc != null && track.isrc!.isNotEmpty) {
-      historyItem = await historyNotifier.getByIsrcAsync(track.isrc!);
-      if (!context.mounted) return;
-    }
-
-    historyItem ??= await historyNotifier.findByTrackAndArtistAsync(
-      track.name,
-      track.artistName,
-    );
-    if (!context.mounted) return;
-
-    if (historyItem != null) {
-      final embeddedCoverPath =
-          await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-            historyItem.filePath,
-          );
-      if (!context.mounted) return;
-      await precacheMetadataBackdrop(
-        context,
-        embeddedCoverPath ?? historyItem.coverUrl,
-      );
-      if (!context.mounted) return;
-      await Navigator.of(context).push(
-        slidePageRoute<void>(page: TrackMetadataScreen(item: historyItem)),
-      );
-      return;
-    }
 
     final localItem = await ref
         .read(localLibraryProvider.notifier)
@@ -1130,16 +972,18 @@ class _CollectionTrackTile extends ConsumerWidget {
         );
     if (!context.mounted) return;
 
-    if (localItem != null) {
-      await precacheMetadataBackdrop(context, localItem.coverPath);
-      if (!context.mounted) return;
-      await Navigator.of(context).push(
-        slidePageRoute<void>(page: TrackMetadataScreen(localItem: localItem)),
+    if (localItem == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.snackbarFileNotFound)),
       );
       return;
     }
 
-    _downloadTrack(context, ref);
+    await precacheMetadataBackdrop(context, localItem.coverPath);
+    if (!context.mounted) return;
+    await Navigator.of(context).push(
+      slidePageRoute<void>(page: TrackMetadataScreen(localItem: localItem)),
+    );
   }
 }
 

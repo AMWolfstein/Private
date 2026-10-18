@@ -6,8 +6,6 @@ import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
-import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/user_profile_provider.dart';
@@ -29,18 +27,13 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
 
   bool _isExporting = false;
   bool _isImporting = false;
-  bool _includeSecrets = false;
   bool _includeSettings = true;
   bool _includeHistory = true;
   bool _includeCollections = true;
-  bool _includeExtensions = true;
 
   bool get _isBusy => _isExporting || _isImporting;
   bool get _hasSelection =>
-      _includeSettings ||
-      _includeHistory ||
-      _includeCollections ||
-      _includeExtensions;
+      _includeSettings || _includeHistory || _includeCollections;
 
   Future<void> _createBackup() async {
     if (_isBusy || !_hasSelection) return;
@@ -58,12 +51,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
         collectionsJson = await notifier.exportCollectionsJson();
         covers = await notifier.exportPlaylistCoverFiles();
       }
-      final extensions = _includeExtensions
-          ? await ref
-                .read(extensionProvider.notifier)
-                .exportBackup(includeSecrets: _includeSecrets)
-          : <String, dynamic>{};
-
       final file = await BackupService.writeBackupArchive(
         settings: settings,
         profile: _includeSettings
@@ -75,7 +62,7 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
         collections: const {},
         collectionsJson: collectionsJson,
         playlistCoverFiles: covers,
-        extensions: extensions,
+        extensions: const {},
       );
 
       messenger.showSnackBar(SnackBar(content: Text(l10n.backupCreated)));
@@ -141,11 +128,7 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
             .restoreFromBackup(bundle.settings!);
       }
       if (bundle.hasHistory) {
-        await ref
-            .read(downloadHistoryProvider.notifier)
-            .restoreFromBackupOperation(
-              () => BackupService.restoreHistory(bundle!),
-            );
+        await BackupService.restoreHistory(bundle);
       }
       if (bundle.hasCollections) {
         await ref
@@ -156,21 +139,9 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
             );
       }
 
-      ExtensionRestoreResult? extResult;
-      if (bundle.hasExtensions) {
-        extResult = await ref
-            .read(extensionProvider.notifier)
-            .restoreFromBackup(bundle.extensions);
-      }
-
       final message = StringBuffer(l10n.backupRestored)
         ..write('\n')
         ..write(l10n.backupRestoreRestartHint);
-      if (extResult != null && extResult.failed > 0) {
-        message
-          ..write('\n')
-          ..write(l10n.backupExtensionsRestoreFailed(extResult.failed));
-      }
 
       messenger.showSnackBar(
         SnackBar(
@@ -243,11 +214,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                   icon: Icons.person_outline,
                   label: l10n.backupContentsArtists(bundle.favoriteArtistCount),
                 ),
-              if (bundle.extensionCount > 0)
-                _ContentRow(
-                  icon: Icons.extension_outlined,
-                  label: l10n.backupContentsExtensions(bundle.extensionCount),
-                ),
             ],
           ),
           actions: [
@@ -291,8 +257,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                           _includeSettings = true;
                           _includeHistory = false;
                           _includeCollections = false;
-                          _includeExtensions = false;
-                          _includeSecrets = false;
                         }),
                 ),
                 SettingsSwitchItem(
@@ -320,26 +284,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                   onChanged: _isBusy
                       ? null
                       : (value) => setState(() => _includeCollections = value),
-                ),
-                SettingsSwitchItem(
-                  icon: Icons.extension_outlined,
-                  title: l10n.backupSelectExtensions,
-                  value: _includeExtensions,
-                  onChanged: _isBusy
-                      ? null
-                      : (value) => setState(() {
-                          _includeExtensions = value;
-                          if (!value) _includeSecrets = false;
-                        }),
-                ),
-                SettingsSwitchItem(
-                  icon: Icons.vpn_key_outlined,
-                  title: l10n.backupIncludeSecrets,
-                  subtitle: l10n.backupIncludeSecretsDescription,
-                  value: _includeSecrets,
-                  onChanged: _isBusy || !_includeExtensions
-                      ? null
-                      : (value) => setState(() => _includeSecrets = value),
                 ),
                 SettingsItem(
                   icon: Icons.ios_share,

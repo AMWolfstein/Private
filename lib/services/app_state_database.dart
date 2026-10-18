@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/download_queue_codec.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
 import 'package:spotiflac_android/utils/logger.dart';
 
@@ -187,41 +186,6 @@ class AppStateDatabase {
       'repeat_mode': repeatMode is String ? repeatMode : 'none',
       'updated_at': DateTime.now().toIso8601String(),
     };
-  }
-
-  Future<bool> migrateQueueFromSharedPreferences({
-    @visibleForTesting SharedPreferences? preferencesOverride,
-    @visibleForTesting Database? databaseOverride,
-  }) async {
-    final prefs = preferencesOverride ?? await _prefs;
-    if (prefs.getBool(_queueMigrationKey) == true) {
-      return false;
-    }
-
-    final raw = prefs.getString(_legacyQueueKey);
-    if (raw == null || raw.isEmpty) {
-      await prefs.setBool(_queueMigrationKey, true);
-      return false;
-    }
-
-    try {
-      final nowIso = DateTime.now().toIso8601String();
-      final rows = await prepareLegacyDownloadQueueRows(raw, nowIso);
-      if (rows == null) {
-        await prefs.setBool(_queueMigrationKey, true);
-        return false;
-      }
-
-      final db = databaseOverride ?? await database;
-      await db.transaction((txn) => _writeQueueChanges(txn, rows, const []));
-
-      await prefs.setBool(_queueMigrationKey, true);
-      _log.i('Migrated legacy queue data to SQLite');
-      return true;
-    } catch (e, stack) {
-      _log.e('Failed queue migration to SQLite: $e', e, stack);
-      return false;
-    }
   }
 
   Future<bool> migrateRecentAccessFromSharedPreferences() async {

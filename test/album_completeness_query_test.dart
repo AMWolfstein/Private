@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -63,13 +62,13 @@ def add(local, id, album, number, total, depth=16):
     db.execute('INSERT INTO '+table+' ('+','.join(fields)+') VALUES ('+','.join('?' for _ in fields)+')', list(fields.values()))
     keys = 'library_path_keys' if local else 'history_db.history_path_keys'
     db.execute('INSERT INTO '+keys+' VALUES (?,?)', (id, fields['file_path']))
-add(False, 'missing1', 'missing', 1, 4, depth=24)
-add(False, 'missing2', 'missing', 2, 4)
-add(False, 'complete1', 'complete', 1, 2, depth=24)
-add(False, 'complete2', 'complete', 2, 2)
-add(False, 'unknown1', 'unknown', 1, None)
-add(False, 'one1', 'one-track', 1, 12)
-add(False, 'mixed1', 'mixed', 1, 2)
+add(True, 'missing1', 'missing', 1, 4, depth=24)
+add(True, 'missing2', 'missing', 2, 4)
+add(True, 'complete1', 'complete', 1, 2, depth=24)
+add(True, 'complete2', 'complete', 2, 2)
+add(True, 'unknown1', 'unknown', 1, None)
+add(True, 'one1', 'one-track', 1, 12)
+add(True, 'mixed1', 'mixed', 1, 2)
 add(True, 'mixed2', 'mixed', 2, 2)
 add(True, 'local1', 'local-only', 1, 3)
 add(True, 'local3', 'local-only', 3, 3)
@@ -100,11 +99,6 @@ class _Settings extends SettingsNotifier {
   void setHistoryFilterMode(String mode) {
     state = state.copyWith(historyFilterMode: mode);
   }
-}
-
-class _History extends DownloadHistoryNotifier {
-  @override
-  DownloadHistoryState build() => DownloadHistoryState(totalCount: 7);
 }
 
 class _Local extends LocalLibraryNotifier {
@@ -265,7 +259,11 @@ void main() {
           source: 'local',
         ),
       );
-      expect(local.single['album_name'], 'local-only');
+      expect(local.map((row) => row['album_name']), [
+        'local-only',
+        'missing',
+        'one-track',
+      ]);
       final noLocal = await db.getQueueAlbumPage(
         const QueueLibraryDbQuery(
           filterMode: 'albums',
@@ -295,12 +293,8 @@ void main() {
         ProviderScope(
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
-            downloadHistoryProvider.overrideWith(_History.new),
             localLibraryProvider.overrideWith(_Local.new),
             libraryCollectionsProvider.overrideWith(_Collections.new),
-            downloadQueueLookupProvider.overrideWithValue(
-              const DownloadQueueLookup.empty(),
-            ),
           ],
           child: MaterialApp(
             theme: AppTheme.light(),

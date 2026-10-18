@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -14,11 +13,6 @@ import 'support/sqlite_process_database.dart';
 class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings(localLibraryEnabled: true);
-}
-
-class _History extends DownloadHistoryNotifier {
-  @override
-  DownloadHistoryState build() => DownloadHistoryState();
 }
 
 class _Local extends LocalLibraryNotifier {
@@ -103,7 +97,6 @@ void main() {
         final container = ProviderContainer(
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
-            downloadHistoryProvider.overrideWith(_History.new),
             localLibraryProvider.overrideWith(_Local.new),
             libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
               reads.add(page);
@@ -148,11 +141,9 @@ void main() {
           );
           expect(reads.every((page) => page.browse.limit == 40), true);
           expect(
-            actual.every(
-              (entry) => entry.trackCount == (request.artists ? 4 : 2),
-            ),
+            actual.every((entry) => entry.trackCount == 2),
             true,
-            reason: 'mirrors and unavailable source must not increase counts',
+            reason: 'the unavailable source must not increase counts',
           );
           if (!request.artists &&
               request.search.isEmpty &&

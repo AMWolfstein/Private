@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/download_item.dart';
-import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/providers/library_search_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -16,11 +13,6 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings(localLibraryEnabled: false);
-}
-
-class _History extends DownloadHistoryNotifier {
-  @override
-  DownloadHistoryState build() => DownloadHistoryState();
 }
 
 LibraryBrowseEntry _album(int index) => LibraryBrowseEntry(
@@ -44,7 +36,6 @@ void main() {
         ProviderScope(
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
-            downloadHistoryProvider.overrideWith(_History.new),
             libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
               final request = page.browse;
               requests.add(request);
@@ -117,7 +108,7 @@ void main() {
   );
 
   for (final brightness in Brightness.values) {
-    testWidgets('Library separates browsing and downloads ($brightness)', (
+    testWidgets('Library overview browses albums, artists, and search ($brightness)', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(390, 844);
@@ -126,28 +117,10 @@ void main() {
       final opened = <String>[];
       final requests = <LibraryBrowseRequest>[];
       final searches = <LibrarySearchRequest>[];
-      final queue = DownloadQueueLookup.fromItems([
-        for (final status in [DownloadStatus.queued, DownloadStatus.completed])
-          DownloadItem(
-            id: status.name,
-            service: 'example',
-            status: status,
-            createdAt: DateTime(2026),
-            track: Track(
-              id: status.name,
-              name: 'Track',
-              artistName: 'Artist',
-              albumName: 'Album',
-              duration: 100,
-            ),
-          ),
-      ]);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            downloadQueueLookupProvider.overrideWithValue(queue),
             settingsProvider.overrideWith(_Settings.new),
-            downloadHistoryProvider.overrideWith(_History.new),
             libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
               final request = page.browse;
               requests.add(request);
@@ -170,7 +143,6 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Recently Added'), findsOneWidget);
-      expect(find.text('1'), findsOneWidget);
       expect(find.text('Playlists'), findsOneWidget);
       expect(find.text('Songs'), findsOneWidget);
       final grid = tester.widget<SliverGrid>(find.byType(SliverGrid));
@@ -179,10 +151,9 @@ void main() {
             .crossAxisCount,
         2,
       );
-      await tester.tap(find.text('Downloads'));
       await tester.tap(find.text('Songs'));
       await tester.tap(find.text('Playlists'));
-      expect(opened, ['downloads', 'all', 'playlists']);
+      expect(opened, ['all', 'playlists']);
 
       await tester.tap(find.byTooltip('Search your library'));
       await tester.pumpAndSettle();
@@ -218,7 +189,6 @@ void main() {
       ProviderScope(
         overrides: [
           settingsProvider.overrideWith(_Settings.new),
-          downloadHistoryProvider.overrideWith(_History.new),
           libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
             final request = page.browse;
             requests.add(request);

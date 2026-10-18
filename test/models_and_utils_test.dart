@@ -1,17 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/download_item.dart';
+import 'package:spotiflac_android/models/download_history.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
-import 'package:spotiflac_android/providers/extension_provider.dart';
-import 'package:spotiflac_android/services/download_request_payload.dart';
-import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
 import 'package:spotiflac_android/utils/audio_conversion_utils.dart';
@@ -22,30 +17,6 @@ import 'package:spotiflac_android/utils/path_match_keys.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 
 void main() {
-  test(
-    'retired quality conversion settings do not enable automatic conversion',
-    () {
-      for (final format in ['mp3_320', 'aac_320', 'opus_256', 'opus_128']) {
-        final settings = AppSettings.fromJson({
-          'audioQuality': 'HIGH',
-          'tidalHighFormat': format,
-        });
-        expect(settings.audioQuality, 'HIGH');
-        expect(settings.autoConvertDownloads, isFalse);
-        expect(settings.toJson().containsKey('tidalHighFormat'), isFalse);
-      }
-      final settings = AppSettings.fromJson({
-        'tidalHighFormat': 'mp3_320',
-        'autoConvertDownloads': true,
-        'autoConvertFormat': 'opus',
-        'autoConvertBitrate': '192k',
-      });
-      expect(settings.autoConvertDownloads, isTrue);
-      expect(settings.autoConvertFormat, 'opus');
-      expect(settings.autoConvertBitrate, '192k');
-    },
-  );
-
   group('Finalized SAF audio names', () {
     for (final extension in ['mp3', 'opus', 'flac', 'ogg', 'm4a', 'mp4']) {
       test(
@@ -108,61 +79,6 @@ void main() {
     test('refuses to delete a virtual CUE track path', () async {
       expect(await deleteFile('/music/album.cue#track01'), isFalse);
     });
-  });
-
-  group('native worker progress', () {
-    test('does not publish 100 percent while finalization is pending', () {
-      expect(nativeWorkerFinalizingProgress(0), 0.95);
-      expect(nativeWorkerFinalizingProgress(0.7), 0.7);
-      expect(nativeWorkerFinalizingProgress(1), 0.99);
-    });
-  });
-
-  group('storage write failure detection', () {
-    test('recognizes typed and common Android filesystem failures', () {
-      expect(
-        isStorageWriteFailure(
-          errorType: 'permission',
-          errorMessage: 'provider-specific text',
-        ),
-        isTrue,
-      );
-      expect(
-        isStorageWriteFailure(
-          errorMessage:
-              'failed to create file: open /storage/song.flac.partial: '
-              'operation not permitted',
-        ),
-        isTrue,
-      );
-      expect(
-        isStorageWriteFailure(
-          errorMessage:
-              'Native finalization failed: failed to publish deferred SAF output',
-        ),
-        isTrue,
-      );
-    });
-
-    test(
-      'does not mistake provider or network failures for storage errors',
-      () {
-        expect(
-          isStorageWriteFailure(
-            errorType: 'api_error',
-            errorMessage: 'HTTP 404 for /download',
-          ),
-          isFalse,
-        );
-        expect(
-          isStorageWriteFailure(
-            errorType: 'network',
-            errorMessage: 'Connection reset by peer',
-          ),
-          isFalse,
-        );
-      },
-    );
   });
 
   group('local library incremental scan', () {
@@ -348,160 +264,6 @@ void main() {
       expect(source, contains('media_json TEXT NOT NULL'));
       expect(source, contains('position_ms INTEGER NOT NULL DEFAULT 0'));
       expect(source, contains('updatePlaybackSessionState'));
-    });
-  });
-
-  group('native worker contracts', () {
-    final finalizerSource = File(
-      'android/app/src/main/kotlin/com/zarz/spotiflac/'
-      'NativeDownloadFinalizer.kt',
-    ).readAsStringSync();
-    final historyStoreSource = File(
-      'android/app/src/main/kotlin/com/zarz/spotiflac/'
-      'NativeHistoryStore.kt',
-    ).readAsStringSync();
-    final historyDatabaseSource = File(
-      'lib/services/history_database.dart',
-    ).readAsStringSync();
-    final workerSnapshotSource = File(
-      'android/app/src/main/kotlin/com/zarz/spotiflac/'
-      'DownloadServiceSnapshot.kt',
-    ).readAsStringSync();
-    final nativeWorkerProviderSource = File(
-      'lib/providers/download_queue_provider_native_worker.dart',
-    ).readAsStringSync();
-
-    int kotlinConstant(String name, String source) {
-      final match = RegExp('const val $name = (\\d+)').firstMatch(source);
-      expect(match, isNotNull, reason: 'Missing Kotlin constant $name');
-      return int.parse(match!.group(1)!);
-    }
-
-    test('uses the same worker contract version in Dart and Kotlin', () {
-      expect(
-        kotlinConstant('NATIVE_WORKER_CONTRACT_VERSION', finalizerSource),
-        DownloadRequestPayload.nativeWorkerContractVersion,
-      );
-    });
-
-    test('uses the same history schema version in Dart and Kotlin', () {
-      expect(
-        kotlinConstant('HISTORY_SCHEMA_VERSION', historyStoreSource),
-        HistoryDatabase.schemaVersion,
-      );
-    });
-
-    test(
-      'waits on one progress delta stream and preserves concurrent items',
-      () {
-        expect(
-          RegExp(
-            r'coreBackend\.openDownloadProgress\(',
-          ).allMatches(workerSnapshotSource),
-          hasLength(1),
-        );
-        expect(workerSnapshotSource, isNot(contains('Gobackend.')));
-        expect(
-          RegExp(
-            r'\.waitDelta\(sinceSeq, 5_000L\)',
-          ).allMatches(workerSnapshotSource),
-          hasLength(1),
-        );
-        expect(workerSnapshotSource, contains('"item_deltas"'));
-        expect(
-          workerSnapshotSource,
-          contains('progressItemIds = orderedItemIds'),
-        );
-        expect(workerSnapshotSource, contains('progressCoordinatorEpoch'));
-        expect(
-          workerSnapshotSource,
-          contains('nativeWorkerProgressEpoch.get()'),
-        );
-        expect(nativeWorkerProviderSource, contains("snapshot['item_deltas']"));
-      },
-    );
-
-    Map<String, String> historyTableDefinitions(String source) {
-      final match = RegExp(
-        r'CREATE TABLE(?: IF NOT EXISTS)? history\s*\(([\s\S]*?)\n\s*\)',
-      ).firstMatch(source);
-      expect(match, isNotNull, reason: 'Missing history CREATE TABLE');
-      final definitions = <String, String>{};
-      for (final definition in match!.group(1)!.split(',')) {
-        final tokens = definition.trim().split(RegExp(r'\s+'));
-        definitions[tokens.first] = tokens.skip(1).join(' ');
-      }
-      return definitions;
-    }
-
-    Map<String, String> historyIndexes(String source) {
-      final indexes = <String, String>{};
-      final pattern = RegExp(
-        r'CREATE INDEX(?: IF NOT EXISTS)?\s+(\w+)\s+'
-        r'ON history\s*\(([^)]+)\)',
-      );
-      for (final match in pattern.allMatches(source)) {
-        indexes[match.group(1)!] = match
-            .group(2)!
-            .replaceAll(RegExp(r'\s+'), ' ')
-            .trim();
-      }
-      return indexes;
-    }
-
-    test('uses the same history columns in Dart and native writers', () {
-      final dartDefinitions = historyTableDefinitions(historyDatabaseSource);
-      final nativeBlock = RegExp(
-        r'historyColumns\s*=\s*linkedMapOf\(([\s\S]*?)\n\s*\)',
-      ).firstMatch(historyStoreSource);
-      expect(nativeBlock, isNotNull, reason: 'Missing native history schema');
-      final nativeDefinitions = {
-        for (final match in RegExp(
-          r'"([a-z0-9_]+)"\s+to\s+"([^"]+)"',
-        ).allMatches(nativeBlock!.group(1)!))
-          match.group(1)!: match.group(2)!,
-      };
-      expect(nativeDefinitions, dartDefinitions);
-
-      final buildHistoryRow = RegExp(
-        r'private fun buildHistoryRow\([\s\S]*?return values',
-      ).firstMatch(finalizerSource);
-      expect(buildHistoryRow, isNotNull);
-      final nativeWrittenColumns = RegExp(
-        r'values\.put\("([a-z0-9_]+)"',
-      ).allMatches(buildHistoryRow!.group(0)!).map((m) => m.group(1)!).toSet();
-      expect(
-        dartDefinitions.keys,
-        containsAll(nativeWrittenColumns),
-        reason: 'Native finalizer writes a column missing from Dart schema',
-      );
-    });
-
-    test('uses the same history indexes in Dart and native writers', () {
-      expect(
-        historyIndexes(historyStoreSource),
-        historyIndexes(historyDatabaseSource),
-      );
-    });
-
-    test('matches shared Dart/native finalization quality cases', () {
-      final fixture = File(
-        'android/app/src/test/resources/finalization_quality_cases.tsv',
-      ).readAsLinesSync();
-      for (final line in fixture) {
-        if (line.isEmpty || line.startsWith('#')) continue;
-        final fields = line.split('\t');
-        expect(fields, hasLength(6), reason: 'Invalid shared fixture: $line');
-        final actual = buildQualityVariantFilenameLabel(
-          detectedFormat: fields[0],
-          bitDepth: int.tryParse(fields[1]),
-          sampleRate: int.tryParse(fields[2]),
-          bitrateKbps: int.tryParse(fields[3]),
-          measuredQuality: fields[4],
-        );
-        final expected = fields[5] == '<null>' ? null : fields[5];
-        expect(actual, expected, reason: 'Shared fixture: $line');
-      }
     });
   });
 
@@ -792,317 +554,81 @@ void main() {
     });
   });
 
-  group('DownloadItem', () {
-    Track sampleTrack() => const Track(
-      id: 'track-1',
-      name: 'Song',
-      artistName: 'Artist',
-      albumName: 'Album',
-      duration: 1000,
-    );
-
-    test('uses defaults and preserves fields through copyWith', () {
-      final createdAt = DateTime.utc(2026, 5, 4, 10);
-      final item = DownloadItem(
-        id: 'download-1',
-        track: sampleTrack(),
-        service: 'provider-a',
-        createdAt: createdAt,
-      );
-
-      final updated = item.copyWith(
-        status: DownloadStatus.downloading,
-        progress: 0.5,
-        speedMBps: 1.25,
-        bytesReceived: 512,
-        bytesTotal: 1024,
-        qualityOverride: 'HI_RES',
-        playlistName: 'Favorites',
-        preparationStage: 'resolving_stream',
-        preserveQualityVariant: true,
-      );
-
-      expect(item.status, DownloadStatus.queued);
-      expect(item.progress, 0);
-      expect(updated.id, item.id);
-      expect(updated.track, item.track);
-      expect(updated.status, DownloadStatus.downloading);
-      expect(updated.progress, 0.5);
-      expect(updated.speedMBps, 1.25);
-      expect(updated.bytesReceived, 512);
-      expect(updated.bytesTotal, 1024);
-      expect(updated.qualityOverride, 'HI_RES');
-      expect(updated.playlistName, 'Favorites');
-      expect(updated.preparationStage, 'resolving_stream');
-      expect(updated.preserveQualityVariant, isTrue);
-    });
-
-    test('maps typed errors to user-facing messages', () {
-      final base = DownloadItem(
-        id: 'download-1',
-        track: sampleTrack(),
-        service: 'provider-b',
-        createdAt: DateTime.utc(2026),
-        filePath: '/music/stale.flac',
-        error: 'raw backend failure',
-      );
-
-      expect(base.errorMessage, 'raw backend failure');
-      expect(
-        base.copyWith(errorType: DownloadErrorType.notFound).errorMessage,
-        'Song not found on any service',
-      );
-      expect(
-        base.copyWith(errorType: DownloadErrorType.rateLimit).errorMessage,
-        'Service rate limit reached. Wait before retrying.',
-      );
-      expect(
-        base.copyWith(errorType: DownloadErrorType.network).errorMessage,
-        'Connection failed, check your internet',
-      );
-      expect(
-        base.copyWith(errorType: DownloadErrorType.permission).errorMessage,
-        'Cannot write to folder, check storage permission',
-      );
-      expect(base.copyWith(error: null).errorMessage, isEmpty);
-      expect(base.copyWith().filePath, '/music/stale.flac');
-      expect(base.copyWith(filePath: null).filePath, isNull);
-      expect(
-        base
-            .copyWith(errorType: DownloadErrorType.network)
-            .copyWith(errorType: null)
-            .errorType,
-        isNull,
-      );
-    });
-
-    test('decodes json defaults and enums', () {
-      final item = DownloadItem.fromJson({
-        'id': 'download-1',
-        'track': {
-          'id': 'track-1',
-          'name': 'Song',
-          'artistName': 'Artist',
-          'albumName': 'Album',
-          'duration': 1000,
-        },
-        'service': 'provider-a',
-        'status': 'failed',
-        'errorType': 'network',
-        'createdAt': '2026-05-04T10:00:00.000Z',
-      });
-
-      expect(item.status, DownloadStatus.failed);
-      expect(item.errorType, DownloadErrorType.network);
-      expect(item.progress, 0);
-      expect(item.bytesReceived, 0);
-      expect(item.preparationStage, isEmpty);
-      expect(item.preserveQualityVariant, isFalse);
-      expect(item.toJson()['status'], 'failed');
-      expect(item.toJson()['errorType'], 'network');
-      expect(item.toJson()['preparationStage'], isEmpty);
-    });
-
-    test('persists restart-safe state without transient transfer progress', () {
-      final item = DownloadItem(
-        id: 'download-active',
-        track: sampleTrack(),
-        service: 'provider-a',
-        createdAt: DateTime.utc(2026),
-        status: DownloadStatus.finalizing,
-        progress: 0.97,
-        speedMBps: 3.5,
-        bytesReceived: 970,
-        bytesTotal: 1000,
-        preparationStage: 'embedding_metadata',
-      );
-
-      final persisted =
-          jsonDecode(encodeDownloadQueueItemForPersistence(item))
-              as Map<String, dynamic>;
-
-      expect(persisted['id'], item.id);
-      expect(persisted['status'], DownloadStatus.queued.name);
-      expect(persisted['progress'], 0.0);
-      expect(persisted['speedMBps'], 0.0);
-      expect(persisted['bytesReceived'], 0);
-      expect(persisted['bytesTotal'], 0);
-      expect(persisted['preparationStage'], isEmpty);
-    });
-  });
-
-  group('Download queue processing gate', () {
-    test('allows only one asynchronous startup at a time', () {
-      final gate = QueueProcessingGate();
-
-      expect(gate.tryEnter(), isTrue);
-      expect(gate.tryEnter(), isFalse);
-      expect(gate.leave(), isTrue);
-      expect(gate.tryEnter(), isTrue);
-      expect(gate.leave(), isFalse);
-    });
-  });
-
-  group('Download queue lookup', () {
-    test('updates counters while sharing unchanged index structures', () {
-      DownloadItem item(String id, DownloadStatus status) => DownloadItem(
-        id: id,
-        track: Track(
-          id: 'track-$id',
-          name: 'Song $id',
-          artistName: 'Artist',
-          albumName: 'Album',
-          duration: 1000,
-        ),
-        service: 'extension.test',
-        createdAt: DateTime.utc(2026),
-        status: status,
-      );
-
-      final previous = [
-        item('queued', DownloadStatus.queued),
-        item('active', DownloadStatus.downloading),
-        item('finalizing', DownloadStatus.finalizing),
-      ];
-      final lookup = DownloadQueueLookup.fromItems(previous);
-      expect(lookup.queuedCount, 3);
-      expect(lookup.activeDownloadsCount, 1);
-      expect(lookup.finalizingCount, 1);
-      expect(lookup.notCompletedItemIds, ['queued', 'active', 'finalizing']);
-
-      final next = List<DownloadItem>.from(previous);
-      next[2] = previous[2].copyWith(status: DownloadStatus.completed);
-      final updated = lookup.updatedForIndices(
-        previousItems: previous,
-        nextItems: next,
-        changedIndices: const [2],
-      );
-
-      expect(updated.queuedCount, 2);
-      expect(updated.completedCount, 1);
-      expect(updated.finalizingCount, 0);
-      expect(identical(updated.indexByItemId, lookup.indexByItemId), isTrue);
-      expect(identical(updated.itemIds, lookup.itemIds), isTrue);
-      expect(updated.notCompletedItemIds, ['queued', 'active']);
-
-      final progressOnly = List<DownloadItem>.from(next);
-      progressOnly[1] = next[1].copyWith(progress: 0.5);
-      final progressUpdated = updated.updatedForIndices(
-        previousItems: next,
-        nextItems: progressOnly,
-        changedIndices: const [1],
-      );
-      expect(
-        identical(
-          progressUpdated.notCompletedItemIds,
-          updated.notCompletedItemIds,
-        ),
-        isTrue,
-      );
-    });
-  });
-
   group('AppSettings', () {
     test('provides stable defaults', () {
       const settings = AppSettings();
 
-      expect(settings.audioQuality, 'LOSSLESS');
-      expect(settings.filenameFormat, '{title} - {artist}');
+      expect(settings.downloadDirectory, '');
+      expect(settings.storageMode, 'app');
+      expect(settings.downloadTreeUri, '');
       expect(settings.artistTagMode, artistTagModeJoined);
       expect(settings.embeddedCoverMaxDimension, 0);
-      expect(settings.autoFallback, isTrue);
       expect(settings.lyricsProviders, ['apple_music', 'lrclib']);
       expect(settings.playerMode, 'internal');
       expect(settings.lyricsMultiPersonWordByWord, isTrue);
       expect(settings.lyricsAppleElrcWordSync, isTrue);
-      expect(settings.deduplicateDownloads, isTrue);
-      expect(settings.allowQualityVariants, isFalse);
-      expect(settings.nativeDownloadWorkerEnabled, isFalse);
-      expect(settings.autoConvertDownloads, isFalse);
-      expect(settings.autoConvertFormat, 'mp3');
-      expect(settings.autoConvertBitrate, '320k');
+      expect(settings.localLibraryEnabled, isFalse);
       expect(
         settings.libraryQualityLabelMode,
         AppSettings.libraryQualityLabelBitrate,
       );
     });
 
-    test('copyWith updates values and can clear nullable provider fields', () {
+    test('copyWith updates values and retains untouched settings', () {
       const settings = AppSettings(
-        downloadFallbackExtensionIds: ['fallback.ext'],
-        searchProvider: 'search.ext',
-        homeFeedProvider: 'feed.ext',
+        downloadDirectory: '/old',
+        storageMode: 'app',
       );
 
       final updated = settings.copyWith(
-        defaultService: 'provider-a',
+        downloadDirectory: '/new',
+        downloadDirectoryBookmark: 'bookmark',
+        storageMode: 'saf',
+        downloadTreeUri: 'content://tree/music',
         embedReplayGain: true,
         embeddedCoverMaxDimension: 1000,
         lyricsProviders: ['apple_music'],
         lyricsAppleElrcWordSync: true,
-        deduplicateDownloads: false,
-        allowQualityVariants: true,
         libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
-        clearDownloadFallbackExtensionIds: true,
-        clearSearchProvider: true,
-        clearHomeFeedProvider: true,
       );
 
-      expect(updated.defaultService, 'provider-a');
+      expect(updated.downloadDirectory, '/new');
+      expect(updated.downloadDirectoryBookmark, 'bookmark');
+      expect(updated.storageMode, 'saf');
+      expect(updated.downloadTreeUri, 'content://tree/music');
       expect(updated.embedReplayGain, isTrue);
       expect(updated.embeddedCoverMaxDimension, 1000);
       expect(updated.lyricsProviders, ['apple_music']);
       expect(updated.lyricsAppleElrcWordSync, isTrue);
-      expect(updated.deduplicateDownloads, isFalse);
-      expect(updated.allowQualityVariants, isTrue);
       expect(
         updated.libraryQualityLabelMode,
         AppSettings.libraryQualityLabelBitDepthOnly,
       );
-      expect(updated.downloadFallbackExtensionIds, isNull);
-      expect(updated.searchProvider, isNull);
-      expect(updated.homeFeedProvider, isNull);
-      expect(updated.audioQuality, settings.audioQuality);
+      expect(updated.artistTagMode, settings.artistTagMode);
     });
 
-    test('round-trips json including recently added settings', () {
+    test('round-trips json including local library settings', () {
       const settings = AppSettings(
-        defaultService: 'provider-b',
+        downloadDirectory: '/music',
+        downloadDirectoryBookmark: 'bookmark',
         storageMode: 'saf',
         downloadTreeUri: 'content://tree/music',
-        downloadFallbackExtensionIds: ['ext.a', 'ext.b'],
-        searchProvider: 'search.ext',
-        homeFeedProvider: AppSettings.homeFeedProviderOff,
-        useAllFilesAccess: true,
-        networkCompatibilityMode: true,
-        songLinkRegion: 'ID',
         localLibraryEnabled: true,
         localLibraryPath: '/music',
         hasCompletedTutorial: true,
         musixmatchLanguage: 'id',
         lyricsAppleElrcWordSync: true,
         lastSeenVersion: '4.5.0',
-        deduplicateDownloads: false,
-        allowQualityVariants: true,
-        nativeDownloadWorkerEnabled: true,
-        autoConvertDownloads: true,
-        autoConvertFormat: 'opus',
-        autoConvertBitrate: '192k',
         libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
         embeddedCoverMaxDimension: 1500,
       );
 
       final decoded = AppSettings.fromJson(settings.toJson());
 
-      expect(decoded.defaultService, 'provider-b');
+      expect(decoded.downloadDirectory, '/music');
+      expect(decoded.downloadDirectoryBookmark, 'bookmark');
       expect(decoded.storageMode, 'saf');
       expect(decoded.downloadTreeUri, 'content://tree/music');
-      expect(decoded.downloadFallbackExtensionIds, ['ext.a', 'ext.b']);
-      expect(decoded.searchProvider, 'search.ext');
-      expect(decoded.homeFeedProvider, AppSettings.homeFeedProviderOff);
-      expect(decoded.useAllFilesAccess, isTrue);
-      expect(decoded.networkCompatibilityMode, isTrue);
-      expect(decoded.songLinkRegion, 'ID');
       expect(decoded.localLibraryEnabled, isTrue);
       expect(decoded.localLibraryPath, '/music');
       expect(decoded.hasCompletedTutorial, isTrue);
@@ -1113,12 +639,6 @@ void main() {
         decoded.libraryQualityLabelMode,
         AppSettings.libraryQualityLabelBitDepthOnly,
       );
-      expect(decoded.deduplicateDownloads, isFalse);
-      expect(decoded.allowQualityVariants, isTrue);
-      expect(decoded.nativeDownloadWorkerEnabled, isTrue);
-      expect(decoded.autoConvertDownloads, isTrue);
-      expect(decoded.autoConvertFormat, 'opus');
-      expect(decoded.autoConvertBitrate, '192k');
       expect(decoded.embeddedCoverMaxDimension, 1500);
     });
   });
@@ -1162,206 +682,6 @@ void main() {
         ThemeSettings.fromJson({'theme_style': 'invalid'}).style,
         AppThemeStyle.material,
       );
-    });
-  });
-
-  group('DownloadRequestPayload', () {
-    test('serializes all backend field names', () {
-      const payload = DownloadRequestPayload(
-        isrc: 'ISRC123',
-        service: 'source-provider',
-        downloadProvider: 'download-provider',
-        providerTrackId: '123456789',
-        spotifyId: 'source-track-1',
-        trackName: 'Song',
-        artistName: 'Artist',
-        albumName: 'Album',
-        albumArtist: 'Album Artist',
-        coverUrl: 'https://example.test/cover.jpg',
-        coverMaxDimension: 1000,
-        outputDir: '/downloads',
-        filenameFormat: '{artist} - {title}',
-        quality: 'HI_RES',
-        embedMetadata: false,
-        artistTagMode: artistTagModeSplitVorbis,
-        embedLyrics: false,
-        embedReplayGain: true,
-        postProcessingEnabled: true,
-        autoConvertDownloads: true,
-        autoConvertFormat: 'opus',
-        autoConvertBitrate: '192k',
-        trackNumber: 7,
-        playlistPosition: 3,
-        discNumber: 2,
-        totalTracks: 12,
-        totalDiscs: 2,
-        releaseDate: '2026-05-04',
-        itemId: 'item-1',
-        durationMs: 250000,
-        source: 'extension.example',
-        genre: 'Pop',
-        label: 'Label',
-        copyright: 'Copyright',
-        composer: 'Composer',
-        comment: 'https://example.test/album/1',
-        explicit: true,
-        albumType: 'compilation',
-        upc: '0012345678901',
-        tidalId: 'alternate-id-a',
-        qobuzId: 'alternate-id-b',
-        deezerId: 'alternate-id-c',
-        lyricsMode: 'sidecar',
-        useExtensions: true,
-        useFallback: true,
-        storageMode: 'saf',
-        safTreeUri: 'content://tree/music',
-        safRelativeDir: 'Album',
-        safFileName: 'Song.flac',
-        safOutputExt: 'flac',
-        outputExt: '.flac',
-        allowQualityVariant: true,
-        qualityVariant: 'qv_12345678',
-        qualityVariantCollisionOnly: true,
-        songLinkRegion: 'ID',
-        networkConcurrencyLimit: 2,
-      );
-
-      expect(payload.toJson(), {
-        'contract_version': DownloadRequestPayload.nativeWorkerContractVersion,
-        'isrc': 'ISRC123',
-        'service': 'source-provider',
-        'download_provider': 'download-provider',
-        'provider_track_id': '123456789',
-        'spotify_id': 'source-track-1',
-        'track_name': 'Song',
-        'artist_name': 'Artist',
-        'album_name': 'Album',
-        'album_artist': 'Album Artist',
-        'cover_url': 'https://example.test/cover.jpg',
-        'cover_max_dimension': 1000,
-        'output_dir': '/downloads',
-        'filename_format': '{artist} - {title}',
-        'quality': 'HI_RES',
-        'embed_metadata': false,
-        'artist_tag_mode': artistTagModeSplitVorbis,
-        'embed_lyrics': false,
-        'embed_replaygain': true,
-        'post_processing_enabled': true,
-        'auto_convert_downloads': true,
-        'auto_convert_format': 'opus',
-        'auto_convert_bitrate': '192k',
-        'track_number': 7,
-        'playlist_position': 3,
-        'disc_number': 2,
-        'total_tracks': 12,
-        'total_discs': 2,
-        'release_date': '2026-05-04',
-        'item_id': 'item-1',
-        'duration_ms': 250000,
-        'source': 'extension.example',
-        'genre': 'Pop',
-        'label': 'Label',
-        'copyright': 'Copyright',
-        'composer': 'Composer',
-        'comment': 'https://example.test/album/1',
-        'explicit': true,
-        'album_type': 'compilation',
-        'upc': '0012345678901',
-        'tidal_id': 'alternate-id-a',
-        'qobuz_id': 'alternate-id-b',
-        'deezer_id': 'alternate-id-c',
-        'lyrics_mode': 'sidecar',
-        'use_extensions': true,
-        'use_fallback': true,
-        'storage_mode': 'saf',
-        'saf_tree_uri': 'content://tree/music',
-        'saf_relative_dir': 'Album',
-        'saf_file_name': 'Song.flac',
-        'saf_output_ext': 'flac',
-        'output_ext': '.flac',
-        'stage_saf_output': false,
-        'defer_saf_publish': false,
-        'requires_container_conversion': false,
-        'allow_quality_variant': true,
-        'quality_variant': 'qv_12345678',
-        'quality_variant_collision_only': true,
-        'songlink_region': 'ID',
-        'network_concurrency_limit': 2,
-      });
-    });
-
-    test('withStrategy only changes requested strategy flags', () {
-      const payload = DownloadRequestPayload(
-        trackName: 'Song',
-        artistName: 'Artist',
-        albumName: 'Album',
-        outputDir: '/downloads',
-        albumFolderTemplate: '[2024] {album}',
-        filenameFormat: '{title}',
-        useExtensions: false,
-        useFallback: true,
-      );
-
-      final updated = payload.withStrategy(useExtensions: true);
-
-      expect(updated.useExtensions, isTrue);
-      expect(updated.useFallback, isTrue);
-      expect(updated.trackName, payload.trackName);
-      expect(updated.albumFolderTemplate, payload.albumFolderTemplate);
-      expect(updated.toJson()['album_folder_template'], '[2024] {album}');
-      expect(updated.filenameFormat, payload.filenameFormat);
-      expect(updated.downloadProvider, payload.downloadProvider);
-      expect(updated.providerTrackId, payload.providerTrackId);
-      expect(updated.allowQualityVariant, payload.allowQualityVariant);
-      expect(updated.qualityVariant, payload.qualityVariant);
-      expect(updated.autoConvertDownloads, payload.autoConvertDownloads);
-      expect(updated.autoConvertFormat, payload.autoConvertFormat);
-      expect(updated.autoConvertBitrate, payload.autoConvertBitrate);
-      expect(updated.explicit, payload.explicit);
-      expect(updated.albumType, payload.albumType);
-      expect(updated.upc, payload.upc);
-      expect(
-        updated.qualityVariantCollisionOnly,
-        payload.qualityVariantCollisionOnly,
-      );
-    });
-  });
-
-  group('extension download transfer policy', () {
-    test('parses and bounds the generic manifest capability', () {
-      final extension = Extension.fromJson({
-        'id': 'provider',
-        'name': 'provider',
-        'capabilities': {
-          'downloadTransfer': {
-            'maxAttempts': 99,
-            'resumePolicy': 'validated',
-            'persistentCheckpoint': true,
-            'maxParallelSegments': 99,
-            'maxConcurrentDownloads': 99,
-          },
-        },
-      });
-
-      final policy = extension.downloadTransferPolicy;
-      expect(policy.maxAttempts, 8);
-      expect(policy.resumePolicy, 'validated');
-      expect(policy.persistentCheckpoint, isTrue);
-      expect(policy.maxParallelSegments, 8);
-      expect(policy.maxConcurrentDownloads, 3);
-    });
-
-    test('disables checkpoints unless validated resume is selected', () {
-      final extension = Extension.fromJson({
-        'id': 'provider',
-        'name': 'provider',
-        'capabilities': {
-          'downloadTransfer': {'persistentCheckpoint': true},
-        },
-      });
-
-      expect(extension.downloadTransferPolicy.resumePolicy, 'none');
-      expect(extension.downloadTransferPolicy.persistentCheckpoint, isFalse);
     });
   });
 

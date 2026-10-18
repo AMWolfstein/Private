@@ -6,7 +6,6 @@ import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/services/library_database.dart';
@@ -130,24 +129,19 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
     List<IsrcDuplicateEntry> entries, {
     required List<IsrcDuplicateEntry> retainedEntries,
   }) async {
-    final historyNotifier = ref.read(downloadHistoryProvider.notifier);
     final deleted = await deleteReviewedDuplicateCopies(
       entries: entries,
       retainedEntries: retainedEntries,
       deleteFile: deleteFile,
       removePhysicalFile: (path) async {
-        // A download may also be indexed by a scan. Clear both references so
-        // playlist resolution by ISRC finds the surviving file, not a ghost.
-        await historyNotifier.removePhysicalFiles([path]);
+        // A file may be indexed by more than one scanned row. Clear every
+        // reference so playlist resolution by ISRC finds the surviving file,
+        // not a ghost.
         await _localLibraryNotifier.removePhysicalFiles([path]);
       },
       removeIndexEntry: (entry) async {
-        if (entry.source == 'downloaded') {
-          await historyNotifier.removeFromHistory(entry.id);
-        } else {
-          await LibraryDatabase.instance.deleteByPath(entry.filePath);
-          _deletedLocalRows = true;
-        }
+        await LibraryDatabase.instance.deleteByPath(entry.filePath);
+        _deletedLocalRows = true;
       },
     );
     if (!mounted) return;

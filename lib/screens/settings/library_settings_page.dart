@@ -9,7 +9,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -254,18 +253,14 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       return;
     }
     final library = ref.read(localLibraryProvider.notifier);
-    final downloads = ref.read(downloadHistoryProvider.notifier);
     setState(() => _isCleaningMissingFiles = true);
     try {
       final missingLibraryEntries = await library.cleanupMissingFiles();
-      final orphanedDownloads = await downloads.cleanupOrphanedDownloads();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            context.l10n.libraryRemovedMissingFiles(
-              missingLibraryEntries + orphanedDownloads,
-            ),
+            context.l10n.libraryRemovedMissingFiles(missingLibraryEntries),
           ),
         ),
       );
@@ -840,16 +835,10 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
               child: Consumer(
                 builder: (context, ref, _) {
                   final libraryState = ref.watch(localLibraryProvider);
-                  final hasDownloads = ref.watch(
-                    downloadHistoryProvider.select(
-                      (state) => state.totalCount > 0,
-                    ),
-                  );
                   final canCleanup =
                       !_isCleaningMissingFiles &&
                       !libraryState.isScanning &&
                       (libraryState.totalCount > 0 ||
-                          hasDownloads ||
                           librarySources.isNotEmpty);
                   return SettingsGroup(
                     children: [

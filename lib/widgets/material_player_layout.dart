@@ -200,7 +200,6 @@ class MaterialPlayerLayout extends StatelessWidget {
                         return ClickableArtistName(
                           artistName: mediaItem.artist ?? '',
                           artistId: track?.artistId,
-                          extensionId: track?.source,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(color: colorScheme.onSurfaceVariant),
                           textAlign: TextAlign.center,

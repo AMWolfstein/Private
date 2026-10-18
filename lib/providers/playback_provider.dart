@@ -1,10 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/music_player_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
@@ -17,12 +15,10 @@ class PlaybackState {
 }
 
 class PlaybackController extends Notifier<PlaybackState> {
-  PlaybackController({LibraryDatabase? library, HistoryDatabase? history})
-    : _library = library ?? LibraryDatabase.instance,
-      _history = history ?? HistoryDatabase.instance;
+  PlaybackController({LibraryDatabase? library})
+    : _library = library ?? LibraryDatabase.instance;
 
   final LibraryDatabase _library;
-  final HistoryDatabase _history;
 
   @override
   PlaybackState build() => const PlaybackState();
@@ -109,30 +105,6 @@ class PlaybackController extends Notifier<PlaybackState> {
     }
   }
 
-  /// Plays a downloaded-history album/list starting at [startItem], queuing the
-  /// rest. Honors player mode.
-  Future<void> playHistoryQueue(
-    List<DownloadHistoryItem> items, {
-    required DownloadHistoryItem startItem,
-  }) async {
-    final playable = items
-        .where(
-          (i) => i.filePath.trim().isNotEmpty && !isCueVirtualPath(i.filePath),
-        )
-        .toList();
-    if (playable.isEmpty) return;
-    var startIndex = playable.indexWhere((i) => i.id == startItem.id);
-    if (startIndex < 0) startIndex = 0;
-
-    if (await _useInternalPlayer()) {
-      await ref
-          .read(musicPlayerControllerProvider)
-          .playHistory(playable, initialIndex: startIndex);
-    } else {
-      await openFile(playable[startIndex].filePath);
-    }
-  }
-
   /// Plays a prebuilt media queue starting at [startIndex]. Honors player mode
   /// ([externalPath] is opened externally when the built-in player is off).
   Future<void> playMediaQueue(
@@ -174,7 +146,7 @@ class PlaybackController extends Notifier<PlaybackState> {
       throw Exception(
         skippedCueVirtualTrack
             ? cueVirtualTrackRequiresSplitMessage
-            : 'No local audio file is available to open. Download the track first.',
+            : 'No local audio file is available to open.',
       );
     }
     final resolvedPaths = await resolveTrackFilePaths(tracks);
@@ -221,7 +193,7 @@ class PlaybackController extends Notifier<PlaybackState> {
         throw Exception(cueVirtualTrackRequiresSplitMessage);
       }
       throw Exception(
-        'No local audio file is available to play. Download the track first.',
+        'No local audio file is available to play.',
       );
     }
 
@@ -251,12 +223,12 @@ class PlaybackController extends Notifier<PlaybackState> {
     }
 
     throw Exception(
-      'No local audio file is available to open. Download the track first.',
+      'No local audio file is available to open.',
     );
   }
 
   /// Public wrapper so non-playback features (e.g. M3U export) reuse the
-  /// same library+history file resolution.
+  /// same local-library file resolution.
   Future<List<String?>> resolveTrackFilePaths(List<Track> tracks) =>
       _resolveTrackPaths(tracks);
 
@@ -271,23 +243,13 @@ class PlaybackController extends Notifier<PlaybackState> {
           artistName: track.artistName,
         ),
     ]);
-    final historyFuture = _history.findExistingTracks([
-      for (final track in tracks)
-        HistoryLookupRequest(
-          spotifyId: track.id,
-          isrc: track.isrc,
-          trackName: track.name,
-          artistName: track.artistName,
-        ),
-    ]);
     final localMatches = await localFuture;
-    final historyMatches = await historyFuture;
 
     final results = List<String?>.filled(tracks.length, null);
     final existsChecks = <String, Future<bool>>{};
     final unknownSafPaths = <String>{};
     final safPaths = <String>{
-      for (final row in [...localMatches, ...historyMatches])
+      for (final row in localMatches)
         if (isContentUri(
           stripCueTrackSuffix(row?['filePath']?.toString() ?? ''),
         ))
@@ -313,7 +275,6 @@ class PlaybackController extends Notifier<PlaybackState> {
         unknownSafPaths.addAll(batch);
       }
     }
-    final invalidHistoryIds = <String>{};
     var next = 0;
     final workerCount = tracks.length < 8 ? tracks.length : 8;
 
@@ -329,26 +290,11 @@ class PlaybackController extends Notifier<PlaybackState> {
         final localPath = localMatches[index]?['filePath']?.toString() ?? '';
         if (localPath.isNotEmpty && await pathExists(localPath)) {
           results[index] = localPath;
-          continue;
-        }
-
-        final historyMatch = historyMatches[index];
-        final historyPath = historyMatch?['filePath']?.toString() ?? '';
-        if (historyPath.isNotEmpty && await pathExists(historyPath)) {
-          results[index] = historyPath;
-          continue;
-        }
-        final historyId = historyMatch?['id']?.toString() ?? '';
-        if (historyId.isNotEmpty &&
-            !unknownSafPaths.contains(stripCueTrackSuffix(historyPath))) {
-          invalidHistoryIds.add(historyId);
         }
       }
     }
 
     await Future.wait(List.generate(workerCount, (_) => worker()));
-    final historyNotifier = ref.read(downloadHistoryProvider.notifier);
-    await historyNotifier.removeManyFromHistory(invalidHistoryIds);
     return results;
   }
 }

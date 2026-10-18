@@ -6,7 +6,6 @@ import 'package:spotiflac_android/models/unified_library_item.dart';
 import 'package:spotiflac_android/providers/library_search_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/screens/downloaded_album_screen.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
@@ -73,8 +72,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     super.dispose();
   }
 
-  static String _itemId(LibrarySearchHit hit) =>
-      hit.source == 'local' ? 'local_${hit.id}' : 'dl_${hit.id}';
+  static String _itemId(LibrarySearchHit hit) => 'local_${hit.id}';
 
   Future<UnifiedLibraryItem?> _resolve(LibrarySearchHit hit) => ref.read(
     librarySearchTrackProvider((source: hit.source, id: hit.id)).future,
@@ -209,20 +207,17 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
             librarySearchTrackProvider((source: hit.source, id: hit.id)).future,
           );
           if (!mounted || item == null) return;
+          final localItem = item.localItem;
+          if (localItem == null) return;
           if (!play) {
             await Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => TrackMetadataScreen(
-                  item: item.historyItem,
-                  localItem: item.localItem,
-                ),
+                builder: (_) => TrackMetadataScreen(localItem: localItem),
               ),
             );
             return;
           }
-          final media = item.localItem != null
-              ? playableFromLocal(item.localItem!)
-              : playableFromHistory(item.historyItem!);
+          final media = playableFromLocal(localItem);
           await ref
               .read(playbackProvider.notifier)
               .playMediaQueue(
@@ -242,31 +237,19 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
             ),
           );
         case LibrarySearchKind.albums:
-          if (hit.source == 'local') {
-            final rows = await LibraryDatabase.instance
-                .getQueueLocalAlbumTracksByKey(hit.id);
-            if (!mounted) return;
-            await Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => LocalAlbumScreen(
-                  albumName: hit.title,
-                  artistName: hit.artist,
-                  coverPath: hit.cover,
-                  tracks: rows.map(LocalLibraryItem.fromJson).toList(),
-                ),
+          final rows = await LibraryDatabase.instance
+              .getQueueLocalAlbumTracksByKey(hit.id);
+          if (!mounted) return;
+          await Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => LocalAlbumScreen(
+                albumName: hit.title,
+                artistName: hit.artist,
+                coverPath: hit.cover,
+                tracks: rows.map(LocalLibraryItem.fromJson).toList(),
               ),
-            );
-          } else {
-            await Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => DownloadedAlbumScreen(
-                  albumName: hit.title,
-                  artistName: hit.artist,
-                  coverUrl: hit.cover,
-                ),
-              ),
-            );
-          }
+            ),
+          );
       }
     } catch (error) {
       if (!mounted) return;

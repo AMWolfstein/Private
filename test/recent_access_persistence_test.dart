@@ -152,7 +152,6 @@ void main() {
         providerId: 'example',
       );
       notifier.removeItem(removed);
-      notifier.hideDownloadFromRecents('new-download');
       expect(
         container.read(recentAccessProvider).items.single.name,
         'New name',
@@ -164,9 +163,7 @@ void main() {
       final state = container.read(recentAccessProvider);
       expect(state.items.map((item) => item.id), ['edited', 'kept']);
       expect(state.items.first.name, 'New name');
-      expect(state.hiddenDownloadIds, {'saved-download', 'new-download'});
-      expect(state.downloadsClearedAt, database.clearedAt);
-      await database.whenCompleted('hide:new-download');
+      await database.whenCompleted('remove:${removed.uniqueKey}');
       expect(database.items.keys, [
         _artist('edited').uniqueKey,
         _artist('kept').uniqueKey,
@@ -174,24 +171,6 @@ void main() {
       expect(database.items[_artist('edited').uniqueKey]!.name, 'New name');
     },
   );
-
-  test('early hidden clear is replayed before a later hide', () async {
-    final database = _Database();
-    final container = _container(database);
-    addTearDown(container.dispose);
-    final notifier = container.read(recentAccessProvider.notifier);
-    await database.readStarted.future;
-    notifier.clearHiddenDownloads();
-    notifier.hideDownloadFromRecents('new-download');
-    database.releaseRead.complete();
-    await _waitUntilLoaded(container);
-    await database.whenCompleted('hide:new-download');
-    expect(container.read(recentAccessProvider).hiddenDownloadIds, {
-      'new-download',
-    });
-    expect(database.hiddenIds, {'new-download'});
-    expect(database.operations, ['clear-hidden', 'hide:new-download']);
-  });
 
   test(
     'startup clear preserves accesses made after the clear request',
@@ -214,10 +193,6 @@ void main() {
       await database.whenCompleted('record:${_artist('later').uniqueKey}');
       expect(container.read(recentAccessProvider).items.single.id, 'later');
       expect(database.items.values.single.id, 'later');
-      expect(
-        container.read(recentAccessProvider).downloadsClearedAt,
-        DateTime.utc(2026, 10, 1),
-      );
       expect(database.operations, [
         'clear',
         'record:${_artist('later').uniqueKey}',
@@ -240,11 +215,19 @@ void main() {
       name: 'Failed',
       providerId: 'example',
     );
-    notifier.hideDownloadFromRecents('after-failure');
-    await database.whenCompleted('hide:after-failure');
-    expect(container.read(recentAccessProvider).items.single.id, 'failed');
-    expect(database.items, isEmpty);
-    expect(database.hiddenIds, contains('after-failure'));
+    notifier.recordArtistAccess(
+      id: 'after-failure',
+      name: 'After failure',
+      providerId: 'example',
+    );
+    await database.whenCompleted(
+      'record:${_artist('after-failure').uniqueKey}',
+    );
+    expect(
+      container.read(recentAccessProvider).items.map((item) => item.id),
+      contains('failed'),
+    );
+    expect(database.items.keys, [_artist('after-failure').uniqueKey]);
     expect(
       LogBuffer().entries.any(
         (entry) =>

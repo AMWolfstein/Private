@@ -3,25 +3,25 @@ package com.zarz.spotiflac
 import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.util.Locale
 
 /**
- * Shared SAF download wrapper for foreground activity calls and service-owned
- * native workers.
+ * Generic SAF file-write utilities shared by foreground activity calls
+ * (SAF io/scan, library scans, local conversions). Downloads no longer use
+ * this object (Phase 6 removed the download engine).
  */
-object SafDownloadHandler {
+object SafFileOps {
     private val safDirLock = Any()
     private const val MAX_SAF_DISPLAY_NAME_UTF8_BYTES = 180
     private const val STAGED_SAF_MIME_TYPE = "application/octet-stream"
 
     // Serializes the exists-check/create/write/publish sequence per target
-    // file so concurrent downloads that sanitize to the same display name
+    // file so concurrent writers that sanitize to the same display name
     // cannot interleave writes into one document. Different names keep
-    // downloading in parallel; the second same-name caller blocks, then hits
+    // writing in parallel; the second same-name caller blocks, then hits
     // the exists check and reports already_exists.
     private val safNameLocks = KeyedLockPool<String>()
 
@@ -75,241 +75,7 @@ object SafDownloadHandler {
         }
     }
 
-    internal fun handle(context: Context, requestJson: String, backend: CoreBackend): String {
-        val req = JSONObject(requestJson)
-        val storageMode = req.optString("storage_mode", "")
-        val treeUriStr = req.optString("saf_tree_uri", "")
-        if (storageMode != "saf" || treeUriStr.isBlank()) {
-            return backend.downloadByStrategy(requestJson)
-        }
-
-        val relativeDir = sanitizeRelativeDir(req.optString("saf_relative_dir", ""))
-        val outputExt = normalizeExt(req.optString("saf_output_ext", ""))
-        val fileName = buildSafFileName(req, outputExt)
-        return withSafNameLock(treeUriStr, relativeDir, fileName) {
-            handleSafLocked(context, req, backend, treeUriStr, relativeDir, outputExt, fileName)
-        }
-    }
-
-    private fun handleSafLocked(
-        context: Context,
-        req: JSONObject,
-        backend: CoreBackend,
-        treeUriStr: String,
-        relativeDir: String,
-        outputExt: String,
-        fileName: String
-    ): String {
-        val treeUri = Uri.parse(treeUriStr)
-        val mimeType = mimeTypeForExt(outputExt)
-        val deferSafPublish = req.optBoolean("defer_saf_publish", false)
-        // Downloads are always written under a staged ".partial" name so a
-        // killed process can never leave a half-written file under the final
-        // name (which the exists check would then accept as complete forever).
-        // Callers that set stage_saf_output own the promotion to the final
-        // name (the native finalizer); for everyone else — the foreground
-        // Dart queue — this handler promotes right after a successful write.
-        val finalizerPromotesStaged = req.optBoolean("stage_saf_output", false) && !deferSafPublish
-        val useStagedOutput = !deferSafPublish
-        val stagedFileName = if (useStagedOutput) buildStagedSafFileName(fileName) else fileName
-        val stagedMimeType = if (useStagedOutput) STAGED_SAF_MIME_TYPE else mimeType
-
-        val existingDir = findDocumentDir(context, treeUri, relativeDir)
-        if (existingDir != null && req.optString("album_folder_template", "").isBlank()) {
-            val existing = findSafChild(context, existingDir, fileName)
-            if (existing != null && existing.isFile && existing.length() > 0) {
-                deleteStaleStagedFiles(context, existingDir, fileName, outputExt)
-                val obj = JSONObject()
-                obj.put("success", true)
-                obj.put("message", "File already exists")
-                obj.put("file_path", existing.uri.toString())
-                obj.put("file_name", existing.name ?: fileName)
-                obj.put("already_exists", true)
-                return obj.toString()
-            }
-        }
-
-        if (deferSafPublish) {
-            existingDir?.let { deleteStaleStagedFiles(context, it, fileName, outputExt) }
-            val workingExt = outputExt.ifBlank { ".tmp" }
-            val workingFile = backend.createTemporaryMediaFile(context, "native_saf_work_", workingExt)
-            return try {
-                req.put("output_path", workingFile.absolutePath)
-                req.put("output_ext", outputExt)
-                req.remove("output_fd")
-                val response = backend.downloadByStrategy(req.toString())
-                val respObj = JSONObject(response)
-                if (respObj.optBoolean("success", false)) {
-                    val actualExt = normalizeExt(respObj.optString("actual_extension", ""))
-                        .ifBlank { outputExt }
-                    val resolvedFileName = respObj.optString("resolved_file_name", "")
-                        .trim()
-                        .let { forceFilenameExt(it.ifBlank { fileName }, actualExt) }
-                    val reportedPath = respObj.optString("file_path", "").trim()
-                    if (reportedPath.isEmpty() || reportedPath.startsWith("/proc/self/fd/")) {
-                        respObj.put("file_path", workingFile.absolutePath)
-                    } else if (reportedPath != workingFile.absolutePath) {
-                        workingFile.delete()
-                    }
-                    respObj.put("file_name", resolvedFileName)
-                    respObj.put("saf_deferred_publish", true)
-                    respObj.put("saf_final_file_name", resolvedFileName)
-                    val resolvedDir = NativeFinalizationPolicy.resolvedAlbumRelativeDirectory(
-                        relativeDirectory = relativeDir,
-                        albumFolderTemplate = req.optString("album_folder_template", ""),
-                        resolvedAlbumFolder = respObj.optString("resolved_album_folder", ""),
-                    )
-                    respObj.put("saf_relative_dir", resolvedDir)
-                    respObj.put("saf_tree_uri", treeUriStr)
-                    respObj.put("saf_output_ext", actualExt)
-                    respObj.put("saf_final_mime_type", mimeTypeForExt(actualExt))
-                } else {
-                    workingFile.delete()
-                }
-                respObj.toString()
-            } catch (e: Exception) {
-                workingFile.delete()
-                errorJson("SAF deferred download failed: ${e.message}")
-            }
-        }
-
-        val targetDir = ensureDocumentDir(context, treeUri, relativeDir)
-            ?: return errorJson("Failed to access SAF directory")
-
-        // Remove any stale partial from a previous killed attempt before
-        // creating the staged document: reusing it would let a shorter new
-        // write leave the old tail bytes in place (fd truncation is
-        // best-effort on some providers).
-        deleteStaleStagedFiles(context, targetDir, fileName, outputExt)
-        var document = createOrReuseDocumentFile(context, targetDir, stagedMimeType, stagedFileName)
-            ?: return errorJson("Failed to create SAF file")
-
-        var pfd: android.os.ParcelFileDescriptor? = null
-        var detachedFd: Int? = null
-        var workingFile: File? = null
-        try {
-            if (backend.supportsOutputDescriptors) {
-                val descriptor = context.contentResolver.openFileDescriptor(document.uri, "rw")
-                    ?: throw IllegalStateException("Failed to open SAF file")
-                pfd = descriptor
-                detachedFd = descriptor.detachFd()
-                req.put("output_path", "")
-                req.put("output_fd", detachedFd)
-            } else {
-                // The OS adapter retains descriptor ownership. A path-based
-                // backend writes into its granted staging directory, then the
-                // existing SAF copy/promotion publishes the completed output.
-                val staged = backend.createTemporaryMediaFile(
-                    context,
-                    "native_saf_work_",
-                    outputExt.ifBlank { ".tmp" },
-                )
-                workingFile = staged
-                req.put("output_path", staged.absolutePath)
-                req.remove("output_fd")
-            }
-            req.put("output_ext", outputExt)
-            val response = backend.downloadByStrategy(req.toString())
-            val respObj = JSONObject(response)
-            if (respObj.optBoolean("success", false)) {
-                val resolvedFileName = respObj.optString("resolved_file_name", "").trim()
-                var finalFileName = if (resolvedFileName.isNotEmpty()) {
-                    forceFilenameExt(resolvedFileName, outputExt)
-                } else {
-                    fileName
-                }
-                val backendFilePath = respObj.optString("file_path", "")
-                val localFilePath = backendFilePath.takeIf {
-                    it.isNotEmpty() && !it.startsWith("content://") &&
-                        !it.startsWith("/proc/self/fd/")
-                } ?: workingFile?.absolutePath
-                if (localFilePath != null) {
-                    try {
-                        val srcFile = File(localFilePath)
-                        if (!srcFile.exists() || srcFile.length() <= 0) {
-                            throw IllegalStateException("extension output missing or empty: $localFilePath")
-                        }
-                        val actualExt = normalizeExt(srcFile.extension)
-                        if (actualExt.isNotBlank()) {
-                            respObj.put("actual_extension", actualExt)
-                        }
-                        if (actualExt.isNotBlank() && actualExt != outputExt) {
-                            val actualFileName = if (resolvedFileName.isNotEmpty()) {
-                                forceFilenameExt(resolvedFileName, actualExt)
-                            } else {
-                                buildSafFileName(req, actualExt)
-                            }
-                            val actualStagedFileName = if (useStagedOutput) {
-                                buildStagedSafFileName(actualFileName)
-                            } else {
-                                actualFileName
-                            }
-                            val actualMimeType = mimeTypeForExt(actualExt)
-                            val replacement = createOrReuseDocumentFile(
-                                context,
-                                targetDir,
-                                if (useStagedOutput) STAGED_SAF_MIME_TYPE else actualMimeType,
-                                actualStagedFileName
-                            ) ?: throw IllegalStateException(
-                                "failed to create SAF output with actual extension"
-                            )
-                            if (replacement.uri != document.uri) {
-                                document.delete()
-                                document = replacement
-                            }
-                            finalFileName = actualFileName
-                        }
-                        context.contentResolver.openOutputStream(document.uri, "wt")?.use { output ->
-                            srcFile.inputStream().use { input ->
-                                input.copyTo(output)
-                            }
-                            syncOutputStream(output)
-                        } ?: throw IllegalStateException("failed to open SAF output stream")
-                        srcFile.delete()
-                    } catch (e: Exception) {
-                        document.delete()
-                        android.util.Log.w(
-                            "SpotiFLAC",
-                            "Failed to copy extension output to SAF: ${e.message}"
-                        )
-                        return errorJson("Failed to copy extension output to SAF: ${e.message}")
-                    }
-                }
-                respObj.put("file_path", document.uri.toString())
-                respObj.put("file_name", document.name ?: fileName)
-                if (finalizerPromotesStaged) {
-                    respObj.put("saf_staged_output", true)
-                    respObj.put("saf_staged_file_name", document.name ?: stagedFileName)
-                } else if (useStagedOutput) {
-                    // Legacy caller (foreground Dart queue): publish here by
-                    // renaming the staged file to its final name.
-                    val published = replaceFinalDocument(context, targetDir, document, finalFileName)
-                    if (published == null) {
-                        document.delete()
-                        return errorJson("Failed to publish SAF download")
-                    }
-                    respObj.put("file_path", published.uri.toString())
-                    respObj.put("file_name", published.name ?: finalFileName)
-                }
-            } else {
-                document.delete()
-            }
-            return respObj.toString()
-        } catch (e: Exception) {
-            document.delete()
-            return errorJson("SAF download failed: ${e.message}")
-        } finally {
-            workingFile?.delete()
-            if (detachedFd == null) {
-                try {
-                    pfd?.close()
-                } catch (_: Exception) {
-                }
-            }
-        }
-    }
-
-    /**
+        /**
      * Swaps [document] into place under [finalName] without a window where the
      * previous file is gone but the new one is not yet in place. Any existing
      * file is renamed aside first and only deleted once the staged file holds
@@ -663,21 +429,6 @@ object SafDownloadHandler {
         }
     }
 
-    private fun forceFilenameExt(name: String, outputExt: String): String {
-        val normalizedExt = normalizeExt(outputExt)
-        if (normalizedExt.isBlank()) return sanitizeFilename(name)
-
-        val safeName = sanitizeFilename(name)
-        val lower = safeName.lowercase(Locale.ROOT)
-        val knownExts = listOf(".flac", ".m4a", ".mp4", ".mp3", ".opus", ".lrc")
-        for (knownExt in knownExts) {
-            if (lower.endsWith(knownExt)) {
-                return safeName.dropLast(knownExt.length) + normalizedExt
-            }
-        }
-        return safeName + normalizedExt
-    }
-
     private fun buildStagedSafFileName(fileName: String): String {
         val safeName = sanitizeFilename(fileName)
         return "$safeName.partial"
@@ -871,21 +622,4 @@ object SafDownloadHandler {
         }
     }
 
-    private fun buildSafFileName(req: JSONObject, outputExt: String): String {
-        val provided = req.optString("saf_file_name", "")
-        if (provided.isNotBlank()) return forceFilenameExt(provided, outputExt)
-
-        val trackName = req.optString("track_name", "track")
-        val artistName = req.optString("artist_name", "")
-        val baseName = if (artistName.isNotBlank()) "$artistName - $trackName" else trackName
-        return forceFilenameExt(baseName, outputExt)
-    }
-
-    private fun errorJson(message: String): String {
-        val obj = JSONObject()
-        obj.put("success", false)
-        obj.put("error", message)
-        obj.put("message", message)
-        return obj.toString()
-    }
 }

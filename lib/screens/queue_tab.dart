@@ -21,7 +21,6 @@ import 'package:spotiflac_android/widgets/library_playlist_drag_source.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/audio_quality_badge_policy.dart';
@@ -29,11 +28,8 @@ import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/library_format_filters.dart';
 import 'package:spotiflac_android/utils/ordered_range_selection.dart';
-import 'package:spotiflac_android/models/download_item.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
-import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
@@ -47,10 +43,7 @@ import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
-import 'package:spotiflac_android/screens/downloaded_album_screen.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/mornye_library_screen.dart';
@@ -59,7 +52,6 @@ import 'package:spotiflac_android/utils/clickable_metadata.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/smoothed_progress.dart';
 import 'package:spotiflac_android/widgets/scroll_edge_fade.dart';
 import 'package:spotiflac_android/widgets/two_finger_pinch_listener.dart';
 
@@ -71,142 +63,6 @@ part 'queue_tab_collection_items.dart';
 part 'queue_tab_filter_widgets.dart';
 part 'queue_tab_batch_actions.dart';
 part 'queue_tab_item_widgets.dart';
-
-String _formatDownloadSizeMB(num bytes) => '${formatMegabytes(bytes)} MB';
-
-String _formatDownloadProgressLabel(
-  BuildContext context,
-  DownloadItem item, {
-  double? visualProgress,
-}) {
-  final progress = (visualProgress ?? item.progress).clamp(0.0, 1.0);
-  final speedSuffix = item.speedMBps > 0
-      ? ' • ${item.speedMBps.toStringAsFixed(1)} MB/s'
-      : '';
-
-  if (item.bytesTotal > 0) {
-    final received = visualProgress != null
-        ? item.bytesTotal * progress
-        : item.bytesReceived > 0
-        ? item.bytesReceived
-        : item.bytesTotal * progress;
-    final percent = (progress * 100).toStringAsFixed(0);
-    return '${_formatDownloadSizeMB(received)} / ${_formatDownloadSizeMB(item.bytesTotal)} • $percent%$speedSuffix';
-  }
-
-  if (item.bytesReceived > 0) {
-    final canEstimateTotal = progress > 0.01 && progress < 0.995;
-    if (canEstimateTotal) {
-      final estimatedTotal = item.bytesReceived / progress;
-      if (estimatedTotal > item.bytesReceived) {
-        return '${_formatDownloadSizeMB(item.bytesReceived)} / ~${_formatDownloadSizeMB(estimatedTotal)}$speedSuffix';
-      }
-    }
-    return '${_formatDownloadSizeMB(item.bytesReceived)}$speedSuffix';
-  }
-
-  if (progress > 0) {
-    final percent = (progress * 100).toStringAsFixed(0);
-    return '$percent%$speedSuffix';
-  }
-
-  if (item.speedMBps > 0) {
-    return context.l10n.queueDownloadSpeedStatus(
-      item.speedMBps.toStringAsFixed(1),
-    );
-  }
-
-  if (item.error == 'Waiting for verification') {
-    return context.l10n.queueWaitingForVerification;
-  }
-  switch (item.preparationStage) {
-    case 'checking_session':
-      return context.l10n.queueCheckingDownloadSession;
-    case 'resolving_metadata':
-      return context.l10n.queueResolvingDownloadMetadata;
-    case 'resolving_stream':
-      return context.l10n.queueResolvingDownloadStream;
-  }
-  if (item.error == 'Retrying after verification') {
-    return context.l10n.queueResumingAfterVerification;
-  }
-
-  return context.l10n.queueDownloadStarting;
-}
-
-String _formatDownloadStatusLine(
-  BuildContext context,
-  DownloadItem item, {
-  double? visualProgress,
-}) {
-  final base = _formatDownloadProgressLabel(
-    context,
-    item,
-    visualProgress: visualProgress,
-  );
-  final eta = _formatDownloadEta(item, visualProgress: visualProgress);
-  return eta == null ? base : '$base • $eta';
-}
-
-String? _formatDownloadEta(DownloadItem item, {double? visualProgress}) {
-  if (item.speedMBps <= 0 || item.bytesTotal <= 0) return null;
-  final progress = (visualProgress ?? item.progress).clamp(0.0, 1.0);
-  final received = visualProgress != null
-      ? (item.bytesTotal * progress).round()
-      : item.bytesReceived > 0
-      ? item.bytesReceived
-      : (item.bytesTotal * progress).round();
-  final remaining = item.bytesTotal - received;
-  if (remaining <= 0) return null;
-  final seconds = remaining / (item.speedMBps * 1024 * 1024);
-  if (!seconds.isFinite || seconds > 3600) return null;
-  if (seconds < 60) return '~${seconds.round()}s';
-  final minutes = (seconds / 60).floor();
-  final secs = (seconds % 60).round();
-  return '~${minutes}m${secs.toString().padLeft(2, '0')}s';
-}
-
-bool _shouldAnimateDownloadProgress(BuildContext context, DownloadItem item) {
-  final progress = item.progress.clamp(0.0, 1.0);
-  final animationsDisabled =
-      MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-  return item.status == DownloadStatus.downloading &&
-      progress > 0 &&
-      progress < 1 &&
-      !animationsDisabled;
-}
-
-DownloadHistoryItem? _historyItemForCompletionBridge(
-  DownloadItem item,
-  List<DownloadHistoryItem> historyItems,
-) {
-  final filePath = item.filePath?.trim();
-  if (filePath != null && filePath.isNotEmpty) {
-    for (final historyItem in historyItems) {
-      if (historyItem.filePath == filePath) return historyItem;
-    }
-  }
-
-  for (final historyItem in historyItems) {
-    if (historyItem.id == item.id) return historyItem;
-  }
-
-  final trackId = item.track.id.trim();
-  if (trackId.isNotEmpty) {
-    for (final historyItem in historyItems) {
-      if (historyItem.spotifyId == trackId) return historyItem;
-    }
-  }
-
-  final isrc = item.track.isrc?.trim();
-  if (isrc != null && isrc.isNotEmpty) {
-    for (final historyItem in historyItems) {
-      if (historyItem.isrc == isrc) return historyItem;
-    }
-  }
-
-  return null;
-}
 
 class QueueTab extends ConsumerStatefulWidget {
   final String? librarySection;
@@ -230,7 +86,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   static const int _libraryPageSize = 300;
   final LibraryFileAvailabilityCache _fileExistsCache =
       LibraryFileAvailabilityCache();
-  late final CompletionBridgePlayableProbeCache _completionBridgePlayableProbe;
   static const double _libraryGridMinExtent = 92;
   static const double _libraryGridDefaultExtent = 126;
   static const double _libraryGridMaxExtent = 190;
@@ -267,9 +122,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   final FocusNode _searchFocusNode = FocusNode();
   String _searchQuery = '';
   Timer? _searchDebounce;
-  final Map<String, DownloadItem> _completionBridge = {};
-  final Map<String, DateTime> _completionBridgeAt = {};
-  final Set<String> _bridgePrecacheStarted = {};
   String? _filterSource;
   String? _filterQuality;
   String? _filterFormat;
@@ -284,21 +136,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   _queueLibraryCountsCache = {};
   final Map<_QueueLibraryPageRequest, _QueueLibraryPageData>
   _queueLibraryPageDataCache = {};
-  DateTime? _lastBlankLibraryRepairAt;
-
-  double _effectiveTextScale() {
-    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
-    if (textScale < 1.0) return 1.0;
-    if (textScale > 1.4) return 1.4;
-    return textScale;
-  }
-
-  double _queueCoverSize() {
-    final shortestSide = MediaQuery.sizeOf(context).shortestSide;
-    final scale = (shortestSide / 390).clamp(0.82, 1.0);
-    final textScale = _effectiveTextScale();
-    return (56 * scale * (1 + ((textScale - 1) * 0.12))).clamp(46.0, 56.0);
-  }
 
   double get _libraryAlbumGridExtent =>
       (_libraryGridExtent * 1.45).clamp(150.0, 300.0);
@@ -330,9 +167,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   @override
   void initState() {
     super.initState();
-    _completionBridgePlayableProbe = CompletionBridgePlayableProbeCache(
-      onPlayable: _fileExistsCache.markExists,
-    );
   }
 
   void _initializePageController() {
@@ -392,7 +226,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     _hideSelectionOverlay();
     _hidePlaylistSelectionOverlay();
     _fileExistsCache.dispose();
-    _completionBridgePlayableProbe.dispose();
     _embeddedCoverVersion.dispose();
     _filterPageController?.dispose();
     _searchController.dispose();
@@ -531,40 +364,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     return combined;
   }
 
-  void _invalidateLibraryDataCaches() {
-    _queueLibraryCountsCache.clear();
-    _queueLibraryPageDataCache.clear();
-  }
-
-  void _scheduleBlankLibraryRepair({
-    required bool hasQueueItems,
-    required bool hasLibraryContent,
-    required bool hasAnyLibraryItems,
-    required bool isLibraryPageLoading,
-  }) {
-    if (!hasQueueItems ||
-        hasLibraryContent ||
-        hasAnyLibraryItems ||
-        isLibraryPageLoading) {
-      return;
-    }
-    final now = DateTime.now();
-    final last = _lastBlankLibraryRepairAt;
-    if (last != null && now.difference(last) < const Duration(seconds: 8)) {
-      return;
-    }
-    _lastBlankLibraryRepairAt = now;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _invalidateLibraryDataCaches();
-      ref.read(downloadHistoryProvider.notifier).reloadFromStorage();
-      if (ref.read(settingsProvider).localLibraryEnabled) {
-        ref.read(localLibraryProvider.notifier).reloadFromStorage();
-      }
-      setState(() {});
-    });
-  }
-
   void _trimQueueLibraryCountsCache() {
     const maxCountEntries = 24;
     while (_queueLibraryCountsCache.length > maxCountEntries) {
@@ -680,19 +479,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         _embeddedCoverVersion.value++;
       }
     });
-  }
-
-  Future<void> _scheduleDownloadedEmbeddedCoverRefreshForPath(
-    String? filePath, {
-    int? beforeModTime,
-    bool force = false,
-  }) async {
-    await DownloadedEmbeddedCoverResolver.scheduleRefreshForPath(
-      filePath,
-      beforeModTime: beforeModTime,
-      force: force,
-      onChanged: _onEmbeddedCoverChanged,
-    );
   }
 
   String? _resolveDownloadedEmbeddedCoverPath(String? filePath) {
@@ -1242,64 +1028,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       settingsProvider.select((s) => s.localLibraryEnabled),
     );
 
-    ref.listen(downloadQueueLookupProvider, (previous, next) {
-      if (previous == null) return;
-      if (_completionBridge.keys.any((id) => !next.byItemId.containsKey(id))) {
-        setState(() {
-          _completionBridge.removeWhere(
-            (id, _) => !next.byItemId.containsKey(id),
-          );
-          _completionBridgeAt.removeWhere(
-            (id, _) => !next.byItemId.containsKey(id),
-          );
-          _bridgePrecacheStarted.removeWhere(
-            (id) => !next.byItemId.containsKey(id),
-          );
-        });
-      }
-      if (identical(previous.notCompletedItemIds, next.notCompletedItemIds)) {
-        return;
-      }
-      for (final id in previous.notCompletedItemIds) {
-        final prevItem = previous.byItemId[id];
-        final nextItem = next.byItemId[id];
-        if (prevItem == null) continue;
-        final wasActive =
-            prevItem.status == DownloadStatus.downloading ||
-            prevItem.status == DownloadStatus.finalizing ||
-            prevItem.status == DownloadStatus.queued;
-        final nowCompleted =
-            nextItem != null && nextItem.status == DownloadStatus.completed;
-        if (wasActive && nowCompleted) {
-          _fileExistsCache.refreshForPath(nextItem.filePath);
-          _completionBridgePlayableProbe.refreshForPath(nextItem.filePath);
-          _completionBridge[id] = nextItem;
-          _completionBridgeAt[id] = DateTime.now();
-        }
-      }
-    });
-    ref.listen<int>(
-      downloadHistoryProvider.select((state) => state.loadedIndexVersion),
-      (previous, next) {
-        if (previous == null || previous == next) return;
-        final historyItems = ref.read(downloadHistoryProvider).items;
-        for (final bridgeItem in _completionBridge.values) {
-          _fileExistsCache.refreshForPath(bridgeItem.filePath);
-          _completionBridgePlayableProbe.refreshForPath(bridgeItem.filePath);
-          final historyPath = _historyItemForCompletionBridge(
-            bridgeItem,
-            historyItems,
-          )?.filePath;
-          _fileExistsCache.refreshForPath(historyPath);
-          _completionBridgePlayableProbe.refreshForPath(historyPath);
-        }
-        // The family provider already reruns for the new revision. Retain its
-        // last successful page while SQLite is loading so metadata backfills
-        // and download completions cannot flash the Library as empty.
-        _resetLibraryOffsets();
-        if (mounted) setState(() {});
-      },
-    );
     if (localLibraryEnabled) {
       ref.listen<int>(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
@@ -1312,45 +1040,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       );
     }
 
-    if (widget.librarySection == 'downloads') {
-      final ids = ref.watch(
-        downloadQueueLookupProvider.select((s) => s.notCompletedItemIds),
-      );
-      final colors = Theme.of(context).colorScheme;
-      return CustomScrollView(
-        slivers: [
-          AppSliverHeader.page(title: context.l10n.libraryDownloads),
-          _buildQueueHeaderSliver(context, colors),
-          SliverList.builder(
-            itemCount: ids.length,
-            itemBuilder: (context, index) => _QueueItemSliverRow(
-              key: ValueKey(ids[index]),
-              itemId: ids[index],
-              colorScheme: colors,
-              itemBuilder: _buildQueueItem,
-            ),
-          ),
-          if (ids.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(child: Text(context.l10n.libraryNoActiveDownloads)),
-            ),
-          const NavBarSliverSpacer(),
-        ],
-      );
-    }
-
-    final hasQueueItems = ref.watch(
-      downloadQueueLookupProvider.select((lookup) => lookup.itemIds.isNotEmpty),
-    );
-    final historyTotalCount = ref.watch(
-      downloadHistoryProvider.select((state) => state.totalCount),
-    );
-    // Completion-bridge cells need the finalized in-memory history record
-    // immediately, before the database-backed Library page refresh lands.
-    final inMemoryHistoryItems = ref.watch(
-      downloadHistoryProvider.select((state) => state.items),
-    );
     final localLibraryTotalCount = localLibraryEnabled
         ? ref.watch(localLibraryProvider.select((state) => state.totalCount))
         : 0;
@@ -1404,20 +1093,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             ),
           )
         : ref.watch(_queueLibraryCountsProvider(countsRequest));
-    final historySnapshotFallbackEnabled =
-        hasQueueItems &&
-        inMemoryHistoryItems.isNotEmpty &&
-        countsRequest.allowsInMemoryHistoryFallback;
-    final historySnapshotCounts = historySnapshotFallbackEnabled
-        ? _historySnapshotCounts(
-            inMemoryHistoryItems,
-            persistedTotalCount: historyTotalCount,
-          )
-        : null;
     final queueCounts = _resolveQueueLibraryCounts(
       countsValue,
       countsRequest,
-      nonEmptyFallback: historySnapshotCounts,
     );
 
     _QueueLibraryPageRequest pageRequest(String filterMode) {
@@ -1459,31 +1137,13 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         ? const AsyncData(_QueueLibraryPageData())
         : ref.watch(_queueLibraryPageProvider(activePageRequest));
 
-    // The in-memory snapshot regroups every history item. It is only needed
-    // when a page is still empty, so build it on demand and at most once per
-    // mode for this build's (immutable) history list.
-    final historySnapshots = <(String, int), _QueueLibraryPageData>{};
     _QueueLibraryPageData pageData(String filterMode) {
       final request = filterMode == historyFilterMode
           ? activePageRequest
           : pageRequest(filterMode);
-      final historySnapshotAvailable =
-          hasQueueItems &&
-          inMemoryHistoryItems.isNotEmpty &&
-          request.allowsInMemoryHistoryFallback;
       return _resolveQueueLibraryPageData(
         filterMode == historyFilterMode ? activePageValue : null,
         request,
-        nonEmptyFallback: historySnapshotAvailable
-            ? () => historySnapshots.putIfAbsent(
-                (request.filterMode, request.limit),
-                () => _QueueLibraryPageData.fromHistorySnapshot(
-                  inMemoryHistoryItems,
-                  filterMode: request.filterMode,
-                  limit: request.limit,
-                ),
-              )
-            : null,
       );
     }
 
@@ -1501,8 +1161,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
     final currentPageData = pageData(historyFilterMode);
     final currentLoadedCount = historyFilterMode == 'albums'
-        ? currentPageData.groupedAlbums.length +
-              currentPageData.groupedLocalAlbums.length
+        ? currentPageData.groupedLocalAlbums.length
         : currentPageData.items.length;
     final currentTotalCount = switch (historyFilterMode) {
       'albums' => queueCounts.albumCount,
@@ -1516,21 +1175,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     final hasAnyLibraryItems =
         queueCounts.allTrackCount > 0 || queueCounts.albumCount > 0;
     final hasLibraryContent =
-        historyTotalCount > 0 ||
-        inMemoryHistoryItems.isNotEmpty ||
-        (localLibraryEnabled && localLibraryTotalCount > 0);
+        localLibraryEnabled && localLibraryTotalCount > 0;
     final hasActiveSearch =
         _searchQuery.isNotEmpty || _searchController.text.trim().isNotEmpty;
     final shouldShowLibraryControls =
         hasLibraryContent || hasAnyLibraryItems || hasActiveSearch;
-    if (!searchingLibrary) {
-      _scheduleBlankLibraryRepair(
-        hasQueueItems: hasQueueItems,
-        hasLibraryContent: hasLibraryContent,
-        hasAnyLibraryItems: hasAnyLibraryItems,
-        isLibraryPageLoading: isLibraryPageLoading,
-      );
-    }
 
     final selectionItems = getFilterData(
       historyFilterMode,
@@ -1583,7 +1232,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         : context.l10n.searchSongs,
                   ),
 
-                if (shouldShowLibraryControls || hasQueueItems)
+                if (shouldShowLibraryControls)
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
@@ -1710,12 +1359,10 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                       colorScheme: colorScheme,
                       filterMode: historyFilterMode,
                       historyViewMode: 'list',
-                      hasQueueItems: false,
                       filterData: getFilterData(historyFilterMode),
                       collectionState: collectionState,
                       hasMoreLibrary: hasMoreLibrary,
                       isPageLoading: isLibraryPageLoading,
-                      inMemoryHistoryItems: inMemoryHistoryItems,
                     )
                   : PageView.builder(
                       controller: _filterPageController!,
@@ -1730,14 +1377,12 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                           colorScheme: colorScheme,
                           filterMode: filterMode,
                           historyViewMode: historyViewMode,
-                          hasQueueItems: hasQueueItems,
                           filterData: filterData,
                           collectionState: collectionState,
                           hasMoreLibrary: filterMode == historyFilterMode
                               ? hasMoreLibrary
                               : false,
                           isPageLoading: isLibraryPageLoading,
-                          inMemoryHistoryItems: inMemoryHistoryItems,
                         );
                       },
                     ),
@@ -1746,282 +1391,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         ],
       ),
     );
-  }
-
-  Widget _buildQueueHeaderSliver(
-    BuildContext context,
-    ColorScheme colorScheme,
-  ) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final queueCount = ref.watch(
-          downloadQueueLookupProvider.select(
-            (lookup) => lookup.notCompletedItemIds.length,
-          ),
-        );
-        final failedCount = ref.watch(
-          downloadQueueProvider.select((state) => state.failedCount),
-        );
-        final isProcessing = ref.watch(
-          downloadQueueProvider.select((state) => state.isProcessing),
-        );
-        final isPaused = ref.watch(
-          downloadQueueProvider.select((state) => state.isPaused),
-        );
-        return SliverToBoxAdapter(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 260),
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, animation) => SizeTransition(
-              sizeFactor: animation,
-              alignment: Alignment.topCenter,
-              child: FadeTransition(opacity: animation, child: child),
-            ),
-            child: queueCount == 0
-                ? const SizedBox(
-                    width: double.infinity,
-                    key: ValueKey('dl_header_empty'),
-                  )
-                : Padding(
-                    key: const ValueKey('dl_header'),
-                    padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.downloading_rounded,
-                          size: 16,
-                          color: colorScheme.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            context.l10n.queueDownloadingCount(queueCount),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelLarge
-                                ?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                        ),
-                        if (failedCount > 0 && !isProcessing)
-                          IconButton(
-                            onPressed: () => ref
-                                .read(downloadQueueProvider.notifier)
-                                .retryAllFailed(),
-                            icon: const Icon(Icons.replay_rounded, size: 20),
-                            tooltip: context.l10n.queueRetryAllFailed(
-                              failedCount,
-                            ),
-                            color: colorScheme.primary,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        IconButton(
-                          onPressed: () => ref
-                              .read(downloadQueueProvider.notifier)
-                              .togglePause(),
-                          icon: Icon(
-                            isPaused
-                                ? Icons.play_arrow_rounded
-                                : Icons.pause_rounded,
-                            size: 20,
-                          ),
-                          tooltip: isPaused
-                              ? context.l10n.actionResume
-                              : context.l10n.actionPause,
-                          color: colorScheme.onSurfaceVariant,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        IconButton(
-                          onPressed: () =>
-                              _showClearAllDialog(context, ref, colorScheme),
-                          icon: const Icon(Icons.clear_all_rounded, size: 20),
-                          tooltip: context.l10n.queueClearAll,
-                          color: colorScheme.error,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _confirmCancelDownload(
-    BuildContext context,
-    DownloadItem item,
-  ) async {
-    final confirmed = await showAppDialog<bool>(
-      context: context,
-      builder: (ctx) => AppAlertDialog(
-        title: Text(context.l10n.cancelDownloadTitle),
-        content: Text(context.l10n.cancelDownloadContent(item.track.name)),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(context.l10n.cancelDownloadKeep),
-          ),
-          AppDialogAction(
-            isDestructive: true,
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(context.l10n.dialogCancel),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      // cancelItem (not dismissItem): the item stays in the queue as
-      // cancelled so it can be retried without re-searching the track.
-      ref.read(downloadQueueProvider.notifier).cancelItem(item.id);
-    }
-  }
-
-  Future<void> _showDownloadErrorDialog(
-    BuildContext context,
-    DownloadItem item,
-  ) async {
-    final colorScheme = Theme.of(context).colorScheme;
-    final isRateLimit = item.errorType == DownloadErrorType.rateLimit;
-    final isCancelled = item.status == DownloadStatus.skipped;
-    final isFolderAccessLost =
-        item.errorMessage == safPermissionLostErrorMessage ||
-        item.errorMessage == downloadFolderAccessLostErrorMessage;
-    final title = isCancelled
-        ? context.l10n.queueCancelledTitle
-        : isRateLimit
-        ? context.l10n.queueRateLimitTitle
-        : context.l10n.updateDownloadFailed;
-    final message = isCancelled
-        ? context.l10n.queueCancelledMessage
-        : isRateLimit
-        ? context.l10n.queueRateLimitMessage
-        : (item.errorMessage.trim().isNotEmpty
-              ? _localizedDownloadError(context, item.errorMessage)
-              : context.l10n.updateDownloadFailed);
-    final action = await showAppDialog<String>(
-      context: context,
-      builder: (ctx) => AppAlertDialog(
-        title: Text(title),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                item.track.name,
-                style: Theme.of(
-                  ctx,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 10),
-              SelectableText(
-                message,
-                style: Theme.of(ctx).textTheme.bodyMedium,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          AppDialogAction(
-            isDestructive: true,
-            onPressed: () => Navigator.of(ctx).pop('remove'),
-            style: TextButton.styleFrom(foregroundColor: colorScheme.error),
-            child: Text(context.l10n.dialogRemove),
-          ),
-          AppDialogAction(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          if (isFolderAccessLost)
-            AppDialogAction(
-              filled: true,
-              onPressed: () => Navigator.of(ctx).pop('reselect'),
-              child: Text(context.l10n.downloadFolderReselect),
-            )
-          else
-            AppDialogAction(
-              filled: true,
-              onPressed: () => Navigator.of(ctx).pop('retry'),
-              child: Text(context.l10n.dialogRetry),
-            ),
-        ],
-      ),
-    );
-    if (!mounted) return;
-    if (action == 'retry') {
-      ref.read(downloadQueueProvider.notifier).retryItem(item.id);
-    } else if (action == 'remove') {
-      ref.read(downloadQueueProvider.notifier).removeItem(item.id);
-    } else if (action == 'reselect') {
-      final reselected = await _reselectDownloadFolder();
-      if (reselected && mounted) {
-        ref.read(downloadQueueProvider.notifier).retryItem(item.id);
-      }
-    }
-  }
-
-  /// Reopen the platform folder picker to restore download folder access,
-  /// then persist the new location. Returns true when a folder was saved.
-  Future<bool> _reselectDownloadFolder() async {
-    if (Platform.isAndroid) {
-      final result = await PlatformBridge.pickSafTree();
-      if (result == null) return false;
-      final treeUri = result['tree_uri'] as String? ?? '';
-      final displayName = result['display_name'] as String? ?? '';
-      if (treeUri.isEmpty) return false;
-      final notifier = ref.read(settingsProvider.notifier);
-      notifier.setStorageMode('saf');
-      notifier.setDownloadTreeUri(
-        treeUri,
-        displayName: displayName.isNotEmpty ? displayName : treeUri,
-      );
-      return true;
-    }
-    if (Platform.isIOS) {
-      IosPickedDirectory? picked;
-      try {
-        picked = await PlatformBridge.pickIosDirectory();
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                context.l10n.snackbarFolderPickerFailed(
-                  context.friendlyError(e),
-                ),
-              ),
-            ),
-          );
-        }
-        return false;
-      }
-      if (picked == null || !mounted) return false;
-      final validation = validateIosPath(
-        picked.path,
-        bookmark: picked.bookmark,
-      );
-      if (!validation.isValid) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                validation.errorReason ?? context.l10n.setupIcloudNotSupported,
-              ),
-            ),
-          );
-        }
-        return false;
-      }
-      ref
-          .read(settingsProvider.notifier)
-          .setDownloadDirectory(picked.path, iosBookmark: picked.bookmark);
-      return true;
-    }
-    return false;
   }
 }
 

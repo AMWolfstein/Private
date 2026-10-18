@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
+import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 
 void main() {
@@ -58,14 +58,13 @@ void main() {
         }
       });
       addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
-      final item = DownloadHistoryItem(
+      final item = LocalLibraryItem(
         id: 'local-song',
         trackName: 'Song',
         artistName: 'Artist',
         albumName: 'Album',
         filePath: path,
-        service: 'example-provider',
-        downloadedAt: DateTime(2026),
+        scannedAt: DateTime(2026),
         format: 'flac',
       );
       await tester.pumpWidget(
@@ -73,7 +72,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: TrackMetadataScreen(item: item),
+            home: TrackMetadataScreen(localItem: item),
           ),
         ),
       );

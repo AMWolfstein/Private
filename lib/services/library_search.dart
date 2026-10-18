@@ -105,17 +105,12 @@ class LibrarySearchHit {
   );
 }
 
-/// Runs bounded, ranked searches in SQLite instead of copying the Library into
-/// Dart. The caller supplies the Library connection with history_db attached.
+/// Runs bounded, ranked searches against the local library in SQLite instead
+/// of copying the Library into Dart.
 class LibrarySearchStore {
-  const LibrarySearchStore(
-    this.db, {
-    required this.historyFts,
-    required this.localFts,
-  });
+  const LibrarySearchStore(this.db, {required this.localFts});
 
   final DatabaseExecutor db;
-  final bool historyFts;
   final bool localFts;
 
   Future<List<LibrarySearchHit>> search({
@@ -127,74 +122,59 @@ class LibrarySearchStore {
   }) async {
     final search = LibrarySearchQuery(query);
     if (search.terms.isEmpty || kind == LibrarySearchKind.playlists) return [];
+    if (!includeLocal) return [];
     final args = <Object?>[];
-    final parts = <String>[];
-    for (final local in [false, if (includeLocal) true]) {
-      final alias = local ? 'l' : 'h';
-      final source = local ? 'local' : 'downloaded';
-      final table = local ? 'library_visible' : 'history_db.history';
-      final artist = local ? 'album_artist_norm' : 'sort_album_artist';
-      final album = local ? 'album_name_norm' : 'sort_album';
-      final title = local ? 'track_name_norm' : 'sort_track';
-      final where = <String>[
-        if (local)
-          '''NOT EXISTS (
-            SELECT 1 FROM library_path_keys lpk
-            JOIN history_db.history_path_keys hpk ON hpk.path_key = lpk.path_key
-            WHERE lpk.item_id = l.id
-          )''',
-      ];
-      final column = switch (kind) {
-        LibrarySearchKind.songs => '$alias.search_text',
-        LibrarySearchKind.albums => "$alias.$album || ' ' || $alias.$artist",
-        LibrarySearchKind.artists => '$alias.$artist',
-        LibrarySearchKind.playlists => throw StateError('Not a track index'),
-      };
-      where.add(
-        search.predicate(
-          column,
-          args,
-          // Views do not expose their underlying table's implicit rowid.
-          rowId: local ? '$alias.id' : '$alias.rowid',
-          ftsContentTable: local ? 'library' : null,
-          ftsTable: kind != LibrarySearchKind.songs
+    const alias = 'l';
+    const table = 'library_visible';
+    const artist = 'album_artist_norm';
+    const album = 'album_name_norm';
+    const title = 'track_name_norm';
+    final column = switch (kind) {
+      LibrarySearchKind.songs => '$alias.search_text',
+      LibrarySearchKind.albums => "$alias.$album || ' ' || $alias.$artist",
+      LibrarySearchKind.artists => '$alias.$artist',
+      LibrarySearchKind.playlists => throw StateError('Not a track index'),
+    };
+    final predicate = search.predicate(
+      column,
+      args,
+      // Views do not expose their underlying table's implicit rowid.
+      rowId: '$alias.id',
+      ftsContentTable: 'library',
+      ftsTable:
+          kind != LibrarySearchKind.songs
               ? null
-              : local
-              ? (localFts ? 'library_search_fts' : null)
-              : (historyFts ? 'history_db.history_search_fts' : null),
-        ),
-      );
-      parts.add('''
-        SELECT '$source' AS source, $alias.id, $alias.track_name AS title,
-          $alias.artist_name AS artist, $alias.album_name AS album,
-          COALESCE(NULLIF($alias.album_artist, ''), $alias.artist_name) AS album_artist,
-          $alias.album_key, $alias.$title AS title_key,
-          $alias.$album AS album_sort, $alias.$artist AS artist_key,
-          ${local ? '$alias.cover_path' : '$alias.cover_url'} AS cover,
-          $alias.file_path AS sample_path
-        FROM $table $alias WHERE ${where.join(' AND ')}
-      ''');
-    }
-    final rows = '(${parts.join(' UNION ALL ')})';
+              : (localFts ? 'library_search_fts' : null),
+    );
+    final rows = '''
+      SELECT 'local' AS source, $alias.id, $alias.track_name AS title,
+        $alias.artist_name AS artist, $alias.album_name AS album,
+        COALESCE(NULLIF($alias.album_artist, ''), $alias.artist_name) AS album_artist,
+        $alias.album_key, $alias.$title AS title_key,
+        $alias.$album AS album_sort, $alias.$artist AS artist_key,
+        $alias.cover_path AS cover,
+        $alias.file_path AS sample_path
+      FROM $table $alias WHERE $predicate
+    ''';
     // Album predicates use only album-level fields, preserving full track
-    // counts. Keep downloaded/local albums separate, as their detail screens
-    // resolve tracks from different stores. Artists merge both sources.
+    // counts. Albums are grouped by their normalized album key; artists merge
+    // into one row per normalized album-artist key.
     final select = switch (kind) {
-      LibrarySearchKind.songs => 'SELECT *, 1 AS track_count FROM $rows',
+      LibrarySearchKind.songs => 'SELECT *, 1 AS track_count FROM ($rows)',
       LibrarySearchKind.albums =>
         '''
         SELECT source, album_key AS id, MIN(album) AS title,
           MIN(album_artist) AS artist, MAX(NULLIF(cover, '')) AS cover,
           MAX(sample_path) AS sample_path, COUNT(*) AS track_count,
           MIN(album_sort) AS title_key
-        FROM $rows WHERE album_sort != '' GROUP BY source, album_key''',
+        FROM ($rows) WHERE album_sort != '' GROUP BY source, album_key''',
       LibrarySearchKind.artists =>
         '''
         SELECT '' AS source, artist_key AS id, MIN(album_artist) AS title,
           MIN(album_artist) AS artist, MAX(NULLIF(cover, '')) AS cover,
           MAX(sample_path) AS sample_path, COUNT(*) AS track_count,
           artist_key AS title_key
-        FROM $rows WHERE artist_key != '' GROUP BY artist_key''',
+        FROM ($rows) WHERE artist_key != '' GROUP BY artist_key''',
       LibrarySearchKind.playlists => throw StateError('Not a track index'),
     };
     final rank = search.orderBy('title_key', args);

@@ -10,9 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
+import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
@@ -212,14 +212,13 @@ void main() {
       await tester.pumpWidget(
         _app(
           TrackMetadataScreen(
-            item: DownloadHistoryItem(
+            localItem: LocalLibraryItem(
               id: 'menu-track',
               trackName: 'Track',
               artistName: 'Artist',
               albumName: 'Album',
               filePath: 'content://library/document/menu-track.flac',
-              service: 'provider-a',
-              downloadedAt: DateTime(2026),
+              scannedAt: DateTime(2026),
             ),
           ),
           platform: platform,
@@ -270,14 +269,13 @@ void main() {
     await tester.pumpWidget(
       _app(
         TrackMetadataScreen(
-          item: DownloadHistoryItem(
+          localItem: LocalLibraryItem(
             id: 'edit-track',
             trackName: 'Track',
             artistName: 'Artist',
             albumName: 'Album',
             filePath: 'content://library/document/edit-track.flac',
-            service: 'provider-a',
-            downloadedAt: DateTime(2026),
+            scannedAt: DateTime(2026),
           ),
         ),
       ),

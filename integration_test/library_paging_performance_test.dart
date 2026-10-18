@@ -9,7 +9,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/download_history_provider.dart';
 import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -31,11 +30,6 @@ const _request = (
 class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings(localLibraryEnabled: true);
-}
-
-class _History extends DownloadHistoryNotifier {
-  @override
-  DownloadHistoryState build() => DownloadHistoryState();
 }
 
 class _Local extends LocalLibraryNotifier {
@@ -198,7 +192,6 @@ void main() {
               key: ValueKey(mountNumber++),
               overrides: [
                 settingsProvider.overrideWith(_Settings.new),
-                downloadHistoryProvider.overrideWith(_History.new),
                 localLibraryProvider.overrideWith(_Local.new),
                 libraryBrowsePageLoaderProvider.overrideWithValue(readPage),
                 if (before)
@@ -331,8 +324,9 @@ void main() {
     await probe.finish(
       metadata: {
         'fixture':
-            'Isolated actual SQLite schema17, 1000 two-source albums/2000 tracks, '
-            '50 mirrored tracks and one unavailable source; shared decoded 384px PNG, no network.',
+            'Isolated actual SQLite schema17, 1000 albums/2000 local tracks '
+            '(plus mirrored history rows) and one unavailable source; shared '
+            'decoded 384px PNG, no network.',
         'baseline':
             'Previous growing-prefix reads through production SQL; same MornyeLibraryScreen.',
         'paging':

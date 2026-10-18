@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
@@ -11,15 +11,12 @@ import 'package:spotiflac_android/widgets/track_card.dart';
 import 'package:spotiflac_android/widgets/in_library_badge.dart';
 import 'package:spotiflac_android/widgets/track_collection_quick_actions.dart';
 
-/// Track row shared by the album and playlist screens. Tap offers another
-/// download when quality variants are enabled, otherwise it plays the local
-/// copy when one exists and falls back to [onDownload]. Long-press opens the
-/// track options sheet. Callers supply [leading] (track number, cover art,
-/// ...) and choose whether the artist name links to the artist screen.
+/// Track row shared by the library and playlist screens. Tapping plays the
+/// local copy when one exists. Long-press opens the track options sheet.
+/// Callers supply [leading] (track number, cover art, ...) and choose whether
+/// the artist name links to the artist screen.
 class TrackListTile extends ConsumerWidget {
   final Track track;
-  final bool isInHistory;
-  final void Function({bool forceQualityPicker}) onDownload;
   final Widget leading;
   final bool clickableArtist;
   final bool showQualityBadges;
@@ -31,8 +28,6 @@ class TrackListTile extends ConsumerWidget {
   const TrackListTile({
     super.key,
     required this.track,
-    required this.isInHistory,
-    required this.onDownload,
     required this.leading,
     this.clickableArtist = false,
     this.showQualityBadges = true,
@@ -45,12 +40,6 @@ class TrackListTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-
-    final isQueued = ref.watch(
-      downloadQueueLookupProvider.select(
-        (lookup) => lookup.byTrackId.containsKey(track.id),
-      ),
-    );
 
     final showLocalLibraryIndicator = ref.watch(
       settingsProvider.select(
@@ -81,7 +70,6 @@ class TrackListTile extends ConsumerWidget {
                 artistName: track.artistName,
                 artistId: track.artistId,
                 coverUrl: track.coverUrl,
-                extensionId: track.source,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: colorScheme.onSurfaceVariant),
@@ -99,7 +87,7 @@ class TrackListTile extends ConsumerWidget {
             colorScheme: colorScheme,
             explicit: track.isExplicit,
           ),
-          if (isInLocalLibrary || isInHistory) const InLibraryBadge(),
+          if (isInLocalLibrary) const InLibraryBadge(),
         ],
       ),
       trailing: Row(
@@ -107,18 +95,13 @@ class TrackListTile extends ConsumerWidget {
         children: [
           TrackCollectionQuickActions(
             track: track,
-            hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
+            hasLocalPlaybackCandidate: isInLocalLibrary,
           ),
         ],
       ),
       onTap: isSelectionMode
           ? onToggleSelection
-          : () => _handleTap(
-              context,
-              ref,
-              isQueued: isQueued,
-              isInLocalLibrary: isInLocalLibrary,
-            ),
+          : () => _handleTap(context, ref),
       onLongPress: isSelectionMode
           ? null
           : onEnterSelectionMode ??
@@ -126,30 +109,16 @@ class TrackListTile extends ConsumerWidget {
                   context,
                   ref,
                   track,
-                  hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
+                  hasLocalPlaybackCandidate: isInLocalLibrary,
                 ),
     );
   }
 
-  void _handleTap(
-    BuildContext context,
-    WidgetRef ref, {
-    required bool isQueued,
-    required bool isInLocalLibrary,
-  }) async {
-    if (isQueued) return;
-
-    final settings = ref.read(settingsProvider);
-    if (settings.allowQualityVariants && (isInHistory || isInLocalLibrary)) {
-      onDownload(forceQualityPicker: true);
-      return;
-    }
-
+  Future<void> _handleTap(BuildContext context, WidgetRef ref) async {
     final playedLocal = await playLocalIfAvailable(context, ref, track);
-    if (playedLocal) {
-      return;
-    }
-
-    onDownload();
+    if (playedLocal || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.snackbarFileNotFound)),
+    );
   }
 }
