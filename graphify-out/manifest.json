@@ -732,20 +732,20 @@
     "semantic_hash": ""
   },
   "lib/screens/home_tab.dart": {
-    "mtime": 1792325039.7733452,
-    "seen": 1792339135.8015802,
-    "ast_hash": "284063eaa72a2c74814ded0511a66387",
+    "mtime": 1792339684.5505707,
+    "seen": 1792340100.2774954,
+    "ast_hash": "f7437d2fa1079b22abd3dd7a30746caa",
     "semantic_hash": ""
   },
   "lib/screens/home_tab_helpers.dart": {
-    "mtime": 1792321474.9078102,
-    "seen": 1792321668.1150594,
-    "ast_hash": "d8a4e19cf1caa32ce514745f19114ac6",
+    "mtime": 1792339622.1883898,
+    "seen": 1792340100.277498,
+    "ast_hash": "13992f62d8e24335c5a320bc185fa497",
     "semantic_hash": ""
   },
   "lib/screens/home_tab_recent.dart": {
-    "mtime": 1792321474.9444098,
-    "seen": 1792321668.115061,
+    "mtime": 1792339655.922411,
+    "seen": 1792340100.2774997,
     "ast_hash": "8175463740eaebabaf4edd4c24a72351",
     "semantic_hash": ""
   },
@@ -756,9 +756,9 @@
     "semantic_hash": ""
   },
   "lib/screens/home_tab_widgets.dart": {
-    "mtime": 1792321474.8789015,
-    "seen": 1792321668.1150632,
-    "ast_hash": "710a640703b804560399e17bcbe853c2",
+    "mtime": 1792339655.916283,
+    "seen": 1792340100.2775028,
+    "ast_hash": "208d902f81c6df7170c47c4a607a8eb9",
     "semantic_hash": ""
   },
   "lib/screens/library_tracks_folder_data.dart": {
@@ -6864,9 +6864,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792321618.7000458,
-    "seen": 1792321668.1165907,
-    "ast_hash": "5e7a39b5f4601c758318a927dd64a068",
+    "mtime": 1792339923.8750708,
+    "seen": 1792340100.2790227,
+    "ast_hash": "1b555848dd79aba9fbd0956c5a5087b4",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -7470,9 +7470,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792338979.964255,
-    "seen": 1792339135.8032184,
-    "ast_hash": "c3a58955e3cd6c173e43f5e947e0a15a",
+    "mtime": 1792339923.8747394,
+    "seen": 1792340100.279029,
+    "ast_hash": "5da7d297bd00a7ba2504c4a37b8683fd",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7653,6 +7653,24 @@
     "mtime": 1792338810.7648253,
     "seen": 1792339135.8028982,
     "ast_hash": "9d995a5fd1d2c4ff3a848a6283759cf7",
+    "semantic_hash": ""
+  },
+  "lib/providers/local_home_feed_provider.dart": {
+    "mtime": 1792339623.4947555,
+    "seen": 1792340100.2774732,
+    "ast_hash": "939b1ffac9f603a0d4f3f7c684aab6eb",
+    "semantic_hash": ""
+  },
+  "lib/screens/home_tab_feed.dart": {
+    "mtime": 1792339842.2298496,
+    "seen": 1792340100.2774966,
+    "ast_hash": "ab1d793600e8536fd2c4b537604b85ad",
+    "semantic_hash": ""
+  },
+  "test/local_home_feed_test.dart": {
+    "mtime": 1792339799.9701984,
+    "seen": 1792340100.2788033,
+    "ast_hash": "b8c9ffdf154ae7ec03c345240d34af8d",
     "semantic_hash": ""
   }
 }
