@@ -12,8 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user override (2026-10-18): do not build APKs.** Keep APK/device validation
-pending; use analysis, tests and native compilation for this task.
+**Current user instruction (2026-10-18): complete Phase 8, then build an APK.** This
+supersedes the earlier Phase 7 instruction to stop APK builds.
 
 ---
 
@@ -21,8 +21,8 @@ pending; use analysis, tests and native compilation for this task.
 
 _Last updated: 2026-10-18_
 
-**Status:** IN PROGRESS. Phases 1-7 implemented. Phase 7 reduced the Rust backend to local
-operations; APK and device validation remain incomplete. Phase 8 is next.
+**Status:** Phases 1-8 implemented and committed. Host validation and the release APK
+build/audit passed. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
 **Committed:**
@@ -127,14 +127,71 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
   absence of retired extension/repository exports.
 - Kotlin-to-Rust host ABI smoke passed: local metadata, grant revocation, local lyrics/export,
   shutdown, native data jobs and cancellation.
-- APK validation is **incomplete**. Earlier attempts failed (a stale Phase 6 widget manifest
-  reference was fixed; release CMake dependency population later failed). No APK build is
-  running, and none should be retried under the current user instruction.
+- At the end of Phase 7, APK validation was **incomplete**: a stale Phase 6 widget manifest
+  reference was fixed, then release CMake dependency population failed. The user stopped APK
+  builds for Phase 7 and subsequently authorized a Phase 8 APK build; see the results below.
 - No Android device or emulator is available; app playback, SAF/USB, statx and on-device
   integration tests have not run.
 - Graphify was queried before removal and refreshed afterward (AST-only): **23223 nodes,
   44926 edges, 639 communities**. No nodes are attributed to the three deleted crates.
   Eight extractor syntax warnings are confined to unchanged vendored C/libusb sources.
+
+**Phase 8 implementation:**
+- `8609ad06` — final local-player cleanup; `929792e1` refreshed Graphify from that code commit. Removed direct dependencies on `http`,
+  `connectivity_plus`, `cached_network_image`, `flutter_cache_manager`,
+  `flutter_secure_storage`, `receive_sharing_intent`, `video_player`, `dynamic_color` and
+  the video-player test interface; removed 19 resolved packages and regenerated the lockfile
+  without upgrading retained packages.
+  Kept archive/crypto for local backups and hashing, XML/HTML for local parsing, and
+  url_launcher for explicit external browser links. Shared widget libraries remain in use.
+- Removed Dart extension/provider/repository/search/network wrappers, lookup caches and
+  best-effort native provider synchronization. Settings migration 12 clears retired feed and
+  lookup preferences; serialization drops obsolete provider and download-only tag flags.
+- Lyrics controls now cover local embedding/sidecar output and presentation. Local artwork
+  renders from files; stale HTTP(S) artwork is ignored, including widget artwork. Cover export
+  copies local artwork through staged publication and rejects remote URLs. Local metadata,
+  tag/lyrics editing, backups, local profiles, playback, SAF and USB remain.
+- Mornye is the sole production theme, with existing light/dark, accents, glass and font
+  controls. Old Material preferences restore as Mornye. The old Material theme is retained
+  only as a test harness for shared-widget fallback coverage.
+- Removed the download tutorial simulation and provider deep-link actions; onboarding now
+  describes local scanning, playback and folder access. Removed online diagnostic heuristics,
+  empty provider settings, stale cache rows and history-exclusion UI. Legacy backup record
+  import/export remains for local archive compatibility, explicitly labeled as legacy records.
+- Localized message getters reduced from **1627 to 894** (obsolete keys removed or renamed,
+  with new local-playback messages added). Rewritten offline copy uses English fallback in
+  locales awaiting updated translations, avoiding stale instructions about removed features.
+- Removed the release Internet/network-state permissions and obsolete network-security file
+  after confirming no FFmpeg loopback/decryption tunnel remains. Debug tooling keeps its
+  development Internet permission. Native source archive URLs now use direct codeload URLs
+  with the same verified SHA-256 pins, avoiding the earlier redirect/download failure.
+- README, changelog, contribution instructions, widget docs and agent guidance now describe
+  the offline Android player. iOS launcher-icon generation is removed.
+
+**Phase 8 validation:**
+- Flutter analysis: **No issues found**. Focused artwork/theme migration, storage and metadata
+  tests: **36 passed**.
+- Rust fmt/clippy/workspace tests: **215 passed, 1 existing ignored**; host bindings and Android
+  ARM64/ARMv7 Rust builds passed. Python script tests: **12 passed**.
+- App and instrumentation Kotlin compilation passed. Android JVM tests: **63 passed, none
+  skipped**, including all six host Rust data-job/cancellation ABI tests.
+- Release APK built with `flutter build apk --release --target-platform android-arm,android-arm64
+  --dart-define=GIT_COMMIT=8609ad06`; **119,269,488 bytes**, Android API 24+, ARM64 + ARMv7.
+  Artifact: `build/app/outputs/flutter-apk/app-release.apk`, also copied to
+  `/workspace/SpotiFLAC-offline.apk` for download.
+- `check_backend_apk.py` passed for Rust and both ABIs. Signature verification passed (APK v2,
+  development key); ZIP alignment passed at 16 KB. All **17 ARM64 native libraries** have
+  16 KB-or-greater ELF LOAD alignment. Both app libraries contain build commit `8609ad06`.
+  The merged release manifest is not debuggable and has no INTERNET/ACCESS_NETWORK_STATE
+  permission. No production signing key was configured.
+- APK SHA-256: `9ac081b9cd9e4d683077ce51a6eb72c7bb2656625e86f7d9b8e30915348ff683`.
+- Graphify refreshed (AST-only): **22956 nodes, 44569 edges, 677 communities**; provenance
+  `8609ad06`. No nodes are attributed to the removed share service or production Material theme.
+  Vendored C/libusb extractor warnings remain confined to unchanged sources.
+- Full `flutter test`: **1615 passed, 3 skipped**. Paging performance test passed; all
+  album completeness/filter tests passed with the updated local-library wording.
+- Physical-device playback, SAF/USB, statx and launcher-widget checks remain unrun: no Android
+  device/emulator is attached. A packaged APK and host tests do not establish device playback.
 
 **Environment / toolchain:**
 - In each shell run `source /workspace/toolchains/activate.sh`.
@@ -150,11 +207,10 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
 **Known flaky:** `test/library_browse_sqlite_paging_test.dart` has timed out at 30s in earlier
 runs; it passed in the final Phase 7 suite.
 
-**Next step:** Phase 8 — dependencies, obsolete Dart bridge wrappers/settings synchronization,
-l10n, Mornye theme consolidation and docs. Some best-effort Dart calls still refer to retired
-native online operations; remove them in Phase 8 rather than restoring native APIs. Keep local
-lyrics and file operations. APK builds remain prohibited unless the user changes the instruction.
-Device playback/SAF/USB/statx validation remains pending access to a device.
+**Next step:** validate local playback, scanning,
+metadata/lyrics saving, backup/restore, SAF/USB, widgets and statx compatibility on an Android
+device. Complete translations for newly rewritten offline messages as needed. Do not restore
+online APIs to satisfy legacy callers.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
@@ -239,7 +295,8 @@ bindgen     -> uniffi only (CLI)
 ### Vision refinements (user, 2026-10-16)
 
 - **V1 — Mornye theme only.** Remove all other themes and the theme picker; Mornye is the sole
-  look. TBD: keep light/dark and/or dynamic color *within* Mornye, or one fixed variant?
+  look. Phase 8 retains light/dark, Mornye accents, glass and local font controls; the
+  alternate Material theme and picker are removed.
 - **V2 — Home feed → local.** Rewire the home feed provider off Apple Music to local content.
   TBD: which sections (Recently Added / Recently Played / Most Played / local Albums / Favorites /
   Artists)?
@@ -349,7 +406,7 @@ Suggested sub-order (mirrors the crate graph):
    android tests for extensions/downloads (remove).
 Verify: `cargo test`, `scripts/build_rust_backend.sh android`, full `flutter build apk`, run app.
 
-### Phase 8 — Dependencies, l10n, docs, final polish
+### Phase 8 — Dependencies, l10n, docs, final polish — IMPLEMENTED (`8609ad06`)
 - `pubspec.yaml`: drop now-unused online deps (`http`, `cached_network_image`, `connectivity_plus`,
   `url_launcher`, `receive_sharing_intent`, `xml`, `html`, `archive`, `crypto`, `flutter_cache_manager`,
   `flutter_secure_storage` if unused); drop `ios: true` from `flutter_launcher_icons`; regen
@@ -361,15 +418,18 @@ Verify: `cargo test`, `scripts/build_rust_backend.sh android`, full `flutter bui
 
 ---
 
-## 5. Risks
+## 5. Risk resolution and remaining verification
 
-- **R1 (high):** Rust local FFI is bound to online structs; Phase 7.2–7.3 is a genuine refactor.
-  Budget the most time here; consider a spike branch first.
-- **R2 (high):** `download_history` ↔ player coupling (D1). Decide before Phase 6.
-- **R3 (med):** `spotiflac_discord` is a pubspec path dep → must edit pubspec + lock with the delete.
-- **R4 (med):** pubspec-gated assets/licenses; mirror removals in `pubspec.yaml`.
-- **R5 (med):** `flutter_secure_storage` may serve non-Discord secrets (extension storage *and*
-  other) — verify before dropping.
-- **R6 (low):** keep `INTERNET`/`network_security_config` until the FFmpeg decrypt tunnel is verified
-  to not need localhost.
-- **R7 (low):** no in-repo CI; confirm external CI doesn't invoke removed crates/scripts.
+- Rust/core/local/FFI coupling (R1) is resolved by Phases 7-8; native tests and both Android
+  Rust ABI builds pass. Device storage/audio validation is still required.
+- Player/download-history coupling (R2) was resolved in Phase 6; Phase 7 removed history
+  attachment/exclusion. Legacy local backup records remain readable for archive compatibility.
+- Discord dependency and asset cleanup (R3/R4) is complete; local native license assets remain.
+- Secure-storage coupling (R5) ended with provider credentials; the unused plugin is removed.
+- The old FFmpeg tunnel is absent (R6); release Internet permission is removed and the
+  packaged manifest was audited. Debug builds retain Internet for Flutter tooling.
+- External CI configuration (R7) is not present in this checkout and has not been inspected.
+- Validate the APK on real hardware: local playback, background controls, scans, metadata and
+  lyrics, backups, SAF/removable storage, USB routing, widgets and older-Android statx handling.
+- New offline copy uses English fallback where translations need updating. The APK uses the
+  development signing key; configure a production key before distributing official updates.

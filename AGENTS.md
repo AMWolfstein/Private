@@ -4,6 +4,10 @@ This repo is being converted to a local/offline Android-only music player.
 **Read `LOCAL_OFFLINE_MIGRATION_PLAN.md` (esp. `## Progress`) and `git log --oneline -10`
 before continuing any migration work.**
 
+The app targets Android and local files only. Mornye is its sole production theme; keep
+light/dark modes and local storage, playback, lyrics, backup and USB support. Do not
+reintroduce providers, downloads, extension credentials or remote artwork loading.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
