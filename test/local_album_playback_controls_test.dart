@@ -30,9 +30,10 @@ class _Player extends MusicPlayerController {
 
   final void Function(bool) _emit;
   final _toggles = <bool>[];
+  final shuffleWrites = <bool>[];
 
   @override
-  Future<void> setShuffle(bool enabled) async {}
+  Future<void> setShuffle(bool enabled) async => shuffleWrites.add(enabled);
 
   @override
   Future<void> togglePlayPause(bool isPlaying) async {
@@ -129,6 +130,12 @@ void main() {
         );
         Finder rowButton(int number) =>
             find.descendant(of: row(number), matching: find.byType(IconButton));
+        if (mornye) {
+          expect(find.text('Shuffle'), findsOneWidget);
+          expect(find.byTooltip('Shuffle'), findsNothing);
+          expect(find.byIcon(CupertinoIcons.heart), findsOneWidget);
+          expect(find.byIcon(CupertinoIcons.text_badge_plus), findsOneWidget);
+        }
         final pauseIcon = mornye ? CupertinoIcons.pause_fill : Icons.pause;
         final playIcon = mornye ? CupertinoIcons.play_fill : Icons.play_arrow;
 
@@ -229,6 +236,18 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(playback._started, ['1', '2', '1']);
+        await tester.ensureVisible(header);
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(
+            of: header,
+            matching: mornye ? find.text('Shuffle') : find.byTooltip('Shuffle'),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(player.shuffleWrites.last, isTrue);
+        expect(playback._started, hasLength(4));
+        expect(playback._started.last, isIn(['1', '2']));
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox.shrink());
       },

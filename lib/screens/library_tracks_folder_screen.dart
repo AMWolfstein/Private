@@ -605,15 +605,6 @@ class _LibraryTracksFolderScreenState
       appBarActions: [
         if (!isSelectionMode && entries.isNotEmpty)
           IconButton(
-            tooltip: context.l10n.actionShuffle,
-            icon: const Icon(Icons.shuffle),
-            onPressed: () => _playAll(
-              entries.map((entry) => entry.track).toList(),
-              shuffle: true,
-            ),
-          ),
-        if (!isSelectionMode && entries.isNotEmpty)
-          IconButton(
             tooltip: context.l10n.collectionExportM3u,
             icon: Container(
               padding: const EdgeInsets.all(8),

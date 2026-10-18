@@ -7,7 +7,7 @@ import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 
-/// Original Mornye album/playlist action row: love, primary pill, playlist.
+/// Mornye album/playlist action row: Loved, Play, Shuffle, Add to playlist.
 /// The primary action plays local files in place of the retired download action.
 class LocalCollectionActions extends ConsumerStatefulWidget {
   const LocalCollectionActions({
@@ -46,6 +46,7 @@ class _LocalCollectionActionsState
       onShuffle: widget.onShuffle,
       leadingAction: HeaderCircleButton(
         icon: loved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+        buttonSize: 48,
         tooltip: loved
             ? context.l10n.trackOptionRemoveFromLoved
             : context.l10n.trackOptionAddToLoved,
@@ -68,6 +69,7 @@ class _LocalCollectionActionsState
       ),
       trailingAction: HeaderCircleButton(
         icon: CupertinoIcons.text_badge_plus,
+        buttonSize: 48,
         tooltip: context.l10n.collectionAddToPlaylist,
         onPressed: widget.tracks.isEmpty
             ? null

@@ -522,8 +522,8 @@ class _RenderAlbumOverlayToolbar extends RenderProxySliver {
   }
 }
 
-/// Primary "play" pill + shuffle circle used by the local and downloaded album
-/// headers. Colours follow the [HeaderPalette].
+/// Centered Play/Shuffle pills with optional outer Loved and playlist controls.
+/// Colours and translucent fills follow the existing detail-header design.
 class AlbumPlayActions extends StatelessWidget {
   const AlbumPlayActions({
     super.key,
@@ -549,48 +549,37 @@ class AlbumPlayActions extends StatelessWidget {
     final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
     if (context.isMornye) {
-      if (leadingAction != null && trailingAction != null) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            leadingAction!,
-            const SizedBox(width: 16),
-            Flexible(
-              child: SizedBox(
-                width: 172,
-                child: HeaderFilledButton(
-                  icon: isPlaying
-                      ? CupertinoIcons.pause_fill
-                      : CupertinoIcons.play_fill,
-                  label: playLabel,
-                  onPressed: onPlay,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            trailingAction!,
-          ],
-        );
-      }
+      final compact = leadingAction != null || trailingAction != null;
+      final gap = compact ? 6.0 : 12.0;
       return Row(
+        // Keep the transport pair between Loved (left) and playlist (right),
+        // including when the track metadata uses a right-to-left language.
+        textDirection: TextDirection.ltr,
         children: [
+          if (leadingAction != null) ...[leadingAction!, SizedBox(width: gap)],
           Expanded(
             child: HeaderFilledButton(
               icon: isPlaying
                   ? CupertinoIcons.pause_fill
                   : CupertinoIcons.play_fill,
               label: playLabel,
+              compact: compact,
               onPressed: onPlay,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: gap),
           Expanded(
             child: _MornyeHeaderButton(
               icon: CupertinoIcons.shuffle,
               label: shuffleTooltip,
+              compact: compact,
               onPressed: onShuffle,
             ),
           ),
+          if (trailingAction != null) ...[
+            SizedBox(width: gap),
+            trailingAction!,
+          ],
         ],
       );
     }
@@ -637,12 +626,14 @@ class HeaderFilledButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.tonal = false,
+    this.compact = false,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
   final bool tonal;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -654,6 +645,7 @@ class HeaderFilledButton extends StatelessWidget {
         label: label,
         onPressed: onPressed,
         prominent: !tonal,
+        compact: compact,
       );
     }
     return ExpressiveButton(
@@ -776,12 +768,14 @@ class _MornyeHeaderButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.prominent = false,
+    this.compact = false,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
   final bool prominent;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -792,9 +786,12 @@ class _MornyeHeaderButton extends StatelessWidget {
         ? scheme.onPrimary
         : scheme.primary;
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 50),
+      constraints: BoxConstraints(minHeight: compact ? 48 : 50),
       child: CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 6 : 16,
+          vertical: 12,
+        ),
         borderRadius: BorderRadius.circular(28),
         color: prominent
             ? scheme.primary
@@ -806,15 +803,15 @@ class _MornyeHeaderButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 20, color: foreground),
-            const SizedBox(width: 8),
+            Icon(icon, size: compact ? 18 : 20, color: foreground),
+            SizedBox(width: compact ? 4 : 8),
             Flexible(
               child: Text(
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: compact ? 15 : 17,
                   fontWeight: FontWeight.w600,
                   color: foreground,
                 ),

@@ -287,7 +287,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(collections.loved.single.id, '1');
         expect(find.byTooltip('Add to playlist'), findsOneWidget);
-        expect(find.byTooltip('Shuffle'), findsOneWidget);
+        expect(find.byTooltip('Shuffle'), findsNothing);
+        expect(find.text('Shuffle').hitTestable(), findsOneWidget);
         expect(tester.takeException(), isNull);
       },
     );

@@ -359,14 +359,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         overflow: TextOverflow.ellipsis,
       ),
       meta: _buildLocalHeaderMeta(context, qualityLabelMode),
-      appBarActions: [
-        if (!isSelectionMode)
-          IconButton(
-            tooltip: context.l10n.actionShuffle,
-            icon: const Icon(Icons.shuffle),
-            onPressed: _shuffleAll,
-          ),
-      ],
       actions: Consumer(
         builder: (context, ref, _) {
           final isCurrent = ref.watch(

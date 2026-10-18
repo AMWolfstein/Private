@@ -17,6 +17,7 @@ import 'package:spotiflac_android/services/music_player_service.dart';
 import 'support/material_test_theme.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/track_card.dart';
+import 'package:spotiflac_android/widgets/album_detail_header.dart';
 
 final _tracks = [
   for (final name in ['First', 'Unavailable', 'Selected', 'Last'])
@@ -41,6 +42,10 @@ class _Handler extends Fake implements MusicPlayerHandler {}
 
 class _Player extends MusicPlayerController {
   bool available = true;
+  bool? shuffle;
+
+  @override
+  Future<void> setShuffle(bool enabled) async => shuffle = enabled;
   List<PlayableMedia> queue = [];
   int? index;
 
@@ -202,6 +207,10 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
+          if (mornye) {
+            expect(find.text('Shuffle'), findsOneWidget);
+            expect(find.byTooltip('Shuffle'), findsNothing);
+          }
           await tester.ensureVisible(find.text('First'));
           await tester.longPress(find.text('First'));
           await tester.pumpAndSettle();
@@ -276,6 +285,22 @@ void main() {
         'Last',
       ]);
       expect(player.index, 1);
+      final actions = find.byType(AlbumPlayActions);
+      await tester.ensureVisible(actions);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(
+          of: actions,
+          matching: mornye ? find.text('Shuffle') : find.byTooltip('Shuffle'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(player.shuffle, isTrue);
+      expect(
+        player.queue.map((item) => item.title),
+        unorderedEquals(['First', 'Selected', 'Last']),
+      );
+
       expect(tester.takeException(), isNull);
     });
   }
