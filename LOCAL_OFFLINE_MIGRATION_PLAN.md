@@ -12,9 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): center album-style header actions as Loved,
-Play/Pause, Shuffle, Add to playlist, using the existing pill design with smaller central
-buttons. Remove the duplicate toolbar Shuffle actions. Do not build an APK.**
+**Current user instruction (2026-10-18): push the latest changes and rebuild the same
+ARM64-only side-by-side SpotiFLAC Local APK, replacing the black launcher background with
+a color that contrasts with the green logo. This explicitly authorizes an APK build.**
 
 ---
 
@@ -24,10 +24,44 @@ _Last updated: 2026-10-18_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 and the
-first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
-No new APK was built for that follow-up. Physical-device validation remains pending.
+source validation passed. The signed ARM64-only side-by-side **build 163** now includes
+V2/V3, the fragmented Opus follow-up, Popular paging, settings/conversion cleanup, selectable
+Normal/Immersive player views, centered collection actions and a cream launcher background.
+Physical-device installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**ARM64 Local build 163 and contrasting icon (2026-10-18):** `1474c860` replaces the black
+launcher background with light cream (`#FFF4DF` for the adaptive icon), keeps the existing
+green adaptive/monochrome logo, and regenerates the Android launcher resources. The legacy
+raster icon uses the matching cream-background design. Increments `pubspec.yaml` and the
+in-app log build number from 162 to 163 while retaining version 5.1.1. The existing
+side-by-side switch keeps **SpotiFLAC Local** / `com.zarz.spotiflac.local`, separate from the
+original SpotiFLAC package.
+
+Built using the same release/side-by-side settings as build 162, with ARM64 only:
+```
+source /workspace/toolchains/activate.sh
+SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a \
+  flutter build apk --release --target-platform android-arm64 --split-per-abi \
+  --dart-define=GIT_COMMIT=1474c860
+```
+
+Output: **SpotiFLAC-Local-arm64-v8a.apk**, **54,345,707 bytes**, version 5.1.1 / build 163
+(split manifest versionCode 2163), minimum API 24, target API 37. The signed manifest confirms
+`com.zarz.spotiflac.local`, label SpotiFLAC Local and only `arm64-v8a`. All **17 native
+libraries** are AArch64 ELF64 with 16 KB-compatible ELF/ZIP alignment. Rust packaging, source
+revision, offline permissions, light legacy icon backgrounds and the compiled cream adaptive
+background passed inspection. `apksigner verify` passes; the certificate matches the previous
+Local APK, enabling an update without uninstalling or changing the original SpotiFLAC app.
+
+Static analysis is clean. The application code passed **1,615 Flutter tests, 3 skipped**
+immediately before this icon/version-only change. The host and ARM64 Rust backend were rebuilt
+in the APK build. Graph refreshed after the source commit. Physical-device testing remains
+pending. Latest collection-action commits were pushed to `main` through `bbc56e0`; icon/build
+source and this record are pushed with this build.
+
+APK download branch: `apk-local-arm64-163` (APK, README, SHA256SUMS and APK_DETAILS.json).
+SHA-256: `bef4e5213fcb40cb529b809c4605a840a50cfcb05dd780a20cef39845410b83f`.
 
 **Centered collection playback actions (2026-10-18):** `d78043f` updates the shared album/playlist action
 row now includes both Play/Pause and Shuffle between Loved on the left and Add to playlist
@@ -46,7 +80,8 @@ Validation: `flutter analyze` reports **No issues found**; full `flutter test` r
 order, bounds, touch targets, styling and callbacks in light/dark, 320px widths, RTL and 2x
 text. Album and playlist playback checks exercise Shuffle from the new row; playlist/Loved/
 Wishlist screen tests check that no toolbar Shuffle remains. The graph was refreshed after
-the code commit. No APK built; GitHub push is pending an explicit request for this change.
+the code commit. No APK was built in that change; the commits were subsequently pushed to
+`main` through `bbc56e0` and are included in the new build 163 recorded above.
 
 **Selectable player view and History View cleanup (2026-10-18):** `c609d90` adds
 **Player view → Normal view / Immersive view**. Normal remains the default. The preference
