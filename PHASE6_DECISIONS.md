@@ -7,6 +7,15 @@ fold any follow-ups into Phase 8.
 
 ## PD1 — Online detail screens (album_screen / artist_screen / playlist_screen)
 
+**Correction (V3, 2026-10-18):** The decision below overlooked the explicit requirement to
+reuse the online Mornye designs over local data. It is superseded for UI presentation:
+the original artist portrait/identity, featured release, five-song carousel and discography
+composition are restored in `local_artist_screen.dart`; album/playlist surfaces use the
+original immersive artwork, centered primary pill, Love and Add-to-playlist actions and footer.
+The primary action plays local files. Provider/download code remains removed. Artist links
+from metadata, home/search, library and favorites now open the local detail screen.
+The generic filtered album scaffold is no longer the artist detail destination.
+
 **Question:** their only data source is the extension metadata system (`extensionProvider`,
 `trackProvider`, `PlatformBridge.getProviderMetadata`). With the extension registry deleted in
 Phase 6 they cannot fetch anything. Delete outright, or keep them stripped-but-dead for a later

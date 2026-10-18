@@ -8,6 +8,11 @@ The app targets Android and local files only. Mornye is its sole production them
 light/dark modes and local storage, playback, lyrics, backup and USB support. Do not
 reintroduce providers, downloads, extension credentials or remote artwork loading.
 
+V3 detail designs are restored over local data. Artist navigation must open
+`local_artist_screen.dart`, not a generic filtered album browser. Keep Play centered,
+feature releases by their release-date tags, and classify Singles from explicit total-track
+tags (1), never from the number of files stored from an album; EPs remain under Albums.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

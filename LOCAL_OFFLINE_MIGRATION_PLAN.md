@@ -12,8 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): fix the new Opus scan log, then wait. Do not
-build an APK.** This supersedes the previous authorization to build a Phase 8 APK.
+**Current user instruction (2026-10-18): complete V3's local artist/album/playlist
+design port, including centered artist Play, newest release and tag-based Singles/Albums.**
+The instruction not to build an APK remains in force.
 
 ---
 
@@ -21,8 +22,9 @@ build an APK.** This supersedes the previous authorization to build a Phase 8 AP
 
 _Last updated: 2026-10-18_
 
-**Status:** Phases 1-8 implemented and committed. Host validation and the release APK
-build/audit passed. Physical-device validation remains pending.
+**Status:** Phases 1-8 implemented, with the missed V3 detail-design port now completed
+(`0e6c88e`). Latest source validation passed. The last APK predates V3 and the follow-up
+Opus continuation fix; no new APK was built. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
 **Committed:**
@@ -237,6 +239,32 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
   unverified. This corrects reproduced parser failures that yield the reported error.
 - Changes are committed locally; no GitHub push or artifact publication was performed.
 
+**V3 detail-design correction (`0e6c88e`, 2026-10-18):**
+- Recovered the former Mornye artist/album/playlist designs from Git history rather than
+  retaining the generic local artist destination. `LocalArtistScreen` restores the portrait
+  identity header, centered Play between Favorite and Shuffle, featured release card,
+  five-song carousel, and separate Albums/Singles discography shelves.
+- Artist links from metadata/now-playing, album subtitles, home/search, library and favorite
+  artists now open the local detail page. Existing favorite entries are matched by local
+  artist name; no provider lookup is needed. Local artist reads are paged, support retry
+  and disposal, refresh after scans, and build a complete playback queue beyond the first page.
+- Album/playlist headers reuse the original immersive artwork, Love / primary playback pill /
+  Add-to-playlist composition and release/count/duration footer. Keep shuffle in the toolbar,
+  album play/pause/resume, selection, metadata navigation, playlist rename/cover/export actions.
+- The featured card follows release-date tags, with scan recency as a tie-breaker. Classification
+  uses total-track/disc tags, not the number of files currently stored: explicit one-track,
+  single-disc releases are Singles; larger totals, EPs, partial albums and unknown totals are
+  Albums. SQLite regression coverage includes an old album added today and one stored track
+  from a 12-track album. No EP classification is inferred from the local file count.
+- FLAC/Opus readers now honor separate `TOTALTRACKS`/`TRACKTOTAL` and `TOTALDISCS`/`DISCTOTAL`
+  comments independently of tag order, retaining valid number-pair totals when separate values
+  are invalid. Previously scanned files require a full rescan to populate newly recognized tags.
+- Validation: Flutter analysis **No issues found**; full `flutter test` **1623 passed, 3 skipped**;
+  focused detail/paging/release/playback/metadata tests **12 passed**. Rust fmt/clippy clean;
+  workspace tests **225 passed, 1 existing ignored**. Render checks used the same widget fixtures
+  in light/dark and narrow screens with larger text. No Android APK/native release build or
+  physical-device run was performed. Corrected the contradictory Phase 6 PD1 decision.
+
 **Environment / toolchain:**
 - In each shell run `source /workspace/toolchains/activate.sh`.
 - Installed: Flutter **3.47.7**, Rust **1.99.0** with fmt/clippy, Java **25**, Android platform/
@@ -345,7 +373,14 @@ bindgen     -> uniffi only (CLI)
   TBD: which sections (Recently Added / Recently Played / Most Played / local Albums / Favorites /
   Artists)?
 - **V3 — Reuse Mornye "online" theming for local artist / album / playlist screens**, replacing
-  the old local styling. TBD: confirm the old local screens/styling are deleted outright.
+  the old local styling. Implemented by restoring the original detail composition over local
+  data; artist navigation no longer opens a generic filtered album browser. Preserve local
+  playback, selection, metadata, collection editing and export actions.
+  User refinement (2026-10-18): center artist Play between Favorite and Shuffle; highlight
+  the newest locally available album/single by release-date tags (scan recency breaks ties).
+  Classify Singles only from an explicit total-track count of 1, excluding multi-disc releases.
+  Larger totals, including EPs and partially stored albums, belong under Albums. Unknown totals
+  stay under Albums rather than treating one stored song as proof of a single.
 - **V4 — Remove all online-service settings** (extensions/store, providers, downloads, network
   storage, Discord, updates/remote-config, profile, donate, plus online rows inside
   Music/Library settings).
