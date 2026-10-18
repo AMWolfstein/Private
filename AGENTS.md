@@ -40,6 +40,12 @@ queue, track changes and mini-player dismissal must work in both views. Landscap
 the two-column player. Do not restore the obsolete History View/Layout preference or search
 entry; the Library overview uses cards and dedicated Library sections use rows.
 
+Album-style collection headers (albums, playlists, Loved and Wishlist) use one centered
+row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled
+Play and translucent Shuffle pills with compact sizing and at least 48px touch targets;
+keep the outer icons in the same row, including RTL. Do not move Shuffle into the toolbar.
+The artist header retains its separate centered-Play design.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

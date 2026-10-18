@@ -12,9 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): expose the existing immersive player as a saved
-Appearance → Player view choice alongside Normal view, and remove the obsolete History
-View/Layout setting and its references. Do not build an APK.**
+**Current user instruction (2026-10-18): center album-style header actions as Loved,
+Play/Pause, Shuffle, Add to playlist, using the existing pill design with smaller central
+buttons. Remove the duplicate toolbar Shuffle actions. Do not build an APK.**
 
 ---
 
@@ -28,6 +28,25 @@ source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 
 first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
 No new APK was built for that follow-up. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Centered collection playback actions (2026-10-18):** `d78043f` updates the shared album/playlist action
+row now includes both Play/Pause and Shuffle between Loved on the left and Add to playlist
+on the right. Previously the presence of the two outer icons hid the inline Shuffle action,
+leaving it in the corner toolbar. Removes the toolbar Shuffle controls from local albums and
+Library collection folders; playlists, Loved and Wishlist all use the corrected shared row.
+
+Reuses the existing filled Play and translucent Shuffle pills, with equal available widths,
+compact padding/icons/type and 48px minimum touch heights. Outer Loved/playlist icons use
+48px targets. The physical left-to-right order remains consistent with RTL metadata. Header
+colors, playback/pause behavior, shuffle queue loading, Loved mutations, playlist picking,
+playlist editing/export, selection and the separate artist header are preserved.
+
+Validation: `flutter analyze` reports **No issues found**; full `flutter test` reports
+**1,615 passed, 3 skipped**. Focused tests cover the four controls'
+order, bounds, touch targets, styling and callbacks in light/dark, 320px widths, RTL and 2x
+text. Album and playlist playback checks exercise Shuffle from the new row; playlist/Loved/
+Wishlist screen tests check that no toolbar Shuffle remains. The graph was refreshed after
+the code commit. No APK built; GitHub push is pending an explicit request for this change.
 
 **Selectable player view and History View cleanup (2026-10-18):** `c609d90` adds
 **Player view → Normal view / Immersive view**. Normal remains the default. The preference
@@ -53,7 +72,7 @@ legacy settings, search navigation, full-bleed geometry, pause, small portrait a
 rapid lyrics/queue transitions, track changes, live view switching and both mini-player
 dismissal paths. Production-source/ARB searches confirm no retired History View preference,
 selector or localization references remain. Graph refreshed after the code commit. No APK
-built; GitHub push is pending an explicit request for this change.
+built. The player-view commits were subsequently pushed to `main` through `f63648a`.
 
 **Format conversion removal (2026-10-18):** `19a28b3` removes Convert Format from the file metadata
 menu and Convert actions from Library/queue, search results and album track selection.
