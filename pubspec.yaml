@@ -1,7 +1,7 @@
 name: spotiflac_android
 description: Local offline Android music player
 publish_to: "none"
-version: 5.1.1+162
+version: 5.1.1+163
 
 environment:
   sdk: ^3.10.0
@@ -96,7 +96,7 @@ flutter_launcher_icons:
   android: true
   image_path: "icon.png"
   image_path_android: "icon_android.png"
-  adaptive_icon_background: "#000000"
+  adaptive_icon_background: "#FFF4DF"
   adaptive_icon_foreground: "icon_foreground_android.png"
   adaptive_icon_foreground_inset: 16
   adaptive_icon_monochrome: "icon_foreground_android.png"
