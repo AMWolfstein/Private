@@ -12,8 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): complete Phase 8, then build an APK.** This
-supersedes the earlier Phase 7 instruction to stop APK builds.
+**Current user instruction (2026-10-18): fix the new Opus scan log, then wait. Do not
+build an APK.** This supersedes the previous authorization to build a Phase 8 APK.
 
 ---
 
@@ -217,6 +217,25 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
 - The user's actual audio files and physical Android device are unavailable here; this
   fixes a confirmed failure case consistent with the log, not a verified diagnosis of
   every reported file. Device rescan remains to be checked after installing build 162.
+
+**Follow-up Opus continuation fix (2026-10-18, `34133cc`):**
+- The follow-up device log now reports `no Vorbis comments found`. Reproduced this exact
+  error with a valid comment packet spanning more than 80 pages. The reader also silently
+  discarded packets larger than 10 MiB, including large artwork/padding headers.
+- Metadata/artwork now assemble the first two header packets within the writer's bounded
+  1024-page / 64 MiB limits. They stop before scanning audio packets. Truncated, interrupted
+  or over-budget headers produce specific failures instead of a misleading missing-tag error.
+- Quality reads only the identification packet, so large comments do not suppress rate,
+  duration and bitrate probing. Regression coverage includes >80-page comments, >10 MiB
+  packets, continued artwork, bounded reads, truncated headers, and a real FFmpeg Opus
+  stream rewritten with a 6 MiB tag and scanned through a borrowed descriptor.
+- Fixed the hardcoded exported-log/about build number from 161 to 162 to match pubspec.
+  The follow-up log's build 161 label alone does not identify the installed APK.
+- Rust fmt/clippy clean; **223 tests passed, 1 existing ignored**. Flutter analysis:
+  **No issues found**. No APK or Android release/native-library build was run for this fix.
+- Actual user audio files are unavailable here; the precise on-device header layout remains
+  unverified. This corrects reproduced parser failures that yield the reported error.
+- Changes are committed locally; no GitHub push or artifact publication was performed.
 
 **Environment / toolchain:**
 - In each shell run `source /workspace/toolchains/activate.sh`.
