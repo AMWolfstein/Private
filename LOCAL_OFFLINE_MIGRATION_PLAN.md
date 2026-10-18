@@ -12,9 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): build an ARM64-only APK with a distinct name
-and package so it can install beside the original SpotiFLAC.** The user confirmed ARM64;
-this supersedes the earlier instruction to pause APK builds.
+**Current user instruction (2026-10-18): fix the 28 remaining Opus scan errors in the
+new device log ("Ogg header spans too many pages"). Do not build an APK.**
 
 ---
 
@@ -24,9 +23,28 @@ _Last updated: 2026-10-18_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. A signed ARM64-only side-by-side APK now includes V2/V3 and the
-follow-up Opus continuation fix. Physical-device validation remains pending.
+source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 and the
+first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
+No new APK was built for that follow-up. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Fragmented Opus header follow-up (2026-10-18):** Device scan found 1,949 tracks with
+28 metadata errors, all "Ogg header spans too many pages". The previous 1,024-page cap still
+rejected comment/artwork packets below the 64 MiB byte budget when spread across small pages.
+`3afd609` removes that cap for metadata, artwork and tag editing. The existing 64 MiB header
+byte limit remains; audio-quality identification probing retains its short 10-page limit.
+Readers still stop after the two required header packets and do not scan audio for tags/art.
+Malformed/truncated comments retain explicit diagnostics. No claim is made that the 28 actual
+files were examined: regression fixtures exercise the pagination failure shown in the log.
+
+Validation: the expanded Opus regression suite fails against the pre-fix readers/writer
+(5 failures with the page-limit error), then passes **8/8** with the fix. Coverage includes
+512 KiB comments and artwork across thousands of pages, local scan metadata, tag edits
+preserving audio bytes, invalid/truncated comments and a continued packet exceeding the
+64 MiB byte limit. `bash scripts/check_rust_backend.sh` passes formatting, Clippy and the
+full Rust workspace suite: **227 passed, 1 existing ignored**. No Dart/Flutter behavior or
+bridge signatures changed. Graph updated after the code commit. No Android/native release
+or APK build was run; the previously delivered APK does not contain this fix.
 
 **Side-by-side ARM64 APK (2026-10-18):** `eb33f36` adds opt-in
 `SPOTIFLAC_SIDE_BY_SIDE=true` Gradle configuration. It sets the app name to **SpotiFLAC Local**
