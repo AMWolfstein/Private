@@ -74,7 +74,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Download Directory'));
+    await tester.tap(find.text('Music folder'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Choose from Files'));
     await tester.pump(const Duration(milliseconds: 300));

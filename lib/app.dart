@@ -10,7 +10,7 @@ import 'package:spotiflac_android/screens/tutorial_screen.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/app_navigation_service.dart';
 import 'package:spotiflac_android/services/app_orientation.dart';
-import 'package:spotiflac_android/theme/dynamic_color_wrapper.dart';
+import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/l10n/supported_locales.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
@@ -190,7 +190,7 @@ class SpotiFLACApp extends ConsumerWidget {
       }
     }
 
-    return DynamicColorWrapper(
+    return MornyeThemeWrapper(
       builder: (lightTheme, darkTheme, themeMode) {
         return MaterialApp.router(
           title: AppInfo.appName,

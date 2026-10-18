@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,13 +7,11 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
@@ -28,10 +25,6 @@ class CacheManagementPage extends ConsumerStatefulWidget {
 }
 
 class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
-  // Keep in sync with ExploreNotifier keys.
-  static const String _exploreCacheKey = 'explore_home_feed_cache';
-  static const String _exploreCacheTsKey = 'explore_home_feed_ts';
-
   _CacheOverview? _overview;
   bool _isLoading = true;
   String? _busyAction;
@@ -71,8 +64,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     final tempDirFuture = getTemporaryDirectory();
     final appSupportDirFuture = getApplicationSupportDirectory();
     final coverStatsFuture = CoverCacheManager.getStats();
-    final prefsFuture = SharedPreferences.getInstance();
-    final trackCacheEntriesFuture = _getTrackCacheSizeSafe();
 
     final appCacheDir = await appCacheDirFuture;
     final tempDir = await tempDirFuture;
@@ -93,24 +84,11 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       Directory('${appSupportDir.path}/audio_analysis_cache'),
     );
 
-    final prefs = await prefsFuture;
-    final explorePayload = prefs.getString(_exploreCacheKey);
-    final exploreTs = prefs.getInt(_exploreCacheTsKey);
-    var exploreBytes = 0;
-    if (explorePayload != null && explorePayload.isNotEmpty) {
-      exploreBytes += utf8.encode(explorePayload).length;
-    }
-    if (exploreTs != null) {
-      exploreBytes += 8;
-    }
-    final hasExploreCache = exploreBytes > 0;
-
     final appCacheStats = await appCacheStatsFuture;
     final tempStats = await tempStatsFuture;
     final coverStats = await coverStatsFuture;
     final libraryCoverStats = await libraryCoverStatsFuture;
     final audioAnalysisStats = await audioAnalysisStatsFuture;
-    final trackCacheEntries = await trackCacheEntriesFuture;
 
     return _CacheOverview(
       appCachePath: appCachePath,
@@ -121,9 +99,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       coverStats: coverStats,
       libraryCoverStats: libraryCoverStats,
       audioAnalysisStats: audioAnalysisStats,
-      exploreCacheBytes: exploreBytes,
-      hasExploreCache: hasExploreCache,
-      trackCacheEntries: trackCacheEntries,
     );
   }
 
@@ -148,14 +123,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     } catch (_) {}
 
     return _DirectoryStats(fileCount: fileCount, totalSizeBytes: totalSize);
-  }
-
-  Future<int> _getTrackCacheSizeSafe() async {
-    try {
-      return await PlatformBridge.getTrackCacheSize();
-    } catch (_) {
-      return 0;
-    }
   }
 
   Future<void> _clearDirectoryContents(String path) async {
@@ -216,16 +183,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     await _clearDirectoryContents(analysisDir.path);
   }
 
-  Future<void> _clearExploreCache() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_exploreCacheKey);
-    await prefs.remove(_exploreCacheTsKey);
-  }
-
-  Future<void> _clearTrackCache() async {
-    await PlatformBridge.clearTrackCache();
-  }
-
   Future<void> _clearAllCaches() async {
     final currentOverview = _overview;
     await _clearAppCache();
@@ -235,8 +192,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     await _clearCoverCache();
     await _clearLibraryCoverCache();
     await _clearAudioAnalysisCache();
-    await _clearExploreCache();
-    await _clearTrackCache();
   }
 
   Future<bool> _confirmClear(String target) async {
@@ -617,47 +572,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                       ),
                     ),
                   ),
-                  SettingsItem(
-                    icon: Icons.explore_outlined,
-                    title: context.l10n.cacheExploreFeed,
-                    subtitle: _buildSubtitle(
-                      context.l10n.cacheExploreFeedDesc,
-                      overview.hasExploreCache
-                          ? context.l10n.cacheSizeOnly(
-                              formatBytes(overview.exploreCacheBytes),
-                            )
-                          : context.l10n.cacheNoData,
-                    ),
-                    trailing: _buildClearTrailing(
-                      'clear_explore_cache',
-                      () => _confirmAndRunAction(
-                        actionKey: 'clear_explore_cache',
-                        targetLabel: context.l10n.cacheExploreFeed,
-                        action: _clearExploreCache,
-                      ),
-                    ),
-                  ),
-                  SettingsItem(
-                    icon: Icons.memory_outlined,
-                    title: context.l10n.cacheTrackLookup,
-                    subtitle: _buildSubtitle(
-                      context.l10n.cacheTrackLookupDesc,
-                      overview.trackCacheEntries > 0
-                          ? context.l10n.cacheEntries(
-                              overview.trackCacheEntries,
-                            )
-                          : context.l10n.cacheNoData,
-                    ),
-                    trailing: _buildClearTrailing(
-                      'clear_track_cache',
-                      () => _confirmAndRunAction(
-                        actionKey: 'clear_track_cache',
-                        targetLabel: context.l10n.cacheTrackLookup,
-                        action: _clearTrackCache,
-                      ),
-                    ),
-                    showDivider: false,
-                  ),
                 ],
               ),
             ),
@@ -702,9 +616,6 @@ class _CacheOverview {
   final CacheStats coverStats;
   final _DirectoryStats libraryCoverStats;
   final _DirectoryStats audioAnalysisStats;
-  final int exploreCacheBytes;
-  final bool hasExploreCache;
-  final int trackCacheEntries;
 
   const _CacheOverview({
     required this.appCachePath,
@@ -715,17 +626,13 @@ class _CacheOverview {
     required this.coverStats,
     required this.libraryCoverStats,
     required this.audioAnalysisStats,
-    required this.exploreCacheBytes,
-    required this.hasExploreCache,
-    required this.trackCacheEntries,
   });
 
   int get totalKnownDiskCacheBytes {
     return appCacheStats.totalSizeBytes +
         (tempStats?.totalSizeBytes ?? 0) +
         coverStats.totalSizeBytes +
-        libraryCoverStats.totalSizeBytes +
-        exploreCacheBytes;
+        libraryCoverStats.totalSizeBytes;
   }
 }
 

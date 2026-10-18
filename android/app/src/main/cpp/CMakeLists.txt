@@ -13,10 +13,10 @@ set(WAVPACK_ENABLE_ASM OFF CACHE BOOL "" FORCE)
 
 # Immutable releases plus checksums keep local and CI builds identical.
 FetchContent_Declare(oboe
-    URL https://github.com/google/oboe/archive/refs/tags/1.11.0.tar.gz
+    URL https://codeload.github.com/google/oboe/tar.gz/refs/tags/1.11.0
     URL_HASH SHA256=0ccf2110640a2b4489f1c93a404f2978656b434d8c5dc9cb6258f9cc95c79b15)
 FetchContent_Declare(wavpack
-    URL https://github.com/dbry/WavPack/archive/refs/tags/5.9.0.tar.gz
+    URL https://codeload.github.com/dbry/WavPack/tar.gz/refs/tags/5.9.0
     URL_HASH SHA256=2a53e50aefd8c9f04a0828a0e1ef77b6f4c17b0ef6964ad234ab295f313b7d6d)
 FetchContent_MakeAvailable(oboe wavpack)
 

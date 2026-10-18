@@ -566,11 +566,10 @@ class _PlaylistPickerThumbnail extends StatelessWidget {
 
     final firstCoverUrl = playlist.previewCover;
     if (firstCoverUrl != null) {
-      return LocalOrNetworkCoverImage(
+      return LocalCoverImage(
         url: firstCoverUrl,
         width: size,
         height: size,
-        networkCacheWidth: (size * 2).toInt(),
         placeholder: (_) => _iconFallback(context, colorScheme, size),
       );
     }

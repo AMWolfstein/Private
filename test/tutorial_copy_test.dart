@@ -4,10 +4,10 @@ import 'package:spotiflac_android/l10n/app_localizations.dart';
 
 void main() {
   group('setup and tutorial copy', () {
-    test('uses the current app name and extension-based workflow', () {
+    test('uses the current app name and local workflow', () {
       for (final locale in AppLocalizations.supportedLocales) {
         final strings = lookupAppLocalizations(locale);
-        final setupTagline = strings.setupDownloadInFlac.toLowerCase();
+        final setupTagline = strings.setupLocalPlayback.toLowerCase();
         final firstTip = strings.tutorialWelcomeTip1.toLowerCase();
 
         expect(
@@ -32,9 +32,9 @@ void main() {
       final english = lookupAppLocalizations(const Locale('en'));
       final indonesian = lookupAppLocalizations(const Locale('id'));
 
-      expect(english.tutorialWelcomeDesc, contains('extensions'));
+      expect(english.tutorialWelcomeDesc, contains('offline'));
       expect(english.tutorialLibraryTip2, contains('built-in player'));
-      expect(indonesian.tutorialWelcomeDesc, contains('ekstensi'));
+      expect(indonesian.tutorialWelcomeDesc, contains('offline'));
       expect(indonesian.tutorialLibraryTip2, contains('pemutar bawaan'));
     });
   });

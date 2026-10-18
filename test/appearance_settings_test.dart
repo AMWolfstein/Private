@@ -7,7 +7,7 @@ import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
-import 'package:spotiflac_android/theme/dynamic_color_wrapper.dart';
+import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 
 void main() {
@@ -87,7 +87,7 @@ void main() {
           // Low-end Android without forced blur renders flat, opaque glass.
           if (lowEnd) lowEndDeviceProvider.overrideWithValue(true),
         ],
-        child: DynamicColorWrapper(
+        child: MornyeThemeWrapper(
           builder: (light, dark, mode) => MaterialApp(
             theme: light,
             darkTheme: dark,

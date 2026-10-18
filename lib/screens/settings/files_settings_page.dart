@@ -68,7 +68,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
 
             SliverToBoxAdapter(
               child: SettingsSectionHeader(
-                title: context.l10n.setupDownloadLocationTitle,
+                title: context.l10n.setupMusicLocationTitle,
               ),
             ),
             SliverToBoxAdapter(
@@ -168,7 +168,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
               child: Text(
-                context.l10n.setupDownloadLocationTitle,
+                context.l10n.setupMusicLocationTitle,
                 style: Theme.of(
                   ctx,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -229,7 +229,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
               child: Text(
-                context.l10n.setupDownloadLocationTitle,
+                context.l10n.setupMusicLocationTitle,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

@@ -17,8 +17,6 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/services/share_intent_service.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/services/app_state_database.dart';
 import 'package:spotiflac_android/services/app_navigation_service.dart';
 import 'package:spotiflac_android/services/app_orientation.dart';
@@ -380,7 +378,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    CoverCacheManager.stopMaintenance();
     _localLibraryEnabledSub?.close();
     _localLibraryWarmupTimer?.cancel();
     super.dispose();
@@ -389,7 +386,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      CoverCacheManager.scheduleMaintenance();
       _maybeAutoScanLocalLibrary();
       if (ref.exists(localLibraryProvider)) {
         unawaited(
@@ -399,7 +395,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
         );
       }
     } else if (state == AppLifecycleState.paused) {
-      CoverCacheManager.stopMaintenance();
       // Backgrounded: release idle native runtimes and connections.
       unawaited(PlatformBridge.releaseNativeMemory());
     }
@@ -412,9 +407,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
     final imageCache = PaintingBinding.instance.imageCache;
     imageCache.clear();
     imageCache.clearLiveImages();
-    if (CoverCacheManager.isInitialized) {
-      CoverCacheManager.instance.store.emptyMemoryCache();
-    }
     unawaited(PlatformBridge.releaseNativeMemory(underPressure: true));
   }
 
@@ -507,12 +499,7 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
 
   Future<void> _initializeAppServices() async {
     try {
-      await CoverCacheManager.initialize();
-      CoverCacheManager.scheduleMaintenance();
-      await Future.wait([
-        NotificationService().initialize(),
-        ShareIntentService().initialize(),
-      ]);
+      await Future.wait([NotificationService().initialize()]);
       _startupBenchmark?.appReady(ref.read(settingsProvider));
     } catch (e) {
       debugPrint('Failed to initialize app services: $e');

@@ -16,15 +16,13 @@ class AppSettings {
   final String downloadDirectoryBookmark;
   final String storageMode; // 'app' or 'saf'
   final String downloadTreeUri; // SAF persistable tree URI
-  final bool embedMetadata;
 
-  /// Maximum width or height of remotely fetched artwork before embedding.
-  /// Zero preserves the provider's original image.
+  /// Maximum width or height of selected local artwork before embedding.
+  /// Zero preserves the original image.
   final int embeddedCoverMaxDimension;
   final String
   artistTagMode; // 'joined', 'split_vorbis' (Vorbis formats), or 'primary'
   final bool embedLyrics;
-  final bool embedReplayGain;
   // Apply ReplayGain/R128 tags as volume normalization in the built-in player.
   final bool playbackNormalization;
   final bool pauseOnMute;
@@ -90,18 +88,6 @@ class AppSettings {
 
   final bool hasCompletedTutorial;
 
-  final List<String> lyricsProviders;
-  final bool
-  lyricsIncludeTranslationNetease; // Append translated lyrics (Netease)
-  final bool
-  lyricsIncludeRomanizationNetease; // Append romanized lyrics (Netease)
-  final bool
-  lyricsMultiPersonWordByWord; // Enable v1/v2 + [bg:] tags for Apple/QQ syllable lyrics
-  final bool
-  lyricsAppleElrcWordSync; // Preserve Apple Music inline word timestamps for eLRC-capable players
-  final String
-  musixmatchLanguage; // Optional ISO language code for Musixmatch localized lyrics
-
   final String
   lastSeenVersion; // Last app version the user has acknowledged (e.g. '3.7.0')
 
@@ -114,11 +100,9 @@ class AppSettings {
     this.downloadDirectoryBookmark = '',
     this.storageMode = 'app',
     this.downloadTreeUri = '',
-    this.embedMetadata = true,
     this.embeddedCoverMaxDimension = 0,
     this.artistTagMode = artistTagModeJoined,
     this.embedLyrics = true,
-    this.embedReplayGain = false,
     this.playbackNormalization = false,
     this.pauseOnMute = true,
     this.playOnHeadphonesConnected = false,
@@ -156,37 +140,20 @@ class AppSettings {
     this.localLibraryShowDuplicates = true,
     this.localLibraryAutoScan = 'off',
     this.hasCompletedTutorial = false,
-    this.lyricsProviders = const ['apple_music', 'lrclib'],
-    this.lyricsIncludeTranslationNetease = false,
-    this.lyricsIncludeRomanizationNetease = false,
-    this.lyricsMultiPersonWordByWord = true,
-    this.lyricsAppleElrcWordSync = true,
-    this.musixmatchLanguage = '',
     this.lastSeenVersion = '',
     this.playerMode = 'internal',
     this.playerShowPronunciation = true,
     this.playerShowTranslation = true,
   });
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<String, dynamic> get lyricsFetchOptions => {
-    'include_translation_netease': lyricsIncludeTranslationNetease,
-    'include_romanization_netease': lyricsIncludeRomanizationNetease,
-    'multi_person_word_by_word': lyricsMultiPersonWordByWord,
-    'apple_elrc_word_sync': lyricsAppleElrcWordSync,
-    'musixmatch_language': musixmatchLanguage,
-  };
-
   AppSettings copyWith({
     String? downloadDirectory,
     String? downloadDirectoryBookmark,
     String? storageMode,
     String? downloadTreeUri,
-    bool? embedMetadata,
     int? embeddedCoverMaxDimension,
     String? artistTagMode,
     bool? embedLyrics,
-    bool? embedReplayGain,
     bool? playbackNormalization,
     bool? pauseOnMute,
     bool? playOnHeadphonesConnected,
@@ -224,12 +191,6 @@ class AppSettings {
     bool? localLibraryShowDuplicates,
     String? localLibraryAutoScan,
     bool? hasCompletedTutorial,
-    List<String>? lyricsProviders,
-    bool? lyricsIncludeTranslationNetease,
-    bool? lyricsIncludeRomanizationNetease,
-    bool? lyricsMultiPersonWordByWord,
-    bool? lyricsAppleElrcWordSync,
-    String? musixmatchLanguage,
     String? lastSeenVersion,
     String? playerMode,
     bool? playerShowPronunciation,
@@ -241,12 +202,10 @@ class AppSettings {
           downloadDirectoryBookmark ?? this.downloadDirectoryBookmark,
       storageMode: storageMode ?? this.storageMode,
       downloadTreeUri: downloadTreeUri ?? this.downloadTreeUri,
-      embedMetadata: embedMetadata ?? this.embedMetadata,
       embeddedCoverMaxDimension:
           embeddedCoverMaxDimension ?? this.embeddedCoverMaxDimension,
       artistTagMode: artistTagMode ?? this.artistTagMode,
       embedLyrics: embedLyrics ?? this.embedLyrics,
-      embedReplayGain: embedReplayGain ?? this.embedReplayGain,
       playbackNormalization:
           playbackNormalization ?? this.playbackNormalization,
       pauseOnMute: pauseOnMute ?? this.pauseOnMute,
@@ -291,18 +250,6 @@ class AppSettings {
           localLibraryShowDuplicates ?? this.localLibraryShowDuplicates,
       localLibraryAutoScan: localLibraryAutoScan ?? this.localLibraryAutoScan,
       hasCompletedTutorial: hasCompletedTutorial ?? this.hasCompletedTutorial,
-      lyricsProviders: lyricsProviders ?? this.lyricsProviders,
-      lyricsIncludeTranslationNetease:
-          lyricsIncludeTranslationNetease ??
-          this.lyricsIncludeTranslationNetease,
-      lyricsIncludeRomanizationNetease:
-          lyricsIncludeRomanizationNetease ??
-          this.lyricsIncludeRomanizationNetease,
-      lyricsMultiPersonWordByWord:
-          lyricsMultiPersonWordByWord ?? this.lyricsMultiPersonWordByWord,
-      lyricsAppleElrcWordSync:
-          lyricsAppleElrcWordSync ?? this.lyricsAppleElrcWordSync,
-      musixmatchLanguage: musixmatchLanguage ?? this.musixmatchLanguage,
       lastSeenVersion: lastSeenVersion ?? this.lastSeenVersion,
       playerMode: playerMode ?? this.playerMode,
       playerShowPronunciation:

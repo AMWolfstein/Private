@@ -14,7 +14,6 @@ import 'package:spotiflac_android/services/file_access_check.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
@@ -107,10 +106,7 @@ class TrackMetadataScreen extends ConsumerStatefulWidget {
     this.localNavigationItems,
     this.navigationIndex,
     this.coverHeroTag,
-  }) : assert(
-         localItem != null,
-         'localItem must be provided',
-       ),
+  }) : assert(localItem != null, 'localItem must be provided'),
        assert(
          navigationIndex == null ||
              (localNavigationItems != null &&

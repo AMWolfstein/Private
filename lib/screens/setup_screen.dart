@@ -440,7 +440,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
               child: Text(
-                context.l10n.setupDownloadLocationTitle,
+                context.l10n.setupMusicLocationTitle,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -832,7 +832,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
                   ),
                   SizedBox(height: subtitleGap),
                   Text(
-                    context.l10n.setupDownloadInFlac,
+                    context.l10n.setupLocalPlayback,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: colorScheme.onSurfaceVariant,

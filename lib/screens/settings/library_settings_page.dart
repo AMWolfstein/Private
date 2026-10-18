@@ -1055,7 +1055,7 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
               : context.l10n.libraryScanning
         : source.lastScanError?.trim().isNotEmpty == true
         ? context.l10n.notifLibraryScanFailed
-        : context.l10n.librarySourceOnline;
+        : context.l10n.librarySourceReady;
     final pathLine = source.displayName == title ? null : source.displayName;
     final details = [
       status,
@@ -1066,9 +1066,7 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
     return Opacity(
       opacity: enabled ? 1 : 0.5,
       child: SettingsItem(
-        icon: source.isRemovable
-            ? Icons.usb_rounded
-            : Icons.folder_outlined,
+        icon: source.isRemovable ? Icons.usb_rounded : Icons.folder_outlined,
         title: title,
         titleTrailing: source.isRemovable
             ? Tooltip(
@@ -1338,22 +1336,7 @@ class _LibraryHeroCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (!isScanning && excludedDownloadedCount > 0) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    context.l10n.libraryDownloadsHistoryExcluded(
-                      excludedDownloadedCount,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.8,
-                      ),
-                    ),
-                  ),
-                ],
+
                 if (isScanning) ...[
                   const SizedBox(height: 16),
                   LinearProgressIndicator(

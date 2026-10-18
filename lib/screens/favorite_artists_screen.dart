@@ -1,10 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/screens/mornye_library_screen.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
@@ -131,14 +130,14 @@ class _ArtistThumbnail extends StatelessWidget {
     final imageUrl = artist.imageUrl;
     return ClipOval(
       child: imageUrl != null && imageUrl.isNotEmpty
-          ? CachedNetworkImage(
+          ? CachedCoverImage(
               imageUrl: imageUrl,
               width: 56,
               height: 56,
               fit: BoxFit.cover,
               memCacheWidth: 112,
               memCacheHeight: 112,
-              cacheManager: CoverCacheManager.instance,
+
               errorWidget: (_, _, _) => _placeholder(colorScheme),
             )
           : _placeholder(colorScheme),

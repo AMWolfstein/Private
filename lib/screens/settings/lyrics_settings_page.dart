@@ -5,8 +5,6 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/lyrics_size_setting.dart';
 
 class LyricsSettingsPage extends ConsumerWidget {
@@ -42,17 +40,15 @@ class LyricsSettingsPage extends ConsumerWidget {
                   SettingsSwitchItem(
                     icon: Icons.subtitles_outlined,
                     title: context.l10n.optionsEmbedLyrics,
-                    subtitle: settings.embedMetadata
-                        ? context.l10n.optionsEmbedLyricsSubtitle
-                        : context.l10n.downloadEmbedLyricsDisabled,
+                    subtitle: context.l10n.optionsEmbedLyricsSubtitle,
                     value: settings.embedLyrics,
-                    enabled: settings.embedMetadata,
+
                     onChanged: (value) => ref
                         .read(settingsProvider.notifier)
                         .setEmbedLyrics(value),
-                    showDivider: settings.embedMetadata && settings.embedLyrics,
+                    showDivider: settings.embedLyrics,
                   ),
-                  if (settings.embedMetadata && settings.embedLyrics) ...[
+                  if (settings.embedLyrics) ...[
                     SettingsItem(
                       icon: Icons.lyrics_outlined,
                       title: context.l10n.lyricsMode,
@@ -71,85 +67,6 @@ class LyricsSettingsPage extends ConsumerWidget {
                 ],
               ),
             ),
-
-            if (settings.embedMetadata && settings.embedLyrics) ...[
-              SliverToBoxAdapter(
-                child: SettingsSectionHeader(
-                  title: context.l10n.sectionLyricsProviderOptions,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: SettingsGroup(
-                  children: [
-                    SettingsSwitchItem(
-                      icon: Icons.translate_outlined,
-                      title: context.l10n.downloadNeteaseIncludeTranslation,
-                      subtitle: settings.lyricsIncludeTranslationNetease
-                          ? context
-                                .l10n
-                                .downloadNeteaseIncludeTranslationEnabled
-                          : context
-                                .l10n
-                                .downloadNeteaseIncludeTranslationDisabled,
-                      value: settings.lyricsIncludeTranslationNetease,
-                      onChanged: (value) => ref
-                          .read(settingsProvider.notifier)
-                          .setLyricsIncludeTranslationNetease(value),
-                    ),
-                    SettingsSwitchItem(
-                      icon: Icons.text_fields_outlined,
-                      title: context.l10n.downloadNeteaseIncludeRomanization,
-                      subtitle: settings.lyricsIncludeRomanizationNetease
-                          ? context
-                                .l10n
-                                .downloadNeteaseIncludeRomanizationEnabled
-                          : context
-                                .l10n
-                                .downloadNeteaseIncludeRomanizationDisabled,
-                      value: settings.lyricsIncludeRomanizationNetease,
-                      onChanged: (value) => ref
-                          .read(settingsProvider.notifier)
-                          .setLyricsIncludeRomanizationNetease(value),
-                    ),
-                    SettingsSwitchItem(
-                      icon: Icons.record_voice_over_outlined,
-                      title: context.l10n.downloadAppleQqMultiPerson,
-                      subtitle: settings.lyricsMultiPersonWordByWord
-                          ? context.l10n.downloadAppleQqMultiPersonEnabled
-                          : context.l10n.downloadAppleQqMultiPersonDisabled,
-                      value: settings.lyricsMultiPersonWordByWord,
-                      onChanged: (value) => ref
-                          .read(settingsProvider.notifier)
-                          .setLyricsMultiPersonWordByWord(value),
-                    ),
-                    SettingsSwitchItem(
-                      icon: Icons.graphic_eq_outlined,
-                      title: context.l10n.downloadAppleElrcWordSync,
-                      subtitle: settings.lyricsAppleElrcWordSync
-                          ? context.l10n.downloadAppleElrcWordSyncEnabled
-                          : context.l10n.downloadAppleElrcWordSyncDisabled,
-                      value: settings.lyricsAppleElrcWordSync,
-                      onChanged: (value) => ref
-                          .read(settingsProvider.notifier)
-                          .setLyricsAppleElrcWordSync(value),
-                    ),
-                    SettingsItem(
-                      icon: Icons.language_outlined,
-                      title: context.l10n.downloadMusixmatchLanguage,
-                      subtitle: settings.musixmatchLanguage.isEmpty
-                          ? context.l10n.downloadMusixmatchLanguageAuto
-                          : settings.musixmatchLanguage.toUpperCase(),
-                      onTap: () => _showMusixmatchLanguagePicker(
-                        context,
-                        ref,
-                        settings.musixmatchLanguage,
-                      ),
-                      showDivider: false,
-                    ),
-                  ],
-                ),
-              ),
-            ],
 
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
           ],
@@ -233,109 +150,6 @@ class LyricsSettingsPage extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showMusixmatchLanguagePicker(
-    BuildContext context,
-    WidgetRef ref,
-    String currentLanguage,
-  ) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final controller = TextEditingController(text: currentLanguage);
-
-    showAppModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: colorScheme.surfaceContainerHigh,
-      isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          left: 24,
-          right: 24,
-          top: 24,
-          bottom: 24 + MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.downloadMusixmatchLanguage,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              context.l10n.downloadMusixmatchLanguageDesc,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                labelText: context.l10n.downloadMusixmatchLanguageCode,
-                hintText: context.l10n.downloadMusixmatchLanguageHint,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Builder(
-              builder: (context) {
-                final actions = [
-                  AppDialogAction(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(context.l10n.dialogCancel),
-                  ),
-                  AppDialogAction(
-                    onPressed: () {
-                      ref
-                          .read(settingsProvider.notifier)
-                          .setMusixmatchLanguage('');
-                      Navigator.pop(context);
-                    },
-                    child: Text(context.l10n.downloadMusixmatchAuto),
-                  ),
-                  AppDialogAction(
-                    filled: true,
-                    onPressed: () {
-                      final normalized = controller.text
-                          .trim()
-                          .toLowerCase()
-                          .replaceAll(RegExp(r'[^a-z0-9\-_]'), '');
-                      ref
-                          .read(settingsProvider.notifier)
-                          .setMusixmatchLanguage(normalized);
-                      Navigator.pop(context);
-                    },
-                    child: Text(context.l10n.dialogSave),
-                  ),
-                ];
-                return context.isMornye
-                    ? Wrap(
-                        alignment: WrapAlignment.end,
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: actions,
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          actions[0],
-                          const SizedBox(width: 8),
-                          actions[1],
-                          const SizedBox(width: 8),
-                          actions[2],
-                        ],
-                      );
-              },
-            ),
           ],
         ),
       ),

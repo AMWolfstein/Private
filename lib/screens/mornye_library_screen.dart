@@ -534,6 +534,6 @@ class _LibraryBrowseArtworkState extends State<_LibraryBrowseArtwork> {
     final cover = entry.cover?.isNotEmpty == true ? entry.cover! : embedded;
     return cover == null
         ? fallback(context)
-        : LocalOrNetworkCoverImage(url: cover, placeholder: fallback);
+        : LocalCoverImage(url: cover, placeholder: fallback);
   }
 }

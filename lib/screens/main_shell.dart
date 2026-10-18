@@ -18,7 +18,6 @@ import 'package:spotiflac_android/screens/queue_tab.dart';
 import 'package:spotiflac_android/screens/settings/settings_tab.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/services/share_intent_service.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
@@ -66,7 +65,6 @@ class _MainShellState extends ConsumerState<MainShell>
   bool _initialSafRepairComplete = false;
   bool _safRepairDialogVisible = false;
   bool _usbVolumeWarningShown = false;
-  StreamSubscription<String>? _shareSubscription;
   DateTime? _lastBackPress;
   final GlobalKey<NavigatorState> _homeTabNavigatorKey =
       ShellNavigationService.homeTabNavigatorKey;
@@ -88,13 +86,7 @@ class _MainShellState extends ConsumerState<MainShell>
     final settings = ref.read(settingsProvider);
     playback.configure(settings);
     listeningRecorder.setEnabled(settings.listeningStatisticsEnabled);
-    // Deezer & co. localize artist/genre names by IP unless told the app's
-    // language (issue #480).
-    unawaited(
-      PlatformBridge.setMetadataLanguage(
-        Localizations.localeOf(context).toLanguageTag(),
-      ),
-    );
+
   }
 
   @override
@@ -120,7 +112,6 @@ class _MainShellState extends ConsumerState<MainShell>
       _initialSafRepairComplete = true;
       if (!mounted) return;
       unawaited(ref.read(musicPlayerRuntimeProvider).restoreSession());
-      _setupShareListener();
       await _checkSafMigration();
     });
   }
@@ -267,43 +258,6 @@ class _MainShellState extends ConsumerState<MainShell>
     }
   }
 
-  void _setupShareListener() {
-    final pendingUrl = ShareIntentService().consumePendingUrl();
-    if (pendingUrl != null) {
-      _handleSharedUrl(pendingUrl);
-    }
-
-    _shareSubscription = ShareIntentService().sharedUrlStream.listen(
-      (url) {
-        _handleSharedUrl(url);
-      },
-      onError: (Object error) {
-        _log.e('Share stream error: $error');
-      },
-      cancelOnError: false,
-    );
-  }
-
-  Future<void> _handleSharedUrl(String url) async {
-    if (!mounted) return;
-
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    _onShellTabRequested(ShellTab.search);
-    final searchNavigator = context.isMornye
-        ? _searchTabNavigatorKey
-        : _homeTabNavigatorKey;
-    searchNavigator.currentState?.popUntil((route) => route.isFirst);
-    // Mount the lazy Search page before focusing the field.
-    await WidgetsBinding.instance.endOfFrame;
-    if (!mounted) return;
-    ShellNavigationService.requestSearch();
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(context.l10n.loadingSharedLink)));
-    }
-  }
-
   static const _safMigrationShownKey = 'saf_migration_prompt_shown';
 
   Future<void> _checkSafMigration() async {
@@ -390,7 +344,6 @@ class _MainShellState extends ConsumerState<MainShell>
     WidgetsBinding.instance.removeObserver(this);
     usbAudioStatus.removeListener(_onUsbAudioStatusChanged);
     ShellNavigationService.unregisterTabSelectionHandler(this);
-    _shareSubscription?.cancel();
     _pageController.dispose();
     _tabJumpOpacity.dispose();
     _tabJumpTransitionController.dispose();

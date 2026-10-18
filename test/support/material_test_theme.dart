@@ -1,3 +1,4 @@
+// Test-only theme for exercising shared Material widget fallbacks.
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

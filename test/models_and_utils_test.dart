@@ -563,10 +563,7 @@ void main() {
       expect(settings.downloadTreeUri, '');
       expect(settings.artistTagMode, artistTagModeJoined);
       expect(settings.embeddedCoverMaxDimension, 0);
-      expect(settings.lyricsProviders, ['apple_music', 'lrclib']);
       expect(settings.playerMode, 'internal');
-      expect(settings.lyricsMultiPersonWordByWord, isTrue);
-      expect(settings.lyricsAppleElrcWordSync, isTrue);
       expect(settings.localLibraryEnabled, isFalse);
       expect(
         settings.libraryQualityLabelMode,
@@ -585,10 +582,8 @@ void main() {
         downloadDirectoryBookmark: 'bookmark',
         storageMode: 'saf',
         downloadTreeUri: 'content://tree/music',
-        embedReplayGain: true,
         embeddedCoverMaxDimension: 1000,
-        lyricsProviders: ['apple_music'],
-        lyricsAppleElrcWordSync: true,
+
         libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
       );
 
@@ -596,10 +591,7 @@ void main() {
       expect(updated.downloadDirectoryBookmark, 'bookmark');
       expect(updated.storageMode, 'saf');
       expect(updated.downloadTreeUri, 'content://tree/music');
-      expect(updated.embedReplayGain, isTrue);
       expect(updated.embeddedCoverMaxDimension, 1000);
-      expect(updated.lyricsProviders, ['apple_music']);
-      expect(updated.lyricsAppleElrcWordSync, isTrue);
       expect(
         updated.libraryQualityLabelMode,
         AppSettings.libraryQualityLabelBitDepthOnly,
@@ -616,8 +608,7 @@ void main() {
         localLibraryEnabled: true,
         localLibraryPath: '/music',
         hasCompletedTutorial: true,
-        musixmatchLanguage: 'id',
-        lyricsAppleElrcWordSync: true,
+
         lastSeenVersion: '4.5.0',
         libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
         embeddedCoverMaxDimension: 1500,
@@ -632,8 +623,6 @@ void main() {
       expect(decoded.localLibraryEnabled, isTrue);
       expect(decoded.localLibraryPath, '/music');
       expect(decoded.hasCompletedTutorial, isTrue);
-      expect(decoded.musixmatchLanguage, 'id');
-      expect(decoded.lyricsAppleElrcWordSync, isTrue);
       expect(decoded.lastSeenVersion, '4.5.0');
       expect(
         decoded.libraryQualityLabelMode,
@@ -680,7 +669,7 @@ void main() {
       );
       expect(
         ThemeSettings.fromJson({'theme_style': 'invalid'}).style,
-        AppThemeStyle.material,
+        AppThemeStyle.mornye,
       );
     });
   });

@@ -54,7 +54,7 @@ void main() {
     }
   });
 
-  test('metadata artwork prefers embedded, then local, then remote', () {
+  test('metadata artwork prefers embedded and local, rejecting remote URLs', () {
     expect(
       resolveMetadataArtworkSource(
         embeddedCoverPath: ' C:/covers/embedded.jpg ',
@@ -75,7 +75,7 @@ void main() {
       resolveMetadataArtworkSource(
         remoteCoverUrl: ' https://example.com/online.jpg ',
       ),
-      'https://example.com/online.jpg',
+      isNull,
     );
     expect(resolveMetadataArtworkSource(), isNull);
   });

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
@@ -315,14 +315,13 @@ class MornyeArtistHeader extends StatelessWidget {
       label: name,
       image: true,
       excludeSemantics: true,
-      child: CachedNetworkImage(
+      child: CachedCoverImage(
         imageUrl: logo,
         fadeInDuration: Duration.zero,
         fadeOutDuration: Duration.zero,
-        imageBuilder: (_, provider) => ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 320, maxHeight: 96),
-          child: Image(image: provider, fit: BoxFit.contain),
-        ),
+        width: 320,
+        height: 96,
+        fit: BoxFit.contain,
         placeholder: (_, _) => fallback,
         errorWidget: (_, _, _) => fallback,
       ),

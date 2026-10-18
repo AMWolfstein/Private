@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 
 class PlayerArtwork extends StatelessWidget {
   /// An HTTP(S) URL, file URI, or absolute local artwork path.
@@ -41,14 +40,14 @@ class PlayerArtwork extends StatelessWidget {
     if (uri == null || uri.isEmpty) return placeholder;
 
     if (uri.startsWith('http')) {
-      return CachedNetworkImage(
+      return CachedCoverImage(
         imageUrl: uri,
         fit: BoxFit.cover,
-        cacheManager: CoverCacheManager.instance,
+
         memCacheWidth: cacheWidth,
         fadeInDuration: Duration.zero,
         fadeOutDuration: const Duration(milliseconds: 0),
-        useOldImageOnUrlChange: true,
+
         placeholder: (_, _) => placeholder,
         errorWidget: (_, _, _) => placeholder,
       );

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:spotiflac_android/services/ffmpeg_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/logger.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});
 
@@ -22,7 +21,6 @@ class MetadataCoverPreview {
 /// Owns editor artwork, including resources created after a sheet is closed.
 /// A save lease keeps every owned file alive until the writer has finished.
 class MetadataCoverResources {
-  static final _log = AppLogger('MetadataCoverResources');
   final Set<String> _directories = {};
   final Set<String> _deferredReleases = {};
   bool _disposed = false;
@@ -110,22 +108,6 @@ class MetadataCoverResources {
     } finally {
       _pending--;
       await _cleanupIfIdle();
-    }
-  }
-
-  Future<MetadataCoverPreview?> download(String url) async {
-    try {
-      return await _create('metadata_cover_', 'cover.jpg', (path) async {
-        final result = await PlatformBridge.downloadCoverToFile(url, path);
-        if (result['error'] != null || result['success'] == false) {
-          throw StateError(
-            result['error']?.toString() ?? 'Cover download failed',
-          );
-        }
-      });
-    } catch (error) {
-      _log.w('Could not download metadata artwork: $error');
-      return null;
     }
   }
 

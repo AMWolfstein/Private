@@ -509,11 +509,10 @@ class _LibraryTracksFolderScreenState
             errorBuilder: (_, _, _) => coverFallback,
           )
         : hasCoverUrl
-        ? LocalOrNetworkCoverImage(
+        ? LocalCoverImage(
             url: coverUrl,
             fit: BoxFit.cover,
             localCacheWidth: cacheWidth,
-            networkCacheWidth: cacheWidth,
             fadeInDuration: Duration.zero,
             urlTransform: (u) => highResCoverUrl(u) ?? u,
             placeholder: (_) => Container(color: colorScheme.surface),
@@ -543,13 +542,12 @@ class _LibraryTracksFolderScreenState
           );
         }
         if (hasCoverUrl) {
-          return LocalOrNetworkCoverImage(
+          return LocalCoverImage(
             url: coverUrl,
             fit: BoxFit.cover,
             width: coverSize,
             height: coverSize,
             localCacheWidth: cacheWidth,
-            networkCacheWidth: cacheWidth,
             urlTransform: (u) => highResCoverUrl(u) ?? u,
             placeholder: (_) => squarePlaceholder(),
           );
@@ -569,9 +567,7 @@ class _LibraryTracksFolderScreenState
       actions: entries.isNotEmpty
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(child: _buildPlayAllCenterButton(entries)),
-              ],
+              children: [Flexible(child: _buildPlayAllCenterButton(entries))],
             )
           : null,
       appBarActions: [
@@ -949,11 +945,10 @@ class _CollectionTrackTile extends ConsumerWidget {
       child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
     );
 
-    return LocalOrNetworkCoverImage(
+    return LocalCoverImage(
       url: coverUrl,
       width: size,
       height: size,
-      networkCacheWidth: (size * 2).toInt(),
       fadeInDuration: const Duration(milliseconds: 180),
       fadeOutDuration: const Duration(milliseconds: 90),
       placeholder: (_) => placeholder(),

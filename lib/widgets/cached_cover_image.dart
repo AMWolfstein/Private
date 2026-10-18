@@ -3,8 +3,6 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/utils/image_cache_utils.dart';
 
 class CachedCoverImage extends StatelessWidget {
@@ -80,21 +78,30 @@ class CachedCoverImage extends StatelessWidget {
         );
       }
     }
-    final image = CachedNetworkImage(
-      imageUrl: imageUrl,
+    final local = Uri.tryParse(imageUrl);
+    if (local == null || (local.hasScheme && local.scheme != 'file')) {
+      return errorWidget?.call(
+            context,
+            imageUrl,
+            StateError('Local artwork required'),
+          ) ??
+          placeholder?.call(context, imageUrl) ??
+          const SizedBox.shrink();
+    }
+    final image = Image.file(
+      File(local.scheme == 'file' ? local.toFilePath() : imageUrl),
       width: width,
       height: height,
       fit: fit,
       alignment: alignment,
-      memCacheWidth: autoMemCacheWidth,
-      memCacheHeight: autoMemCacheHeight,
-      cacheManager: CoverCacheManager.instance,
-      fadeInDuration: fadeInDuration,
-      fadeOutDuration: fadeOutDuration,
-      useOldImageOnUrlChange: true,
+      cacheWidth: autoMemCacheWidth,
+      cacheHeight: autoMemCacheHeight,
+      gaplessPlayback: true,
       filterQuality: FilterQuality.low,
-      errorWidget: errorWidget,
-      placeholder: placeholder,
+      errorBuilder: (context, error, _) =>
+          errorWidget?.call(context, imageUrl, error) ??
+          placeholder?.call(context, imageUrl) ??
+          const SizedBox.shrink(),
     );
 
     if (borderRadius != null) {
@@ -116,24 +123,20 @@ class CachedCoverImage extends StatelessWidget {
   }
 }
 
-/// Renders [url] as a local file (when it's not an http/https URL) or as a
-/// cached network image otherwise, with a shared [placeholder] used for the
-/// local error state, the local not-ready frame, and the network
-/// placeholder/error states alike.
-class LocalOrNetworkCoverImage extends StatelessWidget {
+/// Renders local artwork, with a shared placeholder for missing or remote sources.
+class LocalCoverImage extends StatelessWidget {
   final String url;
   final double? width;
   final double? height;
   final BoxFit fit;
   final BorderRadius? borderRadius;
   final int? localCacheWidth;
-  final int? networkCacheWidth;
   final Duration? fadeInDuration;
   final Duration fadeOutDuration;
   final String Function(String)? urlTransform;
   final Widget Function(BuildContext) placeholder;
 
-  const LocalOrNetworkCoverImage({
+  const LocalCoverImage({
     super.key,
     required this.url,
     this.width,
@@ -141,7 +144,6 @@ class LocalOrNetworkCoverImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.borderRadius,
     this.localCacheWidth,
-    this.networkCacheWidth,
     this.fadeInDuration,
     this.fadeOutDuration = Duration.zero,
     this.urlTransform,
@@ -160,22 +162,13 @@ class LocalOrNetworkCoverImage extends StatelessWidget {
       return LayoutBuilder(builder: _buildLocalImage);
     }
 
-    return CachedCoverImage(
-      imageUrl: urlTransform?.call(url) ?? url,
-      width: width,
-      height: height,
-      fit: fit,
-      memCacheWidth: networkCacheWidth,
-      borderRadius: borderRadius,
-      fadeInDuration: fadeInDuration ?? Duration.zero,
-      fadeOutDuration: fadeOutDuration,
-      placeholder: (_, _) => placeholder(context),
-      errorWidget: (_, _, _) => placeholder(context),
-    );
+    return placeholder(context);
   }
 
   Widget _buildLocalImage(BuildContext context, BoxConstraints constraints) {
-    final file = File(url);
+    final file = File(
+      url.startsWith('file://') ? Uri.parse(url).toFilePath() : url,
+    );
     final ImageProvider provider;
     if (localCacheWidth != null) {
       provider = ResizeImage(FileImage(file), width: localCacheWidth);
@@ -299,16 +292,13 @@ class _FittedLocalFileImage extends FileImage {
   int get hashCode => Object.hash(super.hashCode, width, height, fit);
 }
 
-CachedNetworkImageProvider cachedCoverImageProvider(String url) {
-  return CachedNetworkImageProvider(
-    url,
-    cacheManager: CoverCacheManager.instance,
-  );
-}
+FileImage cachedCoverImageProvider(String path) => FileImage(
+  File(path.startsWith('file://') ? Uri.parse(path).toFilePath() : path),
+);
 
 /// Chooses one artwork source for both the Metadata foreground cover and its
-/// blurred backdrop. Embedded file artwork is authoritative for downloaded
-/// tracks; local scan artwork is next, with remote metadata only as fallback.
+/// blurred backdrop. Embedded file artwork is authoritative; local scan artwork
+/// is next. Stale remote metadata is ignored.
 String? resolveMetadataArtworkSource({
   String? embeddedCoverPath,
   String? localCoverPath,
@@ -316,7 +306,12 @@ String? resolveMetadataArtworkSource({
 }) {
   for (final candidate in [embeddedCoverPath, localCoverPath, remoteCoverUrl]) {
     final normalized = candidate?.trim();
-    if (normalized != null && normalized.isNotEmpty) return normalized;
+    if (normalized != null &&
+        normalized.isNotEmpty &&
+        !normalized.startsWith('http://') &&
+        !normalized.startsWith('https://')) {
+      return normalized;
+    }
   }
   return null;
 }
@@ -331,8 +326,7 @@ int metadataBackdropCacheExtent(BuildContext context) {
 }
 
 /// Warms the exact resized image used by Track Metadata's blurred backdrop.
-/// Navigation waits for the common memory/disk-cache path, but a bounded budget
-/// prevents a cold network request from delaying the route for too long.
+/// A bounded wait keeps slow local storage from delaying navigation.
 Future<void> precacheMetadataBackdrop(
   BuildContext context,
   String? source,
@@ -344,7 +338,7 @@ Future<void> precacheMetadataBackdrop(
   final network =
       normalized.startsWith('http://') || normalized.startsWith('https://');
   if (network) {
-    provider = cachedCoverImageProvider(normalized);
+    return;
   } else if (!normalized.startsWith('content://')) {
     final filePath = normalized.startsWith('file://')
         ? Uri.parse(normalized).toFilePath()
@@ -365,10 +359,10 @@ Future<void> precacheMetadataBackdrop(
 }
 
 /// Pre-warms the cover cache at the metadata-screen display size so the hero
-/// transition doesn't pop in a low-res frame. Http(s) URLs only.
+/// transition does not pop in a low-resolution frame. Local files only.
 void precacheCoverImage(BuildContext context, String? url) {
   if (url == null || url.isEmpty) return;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
     return;
   }
   precacheImage(

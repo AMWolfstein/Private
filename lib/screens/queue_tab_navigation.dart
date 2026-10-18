@@ -283,13 +283,12 @@ extension _QueueTabNavigation on _QueueTabState {
 
     if (firstCoverUrl != null) {
       // Guard against local file paths that may have been stored as coverUrl
-      return LocalOrNetworkCoverImage(
+      return LocalCoverImage(
         url: firstCoverUrl,
         width: size,
         height: size,
         borderRadius: borderRadius,
         localCacheWidth: cacheExtent,
-        networkCacheWidth: cacheExtent,
         fadeInDuration: Duration.zero,
         placeholder: (_) => placeholder,
       );

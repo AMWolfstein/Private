@@ -221,7 +221,9 @@ class _HomeTabState extends ConsumerState<HomeTab>
     // The Mornye style uses the navigation title as the page identity. Keep
     // the search surface directly beneath it instead of repeating app
     // branding in the content area.
-    if (context.isMornye) return const SliverToBoxAdapter(child: SizedBox.shrink());
+    if (context.isMornye) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
     return SliverToBoxAdapter(
       child: Padding(

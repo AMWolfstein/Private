@@ -22,62 +22,39 @@ class MetadataSettingsPage extends ConsumerWidget {
             AppSliverHeader.page(title: context.l10n.settingsMetadata),
 
             SliverToBoxAdapter(
-              child: SettingsSectionHeader(title: context.l10n.sectionDownload),
+              child: SettingsSectionHeader(
+                title: context.l10n.settingsMetadata,
+              ),
             ),
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  SettingsSwitchItem(
-                    icon: Icons.sell_outlined,
-                    title: context.l10n.optionsEmbedMetadata,
-                    subtitle: settings.embedMetadata
-                        ? context.l10n.optionsEmbedMetadataSubtitleOn
-                        : context.l10n.optionsEmbedMetadataSubtitleOff,
-                    value: settings.embedMetadata,
-                    onChanged: (v) =>
-                        ref.read(settingsProvider.notifier).setEmbedMetadata(v),
-                    showDivider: settings.embedMetadata,
+                  SettingsItem(
+                    icon: Icons.people_alt_outlined,
+                    title: context.l10n.optionsArtistTagMode,
+                    subtitle: _getArtistTagModeLabel(
+                      context,
+                      settings.artistTagMode,
+                    ),
+                    onTap: () => _showArtistTagModePicker(
+                      context,
+                      ref,
+                      settings.artistTagMode,
+                    ),
                   ),
-                  if (settings.embedMetadata) ...[
-                    SettingsItem(
-                      icon: Icons.people_alt_outlined,
-                      title: context.l10n.optionsArtistTagMode,
-                      subtitle: _getArtistTagModeLabel(
-                        context,
-                        settings.artistTagMode,
-                      ),
-                      onTap: () => _showArtistTagModePicker(
-                        context,
-                        ref,
-                        settings.artistTagMode,
-                      ),
+                  SettingsItem(
+                    icon: Icons.photo_size_select_large_outlined,
+                    title: context.l10n.optionsEmbeddedCoverSize,
+                    subtitle: _getEmbeddedCoverSizeLabel(
+                      context,
+                      settings.embeddedCoverMaxDimension,
                     ),
-                    SettingsItem(
-                      icon: Icons.photo_size_select_large_outlined,
-                      title: context.l10n.optionsEmbeddedCoverSize,
-                      subtitle: _getEmbeddedCoverSizeLabel(
-                        context,
-                        settings.embeddedCoverMaxDimension,
-                      ),
-                      onTap: () => _showEmbeddedCoverSizePicker(
-                        context,
-                        ref,
-                        settings.embeddedCoverMaxDimension,
-                      ),
+                    onTap: () => _showEmbeddedCoverSizePicker(
+                      context,
+                      ref,
+                      settings.embeddedCoverMaxDimension,
                     ),
-                    SettingsSwitchItem(
-                      icon: Icons.graphic_eq,
-                      title: context.l10n.optionsReplayGain,
-                      subtitle: settings.embedReplayGain
-                          ? context.l10n.optionsReplayGainSubtitleOn
-                          : context.l10n.optionsReplayGainSubtitleOff,
-                      value: settings.embedReplayGain,
-                      onChanged: (v) => ref
-                          .read(settingsProvider.notifier)
-                          .setEmbedReplayGain(v),
-                      showDivider: false,
-                    ),
-                  ],
+                  ),
                 ],
               ),
             ),

@@ -3,12 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/services/secure_storage_options.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/logger.dart';
@@ -16,8 +13,7 @@ import 'package:spotiflac_android/utils/logger.dart';
 const _settingsKey = 'app_settings';
 const _settingsCorruptBackupKey = 'app_settings_corrupt_backup';
 const _migrationVersionKey = 'settings_migration_version';
-const _currentMigrationVersion = 11;
-const _spotifyClientSecretKey = 'spotify_client_secret';
+const _currentMigrationVersion = 12;
 final _log = AppLogger('SettingsProvider');
 
 /// Startup override used to render the correct route/locale on the first
@@ -108,9 +104,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   final Future<SharedPreferences> Function() _loadPreferences;
   Future<SharedPreferences> get _prefs => _loadPreferences();
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage(
-    aOptions: secureStorageAndroidOptions,
-  );
   Future<void>? _saveSettingsFuture;
   bool _saveQueued = false;
   String? _pendingSettingsJson;
@@ -176,54 +169,27 @@ class SettingsNotifier extends Notifier<AppSettings> {
       }
     }
 
-    await _cleanupRetiredSpotifySettings();
-
     LogBuffer.loggingEnabled = state.enableLogging;
-
-    await syncLyricsSettingsToBackend();
-  }
-
-  void _syncLyricsSettingsToBackend() {
-    unawaited(syncLyricsSettingsToBackend());
-  }
-
-  Future<void> syncLyricsSettingsToBackend({AppSettings? settings}) async {
-    final snapshot = settings ?? state;
-    if (!PlatformBridge.supportsCoreBackend) return;
-
-    try {
-      await PlatformBridge.setLyricsProviders(snapshot.lyricsProviders);
-    } catch (e) {
-      _log.w('Failed to sync lyrics providers to backend: $e');
-    }
-
-    try {
-      await PlatformBridge.setLyricsFetchOptions(snapshot.lyricsFetchOptions);
-    } catch (e) {
-      _log.w('Failed to sync lyrics fetch options to backend: $e');
-    }
   }
 
   Future<void> _runMigrations(SharedPreferences prefs) async {
     final lastMigration = prefs.getInt(_migrationVersionKey) ?? 0;
 
     if (lastMigration < _currentMigrationVersion) {
+      for (final key in const [
+        'explore_home_feed_cache',
+        'explore_home_feed_ts',
+        'bridge_metadata_lookup_cache_v1',
+      ]) {
+        await prefs.remove(key);
+      }
+
       if (state.downloadTreeUri.isNotEmpty && state.storageMode != 'saf') {
         state = state.copyWith(storageMode: 'saf');
       }
       // Migration 2: existing users who already completed setup should skip tutorial
       if (!state.isFirstLaunch && !state.hasCompletedTutorial) {
         state = state.copyWith(hasCompletedTutorial: true);
-      }
-      if (state.lyricsProviders.contains('spotify_api')) {
-        final updatedProviders = state.lyricsProviders
-            .where((provider) => provider != 'spotify_api')
-            .toList();
-        state = state.copyWith(
-          lyricsProviders: updatedProviders.isEmpty
-              ? const AppSettings().lyricsProviders
-              : updatedProviders,
-        );
       }
       state = state.copyWith(lastSeenVersion: AppInfo.version);
       await prefs.setInt(_migrationVersionKey, _currentMigrationVersion);
@@ -294,7 +260,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await _saveSettings();
 
     LogBuffer.loggingEnabled = state.enableLogging;
-    _syncLyricsSettingsToBackend();
   }
 
   Future<void> _normalizeIosDownloadDirectoryIfNeeded() async {
@@ -345,15 +310,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     return _embeddedCoverMaxDimensionValues.contains(value) ? value : 0;
   }
 
-  Future<void> _cleanupRetiredSpotifySettings() async {
-    final storedSecret = await _secureStorage.read(
-      key: _spotifyClientSecretKey,
-    );
-    if (storedSecret != null && storedSecret.isNotEmpty) {
-      await _secureStorage.delete(key: _spotifyClientSecretKey);
-    }
-  }
-
   void setDownloadDirectory(String directory, {String? iosBookmark}) {
     state = state.copyWith(
       downloadDirectory: directory,
@@ -398,11 +354,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setEmbedLyrics(bool enabled) {
     state = state.copyWith(embedLyrics: enabled);
-    _saveSettings();
-  }
-
-  void setEmbedReplayGain(bool enabled) {
-    state = state.copyWith(embedReplayGain: enabled);
     _saveSettings();
   }
 
@@ -502,11 +453,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setEmbedMetadata(bool enabled) {
-    state = state.copyWith(embedMetadata: enabled);
-    _saveSettings();
-  }
-
   void setEmbeddedCoverMaxDimension(int maxDimension) {
     state = state.copyWith(
       embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
@@ -538,44 +484,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       state = state.copyWith(lyricsMode: mode);
       _saveSettings();
     }
-  }
-
-  void setLyricsProviders(List<String> providers) {
-    state = state.copyWith(lyricsProviders: providers);
-    _saveSettings();
-    _syncLyricsSettingsToBackend();
-  }
-
-  void setLyricsIncludeTranslationNetease(bool enabled) {
-    state = state.copyWith(lyricsIncludeTranslationNetease: enabled);
-    _saveSettings();
-    _syncLyricsSettingsToBackend();
-  }
-
-  void setLyricsIncludeRomanizationNetease(bool enabled) {
-    state = state.copyWith(lyricsIncludeRomanizationNetease: enabled);
-    _saveSettings();
-    _syncLyricsSettingsToBackend();
-  }
-
-  void setLyricsMultiPersonWordByWord(bool enabled) {
-    state = state.copyWith(lyricsMultiPersonWordByWord: enabled);
-    _saveSettings();
-    _syncLyricsSettingsToBackend();
-  }
-
-  void setLyricsAppleElrcWordSync(bool enabled) {
-    state = state.copyWith(lyricsAppleElrcWordSync: enabled);
-    _saveSettings();
-    _syncLyricsSettingsToBackend();
-  }
-
-  void setMusixmatchLanguage(String languageCode) {
-    state = state.copyWith(
-      musixmatchLanguage: languageCode.trim().toLowerCase(),
-    );
-    _saveSettings();
-    _syncLyricsSettingsToBackend();
   }
 
   Future<void> setFirstLaunchComplete() async {

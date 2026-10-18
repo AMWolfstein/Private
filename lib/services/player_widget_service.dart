@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 class PlayerWidgetArtwork {
@@ -253,7 +252,7 @@ class PlayerWidgetService {
     if (uri == null) return null;
     final File file;
     if (uri.scheme == 'http' || uri.scheme == 'https') {
-      file = await CoverCacheManager.instance.getSingleFile(uri.toString());
+      return null;
     } else if (uri.scheme == 'file' || !uri.hasScheme) {
       file = File(uri.scheme == 'file' ? uri.toFilePath() : uri.toString());
     } else {

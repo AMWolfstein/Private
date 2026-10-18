@@ -30,67 +30,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
             AppSliverHeader.page(title: context.l10n.appearanceTitle),
 
             SliverToBoxAdapter(
-              child: SettingsSectionHeader(title: context.l10n.appearanceStyle),
-            ),
-            SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  for (final style in AppThemeStyle.values)
-                    ListTile(
-                      title: Wrap(
-                        spacing: 8,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Text(
-                            style == AppThemeStyle.mornye
-                                ? 'Mornye'
-                                : 'Material',
-                          ),
-                          if (style == AppThemeStyle.mornye)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 7,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.primary.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                'Beta',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      leading: context.isMornye
-                          ? null
-                          : Icon(
-                              style == AppThemeStyle.mornye
-                                  ? Icons.music_note_outlined
-                                  : Icons.palette_outlined,
-                            ),
-                      trailing: themeSettings.style == style
-                          ? Icon(
-                              Icons.check_circle,
-                              color: Theme.of(context).colorScheme.primary,
-                            )
-                          : null,
-                      selected: themeSettings.style == style,
-                      onTap: () =>
-                          ref.read(themeProvider.notifier).setStyle(style),
-                    ),
-                ],
-              ),
-            ),
-
-            SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 16 + wideListInset(context),
@@ -100,7 +39,7 @@ class AppearanceSettingsPage extends ConsumerWidget {
               ),
             ),
 
-            if (themeSettings.style == AppThemeStyle.mornye) ...[
+            ...[
               SliverToBoxAdapter(
                 child: SettingsSectionHeader(title: context.l10n.sectionColor),
               ),
@@ -128,38 +67,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
                   ],
                 ),
               ),
-            ] else ...[
-              SliverToBoxAdapter(
-                child: SettingsSectionHeader(title: context.l10n.sectionColor),
-              ),
-
-              SliverToBoxAdapter(
-                child: SettingsGroup(
-                  children: [
-                    SettingsSwitchItem(
-                      icon: Icons.wallpaper,
-                      title: context.l10n.appearanceDynamicColor,
-                      subtitle: context.l10n.appearanceDynamicColorSubtitle,
-                      value: themeSettings.useDynamicColor,
-                      onChanged: (value) => ref
-                          .read(themeProvider.notifier)
-                          .setUseDynamicColor(value),
-                      showDivider: false,
-                    ),
-                  ],
-                ),
-              ),
-              if (!themeSettings.useDynamicColor)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                    child: _ColorPalettePicker(
-                      currentColor: themeSettings.seedColorValue,
-                      onColorSelected: (color) =>
-                          ref.read(themeProvider.notifier).setSeedColor(color),
-                    ),
-                  ),
-                ),
             ],
 
             SliverToBoxAdapter(
@@ -173,17 +80,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     onChanged: (mode) =>
                         ref.read(themeProvider.notifier).setThemeMode(mode),
                   ),
-                  if (themeSettings.style == AppThemeStyle.material &&
-                      Theme.of(context).brightness == Brightness.dark)
-                    SettingsSwitchItem(
-                      icon: Icons.brightness_2,
-                      title: context.l10n.appearanceAmoledDark,
-                      subtitle: context.l10n.appearanceAmoledDarkSubtitle,
-                      value: themeSettings.useAmoled,
-                      onChanged: (value) =>
-                          ref.read(themeProvider.notifier).setUseAmoled(value),
-                      showDivider: false,
-                    ),
                 ],
               ),
             ),
@@ -683,117 +579,6 @@ class _MornyeAccentPicker extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-}
-
-class _ColorPalettePicker extends StatelessWidget {
-  final int currentColor;
-  final ValueChanged<Color> onColorSelected;
-  const _ColorPalettePicker({
-    required this.currentColor,
-    required this.onColorSelected,
-  });
-
-  static const _colors = [
-    Color(0xFF1DB954),
-    Color(0xFF6750A4),
-    Color(0xFF0061A4),
-    Color(0xFF006E1C),
-    Color(0xFFBA1A1A),
-    Color(0xFF984061),
-    Color(0xFF7D5260),
-    Color(0xFF006874),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: _colors.map((color) {
-          final isSelected = color.toARGB32() == currentColor;
-          final colorHex = color
-              .toARGB32()
-              .toRadixString(16)
-              .padLeft(8, '0')
-              .toUpperCase();
-          return Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Semantics(
-              button: true,
-              selected: isSelected,
-              label: context.l10n.appearanceSelectAccentColor(colorHex),
-              child: GestureDetector(
-                onTap: () => onColorSelected(color),
-                child: _ColorPaletteItem(color: color, isSelected: isSelected),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _ColorPaletteItem extends StatelessWidget {
-  final Color color;
-  final bool isSelected;
-
-  const _ColorPaletteItem({required this.color, required this.isSelected});
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: color,
-      brightness: Theme.of(context).brightness,
-    );
-    final size = 64.0;
-
-    return Stack(
-      children: [
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(child: Container(color: scheme.primaryContainer)),
-                    Expanded(child: Container(color: scheme.tertiaryContainer)),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(color: scheme.secondaryContainer),
-                    ),
-                    Expanded(child: Container(color: scheme.surfaceContainer)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (isSelected)
-          Positioned.fill(
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.check, size: 16, color: scheme.primary),
-              ),
-            ),
-          ),
-      ],
     );
   }
 }

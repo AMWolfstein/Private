@@ -180,7 +180,7 @@ extension _TrackMetadataLyricsAndSaving on _TrackMetadataScreenState {
                     child: FilledButton.tonalIcon(
                       onPressed: _fetchOnlineLyrics,
                       icon: const Icon(Icons.cloud_download_outlined),
-                      label: Text(context.l10n.trackFetchOnlineLyrics),
+                      label: Text(context.l10n.trackReadLocalLyrics),
                     ),
                   ),
                 ],
@@ -687,13 +687,13 @@ extension _TrackMetadataLyricsAndSaving on _TrackMetadataScreenState {
           if (result['error'] != null &&
               _coverUrl != null &&
               _coverUrl!.isNotEmpty) {
-            result = await PlatformBridge.downloadCoverToFile(
+            result = await PlatformBridge.copyLocalCoverToFile(
               _coverUrl!,
               tempOutput,
             );
           }
         } else if (_coverUrl != null && _coverUrl!.isNotEmpty) {
-          result = await PlatformBridge.downloadCoverToFile(
+          result = await PlatformBridge.copyLocalCoverToFile(
             _coverUrl!,
             tempOutput,
           );
@@ -782,13 +782,13 @@ extension _TrackMetadataLyricsAndSaving on _TrackMetadataScreenState {
         if (result['error'] != null &&
             _coverUrl != null &&
             _coverUrl!.isNotEmpty) {
-          result = await PlatformBridge.downloadCoverToFile(
+          result = await PlatformBridge.copyLocalCoverToFile(
             _coverUrl!,
             outputPath,
           );
         }
       } else if (_coverUrl != null && _coverUrl!.isNotEmpty) {
-        result = await PlatformBridge.downloadCoverToFile(
+        result = await PlatformBridge.copyLocalCoverToFile(
           _coverUrl!,
           outputPath,
         );

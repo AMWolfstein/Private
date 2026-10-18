@@ -132,60 +132,9 @@ void main() {
     },
   );
 
-  test('metadata search sends the explicitly selected extension', () async {
-    MethodCall? capturedCall;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(backendChannel, (call) async {
-          capturedCall = call;
-          return jsonEncode([
-            {
-              'id': 'track-1',
-              'name': 'Song',
-              'provider_id': 'selected-metadata',
-            },
-          ]);
-        });
 
-    final results = await PlatformBridge.searchTracksWithMetadataProvider(
-      'selected-metadata',
-      'Song Artist',
-      limit: 5,
-    );
 
-    expect(capturedCall?.method, 'searchTracksWithMetadataProvider');
-    expect(capturedCall?.arguments, {
-      'extension_id': 'selected-metadata',
-      'query': 'Song Artist',
-      'limit': 5,
-    });
-    expect(results.single['provider_id'], 'selected-metadata');
-  });
 
-  test('metadata custom search sends the manifest track filter', () async {
-    MethodCall? capturedCall;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(backendChannel, (call) async {
-          capturedCall = call;
-          return jsonEncode([
-            {'id': 'track-1', 'name': 'Song', 'provider_id': 'custom-metadata'},
-          ]);
-        });
-
-    final results = await PlatformBridge.customSearchWithExtension(
-      'custom-metadata',
-      'Song Artist',
-      options: {'limit': 5, 'filter': 'songs'},
-    );
-
-    expect(capturedCall?.method, 'customSearchWithExtension');
-    final arguments = capturedCall?.arguments as Map<Object?, Object?>?;
-    expect(arguments, isNotNull);
-    expect(arguments?['extension_id'], 'custom-metadata');
-    expect(arguments?['query'], 'Song Artist');
-    expect(arguments?['options'], jsonEncode({'limit': 5, 'filter': 'songs'}));
-    expect(arguments?['request_id'], isA<String>());
-    expect(results.single['provider_id'], 'custom-metadata');
-  });
 
   test('SAF inspection sends one batch and decodes repair results', () async {
     MethodCall? capturedCall;

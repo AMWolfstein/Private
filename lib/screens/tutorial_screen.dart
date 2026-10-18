@@ -163,10 +163,14 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
                   _TutorialPage(
                     index: 2,
                     currentIndex: _currentPage,
-                    icon: Icons.download_rounded,
-                    title: l10n.tutorialDownloadTitle,
-                    description: l10n.tutorialDownloadDesc,
-                    content: const _InteractiveDownloadExample(),
+                    icon: Icons.play_arrow_rounded,
+                    title: l10n.tutorialPlaybackTitle,
+                    description: l10n.tutorialPlaybackDesc,
+                    content: _buildFeatureList(context, [
+                      (Icons.play_arrow, l10n.tutorialPlaybackTip1),
+                      (Icons.queue_music, l10n.tutorialPlaybackTip2),
+                      (Icons.lyrics_outlined, l10n.tutorialPlaybackTip3),
+                    ]),
                   ),
                   _TutorialPage(
                     index: 3,
@@ -175,7 +179,7 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
                     title: l10n.tutorialLibraryTitle,
                     description: l10n.tutorialLibraryDesc,
                     content: _buildFeatureList(context, [
-                      (Icons.downloading_rounded, l10n.tutorialLibraryTip1),
+                      (Icons.queue_music_rounded, l10n.tutorialLibraryTip1),
                       (Icons.play_circle_fill, l10n.tutorialLibraryTip2),
                       (Icons.grid_view_rounded, l10n.tutorialLibraryTip3),
                     ]),
@@ -183,16 +187,16 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
                   _TutorialPage(
                     index: 4,
                     currentIndex: _currentPage,
-                    icon: Icons.extension_rounded,
-                    title: l10n.tutorialExtensionsTitle,
-                    description: l10n.tutorialExtensionsDesc,
+                    icon: Icons.folder_open_rounded,
+                    title: l10n.tutorialStorageTitle,
+                    description: l10n.tutorialStorageDesc,
                     content: _buildFeatureList(context, [
-                      (Icons.extension_rounded, l10n.tutorialExtensionsTip1),
+                      (Icons.folder_open_rounded, l10n.tutorialStorageTip1),
                       (
                         Icons.add_circle_outline_rounded,
-                        l10n.tutorialExtensionsTip2,
+                        l10n.tutorialStorageTip2,
                       ),
-                      (Icons.sync_rounded, l10n.tutorialExtensionsTip3),
+                      (Icons.sync_rounded, l10n.tutorialStorageTip3),
                     ]),
                   ),
                   _TutorialPage(
@@ -486,7 +490,7 @@ class _InteractiveSearchExampleState extends State<_InteractiveSearchExample> {
                           ),
                           const SizedBox(width: 12),
                           Icon(
-                            Icons.download_rounded,
+                            Icons.play_arrow_rounded,
                             color: colorScheme.primary,
                           ),
                         ],
@@ -497,175 +501,6 @@ class _InteractiveSearchExampleState extends State<_InteractiveSearchExample> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _InteractiveDownloadExample extends StatefulWidget {
-  const _InteractiveDownloadExample();
-
-  @override
-  State<_InteractiveDownloadExample> createState() =>
-      _InteractiveDownloadExampleState();
-}
-
-class _InteractiveDownloadExampleState
-    extends State<_InteractiveDownloadExample> {
-  bool _isDownloading = false;
-  double _progress = 0.0;
-  bool _isCompleted = false;
-
-  void _startDownload() async {
-    if (_isDownloading || _isCompleted) return;
-
-    setState(() {
-      _isDownloading = true;
-      _progress = 0.0;
-    });
-
-    for (int i = 0; i <= 100; i += 5) {
-      if (!mounted) return;
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      setState(() => _progress = i / 100);
-    }
-
-    setState(() {
-      _isDownloading = false;
-      _isCompleted = true;
-    });
-
-    await Future<void>.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() {
-        _isCompleted = false;
-        _progress = 0.0;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cardWidth = constraints.maxWidth;
-        final coverSize = (cardWidth * 0.18).clamp(56.0, 80.0);
-        final buttonPadding = (coverSize * 0.18).clamp(10.0, 14.0);
-        final buttonIconSize = (coverSize * 0.4).clamp(22.0, 30.0);
-
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: coverSize,
-                height: coverSize,
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Icon(
-                  Icons.album_rounded,
-                  size: coverSize * 0.5,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: (cardWidth * 0.35).clamp(100.0, 160.0),
-                      height: 14,
-                      decoration: BoxDecoration(
-                        color: colorScheme.onSurface,
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    if (_isDownloading)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: LinearProgressIndicator(
-                          value: _progress,
-                          minHeight: 12,
-                          backgroundColor: colorScheme.surfaceContainerHighest,
-                          color: colorScheme.primary,
-                        ),
-                      )
-                    else
-                      Container(
-                        width: (cardWidth * 0.22).clamp(70.0, 100.0),
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: colorScheme.onSurfaceVariant,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Semantics(
-                button: true,
-                label: _isCompleted
-                    ? context.l10n.tutorialDownloadCompletedSemantics
-                    : _isDownloading
-                    ? context.l10n.tutorialDownloadInProgressSemantics
-                    : context.l10n.tutorialStartDownloadSemantics,
-                child: GestureDetector(
-                  onTap: _startDownload,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: EdgeInsets.all(buttonPadding),
-                    decoration: BoxDecoration(
-                      color: _isCompleted ? Colors.green : colorScheme.primary,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              (_isCompleted
-                                      ? Colors.green
-                                      : colorScheme.primary)
-                                  .withValues(alpha: 0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: _isDownloading
-                        ? SizedBox(
-                            width: buttonIconSize,
-                            height: buttonIconSize,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              color: colorScheme.onPrimary,
-                            ),
-                          )
-                        : ExcludeSemantics(
-                            child: Icon(
-                              _isCompleted
-                                  ? Icons.check_rounded
-                                  : Icons.download_rounded,
-                              color: colorScheme.onPrimary,
-                              size: buttonIconSize,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

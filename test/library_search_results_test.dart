@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
@@ -48,7 +47,6 @@ void main() {
       'search opens metadata; only Play starts audio ($mornye)',
       (tester) async {
           SharedPreferences.setMockInitialValues({});
-          FlutterSecureStorage.setMockInitialValues({});
           const channel = MethodChannel('com.zarz.spotiflac/backend');
           tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
             channel,
@@ -246,7 +244,6 @@ void main() {
       'long-press selects songs for Library batch actions ($mornye)',
       (tester) async {
         SharedPreferences.setMockInitialValues({});
-        FlutterSecureStorage.setMockInitialValues({});
         // Tall enough that the selection bar never covers a result row.
         tester.view.physicalSize = const Size(800, 1600);
         tester.view.devicePixelRatio = 1;

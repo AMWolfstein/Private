@@ -17,7 +17,7 @@ import 'package:spotiflac_android/screens/queue_tab.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/app_theme.dart';
+import 'support/material_test_theme.dart';
 
 String _definition(String file, String table) => RegExp(
   'CREATE TABLE $table\\s*\\([\\s\\S]*?\\n\\s*\\)',
@@ -343,7 +343,7 @@ void main() {
       await _waitFor(tester, find.text('Apply').hitTestable());
       await tester.tap(find.text('Apply'));
       await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('No download history'));
+      await _waitFor(tester, find.text('No local tracks'));
       expect(find.text('Song 1'), findsNothing);
       await tester.tap(find.text('Filters').hitTestable());
       await tester.pump(const Duration(milliseconds: 400));
@@ -395,7 +395,7 @@ void main() {
       // Even an empty matching result must retain the filter controls.
       await tester.enterText(find.byType(TextField), 'no-such-album');
       await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('No album downloads'));
+      await _waitFor(tester, find.text('No local albums'));
       expect(find.text('Filters').hitTestable(), findsOneWidget);
       await tester.enterText(find.byType(TextField), '');
       await tester.pump(const Duration(milliseconds: 400));

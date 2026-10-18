@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/utils/local_playback.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
@@ -206,13 +205,13 @@ class _TrackOptionsSheet extends ConsumerWidget {
                           child:
                               track.coverUrl != null &&
                                   track.coverUrl!.isNotEmpty
-                              ? CachedNetworkImage(
+                              ? CachedCoverImage(
                                   imageUrl: track.coverUrl!,
                                   width: 56,
                                   height: 56,
                                   fit: BoxFit.cover,
                                   memCacheWidth: 112,
-                                  cacheManager: CoverCacheManager.instance,
+
                                   errorWidget: (context, url, error) =>
                                       Container(
                                         width: 56,

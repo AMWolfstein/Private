@@ -22,7 +22,7 @@ double normalizeMornyeGlassClarity(num? value) =>
     ? value.toDouble().clamp(0.0, 1.0)
     : kDefaultMornyeGlassClarity;
 
-enum AppThemeStyle { material, mornye }
+enum AppThemeStyle { mornye }
 
 enum MornyeAccent { red, orange, green, teal, blue, purple, pink }
 
@@ -35,7 +35,7 @@ MornyeAccent mornyeAccentFromString(String? value) =>
 AppThemeStyle themeStyleFromString(String? value) =>
     AppThemeStyle.values.firstWhere(
       (style) => style.name == value,
-      orElse: () => AppThemeStyle.material,
+      orElse: () => AppThemeStyle.mornye,
     );
 
 /// Default Spotify green color for fallback
@@ -60,7 +60,7 @@ class ThemeSettings {
     this.useDynamicColor = true,
     this.seedColorValue = kDefaultSeedColor,
     this.useAmoled = false,
-    this.style = AppThemeStyle.material,
+    this.style = AppThemeStyle.mornye,
     this.mornyeAccent = MornyeAccent.red,
     this.useSystemFont = false,
     this.customFontId = '',
