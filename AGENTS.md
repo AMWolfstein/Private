@@ -13,6 +13,12 @@ V3 detail designs are restored over local data. Artist navigation must open
 feature releases by their release-date tags, and classify Singles from explicit total-track
 tags (1), never from the number of files stored from an album; EPs remain under Albums.
 
+Artist Popular shows at most 20 local songs, ranked by all-time recorded play counts; use a
+random selection for unplayed songs/no history, stable while the page stays open. Display five
+songs per page with dots (at most four). No artist Show-more controls; discography shelves
+load additional pages when swiped near their end. Keep full-artist playback independent of
+the Popular cap.
+
 V2 Home uses the Apple Music editorial-card/shelf composition with local data. Keep featured
 releases ordered by release tags, bounded shelf queries, local artwork and local detail routes.
 Do not replace the feed with only the recent-access history list.

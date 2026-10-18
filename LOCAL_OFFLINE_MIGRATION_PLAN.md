@@ -12,8 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): fix the 28 remaining Opus scan errors in the
-new device log ("Ogg header spans too many pages"). Do not build an APK.**
+**Current user instruction (2026-10-18): match the original artist Popular section:
+remove Show-more controls, use dots for five-song pages, and show at most 20 tracks ranked
+by local play statistics (random selection with no history). Do not build an APK.**
 
 ---
 
@@ -27,6 +28,30 @@ source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 
 first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
 No new APK was built for that follow-up. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Artist Popular refinement (2026-10-18):** `7056525` replaces Songs and numeric arrow
+pagination with **Popular**, five songs per page and tappable dot indicators. It shows at
+most 20 unique available local tracks (four dots when 20 tracks are available; fewer for a
+smaller artist library). Recorded all-time play counts determine rank, with random selection
+and tie order for unplayed tracks/no history. The selection stays stable while the page is
+open. Reads scan the artist in bounded 40-track pages, retain only the best 20 candidates and
+query aggregated listening counts for each page's local path/ID identities. Listening database
+version 2 adds a track-key index while preserving existing history. Pending recorder writes
+are flushed before statistics reads.
+
+All artist Show-more controls are removed. Albums/Singles continue loading bounded pages
+when swiped near the shelf end, with Retry only for failed reads. Artist Play still loads the
+entire artist queue; its loader is retained during startup so the Popular cap cannot truncate
+or dispose playback. The newest featured release and tag-based Singles/Albums rules remain.
+
+Validation: `flutter analyze` reports **No issues found**; full `flutter test` reports
+**1,630 passed, 3 skipped**. New provider/SQLite tests cover most-played ranking across page
+boundaries, summed play counts across days, random fallback across the entire artist library,
+unique 20-track caps and smaller libraries. Light/dark widget tests verify four interactive
+dots, no numeric counter or Show-more controls, automatic discography pagination past 40
+releases and full 41-track playback. Rendered light/dark previews were inspected. Graph
+refreshed after the code commit. No APK built or GitHub push performed for this refinement;
+the installed APK predates this change and the fragmented Opus header follow-up.
 
 **Fragmented Opus header follow-up (2026-10-18):** Device scan found 1,949 tracks with
 28 metadata errors, all "Ogg header spans too many pages". The previous 1,024-page cap still
@@ -441,6 +466,11 @@ bindgen     -> uniffi only (CLI)
   Classify Singles only from an explicit total-track count of 1, excluding multi-disc releases.
   Larger totals, including EPs and partially stored albums, belong under Albums. Unknown totals
   stay under Albums rather than treating one stored song as proof of a single.
+  User refinement (2026-10-18): Popular replaces Songs, capped at 20 tracks with five per
+  page and at most four dots. Rank by all-time local play counts; unplayed tracks fill any
+  remaining places randomly, with a stable order for the open page. Remove artist Show-more
+  controls; album/single shelves fetch the next bounded page automatically near the end.
+  The artist Play button continues to load the complete local artist queue.
 - **V4 — Remove all online-service settings** (extensions/store, providers, downloads, network
   storage, Discord, updates/remote-config, profile, donate, plus online rows inside
   Music/Library settings).
