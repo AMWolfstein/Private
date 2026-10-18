@@ -195,7 +195,9 @@ pub(crate) fn ogg_packets(
 ) -> Result<Vec<Vec<u8>>, String> {
     let mut packets = Vec::new();
     let mut current = Vec::new();
-    let mut skip_packet = false;
+    // Match the writer's bounded header budget, including large embedded art.
+    const MAX_HEADER_BYTES: usize = 64 * 1024 * 1024;
+    let mut header_bytes = 0;
     for _ in 0..max_pages {
         let page = OggPage::read(reader).and_then(|page| page.ok_or_else(|| "EOF".into()));
         let OggPage {
@@ -205,28 +207,25 @@ pub(crate) fn ogg_packets(
         } = match page {
             Ok(page) => page,
             Err(error) if packets.is_empty() => return Err(error),
+            Err(error) if !current.is_empty() => return Err(error),
             Err(_) => break,
         };
+        header_bytes += 27 + segments.len() + data.len();
+        if header_bytes > MAX_HEADER_BYTES {
+            return Err("Ogg headers exceed 64 MiB".into());
+        }
         if header[5] & 1 == 0 && !current.is_empty() {
-            current.clear();
-            skip_packet = false;
+            return Err("missing Ogg packet continuation".into());
         }
         let mut offset = 0;
         for length in segments {
             let length = length as usize;
-            if !skip_packet && current.len() + length > 10 * 1024 * 1024 {
-                current.clear();
-                skip_packet = true;
-            }
-            if !skip_packet {
-                current.extend_from_slice(&data[offset..offset + length]);
-            }
+            current.extend_from_slice(&data[offset..offset + length]);
             offset += length;
             if length < 255 {
                 if !current.is_empty() {
                     packets.push(std::mem::take(&mut current));
                 }
-                skip_packet = false;
                 if packets.len() >= max_packets {
                     break;
                 }
@@ -235,6 +234,9 @@ pub(crate) fn ogg_packets(
         if packets.len() >= max_packets {
             break;
         }
+    }
+    if !current.is_empty() {
+        return Err("Ogg header spans too many pages".into());
     }
     Ok(packets)
 }
@@ -252,7 +254,9 @@ pub(crate) fn ogg_stream_is_opus(packets: &[Vec<u8>]) -> Option<bool> {
 }
 
 pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
-    let packets = ogg_packets(reader, 30, 80)?;
+    // Identification and comments are the first two packets for both codecs.
+    // Stop before audio; allow the same page count as our tag writer.
+    let packets = ogg_packets(reader, 2, 1024)?;
     let stream = ogg_stream_is_opus(&packets);
     let packet = packets.iter().find_map(|packet| {
         if stream != Some(false) && packet.len() > 8 && packet.starts_with(b"OpusTags") {
@@ -273,7 +277,7 @@ pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
 }
 
 pub(super) fn ogg_cover(reader: &mut impl Read) -> Result<CoverArt, String> {
-    let packets = ogg_packets(reader, 30, 80)?;
+    let packets = ogg_packets(reader, 2, 1024)?;
     let stream = ogg_stream_is_opus(&packets);
     for packet in &packets {
         let comments = if stream != Some(false) && packet.starts_with(b"OpusTags") {

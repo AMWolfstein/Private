@@ -127,7 +127,9 @@ pub(crate) fn ogg_quality(
     size: i64,
     path: &str,
 ) -> Result<AudioQuality, String> {
-    let packets = ogg_packets(file, 5, 10)?;
+    // Rate and pre-skip live in the identification packet. Do not assemble a
+    // potentially large artwork/comment packet just to probe audio properties.
+    let packets = ogg_packets(file, 1, 10)?;
     let opus =
         ogg_stream_is_opus(&packets).unwrap_or_else(|| path.to_lowercase().ends_with(".opus"));
     let mut quality = AudioQuality::default();

@@ -112,6 +112,42 @@ mod tests {
     use std::os::fd::AsRawFd;
 
     #[test]
+    fn large_opus_header_scans_from_descriptor_without_losing_quality() {
+        let mut source = tempfile::tempfile().unwrap();
+        let fields = std::collections::BTreeMap::from([
+            ("title".into(), "يوم ما تنسى".into()),
+            ("comment".into(), "x".repeat(6 * 1024 * 1024)),
+        ]);
+        tags::rewrite_audio_tags(
+            &mut std::io::Cursor::new(include_bytes!(
+                "../../core/tests/fixtures/encoder-only.opus"
+            )),
+            &mut source,
+            "opus",
+            &fields,
+            None,
+            &|| Ok(()),
+        )
+        .unwrap();
+        for include_cover in [false, true] {
+            let result = read_library_metadata_from_descriptor(
+                source.as_raw_fd(),
+                "يوم ما تنسى.opus".into(),
+                "scan".into(),
+                include_cover,
+                None,
+            )
+            .unwrap();
+            let json: serde_json::Value = serde_json::from_str(&result.metadata_json).unwrap();
+            assert_eq!(json["trackName"], "يوم ما تنسى");
+            assert_eq!(json["sampleRate"], 48000);
+            assert_eq!(json["duration"], 1);
+            assert!(json.get("metadataFromFilename").is_none());
+            assert!(source.metadata().is_ok());
+        }
+    }
+
+    #[test]
     fn encoder_only_opus_scans_through_a_borrowed_descriptor() {
         let mut source = tempfile::tempfile().unwrap();
         source
