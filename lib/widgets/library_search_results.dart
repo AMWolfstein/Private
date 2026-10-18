@@ -157,15 +157,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       onClose: _exitSelection,
       onToggleSelectAll: allSelected ? _exitSelection : _selectAllVisible,
       bottomPadding: MediaQuery.paddingOf(context).bottom,
-      onConvert: () => showBatchConvertSheet(
-        context,
-        ref,
-        items,
-        onExitSelectionMode: _finishSelectionAction,
-        onSheetOpen: _hideSelectionBar,
-        onSheetClosed: (_) =>
-            _restoreSelectionBar(delay: const Duration(milliseconds: 260)),
-      ),
       onReplayGain: ({required remove}) => runBatchReplayGain(
         context,
         items,

@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/services/ffmpeg_conversion.dart';
+import 'package:spotiflac_android/services/ffmpeg_cue.dart';
 import 'package:spotiflac_android/services/ffmpeg_decryption.dart';
 import 'package:spotiflac_android/services/ffmpeg_metadata.dart';
 import 'package:spotiflac_android/services/ffmpeg_models.dart';
 import 'package:spotiflac_android/services/ffmpeg_probe.dart';
 import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
-import 'package:spotiflac_android/utils/audio_conversion_utils.dart';
 
 export 'package:spotiflac_android/services/ffmpeg_models.dart';
 
@@ -43,30 +42,6 @@ class FFmpegService {
   static Future<({int width, int height})?> probeImageDimensions(
     String filePath,
   ) => FFmpegProbe.imageDimensions(filePath);
-
-  static Future<String?> probePrimaryAudioCodec(String filePath) =>
-      FFmpegProbe.audioCodec(filePath);
-
-  static bool isLosslessAudioCodec(String? codec) =>
-      FFmpegProbe.isLosslessAudioCodec(codec);
-
-  /// Checks the native FLAC magic, distinguishing FLAC-in-MP4 payloads.
-  static Future<bool> isNativeFlacFile(String filePath) =>
-      FFmpegProbe.isNativeFlacFile(filePath);
-
-  static Future<String?> convertM4aToFlac(
-    String inputPath, {
-    String? sourceCodec,
-    @visibleForTesting Future<FFmpegResult> Function(List<String>)? execute,
-  }) => FFmpegConversion.convertM4aToFlac(
-    inputPath,
-    sourceCodec: sourceCodec,
-    execute: execute,
-  );
-
-  /// Corrects the suffix without replacing an existing sibling file.
-  static Future<String> ensureNativeFlacExtension(String inputPath) =>
-      FFmpegConversion.ensureNativeFlacExtension(inputPath);
 
   static Future<String?> decryptWithDescriptor({
     required String inputPath,
@@ -176,33 +151,6 @@ class FFmpegService {
     preserveMetadata: preserveMetadata,
   );
 
-  /// Converts with metadata and cover preservation; lossless caps never upscale.
-  static Future<String?> convertAudioFormat({
-    required String inputPath,
-    required String targetFormat,
-    required String bitrate,
-    required Map<String, String> metadata,
-    String? coverPath,
-    String artistTagMode = artistTagModeJoined,
-    bool deleteOriginal = true,
-    int? sourceBitDepth,
-    LosslessConversionQuality losslessQuality =
-        const LosslessConversionQuality(),
-    LosslessConversionProcessing losslessProcessing =
-        const LosslessConversionProcessing(),
-  }) => FFmpegConversion.convertAudioFormat(
-    inputPath: inputPath,
-    targetFormat: targetFormat,
-    bitrate: bitrate,
-    metadata: metadata,
-    coverPath: coverPath,
-    artistTagMode: artistTagMode,
-    deleteOriginal: deleteOriginal,
-    sourceBitDepth: sourceBitDepth,
-    losslessQuality: losslessQuality,
-    losslessProcessing: losslessProcessing,
-  );
-
   static Future<List<String>?> splitCueToTracks({
     required String audioPath,
     required String outputDir,
@@ -210,7 +158,7 @@ class FFmpegService {
     required Map<String, String> albumMetadata,
     String? coverPath,
     void Function(int current, int total)? onProgress,
-  }) => FFmpegConversion.splitCueToTracks(
+  }) => FFmpegCue.splitCueToTracks(
     audioPath: audioPath,
     outputDir: outputDir,
     tracks: tracks,

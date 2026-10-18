@@ -4,7 +4,6 @@ import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/services/ffmpeg_models.dart';
-import 'package:spotiflac_android/services/ffmpeg_probe.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
@@ -78,7 +77,7 @@ abstract final class FFmpegOutput {
         : firstPath == secondPath;
   }
 
-  // Exclusive creation keeps simultaneous conversions from choosing one name.
+  // Exclusive creation keeps simultaneous file operations from choosing one name.
   static Future<String> reserve(String requestedPath) async {
     final file = File(requestedPath);
     final name = file.uri.pathSegments.last;
@@ -148,7 +147,7 @@ abstract final class FFmpegOutput {
   }) async {
     final working = File(plan.workingPath);
     if (!await working.exists() || await working.length() == 0) {
-      _log.e('Converted output is missing or empty: ${plan.workingPath}');
+      _log.e('Processed output is missing or empty: ${plan.workingPath}');
       await cleanup(plan.workingPath);
       return null;
     }
@@ -165,13 +164,13 @@ abstract final class FFmpegOutput {
         }
         await working.rename(plan.finalPath);
       } catch (e) {
-        _log.e('Failed to replace original after conversion: $e');
+        _log.e('Failed to replace original after processing: $e');
         try {
           if (backedUp && !await source.exists() && await backup.exists()) {
             await backup.rename(inputPath);
           }
         } catch (restoreError) {
-          _log.e('Failed to restore original conversion backup: $restoreError');
+          _log.e('Failed to restore original file backup: $restoreError');
         }
         await cleanup(plan.workingPath);
         onError?.call(e);
@@ -183,11 +182,9 @@ abstract final class FFmpegOutput {
         final source = File(inputPath);
         if (await source.exists()) await source.delete();
       } catch (e) {
-        _log.w('Failed to delete original after conversion: $e');
+        _log.w('Failed to delete original after processing: $e');
       }
     }
-    FFmpegProbe.invalidate(inputPath);
-    FFmpegProbe.invalidate(plan.finalPath);
     return plan.finalPath;
   }
 

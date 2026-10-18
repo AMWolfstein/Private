@@ -228,7 +228,7 @@ void main() {
               children: [
                 for (final label in [
                   'Remove ReplayGain (10)',
-                  'Convert 10 tracks',
+                  'ReplayGain (10)',
                 ])
                   Expanded(
                     child: SelectionActionButton(

@@ -484,9 +484,9 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     }
     if (mode == AppSettings.libraryQualityLabelBitDepthBitrate) {
       return '${context.l10n.audioAnalysisBitDepth} & '
-          '${context.l10n.trackConvertBitrate}';
+          '${context.l10n.audioBitrate}';
     }
-    return context.l10n.trackConvertBitrate;
+    return context.l10n.audioBitrate;
   }
 
   void _showQualityLabelModePicker(BuildContext context, String current) {
@@ -495,7 +495,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       (
         AppSettings.libraryQualityLabelBitrate,
         Icons.speed_rounded,
-        context.l10n.trackConvertBitrate,
+        context.l10n.audioBitrate,
       ),
       (
         AppSettings.libraryQualityLabelBitDepthOnly,
@@ -512,7 +512,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         AppSettings.libraryQualityLabelBitDepthBitrate,
         Icons.multiline_chart_rounded,
         '${context.l10n.audioAnalysisBitDepth} & '
-            '${context.l10n.trackConvertBitrate}',
+            '${context.l10n.audioBitrate}',
       ),
       (
         AppSettings.libraryQualityLabelFileFormat,

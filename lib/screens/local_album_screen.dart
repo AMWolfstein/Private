@@ -611,22 +611,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
                 (constraints.maxWidth - spacing * (columns - 1)) / columns;
             final actions = <Widget>[];
 
-            actions.add(
-              SelectionActionButton(
-                icon: Icons.swap_horiz,
-                label: context.l10n.selectionConvertCount(selectedCount),
-                onPressed: selectedCount > 0
-                    ? () => showBatchConvertSheet(
-                        this.context,
-                        ref,
-                        _selectedUnifiedItems(tracks),
-                        onExitSelectionMode: exitSelectionMode,
-                      )
-                    : null,
-                colorScheme: colorScheme,
-              ),
-            );
-
             for (final remove in [false, true]) {
               actions.add(
                 SelectionActionButton(

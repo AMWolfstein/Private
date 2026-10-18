@@ -67,7 +67,7 @@ String? buildCompletionBridgeFallbackQualityLabel({
 }
 
 /// Returns distinct final-path candidates for a just-completed download.
-/// History is authoritative after conversion/SAF publication, while the
+/// History is authoritative after SAF publication, while the
 /// completed queue item remains a safe fallback if the matched history row is
 /// stale or has not been adopted into the in-memory index yet.
 List<String> resolveCompletionBridgePlayableCandidates({

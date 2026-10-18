@@ -8,9 +8,7 @@ class _BatchProgress {
   const _BatchProgress({this.current = 0, this.detail});
 }
 
-/// A reusable progress dialog for batch operations like conversion and
-/// re-enrich. Follows the same visual style as [_FetchingProgressDialog] in
-/// artist_screen.dart.
+/// A reusable progress dialog for local batch operations such as ReplayGain.
 ///
 /// Uses a static [ValueNotifier] so callers do not need the dialog's
 /// [BuildContext] to push updates – unlike `findAncestorStateOfType` which
@@ -21,9 +19,9 @@ class _BatchProgress {
 /// var cancelled = false;
 /// BatchProgressDialog.show(
 ///   context: context,
-///   title: 'Converting...',
+///   title: 'Applying ReplayGain...',
 ///   total: items.length,
-///   icon: Icons.transform,
+///   icon: Icons.graphic_eq,
 ///   onCancel: () {
 ///     cancelled = true;
 ///     BatchProgressDialog.dismiss(context);

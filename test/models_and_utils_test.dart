@@ -9,7 +9,6 @@ import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
-import 'package:spotiflac_android/utils/audio_conversion_utils.dart';
 import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/mime_utils.dart';
@@ -761,7 +760,7 @@ void main() {
     });
   });
 
-  group('audio conversion utils', () {
+  group('audio format utils', () {
     test('normalizes lightweight library scan metadata for display probes', () {
       final normalized = normalizeScannedAudioMetadata({
         'trackName': 'Song',
@@ -832,57 +831,11 @@ void main() {
       );
     });
 
-    test('treats generic M4A container reports as inconclusive codecs', () {
-      expect(isInconclusiveAudioCodec(null), isTrue);
-      expect(isInconclusiveAudioCodec('m4a'), isTrue);
-      expect(isInconclusiveAudioCodec('MP4'), isTrue);
-      expect(isInconclusiveAudioCodec('flac'), isFalse);
-      expect(isInconclusiveAudioCodec('aac'), isFalse);
-    });
-
     test('uses m4a for ISO-BMFF audio except AC-4 passthrough', () {
       expect(isoBmffAudioExtensionForCodec('opus'), '.m4a');
       expect(isoBmffAudioExtensionForCodec('ec-3'), '.m4a');
       expect(isoBmffAudioExtensionForCodec('aac'), '.m4a');
       expect(isoBmffAudioExtensionForCodec('ac-4'), '.mp4');
-    });
-
-    test(
-      'detects Dolby formats from stored scan format before file extension',
-      () {
-        expect(
-          convertibleAudioSourceFormat(
-            storedFormat: 'eac3',
-            filePath: 'content://media/song.m4a',
-          ),
-          'EAC3',
-        );
-        expect(convertibleAudioSourceFormat(fileName: 'Song.ac-3'), 'AC3');
-        expect(convertibleAudioSourceFormat(storedFormat: 'ac4'), 'AC4');
-      },
-    );
-
-    test('allows Dolby sources only for lossy batch conversion targets', () {
-      expect(
-        canConvertAudioFormat(sourceFormat: 'EAC3', targetFormat: 'MP3'),
-        isTrue,
-      );
-      expect(
-        canConvertAudioFormat(sourceFormat: 'EAC3', targetFormat: 'Opus'),
-        isTrue,
-      );
-      expect(
-        canConvertAudioFormat(sourceFormat: 'EAC3', targetFormat: 'AAC'),
-        isTrue,
-      );
-      expect(
-        canConvertAudioFormat(sourceFormat: 'EAC3', targetFormat: 'FLAC'),
-        isFalse,
-      );
-      expect(
-        canConvertAudioFormat(sourceFormat: 'EAC3', targetFormat: 'ALAC'),
-        isFalse,
-      );
     });
   });
 

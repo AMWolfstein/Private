@@ -150,59 +150,6 @@ Future<bool> writeReEnrichSafSidecarLrc({
   }
 }
 
-Future<void> ensureLyricsMetadataForConversion({
-  required Map<String, String> metadata,
-  required String sourcePath,
-  required bool shouldEmbedLyrics,
-  required String trackName,
-  required String artistName,
-  String spotifyId = '',
-  int durationMs = 0,
-}) async {
-  if (!shouldEmbedLyrics || hasEmbeddedLyricsMetadata(metadata)) {
-    return;
-  }
-
-  String? lyrics;
-
-  // Prefer sidecar .lrc when available to avoid network calls.
-  if (!isContentUri(sourcePath)) {
-    try {
-      final lrcPath = _sidecarLrcPath(sourcePath);
-      final lrcFile = File(lrcPath);
-      if (await lrcFile.exists()) {
-        final content = (await lrcFile.readAsString()).trim();
-        if (content.isNotEmpty) {
-          lyrics = content;
-        }
-      }
-    } catch (_) {}
-  }
-
-  if (lyrics == null || lyrics.isEmpty) {
-    try {
-      final fetched = await PlatformBridge.getLyricsLRC(
-        spotifyId,
-        trackName,
-        artistName,
-        durationMs: durationMs,
-      );
-      final normalized = fetched.trim();
-      if (normalized.isNotEmpty &&
-          normalized.toLowerCase() != '[instrumental:true]') {
-        lyrics = normalized;
-      }
-    } catch (_) {}
-  }
-
-  if (lyrics == null || lyrics.isEmpty) {
-    return;
-  }
-
-  metadata['LYRICS'] = lyrics;
-  metadata['UNSYNCEDLYRICS'] = lyrics;
-}
-
 void mergePlatformMetadataForTagEmbed({
   required Map<String, String> target,
   required Map<String, dynamic> source,

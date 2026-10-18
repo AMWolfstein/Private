@@ -59,7 +59,7 @@ dependencies:
   share_plus: ^13.3.1
   logger: ^2.7.0
 
-  # FFmpeg for audio conversion
+  # FFmpeg for local tag editing, ReplayGain and CUE splitting
   ffmpeg_kit_flutter_new_audio: 2.5.7
   open_filex: ^4.7.0
 

@@ -65,7 +65,6 @@ void main() {
                     onClose: () => closed = true,
                     onToggleSelectAll: () {},
                     bottomPadding: 0,
-                    onConvert: () {},
                     onReplayGain: ({required remove}) {},
                     onDelete: () {},
                     playbackActions: LibrarySelectionPlaybackActions(
@@ -80,6 +79,8 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
+        expect(find.byIcon(Icons.swap_horiz), findsNothing);
+        expect(find.text('ReplayGain (2)'), findsOneWidget);
         await tester.tap(find.text('Play next'));
         await tester.pumpAndSettle();
         expect(controller.enqueued, items.map((item) => item.id));

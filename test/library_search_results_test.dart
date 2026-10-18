@@ -309,7 +309,8 @@ void main() {
         await tester.longPress(find.text('Song a'));
         await tester.pumpAndSettle();
         expect(find.text('1 selected'), findsOneWidget);
-        expect(find.text('Convert 1 track'), findsOneWidget);
+        expect(find.text('Convert 1 track'), findsNothing);
+        expect(find.text('ReplayGain (1)'), findsOneWidget);
         expect(find.text('Delete 1 track'), findsOneWidget);
         // Selecting hides row actions and keeps taps on the selection.
         expect(find.byTooltip('Play'), findsNothing);

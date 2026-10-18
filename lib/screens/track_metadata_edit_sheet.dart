@@ -75,7 +75,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
           (
             value: 0,
             label: _originalCoverResolutionLabel(
-              sheetContext.l10n.trackConvertOriginal,
+              sheetContext.l10n.metadataOriginal,
             ),
           ),
           for (final dimension in _coverResizeDimensions)
@@ -710,7 +710,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
             label: context.l10n.trackCoverResolution,
             value: _coverMaxDimension == null
                 ? _originalCoverResolutionLabel(
-                    context.l10n.trackConvertOriginal,
+                    context.l10n.metadataOriginal,
                   )
                 : '${_coverMaxDimension!} px',
             enabled: !_saving,

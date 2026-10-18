@@ -15,8 +15,6 @@ import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_switch.dart';
-import 'package:spotiflac_android/widgets/batch_convert_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'package:spotiflac_android/widgets/selection_action_button.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
@@ -81,7 +79,7 @@ void main() {
     var selectedAll = false;
     var closed = false;
     var deleted = false;
-    var converted = false;
+    var gainApplied = false;
     await tester.pumpWidget(
       _app(
         Builder(
@@ -95,9 +93,9 @@ void main() {
               bottomPadding: 0,
               children: [
                 SelectionActionButton(
-                  icon: Icons.swap_horiz,
-                  label: 'Convert 1 track',
-                  onPressed: () => converted = true,
+                  icon: Icons.graphic_eq,
+                  label: 'ReplayGain 1 track',
+                  onPressed: () => gainApplied = true,
                   colorScheme: Theme.of(context).colorScheme,
                 ),
                 const SizedBox(height: 8),
@@ -114,52 +112,15 @@ void main() {
     );
     await tester.pumpAndSettle();
     await _tapVisible(tester, find.text('Select All'));
-    await _tapVisible(tester, find.text('Convert 1 track'));
+    await _tapVisible(tester, find.text('ReplayGain 1 track'));
     await _tapVisible(tester, find.byIcon(CupertinoIcons.trash));
     await _tapVisible(tester, find.byIcon(CupertinoIcons.xmark));
-    expect((selectedAll, converted, deleted, closed), (true, true, true, true));
+    expect(
+      (selectedAll, gainApplied, deleted, closed),
+      (true, true, true, true),
+    );
     expect(tester.takeException(), isNull);
   });
-
-  for (final brightness in Brightness.values) {
-    testWidgets('Mornye conversion preserves selected options ($brightness)', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(390, 844));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      (String, String, bool)? result;
-      await tester.pumpWidget(
-        _app(
-          BatchConvertSheet(
-            formats: const [
-              'ALAC',
-              'FLAC',
-              'WAV',
-              'AIFF',
-              'AAC',
-              'MP3',
-              'Opus',
-            ],
-            title: 'Batch Convert',
-            confirmLabel: 'Convert tracks',
-            sourceBitDepth: 24,
-            sourceSampleRate: 48000,
-            onConvert: (format, bitrate, quality, processing, keepOriginal) {
-              result = (format, bitrate, keepOriginal);
-            },
-          ),
-          brightness: brightness,
-        ),
-      );
-      await tester.pumpAndSettle();
-      await _tapVisible(tester, find.text('AAC'));
-      await _tapVisible(tester, find.text('128k'));
-      await _tapVisible(tester, find.byType(AppSwitch));
-      await _tapVisible(tester, find.text('Convert tracks'));
-      expect(result, ('AAC', '128k', true));
-      expect(tester.takeException(), isNull);
-    });
-  }
 
   testWidgets(
     'Mornye ReplayGain cancellation restores selection without analysis',
@@ -227,6 +188,8 @@ void main() {
       expect(find.text('Edit audio file'), findsNothing);
       expect(find.text('Similar songs in Library'), findsNothing);
       expect(find.text('Edit Metadata'), findsOneWidget);
+      expect(find.text('Convert Format'), findsNothing);
+      expect(find.byIcon(Icons.swap_horiz), findsNothing);
       final lastAction = find.text('Remove from device');
       expect(lastAction.hitTestable(), findsNothing);
       expect(find.byType(MornyeContextMenu), findsOneWidget);

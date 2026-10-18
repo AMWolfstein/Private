@@ -93,7 +93,7 @@ class _AudioInfoCard extends StatelessWidget {
                 if (data.bitrate > 0)
                   _MetricChip(
                     icon: Icons.speed,
-                    label: context.l10n.trackConvertBitrate,
+                    label: context.l10n.audioBitrate,
                     value: _formatBitrate(data.bitrate),
                     cs: cs,
                   ),
