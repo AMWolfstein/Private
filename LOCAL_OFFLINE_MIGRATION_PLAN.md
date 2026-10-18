@@ -12,6 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
+**Current user override (2026-10-18): do not build APKs.** Keep APK/device validation
+pending; use analysis, tests and native compilation for this task.
 
 ---
 
@@ -19,8 +21,8 @@ Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backen
 
 _Last updated: 2026-10-18_
 
-**Status:** IN PROGRESS. Phases 1-6 committed (Phase 6 removed the entire download engine and
-re-pointed the player/queue to the local library — D1). Phase 7 (Rust backend reduction) next.
+**Status:** IN PROGRESS. Phases 1-7 implemented. Phase 7 reduced the Rust backend to local
+operations; APK and device validation remain incomplete. Phase 8 is next.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
 **Committed:**
@@ -83,7 +85,7 @@ online-coupled (`extension_provider` registry, `track_provider`, Mornye home sea
 only by the download engine and is removed with it in Phase 6. Two now-dead settings
 (`homeFeedProvider`, explore-feed cache row) are deferred to the Phase 8 settings purge (V4).
 
-**Phase 6 summary:** the app is now a local-only player in Dart. The download engine, extension
+**Phase 6 summary (historical; Phase 7 changes below supersede the native/history details):** the app is now a local-only player in Dart. The download engine, extension
 registry, `track_provider`, Mornye home search and all download/verification UI are gone; the
 player, queue and search read the local library DB. Per PD2 the Dart SQL layer no longer queries the
 download history, but `history.db` remains ATTACHed and the native library scan still excludes it —
@@ -91,25 +93,68 @@ both re-homed to Rust in Phase 7. Two kept-but-dormant pieces (`downloaded_embed
 the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide is clean; full
 `flutter test` passes (only the known-flaky perf test).
 
+**Phase 7 implementation:**
+- `a9f63b9` pruned core online-support modules; `fa2afff` completed the reduction.
+- `7d54453` refreshed the graph from code commit `fa2afff0`.
+- New `spotiflac-local` crate owns local scans, CUE handling, metadata/tag writes, artwork,
+  lyrics and logging. Scoped file grants, cancellation, atomic file publication and shutdown
+  draining remain; shutdown is idempotent and waits for active operations.
+- Removed `providers`, `network` and `extensions`; workspace now contains `core`, `local`,
+  `mobile` and `bindgen`. Removed 126 lockfile packages without upgrading retained packages.
+  Kept vendored rustix/libusb sources unchanged.
+- Replaced `ExtensionManager` with automatically initialized `LocalBackend`; removed native
+  provider/auth/repository/download APIs and extension event dispatch. Local embedded/sidecar
+  lyrics reading, editing and export remain, with no online fallback. Legacy request fields
+  remain temporarily for caller compatibility.
+- Native and Dart library imports no longer attach/filter against `history.db`.
+- Build scripts generate Kotlin bindings only; removed iOS/Swift/podspec/staticlib wiring and
+  moved the statx example to the local crate. The native FFmpeg command queue was used only by
+  extensions and was removed; local Dart FFmpeg conversion/tag fallback remains.
+- Updated Android callers and integration fixtures; removed obsolete extension/download tests.
+  Replaced deleted SAF helper references and stale Phase 6 manifest service/widget entries;
+  removed retired provider deep links. INTERNET/localhost policy stays pending the Phase 8 audit.
+
+**Phase 7 validation:**
+- `flutter analyze`: **No issues found**.
+- Full `flutter test`: **1645 passed, 3 skipped**; paging performance test passed this run.
+- `bash scripts/check_rust_backend.sh`: fmt/clippy clean; **215 passed, 1 existing ignored**.
+- Python script tests: **12 passed**.
+- `:app:compileDebugKotlin` and `:app:compileDebugAndroidTestKotlin` passed without APK
+  packaging. `:app:testDebugUnitTest`: **63 passed, none skipped**, including six native
+  data-job ABI/cancellation tests using the host Rust library. Fixed the fixture FFmpeg imports
+  and removed a leftover test of the download-finalizer helper deleted in Phase 6.
+- Host and Android ARM64/ARMv7 Rust builds passed. Checked 16 KB ELF segment alignment and
+  absence of retired extension/repository exports.
+- Kotlin-to-Rust host ABI smoke passed: local metadata, grant revocation, local lyrics/export,
+  shutdown, native data jobs and cancellation.
+- APK validation is **incomplete**. Earlier attempts failed (a stale Phase 6 widget manifest
+  reference was fixed; release CMake dependency population later failed). No APK build is
+  running, and none should be retried under the current user instruction.
+- No Android device or emulator is available; app playback, SAF/USB, statx and on-device
+  integration tests have not run.
+- Graphify was queried before removal and refreshed afterward (AST-only): **23223 nodes,
+  44926 edges, 639 communities**. No nodes are attributed to the three deleted crates.
+  Eight extractor syntax warnings are confined to unchanged vendored C/libusb sources.
+
 **Environment / toolchain:**
-- Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
-  (use `export PATH="$HOME/flutter/bin:$PATH"`).
-- Rust (`cargo`/`rustc`) NOT installed yet → `build_rust_backend.sh` and `flutter build apk`
-  cannot run until rustup is installed (needed before Phase 7).
-- Verification: baseline (pre-migration) and post-Phase-2 `flutter analyze` → **No issues found**.
-  Script changes: `cd scripts && python3 -m unittest` (12 tests OK).
+- In each shell run `source /workspace/toolchains/activate.sh`.
+- Installed: Flutter **3.47.7**, Rust **1.99.0** with fmt/clippy, Java **25**, Android platform/
+  build-tools **37**, NDK **30.0.16248370**, CMake **4.1.2**, Gradle **9.8.1**.
+- Activation sets writable caches, libclang and Java proxy/CA trust. No app server is needed.
+  Toolchains live outside the repository; fresh-task restoration has not been verified.
 
-**Untracked (generated/artifacts):** covered by `.gitignore` (added in `c70befc`):
-`.dart_tool/`, `.flutter-plugins-dependencies`, `build/`, `lib/l10n/app_localizations*.dart`,
-`graphify-out/cache/`.
+**Untracked (generated/artifacts):** covered by `.gitignore`: `.dart_tool/`,
+`.flutter-plugins-dependencies`, `build/`, `lib/l10n/app_localizations*.dart`,
+`graphify-out/cache/`, `android/.kotlin/`.
 
-**Known flaky:** `test/library_browse_sqlite_paging_test.dart` times out at 30s here (pure perf
-test, unrelated to migration). Post-Phase-6 full suite: 1645 passed, 3 skipped (that perf test
-passed this run); `flutter analyze` → No issues found repo-wide.
+**Known flaky:** `test/library_browse_sqlite_paging_test.dart` has timed out at 30s in earlier
+runs; it passed in the final Phase 7 suite.
 
-**Next step:** Phase 7 — Rust backend reduction (sub-phased; the riskiest phase). This needs
-rustup installed (`cargo`/`rustc` are still absent), which blocks `check_rust_backend.sh` /
-`build_rust_backend.sh` / `flutter build apk` verification until it is.
+**Next step:** Phase 8 — dependencies, obsolete Dart bridge wrappers/settings synchronization,
+l10n, Mornye theme consolidation and docs. Some best-effort Dart calls still refer to retired
+native online operations; remove them in Phase 8 rather than restoring native APIs. Keep local
+lyrics and file operations. APK builds remain prohibited unless the user changes the instruction.
+Device playback/SAF/USB/statx validation remains pending access to a device.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
@@ -127,18 +172,19 @@ rustup installed (`cargo`/`rustc` are still absent), which blocks `check_rust_ba
   Android home-screen widget.
 
 **Rust** (reduced)
-- `core` (pruned of online-support modules) + a local-only FFI bridge (reduced `mobile`,
-  or a new local crate) + `bindgen` tool + `vendor/rustix` + `vendor/libusb1-sys`.
+- `core` (pruned of online-support modules), `local` (file operations), `mobile` (local-only
+  FFI bridge), `bindgen` tool, `vendor/rustix` and `vendor/libusb1-sys`.
 - Keep: `core`'s `cover`, `cue`, `filename`, `isrc`, `media`(+`hires`), `native_audio_analysis`,
   `native_palette`, `tags`, `progress`, `cancellation`, `clock`, `matching`, `text`, local `lyrics`.
 - Keep local `mobile` modules: `native_library`, `native_backup`, `native_cache`,
   `native_collections`, `native_id3`, `native_lyrics`, `native_playlists`, `native_playlist_write`,
-  `native_listing`, `native_xml`, `tags`, `hires`, `data_jobs`, `library_metadata`, `filename`,
-  `cancellation`, `progress`, `usb_audio`, `ffmpeg`(local registry), `logging`.
+  `native_xml`, `tags`, `hires`, `data_jobs`, `library_metadata`, `filename`, `local`,
+  `lyrics`, `cancellation`, `usb_audio`, `logging`. The former extension-only `native_listing`,
+  progress pump and FFmpeg command registry are removed.
 
 ---
 
-## 2. Key findings (dependency-grounded)
+## 2. Original findings (dependency-grounded; pre-migration baseline)
 
 **Rust crate graph**
 ```
