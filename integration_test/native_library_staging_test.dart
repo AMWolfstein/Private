@@ -38,7 +38,7 @@ void main() {
   late Directory root;
   late Database database;
   late LibraryNativeAdapter adapter;
-  var initialized = false;
+
   final privatePaths = <String>[];
   Future<void> Function(Map<String, dynamic>, Map<String, dynamic>)? afterStage;
   setUp(() async {
@@ -71,7 +71,7 @@ void main() {
           ),
           isEmpty,
         );
-        expect(request['history_path'], isNot('${root.path}/history.db'));
+        expect(request, isNot(contains('history_path')));
         privatePaths.add(private);
         final result = await PlatformBridge.runNativeDataJob(
           request,
@@ -89,10 +89,7 @@ void main() {
     );
   });
   tearDown(() async {
-    if (initialized) {
-      await PlatformBridge.cleanupExtensions();
-      initialized = false;
-    }
+    await PlatformBridge.setLibraryCoverCacheDir('');
     await database.close();
     await root.delete(recursive: true);
   });
@@ -204,21 +201,7 @@ void main() {
         expect(full['inserted'], 1);
 
         final music = await Directory('${root.path}/music').create();
-        if (!initialized) {
-          final extensions = await Directory(
-            '${root.path}/extensions',
-          ).create();
-          final data = await Directory('${root.path}/extension-data').create();
-          await PlatformBridge.initExtensionSystem(
-            extensions.path,
-            data.path,
-            masterKey: base64Encode(List.filled(32, 1)),
-            lyricsProviders: const [],
-            lyricsFetchOptions: const {},
-            allowedDirectories: [music.path],
-          );
-          initialized = true;
-        }
+
         await database.update(
           'library_sources',
           {'path': music.path},
@@ -298,11 +281,11 @@ void main() {
           isCancelled: () => false,
         );
         timings.add(stopwatch.elapsedMicroseconds);
-        final accepted = count == 3 ? rows.take(2).toList() : rows;
+        final accepted = rows;
         expect(result['committed'], isTrue);
         expect(result['durable'], isTrue);
         expect(result['inserted'], accepted.length);
-        expect(result['skipped'], count - accepted.length);
+        expect(result['skipped'], 0);
         expect(
           await database.query(
             'library',
@@ -479,20 +462,10 @@ void main() {
   );
 
   testWidgets(
-    'production folder incremental scan retains removals and publishes current History filtering',
+    'production folder incremental scan retains removals and keeps local files despite legacy History entries',
     (tester) async {
       final folder = await Directory('${root.path}/audio').create();
-      final extensions = await Directory('${root.path}/extensions').create();
-      final data = await Directory('${root.path}/extension-data').create();
-      await PlatformBridge.initExtensionSystem(
-        extensions.path,
-        data.path,
-        masterKey: base64Encode(List.filled(32, 1)),
-        lyricsProviders: const [],
-        lyricsFetchOptions: const {},
-        allowedDirectories: [folder.path],
-      );
-      initialized = true;
+
       final unchanged = await _wav('${folder.path}/unchanged.wav');
       final added = await _wav('${folder.path}/added.wav');
       final missing = '${folder.path}/missing.wav';
@@ -561,15 +534,15 @@ void main() {
       expect(result['durable'], isTrue);
       expect(result['inserted'], 1);
       expect(result['scanned_count'], 1);
-      expect(result['skipped'], 1);
+      expect(result['skipped'], 0);
       expect(result['deleted_count'], 1);
       expect(result['skippedCount'], 1);
       expect(result['totalFiles'], 2);
       expect(
         await database.query(
           'library',
-          where: 'source_id=?',
-          whereArgs: ['source'],
+          where: 'source_id=? AND file_path != ?',
+          whereArgs: ['source', unchanged.path],
           orderBy: 'id',
         ),
         staged,

@@ -1,17 +1,16 @@
 package com.zarz.spotiflac
 
-import com.spotiflac.backend.CancellationDomain
 import com.spotiflac.backend.CancellationRegistry
 import com.spotiflac.backend.RequestLease
 import java.io.File
 import org.json.JSONArray
 import org.json.JSONObject
 
-// Independent of extension initialization: palette/metadata jobs can start
+// Independent of Library initialization: palette/metadata jobs can start
 // while app initialization is still running. Acquire before queuing on IO, so
 // a following channel cancellation also reaches work that has not started.
 internal object NativeDataJobs {
-    private val registry = CancellationRegistry(CancellationDomain.EXTENSION_REQUEST)
+    private val registry = CancellationRegistry()
     private val active = mutableMapOf<String, MutableList<RequestLease>>()
 
     @Synchronized
@@ -23,7 +22,7 @@ internal object NativeDataJobs {
 
     @Synchronized
     fun cancel(id: String) {
-        // The shared extension registry supports pre-cancel sentinels. Data
+        // The shared cancellation registry supports pre-cancel sentinels. Data
         // jobs are acquired in channel order instead and must not retain them.
         if (active[id]?.isNotEmpty() == true) registry.cancel(id)
     }

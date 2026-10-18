@@ -1,6 +1,6 @@
 use crate::cancellation::RequestLease;
-use crate::manager::{ExtensionManager, ExtensionManagerError};
-use spotiflac_extensions::backend::LyricsRequest as CoreRequest;
+use crate::local::{LocalBackend, LocalBackendError};
+use spotiflac_local::backend::LyricsRequest as CoreRequest;
 use std::sync::Arc;
 
 #[derive(uniffi::Record)]
@@ -36,70 +36,45 @@ fn check(lease: &Option<Arc<RequestLease>>) -> Result<(), String> {
 /// Lyrics use the installed manager's root/cache. Native file access shares
 /// environment grants; the caller retains platform access through this call.
 #[uniffi::export]
-impl ExtensionManager {
+impl LocalBackend {
     pub fn embed_lyrics_to_file(
         &self,
         path: String,
         lyrics: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .embed_lyrics_to_file(&path, &lyrics, &|| check(&lease))
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn get_lyrics_lrc(
         &self,
         request: LyricsRequest,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .get_lyrics_lrc(&request.into(), &|| check(&lease))
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn get_lyrics_lrc_with_source(
         &self,
         request: LyricsRequest,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .get_lyrics_lrc_with_source(&request.into(), &|| check(&lease))
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
-
-    pub fn fetch_and_save_lyrics(
+    pub fn save_local_lyrics(
         &self,
         request: LyricsRequest,
         output_path: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<(), ExtensionManagerError> {
+    ) -> Result<(), LocalBackendError> {
         self.inner
-            .fetch_and_save_lyrics(&request.into(), &output_path, &|| check(&lease))
-            .map_err(ExtensionManagerError::Operation)
-    }
-
-    pub fn set_lyrics_providers_json(
-        &self,
-        providers_json: String,
-    ) -> Result<(), ExtensionManagerError> {
-        self.inner
-            .set_lyrics_providers_json(&providers_json)
-            .map_err(ExtensionManagerError::Operation)
-    }
-
-    pub fn get_available_lyrics_providers_json(&self) -> Result<String, ExtensionManagerError> {
-        self.inner
-            .get_available_lyrics_providers_json()
-            .map_err(ExtensionManagerError::Operation)
-    }
-
-    pub fn set_lyrics_fetch_options_json(
-        &self,
-        options_json: String,
-    ) -> Result<(), ExtensionManagerError> {
-        self.inner
-            .set_lyrics_fetch_options_json(&options_json)
-            .map_err(ExtensionManagerError::Operation)
+            .save_local_lyrics(&request.into(), &output_path, &|| check(&lease))
+            .map_err(LocalBackendError::Operation)
     }
 }

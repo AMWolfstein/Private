@@ -170,8 +170,13 @@ class _StartupBenchmark {
       final firstFrame = await _firstFrame.timeout(const Duration(seconds: 30));
       final backends = await PlatformBridge.getBackendImplementations();
       const backend = String.fromEnvironment('EXPECTED_CORE_BACKEND');
-      if (!const ['go', 'rust'].contains(backend) ||
-          backends.length != 4 ||
+      if (backend != 'rust' ||
+          backends.length != 3 ||
+          !const {
+            'filename',
+            'file_metadata',
+            'library',
+          }.containsAll(backends.keys) ||
           backends.values.any((value) => value != backend)) {
         throw StateError('Unexpected backend ownership: $backends');
       }

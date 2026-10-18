@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FFmpegCapabilitiesTest {
     private fun execute(vararg arguments: String) {
-        val result = NativeDownloadFinalizer.runFFmpegArguments(arrayOf("-v", "error", "-y", *arguments))
+        val result = LocalAudioFixtures.runFFmpegArguments(arrayOf("-v", "error", "-y", *arguments))
         assertTrue(result.second, result.first)
     }
 

@@ -763,18 +763,18 @@ class PlatformBridge {
     await _channel.invokeMethod('setDownloadDirectory', {'path': path});
   }
 
-  /// Holds backend access through download and finalization, including folder changes.
-  static Future<String> acquireDownloadDirectory(String path) async {
+  /// Holds local backend access until the media operation finishes.
+  static Future<String> acquireMediaDirectory(String path) async {
     if (!supportsCoreBackend) return '';
-    return await _channel.invokeMethod<String>('acquireDownloadDirectory', {
+    return await _channel.invokeMethod<String>('acquireMediaDirectory', {
           'path': path,
         }) ??
         '';
   }
 
-  static Future<void> releaseDownloadDirectory(String token) async {
+  static Future<void> releaseMediaDirectory(String token) async {
     if (!supportsCoreBackend || token.isEmpty) return;
-    await _channel.invokeMethod('releaseDownloadDirectory', {'token': token});
+    await _channel.invokeMethod('releaseMediaDirectory', {'token': token});
   }
 
   static Future<void> setNetworkCompatibilityOptions({
@@ -1254,7 +1254,7 @@ class PlatformBridge {
     Iterable<String> paths,
     Future<T> Function() operation,
   ) async {
-    // A user-selected library file or cover can live outside the download
+    // A user-selected library file or cover can live outside the selected library
     // folder. Hold only this operation's backend grants; SAF is staged natively.
     final scopes = <String>[];
     try {
@@ -1263,13 +1263,13 @@ class PlatformBridge {
           if (path.startsWith('/')) File(path).parent.path,
       };
       for (final directory in directories) {
-        scopes.add(await acquireDownloadDirectory(directory));
+        scopes.add(await acquireMediaDirectory(directory));
       }
       return await operation();
     } finally {
       for (final scope in scopes.reversed) {
         try {
-          await releaseDownloadDirectory(scope);
+          await releaseMediaDirectory(scope);
         } catch (e) {
           _log.w('Failed to release media file access: $e');
         }

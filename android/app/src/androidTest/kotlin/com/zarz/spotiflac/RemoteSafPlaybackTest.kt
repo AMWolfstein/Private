@@ -127,12 +127,6 @@ class RemoteSafPlaybackTest {
         val library = File(root, "library").apply { mkdirs() }
         val backend = createCoreBackend(context)
         try {
-            backend.invokeApplication("initExtensionSystem", mapOf(
-                "extensions_dir" to File(root, "sources").apply { mkdirs() }.path,
-                "data_dir" to File(root, "data").apply { mkdirs() }.path,
-                "master_key" to "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                "allowed_directories" to listOf(library.path),
-            ))
             val cue = File(library, "album.cue").apply {
                 writeText("FILE \"absent.flac\" WAVE\nTRACK 01 AUDIO\nINDEX 01 00:00:00\nTRACK 02 AUDIO\nINDEX 01 00:01:00\n")
             }
@@ -157,7 +151,7 @@ class RemoteSafPlaybackTest {
             }
             assertFalse(File(library, "absent.flac").exists())
         } finally {
-            backend.invokeApplication("cleanupExtensions", emptyMap<String, Any>())
+            backend.shutdown()
             root.deleteRecursively()
         }
     }

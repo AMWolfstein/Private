@@ -11,6 +11,7 @@ lib/l10n/app_localizations*.dart
 
 # Android build output
 android/.gradle/
+android/.kotlin/
 android/local.properties
 android/app/.cxx/
 *.apk

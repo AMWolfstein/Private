@@ -1,5 +1,5 @@
 use crate::cancellation::RequestLease;
-use crate::manager::{ExtensionManager, ExtensionManagerError};
+use crate::local::{LocalBackend, LocalBackendError};
 use spotiflac_core::tags;
 use std::collections::BTreeMap;
 use std::fs::{File, OpenOptions};
@@ -19,14 +19,14 @@ impl From<String> for AudioTagsError {
 }
 
 #[uniffi::export]
-impl ExtensionManager {
+impl LocalBackend {
     pub fn set_library_cover_cache_directory(
         &self,
         directory: String,
-    ) -> Result<(), ExtensionManagerError> {
+    ) -> Result<(), LocalBackendError> {
         self.inner
             .set_library_cover_cache_directory(&directory)
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn read_audio_metadata(
@@ -35,11 +35,11 @@ impl ExtensionManager {
         hint: String,
         cache_key: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .read_audio_metadata(&path, &hint, &cache_key, &|| check_lease(lease.as_deref()))
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn parse_cue_file_json(
@@ -47,11 +47,11 @@ impl ExtensionManager {
         path: String,
         audio_directory: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .parse_cue_file_json(&path, &audio_directory, &|| check_lease(lease.as_deref()))
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn parse_cue_file_json_with_resolved_audio(
@@ -59,13 +59,13 @@ impl ExtensionManager {
         path: String,
         audio_path: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .parse_cue_file_json_with_resolved_audio(&path, &audio_path, &|| {
                 check_lease(lease.as_deref())
             })
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -79,11 +79,11 @@ impl ExtensionManager {
         cover_path: String,
         scan_time: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         let check = || check_lease(lease.as_deref());
-        check().map_err(ExtensionManagerError::Operation)?;
+        check().map_err(LocalBackendError::Operation)?;
         if descriptor < 0 {
-            return Err(ExtensionManagerError::Operation(
+            return Err(LocalBackendError::Operation(
                 "invalid audio descriptor".into(),
             ));
         }
@@ -93,7 +93,7 @@ impl ExtensionManager {
             "/dev/fd"
         };
         let audio_path = format!("{directory}/{descriptor}");
-        let mut file = open_audio_file(&audio_path).map_err(ExtensionManagerError::Operation)?;
+        let mut file = open_audio_file(&audio_path).map_err(LocalBackendError::Operation)?;
         let format = tags::library_extension(&audio_path, &hint);
         let mut metadata = serde_json::json!({"coverPath":cover_path});
         if format == "flac" {
@@ -111,7 +111,7 @@ impl ExtensionManager {
             metadata["sampleRate"] = value["sample_rate"].clone();
             metadata["duration"] = value["duration"].clone();
         }
-        check().map_err(ExtensionManagerError::Operation)?;
+        check().map_err(LocalBackendError::Operation)?;
         self.inner
             .scan_cue_file_for_library_with_metadata(
                 &path,
@@ -123,7 +123,7 @@ impl ExtensionManager {
                 &check,
             )
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -136,7 +136,7 @@ impl ExtensionManager {
         cache_key: String,
         scan_time: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .scan_cue_file_for_library(
                 &path,
@@ -148,7 +148,7 @@ impl ExtensionManager {
                 &|| check_lease(lease.as_deref()),
             )
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn scan_library_folder_incremental(
@@ -156,13 +156,13 @@ impl ExtensionManager {
         folder: String,
         existing_json: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .scan_library_folder_incremental(&folder, &existing_json, &|| {
                 check_lease(lease.as_deref())
             })
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn scan_library_folder_incremental_from_snapshot(
@@ -170,13 +170,13 @@ impl ExtensionManager {
         folder: String,
         snapshot: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .scan_library_folder_incremental_from_snapshot(&folder, &snapshot, &|| {
                 check_lease(lease.as_deref())
             })
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn scan_library_folder_to_ndjson_file(
@@ -184,35 +184,35 @@ impl ExtensionManager {
         folder: String,
         output: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<u64, ExtensionManagerError> {
+    ) -> Result<u64, LocalBackendError> {
         self.inner
             .scan_library_folder_to_ndjson_file(&folder, &output, &|| check_lease(lease.as_deref()))
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
-    pub fn get_library_scan_progress(&self) -> Result<String, ExtensionManagerError> {
+    pub fn get_library_scan_progress(&self) -> Result<String, LocalBackendError> {
         self.inner
             .get_library_scan_progress()
             .map(|value| value.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
-    pub fn cancel_library_scan(&self) -> Result<(), ExtensionManagerError> {
+    pub fn cancel_library_scan(&self) -> Result<(), LocalBackendError> {
         self.inner
             .cancel_library_scan()
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
-    pub fn pause_library_scan(&self) -> Result<(), ExtensionManagerError> {
+    pub fn pause_library_scan(&self) -> Result<(), LocalBackendError> {
         self.inner
             .pause_library_scan()
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
-    pub fn resume_library_scan(&self) -> Result<(), ExtensionManagerError> {
+    pub fn resume_library_scan(&self) -> Result<(), LocalBackendError> {
         self.inner
             .resume_library_scan()
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn rewrite_split_artist_tags(
@@ -221,12 +221,12 @@ impl ExtensionManager {
         artist: String,
         album_artist: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .rewrite_split_artist_tags(&path, &artist, &album_artist, &|| {
                 check_lease(lease.as_deref())
             })
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn extract_cover_to_file(
@@ -234,24 +234,10 @@ impl ExtensionManager {
         audio_path: String,
         output_path: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<(), ExtensionManagerError> {
+    ) -> Result<(), LocalBackendError> {
         self.inner
             .extract_cover_to_file(&audio_path, &output_path, &|| check_lease(lease.as_deref()))
-            .map_err(ExtensionManagerError::Operation)
-    }
-
-    pub fn download_cover_to_file_sized(
-        &self,
-        url: String,
-        output_path: String,
-        max_dimension: i64,
-        lease: Option<Arc<RequestLease>>,
-    ) -> Result<(), ExtensionManagerError> {
-        self.inner
-            .download_cover_to_file_sized(&url, &output_path, max_dimension, &|| {
-                check_lease(lease.as_deref())
-            })
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn edit_file_metadata(
@@ -259,11 +245,11 @@ impl ExtensionManager {
         path: String,
         metadata_json: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .edit_file_metadata(&path, &metadata_json, &|| check_lease(lease.as_deref()))
             .map(|result| result.to_string())
-            .map_err(ExtensionManagerError::Operation)
+            .map_err(LocalBackendError::Operation)
     }
 
     pub fn write_m4a_freeform_tags(
@@ -271,18 +257,16 @@ impl ExtensionManager {
         path: String,
         metadata_json: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         let check = || check_lease(lease.as_deref());
-        check().map_err(ExtensionManagerError::Operation)?;
+        check().map_err(LocalBackendError::Operation)?;
         let fields = decode_fields(&metadata_json).map_err(|error| {
-            ExtensionManagerError::Operation(format!("invalid metadata JSON: {error}"))
+            LocalBackendError::Operation(format!("invalid metadata JSON: {error}"))
         })?;
         self.inner
             .edit_m4a_freeform(&path, &fields, false, &check)
             .map_err(|error| {
-                ExtensionManagerError::Operation(format!(
-                    "failed to write M4A freeform tags: {error}"
-                ))
+                LocalBackendError::Operation(format!("failed to write M4A freeform tags: {error}"))
             })?;
         Ok(r#"{"success":true,"method":"native_m4a_freeform"}"#.into())
     }
@@ -292,13 +276,11 @@ impl ExtensionManager {
         path: String,
         reference: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         self.inner
             .ensure_ac4_config(&path, &reference, &|| check_lease(lease.as_deref()))
             .map_err(|error| {
-                ExtensionManagerError::Operation(format!(
-                    "failed to finalize AC-4 container: {error}"
-                ))
+                LocalBackendError::Operation(format!("failed to finalize AC-4 container: {error}"))
             })?;
         Ok(r#"{"success":true}"#.into())
     }
@@ -309,14 +291,14 @@ impl ExtensionManager {
         metadata_json: String,
         cover_path: String,
         lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, ExtensionManagerError> {
+    ) -> Result<String, LocalBackendError> {
         let handled = self
             .inner
             .write_ac4_metadata(&path, &metadata_json, &cover_path, &|| {
                 check_lease(lease.as_deref())
             })
             .map_err(|error| {
-                ExtensionManagerError::Operation(format!("failed to write AC-4 metadata: {error}"))
+                LocalBackendError::Operation(format!("failed to write AC-4 metadata: {error}"))
             })?;
         Ok(serde_json::json!({"success":true,"handled":handled}).to_string())
     }
@@ -344,11 +326,6 @@ pub fn read_file_metadata(
     let check = || check_lease(lease.as_deref());
     check()?;
     tags::file_metadata_extension(&path, &hint)?;
-    if path.starts_with("http://") {
-        return crate::network_tags::read(&path, &hint, &check)
-            .and_then(|metadata| serde_json::to_string(&metadata).map_err(|e| e.to_string()))
-            .map_err(Into::into);
-    }
     let mut file = open_audio_file(&path)?;
     let metadata = tags::read_file_metadata(&mut file, &path, &hint, &check)?;
     serde_json::to_string(&metadata).map_err(|error| error.to_string().into())

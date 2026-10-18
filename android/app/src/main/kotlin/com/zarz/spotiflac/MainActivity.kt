@@ -42,7 +42,6 @@ import java.security.SecureRandom
 import java.util.LinkedHashMap
 import java.util.Locale
 import java.util.UUID
-import java.util.concurrent.atomic.AtomicReference
 
 class MainActivity: FlutterFragmentActivity() {
     // Mirrors audio_service's AudioServiceFragmentActivity: the shared engine
@@ -64,8 +63,7 @@ class MainActivity: FlutterFragmentActivity() {
     override fun shouldDestroyEngineWithHost(): Boolean = false
 
     private val CHANNEL = "com.zarz.spotiflac/backend"
-    private val DOWNLOAD_PROGRESS_STREAM_CHANNEL =
-        "com.zarz.spotiflac/download_progress_stream"
+
     private val LIBRARY_SCAN_PROGRESS_STREAM_CHANNEL =
         "com.zarz.spotiflac/library_scan_progress_stream"
     // A progress bar can't show sub-second granularity; 400ms halves the
@@ -82,14 +80,12 @@ class MainActivity: FlutterFragmentActivity() {
         "setScreenAwake",
         "getBackendImplementations",
         "ensureInstallMarker",
-        "prepareRuntimeState",
-        "downloadByStrategy",
-        "runPostProcessingV2",
+
         "readAudioMetadata",
         "readFileMetadata",
         "checkHiResAuthenticity",
         "editFileMetadata",
-        "reEnrichFile",
+
         "setLibraryCoverCacheDir",
         "scanLibraryFolderToNDJSONFile",
         "scanLibraryFolderIncremental",
@@ -105,7 +101,7 @@ class MainActivity: FlutterFragmentActivity() {
         "pickSafTree",
         "readSetupFolderSelection",
         "acknowledgeSetupFolderSelection",
-        "processPendingExtensionCallbacks",
+
         "safExists",
         "safExistsBatch",
         "isSafTreeAccessible",
@@ -127,7 +123,7 @@ class MainActivity: FlutterFragmentActivity() {
         "safCreateCollisionAwareFromPath",
         "writeTempToSaf",
         "writeSafSidecarLrc",
-        "downloadCoverToFile",
+
         "extractCoverToFile",
         "rewriteSplitArtistTags",
         "writeM4AFreeformTags",
@@ -135,37 +131,21 @@ class MainActivity: FlutterFragmentActivity() {
         "writeAC4Metadata",
         "releaseMemory",
         "releaseMemoryUnderPressure",
-        "startDownloadService",
-        "stopDownloadService",
-        "updateDownloadServiceProgress",
-        "isDownloadServiceRunning",
+
         "startBackgroundWork",
         "updateBackgroundWork",
         "stopBackgroundWork",
-        "startNativeDownloadWorker",
-        "appendNativeDownloadWorkerRequests",
-        "finishNativeDownloadWorkerPreparation",
-        "acknowledgeNativeDownloadWorkerItems",
-        "pauseNativeDownloadWorker",
-        "resumeNativeDownloadWorker",
-        "cancelNativeDownloadWorker",
-        "getNativeDownloadWorkerSnapshot",
-        "consumeVerificationNotification",
+
         "exitApp",
     )
     private var libraryStorageReceiver: BroadcastReceiver? = null
-    private val pendingSessionGrantEvents = mutableListOf<Map<String, Any>>()
-    private var pendingVerificationNotification: String? = null
+
     private val setupFolderPickerStore by lazy {
         SetupFolderPickerStore(getSharedPreferences("setup_folder_picker", Context.MODE_PRIVATE))
     }
     internal val safScanLock = Any()
     internal var safScanProgress = SafScanProgress()
-    private var downloadProgressStreamJob: Job? = null
-    private var downloadProgressConnection: AtomicReference<CoreDownloadProgress?>? = null
-    private var downloadProgressEventSink: EventChannel.EventSink? = null
-    private var lastDownloadProgressPayload: String? = null
-    private var lastDownloadProgressSeq = 0L
+
     private var libraryScanProgressStreamJob: Job? = null
     private var libraryScanProgressEventSink: EventChannel.EventSink? = null
     private var lastLibraryScanProgressPayload: String? = null
@@ -284,7 +264,6 @@ class MainActivity: FlutterFragmentActivity() {
         }
     }
 
-
     data class SafScanProgress(
         var totalFiles: Int = 0,
         var scannedFiles: Int = 0,
@@ -295,7 +274,7 @@ class MainActivity: FlutterFragmentActivity() {
     )
 
     companion object {
-        private val extensionAuthCallbacks = ExtensionAuthCallbacks()
+
         // audio_service keeps the engine across Activity recreation. Retain
         // its outstanding picker reply for the same lifetime, not the Activity.
         private var pendingSafTreeResult: MethodChannel.Result? = null
@@ -565,68 +544,6 @@ class MainActivity: FlutterFragmentActivity() {
         }
     }
 
-    private fun updateDownloadProgressSeq(progress: Any?) {
-        val objectValue = progress as? Map<*, *> ?: return
-        val seq = (objectValue["seq"] as? Number)?.toLong() ?: lastDownloadProgressSeq
-        if (objectValue["reset"] == true || seq > lastDownloadProgressSeq) {
-            lastDownloadProgressSeq = seq
-        }
-    }
-
-    private fun startDownloadProgressStream(sink: EventChannel.EventSink) {
-        stopDownloadProgressStream()
-        downloadProgressEventSink = sink
-        lastDownloadProgressPayload = null
-        lastDownloadProgressSeq = 0L
-        val connection = AtomicReference<CoreDownloadProgress?>(null)
-        downloadProgressConnection = connection
-        downloadProgressStreamJob = scope.launch {
-            try {
-                while (isActive && downloadProgressConnection === connection) {
-                    try {
-                        // Decode once on IO. Reset snapshots of large queues
-                        // previously parsed twice on the UI thread.
-                        val (payload, progress) = withContext(Dispatchers.IO) {
-                            val reader = connection.get() ?: coreBackend.openDownloadProgress().also { connection.set(it) }
-                            ensureActive()
-                            val payload = reader.waitDelta(lastDownloadProgressSeq, 15_000L)
-                            payload to if (payload.isEmpty()) null else parseJsonPayload(payload)
-                        }
-                        if (!isActive || downloadProgressConnection !== connection) break
-                        if (payload.isNotEmpty() && payload != lastDownloadProgressPayload) {
-                            updateDownloadProgressSeq(progress)
-                            lastDownloadProgressPayload = payload
-                            sink.success(progress)
-                            delay(250L)
-                        }
-                    } catch (e: Exception) {
-                        connection.getAndSet(null)?.close()
-                        if (!isActive || downloadProgressConnection !== connection) break
-                        lastDownloadProgressSeq = 0L
-                        lastDownloadProgressPayload = null
-                        android.util.Log.w(
-                            "SpotiFLAC",
-                            "Download progress stream poll failed: ${e.message}",
-                        )
-                        delay(250L)
-                    }
-                }
-            } finally {
-                connection.getAndSet(null)?.close()
-            }
-        }
-    }
-
-    private fun stopDownloadProgressStream() {
-        downloadProgressStreamJob?.cancel()
-        downloadProgressStreamJob = null
-        downloadProgressConnection?.getAndSet(null)?.close()
-        downloadProgressConnection = null
-        downloadProgressEventSink = null
-        lastDownloadProgressPayload = null
-        lastDownloadProgressSeq = 0L
-    }
-
     private fun startLibraryScanProgressStream(sink: EventChannel.EventSink) {
         stopLibraryScanProgressStream()
         libraryScanProgressEventSink = sink
@@ -742,96 +659,20 @@ class MainActivity: FlutterFragmentActivity() {
         )
     }
 
-    private fun prepareRuntimeState(extensionDataDir: String): String {
-        val pattern = Regex("^[0-9a-f]{32}$")
-        fun normalize(value: String?): String? {
-            val normalized = value?.trim()?.lowercase().orEmpty()
-            return normalized.takeIf(pattern::matches)
-        }
-        fun ByteArray.hex(): String = buildString(size * 2) {
-            for (byte in this@hex) {
-                append(((byte.toInt() ushr 4) and 0x0f).toString(16))
-                append((byte.toInt() and 0x0f).toString(16))
-            }
-        }
-
-        val values = LinkedHashMap<String, String>()
-        File(extensionDataDir, "signed_sessions")
-            .listFiles { file -> file.isFile && file.name.endsWith(".json") }
-            ?.forEach { record ->
-                try {
-                    if (record.length() <= 64 * 1024L) {
-                        normalize(
-                            JSONObject(record.readText()).optString("install_id"),
-                        )?.let { values[record.name] = it }
-                    }
-                } catch (_: Exception) {
-                    // Invalid records are handled by the normal session loader.
-                }
-            }
-
-        val defaultValue = values.toSortedMap().values.firstOrNull() ?: run {
-            val androidID = android.provider.Settings.Secure.getString(
-                contentResolver,
-                android.provider.Settings.Secure.ANDROID_ID,
-            )?.trim().orEmpty()
-            val domain = "com.zarz.spotiflac/runtime/v1:"
-            val source = if (androidID.isNotEmpty()) {
-                domain + androidID
-            } else {
-                val fallbackFile = File(noBackupFilesDir, "rs_v1")
-                val fallback = try {
-                    normalize(fallbackFile.takeIf(File::isFile)?.readText())
-                } catch (_: Exception) {
-                    null
-                } ?: ByteArray(16).also(SecureRandom()::nextBytes).hex().also { value ->
-                    try {
-                        fallbackFile.parentFile?.mkdirs()
-                        fallbackFile.writeText(value)
-                    } catch (_: Exception) {}
-                }
-                domain + fallback
-            }
-            MessageDigest.getInstance("SHA-256")
-                .digest(source.toByteArray(Charsets.UTF_8))
-                .copyOf(16)
-                .hex()
-        }
-        val entries = JSONObject()
-        for ((key, value) in values.toSortedMap()) entries.put(key, value)
-        return JSONObject()
-            .put("v", 1)
-            .put("d", defaultValue)
-            .put("s", entries)
-            .toString()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         // Ensure the shared audio_service engine exists before the activity
         // delegate looks it up by cached id (see getCachedEngineId above).
         AudioServicePlugin.getFlutterEngine(this)
         super.onCreate(savedInstanceState)
-        handleVerificationNotificationIntent(intent)
-        handleExtensionOAuthIntent(intent)
+
         PlayerWidgetBridge.handleIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        handleVerificationNotificationIntent(intent)
-        handleExtensionOAuthIntent(intent)
-        PlayerWidgetBridge.handleIntent(intent)
-    }
 
-    private fun handleVerificationNotificationIntent(intent: Intent?) {
-        if (intent?.action != VerificationNotificationIntent.ACTION) return
-        val payload = intent.getStringExtra(VerificationNotificationIntent.PAYLOAD)
-            ?.takeIf { it.isNotBlank() } ?: return
-        pendingVerificationNotification = payload
-        intent.removeExtra(VerificationNotificationIntent.PAYLOAD)
-        // Keep the payload until Dart is initialized and explicitly consumes it.
-        backendChannel?.invokeMethod("extensionVerificationNotificationTapped", null)
+        PlayerWidgetBridge.handleIntent(intent)
     }
 
     /**
@@ -839,51 +680,6 @@ class MainActivity: FlutterFragmentActivity() {
      * and run its token exchange (e.g. completeSpotifyLogin). State is a one-time
      * host nonce resolved to the owning extension by the backend.
      */
-    private fun handleExtensionOAuthIntent(intent: Intent?) {
-        val uri = intent?.data ?: return
-        if (!extensionAuthCallbacks.offer(uri)) return
-        // Keep the Intent intact until the result is handled. A cold start has
-        // no extension owner yet; Dart drains this inbox after initialization.
-        backendChannel?.invokeMethod("extensionAuthCallbackReceived", null)
-    }
-
-    private suspend fun processPendingExtensionCallbacks() {
-        extensionAuthCallbacks.drain { callback ->
-            var callbackExtensionId = ""
-            try {
-                withContext(Dispatchers.IO) {
-                    coreBackend.completeAuthCallback(callback.state, callback.code, callback.sessionGrant) {
-                        callbackExtensionId = it
-                    }
-                }
-                android.util.Log.i("SpotiFLAC", "Extension callback completed")
-                if (callback.sessionGrant) {
-                    notifySessionGrantCompleted(callbackExtensionId, true)
-                }
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                android.util.Log.w("SpotiFLAC", "Extension callback failed (${e.javaClass.simpleName})")
-                if (callback.sessionGrant && callbackExtensionId.isNotEmpty()) {
-                    notifySessionGrantCompleted(callbackExtensionId, false)
-                }
-            }
-            val current = intent?.data
-            if (current?.getQueryParameter("state") == callback.state) intent.data = null
-        }
-    }
-
-    private fun notifySessionGrantCompleted(extensionId: String, success: Boolean) {
-        val payload = mapOf(
-            "extension_id" to extensionId,
-            "success" to success,
-        )
-        val channel = backendChannel
-        if (channel == null) {
-            pendingSessionGrantEvents.add(payload)
-            return
-        }
-        channel.invokeMethod("extensionSessionGrantCompleted", payload)
-    }
 
     internal fun reportLibraryScanError(path: String, operation: String, message: String) {
         android.util.Log.e("SpotiFLAC", "Library scan: $operation [$path]: $message")
@@ -973,10 +769,9 @@ class MainActivity: FlutterFragmentActivity() {
             } catch (_: Exception) {}
         }
         libraryStorageReceiver = null
-        // The backend belongs to the process/shared Flutter engine and download
-        // service. Activity recreation must not shut it down (or wait for its
-        // active scans/downloads on the UI thread).
-        stopDownloadProgressStream()
+        // The backend belongs to the process/shared Flutter engine. Activity
+        // recreation must not shut it down or wait for active scans on the UI thread.
+
         stopLibraryScanProgressStream()
         closeAllSafPlaybackLeases()
         super.onDestroy()
@@ -1056,23 +851,6 @@ class MainActivity: FlutterFragmentActivity() {
 
         EventChannel(
             messenger,
-            DOWNLOAD_PROGRESS_STREAM_CHANNEL,
-        ).setStreamHandler(
-            object : EventChannel.StreamHandler {
-                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                    if (events != null) {
-                        startDownloadProgressStream(events)
-                    }
-                }
-
-                override fun onCancel(arguments: Any?) {
-                    stopDownloadProgressStream()
-                }
-            },
-        )
-
-        EventChannel(
-            messenger,
             LIBRARY_SCAN_PROGRESS_STREAM_CHANNEL,
         ).setStreamHandler(
             object : EventChannel.StreamHandler {
@@ -1091,13 +869,6 @@ class MainActivity: FlutterFragmentActivity() {
         val channel = MethodChannel(messenger, CHANNEL)
         backendChannel = channel
         registerLibraryStorageReceiver()
-        if (pendingSessionGrantEvents.isNotEmpty()) {
-            val events = pendingSessionGrantEvents.toList()
-            pendingSessionGrantEvents.clear()
-            for (event in events) {
-                channel.invokeMethod("extensionSessionGrantCompleted", event)
-            }
-        }
 
         channel.setMethodCallHandler { call, result ->
             scope.launch {
@@ -1106,10 +877,7 @@ class MainActivity: FlutterFragmentActivity() {
                         return@launch
                     }
                     when (call.method) {
-                        "processPendingExtensionCallbacks" -> {
-                            processPendingExtensionCallbacks()
-                            result.success(null)
-                        }
+
                         "setScreenAwake" -> {
                             val flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                             if (call.argument<Boolean>("enabled") == true) {
@@ -1119,29 +887,14 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(null)
                         }
-                        "consumeVerificationNotification" -> {
-                            val payload = pendingVerificationNotification
-                            pendingVerificationNotification = null
-                            result.success(payload)
-                        }
+
                         "ensureInstallMarker" -> {
                             val installState = withContext(Dispatchers.IO) {
                                 ensureInstallMarker()
                             }
                             result.success(installState)
                         }
-                        "prepareRuntimeState" -> {
-                            val dataDir = call.argument<String>("data_dir") ?: ""
-                            val runtimeState = withContext(Dispatchers.IO) {
-                                require(dataDir.isNotBlank()) {
-                                    "Extension data directory is required"
-                                }
-                                val payload = prepareRuntimeState(dataDir)
-                                selectedBackend.setRuntimeState(dataDir, payload)
-                                mapOf("ready" to true)
-                            }
-                            result.success(runtimeState)
-                        }
+
                         "exitApp" -> {
                             flutterBackCallback?.isEnabled = false
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -1151,29 +904,13 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(null)
                         }
-                        "downloadByStrategy" -> {
-                            val requestJson = call.arguments as String
-                            val response = withContext(Dispatchers.IO) {
-                                SafDownloadHandler.handle(this@MainActivity, requestJson, coreBackend)
-                            }
-                            result.success(response)
-                        }
-                        "acquireDownloadDirectory" -> {
-                            val path = call.argument<String>("path") ?: ""
-                            withContext(Dispatchers.IO) {
-                                coreBackend.openDownloadDirectory(path).close()
-                            }
-                            // Go grants have process lifetime; Rust owns scoped tokens in its dispatcher.
-                            result.success("")
-                        }
-                        "releaseDownloadDirectory" -> result.success(null)
+
                         "getBackendImplementations" -> {
                             result.success(
                                 mapOf(
                                     "filename" to coreBackend.implementation,
                                     "file_metadata" to coreBackend.fileMetadataImplementation(call.argument<String>("file_path") ?: ""),
-                                    "extensions" to if (coreBackend.routesApplication) "rust" else "go",
-                                    "downloads" to coreBackend.implementation,
+                                    "library" to coreBackend.implementation,
                                 )
                             )
                         }
@@ -1376,16 +1113,16 @@ class MainActivity: FlutterFragmentActivity() {
                         "safCreateFromPath" -> {
                             val treeUriStr = call.argument<String>("tree_uri") ?: ""
                             val relativeDir = call.argument<String>("relative_dir") ?: ""
-                            val fileName = SafDownloadHandler.sanitizeFilename(call.argument<String>("file_name") ?: "")
+                            val fileName = SafFileOps.sanitizeFilename(call.argument<String>("file_name") ?: "")
                             val mimeType = call.argument<String>("mime_type") ?: "application/octet-stream"
                             val srcPath = call.argument<String>("src_path") ?: ""
                             val createdUri = withContext(Dispatchers.IO) {
                                 if (treeUriStr.isBlank()) return@withContext null
                                 if (fileName.isBlank()) return@withContext null
-                                val dir = SafDownloadHandler.ensureDocumentDir(this@MainActivity, Uri.parse(treeUriStr), relativeDir) ?: return@withContext null
+                                val dir = SafFileOps.ensureDocumentDir(this@MainActivity, Uri.parse(treeUriStr), relativeDir) ?: return@withContext null
                                 val existing = findSafChild(this@MainActivity, dir, fileName)
                                 val createdNew = existing == null
-                                val doc = SafDownloadHandler.createOrReuseDocumentFile(this@MainActivity, dir, mimeType, fileName)
+                                val doc = SafFileOps.createOrReuseDocumentFile(this@MainActivity, dir, mimeType, fileName)
                                     ?: return@withContext null
                                 if (!writeUriFromPath(doc.uri, srcPath)) {
                                     if (createdNew) {
@@ -1405,7 +1142,7 @@ class MainActivity: FlutterFragmentActivity() {
                             val srcPath = call.argument<String>("src_path") ?: ""
                             val response = withContext(Dispatchers.IO) {
                                 if (treeUriStr.isBlank() || fileName.isBlank()) return@withContext null
-                                SafDownloadHandler.writeFileToSafIfAbsent(
+                                SafFileOps.writeFileToSafIfAbsent(
                                     context = this@MainActivity,
                                     treeUriStr = treeUriStr,
                                     relativeDir = relativeDir,
@@ -1432,7 +1169,7 @@ class MainActivity: FlutterFragmentActivity() {
                             val preservedSuffix = call.argument<String>("preserved_suffix") ?: ""
                             val response = withContext(Dispatchers.IO) {
                                 if (treeUriStr.isBlank() || fileName.isBlank()) return@withContext null
-                                SafDownloadHandler.writeFileToSafUnique(
+                                SafFileOps.writeFileToSafUnique(
                                     context = this@MainActivity,
                                     treeUriStr = treeUriStr,
                                     relativeDir = relativeDir,
@@ -1464,7 +1201,7 @@ class MainActivity: FlutterFragmentActivity() {
                                     cleanFileName.isBlank() ||
                                     variantFileName.isBlank()
                                 ) return@withContext null
-                                SafDownloadHandler.writeFileToSafCollisionAware(
+                                SafFileOps.writeFileToSafCollisionAware(
                                     context = this@MainActivity,
                                     treeUriStr = treeUriStr,
                                     relativeDir = relativeDir,
@@ -1724,41 +1461,7 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "downloadCoverToFile" -> {
-                            val coverUrl = call.argument<String>("cover_url") ?: ""
-                            val outputPath = call.argument<String>("output_path") ?: ""
-                            val maxDimension = call.argument<Number>("max_dimension")
-                                ?.toLong()
-                                ?.coerceAtLeast(0L)
-                                ?: 0L
-                            val response = withContext(Dispatchers.IO) {
-                                var temporaryCover: File? = null
-                                try {
-                                    val destination = if (outputPath.isBlank()) {
-                                        coreBackend.createTemporaryMediaFile(
-                                            this@MainActivity,
-                                            "cover_",
-                                            ".jpg",
-                                        ).also { temporaryCover = it }.absolutePath
-                                    } else {
-                                        outputPath
-                                    }
-                                    coreBackend.downloadCoverToFileSized(
-                                        coverUrl,
-                                        destination,
-                                        maxDimension
-                                    )
-                                    JSONObject()
-                                        .put("success", true)
-                                        .put("file_path", destination)
-                                        .toString()
-                                } catch (e: Exception) {
-                                    temporaryCover?.delete()
-                                    """{"success":false,"error":"${e.message?.replace("\"", "'")}"}"""
-                                }
-                            }
-                            result.success(response)
-                        }
+
                         "extractCoverToFile" -> {
                             val audioPath = call.argument<String>("audio_path") ?: ""
                             val outputPath = call.argument<String>("output_path") ?: ""
@@ -1777,85 +1480,7 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "reEnrichFile" -> {
-                            val requestJson = call.argument<String>("request_json") ?: "{}"
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    val reqObj = JSONObject(requestJson)
-                                    val filePath = reqObj.optString("file_path", "")
 
-                                    // Preview only resolves online metadata; it does not need
-                                    // a full SAF document copy and never writes the source.
-                                    if (filePath.startsWith("content://") && !reqObj.optBoolean("preview_only", false)) {
-                                        val uri = Uri.parse(filePath)
-                                        val tempPath = copyUriToTemp(uri)
-                                            ?: return@withContext """{"error":"Failed to copy SAF file to temp"}"""
-                                        var retainedForFfmpeg = false
-                                        try {
-                                            reqObj.put("file_path", tempPath)
-                                            val raw = coreBackend.reEnrichFile(reqObj.toString())
-                                            val obj = JSONObject(raw)
-
-                                            if (obj.has("error")) {
-                                                return@withContext raw
-                                            }
-
-                                            val method = obj.optString("method", "")
-                                            if (method == "ffmpeg") {
-                                                // MP3/Opus: Dart handles FFmpeg on temp file, then writes back
-                                                obj.put("temp_path", tempPath)
-                                                obj.put("saf_uri", filePath)
-                                                retainedForFfmpeg = true
-                                                return@withContext obj.toString()
-                                                // Dart cleans up after FFmpeg + writeTempToSaf.
-                                            }
-
-                                            // FLAC: the selected backend wrote to temp; copy back now.
-                                            if (!writeUriFromPath(uri, tempPath)) {
-                                                return@withContext """{"error":"Failed to write enriched metadata back to SAF file"}"""
-                                            }
-                                            if (obj.optBoolean("write_external_lrc", false)) {
-                                                writeSafSidecarLrc(uri, obj.optString("lyrics", ""))
-                                            }
-                                            raw
-                                        } finally {
-                                            if (!retainedForFfmpeg) {
-                                                try { File(tempPath).delete() } catch (_: Exception) {}
-                                            }
-                                        }
-                                    } else {
-                                        coreBackend.reEnrichFile(requestJson)
-                                    }
-                                } catch (e: Exception) {
-                                    """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
-                                }
-                            }
-                            result.success(response)
-                        }
-                        "startDownloadService" -> {
-                            val trackName = call.argument<String>("track_name") ?: ""
-                            val artistName = call.argument<String>("artist_name") ?: ""
-                            val queueCount = call.argument<Int>("queue_count") ?: 0
-                            DownloadService.start(this@MainActivity, trackName, artistName, queueCount)
-                            result.success(null)
-                        }
-                        "stopDownloadService" -> {
-                            DownloadService.stop(this@MainActivity)
-                            result.success(null)
-                        }
-                        "updateDownloadServiceProgress" -> {
-                            val trackName = call.argument<String>("track_name") ?: ""
-                            val artistName = call.argument<String>("artist_name") ?: ""
-                            val progress = (call.argument<Number>("progress") ?: 0).toLong()
-                            val total = (call.argument<Number>("total") ?: 0).toLong()
-                            val queueCount = (call.argument<Number>("queue_count") ?: 0).toInt()
-                            val status = call.argument<String>("status") ?: "downloading"
-                            DownloadService.updateProgress(this@MainActivity, trackName, artistName, progress, total, queueCount, status)
-                            result.success(null)
-                        }
-                        "isDownloadServiceRunning" -> {
-                            result.success(DownloadService.isServiceRunning())
-                        }
                         "startBackgroundWork" -> {
                             result.success(
                                 BackgroundWorkService.start(
@@ -1879,83 +1504,7 @@ class MainActivity: FlutterFragmentActivity() {
                             BackgroundWorkService.stop(call.argument<String>("kind") ?: "")
                             result.success(null)
                         }
-                        "startNativeDownloadWorker" -> {
-                            val requestsJson = call.argument<String>("requests_json") ?: "[]"
-                            val settingsJson = call.argument<String>("settings_json") ?: "{}"
-                            val requestsPath = call.argument<String>("requests_path") ?: ""
-                            val settingsPath = call.argument<String>("settings_path") ?: ""
-                            if (requestsPath.isNotBlank()) {
-                                DownloadService.startNativeQueueFromFiles(
-                                    this@MainActivity,
-                                    requestsPath,
-                                    settingsPath
-                                )
-                            } else {
-                                DownloadService.startNativeQueue(this@MainActivity, requestsJson, settingsJson)
-                            }
-                            result.success(null)
-                        }
-                        "appendNativeDownloadWorkerRequests" -> {
-                            val requestsPath = call.argument<String>("requests_path") ?: ""
-                            val runId = call.argument<String>("run_id") ?: ""
-                            if (requestsPath.isNotBlank() && runId.isNotBlank()) {
-                                DownloadService.appendNativeQueueFromFile(
-                                    this@MainActivity,
-                                    requestsPath,
-                                    runId,
-                                )
-                            }
-                            result.success(null)
-                        }
-                        "finishNativeDownloadWorkerPreparation" -> {
-                            val runId = call.argument<String>("run_id") ?: ""
-                            if (runId.isNotBlank()) {
-                                DownloadService.finishNativeQueuePreparation(
-                                    this@MainActivity,
-                                    runId,
-                                )
-                            }
-                            result.success(null)
-                        }
-                        "acknowledgeNativeDownloadWorkerItems" -> {
-                            val runId = call.argument<String>("run_id") ?: ""
-                            val itemIdsJson = call.argument<String>("item_ids_json") ?: "[]"
-                            if (runId.isNotBlank()) {
-                                DownloadService.acknowledgeNativeQueueItems(
-                                    this@MainActivity,
-                                    runId,
-                                    itemIdsJson,
-                                )
-                            }
-                            result.success(null)
-                        }
-                        "pauseNativeDownloadWorker" -> {
-                            DownloadService.pauseNativeQueue(this@MainActivity)
-                            result.success(null)
-                        }
-                        "resumeNativeDownloadWorker" -> {
-                            DownloadService.resumeNativeQueue(this@MainActivity)
-                            result.success(null)
-                        }
-                        "cancelNativeDownloadWorker" -> {
-                            DownloadService.cancelNativeQueue(this@MainActivity)
-                            result.success(null)
-                        }
-                        "getNativeDownloadWorkerSnapshot" -> {
-                            val sinceStateSerial =
-                                (call.argument<Number>("since_state_serial") ?: 0L).toLong()
-                            // The snapshot can be megabytes late in a large
-                            // batch; read and parse it off the main thread.
-                            val payload = withContext(Dispatchers.IO) {
-                                parseJsonPayload(
-                                    DownloadService.getNativeWorkerSnapshot(
-                                        this@MainActivity,
-                                        sinceStateSerial
-                                    )
-                                )
-                            }
-                            result.success(payload)
-                        }
+
                         "releaseMemory" -> {
                             withContext(Dispatchers.IO) {
                                 coreBackend.releaseIdleResources()
@@ -1969,31 +1518,7 @@ class MainActivity: FlutterFragmentActivity() {
                             android.util.Log.d("SpotiFLAC", "Backend memory pressure release completed")
                             result.success(null)
                         }
-                        "runPostProcessingV2" -> {
-                            val inputJson = call.argument<String>("input") ?: ""
-                            val metadataJson = call.argument<String>("metadata") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                val inputObj = if (inputJson.isNotBlank()) JSONObject(inputJson) else JSONObject()
-                                val uriStr = inputObj.optString("uri", "")
-                                val pathStr = inputObj.optString("path", "")
-                                val effectiveUri = when {
-                                    uriStr.startsWith("content://") -> uriStr
-                                    pathStr.startsWith("content://") -> pathStr
-                                    else -> ""
-                                }
 
-                                if (effectiveUri.isNotBlank()) {
-                                    runPostProcessingSafV2(effectiveUri, metadataJson, inputObj.optString("item_id", ""))
-                                } else {
-                                    if (pathStr.isNotBlank()) {
-                                        inputObj.put("name", File(pathStr).name)
-                                        inputObj.put("is_saf", false)
-                                    }
-                                    coreBackend.runPostProcessing(inputObj.toString(), metadataJson)
-                                }
-                            }
-                            result.success(response)
-                        }
                         "setLibraryCoverCacheDir" -> {
                             val cacheDir = call.argument<String>("cache_dir") ?: ""
                             withContext(Dispatchers.IO) {

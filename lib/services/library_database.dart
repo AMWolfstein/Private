@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/library_queue_store.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
 import 'package:spotiflac_android/services/library_search.dart';
@@ -43,7 +42,6 @@ class LibraryDatabase {
   static const int lyricsMetadataScanVersion = libraryLyricsMetadataScanVersion;
   static final sqlite.SingleFlightInitializer<Database> _database =
       sqlite.SingleFlightInitializer<Database>();
-  bool _historyAttached = false;
   // null means this database connection has not attempted FTS setup yet.
   // false is a completed capability/setup result and must not be retried.
   bool? _searchFtsAvailable;
@@ -85,7 +83,7 @@ class LibraryDatabase {
     if (isCancelled()) throw StateError('Library scan cancelled');
     if (PlatformBridge.supportsCoreBackend) {
       final db = await database;
-      await _ensureHistoryAttached(db);
+
       final result = await LibraryNativeAdapter(db).importScanFile(
         sourceId,
         scan,
@@ -146,7 +144,7 @@ class LibraryDatabase {
     required bool Function() isCancelled,
   }) async {
     final db = await database;
-    await _ensureHistoryAttached(db);
+
     return LibraryNativeAdapter(db).scanIncremental(
       sourceId,
       folderPath,
@@ -165,33 +163,13 @@ class LibraryDatabase {
     int offset = 0,
   }) async {
     final db = await database;
-    return LibrarySearchStore(
-      db,
-      localFts: searchFtsAvailable,
-    ).search(
+    return LibrarySearchStore(db, localFts: searchFtsAvailable).search(
       query: query,
       kind: kind,
       includeLocal: includeLocal,
       limit: limit,
       offset: offset,
     );
-  }
-
-  Future<void> _ensureHistoryAttached(Database db) async {
-    if (_historyAttached) return;
-    await HistoryDatabase.instance.database;
-    final dbPath = await getApplicationDocumentsDirectory();
-    final historyPath = join(dbPath.path, 'history.db');
-    try {
-      await db.execute('ATTACH DATABASE ? AS history_db', [historyPath]);
-    } catch (e) {
-      final message = e.toString().toLowerCase();
-      if (!message.contains('already in use') &&
-          !message.contains('already exists')) {
-        rethrow;
-      }
-    }
-    _historyAttached = true;
   }
 
   void _putPathKeysInBatch(Batch batch, String id, String? filePath) =>
@@ -382,20 +360,6 @@ class LibraryDatabase {
       }
       await flush();
 
-      const historyMatch =
-          '''
-        EXISTS (
-          SELECT 1
-          FROM $_scanStagePathKeysTable sk
-          JOIN history_db.history_path_keys hk ON hk.path_key = sk.path_key
-          WHERE sk.item_id = s.id
-        )
-      ''';
-      final skippedRows = await db.rawQuery(
-        'SELECT COUNT(*) AS count FROM $_scanStageTable s '
-        'WHERE $historyMatch',
-      );
-      final skipped = Sqflite.firstIntValue(skippedRows) ?? 0;
       final stagedRows = await db.rawQuery(
         'SELECT COUNT(*) AS count FROM $_scanStageTable',
       );
@@ -416,29 +380,29 @@ class LibraryDatabase {
         await txn.rawDelete('''
           DELETE FROM library_path_keys
           WHERE item_id IN (
-            SELECT s.id FROM $_scanStageTable s WHERE NOT $historyMatch
+            SELECT s.id FROM $_scanStageTable s
           )
         ''');
         await txn.rawInsert('''
           INSERT OR REPLACE INTO library ($columnList)
           SELECT $selectedColumns FROM $_scanStageTable s
-          WHERE NOT $historyMatch
+
         ''');
         await txn.rawInsert('''
           INSERT OR IGNORE INTO library_path_keys(item_id, path_key)
           SELECT sk.item_id, sk.path_key
           FROM $_scanStagePathKeysTable sk
           JOIN $_scanStageTable s ON s.id = sk.item_id
-          WHERE NOT $historyMatch
+
         ''');
       });
-      final inserted = staged - skipped;
+      final inserted = staged;
       _log.i(
         'Streamed $streamed rows, staged $staged unique rows, and swapped '
         '$inserted into Library source '
-        '$sourceId ($skipped downloads excluded)',
+        '$sourceId',
       );
-      return (inserted: inserted, skipped: skipped);
+      return (inserted: inserted, skipped: 0);
     } finally {
       await db.execute('DROP TABLE IF EXISTS $_scanStagePathKeysTable');
       await db.execute('DROP TABLE IF EXISTS $_scanStageTable');
@@ -651,10 +615,7 @@ class LibraryDatabase {
 
   Future<LibraryQueueStore> _queueStore() async {
     final db = await database;
-    return LibraryQueueStore(
-      db,
-      localFts: searchFtsAvailable,
-    );
+    return LibraryQueueStore(db, localFts: searchFtsAvailable);
   }
 
   Future<QueueLibraryDbPage> getQueueTrackPageResult(
@@ -875,7 +836,7 @@ class LibraryDatabase {
   /// alternate index/URI references to the same file. Best quality comes first.
   Future<List<IsrcDuplicateGroup>> findIsrcDuplicateGroups() async {
     final db = await database;
-    await _ensureHistoryAttached(db);
+
     return readIsrcDuplicateGroups(db);
   }
 
@@ -1103,7 +1064,6 @@ class LibraryDatabase {
     final db = await database;
     await db.close();
     _database.reset();
-    _historyAttached = false;
     _searchFtsAvailable = null;
   }
 

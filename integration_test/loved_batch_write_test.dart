@@ -91,19 +91,9 @@ void main() {
       tester,
     ) async {
       final root = await Directory.systemTemp.createTemp('loved-batch-device-');
-      final extensions = await Directory('${root.path}/extensions').create();
-      final data = await Directory('${root.path}/data').create();
-      final output = await Directory('${root.path}/output').create();
-      await PlatformBridge.initExtensionSystem(
-        extensions.path,
-        data.path,
-        masterKey: base64Encode(List<int>.filled(32, 1)),
-        lyricsProviders: const [],
-        lyricsFetchOptions: const {},
-        allowedDirectories: [output.path],
-      );
+
       expect(
-        (await PlatformBridge.getBackendImplementations())['extensions'],
+        (await PlatformBridge.getBackendImplementations())['library'],
         'rust',
       );
       final db = await openDatabase(
@@ -219,7 +209,7 @@ void main() {
         completed++;
       } finally {
         await db.close();
-        await PlatformBridge.cleanupExtensions();
+        await PlatformBridge.setLibraryCoverCacheDir('');
         await root.delete(recursive: true);
       }
     });

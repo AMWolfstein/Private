@@ -1,19 +1,11 @@
 use spotiflac_core::cancellation as core;
 use std::sync::Arc;
 
-#[derive(uniffi::Enum)]
-pub enum CancellationDomain {
-    Download,
-    ExtensionRequest,
-}
-
 #[derive(Debug, thiserror::Error, uniffi::Error)]
 #[uniffi(flat_error)]
 pub enum CancellationError {
-    #[error("download cancelled")]
-    DownloadCancelled,
-    #[error("extension request cancelled")]
-    ExtensionRequestCancelled,
+    #[error("local request cancelled")]
+    LocalRequestCancelled,
     #[error("cancellation registry closed")]
     RegistryClosed,
     #[error("request lease released")]
@@ -23,8 +15,8 @@ pub enum CancellationError {
 impl From<core::CancellationError> for CancellationError {
     fn from(error: core::CancellationError) -> Self {
         match error {
-            core::CancellationError::DownloadCancelled => Self::DownloadCancelled,
-            core::CancellationError::ExtensionRequestCancelled => Self::ExtensionRequestCancelled,
+            core::CancellationError::DownloadCancelled => Self::LocalRequestCancelled,
+            core::CancellationError::ExtensionRequestCancelled => Self::LocalRequestCancelled,
             core::CancellationError::RegistryClosed => Self::RegistryClosed,
             core::CancellationError::LeaseReleased => Self::LeaseReleased,
         }
@@ -39,13 +31,9 @@ pub struct CancellationRegistry {
 #[uniffi::export]
 impl CancellationRegistry {
     #[uniffi::constructor]
-    pub fn new(domain: CancellationDomain) -> Self {
-        let domain = match domain {
-            CancellationDomain::Download => core::CancellationDomain::Download,
-            CancellationDomain::ExtensionRequest => core::CancellationDomain::ExtensionRequest,
-        };
+    pub fn new() -> Self {
         Self {
-            inner: core::CancellationRegistry::new(domain),
+            inner: core::CancellationRegistry::new(core::CancellationDomain::ExtensionRequest),
         }
     }
 
@@ -81,5 +69,11 @@ impl RequestLease {
 
     pub fn release(&self) {
         self.inner.release();
+    }
+}
+
+impl Default for CancellationRegistry {
+    fn default() -> Self {
+        Self::new()
     }
 }

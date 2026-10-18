@@ -124,15 +124,12 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = null;
   late Directory root;
-  var initialized = false;
+
   setUp(() async {
     root = await Directory.systemTemp.createTemp('native-data-jobs-');
   });
   tearDown(() async {
-    if (initialized) {
-      await PlatformBridge.cleanupExtensions();
-      initialized = false;
-    }
+    await PlatformBridge.setLibraryCoverCacheDir('');
     await root.delete(recursive: true);
   });
 
@@ -453,10 +450,10 @@ void main() {
         'expected_count': 2,
         'error_count': 0,
       });
-      expect(full['inserted'], 1);
-      expect(full['skipped'], 1);
+      expect(full['inserted'], 2);
+      expect(full['skipped'], 0);
       expect(
-        (await db.query('library')).single,
+        (await db.query('library', where: 'id=?', whereArgs: ['first'])).single,
         LibraryRowMapper.encode(firstRow, sourceId: 'test-source'),
       );
       final changed = {...firstRow, 'trackName': 'Updated metadata'};
@@ -471,7 +468,11 @@ void main() {
       });
       expect(delta['committed'], true);
       expect(
-        (await db.query('library')).single['track_name'],
+        (await db.query(
+          'library',
+          where: 'id=?',
+          whereArgs: ['first'],
+        )).single['track_name'],
         'Updated metadata',
       );
       final snapshot = '${root.path}/snapshot.tsv';
@@ -480,23 +481,13 @@ void main() {
           ...common,
           'snapshot_path': snapshot,
         }))['count'],
-        1,
+        2,
       );
-      expect(
-        await File(snapshot).readAsString(),
-        '${firstRow['fileModTime']}\t${first.path}\n',
-      );
-      final extensions = await Directory('${root.path}/extensions').create();
-      final data = await Directory('${root.path}/extension-data').create();
-      await PlatformBridge.initExtensionSystem(
-        extensions.path,
-        data.path,
-        masterKey: base64Encode(List.filled(32, 1)),
-        lyricsProviders: const [],
-        lyricsFetchOptions: const {},
-        allowedDirectories: [media.path],
-      );
-      initialized = true;
+      expect((await File(snapshot).readAsLines()).toSet(), {
+        '${firstRow['fileModTime']}\t${first.path}',
+        '${firstRow['fileModTime']}\t$downloadedPath',
+      });
+
       await first.delete();
       final second = await File(
         '${media.path}/second.flac',

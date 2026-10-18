@@ -131,7 +131,7 @@ class SafDocumentLookupTest {
     fun malformedTreeUriLeavesSourceIntact() {
         val source = File(context.cacheDir, "lookup-invalid.flac").apply { writeText("original audio") }
         try {
-            assertNull(SafDownloadHandler.writeFileToSaf(
+            assertNull(SafFileOps.writeFileToSaf(
                 context, "content://$authority/invalid", "", "Song.flac", "audio/flac", source.path,
             ))
             assertEquals("original audio", source.readText())
@@ -145,7 +145,7 @@ class SafDocumentLookupTest {
         val parent = reset(failFinalRename = true)
         val source = File(context.cacheDir, "lookup-source.flac").apply { writeText("replacement") }
         try {
-            assertNull(SafDownloadHandler.writeFileToSaf(context, treeUri.toString(), "", "Song.flac", "audio/flac", source.path))
+            assertNull(SafFileOps.writeFileToSaf(context, treeUri.toString(), "", "Song.flac", "audio/flac", source.path))
             val restored = requireNotNull(findSafChild(context, parent, "Song.flac"))
             val content = context.contentResolver.openInputStream(restored.uri)?.bufferedReader()?.use { it.readText() }
             assertEquals("original", content)
@@ -165,7 +165,7 @@ class SafDocumentLookupTest {
         try {
             assertNull(findSafChild(context, parent, "Fresh.flac"))
             clearCounters()
-            val result = requireNotNull(SafDownloadHandler.writeFileToSafIfAbsent(
+            val result = requireNotNull(SafFileOps.writeFileToSafIfAbsent(
                 context, treeUri.toString(), "", "Fresh.flac", "audio/flac", source.path,
             ))
             assertTrue(!result.alreadyExists)
@@ -183,7 +183,7 @@ class SafDocumentLookupTest {
             assertNull(findSafChild(context, parent, "Fresh.flac.partial"))
 
             source.writeText("must not replace existing audio")
-            val existing = requireNotNull(SafDownloadHandler.writeFileToSafIfAbsent(
+            val existing = requireNotNull(SafFileOps.writeFileToSafIfAbsent(
                 context, treeUri.toString(), "", "Fresh.flac", "audio/flac", source.path,
             ))
             assertTrue(existing.alreadyExists)

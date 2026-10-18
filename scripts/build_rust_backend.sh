@@ -9,8 +9,8 @@ RUST_BACKEND_DIR="$PROJECT_DIR/rust_backend"
 PLATFORM="${1:-host}"
 
 case "$PLATFORM" in
-  host|android|ios) ;;
-  *) echo "Usage: bash scripts/build_rust_backend.sh [host|android|ios]" >&2; exit 1 ;;
+  host|android) ;;
+  *) echo "Usage: bash scripts/build_rust_backend.sh [host|android]" >&2; exit 1 ;;
 esac
 
 if [[ "$PLATFORM" == "android" ]]; then
@@ -44,7 +44,7 @@ esac
 # enabled in the shipped library through Cargo's workspace feature unification.
 cargo build --locked --release -p spotiflac-mobile
 # Bindgen discovers each crate's uniffi.toml through Cargo metadata.
-for language in kotlin swift; do
+for language in kotlin; do
   cargo run --locked -p spotiflac-bindgen -- generate \
     --library "$HOST_LIBRARY" \
     --language "$language" \
@@ -112,44 +112,6 @@ if [[ "$PLATFORM" == "android" ]]; then
     cp "$CARGO_TARGET_DIR/$target/release/libspotiflac_mobile.so" \
       "$CARGO_TARGET_DIR/android/jniLibs/$ABI/"
   done
-elif [[ "$PLATFORM" == "ios" ]]; then
-  if [[ "$(uname -s)" != "Darwin" ]]; then
-    echo "Error: iOS builds require macOS and Xcode." >&2
-    exit 1
-  fi
-  rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
-  export IPHONEOS_DEPLOYMENT_TARGET=16.0
-  export BINDGEN_EXTRA_CLANG_ARGS_aarch64_apple_ios="-isysroot \"$(xcrun --sdk iphoneos --show-sdk-path)\" --target=arm64-apple-ios16.0"
-  export BINDGEN_EXTRA_CLANG_ARGS_aarch64_apple_ios_sim="-isysroot \"$(xcrun --sdk iphonesimulator --show-sdk-path)\" --target=arm64-apple-ios16.0-simulator"
-  export BINDGEN_EXTRA_CLANG_ARGS_x86_64_apple_ios="-isysroot \"$(xcrun --sdk iphonesimulator --show-sdk-path)\" --target=x86_64-apple-ios16.0-simulator"
-  for target in aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios; do
-    cargo build --locked --release -p spotiflac-mobile --target "$target"
-  done
-  HEADERS_DIR="$CARGO_TARGET_DIR/ios/headers"
-  FRAMEWORK_DIR="$CARGO_TARGET_DIR/ios/SpotiFLACBackendFFI.xcframework"
-  SIMULATOR_LIBRARY="$CARGO_TARGET_DIR/ios/simulator/libspotiflac_mobile.a"
-  mkdir -p "$HEADERS_DIR" "$(dirname "$SIMULATOR_LIBRARY")"
-  cp "$CARGO_TARGET_DIR/bindings/swift/SpotiFLACBackendFFI.h" "$HEADERS_DIR/"
-  cp "$CARGO_TARGET_DIR/bindings/swift/SpotiFLACBackendFFI.modulemap" "$HEADERS_DIR/module.modulemap"
-  # Flutter/CocoaPods may request both simulator architectures, even on an
-  # ARM64 Mac. Supply one universal simulator slice.
-  xcrun lipo -create \
-    "$CARGO_TARGET_DIR/aarch64-apple-ios-sim/release/libspotiflac_mobile.a" \
-    "$CARGO_TARGET_DIR/x86_64-apple-ios/release/libspotiflac_mobile.a" \
-    -output "$SIMULATOR_LIBRARY"
-  # xcodebuild refuses to overwrite an existing generated XCFramework.
-  if [[ -d "$FRAMEWORK_DIR" ]]; then
-    rm -rf "$FRAMEWORK_DIR"
-  fi
-  xcodebuild -create-xcframework \
-    -library "$CARGO_TARGET_DIR/aarch64-apple-ios/release/libspotiflac_mobile.a" -headers "$HEADERS_DIR" \
-    -library "$SIMULATOR_LIBRARY" -headers "$HEADERS_DIR" \
-    -output "$FRAMEWORK_DIR"
-  # CocoaPods does not traverse nested symlinks, including a relocated target/.
-  # Stage one pod root that Podfile can resolve before scanning its files.
-  cp "$CARGO_TARGET_DIR/bindings/swift/SpotiFLACBackend.swift" "$CARGO_TARGET_DIR/ios/"
-  cp "$RUST_BACKEND_DIR/SpotiFLACBackend.podspec" "$CARGO_TARGET_DIR/ios/"
-  cp "$PROJECT_DIR/LICENSE" "$CARGO_TARGET_DIR/ios/"
 fi
 
 echo "Rust $PLATFORM artifacts are staged in $CARGO_TARGET_DIR."

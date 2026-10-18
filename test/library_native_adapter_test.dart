@@ -64,14 +64,7 @@ class _NativeHarness {
         count = rows.length;
       } else {
         expect(await private.query('library'), isEmpty);
-        final history = await SqliteProcessDatabase.open(
-          path: request['history_path'] as String,
-        );
-        try {
-          expect(await history.query('history_path_keys'), isEmpty);
-        } finally {
-          await history.close();
-        }
+        expect(request, isNot(contains('history_path')));
         final full = request['operation'] == 'library_full_import';
         final rows = full
             ? (await File(request['ndjson_path'] as String).readAsLines())
@@ -239,7 +232,7 @@ void main() {
   }
 
   test(
-    'full private staging publishes exact rows and filters current History through live triggers',
+    'full private staging publishes all local rows despite legacy History entries',
     () async {
       final rows = [nativeLibraryTrack('new'), nativeLibraryTrack('download')];
       native.afterStage = () =>
@@ -251,26 +244,29 @@ void main() {
         isCancelled: () => false,
       );
       expect(result, containsPair('durable', true));
-      expect(result['inserted'], 1);
-      expect(result['skipped'], 1);
+      expect(result['inserted'], 2);
+      expect(result['skipped'], 0);
       expect(
         await live.query(
           'library',
           where: 'source_id = ?',
           whereArgs: ['source'],
         ),
-        [LibraryRowMapper.encode(rows.first, sourceId: 'source')],
+        rows
+            .map((row) => LibraryRowMapper.encode(row, sourceId: 'source'))
+            .toList(),
       );
       expect(
         (await live.query(
           'library_path_keys',
         )).map((r) => r['item_id']).toSet(),
-        {'new', 'other'},
+        {'new', 'download', 'other'},
       );
       final lookup = await live.rawQuery(
         "SELECT ref_count FROM library_lookup_summary WHERE source_id='source' AND kind='match'",
       );
       expect(lookup, [
+        {'ref_count': 1},
         {'ref_count': 1},
       ]);
       await cleaned();
@@ -315,7 +311,7 @@ void main() {
   );
 
   test(
-    'incremental removes current downloads and exact source-scoped deleted paths',
+    'incremental keeps legacy downloads and removes exact source-scoped deleted paths',
     () async {
       await addNativeLibraryTrack(live, nativeLibraryTrack('unchanged'));
       await addNativeLibraryTrack(live, nativeLibraryTrack('unreadable'));
@@ -340,22 +336,24 @@ void main() {
         requestId: 'incremental',
         isCancelled: () => false,
       );
-      expect(result['inserted'], 1);
-      expect(result['skipped'], 2);
+      expect(result['inserted'], 2);
+      expect(result['skipped'], 0);
       expect(result['deleted_count'], 1);
       expect(result['skippedCount'], 3);
       expect(result['scanned_count'], 2);
       expect(result['totalFiles'], 5);
       expect((await live.query('library', orderBy: 'id')).map((r) => r['id']), [
+        'download',
         'new',
         'other',
+        'unchanged',
         'unreadable',
       ]);
       expect(
         (await live.query(
           'library_path_keys',
         )).map((r) => r['item_id']).toSet(),
-        {'new', 'other', 'unreadable'},
+        {'download', 'new', 'other', 'unchanged', 'unreadable'},
       );
       await cleaned();
     },

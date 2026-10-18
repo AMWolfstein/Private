@@ -1,7 +1,7 @@
 //! CPU and file work submitted by Flutter. Platform dispatch owns the worker
 //! thread and the cancellation lease; widgets continue to own presentation.
 use crate::cancellation::RequestLease;
-use crate::manager::ExtensionManager;
+use crate::local::LocalBackend;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{fs::File, io::Read, sync::Arc};
@@ -23,7 +23,7 @@ pub fn run_native_data_job(
 }
 
 #[uniffi::export]
-impl ExtensionManager {
+impl LocalBackend {
     pub fn run_native_data_job(
         &self,
         request_json: String,
@@ -38,7 +38,7 @@ fn run(
     request_json: &str,
     bytes: &[u8],
     lease: Option<&RequestLease>,
-    manager: Option<&ExtensionManager>,
+    manager: Option<&LocalBackend>,
 ) -> Result<String, NativeDataJobError> {
     let check = || crate::tags::check_lease(lease);
     check().map_err(NativeDataJobError::Operation)?;
@@ -55,31 +55,11 @@ fn execute(
     request: &Value,
     bytes: &[u8],
     check: &(dyn Fn() -> Result<(), String> + Sync),
-    manager: Option<&ExtensionManager>,
+    manager: Option<&LocalBackend>,
 ) -> Result<Value, String> {
     let operation = string(request, "operation")?;
     match operation {
         "hash_file" => Ok(json!({"sha256": hash_file(string(request, "path")?, check)?})),
-        "matches_network_upload" => crate::network_tags::matches_upload(request, check),
-        "network_metadata" => {
-            let metadata = crate::network_tags::read_to_cache(
-                string(request, "url")?,
-                string(request, "display_name")?,
-                string(request, "cache_directory")?,
-                check,
-            )?;
-            let cacheable = serde_json::to_vec(&metadata)
-                .map_err(|error| error.to_string())?
-                .len()
-                <= 128 * 1024;
-            Ok(json!({"metadata": metadata, "cacheable": cacheable}))
-        }
-        "promote_network_cover" => crate::network_tags::promote_cover(
-            string(request, "path")?,
-            string(request, "directory")?,
-            check,
-        ),
-        "parse_network_listing" => crate::native_listing::execute(request, Some(bytes)),
         "parse_playlist" | "build_m3u" => {
             crate::native_playlists::execute(request, Some(bytes), check)
         }

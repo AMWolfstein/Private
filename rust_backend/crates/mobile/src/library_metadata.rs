@@ -142,8 +142,8 @@ mod tests {
         source.read_to_end(&mut unchanged).unwrap();
         assert_eq!(unchanged, flac);
 
-        use crate::cancellation::{CancellationDomain, CancellationRegistry};
-        let registry = CancellationRegistry::new(CancellationDomain::ExtensionRequest);
+        use crate::cancellation::CancellationRegistry;
+        let registry = CancellationRegistry::new();
         let lease = registry.acquire("artwork".into()).unwrap();
         registry.cancel("artwork".into()).unwrap();
         assert!(

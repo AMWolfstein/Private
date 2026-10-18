@@ -25,7 +25,7 @@ export "BINDGEN_EXTRA_CLANG_ARGS_${target_env}=--sysroot=$ANDROID_NDK_HOME/toolc
 export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384"
 
 cd "$PROJECT_DIR/rust_backend"
-cargo rustc --locked --release -p spotiflac-extensions --example android_statx_smoke \
+cargo rustc --locked --release -p spotiflac-local --example android_statx_smoke \
   --target "$target" -- -C link-arg=-Wl,--wrap=dlsym
 remote="/data/local/tmp/spotiflac-statx-smoke-$$"
 trap 'adb shell rm -f "$remote" >/dev/null 2>&1 || true' EXIT

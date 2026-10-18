@@ -18,7 +18,7 @@ final _log = AppLogger('LibraryNativeAdapter');
 var _attachmentSequence = 0;
 
 /// Native SQLite only opens detached private files. Publication uses the live
-/// database's owning connection, its current History keys and existing indexes.
+/// database's owning connection and existing indexes.
 class LibraryNativeAdapter {
   LibraryNativeAdapter(
     this.database, {
@@ -120,7 +120,6 @@ class LibraryNativeAdapter {
     Directory directory,
   ) => {
     'library_path': p.join(directory.path, 'local_library.db'),
-    'history_path': p.join(directory.path, 'history.db'),
     'source_id': sourceId,
     'expected_source_path': sourcePath,
     'platform': _platform,
@@ -150,16 +149,6 @@ class LibraryNativeAdapter {
           [sourceId],
         );
       });
-    });
-    // Retain every candidate during staging. Downloads can change while native
-    // work runs; the authoritative anti-join belongs to live publication.
-    await _attached(p.join(directory.path, 'history.db'), (alias) async {
-      await database.execute(
-        'CREATE TABLE $alias.history_path_keys('
-        'item_id TEXT NOT NULL, path_key TEXT NOT NULL, '
-        'PRIMARY KEY(item_id, path_key))',
-      );
-      await database.execute('PRAGMA $alias.user_version = 15');
     });
   }
 
@@ -259,17 +248,9 @@ class LibraryNativeAdapter {
       final columns = (await txn.rawQuery(
         'PRAGMA main.table_info(library)',
       )).map((column) => '"${column['name']}"').join(', ');
-      final historyMatch =
-          'EXISTS(SELECT 1 FROM $alias.library_path_keys sk '
-          'JOIN history_db.history_path_keys hk ON hk.path_key = sk.path_key '
-          'WHERE sk.item_id = s.id)';
       Future<int> count(String sql, [List<Object?>? args]) async =>
           ((await txn.rawQuery(sql, args)).single.values.single as num).toInt();
       final staged = await count('SELECT COUNT(*) FROM $alias.library');
-      final skipped = await count(
-        'SELECT COUNT(*) FROM $alias.library s WHERE $historyMatch',
-      );
-      var excludedExisting = 0;
       var deleted = 0;
       final selectedIds = '${alias}_selected';
       await txn.execute('CREATE TEMP TABLE $selectedIds(id TEXT PRIMARY KEY)');
@@ -291,21 +272,9 @@ class LibraryNativeAdapter {
       }
 
       if (incremental) {
-        excludedExisting += await deleteWhere(
-          'source_id = ? AND EXISTS(SELECT 1 FROM main.library_path_keys lk '
-          'JOIN history_db.history_path_keys hk ON hk.path_key = lk.path_key '
-          'WHERE lk.item_id = library.id)',
-          [sourceId],
-        );
-        _check(isCancelled);
         deleted = await deleteWhere(
           'source_id = ? AND file_path IN('
           'SELECT path FROM $alias.native_library_removed_paths)',
-          [sourceId],
-        );
-        excludedExisting += await deleteWhere(
-          'source_id = ? AND file_path IN(SELECT s.file_path '
-          'FROM $alias.library s WHERE $historyMatch)',
           [sourceId],
         );
       } else {
@@ -320,17 +289,17 @@ class LibraryNativeAdapter {
       _check(isCancelled);
       await txn.rawDelete(
         'DELETE FROM main.library_path_keys WHERE item_id IN('
-        'SELECT s.id FROM $alias.library s WHERE NOT $historyMatch)',
+        'SELECT s.id FROM $alias.library s)',
       );
       await txn.execute(
         'INSERT OR REPLACE INTO main.library($columns) '
-        'SELECT $columns FROM $alias.library s WHERE NOT $historyMatch '
+        'SELECT $columns FROM $alias.library s '
         'ORDER BY s.rowid',
       );
       await txn.execute(
         'INSERT OR IGNORE INTO main.library_path_keys '
         'SELECT sk.item_id, sk.path_key FROM $alias.library_path_keys sk '
-        'JOIN $alias.library s ON s.id = sk.item_id WHERE NOT $historyMatch',
+        'JOIN $alias.library s ON s.id = sk.item_id',
       );
       await txn.execute('DROP TABLE $selectedIds');
       _check(isCancelled);
@@ -338,9 +307,9 @@ class LibraryNativeAdapter {
         ...nativeResult,
         'committed': true,
         'durable': true,
-        'inserted': staged - skipped,
-        'upserted': staged - skipped,
-        'skipped': skipped + excludedExisting,
+        'inserted': staged,
+        'upserted': staged,
+        'skipped': 0,
         'deleted_count': deleted,
       };
     }, exclusive: true);

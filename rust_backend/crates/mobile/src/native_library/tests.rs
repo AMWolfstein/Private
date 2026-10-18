@@ -12,7 +12,6 @@ impl Fixture {
     fn new() -> Self {
         let directory = tempfile::tempdir().unwrap();
         let library = directory.path().join("local_library.db");
-        let history = directory.path().join("history.db");
         let db = Connection::open(&library).unwrap();
         let example = encode(&track("schema", "/music/schema.flac"), "source").unwrap();
         let definitions = example
@@ -42,9 +41,7 @@ impl Fixture {
             CREATE VIRTUAL TABLE library_search_fts USING fts5(search_text,content='library',content_rowid='rowid',tokenize='trigram');
             CREATE TRIGGER library_fts_ai AFTER INSERT ON library BEGIN INSERT INTO library_search_fts(rowid,search_text) VALUES(new.rowid,new.search_text); END;
             CREATE TRIGGER library_fts_ad AFTER DELETE ON library BEGIN INSERT INTO library_search_fts(library_search_fts,rowid,search_text) VALUES('delete',old.rowid,old.search_text); END;" )).unwrap();
-        let history_db = Connection::open(&history).unwrap();
-        history_db.execute_batch("CREATE TABLE history_path_keys(item_id TEXT,path_key TEXT); CREATE INDEX history_key_index ON history_path_keys(path_key);").unwrap();
-        let request = json!({"operation":"library_full_import","library_path":library.to_str().unwrap(),"history_path":history.to_str().unwrap(),"source_id":"source","expected_source_path":"/music","platform":"ios","error_count":0});
+        let request = json!({"operation":"library_full_import","library_path":library.to_str().unwrap(),"source_id":"source","expected_source_path":"/music","platform":"ios","error_count":0});
         Self {
             directory,
             db,
@@ -317,16 +314,13 @@ fn spilled_incremental_json_is_consumed_without_deleting_adapter_file() {
 }
 
 #[test]
-fn full_swap_excludes_downloads_and_preserves_other_source_and_fts() {
+fn full_swap_ignores_legacy_downloads_and_preserves_other_source_and_fts() {
     let fixture = Fixture::new();
     fixture.add("old", "/music/old.flac", "source");
     fixture.add("other", "/other/track.flac", "other");
-    let history = Connection::open(fixture.request["history_path"].as_str().unwrap()).unwrap();
+    let history = Connection::open(fixture.directory.path().join("history.db")).unwrap();
     history
-        .execute(
-            "INSERT INTO history_path_keys VALUES('downloaded','/music/downloaded')",
-            [],
-        )
+        .execute_batch("CREATE TABLE history_path_keys(item_id TEXT,path_key TEXT); INSERT INTO history_path_keys VALUES('downloaded','/music/downloaded')")
         .unwrap();
     let result = fixture
         .scan(
@@ -339,9 +333,9 @@ fn full_swap_excludes_downloads_and_preserves_other_source_and_fts() {
             &|| Ok(()),
         )
         .unwrap();
-    assert_eq!(result["inserted"], 1);
-    assert_eq!(result["skipped"], 1);
-    assert_eq!(fixture.ids(), ["new", "other"]);
+    assert_eq!(result["inserted"], 2);
+    assert_eq!(result["skipped"], 0);
+    assert_eq!(fixture.ids(), ["downloaded", "new", "other"]);
     assert_eq!(
         fixture
             .db
@@ -448,24 +442,21 @@ fn concurrent_source_edit_aborts_native_swap_without_overwriting_other_writer() 
 }
 
 #[test]
-fn incremental_deletes_only_its_source_and_reconciles_existing_downloads() {
+fn incremental_deletes_only_its_source_and_keeps_legacy_downloads() {
     let fixture = Fixture::new();
     fixture.add("old", "/music/old.flac", "source");
     fixture.add("download", "/music/download.flac", "source");
     fixture.add("other", "/other/track.flac", "other");
-    let history = Connection::open(fixture.request["history_path"].as_str().unwrap()).unwrap();
+    let history = Connection::open(fixture.directory.path().join("history.db")).unwrap();
     history
-        .execute(
-            "INSERT INTO history_path_keys VALUES('h','/music/download')",
-            [],
-        )
+        .execute_batch("CREATE TABLE history_path_keys(item_id TEXT,path_key TEXT); INSERT INTO history_path_keys VALUES('h','/music/download')")
         .unwrap();
     let mut request = fixture.request.clone();
     request["operation"] = "library_incremental_import".into();
     request["delta"] = json!({"scanned":[track("new","/music/new.flac")],"deletedPaths":["/music/old.flac","/other/track.flac"],"skippedCount":10,"totalFiles":11});
     let result = execute(&request, &|| Ok(())).unwrap();
-    assert_eq!(fixture.ids(), ["new", "other"]);
-    assert_eq!(result["skipped"], 1);
+    assert_eq!(fixture.ids(), ["download", "new", "other"]);
+    assert_eq!(result["skipped"], 0);
     assert_eq!(result["deleted_count"], 1);
 }
 

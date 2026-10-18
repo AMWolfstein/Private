@@ -4,7 +4,7 @@
 pub(crate) mod dart_date;
 pub(crate) mod path_keys;
 
-use crate::manager::ExtensionManager;
+use crate::local::LocalBackend;
 use rusqlite::{Connection, OpenFlags, TransactionBehavior, params, params_from_iter};
 use serde_json::{Map, Value, json};
 use std::{
@@ -58,7 +58,7 @@ fn required<'a>(request: &'a Value, key: &str) -> Result<&'a str, String> {
         .ok_or_else(|| format!("Library request requires {key}"))
 }
 
-fn open(request: &Value, with_history: bool) -> Result<Connection, String> {
+fn open(request: &Value) -> Result<Connection, String> {
     let path = required(request, "library_path")?;
     if !Path::new(path).is_absolute()
         || Path::new(path).file_name().and_then(|v| v.to_str()) != Some("local_library.db")
@@ -81,17 +81,6 @@ fn open(request: &Value, with_history: bool) -> Result<Connection, String> {
     }
     db.execute_batch("PRAGMA recursive_triggers = ON; PRAGMA synchronous = NORMAL;")
         .map_err(|e| error("configure Library", e))?;
-    if with_history {
-        let history = required(request, "history_path")?;
-        if !Path::new(history).is_absolute()
-            || Path::new(history).file_name().and_then(|v| v.to_str()) != Some("history.db")
-            || !Path::new(history).is_file()
-        {
-            return Err("History database must already exist".into());
-        }
-        db.execute("ATTACH DATABASE ? AS history_db", [history])
-            .map_err(|e| error("attach History", e))?;
-    }
     Ok(db)
 }
 
@@ -141,7 +130,7 @@ pub(crate) fn execute(request: &Value, check: Check<'_>) -> Result<Value, String
 /// The existing native scanner's delta stays native through ingestion. The
 /// platform SAF adapter uses library_incremental_import with its native delta.
 pub(crate) fn scan_incremental(
-    manager: &ExtensionManager,
+    manager: &LocalBackend,
     request: &Value,
     check: &(dyn Fn() -> Result<(), String> + Sync),
 ) -> Result<Value, String> {
@@ -353,7 +342,7 @@ fn sql_value(value: &Value) -> Result<rusqlite::types::Value, String> {
 }
 
 fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Value, String> {
-    let mut db = open(request, true)?;
+    let mut db = open(request)?;
     source_current(&db, request)?;
     let source = required(request, "source_id")?;
     let columns = db
@@ -479,33 +468,13 @@ fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Va
         .transaction_with_behavior(TransactionBehavior::Immediate)
         .map_err(|e| error("begin Library swap", e))?;
     source_current(&transaction, request)?;
-    let history_match = "EXISTS(SELECT 1 FROM native_library_keys sk JOIN history_db.history_path_keys hk ON hk.path_key = sk.path_key WHERE sk.item_id = s.id)";
     let staged: i64 = transaction
         .query_row("SELECT COUNT(*) FROM native_library_stage", [], |row| {
             row.get(0)
         })
         .map_err(|e| error("count staged rows", e))?;
-    let skipped: i64 = transaction
-        .query_row(
-            &format!("SELECT COUNT(*) FROM native_library_stage s WHERE {history_match}"),
-            [],
-            |row| row.get(0),
-        )
-        .map_err(|e| error("count excluded downloads", e))?;
     let mut deleted = 0;
-    let mut excluded_existing = 0;
     if let Some(delta) = delta {
-        // Remove files which became downloads, then apply this source's delta
-        // atomically. All deletes remain source-scoped even if aliases overlap.
-        let excluded = "source_id = ? AND EXISTS(SELECT 1 FROM library_path_keys lk JOIN history_db.history_path_keys hk ON hk.path_key = lk.path_key WHERE lk.item_id = library.id)";
-        transaction.execute(&format!("CREATE TEMP TABLE native_library_excluded AS SELECT id FROM library WHERE {excluded}"), [source]).map_err(|e| error("select downloaded rows", e))?;
-        transaction.execute("DELETE FROM library_path_keys WHERE item_id IN(SELECT id FROM native_library_excluded)", []).map_err(|e| error("remove downloaded path keys", e))?;
-        excluded_existing += transaction
-            .execute(
-                "DELETE FROM library WHERE id IN(SELECT id FROM native_library_excluded)",
-                [],
-            )
-            .map_err(|e| error("remove downloaded rows", e))?;
         let paths = delta["removedUris"]
             .as_array()
             .or_else(|| delta["deletedPaths"].as_array());
@@ -540,19 +509,6 @@ fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Va
                     .map_err(|e| error("delete removed track", e))?;
             }
         }
-        // staged/download overlap is the same anti-join used by full scans.
-        let ids = format!(
-            "SELECT id FROM library WHERE source_id = ? AND file_path IN(SELECT file_path FROM native_library_stage s WHERE {history_match})"
-        );
-        transaction
-            .execute(
-                &format!("DELETE FROM library_path_keys WHERE item_id IN({ids})"),
-                [source],
-            )
-            .map_err(|e| error("remove excluded keys", e))?;
-        excluded_existing += transaction
-            .execute(&format!("DELETE FROM library WHERE id IN({ids})"), [source])
-            .map_err(|e| error("remove excluded rows", e))?;
     } else {
         let errors = request["error_count"]
             .as_u64()
@@ -571,20 +527,20 @@ fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Va
             .map_err(|e| error("replace source rows", e))?;
     }
     check()?;
-    transaction.execute(&format!("DELETE FROM library_path_keys WHERE item_id IN(SELECT s.id FROM native_library_stage s WHERE NOT {history_match})"), []).map_err(|e| error("replace imported keys", e))?;
-    transaction.execute(&format!("INSERT OR REPLACE INTO library({column_list}) SELECT {} FROM native_library_stage s WHERE NOT {history_match}", columns.iter().map(|c| format!("s.\"{c}\"")).collect::<Vec<_>>().join(", ")), []).map_err(|e| error("swap imported rows", e))?;
-    transaction.execute(&format!("INSERT OR IGNORE INTO library_path_keys SELECT sk.item_id,sk.path_key FROM native_library_keys sk JOIN native_library_stage s ON s.id=sk.item_id WHERE NOT {history_match}"), []).map_err(|e| error("swap imported keys", e))?;
+    transaction.execute("DELETE FROM library_path_keys WHERE item_id IN(SELECT s.id FROM native_library_stage s)", []).map_err(|e| error("replace imported keys", e))?;
+    transaction.execute(&format!("INSERT OR REPLACE INTO library({column_list}) SELECT {} FROM native_library_stage s", columns.iter().map(|c| format!("s.\"{c}\"")).collect::<Vec<_>>().join(", ")), []).map_err(|e| error("swap imported rows", e))?;
+    transaction.execute("INSERT OR IGNORE INTO library_path_keys SELECT sk.item_id,sk.path_key FROM native_library_keys sk JOIN native_library_stage s ON s.id=sk.item_id", []).map_err(|e| error("swap imported keys", e))?;
     check()?;
     transaction
         .commit()
         .map_err(|e| error("commit Library swap", e))?;
     Ok(
-        json!({"committed":true,"inserted":staged-skipped,"upserted":staged-skipped,"skipped":skipped+excluded_existing as i64,"scanned_count":streamed,"deleted_count":deleted,"skippedCount":delta.map(|d|d["skippedCount"].clone()).unwrap_or(json!(0)),"totalFiles":delta.map(|d|d["totalFiles"].clone()).unwrap_or(json!(streamed))}),
+        json!({"committed":true,"inserted":staged,"upserted":staged,"skipped":0,"scanned_count":streamed,"deleted_count":deleted,"skippedCount":delta.map(|d|d["skippedCount"].clone()).unwrap_or(json!(0)),"totalFiles":delta.map(|d|d["totalFiles"].clone()).unwrap_or(json!(streamed))}),
     )
 }
 
 fn snapshot_candidates(request: &Value, check: Check<'_>) -> Result<Value, String> {
-    let db = open(request, false)?;
+    let db = open(request)?;
     source_current(&db, request)?;
     let cursor = request["cursor"].as_str().unwrap_or("");
     let limit = request["limit"].as_i64().unwrap_or(500).clamp(1, 500);
@@ -606,7 +562,7 @@ fn snapshot_candidates(request: &Value, check: Check<'_>) -> Result<Value, Strin
 }
 
 fn snapshot(request: &Value, check: Check<'_>) -> Result<Value, String> {
-    let mut db = open(request, false)?;
+    let mut db = open(request)?;
     source_current(&db, request)?;
     let path = required(request, "snapshot_path")?;
     if !Path::new(path).is_absolute() || !path.ends_with(".tsv") {
