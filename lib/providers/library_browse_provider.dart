@@ -24,6 +24,13 @@ class LibraryBrowseEntry {
   final String samplePath;
   final int trackCount;
   final AlbumCompleteness? completeness;
+  final int? totalTracks;
+  final int? totalDiscs;
+  final String? releaseDate;
+
+  /// A partial local album is still an album. Only explicit one-track tags
+  /// identify a single; EPs and unknown totals stay with albums.
+  bool get isSingleRelease => totalTracks == 1 && (totalDiscs ?? 1) <= 1;
 
   const LibraryBrowseEntry({
     required this.source,
@@ -34,6 +41,9 @@ class LibraryBrowseEntry {
     required this.samplePath,
     required this.trackCount,
     this.completeness,
+    this.totalTracks,
+    this.totalDiscs,
+    this.releaseDate,
   });
 
   factory LibraryBrowseEntry.fromRow(
@@ -53,6 +63,9 @@ class LibraryBrowseEntry {
       samplePath: row['sample_file_path'] as String? ?? '',
       trackCount: (row['track_count'] as num?)?.toInt() ?? 0,
       completeness: AlbumCompleteness.fromRow(row),
+      totalTracks: (row['album_total_tracks'] as num?)?.toInt(),
+      totalDiscs: (row['album_total_discs'] as num?)?.toInt(),
+      releaseDate: row['sort_release'] as String?,
     );
   }
 }

@@ -3854,5 +3854,6 @@
   },
   "tutorialPlaybackTip1": "Play or pause music with the built-in player",
   "tutorialPlaybackTip2": "Add local tracks to the queue and playlists",
-  "tutorialPlaybackTip3": "Read embedded or sidecar lyrics while listening"
+  "tutorialPlaybackTip3": "Read embedded or sidecar lyrics while listening",
+  "libraryShowMore": "Show more"
 }

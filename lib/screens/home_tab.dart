@@ -8,7 +8,7 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/recent_access_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/mornye_library_screen.dart';
+import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/services/library_database.dart';
@@ -121,13 +121,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
   void _openArtist(String artist) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => Scaffold(
-          body: MornyeLibraryScreen(
-            page: MornyeLibraryPage.albums,
-            artist: artist,
-            onOpenSection: (_) {},
-          ),
-        ),
+        builder: (_) => LocalArtistScreen(artistName: artist),
       ),
     );
   }

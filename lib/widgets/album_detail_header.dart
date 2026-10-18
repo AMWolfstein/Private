@@ -532,6 +532,8 @@ class AlbumPlayActions extends StatelessWidget {
     required this.onPlay,
     required this.onShuffle,
     this.isPlaying = false,
+    this.leadingAction,
+    this.trailingAction,
   });
 
   final String playLabel;
@@ -539,12 +541,37 @@ class AlbumPlayActions extends StatelessWidget {
   final VoidCallback onPlay;
   final VoidCallback onShuffle;
   final bool isPlaying;
+  final Widget? leadingAction;
+  final Widget? trailingAction;
 
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
     if (context.isMornye) {
+      if (leadingAction != null && trailingAction != null) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            leadingAction!,
+            const SizedBox(width: 16),
+            Flexible(
+              child: SizedBox(
+                width: 172,
+                child: HeaderFilledButton(
+                  icon: isPlaying
+                      ? CupertinoIcons.pause_fill
+                      : CupertinoIcons.play_fill,
+                  label: playLabel,
+                  onPressed: onPlay,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            trailingAction!,
+          ],
+        );
+      }
       return Row(
         children: [
           Expanded(

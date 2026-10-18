@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/screens/mornye_library_screen.dart';
+import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
@@ -98,12 +98,9 @@ class FavoriteArtistsScreen extends ConsumerWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         slidePageRoute<void>(
-                          page: Scaffold(
-                            body: MornyeLibraryScreen(
-                              page: MornyeLibraryPage.albums,
-                              artist: artist.name,
-                              onOpenSection: (_) {},
-                            ),
+                          page: LocalArtistScreen(
+                            artistName: artist.name,
+                            coverPath: artist.imageUrl,
                           ),
                         ),
                       );

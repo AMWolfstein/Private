@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
+import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 
@@ -22,7 +23,11 @@ Future<void> navigateToArtist(
   String? coverUrl,
 }) async {
   if (artistName.isEmpty) return;
-  _showUnavailable(context, context.l10n.trackArtist);
+  pushViaPreferredNavigator(
+    context,
+    (_) =>
+        LocalArtistScreen(artistName: artistName.trim(), coverPath: coverUrl),
+  );
 }
 
 Future<void> navigateToAlbum(
@@ -140,12 +145,20 @@ class ClickableArtistName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      artistName,
-      style: style,
-      maxLines: maxLines,
-      overflow: overflow,
-      textAlign: textAlign,
+    return GestureDetector(
+      onTap: () => navigateToArtist(
+        context,
+        artistName: artistName,
+        artistId: artistId,
+        coverUrl: coverUrl,
+      ),
+      child: Text(
+        artistName,
+        style: style,
+        maxLines: maxLines,
+        overflow: overflow,
+        textAlign: textAlign,
+      ),
     );
   }
 }

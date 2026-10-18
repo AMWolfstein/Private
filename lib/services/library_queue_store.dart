@@ -417,6 +417,8 @@ class LibraryQueueStore {
           MAX(CASE WHEN l.cover_path IS NOT NULL AND l.cover_path != '' THEN l.cover_path END) AS cover_path,
           MAX(l.file_path) AS sample_file_path,
           COUNT(*) AS track_count,
+          MAX(CASE WHEN l.total_tracks > 0 THEN l.total_tracks END) AS album_total_tracks,
+          MAX(CASE WHEN l.total_discs > 0 THEN l.total_discs END) AS album_total_discs,
           $completenessColumns
           ${unfiltered ? 'MAX(COALESCE(l.sort_added, 0))' : 'c.latest_added'} AS sort_added,
           MIN(l.album_name_norm) AS sort_album,
@@ -460,6 +462,8 @@ class LibraryQueueStore {
           NULL AS cover_path,
           NULL AS sample_file_path,
           NULL AS track_count,
+          NULL AS album_total_tracks,
+          NULL AS album_total_discs,
           NULL AS album_completeness,
           NULL AS album_present_tracks,
           NULL AS album_expected_tracks,
@@ -780,6 +784,11 @@ class LibraryQueueStore {
 
   List<_QueueOrderTerm> _queueAlbumOrderTerms(String sortMode) {
     return switch (sortMode) {
+      'artist-releases-newest' => const [
+        _QueueOrderTerm('sort_release', descending: true),
+        _QueueOrderTerm('sort_added', descending: true),
+        _QueueOrderTerm('album_key'),
+      ],
       'oldest' => const [
         _QueueOrderTerm('sort_added'),
         _QueueOrderTerm('sort_album'),
@@ -919,7 +928,8 @@ class LibraryQueueStore {
       'downloadedAt': row['downloaded_at'] ?? row['sort_added'],
       'spotifyId': row['spotify_id'],
       'quality': row['quality'],
-      'replayGainMetadataScanVersion': row['replaygain_metadata_scan_version'] ?? 0,
+      'replayGainMetadataScanVersion':
+          row['replaygain_metadata_scan_version'] ?? 0,
     };
     return {'source': source, 'item': item};
   }

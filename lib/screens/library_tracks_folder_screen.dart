@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'dart:io';
 
+import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
@@ -13,6 +15,8 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:spotiflac_android/widgets/local_collection_actions.dart';
+import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -214,6 +218,30 @@ class _LibraryTracksFolderScreenState
 
   @override
   Widget build(BuildContext context) {
+    final collections = ref.watch(libraryCollectionsProvider);
+    final collection = widget.mode == LibraryTracksFolderMode.playlist
+        ? collections.playlistById(widget.playlistId ?? '')
+        : null;
+    final entries = widget.mode == LibraryTracksFolderMode.playlist
+        ? collection?.tracks
+        : widget.mode == LibraryTracksFolderMode.loved
+        ? collections.loved
+        : collections.wishlist;
+    final cover =
+        collection?.coverImagePath ??
+        collection?.previewCover ??
+        entries?.firstOrNull?.track.coverUrl;
+    if (context.isMornye) {
+      return MornyeArtistSurface(
+        imageSource: cover,
+        neutralActions: true,
+        child: Builder(builder: _buildPage),
+      );
+    }
+    return _buildPage(context);
+  }
+
+  Widget _buildPage(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
     final List<CollectionTrackEntry> entries;
@@ -326,6 +354,13 @@ class _LibraryTracksFolderScreenState
                 );
               }, childCount: entries.length),
             ),
+          ),
+        if (entries.isNotEmpty)
+          buildTrackListFooter(
+            context,
+            colorScheme,
+            folderTracks,
+            excludeEpochReleaseDate: true,
           ),
       ],
     );
@@ -521,6 +556,8 @@ class _LibraryTracksFolderScreenState
 
     return AlbumDetailHeader(
       title: title,
+      immersive: context.isMornye,
+      squareArtwork: true,
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
           : title,
@@ -564,13 +601,17 @@ class _LibraryTracksFolderScreenState
               ],
             )
           : null,
-      actions: entries.isNotEmpty
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Flexible(child: _buildPlayAllCenterButton(entries))],
-            )
-          : null,
+      actions: entries.isNotEmpty ? _buildPlayAllCenterButton(entries) : null,
       appBarActions: [
+        if (!isSelectionMode && entries.isNotEmpty)
+          IconButton(
+            tooltip: context.l10n.actionShuffle,
+            icon: const Icon(Icons.shuffle),
+            onPressed: () => _playAll(
+              entries.map((entry) => entry.track).toList(),
+              shuffle: true,
+            ),
+          ),
         if (!isSelectionMode && entries.isNotEmpty)
           IconButton(
             tooltip: context.l10n.collectionExportM3u,
@@ -647,24 +688,32 @@ class _LibraryTracksFolderScreenState
 
   Widget _buildPlayAllCenterButton(List<CollectionTrackEntry> entries) {
     final tracks = entries.map((e) => e.track).toList(growable: false);
-    return HeaderFilledButton(
-      icon: Icons.play_arrow_rounded,
-      label: context.l10n.tooltipPlay,
-      onPressed: tracks.isEmpty ? null : () => _playAll(tracks),
+    final current = ref.watch(currentMediaItemProvider).asData?.value;
+    final source = current?.extras?['source'];
+    final inQueue =
+        current != null &&
+        tracks.any((track) => track.id == current.id || track.id == source);
+    final playing = inQueue && ref.watch(playbackPlayingProvider);
+    return LocalCollectionActions(
+      tracks: tracks,
+      isPlaying: playing,
+      onPlay: inQueue
+          ? () =>
+                ref.read(musicPlayerControllerProvider).togglePlayPause(playing)
+          : () => _playAll(tracks),
+      onShuffle: () => _playAll(tracks, shuffle: true),
     );
   }
 
-  Future<void> _playAll(List<Track> tracks) async {
+  Future<void> _playAll(List<Track> tracks, {bool shuffle = false}) async {
     if (tracks.isEmpty) return;
-
     try {
-      await ref.read(musicPlayerControllerProvider).setShuffle(false);
-      await ref.read(playbackProvider.notifier).playTrackList(tracks);
+      final queue = tracks.toList();
+      if (shuffle) queue.shuffle(Random());
+      await ref.read(musicPlayerControllerProvider).setShuffle(shuffle);
+      await ref.read(playbackProvider.notifier).playTrackList(queue);
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.snackbarCannotOpenFile('$e'))),
-      );
+      if (mounted) showCannotOpenFileSnackBar(context, e);
     }
   }
 

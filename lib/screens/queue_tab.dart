@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show ValueListenable;
@@ -1093,10 +1094,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             ),
           )
         : ref.watch(_queueLibraryCountsProvider(countsRequest));
-    final queueCounts = _resolveQueueLibraryCounts(
-      countsValue,
-      countsRequest,
-    );
+    final queueCounts = _resolveQueueLibraryCounts(countsValue, countsRequest);
 
     _QueueLibraryPageRequest pageRequest(String filterMode) {
       final offset = _libraryPageOffsetFor(filterMode);
@@ -1174,8 +1172,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         countsValue.isLoading || activePageValue.isLoading;
     final hasAnyLibraryItems =
         queueCounts.allTrackCount > 0 || queueCounts.albumCount > 0;
-    final hasLibraryContent =
-        localLibraryEnabled && localLibraryTotalCount > 0;
+    final hasLibraryContent = localLibraryEnabled && localLibraryTotalCount > 0;
     final hasActiveSearch =
         _searchQuery.isNotEmpty || _searchController.text.trim().isNotEmpty;
     final shouldShowLibraryControls =
@@ -1340,13 +1337,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                           query: _searchQuery,
                           onOpenArtist: (artist) => Navigator.of(context).push(
                             MaterialPageRoute<void>(
-                              builder: (_) => Scaffold(
-                                body: MornyeLibraryScreen(
-                                  page: MornyeLibraryPage.albums,
-                                  artist: artist,
-                                  onOpenSection: (_) {},
-                                ),
-                              ),
+                              builder: (_) =>
+                                  LocalArtistScreen(artistName: artist),
                             ),
                           ),
                         ),

@@ -96,6 +96,7 @@ pub(super) fn flac(metadata: &mut AudioMetadata, items: &[(String, String)]) {
             }
         }
     }
+    separate_totals(metadata, items);
     metadata.genre = get("GENRE");
     metadata.label = ["ORGANIZATION", "LABEL", "PUBLISHER"]
         .into_iter()
@@ -238,5 +239,73 @@ pub(super) fn ogg(items: &[(String, String)]) -> AudioMetadata {
     if !album_artists.is_empty() {
         metadata.album_artist = joined(album_artists.into_iter());
     }
+    separate_totals(&mut metadata, items);
     metadata
+}
+
+/// Vorbis comments commonly store totals separately from TRACKNUMBER/DISCNUMBER.
+/// Apply them after number pairs so field order cannot erase an album's total.
+fn separate_totals(metadata: &mut AudioMetadata, items: &[(String, String)]) {
+    for (names, target) in [
+        (["TOTALTRACKS", "TRACKTOTAL"], &mut metadata.total_tracks),
+        (["TOTALDISCS", "DISCTOTAL"], &mut metadata.total_discs),
+    ] {
+        if let Some(total) = names.into_iter().find_map(|name| {
+            items.iter().find_map(|(key, value)| {
+                (uppercase(key) == name)
+                    .then(|| value.trim().parse::<i64>().ok().filter(|value| *value > 0))
+                    .flatten()
+            })
+        }) {
+            *target = total;
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn separate_album_totals_survive_comment_order_and_aliases() {
+        for (track_total, disc_total) in
+            [("TOTALTRACKS", "TOTALDISCS"), ("TRACKTOTAL", "DISCTOTAL")]
+        {
+            let mut items = vec![
+                (track_total.into(), "12".into()),
+                (disc_total.into(), "2".into()),
+                ("TRACKNUMBER".into(), "1".into()),
+                ("DISCNUMBER".into(), "1".into()),
+            ];
+            for reverse in [false, true] {
+                if reverse {
+                    items.reverse();
+                }
+                let mut flac_tags = AudioMetadata::default();
+                flac(&mut flac_tags, &items);
+                for metadata in [flac_tags, ogg(&items)] {
+                    assert_eq!(metadata.track_number, 1);
+                    assert_eq!(metadata.total_tracks, 12);
+                    assert_eq!(metadata.disc_number, 1);
+                    assert_eq!(metadata.total_discs, 2);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_separate_totals_do_not_erase_number_pair_totals() {
+        let items = vec![
+            ("TRACKNUMBER".into(), "1/12".into()),
+            ("TOTALTRACKS".into(), "invalid".into()),
+            ("DISCNUMBER".into(), "1/2".into()),
+            ("DISCTOTAL".into(), "0".into()),
+        ];
+        let mut flac_tags = AudioMetadata::default();
+        flac(&mut flac_tags, &items);
+        for metadata in [flac_tags, ogg(&items)] {
+            assert_eq!(metadata.total_tracks, 12);
+            assert_eq!(metadata.total_discs, 2);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:spotiflac_android/widgets/track_detail_actions.dart';
 import 'package:audio_service/audio_service.dart' show MediaItem;
 import 'package:spotiflac_android/services/deleted_library_files.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ import 'package:spotiflac_android/widgets/library_selection_playback_actions.dar
 import 'package:spotiflac_android/widgets/disc_separator_chip.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
+import 'package:spotiflac_android/widgets/local_collection_actions.dart';
+import 'package:spotiflac_android/utils/clickable_metadata.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -261,6 +264,17 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           )
         else
           _buildTrackList(context, colorScheme, tracks),
+        if (!_loadingTracks && _loadError == null)
+          buildTrackListFooter(
+            context,
+            colorScheme,
+            tracks
+                .map(
+                  (track) =>
+                      UnifiedLibraryItem.fromLocalLibrary(track).toTrack(),
+                )
+                .toList(),
+          ),
       ],
       selectionBar: _buildSelectionBottomBar(
         context,
@@ -330,8 +344,9 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-      subtitle: Text(
-        widget.artistName,
+      subtitle: ClickableArtistName(
+        artistName: widget.artistName,
+        coverUrl: widget.coverPath,
         style: TextStyle(
           color: context.isMornye
               ? colorScheme.primary
@@ -344,6 +359,14 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         overflow: TextOverflow.ellipsis,
       ),
       meta: _buildLocalHeaderMeta(context, qualityLabelMode),
+      appBarActions: [
+        if (!isSelectionMode)
+          IconButton(
+            tooltip: context.l10n.actionShuffle,
+            icon: const Icon(Icons.shuffle),
+            onPressed: _shuffleAll,
+          ),
+      ],
       actions: Consumer(
         builder: (context, ref, _) {
           final isCurrent = ref.watch(
@@ -354,12 +377,14 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
             ),
           );
           final isPlaying = isCurrent && ref.watch(playbackPlayingProvider);
-          return AlbumPlayActions(
+          final tracksForActions = _sortedTracksCache
+              .map(
+                (track) => UnifiedLibraryItem.fromLocalLibrary(track).toTrack(),
+              )
+              .toList();
+          return LocalCollectionActions(
+            tracks: tracksForActions,
             isPlaying: isPlaying,
-            playLabel: isPlaying
-                ? context.l10n.actionPause
-                : context.l10n.tooltipPlay,
-            shuffleTooltip: context.l10n.actionShuffle,
             onPlay: isCurrent
                 ? () => ref
                       .read(musicPlayerControllerProvider)
@@ -383,6 +408,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
     return HeaderMetaRow(
       items: [
+        if (tracks.firstOrNull?.releaseDate?.isNotEmpty == true)
+          HeaderMetaItem(tracks.first.releaseDate!.split('-').first),
         HeaderMetaItem(context.l10n.queueTrackCount(tracks.length)),
         if (totalMinutes > 0) HeaderMetaItem('$totalMinutes min'),
         if (quality != null && quality.isNotEmpty)
