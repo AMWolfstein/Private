@@ -1681,10 +1681,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "Wishlist",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "Loved",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1765,10 +1761,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "Wishlist is empty",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "Loved folder is empty",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -1799,7 +1791,7 @@
   },
   "collectionRemoveFromFolder": "Remove from folder",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "\"{trackName}\" added to Loved",
   "@collectionAddedToLoved": {
@@ -1813,24 +1805,6 @@
   "collectionRemovedFromLoved": "\"{trackName}\" removed from Loved",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "\"{trackName}\" added to Wishlist",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "\"{trackName}\" removed from Wishlist",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -1853,14 +1827,6 @@
   "trackOptionRemoveFromLoved": "Remove from Loved",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "Add to Wishlist",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "Remove from Wishlist",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
   "@artistOptionRemoveFromFavorites": {
@@ -1962,15 +1928,6 @@
   "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} wishlist {count, plural, =1{track} other{tracks}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

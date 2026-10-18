@@ -1835,10 +1835,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "Список желаемого",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "Любимые",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1919,10 +1915,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "Список желаний пуст",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "Папка Любимые пуста",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -1953,7 +1945,7 @@
   },
   "collectionRemoveFromFolder": "Убрать из папки",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "\"{trackName}\" добавлен в Любимые",
   "@collectionAddedToLoved": {
@@ -1967,24 +1959,6 @@
   "collectionRemovedFromLoved": "\"{trackName}\" удалено из Любимых",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "\"{trackName}\" добавлен в список желаний",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "\"{trackName}\" удалён из списка желаний",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -2007,14 +1981,6 @@
   "trackOptionRemoveFromLoved": "Исключить из Любимых",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "Добавить в список желаний",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "Удалить из списка желаний",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "Удалить из избранных исполнителей",
   "@artistOptionRemoveFromFavorites": {
@@ -2102,7 +2068,7 @@
   },
   "backupSettingsOnly": "Только настройки",
   "backupSelectCollections": "Коллекции медиатеки",
-  "backupSelectCollectionsDescription": "Любимые треки, список желаний, любимые исполнители, плейлисты и обложки плейлистов.",
+  "backupSelectCollectionsDescription": "Любимые треки, любимые исполнители, плейлисты и обложки плейлистов.",
   "backupSelectedExportDescription": "Сохранить выбранные категории в файл резервной копии. Аудио файлы не включены.",
   "backupSelectAtLeastOne": "Выберите хотя бы одну категорию для создания резервной копии.",
   "backupSelectedRestoreMessage": "Будут восстановлены только перечисленные ниже категории. Категории, не вошедшие в эту резервную копию, останутся без изменений. Восстановление может перезаписать существующие данные, это действие нельзя отменить.",
@@ -2122,15 +2088,6 @@
   "backupContentsLiked": "{count} {count, plural, =1{понравившийся трек} few{понравившихся трека} other{понравившихся треков}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} {count, plural, =1{трек из списка желаний} few{трека из списка желаний} other{треков из списка желаний}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

@@ -1835,10 +1835,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "Liste de souhaits",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "Favoris",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1919,10 +1915,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "La liste de souhaits est vide",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "Le dossier « Favoris » est vide",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -1953,7 +1945,7 @@
   },
   "collectionRemoveFromFolder": "Supprimer du dossier",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "\"{trackName}\" ajouté aux Favoris",
   "@collectionAddedToLoved": {
@@ -1967,24 +1959,6 @@
   "collectionRemovedFromLoved": "\"{trackName}\" supprimé des Favoris",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "« {trackName} » a été ajouté à la liste de souhaits",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "« {trackName} » a été supprimé de la liste de souhaits",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -2007,14 +1981,6 @@
   "trackOptionRemoveFromLoved": "Supprimer des Favoris",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "Ajouter à la liste de souhaits",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "Supprimer de la liste de souhaits",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "Supprimer des Artistes Favoris",
   "@artistOptionRemoveFromFavorites": {
@@ -2102,7 +2068,7 @@
   },
   "backupSettingsOnly": "Paramètres uniquement",
   "backupSelectCollections": "Fonds de la bibliothèque",
-  "backupSelectCollectionsDescription": "Titres appréciés, liste de souhaits, artistes préférés, playlists et pochettes de playlists.",
+  "backupSelectCollectionsDescription": "Titres appréciés, artistes préférés, playlists et pochettes de playlists.",
   "backupSelectedExportDescription": "Enregistrez les catégories sélectionnées dans un fichier de sauvegarde. Les fichiers audio ne sont pas inclus.",
   "backupSelectAtLeastOne": "Sélectionnez au moins une catégorie pour créer une sauvegarde.",
   "backupSelectedRestoreMessage": "Seules les catégories répertoriées ci-dessous seront restaurées. Les catégories non incluses dans cette sauvegarde resteront inchangées. La restauration peut remplacer les données existantes et ne peut pas être annulée.",
@@ -2122,15 +2088,6 @@
   "backupContentsLiked": "{count} favoris {count, plural, one{titre} other{titres}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} liste de souhaits {count, plural, one{titre} other{titres}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

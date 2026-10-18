@@ -1912,10 +1912,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "Wishlist",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "Disukai",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1996,10 +1992,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "Wishlist kosong",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "Folder disukai kosong",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -2030,7 +2022,7 @@
   },
   "collectionRemoveFromFolder": "Hapus dari folder",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "\"{trackName}\" ditambahkan ke Disukai",
   "@collectionAddedToLoved": {
@@ -2044,24 +2036,6 @@
   "collectionRemovedFromLoved": "\"{trackName}\" dihapus dari Disukai",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "\"{trackName}\" ditambahkan ke Wishlist",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "\"{trackName}\" dihapus dari Wishlist",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -2084,14 +2058,6 @@
   "trackOptionRemoveFromLoved": "Hapus dari Disukai",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "Tambah ke Wishlist",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "Hapus dari Wishlist",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "Hapus dari Artis Favorit",
   "@artistOptionRemoveFromFavorites": {
@@ -2179,7 +2145,7 @@
   },
   "backupSettingsOnly": "Setelan saja",
   "backupSelectCollections": "Koleksi saya",
-  "backupSelectCollectionsDescription": "Lagu, wishlist, artis favorit, playlist, dan cover playlist yang disukai.",
+  "backupSelectCollectionsDescription": "Lagu, artis favorit, playlist, dan cover playlist yang disukai.",
   "backupSelectedExportDescription": "Buat file cadangan dari kategori terpilih. Tidak termasuk file audio.",
   "backupSelectAtLeastOne": "Pilih setidaknya satu kategori untuk dicadangkan.",
   "backupSelectedRestoreMessage": "Hanya kategori di bawah yang akan dipulihkan. Yang tidak ada di daftar tidak akan diubah. Pemulihan akan mengganti data yang sudah ada dan tidak dapat diurungkan.",
@@ -2199,15 +2165,6 @@
   "backupContentsLiked": "{count} lagu {count, plural, =1{disukai} other{disukai}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} lagu di {count, plural, =1{wishlist} other{wishlist}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

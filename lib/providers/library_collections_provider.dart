@@ -200,15 +200,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     return true;
   });
 
-  Future<bool> toggleWishlist(Track track) => _toggleTrackEntry(
-    track,
-    contains: (key) => state.containsWishlistKey(key),
-    select: (state) => state.wishlist,
-    withList: (list) => state.copyWith(wishlist: list),
-    dbDelete: _db.deleteWishlistEntry,
-    dbUpsert: _db.upsertWishlistEntry,
-  );
-
   Future<bool> toggleLoved(Track track) => _toggleTrackEntry(
     track,
     contains: (key) => state.containsLovedKey(key),
@@ -345,15 +336,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     dbDelete: _db.deleteFavoriteArtistEntry,
   );
 
-  Future<void> removeFromWishlist(String trackKey) => _removeEntry(
-    trackKey,
-    contains: (key) => state.containsWishlistKey(key),
-    select: (state) => state.wishlist,
-    keyOf: (entry) => entry.key,
-    withList: (list) => state.copyWith(wishlist: list),
-    dbDelete: _db.deleteWishlistEntry,
-  );
-
   Future<void> removeFromLoved(String trackKey) => _removeEntry(
     trackKey,
     contains: (key) => state.containsLovedKey(key),
@@ -386,15 +368,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       return keys.length;
     });
   }
-
-  Future<int> removeWishlistTracks(Iterable<String> trackKeys) =>
-      _removeTrackEntries(
-        trackKeys,
-        contains: (key) => state.containsWishlistKey(key),
-        select: () => state.wishlist,
-        withList: (list) => state.copyWith(wishlist: list),
-        dbDelete: _db.deleteWishlistTracks,
-      );
 
   Future<int> removeLovedTracks(Iterable<String> trackKeys) =>
       _removeTrackEntries(
@@ -778,7 +751,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     _invalidatePlaylistPickerSummaries();
   });
 
-  /// Returns the full collections snapshot (wishlist, loved, playlists,
+  /// Returns the full collections snapshot (loved, playlists,
   /// favorite artists) for a backup, ensuring data is loaded first.
   Future<Map<String, dynamic>> exportCollections() async {
     await _ensureLoaded();
@@ -850,7 +823,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     return covers;
   }
 
-  /// Replaces all collections (wishlist, loved, playlists, favorite artists)
+  /// Replaces all collections (loved, playlists, favorite artists)
   /// with the contents of a backup. [collectionsJson] uses the
   /// [LibraryCollectionsState.toJson] shape; [coverImages] is the map produced
   /// by [exportPlaylistCovers]. Cover images are rewritten into this device's

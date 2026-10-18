@@ -37,7 +37,7 @@ void main() {
     expect(implementations['library'], 'rust');
     db = await openDatabase(
       '${root.path}/library_collections.db',
-      version: 2,
+      version: 3,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys=ON');
         await db.execute('PRAGMA recursive_triggers=ON');

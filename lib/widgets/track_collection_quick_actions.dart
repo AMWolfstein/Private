@@ -92,10 +92,6 @@ class _TrackOptionsSheet extends ConsumerWidget {
     final isLoved = ref.watch(
       libraryCollectionsProvider.select((state) => state.isLoved(track)),
     );
-    final isInWishlist = ref.watch(
-      libraryCollectionsProvider.select((state) => state.isInWishlist(track)),
-    );
-
     if (context.isMornye) {
       final l10n = context.l10n;
       return MornyeContextMenu(
@@ -104,7 +100,7 @@ class _TrackOptionsSheet extends ConsumerWidget {
             icon: CupertinoIcons.star_fill,
             label: isLoved ? l10n.mornyeFavorited : l10n.mornyeFavorite,
             selected: isLoved,
-            onPressed: () => _toggleCollection(context, ref, wishlist: false),
+            onPressed: () => _toggleLoved(context, ref),
           ),
           MornyeMenuAction(
             icon: CupertinoIcons.share_solid,
@@ -150,15 +146,6 @@ class _TrackOptionsSheet extends ConsumerWidget {
                 Navigator.pop(context);
                 showAddTrackToPlaylistSheet(root, ref, track);
               },
-            ),
-            MornyeMenuAction(
-              icon: isInWishlist
-                  ? CupertinoIcons.checkmark_circle
-                  : CupertinoIcons.add_circled,
-              label: isInWishlist
-                  ? l10n.trackOptionRemoveFromWishlist
-                  : l10n.trackOptionAddToWishlist,
-              onPressed: () => _toggleCollection(context, ref, wishlist: true),
             ),
           ],
           [
@@ -327,33 +314,6 @@ class _TrackOptionsSheet extends ConsumerWidget {
                 },
               ),
               _OptionTile(
-                icon: isInWishlist
-                    ? Icons.playlist_add_check_circle
-                    : Icons.add_circle_outline,
-                iconColor: isInWishlist ? colorScheme.primary : null,
-                title: isInWishlist
-                    ? context.l10n.trackOptionRemoveFromWishlist
-                    : context.l10n.trackOptionAddToWishlist,
-                onTap: () async {
-                  Navigator.pop(context);
-                  final added = await ref
-                      .read(libraryCollectionsProvider.notifier)
-                      .toggleWishlist(track);
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        added
-                            ? context.l10n.collectionAddedToWishlist(track.name)
-                            : context.l10n.collectionRemovedFromWishlist(
-                                track.name,
-                              ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              _OptionTile(
                 icon: Icons.playlist_add,
                 title: context.l10n.collectionAddToPlaylist,
                 onTap: () {
@@ -374,26 +334,16 @@ class _TrackOptionsSheet extends ConsumerWidget {
     );
   }
 
-  Future<void> _toggleCollection(
-    BuildContext context,
-    WidgetRef ref, {
-    required bool wishlist,
-  }) async {
+  Future<void> _toggleLoved(BuildContext context, WidgetRef ref) async {
     final root = Navigator.of(context, rootNavigator: true).context;
     final notifier = ref.read(libraryCollectionsProvider.notifier);
     Navigator.pop(context);
-    final added = wishlist
-        ? await notifier.toggleWishlist(track)
-        : await notifier.toggleLoved(track);
+    final added = await notifier.toggleLoved(track);
     if (!root.mounted) return;
     final l10n = root.l10n;
-    final message = wishlist
-        ? (added
-              ? l10n.collectionAddedToWishlist(track.name)
-              : l10n.collectionRemovedFromWishlist(track.name))
-        : (added
-              ? l10n.collectionAddedToLoved(track.name)
-              : l10n.collectionRemovedFromLoved(track.name));
+    final message = added
+        ? l10n.collectionAddedToLoved(track.name)
+        : l10n.collectionRemovedFromLoved(track.name);
     ScaffoldMessenger.of(root).showSnackBar(SnackBar(content: Text(message)));
   }
 

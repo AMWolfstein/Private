@@ -98,7 +98,7 @@ void main() {
       );
       final db = await openDatabase(
         '${root.path}/collections.db',
-        version: 2,
+        version: 3,
         onConfigure: (db) async {
           await db.execute('PRAGMA auto_vacuum=INCREMENTAL');
           await db.execute('PRAGMA recursive_triggers=ON');

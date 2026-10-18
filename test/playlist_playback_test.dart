@@ -112,7 +112,7 @@ class _RemovalCollections extends _Collections {
   LibraryCollectionsState build() {
     final initial = super.build();
     final tracks = initial.playlists.single.tracks;
-    return initial.copyWith(wishlist: tracks, loved: tracks);
+    return initial.copyWith(loved: tracks);
   }
 
   Future<int> _remove(String kind, Iterable<String> keys) async {
@@ -121,7 +121,6 @@ class _RemovalCollections extends _Collections {
     List<CollectionTrackEntry> keep(List<CollectionTrackEntry> entries) =>
         entries.where((entry) => !selected.contains(entry.key)).toList();
     state = switch (kind) {
-      'wishlist' => state.copyWith(wishlist: keep(state.wishlist)),
       'loved' => state.copyWith(loved: keep(state.loved)),
       _ => state.copyWith(
         playlists: [
@@ -133,10 +132,6 @@ class _RemovalCollections extends _Collections {
     };
     return selected.length;
   }
-
-  @override
-  Future<int> removeWishlistTracks(Iterable<String> keys) =>
-      _remove('wishlist', keys);
 
   @override
   Future<int> removeLovedTracks(Iterable<String> keys) =>

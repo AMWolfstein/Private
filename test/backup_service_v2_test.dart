@@ -69,11 +69,7 @@ void main() {
           final end = (offset + limit).clamp(0, history.length);
           return history.sublist(offset, end);
         },
-        collections: const {
-          'loved': <dynamic>[],
-          'wishlist': <dynamic>[],
-          'playlists': <dynamic>[],
-        },
+        collections: const {'loved': <dynamic>[], 'playlists': <dynamic>[]},
         playlistCoverFiles: {
           'playlist-1': {'ext': '.jpg', 'path': cover.path},
         },

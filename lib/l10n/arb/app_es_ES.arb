@@ -1835,10 +1835,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "Lista de deseos",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "Me gusta",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1919,10 +1915,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "La lista de deseos está vacía",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "La carpeta «Me gusta» está vacía",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -1953,7 +1945,7 @@
   },
   "collectionRemoveFromFolder": "Quitar de la carpeta",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "\"{trackName}\" se agregó a «Me gusta»",
   "@collectionAddedToLoved": {
@@ -1967,24 +1959,6 @@
   "collectionRemovedFromLoved": "\"{trackName}\" se eliminó de «Me gusta»",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "\"{trackName}\" se agregó a la lista de deseos",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "\"{trackName}\" se eliminó de la lista de deseos",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -2007,14 +1981,6 @@
   "trackOptionRemoveFromLoved": "Quitar de «Me gusta»",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "Añadir a la lista de deseos",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "Quitar de la lista de deseos",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "Quitar de Artistas favoritos",
   "@artistOptionRemoveFromFavorites": {
@@ -2102,7 +2068,7 @@
   },
   "backupSettingsOnly": "Solo configuraciones",
   "backupSelectCollections": "Colecciones de la biblioteca",
-  "backupSelectCollectionsDescription": "Canciones que te gustaron, lista de deseos, artistas favoritos, listas de reproducción y portadas de listas de reproducción.",
+  "backupSelectCollectionsDescription": "Canciones que te gustaron, artistas favoritos, listas de reproducción y portadas de listas de reproducción.",
   "backupSelectedExportDescription": "Guarda las categorías seleccionadas en un archivo de respaldo. No se incluyen los archivos de audio.",
   "backupSelectAtLeastOne": "Selecciona al menos una categoría para crear una copia de seguridad.",
   "backupSelectedRestoreMessage": "Solo se restaurarán las categorías que se enumeran a continuación. Las categorías que no estén incluidas en esta copia de seguridad permanecerán sin cambios. La restauración puede reemplazar los datos existentes y no se puede deshacer.",
@@ -2122,15 +2088,6 @@
   "backupContentsLiked": "{count} {count, plural, =1{pista con «Me gusta»} other{pistas con «Me gusta»}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} {count, plural, =1{pista en la lista de deseos} other{pistas en la lista de deseos}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

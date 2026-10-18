@@ -30,14 +30,12 @@ Future<LibraryCollectionsState> hydrateLibraryCollectionsSnapshot(
     }
   }
   final rows =
-      snapshot.wishlistRows.length +
       snapshot.lovedRows.length +
       snapshot.favoriteArtistRows.length +
       snapshot.playlistRows.length +
       snapshot.playlistTrackRows.length;
   if (rows < _workerRowThreshold &&
       !_hasLargeJson([
-        ...snapshot.wishlistRows,
         ...snapshot.lovedRows,
         ...snapshot.favoriteArtistRows,
         ...snapshot.playlistRows,
@@ -46,7 +44,6 @@ Future<LibraryCollectionsState> hydrateLibraryCollectionsSnapshot(
   }
   return _hydrateRowsInWorker<LibraryCollectionsState>(
     rows: {
-      _CollectionRows.wishlist: snapshot.wishlistRows,
       _CollectionRows.loved: snapshot.lovedRows,
       _CollectionRows.artists: snapshot.favoriteArtistRows,
       _CollectionRows.membership: snapshot.playlistTrackRows,
@@ -59,7 +56,6 @@ LibraryCollectionsState decodeLibraryCollectionsSnapshot(
   LibraryCollectionsSnapshot snapshot,
 ) {
   final accumulator = _CollectionHydrationAccumulator()
-    ..add(_CollectionRows.wishlist, snapshot.wishlistRows)
     ..add(_CollectionRows.loved, snapshot.lovedRows)
     ..add(_CollectionRows.artists, snapshot.favoriteArtistRows)
     ..add(_CollectionRows.membership, snapshot.playlistTrackRows)
@@ -131,7 +127,7 @@ Future<HydratedPlaylistTracks> hydratePlaylistTracks(
     return _decodePlaylistTracks(request);
   }
   return _hydrateRowsInWorker<HydratedPlaylistTracks>(
-    rows: {_CollectionRows.wishlist: rows},
+    rows: {_CollectionRows.playlistTracks: rows},
     knownKeys: knownKeys,
   );
 }
@@ -242,10 +238,10 @@ bool _hasLargeJson(List<Map<String, dynamic>> rows) {
   return false;
 }
 
-enum _CollectionRows { wishlist, loved, artists, membership, playlists }
+enum _CollectionRows { playlistTracks, loved, artists, membership, playlists }
 
 class _CollectionHydrationAccumulator {
-  final wishlist = <CollectionTrackEntry>[];
+  final playlistTracks = <CollectionTrackEntry>[];
   final loved = <CollectionTrackEntry>[];
   final artists = <CollectionArtistEntry>[];
   final playlistRows = <Map<String, dynamic>>[];
@@ -253,8 +249,8 @@ class _CollectionHydrationAccumulator {
 
   void add(_CollectionRows kind, List<Map<String, dynamic>> rows) {
     switch (kind) {
-      case _CollectionRows.wishlist:
-        wishlist.addAll(_decodeTrackRows(rows));
+      case _CollectionRows.playlistTracks:
+        playlistTracks.addAll(_decodeTrackRows(rows));
       case _CollectionRows.loved:
         loved.addAll(_decodeTrackRows(rows));
       case _CollectionRows.artists:
@@ -275,7 +271,6 @@ class _CollectionHydrationAccumulator {
   }
 
   LibraryCollectionsState finish() => LibraryCollectionsState(
-    wishlist: wishlist,
     loved: loved,
     favoriteArtists: artists,
     playlists: _decodePlaylistRows(playlistRows, trackKeysByPlaylist),
@@ -428,7 +423,7 @@ void _collectionHydrationWorker(_CollectionWorkerRequest request) async {
       if (request.mode == _CollectionWorkerMode.snapshot) {
         Isolate.exit(request.result, [accumulator.finish()]);
       }
-      final tracks = accumulator.wishlist.toList(growable: false);
+      final tracks = accumulator.playlistTracks.toList(growable: false);
       final keys = tracks.map((entry) => entry.key).toSet();
       Isolate.exit(request.result, [
         HydratedPlaylistTracks(
@@ -453,7 +448,7 @@ Future<void> _readNativeCollectionRows(
     _CollectionLineSink((line) {
       final decoded = jsonDecode(line) as Map<String, dynamic>;
       final kind = switch (decoded['kind']) {
-        'wishlist' || 'playlist_track' => _CollectionRows.wishlist,
+        'playlist_track' => _CollectionRows.playlistTracks,
         'loved' => _CollectionRows.loved,
         'artist' => _CollectionRows.artists,
         'membership' => _CollectionRows.membership,
@@ -504,7 +499,7 @@ class _CollectionLineSink implements Sink<String> {
   void close() {}
 }
 
-enum _CollectionExportRows { wishlist, loved, artist, playlistTrack }
+enum _CollectionExportRows { loved, artist, playlistTrack }
 
 typedef _CollectionExportBatch = ({
   _CollectionExportRows kind,
@@ -525,10 +520,7 @@ Future<Map<String, dynamic>> exportLibraryCollectionsState(
   LibraryCollectionsState state,
 ) async {
   var count =
-      state.wishlistCount +
-      state.lovedCount +
-      state.favoriteArtistCount +
-      state.playlistCount;
+      state.lovedCount + state.favoriteArtistCount + state.playlistCount;
   for (final playlist in state.playlists) {
     if (count >= _workerRowThreshold) break;
     count += playlist.tracks.length;
@@ -563,7 +555,6 @@ Future<T> _exportLibraryCollectionsInWorker<T>(
       }
     }
 
-    await entries(_CollectionExportRows.wishlist, state.wishlist);
     await entries(_CollectionExportRows.loved, state.loved);
     for (final playlist in state.playlists) {
       await sendBatch((
@@ -580,7 +571,6 @@ Future<T> _exportLibraryCollectionsInWorker<T>(
 );
 
 class _CollectionExportAccumulator {
-  final wishlist = <Map<String, dynamic>>[];
   final loved = <Map<String, dynamic>>[];
   final artists = <Map<String, dynamic>>[];
   final playlists = <Map<String, dynamic>>[];
@@ -606,7 +596,6 @@ class _CollectionExportAccumulator {
       return;
     }
     final target = switch (batch.kind) {
-      _CollectionExportRows.wishlist => wishlist,
       _CollectionExportRows.loved => loved,
       _CollectionExportRows.playlistTrack =>
         playlistTracks ??
@@ -621,7 +610,6 @@ class _CollectionExportAccumulator {
   }
 
   Map<String, dynamic> finish() => {
-    'wishlist': wishlist,
     'loved': loved,
     'playlists': playlists,
     'favoriteArtists': artists,

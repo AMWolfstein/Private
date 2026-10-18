@@ -1,6 +1,6 @@
 part of 'queue_tab.dart';
 
-enum _CollectionEntryType { wishlist, loved, favoriteArtists, playlist }
+enum _CollectionEntryType { loved, favoriteArtists, playlist }
 
 class _CollectionEntry {
   final _CollectionEntryType type;
@@ -8,7 +8,6 @@ class _CollectionEntry {
 
   const _CollectionEntry._(this.type, [this.playlistIndex = -1]);
 
-  static const wishlist = _CollectionEntry._(_CollectionEntryType.wishlist);
   static const loved = _CollectionEntry._(_CollectionEntryType.loved);
   static const favoriteArtists = _CollectionEntry._(
     _CollectionEntryType.favoriteArtists,

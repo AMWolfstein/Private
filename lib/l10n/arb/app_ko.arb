@@ -1835,10 +1835,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "위시리스트",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "좋아요 표시한 음악",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1919,10 +1915,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "위시리스트가 비어 있음",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "'좋아요 표시한 음악' 폴더가 비어 있음",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -1953,7 +1945,7 @@
   },
   "collectionRemoveFromFolder": "폴더에서 제거",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "'{trackName}'이 '좋아요 표시한 음악'에 추가됨",
   "@collectionAddedToLoved": {
@@ -1967,24 +1959,6 @@
   "collectionRemovedFromLoved": "'{trackName}'이 '좋아요 표시한 음악'에서 제거됨",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "'{trackName}'가 위시리스트에 추가됨",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "'{trackName}'가 위시리스트에서 제거됨",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -2007,14 +1981,6 @@
   "trackOptionRemoveFromLoved": "좋아요 표시한 음악에서 제거",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "위시리스트에 추가",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "위시리스트에서 제거",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "즐겨찾는 아티스트에서 제거",
   "@artistOptionRemoveFromFavorites": {
@@ -2102,7 +2068,7 @@
   },
   "backupSettingsOnly": "설정 만",
   "backupSelectCollections": "라이브러리 컬렉션",
-  "backupSelectCollectionsDescription": "좋아요 표시한 음악, 위시리스트, 즐겨찾는 아티스트, 재생목록 및 재생목록 커버",
+  "backupSelectCollectionsDescription": "좋아요 표시한 음악, 즐겨찾는 아티스트, 재생목록 및 재생목록 커버",
   "backupSelectedExportDescription": "선택한 카테고리를 백업 파일에 저장합니다. 오디오 파일은 포함되지 않습니다",
   "backupSelectAtLeastOne": "백업을 생성하려면 최소 하나 이상의 카테고리를 선택하세요",
   "backupSelectedRestoreMessage": "아래 나열된 카테고리만 복원됩니다. 이 백업에 포함되지 않은 카테고리는 변경되지 않습니다. 복원하면 기존 데이터가 덮어쓰여질 수 있으며 되돌릴 수 없습니다",
@@ -2122,15 +2088,6 @@
   "backupContentsLiked": "{count} 개의 좋아요 표시한 {count, plural, =1{음악} other{음악}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} 개의 위시리스트 {count, plural, =1{트랙} other{트랙}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

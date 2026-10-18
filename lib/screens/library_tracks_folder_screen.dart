@@ -141,7 +141,6 @@ class _LibraryTracksFolderScreenState
 
   IconData _modeIcon() {
     return switch (widget.mode) {
-      LibraryTracksFolderMode.wishlist => Icons.bookmark,
       LibraryTracksFolderMode.loved => Icons.favorite,
       LibraryTracksFolderMode.playlist => Icons.queue_music,
     };
@@ -166,9 +165,6 @@ class _LibraryTracksFolderScreenState
     final notifier = ref.read(libraryCollectionsProvider.notifier);
 
     switch (widget.mode) {
-      case LibraryTracksFolderMode.wishlist:
-        await notifier.removeWishlistTracks(keysToRemove);
-        break;
       case LibraryTracksFolderMode.loved:
         await notifier.removeLovedTracks(keysToRemove);
         break;
@@ -224,9 +220,7 @@ class _LibraryTracksFolderScreenState
         : null;
     final entries = widget.mode == LibraryTracksFolderMode.playlist
         ? collection?.tracks
-        : widget.mode == LibraryTracksFolderMode.loved
-        ? collections.loved
-        : collections.wishlist;
+        : collections.loved;
     final cover =
         collection?.coverImagePath ??
         collection?.previewCover ??
@@ -247,12 +241,6 @@ class _LibraryTracksFolderScreenState
     final List<CollectionTrackEntry> entries;
 
     switch (widget.mode) {
-      case LibraryTracksFolderMode.wishlist:
-        playlist = null;
-        entries = ref.watch(
-          libraryCollectionsProvider.select((state) => state.wishlist),
-        );
-        break;
       case LibraryTracksFolderMode.loved:
         playlist = null;
         entries = ref.watch(
@@ -276,23 +264,18 @@ class _LibraryTracksFolderScreenState
     pruneSelection(_folderData.keys);
 
     final title = switch (widget.mode) {
-      LibraryTracksFolderMode.wishlist => context.l10n.collectionWishlist,
       LibraryTracksFolderMode.loved => context.l10n.collectionLoved,
       LibraryTracksFolderMode.playlist =>
         playlist?.name ?? context.l10n.collectionPlaylist,
     };
 
     final emptyTitle = switch (widget.mode) {
-      LibraryTracksFolderMode.wishlist =>
-        context.l10n.collectionWishlistEmptyTitle,
       LibraryTracksFolderMode.loved => context.l10n.collectionLovedEmptyTitle,
       LibraryTracksFolderMode.playlist =>
         context.l10n.collectionPlaylistEmptyTitle,
     };
 
     final emptySubtitle = switch (widget.mode) {
-      LibraryTracksFolderMode.wishlist =>
-        context.l10n.collectionWishlistEmptySubtitle,
       LibraryTracksFolderMode.loved =>
         context.l10n.collectionLovedEmptySubtitle,
       LibraryTracksFolderMode.playlist =>
@@ -1063,4 +1046,4 @@ class _EmptyFolderState extends StatelessWidget {
   }
 }
 
-enum LibraryTracksFolderMode { wishlist, loved, playlist }
+enum LibraryTracksFolderMode { loved, playlist }

@@ -18,7 +18,7 @@ void main() {
     'direct collections JSON keeps exact metadata bytes for v2 and v3',
     () async {
       final collections = <String, dynamic>{
-        'wishlist': [
+        'loved': [
           {
             'key': 'example:track',
             'track': {
@@ -30,7 +30,6 @@ void main() {
             },
           },
         ],
-        'loved': <dynamic>[],
         'playlists': [
           {
             'id': 'playlist',
@@ -91,12 +90,7 @@ void main() {
     'direct JSON archive round trips and retains category presence',
     () async {
       for (final collections in <Map<String, dynamic>>[
-        {
-          'wishlist': <dynamic>[],
-          'loved': <dynamic>[],
-          'playlists': <dynamic>[],
-          'favoriteArtists': <dynamic>[],
-        },
+        {'playlists': <dynamic>[], 'favoriteArtists': <dynamic>[]},
         {
           'loved': [
             {'opaque': '日本語 🎵 \\ "\n', 'nil': null},

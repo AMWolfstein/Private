@@ -1811,10 +1811,6 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionWishlist": "Список бажань",
-  "@collectionWishlist": {
-    "description": "Custom folder for saved tracks to download later"
-  },
   "collectionLoved": "Вподобані",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
@@ -1895,10 +1891,6 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
-  "collectionWishlistEmptyTitle": "Список бажань порожній",
-  "@collectionWishlistEmptyTitle": {
-    "description": "Wishlist empty state title"
-  },
   "collectionLovedEmptyTitle": "Тека \"Улюблені\" порожня",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
@@ -1929,7 +1921,7 @@
   },
   "collectionRemoveFromFolder": "Видалити з теки",
   "@collectionRemoveFromFolder": {
-    "description": "Tooltip for removing track from wishlist/loved folder"
+    "description": "Tooltip for removing track from Loved folder"
   },
   "collectionAddedToLoved": "\"{trackName}\" додано до списку улюблених",
   "@collectionAddedToLoved": {
@@ -1943,24 +1935,6 @@
   "collectionRemovedFromLoved": "\"{trackName}\" видалено з уподобань",
   "@collectionRemovedFromLoved": {
     "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionAddedToWishlist": "\"{trackName}\" додано до списку бажань",
-  "@collectionAddedToWishlist": {
-    "description": "Snackbar after adding track to wishlist",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromWishlist": "\"{trackName}\" видалено зі списку бажань",
-  "@collectionRemovedFromWishlist": {
-    "description": "Snackbar after removing track from wishlist",
     "placeholders": {
       "trackName": {
         "type": "String"
@@ -1983,14 +1957,6 @@
   "trackOptionRemoveFromLoved": "Видалити з улюблених",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
-  },
-  "trackOptionAddToWishlist": "Додати до списку бажань",
-  "@trackOptionAddToWishlist": {
-    "description": "Bottom sheet action label - add track to wishlist"
-  },
-  "trackOptionRemoveFromWishlist": "Видалити зі списку бажань",
-  "@trackOptionRemoveFromWishlist": {
-    "description": "Bottom sheet action label - remove track from wishlist"
   },
   "artistOptionRemoveFromFavorites": "Видалено з улюблених Виконавців",
   "@artistOptionRemoveFromFavorites": {
@@ -2078,7 +2044,7 @@
   },
   "backupSettingsOnly": "Тільки налаштування",
   "backupSelectCollections": "Колекції бібліотек",
-  "backupSelectCollectionsDescription": "Вподобані треки, список бажань, улюблені виконавці, списки відтворення та обкладинки списку треків.",
+  "backupSelectCollectionsDescription": "Вподобані треки, улюблені виконавці, списки відтворення та обкладинки списку треків.",
   "backupSelectedExportDescription": "Зберегти вибрані категорії в файл резервної копії. Аудіофайли не включені.",
   "backupSelectAtLeastOne": "Виберіть принаймні одну категорію, для створення резервної копії.",
   "backupSelectedRestoreMessage": "Буде відновлено лише категорії, перелічені нижче. Категорії, не включені до цієї резервної копії, залишаться без змін. Процес відновлення може замінити наявні дані; скасувати цю дію неможливо.",
@@ -2098,15 +2064,6 @@
   "backupContentsLiked": "{count} вподобали {count, plural, =1{трек} other{треків}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "backupContentsWishlist": "{count} список бажань {count, plural, =1{трек} other{треків}}",
-  "@backupContentsWishlist": {
-    "description": "Backup contents row for wishlist tracks count",
     "placeholders": {
       "count": {
         "type": "int"

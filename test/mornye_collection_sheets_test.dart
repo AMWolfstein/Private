@@ -148,6 +148,8 @@ void main() {
       );
       await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
       await tester.pumpAndSettle();
+      expect(find.textContaining('Wishlist'), findsNothing);
+      expect(find.byIcon(CupertinoIcons.star_fill), findsOneWidget);
       expect(find.byType(MornyeGlassPanel), findsOneWidget);
       expect(find.byType(ListTile), findsNothing);
       expect(find.byIcon(CupertinoIcons.doc_on_doc), findsNWidgets(2));

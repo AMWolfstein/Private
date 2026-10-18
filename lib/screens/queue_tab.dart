@@ -1050,7 +1050,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     ref.watch(
       libraryCollectionsProvider.select(
         (s) => (
-          s.wishlistCount,
           s.lovedCount,
           s.favoriteArtistCount,
           s.playlistCount,

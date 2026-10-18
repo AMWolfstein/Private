@@ -1,7 +1,6 @@
 part of 'queue_tab.dart';
 
 extension _QueueTabCollectionItemWidgets on _QueueTabState {
-
   Widget _buildLibraryQualityBadge(
     BuildContext context,
     ColorScheme colorScheme,
@@ -201,9 +200,6 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
     LibraryCollectionsState collectionState,
   ) {
     final entries = <_CollectionEntry>[];
-    if (collectionState.wishlistCount > 0) {
-      entries.add(_CollectionEntry.wishlist);
-    }
     if (collectionState.lovedCount > 0) {
       entries.add(_CollectionEntry.loved);
     }
@@ -224,17 +220,6 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
     List<UnifiedLibraryItem> filteredUnifiedItems = const [],
   }) {
     switch (entry.type) {
-      case _CollectionEntryType.wishlist:
-        return _buildCollectionGridItem(
-          context: context,
-          colorScheme: colorScheme,
-          icon: Icons.add_circle_outline,
-          iconColor: Colors.white,
-          iconBgColor: const Color(0xFF1DB954),
-          title: context.l10n.collectionWishlist,
-          count: collectionState.wishlistCount,
-          onTap: _openWishlistFolder,
-        );
       case _CollectionEntryType.loved:
         return _buildCollectionGridItem(
           context: context,
@@ -352,18 +337,6 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
     List<UnifiedLibraryItem> filteredUnifiedItems = const [],
   }) {
     switch (entry.type) {
-      case _CollectionEntryType.wishlist:
-        return _buildCollectionListItem(
-          context: context,
-          colorScheme: colorScheme,
-          icon: Icons.add_circle_outline,
-          iconColor: Colors.white,
-          iconBgColor: const Color(0xFF1DB954),
-          title: context.l10n.collectionWishlist,
-          subtitle:
-              '${context.l10n.collectionFoldersTitle} • ${collectionState.wishlistCount} ${collectionState.wishlistCount == 1 ? 'track' : 'tracks'}',
-          onTap: _openWishlistFolder,
-        );
       case _CollectionEntryType.loved:
         return _buildCollectionListItem(
           context: context,

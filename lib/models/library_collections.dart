@@ -297,31 +297,25 @@ class PlaylistPickerSummaryRequest {
 }
 
 class LibraryCollectionsState {
-  final List<CollectionTrackEntry> wishlist;
   final List<CollectionTrackEntry> loved;
   final List<UserPlaylistCollection> playlists;
   final List<CollectionArtistEntry> favoriteArtists;
   final bool isLoaded;
-  final Set<String> _wishlistKeys;
   final Set<String> _lovedKeys;
   final Set<String> _favoriteArtistKeys;
   final Map<String, UserPlaylistCollection> _playlistsById;
   final Set<String> _allPlaylistTrackKeys;
 
   LibraryCollectionsState({
-    this.wishlist = const [],
     this.loved = const [],
     this.playlists = const [],
     this.favoriteArtists = const [],
     this.isLoaded = false,
-    Set<String>? wishlistKeys,
     Set<String>? lovedKeys,
     Set<String>? favoriteArtistKeys,
     Map<String, UserPlaylistCollection>? playlistsById,
     Set<String>? allPlaylistTrackKeys,
-  }) : _wishlistKeys =
-           wishlistKeys ?? wishlist.map((entry) => entry.key).toSet(),
-       _lovedKeys = lovedKeys ?? loved.map((entry) => entry.key).toSet(),
+  }) : _lovedKeys = lovedKeys ?? loved.map((entry) => entry.key).toSet(),
        _favoriteArtistKeys =
            favoriteArtistKeys ??
            favoriteArtists.map((entry) => entry.key).toSet(),
@@ -333,23 +327,13 @@ class LibraryCollectionsState {
        _allPlaylistTrackKeys =
            allPlaylistTrackKeys ?? _buildPlaylistTrackKeys(playlists);
 
-  int get wishlistCount => wishlist.length;
   int get lovedCount => loved.length;
   int get playlistCount => playlists.length;
   int get favoriteArtistCount => favoriteArtists.length;
 
-  bool isInWishlist(Track track) {
-    final key = trackCollectionKey(track);
-    return _wishlistKeys.contains(key);
-  }
-
   bool isLoved(Track track) {
     final key = trackCollectionKey(track);
     return _lovedKeys.contains(key);
-  }
-
-  bool containsWishlistKey(String trackKey) {
-    return _wishlistKeys.contains(trackKey);
   }
 
   bool containsLovedKey(String trackKey) {
@@ -379,17 +363,14 @@ class LibraryCollectionsState {
   bool get hasPlaylistTracks => _allPlaylistTrackKeys.isNotEmpty;
 
   LibraryCollectionsState copyWith({
-    List<CollectionTrackEntry>? wishlist,
     List<CollectionTrackEntry>? loved,
     List<UserPlaylistCollection>? playlists,
     List<CollectionArtistEntry>? favoriteArtists,
     bool? isLoaded,
   }) {
-    final nextWishlist = wishlist ?? this.wishlist;
     final nextLoved = loved ?? this.loved;
     final nextPlaylists = playlists ?? this.playlists;
     final nextFavoriteArtists = favoriteArtists ?? this.favoriteArtists;
-    final keepWishlistIndex = identical(nextWishlist, this.wishlist);
     final keepLovedIndex = identical(nextLoved, this.loved);
     final keepPlaylistIndex = identical(nextPlaylists, this.playlists);
     final keepFavoriteArtistIndex = identical(
@@ -398,12 +379,10 @@ class LibraryCollectionsState {
     );
 
     return LibraryCollectionsState(
-      wishlist: nextWishlist,
       loved: nextLoved,
       playlists: nextPlaylists,
       favoriteArtists: nextFavoriteArtists,
       isLoaded: isLoaded ?? this.isLoaded,
-      wishlistKeys: keepWishlistIndex ? _wishlistKeys : null,
       lovedKeys: keepLovedIndex ? _lovedKeys : null,
       favoriteArtistKeys: keepFavoriteArtistIndex ? _favoriteArtistKeys : null,
       playlistsById: keepPlaylistIndex ? _playlistsById : null,
@@ -432,25 +411,17 @@ class LibraryCollectionsState {
   }
 
   Map<String, dynamic> toJson() => {
-    'wishlist': wishlist.map((e) => e.toJson()).toList(),
     'loved': loved.map((e) => e.toJson()).toList(),
     'playlists': playlists.map((e) => e.toJson()).toList(),
     'favoriteArtists': favoriteArtists.map((e) => e.toJson()).toList(),
   };
 
   factory LibraryCollectionsState.fromJson(Map<String, dynamic> json) {
-    final wishlistRaw = (json['wishlist'] as List?) ?? const [];
     final lovedRaw = (json['loved'] as List?) ?? const [];
     final playlistsRaw = (json['playlists'] as List?) ?? const [];
     final favoriteArtistsRaw = (json['favoriteArtists'] as List?) ?? const [];
 
     return LibraryCollectionsState(
-      wishlist: wishlistRaw
-          .whereType<Map<Object?, Object?>>()
-          .map(
-            (e) => CollectionTrackEntry.fromJson(Map<String, dynamic>.from(e)),
-          )
-          .toList(growable: false),
       loved: lovedRaw
           .whereType<Map<Object?, Object?>>()
           .map(

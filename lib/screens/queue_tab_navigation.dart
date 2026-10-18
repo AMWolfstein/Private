@@ -145,16 +145,6 @@ extension _QueueTabNavigation on _QueueTabState {
     );
   }
 
-  void _openWishlistFolder() {
-    _navigateWithUnfocus(
-      MaterialPageRoute(
-        builder: (_) => const LibraryTracksFolderScreen(
-          mode: LibraryTracksFolderMode.wishlist,
-        ),
-      ),
-    );
-  }
-
   void _openLovedFolder() {
     _navigateWithUnfocus(
       MaterialPageRoute(
