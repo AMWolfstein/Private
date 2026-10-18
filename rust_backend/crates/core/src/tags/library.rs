@@ -144,6 +144,9 @@ fn read(
     let format = read_container_format(file, &extension)?;
     let metadata = read_tags(file, format, &|| Ok(()), cover.as_deref_mut());
     let tagged = metadata.is_ok();
+    if let Err(error) = &metadata {
+        result["metadataReadError"] = error.clone().into();
+    }
     if !tagged && let Some(cover) = cover {
         *cover = None;
     }

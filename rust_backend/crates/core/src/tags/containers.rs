@@ -263,18 +263,13 @@ pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
             None
         }
     });
-    let metadata = packet
-        .map(|data| comments::ogg(&comments::parse(data, 512 * 1024)))
-        .unwrap_or_default();
-    if metadata.title.is_empty()
-        && metadata.artist.is_empty()
-        && metadata.replay_gain_track_gain.is_empty()
-        && metadata.replay_gain_album_gain.is_empty()
-    {
-        Err("no Vorbis comments found".into())
-    } else {
-        Ok(metadata)
+    let data = packet.ok_or("no Vorbis comments found")?;
+    // An encoder-only or empty comment list is valid. Tag presence is a
+    // container property, independent of which fields the user filled in.
+    if !valid_comments(data) {
+        return Err("invalid Vorbis comments".into());
     }
+    Ok(comments::ogg(&comments::parse(data, 512 * 1024)))
 }
 
 pub(super) fn ogg_cover(reader: &mut impl Read) -> Result<CoverArt, String> {

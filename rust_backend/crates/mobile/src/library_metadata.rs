@@ -112,6 +112,33 @@ mod tests {
     use std::os::fd::AsRawFd;
 
     #[test]
+    fn encoder_only_opus_scans_through_a_borrowed_descriptor() {
+        let mut source = tempfile::tempfile().unwrap();
+        source
+            .write_all(include_bytes!(
+                "../../core/tests/fixtures/encoder-only.opus"
+            ))
+            .unwrap();
+        // dup shares the current offset; each read must rewind independently.
+        for include_cover in [false, true, false] {
+            let result = read_library_metadata_from_descriptor(
+                source.as_raw_fd(),
+                "يوم ما تنسى.opus".into(),
+                "scan".into(),
+                include_cover,
+                None,
+            )
+            .unwrap();
+            let json: serde_json::Value = serde_json::from_str(&result.metadata_json).unwrap();
+            assert_eq!(json["trackName"], "يوم ما تنسى");
+            assert_eq!(json["sampleRate"], 48000);
+            assert_eq!(json["duration"], 1);
+            assert!(json.get("metadataFromFilename").is_none());
+            assert!(source.metadata().is_ok());
+        }
+    }
+
+    #[test]
     fn original_artwork_is_copied_without_decoding_or_changing_the_source() {
         // Extraction preserves even formats the thumbnail decoder cannot read.
         let artwork = b"original embedded image bytes";

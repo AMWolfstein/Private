@@ -261,7 +261,7 @@ internal fun MainActivity.readAudioMetadataFromUri(
     acceptRead = {
         val fromFilename = it.optBoolean("metadataFromFilename", false)
         if (fromFilename) {
-            throw IOException("Audio tags unreadable; only filename-derived metadata available")
+            throw IOException(it.optString("metadataReadError", "Audio tags unreadable; only filename-derived metadata available"))
         }
         !fromFilename
     },
