@@ -12,9 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): match the original artist Popular section:
-remove Show-more controls, use dots for five-song pages, and show at most 20 tracks ranked
-by local play statistics (random selection with no history). Do not build an APK.**
+**Current user instruction (2026-10-18): remove the obsolete output-folder Local storage
+setting/Files & Folders page, remove the player chooser and use the built-in player only,
+and remove the download-era Metadata settings page. Do not build an APK.**
 
 ---
 
@@ -28,6 +28,30 @@ source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 
 first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
 No new APK was built for that follow-up. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Settings cleanup (2026-10-18):** `8fa30b9` removes the obsolete Files & Folders
+output-folder page and download-era Metadata page, their root Settings destinations and
+nested search entries. Their unused setters and picker-specific widget tests are removed;
+local file metadata editing and compatibility fields used by tag rewriting remain. Music
+source folder management stays in Local Library. Existing setup/folder-grant handling remains.
+
+Playback uses the built-in player exclusively. The Player chooser, Now Playing external-player
+actions, player-mode model/serialized field and setter, mode-based automation gates and all
+external playback/fallback branches are removed. Old JSON/backups containing `playerMode`
+are accepted but ignore that unknown key. Each playback entry point requires successful
+built-in initialization; failure reports an error without opening another app. Queue selection,
+Previous/Next, CUE checks, ReplayGain, AutoMix, autoplay, mute/headphone automation and USB
+hardware/output controls are preserved. The automation helper's enable flag now controls only
+automation, rather than switching a player implementation.
+
+Validation: `flutter analyze` reports **No issues found**; full `flutter test` reports
+**1,625 passed, 3 skipped**. Focused regression checks cover Settings/search absence, legacy
+JSON compatibility, all four playback entry points refusing external fallback on initialization
+failure, queue ordering and enabled built-in controls. Retired tests covered the removed picker
+pages and external-mode behavior; setup's folder-grant test and local tag-mode compatibility
+coverage remain. Production source was searched to confirm no remaining removed page classes,
+player-mode consumers or external-player actions. Graph refreshed after the code commit.
+No APK built or GitHub push performed for this cleanup; the installed APK predates it.
 
 **Artist Popular refinement (2026-10-18):** `7056525` replaces Songs and numeric arrow
 pagination with **Popular**, five songs per page and tappable dot indicators. It shows at

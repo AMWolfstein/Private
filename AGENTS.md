@@ -23,6 +23,12 @@ V2 Home uses the Apple Music editorial-card/shelf composition with local data. K
 releases ordered by release tags, bounded shelf queries, local artwork and local detail routes.
 Do not replace the feed with only the recent-access history list.
 
+Settings no longer include the obsolete output-folder Files & Folders page or the
+download-era Metadata page. Music scanning stays under Local Library; local per-file tag
+editing remains supported. Audio playback uses only the built-in player, including on old
+settings imports: do not restore player-mode choices, external-player shortcuts or automatic
+external fallback on initialization failure. Keep USB/output-device controls and DSP settings.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
