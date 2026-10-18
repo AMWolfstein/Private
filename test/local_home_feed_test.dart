@@ -136,6 +136,9 @@ void main() {
                 requests.add(request);
                 return _browse(request);
               }),
+              localArtistPlayCountsLoaderProvider.overrideWithValue(
+                (keys) async => {},
+              ),
               localArtistTrackLoaderProvider.overrideWithValue(
                 (request) async =>
                     const QueueLibraryDbPage(rows: [], nextCursor: null),

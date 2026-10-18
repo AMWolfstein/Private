@@ -259,8 +259,9 @@ class ListeningStatisticsStore {
   Future<Database> _open() => _database.getOrCreate(
     () => sqlite.openAppDatabase(
       'listening_statistics.db',
-      version: 1,
-      onCreate: (db, _) => db.execute('''
+      version: 2,
+      onCreate: (db, _) async {
+        await db.execute('''
         CREATE TABLE listening (
           day TEXT NOT NULL,
           track_key TEXT NOT NULL,
@@ -272,8 +273,14 @@ class ListeningStatisticsStore {
           plays INTEGER NOT NULL DEFAULT 0,
           PRIMARY KEY (day, track_key)
         )
-      '''),
-      onUpgrade: (_, _, _) async {},
+      ''');
+        await db.execute(
+          'CREATE INDEX listening_track_key ON listening(track_key)',
+        );
+      },
+      onUpgrade: (db, _, _) => db.execute(
+        'CREATE INDEX IF NOT EXISTS listening_track_key ON listening(track_key)',
+      ),
     ),
   );
 
@@ -323,6 +330,13 @@ class ListeningStatisticsStore {
   Future<ListeningSummary> load(DateTime start, DateTime end) async {
     final db = await _open();
     return readListeningSummary(db, start, end);
+  }
+
+  /// A bounded batch of local identities, aggregated across all listening days.
+  Future<Map<String, int>> playsForTracks(List<String> keys) async {
+    if (keys.isEmpty) return const {};
+    final db = await _open();
+    return readListeningPlayCounts(db, keys);
   }
 
   Future<void> clear() async => (await _open()).delete('listening');
@@ -391,3 +405,21 @@ final listeningRecorder = ListeningRecorder(
   elapsed: () => _listeningClock.elapsed,
   now: DateTime.now,
 );
+
+/// Callers pass one library page, keeping the SQL parameter/result set bounded.
+Future<Map<String, int>> readListeningPlayCounts(
+  DatabaseExecutor db,
+  List<String> keys,
+) async {
+  if (keys.isEmpty) return const {};
+  final rows = await db.rawQuery(
+    'SELECT track_key, SUM(plays) AS plays FROM listening '
+    'WHERE track_key IN (${List.filled(keys.length, '?').join(',')}) '
+    'GROUP BY track_key',
+    keys,
+  );
+  return {
+    for (final row in rows)
+      row['track_key'] as String: (row['plays'] as num).toInt(),
+  };
+}

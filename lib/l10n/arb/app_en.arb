@@ -108,6 +108,8 @@
   },
   "homeLatestReleases": "Latest Releases in Your Library",
   "@homeLatestReleases": {"description": "Local home featured releases shelf, ordered by release tags"},
+  "artistPopular": "Popular",
+  "@artistPopular": {"description": "Artist songs ranked by local play counts"},
   "libraryRecentlyAdded": "Recently Added",
   "librarySearchHint": "Search your library",
   "libraryEmptyCollection": "Your music will appear here",

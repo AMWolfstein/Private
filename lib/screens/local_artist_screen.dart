@@ -62,6 +62,12 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   Future<void> _play({bool shuffle = false, LocalLibraryItem? start}) async {
     if (_startingPlayback) return;
     setState(() => _startingPlayback = true);
+    // Popular has its own bounded selection; retain the full queue loader only
+    // while starting playback, and let navigation dispose it normally.
+    final queueSubscription = ref.listenManual(
+      localArtistTracksProvider(widget.artistName),
+      (_, _) {},
+    );
     try {
       final tracks = await ref
           .read(localArtistTracksProvider(widget.artistName).notifier)
@@ -78,6 +84,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     } catch (error) {
       if (mounted) showCannotOpenFileSnackBar(context, error);
     } finally {
+      queueSubscription.close();
       if (mounted) setState(() => _startingPlayback = false);
     }
   }
@@ -115,7 +122,9 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   Widget build(BuildContext context) {
     final albumsAsync = ref.watch(libraryBrowseProvider(_albumsRequest));
     final albums = albumsAsync.asData?.value;
-    final tracksAsync = ref.watch(localArtistTracksProvider(widget.artistName));
+    final tracksAsync = ref.watch(
+      localArtistPopularProvider(widget.artistName),
+    );
     final tracks = tracksAsync.asData?.value;
     final media = ref.watch(currentMediaItemProvider).asData?.value;
     final source = media?.extras?['source'];
@@ -250,7 +259,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                         onPressed: () {
                           ref.invalidate(libraryBrowseProvider(_albumsRequest));
                           ref.invalidate(
-                            localArtistTracksProvider(widget.artistName),
+                            localArtistPopularProvider(widget.artistName),
                           );
                         },
                       ),
@@ -265,7 +274,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
                     child: Text(
-                      context.l10n.searchSongs,
+                      context.l10n.artistPopular,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -318,28 +327,6 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       },
                     ),
                   ),
-                if (tracks?.hasMore == true)
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: TextButton.icon(
-                        onPressed: tracks!.loadingMore
-                            ? null
-                            : () => ref
-                                  .read(
-                                    localArtistTracksProvider(
-                                      widget.artistName,
-                                    ).notifier,
-                                  )
-                                  .loadMore(),
-                        icon: const Icon(Icons.expand_more),
-                        label: Text(
-                          tracks.error != null
-                              ? context.l10n.dialogRetry
-                              : context.l10n.libraryShowMore,
-                        ),
-                      ),
-                    ),
-                  ),
                 if (albums != null) ...[
                   if (albums.entries.any((release) => !release.isSingleRelease))
                     SliverToBoxAdapter(
@@ -361,24 +348,16 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                             .toList(),
                       ),
                     ),
-                  if (albums.hasMore)
+                  if (albums.loadMoreError != null)
                     SliverToBoxAdapter(
                       child: Center(
                         child: TextButton(
-                          onPressed: albums.isLoadingMore
-                              ? null
-                              : () => ref
-                                    .read(
-                                      libraryBrowseProvider(
-                                        _albumsRequest,
-                                      ).notifier,
-                                    )
-                                    .loadMore(),
-                          child: Text(
-                            albums.loadMoreError != null
-                                ? context.l10n.dialogRetry
-                                : context.l10n.libraryShowMore,
-                          ),
+                          onPressed: () => ref
+                              .read(
+                                libraryBrowseProvider(_albumsRequest).notifier,
+                              )
+                              .loadMore(),
+                          child: Text(context.l10n.dialogRetry),
                         ),
                       ),
                     ),
@@ -478,41 +457,54 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
       ),
       SizedBox(
         height: 174 + MediaQuery.textScalerOf(context).scale(16) * 2.6,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          itemCount: releases.length,
-          itemBuilder: (context, index) {
-            final album = releases[index];
-            return SizedBox(
-              width: 170,
-              child: InkWell(
-                onTap: () => _openAlbum(album),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox.square(
-                          dimension: 154,
-                          child: _artwork(album.cover),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification.metrics.axis == Axis.horizontal &&
+                notification.metrics.extentAfter < 400) {
+              final provider = libraryBrowseProvider(_albumsRequest);
+              final state = ref.read(provider).asData?.value;
+              if (state?.loadMoreError == null) {
+                ref.read(provider.notifier).loadMore();
+              }
+            }
+            return false;
+          },
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: releases.length,
+            itemBuilder: (context, index) {
+              final album = releases[index];
+              return SizedBox(
+                width: 170,
+                child: InkWell(
+                  onTap: () => _openAlbum(album),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: SizedBox.square(
+                            dimension: 154,
+                            child: _artwork(album.cover),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        album.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(
+                          album.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     ],
@@ -571,32 +563,38 @@ class _ArtistSongPagesState extends State<_ArtistSongPages> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  tooltip: MaterialLocalizations.of(
-                    context,
-                  ).previousPageTooltip,
-                  onPressed: _page == 0
-                      ? null
-                      : () => _pages.previousPage(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOut,
+                for (var page = 0; page < count; page++)
+                  Semantics(
+                    label: '${page + 1} / $count',
+                    selected: _page == page,
+                    button: true,
+                    child: GestureDetector(
+                      key: ValueKey('artist-popular-dot-$page'),
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _pages.animateToPage(
+                        page,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOut,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 12,
                         ),
-                  icon: const Icon(CupertinoIcons.chevron_left, size: 16),
-                ),
-                Text(
-                  '${_page + 1} / $count',
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-                IconButton(
-                  tooltip: MaterialLocalizations.of(context).nextPageTooltip,
-                  onPressed: _page + 1 >= count
-                      ? null
-                      : () => _pages.nextPage(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOut,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _page == page
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.25),
+                          ),
                         ),
-                  icon: const Icon(CupertinoIcons.chevron_right, size: 16),
-                ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

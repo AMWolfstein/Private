@@ -121,6 +121,9 @@ void main() {
               libraryCollectionsProvider.overrideWith(_Collections.new),
               musicPlayerControllerProvider.overrideWithValue(_Player()),
               playbackProvider.overrideWith(() => playback),
+              localArtistPlayCountsLoaderProvider.overrideWithValue(
+                (keys) async => {},
+              ),
               localArtistTrackLoaderProvider.overrideWithValue(
                 (request) async => QueueLibraryDbPage(
                   rows: [
@@ -135,15 +138,20 @@ void main() {
                 ),
               ),
               libraryBrowsePageLoaderProvider.overrideWithValue(
-                (request) async => const LibraryBrowsePage([
-                  LibraryBrowseEntry(
-                    source: 'local',
-                    key: 'album',
-                    name: 'Album',
-                    artist: 'Artist',
-                    samplePath: '',
-                    trackCount: 41,
-                  ),
+                (request) async => LibraryBrowsePage([
+                  for (
+                    var i = request.offset;
+                    i < (request.offset == 0 ? 40 : 41);
+                    i++
+                  )
+                    LibraryBrowseEntry(
+                      source: 'local',
+                      key: 'album$i',
+                      name: i == 0 ? 'Album' : 'Album $i',
+                      artist: 'Artist',
+                      samplePath: '',
+                      trackCount: 41,
+                    ),
                 ]),
               ),
             ],
@@ -175,6 +183,51 @@ void main() {
         await tester.pumpAndSettle();
         expect(playback.queues.single.length, 41);
         expect(playback.queues.single.last, '40');
+        await tester.scrollUntilVisible(
+          find.byKey(const ValueKey('artist-popular-dot-3')),
+          250,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(find.text('Popular'), findsOneWidget);
+        expect(find.text('Show more'), findsNothing);
+        expect(find.textContaining(RegExp(r'^\d+ / \d+$')), findsNothing);
+        for (var page = 0; page < 4; page++) {
+          expect(
+            find.byKey(ValueKey('artist-popular-dot-$page')),
+            findsOneWidget,
+          );
+        }
+        expect(
+          find.byKey(const ValueKey('artist-popular-dot-4')),
+          findsNothing,
+        );
+        await tester.ensureVisible(
+          find.byKey(const ValueKey('artist-popular-dot-3')),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('artist-popular-dot-3')));
+        await tester.pumpAndSettle();
+        final dot = tester.widget<Semantics>(
+          find
+              .ancestor(
+                of: find.byKey(const ValueKey('artist-popular-dot-3')),
+                matching: find.byType(Semantics),
+              )
+              .first,
+        );
+        expect(dot.properties.selected, true);
+        await tester.scrollUntilVisible(
+          find.text('Albums'),
+          250,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.ensureVisible(find.byType(ListView).last);
+        await tester.drag(find.byType(ListView).last, const Offset(-7000, 0));
+        await tester.pumpAndSettle();
+        final shelf = tester.widget<ListView>(find.byType(ListView).last);
+        expect(shelf.childrenDelegate.estimatedChildCount, 41);
+        expect(find.text('Show more'), findsNothing);
+
         expect(tester.takeException(), isNull);
       },
     );
