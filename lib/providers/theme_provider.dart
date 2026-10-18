@@ -10,6 +10,7 @@ final initialThemeSettingsProvider = Provider<ThemeSettings>(
 ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
+    playerView: playerViewFromString(prefs.getString(kPlayerViewKey)),
     useDynamicColor: prefs.getBool(kUseDynamicColorKey) ?? true,
     seedColorValue: prefs.getInt(kSeedColorKey) ?? kDefaultSeedColor,
     useAmoled: prefs.getBool(kUseAmoledKey) ?? false,
@@ -76,6 +77,7 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       if (!ref.mounted) return;
       final snapshot = state;
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
+      await prefs.setString(kPlayerViewKey, snapshot.playerView.name);
       await prefs.setBool(kUseDynamicColorKey, snapshot.useDynamicColor);
       await prefs.setInt(kSeedColorKey, snapshot.seedColorValue);
       await prefs.setBool(kUseAmoledKey, snapshot.useAmoled);
@@ -97,6 +99,11 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       debugPrint('Error saving theme settings: $e');
     }
   });
+
+  Future<void> setPlayerView(PlayerView view) async {
+    _editState((current) => current.copyWith(playerView: view));
+    await _saveToStorage();
+  }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     _editState((current) => current.copyWith(themeMode: mode));

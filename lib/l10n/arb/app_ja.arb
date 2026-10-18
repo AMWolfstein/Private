@@ -129,18 +129,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "履歴の表示",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "リスト",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "グリッド",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "歌詞を埋め込む",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -915,10 +903,6 @@
   },
   "sectionTheme": "テーマ",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "レイアウト",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "言語",

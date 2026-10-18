@@ -136,16 +136,16 @@ class AppearanceSettingsPage extends ConsumerWidget {
             ),
 
             SliverToBoxAdapter(
-              child: SettingsSectionHeader(title: context.l10n.sectionLayout),
+              child: SettingsSectionHeader(
+                title: context.l10n.appearancePlayerView,
+              ),
             ),
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  _HistoryViewSelector(
-                    currentMode: settings.historyViewMode,
-                    onChanged: (mode) => ref
-                        .read(settingsProvider.notifier)
-                        .setHistoryViewMode(mode),
+                  _PlayerViewSelector(
+                    currentView: themeSettings.playerView,
+                    onChanged: ref.read(themeProvider.notifier).setPlayerView,
                   ),
                 ],
               ),
@@ -644,60 +644,40 @@ class _ThemeModeSelector extends StatelessWidget {
   }
 }
 
-class _HistoryViewSelector extends StatelessWidget {
-  final String currentMode;
-  final ValueChanged<String> onChanged;
-  const _HistoryViewSelector({
-    required this.currentMode,
+class _PlayerViewSelector extends StatelessWidget {
+  final PlayerView currentView;
+  final ValueChanged<PlayerView> onChanged;
+  const _PlayerViewSelector({
+    required this.currentView,
     required this.onChanged,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final content = Padding(
+  Widget build(BuildContext context) => SettingsSearchTarget(
+    label: context.l10n.appearancePlayerView,
+    child: Padding(
       padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8, bottom: 8),
-            child: Text(
-              context.l10n.appearanceHistoryView,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+          for (final view in PlayerView.values) ...[
+            if (view != PlayerView.normal) const SizedBox(width: 8),
+            SettingsChoiceChip(
+              expand: true,
+              layout: SettingsChipLayout.column,
+              icon: view == PlayerView.normal
+                  ? Icons.crop_square
+                  : Icons.fullscreen,
+              label: view == PlayerView.normal
+                  ? context.l10n.appearancePlayerViewNormal
+                  : context.l10n.appearancePlayerViewImmersive,
+              isSelected: currentView == view,
+              onTap: () => onChanged(view),
             ),
-          ),
-          Row(
-            children: [
-              SettingsChoiceChip(
-                expand: true,
-                layout: SettingsChipLayout.column,
-                icon: Icons.view_list,
-                label: context.l10n.appearanceHistoryViewList,
-                isSelected: currentMode == 'list',
-                onTap: () => onChanged('list'),
-              ),
-              const SizedBox(width: 8),
-              SettingsChoiceChip(
-                expand: true,
-                layout: SettingsChipLayout.column,
-                icon: Icons.grid_view,
-                label: context.l10n.appearanceHistoryViewGrid,
-                isSelected: currentMode == 'grid',
-                onTap: () => onChanged('grid'),
-              ),
-            ],
-          ),
+          ],
         ],
       ),
-    );
-    return SettingsSearchTarget(
-      label: context.l10n.appearanceHistoryView,
-      child: content,
-    );
-  }
+    ),
+  );
 }
 
 class _LanguageSelector extends StatelessWidget {

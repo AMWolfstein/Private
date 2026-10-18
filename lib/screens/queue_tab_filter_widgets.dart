@@ -35,12 +35,13 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     required BuildContext context,
     required ColorScheme colorScheme,
     required String filterMode,
-    required String historyViewMode,
     required _FilterContentData filterData,
     required LibraryCollectionsState collectionState,
     required bool hasMoreLibrary,
     required bool isPageLoading,
   }) {
+    // Dedicated Library sections use rows; the Library overview uses cards.
+    final showTrackGrid = widget.librarySection == null;
     final showFilteringIndicator = filterData.showFilteringIndicator;
     final filteredGroupedLocalAlbums = filterData.filteredGroupedLocalAlbums;
     final unifiedItems = filterData.unifiedItems;
@@ -114,8 +115,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (filteredGroupedLocalAlbums.isNotEmpty &&
-            filterMode == 'albums')
+        if (filteredGroupedLocalAlbums.isNotEmpty && filterMode == 'albums')
           SliverToBoxAdapter(
             child: _countHeaderRow(
               context,
@@ -196,8 +196,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (filterMode == 'albums' &&
-            filteredGroupedLocalAlbums.isNotEmpty)
+        if (filterMode == 'albums' && filteredGroupedLocalAlbums.isNotEmpty)
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: _AnimatedLibrarySliverGrid(
@@ -205,20 +204,13 @@ extension _QueueTabFilterWidgets on _QueueTabState {
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 0.72,
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final album = filteredGroupedLocalAlbums[index];
-                  return KeyedSubtree(
-                    key: ValueKey('local_${album.key}'),
-                    child: _buildLocalAlbumGridItem(
-                      context,
-                      album,
-                      colorScheme,
-                    ),
-                  );
-                },
-                childCount: filteredGroupedLocalAlbums.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final album = filteredGroupedLocalAlbums[index];
+                return KeyedSubtree(
+                  key: ValueKey('local_${album.key}'),
+                  child: _buildLocalAlbumGridItem(context, album, colorScheme),
+                );
+              }, childCount: filteredGroupedLocalAlbums.length),
             ),
           ),
 
@@ -266,7 +258,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         ],
 
         if (filterMode == 'all') ...[
-          if (historyViewMode == 'grid')
+          if (showTrackGrid)
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: _AnimatedLibrarySliverGrid(
@@ -274,94 +266,88 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
                 childAspectRatio: 0.66,
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (index < collectionCount) {
-                      return _buildAllTabGridCollectionItem(
-                        context: context,
-                        colorScheme: colorScheme,
-                        entry: collectionEntries[index],
-                        collectionState: collectionState,
-                        filteredUnifiedItems: filteredUnifiedItems,
-                      );
-                    }
-                    final trackIndex = index - collectionCount;
-                    if (trackIndex < filteredUnifiedItems.length) {
-                      final item = filteredUnifiedItems[trackIndex];
-                      return KeyedSubtree(
-                        key: ValueKey(item.id),
-                        child: LibraryPlaylistDragSource<UnifiedLibraryItem>(
-                          data: item,
-                          onSelect: () =>
-                              _selectDraggedTrack(item, filteredUnifiedItems),
-                          onDragStarted: _startLibraryTrackDrag,
-                          onDragEnd: _endLibraryTrackDrag,
-                          feedbackBuilder: (context) =>
-                              _buildDragFeedback(context, item, colorScheme),
-                          child: _buildUnifiedGridItem(
-                            context,
-                            item,
-                            colorScheme,
-                            localNavigationItems: localNavigationItems,
-                            localNavigationIndex:
-                                localNavigationIndexByUnifiedId[item.id],
-                            libraryItems: filteredUnifiedItems,
-                            playlistDragEnabled: true,
-                          ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  if (index < collectionCount) {
+                    return _buildAllTabGridCollectionItem(
+                      context: context,
+                      colorScheme: colorScheme,
+                      entry: collectionEntries[index],
+                      collectionState: collectionState,
+                      filteredUnifiedItems: filteredUnifiedItems,
+                    );
+                  }
+                  final trackIndex = index - collectionCount;
+                  if (trackIndex < filteredUnifiedItems.length) {
+                    final item = filteredUnifiedItems[trackIndex];
+                    return KeyedSubtree(
+                      key: ValueKey(item.id),
+                      child: LibraryPlaylistDragSource<UnifiedLibraryItem>(
+                        data: item,
+                        onSelect: () =>
+                            _selectDraggedTrack(item, filteredUnifiedItems),
+                        onDragStarted: _startLibraryTrackDrag,
+                        onDragEnd: _endLibraryTrackDrag,
+                        feedbackBuilder: (context) =>
+                            _buildDragFeedback(context, item, colorScheme),
+                        child: _buildUnifiedGridItem(
+                          context,
+                          item,
+                          colorScheme,
+                          localNavigationItems: localNavigationItems,
+                          localNavigationIndex:
+                              localNavigationIndexByUnifiedId[item.id],
+                          libraryItems: filteredUnifiedItems,
+                          playlistDragEnabled: true,
                         ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                  childCount: collectionCount + filteredUnifiedItems.length,
-                ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }, childCount: collectionCount + filteredUnifiedItems.length),
               ),
             )
           else
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
               sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (index < collectionCount) {
-                      return _buildAllTabListCollectionItem(
-                        context: context,
-                        colorScheme: colorScheme,
-                        entry: collectionEntries[index],
-                        collectionState: collectionState,
-                        filteredUnifiedItems: filteredUnifiedItems,
-                      );
-                    }
-                    final trackIndex = index - collectionCount;
-                    if (trackIndex < filteredUnifiedItems.length) {
-                      final item = filteredUnifiedItems[trackIndex];
-                      return KeyedSubtree(
-                        key: ValueKey(item.id),
-                        child: LibraryPlaylistDragSource<UnifiedLibraryItem>(
-                          data: item,
-                          onSelect: () =>
-                              _selectDraggedTrack(item, filteredUnifiedItems),
-                          onDragStarted: _startLibraryTrackDrag,
-                          onDragEnd: _endLibraryTrackDrag,
-                          feedbackBuilder: (context) =>
-                              _buildDragFeedback(context, item, colorScheme),
-                          child: _buildUnifiedLibraryItem(
-                            context,
-                            item,
-                            colorScheme,
-                            localNavigationItems: localNavigationItems,
-                            localNavigationIndex:
-                                localNavigationIndexByUnifiedId[item.id],
-                            libraryItems: filteredUnifiedItems,
-                            playlistDragEnabled: true,
-                          ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  if (index < collectionCount) {
+                    return _buildAllTabListCollectionItem(
+                      context: context,
+                      colorScheme: colorScheme,
+                      entry: collectionEntries[index],
+                      collectionState: collectionState,
+                      filteredUnifiedItems: filteredUnifiedItems,
+                    );
+                  }
+                  final trackIndex = index - collectionCount;
+                  if (trackIndex < filteredUnifiedItems.length) {
+                    final item = filteredUnifiedItems[trackIndex];
+                    return KeyedSubtree(
+                      key: ValueKey(item.id),
+                      child: LibraryPlaylistDragSource<UnifiedLibraryItem>(
+                        data: item,
+                        onSelect: () =>
+                            _selectDraggedTrack(item, filteredUnifiedItems),
+                        onDragStarted: _startLibraryTrackDrag,
+                        onDragEnd: _endLibraryTrackDrag,
+                        feedbackBuilder: (context) =>
+                            _buildDragFeedback(context, item, colorScheme),
+                        child: _buildUnifiedLibraryItem(
+                          context,
+                          item,
+                          colorScheme,
+                          localNavigationItems: localNavigationItems,
+                          localNavigationIndex:
+                              localNavigationIndexByUnifiedId[item.id],
+                          libraryItems: filteredUnifiedItems,
+                          playlistDragEnabled: true,
                         ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                  childCount: collectionCount + filteredUnifiedItems.length,
-                ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }, childCount: collectionCount + filteredUnifiedItems.length),
               ),
             ),
         ],
@@ -386,9 +372,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (filteredUnifiedItems.isNotEmpty &&
-            filterMode == 'singles')
-          historyViewMode == 'grid'
+        if (filteredUnifiedItems.isNotEmpty && filterMode == 'singles')
+          showTrackGrid
               ? SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: _AnimatedLibrarySliverGrid(
@@ -437,8 +422,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                 ),
 
         if (totalTrackCount == 0 &&
-            (filterMode != 'albums' ||
-                filteredGroupedLocalAlbums.isEmpty) &&
+            (filterMode != 'albums' || filteredGroupedLocalAlbums.isEmpty) &&
             (filterMode != 'playlists' || playlistIndexes.isEmpty) &&
             !showFilteringIndicator &&
             !isPageLoading)
@@ -464,8 +448,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
           ),
 
         if (totalTrackCount > 0 ||
-            (filterMode == 'albums' &&
-                filteredGroupedLocalAlbums.isNotEmpty) ||
+            (filterMode == 'albums' && filteredGroupedLocalAlbums.isNotEmpty) ||
             (filterMode == 'playlists' && playlistIndexes.isNotEmpty))
           SliverToBoxAdapter(
             child: SizedBox(height: _isSelectionMode ? 100 : 16),
@@ -484,7 +467,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       child: content,
     );
 
-    if (historyViewMode != 'grid') return scrollAwareContent;
+    if (!showTrackGrid) return scrollAwareContent;
     return TwoFingerPinchListener(
       onStart: _handleLibraryGridPinchStart,
       onUpdate: _handleLibraryGridPinchUpdate,

@@ -49,7 +49,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   hasSearchedBefore: json['hasSearchedBefore'] as bool? ?? false,
   albumFolderStructure:
       json['albumFolderStructure'] as String? ?? 'artist_album',
-  historyViewMode: json['historyViewMode'] as String? ?? 'grid',
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
   defaultLibraryView: json['defaultLibraryView'] as String? ?? 'last',
   libraryQualityLabelMode:
@@ -104,7 +103,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'isFirstLaunch': instance.isFirstLaunch,
       'hasSearchedBefore': instance.hasSearchedBefore,
       'albumFolderStructure': instance.albumFolderStructure,
-      'historyViewMode': instance.historyViewMode,
       'historyFilterMode': instance.historyFilterMode,
       'defaultLibraryView': instance.defaultLibraryView,
       'libraryQualityLabelMode': instance.libraryQualityLabelMode,

@@ -34,6 +34,7 @@ void main() {
     expect(find.text('Files & Folders'), findsNothing);
     expect(find.text('Metadata'), findsNothing);
     for (final query in [
+      'History View',
       'Music folder',
       'Artist Tag Mode',
       'Embedded Cover Size',
@@ -52,6 +53,20 @@ void main() {
     await tester.enterText(find.byType(TextField), 'Scan');
     await tester.pumpAndSettle();
     expect(find.text('Scan Library'), findsWidgets);
+  });
+
+  testWidgets('finds the saved player view choice from Appearance', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    await tester.enterText(find.byType(TextField), 'immersive');
+    await tester.pumpAndSettle();
+    expect(find.text('Player view'), findsOneWidget);
+    await tester.tap(find.text('Player view'));
+    await tester.pumpAndSettle();
+    expect(find.text('Immersive view').hitTestable(), findsOneWidget);
+    expect(find.text('History View'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('finds controls nested inside a settings page', (tester) async {

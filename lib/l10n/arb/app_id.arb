@@ -198,18 +198,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "Tampilan Koleksi",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "Daftar",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "Kisi",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "Lirik Tersemat",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -984,10 +972,6 @@
   },
   "sectionTheme": "Tema",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "Tata Letak",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "Bahasa",

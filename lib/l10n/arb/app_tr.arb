@@ -129,18 +129,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "Geçmiş Düzeni",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "Liste",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "Izgara",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "Şarkı Sözlerini Göm",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -915,10 +903,6 @@
   },
   "sectionTheme": "Tema",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "Düzen",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "Dil",

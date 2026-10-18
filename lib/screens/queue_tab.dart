@@ -1060,9 +1060,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       ),
     );
     final collectionState = ref.read(libraryCollectionsProvider);
-    final historyViewMode = ref.watch(
-      settingsProvider.select((s) => s.historyViewMode),
-    );
     final String historyFilterMode =
         widget.librarySection ??
         ref.watch<String>(settingsProvider.select((s) => s.historyFilterMode));
@@ -1350,7 +1347,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                       context: context,
                       colorScheme: colorScheme,
                       filterMode: historyFilterMode,
-                      historyViewMode: 'list',
                       filterData: getFilterData(historyFilterMode),
                       collectionState: collectionState,
                       hasMoreLibrary: hasMoreLibrary,
@@ -1368,7 +1364,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                           context: context,
                           colorScheme: colorScheme,
                           filterMode: filterMode,
-                          historyViewMode: historyViewMode,
                           filterData: filterData,
                           collectionState: collectionState,
                           hasMoreLibrary: filterMode == historyFilterMode

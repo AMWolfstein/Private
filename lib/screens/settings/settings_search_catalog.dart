@@ -110,11 +110,11 @@ class SettingsSearchCatalog {
         ),
         SettingsSearchEntry(
           icon: Icons.grid_view_outlined,
-          title: l10n.appearanceHistoryView,
+          title: l10n.appearancePlayerView,
           subtitle:
-              '${l10n.appearanceHistoryViewList}, '
-              '${l10n.appearanceHistoryViewGrid}',
-          keywords: const ['layout', 'list', 'grid'],
+              '${l10n.appearancePlayerViewNormal}, '
+              '${l10n.appearancePlayerViewImmersive}',
+          keywords: const ['player', 'normal', 'immersive', 'artwork', 'cover'],
         ),
       ],
       library = [

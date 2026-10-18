@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
+import 'package:spotiflac_android/models/theme_settings.dart';
+import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/screens/now_playing_screen.dart';
@@ -144,6 +146,7 @@ void main() {
   Future<void> pumpNowPlaying(
     WidgetTester tester, {
     ThemeData? theme,
+    PlayerView playerView = PlayerView.normal,
     Size size = const Size(1080, 1920),
     PlaybackState? playback,
     Stream<PlaybackState>? playbackEvents,
@@ -151,6 +154,8 @@ void main() {
     MusicPlayerController? controller,
     List<MediaItem> queue = const [],
   }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(kPlayerViewKey, playerView.name);
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -159,6 +164,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          initialThemeSettingsProvider.overrideWithValue(
+            ThemeSettings(playerView: playerView),
+          ),
           if (controller != null)
             musicPlayerControllerProvider.overrideWithValue(controller),
           currentMediaItemProvider.overrideWith((ref) => mediaItems.stream),
@@ -2276,88 +2284,196 @@ void main() {
     },
   );
 
-  for (final drag in [false, true]) {
+  testWidgets(
+    'player view switches live without duplicate artwork or lost controls',
+    (tester) async {
+      await pumpNowPlaying(
+        tester,
+        theme: MornyeTheme.build(Brightness.dark),
+        size: const Size(393, 852),
+        playerView: PlayerView.immersive,
+      );
+      mediaItems.add(item('first'));
+      await settlePlayer(tester);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(NowPlayingScreen)),
+      );
+      final full = find.byKey(const ValueKey('full-player-artwork'));
+      final notifier = container.read(themeProvider.notifier);
+      await notifier.setPlayerView(PlayerView.normal);
+      await settlePlayer(tester);
+      expect(full, findsOneWidget);
+      expect(tester.getRect(full).left, greaterThan(0));
+      await notifier.setPlayerView(PlayerView.immersive);
+      await tester.pump(const Duration(milliseconds: 80));
+      await notifier.setPlayerView(PlayerView.normal);
+      await tester.pump(const Duration(milliseconds: 80));
+      await notifier.setPlayerView(PlayerView.immersive);
+      await settlePlayer(tester);
+      expect(full, findsOneWidget);
+      expect(tester.getRect(full).width, 393);
+      expect(find.byType(PlaybackSeekSlider).hitTestable(), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  for (final size in [
+    const Size(393, 852),
+    const Size(393, 620),
+    const Size(852, 393),
+  ]) {
     testWidgets(
-      'Mornye minimizes into the current mini player (drag: $drag)',
+      'saved immersive view fills artwork and keeps controls ($size)',
       (tester) async {
         await pumpNowPlaying(
           tester,
           theme: MornyeTheme.build(Brightness.dark),
-          size: const Size(393, 852),
-          playback: PlaybackState(playing: true),
-          wrapPlayer: (_) => const Scaffold(
-            body: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(12, 0, 12, 90),
-                child: MiniPlayer(),
-              ),
-            ),
-          ),
+          size: size,
+          playerView: PlayerView.immersive,
+          playback: PlaybackState(playing: false),
         );
         mediaItems.add(item('first'));
         await settlePlayer(tester);
-        final mini = find.byType(MiniPlayer);
-        final miniCover = find.descendant(
-          of: mini,
-          matching: find.byType(Hero),
-        );
-        final destination = tester.getRect(miniCover);
-        await tester.tap(
-          find.descendant(of: mini, matching: find.text('First')),
-        );
-        await settlePlayer(tester);
-        final player = find.byType(NowPlayingScreen);
-        final route =
-            ModalRoute.of(tester.element(player))! as NowPlayingRoute;
-        final fullCover = find.byKey(const ValueKey('full-player-artwork'));
-        if (drag) {
-          route.startDrag();
-          route.updateDrag(
-            DragUpdateDetails(
-              globalPosition: const Offset(0, 300),
-              delta: const Offset(0, 300),
-              primaryDelta: 300,
-            ),
-            852,
-          );
-          await tester.pump();
-        }
-        final releasedCover = tester.getRect(fullCover);
-        final releasedPanel = tester.getRect(
-          find.byType(MornyePlayerBackground),
-        );
-        if (drag) {
-          route.endDrag(DragEndDetails(primaryVelocity: 0), 852);
-        } else {
-          Navigator.of(tester.element(player)).pop();
-        }
-        await tester.pump();
-        final flyingCover = find.byKey(
-          const ValueKey('player-minimize-artwork'),
-        );
-        final surface = find.byKey(const ValueKey('player-minimize-surface'));
-        expect(tester.getRect(flyingCover), releasedCover);
-        expect(tester.getRect(surface), releasedPanel);
-        var previousDistance =
-            (releasedCover.center - destination.center).distance;
-        for (var frame = 0; frame < 5; frame++) {
-          await tester.pump(const Duration(milliseconds: 25));
-          final bounds = tester.getRect(flyingCover);
-          final distance = (bounds.center - destination.center).distance;
-          expect(distance, lessThan(previousDistance));
+        final full = find.byKey(const ValueKey('full-player-artwork'));
+        if (size.width < size.height) {
+          final bounds = tester.getRect(full);
+          expect(bounds.left, 0);
+          expect(bounds.top, 0);
+          expect(bounds.width, size.width);
+          expect(bounds.height, closeTo(size.height * .66, .01));
           expect(
-            bounds.width,
-            inExclusiveRange(destination.width, releasedCover.width),
+            find.descendant(
+              of: find.byType(MornyePlayerBackground),
+              matching: full,
+            ),
+            findsOneWidget,
           );
-          previousDistance = distance;
+        } else {
+          expect(tester.getRect(full).width, lessThan(size.width));
         }
+        expect(find.byType(PlaybackSeekSlider).hitTestable(), findsOneWidget);
+        await tester.tap(
+          find.byIcon(CupertinoIcons.quote_bubble).hitTestable(),
+        );
         await settlePlayer(tester);
-        expect(player, findsNothing);
-        expect(tester.getRect(miniCover), destination);
+        expect(find.text('First lyric').hitTestable(), findsOneWidget);
+        if (size.width < size.height) {
+          await tester.tap(
+            find.byKey(const ValueKey('compact-player-artwork')),
+          );
+          await tester.pump(const Duration(milliseconds: 80));
+          await tester.tap(
+            find.byIcon(CupertinoIcons.quote_bubble).hitTestable(),
+          );
+          await tester.pump(const Duration(milliseconds: 80));
+          await tester.tap(
+            find.byKey(const ValueKey('compact-player-artwork')),
+          );
+          await settlePlayer(tester);
+          expect(tester.getRect(full).width, size.width);
+          await tester.tap(
+            find.byIcon(CupertinoIcons.list_bullet).hitTestable(),
+          );
+          await settlePlayer(tester);
+          expect(find.byType(MornyePlayerQueue).hitTestable(), findsOneWidget);
+          await tester.tap(
+            find.byKey(const ValueKey('compact-player-artwork')),
+          );
+          await settlePlayer(tester);
+        }
+        mediaItems.add(item('second'));
+        await settlePlayer(tester);
+        expect(find.text('Second').hitTestable(), findsWidgets);
         expect(tester.takeException(), isNull);
       },
     );
+  }
+
+  for (final view in PlayerView.values) {
+    for (final drag in [false, true]) {
+      testWidgets(
+        'Mornye minimizes into the current mini player ($view, drag: $drag)',
+        (tester) async {
+          await pumpNowPlaying(
+            tester,
+            theme: MornyeTheme.build(Brightness.dark),
+            playerView: view,
+            size: const Size(393, 852),
+            playback: PlaybackState(playing: true),
+            wrapPlayer: (_) => const Scaffold(
+              body: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(12, 0, 12, 90),
+                  child: MiniPlayer(),
+                ),
+              ),
+            ),
+          );
+          mediaItems.add(item('first'));
+          await settlePlayer(tester);
+          final mini = find.byType(MiniPlayer);
+          final miniCover = find.descendant(
+            of: mini,
+            matching: find.byType(Hero),
+          );
+          final destination = tester.getRect(miniCover);
+          await tester.tap(
+            find.descendant(of: mini, matching: find.text('First')),
+          );
+          await settlePlayer(tester);
+          final player = find.byType(NowPlayingScreen);
+          final route =
+              ModalRoute.of(tester.element(player))! as NowPlayingRoute;
+          final fullCover = find.byKey(const ValueKey('full-player-artwork'));
+          if (drag) {
+            route.startDrag();
+            route.updateDrag(
+              DragUpdateDetails(
+                globalPosition: const Offset(0, 300),
+                delta: const Offset(0, 300),
+                primaryDelta: 300,
+              ),
+              852,
+            );
+            await tester.pump();
+          }
+          final releasedCover = tester.getRect(fullCover);
+          final releasedPanel = tester.getRect(
+            find.byType(MornyePlayerBackground),
+          );
+          if (drag) {
+            route.endDrag(DragEndDetails(primaryVelocity: 0), 852);
+          } else {
+            Navigator.of(tester.element(player)).pop();
+          }
+          await tester.pump();
+          final flyingCover = find.byKey(
+            const ValueKey('player-minimize-artwork'),
+          );
+          final surface = find.byKey(const ValueKey('player-minimize-surface'));
+          expect(tester.getRect(flyingCover), releasedCover);
+          expect(tester.getRect(surface), releasedPanel);
+          var previousDistance =
+              (releasedCover.center - destination.center).distance;
+          for (var frame = 0; frame < 5; frame++) {
+            await tester.pump(const Duration(milliseconds: 25));
+            final bounds = tester.getRect(flyingCover);
+            final distance = (bounds.center - destination.center).distance;
+            expect(distance, lessThan(previousDistance));
+            expect(
+              bounds.width,
+              inExclusiveRange(destination.width, releasedCover.width),
+            );
+            previousDistance = distance;
+          }
+          await settlePlayer(tester);
+          expect(player, findsNothing);
+          expect(tester.getRect(miniCover), destination);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
   }
 
   for (final lyrics in [true, false]) {

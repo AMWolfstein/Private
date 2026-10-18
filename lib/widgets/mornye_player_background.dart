@@ -9,12 +9,14 @@ class MornyePlayerBackground extends StatelessWidget {
     required this.artUri,
     this.artwork,
     this.squareArtwork = true,
+    this.showArtwork = true,
     this.artworkAspectRatio,
   });
 
   final Uri? artUri;
   final Widget? artwork;
   final bool squareArtwork;
+  final bool showArtwork;
   final double? artworkAspectRatio;
 
   @override
@@ -96,36 +98,52 @@ class MornyePlayerBackground extends StatelessWidget {
                       : squareArtwork
                       ? MediaQuery.sizeOf(context).width
                       : MediaQuery.sizeOf(context).height * 0.66,
-                  child: ShaderMask(
-                    blendMode: BlendMode.dstIn,
-                    shaderCallback: (bounds) => const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0, 0.58, 1],
-                      colors: [Colors.white, Colors.white, Colors.transparent],
-                    ).createShader(bounds),
-                    child: HeroMode(
-                      // The compact header owns the route hero while the
-                      // full cover is fading out behind the lyrics.
-                      enabled: artwork != null,
-                      child: AnimatedSwitcher(
+                  child: IgnorePointer(
+                    ignoring: !showArtwork,
+                    child: ExcludeSemantics(
+                      excluding: !showArtwork,
+                      child: AnimatedOpacity(
+                        opacity: showArtwork ? 1 : 0,
                         duration: motion,
-                        switchInCurve: Curves.easeInOutCubic,
-                        switchOutCurve: Curves.easeInOutCubic,
-                        layoutBuilder: (current, previous) => Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            for (final child in previous)
-                              HeroMode(enabled: false, child: child),
-                            ?current,
-                          ],
-                        ),
-                        child: artwork == null
-                            ? null
-                            : KeyedSubtree(
-                                key: const ValueKey('full-player-artwork'),
-                                child: artwork!,
+                        child: ShaderMask(
+                          blendMode: BlendMode.dstIn,
+                          shaderCallback: (bounds) => const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: [0, 0.58, 1],
+                            colors: [
+                              Colors.white,
+                              Colors.white,
+                              Colors.transparent,
+                            ],
+                          ).createShader(bounds),
+                          child: HeroMode(
+                            // The compact header owns the route hero while the
+                            // full cover is fading out behind the lyrics.
+                            enabled: artwork != null && showArtwork,
+                            child: AnimatedSwitcher(
+                              duration: motion,
+                              switchInCurve: Curves.easeInOutCubic,
+                              switchOutCurve: Curves.easeInOutCubic,
+                              layoutBuilder: (current, previous) => Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  for (final child in previous)
+                                    HeroMode(enabled: false, child: child),
+                                  ?current,
+                                ],
                               ),
+                              child: artwork == null
+                                  ? null
+                                  : KeyedSubtree(
+                                      key: const ValueKey(
+                                        'full-player-artwork',
+                                      ),
+                                      child: artwork!,
+                                    ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

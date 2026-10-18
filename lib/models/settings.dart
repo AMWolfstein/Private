@@ -56,7 +56,6 @@ class AppSettings {
   final bool isFirstLaunch;
   final bool hasSearchedBefore;
   final String albumFolderStructure;
-  final String historyViewMode;
   final String historyFilterMode;
 
   /// Library view opened when switching to the Library tab:
@@ -122,7 +121,6 @@ class AppSettings {
     this.isFirstLaunch = true,
     this.hasSearchedBefore = false,
     this.albumFolderStructure = 'artist_album',
-    this.historyViewMode = 'grid',
     this.historyFilterMode = 'all',
     this.defaultLibraryView = 'last',
     this.libraryQualityLabelMode = AppSettings.libraryQualityLabelBitrate,
@@ -172,7 +170,6 @@ class AppSettings {
     bool? isFirstLaunch,
     bool? hasSearchedBefore,
     String? albumFolderStructure,
-    String? historyViewMode,
     String? historyFilterMode,
     String? defaultLibraryView,
     String? libraryQualityLabelMode,
@@ -226,7 +223,6 @@ class AppSettings {
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
       hasSearchedBefore: hasSearchedBefore ?? this.hasSearchedBefore,
       albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,
-      historyViewMode: historyViewMode ?? this.historyViewMode,
       historyFilterMode: historyFilterMode ?? this.historyFilterMode,
       defaultLibraryView: defaultLibraryView ?? this.defaultLibraryView,
       libraryQualityLabelMode:

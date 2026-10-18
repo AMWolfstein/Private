@@ -21,6 +21,7 @@ void main() {
         kUseAmoledKey: true,
         kUseSystemFontKey: true,
         kMornyeAccentKey: 'blue',
+        kPlayerViewKey: 'immersive',
         kMornyeGlassClarityKey: 0.2,
       });
       final prefs = await SharedPreferences.getInstance();
@@ -52,6 +53,7 @@ void main() {
       expect(state.mornyeAccent, MornyeAccent.red);
       expect(state.mornyeGlassClarity, 0.8);
       expect(state.style, AppThemeStyle.mornye);
+      expect(state.playerView, PlayerView.immersive);
       expect(state.seedColorValue, 0xff123456);
       expect(state.useDynamicColor, isFalse);
       expect(state.useAmoled, isTrue);

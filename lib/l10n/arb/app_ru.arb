@@ -129,18 +129,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "Отображение истории",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "Список",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "Сетка",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "Вписать текст песни",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -915,10 +903,6 @@
   },
   "sectionTheme": "Тема",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "Разметка",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "Язык",

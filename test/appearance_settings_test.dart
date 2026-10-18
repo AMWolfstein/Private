@@ -11,6 +11,21 @@ import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 
 void main() {
+  test('player view defaults safely and survives theme serialization', () {
+    for (final saved in [null, '', 'unknown', 5]) {
+      expect(
+        ThemeSettings.fromJson({kPlayerViewKey: saved}).playerView,
+        PlayerView.normal,
+      );
+    }
+    const immersive = ThemeSettings(playerView: PlayerView.immersive);
+    expect(ThemeSettings.fromJson(immersive.toJson()), immersive);
+    expect(
+      immersive.copyWith(useSystemFont: true).playerView,
+      PlayerView.immersive,
+    );
+    expect(immersive, isNot(const ThemeSettings()));
+  });
   test(
     'old themes retain outlines and new themes serialize the preference',
     () {
@@ -103,6 +118,41 @@ void main() {
   }
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    testWidgets('player view choice survives restart ($mode)', (tester) async {
+      SharedPreferences.setMockInitialValues({kThemeModeKey: mode.name});
+      final prefs = await SharedPreferences.getInstance();
+      await openSettings(tester, prefs);
+      final immersive = find.text('Immersive view');
+      await tester.scrollUntilVisible(
+        immersive,
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Normal view'), findsOneWidget);
+      expect(find.text('History View'), findsNothing);
+      expect(find.text('Layout'), findsNothing);
+      await tester.tap(immersive);
+      await tester.pumpAndSettle();
+      expect(prefs.getString(kPlayerViewKey), 'immersive');
+      await tester.pumpWidget(const SizedBox());
+      await openSettings(tester, prefs);
+      expect(
+        loadBootstrapThemeSettings(prefs).playerView,
+        PlayerView.immersive,
+      );
+      await tester.scrollUntilVisible(
+        find.text('Normal view'),
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Normal view'));
+      await tester.pumpAndSettle();
+      expect(prefs.getString(kPlayerViewKey), 'normal');
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets(
       'glass outlines toggle survives restart and local themes ($mode)',
       (tester) async {

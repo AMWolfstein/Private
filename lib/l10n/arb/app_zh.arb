@@ -69,18 +69,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "历史记录",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "列表",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "网格",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "内嵌歌词",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -784,10 +772,6 @@
   },
   "sectionTheme": "Theme",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "Layout",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "Language",

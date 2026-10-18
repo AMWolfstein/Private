@@ -9,6 +9,7 @@ const String kMornyeAccentKey = 'mornye_accent';
 const String kUseSystemFontKey = 'use_system_font';
 const String kCustomFontIdKey = 'custom_font_id';
 const String kCustomFontNameKey = 'custom_font_name';
+const String kPlayerViewKey = 'player_view';
 const String kLyricsTextScaleKey = 'lyrics_text_scale';
 
 double normalizeLyricsTextScale(num? value) =>
@@ -21,6 +22,13 @@ double normalizeMornyeGlassClarity(num? value) =>
     value != null && value.isFinite
     ? value.toDouble().clamp(0.0, 1.0)
     : kDefaultMornyeGlassClarity;
+
+enum PlayerView { normal, immersive }
+
+PlayerView playerViewFromString(String? value) => PlayerView.values.firstWhere(
+  (view) => view.name == value,
+  orElse: () => PlayerView.normal,
+);
 
 enum AppThemeStyle { mornye }
 
@@ -43,6 +51,7 @@ const int kDefaultSeedColor = 0xFF1DB954;
 
 class ThemeSettings {
   final ThemeMode themeMode;
+  final PlayerView playerView;
   final bool useDynamicColor;
   final int seedColorValue;
   final bool useAmoled;
@@ -57,6 +66,7 @@ class ThemeSettings {
 
   const ThemeSettings({
     this.themeMode = ThemeMode.system,
+    this.playerView = PlayerView.normal,
     this.useDynamicColor = true,
     this.seedColorValue = kDefaultSeedColor,
     this.useAmoled = false,
@@ -74,6 +84,7 @@ class ThemeSettings {
 
   ThemeSettings copyWith({
     ThemeMode? themeMode,
+    PlayerView? playerView,
     bool? useDynamicColor,
     int? seedColorValue,
     bool? useAmoled,
@@ -88,6 +99,7 @@ class ThemeSettings {
   }) {
     return ThemeSettings(
       themeMode: themeMode ?? this.themeMode,
+      playerView: playerView ?? this.playerView,
       useDynamicColor: useDynamicColor ?? this.useDynamicColor,
       seedColorValue: seedColorValue ?? this.seedColorValue,
       useAmoled: useAmoled ?? this.useAmoled,
@@ -108,6 +120,7 @@ class ThemeSettings {
 
   Map<String, dynamic> toJson() => {
     kThemeModeKey: themeMode.name,
+    kPlayerViewKey: playerView.name,
     kUseDynamicColorKey: useDynamicColor,
     kSeedColorKey: seedColorValue,
     kUseAmoledKey: useAmoled,
@@ -124,6 +137,7 @@ class ThemeSettings {
   factory ThemeSettings.fromJson(Map<String, dynamic> json) {
     return ThemeSettings(
       themeMode: themeModeFromString(json[kThemeModeKey] as String?),
+      playerView: playerViewFromString(json[kPlayerViewKey]?.toString()),
       useDynamicColor: json[kUseDynamicColorKey] as bool? ?? true,
       seedColorValue: json[kSeedColorKey] as int? ?? kDefaultSeedColor,
       useAmoled: json[kUseAmoledKey] as bool? ?? false,
@@ -147,6 +161,7 @@ class ThemeSettings {
     if (identical(this, other)) return true;
     return other is ThemeSettings &&
         other.themeMode == themeMode &&
+        other.playerView == playerView &&
         other.useDynamicColor == useDynamicColor &&
         other.seedColorValue == seedColorValue &&
         other.useAmoled == useAmoled &&
@@ -163,6 +178,7 @@ class ThemeSettings {
   @override
   int get hashCode =>
       themeMode.hashCode ^
+      playerView.hashCode ^
       useDynamicColor.hashCode ^
       seedColorValue.hashCode ^
       useAmoled.hashCode ^

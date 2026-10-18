@@ -631,6 +631,11 @@ void main() {
     });
   });
 
+  test('legacy history layout imports ignore the retired preference', () {
+    final settings = AppSettings.fromJson({'historyViewMode': 'list'});
+    expect(settings.toJson().containsKey('historyViewMode'), isFalse);
+  });
+
   group('ThemeSettings', () {
     test('serializes, deserializes, copies, and compares values', () {
       const settings = ThemeSettings(

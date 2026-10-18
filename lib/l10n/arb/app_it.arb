@@ -129,18 +129,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "Cronologia aspetto",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "Lista",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "Griglia",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "Incorpora Testo",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -915,10 +903,6 @@
   },
   "sectionTheme": "Temi",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "Layout",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "Lingua",

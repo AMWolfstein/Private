@@ -11,6 +11,8 @@ import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:spotiflac_android/providers/theme_provider.dart';
+import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/routes/now_playing_route.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -154,6 +156,14 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
 
   Widget _buildPlayer(BuildContext context) {
     final mornye = context.isMornye;
+    final immersive =
+        mornye &&
+        !_landscape &&
+        ref.watch(
+          themeProvider.select(
+            (settings) => settings.playerView == PlayerView.immersive,
+          ),
+        );
     final colorScheme = mornye
         ? MornyeTheme.fromContext(
             context,
@@ -212,10 +222,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             box.getTransformTo(overlay),
             Offset.zero & box.size,
           ),
-          fullBleed: false,
+          fullBleed: immersive && _currentPage == 0,
           child: Theme(
             data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
-            child: key == _compactArtworkKey
+            child: key == _compactArtworkKey || immersive
                 ? PlayerArtwork(
                     artUri: mediaItem.artUri?.toString(),
                     colorScheme: colorScheme,
@@ -310,7 +320,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                           colorScheme: colorScheme,
                           page: _currentPage,
                           motionArtwork: artwork(),
-                          insetArtwork: true,
+                          insetArtwork: !immersive,
                           artworkTopInset:
                               MediaQuery.paddingOf(context).top + 36,
                           artworkKeys: (
@@ -461,7 +471,29 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                 if (!mounted) return;
                 _artworkForeground.value = colors;
               },
-              child: MornyePlayerBackground(artUri: mediaItem.artUri),
+              child: MornyePlayerBackground(
+                key: ValueKey(immersive),
+                artUri: mediaItem.artUri,
+                squareArtwork: !immersive,
+                showArtwork: _currentPage == 0,
+                artwork: immersive
+                    ? PlayerArtworkDragRegion(
+                        child: PlayerTransitionArtwork(
+                          artworkKey: _expandedArtworkKey,
+                          child: Hero(
+                            tag: kNowPlayingArtworkHeroTag,
+                            child: PlayerArtwork(
+                              artUri: mediaItem.artUri?.toString(),
+                              colorScheme: colorScheme,
+                              cacheWidth: PlayerArtwork.transitionCacheWidth(
+                                context,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
             ),
             Listener(
               behavior: HitTestBehavior.translucent,

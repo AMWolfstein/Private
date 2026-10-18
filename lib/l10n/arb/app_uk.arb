@@ -129,18 +129,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceHistoryView": "Історія переглядів",
-  "@appearanceHistoryView": {
-    "description": "Layout style for history"
-  },
-  "appearanceHistoryViewList": "Список",
-  "@appearanceHistoryViewList": {
-    "description": "List layout option"
-  },
-  "appearanceHistoryViewGrid": "Сітка",
-  "@appearanceHistoryViewGrid": {
-    "description": "Grid layout option"
-  },
   "optionsEmbedLyrics": "Вбудований текст пісні",
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
@@ -887,10 +875,6 @@
   },
   "sectionTheme": "Тема",
   "@sectionTheme": {
-    "description": "Settings section header"
-  },
-  "sectionLayout": "Макет",
-  "@sectionLayout": {
     "description": "Settings section header"
   },
   "sectionLanguage": "Мова",
