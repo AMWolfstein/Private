@@ -1,57 +1,5 @@
 part of 'home_tab.dart';
 
-class _RecentlyAddedTile extends StatelessWidget {
-  final LocalLibraryItem item;
-  final ColorScheme colorScheme;
-  final VoidCallback onTap;
-
-  const _RecentlyAddedTile({
-    required this.item,
-    required this.colorScheme,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DownloadedOrRemoteCover(
-            downloadedFilePath: item.filePath,
-            imageUrl: item.coverPath,
-            width: 112,
-            height: 112,
-            borderRadius: BorderRadius.circular(12),
-            fallbackIcon: Icons.music_note,
-            fallbackIconSize: 32,
-            colorScheme: colorScheme,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            item.trackName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
-          ),
-          Text(
-            item.artistName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _DownloadedOrRemoteCover extends StatefulWidget {
   final String? downloadedFilePath;
   final String? imageUrl;

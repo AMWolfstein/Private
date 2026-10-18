@@ -23,18 +23,4 @@ final recentAccessViewProvider = Provider<_RecentAccessView>((ref) {
   return _RecentAccessView(uniqueItems);
 });
 
-const _recentlyAddedLimit = 12;
-
-final _recentlyAddedProvider = FutureProvider<List<LocalLibraryItem>>((
-  ref,
-) async {
-  // Re-read the library whenever a scan finishes.
-  ref.watch(localLibraryProvider.select((s) => s.lastScannedAt));
-  final rows = await LibraryDatabase.instance.getAll();
-  final items = rows
-      .map(LocalLibraryItem.fromJson)
-      .where((item) => item.filePath.trim().isNotEmpty)
-      .toList();
-  items.sort((a, b) => b.scannedAt.compareTo(a.scannedAt));
-  return items.take(_recentlyAddedLimit).toList(growable: false);
-});
+final _recentlyAddedProvider = localHomeTracksProvider;

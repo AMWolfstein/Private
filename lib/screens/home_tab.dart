@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
+import 'package:spotiflac_android/providers/local_home_feed_provider.dart';
+import 'package:spotiflac_android/providers/library_browse_provider.dart';
+import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/recent_access_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
@@ -24,6 +27,7 @@ import 'package:spotiflac_android/widgets/library_search_results.dart';
 import 'package:spotiflac_android/widgets/profile_avatar.dart';
 
 part 'home_tab_helpers.dart';
+part 'home_tab_feed.dart';
 part 'home_tab_recent.dart';
 part 'home_tab_search_results.dart';
 part 'home_tab_widgets.dart';
@@ -176,7 +180,8 @@ class _HomeTabState extends ConsumerState<HomeTab>
               SliverMainAxisGroup(
                 slivers: [
                   if (_showsHome) _buildHomeIntro(colorScheme),
-                  _buildRecentlyAdded(colorScheme),
+                  if (_showsHome) ..._buildLocalFeed(colorScheme),
+                  if (!_showsHome) _buildRecentlyAdded(colorScheme),
                   ..._buildRecentAccess(colorScheme),
                 ],
               ),
@@ -273,50 +278,34 @@ class _HomeTabState extends ConsumerState<HomeTab>
     return SliverToBoxAdapter(
       child: Consumer(
         builder: (context, ref, _) {
-          final items = ref.watch(_recentlyAddedProvider).value ?? const [];
-          if (items.isEmpty) return const SizedBox.shrink();
-
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 0, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          return ref
+              .watch(_recentlyAddedProvider)
+              .when(
+                data: (items) => _feedShelf(
                   context.l10n.libraryRecentlyAdded,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 156,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      final item = items[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: SizedBox(
-                          width: 112,
-                          child: _RecentlyAddedTile(
-                            item: item,
-                            colorScheme: colorScheme,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) =>
-                                    TrackMetadataScreen(localItem: item),
-                              ),
+                  items
+                      .map(
+                        (item) => _feedCard(
+                          name: item.trackName,
+                          subtitle: item.artistName,
+                          cover: item.coverPath,
+                          samplePath: item.filePath,
+                          icon: Icons.music_note,
+                          colors: colorScheme,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  TrackMetadataScreen(localItem: item),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      )
+                      .toList(),
                 ),
-              ],
-            ),
-          );
+                loading: () => const SizedBox.shrink(),
+                error: (_, _) =>
+                    _feedRetry(() => ref.invalidate(_recentlyAddedProvider)),
+              );
         },
       ),
     );

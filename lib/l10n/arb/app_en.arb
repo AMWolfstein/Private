@@ -106,6 +106,8 @@
   "@historyFilterSingles": {
     "description": "Filter chip - show singles only"
   },
+  "homeLatestReleases": "Latest Releases in Your Library",
+  "@homeLatestReleases": {"description": "Local home featured releases shelf, ordered by release tags"},
   "libraryRecentlyAdded": "Recently Added",
   "librarySearchHint": "Search your library",
   "libraryEmptyCollection": "Your music will appear here",
