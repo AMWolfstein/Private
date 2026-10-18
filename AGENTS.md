@@ -40,11 +40,15 @@ queue, track changes and mini-player dismissal must work in both views. Landscap
 the two-column player. Do not restore the obsolete History View/Layout preference or search
 entry; the Library overview uses cards and dedicated Library sections use rows.
 
-Album-style collection headers (albums, playlists, Loved and Wishlist) use one centered
+Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled
 Play and translucent Shuffle pills with compact sizing and at least 48px touch targets;
 keep the outer icons in the same row, including RTL. Do not move Shuffle into the toolbar.
 The artist header retains its separate centered-Play design.
+
+Wishlist is removed from the Library, track menus, models, backups and native collection
+queries. Collection schema v3 drops the obsolete table on upgrade; old JSON imports ignore
+that category. Keep Loved, playlists and favorite artists supported.
 
 ## graphify
 

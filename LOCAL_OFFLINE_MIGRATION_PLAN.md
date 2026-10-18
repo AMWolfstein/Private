@@ -12,9 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): push the latest changes and rebuild the same
-ARM64-only side-by-side SpotiFLAC Local APK, replacing the black launcher background with
-a color that contrasts with the green logo. This explicitly authorizes an APK build.**
+**Current user instruction (2026-10-18): remove Wishlist and all feature references.
+No new APK build or GitHub publication is requested for this cleanup.**
 
 ---
 
@@ -27,8 +26,27 @@ and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. 
 source validation passed. The signed ARM64-only side-by-side **build 163** now includes
 V2/V3, the fragmented Opus follow-up, Popular paging, settings/conversion cleanup, selectable
 Normal/Immersive player views, centered collection actions and a cream launcher background.
-Physical-device installation/playback validation remains pending.
+Wishlist has subsequently been removed from source; the published build 163 predates that
+cleanup. Physical-device installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Wishlist removal (2026-10-18):** `d44a273` removes Wishlist Library cards/rows and
+navigation, track-menu actions, folder mode, provider mutation APIs, state/index fields,
+backup counts/preview rows/restore commands, hydration/export paths and localized strings.
+Native collection reads and restore publication now use schema v3 with only retained
+collections. The upgrade drops the obsolete table from v1/v2 databases without rewriting
+Loved, playlists or favorite artists. Older JSON/preferences imports ignore removed data;
+new collection exports omit it. Playlist hydration now has its own named accumulator.
+
+Validation: `flutter analyze` reports **No issues found**; the full Flutter suite passes
+**1,611 tests, 3 skipped**. New regression tests cover real SQLite v1/v2 upgrades preserving
+retained rows, ignored malformed legacy JSON and absent Wishlist menu actions. Existing
+collection mutation/rollback, paging, hydration, backup and playlist playback coverage was
+adapted to retained collections. `bash scripts/check_rust_backend.sh` passes formatting,
+Clippy with warnings denied and **227 Rust tests, 1 ignored**. Device integration fixtures
+were updated to schema v3 but not executed without a device. Source search leaves only the
+obsolete-table deletion and regression fixtures; the refreshed graph query finds no
+Wishlist nodes (`e6015e5`). No APK was built and no commits were pushed for this task.
 
 **ARM64 Local build 163 and contrasting icon (2026-10-18):** `1474c860` replaces the black
 launcher background with light cream (`#FFF4DF` for the adaptive icon), keeps the existing
