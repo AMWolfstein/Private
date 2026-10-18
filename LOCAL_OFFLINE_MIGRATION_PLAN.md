@@ -12,9 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): restore V2's Apple Music home presentation
-with a local feed, following the completed V3 artist/album/playlist design port.**
-The instruction not to build an APK remains in force.
+**Current user instruction (2026-10-18): build an ARM64-only APK with a distinct name
+and package so it can install beside the original SpotiFLAC.** The user confirmed ARM64;
+this supersedes the earlier instruction to pause APK builds.
 
 ---
 
@@ -24,9 +24,32 @@ _Last updated: 2026-10-18_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. The last APK predates V2/V3 and the follow-up Opus continuation
-fix; no new APK was built. Physical-device validation remains pending.
+source validation passed. A signed ARM64-only side-by-side APK now includes V2/V3 and the
+follow-up Opus continuation fix. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Side-by-side ARM64 APK (2026-10-18):** `eb33f36` adds opt-in
+`SPOTIFLAC_SIDE_BY_SIDE=true` Gradle configuration. It sets the app name to **SpotiFLAC Local**
+and application ID to `com.zarz.spotiflac.local`; ordinary builds retain the original identity.
+The packaged manifest also has unique provider authorities, with the original activity class
+resolved correctly under the new application ID. App settings/data and folder permissions are
+independent of the original installation. Graph refreshed in `3942d11`.
+
+Built with:
+```
+source /workspace/toolchains/activate.sh
+SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a \
+  flutter build apk --release --target-platform android-arm64 --split-per-abi
+```
+
+Output: **SpotiFLAC-Local-arm64-v8a.apk**, 54,510,467 bytes, version 5.1.1 / Flutter build 162
+(ABI split manifest versionCode 2162), minimum Android API 24. `aapt dump badging` verifies
+name/package and only `arm64-v8a`; all 17 native libraries were checked as AArch64 ELF64,
+including the rebuilt Rust backend. `apksigner verify` passes (v2 signature). No physical device
+was attached, so installation/playback testing remains pending. The previously validated
+Flutter source passed 1,626 tests (3 skipped); this change only affects Android build identity.
+APK download branch: `apk-local-arm64-162` (artifact only).
+SHA-256: `ddb29a6b7ae632ab614b4c9d48be0df7c99ab7ac85d4d0bf8b083f822d6e9823`.
 
 **Home feed correction (V2, 2026-10-18):** `45e5f17` restores the original Apple Music
 large featured-card composition, horizontal album/playlist shelves and circular artist cards.
