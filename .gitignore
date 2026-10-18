@@ -16,6 +16,14 @@ android/app/.cxx/
 *.apk
 *.aab
 
+# Rust build output (cargo / rustup)
+rust_backend/target/
+target/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
 # IDE / editor
 .idea/
 *.iml

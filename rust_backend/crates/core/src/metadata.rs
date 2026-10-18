@@ -1,11 +1,5 @@
 //! Application metadata response schemas and built-in provider conversion.
 
-mod catalog;
-pub mod deezer;
-pub mod musicbrainz;
-pub mod reenrich;
-pub mod share;
-pub use catalog::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]

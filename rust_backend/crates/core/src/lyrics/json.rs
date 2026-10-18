@@ -1,12 +1,8 @@
 //! Go's typed provider JSON accepts case-insensitive fields and null scalars.
 
-use serde::de::{DeserializeOwned, DeserializeSeed, Visitor};
+use serde::de::{DeserializeSeed, Visitor};
 use serde::{Deserialize, Deserializer};
 use std::borrow::Cow;
-
-pub(super) fn decode<T: DeserializeOwned>(raw: &str) -> Result<T, serde_json::Error> {
-    serde_json::from_str(&crate::text::json_surrogates(raw))
-}
 
 pub(crate) fn field_name(name: &str) -> String {
     name.chars()

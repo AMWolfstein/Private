@@ -1,14 +1,10 @@
 //! Lyrics contracts shared by built-in providers, extension hosts and exports.
 
-pub mod config;
-pub mod errors;
 pub mod file;
 pub(crate) mod json;
 pub mod lrc;
-pub mod lrclib;
 pub mod matching;
 pub mod models;
-pub mod payloads;
 
 use serde::{Deserialize, Serialize};
 
