@@ -71,7 +71,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   localLibraryAutoScan: json['localLibraryAutoScan'] as String? ?? 'off',
   hasCompletedTutorial: json['hasCompletedTutorial'] as bool? ?? false,
   lastSeenVersion: json['lastSeenVersion'] as String? ?? '',
-  playerMode: json['playerMode'] as String? ?? 'internal',
   playerShowPronunciation: json['playerShowPronunciation'] as bool? ?? true,
   playerShowTranslation: json['playerShowTranslation'] as bool? ?? true,
 );
@@ -123,7 +122,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'localLibraryAutoScan': instance.localLibraryAutoScan,
       'hasCompletedTutorial': instance.hasCompletedTutorial,
       'lastSeenVersion': instance.lastSeenVersion,
-      'playerMode': instance.playerMode,
       'playerShowPronunciation': instance.playerShowPronunciation,
       'playerShowTranslation': instance.playerShowTranslation,
     };

@@ -125,12 +125,6 @@ class MornyePlayerActionsSheet extends ConsumerWidget {
               CupertinoIcons.moon_zzz,
               subtitle: sleepTimerSubtitle,
             ),
-            _action(
-              context,
-              'external',
-              context.l10n.nowPlayingOpenInExternalPlayer,
-              CupertinoIcons.arrow_up_right_square,
-            ),
           ],
         ],
       ),

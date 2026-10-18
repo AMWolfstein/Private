@@ -75,7 +75,6 @@ void main() {
         ),
         isTrue,
       );
-      container.read(settingsProvider.notifier).setPlayerMode('external');
       await tester.pump();
       expect(
         tester
@@ -87,7 +86,7 @@ void main() {
               ),
             )
             .enabled,
-        isFalse,
+        isTrue,
       );
       expect(tester.takeException(), isNull);
     });

@@ -25,9 +25,8 @@ class _PlaybackRecorder extends PlaybackController {
   Future<void> playMediaQueue(
     Iterable<PlayableMedia> queue, {
     required int startIndex,
-    required String externalPath,
   }) async {
-    paths.add(externalPath);
+    paths.add(queue.elementAt(startIndex).source);
   }
 }
 

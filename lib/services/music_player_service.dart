@@ -76,9 +76,8 @@ void setPlaybackAutomationOptions({
   required bool playOnHeadphonesConnected,
 }) => musicPlayerRuntime.configure(
   musicPlayerRuntime.settings.copyWith(
-    playerMode: enabled ? 'internal' : 'external',
-    pauseOnMute: pauseOnMute,
-    playOnHeadphonesConnected: playOnHeadphonesConnected,
+    pauseOnMute: enabled && pauseOnMute,
+    playOnHeadphonesConnected: enabled && playOnHeadphonesConnected,
   ),
 );
 
@@ -355,8 +354,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   /// Reconcile only the playback fields affected by the new settings snapshot.
   void applySettings(AppSettings previous) {
     final settings = _settings;
-    if (previous.autoplayPersonalization != settings.autoplayPersonalization ||
-        previous.playerMode != settings.playerMode) {
+    if (previous.autoplayPersonalization != settings.autoplayPersonalization) {
       _configurePersonalization();
     }
     if (previous.playbackNormalization != settings.playbackNormalization) {
@@ -368,9 +366,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       unawaited(_autoMix.cancel());
     }
     // USB changes apply at the next source boundary, without raising volume.
-    if ((previous.playerMode == 'internal') !=
-            (settings.playerMode == 'internal') ||
-        previous.pauseOnMute != settings.pauseOnMute ||
+    if (previous.pauseOnMute != settings.pauseOnMute ||
         previous.playOnHeadphonesConnected !=
             settings.playOnHeadphonesConnected ||
         previous.usbBitPerfect != settings.usbBitPerfect) {
@@ -530,8 +526,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   }
 
   void _configurePersonalization() {
-    final enabled =
-        _settings.autoplayPersonalization && _settings.playerMode == 'internal';
+    final enabled = _settings.autoplayPersonalization;
     _runtime.personalization.setEnabled(enabled);
     if (enabled && _index >= 0 && _index < _media.length) {
       _runtime.personalization.begin(_learningTrack(_media[_index]));
@@ -691,13 +686,8 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   void _refreshPlaybackAutomation() {
     if (_disposed) return;
-    final pauseOnMute =
-        _settings.playerMode == 'internal' &&
-        _settings.pauseOnMute &&
-        !_settings.usbBitPerfect;
-    final playOnHeadphonesConnected =
-        _settings.playerMode == 'internal' &&
-        _settings.playOnHeadphonesConnected;
+    final pauseOnMute = _settings.pauseOnMute && !_settings.usbBitPerfect;
+    final playOnHeadphonesConnected = _settings.playOnHeadphonesConnected;
     unawaited(
       _playbackAutomation.configure(
         pauseOnMute: pauseOnMute,

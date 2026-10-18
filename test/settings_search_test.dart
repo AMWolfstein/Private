@@ -27,6 +27,33 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets('retired download settings and player chooser are absent', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    expect(find.text('Files & Folders'), findsNothing);
+    expect(find.text('Metadata'), findsNothing);
+    for (final query in [
+      'Music folder',
+      'Artist Tag Mode',
+      'Embedded Cover Size',
+      'External player',
+      'Built-in preview player',
+    ]) {
+      await tester.enterText(find.byType(TextField), query);
+      await tester.pumpAndSettle();
+      expect(
+        find.byWidgetPredicate(
+          (widget) => widget is Text && widget.data == query,
+        ),
+        findsNothing,
+      );
+    }
+    await tester.enterText(find.byType(TextField), 'Scan');
+    await tester.pumpAndSettle();
+    expect(find.text('Scan Library'), findsWidgets);
+  });
+
   testWidgets('finds controls nested inside a settings page', (tester) async {
     await pumpSettings(tester);
 

@@ -52,7 +52,6 @@ extension _QueueTabNavigation on _QueueTabState {
           .playMediaQueue(
             playableItems.map(_toPlayableMedia),
             startIndex: start,
-            externalPath: item.filePath,
           );
     } catch (e) {
       if (mounted) showCannotOpenFileSnackBar(context, e);

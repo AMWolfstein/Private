@@ -518,7 +518,7 @@ void main() {
       final volume = StreamController<double>.broadcast();
       addTearDown(volume.close);
       final runtime = _runtime(
-        settings: const AppSettings(playerMode: 'internal', pauseOnMute: true),
+        settings: const AppSettings(pauseOnMute: true),
         volumeChanges: volume.stream,
       );
       var warnings = 0;

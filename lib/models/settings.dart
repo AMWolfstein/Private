@@ -91,7 +91,6 @@ class AppSettings {
   final String
   lastSeenVersion; // Last app version the user has acknowledged (e.g. '3.7.0')
 
-  final String playerMode;
   final bool playerShowPronunciation;
   final bool playerShowTranslation;
 
@@ -141,7 +140,6 @@ class AppSettings {
     this.localLibraryAutoScan = 'off',
     this.hasCompletedTutorial = false,
     this.lastSeenVersion = '',
-    this.playerMode = 'internal',
     this.playerShowPronunciation = true,
     this.playerShowTranslation = true,
   });
@@ -192,7 +190,6 @@ class AppSettings {
     String? localLibraryAutoScan,
     bool? hasCompletedTutorial,
     String? lastSeenVersion,
-    String? playerMode,
     bool? playerShowPronunciation,
     bool? playerShowTranslation,
   }) {
@@ -251,7 +248,6 @@ class AppSettings {
       localLibraryAutoScan: localLibraryAutoScan ?? this.localLibraryAutoScan,
       hasCompletedTutorial: hasCompletedTutorial ?? this.hasCompletedTutorial,
       lastSeenVersion: lastSeenVersion ?? this.lastSeenVersion,
-      playerMode: playerMode ?? this.playerMode,
       playerShowPronunciation:
           playerShowPronunciation ?? this.playerShowPronunciation,
       playerShowTranslation:

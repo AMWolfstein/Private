@@ -54,38 +54,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
         slivers: [
           AppSliverHeader.page(title: context.l10n.libraryPlayback),
           SliverToBoxAdapter(
-            child: SettingsSectionHeader(title: context.l10n.sectionPlayer),
-          ),
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                SettingsItem(
-                  icon: Icons.open_in_new,
-                  title: context.l10n.libraryExternalPlayer,
-                  subtitle: context.l10n.libraryExternalPlayerSubtitle,
-                  trailing: settings.playerMode == 'external'
-                      ? Icon(Icons.check, color: colorScheme.primary)
-                      : null,
-                  onTap: () => ref
-                      .read(settingsProvider.notifier)
-                      .setPlayerMode('external'),
-                ),
-                SettingsItem(
-                  icon: Icons.play_circle_outline,
-                  title: context.l10n.libraryBuiltInPreviewPlayer,
-                  subtitle: context.l10n.libraryBuiltInPreviewPlayerSubtitle,
-                  trailing: settings.playerMode == 'internal'
-                      ? Icon(Icons.check, color: colorScheme.primary)
-                      : null,
-                  onTap: () => ref
-                      .read(settingsProvider.notifier)
-                      .setPlayerMode('internal'),
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
-          SliverToBoxAdapter(
             child: SettingsSectionHeader(
               title: context.l10n.sectionVolumeAndTransitions,
             ),
@@ -137,7 +105,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                   title: context.l10n.autoplayFromLibrary,
                   subtitle: context.l10n.autoplayDescription,
                   value: settings.autoplay,
-                  enabled: settings.playerMode == 'internal',
                   onChanged: (value) =>
                       ref.read(settingsProvider.notifier).setAutoplay(value),
                 ),
@@ -146,7 +113,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                   title: context.l10n.autoplayPersonalization,
                   subtitle: context.l10n.autoplayPersonalizationDescription,
                   value: settings.autoplayPersonalization,
-                  enabled: settings.playerMode == 'internal',
                   onChanged: (value) => ref
                       .read(settingsProvider.notifier)
                       .setAutoplayPersonalization(value),
@@ -175,9 +141,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                   title: context.l10n.playbackPauseOnMute,
                   subtitle: context.l10n.playbackPauseOnMuteDescription,
                   value: settings.pauseOnMute,
-                  enabled:
-                      settings.playerMode == 'internal' &&
-                      !settings.usbBitPerfect,
+                  enabled: !settings.usbBitPerfect,
                   onChanged: (value) =>
                       ref.read(settingsProvider.notifier).setPauseOnMute(value),
                 ),
@@ -187,7 +151,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                   subtitle:
                       context.l10n.playbackOnHeadphonesConnectedDescription,
                   value: settings.playOnHeadphonesConnected,
-                  enabled: settings.playerMode == 'internal',
                   onChanged: (value) => ref
                       .read(settingsProvider.notifier)
                       .setPlayOnHeadphonesConnected(value),

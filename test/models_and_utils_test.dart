@@ -563,7 +563,7 @@ void main() {
       expect(settings.downloadTreeUri, '');
       expect(settings.artistTagMode, artistTagModeJoined);
       expect(settings.embeddedCoverMaxDimension, 0);
-      expect(settings.playerMode, 'internal');
+      expect(settings.toJson().containsKey('playerMode'), false);
       expect(settings.localLibraryEnabled, isFalse);
       expect(
         settings.libraryQualityLabelMode,

@@ -15,11 +15,9 @@ import 'package:spotiflac_android/routes/now_playing_route.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/expressive_icon_button.dart';
 import 'package:spotiflac_android/widgets/audio_output_button.dart';
 import 'package:spotiflac_android/widgets/lyrics_screen_awake.dart';
@@ -738,16 +736,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     }
   }
 
-  Future<void> _openExternally(String source) async {
-    if (source.isEmpty) return;
-    try {
-      await openFile(source);
-    } catch (e) {
-      if (!mounted) return;
-      showCannotOpenFileSnackBar(context, e);
-    }
-  }
-
   Future<void> _showTrackNavigationMenu(
     BuildContext titleContext,
     MediaItem mediaItem,
@@ -855,19 +843,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     subtitle: sleepTimerSubtitle,
                     onTap: () => Navigator.of(sheetContext).pop('sleepTimer'),
                   ),
-                  SettingsItem(
-                    icon: Icons.open_in_new,
-                    title: sheetContext.l10n.nowPlayingOpenInExternalPlayer,
-                    trailing: Icon(
-                      Icons.open_in_new,
-                      size: 18,
-                      color: Theme.of(
-                        sheetContext,
-                      ).colorScheme.onSurfaceVariant,
-                    ),
-                    showDivider: false,
-                    onTap: () => Navigator.of(sheetContext).pop('external'),
-                  ),
                 ],
               ),
             ),
@@ -912,9 +887,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         break;
       case 'sleepTimer':
         await _showSleepTimerSheet(context, controller, colorScheme);
-        break;
-      case 'external':
-        await _openExternally(source);
         break;
     }
   }

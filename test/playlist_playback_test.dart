@@ -32,23 +32,21 @@ final _tracks = [
 class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings(
-    playerMode: 'internal',
     localLibraryEnabled: true,
     localLibraryShowDuplicates: true,
   );
-
-  @override
-  void setPlayerMode(String mode) => state = state.copyWith(playerMode: mode);
 }
 
 class _Handler extends Fake implements MusicPlayerHandler {}
 
 class _Player extends MusicPlayerController {
+  bool available = true;
   List<PlayableMedia> queue = [];
   int? index;
 
   @override
-  Future<MusicPlayerHandler?> ensureInitialized() async => _Handler();
+  Future<MusicPlayerHandler?> ensureInitialized() async =>
+      available ? _Handler() : null;
 
   @override
   Future<void> playAll(
@@ -369,8 +367,30 @@ void main() {
     },
   );
 
-  test('external mode opens only the selected available file', () async {
-    container.read(settingsProvider.notifier).setPlayerMode('external');
+  test(
+    'old external preference cannot redirect local queue playback',
+    () async {
+      final calls = <MethodCall>[];
+      const channel = MethodChannel('com.zarz.spotiflac/backend');
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        calls.add(call);
+        return null;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+      final legacy = AppSettings.fromJson({'playerMode': 'external'});
+      expect(legacy.toJson().containsKey('playerMode'), false);
+      await container
+          .read(playbackProvider.notifier)
+          .playTrackList(_tracks, startIndex: 2);
+      expect(player.queue[player.index!].title, 'Selected');
+      expect(player.queue.length, 3);
+      expect(calls, isEmpty);
+    },
+  );
+  test('initialization failure never launches an external player', () async {
+    player.available = false;
     final calls = <MethodCall>[];
     const channel = MethodChannel('com.zarz.spotiflac/backend');
     final messenger =
@@ -380,44 +400,35 @@ void main() {
       return null;
     });
     addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
-
-    await container
-        .read(playbackProvider.notifier)
-        .playTrackList(_tracks, startIndex: 2);
-    expect(calls.single.method, 'openContentUri');
-    expect(
-      calls.single.arguments,
-      containsPair('uri', 'content://library/selected'),
+    final controller = container.read(playbackProvider.notifier);
+    final local = LocalLibraryItem(
+      id: 'local',
+      trackName: 'Song',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: 'content://library/song',
+      scannedAt: DateTime(2026),
     );
-    expect(player.index, isNull);
-    expect(playback.resolvedRequests, [
-      ['Selected'],
-    ]);
-  });
-
-  test('external mode skips unavailable and CUE candidates lazily', () async {
-    container.read(settingsProvider.notifier).setPlayerMode('external');
-    playback.paths['Selected'] = '/album.cue#track02';
-    const channel = MethodChannel('com.zarz.spotiflac/backend');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    final calls = <MethodCall>[];
-    messenger.setMockMethodCallHandler(channel, (call) async {
-      calls.add(call);
-      return null;
-    });
-    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
-    await container
-        .read(playbackProvider.notifier)
-        .playTrackList(_tracks, startIndex: 1);
-    expect(playback.resolvedRequests, [
-      ['Unavailable'],
-      ['Selected'],
-      ['Last'],
-    ]);
-    expect(
-      calls.single.arguments,
-      containsPair('uri', 'content://library/last'),
-    );
+    for (final operation in <Future<void> Function()>[
+      () => controller.playLocalPath(
+        path: local.filePath,
+        title: 'Song',
+        artist: 'Artist',
+      ),
+      () => controller.playLocalLibraryQueue([local], startItem: local),
+      () => controller.playMediaQueue([
+        const PlayableMedia(
+          id: 'song',
+          source: 'content://library/song',
+          title: 'Song',
+          artist: 'Artist',
+        ),
+      ], startIndex: 0),
+      () => controller.playTrackList(_tracks),
+    ]) {
+      await expectLater(operation(), throwsA(isA<Exception>()));
+    }
+    expect(calls, isEmpty);
+    expect(player.queue, isEmpty);
   });
 }

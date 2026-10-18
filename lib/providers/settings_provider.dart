@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
@@ -453,22 +452,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setEmbeddedCoverMaxDimension(int maxDimension) {
-    state = state.copyWith(
-      embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
-        maxDimension,
-      ),
-    );
-    _saveSettings();
-  }
-
-  void setArtistTagMode(String mode) {
-    if (artistTagModes.contains(mode)) {
-      state = state.copyWith(artistTagMode: mode);
-      _saveSettings();
-    }
-  }
-
   void setKeepScreenOnLyrics(bool enabled) {
     state = state.copyWith(keepScreenOnLyrics: enabled);
     _saveSettings();
@@ -607,12 +590,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setTutorialComplete() {
     state = state.copyWith(hasCompletedTutorial: true);
-    _saveSettings();
-  }
-
-  void setPlayerMode(String mode) {
-    final normalized = mode == 'internal' ? 'internal' : 'external';
-    state = state.copyWith(playerMode: normalized);
     _saveSettings();
   }
 

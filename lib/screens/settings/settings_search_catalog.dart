@@ -206,18 +206,6 @@ class SettingsSearchCatalog {
           keywords: const ['wrapped', 'statistics', 'listening', 'stats'],
         ),
         SettingsSearchEntry(
-          icon: Icons.open_in_new,
-          title: l10n.libraryExternalPlayer,
-          subtitle: l10n.libraryExternalPlayerSubtitle,
-          keywords: const ['playback app'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.play_circle_outline,
-          title: l10n.libraryBuiltInPreviewPlayer,
-          subtitle: l10n.libraryBuiltInPreviewPlayerSubtitle,
-          keywords: const ['internal player'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.graphic_eq,
           title: l10n.libraryPlaybackNormalization,
           subtitle: l10n.libraryPlaybackNormalizationSubtitle,
@@ -265,23 +253,6 @@ class SettingsSearchCatalog {
           ),
         ],
       ],
-      metadata = [
-        SettingsSearchEntry(
-          icon: Icons.people_alt_outlined,
-          title: l10n.optionsArtistTagMode,
-          keywords: const [
-            'artist separator',
-            'multiple artists',
-            'primary artist',
-          ],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.photo_size_select_large_outlined,
-          title: l10n.optionsEmbeddedCoverSize,
-          subtitle: l10n.optionsEmbeddedCoverSizeDescription,
-          keywords: const ['cover size', 'artwork resolution', 'resize image'],
-        ),
-      ],
       lyrics = [
         SettingsSearchEntry(
           icon: Icons.light_mode_outlined,
@@ -298,13 +269,6 @@ class SettingsSearchCatalog {
           icon: Icons.lyrics_outlined,
           title: l10n.lyricsMode,
           keywords: const ['synced', 'plain', 'lyrics type'],
-        ),
-      ],
-      files = [
-        SettingsSearchEntry(
-          icon: Icons.folder_outlined,
-          title: l10n.downloadDirectory,
-          keywords: const ['download folder', 'saf', 'storage path'],
         ),
       ],
       app = [
@@ -456,9 +420,7 @@ class SettingsSearchCatalog {
   final List<SettingsSearchEntry> appearance;
   final List<SettingsSearchEntry> library;
   final List<SettingsSearchEntry> playback;
-  final List<SettingsSearchEntry> metadata;
   final List<SettingsSearchEntry> lyrics;
-  final List<SettingsSearchEntry> files;
   final List<SettingsSearchEntry> app;
   final List<SettingsSearchEntry> cache;
   final List<SettingsSearchEntry> backup;

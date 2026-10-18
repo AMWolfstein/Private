@@ -12,11 +12,9 @@ import 'package:spotiflac_android/screens/settings/app_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/backup_restore_page.dart';
 import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
-import 'package:spotiflac_android/screens/settings/files_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/log_screen.dart';
 import 'package:spotiflac_android/screens/settings/lyrics_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/metadata_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/playback_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/settings_search_catalog.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
@@ -142,15 +140,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             pageBuilder: () => const LibrarySettingsPage(),
           ),
           _Destination(
-            icon: Icons.sell_outlined,
-            iconColor: Colors.amber,
-            title: l10n.settingsMetadata,
-            subtitle: l10n.settingsMetadataSubtitle,
-            keywords: const ['tag', 'cover', 'artwork', 'isrc', 'provider'],
-            searchEntries: searchCatalog.metadata,
-            pageBuilder: () => const MetadataSettingsPage(),
-          ),
-          _Destination(
             icon: Icons.lyrics_outlined,
             iconColor: Colors.cyan,
             title: l10n.settingsLyrics,
@@ -167,25 +156,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             keywords: const ['player', 'audio', 'playback', 'pemutaran'],
             searchEntries: searchCatalog.playback,
             pageBuilder: () => const PlaybackSettingsPage(),
-          ),
-        ],
-      ),
-      _Group(
-        destinations: [
-          _Destination(
-            icon: Icons.folder_outlined,
-            iconColor: Colors.orange,
-            title: l10n.settingsFiles,
-            subtitle: l10n.settingsFilesSubtitle,
-            keywords: const [
-              'saf',
-              'storage',
-              'folder',
-              'path',
-              'permission',
-            ],
-            searchEntries: searchCatalog.files,
-            pageBuilder: () => const FilesSettingsPage(),
           ),
         ],
       ),

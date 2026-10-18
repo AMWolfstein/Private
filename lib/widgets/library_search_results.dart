@@ -218,13 +218,9 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
             return;
           }
           final media = playableFromLocal(localItem);
-          await ref
-              .read(playbackProvider.notifier)
-              .playMediaQueue(
-                [media],
-                startIndex: 0,
-                externalPath: media.source,
-              );
+          await ref.read(playbackProvider.notifier).playMediaQueue([
+            media,
+          ], startIndex: 0);
         case LibrarySearchKind.artists:
           widget.onOpenArtist(hit.title);
         case LibrarySearchKind.playlists:

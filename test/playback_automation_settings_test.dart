@@ -71,7 +71,6 @@ void main() {
       expect(saved.pauseOnMute, isTrue);
       expect(saved.playOnHeadphonesConnected, isTrue);
 
-      container.read(settingsProvider.notifier).setPlayerMode('external');
       await tester.pump();
       final automationControls = tester.widgetList<SettingsSwitchItem>(
         find.byWidgetPredicate(
@@ -84,7 +83,7 @@ void main() {
         ),
       );
       expect(automationControls, hasLength(2));
-      expect(automationControls.every((widget) => !widget.enabled), isTrue);
+      expect(automationControls.every((widget) => widget.enabled), isTrue);
       expect(tester.takeException(), isNull);
 
       final l10n = AppLocalizations.of(tester.element(connected));
