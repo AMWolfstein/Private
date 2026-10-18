@@ -34,6 +34,12 @@ menus, format/bitrate/quality sheets, encoding services or converted-file public
 Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
+Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
+view (the existing full-bleed portrait artwork). Persist the choice across restarts; lyrics,
+queue, track changes and mini-player dismissal must work in both views. Landscape retains
+the two-column player. Do not restore the obsolete History View/Layout preference or search
+entry; the Library overview uses cards and dedicated Library sections use rows.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

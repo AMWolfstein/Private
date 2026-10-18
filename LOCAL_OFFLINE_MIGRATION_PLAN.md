@@ -12,8 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): remove the Convert Format feature entirely,
-including single-file and batch actions and encoding/publication plumbing. Do not build an APK.**
+**Current user instruction (2026-10-18): expose the existing immersive player as a saved
+Appearance → Player view choice alongside Normal view, and remove the obsolete History
+View/Layout setting and its references. Do not build an APK.**
 
 ---
 
@@ -27,6 +28,32 @@ source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 
 first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
 No new APK was built for that follow-up. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Selectable player view and History View cleanup (2026-10-18):** `c609d90` adds
+**Player view → Normal view / Immersive view**. Normal remains the default. The preference
+uses the existing Mornye full-bleed artwork layout/background rather than adding another
+player implementation. Immersive portrait artwork stays edge-to-edge while paused and fades
+into the existing controls; landscape keeps the established two-column layout. The saved
+theme setting loads at bootstrap, survives subsequent theme edits and serializes safely;
+unknown/missing values fall back to Normal.
+
+The full cover stays mounted while lyrics/queue panels fade, with pointer/semantics and hero
+ownership handed to the compact header. View changes and rotation replace the background
+without retaining duplicate global artwork keys. Both views use the existing seek, playback,
+volume, lyrics, queue and track-navigation controls and mini-player dismissal geometry.
+
+Removes the Layout/History View selector, Settings search result, app-setting field, setter,
+JSON serialization and obsolete localized strings. Older imported JSON containing the retired
+field is accepted and ignores it. Library overview cards and dedicated section rows retain
+their structural layouts without reading the removed preference.
+
+Validation: `flutter analyze` reports **No issues found**; full `flutter test` reports
+**1,609 passed, 3 skipped**. Focused tests cover persistence in light/dark,
+legacy settings, search navigation, full-bleed geometry, pause, small portrait and landscape,
+rapid lyrics/queue transitions, track changes, live view switching and both mini-player
+dismissal paths. Production-source/ARB searches confirm no retired History View preference,
+selector or localization references remain. Graph refreshed after the code commit. No APK
+built; GitHub push is pending an explicit request for this change.
 
 **Format conversion removal (2026-10-18):** `19a28b3` removes Convert Format from the file metadata
 menu and Convert actions from Library/queue, search results and album track selection.
@@ -46,8 +73,8 @@ Validation: `flutter analyze` reports **No issues found**; full `flutter test` r
 **1,598 passed, 3 skipped**. Search/selection regressions pass in both theme variants and
 portrait/landscape layouts. Source and ARB searches confirm the removed conversion entry
 points, services and localization keys are absent. Graph refreshed after the code commit.
-No APK built. Changes are committed locally; GitHub push is pending an explicit request
-for this change.
+No APK built. The conversion-removal commits were subsequently pushed to `main` through
+`ffab9ba`.
 
 **Settings cleanup (2026-10-18):** `8fa30b9` removes the obsolete Files & Folders
 output-folder page and download-era Metadata page, their root Settings destinations and
