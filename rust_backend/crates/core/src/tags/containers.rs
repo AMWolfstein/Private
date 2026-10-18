@@ -191,14 +191,15 @@ impl OggPage {
 pub(crate) fn ogg_packets(
     reader: &mut impl Read,
     max_packets: usize,
-    max_pages: usize,
+    max_pages: Option<usize>,
 ) -> Result<Vec<Vec<u8>>, String> {
     let mut packets = Vec::new();
     let mut current = Vec::new();
-    // Match the writer's bounded header budget, including large embedded art.
+    // Bound metadata by bytes, not pagination: legal comment packets can span
+    // thousands of small pages. Audio probing may opt into a tighter page cap.
     const MAX_HEADER_BYTES: usize = 64 * 1024 * 1024;
     let mut header_bytes = 0;
-    for _ in 0..max_pages {
+    for _ in 0..max_pages.unwrap_or(usize::MAX) {
         let page = OggPage::read(reader).and_then(|page| page.ok_or_else(|| "EOF".into()));
         let OggPage {
             header,
@@ -255,8 +256,8 @@ pub(crate) fn ogg_stream_is_opus(packets: &[Vec<u8>]) -> Option<bool> {
 
 pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
     // Identification and comments are the first two packets for both codecs.
-    // Stop before audio; allow the same page count as our tag writer.
-    let packets = ogg_packets(reader, 2, 1024)?;
+    // Stop before audio; the byte budget bounds fragmented comment/art packets.
+    let packets = ogg_packets(reader, 2, None)?;
     let stream = ogg_stream_is_opus(&packets);
     let packet = packets.iter().find_map(|packet| {
         if stream != Some(false) && packet.len() > 8 && packet.starts_with(b"OpusTags") {
@@ -277,7 +278,7 @@ pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
 }
 
 pub(super) fn ogg_cover(reader: &mut impl Read) -> Result<CoverArt, String> {
-    let packets = ogg_packets(reader, 2, 1024)?;
+    let packets = ogg_packets(reader, 2, None)?;
     let stream = ogg_stream_is_opus(&packets);
     for packet in &packets {
         let comments = if stream != Some(false) && packet.starts_with(b"OpusTags") {

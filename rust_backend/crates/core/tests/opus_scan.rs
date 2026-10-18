@@ -104,7 +104,7 @@ fn paged_packet(packet: &[u8], sequence: &mut u32, max_segments: usize) -> Vec<u
 fn continued_opus_comments_survive_page_and_old_packet_limits() {
     // Metadata may span many small pages, or carry a large artwork/padding field.
     // Both layouts used to silently discard OpusTags and report "no comments".
-    for (padding, segments) in [(64 * 1024, 1), (11 * 1024 * 1024, 255)] {
+    for (padding, segments) in [(64 * 1024, 1), (512 * 1024, 1), (11 * 1024 * 1024, 255)] {
         let mut tags = b"OpusTags".to_vec();
         tags.extend(0_u32.to_le_bytes()); // vendor
         tags.extend(2_u32.to_le_bytes());
@@ -165,7 +165,7 @@ fn artwork_across_many_pages_is_read_without_consuming_audio() {
         &mut sequence,
         255,
     );
-    data.extend(paged_packet(&tags, &mut sequence, 16));
+    data.extend(paged_packet(&tags, &mut sequence, 1));
     let header_end = data.len() as u64;
     // Junk after the headers must not be parsed while extracting tags/artwork.
     data.resize(data.len() + 2 * 1024 * 1024, 0x55);
@@ -177,7 +177,7 @@ fn artwork_across_many_pages_is_read_without_consuming_audio() {
 }
 
 #[test]
-fn incomplete_or_excessively_fragmented_comments_report_the_real_failure() {
+fn malformed_or_incomplete_fragmented_comments_report_the_real_failure() {
     let mut sequence = 0;
     let first = paged_packet(
         b"OpusHead\x01\x02\0\0\x80\xbb\0\0\0\0\0",
@@ -190,10 +190,74 @@ fn incomplete_or_excessively_fragmented_comments_report_the_real_failure() {
     data.extend(paged_packet(&tags, &mut sequence, 1));
     assert_eq!(
         read_audio_tags(&mut Cursor::new(&data), "opus", &|| Ok(())).unwrap_err(),
-        "Ogg header spans too many pages"
+        "invalid Vorbis comments"
     );
     // A partial continued header must never degrade into "no comments".
     data.truncate(1000);
     let error = read_audio_tags(&mut Cursor::new(data), "opus", &|| Ok(())).unwrap_err();
     assert!(error.contains("EOF"), "{error}");
+}
+
+#[test]
+fn editing_fragmented_headers_preserves_audio_and_new_tags() {
+    let mut tags = b"OpusTags".to_vec();
+    tags.extend(0_u32.to_le_bytes());
+    tags.extend(1_u32.to_le_bytes());
+    let comment = format!("PADDING={}", "x".repeat(512 * 1024));
+    tags.extend((comment.len() as u32).to_le_bytes());
+    tags.extend(comment.as_bytes());
+    let mut sequence = 0;
+    let mut input = paged_packet(
+        b"OpusHead\x01\x02\0\0\x80\xbb\0\0\0\0\0",
+        &mut sequence,
+        255,
+    );
+    input.extend(paged_packet(&tags, &mut sequence, 1));
+    assert!(sequence > 1024);
+    let audio = b"audio payload retained during header repagination";
+    input.extend(paged_packet(audio, &mut sequence, 255));
+    let mut output = Vec::new();
+    rewrite_audio_tags(
+        &mut Cursor::new(input),
+        &mut output,
+        "opus",
+        &BTreeMap::from([("title".into(), "الميدان".into())]),
+        None,
+        &|| Ok(()),
+    )
+    .unwrap();
+    assert!(output.ends_with(audio));
+    let metadata = read_audio_tags(&mut Cursor::new(output), "opus", &|| Ok(())).unwrap();
+    assert_eq!(metadata.title, "الميدان");
+}
+
+#[test]
+fn endless_continuation_is_stopped_by_the_byte_budget() {
+    let mut sequence = 0;
+    let first = paged_packet(
+        b"OpusHead\x01\x02\0\0\x80\xbb\0\0\0\0\0",
+        &mut sequence,
+        255,
+    );
+    let mut page = vec![0_u8; 27];
+    page[..4].copy_from_slice(b"OggS");
+    page[5] = 1;
+    page[14..18].copy_from_slice(&1_u32.to_le_bytes());
+    page[26] = 255;
+    page.extend([255; 255]);
+    page.extend(vec![b'x'; 255 * 255]);
+    let page_len = page.len();
+    // The first continuation page starts a packet rather than continuing one.
+    let mut start = page.clone();
+    start[5] = 0;
+    let mut bytes = Vec::with_capacity(64 * 1024 * 1024 + 2 * page_len);
+    bytes.extend(first);
+    bytes.extend(start);
+    while bytes.len() <= 64 * 1024 * 1024 {
+        bytes.extend(&page);
+    }
+    let mut input = Cursor::new(bytes);
+    let error = read_audio_tags(&mut input, "opus", &|| Ok(())).unwrap_err();
+    assert_eq!(error, "Ogg headers exceed 64 MiB");
+    assert!(input.position() <= (64 * 1024 * 1024 + page_len + 8192) as u64);
 }

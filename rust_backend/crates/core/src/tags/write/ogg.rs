@@ -95,9 +95,6 @@ pub(super) fn rewrite(
         if packets.len() == packet_count {
             break;
         }
-        if header_pages >= 1024 {
-            return Err("ogg header spans too many pages".into());
-        }
         page = read_page(source)?.ok_or("incomplete ogg header packets")?;
     }
     let prefix: &[u8] = if opus { b"OpusTags" } else { b"\x03vorbis" };
