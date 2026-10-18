@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-18)
 
 ## Corpus Check
-- 1194 files · ~1,023,668 words
+- 1194 files · ~1,088,438 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 121 file(s) not represented in the graph (top: .xml 37, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d78043f9`
+- Built from commit: `1474c860`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2634,6 +2634,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `package:spotiflac_android/theme/mornye_theme.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.011864406779661017 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `Uid`, `PollFd<'fd>`, `borrowed_fd`, `ioctl/mod.rs`, `fs/ioctl.rs`, `Timespec`, `msg.rs`, `setsockopt`, `at.rs`, `c`, `linux_raw/net/sockopt.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `Pid`, `linux_raw/conv.rs`, `ret`, `libc/pipe/syscalls.rs`, `to_ipv6mr`, `SendAncillaryMessage`, `RawFd`, `net/types.rs`, `OwnedFd`, `Timeout`, `PollFd<'fd>`, `SocketAddrXdp`, `Ipv4PathMtuDiscovery`, `.from`, `libc/system/syscalls.rs`, `linux_raw/mm/syscalls.rs`, `linux_raw/termios/syscalls.rs`, `Ipv6PathMtuDiscovery`, `setns.rs`, `Ipv4Addr`, `std/mod.rs`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Should `settings_tab.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.02863802863802864 - nodes in this community are weakly interconnected._
