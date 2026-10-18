@@ -193,6 +193,31 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
 - Physical-device playback, SAF/USB, statx and launcher-widget checks remain unrun: no Android
   device/emulator is attached. A packaged APK and host tests do not establish device playback.
 
+**Post-Phase 8 Opus scan fix (2026-10-18, `6500a82`):**
+- Device build 161 reported widespread SAF Opus tag failures. Reproduced a reader defect
+  with a real FFmpeg/libopus silence fixture: valid encoder-only comments were rejected
+  unless a title, artist or ReplayGain field existed. Accept structurally valid comments,
+  including album/lyrics-only metadata; retain filename display defaults and quality probing.
+- Preserve parser diagnostics as `metadataReadError` and forward them through SAF failures;
+  malformed comments still fail. No file conversion or library reset is required.
+- Build **5.1.1+162**. Regression coverage includes Arabic display names, album/lyrics-only
+  tags, malformed comments, and repeated borrowed-descriptor reads with/without artwork.
+- Rust fmt/clippy clean; **219 tests passed, 1 existing ignored**. Both Android native ABIs
+  built. Kotlin app/instrumentation compilation and **63 JVM tests** passed; Flutter
+  analysis clean and **6 metadata bridge tests** passed.
+- Graphify refreshed: **22962 nodes, 44586 edges**, source provenance `6500a82`.
+- Release APK built for ARM64/ARMv7 with source commit `6500a82`. Both split packages
+  passed backend/CRC audits, APK signature verification (same certificate as build 161),
+  16 KB ZIP alignment and offline/non-debuggable manifest checks. All **17 ARM64 native
+  libraries** have at least 16 KB ELF LOAD alignment; fixed native-reader marker verified.
+- Download branch: `apk-opus-fix-162` (artifact-only, separate from `main`), with independently
+  installable ARM64/ARMv7 APKs, installation instructions and SHA256SUMS.
+  ARM64 SHA-256: `2f462b2737af65adacb3c8c1859bfec1516b7ce0cace4f179ff3b34e2adadba6`.
+  ARMv7 SHA-256: `d2ed3168621ff4e1cd5e0bbae0453f2587c247730dd76c818725924ee6d4780b`.
+- The user's actual audio files and physical Android device are unavailable here; this
+  fixes a confirmed failure case consistent with the log, not a verified diagnosis of
+  every reported file. Device rescan remains to be checked after installing build 162.
+
 **Environment / toolchain:**
 - In each shell run `source /workspace/toolchains/activate.sh`.
 - Installed: Flutter **3.47.7**, Rust **1.99.0** with fmt/clippy, Java **25**, Android platform/
