@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
-    "mtime": 1792321475.117683,
-    "seen": 1792321668.1150095,
-    "ast_hash": "a1a952523a60bcc0334c71552c61e99d",
+    "mtime": 1792324005.9425125,
+    "seen": 1792324126.9861417,
+    "ast_hash": "cf78c1e3ec8d6e522cb812605cf9f7cd",
     "semantic_hash": ""
   },
   "lib/constants/language_choices.dart": {
@@ -2556,10 +2556,10 @@
     "semantic_hash": "1f205d2e4c3a98e61ee45d2d3056a901"
   },
   "rust_backend/crates/core/src/media/audio.rs": {
-    "mtime": 1792303265.0197206,
-    "seen": 1792304950.7206473,
-    "ast_hash": "a6bb775d4208f3cd7b1500ef59dcb390",
-    "semantic_hash": "a6bb775d4208f3cd7b1500ef59dcb390"
+    "mtime": 1792324005.730513,
+    "seen": 1792324126.9867063,
+    "ast_hash": "d3ef1ddeae47bcac05e60d3403bbc852",
+    "semantic_hash": ""
   },
   "rust_backend/crates/core/src/media/hires/evidence.rs": {
     "mtime": 1792303265.0200205,
@@ -2664,9 +2664,9 @@
     "semantic_hash": "56e23acd47c2d6354b31348c27a09e8c"
   },
   "rust_backend/crates/core/src/tags/containers.rs": {
-    "mtime": 1792323190.6329255,
-    "seen": 1792323289.1353943,
-    "ast_hash": "f76da8d8c5fd86617964455de3b52542",
+    "mtime": 1792324005.502514,
+    "seen": 1792324126.9867318,
+    "ast_hash": "38da10bcc307a159c5d74d05a99396e3",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/file.rs": {
@@ -2796,9 +2796,9 @@
     "semantic_hash": ""
   },
   "rust_backend/crates/mobile/src/library_metadata.rs": {
-    "mtime": 1792323203.172886,
-    "seen": 1792323289.135449,
-    "ast_hash": "c4c95cd1a918006221d38b78d7ff0a72",
+    "mtime": 1792324071.4823136,
+    "seen": 1792324126.9867878,
+    "ast_hash": "6d2767fbccf095d7b6b614dfa70329da",
     "semantic_hash": ""
   },
   "rust_backend/crates/mobile/src/logging.rs": {
@@ -7470,9 +7470,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792322315.3326871,
-    "seen": 1792323289.1364262,
-    "ast_hash": "b903dedab65f5d9b22981de234d0fc64",
+    "mtime": 1792324113.65818,
+    "seen": 1792324126.9878242,
+    "ast_hash": "b838e2095443e56ad02c032434cd20ca",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7614,9 +7614,9 @@
     "semantic_hash": ""
   },
   "rust_backend/crates/core/tests/opus_scan.rs": {
-    "mtime": 1792323203.0968862,
-    "seen": 1792323289.1354153,
-    "ast_hash": "862c01a18c07abdbe8d25c658216d9d9",
+    "mtime": 1792324053.7263641,
+    "seen": 1792324126.9867525,
+    "ast_hash": "e9699e9dc35b3e10f5070abc4df4638f",
     "semantic_hash": ""
   }
 }
