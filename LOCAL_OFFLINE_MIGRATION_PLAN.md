@@ -12,9 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): remove the obsolete output-folder Local storage
-setting/Files & Folders page, remove the player chooser and use the built-in player only,
-and remove the download-era Metadata settings page. Do not build an APK.**
+**Current user instruction (2026-10-18): remove the Convert Format feature entirely,
+including single-file and batch actions and encoding/publication plumbing. Do not build an APK.**
 
 ---
 
@@ -28,6 +27,27 @@ source validation passed. The signed ARM64-only side-by-side APK includes V2/V3 
 first Opus continuation fix, but predates the fragmented-header follow-up (`3afd609`).
 No new APK was built for that follow-up. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Format conversion removal (2026-10-18):** `19a28b3` removes Convert Format from the file metadata
+menu and Convert actions from Library/queue, search results and album track selection.
+Deletes the conversion sheet, lossless encoding/quality/resampler options, batch conversion
+runner, conversion-specific SAF publication/history persistence, library replacement methods,
+automatic conversion helpers and codec probes/cache used only by conversion. All conversion
+localization keys are removed across the ARBs; bitrate and original-cover labels now have
+neutral keys. Setup, tutorial and cache text no longer advertise conversion.
+
+CUE splitting is extracted into `ffmpeg_cue.dart`; retained metadata, CUE and ReplayGain UI
+helpers move to `track_metadata_file_actions.dart`. File tag/cover/lyrics editing, ReplayGain,
+artwork dimension probing, safe temporary-output publication and built-in playback remain.
+Conversion-specific tests are retired; shared selection and metadata menu tests assert the
+absence of conversion while retaining playback, ReplayGain and metadata editing coverage.
+
+Validation: `flutter analyze` reports **No issues found**; full `flutter test` reports
+**1,598 passed, 3 skipped**. Search/selection regressions pass in both theme variants and
+portrait/landscape layouts. Source and ARB searches confirm the removed conversion entry
+points, services and localization keys are absent. Graph refreshed after the code commit.
+No APK built. Changes are committed locally; GitHub push is pending an explicit request
+for this change.
 
 **Settings cleanup (2026-10-18):** `8fa30b9` removes the obsolete Files & Folders
 output-folder page and download-era Metadata page, their root Settings destinations and

@@ -29,6 +29,11 @@ editing remains supported. Audio playback uses only the built-in player, includi
 settings imports: do not restore player-mode choices, external-player shortcuts or automatic
 external fallback on initialization failure. Keep USB/output-device controls and DSP settings.
 
+Audio format conversion is removed entirely: do not restore single-track or batch Convert
+menus, format/bitrate/quality sheets, encoding services or converted-file publication.
+Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
+Artwork probing and FFmpeg processing for those retained features remain supported.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
