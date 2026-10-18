@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-18)
 
 ## Corpus Check
-- 1201 files · ~1,030,482 words
+- 1201 files · ~1,030,690 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 121 file(s) not represented in the graph (top: .xml 37, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `45e5f177`
+- Built from commit: `eb33f36f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2690,17 +2690,17 @@ Nodes (13): mediaItemPlaybackUiProvider, build, _buildFilterButton, _buildSelect
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `_` connect `_` to `package:flutter/material.dart`, `music_playback_deck.dart`, `StatelessWidget`, `_`, `playlist_picker_sheet.dart`, `AndroidPlaybackInfo`, `Duration`, `ValueStream`, `MediaItemCopyWith`, `datetime`, `int get`, `PlaybackStateCopyWith`, `app_info.dart`, `playback_feedback.dart`, `player_widget_service.dart`, `dart:async`, `map`, `List`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `library_collections_benchmark.dart`, `playback_automation.dart`, `dart:convert`, `@Deprecated`, `MusicPlayerHandler`, `_MediaButtonMessageExtension`, `AudioService`, `_MediaItemMessageExtension`, `_RatingMessageExtension`, `playback_seek_preview.dart`, `AudioService`, `RemoteSafPlaybackTest.kt`, `AudioHandler`, `library_collections_hydration.dart`, `audio_format_utils.dart`?**
+- **Why does `BorrowedFd` connect `BorrowedFd` to `Uid`, `PollFd<'fd>`, `ret`, `ioctl/mod.rs`, `Timespec`, `linux_raw/net/syscalls.rs`, `Ipv4Addr`, `at.rs`, `Backend`, `linux_raw/net/sockopt.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `Pid`, `ret`, `linux_raw/conv.rs`, `RawFd`, `net/types.rs`, `OwnedFd`, `c`, `SendAncillaryMessage`, `linux_raw/net/read_sockaddr.rs`, `.from`, `Ipv4PathMtuDiscovery`, `to_ipv6mr`, `Ipv6PathMtuDiscovery`, `setns.rs`, `libc/mm/syscalls.rs`, `setsockopt`, `SocketAddrXdp`, `Timeout`, `linux_raw/termios/syscalls.rs`, `linux_raw/io/syscalls.rs`, `libc/io/syscalls.rs`?**
   _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **What connects `values`, `next`, `stream` to the rest of the system?**
   _8830 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004651162790697674 - nodes in this community are weakly interconnected._
-- **Why does `BorrowedFd` connect `BorrowedFd` to `Uid`, `PollFd<'fd>`, `ret`, `ioctl/mod.rs`, `Timespec`, `linux_raw/net/syscalls.rs`, `Ipv4Addr`, `at.rs`, `Backend`, `linux_raw/net/sockopt.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `Pid`, `ret`, `linux_raw/conv.rs`, `RawFd`, `net/types.rs`, `OwnedFd`, `c`, `SendAncillaryMessage`, `linux_raw/net/read_sockaddr.rs`, `.from`, `Ipv4PathMtuDiscovery`, `to_ipv6mr`, `Ipv6PathMtuDiscovery`, `setns.rs`, `libc/mm/syscalls.rs`, `setsockopt`, `SocketAddrXdp`, `Timeout`, `linux_raw/termios/syscalls.rs`, `linux_raw/io/syscalls.rs`, `libc/io/syscalls.rs`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `_` connect `_` to `package:flutter/material.dart`, `music_playback_deck.dart`, `StatelessWidget`, `_`, `playlist_picker_sheet.dart`, `AndroidPlaybackInfo`, `Duration`, `ValueStream`, `MediaItemCopyWith`, `datetime`, `int get`, `PlaybackStateCopyWith`, `app_info.dart`, `playback_feedback.dart`, `player_widget_service.dart`, `dart:async`, `map`, `List`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `library_collections_benchmark.dart`, `playback_automation.dart`, `dart:convert`, `@Deprecated`, `MusicPlayerHandler`, `_MediaButtonMessageExtension`, `AudioService`, `_MediaItemMessageExtension`, `_RatingMessageExtension`, `playback_seek_preview.dart`, `AudioService`, `RemoteSafPlaybackTest.kt`, `AudioHandler`, `library_collections_hydration.dart`, `audio_format_utils.dart`?**
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **Should `package:flutter/material.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.009172006533484106 - nodes in this community are weakly interconnected._
-- **Why does `Duration` connect `Timespec` to `isrc/cache.rs`, `BorrowedFd`, `dart_date.rs`, `files.rs`, `OwnedFd`, `scan.rs`, `progress/mod.rs`, `src/net/sockopt.rs`, `Outcome`, `core/src/cancellation.rs`, `native_backup.rs`, `collections.rs`, `native_library.rs`, `transport.rs`, `linux_raw/net/sockopt.rs`, `cover/library.rs`, `check`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+- **Why does `c_int()` connect `src/constants.rs` to `linux_raw/c.rs`, `BorrowedFd`, `ret`, `reg.rs`, `vdso_wrappers.rs`, `Timespec`, `linux_raw/net/syscalls.rs`, `procctl.rs`, `libc_auxv.rs`, `Backend`, `process/prctl.rs`, `Pid`, `ret`, `linux_raw/conv.rs`, `Errno`, `linux_raw/param/auxv.rs`, `libusb1-sys-0.7.0/src/lib.rs`, `c`, `thread/prctl.rs`, `SendAncillaryMessage`, `setns.rs`, `to_ipv6mr`, `SyscallNumber`, `linux_raw/process/wait.rs`, `linux_raw/io/syscalls.rs`, `libc/c.rs`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Should `mornye_library_screen.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.02912280701754386 - nodes in this community are weakly interconnected._
