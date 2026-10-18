@@ -21,6 +21,12 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+// Opt-in local build identity; normal builds retain the original package/name.
+val sideBySideBuild = providers.environmentVariable("SPOTIFLAC_SIDE_BY_SIDE")
+    .map { it == "true" }
+    .orElse(false)
+    .get()
+
 val rustBackendDir = rootProject.file("../rust_backend")
 val rustAndroidAbis = providers.environmentVariable("SPOTIFLAC_RUST_ANDROID_ABIS")
     .orElse("arm64-v8a,armeabi-v7a")
@@ -86,7 +92,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.zarz.spotiflac"
+        applicationId = if (sideBySideBuild) "com.zarz.spotiflac.local" else "com.zarz.spotiflac"
+        manifestPlaceholders["appLabel"] = if (sideBySideBuild) "SpotiFLAC Local" else "SpotiFLAC Mobile"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         minSdk = flutter.minSdkVersion
         targetSdk = 37
