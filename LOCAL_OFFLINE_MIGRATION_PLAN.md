@@ -17,10 +17,11 @@ Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backen
 
 ## Progress
 
-_Last updated: 2026-10-17_
+_Last updated: 2026-10-18_
 
-**Status:** IN PROGRESS. Phases 1-5 committed (Phase 5 removed the online UI/provider layer in
-sub-phases 5a/5b/5c). Phase 6 next. Vision refinements V1-V4 captured.
+**Status:** IN PROGRESS. Phases 1-6 committed (Phase 6 removed the entire download engine and
+re-pointed the player/queue to the local library — D1). Phase 7 (Rust backend reduction) next.
+Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
 **Committed:**
 - `f0a1b45` — graphify baseline (graph + report).
@@ -57,11 +58,38 @@ sub-phases 5a/5b/5c). Phase 6 next. Vision refinements V1-V4 captured.
   `track_provider.artistConcerts`; motion-artwork rendering in now-playing / mini-player / album
   screens / cache management; motion+home-feed settings). Home tab keeps local recent/import
   sections and home search. Phase 5 complete.
+- `f3ab83e` — Phase 6: download engine removed and player/queue re-pointed to the local library
+  (D1). Deleted all `download_queue_provider*`/`download_queue_state`/
+  `download_verification_retry_guard`, `download_history_provider*` (state moved to
+  `models/download_history.dart`), `extension_provider*`, `track_provider`,
+  `models/download_item(.g)`/`download_result`/`extension`; all `services/download_*`,
+  `native_download_history`, `verification_notification`, `cover_download_service`,
+  `album_replaygain_readiness`, `extension_storage_service`; `utils/download_error_type`/
+  `extension_*`; screens `downloaded_album_screen`/`home_tab_import`/`album_screen`/`artist_screen`/
+  `artist_screen_widgets`/`playlist_screen`; widgets `downloadable_cover`/`download_queue_feedback`;
+  `settings/download_settings_page`; and the Android `DownloadService*`/`NativeDownloadFinalizer*`/
+  `NativeFinalizationPolicy*`/`SafDownloadHandler.kt`/`DownloadQueueWidgetProvider.kt` + widget
+  resources (added `SafFileOps.kt`). Re-pointed `music_player_provider`/`playback_provider`/
+  `library_search_provider`/`library_browse_provider`/`queue_tab*`/`home_tab*`/`main_shell`/settings
+  to the local library DB; purged all download/extension settings keys (kept `downloadDirectory`/
+  `downloadDirectoryBookmark`/`storageMode`/`downloadTreeUri`). Per PD2 the Dart SQL layer is
+  local-only but `history.db` stays ATTACHed (native-scan exclusion SQL + Rust refs re-homed in
+  Phase 7). ~62 offline tests deleted, ~38 edited.
+- `dfd7f43` — graphify: refreshed code graph after Phase 6 (57360 → 26443 nodes: deleted code plus
+  generated `app_localizations*.dart` now ignored).
 
 **Phase 5 summary:** the entire online extension/provider/search UI layer is gone; what remains
 online-coupled (`extension_provider` registry, `track_provider`, Mornye home search) is consumed
 only by the download engine and is removed with it in Phase 6. Two now-dead settings
 (`homeFeedProvider`, explore-feed cache row) are deferred to the Phase 8 settings purge (V4).
+
+**Phase 6 summary:** the app is now a local-only player in Dart. The download engine, extension
+registry, `track_provider`, Mornye home search and all download/verification UI are gone; the
+player, queue and search read the local library DB. Per PD2 the Dart SQL layer no longer queries the
+download history, but `history.db` remains ATTACHed and the native library scan still excludes it —
+both re-homed to Rust in Phase 7. Two kept-but-dormant pieces (`downloaded_embedded_cover_resolver`,
+the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide is clean; full
+`flutter test` passes (only the known-flaky perf test).
 
 **Environment / toolchain:**
 - Flutter **3.47.7** (Dart 3.13.5) installed at `~/flutter`
@@ -71,16 +99,17 @@ only by the download engine and is removed with it in Phase 6. Two now-dead sett
 - Verification: baseline (pre-migration) and post-Phase-2 `flutter analyze` → **No issues found**.
   Script changes: `cd scripts && python3 -m unittest` (12 tests OK).
 
-**Untracked (generated/artifacts):** `.dart_tool/`, `.flutter-plugins-dependencies`, `build/`,
-`lib/l10n/app_localizations*.dart` (regenerated), `graphify-out/cache/`. No root `.gitignore`
-exists (remove `cache/` or add one).
+**Untracked (generated/artifacts):** covered by `.gitignore` (added in `c70befc`):
+`.dart_tool/`, `.flutter-plugins-dependencies`, `build/`, `lib/l10n/app_localizations*.dart`,
+`graphify-out/cache/`.
 
 **Known flaky:** `test/library_browse_sqlite_paging_test.dart` times out at 30s here (pure perf
-test, unrelated to migration). Post-Phase-5 full suite: 2034 passed, 3 skipped, 1 failed (that
-same perf test). `flutter analyze` → No issues found.
+test, unrelated to migration). Post-Phase-6 full suite: 1645 passed, 3 skipped (that perf test
+passed this run); `flutter analyze` → No issues found repo-wide.
 
-**Next step:** Phase 6 — download engine removal + player re-point to the local library (D1).
-This also removes the extension registry, `track_provider` and Mornye home search.
+**Next step:** Phase 7 — Rust backend reduction (sub-phased; the riskiest phase). This needs
+rustup installed (`cargo`/`rustc` are still absent), which blocks `check_rust_backend.sh` /
+`build_rust_backend.sh` / `flutter build apk` verification until it is.
 
 **Resume instruction:** read this file, then `git log --oneline -10`; continue from "Next step".
 
@@ -241,7 +270,7 @@ Edit: `home_tab*.dart`, `album_screen`, `artist_screen`, `playlist_screen`,
 `settings_tab.dart`, `settings/lyrics_settings_page`, `settings/metadata_settings_page`,
 `settings/cache_management_page.dart`.
 
-### Phase 6 — Download engine removal + player re-point  (largest Dart phase; depends on D1)
+### Phase 6 — Download engine removal + player re-point  (largest Dart phase; depends on D1) — DONE (`f3ab83e`, `dfd7f43`)
 Remove providers: `download_queue_provider*` (10 files), `download_queue_state`,
 `download_verification_retry_guard`; and per D1, `download_history_provider*` +
 `models/download_item(.g)`, `download_result`, `download_history`.
