@@ -13,6 +13,10 @@ V3 detail designs are restored over local data. Artist navigation must open
 feature releases by their release-date tags, and classify Singles from explicit total-track
 tags (1), never from the number of files stored from an album; EPs remain under Albums.
 
+V2 Home uses the Apple Music editorial-card/shelf composition with local data. Keep featured
+releases ordered by release tags, bounded shelf queries, local artwork and local detail routes.
+Do not replace the feed with only the recent-access history list.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

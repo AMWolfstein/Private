@@ -12,8 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): complete V3's local artist/album/playlist
-design port, including centered artist Play, newest release and tag-based Singles/Albums.**
+**Current user instruction (2026-10-18): restore V2's Apple Music home presentation
+with a local feed, following the completed V3 artist/album/playlist design port.**
 The instruction not to build an APK remains in force.
 
 ---
@@ -22,10 +22,26 @@ The instruction not to build an APK remains in force.
 
 _Last updated: 2026-10-18_
 
-**Status:** Phases 1-8 implemented, with the missed V3 detail-design port now completed
-(`0e6c88e`). Latest source validation passed. The last APK predates V3 and the follow-up
-Opus continuation fix; no new APK was built. Physical-device validation remains pending.
+**Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
+and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
+source validation passed. The last APK predates V2/V3 and the follow-up Opus continuation
+fix; no new APK was built. Physical-device validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Home feed correction (V2, 2026-10-18):** `45e5f17` restores the original Apple Music
+large featured-card composition, horizontal album/playlist shelves and circular artist cards.
+Featured entries are ordered by local release-date tags; Recently Added uses SQLite ordering
+and a 12-track limit instead of hydrating/sorting the full library. Album cards load the exact
+local album key, playlist cards open saved collections and artist cards open the V3 detail page.
+Scan/index changes refresh the feed; read failures offer Retry. Existing search and recent
+access remain available. All artwork stays local. Saved playlist summaries are sorted by
+last edit and limited to 12 cards. No online service or home-provider setting is restored.
+
+Validation: `flutter analyze` reports **No issues found**; full `flutter test` reports
+**1,626 passed, 3 skipped**. New tests cover scan refresh, disabled-library reads, bounded
+shelves, light/dark layouts at 360px with 1.6x text, and local artist navigation. Rendered
+layout previews were inspected. Graph refreshed after the code commit (`7c9a08b`). No APK
+or GitHub push performed for this change.
 
 **Committed:**
 - `f0a1b45` — graphify baseline (graph + report).
@@ -370,8 +386,11 @@ bindgen     -> uniffi only (CLI)
   look. Phase 8 retains light/dark, Mornye accents, glass and local font controls; the
   alternate Material theme and picker are removed.
 - **V2 — Home feed → local.** Rewire the home feed provider off Apple Music to local content.
-  TBD: which sections (Recently Added / Recently Played / Most Played / local Albums / Favorites /
-  Artists)?
+  Implemented (2026-10-18): original large editorial cards for latest locally available
+  releases (release-date tags), followed by Recently Added songs, local Albums, saved Playlists
+  and circular Artists shelves. Recent access/history remains beneath the feed. Each database
+  shelf reads at most 12 entries and refreshes with the library index; playlist cards use saved
+  collection summaries. All artwork and destinations are local. Search stays a separate mode.
 - **V3 — Reuse Mornye "online" theming for local artist / album / playlist screens**, replacing
   the old local styling. Implemented by restoring the original detail composition over local
   data; artist navigation no longer opens a generic filtered album browser. Preserve local
