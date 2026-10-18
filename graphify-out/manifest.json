@@ -2556,9 +2556,9 @@
     "semantic_hash": "1f205d2e4c3a98e61ee45d2d3056a901"
   },
   "rust_backend/crates/core/src/media/audio.rs": {
-    "mtime": 1792324005.730513,
-    "seen": 1792324126.9867063,
-    "ast_hash": "d3ef1ddeae47bcac05e60d3403bbc852",
+    "mtime": 1792344086.400745,
+    "seen": 1792344151.2101939,
+    "ast_hash": "1ec4792ef9ce7f6b2c0522c73a587165",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/media/hires/evidence.rs": {
@@ -2664,9 +2664,9 @@
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/containers.rs": {
-    "mtime": 1792324005.502514,
-    "seen": 1792324126.9867318,
-    "ast_hash": "38da10bcc307a159c5d74d05a99396e3",
+    "mtime": 1792344086.4006355,
+    "seen": 1792344151.2102187,
+    "ast_hash": "6c03e0b1733c92b072747dc217281f14",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/file.rs": {
@@ -2724,10 +2724,10 @@
     "semantic_hash": "975a9d41cc9c9c1bd904286de2760401"
   },
   "rust_backend/crates/core/src/tags/write/ogg.rs": {
-    "mtime": 1792303265.0218863,
-    "seen": 1792304950.720681,
-    "ast_hash": "7e1177155dd416566a89b426037d2719",
-    "semantic_hash": "7e1177155dd416566a89b426037d2719"
+    "mtime": 1792344086.4007912,
+    "seen": 1792344151.2102525,
+    "ast_hash": "3bd88ae6543640122e7d38afa9521245",
+    "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/write/riff.rs": {
     "mtime": 1792303265.0218863,
@@ -7470,9 +7470,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792340120.673876,
-    "seen": 1792340890.68692,
-    "ast_hash": "ef092fce77d6f453b7cba66393d05aa6",
+    "mtime": 1792341033.9136353,
+    "seen": 1792344151.2113779,
+    "ast_hash": "f1163b0889bedfaa8b59ac42e57d10aa",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7614,9 +7614,9 @@
     "semantic_hash": ""
   },
   "rust_backend/crates/core/tests/opus_scan.rs": {
-    "mtime": 1792324053.7263641,
-    "seen": 1792324126.9867525,
-    "ast_hash": "e9699e9dc35b3e10f5070abc4df4638f",
+    "mtime": 1792344068.3647883,
+    "seen": 1792344151.210261,
+    "ast_hash": "11315ef7ea92d8c99b9b6e2c1a92d6dc",
     "semantic_hash": ""
   },
   "lib/providers/local_artist_provider.dart": {
