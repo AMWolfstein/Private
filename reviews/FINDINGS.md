@@ -564,6 +564,84 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
 
+### DATA-502 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/tags/library.rs:19-24` (`library_id`), used at :44 and `rust_backend/crates/local/src/backend/library.rs:421`; `lib/services/library_schema.dart:25` (`id TEXT PRIMARY KEY`)
+- Scenario: track id = `lib_` + 32-bit DJB2 hash of the path; two distinct files with colliding hashes → `INSERT OR REPLACE` keeps only one row → the other track silently disappears from the library (birthday odds ≈1% at 10k tracks, ≈10% at 30k).
+- Root cause: 32-bit hash used as a unique primary key.
+- Impact: missing tracks with no error; collections/history entries keyed by that id can point at the wrong song.
+- Fix: 64-bit+ hash (or path-based key with collision check) plus an id migration for library, collections and history references; medium, needs a design note.
+- Evidence: hash body above; primary key in schema; `INSERT OR REPLACE` noted by storage/native reviewers.
+
+### CONC-102 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/local/src/backend/cover.rs:124-136` (`cache_cover`)
+- Scenario: cover cache file `cover_<32-bit hash of path|size|mtime>`; on collision the cache-hit path returns the other track's cover without checking the key.
+- Impact: wrong artwork for a track, persistent until the cache is cleared (≈10% chance of some collision at 30k tracks).
+- Fix: 64-bit or SHA-256-prefix filename (one-time cache invalidation); ~5 lines. Pair with DATA-502.
+
+### CONC-101 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/local/src/backend/library.rs:172-177` (`resolve_cue_audio`), `rust_backend/crates/core/src/tags/library.rs:14` (`library_extension` lowercases)
+- Scenario: CUE `FILE` name whose extension changes byte length when lowercased (e.g. `İ` → 3 bytes) → `&name[..name.len() - suffix.len() - 1]` slices inside a UTF-8 character → panic during library scan.
+- Root cause: slicing the original string with the lowercased suffix's length.
+- Impact: scan aborts on an odd/crafted CUE (panic across FFI; mapping unverified).
+- Fix: derive the stem with `rfind('.')` on the original name; ~3 lines + test.
+
+### RUST-401 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/mobile/src/native_lyrics.rs:111-139` (`execute`), :688-700, :790-826 (`parse_ttml`)
+- Scenario: native (production) lyrics path has the same untimed-TTML discard as BUG-101 → raw XML shown as plain lyrics.
+- Fix: accept TTML when lines or plain text are non-empty; ~3 lines; fix together with BUG-101 and update `test/fixtures/native_lyrics_parsers.json`.
+- Evidence: `parseAsyncNative` is the live path (`lyrics_parser.dart:231`).
+
+### RUST-402 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/mobile/src/native_id3.rs:155-170` (`make_tag`, from `write_lyrics`)
+- Scenario: zero-size, oversize or invalid-ID frame → `break`, later frames (APIC, TXXX) dropped, `committed: true`.
+- Impact: silent cover/tag loss when USLT is written to an MP3. Same pattern as BUG-104 (Dart) and RUST-102 (tag writer).
+- Fix: if non-zero bytes remain after `break`, return `Ok(false)` (file untouched); skip size-0 frames; ~10 lines + test. Batch with RUST-102/BUG-104.
+
+### RUST-403 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/mobile/src/native_lyrics.rs:~455-490` (`parse_lrc`)
+- Scenario: one LRC line with K leading timestamps and W word tags clones the word list K times (K×W); a crafted ~700 KB line can exhaust memory → native abort when lyrics open. Dart parser has the same amplification.
+- Fix: cap timestamps per line (e.g. 64) and total words; ~10 lines.
+
+### SEC-201 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/local/src/backend/library.rs:161-170` (`resolve_cue_audio`, `exists`)
+- Scenario: `FILE "../../x.flac"` outside granted roots → access-denied error propagates via `?`, so the same-stem/extension fallbacks (e.g. `album.flac` beside the CUE) are never tried; CUE dropped. Not a sandbox escape (`resolve` enforces granted roots).
+- Fix: treat resolve/`native_display` errors in `exists` as `Ok(None)`; ~4 lines.
+
+### CONC-103 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/local/src/backend/library/scan.rs:363-371`, :392-399
+- Scenario: a second scan swaps the shared progress slot before acquiring the owner lock → progress jumps to zero while the first unwinds.
+- Fix: swap after acquiring `_owner`; ~6 lines.
+
+### CONC-104 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/local/src/redact.rs`, `rust_backend/crates/local/src/logging.rs` (`add_message`)
+- Scenario: redaction covers credentials/tokens only; absolute paths, `content://` URIs and folder names stay in shareable logs.
+- Fix: product decision: redact on share or document it.
+
+### RUST-301 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/mobile/src/native_library.rs:617-619` (`snapshot`)
+- Scenario: a library row whose path contains `\n`/`\r` makes every `library_snapshot` fail → incremental scans of that source never succeed (Dart fallback not traced).
+- Fix: skip/flag such rows or reject them at import; ~3 lines.
+
+### DEAD-301 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/isrc/**` (931 lines), `rust_backend/crates/local/src/files/index.rs` (~110), `pub mod isrc` in `core/src/lib.rs`
+- Scenario: ISRC duplicate index (`IndexCache`, `IndexFiles`, `NativeFiles`, `read_isrc`) has no consumer outside its own tests.
+- Fix: delete (~1,050 lines).
+
+### DEAD-302 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/lyrics/models.rs`, `lyrics/matching.rs`, `lyrics/json.rs`, parts of `lyrics.rs` and `lyrics/lrc.rs`, `core/src/metadata.rs`, `core/src/matching.rs` (`normalize`, `compare_*`)
+- Scenario: online lyrics provider schemas (Netease/Apple/QQ/Kugou/Genius/Spotify/YouTube) and matching with zero callers.
+- Fix: delete (~1,000 lines); keep `lowercase`/`uppercase`, `lyrics::file::{extract,sidecar}`, `lrc::has_usable_content`; check internal dependencies first.
+
+### DEAD-303 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/filename/**` (565), `rust_backend/crates/core/src/filename.rs` (99), `rust_backend/crates/mobile/src/filename.rs`, `rust_backend/crates/mobile/src/lib.rs:25-27`, `SelectedCoreBackend.kt:411-414`
+- Scenario: Rust side of DEAD-201 (download filename templating).
+- Fix: delete with DEAD-201 (~700 lines); regenerate uniffi bindings.
+
+### DEAD-304 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/local/src/backend/lyrics.rs` (~190), `rust_backend/crates/mobile/src/lyrics.rs` (~75)
+- Scenario: Rust side of DEAD-203 (embed/fetch lyrics); only integration test and mocks reach it.
+- Fix: delete with DEAD-203; update `integration_test/lyrics_file_access_test.dart`.
+
 ## Resolved
 
 _None yet._
