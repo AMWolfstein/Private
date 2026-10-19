@@ -3,16 +3,16 @@
 Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. Rules:
 `reviews/PROTOCOL.md`. Keep this file short; history lives in git.
 
-- Last reviewed commit: none
+- Last reviewed commit: `2b32361`
 - Graph: `graphify-out/` built from `98fe1946` (fresh for all app code). Check with
   `scripts/review_scope.sh`.
-- Next review unit: `/review 2b32361~5..2b32361` (song-menu actions, `6ac8efd`) — flutter-dart-auditor
-  + test-auditor.
+- Next review unit: `/review` (commits after `2b32361`; review-system commits are
+  docs/config only). Suggested fix batch: BUG-001 + BUG-002 + TEST-002 (CUE split).
 - Next audit unit: `audio` (playback correctness/leaks/threading only; Media3 migration is
   separate) — then `storage`, `scanner`.
-- Open findings: 0 (see `FINDINGS.md`).
-- Last checkpoint: review-system setup (this commit); push status recorded in the next
-  checkpoint.
+- Open findings: 10 (0 P0/P1, 3 P2, 7 P3; see `FINDINGS.md`).
+- Last checkpoint: `/review 2b32361~5..2b32361` (this commit). Previous checkpoint
+  `b15a651` pushed and verified.
 
 ## Handoff
 
