@@ -44,9 +44,18 @@ view (the existing full-bleed portrait artwork). Persist the choice across resta
 queue, track changes and mini-player dismissal must work in both views. Landscape retains
 the two-column player. Do not restore the obsolete History View/Layout preference or search
 entry; the Library overview uses matching category rows and dedicated Library sections
-use rows. The overview has no Recently Added album grid. Keep Loved and Favorite Artists
-below Songs, with Playlists in its own category. Songs contains only tracks (including
+use rows. The overview has no Recently Added album grid. Keep Genres directly below Songs, followed by Loved Songs and Favorite Artists,
+with Playlists in its own category. Genres uses bounded local tag queries against the visible
+library, with exact tag matching and no online catalog. Songs contains only tracks (including
 playlist members), with no collection rows or individual playlists mixed into the list.
+
+Song taps start local playback; do not restore the separate TrackMetadataScreen/details
+route or its old action menu. Song ellipsis menus retain Edit Metadata (including tag,
+cover and lyrics editing) and Audio Quality Analysis. Songs, playlists and Loved Songs use
+artwork, a title with an explicit E badge when applicable, artist underneath, and circular
+Play plus ellipsis controls. Albums use track numbers instead of artwork. Keep selection,
+range selection and queue order working. The Loved Songs label is UI-only: persisted loved
+collection keys and backups stay compatible.
 
 Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled

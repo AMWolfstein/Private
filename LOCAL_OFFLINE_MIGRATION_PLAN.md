@@ -12,9 +12,11 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current task (2026-10-19): follow up the still-blank Loved list reported on build 164.
-Reproduce with actual local artwork, fix the layout and provide the same ARM64 Local APK
-for device verification.**
+**Current user instruction (2026-10-19): remove the song metadata details page and its
+old options while preserving Edit Metadata and moving Audio Quality Analysis into the
+song ellipsis menu. Song taps play. Use artwork/title/explicit E/artist/Play/ellipsis rows
+in Songs, playlists and Loved Songs; use numbers on albums. Rename Loved to Loved Songs
+and add Genres directly below Songs in the Library overview. Implement in source.**
 
 ---
 
@@ -30,6 +32,40 @@ Home/Library cleanup, Local Library preference removal and the real-artwork Love
 the cream launcher background and updates the previous Local installation. Physical-device
 installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Local song controls, metadata-page retirement and Genres (2026-10-19, `26f8e71`):** The separate
+metadata details route and its display/cover/lyrics/menu/file-action modules are removed,
+including the unused barcode visualization/encoder and 69 unused page-only translation
+keys. Existing Home, Search, artist, album, Songs and collection song entry points now
+start local playback instead of opening the removed route. Player details remain their
+separate existing read-only sheet. Per-song menus contain Edit Metadata and Audio Quality
+Analysis; the former keeps the existing editor/controller and tag/cover/lyrics persistence,
+and the latter opens the retained analysis card/cache/spectrogram workflow. The old
+single-file menu actions are removed; existing independent batch operations remain.
+
+A shared song row provides artwork, title plus explicit E badge, artist, circular play
+control and ellipsis for Songs, playlists and Loved Songs. Album rows reuse it with track
+numbers. Selection/range selection and queue context remain supported. Artist Popular
+retains its compact five-per-page layout, with playback on row taps and a song menu.
+Edited file tags refresh the library index without changing file/source identity or
+unrelated audio facts; changed cover art is extracted to a new library cache entry.
+Album rows refresh after saving. Collection rows resolve current scanned tags by ID.
+
+Library categories are Playlists, Artists, Albums, Songs, Genres, Loved Songs and Favorite
+Artists. The Loved Songs rename is localized and leaves existing collection keys/backup
+formats intact. Genres uses 40-row local SQLite pages over the visible-source view;
+blank tags are excluded, semicolon/newline multi-value tags are split, case variants are
+grouped, and repeated tags count a song once. Genre selection opens matching local tracks,
+with exact tag matching (Rap does not include Trap), the shared row, playback and editing.
+Local index changes refresh genre pages. No network catalog or schema migration is added.
+
+Validation: `flutter analyze` reports **No issues found**; the full `flutter test` run
+passes **1,590 tests, 3 skipped**. Coverage includes editor availability, menu analysis
+navigation, artwork/number rows, album pause/resume, selection and range selection,
+Loved Songs/category navigation, tag refresh identity, and real SQLite genre grouping,
+exact matching and paging. Songs list controls retain current-track pause/resume.
+No APK was built or published for this source change; physical-device validation remains
+pending.
 
 **ARM64 Local build 165 (2026-10-19):** `c4b79cee` includes the artwork row layout fix
 and increments Flutter/log build numbers to 165. Same release flags as build 164:
