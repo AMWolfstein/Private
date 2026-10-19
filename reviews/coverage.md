@@ -9,7 +9,7 @@ mapping). Status: `not reviewed` · `partial` · `reviewed` · `stale` (code cha
 | ui | Flutter UI (screens, widgets, theme, routes) | not reviewed | - | 162 files | - |
 | state | State management and app services | not reviewed | - | 60 files | - |
 | scanner | Library scanner and file access (Dart) | reviewed | a9df85a | 2 reviewers: data-integrity (cleanup, duplicates, search, genres), security (file access). Check in kotlin/state: empty full-import stage with errorCount 0 wipes a source (`deleteReplacedLibraryScanRows`); duplicates also read download-era `history_db.history` | DATA-201..204, SEC-001..004 |
-| metadata | Metadata, tags, covers, lyrics, ReplayGain, CUE | not reviewed | - | 27 files | - |
+| metadata | Metadata, tags, covers, lyrics, ReplayGain, CUE | reviewed | c26265b | 3 chunks: tag/ReplayGain/CUE (data-integrity), lyrics (bug-hunter), covers + leftovers (data-integrity). Not covered: Rust native tag writers, resolver body :488-1068 line by line, Rust `parse_lyrics` parity | DATA-301..307, DATA-401..402, BUG-101..105, DEAD-001..004 |
 | rust | Rust backend crates | not reviewed | - | 111 files, excludes vendor | - |
 | kotlin | Kotlin integration, SAF, channels | not reviewed | - | 47 files | - |
 | audio | Audio playback (Dart, Kotlin, C++) | reviewed | b98c51c | 3 chunks: core Dart (concurrency), features (bug-hunter, PASS), native (kotlin-android). Open: AAudio callback quiescence on flush, OEM AudioOutputActivity focus | CONC-001..004, KT-001, KT-002 |

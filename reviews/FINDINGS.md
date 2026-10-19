@@ -254,6 +254,125 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: keep `#trackNN` in SAF/URI keys; skip lowercase key for non-SAF paths; ~10 lines.
 - Evidence: :100-101, :125-131.
 
+### DATA-301 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/widgets/local_song_menu.dart:256-282` (`editLocalSongMetadata`), `lib/controllers/metadata_editor_controller.dart:54`
+- Scenario: `PlatformBridge.readFileMetadata` returns `{error: ...}` (no throw) on a transient SAF/IO failure → form prefilled from the DB, `comment`/`album_type`/`upc`/`lyrics` become `''` → user edits only the title → save sends empty values, which clear those tags.
+- Root cause: prefill ignores `tags['error']`; fields the DB does not hold are submitted as clears.
+- Impact: silent loss of embedded lyrics, comment, release type and UPC.
+- Fix: abort with a snackbar when `tags['error'] != null`, or send only dirty fields; ~5 lines + test.
+- Evidence: only thrown errors are caught (:258-261); `val()` falls back to DB or `''`.
+
+### DATA-302 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/services/ffmpeg_metadata.dart:180-195` (`embedMetadataToMp3`)
+- Scenario: tag-only edit on an MP3 whose stream copy reports "Invalid audio stream"/"incorrect codec parameters" (native MP3 editor already failed) → audio silently re-encoded with `libmp3lame -b:a 192k` and the original replaced.
+- Root cause: conversion-era retry kept in the tag-write path.
+- Impact: lossy, quality-reducing rewrite of the user's file (320k/VBR downgraded) without consent.
+- Fix: fail with `MetadataSaveFailure.ffmpeg` instead of re-encoding; ~10 lines removed + test.
+- Evidence: code above; reached via `save()` → `_embed` when tags.rs returns `method: "ffmpeg"`.
+
+### DATA-306 [P2] [confidence: medium] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:347`, :414 (`writeUriFromPath`); Dart callers `MetadataPersistenceService.writeBack`, `ReplayGainService._updateFile`
+- Scenario: SAF write-back opens the original with mode `"wt"` (truncates immediately) then streams the temp copy; IO error, full storage or process death mid-copy leaves the only copy truncated; temp is deleted in `finally`.
+- Root cause: non-atomic write-back and unconditional temp deletion.
+- Impact: rare but total loss of a music file during SAF tag edit or ReplayGain.
+- Fix: check free space/size first; keep the temp on failure and surface a retry; ~15 lines Kotlin.
+- Evidence: `openOutputStream(uri, "wt")` at :347 and :414.
+
+### DATA-303 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/services/ffmpeg_metadata.dart:375-379` (`embedMetadataToM4a`)
+- Scenario: M4A edit on the FFmpeg fallback: explicit/`album_type`/`upc`/compilation are written only by `writeM4AReleaseIdentityTags`, whose bool result is ignored; `writeM4AFreeformTags` swallows errors → "saved" while the file is unchanged; UI reverts after re-read. FFmpeg mov muxer also drops unknown freeform atoms (ISRC, ReplayGain) without `-movflags use_metadata_tags`.
+- Root cause: post-FFmpeg native write failures not propagated; freeform atoms not preserved.
+- Impact: false success; untouched freeform tags lost on the fallback path.
+- Fix: return failure when the identity write returns false; add `-movflags use_metadata_tags`; ~4 lines.
+- Evidence: unused return value at :378.
+
+### BUG-101 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/utils/lyrics_parser.dart:213-220` (`parse`), :758-765 (`_parseTtml`)
+- Scenario: TTML with `<p>` but no usable `begin`, or no `<p>` → `_parseTtml` returns an untimed result (or null); `parse()` requires `lines.isNotEmpty`, falls through to `_parseLrcOrPlain(text)` on raw XML → plain text view shows XML markup.
+- Root cause: untimed TTML result discarded.
+- Impact: unsynced TTML lyrics (embedded or sidecar) render as raw XML.
+- Fix: return `_withCredits(text, ttml)` when `ttml != null` and `plainText` is non-empty; ~3 lines + test.
+- Evidence: guard at :215; untimed return at :758.
+
+### DATA-304 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/services/replaygain_service.dart:158-170`, `lib/services/ffmpeg_replaygain.dart:188`
+- Scenario: native ReplayGain writer fails → FFmpeg `-map 0 -c copy` fallback promotes over the original, then verification runs; for M4A the muxer dropped the atoms → reports failure, but the local file is already rewritten minus freeform tags.
+- Root cause: verify after publish.
+- Impact: failed apply leaves a modified file with lost custom tags.
+- Fix: skip the FFmpeg fallback for .m4a/.mp4/.m4b (like Opus) or verify the temp before promoting; ~3 lines.
+- Evidence: reviewer trace.
+
+### DATA-305 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/services/ffmpeg_cue.dart:72-77` (`splitCueToTracks`)
+- Scenario: one track fails → partial output not deleted, skipped with `continue`; shorter list returned with no signal; caller reports "n tracks".
+- Root cause: no cleanup or partial-failure signal.
+- Impact: silently incomplete split; truncated file left in staging.
+- Fix: `FFmpegOutput.cleanup(outputPath)` on failure and return the failed count; ~4 lines. Pair with BUG-001/002.
+- Evidence: caller `local_song_file_actions.dart:171` iterates `paths` only.
+
+### DATA-307 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/widgets/local_song_menu.dart:297-312`
+- Scenario: each metadata edit writes a new `library_covers/edited_<ts>.jpg` and never deletes the previous one.
+- Impact: one orphaned image per edit (may be swept by cover snapshot pruning; not verified).
+- Fix: delete the old cover if it is under `library_covers` and differs.
+
+### BUG-102 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/utils/lyrics_parser.dart:280-288` (`_withCredits`)
+- Scenario: LRC with a trailing "Written by:" credit and multi-timestamp chorus lines → plainText rebuilt from expanded timed lines → chorus duplicated.
+- Fix: remove the trailer from the existing plainText instead of rebuilding; ~3 lines.
+
+### BUG-103 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/utils/lyrics_parser.dart:415-436`
+- Scenario: enhanced LRC `[00:10][01:30]<00:10>a<00:11>b` → repeated line shares word times of the first occurrence; word highlight wrong on repeats.
+- Fix: shift word times per extra timestamp; ~10 lines.
+
+### BUG-104 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/services/id3v23_lyrics.dart:137-161` (`_removeFrames`)
+- Scenario: existing ID3v2.3 tag has a zero-size/invalid/overrunning frame → `break` drops every later frame (e.g. APIC) when lyrics are written.
+- Impact: cover/tag loss with non-conforming taggers (low exposure: FFmpeg rewrites the tag just before).
+- Fix: preserve the remaining payload verbatim or return null to leave the file unchanged; ~5 lines.
+
+### BUG-105 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/utils/lyrics_metadata_helper.dart:56`, :71-79
+- Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
+- Fix: split on `\r\n|\r|\n`; ~3 lines. Note: these helpers currently have no production callers (see DEAD-002), so fix only if kept.
+
+### DATA-401 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/widgets/audio_analysis_widget.dart:913`, :941-963; `lib/services/audio_analysis_cache.dart`
+- Scenario: cache key = path hash, validated by `fileSize` only (SAF size 0 skips check) → same-size replacement serves stale analysis.
+- Fix: store and compare modified time; ~8 lines.
+
+### DATA-402 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/library_cover_snapshot.dart:34-45`, `rust_backend/crates/mobile/src/native_cache/unix.rs:353-359`, `lib/services/library_schema.dart:15`
+- Scenario: schema version 17 is hard-coded in three places; bumping `LibrarySchema.version` breaks cover pruning (orphan covers accumulate).
+- Fix: use `LibrarySchema.version` and pass it to Rust, or a test asserting all three agree; ~5 lines.
+
+### DEAD-001 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/ffmpeg_decryption.dart` (169), `FFmpegService.decryptWithDescriptor` (`ffmpeg_service.dart:46-57`), `DownloadDecryptionDescriptor` (`ffmpeg_models.dart`), `FFmpegExecution.command`, `FFmpegOutput.plan`, `FFmpegMetadata.embedMetadata`/`FFmpegService.embedMetadata`, `FFmpegMetadata.embedChunkTagsNative`, `returnTempPath`/`onTempReady` params of ReplayGain writers
+- Scenario: download-era decryption and conversion-era helpers with no production callers.
+- Impact: ~250 lines + `test/ffmpeg_decryption_output_test.dart` (215) and part of `test/maintainability_contracts_test.dart`.
+- Fix: delete; trim tests.
+- Evidence: `grep -rln` over lib/ test/ finds only definitions, self-references and tests.
+
+### DEAD-002 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/ffmpeg_reenrich.dart` (145), `lib/utils/re_enrich_result.dart` (51), `lib/utils/re_enrich_release_policy.dart` (8), `lib/utils/lyrics_metadata_helper.dart` (209: `cleanLyricsForDisplay`, `hasUsableLyricsContent`, `hasEmbeddedLyricsMetadata`, `isInstrumentalLyricsMarker`, `mergePlatformMetadataForTagEmbed`, sidecar writers), `PlatformBridge.writeSafSidecarLrc` (`platform_bridge.dart:830`)
+- Scenario: online re-enrich/lyrics flow removed; nothing calls `applyFfmpegReEnrichResult`; the helpers are reachable only from it or tests.
+- Impact: ~410 lines + tests (`re_enrich_result_test`, `re_enrich_release_policy_test`, helper tests), likely orphan `trackReEnrich*` l10n keys and native `write_external_lrc`.
+- Fix: delete with tests; check l10n keys and the native channel method in the dead-code sweep.
+- Evidence: `grep -rln` per symbol over lib/.
+
+### DEAD-003 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/cover_art_utils.dart` (`highResCoverUrl`), `lib/widgets/cached_cover_image.dart:136,149` (`urlTransform`), callers `library_tracks_folder_screen.dart:530,566`
+- Scenario: Spotify/Deezer CDN URL rewrite passed as `urlTransform`, which `LocalCoverImage` never reads.
+- Impact: dead remote-artwork code (~30 lines + test).
+- Fix: delete the file/test, the parameter and its two uses.
+
+### DEAD-004 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/downloaded_embedded_cover_resolver.dart:210` (`scheduleRefreshForPath`), :232 (`invalidate`), `_pendingRefresh` branches
+- Scenario: no non-test callers; staleness is handled by the mod-time poll. Class name/comments still say "downloaded"/"online fallback".
+- Impact: ~50 lines dead API; misleading naming.
+- Fix: remove dead methods; fix comments; rename if cheap.
+
 ## Resolved
 
 _None yet._
@@ -266,4 +385,5 @@ _False positives and intentional behavior, with one-line reason._
 - R-002 (`/code-review` #9, split logic in a widget file): the old screen implementation was deleted, so there is no duplicate; no demonstrated impact.
 - R-004 (test-auditor TEST-004, unawaited popover action): no pending future in that test; an open overlay at test end leaks nothing.
 - R-005 (test-auditor TEST-005, plain `.cue` delete test): duplicate of DATA-001; its regression test belongs to that fix.
+- R-006 (metadata DEAD-005, `cover_cache_manager.dart`): live upgrade-cleanup affordance used by `cache_management_page.dart`; UX note only.
 - R-003 (`/code-review` #10, graphify commit title `81577e5` missing "code"): historical pushed commit; fixing needs history rewrite. Future commits follow the AGENTS.md wording.
