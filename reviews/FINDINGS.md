@@ -190,6 +190,70 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: validate all categories first, or report which were applied.
 - Evidence: sequential awaits in one try/catch.
 
+### DATA-203 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/services/library_duplicates.dart:11-30` (`readIsrcDuplicateGroups`), `lib/utils/duplicate_cleanup_policy.dart:47` (`buildKeepBestAllDuplicatePlan`)
+- Scenario: files sharing a placeholder or reused ISRC (whole album tagged with one ISRC, "000000000000") form one group; Keep best (all) keeps `entries.first` and deletes every other physical file. Ranking `bit_depth, sample_rate, bitrate` lets a 128 kbps/48 kHz MP3 beat a 320 kbps/44.1 kHz MP3.
+- Root cause: identity = non-empty ISRC only; no ISRC format, title or duration check; lossy ranking ignores bitrate first.
+- Impact: destructive bulk action can delete distinct tracks or the better copy.
+- Fix: require `^[A-Z]{2}[A-Z0-9]{3}\d{7}$` and duration within ~2 s; rank lossy by bitrate; ~15 lines + tests.
+- Evidence: SQL grouping/order at :17-29; policy relies on that order (:42-46).
+
+### SEC-001 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/utils/file_access.dart:354-386` (`deleteFile`)
+- Scenario: SAF grant revoked/provider unavailable → `safDelete` false → `!safExists(path)` is true because `DocumentFile.exists()` returns false on permission errors → reported as deleted, deletion event published, callers drop the library row; file remains on storage. Local branch: `File.exists()` false on parent EACCES.
+- Root cause: binary existence check after a failed delete; tri-state `fileExistenceByPath` exists but is unused here.
+- Impact: failed delete reported as success; row hidden for a file that still exists.
+- Fix: after a failed delete confirm absence with the tri-state helper (`== false` only); ~15 lines + test.
+- Evidence: callers removing rows on `true`: `local_song_file_actions.dart:86`, `local_track_batch_actions.dart:55`, `duplicate_cleanup_policy.dart:22`, `local_album_screen.dart:146`; native `safExists` at `MainActivity.kt:972`.
+
+### SEC-002 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/utils/local_library_scan_prefs.dart:7-16` (`readLocalLibraryLastScannedAt`)
+- Scenario: an older build stored epoch millis (int) under `local_library_last_scanned_at` → `prefs.getString` casts to `String?` and throws `TypeError` before the `getInt` fallback.
+- Root cause: typed getter before the legacy-type fallback.
+- Impact: last-scan read throws for users upgrading from the int format (settings/scan startup).
+- Fix: `final raw = prefs.get(key)` and switch on String/int; ~5 lines + test.
+- Evidence: file body; the fallback comment states the int format existed.
+
+### DATA-201 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/services/library_search.dart:10` (`[\p{L}\p{N}]+`), `lib/services/sqlite_helpers.dart:102` (`normalizeLookupText`)
+- Scenario: Arabic with diacritics, Devanagari, Thai queries split into fragments at combining marks (`\p{M}`) and match unrelated rows; NFD-stored tags (`e`+U+0301) never match NFC queries.
+- Root cause: tokenizer excludes marks; no Unicode normalization on query or stored `search_text`.
+- Impact: wrong or missing search results for non-Latin scripts (app ships ar/hi locales).
+- Fix: include `\p{M}`; NFC-normalize query and stored text (re-normalize migration); ~10 lines + migration.
+- Evidence: regex at :10; `search_text` built by `LibraryRowMapper.queue`.
+
+### DATA-202 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/library_genres.dart:7-19`, :31-47 (`page`)
+- Scenario: `LOWER(genre)` folds ASCII only → "Électro"/"électro" are two genres; each page re-runs the recursive CTE over the whole visible library.
+- Root cause: genre key computed in SQL at query time.
+- Impact: duplicate genre rows for non-ASCII tags; O(library) per page on large libraries.
+- Fix: normalized genre key at scan time or a `library_genres` side table; ~40 lines.
+- Evidence: CTE at :11-18; `local_genres_screen.dart` pages by 40.
+
+### SEC-003 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/utils/file_access.dart:272` (`_cueTrackSuffix`)
+- Scenario: a real file named `Song #track1` matches `#track\d+$` → cannot be deleted/opened; existence checks test the stripped path and report it missing.
+- Root cause: suffix regex not anchored to a `.cue` base.
+- Impact: rare; such files become undeletable or are cleaned up as missing.
+- Fix: require `\.cue#track\d+$` (case-insensitive); ~3 lines + test.
+- Evidence: helpers applied to every path in file_access.dart.
+
+### SEC-004 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/utils/saf_display_path.dart:127-139` (`_safDocumentId`)
+- Scenario: `Uri.pathSegments` already decodes; `Uri.decodeComponent` decodes again → names with a literal `%XX` display wrongly.
+- Root cause: double decoding.
+- Impact: display-only.
+- Fix: return the segment directly; 1 line.
+- Evidence: contradicts `resolveSafDocumentLocation` doc comment.
+
+### DATA-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/utils/path_match_keys.dart:99-148` (`addNormalized`), :180 (`_androidDocumentMatchKey`)
+- Scenario: (A) lowercased keys make `A.flac`/`a.flac` in one folder collide → deleting one drops the other's row until rescan and hides it from duplicates. (B) virtual SAF CUE paths lose `#trackNN` in keys → all tracks of a CUE share a key (latent: current callers guard virtual paths).
+- Root cause: case folding on case-sensitive storage; fragment dropped for SAF keys.
+- Impact: rare row loss; trap for future callers.
+- Fix: keep `#trackNN` in SAF/URI keys; skip lowercase key for non-SAF paths; ~10 lines.
+- Evidence: :100-101, :125-131.
+
 ## Resolved
 
 _None yet._

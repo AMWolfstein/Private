@@ -8,7 +8,7 @@ mapping). Status: `not reviewed` · `partial` · `reviewed` · `stale` (code cha
 |---|---|---|---|---|---|
 | ui | Flutter UI (screens, widgets, theme, routes) | not reviewed | - | 162 files | - |
 | state | State management and app services | not reviewed | - | 60 files | - |
-| scanner | Library scanner and file access | not reviewed | - | 14 files | - |
+| scanner | Library scanner and file access (Dart) | reviewed | a9df85a | 2 reviewers: data-integrity (cleanup, duplicates, search, genres), security (file access). Check in kotlin/state: empty full-import stage with errorCount 0 wipes a source (`deleteReplacedLibraryScanRows`); duplicates also read download-era `history_db.history` | DATA-201..204, SEC-001..004 |
 | metadata | Metadata, tags, covers, lyrics, ReplayGain, CUE | not reviewed | - | 27 files | - |
 | rust | Rust backend crates | not reviewed | - | 111 files, excludes vendor | - |
 | kotlin | Kotlin integration, SAF, channels | not reviewed | - | 47 files | - |
