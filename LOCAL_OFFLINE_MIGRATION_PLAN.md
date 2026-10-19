@@ -12,8 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): fix Loved showing a track count but no visible
-song rows. No APK build requested.**
+**Current user instruction (2026-10-19): remove Default view and Audio quality options
+from Local Library settings, including their related functions. No APK build requested.**
 
 ---
 
@@ -29,6 +29,27 @@ Normal/Immersive player views, centered collection actions and a cream launcher 
 Wishlist removal, first-run guide consolidation and Home/Library cleanup have subsequently
 been implemented in source; the published build 163 predates those changes. Physical-device installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Local Library preference cleanup (2026-10-19):** `5651613` removes Default view and Audio quality
+label selection from the Local Library page and settings search. Their picker
+sheets, preference fields/serialization, constants, normalization and setters are deleted.
+Old settings/backup JSON ignores both retired keys and excludes them when re-exported.
+Library sections retain the active/last-used section instead of applying a configured
+reset on tab activation; the unused shell-to-Library activation plumbing is removed.
+
+Quality metadata remains available for local playback and file information. Library card
+badges and common album-header labels use the former standard measured/stored bitrate
+policy, with detected codec fallback for legacy lossy files. Alternate label-mode dispatch,
+mode-dependent caches/provider subscriptions and an unused download-completion label helper
+are removed. Scanning, folder/source management, duplicate controls and cleanup remain.
+Unused control-only translations are removed; shared metadata labels remain.
+
+Validation: generated settings JSON/localizations refreshed; `flutter analyze` reports
+**No issues found**. Full Flutter suite: **1,607 passed, 3 skipped**. Coverage checks the
+removed rows/search entries, legacy JSON import/export, standard bitrate/legacy codec
+labels, preserved tab selection, library scanning/cleanup and local playback. Source search
+finds retired preference keys only in the compatibility regression test. Graph refreshed;
+no native changes or APK build.
 
 **Loved row visibility (2026-10-19):** `964a054` removes the entrance-animation wrapper
 from Loved and playlist song rows. A regression test reproduces an invisible single row
