@@ -16,8 +16,8 @@ Command: `python3 reviews/upstream-v5.2.0/verify_checkpoint.py` (read-only; requ
 | Graphify scoped query | PASS | Existing query used for scanner/metadata/artwork/lyrics dependencies; graph source remains 6ac8efd0 |
 | Graph JSON/readability and endpoints | PASS | 22,643 unique nodes and valid links; no graph generation or modification |
 | Application source unchanged | PASS | Only reviews/ changes vs audit entry; no application divergence vs graph source |
-| Git diff whitespace | PASS | Review-only diff; no generated files or unrelated edits; staged check also required before commit |
-| Push / remote checkpoint | Pending | See HANDOFF receipt; verify remote branch after successful push |
+| Git diff whitespace | PASS | Review-only diff; no generated files or unrelated edits; staged diff check passed before inventory commit |
+| Push / remote checkpoint | PASS | Origin review branch verified at inventory `0290fbb131b19a0feb1ea26562f9cbadd5d78898`; main unchanged. HANDOFF records receipt; final handoff tip verified again after push |
 
 ## Checks not executed here
 

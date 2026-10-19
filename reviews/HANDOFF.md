@@ -8,8 +8,8 @@ Read `AGENTS.md`, `LOCAL_OFFLINE_MIGRATION_PLAN.md` Progress, `reviews/STATE.md`
 
 - Branch: `review/upstream-v5.2.0-discovery`; origin `https://github.com/AMWolfstein/Private.git`.
 - Source checkpoint on entry: `2b323612a7e473ef9a4e5d6a48ebb071add25924` (docs after code `6ac8efd0` and graph `81577e50`). No application changes in discovery.
-- Audit checkpoint SHA: pending first commit; replace this line after committing inventory.
-- Push status: PENDING; do not claim another agent can access this branch until push succeeds.
+- Completed inventory checkpoint SHA: `0290fbb131b19a0feb1ea26562f9cbadd5d78898` (`review: inventory upstream v5.2.0 changes`).
+- Push status: **SUCCEEDED**. Origin review branch was created and `git ls-remote` verified inventory checkpoint `0290fbb131b19a0feb1ea26562f9cbadd5d78898`. Origin main remains `2b323612a7e473ef9a4e5d6a48ebb071add25924`. This receipt records the published inventory parent; the handoff-receipt commit is pushed afterward and its final tip is verified before reporting completion.
 - Use `git log -3 --oneline` / `git rev-parse HEAD` for the actual latest tip; checkpoint files record the last known parent/receipt, not a self-referential commit hash.
 
 ## What is established

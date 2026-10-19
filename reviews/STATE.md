@@ -1,6 +1,6 @@
 # Upstream audit state
 
-- Phase: initial upstream v5.2.0 discovery/inventory; checkpoint prepared; **no backports implemented**.
+- Phase: initial upstream v5.2.0 discovery/inventory; checkpoint committed and inventory pushed; **no backports implemented**.
 - Subsystem: cross-repository baseline and inventory only. Next: scan recovery/notification-ordering comparison.
 - Branch: `review/upstream-v5.2.0-discovery`; source entry HEAD `2b323612a7e473ef9a4e5d6a48ebb071add25924`. Main/work source not modified.
 - Baseline: high-confidence content equivalent `5a8952659b247fd95f1914a56db60825657fe26d`; local parentless root `47298e55b1eef2cfdbef1f7b80570a164bfa2f3b`. No shared Git merge base; ancestry unproven.
