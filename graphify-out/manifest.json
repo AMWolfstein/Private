@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
-    "mtime": 1792359776.24592,
-    "seen": 1792359838.745638,
-    "ast_hash": "7df5d1c45a2883bf62fd5b20ce40b5af",
+    "mtime": 1792389047.2165806,
+    "seen": 1792389093.1957378,
+    "ast_hash": "15c4d29da2ae0bd019df2e4887b31409",
     "semantic_hash": ""
   },
   "lib/constants/language_choices.dart": {
@@ -6888,9 +6888,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1792359776.245685,
-    "seen": 1792359838.7490475,
-    "ast_hash": "3f647c025f156d56d8dba63eb4517373",
+    "mtime": 1792389047.2164085,
+    "seen": 1792389093.1975286,
+    "ast_hash": "4650e4141a46cdebc44246a7a380c3af",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
