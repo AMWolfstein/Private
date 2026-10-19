@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
-    "mtime": 1792389047.2165806,
-    "seen": 1792389093.1957378,
-    "ast_hash": "15c4d29da2ae0bd019df2e4887b31409",
+    "mtime": 1792389783.949556,
+    "seen": 1792390029.369136,
+    "ast_hash": "af092c9f55138385cf700fbfe55036a5",
     "semantic_hash": ""
   },
   "lib/constants/language_choices.dart": {
@@ -1878,9 +1878,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/cached_cover_image.dart": {
-    "mtime": 1792356506.567048,
-    "seen": 1792357235.8987463,
-    "ast_hash": "a8c1e6feb473073033fcc79503c5d78f",
+    "mtime": 1792389704.3733819,
+    "seen": 1792390029.3694801,
+    "ast_hash": "8c0d42cffda655b5584a7bf8941f61b2",
     "semantic_hash": ""
   },
   "lib/widgets/collection_scaffold.dart": {
@@ -6306,9 +6306,9 @@
     "semantic_hash": "bdd47f7703c1b9bc10c5d18dae494634"
   },
   "test/playlist_playback_test.dart": {
-    "mtime": 1792388172.8399425,
-    "seen": 1792388234.278876,
-    "ast_hash": "1e9aee8cc0944325923e694fd6029c80",
+    "mtime": 1792389739.5635772,
+    "seen": 1792390029.3706875,
+    "ast_hash": "253dc31f91064fd3814fae88d1f7336a",
     "semantic_hash": ""
   },
   "test/provider_resource_ids_test.dart": {
@@ -6888,9 +6888,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1792389047.2164085,
-    "seen": 1792389093.1975286,
-    "ast_hash": "4650e4141a46cdebc44246a7a380c3af",
+    "mtime": 1792389783.9493976,
+    "seen": 1792390029.3708344,
+    "ast_hash": "1169b3dfcfe91ea8ba736a28ed3473e9",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -7392,9 +7392,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792388917.0947642,
-    "seen": 1792388934.25498,
-    "ast_hash": "57e8fcf3807d24d657ba8b2881a59f69",
+    "mtime": 1792390015.5569143,
+    "seen": 1792390029.3708122,
+    "ast_hash": "1bf8f587ec9798b7dc55b7238749ae6d",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
