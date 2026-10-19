@@ -12,8 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): remove Default view and Audio quality options
-from Local Library settings, including their related functions. No APK build requested.**
+**Current user instruction (2026-10-19): build the same ARM64-only, side-by-side Local
+APK as before, including the latest committed changes and cream launcher background.**
 
 ---
 
@@ -23,12 +23,35 @@ _Last updated: 2026-10-19_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. The signed ARM64-only side-by-side **build 163** now includes
-V2/V3, the fragmented Opus follow-up, Popular paging, settings/conversion cleanup, selectable
-Normal/Immersive player views, centered collection actions and a cream launcher background.
-Wishlist removal, first-run guide consolidation and Home/Library cleanup have subsequently
-been implemented in source; the published build 163 predates those changes. Physical-device installation/playback validation remains pending.
+source validation passed. The signed ARM64-only side-by-side **build 164** now includes
+all current changes through `1d29cf4f`, including Wishlist removal, unified setup,
+Home/Library cleanup, Loved visibility and Local Library preference removal. It retains
+the cream launcher background and updates the previous Local installation. Physical-device
+installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**ARM64 Local build 164 (2026-10-19):** `1d29cf4f` increments the Flutter and log build
+numbers to 164, retaining version 5.1.1. Built with the same settings as build 163:
+```
+source /workspace/toolchains/activate.sh
+SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a \
+  flutter build apk --release --target-platform android-arm64 --split-per-abi \
+  --dart-define=GIT_COMMIT=1d29cf4f
+```
+
+Output: **SpotiFLAC-Local-arm64-v8a.apk**, **54,328,531 bytes**, version 5.1.1 /
+build 164 (split versionCode 2164). Verified app name **SpotiFLAC Local**, package
+`com.zarz.spotiflac.local`, minimum API 24 and target API 37. The certificate matches build
+163, so it installs as an update to Local while retaining the original SpotiFLAC app.
+All **17 native libraries** are AArch64 ELF64 with 16 KB-compatible ELF/ZIP alignment.
+Rust backend packaging, source revision, offline permissions, signature verification and
+the compiled cream adaptive icon background passed inspection. Host and ARM64 Rust backend
+were rebuilt by Gradle. Static analysis is clean; the code immediately before the
+build-number-only change passed **1,607 Flutter tests, 3 skipped**. Physical-device
+installation/playback remains untested in this environment.
+
+APK download branch: `apk-local-arm64-164` (APK, README, SHA256SUMS, APK_DETAILS.json).
+SHA-256: `888ab03c7ad9487b7f6895dd8eb7e21e07b4fad6beca0d5bb409f585be165e15`.
 
 **Local Library preference cleanup (2026-10-19):** `5651613` removes Default view and Audio quality
 label selection from the Local Library page and settings search. Their picker
