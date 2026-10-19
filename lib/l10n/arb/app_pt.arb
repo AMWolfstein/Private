@@ -212,22 +212,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "Use Default Folder?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "No folder selected. Would you like to use the default Music folder?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "Use Default",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "On iOS, downloads are saved to the app's Documents folder. You can access them via the Files app.",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "App Documents Folder",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -1180,14 +1164,6 @@
         "type": "int"
       }
     }
-  },
-  "tutorialWelcomeTitle": "Boas-vindas ao SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Automatic metadata, cover art, and lyrics embedding",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
   },
   "tutorialSearchTitle": "Finding Music",
   "@tutorialSearchTitle": {

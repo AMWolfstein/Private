@@ -431,22 +431,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "Utiliser le dossier par défaut ?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "Aucun dossier n'est sélectionné. Souhaitez-vous utiliser le dossier Musique par défaut ?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "Utiliser les paramètres par défaut",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "Sous iOS, les fichiers téléchargés sont enregistrés dans le dossier « Documents » de l'application. Vous pouvez y accéder via l'application Fichiers.",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "Dossier « Documents » de l'application",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -1535,14 +1519,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Bienvenue sur SpotiFLAC Mobile !",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Intégrez automatiquement les métadonnées, la pochette, les paroles et les informations relatives à la sortie",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Trouver de la musique",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2165,7 +2141,6 @@
   },
   "storageAutomaticFolder": "Dossier automatique",
   "storageSafRecommended": "Choisir un dossier (recommandé)",
-  "storageDownloadFolderHint": "Dans le sélecteur de dossiers Android, ouvrez le dossier « Téléchargements » et sélectionnez « SpotiFLAC ». S'il n'existe pas, créez-le à l'aide de l'option « Nouveau dossier », puis appuyez sur « Utiliser ce dossier » pour autoriser l'accès.",
   "downloadFolderReselect": "Sélectionner à nouveau le dossier",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -2575,10 +2550,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Changer de dossier",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Ouvrir {title}, {count} {count, plural, =1{item} other{éléments}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2864,10 +2835,6 @@
   "permissionNotification": "Notification",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Dossier non valide sélectionné",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Lecture",
   "@libraryPlayback": {

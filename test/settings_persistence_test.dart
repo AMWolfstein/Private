@@ -47,7 +47,7 @@ class _Settings extends SettingsNotifier {
 
 void main() {
   test(
-    'setup completes only after folder and completion flag are durable',
+    'setup completes only after settings and both completion flags are durable',
     () async {
       final preferences = _Preferences();
       final container = ProviderContainer(
@@ -70,6 +70,7 @@ void main() {
       preferences.release(1).complete(true);
       await preferences.whenStarted(2);
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
+      expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
       expect(
         preferences.writes.last['downloadTreeUri'],
         'content://test/tree/music',
@@ -78,6 +79,7 @@ void main() {
       preferences.release(2).complete(true);
       await finish;
       expect(container.read(settingsProvider).isFirstLaunch, isFalse);
+      expect(container.read(settingsProvider).hasCompletedTutorial, isTrue);
     },
   );
 
@@ -117,6 +119,7 @@ void main() {
       await preferences.whenStarted(1);
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
+      expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
       expect(
         preferences.writes.last['downloadTreeUri'],
         'content://test/tree/latest',
@@ -124,6 +127,7 @@ void main() {
       preferences.release(1).complete(true);
       await finish;
       expect(container.read(settingsProvider).isFirstLaunch, isFalse);
+      expect(container.read(settingsProvider).hasCompletedTutorial, isTrue);
       expect(
         container.read(settingsProvider).downloadTreeUri,
         'content://test/tree/latest',

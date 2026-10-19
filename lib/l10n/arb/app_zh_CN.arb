@@ -431,22 +431,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "使用默认文件夹？",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "未选择文件夹。要使用默认音乐文件夹吗？",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "使用默认",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "在 iOS 上，下载内容会保存到应用的 Documents 文件夹。你可以通过“文件”应用访问。",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "应用程序文档文件夹",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -1535,14 +1519,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Welcome to SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Embed metadata, cover art, lyrics, and release information automatically",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Finding Music",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2165,7 +2141,6 @@
   },
   "storageAutomaticFolder": "Automatic folder",
   "storageSafRecommended": "Choose folder (Recommended)",
-  "storageDownloadFolderHint": "In the Android folder picker, open Download and select SpotiFLAC. If it does not exist, create it using New folder, then tap Use this folder to grant access.",
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -2575,10 +2550,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Change folder",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2864,10 +2835,6 @@
   "permissionNotification": "Notification",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Invalid folder selected",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Playback",
   "@libraryPlayback": {

@@ -139,7 +139,7 @@ void main() {
   });
 
   group('bootstrap routing', () {
-    test('restored-install reset routes through setup and tutorial', () {
+    test('restored-install reset routes through the unified guide', () {
       final sanitized = resetInstallationBoundSettings(
         const AppSettings(
           isFirstLaunch: false,
@@ -161,7 +161,7 @@ void main() {
           isFirstLaunch: false,
           hasCompletedTutorial: false,
         ),
-        '/tutorial',
+        '/setup',
       );
       expect(
         initialLocationForAppState(

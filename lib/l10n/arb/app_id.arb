@@ -500,22 +500,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "Gunakan Folder Default?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "Tidak ada folder dipilih. Apakah Anda ingin menggunakan folder Musik default?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "Gunakan Default",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "Di iOS, download disimpan ke folder Documents aplikasi. Anda dapat mengaksesnya melalui aplikasi Files.",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "Folder Documents Aplikasi",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -1612,14 +1596,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Selamat datang di SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Otomatis menyatukan metadata, cover art, lirik, dan informasi rilisan",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Menemukan Musik",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2242,7 +2218,6 @@
   },
   "storageAutomaticFolder": "Folder bawaan",
   "storageSafRecommended": "Pilih folder (Disarankan)",
-  "storageDownloadFolderHint": "Begitu pemilih folder Android terbuka, buka folder Download dan pilih SpotiFLAC. Jika belum ada, buat folder baru, lalu ketuk Gunakan folder ini untuk memberi akses.",
   "downloadFolderReselect": "Pilih Folder Baru",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -2652,10 +2627,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Ubah folder",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Buka {title}, {count} {count, plural, =1{item} other{item}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2941,10 +2912,6 @@
   "permissionNotification": "Notifikasi",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Folder tidak valid",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Pemutaran",
   "@libraryPlayback": {

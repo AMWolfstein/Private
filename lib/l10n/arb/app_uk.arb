@@ -427,22 +427,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "Використати теку за замовчуванням?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "Теку не вибрано. Бажаєте використовувати теку «Музика» за замовчуванням?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "Використовувати за замовчуванням",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "На iOS завантаження зберігаються в теці «Документи» програми. Ви можете отримати до них доступ через програму «Файли».",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "Тека з документами програми",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -1511,14 +1495,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Ласкаво просимо до SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Автоматично вбудовуйте метадані, обкладинки, тексти пісень та інформацію про реліз",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Пошук музики",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2141,7 +2117,6 @@
   },
   "storageAutomaticFolder": "Автоматична тека",
   "storageSafRecommended": "Виберіть теку (рекомендовано)",
-  "storageDownloadFolderHint": "У засобі вибору тек Android відкрийте теку Завантаження і виберіть SpotiFLAC. Якщо її немає, створіть її за допомогою опції «Нова тека», а потім натисніть «Використовувати цю теку», щоб надати доступ.",
   "downloadFolderReselect": "Обрати теку повторно",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -2551,10 +2526,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Змінити теку",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Відтворити {title}, {count} {count, plural, =1{item} other{items}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2840,10 +2811,6 @@
   "permissionNotification": "Сповіщення",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Вибрана неправильна тека",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Playback",
   "@libraryPlayback": {

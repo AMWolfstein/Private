@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
 import 'package:spotiflac_android/screens/main_shell.dart';
 import 'package:spotiflac_android/screens/setup_screen.dart';
-import 'package:spotiflac_android/screens/tutorial_screen.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/app_navigation_service.dart';
 import 'package:spotiflac_android/services/app_orientation.dart';
@@ -22,8 +21,7 @@ String initialLocationForAppState({
   required bool isFirstLaunch,
   required bool hasCompletedTutorial,
 }) {
-  if (isFirstLaunch) return '/setup';
-  if (!hasCompletedTutorial) return '/tutorial';
+  if (isFirstLaunch || !hasCompletedTutorial) return '/setup';
   return '/';
 }
 
@@ -49,10 +47,7 @@ final _routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/', builder: (context, state) => const MainShell()),
       GoRoute(path: '/setup', builder: (context, state) => const SetupScreen()),
-      GoRoute(
-        path: '/tutorial',
-        builder: (context, state) => const TutorialScreen(),
-      ),
+      GoRoute(path: '/tutorial', redirect: (context, state) => '/setup'),
     ],
     // Safety net: if a deep link URL (e.g. Spotify/Deezer) somehow reaches
     // GoRouter, redirect to home instead of showing "Page Not Found".

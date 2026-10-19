@@ -458,22 +458,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "Use Default Folder?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "No folder selected. Would you like to use the default Music folder?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "Use Default",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "On iOS, downloads are saved to the app's Documents folder. You can access them via the Files app.",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "App Documents Folder",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -517,14 +501,6 @@
   "setupNotificationEnable": "Enable Notifications",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupFolderChoose": "Choose music folder",
-  "@setupFolderChoose": {
-    "description": "Button to choose folder"
-  },
-  "setupFolderDescription": "Choose the local folder used for music and file exports.",
-  "@setupFolderDescription": {
-    "description": "Explanation for folder selection"
   },
   "setupSelectFolder": "Select Folder",
   "@setupSelectFolder": {
@@ -1618,26 +1594,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Welcome to SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeDesc": "Learn to scan your music folders, browse the library and listen offline in SpotiFLAC Mobile.",
-  "@tutorialWelcomeDesc": {
-    "description": "Tutorial welcome page description"
-  },
-  "tutorialWelcomeTip1": "Select a music folder and scan local audio files",
-  "@tutorialWelcomeTip1": {
-    "description": "Tutorial welcome tip 1"
-  },
-  "tutorialWelcomeTip2": "Play your existing music without accounts or a network connection",
-  "@tutorialWelcomeTip2": {
-    "description": "Tutorial welcome tip 2"
-  },
-  "tutorialWelcomeTip3": "Embed metadata, cover art, lyrics, and release information automatically",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Finding Music",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2340,7 +2296,6 @@
   "storageAutomaticFolder": "Automatic folder",
   "storageAutomaticDownloadFolder": "Uses the existing SpotiFLAC folder when writable, otherwise app storage",
   "storageSafRecommended": "Choose folder (Recommended)",
-  "storageDownloadFolderHint": "In the Android folder picker, open Download and select SpotiFLAC. If it does not exist, create it using New folder, then tap Use this folder to grant access.",
   "downloadFolderAccessLostTitle": "Music folder access lost",
   "@downloadFolderAccessLostTitle": {
     "description": "Title of the warning banner shown in Files settings when the saved SAF folder grant is no longer valid"
@@ -2786,10 +2741,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Change folder",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -3087,10 +3038,6 @@
   "permissionNotification": "Notification",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Invalid folder selected",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Playback",
   "@libraryPlayback": {
@@ -3495,10 +3442,6 @@
   "setupLocalPlayback": "Play your local music offline",
   "@setupLocalPlayback": {
     "description": "App tagline in setup"
-  },
-  "setupMusicLocationTitle": "Local storage",
-  "@setupMusicLocationTitle": {
-    "description": "Download location dialog title"
   },
   "trackReadLocalLyrics": "Read local lyrics",
   "@trackReadLocalLyrics": {

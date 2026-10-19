@@ -1,22 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:spotiflac_android/screens/local_guide_pages.dart';
 import 'package:spotiflac_android/constants/language_choices.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/widgets/scroll_edge_fade.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
@@ -41,8 +37,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   PageController? _pageController;
   final ScrollController _languageScrollController = ScrollController();
   late final Future<void> _initialization;
-  StreamSubscription<void>? _folderSelectionSubscription;
-  Future<void>? _folderRecovery;
   bool _initializing = true;
   int _currentStep = 0;
 
@@ -50,29 +44,22 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   bool _storagePermissionGranted = false;
   bool _notificationPermissionGranted = false;
   bool _notificationPermissionSkipped = false;
-  String? _selectedDirectory;
-  String? _selectedDirectoryBookmark;
-  String? _selectedTreeUri;
   bool _isLoading = false;
   int _androidSdkVersion = 0;
 
-  int get _totalSteps => _androidSdkVersion >= 33 ? 5 : 4;
+  int get _storageStep => 2 + localGuidePageCount;
+  int get _totalSteps => _storageStep + (_androidSdkVersion >= 33 ? 2 : 1);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initialization = _initDeviceInfo();
-    if (_platform == TargetPlatform.android) {
-      _folderSelectionSubscription = PlatformBridge.setupFolderSelectionEvents()
-          .listen((_) => unawaited(_refreshAfterResume()));
-    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    unawaited(_folderSelectionSubscription?.cancel());
     _pageController?.dispose();
     _languageScrollController.dispose();
     super.dispose();
@@ -91,14 +78,15 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       final saved = prefs.getString(_progressKey);
       if (saved != null) {
         final draft = jsonDecode(saved) as Map<String, dynamic>;
-        _currentStep = ((draft['step'] as int?) ?? 0).clamp(0, _totalSteps - 1);
-        _selectedDirectory = draft['directory'] as String?;
-        _selectedDirectoryBookmark = draft['bookmark'] as String?;
-        _selectedTreeUri = draft['treeUri'] as String?;
+        var savedStep = (draft['step'] as int?) ?? 0;
+        // Old drafts used 2/3 for permissions and ended in a download-folder step.
+        if (draft['version'] != 2 && savedStep >= 2) {
+          savedStep += localGuidePageCount;
+        }
+        _currentStep = savedStep.clamp(0, _totalSteps - 1);
         _notificationPermissionSkipped = draft['skipNotifications'] == true;
       }
       await _checkInitialPermissions();
-      if (_platform == TargetPlatform.android) await _restoreSelectedFolder();
     } catch (e, stack) {
       _log.e('Failed to restore setup progress', e, stack);
     } finally {
@@ -121,7 +109,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     if (!mounted) return;
     try {
       await _checkInitialPermissions();
-      if (_platform == TargetPlatform.android) await _restoreSelectedFolder();
     } catch (e, stack) {
       _log.e('Failed to refresh setup permissions', e, stack);
     }
@@ -130,35 +117,12 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   Future<void> _saveProgress({int? step}) async {
     final draft = jsonEncode({
       'step': step ?? _currentStep,
-      'directory': _selectedDirectory,
-      'bookmark': _selectedDirectoryBookmark,
-      'treeUri': _selectedTreeUri,
+      'version': 2,
       'skipNotifications': _notificationPermissionSkipped,
     });
     if (!await (await _prefs).setString(_progressKey, draft)) {
       throw StateError('Could not save setup progress');
     }
-  }
-
-  Future<void> _restoreSelectedFolder() => _folderRecovery ??=
-      _readSelectedFolder().whenComplete(() => _folderRecovery = null);
-
-  Future<void> _readSelectedFolder() async {
-    final payload = await PlatformBridge.readSetupFolderSelection();
-    if (payload == null || !mounted) return;
-    final result = jsonDecode(payload) as Map<String, dynamic>;
-    final uri = result['tree_uri'] as String? ?? '';
-    if (uri.isNotEmpty) {
-      final name = result['display_name'] as String? ?? '';
-      setState(() {
-        _selectedTreeUri = uri;
-        _selectedDirectory = name.isEmpty ? uri : name;
-      });
-      await _saveProgress();
-    }
-    // Acknowledge only after the recovered selection is durable in Dart.
-    await PlatformBridge.acknowledgeSetupFolderSelection(payload);
-    if (mounted) setState(() => _isLoading = false);
   }
 
   Future<void> _checkInitialPermissions() async {
@@ -348,254 +312,15 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     );
   }
 
-  Future<void> _selectDirectory() async {
-    if (_isLoading) return;
-    setState(() => _isLoading = true);
-    try {
-      // Persist before leaving Flutter: the OS may destroy this screen while
-      // the external picker is visible, including on Android 13 devices.
-      await _saveProgress();
-      if (!mounted) return;
-      if (_platform == TargetPlatform.iOS) {
-        await _showIOSDirectoryOptions();
-      } else if (_platform == TargetPlatform.android) {
-        Map<String, dynamic>? result;
-        try {
-          result = await PlatformBridge.pickSafTree(forSetup: true);
-        } catch (e) {
-          _log.w('Failed to open Android SAF picker: $e');
-          if (mounted) showCannotOpenFileSnackBar(context, e);
-        }
-        if (!mounted) return;
-        if (result != null) {
-          final treeUri = result['tree_uri'] as String? ?? '';
-          final displayName = result['display_name'] as String? ?? '';
-          if (treeUri.isNotEmpty) {
-            setState(() {
-              _selectedTreeUri = treeUri;
-              _selectedDirectory = displayName.isNotEmpty
-                  ? displayName
-                  : treeUri;
-            });
-            await _saveProgress();
-          }
-        }
-        await _restoreSelectedFolder();
-        if (!mounted) return;
-
-        // Android fallback if user cancelled SAF picker
-        if (_selectedTreeUri == null || _selectedTreeUri!.isEmpty) {
-          final defaultDir = await _getDefaultDirectory();
-          if (mounted) {
-            final useDefault = await showAppDialog<bool>(
-              context: context,
-              builder: (context) => AppAlertDialog(
-                title: Text(context.l10n.setupUseDefaultFolder),
-                content: Text(
-                  '${context.l10n.setupNoFolderSelected}\n\n$defaultDir',
-                ),
-                actions: [
-                  AppDialogAction(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text(context.l10n.dialogCancel),
-                  ),
-                  AppDialogAction(
-                    filled: true,
-                    onPressed: () => Navigator.pop(context, true),
-                    child: Text(context.l10n.setupUseDefault),
-                  ),
-                ],
-              ),
-            );
-            if (useDefault == true) {
-              if (!mounted) return;
-              setState(() {
-                _selectedTreeUri = '';
-                _selectedDirectory = defaultDir;
-              });
-              await _saveProgress();
-            }
-          }
-        }
-      }
-    } catch (e, stack) {
-      _log.e('Failed to select setup folder', e, stack);
-      if (mounted) showCannotOpenFileSnackBar(context, e);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _showIOSDirectoryOptions() async {
-    final colorScheme = Theme.of(context).colorScheme;
-    await showModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: colorScheme.surfaceContainerHigh,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-              child: Text(
-                context.l10n.setupMusicLocationTitle,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-              child: Text(
-                context.l10n.setupDownloadLocationIosMessage,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.folder_special, color: colorScheme.primary),
-              title: Text(context.l10n.setupAppDocumentsFolder),
-              onTap: () async {
-                final dir = await _getDefaultDirectory();
-                if (!mounted) return;
-                setState(() {
-                  _selectedDirectory = dir;
-                  _selectedDirectoryBookmark = null;
-                });
-                if (ctx.mounted) Navigator.pop(ctx);
-                await _saveProgress();
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.cloud, color: colorScheme.onSurfaceVariant),
-              title: Text(context.l10n.setupChooseFromFiles),
-              onTap: () async {
-                Navigator.pop(ctx);
-                await Future<void>.delayed(const Duration(milliseconds: 250));
-
-                IosPickedDirectory? picked;
-                try {
-                  picked = await PlatformBridge.pickIosDirectory();
-                } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          context.l10n.snackbarFolderPickerFailed(
-                            context.friendlyError(e),
-                          ),
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                        duration: const Duration(seconds: 4),
-                      ),
-                    );
-                  }
-                  return;
-                }
-
-                if (picked == null) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(context.l10n.setupNoFolderSelected),
-                      ),
-                    );
-                  }
-                  return;
-                }
-
-                final validation = validateIosPath(
-                  picked.path,
-                  bookmark: picked.bookmark,
-                );
-                if (!validation.isValid) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          validation.errorReason ??
-                              context.l10n.errorInvalidFolderSelected,
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                        duration: const Duration(seconds: 4),
-                      ),
-                    );
-                  }
-                  return;
-                }
-
-                final pickedDir = picked;
-                if (!mounted) return;
-                setState(() {
-                  _selectedDirectory = pickedDir.path;
-                  _selectedDirectoryBookmark = pickedDir.bookmark;
-                });
-                await _saveProgress();
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<String> _getDefaultDirectory() async {
-    if (_platform == TargetPlatform.android) {
-      final downloadDir = Directory('/storage/emulated/0/Download/SpotiFLAC');
-      try {
-        if (!await downloadDir.exists()) {
-          await downloadDir.create(recursive: true);
-        }
-        return downloadDir.path;
-      } catch (e) {
-        debugPrint('Cannot create Download folder: $e');
-      }
-    }
-    final appDir = await getApplicationDocumentsDirectory();
-    return '${appDir.path}/SpotiFLAC';
-  }
-
   Future<void> _completeSetup() async {
-    if (_selectedDirectory == null) return;
+    if (_isLoading || !_isStepCompleted(_currentStep)) return;
     setState(() => _isLoading = true);
 
     try {
-      if (_platform != TargetPlatform.android ||
-          _selectedTreeUri == null ||
-          _selectedTreeUri!.isEmpty) {
-        final iosBookmark = _platform == TargetPlatform.iOS
-            ? _selectedDirectoryBookmark
-            : null;
-        if (iosBookmark == null || iosBookmark.isEmpty) {
-          final dir = Directory(_selectedDirectory!);
-          if (!await dir.exists()) {
-            await dir.create(recursive: true);
-          }
-        }
-        ref.read(settingsProvider.notifier).setStorageMode('app');
-        ref
-            .read(settingsProvider.notifier)
-            .setDownloadDirectory(
-              _selectedDirectory!,
-              iosBookmark: iosBookmark,
-            );
-        ref.read(settingsProvider.notifier).setDownloadTreeUri('');
-      } else {
-        ref.read(settingsProvider.notifier).setStorageMode('saf');
-        ref
-            .read(settingsProvider.notifier)
-            .setDownloadTreeUri(
-              _selectedTreeUri!,
-              displayName: _selectedDirectory,
-            );
-      }
-
       await ref.read(settingsProvider.notifier).setFirstLaunchComplete();
       await (await _prefs).remove(_progressKey);
 
-      if (mounted) context.go('/tutorial');
+      if (mounted) context.go('/');
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -646,30 +371,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   }
 
   bool _isStepCompleted(int step) {
-    if (step == 0) return true;
-    if (step == 1) return true;
-
-    final logicStep = step - 2;
-
-    if (_androidSdkVersion >= 33) {
-      switch (logicStep) {
-        case 0:
-          return _storagePermissionGranted;
-        case 1:
-          return _notificationPermissionGranted ||
-              _notificationPermissionSkipped;
-        case 2:
-          return _selectedDirectory != null;
-      }
-    } else {
-      switch (logicStep) {
-        case 0:
-          return _storagePermissionGranted;
-        case 1:
-          return _selectedDirectory != null;
-      }
-    }
-    return false;
+    if (step < _storageStep) return true;
+    if (step == _storageStep) return _storagePermissionGranted;
+    return _notificationPermissionGranted || _notificationPermissionSkipped;
   }
 
   @override
@@ -742,10 +446,14 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
                 children: [
                   _buildWelcomeStep(colorScheme),
                   _buildLanguageStep(colorScheme),
+                  ...buildLocalGuidePages(
+                    context,
+                    firstIndex: 2,
+                    currentIndex: _currentStep,
+                  ),
                   _buildStorageStep(colorScheme),
                   if (_androidSdkVersion >= 33)
                     _buildNotificationStep(colorScheme),
-                  _buildDirectoryStep(colorScheme),
                 ],
               ),
             ),
@@ -767,7 +475,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
               icon: const SizedBox.shrink(), // Custom layout
             )
           : FloatingActionButton.extended(
-              onPressed: _isLoading ? null : _completeSetup,
+              onPressed: !_isLoading && _isStepCompleted(_currentStep)
+                  ? _completeSetup
+                  : null,
               label: _isLoading
                   ? SizedBox(
                       width: 20,
@@ -1057,52 +767,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
                 ),
               ],
             ),
-    );
-  }
-
-  Widget _buildDirectoryStep(ColorScheme colorScheme) {
-    return _StepLayout(
-      title: context.l10n.setupFolderChoose,
-      description: _platform == TargetPlatform.android
-          ? context.l10n.storageDownloadFolderHint
-          : context.l10n.setupFolderDescription,
-      icon: Icons.create_new_folder,
-      child: Column(
-        children: [
-          if (_selectedDirectory != null)
-            Card(
-              color: colorScheme.secondaryContainer,
-              child: ListTile(
-                leading: Icon(
-                  Icons.folder,
-                  color: colorScheme.onSecondaryContainer,
-                ),
-                title: Text(
-                  _selectedDirectory!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: IconButton(
-                  tooltip: context.l10n.setupChangeFolderTooltip,
-                  icon: const Icon(Icons.edit),
-                  onPressed: _selectDirectory,
-                ),
-              ),
-            )
-          else
-            FilledButton.tonalIcon(
-              onPressed: _selectDirectory,
-              icon: const Icon(Icons.create_new_folder),
-              label: Text(context.l10n.setupSelectFolder),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }

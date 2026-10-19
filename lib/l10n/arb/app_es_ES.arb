@@ -431,22 +431,6 @@
       }
     }
   },
-  "setupUseDefaultFolder": "¿Usar carpeta por defecto?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "No se ha seleccionado ninguna carpeta. ¿Desea utilizar la carpeta por defecto?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "Usar por defecto",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "En iOS, las descargas se guardan en la carpeta de documentos de la aplicación. Puede acceder a ellas desde la aplicación Archivos.",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
   "setupAppDocumentsFolder": "Carpeta de documentos de App",
   "@setupAppDocumentsFolder": {
     "description": "iOS documents folder option"
@@ -1535,14 +1519,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "¡Bienvenido a SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Incorpora metadatos, portadas, letras e información sobre el lanzamiento automáticamente",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Buscando música",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2165,7 +2141,6 @@
   },
   "storageAutomaticFolder": "Carpeta automática",
   "storageSafRecommended": "Selecciona una carpeta (recomendado)",
-  "storageDownloadFolderHint": "En el selector de carpetas de Android, abre la carpeta «Descargas» y selecciona «SpotiFLAC». Si no existe, créala con la opción «Nueva carpeta» y, a continuación, toca «Usar esta carpeta» para otorgar acceso.",
   "downloadFolderReselect": "Volver a seleccionar carpeta",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -2575,10 +2550,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Cambiar de carpeta",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Abrir {title}, {count} {count, plural, =1{objeto} other{objetos}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2864,10 +2835,6 @@
   "permissionNotification": "Notificación",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Directorio seleccionado inválido",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Reproducción",
   "@libraryPlayback": {

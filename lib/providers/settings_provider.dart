@@ -471,7 +471,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   Future<void> setFirstLaunchComplete() async {
     // The router leaves setup as soon as this flag changes. Persist the final
-    // folder settings first so a restart cannot send the user back to setup.
+    // setup settings and both completion flags together before entering Home.
     await ensureLoaded();
     final prefs = await _prefs;
     while (_saveSettingsFuture != null) {
@@ -482,7 +482,10 @@ class SettingsNotifier extends Notifier<AppSettings> {
     try {
       do {
         _saveQueued = false;
-        final completed = state.copyWith(isFirstLaunch: false);
+        final completed = state.copyWith(
+          isFirstLaunch: false,
+          hasCompletedTutorial: true,
+        );
         if (!await prefs.setString(
           _settingsKey,
           jsonEncode(completed.toJson()),
@@ -580,11 +583,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setLocalLibraryAutoScan(String mode) {
     state = state.copyWith(localLibraryAutoScan: mode);
-    _saveSettings();
-  }
-
-  void setTutorialComplete() {
-    state = state.copyWith(hasCompletedTutorial: true);
     _saveSettings();
   }
 

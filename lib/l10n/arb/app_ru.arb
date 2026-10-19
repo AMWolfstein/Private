@@ -58,7 +58,7 @@
   "appearanceUseSystemFontSubtitle": "Использовать системный шрифт вашего устройства для текста приложения.",
   "@@locale": "ru",
   "@@last_modified": "2026-04-28",
-  "appName": "Spotify",
+  "appName": "SpotiFLAC Mobile",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -430,22 +430,6 @@
         "type": "String"
       }
     }
-  },
-  "setupUseDefaultFolder": "Использовать папку по умолчанию?",
-  "@setupUseDefaultFolder": {
-    "description": "Dialog title for default folder"
-  },
-  "setupNoFolderSelected": "Папка не выбрана. Хотите использовать папку Музыка по умолчанию?",
-  "@setupNoFolderSelected": {
-    "description": "Prompt when no folder selected"
-  },
-  "setupUseDefault": "По умолчанию",
-  "@setupUseDefault": {
-    "description": "Button to use default folder"
-  },
-  "setupDownloadLocationIosMessage": "В iOS загрузки сохраняются в папке Документы приложения. Вы можете получить к ним доступ через приложение Файлы.",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
   },
   "setupAppDocumentsFolder": "Папка Документы приложения",
   "@setupAppDocumentsFolder": {
@@ -1535,14 +1519,6 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Добро пожаловать в SpotiFLAC Mobile!",
-  "@tutorialWelcomeTitle": {
-    "description": "Tutorial welcome page title"
-  },
-  "tutorialWelcomeTip3": "Автоматически вставлять метаданные, обложку, тексты песен и информацию о релизе",
-  "@tutorialWelcomeTip3": {
-    "description": "Tutorial welcome tip 3"
-  },
   "tutorialSearchTitle": "Поиск музыки",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
@@ -2165,7 +2141,6 @@
   },
   "storageAutomaticFolder": "Автоматическая папка",
   "storageSafRecommended": "Выбрать папку (Рекомендуется)",
-  "storageDownloadFolderHint": "В окне выбора папок Android откройте папку «Загрузки» и выберите SpotiFLAC. Если этой папки нет, создайте её, нажав «Новая папка», а затем нажмите «Использовать эту папку», чтобы предоставить доступ.",
   "downloadFolderReselect": "Выбрать папку заново",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -2575,10 +2550,6 @@
   "@actionDismiss": {
     "description": "Generic action - dismiss"
   },
-  "setupChangeFolderTooltip": "Сменить папку",
-  "@setupChangeFolderTooltip": {
-    "description": "Tooltip for editing the selected download folder"
-  },
   "a11yOpenItemCount": "Открыть {title}, {count} {count, plural, =1{элемент} few{элемента} other{элементов}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2864,10 +2835,6 @@
   "permissionNotification": "Уведомление",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Выбрана неверная папка",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "libraryPlayback": "Воспроизведение",
   "@libraryPlayback": {
