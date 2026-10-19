@@ -12,23 +12,47 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-18): remove Wishlist and all feature references.
-No new APK build or GitHub publication is requested for this cleanup.**
+**Current user instruction (2026-10-19): remove the obsolete folder page from first-run
+setup, move Get Started to the preceding permission page, and merge setup plus the follow-on
+guide into one flow. No APK build or GitHub publication requested for this change.**
 
 ---
 
 ## Progress
 
-_Last updated: 2026-10-18_
+_Last updated: 2026-10-19_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
 source validation passed. The signed ARM64-only side-by-side **build 163** now includes
 V2/V3, the fragmented Opus follow-up, Popular paging, settings/conversion cleanup, selectable
 Normal/Immersive player views, centered collection actions and a cream launcher background.
-Wishlist has subsequently been removed from source; the published build 163 predates that
-cleanup. Physical-device installation/playback validation remains pending.
+Wishlist removal and first-run guide consolidation have subsequently been implemented in
+source; the published build 163 predates those changes. Physical-device installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Unified first-run guide (2026-10-19):** `f5d0afd` removes the obsolete download/output-folder
+setup page, folder selection/recovery handlers and output-directory writes from setup.
+The existing local search, playback, Library, music-folder and settings tips now live in
+`local_guide_pages.dart` inside the same setup PageView, after Welcome/language and before
+permissions. This yields nine steps on Android 13+ and eight on older Android versions,
+sharing one counter and Back/Next navigation. Get Started sits on the former penultimate
+permission step (notifications on Android 13+, storage otherwise) and opens Home directly.
+The separate TutorialScreen is deleted; its old route redirects to unified setup. Both
+completion flags are persisted together before publication, preventing a second guide after
+completion/restart. Versioned progress drafts retain their page and notification skip choice;
+legacy permission/folder indices migrate to their corresponding retained permission page,
+ignoring former output-folder fields. Local Library settings still select scanning folders.
+
+Unused setup-folder and duplicate welcome translations were removed. The guide copy checks
+also exposed incorrect Hindi/Russian app-name translations, now corrected. Regression tests
+cover both Android permission layouts, integrated tip titles, Back navigation/resume, old
+folder drafts, permission refresh, optional notification skipping, Home completion, atomic
+completion flags and restart routing. The obsolete iOS output-folder setup test was deleted.
+`flutter analyze` reports **No issues found**; the final full suite passes **1,610 tests,
+3 skipped**. The initial full run identified that obsolete iOS test as its only failure;
+the final run is clean. Graph refreshed (`e15e51a`) and no TutorialScreen node remains.
+No native code changed, APK was built, or commits were pushed for this task.
 
 **Wishlist removal (2026-10-18):** `d44a273` removes Wishlist Library cards/rows and
 navigation, track-menu actions, folder mode, provider mutation APIs, state/index fields,
@@ -46,7 +70,8 @@ adapted to retained collections. `bash scripts/check_rust_backend.sh` passes for
 Clippy with warnings denied and **227 Rust tests, 1 ignored**. Device integration fixtures
 were updated to schema v3 but not executed without a device. Source search leaves only the
 obsolete-table deletion and regression fixtures; the refreshed graph query finds no
-Wishlist nodes (`e6015e5`). No APK was built and no commits were pushed for this task.
+Wishlist nodes (`e6015e5`). No APK was built in that removal task. Its commits were subsequently pushed to `main`
+through `39ba329` at the user’s request.
 
 **ARM64 Local build 163 and contrasting icon (2026-10-18):** `1474c860` replaces the black
 launcher background with light cream (`#FFF4DF` for the adaptive icon), keeps the existing

@@ -50,6 +50,13 @@ Wishlist is removed from the Library, track menus, models, backups and native co
 queries. Collection schema v3 drops the obsolete table on upgrade; old JSON imports ignore
 that category. Keep Loved, playlists and favorite artists supported.
 
+First-run setup and the local-player guide form one flow. Keep language choice, local
+playback tips and permission checks under the same page counter and Back/Next navigation.
+Get Started finishes directly in Home from the final permission page; do not restore the
+old download/output-folder step or a second tutorial afterward. Persist both completion
+flags together, and migrate old setup drafts without restoring their output-folder fields.
+Music-library folder selection remains available under Local Library settings.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
