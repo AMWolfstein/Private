@@ -481,6 +481,89 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: keep rules for nonexistent `DownloadService` and `DownloadQueueWidgetProvider`.
 - Fix: delete both blocks; update the stale comment in `NativeReplayGainPolicy.kt:4` (see KT-001).
 
+### RUST-101 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/tags/id3.rs:404-407` (`decode`), :489 (`v1`), :296 (`picture_frame`); `rust_backend/crates/core/src/text.rs:3` (`utf8`)
+- Scenario: ID3v1/v2.2/v2.3 text in ISO-8859-1 (encoding 0, e.g. "Beyoncé" with 0xE9) → decoded as lossy UTF-8 → "Beyonc\u{FFFD}"; UTF-16 surrogate pairs (emoji) become two U+FFFD.
+- Root cause: encoding 0 routed through UTF-8 (Go-parity decoder); no `decode_utf16`.
+- Impact: corrupted titles/artists/albums for older/Windows-tagged MP3s; saving writes the replacement characters back permanently.
+- Fix: Latin-1 for encoding 0 when not valid UTF-8; `char::decode_utf16`; ~15 lines; update Go-parity tests.
+- Evidence: `decode` and `utf8` bodies; reached from `read_tags` "mp3" branch (tags.rs:208).
+
+### RUST-102 [P2] [confidence: medium] [VALIDATED]
+- Location: `rust_backend/crates/core/src/tags/write/id3.rs:278-300` (`read_frames`), :71-80 (`edit_header`)
+- Scenario: (1) a zero-length or bad-size frame → `break`, Ok with frames so far → rewritten tag drops every later frame (APIC, TXXX, POPM); reader errors on the same input. (2) compressed/encrypted v2.3/v2.4 frames and unknown v2.2 IDs dropped. (3) every save replaces all COMM and USLT frames (editor always sends comment/lyrics), including iTunSMPB/iTunNORM and other-language lyrics. (4) zero-length tag header returns Err, pushing Dart to the FFmpeg fallback (DATA-302).
+- Root cause: lossy rewrite that fails silently on frames it cannot re-emit.
+- Impact: loss of untouched artwork/metadata and gapless info in MP3s with slightly malformed tags.
+- Fix: copy remaining raw bytes or return Err instead of truncating; drop only COMM with empty descriptor and same language; pass through encrypted frames raw; ~30 lines + tests. Related: BUG-104 (Dart USLT writer has the same `break` pattern).
+- Evidence: `break` at :298-300.
+
+### RUST-201 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/media/hires/mod.rs:567-568` (`Source::analyze_window`, FLAC)
+- Scenario: FLAC whose STREAMINFO declares more channels than frames carry → `block.channel(index)` slices out of range in claxon → panic inside an FFI call (Audio Quality Analysis).
+- Root cause: claxon does not check frame vs STREAMINFO channels; guard exists in `replacement.rs:93-95` but not here.
+- Impact: panic on untrusted file data (surfaced as a generic error if uniffi catches it; unverified).
+- Fix: return Err when `block.channels()` differs; ~3 lines + test.
+
+### RUST-202 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/cue.rs:117-122` (`parse`, FILE), `CueTrack` :25-35; consumers `rust_backend/crates/local/src/backend/library.rs:232,284`, `scan.rs:446`
+- Scenario: multi-FILE cue (one file per track: `FILE "01.flac"`/TRACK 01/INDEX 01 00:00:00, `FILE "02.flac"`...) → `sheet.file_name` overwritten per FILE; all tracks attributed to the last file with their own start times.
+- Root cause: no per-track file field.
+- Impact: wrong/zero durations and playback offsets; Split into Tracks cuts the wrong audio; no error shown.
+- Fix: record file per track and resolve per track, or reject sheets with a second distinct FILE (~5 lines) + test.
+- Evidence: assignment at :119; no multi-FILE test.
+
+### RUST-203 [P2] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/cue.rs:291-300` (`timestamp`), `rust_backend/crates/local/src/backend/library.rs:431-433` (`cue_library_rows`)
+- Scenario: malformed INDEX ("xx:yy:zz") becomes 0.0; ff >= 75, negative values and out-of-order starts accepted → negative durations emitted to the library.
+- Root cause: no validation; `unwrap_or(0)`.
+- Impact: overlapping/zero-start tracks and negative durations without a parse error.
+- Fix: `timestamp` returns Option, rejects ff >= 75 / ss >= 60 / negatives; clamp durations with `.max(0)`; ~10 lines + tests.
+
+### RUST-204 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/core/src/cover/library.rs:53-60`, :71 (`library_thumbnail`)
+- Scenario: cache mutex held across `resize` of untrusted embedded art; a decoder panic poisons it → every later call fails "thumbnail cache unavailable" until restart.
+- Impact: all library covers disappear after one bad image.
+- Fix: recover with `into_inner()` on `Poisoned`, or resize outside the lock; ~3 lines.
+
+### RUST-001 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/mobile/src/usb_audio/transport.rs:235, 268, 274, 278, 286, 294` (`completed`, `Slot::submit`, `success`, `actual`)
+- Scenario: `submit` passes `self as *mut Slot` as libusb `user_data`, then writes `self.pending` through `&mut self`; later reborrows invalidate the raw pointer's provenance, so the callback's write is UB under Stacked/Tree Borrows. `iso_packet_desc.as_ptr()` on `[T; 0]` has zero-byte provenance.
+- Root cause: shared completion flag stored inside a `&mut`-used struct.
+- Impact: latent UB only; Opus review: no realistic miscompile today (pointer escapes to libusb, flag reloaded each loop).
+- Fix: heap `AtomicBool` passed as `user_data` with `pending()` accessor; `addr_of_mut!(...).cast()` for iso descriptors; ~15 lines.
+- Evidence: Opus escalation verdict (Sonnet → Opus).
+
+### RUST-002 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/mobile/src/usb_audio/transport.rs:626-631` (`run`), :433-436 (`configure`), `descriptors.rs:247-264`
+- Scenario: integer-nominal rates (48 kHz @125 µs = 6 frames) with feedback slightly above nominal occasionally need 7 frames; if `wMaxPacketSize` is exactly 6×frame, `run` fails "USB feedback exceeded endpoint capacity".
+- Impact: USB bit-perfect playback aborts mid-track on DACs without packet headroom.
+- Fix: clamp to endpoint capacity and carry the remainder; ~5 lines.
+
+### RUST-103 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/tags/id3.rs:302` (`picture_frame`), `rust_backend/crates/core/src/tags/write/id3.rs:182-186` (`cover`)
+- Scenario: UTF-16 APIC description terminator found with unaligned `windows(2)` → image offset wrong by one → corrupt cover (re-embedded for RIFF/AIFF).
+- Fix: aligned search like `separator()`; ~5 lines.
+
+### RUST-104 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/tags/comments.rs:18-22`, `containers.rs:291`, `write/ogg.rs:109-117`, `write.rs:737`
+- Scenario: writer accepts Ogg covers up to 16 MB (≈21 MB base64) but reader caps 10 MB → covers above ~7.4 MB written then read back as missing; reader processes only the first 100 Ogg comments (ReplayGain/R128/picture beyond that ignored).
+- Fix: align limits; bound by bytes, not count.
+
+### RUST-105 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/core/src/tags/write/riff.rs:46, 94-96, 152`, `write/ape.rs:19-40`, `write/mp4.rs:138`, `tags/mp4.rs:45`
+- Scenario: WAV/AIFF ID3 chunk rebuilt only from parsed fields (TXXX/unknown/extra APIC lost; odd final chunk without pad fails save); APE edit deletes trailing ID3v1; MP4 `number as u16` wraps; `covr` type 13 for non-JPEG; legacy rtng 4 not read as explicit.
+- Fix: individually small; batch with RUST-102.
+
+### RUST-106 [P3] [confidence: medium] [VALIDATED]
+- Location: `rust_backend/crates/core/src/tags/write.rs:403-407`, :737-776 (`picture`)
+- Scenario: replacement cover >16 MB that cannot be shrunk → `picture()` Ok(None) after old pictures were removed → save succeeds, artwork gone; oversize decode uses image crate default 512 MB limit.
+- Fix: return Err or keep old pictures; set `image::Limits`.
+
+### RUST-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/core/src/media/hires/mod.rs:525-532`, `WavSource::open` (:690)
+- Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
+- Fix: reject WAV channels > 32; 1 line.
+
 ## Resolved
 
 _None yet._

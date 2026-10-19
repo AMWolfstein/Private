@@ -4,6 +4,7 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-19 | `759e73f` | `/audit rust` round 1: 3 reviewers + Opus escalation (RUST-001) + source validation | 13 findings; no cargo runs (baseline green) |
 | 2026-10-19 | `cd88dab` | `/audit kotlin`: 3 reviewers + source validation of P1/P2s | 20 findings (2 merged, 1 extra UX-003 found during validation); no tests run |
 | 2026-10-19 | `c26265b` | `/audit metadata`: 3 reviewers + source validation of P2s | 20 findings (5 dead-code merged to 4, 1 rejected); no tests run |
 | 2026-10-19 | `a9df85a` | `/audit scanner`: 2 reviewers + source validation of P2s | 8 findings; no tests run (review only) |
