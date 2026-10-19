@@ -12,7 +12,7 @@ mapping). Status: `not reviewed` · `partial` · `reviewed` · `stale` (code cha
 | metadata | Metadata, tags, covers, lyrics, ReplayGain, CUE | not reviewed | - | 27 files | - |
 | rust | Rust backend crates | not reviewed | - | 111 files, excludes vendor | - |
 | kotlin | Kotlin integration, SAF, channels | not reviewed | - | 47 files | - |
-| audio | Audio playback (Dart, Kotlin, C++) | not reviewed | - | 50 files | - |
+| audio | Audio playback (Dart, Kotlin, C++) | reviewed | b98c51c | 3 chunks: core Dart (concurrency), features (bug-hunter, PASS), native (kotlin-android). Open: AAudio callback quiescence on flush, OEM AudioOutputActivity focus | CONC-001..004, KT-001, KT-002 |
 | storage | SQLite, backups, collections, history | not reviewed | - | 18 files | - |
 | tests | Tests and integration tests | not reviewed | - | 262 files | - |
 | build | Dependencies, build, toolchains | not reviewed | - | 19 files | - |

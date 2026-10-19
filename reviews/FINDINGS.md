@@ -86,6 +86,54 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: pump until `find.text(...)` matches, with a bounded loop.
 - Evidence: test-auditor reading; not reproduced.
 
+### CONC-001 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: lib/services/music_player_service.dart:1832 (`seek`), :1928 (`skipToPrevious` restart), :1760 (`_playInternal`)
+- Scenario: app restarts with a restored paused session (`_pendingRestorePosition = X`, `_sourceReady = false`); user seeks to Y (lyrics tap, notification seek) → `seek` hits a deck with no source, UI shows Y; on Play `_playInternal` starts at X.
+- Root cause: `seek` and the restart branch ignore the pending-restore/loading state and are not serialized with `_sourceChangeTail`.
+- Impact: seek after restore or during a load is lost; scrubber jumps back.
+- Fix: when `!_sourceReady`, store the position in `_pendingRestorePosition` and only broadcast; ~6 lines + test.
+- Evidence: `_pendingRestorePosition` read only at :1760; seek callers `player_lyrics.dart:901`, notification `MediaAction.seek` (:833). Unverified: whether the deck accepts a seek before a source is set.
+
+### CONC-002 [P2] [confidence: high] [VALIDATED]
+- Location: lib/services/music_player_service.dart:2031 (`onSourceDeleted`), :1892 (`_stopSession`)
+- Scenario: user stops playback (`_index = -1`, session cleared, queue kept) then deletes a file that was in that queue → else-branch clamps `_index` to 0, broadcasts and persists the session.
+- Root cause: clamp does not preserve `-1`; `_stopSession` keeps `_media`/`_queueItems`.
+- Impact: an explicitly stopped session comes back on next launch; Play from stopped starts item 0.
+- Fix: in the else branch skip index update, broadcast and persist when `_index < 0`; ~3 lines + test.
+- Evidence: `_persistSession` (:1135) only clears when `_index < 0`; `wasCurrent` is false for `_index = -1`.
+
+### CONC-003 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: lib/services/music_player_service.dart:667, :611, :770 (`unawaited(play())`, `unawaited(_handlePlayerComplete())`, `unawaited(pause())`)
+- Scenario: `UsbOutputUnavailable` or a channel `PlatformException` from `stop`/`resume` inside these futures.
+- Root cause: no `catchError` on fire-and-forget calls.
+- Impact: uncaught async error; state may stay stale after a completion failure.
+- Fix: small helper that logs and broadcasts paused/stopped on error; <10 lines.
+- Evidence: reviewer trace; global zone handler not checked.
+
+### CONC-004 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: lib/services/music_player_service.dart:1720-1727 (`play`)
+- Scenario: `play()` while an older operation is active joins it even after `pause()`/`stop()` bumped `_playRequestGeneration`; the old op aborts and the newer Play is dropped.
+- Root cause: join does not compare generations.
+- Impact: final state paused although the last request was Play (headset click, automation, interruption end).
+- Fix: join only when the active op's generation equals `_playRequestGeneration`; ~5 lines.
+- Evidence: reviewer trace.
+
+### KT-001 [P3] [confidence: high] [VALIDATED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt (+ `android/app/src/test/.../NativeReplayGainPolicyTest.kt`)
+- Scenario: download-era album ReplayGain policy ("used by DownloadService"); DownloadService no longer exists.
+- Root cause: leftover after download removal.
+- Impact: ~140 lines of dead code and a test guarding nothing shipped.
+- Fix: delete both files.
+- Evidence: only the file and its test reference the symbol (`grep -rln` over android/app/src, lib, rust_backend/crates).
+
+### KT-002 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt:63, :98, :163; UsbDirectPlayback.kt:131, :178; NativeAudio.kt:7
+- Scenario: `libspotiflac_audio` fails to load → `UnsatisfiedLinkError`/`ExceptionInInitializerError` (an `Error`, not `Exception`) escapes the worker-thread catch and crashes the process instead of falling back.
+- Root cause: catch blocks catch `Exception` only.
+- Impact: crash instead of fallback to normal playback, only if the native library is missing.
+- Fix: catch `LinkageError` around `NativeAudio` calls and map to `unsupported`; ~3 lines.
+- Evidence: CMake library and Rust share `abiFilters` (`build.gradle.kts:113-116`), so the trigger is unlikely in normal builds.
+
 ## Resolved
 
 _None yet._

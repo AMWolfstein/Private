@@ -8,11 +8,12 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
   `scripts/review_scope.sh`.
 - Next review unit: `/review` (commits after `2b32361`; review-system commits are
   docs/config only). Suggested fix batch: BUG-001 + BUG-002 + TEST-002 (CUE split).
-- Next audit unit: `audio` (playback correctness/leaks/threading only; Media3 migration is
-  separate) — then `storage`, `scanner`.
-- Open findings: 10 (0 P0/P1, 3 P2, 7 P3; see `FINDINGS.md`).
-- Last checkpoint: `/review 2b32361~5..2b32361` (this commit). Previous checkpoint
-  `b15a651` pushed and verified.
+- Next audit unit: `storage`, then scanner, metadata, kotlin, rust, state, ui, build, tests
+  (full audit in progress; audio done).
+- Open findings: 16 (0 P0/P1, 5 P2, 11 P3; see `FINDINGS.md`).
+- Last checkpoint: `/audit audio` (this commit). Previous `b98c51c` pushed and verified.
+- Tooling note: `scripts/review_scope.sh` maps `android/app/src/{test,androidTest}` to
+  `audio`/`kotlin`; should map to `tests` (fix with next code commit).
 
 ## Handoff
 
