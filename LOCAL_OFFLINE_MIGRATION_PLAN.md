@@ -12,8 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): build the same ARM64-only, side-by-side Local
-APK as before, including the latest committed changes and cream launcher background.**
+**Current task (2026-10-19): follow up the still-blank Loved list reported on build 164.
+Reproduce with actual local artwork, fix the layout and provide the same ARM64 Local APK
+for device verification.**
 
 ---
 
@@ -23,12 +24,50 @@ _Last updated: 2026-10-19_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. The signed ARM64-only side-by-side **build 164** now includes
-all current changes through `1d29cf4f`, including Wishlist removal, unified setup,
-Home/Library cleanup, Loved visibility and Local Library preference removal. It retains
+source validation passed. The signed ARM64-only side-by-side **build 165** now includes
+all current changes through `c4b79cee`, including Wishlist removal, unified setup,
+Home/Library cleanup, Local Library preference removal and the real-artwork Loved row fix. It retains
 the cream launcher background and updates the previous Local installation. Physical-device
 installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**ARM64 Local build 165 (2026-10-19):** `c4b79cee` includes the artwork row layout fix
+and increments Flutter/log build numbers to 165. Same release flags as build 164:
+`SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a`,
+`flutter build apk --release --target-platform android-arm64 --split-per-abi
+--dart-define=GIT_COMMIT=c4b79cee`.
+
+APK: **54,328,531 bytes**, version 5.1.1 / build 165, split versionCode 2165.
+Verified **SpotiFLAC Local** / `com.zarz.spotiflac.local`, min API 24, target API 37,
+only ARM64, all 17 native libraries AArch64 with 16 KB ELF/ZIP alignment, Rust packaging,
+offline permissions, cream adaptive background and the embedded source revision. Signature
+verification passes and the certificate matches build 164, preserving in-place updates.
+Static analysis is clean; **1,609 Flutter tests passed, 3 skipped**. No physical-device
+verification in this environment; user confirmation of Loved after updating remains pending.
+
+Download branch: `apk-local-arm64-165` (APK, README, SHA256SUMS, APK_DETAILS.json).
+SHA-256: `bcaedfb169b3dec2f3d6e84485608f8c534926a6a0b449913ccf75b9b17a0bf0`.
+
+**Loved local-artwork layout follow-up (2026-10-19):** `c4b79ce` fixes the row layout.
+The user confirmed build 164
+still displayed one saved Loved track but no row; the device log contained no errors.
+The previous no-artwork/ticker test missed the failing local-cover branch. Reproducing
+with an actual PNG exposes `BoxConstraints forces an infinite width and infinite height`
+at `LocalCoverImage`'s fade Stack inside a collection row. `Image.frameBuilder` wraps the
+image outside its own width/height constraints; the expanding Stack therefore received
+unbounded list-row axes and prevented the entire track card from laying out.
+
+The shared image fade Stack now passes constraints through to the image, which supplies
+its explicit/intrinsic size, while the placeholder fills that resulting size as a positioned
+background. Fades and placeholders remain supported. Loved regression coverage includes
+real/missing local covers, paused/active tickers, navigation into Loved, finite compact row
+bounds and empty-to-populated collection updates. This applies to playlist thumbnails too.
+Validation: **42 focused tests pass** for collection playback/selection, real/missing
+artwork and image decode/detail behavior. The new real-artwork test failed before the fix
+with infinite constraints and no visible row; it passes after the fix, including route
+navigation and finite compact row bounds. `flutter analyze`: **No issues found**. Full
+Flutter suite: **1,609 passed, 3 skipped**. Build 165 contains this follow-up; the earlier
+published build 164 does not. Physical-device confirmation remains pending.
 
 **ARM64 Local build 164 (2026-10-19):** `1d29cf4f` increments the Flutter and log build
 numbers to 164, retaining version 5.1.1. Built with the same settings as build 163:
@@ -74,7 +113,7 @@ labels, preserved tab selection, library scanning/cleanup and local playback. So
 finds retired preference keys only in the compatibility regression test. Graph refreshed;
 no native changes or APK build.
 
-**Loved row visibility (2026-10-19):** `964a054` removes the entrance-animation wrapper
+**Earlier Loved row visibility attempt (2026-10-19; incomplete on device):** `964a054` removes the entrance-animation wrapper
 from Loved and playlist song rows. A regression test reproduces an invisible single row
 while its count remains visible when animation tickers are paused; collection rows now
 paint immediately without depending on ticker progress. The same test covers ordinary
