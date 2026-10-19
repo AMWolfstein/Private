@@ -57,5 +57,23 @@
   "branch": "review/upstream-v5.2.0-discovery",
   "origin": "https://github.com/AMWolfstein/Private.git",
   "upstream_url": "https://github.com/spotiflacapp/SpotiFLAC-Mobile",
-  "release_url": "https://github.com/spotiflacapp/SpotiFLAC-Mobile/releases/tag/v5.2.0"
+  "release_url": "https://github.com/spotiflacapp/SpotiFLAC-Mobile/releases/tag/v5.2.0",
+  "scanner_comparison": {
+    "upstream_commit": "378c8f374987c6a8a8f8cbf6330736f136414d94",
+    "entry_checkpoint": "f0b7b114068ecb37e3aa53398d2311ae8b2504f0",
+    "local_source_unchanged": true,
+    "report": "reviews/upstream-v5.2.0-scanner-review.md",
+    "classification": "ADAPT",
+    "batches": [
+      "B01a",
+      "B01b",
+      "B01c"
+    ],
+    "baseline_test_command": "flutter test test/library_scan_scheduling_test.dart test/library_scan_pause_test.dart test/notification_service_test.dart --reporter expanded",
+    "baseline_tests_passed": 20,
+    "baseline_tests_failed": 0,
+    "new_regression_tests": "NOT RUN; not implemented in comparison unit",
+    "next_work_unit": "Implement B01a only: failure visibility and ordered scan notifications; no recovery preferences/native diagnostics yet",
+    "recommended_effort": "HIGH"
+  }
 }

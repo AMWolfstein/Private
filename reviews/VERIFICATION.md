@@ -35,3 +35,12 @@ Command: `python3 reviews/upstream-v5.2.0/verify_checkpoint.py` (read-only; requ
 Historical context only: `LOCAL_OFFLINE_MIGRATION_PLAN.md` records clean analysis and 1,597 tests passed / 3 skipped for prior source `6ac8efd0`. Those results were **not rerun** during this audit and do not verify future backports. Most upstream commits have path/policy triage only; they are not marked as behaviorally tested.
 
 Each future implementation batch must record source SHA(s), upstream SHA(s), targeted commands/results, failures/limitations, graph sync commit and push receipt. No batch is complete while required verification fails. No regression-free or measured performance claim is supported by this checkpoint.
+
+## Scanner comparison checkpoint (second invocation)
+
+- **PASS:** existing focused baseline command `flutter test test/library_scan_scheduling_test.dart test/library_scan_pause_test.dart test/notification_service_test.dart --reporter expanded`: **20 passed, zero failures**, host Linux, source unchanged. Log: `/workspace/upstream-520-scanner-baseline-tests.log` (local capture, not required to resume).
+- Scheduling/pause fixture logs include swallowed notification `LateInitializationError`; one failed native-pause mock is expected. These passing tests do **not** establish notification delivery ordering. B01a must register/init plugin fixtures and add fault/race assertions. Android foreground-service path is not exercised merely by Flutter target-platform override.
+- **PASS:** scoped Graphify query; qualified undirected reference path. No directed call path was found, so exact lifecycle/data-flow conclusions were checked in source, not inferred from graph edges.
+- **PASS:** upstream 378c8f37 source comparison and local provider/auto-scan/poller/notification/SAF/publication review. Corrected initial finding: outer finally already resets scanning; secondary error-save failure suppresses original failure visibility instead.
+- **NOT RUN:** new regression tests (not yet written), Flutter analysis/full suite, Kotlin/Rust/Android device checks and APK. No implementation this unit.
+- Checkpoint verifier and staged diff are rerun before commit; push receipt updated after successful publication. Classification counts remain unchanged; scanner ADAPT entry narrowed to B01a/b/c with detailed gates.

@@ -2,17 +2,13 @@
 
 Initial checkpoint only. **No implementation completed or started.** Manual adaptation is the default because the fork has a parentless snapshot, intentional removals and different UI/provider structure. Do not merge the release or cherry-pick large mixed commits. Every batch below is independently scoped; check current HEAD, handoff and source before acting.
 
-## Next bounded work unit — comparison only
+## Next bounded work unit — B01a implementation only
 
-**B01 comparison, HIGH:** inspect upstream `378c8f374987c6a8a8f8cbf6330736f136414d94` against current `lib/providers/local_library_provider.dart`, notification service, platform bridge and Android scan/lifecycle code. Use a scoped Graphify query/path first. Determine the smallest recovery/notification patch, active source/start-time protocol, API guards, cancellation semantics and fault-injection tests. No implementation is authorized as part of this discovery checkpoint; a subsequent implementation invocation may execute the narrowed approved batch after this comparison.
+Scanner comparison is complete in [scanner review](upstream-v5.2.0-scanner-review.md). Implement **B01a only**, HIGH: original failure visibility despite secondary save failure, error-resilient serialized scan notifications and cleanup/pause ordering. Keep the existing outer startScan finally, poller generation checks and publication transactions. Touch retained provider and regression tests; no native/bridge/preferences/settings changes required. Do not implement B01b/c or build an APK during B01a.
 
-Do not import upstream provider/Android module splits. Produce a concrete plan for these separately testable concerns:
+Corrected discovery finding: outer finally already resets isScanning/admission. The actual gap is skipped original source error/failure notice and rejected scan future after secondary persistence failure, plus delayed notification ordering. Existing 20 focused scanner/pause/notification tests pass; new faults/races remain to be implemented. See the scanner review for exact acceptance tests and host-vs-Android coverage limits.
 
-1. Clear in-memory scanning state and stop polling even if persisting the original error fails; retain the original diagnostic.
-2. Serialize progress/terminal notification transitions and drain them before background work ends; handle cancellation/disposal and rejected notification futures.
-3. Recover interrupted runs without deleting valid rows or losing checkpoints; do not depend on auto-scan being enabled. Match Android exit records to process/time and guard APIs below 30.
-
-Acceptance requires targeted Dart recovery/error/cancellation tests and relevant Kotlin helper tests; a build is not necessary during comparison. Split the eventual implementation if recovery is larger than the minimal error-ordering correction.
+B01b later adds single-flight interrupted-run reporting and additive private markers without changing auto-resume policy. B01c separately adds optional guarded Android exit diagnostics. Neither changes native scanner, NDJSON/state checkpoint format, user files, schema or source publication.
 
 ## Approved scoped candidates — implementation pending
 
@@ -20,7 +16,7 @@ ADAPT is approval of the listed behavior in principle, subject to local call-gra
 
 | Batch | Priority / source | Smallest permitted scope | Dependency / safeguards | Verification gate | Effort / risk |
 |---|---|---|---|---|---|
-| B01 | P1 correctness — `378c8f374987c6a8a8f8cbf6330736f136414d94` | Scan terminal-state correctness, notification ordering, then bounded recovery as narrowed by next comparison | Existing preferences/channels; API guards; preserve checkpoints, source IDs and rows; avoid upstream splits | DB failure during error handling; progress vs completion/cancel; restart/auto-scan off; lifecycle and native exit matching | HIGH / medium |
+| B01a/b/c | P1 correctness — `378c8f374987c6a8a8f8cbf6330736f136414d94` | B01a failure visibility/notification ordering (next); B01b restart reporting; B01c optional Android exit diagnostics | Existing preferences/channels; API guards; preserve checkpoints, source IDs and rows; avoid upstream splits | DB failure during error handling; progress vs completion/cancel; restart/auto-scan off; lifecycle and native exit matching | HIGH / medium |
 | B02 | P2 resource correctness — `fe29f304aa79b018fe08675cdd755812cc0cfb4e` | One local playlist-name dialog owns/disposes controller; reuse only where local validation semantics match | Existing Mornye dialog/TextFormField; no upstream expressive form dependency | Create/rename/trim/empty/duplicate/cancel; repeated dialog lifecycle and focus | MEDIUM / low–medium |
 | B03 | P2 static performance — `ef5fa1cb4607a6ff30438ec2f0d163cf7e35fe50` | Compile local lyrics credit regexes once | Existing Rust regex + std LazyLock; reject extensions hunk; preserve text byte/Unicode semantics | Local LRC/TTML credits, whitespace, Unicode, repeated parse equivalence; targeted Rust tests | HIGH / low–medium |
 | B04 | P2 artwork correctness — `080df889d05f70abd390a25d2c6c89f9321a82c3` | Missing/empty local-cover fallback using existing resolver in retained rows/detail artwork | No remote URLs; bounded cache/stale-result guard; keep real artwork and StackFit sizing fix | File/SAF/missing/empty/stale identity/cache bounds; row/widget image dimensions | MEDIUM / medium |
