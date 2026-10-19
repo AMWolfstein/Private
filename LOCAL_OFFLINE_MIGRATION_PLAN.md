@@ -12,11 +12,9 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): move Detailed logging to the first option in
-Logs, remove the now-empty App settings page, remove Embed lyrics and its submenu,
-remove the decorative Library preview in Appearance, and reuse album-style circular back
-buttons throughout Settings and Library pages. Push the changes, then build the same
-ARM64-only side-by-side SpotiFLAC Local APK with its existing cream/green icon.**
+**Current user instruction (2026-10-19): restore the former metadata-page local actions
+in the new song ellipsis menus, retaining Edit Metadata and Audio Quality Analysis, and fix
+popover placement so it follows the tapped ellipsis. Keep the metadata page removed.**
 
 ---
 
@@ -31,6 +29,27 @@ updated rows and the Settings cleanup. It retains the cream/green launcher icon 
 certificate, updating the previous SpotiFLAC Local installation. Physical-device validation
 remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Song-menu actions and anchoring follow-up (2026-10-19, `6ac8efd`):** Restores the old local
+track overflow actions in Songs, playlists/Loved Songs, albums, Genres and Artist Popular.
+Play/Share shortcuts, Play next/Add to queue, local album/artist navigation, Copy file path,
+Edit Metadata, ReplayGain apply/remove, Audio Quality Analysis and confirmed deletion reuse
+local playback/tag/queue/index services. CUE tracks offer Split into Tracks with confirmation
+and a SAF destination picker, private staging and cleanup; virtual-row deletion only removes
+the index row. Physical deletion clears shared file index entries and refreshes album rows.
+The removed metadata route, Wishlist, format conversion and online actions stay removed.
+
+Every production song ellipsis captures its own root-overlay rectangle before async local
+lookup. Song popovers constrain their height to the larger available region above/below the
+button and scroll; existing context-menu callers retain their default layout behavior.
+Regression checks cover actual row buttons at top/bottom positions in LTR/RTL, access to
+the last action, restored menu contents, queue dispatch, clipboard, cancel/confirm physical
+deletion, CUE split cancellation and backing-file preservation, editor/analysis navigation,
+and album playback controls.
+Validation: `flutter analyze` reports **No issues found**; the full `flutter test`
+run passes **1,597 tests, 3 skipped**. The focused regression suite passes 42 tests.
+The code graph has been refreshed. This follow-up is committed in source; published
+Local build 166 predates it and no replacement APK was built during this fix.
 
 **Settings cleanup and Local build 166 (2026-10-19, `3d798c2`):** Detailed logging moves to the
 first content group in Logs, retaining its existing persisted switch and log-buffer behavior.

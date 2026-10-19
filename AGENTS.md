@@ -56,12 +56,16 @@ library, with exact tag matching and no online catalog. Songs contains only trac
 playlist members), with no collection rows or individual playlists mixed into the list.
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
-route or its old action menu. Song ellipsis menus retain Edit Metadata (including tag,
-cover and lyrics editing) and Audio Quality Analysis. Songs, playlists and Loved Songs use
-artwork, a title with an explicit E badge when applicable, artist underneath, and circular
-Play plus ellipsis controls. Albums use track numbers instead of artwork. Keep selection,
-range selection and queue order working. The Loved Songs label is UI-only: persisted loved
-collection keys and backups stay compatible.
+route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
+Add to queue, Go to album/artist, Copy file path, Edit Metadata, ReplayGain apply/remove,
+Audio Quality Analysis and confirmed deletion. CUE tracks have Split into Tracks; deleting
+one virtual row must preserve the backing CUE/audio. Do not restore Wishlist, conversion or
+online-only actions. Capture the tapped ellipsis button's root-overlay bounds before any
+async lookup; long popovers scroll within space above/below that control. Songs, playlists
+and Loved Songs use artwork, title plus explicit E, artist underneath, circular Play and
+ellipsis controls. Albums use track numbers instead of artwork. Keep selection, range
+selection and queue order working. Loved Songs remains a UI-only rename: persisted collection
+keys and backups stay compatible.
 
 Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled
