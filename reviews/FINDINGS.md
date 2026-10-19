@@ -134,6 +134,62 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: catch `LinkageError` around `NativeAudio` calls and map to `unsupported`; ~3 lines.
 - Evidence: CMake library and Rust share `abiFilters` (`build.gradle.kts:113-116`), so the trigger is unlikely in normal builds.
 
+### DATA-002 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
+- Scenario: tapping a recent album calls unbounded `getAll()`, decodes every library row, then filters by album in Dart; shuffle does the same for all rows.
+- Root cause: `getAll()` has no bound and its ORDER BY matches no index (temp B-tree sort of the whole view).
+- Impact: jank and memory spikes on large libraries for a single album tap.
+- Fix: album tap → `getQueueLocalAlbumTracksByKey` (indexed); shuffle → select only id/file_path; ~20 lines.
+- Evidence: the only two non-test `getAll()` callers.
+
+### DATA-003 [P2] [confidence: medium] [VALIDATED]
+- Location: lib/services/library_database.dart:643 (`getQueueLocalAlbumTracks`); callers `lib/utils/clickable_metadata.dart:44`, `lib/screens/queue_tab_navigation.dart:72,77`
+- Scenario: album navigation queries `LOWER(album_name) = ? AND LOWER(COALESCE(...)) = ?`.
+- Root cause: functions on columns defeat `idx_library_album`/`_norm` indexes (full scan); SQLite `LOWER` is ASCII-only while args use Dart `toLowerCase`.
+- Impact: album open latency grows with library size; non-ASCII albums ("Été") can open empty or incomplete.
+- Fix: use `album_key = ?` (`getQueueLocalAlbumTracksByKey`) or the `*_norm` columns; ~10 lines + test with a non-ASCII album.
+- Evidence: query body at :650-652; keyed variant directly below.
+
+### DATA-004 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/services/library_queue_store.dart:278` (singles `HAVING COUNT(*) = 1`), :460 (albums `> minimumTracks`)
+- Scenario: a 10-track album with one file on disk shows as a Single in the Library singles filter/count; a single with a bonus file shows as an Album.
+- Root cause: classification by stored file count.
+- Impact: contradicts the AGENTS.md rule "classify Singles from explicit total-track tags (1), never from the number of files stored"; Library filter (`queue_tab.dart:116,1106`) disagrees with Home/Artist.
+- Fix: per `album_key`, single = `MAX(total_tracks) = 1`, rest are Albums; ~30 lines SQL. Needs product confirmation that the rule covers the Library filter.
+- Evidence: SQL lines above.
+
+### DATA-101 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/csv_import_service.dart:28`, `lib/services/m3u_playlist_service.dart:42` (import half)
+- Scenario: `pickAndParseCsv`, `parsePlaylistInBackground`, `parseM3u` have no non-test callers; the CSV parser is Spotify-oriented (`spotify:track:`, ISRC).
+- Root cause: download-era import code left behind; only M3U export is used.
+- Impact: ~150 lines of dead code (+ tests, native `parse_playlist` op) with latent parsing bugs.
+- Fix: delete the import half and its tests; keep export.
+- Evidence: `grep -rn` over lib/ finds callers only inside the two files.
+
+### API-001 [P2] [confidence: high] [VALIDATED]
+- Location: lib/services/backup_service.dart:413-422 (`restoreHistory`, non-native branch)
+- Scenario: restore from a picked file without a path (`backup_restore_page.dart:94-96` → `BackupService.parse`) runs `clearAll()` then batched upserts; one malformed/old row (NOT NULL column) fails a batch after the clear.
+- Root cause: clear and inserts in separate transactions, no validation; atomic `HistoryDatabase.replaceAll` exists but is unused here.
+- Impact: existing history wiped, only a prefix restored; settings/profile already replaced.
+- Fix: `await HistoryDatabase.instance.replaceAll(bundle.streamHistory())`; ~5 lines + test.
+- Evidence: `history_database.dart:813` → `history_maintenance.dart:51` (single transaction).
+
+### API-002 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: lib/services/backup_service.dart:206-294 (`writeBackupArchive`) vs `lib/services/listening_statistics.dart:253`
+- Scenario: backup/restore or device migration drops `listening_statistics.db` → all play counts reset.
+- Root cause: listening data is not part of the backup format.
+- Impact: Artist Popular ranking and listening stats lost on restore without notice.
+- Fix: optional `listening` category in v3 metadata (older readers ignore unknown keys), merge per (day, track_key); medium. Product decision: include or document exclusion.
+- Evidence: no listening references in backup_service.dart; restore flow `backup_restore_page.dart:120-140`.
+
+### API-003 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/settings/backup_restore_page.dart:120-140`
+- Scenario: profile, settings, history, collections restored sequentially; a later failure leaves earlier categories replaced with a generic error.
+- Root cause: no validation pass before the first destructive write.
+- Impact: partial restore (each category atomic on Android).
+- Fix: validate all categories first, or report which were applied.
+- Evidence: sequential awaits in one try/catch.
+
 ## Resolved
 
 _None yet._
