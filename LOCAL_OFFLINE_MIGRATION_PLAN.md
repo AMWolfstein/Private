@@ -24,13 +24,12 @@ ARM64-only side-by-side SpotiFLAC Local APK with its existing cream/green icon.*
 
 _Last updated: 2026-10-19_
 
-**Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
-and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. The latest published signed ARM64-only side-by-side **build 165** includes
-changes through `c4b79cee`, including Wishlist removal, unified setup,
-Home/Library cleanup, Local Library preference removal and the real-artwork Loved row fix. It retains
-the cream launcher background and updates the previous Local installation. Physical-device
-installation/playback validation remains pending.
+**Status:** Phases 1-8 and the requested local-player refinements are implemented.
+Latest source validation passed. The signed ARM64-only side-by-side **build 166** includes
+source through `b62b3d9e`: song menus and metadata-page retirement, Genres, Loved Songs,
+updated rows and the Settings cleanup. It retains the cream/green launcher icon and signing
+certificate, updating the previous SpotiFLAC Local installation. Physical-device validation
+remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
 **Settings cleanup and Local build 166 (2026-10-19, `3d798c2`):** Detailed logging moves to the
@@ -46,7 +45,22 @@ Validation: generated settings/localizations refreshed; `flutter analyze` report
 **No issues found**, and the full `flutter test` run passes **1,590 tests, 3 skipped**.
 The existing log-selection test now scrolls to the first log row after the new switch
 increases content height. Removed settings/preview symbols and search entries are absent.
-APK build and package/signature validation follow the source push.
+Source changes were pushed before building the verified APK described below.
+
+**Verified ARM64 Local build 166:** Source `b62b3d9e`, version 5.1.1 / build 166,
+split versionCode 2166. Built with `SPOTIFLAC_SIDE_BY_SIDE=true`,
+`SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a` and `flutter build apk --release
+--target-platform android-arm64 --split-per-abi --dart-define=GIT_COMMIT=b62b3d9e`.
+
+APK: **54,065,931 bytes**. Audited package `com.zarz.spotiflac.local`, label
+SpotiFLAC Local, minimum API 24 / target API 37, ARM64 only and all 17 native libraries.
+APK CRC/backend checks, AArch64 ELF/ZIP 16 KB alignment, embedded source revision, offline
+permissions and cream adaptive icon background pass. APK signatures verify and match
+build 165, preserving Local app updates/data. Analysis is clean; 1,590 tests pass, 3 skip.
+No physical-device installation/playback test was run in this environment.
+
+Download branch: `apk-local-arm64-166` (APK, README, SHA256SUMS, APK_DETAILS.json).
+SHA-256: `5884f74494d15f06897b64461e193c286bfb492edb1a10607f4722aa42b363bd`.
 
 **Local song controls, metadata-page retirement and Genres (2026-10-19, `26f8e71`):** The separate
 metadata details route and its display/cover/lyrics/menu/file-action modules are removed,
@@ -79,8 +93,8 @@ passes **1,590 tests, 3 skipped**. Coverage includes editor availability, menu a
 navigation, artwork/number rows, album pause/resume, selection and range selection,
 Loved Songs/category navigation, tag refresh identity, and real SQLite genre grouping,
 exact matching and paging. Songs list controls retain current-track pause/resume.
-No APK was built or published for this source change; physical-device validation remains
-pending.
+No APK was built at that source commit; the change is included in build 166 above.
+Physical-device validation remains pending.
 
 **ARM64 Local build 165 (2026-10-19):** `c4b79cee` includes the artwork row layout fix
 and increments Flutter/log build numbers to 165. Same release flags as build 164:
