@@ -124,7 +124,8 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
                 onPlay: () => ref
                     .read(playbackProvider.notifier)
                     .playLocalLibraryQueue(tracks, startItem: track),
-                onMenu: () => showLocalSongMenu(context, ref, track),
+                onMenu: (anchor) =>
+                    showLocalSongMenu(context, ref, track, anchor: anchor),
               );
             },
           ),

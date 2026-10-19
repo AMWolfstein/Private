@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/widgets/track_card.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
@@ -28,7 +29,8 @@ class LocalSongRow extends StatelessWidget {
   final int? number;
   final bool numbered, explicit, isPlaying, isSelectionMode, isSelected;
   final Widget? artistWidget, playControl;
-  final VoidCallback onPlay, onMenu;
+  final VoidCallback onPlay;
+  final ValueChanged<Rect?> onMenu;
   final VoidCallback? onSelect, onLongPress;
   @override
   Widget build(BuildContext context) => TrackCard(
@@ -119,10 +121,12 @@ class LocalSongRow extends StatelessWidget {
                 ),
               ),
             ),
-        IconButton(
-          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-          onPressed: onMenu,
-          icon: const Icon(Icons.more_horiz),
+        Builder(
+          builder: (buttonContext) => IconButton(
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            onPressed: () => onMenu(mornyeMenuAnchor(buttonContext)),
+            icon: const Icon(Icons.more_horiz),
+          ),
         ),
       ],
     ),

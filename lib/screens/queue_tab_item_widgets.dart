@@ -204,7 +204,8 @@ extension _QueueTabItemWidgets on _QueueTabState {
         ),
         onPlay: () => _playLibraryItem(item, libraryItems),
       ),
-      onMenu: () => showCollectionSongMenu(context, ref, item.toTrack()),
+      onMenu: (anchor) =>
+          showCollectionSongMenu(context, ref, item.toTrack(), anchor: anchor),
     );
   }
 

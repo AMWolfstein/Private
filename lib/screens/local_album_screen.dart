@@ -184,14 +184,20 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     }
   }
 
-  Future<void> _showTrackMenu(LocalLibraryItem track) async {
-    if (!await showLocalSongMenu(context, ref, track) || !mounted) return;
+  Future<void> _showTrackMenu(LocalLibraryItem track, Rect? anchor) async {
+    if (!await showLocalSongMenu(context, ref, track, anchor: anchor) ||
+        !mounted) {
+      return;
+    }
     final row = await LibraryDatabase.instance.getById(track.id);
-    if (row == null || !mounted) return;
+    if (!mounted) return;
     setState(() {
       _loadedTracks = [
         for (final item in _sortedTracksCache)
-          if (item.id == track.id) LocalLibraryItem.fromJson(row) else item,
+          if (item.id != track.id)
+            item
+          else if (row != null)
+            LocalLibraryItem.fromJson(row),
       ];
       _rebuildTrackCaches();
     });
@@ -502,7 +508,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           isSelected: selectedIds.contains(track.id),
           colorScheme: colorScheme,
           onToggleSelection: () => toggleSelection(track.id),
-          onMenu: () => _showTrackMenu(track),
+          onMenu: (anchor) => _showTrackMenu(track, anchor),
           onEnterSelectionMode: () => enterSelectionMode(track.id),
           onPlay: isCurrent
               ? () => ref

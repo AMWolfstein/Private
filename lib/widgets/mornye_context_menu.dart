@@ -10,7 +10,11 @@ Rect? mornyeMenuAnchor(BuildContext context) {
   final box = context.findRenderObject();
   if (box is! RenderBox || !box.hasSize) return null;
   if (box.size.height > MediaQuery.sizeOf(context).height * 0.65) return null;
-  return box.localToGlobal(Offset.zero) & box.size;
+  final overlay = Overlay.maybeOf(
+    context,
+    rootOverlay: true,
+  )?.context.findRenderObject();
+  return box.localToGlobal(Offset.zero, ancestor: overlay) & box.size;
 }
 
 Future<T?> showMornyeContextMenu<T>({
@@ -19,6 +23,7 @@ Future<T?> showMornyeContextMenu<T>({
   Rect? anchor,
   bool preferAbove = false,
   double maxWidth = 320,
+  bool fitToAnchorSpace = false,
 }) {
   final navigator = Navigator.of(context, rootNavigator: true);
   final themes = InheritedTheme.capture(from: context, to: navigator.context);
@@ -60,6 +65,7 @@ Future<T?> showMornyeContextMenu<T>({
                   anchor: target,
                   preferAbove: preferAbove,
                   maxWidth: maxWidth,
+                  fitToAnchorSpace: fitToAnchorSpace,
                   padding: media.padding.copyWith(
                     bottom: math.max(
                       media.padding.bottom,
@@ -93,11 +99,13 @@ class _MenuLayout extends SingleChildLayoutDelegate {
     required this.preferAbove,
     required this.maxWidth,
     required this.progress,
+    required this.fitToAnchorSpace,
   });
 
   final Rect? anchor;
   final EdgeInsets padding;
   final bool preferAbove;
+  final bool fitToAnchorSpace;
   final double maxWidth;
   final double progress;
   static const double _margin = 16;
@@ -113,6 +121,12 @@ class _MenuLayout extends SingleChildLayoutDelegate {
       constraints.maxHeight - padding.vertical - _margin * 2,
     );
     final above = (anchor?.top ?? 0) - padding.top - _margin - 8;
+    if (fitToAnchorSpace && anchor != null) {
+      final below =
+          constraints.maxHeight - padding.bottom - _margin - anchor!.bottom - 8;
+      final available = math.max(above, below);
+      if (available >= 160) height = math.min(height, available);
+    }
     if (preferAbove && above >= 160) height = math.min(height, above);
     return BoxConstraints(minWidth: width, maxWidth: width, maxHeight: height);
   }
@@ -163,6 +177,7 @@ class _MenuLayout extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_MenuLayout oldDelegate) =>
+      fitToAnchorSpace != oldDelegate.fitToAnchorSpace ||
       anchor != oldDelegate.anchor ||
       padding != oldDelegate.padding ||
       maxWidth != oldDelegate.maxWidth ||

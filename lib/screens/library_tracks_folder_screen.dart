@@ -893,9 +893,9 @@ class _CollectionTrackTile extends ConsumerWidget {
       onSelect: onTap,
       onLongPress: isSelectionMode ? onTap : onLongPress,
       onPlay: () => _playFromHere(context, ref),
-      onMenu: () => fresh != null
-          ? showLocalSongMenu(context, ref, fresh)
-          : showCollectionSongMenu(context, ref, track),
+      onMenu: (anchor) => fresh != null
+          ? showLocalSongMenu(context, ref, fresh, anchor: anchor)
+          : showCollectionSongMenu(context, ref, track, anchor: anchor),
     );
   }
 

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,12 +15,16 @@ void main() {
       'song row uses ${numbered ? 'track number' : 'artwork'}, explicit badge and two actions',
       (tester) async {
         var plays = 0;
+        final directory = Directory.systemTemp.createTempSync('song-menu-');
+        addTearDown(() => directory.deleteSync(recursive: true));
+        final path = '${directory.path}/song.flac';
+        File(path).writeAsBytesSync([102, 76, 97, 67, 0, 0, 0, 0]);
         final item = LocalLibraryItem(
           id: 'song',
           trackName: 'Song',
           artistName: 'Artist',
           albumName: 'Album',
-          filePath: '/music/song.flac',
+          filePath: path,
           scannedAt: DateTime(2026),
         );
         await tester.pumpWidget(
@@ -37,7 +42,8 @@ void main() {
                     numbered: numbered,
                     number: 2,
                     onPlay: () => plays++,
-                    onMenu: () => showLocalSongMenu(context, ref, item),
+                    onMenu: (anchor) =>
+                        showLocalSongMenu(context, ref, item, anchor: anchor),
                   ),
                 ),
               ),
@@ -58,15 +64,24 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Edit Metadata'), findsOneWidget);
         expect(find.text('Audio Quality Analysis'), findsOneWidget);
+        final l10n = AppLocalizations.of(
+          tester.element(find.byType(LocalSongRow)),
+        );
         for (final label in [
-          'Share',
-          'Copy file path',
-          'Play next',
-          'Remove from device',
-          'ReplayGain',
+          l10n.trackMetadataShare,
+          l10n.trackCopyFilePath,
+          l10n.trackPlayNext,
+          l10n.trackAddToQueue,
+          l10n.trackRemoveFromDevice,
+          l10n.trackReplayGain,
+          l10n.trackRemoveReplayGain,
+          l10n.homeGoToAlbum,
+          l10n.mornyeGoToArtist,
         ]) {
-          expect(find.text(label), findsNothing);
+          expect(find.text(label), findsOneWidget);
         }
+        await tester.ensureVisible(find.text('Audio Quality Analysis'));
+        await tester.pumpAndSettle();
         await tester.tap(find.text('Audio Quality Analysis'));
         await tester.pumpAndSettle();
         expect(find.byType(AudioQualityAnalysisScreen), findsOneWidget);

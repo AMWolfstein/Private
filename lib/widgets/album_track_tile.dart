@@ -33,7 +33,7 @@ class AlbumTrackTile extends StatelessWidget {
   final VoidCallback onPlay;
   final bool isPlaying;
   final bool explicit;
-  final VoidCallback onMenu;
+  final ValueChanged<Rect?> onMenu;
 
   @override
   Widget build(BuildContext context) {

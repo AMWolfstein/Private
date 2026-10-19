@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -317,13 +318,19 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                                 icon: const Icon(CupertinoIcons.play_fill),
                                 onPressed: () => _play(start: track),
                               ),
-                              IconButton(
-                                tooltip: MaterialLocalizations.of(
-                                  context,
-                                ).moreButtonTooltip,
-                                icon: const Icon(Icons.more_horiz),
-                                onPressed: () =>
-                                    showLocalSongMenu(context, ref, track),
+                              Builder(
+                                builder: (buttonContext) => IconButton(
+                                  tooltip: MaterialLocalizations.of(
+                                    context,
+                                  ).moreButtonTooltip,
+                                  icon: const Icon(Icons.more_horiz),
+                                  onPressed: () => showLocalSongMenu(
+                                    context,
+                                    ref,
+                                    track,
+                                    anchor: mornyeMenuAnchor(buttonContext),
+                                  ),
+                                ),
                               ),
                             ],
                           ),

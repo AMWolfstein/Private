@@ -1,4 +1,13 @@
 import 'dart:io';
+import 'package:spotiflac_android/theme/mornye_icons.dart';
+import 'package:spotiflac_android/widgets/app_snack_bar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:spotiflac_android/providers/playback_provider.dart';
+import 'package:spotiflac_android/providers/music_player_provider.dart';
+import 'package:spotiflac_android/models/unified_library_item.dart';
+import 'package:spotiflac_android/services/batch_track_actions.dart';
+import 'package:spotiflac_android/utils/clickable_metadata.dart';
+import 'package:spotiflac_android/widgets/local_song_file_actions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/services/library_edited_metadata.dart';
 import 'package:spotiflac_android/utils/logger.dart';
@@ -47,8 +56,9 @@ final localSongLookupProvider = FutureProvider.autoDispose
 Future<void> showCollectionSongMenu(
   BuildContext context,
   WidgetRef ref,
-  Track track,
-) async {
+  Track track, {
+  Rect? anchor,
+}) async {
   try {
     final item = await ref.read(
       localSongLookupProvider((
@@ -65,7 +75,7 @@ Future<void> showCollectionSongMenu(
       );
       return;
     }
-    await showLocalSongMenu(context, ref, item);
+    await showLocalSongMenu(context, ref, item, anchor: anchor);
   } catch (_) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -78,36 +88,152 @@ Future<void> showCollectionSongMenu(
 Future<bool> showLocalSongMenu(
   BuildContext context,
   WidgetRef ref,
-  LocalLibraryItem item,
-) async {
+  LocalLibraryItem item, {
+  Rect? anchor,
+}) async {
+  final cue = isCueSong(item);
   final action = await showMornyeContextMenu<String>(
     context: context,
-    builder: (menuContext) => MornyeContextMenu(
-      groups: [
-        [
-          MornyeMenuAction(
-            icon: Icons.edit_outlined,
-            label: context.l10n.trackEditMetadata,
-            onPressed: () => Navigator.of(menuContext).pop('edit'),
-          ),
-          MornyeMenuAction(
-            icon: Icons.analytics_outlined,
-            label: context.l10n.audioAnalysisTitle,
-            onPressed: () => Navigator.of(menuContext).pop('analysis'),
-          ),
+    anchor: anchor,
+    fitToAnchorSpace: true,
+    builder: (menuContext) {
+      final l10n = context.l10n;
+      MornyeMenuAction option(
+        String id,
+        IconData icon,
+        String label, {
+        bool destructive = false,
+      }) => MornyeMenuAction(
+        icon: mornyeIconFor(icon),
+        label: label,
+        destructive: destructive,
+        onPressed: () => Navigator.of(menuContext).pop(id),
+      );
+      return MornyeContextMenu(
+        quickActions: [
+          option('play', CupertinoIcons.play_fill, l10n.tooltipPlay),
+          option('share', CupertinoIcons.share_solid, l10n.trackMetadataShare),
         ],
-      ],
-    ),
+        groups: [
+          [
+            option('next', Icons.playlist_play, l10n.trackPlayNext),
+            option('queue', Icons.queue_music, l10n.trackAddToQueue),
+            if (item.albumName.trim().isNotEmpty)
+              option('album', Icons.album_outlined, l10n.homeGoToAlbum),
+            if (item.artistName.trim().isNotEmpty)
+              option('artist', Icons.person_outline, l10n.mornyeGoToArtist),
+          ],
+          [
+            option('copy', Icons.copy_outlined, l10n.trackCopyFilePath),
+            option('edit', Icons.edit_outlined, l10n.trackEditMetadata),
+            if (!cue) ...[
+              option('gain', Icons.graphic_eq, l10n.trackReplayGain),
+              option(
+                'removeGain',
+                Icons.remove_circle_outline,
+                l10n.trackRemoveReplayGain,
+              ),
+              option(
+                'analysis',
+                Icons.analytics_outlined,
+                l10n.audioAnalysisTitle,
+              ),
+            ] else
+              option('split', Icons.call_split, l10n.cueSplitTitle),
+          ],
+          [
+            option(
+              'delete',
+              Icons.delete_outline,
+              l10n.trackRemoveFromDevice,
+              destructive: true,
+            ),
+          ],
+        ],
+      );
+    },
   );
   if (!context.mounted || action == null) return false;
-  if (action == 'analysis') {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => AudioQualityAnalysisScreen(item: item),
-      ),
-    );
-  } else {
-    return editLocalSongMetadata(context, ref, item);
+  try {
+    switch (action) {
+      case 'copy':
+        await copyLocalSongPath(context, item);
+      case 'artist':
+        await navigateToArtistCredits(context, artistNames: item.artistName);
+      case 'album':
+        await navigateToAlbum(
+          context,
+          albumName: item.albumName,
+          artistName: item.albumArtist ?? item.artistName,
+          coverUrl: item.coverPath,
+        );
+      case 'delete':
+        return await deleteLocalSong(context, item);
+      case 'analysis':
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => AudioQualityAnalysisScreen(item: item),
+          ),
+        );
+      case 'split':
+        await splitLocalCue(context, item);
+      case 'edit':
+        return await editLocalSongMetadata(context, ref, item);
+      case 'gain':
+      case 'removeGain':
+        await runBatchReplayGain(
+          context,
+          [UnifiedLibraryItem.fromLocalLibrary(item)],
+          onExitSelectionMode: () {},
+          remove: action == 'removeGain',
+        );
+        return true;
+      default:
+        if (isCueVirtualPath(item.filePath)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text(cueVirtualTrackRequiresSplitMessage)),
+          );
+          return false;
+        }
+        if (!await fileExists(item.filePath)) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.l10n.snackbarFileNotFound)),
+            );
+          }
+          return false;
+        }
+        if (!context.mounted) return false;
+        switch (action) {
+          case 'play':
+            await ref.read(playbackProvider.notifier).playLocalLibraryQueue([
+              item,
+            ], startItem: item);
+          case 'next':
+          case 'queue':
+            final controller = ref.read(musicPlayerControllerProvider);
+            if (action == 'next') {
+              await controller.playNextLocal(item);
+            } else {
+              await controller.addToQueueLocal(item);
+            }
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    action == 'next'
+                        ? context.l10n.snackbarPlayingNext
+                        : context.l10n.snackbarAddedToQueueGeneric,
+                  ),
+                ),
+              );
+            }
+          case 'share':
+            await shareLocalSong(context, item);
+        }
+    }
+  } catch (error) {
+    if (context.mounted) showCannotOpenFileSnackBar(context, error);
   }
   return false;
 }
