@@ -162,8 +162,8 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `lib/services/csv_import_service.dart:28`, `lib/services/m3u_playlist_service.dart:42` (import half)
 - Scenario: `pickAndParseCsv`, `parsePlaylistInBackground`, `parseM3u` have no non-test callers; the CSV parser is Spotify-oriented (`spotify:track:`, ISRC).
 - Root cause: download-era import code left behind; only M3U export is used.
-- Impact: ~150 lines of dead code (+ tests, native `parse_playlist` op) with latent parsing bugs.
-- Fix: delete the import half and its tests; keep export.
+- Impact: ~150 lines of dead code (+ tests) with latent parsing bugs; also Rust `parse_playlist` (`native_playlists.rs:17`, `data_jobs.rs:63`) and `hash_file` (`data_jobs.rs:62`) have only test callers.
+- Fix: delete the import half, `csv_import_service.dart`, the Rust ops and their tests; keep `build_m3u` and export.
 - Evidence: `grep -rn` over lib/ finds callers only inside the two files.
 
 ### API-001 [P2] [confidence: high] [VALIDATED]
@@ -358,7 +358,7 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `lib/utils/ffmpeg_reenrich.dart` (145), `lib/utils/re_enrich_result.dart` (51), `lib/utils/re_enrich_release_policy.dart` (8), `lib/utils/lyrics_metadata_helper.dart` (209: `cleanLyricsForDisplay`, `hasUsableLyricsContent`, `hasEmbeddedLyricsMetadata`, `isInstrumentalLyricsMarker`, `mergePlatformMetadataForTagEmbed`, sidecar writers), `PlatformBridge.writeSafSidecarLrc` (`platform_bridge.dart:830`)
 - Scenario: online re-enrich/lyrics flow removed; nothing calls `applyFfmpegReEnrichResult`; the helpers are reachable only from it or tests.
 - Impact: ~410 lines + tests (`re_enrich_result_test`, `re_enrich_release_policy_test`, helper tests), likely orphan `trackReEnrich*` l10n keys and native `write_external_lrc`.
-- Fix: delete with tests; check l10n keys and the native channel method in the dead-code sweep.
+- Fix: delete with tests, plus the `writeSafSidecarLrc` Kotlin handler (`MainActivity.kt:1447`); keep `writeTempToSaf` (live callers in replaygain/metadata persistence); check l10n keys in the dead-code sweep.
 - Evidence: `grep -rln` per symbol over lib/.
 
 ### DEAD-003 [P3] [confidence: high] [VALIDATED]
@@ -373,6 +373,114 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Impact: ~50 lines dead API; misleading naming.
 - Fix: remove dead methods; fix comments; rename if cheap.
 
+### DATA-501 [P1] [confidence: medium] [VALIDATED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:741-757 (`querySafChildrenOrThrow`), consumed at :930, :1355; Dart `library_database.dart:373`, `library_cleanup.dart:18-27`
+- Scenario: a cloud/network DocumentsProvider returns an empty children cursor with `DocumentsContract.EXTRA_ERROR` → treated as an empty folder, `traversalErrors` stays 0 → full scan: `error_count` 0 → `preserveMissing = false` → `deleteReplacedLibraryScanRows` deletes the subtree (or whole source if the root listing is empty); incremental: missing URIs go to `removedUris` → `deleteByPaths`.
+- Root cause: only `EXTRA_LOADING` is checked; a 0-row result with no errors is trusted as authoritative.
+- Impact: library rows for a folder or the whole source disappear after a transient provider failure (files untouched; restored by a later successful scan).
+- Fix: throw `IOException` when `cursor.extras.getString(EXTRA_ERROR) != null` (~3 lines); optionally refuse a full replace yielding 0 rows when the source had rows.
+- Evidence: check at :756 only reads `EXTRA_LOADING`; trigger depends on provider behavior (documented DocumentsProvider error contract).
+
+### KT-201 [P2] [confidence: high] [VALIDATED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1465-1539 (changed-CUE loop in `scanSafTreeIncremental`), :1427, :1660
+- Scenario: a CUE whose mtime changed fails to re-scan (temp copy null, audio missing, parse throws) → catch only does `errors++`; old `cue#trackN` paths never added to `currentUris` → returned as removed → Dart deletes the CUE's tracks. `errors` not returned.
+- Root cause: failed re-index treated like deletion.
+- Impact: transient read error deletes all tracks of a CUE album from the library.
+- Fix: on failure add the existing virtual paths to `currentUris`; return the error count; ~5 lines.
+- Evidence: catch block at :1534-1536; `currentUris` extended only at :1401 and :1530.
+
+### KT-202 [P2] [confidence: high] [VALIDATED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1604-1613, :1427-1430 (incremental scan)
+- Scenario: a `.cue` is added beside an already-indexed, unchanged audio file → CUE tracks indexed, standalone row kept → duplicates until a full rescan.
+- Root cause: `cueReferencedAudioUris` only skips changed audio; never removes existing standalone rows.
+- Fix: add `existingFiles.keys ∩ cueReferencedAudioUris` to `finalRemovedUris`; ~3 lines.
+- Evidence: full scan avoids it via full swap (:1162).
+
+### KT-203 [P2] [confidence: medium] [VALIDATED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1003-1012, :1047-1160 (`scanSafTree` resume)
+- Scenario: full scan interrupted and resumed; checkpoint rebuilt from surviving NDJSON rows; files deleted/renamed in between stay in the output and are imported.
+- Root cause: resumed output not pruned against the current listing.
+- Impact: ghost tracks for deleted files.
+- Fix: filter stale lines after traversal or discard the resume when the checkpoint has URIs not in the listing; ~15 lines.
+- Evidence: reconcile step never consults the current listing.
+
+### KT-102 [P2] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:191-196` (`safTreeLauncher` callback), :219
+- Scenario: picker returns OK but `data.flags` has no grant bits (`takeFlags == 0`) or `takePersistableUriPermission` throws (e.g. grant cap reached, see KT-105) → only logged; payload delivered as success.
+- Root cause: persist failure not propagated; no READ|WRITE fallback.
+- Impact: Dart stores a tree whose grant is lost after restart; the library silently loses access.
+- Fix: fall back to READ|WRITE flags when 0; on failure return an error; ~6 lines.
+- Evidence: lines 191-196; unconditional `deliver(payload)` at :219.
+
+### UX-003 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/main_shell.dart:151-200` (`_repairSafAccessIfNeeded` dialog), `lib/providers/settings_provider.dart:173`, :279 (`setDownloadDirectory`), `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1042-1061` (`isSafTreeAccessible`)
+- Scenario: a user upgrading or importing settings with `storageMode == 'saf'` and a legacy `downloadTreeUri` gets a non-dismissible "Download folder access lost" dialog on start/resume whenever the tree is not writable or the provider is slow (`isSafTreeAccessible` returns false on any exception or missing write grant); its action resets the legacy fields.
+- Root cause: download/output-folder repair flow and settings survived the offline migration; the probe is binary.
+- Impact: obsolete download-era modal in an offline player (AGENTS.md: output-folder feature removed); can appear repeatedly.
+- Fix: remove the repair dialog and the legacy `downloadTreeUri`/`downloadDirectory`/`storageMode` handling (ignore them on import); ~60 lines. Merges reviewer KT-101.
+- Evidence: dialog strings `downloadFolderAccessLostTitle`; trigger condition at `main_shell.dart:157-160`.
+
+### KT-103 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:756-778` (`onDestroy`), :857-866, :74
+- Scenario: engine outlives the Activity; after Activity re-creation during a background scan, a new progress StreamHandler is installed without a Dart re-subscribe → progress stalls; `scope` never cancelled and backend channel handler not cleared → short Activity leak.
+- Fix: cancel `scope` in `onDestroy`; confirm `ProgressStreamPoller` re-subscribes.
+
+### KT-104 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1459`, :1478
+- Scenario: error JSON hand-built with only quote replacement → backslash/newline in a message yields invalid JSON → Dart `jsonDecode` throws.
+- Fix: use `errorJson(e.message ?: "unknown")`; 2 lines.
+
+### KT-105 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:193`
+- Scenario: `releasePersistableUriPermission` is never called; replaced/removed folders keep grants until the platform cap (128/512) → later picks fail (silently, KT-102).
+- Fix: release grants when a library source is removed; ~15 lines.
+
+### KT-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1396-1398, :1410
+- Scenario: providers without `COLUMN_LAST_MODIFIED` give 0 → edits never detected incrementally; replacing audio under an unchanged CUE keeps stale CUE data.
+- Fix: treat 0 as changed; ~2 lines.
+
+### KT-205 [P3] [confidence: high] [VALIDATED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1094-1096, :1558-1575
+- Scenario: resumed scan skips indexed CUEs without `scanned++` (progress under-reports); unchanged-CUE copy failure only logged → audio indexed standalone, duplicating CUE rows.
+- Fix: count/progress before `continue`; treat unresolved unchanged CUE as an error.
+
+### SEC-101 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `android/app/src/main/AndroidManifest.xml:42-45`, `android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt:274-278` (`PlayerWidgetBridge.handleIntent`)
+- Scenario: any app can start the exported launcher Activity with `player_widget_command=<any>`; forwarded to Dart unvalidated (receiver path allow-lists toggle/next/previous).
+- Impact: low today (MediaSession allows the same); risk for future handlers.
+- Fix: same allow-list in `handleIntent`; 3 lines.
+
+### DEAD-201 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/platform_bridge.dart:268` (`prepareRuntimeState`), :277 (`setDownloadDirectory`), :305 (`buildFilename`), :316 (`sanitizeFilename`); `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:917`, :925; `CoreBackend.kt:13-14`
+- Scenario: no `PlatformBridge.` callers; native branches for buildFilename/sanitizeFilename unreachable (not in `nativeBackendMethods`), others have no handler.
+- Fix: delete wrappers, branches and interface members (~40 lines). (`SettingsNotifier.setDownloadDirectory` is a different symbol — see UX-003.)
+
+### DEAD-202 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/platform_bridge.dart:415, 429, 494, 510, 528, 563, 688, 776, 792, 808` (`resolveSafFile`, `inspectSafFiles`, three `create*SafFile*` variants, `shareMultipleContentUris`, `checkHiResAuthenticity`, `ensureAC4Config`, `writeAC4Metadata`, `rewriteSplitArtistTags`) and their MainActivity handlers
+- Scenario: download/conversion-era wrappers with zero callers; native handlers unreachable.
+- Fix: remove wrappers, handlers and CoreBackend members in one batch; keep `writeM4AFreeformTags` and `safCreateFromPath`.
+
+### DEAD-203 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/platform_bridge.dart:574, 591, 607, 658` (`getLyricsLRC`, `getLyricsLRCWithSource`, `embedLyricsToFile`, `fetchAndSaveLyrics`); `android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt:34-54`, :390-406
+- Scenario: Embed lyrics and fetch-and-save were removed (AGENTS.md) but remain wired end to end; no `lib/` callers.
+- Fix: delete wrappers, Kotlin branches and plumbing; update tests.
+
+### DEAD-206 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/platform_bridge.dart:223, 333-339`; `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:965-970`; `android/app/src/main/kotlin/com/zarz/spotiflac/SetupFolderPickerStore.kt`
+- Scenario: setup folder step removed; native still persists `for_setup` picks and emits `setupFolderSelectionChanged`; nothing reads it.
+- Fix: remove Dart members, handlers, `for_setup` branch and the store (~60 lines).
+
+### DEAD-207 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/platform_bridge.dart:1167-1230` (iOS bookmark/directory methods), `lib/widgets/ios_library_folder_sheet.dart`, `lib/providers/local_library_provider.dart:636-644, 917, 1586-1608`, `lib/screens/settings/library_settings_page.dart:150`
+- Scenario: Android-only project (no `ios/`); methods have no handler.
+- Fix: remove iOS methods, sheet and branches (~150 lines); include `migrateIosContainerPaths`, `lib/utils/ios_container_paths.dart` in the dead-code sweep.
+
+### DEAD-208 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/proguard-rules.pro:48-53`
+- Scenario: keep rules for nonexistent `DownloadService` and `DownloadQueueWidgetProvider`.
+- Fix: delete both blocks; update the stale comment in `NativeReplayGainPolicy.kt:4` (see KT-001).
+
 ## Resolved
 
 _None yet._
@@ -386,4 +494,6 @@ _False positives and intentional behavior, with one-line reason._
 - R-004 (test-auditor TEST-004, unawaited popover action): no pending future in that test; an open overlay at test end leaks nothing.
 - R-005 (test-auditor TEST-005, plain `.cue` delete test): duplicate of DATA-001; its regression test belongs to that fix.
 - R-006 (metadata DEAD-005, `cover_cache_manager.dart`): live upgrade-cleanup affordance used by `cache_management_page.dart`; UX note only.
+- R-007 (kotlin KT-101, legacy SAF repair dialog probe): merged into UX-003.
+- R-008 (kotlin DEAD-204/DEAD-205): duplicates of DEAD-002 and DATA-101; native parts added there.
 - R-003 (`/code-review` #10, graphify commit title `81577e5` missing "code"): historical pushed commit; fixing needs history rewrite. Future commits follow the AGENTS.md wording.
