@@ -6,7 +6,7 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Last reviewed commit: none
 - Graph: `graphify-out/` built from `98fe1946` (fresh for all app code). Check with
   `scripts/review_scope.sh`.
-- Next review unit: `/review HEAD~3..HEAD` (song-menu actions, `6ac8efd`) — flutter-dart-auditor
+- Next review unit: `/review 2b32361~5..2b32361` (song-menu actions, `6ac8efd`) — flutter-dart-auditor
   + test-auditor.
 - Next audit unit: `audio` (playback correctness/leaks/threading only; Media3 migration is
   separate) — then `storage`, `scanner`.
