@@ -9,7 +9,7 @@ import 'package:spotiflac_android/providers/local_artist_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
+import 'package:spotiflac_android/widgets/local_song_menu.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
@@ -309,20 +309,25 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          trailing: IconButton(
-                            tooltip: context.l10n.tooltipPlay,
-                            icon: const Icon(CupertinoIcons.play_fill),
-                            onPressed: () => _play(start: track),
-                          ),
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (_) => TrackMetadataScreen(
-                                localItem: track,
-                                localNavigationItems: tracks.items,
-                                navigationIndex: index,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                tooltip: context.l10n.tooltipPlay,
+                                icon: const Icon(CupertinoIcons.play_fill),
+                                onPressed: () => _play(start: track),
                               ),
-                            ),
+                              IconButton(
+                                tooltip: MaterialLocalizations.of(
+                                  context,
+                                ).moreButtonTooltip,
+                                icon: const Icon(Icons.more_horiz),
+                                onPressed: () =>
+                                    showLocalSongMenu(context, ref, track),
+                              ),
+                            ],
                           ),
+                          onTap: () => _play(start: track),
                         );
                       },
                     ),

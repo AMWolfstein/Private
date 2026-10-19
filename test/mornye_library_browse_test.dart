@@ -9,6 +9,7 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/mornye_library_screen.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
+import 'package:spotiflac_android/screens/local_genres_screen.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -157,18 +158,32 @@ void main() {
         expect(requests, isEmpty);
         expect(find.text('Playlists'), findsOneWidget);
         expect(find.text('Songs'), findsOneWidget);
-        expect(find.text('Loved'), findsOneWidget);
+        expect(find.text('Genres'), findsOneWidget);
+        expect(
+          tester.getTopLeft(find.text('Genres')).dy,
+          greaterThan(tester.getTopLeft(find.text('Songs')).dy),
+        );
+        expect(
+          tester.getTopLeft(find.text('Genres')).dy,
+          lessThan(tester.getTopLeft(find.text('Loved Songs')).dy),
+        );
+        await tester.tap(find.text('Genres'));
+        await tester.pumpAndSettle();
+        expect(find.byType(LocalGenresScreen), findsOneWidget);
+        await tester.tap(find.byTooltip('Back'));
+        await tester.pumpAndSettle();
+        expect(find.text('Loved Songs'), findsOneWidget);
         expect(find.text('Favorite Artists'), findsOneWidget);
         expect(
           tester.getTopLeft(find.text('Songs')).dy,
-          lessThan(tester.getTopLeft(find.text('Loved')).dy),
+          lessThan(tester.getTopLeft(find.text('Loved Songs')).dy),
         );
         expect(
-          tester.getTopLeft(find.text('Loved')).dy,
+          tester.getTopLeft(find.text('Loved Songs')).dy,
           lessThan(tester.getTopLeft(find.text('Favorite Artists')).dy),
         );
-        await tester.ensureVisible(find.text('Loved'));
-        await tester.tap(find.text('Loved'));
+        await tester.ensureVisible(find.text('Loved Songs'));
+        await tester.tap(find.text('Loved Songs'));
         await tester.pumpAndSettle();
         expect(find.byType(LibraryTracksFolderScreen), findsOneWidget);
         await tester.tap(find.byTooltip('Back'));

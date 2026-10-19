@@ -1,4 +1,5 @@
 {
+  "libraryGenres": "Genres",
   "settingsPlaybackSubtitle": "Lecteur, volume, AutoMix et sortie audio",
   "sectionPlayer": "Lecteur",
   "sectionVolumeAndTransitions": "Volume et transitions",
@@ -133,25 +134,7 @@
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
   },
-  "trackReplayGain": "Réanalyser ReplayGain",
-  "@trackReplayGain": {
-    "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
-  },
-  "trackReplayGainScanning": "Analyse du volume sonore...",
-  "@trackReplayGainScanning": {
-    "description": "Snackbar/progress message while scanning ReplayGain for a single track"
-  },
-  "trackReplayGainSuccess": "Ajout des balises ReplayGain",
-  "@trackReplayGainSuccess": {
-    "description": "Snackbar message after ReplayGain tags written for a single track"
-  },
-  "trackReplayGainFailed": "Impossible d'ajouter les balises ReplayGain",
-  "@trackReplayGainFailed": {
-    "description": "Snackbar message when ReplayGain scan/write fails"
-  },
   "trackRemoveReplayGain": "Supprimer ReplayGain",
-  "trackRemoveReplayGainSuccess": "Suppression des balises ReplayGain",
-  "trackRemoveReplayGainFailed": "Impossible de supprimer les balises ReplayGain",
   "replayGainRemoving": "Suppression de ReplayGain...",
   "replayGainRemoveConfirmMessage": "Souhaitez-vous supprimer les balises ReplayGain des {count} titres ? Les données audio, les pochettes et les autres métadonnées seront conservées.",
   "@replayGainRemoveConfirmMessage": {
@@ -376,10 +359,6 @@
   "@aboutSquiglyDesc": {
     "description": "Credit for the Squigly resolver"
   },
-  "trackMetadataService": "Service",
-  "@trackMetadataService": {
-    "description": "Metadata field - download service used"
-  },
   "trackMetadataPlay": "Lire",
   "@trackMetadataPlay": {
     "description": "Action button - play track"
@@ -387,10 +366,6 @@
   "trackMetadataShare": "Partager",
   "@trackMetadataShare": {
     "description": "Action button - share track"
-  },
-  "trackMetadataDelete": "Supprimer",
-  "@trackMetadataDelete": {
-    "description": "Action button - delete track"
   },
   "setupGrantPermission": "Accorder l'autorisation",
   "@setupGrantPermission": {
@@ -918,134 +893,21 @@
       }
     }
   },
-  "trackCopyFilePath": "Copier le chemin d'accès au fichier",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
-  },
-  "trackRemoveFromDevice": "Supprimer de l'appareil",
-  "@trackRemoveFromDevice": {
-    "description": "Action - delete downloaded file"
-  },
-  "trackLoadLyrics": "Charger les paroles",
-  "@trackLoadLyrics": {
-    "description": "Action - fetch lyrics"
-  },
   "trackMetadata": "Métadonnées",
   "@trackMetadata": {
     "description": "Tab title - track metadata"
-  },
-  "trackFileInfo": "Informations sur le fichier",
-  "@trackFileInfo": {
-    "description": "Tab title - file information"
   },
   "trackLyrics": "Paroles",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
-  "trackFileNotFound": "Fichier introuvable",
-  "@trackFileNotFound": {
-    "description": "Error - file doesn't exist"
-  },
-  "trackTrackName": "Nom de la piste",
-  "@trackTrackName": {
-    "description": "Metadata label - track title"
-  },
-  "trackArtist": "Artiste",
-  "@trackArtist": {
-    "description": "Metadata label - artist name"
-  },
-  "trackAlbumArtist": "Artiste de l'album",
-  "@trackAlbumArtist": {
-    "description": "Metadata label - album artist"
-  },
   "trackAlbum": "Album",
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackTrackNumber": "Numéro de piste",
-  "@trackTrackNumber": {
-    "description": "Metadata label - track number"
-  },
-  "trackDiscNumber": "Numéro de disque",
-  "@trackDiscNumber": {
-    "description": "Metadata label - disc number"
-  },
-  "trackDuration": "Durée",
-  "@trackDuration": {
-    "description": "Metadata label - track length"
-  },
-  "trackAudioQuality": "Qualité audio",
-  "@trackAudioQuality": {
-    "description": "Metadata label - audio quality"
-  },
-  "trackReplayGainTrackGain": "ReplayGain - Gain par piste",
-  "@trackReplayGainTrackGain": {
-    "description": "Metadata label - ReplayGain track gain"
-  },
-  "trackReplayGainTrackPeak": "ReplayGain – Pic de piste",
-  "@trackReplayGainTrackPeak": {
-    "description": "Metadata label - ReplayGain track peak"
-  },
-  "trackReplayGainAlbumGain": "ReplayGain - Gain de l'album",
-  "@trackReplayGainAlbumGain": {
-    "description": "Metadata label - ReplayGain album gain"
-  },
-  "trackReplayGainAlbumPeak": "ReplayGain – Valeur maximale de l'album",
-  "@trackReplayGainAlbumPeak": {
-    "description": "Metadata label - ReplayGain album peak"
-  },
-  "trackReleaseDate": "Date de sortie",
-  "@trackReleaseDate": {
-    "description": "Metadata label - release date"
-  },
-  "trackGenre": "Genre",
-  "@trackGenre": {
-    "description": "Metadata label - music genre"
-  },
-  "trackLabel": "Label",
-  "@trackLabel": {
-    "description": "Metadata label - record label"
-  },
-  "trackCopyright": "Droits d'auteur",
-  "@trackCopyright": {
-    "description": "Metadata label - copyright information"
-  },
-  "trackCopyLyrics": "Copier les paroles",
-  "@trackCopyLyrics": {
-    "description": "Action - copy lyrics to clipboard"
-  },
-  "trackLyricsSource": "Source : {source}",
-  "@trackLyricsSource": {
-    "description": "Label showing the lyrics source/provider",
-    "placeholders": {
-      "source": {
-        "type": "String"
-      }
-    }
-  },
   "trackLyricsNotAvailable": "Les paroles de ce morceau ne sont pas disponibles",
   "@trackLyricsNotAvailable": {
     "description": "Message when lyrics not found"
-  },
-  "trackLyricsNotInFile": "Aucune parole n'a été trouvée dans ce fichier",
-  "@trackLyricsNotInFile": {
-    "description": "Message when no embedded lyrics in audio file"
-  },
-  "trackLyricsTimeout": "La requête a expiré. Veuillez réessayer plus tard.",
-  "@trackLyricsTimeout": {
-    "description": "Message when lyrics request times out"
-  },
-  "trackLyricsLoadFailed": "Impossible de charger les paroles",
-  "@trackLyricsLoadFailed": {
-    "description": "Message when lyrics loading fails"
-  },
-  "trackEmbedLyrics": "Intégrer les paroles",
-  "@trackEmbedLyrics": {
-    "description": "Action - embed lyrics into audio file"
-  },
-  "trackLyricsEmbedded": "Les paroles ont été intégrées avec succès",
-  "@trackLyricsEmbedded": {
-    "description": "Snackbar - lyrics saved to file"
   },
   "trackInstrumental": "Morceau instrumental",
   "@trackInstrumental": {
@@ -1054,10 +916,6 @@
   "trackCopiedToClipboard": "Copié dans le presse-papiers",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
-  },
-  "trackDeleteConfirmTitle": "Supprimer de l'appareil ?",
-  "@trackDeleteConfirmTitle": {
-    "description": "Delete confirmation title"
   },
   "dateDaysAgo": "Il y a {count} jours",
   "@dateDaysAgo": {
@@ -1393,10 +1251,6 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "librarySourceLocal": "Locale",
-  "@librarySourceLocal": {
-    "description": "Badge for tracks from local library scan"
-  },
   "libraryFilterAll": "Tout",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
@@ -1661,43 +1515,9 @@
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackSaveCoverArt": "Enregistrer la pochette",
-  "@trackSaveCoverArt": {
-    "description": "Menu action - save album cover art as file"
-  },
-  "trackSaveLyrics": "Enregistrer les paroles (.lrc)",
-  "@trackSaveLyrics": {
-    "description": "Menu action - save lyrics as .lrc file"
-  },
-  "trackSaveLyricsProgress": "Enregistrement des paroles...",
-  "@trackSaveLyricsProgress": {
-    "description": "Snackbar while saving lyrics to file"
-  },
   "trackEditMetadata": "Modifier les métadonnées",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
-  },
-  "trackCoverSaved": "La pochette a été enregistrée sous le nom {fileName}",
-  "@trackCoverSaved": {
-    "description": "Snackbar after cover art saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
-  },
-  "trackCoverNoSource": "Aucune source d'illustration de couverture disponible",
-  "@trackCoverNoSource": {
-    "description": "Snackbar when no cover art URL or embedded cover"
-  },
-  "trackLyricsSaved": "Paroles enregistrées dans {fileName}",
-  "@trackLyricsSaved": {
-    "description": "Snackbar after lyrics saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
   },
   "trackReEnrichSuccess": "Métadonnées réenrichies avec succès",
   "trackReEnrichMetadataSaved": "Métadonnées enregistrées",
@@ -1706,98 +1526,9 @@
   "@trackReEnrichSuccess": {
     "description": "Snackbar after successful re-enrichment"
   },
-  "trackSaveFailed": "Échec : {error}",
-  "@trackSaveFailed": {
-    "description": "Snackbar when save operation fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "audioBitrate": "Débit binaire",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
-  },
-  "cueSplitTitle": "Fiche CUE fractionnée",
-  "@cueSplitTitle": {
-    "description": "Title for CUE split bottom sheet"
-  },
-  "cueSplitAlbum": "Album : {album}",
-  "@cueSplitAlbum": {
-    "description": "Album name in CUE split sheet",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitArtist": "Artiste : {artist}",
-  "@cueSplitArtist": {
-    "description": "Artist name in CUE split sheet",
-    "placeholders": {
-      "artist": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitTrackCount": "{count} titres",
-  "@cueSplitTrackCount": {
-    "description": "Number of tracks in CUE sheet",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitConfirmTitle": "Album CUE fractionné",
-  "@cueSplitConfirmTitle": {
-    "description": "CUE split confirmation dialog title"
-  },
-  "cueSplitConfirmMessage": "Diviser « {album} » en {count} fichiers FLAC individuels ?\n\nLes fichiers seront enregistrés dans le même répertoire.",
-  "@cueSplitConfirmMessage": {
-    "description": "CUE split confirmation dialog message",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSplitting": "Fractionnement de la liste CUE... ({current}/{total})",
-  "@cueSplitSplitting": {
-    "description": "Snackbar while splitting CUE",
-    "placeholders": {
-      "current": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSuccess": "Le fichier a été divisé en {count} pistes avec succès",
-  "@cueSplitSuccess": {
-    "description": "Snackbar after successful CUE split",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitFailed": "Échec de la division CUE",
-  "@cueSplitFailed": {
-    "description": "Snackbar when CUE split fails"
-  },
-  "cueSplitNoAudioFile": "Fichier audio introuvable pour cette liste CUE",
-  "@cueSplitNoAudioFile": {
-    "description": "Error when CUE audio file is missing"
-  },
-  "cueSplitButton": "Diviser en pistes",
-  "@cueSplitButton": {
-    "description": "Button text to start CUE splitting"
   },
   "actionCreate": "Créer",
   "@actionCreate": {
@@ -1807,7 +1538,7 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionLoved": "Favoris",
+  "collectionLoved": "Titres aimés",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
@@ -2106,21 +1837,9 @@
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarLoadingCueSheet": "Chargement de la liste CUE...",
-  "@snackbarLoadingCueSheet": {
-    "description": "Snackbar while loading a CUE sheet file"
-  },
   "snackbarMetadataSaved": "Les métadonnées ont été enregistrées avec succès",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
-  },
-  "snackbarFailedToEmbedLyrics": "Impossible d'intégrer les paroles",
-  "@snackbarFailedToEmbedLyrics": {
-    "description": "Snackbar when lyrics embedding fails"
-  },
-  "snackbarFailedToWriteStorage": "Échec de l'écriture sur le support de stockage",
-  "@snackbarFailedToWriteStorage": {
-    "description": "Snackbar when writing metadata back to file fails"
   },
   "snackbarError": "Erreur : {error}",
   "@snackbarError": {
@@ -2800,14 +2519,6 @@
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "trackLyricsEmbeddedSource": "Intégré",
-  "@trackLyricsEmbeddedSource": {
-    "description": "Lyrics source label for embedded lyrics"
-  },
-  "unknownAlbum": "Album inconnu",
-  "@unknownAlbum": {
-    "description": "Fallback album name when metadata is missing"
-  },
   "unknownArtist": "Artiste inconnu",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
@@ -2994,14 +2705,6 @@
   "@aboutPaxsenixSubtitle": {
     "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
-  "snackbarPlayingNext": "Prochainement",
-  "@snackbarPlayingNext": {
-    "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "snackbarAddedToQueueGeneric": "Ajouté à la file d'attente",
-  "@snackbarAddedToQueueGeneric": {
-    "description": "Snackbar when a track is added to the playback queue without naming it"
-  },
   "selectionDeletePlaylistsCount": "Supprimer {count} {count, plural, one{playlist} other{playlists}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
@@ -3064,20 +2767,8 @@
   "@trackOptionCopyTrackAndArtist": {
     "description": "Track menu action that copies the track title and artist"
   },
-  "metadataCopyValue": "Copier la valeur",
-  "@metadataCopyValue": {
-    "description": "Metadata menu action that copies only the selected value"
-  },
-  "metadataCopyField": "Copier le champ et la valeur",
-  "@metadataCopyField": {
-    "description": "Metadata menu action that copies the selected key and value"
-  },
   "mornyeSearch": "Rechercher",
   "mornyeContinuePlaying": "Continuer à lire",
-  "metadataCopyAll": "Copier toutes les métadonnées",
-  "@metadataCopyAll": {
-    "description": "Metadata menu action that copies every visible key and value"
-  },
   "optionsEmbeddedCoverSize": "Dimensions de la pochette intégrée",
   "@optionsEmbeddedCoverSize": {
     "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"

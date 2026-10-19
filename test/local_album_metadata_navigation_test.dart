@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'support/material_test_theme.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -25,9 +24,7 @@ class _Playback extends PlaybackController {
 
 void main() {
   for (final mornye in [false, true]) {
-    testWidgets('album row opens metadata, Play plays ($mornye)', (
-      tester,
-    ) async {
+    testWidgets('album row and Play both play ($mornye)', (tester) async {
       SharedPreferences.setMockInitialValues({});
       tester.view.physicalSize = const Size(430, 1200);
       tester.view.devicePixelRatio = 1;
@@ -68,27 +65,15 @@ void main() {
       await tester.scrollUntilVisible(find.text('Song 2'), 150);
       await tester.tap(find.text('Song 2'));
       await tester.pumpAndSettle();
-      final metadata = tester.widget<TrackMetadataScreen>(
-        find.byType(TrackMetadataScreen),
-      );
-      expect(metadata.localItem!.id, '2');
-      expect(metadata.localNavigationItems!.map((track) => track.id), [
-        '1',
-        '2',
-      ]);
-      expect(metadata.navigationIndex, 1);
-      expect(playback.played, isEmpty);
-      navigator.currentState!.pop();
-      await tester.pumpAndSettle();
+      expect(playback.played, ['2']);
       final row = find.byWidgetPredicate(
         (widget) => widget is AlbumTrackTile && widget.trackName == 'Song 2',
       );
       await tester.tap(
-        find.descendant(of: row, matching: find.byType(IconButton)),
+        find.descendant(of: row, matching: find.byTooltip('Play')),
       );
       await tester.pumpAndSettle();
-      expect(playback.played, ['2']);
-      expect(find.byType(TrackMetadataScreen), findsNothing);
+      expect(playback.played, ['2', '2']);
       expect(tester.takeException(), isNull);
     });
   }

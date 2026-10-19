@@ -12,7 +12,7 @@ import 'package:spotiflac_android/providers/recent_access_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
+import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
@@ -292,12 +292,9 @@ class _HomeTabState extends ConsumerState<HomeTab>
                           samplePath: item.filePath,
                           icon: Icons.music_note,
                           colors: colorScheme,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (_) =>
-                                  TrackMetadataScreen(localItem: item),
-                            ),
-                          ),
+                          onTap: () => ref
+                              .read(playbackProvider.notifier)
+                              .playLocalLibraryQueue([item], startItem: item),
                         ),
                       )
                       .toList(),

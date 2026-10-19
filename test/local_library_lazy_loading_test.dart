@@ -350,7 +350,7 @@ void main() {
     container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
     await tester.pumpAndSettle();
     expect(find.text('Song in playlist'), findsOneWidget);
-    expect(find.text('Loved'), findsNothing);
+    expect(find.text('Loved Songs'), findsNothing);
     expect(find.text('Favorite Artists'), findsNothing);
     expect(find.text('My hidden playlist'), findsNothing);
     expect(tester.takeException(), isNull);

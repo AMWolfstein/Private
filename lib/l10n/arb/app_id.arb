@@ -1,5 +1,5 @@
 {
-  "trackFileUnavailable": "File saat ini tidak dapat diakses. Periksa akses penyimpanan dan coba lagi.",
+  "libraryGenres": "Genre",
   "appearanceGlassClearPerformance": "Kaca sangat bening dapat memakai lebih banyak daya dan terasa kurang lancar di perangkat lama. Kurangi kebeningan jika perlu.",
   "libraryFilterIncompleteAlbums": "Album belum lengkap",
   "@libraryFilterIncompleteAlbums": {
@@ -202,25 +202,7 @@
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
   },
-  "trackReplayGain": "Pindai ulang ReplayGain",
-  "@trackReplayGain": {
-    "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
-  },
-  "trackReplayGainScanning": "Menganalisis kenyaringan...",
-  "@trackReplayGainScanning": {
-    "description": "Snackbar/progress message while scanning ReplayGain for a single track"
-  },
-  "trackReplayGainSuccess": "Tag ReplayGain ditambahkan",
-  "@trackReplayGainSuccess": {
-    "description": "Snackbar message after ReplayGain tags written for a single track"
-  },
-  "trackReplayGainFailed": "Gagal menambahkan tag ReplayGain",
-  "@trackReplayGainFailed": {
-    "description": "Snackbar message when ReplayGain scan/write fails"
-  },
   "trackRemoveReplayGain": "Hapus ReplayGain",
-  "trackRemoveReplayGainSuccess": "Tag ReplayGain dihapus",
-  "trackRemoveReplayGainFailed": "Gagal menghapus tag ReplayGain",
   "replayGainRemoving": "Menghapus ReplayGain...",
   "replayGainRemoveConfirmMessage": "Hapus tag ReplayGain dari {count} lagu? Audio, cover, dan metadata lain akan tetap disimpan.",
   "@replayGainRemoveConfirmMessage": {
@@ -445,10 +427,6 @@
   "@aboutSquiglyDesc": {
     "description": "Credit for the Squigly resolver"
   },
-  "trackMetadataService": "Layanan",
-  "@trackMetadataService": {
-    "description": "Metadata field - download service used"
-  },
   "trackMetadataPlay": "Putar",
   "@trackMetadataPlay": {
     "description": "Action button - play track"
@@ -456,10 +434,6 @@
   "trackMetadataShare": "Bagikan",
   "@trackMetadataShare": {
     "description": "Action button - share track"
-  },
-  "trackMetadataDelete": "Hapus",
-  "@trackMetadataDelete": {
-    "description": "Action button - delete track"
   },
   "setupGrantPermission": "Berikan Izin",
   "@setupGrantPermission": {
@@ -987,134 +961,21 @@
       }
     }
   },
-  "trackCopyFilePath": "Salin lokasi file",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
-  },
-  "trackRemoveFromDevice": "Hapus dari perangkat",
-  "@trackRemoveFromDevice": {
-    "description": "Action - delete downloaded file"
-  },
-  "trackLoadLyrics": "Muat Lirik",
-  "@trackLoadLyrics": {
-    "description": "Action - fetch lyrics"
-  },
   "trackMetadata": "Metadata",
   "@trackMetadata": {
     "description": "Tab title - track metadata"
-  },
-  "trackFileInfo": "Info File",
-  "@trackFileInfo": {
-    "description": "Tab title - file information"
   },
   "trackLyrics": "Lirik",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
-  "trackFileNotFound": "File tidak ditemukan",
-  "@trackFileNotFound": {
-    "description": "Error - file doesn't exist"
-  },
-  "trackTrackName": "Nama lagu",
-  "@trackTrackName": {
-    "description": "Metadata label - track title"
-  },
-  "trackArtist": "Artis",
-  "@trackArtist": {
-    "description": "Metadata label - artist name"
-  },
-  "trackAlbumArtist": "Artis album",
-  "@trackAlbumArtist": {
-    "description": "Metadata label - album artist"
-  },
   "trackAlbum": "Album",
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackTrackNumber": "Nomor lagu",
-  "@trackTrackNumber": {
-    "description": "Metadata label - track number"
-  },
-  "trackDiscNumber": "Nomor disc",
-  "@trackDiscNumber": {
-    "description": "Metadata label - disc number"
-  },
-  "trackDuration": "Durasi",
-  "@trackDuration": {
-    "description": "Metadata label - track length"
-  },
-  "trackAudioQuality": "Kualitas audio",
-  "@trackAudioQuality": {
-    "description": "Metadata label - audio quality"
-  },
-  "trackReplayGainTrackGain": "ReplayGain Gain Lagu",
-  "@trackReplayGainTrackGain": {
-    "description": "Metadata label - ReplayGain track gain"
-  },
-  "trackReplayGainTrackPeak": "ReplayGain Peak Lagu",
-  "@trackReplayGainTrackPeak": {
-    "description": "Metadata label - ReplayGain track peak"
-  },
-  "trackReplayGainAlbumGain": "ReplayGain Gain Album",
-  "@trackReplayGainAlbumGain": {
-    "description": "Metadata label - ReplayGain album gain"
-  },
-  "trackReplayGainAlbumPeak": "ReplayGain Peak Album",
-  "@trackReplayGainAlbumPeak": {
-    "description": "Metadata label - ReplayGain album peak"
-  },
-  "trackReleaseDate": "Tanggal rilis",
-  "@trackReleaseDate": {
-    "description": "Metadata label - release date"
-  },
-  "trackGenre": "Genre",
-  "@trackGenre": {
-    "description": "Metadata label - music genre"
-  },
-  "trackLabel": "Label",
-  "@trackLabel": {
-    "description": "Metadata label - record label"
-  },
-  "trackCopyright": "Hak cipta",
-  "@trackCopyright": {
-    "description": "Metadata label - copyright information"
-  },
-  "trackCopyLyrics": "Salin lirik",
-  "@trackCopyLyrics": {
-    "description": "Action - copy lyrics to clipboard"
-  },
-  "trackLyricsSource": "Sumber: {source}",
-  "@trackLyricsSource": {
-    "description": "Label showing the lyrics source/provider",
-    "placeholders": {
-      "source": {
-        "type": "String"
-      }
-    }
-  },
   "trackLyricsNotAvailable": "Lirik tidak tersedia untuk lagu ini",
   "@trackLyricsNotAvailable": {
     "description": "Message when lyrics not found"
-  },
-  "trackLyricsNotInFile": "Tidak ditemukan lirik dalam file ini",
-  "@trackLyricsNotInFile": {
-    "description": "Message when no embedded lyrics in audio file"
-  },
-  "trackLyricsTimeout": "Permintaan habis waktu. Coba lagi nanti.",
-  "@trackLyricsTimeout": {
-    "description": "Message when lyrics request times out"
-  },
-  "trackLyricsLoadFailed": "Gagal memuat lirik",
-  "@trackLyricsLoadFailed": {
-    "description": "Message when lyrics loading fails"
-  },
-  "trackEmbedLyrics": "Sematkan Lirik",
-  "@trackEmbedLyrics": {
-    "description": "Action - embed lyrics into audio file"
-  },
-  "trackLyricsEmbedded": "Lirik berhasil disematkan",
-  "@trackLyricsEmbedded": {
-    "description": "Snackbar - lyrics saved to file"
   },
   "trackInstrumental": "Lagu instrumental",
   "@trackInstrumental": {
@@ -1123,10 +984,6 @@
   "trackCopiedToClipboard": "Tersalin ke clipboard",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
-  },
-  "trackDeleteConfirmTitle": "Hapus dari perangkat?",
-  "@trackDeleteConfirmTitle": {
-    "description": "Delete confirmation title"
   },
   "snackbarDeleteTracksFailed": "Gagal menghapus {count} lagu. Periksa izin akses penyimpanan dan coba lagi.",
   "@snackbarDeleteTracksFailed": {
@@ -1470,10 +1327,6 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "librarySourceLocal": "Lokal",
-  "@librarySourceLocal": {
-    "description": "Badge for tracks from local library scan"
-  },
   "libraryFilterAll": "Semua",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
@@ -1738,43 +1591,9 @@
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackSaveCoverArt": "Simpan Cover Art",
-  "@trackSaveCoverArt": {
-    "description": "Menu action - save album cover art as file"
-  },
-  "trackSaveLyrics": "Simpan Lirik (.lrc)",
-  "@trackSaveLyrics": {
-    "description": "Menu action - save lyrics as .lrc file"
-  },
-  "trackSaveLyricsProgress": "Menyimpan lirik...",
-  "@trackSaveLyricsProgress": {
-    "description": "Snackbar while saving lyrics to file"
-  },
   "trackEditMetadata": "Edit Metadata",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
-  },
-  "trackCoverSaved": "Cover art disimpan ke {fileName}",
-  "@trackCoverSaved": {
-    "description": "Snackbar after cover art saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
-  },
-  "trackCoverNoSource": "Tidak ada sumber cover art",
-  "@trackCoverNoSource": {
-    "description": "Snackbar when no cover art URL or embedded cover"
-  },
-  "trackLyricsSaved": "Lirik disimpan ke {fileName}",
-  "@trackLyricsSaved": {
-    "description": "Snackbar after lyrics saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
   },
   "trackReEnrichSuccess": "Metadata berhasil diupdate",
   "trackReEnrichMetadataSaved": "Metadata disimpan",
@@ -1783,98 +1602,9 @@
   "@trackReEnrichSuccess": {
     "description": "Snackbar after successful re-enrichment"
   },
-  "trackSaveFailed": "Gagal: {error}",
-  "@trackSaveFailed": {
-    "description": "Snackbar when save operation fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "audioBitrate": "Bitrate",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
-  },
-  "cueSplitTitle": "Pisahkan Lembar CUE",
-  "@cueSplitTitle": {
-    "description": "Title for CUE split bottom sheet"
-  },
-  "cueSplitAlbum": "Album {album}",
-  "@cueSplitAlbum": {
-    "description": "Album name in CUE split sheet",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitArtist": "Artis: {artist}",
-  "@cueSplitArtist": {
-    "description": "Artist name in CUE split sheet",
-    "placeholders": {
-      "artist": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitTrackCount": "{count} lagu",
-  "@cueSplitTrackCount": {
-    "description": "Number of tracks in CUE sheet",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitConfirmTitle": "Pisahkan Album CUE",
-  "@cueSplitConfirmTitle": {
-    "description": "CUE split confirmation dialog title"
-  },
-  "cueSplitConfirmMessage": "Pisahkan \"{album}\" menjadi {count} file FLAC?\n\nFile akan disimpan ke folder yang sama.",
-  "@cueSplitConfirmMessage": {
-    "description": "CUE split confirmation dialog message",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSplitting": "Memisahkan lembar CUE... ({current}/{total})",
-  "@cueSplitSplitting": {
-    "description": "Snackbar while splitting CUE",
-    "placeholders": {
-      "current": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSuccess": "Berhasil memisah menjadi {count} lagu",
-  "@cueSplitSuccess": {
-    "description": "Snackbar after successful CUE split",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitFailed": "Gagal memisahkan CUE",
-  "@cueSplitFailed": {
-    "description": "Snackbar when CUE split fails"
-  },
-  "cueSplitNoAudioFile": "Tidak menemukan lagu untuk lembar CUE ini",
-  "@cueSplitNoAudioFile": {
-    "description": "Error when CUE audio file is missing"
-  },
-  "cueSplitButton": "Pisah menjadi Lagu",
-  "@cueSplitButton": {
-    "description": "Button text to start CUE splitting"
   },
   "actionCreate": "Buat",
   "@actionCreate": {
@@ -1884,7 +1614,7 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionLoved": "Disukai",
+  "collectionLoved": "Lagu yang Disukai",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
@@ -2183,21 +1913,9 @@
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarLoadingCueSheet": "Memuat lembar CUE...",
-  "@snackbarLoadingCueSheet": {
-    "description": "Snackbar while loading a CUE sheet file"
-  },
   "snackbarMetadataSaved": "Berhasil menyimpan metadata",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
-  },
-  "snackbarFailedToEmbedLyrics": "Gagal menyematkan lirik",
-  "@snackbarFailedToEmbedLyrics": {
-    "description": "Snackbar when lyrics embedding fails"
-  },
-  "snackbarFailedToWriteStorage": "Gagal memodifikasi file",
-  "@snackbarFailedToWriteStorage": {
-    "description": "Snackbar when writing metadata back to file fails"
   },
   "snackbarError": "Eror: {error}",
   "@snackbarError": {
@@ -2877,14 +2595,6 @@
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "trackLyricsEmbeddedSource": "Tersemat",
-  "@trackLyricsEmbeddedSource": {
-    "description": "Lyrics source label for embedded lyrics"
-  },
-  "unknownAlbum": "Album Tak Dikenal",
-  "@unknownAlbum": {
-    "description": "Fallback album name when metadata is missing"
-  },
   "unknownArtist": "Artis Tak Dikenal",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
@@ -3071,14 +2781,6 @@
   "@aboutPaxsenixSubtitle": {
     "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
-  "snackbarPlayingNext": "Memutar lagu berikutnya",
-  "@snackbarPlayingNext": {
-    "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "snackbarAddedToQueueGeneric": "Ditambahkan ke antrean",
-  "@snackbarAddedToQueueGeneric": {
-    "description": "Snackbar when a track is added to the playback queue without naming it"
-  },
   "selectionDeletePlaylistsCount": "Hapus {count} {count, plural, =1{playlist} other{playlist}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
@@ -3145,20 +2847,8 @@
   "@trackOptionCopyTrackAndArtist": {
     "description": "Track menu action that copies the track title and artist"
   },
-  "metadataCopyValue": "Salin isi",
-  "@metadataCopyValue": {
-    "description": "Metadata menu action that copies only the selected value"
-  },
-  "metadataCopyField": "Salin isi kolom",
-  "@metadataCopyField": {
-    "description": "Metadata menu action that copies the selected key and value"
-  },
   "mornyeSearch": "Telusuri",
   "mornyeContinuePlaying": "Lanjut Memutar",
-  "metadataCopyAll": "Salin semua metadata",
-  "@metadataCopyAll": {
-    "description": "Metadata menu action that copies every visible key and value"
-  },
   "optionsEmbeddedCoverSize": "Ukuran Cover Tersemat",
   "@optionsEmbeddedCoverSize": {
     "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"

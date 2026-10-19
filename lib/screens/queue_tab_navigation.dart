@@ -5,30 +5,6 @@ extension _QueueTabNavigation on _QueueTabState {
     return item.localItem?.id ?? item.id;
   }
 
-  Future<void> _openFile(
-    String filePath, {
-    String title = '',
-    String artist = '',
-    String album = '',
-    String coverUrl = '',
-  }) async {
-    final cleanPath = _cleanFilePath(filePath);
-    try {
-      final fallbackTitle = cleanPath.split('/').last.split('\\').last;
-      await ref
-          .read(playbackProvider.notifier)
-          .playLocalPath(
-            path: cleanPath,
-            title: title.isNotEmpty ? title : fallbackTitle,
-            artist: artist,
-            album: album,
-            coverUrl: coverUrl,
-          );
-    } catch (e) {
-      if (mounted) showCannotOpenFileSnackBar(context, e);
-    }
-  }
-
   /// Plays [item] and queues the rest of the merged library (downloaded + local
   /// in display order) so playback continues to the next track. Honors player
   /// mode and shuffle.
@@ -80,30 +56,6 @@ extension _QueueTabNavigation on _QueueTabState {
       album: item.albumName,
       artUri: art,
     );
-  }
-
-  Future<void> _navigateToLocalMetadataScreen(
-    LocalLibraryItem item, {
-    List<LocalLibraryItem>? navigationItems,
-    int? navigationIndex,
-  }) async {
-    _searchFocusNode.unfocus();
-    if (!context.isMornye) {
-      await precacheMetadataBackdrop(context, item.coverPath);
-    }
-    if (!mounted) return;
-    await Navigator.push(
-      context,
-      slidePageRoute<void>(
-        page: TrackMetadataScreen(
-          localItem: item,
-          localNavigationItems: navigationItems,
-          navigationIndex: navigationIndex,
-          coverHeroTag: 'cover_lib_local_${item.id}',
-        ),
-      ),
-    );
-    if (mounted) _searchFocusNode.unfocus();
   }
 
   void _navigateWithUnfocus(Route<dynamic> route) {

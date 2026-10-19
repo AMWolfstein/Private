@@ -128,8 +128,14 @@ void main() {
           (widget) =>
               widget is AlbumTrackTile && widget.trackName == 'Song $number',
         );
-        Finder rowButton(int number) =>
-            find.descendant(of: row(number), matching: find.byType(IconButton));
+        Finder rowButton(int number) => find.descendant(
+          of: row(number),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is IconButton &&
+                (widget.tooltip == 'Play' || widget.tooltip == 'Pause'),
+          ),
+        );
         if (mornye) {
           expect(find.text('Shuffle'), findsOneWidget);
           expect(find.byTooltip('Shuffle'), findsNothing);
@@ -137,7 +143,7 @@ void main() {
           expect(find.byIcon(CupertinoIcons.text_badge_plus), findsOneWidget);
         }
         final pauseIcon = mornye ? CupertinoIcons.pause_fill : Icons.pause;
-        final playIcon = mornye ? CupertinoIcons.play_fill : Icons.play_arrow;
+        const playIcon = Icons.play_arrow;
 
         await tester.tap(
           find.descendant(of: header, matching: find.text('Play')),
@@ -153,7 +159,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.descendant(of: row(1), matching: find.byIcon(pauseIcon)),
+          find.descendant(of: row(1), matching: find.byIcon(Icons.pause)),
           findsOneWidget,
         );
         expect(
@@ -194,7 +200,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.descendant(of: row(2), matching: find.byIcon(pauseIcon)),
+          find.descendant(of: row(2), matching: find.byIcon(Icons.pause)),
           findsOneWidget,
         );
         await tester.tap(rowButton(2));
@@ -207,7 +213,7 @@ void main() {
         emitPlaying(true);
         await tester.pumpAndSettle();
         expect(
-          find.descendant(of: row(1), matching: find.byIcon(pauseIcon)),
+          find.descendant(of: row(1), matching: find.byIcon(Icons.pause)),
           findsOneWidget,
         );
         await tester.tap(rowButton(1));

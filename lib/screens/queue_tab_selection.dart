@@ -289,8 +289,4 @@ extension _QueueTabSelectionActions on _QueueTabState {
         isActive: () => mounted,
         onComplete: _exitSelectionMode,
       );
-
-  String _cleanFilePath(String? filePath) {
-    return DownloadedEmbeddedCoverResolver.cleanFilePath(filePath);
-  }
 }

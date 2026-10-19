@@ -26,6 +26,7 @@ class TrackCard extends StatelessWidget {
     required this.leading,
     required this.title,
     this.subtitle,
+    this.titleTrailing,
     this.trailing,
     this.background,
     this.style = TrackCardStyle.filled,
@@ -40,6 +41,7 @@ class TrackCard extends StatelessWidget {
   final Widget leading;
 
   final String title;
+  final Widget? titleTrailing;
 
   /// Secondary line. A widget rather than a string because callers mix in
   /// clickable artist names, quality badges and status text.
@@ -131,13 +133,23 @@ class TrackCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            if (titleTrailing != null) ...[
+                              const SizedBox(width: 6),
+                              titleTrailing!,
+                            ],
+                          ],
                         ),
                         if (subtitle != null) ...[
                           const SizedBox(height: 2),

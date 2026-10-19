@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:spotiflac_android/screens/local_genres_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -323,6 +324,15 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                         Icons.music_note_outlined,
                         context.l10n.searchSongs,
                         () => widget.onOpenSection('all'),
+                      ),
+                      (
+                        Icons.category_outlined,
+                        context.l10n.libraryGenres,
+                        () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const LocalGenresScreen(),
+                          ),
+                        ),
                       ),
                       (
                         Icons.favorite_border,

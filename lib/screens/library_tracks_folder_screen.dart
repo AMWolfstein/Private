@@ -6,8 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
@@ -27,18 +25,16 @@ import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/cover_art_utils.dart';
 import 'package:spotiflac_android/screens/collapsing_header_scroll_mixin.dart';
 import 'package:spotiflac_android/screens/selection_mode_mixin.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_data.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
+import 'package:spotiflac_android/widgets/local_song_row.dart';
+import 'package:spotiflac_android/widgets/local_song_menu.dart';
 import 'package:spotiflac_android/widgets/selection_action_button.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/in_library_badge.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
 
 String? _resolveRawCoverUrl(Track track) {
   final rawCover = track.coverUrl?.trim();
@@ -860,7 +856,6 @@ class _CollectionTrackTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final track = entry.track;
-    final colorScheme = Theme.of(context).colorScheme;
     final rawCoverUrl = _resolveRawCoverUrl(track);
     final localCoverUrl = rawCoverUrl == null
         ? ref
@@ -877,73 +872,30 @@ class _CollectionTrackTile extends ConsumerWidget {
         : null;
     final effectiveCoverUrl = rawCoverUrl ?? localCoverUrl;
 
-    // Fine-grained provider watch – only this tile rebuilds when its own
-    // local-library entry changes.
-    final showLocalLibraryIndicator = ref.watch(
-      settingsProvider.select(
-        (s) => s.localLibraryEnabled && s.localLibraryShowDuplicates,
-      ),
-    );
-    final isInLocalLibrary = showLocalLibraryIndicator
-        ? ref.watch(
-            localLibraryProvider.select((state) {
-              final isrc = track.isrc?.trim();
-              return state.existsInLibrary(
-                isrc: isrc,
-                trackName: track.name,
-                artistName: track.artistName,
-              );
-            }),
-          )
-        : false;
-
-    return TrackCard(
-      style: TrackCardStyle.flat,
+    final fresh = ref
+        .watch(
+          localSongLookupProvider((
+            id: track.id,
+            name: track.name,
+            artist: track.artistName,
+            isrc: track.isrc,
+          )),
+        )
+        .asData
+        ?.value;
+    return LocalSongRow(
+      title: fresh?.trackName ?? track.name,
+      artist: fresh?.artistName ?? track.artistName,
+      cover: fresh?.coverPath ?? effectiveCoverUrl,
+      explicit: fresh?.explicit ?? track.isExplicit,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      leading: Builder(
-        builder: (context) {
-          final size = context.tokens.coverCompact;
-          return ClipRRect(
-            borderRadius: context.tokens.borderRadiusThumb,
-            child: effectiveCoverUrl != null && effectiveCoverUrl.isNotEmpty
-                ? _buildTrackCover(context, effectiveCoverUrl, size)
-                : TrackCoverPlaceholder(size: size),
-          );
-        },
-      ),
-      title: track.name,
-      subtitle: Row(
-        children: [
-          Flexible(
-            child: Text(
-              track.artistName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: colorScheme.onSurfaceVariant),
-            ),
-          ),
-          if (isInLocalLibrary) ...[
-            const SizedBox(width: 6),
-            const InLibraryBadge(),
-          ],
-        ],
-      ),
-      trailing: isInLocalLibrary
-          ? IconButton(
-              tooltip: context.l10n.tooltipPlay,
-              onPressed: () => _playFromHere(context, ref),
-              icon: Icon(Icons.play_arrow, color: colorScheme.primary),
-              style: IconButton.styleFrom(
-                minimumSize: Size.square(context.tokens.minTouchTarget),
-                backgroundColor: colorScheme.primaryContainer.withValues(
-                  alpha: 0.3,
-                ),
-              ),
-            )
-          : null,
-      onTap: isSelectionMode ? onTap : () => _navigateToMetadata(context, ref),
+      onSelect: onTap,
       onLongPress: isSelectionMode ? onTap : onLongPress,
+      onPlay: () => _playFromHere(context, ref),
+      onMenu: () => fresh != null
+          ? showLocalSongMenu(context, ref, fresh)
+          : showCollectionSongMenu(context, ref, track),
     );
   }
 
@@ -956,51 +908,6 @@ class _CollectionTrackTile extends ConsumerWidget {
       if (!context.mounted) return;
       showCannotOpenFileSnackBar(context, error);
     }
-  }
-
-  Widget _buildTrackCover(BuildContext context, String coverUrl, double size) {
-    final colorScheme = Theme.of(context).colorScheme;
-    Widget placeholder() => Container(
-      width: size,
-      height: size,
-      color: colorScheme.surfaceContainerHighest,
-      child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
-    );
-
-    return LocalCoverImage(
-      url: coverUrl,
-      width: size,
-      height: size,
-      fadeInDuration: const Duration(milliseconds: 180),
-      fadeOutDuration: const Duration(milliseconds: 90),
-      placeholder: (_) => placeholder(),
-    );
-  }
-
-  Future<void> _navigateToMetadata(BuildContext context, WidgetRef ref) async {
-    final track = entry.track;
-
-    final localItem = await ref
-        .read(localLibraryProvider.notifier)
-        .findExistingAsync(
-          isrc: track.isrc,
-          trackName: track.name,
-          artistName: track.artistName,
-        );
-    if (!context.mounted) return;
-
-    if (localItem == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.snackbarFileNotFound)),
-      );
-      return;
-    }
-
-    await precacheMetadataBackdrop(context, localItem.coverPath);
-    if (!context.mounted) return;
-    await Navigator.of(context).push(
-      slidePageRoute<void>(page: TrackMetadataScreen(localItem: localItem)),
-    );
   }
 }
 

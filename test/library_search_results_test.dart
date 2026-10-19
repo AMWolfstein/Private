@@ -10,7 +10,6 @@ import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
 import 'package:spotiflac_android/providers/library_search_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/library_search.dart';
 import 'package:spotiflac_android/services/music_player_service.dart';
@@ -42,99 +41,87 @@ LibrarySearchHit _hit(
 
 void main() {
   for (final mornye in [false, true]) {
-    testWidgets(
-      'search opens metadata; only Play starts audio ($mornye)',
-      (tester) async {
-          SharedPreferences.setMockInitialValues({});
-          const channel = MethodChannel('com.zarz.spotiflac/backend');
-          tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-            channel,
-            (call) async => switch (call.method) {
-              'safStat' => jsonEncode({'exists': true, 'size': 100}),
-              'readAudioMetadata' || 'readFileMetadata' => '{}',
-              'getLyricsLRCWithSource' => jsonEncode({
-                'lyrics': '',
-                'source': '',
-              }),
-              'getSafFileModTimes' => '{}',
-              _ => null,
-            },
-          );
-          addTearDown(
-            () => tester.binding.defaultBinaryMessenger
-                .setMockMethodCallHandler(channel, null),
-          );
-          const path = 'content://library/document/song.flac';
-          final item = UnifiedLibraryItem.fromLocalLibrary(
-            LocalLibraryItem(
-              id: 'chosen',
-              trackName: 'Song',
-              artistName: 'Artist',
-              albumName: 'Album',
-              filePath: path,
-              scannedAt: DateTime(2026),
+    testWidgets('search song tap and Play both start audio ($mornye)', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      const channel = MethodChannel('com.zarz.spotiflac/backend');
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        (call) async => switch (call.method) {
+          'safStat' => jsonEncode({'exists': true, 'size': 100}),
+          'readAudioMetadata' || 'readFileMetadata' => '{}',
+          'getLyricsLRCWithSource' => jsonEncode({'lyrics': '', 'source': ''}),
+          'getSafFileModTimes' => '{}',
+          _ => null,
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          channel,
+          null,
+        ),
+      );
+      const path = 'content://library/document/song.flac';
+      final item = UnifiedLibraryItem.fromLocalLibrary(
+        LocalLibraryItem(
+          id: 'chosen',
+          trackName: 'Song',
+          artistName: 'Artist',
+          albumName: 'Album',
+          filePath: path,
+          scannedAt: DateTime(2026),
+        ),
+      );
+      final player = _PlaybackRecorder();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            playbackProvider.overrideWith(() => player),
+            librarySearchProvider.overrideWith(
+              (ref, request) async => request.kind == LibrarySearchKind.songs
+                  ? [
+                      LibrarySearchHit(
+                        kind: LibrarySearchKind.songs,
+                        id: 'chosen',
+                        title: 'Song',
+                        source: 'local',
+                      ),
+                    ]
+                  : [],
             ),
-          );
-          final player = _PlaybackRecorder();
-          await tester.pumpWidget(
-            ProviderScope(
-              overrides: [
-                playbackProvider.overrideWith(() => player),
-                librarySearchProvider.overrideWith(
-                  (ref, request) async =>
-                      request.kind == LibrarySearchKind.songs
-                      ? [
-                          LibrarySearchHit(
-                            kind: LibrarySearchKind.songs,
-                            id: 'chosen',
-                            title: 'Song',
-                            source: 'local',
-                          ),
-                        ]
-                      : [],
-                ),
-                librarySearchTrackProvider.overrideWith((ref, key) async {
-                  expect(key, (source: 'local', id: 'chosen'));
-                  return item;
-                }),
-              ],
-              child: MaterialApp(
-                theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
-                    : ThemeData(),
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                home: Scaffold(
-                  body: CustomScrollView(
-                    slivers: [
-                      LibrarySearchResults(query: 'Song', onOpenArtist: (_) {}),
-                    ],
-                  ),
-                ),
+            librarySearchTrackProvider.overrideWith((ref, key) async {
+              expect(key, (source: 'local', id: 'chosen'));
+              return item;
+            }),
+          ],
+          child: MaterialApp(
+            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: CustomScrollView(
+                slivers: [
+                  LibrarySearchResults(query: 'Song', onOpenArtist: (_) {}),
+                ],
               ),
             ),
-          );
-          await tester.pumpAndSettle();
-          expect(
-            tester.widget<TrackCard>(find.byType(TrackCard)).style,
-            mornye ? TrackCardStyle.flat : TrackCardStyle.filled,
-          );
-          await tester.tap(find.text('Song'));
-          await tester.pumpAndSettle();
-          final details = tester.widget<TrackMetadataScreen>(
-            find.byType(TrackMetadataScreen),
-          );
-          expect(details.localItem, item.localItem);
-          expect(player.paths, isEmpty);
-          tester.state<NavigatorState>(find.byType(Navigator).first).pop();
-          await tester.pumpAndSettle();
-          await tester.tap(find.byTooltip('Play'));
-          await tester.pumpAndSettle();
-          expect(player.paths, [path]);
-          expect(find.byType(TrackMetadataScreen), findsNothing);
-          expect(tester.takeException(), isNull);
-      },
-    );
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TrackCard>(find.byType(TrackCard)).style,
+        mornye ? TrackCardStyle.flat : TrackCardStyle.filled,
+      );
+      await tester.tap(find.text('Song'));
+      await tester.pumpAndSettle();
+      expect(player.paths, [path]);
+      await tester.tap(find.byTooltip('Play'));
+      await tester.pumpAndSettle();
+      expect(player.paths, [path, path]);
+      expect(tester.takeException(), isNull);
+    });
   }
 
   for (final mornye in [false, true]) {

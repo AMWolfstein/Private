@@ -8,7 +8,6 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/library_search.dart';
@@ -200,14 +199,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           if (!mounted || item == null) return;
           final localItem = item.localItem;
           if (localItem == null) return;
-          if (!play) {
-            await Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => TrackMetadataScreen(localItem: localItem),
-              ),
-            );
-            return;
-          }
           final media = playableFromLocal(localItem);
           await ref.read(playbackProvider.notifier).playMediaQueue([
             media,

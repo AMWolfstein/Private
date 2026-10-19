@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
+import 'package:spotiflac_android/widgets/local_song_row.dart';
 
 /// Album-style track row: track number, title/subtitle, and a trailing play
 /// button that's hidden once selection mode is active.
 ///
-/// A thin arrangement over [TrackCard]; the container, selection tick, padding
-/// and typography all come from there.
+/// Uses [LocalSongRow] so album and collection controls stay consistent.
 class AlbumTrackTile extends StatelessWidget {
   const AlbumTrackTile({
     super.key,
@@ -20,10 +15,11 @@ class AlbumTrackTile extends StatelessWidget {
     required this.isSelected,
     required this.colorScheme,
     required this.onToggleSelection,
-    required this.onOpen,
     required this.onEnterSelectionMode,
     required this.onPlay,
     this.isPlaying = false,
+    this.explicit = false,
+    required this.onMenu,
   });
 
   final int? trackNumber;
@@ -33,52 +29,28 @@ class AlbumTrackTile extends StatelessWidget {
   final bool isSelected;
   final ColorScheme colorScheme;
   final VoidCallback onToggleSelection;
-  final VoidCallback onOpen;
   final VoidCallback onEnterSelectionMode;
   final VoidCallback onPlay;
   final bool isPlaying;
+  final bool explicit;
+  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context) {
-    return TrackCard(
-      style: TrackCardStyle.flat,
+    return LocalSongRow(
+      title: trackName,
+      artist: '',
+      numbered: true,
+      number: trackNumber,
+      explicit: explicit,
+      isPlaying: isPlaying,
+      artistWidget: subtitle,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      onTap: isSelectionMode ? onToggleSelection : onOpen,
+      onSelect: onToggleSelection,
       onLongPress: isSelectionMode ? null : onEnterSelectionMode,
-      leading: SizedBox(
-        width: 24,
-        child: Text(
-          trackNumber?.toString() ?? '-',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w500,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-      title: trackName,
-      subtitle: subtitle,
-      trailing: IconButton(
-        tooltip: isPlaying
-            ? context.l10n.actionPause
-            : context.l10n.tooltipPlay,
-        onPressed: onPlay,
-        icon: Icon(
-          context.isMornye
-              ? (isPlaying
-                    ? CupertinoIcons.pause_fill
-                    : CupertinoIcons.play_fill)
-              : (isPlaying ? Icons.pause : Icons.play_arrow),
-          color: colorScheme.primary,
-        ),
-        style: IconButton.styleFrom(
-          minimumSize: Size.square(context.tokens.minTouchTarget),
-          backgroundColor: context.isMornye
-              ? Colors.transparent
-              : colorScheme.primaryContainer.withValues(alpha: 0.3),
-        ),
-      ),
+      onPlay: onPlay,
+      onMenu: onMenu,
     );
   }
 }

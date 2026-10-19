@@ -5,9 +5,7 @@ extension _HomeTabRecentUI on _HomeTabState {
     final items = ref.watch(recentAccessViewProvider).uniqueItems;
 
     return [
-      SliverToBoxAdapter(
-        child: _buildRecentAccessHeader(items, colorScheme),
-      ),
+      SliverToBoxAdapter(child: _buildRecentAccessHeader(items, colorScheme)),
       if (items.isNotEmpty)
         SliverPadding(
           padding:
@@ -250,11 +248,9 @@ extension _HomeTabRecentUI on _HomeTabState {
           _showSnack(item.name);
           return;
         }
-        await Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => TrackMetadataScreen(localItem: localItem),
-          ),
-        );
+        await ref.read(playbackProvider.notifier).playLocalLibraryQueue([
+          localItem,
+        ], startItem: localItem);
         return;
       case RecentAccessType.playlist:
         if (item.id.trim().isEmpty) {
@@ -274,6 +270,8 @@ extension _HomeTabRecentUI on _HomeTabState {
   }
 
   void _showSnack(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

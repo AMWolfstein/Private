@@ -23,7 +23,7 @@ import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/screens/collapsing_header_scroll_mixin.dart';
 import 'package:spotiflac_android/screens/selection_mode_mixin.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
+import 'package:spotiflac_android/widgets/local_song_menu.dart';
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
 import 'package:spotiflac_android/widgets/album_track_tile.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
@@ -184,17 +184,17 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     }
   }
 
-  Future<void> _openMetadata(LocalLibraryItem track) async {
-    final tracks = _sortedTracksCache;
-    await Navigator.of(context).push(
-      slidePageRoute<void>(
-        page: TrackMetadataScreen(
-          localItem: track,
-          localNavigationItems: tracks,
-          navigationIndex: tracks.indexWhere((item) => item.id == track.id),
-        ),
-      ),
-    );
+  Future<void> _showTrackMenu(LocalLibraryItem track) async {
+    if (!await showLocalSongMenu(context, ref, track) || !mounted) return;
+    final row = await LibraryDatabase.instance.getById(track.id);
+    if (row == null || !mounted) return;
+    setState(() {
+      _loadedTracks = [
+        for (final item in _sortedTracksCache)
+          if (item.id == track.id) LocalLibraryItem.fromJson(row) else item,
+      ];
+      _rebuildTrackCaches();
+    });
   }
 
   bool _isCurrentTrack(MediaItem? item, LocalLibraryItem track) {
@@ -491,39 +491,18 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           isPlaying: isPlaying,
           trackNumber: track.trackNumber,
           trackName: track.trackName,
-          subtitle: Row(
-            children: [
-              Flexible(
-                child: Text(
-                  track.artistName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
-              ),
-              if (track.format != null) ...[
-                Text(
-                  ' • ',
-                  style: TextStyle(
-                    color: colorScheme.onSurfaceVariant,
-                    fontSize: 12,
-                  ),
-                ),
-                Text(
-                  track.format!.toUpperCase(),
-                  style: TextStyle(
-                    color: colorScheme.onSurfaceVariant,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ],
+          explicit: track.explicit,
+          subtitle: Text(
+            track.artistName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: colorScheme.onSurfaceVariant),
           ),
           isSelectionMode: isSelectionMode,
           isSelected: selectedIds.contains(track.id),
           colorScheme: colorScheme,
           onToggleSelection: () => toggleSelection(track.id),
-          onOpen: () => _openMetadata(track),
+          onMenu: () => _showTrackMenu(track),
           onEnterSelectionMode: () => enterSelectionMode(track.id),
           onPlay: isCurrent
               ? () => ref

@@ -182,112 +182,29 @@ extension _QueueTabItemWidgets on _QueueTabState {
     required List<UnifiedLibraryItem> libraryItems,
     bool playlistDragEnabled = false,
   }) {
-    final fileExistsListenable = _fileExistsListenable(item.filePath);
-    final isSelected = _selectedIds.contains(item.id);
-    final date = item.addedAt;
-    final dateStr =
-        '${shortMonthNames[date.month - 1]} ${date.day}, ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-
-    final quality = item.displayQuality;
-
-    return Semantics(
-      label: context.l10n.a11yTrackByArtist(item.trackName, item.artistName),
-      selected: isSelected,
-      child: TrackCard(
-        isSelectionMode: _isSelectionMode,
-        isSelected: isSelected,
-        onTap: _isSelectionMode
-            ? () => _toggleSelection(item.id)
-            : item.localItem != null
-            ? () => _navigateToLocalMetadataScreen(
-                item.localItem!,
-                navigationItems: localNavigationItems,
-                navigationIndex: localNavigationIndex,
-              )
-            : () => _openFile(
-                item.filePath,
-                title: item.trackName,
-                artist: item.artistName,
-                album: item.albumName,
-                coverUrl: item.coverUrl ?? item.localCoverPath ?? '',
-              ),
-        onLongPress: playlistDragEnabled
-            ? null
-            : _isSelectionMode
-            ? () => _selectRangeTo(item.id, libraryItems)
-            : () => _enterSelectionMode(item.id),
-        leading: Hero(
-          tag: 'cover_lib_${item.id}',
-          child: _buildUnifiedCoverImage(
-            item,
-            colorScheme,
-            context.tokens.coverList,
-          ),
+    return LocalSongRow(
+      title: item.trackName,
+      artist: item.artistName,
+      cover: item.localCoverPath ?? item.coverUrl,
+      explicit: item.localItem?.explicit ?? false,
+      isSelectionMode: _isSelectionMode,
+      isSelected: _selectedIds.contains(item.id),
+      onSelect: () => _toggleSelection(item.id),
+      onLongPress: playlistDragEnabled
+          ? null
+          : _isSelectionMode
+          ? () => _selectRangeTo(item.id, libraryItems)
+          : () => _enterSelectionMode(item.id),
+      onPlay: () => _playLibraryItem(item, libraryItems),
+      playControl: _LibraryPlaybackButton(
+        mediaId: _libraryPlaybackMediaId(item),
+        playTooltip: context.l10n.a11yPlayTrackByArtist(
+          item.trackName,
+          item.artistName,
         ),
-        title: item.trackName,
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClickableArtistName(
-              artistName: item.artistName,
-              coverUrl: item.coverUrl,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              children: [
-                Flexible(
-                  child: Text(
-                    dateStr,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-                if (quality != null && quality.isNotEmpty) ...[
-                  const SizedBox(width: 8),
-                  _buildLibraryQualityBadge(
-                    context,
-                    colorScheme,
-                    quality,
-                    listStyle: true,
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
-        trailing: ValueListenableBuilder<bool>(
-          valueListenable: fileExistsListenable,
-          builder: (context, fileExists, child) {
-            if (fileExists) {
-              return _LibraryPlaybackButton(
-                mediaId: _libraryPlaybackMediaId(item),
-                playTooltip: context.l10n.a11yPlayTrackByArtist(
-                  item.trackName,
-                  item.artistName,
-                ),
-                onPlay: () => _playLibraryItem(item, libraryItems),
-              );
-            }
-            return Tooltip(
-              message: context.l10n.queueDownloadedFileMissing,
-              child: Icon(
-                Icons.error_outline,
-                color: colorScheme.error,
-                size: 20,
-              ),
-            );
-          },
-        ),
+        onPlay: () => _playLibraryItem(item, libraryItems),
       ),
+      onMenu: () => showCollectionSongMenu(context, ref, item.toTrack()),
     );
   }
 
@@ -312,19 +229,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
       ),
       onTap: _isSelectionMode
           ? () => _toggleSelection(item.id)
-          : item.localItem != null
-          ? () => _navigateToLocalMetadataScreen(
-              item.localItem!,
-              navigationItems: localNavigationItems,
-              navigationIndex: localNavigationIndex,
-            )
-          : () => _openFile(
-              item.filePath,
-              title: item.trackName,
-              artist: item.artistName,
-              album: item.albumName,
-              coverUrl: item.coverUrl ?? item.localCoverPath ?? '',
-            ),
+          : () => _playLibraryItem(item, libraryItems),
       onLongPress: playlistDragEnabled
           ? null
           : _isSelectionMode
@@ -477,11 +382,19 @@ class _LibraryPlaybackButton extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return IconButton(
       onPressed: onPressed,
-      icon: Icon(icon, color: colorScheme.primary),
+      icon: DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: colorScheme.onSurfaceVariant, width: 1.5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(2),
+          child: Icon(icon, size: 20),
+        ),
+      ),
       tooltip: tooltip,
       style: IconButton.styleFrom(
         minimumSize: Size.square(context.tokens.minTouchTarget),
-        backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.3),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,13 +8,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/screens/track_metadata_screen.dart';
+import 'package:spotiflac_android/widgets/local_song_menu.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'package:spotiflac_android/widgets/selection_action_button.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/destructive_selection_button.dart';
@@ -161,66 +159,6 @@ void main() {
     },
   );
 
-  for (final platform in [TargetPlatform.iOS, TargetPlatform.android]) {
-    testWidgets('Metadata menu scroll reaches the last action ($platform)', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(390, 540));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      _mockMetadataFile(tester);
-      await tester.pumpWidget(
-        _app(
-          TrackMetadataScreen(
-            localItem: LocalLibraryItem(
-              id: 'menu-track',
-              trackName: 'Track',
-              artistName: 'Artist',
-              albumName: 'Album',
-              filePath: 'content://library/document/menu-track.flac',
-              scannedAt: DateTime(2026),
-            ),
-          ),
-          platform: platform,
-        ),
-      );
-      await tester.pumpAndSettle();
-      await _tapVisible(tester, find.byIcon(CupertinoIcons.ellipsis));
-      expect(find.text('Edit audio file'), findsNothing);
-      expect(find.text('Similar songs in Library'), findsNothing);
-      expect(find.text('Edit Metadata'), findsOneWidget);
-      expect(find.text('Convert Format'), findsNothing);
-      expect(find.byIcon(Icons.swap_horiz), findsNothing);
-      final lastAction = find.text('Remove from device');
-      expect(lastAction.hitTestable(), findsNothing);
-      expect(find.byType(MornyeContextMenu), findsOneWidget);
-      expect(find.byType(BottomSheet), findsNothing);
-      for (var drag = 0; drag < 4; drag++) {
-        await tester.dragFrom(const Offset(195, 400), const Offset(0, -320));
-        await tester.pumpAndSettle();
-      }
-      expect(find.text('Share').hitTestable(), findsOneWidget);
-      expect(lastAction.hitTestable(), findsOneWidget);
-      // Device Hub / Simulator users can also scroll with a trackpad or wheel.
-      await tester.sendEventToBinding(
-        const PointerScrollEvent(
-          position: Offset(195, 400),
-          scrollDelta: Offset(0, -2000),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Play next').hitTestable(), findsOneWidget);
-      await tester.sendEventToBinding(
-        const PointerScrollEvent(
-          position: Offset(195, 400),
-          scrollDelta: Offset(0, 2000),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(lastAction.hitTestable(), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-  }
-
   testWidgets('Mornye metadata editor keeps edited text and Save available', (
     tester,
   ) async {
@@ -229,7 +167,7 @@ void main() {
     _mockMetadataFile(tester);
     await tester.pumpWidget(
       _app(
-        TrackMetadataScreen(
+        _SongMenuHarness(
           localItem: LocalLibraryItem(
             id: 'edit-track',
             trackName: 'Track',
@@ -267,4 +205,18 @@ void main() {
     expect(find.widgetWithText(AppActionButton, 'Save'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+class _SongMenuHarness extends ConsumerWidget {
+  const _SongMenuHarness({required this.localItem});
+  final LocalLibraryItem localItem;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
+    body: Center(
+      child: IconButton(
+        icon: const Icon(CupertinoIcons.ellipsis),
+        onPressed: () => showLocalSongMenu(context, ref, localItem),
+      ),
+    ),
+  );
 }

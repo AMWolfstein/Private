@@ -1,4 +1,5 @@
 {
+  "libraryGenres": "Жанры",
   "settingsPlaybackSubtitle": "Воспроизведение, громкость, автомикс и аудиовыход",
   "sectionPlayer": "Плеер",
   "sectionVolumeAndTransitions": "Громкость и переходы",
@@ -133,25 +134,7 @@
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
   },
-  "trackReplayGain": "Пересканировать ReplayGain",
-  "@trackReplayGain": {
-    "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
-  },
-  "trackReplayGainScanning": "Анализ громкости...",
-  "@trackReplayGainScanning": {
-    "description": "Snackbar/progress message while scanning ReplayGain for a single track"
-  },
-  "trackReplayGainSuccess": "Добавлены теги ReplayGain",
-  "@trackReplayGainSuccess": {
-    "description": "Snackbar message after ReplayGain tags written for a single track"
-  },
-  "trackReplayGainFailed": "Не удалось добавить теги ReplayGain",
-  "@trackReplayGainFailed": {
-    "description": "Snackbar message when ReplayGain scan/write fails"
-  },
   "trackRemoveReplayGain": "Удалить ReplayGain",
-  "trackRemoveReplayGainSuccess": "Теги ReplayGain удалены",
-  "trackRemoveReplayGainFailed": "Не удалось удалить теги ReplayGain",
   "replayGainRemoving": "Удаление ReplayGain...",
   "replayGainRemoveConfirmMessage": "Удалить теги ReplayGain трека и альбома для {count, plural, one {{count} трека} other {{count} треков}}? Аудио, обложки и другие метаданные будут сохранены.",
   "@replayGainRemoveConfirmMessage": {
@@ -376,10 +359,6 @@
   "@aboutSquiglyDesc": {
     "description": "Credit for the Squigly resolver"
   },
-  "trackMetadataService": "Сервис",
-  "@trackMetadataService": {
-    "description": "Metadata field - download service used"
-  },
   "trackMetadataPlay": "Воспроизвести",
   "@trackMetadataPlay": {
     "description": "Action button - play track"
@@ -387,10 +366,6 @@
   "trackMetadataShare": "Поделиться",
   "@trackMetadataShare": {
     "description": "Action button - share track"
-  },
-  "trackMetadataDelete": "Удалить",
-  "@trackMetadataDelete": {
-    "description": "Action button - delete track"
   },
   "setupGrantPermission": "Предоставить разрешение",
   "@setupGrantPermission": {
@@ -918,134 +893,21 @@
       }
     }
   },
-  "trackCopyFilePath": "Скопировать путь к файлу",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
-  },
-  "trackRemoveFromDevice": "Удалить с устройства",
-  "@trackRemoveFromDevice": {
-    "description": "Action - delete downloaded file"
-  },
-  "trackLoadLyrics": "Загрузить текст песни",
-  "@trackLoadLyrics": {
-    "description": "Action - fetch lyrics"
-  },
   "trackMetadata": "Метаданные",
   "@trackMetadata": {
     "description": "Tab title - track metadata"
-  },
-  "trackFileInfo": "Информация о файле",
-  "@trackFileInfo": {
-    "description": "Tab title - file information"
   },
   "trackLyrics": "Текст песни",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
-  "trackFileNotFound": "Файл не найден",
-  "@trackFileNotFound": {
-    "description": "Error - file doesn't exist"
-  },
-  "trackTrackName": "Название",
-  "@trackTrackName": {
-    "description": "Metadata label - track title"
-  },
-  "trackArtist": "Исполнитель",
-  "@trackArtist": {
-    "description": "Metadata label - artist name"
-  },
-  "trackAlbumArtist": "Исполнитель альбома",
-  "@trackAlbumArtist": {
-    "description": "Metadata label - album artist"
-  },
   "trackAlbum": "Альбом",
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackTrackNumber": "Номер трека",
-  "@trackTrackNumber": {
-    "description": "Metadata label - track number"
-  },
-  "trackDiscNumber": "Номер диска",
-  "@trackDiscNumber": {
-    "description": "Metadata label - disc number"
-  },
-  "trackDuration": "Продолжительность",
-  "@trackDuration": {
-    "description": "Metadata label - track length"
-  },
-  "trackAudioQuality": "Качество записи",
-  "@trackAudioQuality": {
-    "description": "Metadata label - audio quality"
-  },
-  "trackReplayGainTrackGain": "ReplayGain Усилие трека",
-  "@trackReplayGainTrackGain": {
-    "description": "Metadata label - ReplayGain track gain"
-  },
-  "trackReplayGainTrackPeak": "ReplayGain Пик трека",
-  "@trackReplayGainTrackPeak": {
-    "description": "Metadata label - ReplayGain track peak"
-  },
-  "trackReplayGainAlbumGain": "ReplayGain Усилие трека",
-  "@trackReplayGainAlbumGain": {
-    "description": "Metadata label - ReplayGain album gain"
-  },
-  "trackReplayGainAlbumPeak": "ReplayGain Пик альбома",
-  "@trackReplayGainAlbumPeak": {
-    "description": "Metadata label - ReplayGain album peak"
-  },
-  "trackReleaseDate": "Дата выхода",
-  "@trackReleaseDate": {
-    "description": "Metadata label - release date"
-  },
-  "trackGenre": "Жанр",
-  "@trackGenre": {
-    "description": "Metadata label - music genre"
-  },
-  "trackLabel": "Заголовок",
-  "@trackLabel": {
-    "description": "Metadata label - record label"
-  },
-  "trackCopyright": "Авторские права",
-  "@trackCopyright": {
-    "description": "Metadata label - copyright information"
-  },
-  "trackCopyLyrics": "Копировать текст",
-  "@trackCopyLyrics": {
-    "description": "Action - copy lyrics to clipboard"
-  },
-  "trackLyricsSource": "Источник: {source}",
-  "@trackLyricsSource": {
-    "description": "Label showing the lyrics source/provider",
-    "placeholders": {
-      "source": {
-        "type": "String"
-      }
-    }
-  },
   "trackLyricsNotAvailable": "Текст песни недоступен для этого трека",
   "@trackLyricsNotAvailable": {
     "description": "Message when lyrics not found"
-  },
-  "trackLyricsNotInFile": "В этом файле не найдено текстов песен",
-  "@trackLyricsNotInFile": {
-    "description": "Message when no embedded lyrics in audio file"
-  },
-  "trackLyricsTimeout": "Время ожидания запроса истекло. Повторите попытку позже.",
-  "@trackLyricsTimeout": {
-    "description": "Message when lyrics request times out"
-  },
-  "trackLyricsLoadFailed": "Не удалось загрузить текст песни",
-  "@trackLyricsLoadFailed": {
-    "description": "Message when lyrics loading fails"
-  },
-  "trackEmbedLyrics": "Вписать текст песни",
-  "@trackEmbedLyrics": {
-    "description": "Action - embed lyrics into audio file"
-  },
-  "trackLyricsEmbedded": "Текст успешно добавлен",
-  "@trackLyricsEmbedded": {
-    "description": "Snackbar - lyrics saved to file"
   },
   "trackInstrumental": "Инструментальный трек",
   "@trackInstrumental": {
@@ -1054,10 +916,6 @@
   "trackCopiedToClipboard": "Скопировано в буфер обмена",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
-  },
-  "trackDeleteConfirmTitle": "Удалить с устройства?",
-  "@trackDeleteConfirmTitle": {
-    "description": "Delete confirmation title"
   },
   "dateDaysAgo": "{count} дней назад",
   "@dateDaysAgo": {
@@ -1393,10 +1251,6 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "librarySourceLocal": "Локальные",
-  "@librarySourceLocal": {
-    "description": "Badge for tracks from local library scan"
-  },
   "libraryFilterAll": "Все",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
@@ -1661,43 +1515,9 @@
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackSaveCoverArt": "Сохранить обложку",
-  "@trackSaveCoverArt": {
-    "description": "Menu action - save album cover art as file"
-  },
-  "trackSaveLyrics": "Сохранить текст (.lrc)",
-  "@trackSaveLyrics": {
-    "description": "Menu action - save lyrics as .lrc file"
-  },
-  "trackSaveLyricsProgress": "Сохранение текста...",
-  "@trackSaveLyricsProgress": {
-    "description": "Snackbar while saving lyrics to file"
-  },
   "trackEditMetadata": "Редактировать метаданные",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
-  },
-  "trackCoverSaved": "Обложка сохранена в {fileName}",
-  "@trackCoverSaved": {
-    "description": "Snackbar after cover art saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
-  },
-  "trackCoverNoSource": "Нет доступных источников обложки",
-  "@trackCoverNoSource": {
-    "description": "Snackbar when no cover art URL or embedded cover"
-  },
-  "trackLyricsSaved": "Текст песни сохранен в {fileName}",
-  "@trackLyricsSaved": {
-    "description": "Snackbar after lyrics saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
   },
   "trackReEnrichSuccess": "Метаданные успешно обновлены",
   "trackReEnrichMetadataSaved": "Метаданные сохранены",
@@ -1706,98 +1526,9 @@
   "@trackReEnrichSuccess": {
     "description": "Snackbar after successful re-enrichment"
   },
-  "trackSaveFailed": "Ошибка: {error}",
-  "@trackSaveFailed": {
-    "description": "Snackbar when save operation fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "audioBitrate": "Битрейт",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
-  },
-  "cueSplitTitle": "Разделить CUE Sheet",
-  "@cueSplitTitle": {
-    "description": "Title for CUE split bottom sheet"
-  },
-  "cueSplitAlbum": "Альбом: {album}",
-  "@cueSplitAlbum": {
-    "description": "Album name in CUE split sheet",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitArtist": "Артист: {artist}",
-  "@cueSplitArtist": {
-    "description": "Artist name in CUE split sheet",
-    "placeholders": {
-      "artist": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitTrackCount": "{count} треков",
-  "@cueSplitTrackCount": {
-    "description": "Number of tracks in CUE sheet",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitConfirmTitle": "Разделенный CUE-альбом",
-  "@cueSplitConfirmTitle": {
-    "description": "CUE split confirmation dialog title"
-  },
-  "cueSplitConfirmMessage": "Разбить \"{album}\" на {count} отдельных FLAC-файлов?",
-  "@cueSplitConfirmMessage": {
-    "description": "CUE split confirmation dialog message",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSplitting": "Разделение CUE sheet... ({current}/{total})",
-  "@cueSplitSplitting": {
-    "description": "Snackbar while splitting CUE",
-    "placeholders": {
-      "current": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSuccess": "Успешно разделено на {count} треков",
-  "@cueSplitSuccess": {
-    "description": "Snackbar after successful CUE split",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitFailed": "Разделение CUE не удалось",
-  "@cueSplitFailed": {
-    "description": "Snackbar when CUE split fails"
-  },
-  "cueSplitNoAudioFile": "Аудиофайл для этого CUE sheet не найден",
-  "@cueSplitNoAudioFile": {
-    "description": "Error when CUE audio file is missing"
-  },
-  "cueSplitButton": "Разделить на Треки",
-  "@cueSplitButton": {
-    "description": "Button text to start CUE splitting"
   },
   "actionCreate": "Создать",
   "@actionCreate": {
@@ -1807,7 +1538,7 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionLoved": "Любимые",
+  "collectionLoved": "Любимые песни",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
@@ -2106,21 +1837,9 @@
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarLoadingCueSheet": "Загрузка CUE разметки...",
-  "@snackbarLoadingCueSheet": {
-    "description": "Snackbar while loading a CUE sheet file"
-  },
   "snackbarMetadataSaved": "Метаданные успешно сохранены",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
-  },
-  "snackbarFailedToEmbedLyrics": "Не удалось встроить текст",
-  "@snackbarFailedToEmbedLyrics": {
-    "description": "Snackbar when lyrics embedding fails"
-  },
-  "snackbarFailedToWriteStorage": "Не удалось записать в хранилище",
-  "@snackbarFailedToWriteStorage": {
-    "description": "Snackbar when writing metadata back to file fails"
   },
   "snackbarError": "Ошибка: {error}",
   "@snackbarError": {
@@ -2800,14 +2519,6 @@
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "trackLyricsEmbeddedSource": "Встроенный",
-  "@trackLyricsEmbeddedSource": {
-    "description": "Lyrics source label for embedded lyrics"
-  },
-  "unknownAlbum": "Неизвестный альбом",
-  "@unknownAlbum": {
-    "description": "Fallback album name when metadata is missing"
-  },
   "unknownArtist": "Неизвестный исполнитель",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
@@ -2994,14 +2705,6 @@
   "@aboutPaxsenixSubtitle": {
     "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
-  "snackbarPlayingNext": "Следующий",
-  "@snackbarPlayingNext": {
-    "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "snackbarAddedToQueueGeneric": "Добавлено в очередь",
-  "@snackbarAddedToQueueGeneric": {
-    "description": "Snackbar when a track is added to the playback queue without naming it"
-  },
   "selectionDeletePlaylistsCount": "Удалить {count} {count, plural, =1{плейлист} few{плейлиста} other{плейлистов}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
@@ -3064,20 +2767,8 @@
   "@trackOptionCopyTrackAndArtist": {
     "description": "Track menu action that copies the track title and artist"
   },
-  "metadataCopyValue": "Копировать значение",
-  "@metadataCopyValue": {
-    "description": "Metadata menu action that copies only the selected value"
-  },
-  "metadataCopyField": "Копировать поле и значение",
-  "@metadataCopyField": {
-    "description": "Metadata menu action that copies the selected key and value"
-  },
   "mornyeSearch": "Поиск",
   "mornyeContinuePlaying": "Продолжить воспроизведение",
-  "metadataCopyAll": "Скопировать все метаданные",
-  "@metadataCopyAll": {
-    "description": "Metadata menu action that copies every visible key and value"
-  },
   "optionsEmbeddedCoverSize": "Размер встраиваемой обложки",
   "@optionsEmbeddedCoverSize": {
     "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"

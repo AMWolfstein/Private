@@ -134,6 +134,7 @@ class UnifiedLibraryItem {
         discNumber: l.discNumber,
         releaseDate: l.releaseDate,
         source: 'local',
+        explicit: l.explicit,
       );
     }
     return Track(

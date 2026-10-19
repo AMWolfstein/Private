@@ -1,4 +1,5 @@
 {
+  "libraryGenres": "Жанри",
   "settingsPlaybackSubtitle": "Плеєр, гучність, автомікшування та аудіовихід",
   "sectionPlayer": "Плеєр",
   "sectionVolumeAndTransitions": "Гучність та переходи",
@@ -133,25 +134,7 @@
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
   },
-  "trackReplayGain": "Повторне сканування ReplayGain",
-  "@trackReplayGain": {
-    "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
-  },
-  "trackReplayGainScanning": "Аналіз гучності...",
-  "@trackReplayGainScanning": {
-    "description": "Snackbar/progress message while scanning ReplayGain for a single track"
-  },
-  "trackReplayGainSuccess": "Додано теги ReplayGain",
-  "@trackReplayGainSuccess": {
-    "description": "Snackbar message after ReplayGain tags written for a single track"
-  },
-  "trackReplayGainFailed": "Не вдалося додати теги ReplayGain",
-  "@trackReplayGainFailed": {
-    "description": "Snackbar message when ReplayGain scan/write fails"
-  },
   "trackRemoveReplayGain": "Видалити ReplayGain",
-  "trackRemoveReplayGainSuccess": "Теги ReplayGain видалено",
-  "trackRemoveReplayGainFailed": "Не вдалося видалити теги ReplayGain",
   "replayGainRemoving": "Видалення ReplayGain...",
   "replayGainRemoveConfirmMessage": "Видалити теги ReplayGain для треків та альбомів з {count} трек(s)? Аудіодані, обкладинки та інші метадані буде збережено.",
   "@replayGainRemoveConfirmMessage": {
@@ -372,10 +355,6 @@
   "@aboutSquiglyDesc": {
     "description": "Credit for the Squigly resolver"
   },
-  "trackMetadataService": "Сервіс",
-  "@trackMetadataService": {
-    "description": "Metadata field - download service used"
-  },
   "trackMetadataPlay": "Прослухати",
   "@trackMetadataPlay": {
     "description": "Action button - play track"
@@ -383,10 +362,6 @@
   "trackMetadataShare": "Поділитися",
   "@trackMetadataShare": {
     "description": "Action button - share track"
-  },
-  "trackMetadataDelete": "Видалити",
-  "@trackMetadataDelete": {
-    "description": "Action button - delete track"
   },
   "setupGrantPermission": "Надати дозвіл",
   "@setupGrantPermission": {
@@ -890,134 +865,21 @@
       }
     }
   },
-  "trackCopyFilePath": "Копіювати шлях до файлу",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
-  },
-  "trackRemoveFromDevice": "Видалити з пристрою",
-  "@trackRemoveFromDevice": {
-    "description": "Action - delete downloaded file"
-  },
-  "trackLoadLyrics": "Завантажити текст пісні",
-  "@trackLoadLyrics": {
-    "description": "Action - fetch lyrics"
-  },
   "trackMetadata": "Метадані",
   "@trackMetadata": {
     "description": "Tab title - track metadata"
-  },
-  "trackFileInfo": "Інформація про файл",
-  "@trackFileInfo": {
-    "description": "Tab title - file information"
   },
   "trackLyrics": "Тексти пісень",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
-  "trackFileNotFound": "Файл не знайдено",
-  "@trackFileNotFound": {
-    "description": "Error - file doesn't exist"
-  },
-  "trackTrackName": "Назва треку",
-  "@trackTrackName": {
-    "description": "Metadata label - track title"
-  },
-  "trackArtist": "Артист",
-  "@trackArtist": {
-    "description": "Metadata label - artist name"
-  },
-  "trackAlbumArtist": "Виконавець альбому",
-  "@trackAlbumArtist": {
-    "description": "Metadata label - album artist"
-  },
   "trackAlbum": "Альбом",
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackTrackNumber": "Номер треку",
-  "@trackTrackNumber": {
-    "description": "Metadata label - track number"
-  },
-  "trackDiscNumber": "Номер диска",
-  "@trackDiscNumber": {
-    "description": "Metadata label - disc number"
-  },
-  "trackDuration": "Тривалість",
-  "@trackDuration": {
-    "description": "Metadata label - track length"
-  },
-  "trackAudioQuality": "Якість звуку",
-  "@trackAudioQuality": {
-    "description": "Metadata label - audio quality"
-  },
-  "trackReplayGainTrackGain": "ReplayGain: посилення для треку",
-  "@trackReplayGainTrackGain": {
-    "description": "Metadata label - ReplayGain track gain"
-  },
-  "trackReplayGainTrackPeak": "Піковий рівень треку ReplayGain",
-  "@trackReplayGainTrackPeak": {
-    "description": "Metadata label - ReplayGain track peak"
-  },
-  "trackReplayGainAlbumGain": "ReplayGain: посилення для альбому",
-  "@trackReplayGainAlbumGain": {
-    "description": "Metadata label - ReplayGain album gain"
-  },
-  "trackReplayGainAlbumPeak": "Піковий рівень альбому ReplayGain",
-  "@trackReplayGainAlbumPeak": {
-    "description": "Metadata label - ReplayGain album peak"
-  },
-  "trackReleaseDate": "Дата випуску",
-  "@trackReleaseDate": {
-    "description": "Metadata label - release date"
-  },
-  "trackGenre": "Жанр",
-  "@trackGenre": {
-    "description": "Metadata label - music genre"
-  },
-  "trackLabel": "Обкладинка",
-  "@trackLabel": {
-    "description": "Metadata label - record label"
-  },
-  "trackCopyright": "Авторське право",
-  "@trackCopyright": {
-    "description": "Metadata label - copyright information"
-  },
-  "trackCopyLyrics": "Скопіювати тексти пісень",
-  "@trackCopyLyrics": {
-    "description": "Action - copy lyrics to clipboard"
-  },
-  "trackLyricsSource": "Джерело {source}",
-  "@trackLyricsSource": {
-    "description": "Label showing the lyrics source/provider",
-    "placeholders": {
-      "source": {
-        "type": "String"
-      }
-    }
-  },
   "trackLyricsNotAvailable": "Текст пісні для цього треку недоступний",
   "@trackLyricsNotAvailable": {
     "description": "Message when lyrics not found"
-  },
-  "trackLyricsNotInFile": "У цьому файлі не знайдено текстів пісень",
-  "@trackLyricsNotInFile": {
-    "description": "Message when no embedded lyrics in audio file"
-  },
-  "trackLyricsTimeout": "Час очікування запиту минув. Спробуйте ще раз пізніше.",
-  "@trackLyricsTimeout": {
-    "description": "Message when lyrics request times out"
-  },
-  "trackLyricsLoadFailed": "Не вдалося завантажити текст пісні",
-  "@trackLyricsLoadFailed": {
-    "description": "Message when lyrics loading fails"
-  },
-  "trackEmbedLyrics": "Вбудувати текст пісні",
-  "@trackEmbedLyrics": {
-    "description": "Action - embed lyrics into audio file"
-  },
-  "trackLyricsEmbedded": "Текст пісні успішно вбудовано в пісню",
-  "@trackLyricsEmbedded": {
-    "description": "Snackbar - lyrics saved to file"
   },
   "trackInstrumental": "Інструментальний трек",
   "@trackInstrumental": {
@@ -1026,10 +888,6 @@
   "trackCopiedToClipboard": "Скопійовано в буфер обміну",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
-  },
-  "trackDeleteConfirmTitle": "Видалити з пристрою?",
-  "@trackDeleteConfirmTitle": {
-    "description": "Delete confirmation title"
   },
   "dateDaysAgo": "{count} Днів тому",
   "@dateDaysAgo": {
@@ -1369,10 +1227,6 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "librarySourceLocal": "Локальні",
-  "@librarySourceLocal": {
-    "description": "Badge for tracks from local library scan"
-  },
   "libraryFilterAll": "Усі",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
@@ -1637,43 +1491,9 @@
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackSaveCoverArt": "Зберегти обкладинку",
-  "@trackSaveCoverArt": {
-    "description": "Menu action - save album cover art as file"
-  },
-  "trackSaveLyrics": "Зберегти текст пісні (.lrc)",
-  "@trackSaveLyrics": {
-    "description": "Menu action - save lyrics as .lrc file"
-  },
-  "trackSaveLyricsProgress": "Збереження тексту пісні...",
-  "@trackSaveLyricsProgress": {
-    "description": "Snackbar while saving lyrics to file"
-  },
   "trackEditMetadata": "Редагувати метадані",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
-  },
-  "trackCoverSaved": "Обкладинку збережено до {fileName}",
-  "@trackCoverSaved": {
-    "description": "Snackbar after cover art saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
-  },
-  "trackCoverNoSource": "Джерело обкладинки недоступне",
-  "@trackCoverNoSource": {
-    "description": "Snackbar when no cover art URL or embedded cover"
-  },
-  "trackLyricsSaved": "Текст пісні збережено в {fileName}",
-  "@trackLyricsSaved": {
-    "description": "Snackbar after lyrics saved",
-    "placeholders": {
-      "fileName": {
-        "type": "String"
-      }
-    }
   },
   "trackReEnrichSuccess": "Метадані повторно збагачені успішно",
   "trackReEnrichMetadataSaved": "Метадані збережені",
@@ -1682,98 +1502,9 @@
   "@trackReEnrichSuccess": {
     "description": "Snackbar after successful re-enrichment"
   },
-  "trackSaveFailed": "Не вдалося: {error}",
-  "@trackSaveFailed": {
-    "description": "Snackbar when save operation fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "audioBitrate": "Бітрейт",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
-  },
-  "cueSplitTitle": "Розділений аркуш CUE",
-  "@cueSplitTitle": {
-    "description": "Title for CUE split bottom sheet"
-  },
-  "cueSplitAlbum": "Альбом: {album}",
-  "@cueSplitAlbum": {
-    "description": "Album name in CUE split sheet",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitArtist": "Артист: {artist}",
-  "@cueSplitArtist": {
-    "description": "Artist name in CUE split sheet",
-    "placeholders": {
-      "artist": {
-        "type": "String"
-      }
-    }
-  },
-  "cueSplitTrackCount": "{count} Треків",
-  "@cueSplitTrackCount": {
-    "description": "Number of tracks in CUE sheet",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitConfirmTitle": "Розділений альбом CUE",
-  "@cueSplitConfirmTitle": {
-    "description": "CUE split confirmation dialog title"
-  },
-  "cueSplitConfirmMessage": "Розділити \"{album}\" на {count} окремих FLAC-файлів?\n\nФайли будуть збережені в одному каталозі.",
-  "@cueSplitConfirmMessage": {
-    "description": "CUE split confirmation dialog message",
-    "placeholders": {
-      "album": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSplitting": "Розділення аркуша CUE... ({current}/{total})",
-  "@cueSplitSplitting": {
-    "description": "Snackbar while splitting CUE",
-    "placeholders": {
-      "current": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitSuccess": "Розділено на {count} треки успішно",
-  "@cueSplitSuccess": {
-    "description": "Snackbar after successful CUE split",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cueSplitFailed": "Розділення CUE не вдалося",
-  "@cueSplitFailed": {
-    "description": "Snackbar when CUE split fails"
-  },
-  "cueSplitNoAudioFile": "Аудіофайл для цього аркуша CUE не знайдено",
-  "@cueSplitNoAudioFile": {
-    "description": "Error when CUE audio file is missing"
-  },
-  "cueSplitButton": "Розділити на треки",
-  "@cueSplitButton": {
-    "description": "Button text to start CUE splitting"
   },
   "actionCreate": "Створити",
   "@actionCreate": {
@@ -1783,7 +1514,7 @@
   "@collectionFoldersTitle": {
     "description": "Library section title for custom folders"
   },
-  "collectionLoved": "Вподобані",
+  "collectionLoved": "Улюблені пісні",
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
@@ -2082,21 +1813,9 @@
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarLoadingCueSheet": "Завантаження аркуша CUE...",
-  "@snackbarLoadingCueSheet": {
-    "description": "Snackbar while loading a CUE sheet file"
-  },
   "snackbarMetadataSaved": "Метадані успішно збережено",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
-  },
-  "snackbarFailedToEmbedLyrics": "Не вдалося вставити текст пісні",
-  "@snackbarFailedToEmbedLyrics": {
-    "description": "Snackbar when lyrics embedding fails"
-  },
-  "snackbarFailedToWriteStorage": "Не вдалося перезаписати у сховище",
-  "@snackbarFailedToWriteStorage": {
-    "description": "Snackbar when writing metadata back to file fails"
   },
   "snackbarError": "Помилка: {error}",
   "@snackbarError": {
@@ -2776,14 +2495,6 @@
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "trackLyricsEmbeddedSource": "Вбудовано",
-  "@trackLyricsEmbeddedSource": {
-    "description": "Lyrics source label for embedded lyrics"
-  },
-  "unknownAlbum": "Невідомий альбом",
-  "@unknownAlbum": {
-    "description": "Fallback album name when metadata is missing"
-  },
   "unknownArtist": "Невідомий виконавець",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
@@ -2994,14 +2705,6 @@
   "@aboutPaxsenixSubtitle": {
     "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
-  "snackbarPlayingNext": "Відтворити далі",
-  "@snackbarPlayingNext": {
-    "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "snackbarAddedToQueueGeneric": "Додано до черги",
-  "@snackbarAddedToQueueGeneric": {
-    "description": "Snackbar when a track is added to the playback queue without naming it"
-  },
   "selectionDeletePlaylistsCount": "Видалити {count} {count, plural, =1{список треків} other{списки треків}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
@@ -3064,20 +2767,8 @@
   "@trackOptionCopyTrackAndArtist": {
     "description": "Track menu action that copies the track title and artist"
   },
-  "metadataCopyValue": "Копіювати значення",
-  "@metadataCopyValue": {
-    "description": "Metadata menu action that copies only the selected value"
-  },
-  "metadataCopyField": "Копіювати поле та значення",
-  "@metadataCopyField": {
-    "description": "Metadata menu action that copies the selected key and value"
-  },
   "mornyeSearch": "Пошук",
   "mornyeContinuePlaying": "Продовжити відтворювання",
-  "metadataCopyAll": "Копіювати всі метадані",
-  "@metadataCopyAll": {
-    "description": "Metadata menu action that copies every visible key and value"
-  },
   "optionsEmbeddedCoverSize": "Розмір вбудованої обкладинки",
   "@optionsEmbeddedCoverSize": {
     "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"
