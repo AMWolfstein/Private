@@ -1,0 +1,21 @@
+{
+  "source": "b62b3d9e",
+  "package": "com.zarz.spotiflac.local",
+  "label": "SpotiFLAC Local",
+  "version": "5.1.1",
+  "build": 166,
+  "version_code": 2166,
+  "minimum_api": 24,
+  "target_api": 37,
+  "abis": [
+    "arm64-v8a"
+  ],
+  "native_libraries": 17,
+  "same_signing_certificate": true,
+  "zip_16k_alignment": true,
+  "elf_16k_alignment": true,
+  "offline_permissions": true,
+  "cream_adaptive_background": "#FFF4DF",
+  "size": 54065931,
+  "sha256": "5884f74494d15f06897b64461e193c286bfb492edb1a10607f4722aa42b363bd"
+}
