@@ -44,3 +44,5 @@ Each future implementation batch must record source SHA(s), upstream SHA(s), tar
 - **PASS:** upstream 378c8f37 source comparison and local provider/auto-scan/poller/notification/SAF/publication review. Corrected initial finding: outer finally already resets scanning; secondary error-save failure suppresses original failure visibility instead.
 - **NOT RUN:** new regression tests (not yet written), Flutter analysis/full suite, Kotlin/Rust/Android device checks and APK. No implementation this unit.
 - Checkpoint verifier and staged diff are rerun before commit; push receipt updated after successful publication. Classification counts remain unchanged; scanner ADAPT entry narrowed to B01a/b/c with detailed gates.
+
+- **PASS:** comparison checkpoint `87595eeb22ab7702121c05c074faccaac972fc61` pushed and verified using `git ls-remote` on `review/upstream-v5.2.0-discovery`; main unchanged. Handoff receipt commit follows; final remote tip is checked after that push. Review verifier, scanner-report evidence checks and staged whitespace checks passed.
