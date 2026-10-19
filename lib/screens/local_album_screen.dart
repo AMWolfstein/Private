@@ -9,7 +9,6 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/audio_quality_badge_policy.dart';
 import 'package:spotiflac_android/utils/confirm_and_delete_tracks.dart';
@@ -81,7 +80,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
   List<int> get _sortedDiscNumbersCache => _trackOrder.discNumbers;
   bool get _hasMultipleDiscsCache => _trackOrder.discGroups.length > 1;
   String? _commonQualityCache;
-  String? _commonQualityModeCache;
 
   @override
   void initState() {
@@ -130,8 +128,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       trackNumber: (track) => track.trackNumber,
       trackName: (track) => track.trackName,
     );
-    _commonQualityCache = null;
-    _commonQualityModeCache = null;
+    _commonQualityCache = _computeCommonQuality(_sortedTracksCache);
   }
 
   Future<void> _deleteSelected(List<LocalLibraryItem> currentTracks) async {
@@ -223,9 +220,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
   Widget _buildPage(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final qualityLabelMode = ref.watch(
-      settingsProvider.select((s) => s.libraryQualityLabelMode),
-    );
     final bottomPadding = isSelectionMode
         ? MediaQuery.paddingOf(context).bottom
         : 0.0;
@@ -244,7 +238,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       scrollController: scrollController,
       isSelectionMode: isSelectionMode,
       onExitSelectionMode: exitSelectionMode,
-      appBar: _buildAppBar(context, colorScheme, qualityLabelMode),
+      appBar: _buildAppBar(context, colorScheme),
       slivers: [
         if (_loadError != null)
           SliverToBoxAdapter(
@@ -285,11 +279,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     );
   }
 
-  Widget _buildAppBar(
-    BuildContext context,
-    ColorScheme colorScheme,
-    String qualityLabelMode,
-  ) {
+  Widget _buildAppBar(BuildContext context, ColorScheme colorScheme) {
     final expandedHeight = calculateExpandedHeight(context);
     final cacheWidth = coverCacheWidthForViewport(context);
     final Widget background = widget.coverPath != null
@@ -358,7 +348,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      meta: _buildLocalHeaderMeta(context, qualityLabelMode),
+      meta: _buildLocalHeaderMeta(context),
       actions: Consumer(
         builder: (context, ref, _) {
           final isCurrent = ref.watch(
@@ -389,14 +379,14 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     );
   }
 
-  Widget _buildLocalHeaderMeta(BuildContext context, String qualityLabelMode) {
+  Widget _buildLocalHeaderMeta(BuildContext context) {
     final tracks = _sortedTracksCache;
     final totalSeconds = tracks.fold<int>(
       0,
       (sum, t) => sum + ((t.duration ?? 0) > 0 ? t.duration! : 0),
     );
     final totalMinutes = (totalSeconds / 60).round();
-    final quality = _getCommonQuality(qualityLabelMode);
+    final quality = _commonQualityCache;
 
     return HeaderMetaRow(
       items: [
@@ -426,22 +416,12 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     await _openFile(tracks[Random().nextInt(tracks.length)]);
   }
 
-  String? _getCommonQuality(String mode) {
-    if (_commonQualityModeCache == mode) return _commonQualityCache;
-    _commonQualityModeCache = mode;
-    _commonQualityCache = _computeCommonQuality(_sortedTracksCache, mode);
-    return _commonQualityCache;
-  }
-
-  String? _computeCommonQuality(List<LocalLibraryItem> tracks, String mode) {
+  String? _computeCommonQuality(List<LocalLibraryItem> tracks) {
     if (tracks.isEmpty) return null;
     String? label(LocalLibraryItem track) => buildLibraryAudioQualityLabel(
-      mode: mode,
       format: track.format,
       filePath: track.filePath,
       bitrateKbps: track.bitrate,
-      bitDepth: track.bitDepth,
-      sampleRate: track.sampleRate,
     );
 
     final firstQuality = label(tracks.first);

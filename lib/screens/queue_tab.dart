@@ -29,7 +29,6 @@ import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/library_format_filters.dart';
 import 'package:spotiflac_android/utils/ordered_range_selection.dart';
-import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -67,14 +66,12 @@ part 'queue_tab_item_widgets.dart';
 
 class QueueTab extends ConsumerStatefulWidget {
   final String? librarySection;
-  final bool isTabActive;
   final PageController? parentPageController;
   final int parentPageIndex;
 
   const QueueTab({
     super.key,
     this.librarySection,
-    this.isTabActive = true,
     this.parentPageController,
     this.parentPageIndex = 1,
   });
@@ -118,7 +115,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   PageController? _filterPageController;
   final List<String> _filterModes = ['all', 'albums', 'singles', 'playlists'];
   bool _isPageControllerInitialized = false;
-  bool _wasTabVisible = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   String _searchQuery = '';
@@ -128,7 +124,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   String? _filterFormat;
   String? _filterMetadata;
   String _sortMode = 'latest';
-  String _libraryQualityLabelMode = AppSettings.libraryQualityLabelBitrate;
   double _libraryGridExtent = _libraryGridDefaultExtent;
   double? _libraryGridPinchStartExtent;
   final Map<String, int> _libraryPageOffsetByFilter = {};
@@ -174,11 +169,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     if (_isPageControllerInitialized) return;
     _isPageControllerInitialized = true;
     final settings = ref.read(settingsProvider);
-    final initialFilter =
-        widget.librarySection ??
-        (settings.defaultLibraryView == 'last'
-            ? settings.historyFilterMode
-            : settings.defaultLibraryView);
+    final initialFilter = widget.librarySection ?? settings.historyFilterMode;
     final initialPage = _filterModes
         .indexOf(initialFilter)
         .clamp(0, _filterModes.length - 1);
@@ -192,34 +183,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       });
     }
     _filterPageController = PageController(initialPage: initialPage);
-  }
-
-  /// When the shell switches back to this tab and a fixed default view is
-  /// configured, jump the filter pager to it.
-  void _applyDefaultLibraryViewOnTabVisible() {
-    if (widget.librarySection != null) return;
-    // Route transitions also disable TickerMode. Only a shell tab change
-    // should reset the user's current album/single view.
-    final isVisible = widget.isTabActive;
-    final becameVisible = isVisible && !_wasTabVisible;
-    _wasTabVisible = isVisible;
-    if (!becameVisible) return;
-    final defaultView = ref.read(settingsProvider).defaultLibraryView;
-    if (defaultView == 'last') return;
-    final index = _filterModes.indexOf(defaultView);
-    if (index < 0) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (ref.read(settingsProvider).historyFilterMode != defaultView) {
-        ref.read(settingsProvider.notifier).setHistoryFilterMode(defaultView);
-      }
-      final controller = _filterPageController;
-      if (controller != null &&
-          controller.hasClients &&
-          controller.page?.round() != index) {
-        controller.jumpToPage(index);
-      }
-    });
   }
 
   @override
@@ -1024,7 +987,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       );
     }
     _initializePageController();
-    _applyDefaultLibraryViewOnTabVisible();
     final localLibraryEnabled = ref.watch(
       settingsProvider.select((s) => s.localLibraryEnabled),
     );
@@ -1062,11 +1024,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     final String historyFilterMode =
         widget.librarySection ??
         ref.watch<String>(settingsProvider.select((s) => s.historyFilterMode));
-    // Keep this mode out of the page-provider request: changing only badge
-    // text must not re-query the database or reset Library pagination.
-    _libraryQualityLabelMode = ref.watch(
-      settingsProvider.select((s) => s.libraryQualityLabelMode),
-    );
     final colorScheme = Theme.of(context).colorScheme;
     final countsRequest = _QueueLibraryCountsRequest(
       searchQuery: _searchQuery,

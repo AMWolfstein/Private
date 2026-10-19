@@ -86,7 +86,6 @@ class _MainShellState extends ConsumerState<MainShell>
     final settings = ref.read(settingsProvider);
     playback.configure(settings);
     listeningRecorder.setEnabled(settings.listeningStatisticsEnabled);
-
   }
 
   @override
@@ -538,10 +537,7 @@ class _MainShellState extends ConsumerState<MainShell>
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
-        child: _LibraryTabRoot(
-          parentPageController: _pageController,
-          isTabActive: _currentIndex == 1,
-        ),
+        child: _LibraryTabRoot(parentPageController: _pageController),
       ),
       if (!context.isMornye) const SettingsTab(),
       if (context.isMornye)
@@ -860,17 +856,12 @@ class _TabNavigatorState extends State<_TabNavigator> {
 
 class _LibraryTabRoot extends ConsumerWidget {
   final PageController parentPageController;
-  final bool isTabActive;
 
-  const _LibraryTabRoot({
-    required this.parentPageController,
-    required this.isTabActive,
-  });
+  const _LibraryTabRoot({required this.parentPageController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return QueueTab(
-      isTabActive: isTabActive,
       parentPageController: parentPageController,
       parentPageIndex: 1,
     );

@@ -119,25 +119,6 @@ class SettingsSearchCatalog {
       ],
       library = [
         SettingsSearchEntry(
-          icon: Icons.grid_view_rounded,
-          title: l10n.libraryDefaultView,
-          keywords: const ['library tab', 'default page'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.graphic_eq_rounded,
-          title: l10n.trackAudioQuality,
-          keywords: const [
-            'quality label',
-            'bitrate',
-            'bit depth',
-            'file format',
-            'codec',
-            'flac',
-            'mp3',
-            'kbps',
-          ],
-        ),
-        SettingsSearchEntry(
           icon: Icons.library_music_outlined,
           title: l10n.libraryEnableLocalLibrary,
           subtitle: l10n.libraryEnableLocalLibrarySubtitle,

@@ -86,13 +86,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
   SettingsNotifier({Future<SharedPreferences> Function()? preferences})
     : _loadPreferences = preferences ?? SharedPreferences.getInstance;
 
-  static const Set<String> _libraryViewValues = {
-    'last',
-    'all',
-    'albums',
-    'singles',
-    'playlists',
-  };
   static const Set<int> _embeddedCoverMaxDimensionValues = {
     0,
     500,
@@ -152,12 +145,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
       if (loaded != null) {
         state = loaded.copyWith(
-          defaultLibraryView: _normalizeDefaultLibraryView(
-            loaded.defaultLibraryView,
-          ),
-          libraryQualityLabelMode: _normalizeLibraryQualityLabelMode(
-            loaded.libraryQualityLabelMode,
-          ),
           embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
             loaded.embeddedCoverMaxDimension,
           ),
@@ -283,26 +270,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       downloadDirectoryBookmark: '',
     );
     await _saveSettings();
-  }
-
-  String _normalizeDefaultLibraryView(String value) {
-    final normalized = value.trim().toLowerCase();
-    if (_libraryViewValues.contains(normalized)) return normalized;
-    return 'last';
-  }
-
-  String _normalizeLibraryQualityLabelMode(String value) {
-    return switch (value) {
-      AppSettings.libraryQualityLabelFileFormat =>
-        AppSettings.libraryQualityLabelFileFormat,
-      AppSettings.libraryQualityLabelBitDepthOnly =>
-        AppSettings.libraryQualityLabelBitDepthOnly,
-      AppSettings.libraryQualityLabelBitDepth =>
-        AppSettings.libraryQualityLabelBitDepth,
-      AppSettings.libraryQualityLabelBitDepthBitrate =>
-        AppSettings.libraryQualityLabelBitDepthBitrate,
-      _ => AppSettings.libraryQualityLabelBitrate,
-    };
   }
 
   int _normalizeEmbeddedCoverMaxDimension(int value) {
@@ -510,20 +477,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setHistoryFilterMode(String mode) {
     state = state.copyWith(historyFilterMode: mode);
-    _saveSettings();
-  }
-
-  void setDefaultLibraryView(String view) {
-    state = state.copyWith(
-      defaultLibraryView: _normalizeDefaultLibraryView(view),
-    );
-    _saveSettings();
-  }
-
-  void setLibraryQualityLabelMode(String mode) {
-    state = state.copyWith(
-      libraryQualityLabelMode: _normalizeLibraryQualityLabelMode(mode),
-    );
     _saveSettings();
   }
 

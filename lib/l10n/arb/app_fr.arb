@@ -994,10 +994,6 @@
   "@trackReplayGainAlbumPeak": {
     "description": "Metadata label - ReplayGain album peak"
   },
-  "libraryQualityLabelFileFormat": "Format de fichier",
-  "@libraryQualityLabelFileFormat": {
-    "description": "Library audio quality label mode that shows the detected file format"
-  },
   "trackReleaseDate": "Date de sortie",
   "@trackReleaseDate": {
     "description": "Metadata label - release date"
@@ -2235,14 +2231,6 @@
   "queueEmptyPlaylistsSubtitle": "Créez une playlist pour organiser vos morceaux",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
-  },
-  "libraryDefaultView": "Affichage par défaut",
-  "@libraryDefaultView": {
-    "description": "Setting title - which library view opens when switching to the Library tab"
-  },
-  "libraryDefaultViewLastUsed": "Dernière utilisation",
-  "@libraryDefaultViewLastUsed": {
-    "description": "Default view option - keep the last used library view"
   },
   "selectionAllPlaylistsSelected": "Toutes les playlists sélectionnées",
   "@selectionAllPlaylistsSelected": {

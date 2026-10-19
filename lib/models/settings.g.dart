@@ -50,10 +50,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   albumFolderStructure:
       json['albumFolderStructure'] as String? ?? 'artist_album',
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
-  defaultLibraryView: json['defaultLibraryView'] as String? ?? 'last',
-  libraryQualityLabelMode:
-      json['libraryQualityLabelMode'] as String? ??
-      AppSettings.libraryQualityLabelBitrate,
   enableLogging: json['enableLogging'] as bool? ?? false,
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
   forceBackdropBlur: json['forceBackdropBlur'] as bool? ?? false,
@@ -104,8 +100,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'hasSearchedBefore': instance.hasSearchedBefore,
       'albumFolderStructure': instance.albumFolderStructure,
       'historyFilterMode': instance.historyFilterMode,
-      'defaultLibraryView': instance.defaultLibraryView,
-      'libraryQualityLabelMode': instance.libraryQualityLabelMode,
       'enableLogging': instance.enableLogging,
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,
       'forceBackdropBlur': instance.forceBackdropBlur,

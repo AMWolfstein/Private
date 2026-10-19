@@ -188,7 +188,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
     final dateStr =
         '${shortMonthNames[date.month - 1]} ${date.day}, ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 
-    final quality = item.qualityForMode(_libraryQualityLabelMode);
+    final quality = item.displayQuality;
 
     return Semantics(
       label: context.l10n.a11yTrackByArtist(item.trackName, item.artistName),
@@ -302,7 +302,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
   }) {
     final fileExistsListenable = _fileExistsListenable(item.filePath);
     final isSelected = _selectedIds.contains(item.id);
-    final quality = item.qualityForMode(_libraryQualityLabelMode);
+    final quality = item.displayQuality;
 
     return TrackGridCard(
       isSelected: _isSelectionMode && isSelected,

@@ -564,10 +564,6 @@ void main() {
       expect(settings.embeddedCoverMaxDimension, 0);
       expect(settings.toJson().containsKey('playerMode'), false);
       expect(settings.localLibraryEnabled, isFalse);
-      expect(
-        settings.libraryQualityLabelMode,
-        AppSettings.libraryQualityLabelBitrate,
-      );
     });
 
     test('copyWith updates values and retains untouched settings', () {
@@ -582,8 +578,6 @@ void main() {
         storageMode: 'saf',
         downloadTreeUri: 'content://tree/music',
         embeddedCoverMaxDimension: 1000,
-
-        libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
       );
 
       expect(updated.downloadDirectory, '/new');
@@ -591,10 +585,6 @@ void main() {
       expect(updated.storageMode, 'saf');
       expect(updated.downloadTreeUri, 'content://tree/music');
       expect(updated.embeddedCoverMaxDimension, 1000);
-      expect(
-        updated.libraryQualityLabelMode,
-        AppSettings.libraryQualityLabelBitDepthOnly,
-      );
       expect(updated.artistTagMode, settings.artistTagMode);
     });
 
@@ -609,7 +599,6 @@ void main() {
         hasCompletedTutorial: true,
 
         lastSeenVersion: '4.5.0',
-        libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
         embeddedCoverMaxDimension: 1500,
       );
 
@@ -623,13 +612,27 @@ void main() {
       expect(decoded.localLibraryPath, '/music');
       expect(decoded.hasCompletedTutorial, isTrue);
       expect(decoded.lastSeenVersion, '4.5.0');
-      expect(
-        decoded.libraryQualityLabelMode,
-        AppSettings.libraryQualityLabelBitDepthOnly,
-      );
       expect(decoded.embeddedCoverMaxDimension, 1500);
     });
   });
+
+  test(
+    'retired Library options are ignored by settings imports and exports',
+    () {
+      final settings = AppSettings.fromJson({
+        'defaultLibraryView': 'albums',
+        'libraryQualityLabelMode': 'bit_depth',
+        'localLibraryEnabled': true,
+        'localLibraryPath': '/music',
+        'historyFilterMode': 'singles',
+      });
+      expect(settings.localLibraryEnabled, isTrue);
+      expect(settings.localLibraryPath, '/music');
+      expect(settings.historyFilterMode, 'singles');
+      expect(settings.toJson(), isNot(contains('defaultLibraryView')));
+      expect(settings.toJson(), isNot(contains('libraryQualityLabelMode')));
+    },
+  );
 
   test('legacy history layout imports ignore the retired preference', () {
     final settings = AppSettings.fromJson({'historyViewMode': 'list'});

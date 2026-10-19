@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
@@ -409,155 +408,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     );
   }
 
-  String _getDefaultViewLabel(BuildContext context, String view) {
-    switch (view) {
-      case 'all':
-        return context.l10n.historyFilterAll;
-      case 'albums':
-        return context.l10n.historyFilterAlbums;
-      case 'singles':
-        return context.l10n.historyFilterSingles;
-      case 'playlists':
-        return context.l10n.searchPlaylists;
-      default:
-        return context.l10n.libraryDefaultViewLastUsed;
-    }
-  }
-
-  void _showDefaultViewPicker(BuildContext context, String current) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final options = [
-      ('last', Icons.history, context.l10n.libraryDefaultViewLastUsed),
-      ('all', Icons.apps, context.l10n.historyFilterAll),
-      ('albums', Icons.album, context.l10n.historyFilterAlbums),
-      ('singles', Icons.music_note, context.l10n.historyFilterSingles),
-      ('playlists', Icons.queue_music, context.l10n.searchPlaylists),
-    ];
-    showAppModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: colorScheme.surfaceContainerHigh,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-              child: Text(
-                context.l10n.libraryDefaultView,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            for (final (value, icon, label) in options)
-              _AutoScanOption(
-                icon: icon,
-                title: label,
-                selected: current == value,
-                colorScheme: colorScheme,
-                onTap: () {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setDefaultLibraryView(value);
-                  Navigator.pop(context);
-                },
-              ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getQualityLabelModeLabel(BuildContext context, String mode) {
-    if (mode == AppSettings.libraryQualityLabelFileFormat) {
-      return context.l10n.libraryQualityLabelFileFormat;
-    }
-    if (mode == AppSettings.libraryQualityLabelBitDepthOnly) {
-      return context.l10n.audioAnalysisBitDepth;
-    }
-    if (mode == AppSettings.libraryQualityLabelBitDepth) {
-      return '${context.l10n.audioAnalysisBitDepth} & '
-          '${context.l10n.audioAnalysisSampleRate}';
-    }
-    if (mode == AppSettings.libraryQualityLabelBitDepthBitrate) {
-      return '${context.l10n.audioAnalysisBitDepth} & '
-          '${context.l10n.audioBitrate}';
-    }
-    return context.l10n.audioBitrate;
-  }
-
-  void _showQualityLabelModePicker(BuildContext context, String current) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final options = [
-      (
-        AppSettings.libraryQualityLabelBitrate,
-        Icons.speed_rounded,
-        context.l10n.audioBitrate,
-      ),
-      (
-        AppSettings.libraryQualityLabelBitDepthOnly,
-        Icons.tune_rounded,
-        context.l10n.audioAnalysisBitDepth,
-      ),
-      (
-        AppSettings.libraryQualityLabelBitDepth,
-        Icons.graphic_eq_rounded,
-        '${context.l10n.audioAnalysisBitDepth} & '
-            '${context.l10n.audioAnalysisSampleRate}',
-      ),
-      (
-        AppSettings.libraryQualityLabelBitDepthBitrate,
-        Icons.multiline_chart_rounded,
-        '${context.l10n.audioAnalysisBitDepth} & '
-            '${context.l10n.audioBitrate}',
-      ),
-      (
-        AppSettings.libraryQualityLabelFileFormat,
-        Icons.audio_file_rounded,
-        context.l10n.libraryQualityLabelFileFormat,
-      ),
-    ];
-    showAppModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: colorScheme.surfaceContainerHigh,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-              child: Text(
-                context.l10n.trackAudioQuality,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            for (final (value, icon, label) in options)
-              _AutoScanOption(
-                icon: icon,
-                title: label,
-                selected: current == value,
-                colorScheme: colorScheme,
-                onTap: () {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setLibraryQualityLabelMode(value);
-                  Navigator.pop(context);
-                },
-              ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
@@ -591,38 +441,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   lastScannedAt: libraryState.lastScannedAt,
                 );
               },
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                SettingsItem(
-                  icon: Icons.grid_view_rounded,
-                  title: context.l10n.libraryDefaultView,
-                  subtitle: _getDefaultViewLabel(
-                    context,
-                    settings.defaultLibraryView,
-                  ),
-                  onTap: () => _showDefaultViewPicker(
-                    context,
-                    settings.defaultLibraryView,
-                  ),
-                ),
-                SettingsItem(
-                  icon: Icons.graphic_eq_rounded,
-                  title: context.l10n.trackAudioQuality,
-                  subtitle: _getQualityLabelModeLabel(
-                    context,
-                    settings.libraryQualityLabelMode,
-                  ),
-                  onTap: () => _showQualityLabelModePicker(
-                    context,
-                    settings.libraryQualityLabelMode,
-                  ),
-                  showDivider: false,
-                ),
-              ],
             ),
           ),
 

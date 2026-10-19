@@ -72,16 +72,13 @@ class UnifiedLibraryItem {
       coverUrl != null ||
       (localCoverPath != null && localCoverPath!.isNotEmpty);
 
-  String? qualityForMode(String mode) {
+  String? get displayQuality {
     final local = localItem;
     if (local != null) {
       return buildLibraryAudioQualityLabel(
-        mode: mode,
         format: local.format,
         filePath: local.filePath,
         bitrateKbps: local.bitrate,
-        bitDepth: local.bitDepth,
-        sampleRate: local.sampleRate,
         storedQuality: quality,
       );
     }

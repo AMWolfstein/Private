@@ -1063,10 +1063,6 @@
   "@trackReplayGainAlbumPeak": {
     "description": "Metadata label - ReplayGain album peak"
   },
-  "libraryQualityLabelFileFormat": "Format file",
-  "@libraryQualityLabelFileFormat": {
-    "description": "Library audio quality label mode that shows the detected file format"
-  },
   "trackReleaseDate": "Tanggal rilis",
   "@trackReleaseDate": {
     "description": "Metadata label - release date"
@@ -2312,14 +2308,6 @@
   "queueEmptyPlaylistsSubtitle": "Buat playlist untuk menata lagu Anda",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
-  },
-  "libraryDefaultView": "Tampilan default",
-  "@libraryDefaultView": {
-    "description": "Setting title - which library view opens when switching to the Library tab"
-  },
-  "libraryDefaultViewLastUsed": "Terakhir digunakan",
-  "@libraryDefaultViewLastUsed": {
-    "description": "Default view option - keep the last used library view"
   },
   "selectionAllPlaylistsSelected": "Semua playlist terpilih",
   "@selectionAllPlaylistsSelected": {

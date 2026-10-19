@@ -1,4 +1,3 @@
-import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 
@@ -8,20 +7,6 @@ final RegExp _bitDepthQualityPattern = RegExp(
   r'\b\d+\s*(?:-\s*)?bit\b',
   caseSensitive: false,
 );
-
-String normalizeLibraryQualityLabelMode(String? mode) {
-  return switch (mode) {
-    AppSettings.libraryQualityLabelFileFormat =>
-      AppSettings.libraryQualityLabelFileFormat,
-    AppSettings.libraryQualityLabelBitDepthOnly =>
-      AppSettings.libraryQualityLabelBitDepthOnly,
-    AppSettings.libraryQualityLabelBitDepth =>
-      AppSettings.libraryQualityLabelBitDepth,
-    AppSettings.libraryQualityLabelBitDepthBitrate =>
-      AppSettings.libraryQualityLabelBitDepthBitrate,
-    _ => AppSettings.libraryQualityLabelBitrate,
-  };
-}
 
 String? _libraryFileFormatLabel(String? format) {
   final rawFormat = normalizeOptionalString(format);
@@ -43,17 +28,13 @@ String? _libraryFileFormatLabel(String? format) {
   };
 }
 
-/// Builds a Library label from metadata already held in memory. Lossy formats
-/// keep their bitrate label in quality modes because bit depth is not a useful
-/// quality signal for encoded MP3/AAC/Opus audio.
+/// Builds the standard Library label from measured/stored bitrate metadata.
+/// Legacy lossy files without a bitrate retain their detected codec label.
 String? buildLibraryAudioQualityLabel({
-  required String mode,
   String? format,
   String? filePath,
   String? fileName,
   int? bitrateKbps,
-  int? bitDepth,
-  int? sampleRate,
   String? storedQuality,
 }) {
   final effectiveFormat =
@@ -61,32 +42,15 @@ String? buildLibraryAudioQualityLabel({
       audioFormatForPath(filePath, fileName: fileName);
   final stored = normalizeOptionalString(storedQuality);
   final storedBitrate = _bitrateFromStoredQuality(stored);
-  final storedBitDepth = _bitDepthFromStoredQuality(stored);
   final effectiveBitrate = bitrateKbps != null && bitrateKbps > 0
       ? bitrateKbps
       : storedBitrate;
-  final effectiveBitDepth = bitDepth != null && bitDepth > 0
-      ? bitDepth
-      : storedBitDepth;
   final bitrateLabel = effectiveBitrate != null
       ? buildDisplayAudioQuality(
           bitrateKbps: effectiveBitrate,
           format: effectiveFormat,
         )
       : null;
-  final bitDepthLabel =
-      bitDepth != null && bitDepth > 0 && sampleRate != null && sampleRate > 0
-      ? buildDisplayAudioQuality(bitDepth: bitDepth, sampleRate: sampleRate)
-      : null;
-  final bitDepthOnlyLabel = effectiveBitDepth != null
-      ? '$effectiveBitDepth-bit'
-      : null;
-  final normalizedMode = normalizeLibraryQualityLabelMode(mode);
-
-  if (normalizedMode == AppSettings.libraryQualityLabelFileFormat) {
-    return _libraryFileFormatLabel(effectiveFormat);
-  }
-
   if (isLossyAudioFormat(effectiveFormat)) {
     // Older rows may know the codec before their bitrate has been backfilled.
     // Keep a useful badge without showing stale lossless specs or inventing a
@@ -94,24 +58,7 @@ String? buildLibraryAudioQualityLabel({
     return bitrateLabel ?? _libraryFileFormatLabel(effectiveFormat);
   }
 
-  return switch (normalizedMode) {
-    AppSettings.libraryQualityLabelBitDepthOnly =>
-      bitDepthOnlyLabel ?? bitrateLabel ?? stored,
-    AppSettings.libraryQualityLabelBitDepth =>
-      bitDepthLabel ?? bitrateLabel ?? stored,
-    AppSettings.libraryQualityLabelBitDepthBitrate =>
-      _buildBitDepthBitrateLabel(
-            bitDepth: effectiveBitDepth,
-            bitrateKbps: effectiveBitrate,
-          ) ??
-          bitrateLabel ??
-          bitDepthLabel ??
-          stored,
-    // Do not display bit depth/sample rate while the user selected bitrate.
-    // Legacy rows are backfilled separately; a stored measured bitrate remains
-    // usable while that migration completes.
-    _ => bitrateLabel,
-  };
+  return bitrateLabel;
 }
 
 int? _bitrateFromStoredQuality(String? quality) {
@@ -123,25 +70,6 @@ int? _bitrateFromStoredQuality(String? quality) {
   if (value == null || value <= 0) return null;
   final unit = match?.group(2)?.toLowerCase();
   return unit == 'mbps' ? (value * 1000).round() : value.round();
-}
-
-int? _bitDepthFromStoredQuality(String? quality) {
-  final match = RegExp(
-    r'\b(\d{1,3})(?:\s*[- ]?\s*bit\b|(?=/))',
-    caseSensitive: false,
-  ).firstMatch(quality ?? '');
-  final value = int.tryParse(match?.group(1) ?? '');
-  return value != null && value > 0 ? value : null;
-}
-
-String? _buildBitDepthBitrateLabel({int? bitDepth, int? bitrateKbps}) {
-  if (bitDepth == null ||
-      bitDepth <= 0 ||
-      bitrateKbps == null ||
-      bitrateKbps <= 0) {
-    return null;
-  }
-  return '$bitDepth-bit/${bitrateKbps}kbps';
 }
 
 /// Keeps detailed bit-depth labels intact in Library grid badges while

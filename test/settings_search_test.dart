@@ -34,6 +34,8 @@ void main() {
     expect(find.text('Files & Folders'), findsNothing);
     expect(find.text('Metadata'), findsNothing);
     for (final query in [
+      'Default view',
+      'Audio quality',
       'History View',
       'Music folder',
       'Artist Tag Mode',

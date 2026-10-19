@@ -6,12 +6,6 @@ part 'settings.g.dart';
 
 @JsonSerializable()
 class AppSettings {
-  static const String libraryQualityLabelBitrate = 'bitrate';
-  static const String libraryQualityLabelFileFormat = 'file_format';
-  static const String libraryQualityLabelBitDepthOnly = 'bit_depth_only';
-  static const String libraryQualityLabelBitDepth = 'bit_depth';
-  static const String libraryQualityLabelBitDepthBitrate = 'bit_depth_bitrate';
-
   final String downloadDirectory;
   final String downloadDirectoryBookmark;
   final String storageMode; // 'app' or 'saf'
@@ -58,13 +52,6 @@ class AppSettings {
   final String albumFolderStructure;
   final String historyFilterMode;
 
-  /// Library view opened when switching to the Library tab:
-  /// 'last' (keep last used), 'all', 'albums', 'singles', or 'playlists'.
-  final String defaultLibraryView;
-
-  /// Library badge text: measured bitrate, file format, bit depth,
-  /// bit depth/sample rate, or the combined bit depth/bitrate label.
-  final String libraryQualityLabelMode;
   final bool enableLogging;
   final bool heroAnimationsEnabled;
 
@@ -122,8 +109,6 @@ class AppSettings {
     this.hasSearchedBefore = false,
     this.albumFolderStructure = 'artist_album',
     this.historyFilterMode = 'all',
-    this.defaultLibraryView = 'last',
-    this.libraryQualityLabelMode = AppSettings.libraryQualityLabelBitrate,
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
     this.forceBackdropBlur = false,
@@ -171,8 +156,6 @@ class AppSettings {
     bool? hasSearchedBefore,
     String? albumFolderStructure,
     String? historyFilterMode,
-    String? defaultLibraryView,
-    String? libraryQualityLabelMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
     bool? forceBackdropBlur,
@@ -224,9 +207,6 @@ class AppSettings {
       hasSearchedBefore: hasSearchedBefore ?? this.hasSearchedBefore,
       albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,
       historyFilterMode: historyFilterMode ?? this.historyFilterMode,
-      defaultLibraryView: defaultLibraryView ?? this.defaultLibraryView,
-      libraryQualityLabelMode:
-          libraryQualityLabelMode ?? this.libraryQualityLabelMode,
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,

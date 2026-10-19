@@ -92,8 +92,7 @@ print(json.dumps([dict(row) for row in db.execute(data['sql'], data['args'])]))
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() =>
-      const AppSettings(localLibraryEnabled: true, defaultLibraryView: 'all');
+  AppSettings build() => const AppSettings(localLibraryEnabled: true);
 
   @override
   void setHistoryFilterMode(String mode) {
@@ -303,10 +302,7 @@ void main() {
             home: ValueListenableBuilder<bool>(
               valueListenable: tabActive,
               builder: (_, active, _) => Scaffold(
-                body: TickerMode(
-                  enabled: active,
-                  child: QueueTab(isTabActive: active),
-                ),
+                body: TickerMode(enabled: active, child: const QueueTab()),
               ),
             ),
           ),
@@ -369,7 +365,7 @@ void main() {
       expect(container.read(settingsProvider).historyFilterMode, 'albums');
 
       // Pushing an album/detail route disables the underlying route's ticker.
-      // Popping it must retain Albums rather than reapply the All default.
+      // Popping it must retain the current Albums section.
       final navigator = Navigator.of(tester.element(find.byType(QueueTab)));
       unawaited(
         navigator.push<void>(
@@ -411,13 +407,13 @@ void main() {
       await _waitFor(tester, find.text('complete'));
       expect(find.text('1/12'), findsNothing);
       expect(container.read(settingsProvider).historyFilterMode, 'albums');
-      // An actual shell-tab switch still applies the configured All default.
+      // Switching tabs also retains the current section; there is no default-view reset.
       tabActive.value = false;
       await tester.pump();
       tabActive.value = true;
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
-      expect(container.read(settingsProvider).historyFilterMode, 'all');
+      expect(container.read(settingsProvider).historyFilterMode, 'albums');
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       // Let any already-dispatched SQLite queries finish after provider disposal.

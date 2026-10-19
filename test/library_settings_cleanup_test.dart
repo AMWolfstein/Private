@@ -88,6 +88,9 @@ Future<void> _mount(
     ),
   );
   await tester.pumpAndSettle();
+  expect(find.text('Default view'), findsNothing);
+  expect(find.text('Audio quality'), findsNothing);
+  expect(find.text('Scan Settings'), findsOneWidget);
   await tester.scrollUntilVisible(find.text('Cleanup Missing Files'), 300);
   await tester.pumpAndSettle();
 }
