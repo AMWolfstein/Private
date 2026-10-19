@@ -65,7 +65,8 @@ class LibraryBrowseEntry {
       completeness: AlbumCompleteness.fromRow(row),
       totalTracks: (row['album_total_tracks'] as num?)?.toInt(),
       totalDiscs: (row['album_total_discs'] as num?)?.toInt(),
-      releaseDate: row['sort_release'] as String?,
+      releaseDate:
+          (row['metadata_release_date'] ?? row['sort_release']) as String?,
     );
   }
 }

@@ -5,7 +5,7 @@ part of 'home_tab.dart';
 extension _LocalHomeFeedUI on _HomeTabState {
   List<Widget> _buildLocalFeed(ColorScheme colors) {
     final newest = libraryBrowseProvider(
-      localHomeBrowseRequest(sort: 'artist-releases-newest'),
+      localHomeBrowseRequest(sort: 'release-date-newest'),
     );
     final albums = libraryBrowseProvider(localHomeBrowseRequest());
     final artists = libraryBrowseProvider(

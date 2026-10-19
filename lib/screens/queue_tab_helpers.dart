@@ -185,9 +185,7 @@ class _QueueLibraryPageData {
   });
 
   bool get isEmpty =>
-      items.isEmpty &&
-      localItems.isEmpty &&
-      groupedLocalAlbums.isEmpty;
+      items.isEmpty && localItems.isEmpty && groupedLocalAlbums.isEmpty;
 
   factory _QueueLibraryPageData.combine(List<_QueueLibraryPageData> pages) {
     if (pages.isEmpty) return const _QueueLibraryPageData();
@@ -215,8 +213,10 @@ class _QueueLibraryPageData {
     LibraryCollectionsState collectionState, {
     int? totalTrackCount,
     int? totalAlbumCount,
+    bool includePlaylistTracks = false,
   }) {
-    final filteredItems = !collectionState.hasPlaylistTracks
+    final filteredItems =
+        includePlaylistTracks || !collectionState.hasPlaylistTracks
         ? items
         : items
               .where(

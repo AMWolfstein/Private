@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
+import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
+import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
@@ -60,9 +62,10 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    _sort = _overview ? 'latest' : 'a-z';
+    _sort = 'a-z';
     _scroll.addListener(() {
-      if (_scroll.position.extentAfter < 500 &&
+      if (!_overview &&
+          _scroll.position.extentAfter < 500 &&
           !_loading &&
           !(_overview && _query.isNotEmpty)) {
         unawaited(
@@ -223,7 +226,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final searchingLibrary = _overview && _query.isNotEmpty;
-    final result = searchingLibrary
+    final result = _overview
         ? const AsyncData(LibraryBrowseState([], hasMore: false))
         : ref.watch(libraryBrowseProvider(_request));
     _loading = result.isLoading || (result.value?.isLoadingMore ?? false);
@@ -259,7 +262,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
     ];
     return RefreshIndicator(
       onRefresh: () async {
-        if (searchingLibrary) return;
+        if (_overview) return;
         ref.invalidate(libraryBrowseProvider(_request));
         await ref.read(libraryBrowseProvider(_request).future);
       },
@@ -321,6 +324,26 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                         context.l10n.searchSongs,
                         () => widget.onOpenSection('all'),
                       ),
+                      (
+                        Icons.favorite_border,
+                        context.l10n.collectionLoved,
+                        () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const LibraryTracksFolderScreen(
+                              mode: LibraryTracksFolderMode.loved,
+                            ),
+                          ),
+                        ),
+                      ),
+                      (
+                        Icons.star_border,
+                        context.l10n.collectionFavoriteArtists,
+                        () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const FavoriteArtistsScreen(),
+                          ),
+                        ),
+                      ),
                     ]) ...[
                       ListTile(
                         contentPadding: EdgeInsets.zero,
@@ -343,20 +366,6 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                       const Divider(height: 1, indent: 48),
                     ],
                   ],
-                ),
-              ),
-            if (_overview)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                  child: Text(
-                    _query.isEmpty
-                        ? context.l10n.libraryRecentlyAdded
-                        : context.l10n.searchAlbums,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
               ),
             if (_rows.isNotEmpty)
@@ -495,7 +504,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                   child: Center(child: CircularProgressIndicator.adaptive()),
                 ),
               )
-            else if (_rows.isEmpty)
+            else if (_rows.isEmpty && !_overview)
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(child: Text(context.l10n.libraryEmptyCollection)),

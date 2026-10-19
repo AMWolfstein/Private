@@ -103,15 +103,57 @@ class _SelectionCollections extends LibraryCollectionsNotifier {
   }
 }
 
+class _SongsCollections extends LibraryCollectionsNotifier {
+  @override
+  LibraryCollectionsState build() {
+    final entry = CollectionTrackEntry(
+      key: 'local:song',
+      track: const Track(
+        id: 'song',
+        source: 'local',
+        name: 'Song in playlist',
+        artistName: 'Artist',
+        albumName: 'Album',
+        duration: 180,
+      ),
+      addedAt: DateTime.utc(2026),
+    );
+    return LibraryCollectionsState(
+      isLoaded: true,
+      loved: [entry],
+      playlists: [
+        UserPlaylistCollection(
+          id: 'mix',
+          name: 'My hidden playlist',
+          createdAt: DateTime.utc(2026),
+          updatedAt: DateTime.utc(2026),
+          tracks: [entry],
+        ),
+      ],
+      favoriteArtists: [
+        CollectionArtistEntry(
+          key: 'artist',
+          artistId: 'artist',
+          providerId: null,
+          name: 'Favorite artist',
+          addedAt: DateTime.utc(2026),
+        ),
+      ],
+    );
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _Local local;
   late int queries;
+  var returnSong = false;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     local = _Local();
     queries = 0;
+    returnSong = false;
     final previousFactory = databaseFactoryOrNull;
     databaseFactory = databaseFactorySqflitePlugin;
     addTearDown(() => databaseFactory = previousFactory);
@@ -143,6 +185,43 @@ void main() {
         };
       }
       queries++;
+      if (returnSong && sql.contains('SUM(all_count)')) {
+        return {
+          'columns': ['all_count', 'single_count', 'album_count'],
+          'rows': [
+            [1, 1, 0],
+          ],
+        };
+      }
+      if (returnSong &&
+          sql.contains('AS queue_source') &&
+          sql.contains('track_name') &&
+          sql.contains('LIMIT ?')) {
+        return {
+          'columns': [
+            'id',
+            'queue_source',
+            'track_name',
+            'artist_name',
+            'album_name',
+            'file_path',
+            'scanned_at',
+            'sort_added',
+          ],
+          'rows': [
+            [
+              'song',
+              'local',
+              'Song in playlist',
+              'Artist',
+              'Album',
+              '',
+              '2026-01-01',
+              0,
+            ],
+          ],
+        };
+      }
       return {'columns': <String>[], 'rows': <List<Object?>>[]};
     });
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
@@ -246,40 +325,72 @@ void main() {
     expect(queries, disabledQueries);
   });
 
-  for (final section in ['all', 'albums']) {
-    testWidgets('Queue $section stays lazy until the local library is enabled', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            localLibraryProvider.overrideWith(() => local),
-            libraryCollectionsProvider.overrideWith(_Collections.new),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.light(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(body: QueueTab(librarySection: section)),
-          ),
+  testWidgets('Songs contains playlist-member songs without collection rows', (
+    tester,
+  ) async {
+    returnSong = true;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(() => local),
+          libraryCollectionsProvider.overrideWith(_SongsCollections.new),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: QueueTab(librarySection: 'all')),
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(local._builds, 0);
-      expect(local._reloads, 0);
-      final container = ProviderScope.containerOf(
-        tester.element(find.byType(QueueTab)),
-      );
-      container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
-      await tester.pumpAndSettle();
-      expect(local._builds, 1);
-      container.read(settingsProvider.notifier).setLocalLibraryEnabled(false);
-      await tester.pumpAndSettle();
-      final disabledQueries = queries;
-      local.publishIndexChange();
-      await tester.pumpAndSettle();
-      expect(queries, disabledQueries);
-    });
+      ),
+    );
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(QueueTab)),
+    );
+    container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
+    await tester.pumpAndSettle();
+    expect(find.text('Song in playlist'), findsOneWidget);
+    expect(find.text('Loved'), findsNothing);
+    expect(find.text('Favorite Artists'), findsNothing);
+    expect(find.text('My hidden playlist'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final section in ['all', 'albums']) {
+    testWidgets(
+      'Queue $section stays lazy until the local library is enabled',
+      (tester) async {
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              settingsProvider.overrideWith(_Settings.new),
+              localLibraryProvider.overrideWith(() => local),
+              libraryCollectionsProvider.overrideWith(_Collections.new),
+            ],
+            child: MaterialApp(
+              theme: AppTheme.light(),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: Scaffold(body: QueueTab(librarySection: section)),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(local._builds, 0);
+        expect(local._reloads, 0);
+        final container = ProviderScope.containerOf(
+          tester.element(find.byType(QueueTab)),
+        );
+        container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
+        await tester.pumpAndSettle();
+        expect(local._builds, 1);
+        container.read(settingsProvider.notifier).setLocalLibraryEnabled(false);
+        await tester.pumpAndSettle();
+        final disabledQueries = queries;
+        local.publishIndexChange();
+        await tester.pumpAndSettle();
+        expect(queries, disabledQueries);
+      },
+    );
   }
 }

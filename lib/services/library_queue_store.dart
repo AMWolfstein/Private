@@ -15,6 +15,25 @@ String confirmedMissingLyricsSqlPredicate({
 String missingReplayGainSqlPredicate({required String hasReplayGainExpr}) =>
     'COALESCE($hasReplayGainExpr, 0) = 0';
 
+/// Normalize supported audio-tag dates for chronology, without consulting scan dates.
+/// Accept year, year-month, ISO date/timestamp, slash dates and compact YYYYMMDD.
+/// Invalid/undated tags have no release order and stay out of Latest Releases.
+String metadataReleaseDateSql(String column) {
+  final raw = "REPLACE(TRIM(COALESCE($column, '')), '/', '-')";
+  final year = '[0-9][0-9][0-9][0-9]';
+  final pair = '[0-9][0-9]';
+  final candidate =
+      """(CASE
+    WHEN $raw GLOB '$year' THEN $raw || '-01-01'
+    WHEN $raw GLOB '$year-$pair' THEN $raw || '-01'
+    WHEN SUBSTR($raw,1,10) GLOB '$year-$pair-$pair' THEN SUBSTR($raw,1,10)
+    WHEN $raw GLOB '$year$pair$pair' THEN
+      SUBSTR($raw,1,4) || '-' || SUBSTR($raw,5,2) || '-' || SUBSTR($raw,7,2)
+    ELSE NULL END)""";
+  return "COALESCE(CASE WHEN STRFTIME('%Y-%m-%d', $candidate, '+0 days') = $candidate "
+      "THEN $candidate END, '')";
+}
+
 /// Album inventory for completeness assessment over scanned local tracks.
 /// Retained rows on disconnected sources still make the assessment unknown.
 String localAlbumInventorySql() {
@@ -387,6 +406,10 @@ class LibraryQueueStore {
         request.quality == null &&
         request.format == null &&
         request.metadata == null;
+    final releaseDatedOnly = request.sortMode == 'release-date-newest';
+    final releaseOrder = releaseDatedOnly
+        ? metadataReleaseDateSql('l.release_date')
+        : "COALESCE(l.release_date, '')";
     final assessesCompleteness = isAlbumCompletenessFilter(request.metadata);
     final minimumTracks =
         request.includeSingleTrackAlbums || assessesCompleteness ? 0 : 1;
@@ -423,7 +446,8 @@ class LibraryQueueStore {
           ${unfiltered ? 'MAX(COALESCE(l.sort_added, 0))' : 'c.latest_added'} AS sort_added,
           MIN(l.album_name_norm) AS sort_album,
           MIN(l.album_artist_norm) AS sort_artist,
-          COALESCE(MAX(l.release_date), '') AS sort_release,
+          ${releaseDatedOnly ? "SUBSTR(MAX(CASE WHEN $releaseOrder != '' THEN $releaseOrder || TRIM(l.release_date) END), 11) AS metadata_release_date," : ''}
+          COALESCE(MAX($releaseOrder), '') AS sort_release,
           COALESCE(MAX(l.sort_genre), '') AS sort_genre
         FROM ${LibrarySchema.visibleView} l
         ${unfiltered ? '' : '''JOIN (
@@ -438,7 +462,8 @@ class LibraryQueueStore {
         ${assessesCompleteness ? 'JOIN ($completenessSql) ac ON ac.album_key = l.album_key' : ''}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         GROUP BY $albumKey
-        ${unfiltered ? 'HAVING $albumKey IS NOT NULL AND COUNT(*) > $minimumTracks' : ''}
+        ${unfiltered ? 'HAVING $albumKey IS NOT NULL AND COUNT(*) > $minimumTracks' : 'HAVING 1'}
+        ${releaseDatedOnly ? "AND MAX($releaseOrder) != ''" : ''}
         ''';
       parts.add(
         _boundedQueuePart(
@@ -784,6 +809,10 @@ class LibraryQueueStore {
 
   List<_QueueOrderTerm> _queueAlbumOrderTerms(String sortMode) {
     return switch (sortMode) {
+      'release-date-newest' => const [
+        _QueueOrderTerm('sort_release', descending: true),
+        _QueueOrderTerm('album_key'),
+      ],
       'artist-releases-newest' => const [
         _QueueOrderTerm('sort_release', descending: true),
         _QueueOrderTerm('sort_added', descending: true),

@@ -182,7 +182,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
                   if (_showsHome) _buildHomeIntro(colorScheme),
                   if (_showsHome) ..._buildLocalFeed(colorScheme),
                   if (!_showsHome) _buildRecentlyAdded(colorScheme),
-                  ..._buildRecentAccess(colorScheme),
+                  if (!_showsHome) ..._buildRecentAccess(colorScheme),
                 ],
               ),
 

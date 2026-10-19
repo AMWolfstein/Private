@@ -21,7 +21,9 @@ the Popular cap.
 
 V2 Home uses the Apple Music editorial-card/shelf composition with local data. Keep featured
 releases ordered by release tags, bounded shelf queries, local artwork and local detail routes.
-Do not replace the feed with only the recent-access history list.
+Home has no Recent access-history section. Latest Releases uses valid release-date tags
+from local songs, normalized chronologically without scan/add-date fallback; keep Home's
+Recently Added shelf unchanged. Do not replace the feed with only access history.
 
 Settings no longer include the obsolete output-folder Files & Folders page or the
 download-era Metadata page. Music scanning stays under Local Library; local per-file tag
@@ -38,7 +40,10 @@ Appearance exposes Player view with Normal view (the default inset artwork) and 
 view (the existing full-bleed portrait artwork). Persist the choice across restarts; lyrics,
 queue, track changes and mini-player dismissal must work in both views. Landscape retains
 the two-column player. Do not restore the obsolete History View/Layout preference or search
-entry; the Library overview uses cards and dedicated Library sections use rows.
+entry; the Library overview uses matching category rows and dedicated Library sections
+use rows. The overview has no Recently Added album grid. Keep Loved and Favorite Artists
+below Songs, with Playlists in its own category. Songs contains only tracks (including
+playlist members), with no collection rows or individual playlists mixed into the list.
 
 Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled

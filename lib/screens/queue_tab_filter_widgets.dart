@@ -61,7 +61,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       }
     }
 
-    final collectionEntries = filterMode == 'all'
+    final collectionEntries =
+        filterMode == 'all' && widget.librarySection == null
         ? _getVisibleCollectionEntries(collectionState)
         : const <_CollectionEntry>[];
     final collectionCount = collectionEntries.length;

@@ -46,7 +46,8 @@ class _Collections extends LibraryCollectionsNotifier {
 
 class _Recent extends RecentAccessNotifier {
   @override
-  RecentAccessState build() => const RecentAccessState();
+  RecentAccessState build() =>
+      throw StateError('Home must not subscribe to access history');
 }
 
 final _item = LocalLibraryItem(
@@ -161,9 +162,12 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Latest Releases in Your Library'), findsOneWidget);
         expect(find.text('2026-10-18'), findsOneWidget);
+        expect(find.text('Recently Added'), findsOneWidget);
+        expect(find.text('Recent'), findsNothing);
+        expect(find.text('No recent items yet'), findsNothing);
         expect(
           requests.map((r) => r.browse.sort),
-          containsAll(['artist-releases-newest', 'latest', 'a-z']),
+          containsAll(['release-date-newest', 'latest', 'a-z']),
         );
         expect(
           requests.every((r) => r.browse.limit == 12 && r.includeLocal),

@@ -1144,6 +1144,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     _FilterContentData getFilterData(String filterMode) {
       return pageData(filterMode).toFilterContentData(
         collectionState,
+        includePlaylistTracks: widget.librarySection == 'all',
         totalTrackCount: switch (filterMode) {
           'singles' => queueCounts.singleTrackCount,
           'albums' || 'playlists' => 0,

@@ -12,9 +12,12 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): remove the obsolete folder page from first-run
-setup, move Get Started to the preceding permission page, and merge setup plus the follow-on
-guide into one flow. No APK build or GitHub publication requested for this change.**
+**Current user instruction (2026-10-19): remove Home Recent, order Latest Releases by song
+release-date metadata while preserving Home Recently Added; remove Library Recently Added,
+make Songs tracks-only and move Loved/Favorite Artists below Songs in the main category list.
+Make these changes in one commit and push it. This explicit instruction overrides the usual
+three-commit convention for this task; code, tests, graph and notes are committed together.
+No APK build requested.**
 
 ---
 
@@ -27,9 +30,34 @@ and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. 
 source validation passed. The signed ARM64-only side-by-side **build 163** now includes
 V2/V3, the fragmented Opus follow-up, Popular paging, settings/conversion cleanup, selectable
 Normal/Immersive player views, centered collection actions and a cream launcher background.
-Wishlist removal and first-run guide consolidation have subsequently been implemented in
-source; the published build 163 predates those changes. Physical-device installation/playback validation remains pending.
+Wishlist removal, first-run guide consolidation and Home/Library cleanup have subsequently
+been implemented in source; the published build 163 predates those changes. Physical-device installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Home and Library cleanup (2026-10-19):** Home no longer renders or subscribes to the
+Recent access-history section; the separate Search surface retains its existing history.
+Latest Releases uses a bounded `release-date-newest` album query over scanned song tags.
+Year, year-month, ISO date/timestamp, slash-date and compact YYYYMMDD metadata normalize to
+chronological sort keys; invalid calendar dates and undated groups are excluded. An album
+uses its newest valid song tag. Equal dates use a stable album key, with no scan/add-time
+fallback. The displayed date preserves the source tag's precision rather than presenting
+an invented January 1 for year-only metadata. Home's Recently Added loader/order is unchanged.
+
+Library overview now contains only matching category rows: Playlists, Artists, Albums,
+Songs, Loved and Favorite Artists. The last two open their existing local collection pages.
+The overview no longer queries, renders or pages the Recently Added album grid. Albums,
+Artists and cross-library search retain their existing bounded queries. Dedicated Songs
+removes collection/individual-playlist rows and includes playlist-member songs instead of
+hiding them; Playlists remains in its own section.
+
+Validation: `flutter analyze` reports **No issues found**. **26 focused tests pass**, covering
+release metadata versus scan time, date formats/calendar validation, stable cursor pages,
+metadata updates, original tag display, unchanged Recently Added ordering, no Home history
+subscription, Library row ordering/routes, no overview album query and songs already saved
+in playlists. Final full Flutter suite: **1,613 passed, 3 skipped**. No native code/schema changes
+or APK build. Graph refreshed from the finished source. Per the user's request, this phase
+uses one combined commit, then publishes to `main`, including the previously committed guide
+consolidation (`f5d0afd` through `eb7aa5d`).
 
 **Unified first-run guide (2026-10-19):** `f5d0afd` removes the obsolete download/output-folder
 setup page, folder selection/recovery handlers and output-directory writes from setup.
