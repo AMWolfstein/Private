@@ -12,12 +12,8 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): remove Home Recent, order Latest Releases by song
-release-date metadata while preserving Home Recently Added; remove Library Recently Added,
-make Songs tracks-only and move Loved/Favorite Artists below Songs in the main category list.
-Make these changes in one commit and push it. This explicit instruction overrides the usual
-three-commit convention for this task; code, tests, graph and notes are committed together.
-No APK build requested.**
+**Current user instruction (2026-10-19): fix Loved showing a track count but no visible
+song rows. No APK build requested.**
 
 ---
 
@@ -33,6 +29,19 @@ Normal/Immersive player views, centered collection actions and a cream launcher 
 Wishlist removal, first-run guide consolidation and Home/Library cleanup have subsequently
 been implemented in source; the published build 163 predates those changes. Physical-device installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Loved row visibility (2026-10-19):** `964a054` removes the entrance-animation wrapper
+from Loved and playlist song rows. A regression test reproduces an invisible single row
+while its count remains visible when animation tickers are paused; collection rows now
+paint immediately without depending on ticker progress. The same test covers ordinary
+animation settings and an empty-to-populated update. Saved collections, playback and
+selection behavior remain intact. The physical-device screenshot's exact navigation
+sequence has not been reproduced on a device.
+
+Validation: `flutter analyze` reports **No issues found**; **35 focused widget/playback tests
+pass**, including the new opacity regression, collection selection/queue behavior and
+Mornye detail headers. No native changes or APK build. Code, refreshed graph and progress
+notes use the repository's separate commits.
 
 **Home and Library cleanup (2026-10-19):** Home no longer renders or subscribes to the
 Recent access-history section; the separate Search surface retains its existing history.
