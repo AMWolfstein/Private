@@ -30,6 +30,12 @@ certificate, updating the previous SpotiFLAC Local installation. Physical-device
 remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
+**Review-agent system (2026-10-19):** Adds a quota-bounded review setup without changing app
+source: `reviews/PROTOCOL.md` (shared rules), `reviews/` state files, 14 read-only reviewer
+agents plus `review-fixer` in `.claude/agents/`, `/review` and `/audit` skills, and
+`scripts/review_scope.sh` for model-free scope, reviewer routing and graph freshness. No code
+review has run yet; baseline analyze/test/Rust checks are logged in `reviews/VERIFICATION.md`.
+
 **Song-menu actions and anchoring follow-up (2026-10-19, `6ac8efd`):** Restores the old local
 track overflow actions in Songs, playlists/Loved Songs, albums, Genres and Artist Popular.
 Play/Share shortcuts, Play next/Add to queue, local album/artist navigation, Copy file path,
