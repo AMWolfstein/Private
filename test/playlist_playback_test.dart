@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -178,75 +179,104 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final tickersEnabled in [true, false]) {
-    testWidgets('single loved song stays painted (tickers: $tickersEnabled)', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(432, 960);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final collections = _SingleLovedCollections();
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            musicPlayerControllerProvider.overrideWithValue(_Player()),
-            playbackProvider.overrideWith(_Playback.new),
-            libraryCollectionsProvider.overrideWith(() => collections),
-            localLibraryProvider.overrideWith(_PlaylistLibrary.new),
-            localLibraryCoverProvider.overrideWith(
-              (ref, request) async => null,
-            ),
-            localLibraryFirstCoverProvider.overrideWith(
-              (ref, request) async => null,
-            ),
-          ],
-          child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: TickerMode(
-              enabled: tickersEnabled,
-              child: const LibraryTracksFolderScreen(
-                mode: LibraryTracksFolderMode.loved,
+  for (final (tickersEnabled, withArtwork) in [
+    (true, false),
+    (false, false),
+    (true, true),
+    (false, true),
+  ]) {
+    testWidgets(
+      'single loved song stays painted (tickers: $tickersEnabled, artwork: $withArtwork)',
+      (tester) async {
+        tester.view.physicalSize = const Size(432, 960);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final collections = _SingleLovedCollections();
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              settingsProvider.overrideWith(_Settings.new),
+              musicPlayerControllerProvider.overrideWithValue(_Player()),
+              playbackProvider.overrideWith(_Playback.new),
+              libraryCollectionsProvider.overrideWith(() => collections),
+              localLibraryProvider.overrideWith(_PlaylistLibrary.new),
+              localLibraryCoverProvider.overrideWith(
+                (ref, request) async => withArtwork
+                    ? File('assets/images/logo.png').absolute.path
+                    : null,
               ),
+              localLibraryFirstCoverProvider.overrideWith(
+                (ref, request) async => null,
+              ),
+            ],
+            child: MaterialApp(
+              theme: MornyeTheme.build(Brightness.dark),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: withArtwork && tickersEnabled
+                  ? Builder(
+                      builder: (context) => Scaffold(
+                        body: TextButton(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const LibraryTracksFolderScreen(
+                                mode: LibraryTracksFolderMode.loved,
+                              ),
+                            ),
+                          ),
+                          child: const Text('Open Loved'),
+                        ),
+                      ),
+                    )
+                  : TickerMode(
+                      enabled: tickersEnabled,
+                      child: const LibraryTracksFolderScreen(
+                        mode: LibraryTracksFolderMode.loved,
+                      ),
+                    ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('First').hitTestable(), findsOneWidget);
-      expect(
-        tester
-            .widgetList<Opacity>(
-              find.ancestor(
-                of: find.text('First'),
-                matching: find.byType(Opacity),
-              ),
-            )
-            .every((widget) => widget.opacity == 1),
-        isTrue,
-      );
-      expect(tester.takeException(), isNull);
-      collections.clearLoved();
-      await tester.pumpAndSettle();
-      collections.restoreLoved();
-      await tester.pumpAndSettle();
-      expect(find.text('First').hitTestable(), findsOneWidget);
-      expect(
-        tester
-            .widgetList<Opacity>(
-              find.ancestor(
-                of: find.text('First'),
-                matching: find.byType(Opacity),
-              ),
-            )
-            .every((widget) => widget.opacity == 1),
-        isTrue,
-      );
-      expect(tester.takeException(), isNull);
-    });
+        );
+        if (withArtwork && tickersEnabled) {
+          await tester.tap(find.text('Open Loved'));
+        }
+        await tester.pumpAndSettle();
+        expect(find.text('First').hitTestable(), findsOneWidget);
+        final row = tester.getRect(find.byType(TrackCard));
+        expect(row.isFinite, isTrue);
+        expect(row.height, inExclusiveRange(0, 140));
+        expect(
+          tester
+              .widgetList<Opacity>(
+                find.ancestor(
+                  of: find.text('First'),
+                  matching: find.byType(Opacity),
+                ),
+              )
+              .every((widget) => widget.opacity == 1),
+          isTrue,
+        );
+        expect(tester.takeException(), isNull);
+        collections.clearLoved();
+        await tester.pumpAndSettle();
+        collections.restoreLoved();
+        await tester.pumpAndSettle();
+        expect(find.text('First').hitTestable(), findsOneWidget);
+        expect(
+          tester
+              .widgetList<Opacity>(
+                find.ancestor(
+                  of: find.text('First'),
+                  matching: find.byType(Opacity),
+                ),
+              )
+              .every((widget) => widget.opacity == 1),
+          isTrue,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 
   for (final mode in LibraryTracksFolderMode.values) {

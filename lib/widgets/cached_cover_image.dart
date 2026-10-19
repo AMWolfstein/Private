@@ -204,10 +204,13 @@ class LocalCoverImage extends StatelessWidget {
               if (fadeInDuration == Duration.zero) {
                 return ready ? child : placeholder(context);
               }
+              // The image supplies its explicit/intrinsic size in list rows,
+              // where both incoming axes may be unbounded. Expanding the
+              // placeholder here would give the entire row infinite bounds.
               return Stack(
-                fit: StackFit.expand,
+                fit: StackFit.passthrough,
                 children: [
-                  placeholder(context),
+                  Positioned.fill(child: placeholder(context)),
                   AnimatedOpacity(
                     opacity: ready ? 1.0 : 0.0,
                     duration: fadeInDuration!,
