@@ -642,6 +642,124 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: Rust side of DEAD-203 (embed/fetch lyrics); only integration test and mocks reach it.
 - Fix: delete with DEAD-203; update `integration_test/lyrics_file_access_test.dart`.
 
+### API-201 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/providers/settings_provider.dart:224-249` (`restoreFromBackup`), `lib/models/settings.g.dart:47,65`, `lib/app.dart:24`
+- Scenario: restoring a backup with `isFirstLaunch:false` and no `hasCompletedTutorial` (older version or mid-setup device) → flag falls back to false → router rebuilds to `/setup`; a backup with `isFirstLaunch:true` forces setup on a configured device. Foreign `localLibraryPath`/bookmark is restored and fed to `_migrateLegacySource`.
+- Root cause: only download-era storage fields are preserved; install-bound fields (`isFirstLaunch`, `hasCompletedTutorial`, `lastSeenVersion`, `localLibraryEnabled/Path/Bookmark/AutoScan`) come from the backup.
+- Impact: restore sends the user back to first-run setup; a non-existent library source can be created.
+- Fix: keep the current values of those fields on restore (same set as `resetInstallationBoundSettings`); ~8 lines + test.
+- Evidence: `copyWith` at :234-244; route rule `app.dart:24`.
+
+### API-202 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/main.dart:84-86`, :213-258 (`_prepareAndroidInstallationState`, `_detectInitialSafAccessLoss`)
+- Scenario: before `runApp`, legacy `storageMode=='saf'` users wait up to 2 s on `validateSafTreeAccess` (download-era) plus an install-marker round-trip and app-state DB open.
+- Impact: up to 2 s longer cold start for a removed feature.
+- Fix: delete `_detectInitialSafAccessLoss`/`initialSafAccessLostProvider` with UX-003; move install-marker work after first frame; ~25 lines.
+
+### API-203 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/models/settings.dart:9-12`, `lib/providers/settings_provider.dart:51-64, 173-175, 219-319`, `lib/screens/main_shell.dart:157-220, 262-325`
+- Scenario: `downloadDirectory`, `downloadDirectoryBookmark`, `storageMode`, `downloadTreeUri` still persisted/restored; migration 1 forces `storageMode='saf'`; `_checkSafMigration` shows a second one-time "SAF migration" prompt for legacy `downloadDirectory`.
+- Root cause: output-folder settings not removed with the feature (extends UX-003).
+- Impact: obsolete prompts for upgraded users; dead persistence code.
+- Fix: one batch with UX-003 and API-202: drop the four fields (old JSON ignored), setters, `useAppFolderStorage`, migration 1, iOS normalizer, both main_shell dialogs.
+
+### BUG-201 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/providers/local_artist_provider.dart:147-201` (`localArtistPopularProvider`), tie at :184
+- Scenario: artist with <20 played songs; any scan/delete/edit bumps `loadedIndexVersion` (watched at :149) → provider rebuilds → `random.nextDouble()` ties redrawn → unplayed Popular picks reshuffle while the page is open.
+- Root cause: random priorities regenerated per build.
+- Impact: violates AGENTS.md "random selection … stable while the page stays open".
+- Fix: per-page seed (e.g. stored in the page state) hashed with `item.id` for ties; ~15 lines + test.
+
+### BUG-202 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/providers/library_search_provider.dart:46-53`
+- Scenario: Local Library disabled → search still returns local songs/albums/artists (`includeLocal: true` hard-coded; watched setting discarded).
+- Impact: search diverges from Home/Browse/Artist, which honour the setting.
+- Fix: pass the watched `localLibraryEnabled`; ~3 lines + test.
+
+### BUG-203 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/providers/local_library_provider.dart:1666-1678` (`removePhysicalFiles`/`removeItems`), `lib/services/deleted_library_files.dart:7-16`, `lib/providers/library_collections_provider.dart`
+- Scenario: deleting a song (menu, album, duplicates, batch) clears only the library index; Loved/playlist entries keyed `local:<id>`/`isrc:` remain and render verbatim (`library_tracks_folder_screen.dart:236-259`).
+- Impact: ghost rows in Loved/playlists that fail on play; inflated counts.
+- Fix: remove matching collection keys on delete, or hide missing local entries at render; ~25 lines. Unverified: exact play failure symptom.
+
+### BUG-204 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/providers/local_library_provider.dart:324-335` (`reloadFromStorage`)
+- Scenario: a DB write (tag edit, duplicates, batch edit) followed by `reloadFromStorage()` while a load is in flight → awaits the stale load and returns; `loadedIndexVersion` not bumped.
+- Impact: UI shows pre-edit tags/artwork until the next reload; dependent providers stay stale.
+- Fix: `_reloadRequested` flag → extra pass after the in-flight load; ~8 lines.
+
+### BUG-301 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/services/local_track_batch_actions.dart:51-58` (`deleteLibraryTracks`); callers `lib/screens/queue_tab_selection.dart:285`, `lib/widgets/library_search_results.dart:169`
+- Scenario: batch-deleting CUE virtual rows from Songs/Search → `deleteFile` refuses virtual paths → counted as failed, rows stay, "delete failed" snackbar.
+- Root cause: CUE branch present only in `local_album_screen._deleteSelected` (:145-163).
+- Impact: CUE rows can never be removed outside the album screen.
+- Fix: mirror the album-screen handling (skip file delete, `removeItems(ids)`); ~10 lines + test. Pair with DATA-001.
+
+### API-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/main.dart:81`, `lib/app.dart:24`, `lib/providers/settings_provider.dart:177-179`
+- Scenario: upgraded user with `isFirstLaunch=false` and no `hasCompletedTutorial` → first frame routes to `/setup` before migration 2 runs → one-time setup flash.
+- Fix: apply the migration rule in `loadBootstrapSettings`; ~3 lines.
+
+### API-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/setup_screen.dart:80`, :95
+- Scenario: malformed `setup_progress_v1` throws in parse; catch logs and skips `_checkInitialPermissions()`; the draft is never cleared → fails every launch.
+- Fix: remove the key in the catch; 2 lines.
+
+### BUG-205 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/providers/local_library_provider.dart:1616-1631` (`clearLibrary`)
+- Scenario: provider disposed during the awaited refresh → `state =` without `ref.mounted` → StateError; no guard against a running scan.
+- Fix: `if (!ref.mounted) return;`; optionally refuse during `_scanInProgress`.
+
+### BUG-302 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/services/batch_track_actions.dart:89-113` (`runBatchReplayGain`)
+- Scenario: batch ReplayGain over a selection containing CUE virtual rows (single-track menu hides it) → virtual paths sent to the writer → inflated failure count; `catch (_) {}` hides reasons.
+- Fix: filter `isCueVirtualPath` before computing totals; log failures; ~3 lines.
+
+### BUG-303 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/utils/clickable_metadata.dart:14` (`navigateToArtistCredits`), caller `lib/widgets/local_song_menu.dart:162`
+- Scenario: splits artist names on commas only → "A feat. B" opens as one artist; "Tyler, The Creator" becomes "Tyler".
+- Fix: use `splitArtistNames` and prefer an exact library match.
+
+### BUG-304 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/clickable_metadata.dart:44-48` (`navigateToAlbum`)
+- Scenario: DB error swallowed by `catch (_) {}` → "album information unavailable", nothing logged.
+- Fix: log via `AppLogger`; ~3 lines.
+
+### DEAD-401 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/models/settings.dart` (`albumFolderStructure`, `hasSearchedBefore`, `embeddedCoverMaxDimension`), `lib/providers/settings_provider.dart:89-95, 241-243, 275-277, 317-322, 459-464, 477-480`
+- Scenario: download-era settings with no readers outside settings files; `artistTagMode` has no setter.
+- Fix: delete (~40 lines); old JSON still loads.
+
+### DEAD-402 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/models/track.dart:236-262` (`ServiceAvailability`), `Track.deezerId`/`spotifyId` fallbacks :107-111
+- Scenario: provider-era model (tidal/qobuz/amazon/deezer) with no references.
+- Fix: delete and regenerate; check `deezerId` users first.
+
+### DEAD-403 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/models/download_history.dart:257` (`DownloadHistoryState`), `DownloadHistoryItem.storageMode/downloadTreeUri`
+- Scenario: `DownloadHistoryState` unused; the rest ties into history DB columns and backups.
+- Fix: delete `DownloadHistoryState` now; history schema cleanup is a separate decision (see API-001).
+
+### DEAD-501 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/provider_resource_ids.dart`
+- Scenario: provider-era helpers referenced only by their test.
+- Fix: delete file and test; then check `lib/constants/music_services.dart`.
+
+### DEAD-502 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/ttl_cache.dart`, `chunked_list.dart`, `periodic_async_task.dart`, `cache_byte_budget.dart`
+- Scenario: not imported in `lib/`; tests only (ChunkedList: nowhere).
+- Fix: delete with tests; check `native_cache_maintenance.dart` afterwards.
+
+### DEAD-503 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/audio_format_utils.dart` (quality-variant filename helpers, `resolveDisplayQuality`, `finalizedAudioFileName`, `estimateAverageBitrateKbps`, etc.), `lib/utils/string_utils.dart` (`formatMegabytes`, `shortMonthNames`, `isPlaceholderQualityLabel`), `lib/utils/artist_utils.dart` (`primaryArtistName`)
+- Scenario: download/quality-variant naming logic with zero `lib/` callers.
+- Fix: delete the group; keep `buildLibraryAudioQualityLabel`.
+
+### DEAD-504 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/utils/editorial_notes.dart:15` (`albumDescriptionFromMetadata`)
+- Scenario: referenced only by `test/album_description_test.dart`.
+- Fix: delete with its test.
+
 ## Resolved
 
 _None yet._

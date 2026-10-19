@@ -8,11 +8,11 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
   `scripts/review_scope.sh`.
 - Next review unit: `/review` (commits after `2b32361`; review-system commits are
   docs/config only). Suggested fix batch: BUG-001 + BUG-002 + TEST-002 (CUE split).
-- Next audit unit: `state`, then ui, build, tests (full audit in progress; audio, storage,
-  scanner, metadata, kotlin, rust done). Dead-code sweep at the end (iOS helpers,
-  download/re-enrich l10n keys, vestigial "download" cancellation/progress domains).
-- Open findings: 94 (0 P0, 1 P1, 36 P2, 57 P3; see `FINDINGS.md`).
-- Last checkpoint: `/audit rust` round 2 (this commit). Previous `d2a8907` pushed and verified.
+- Next audit unit: `ui`, then build, tests (full audit in progress; audio, storage, scanner,
+  metadata, kotlin, rust, state done). Dead-code sweep at the end (iOS helpers,
+  download/re-enrich l10n keys, `recent_access_provider` callers, `music_services.dart`).
+- Open findings: 115 (0 P0, 1 P1, 44 P2, 70 P3; see `FINDINGS.md`).
+- Last checkpoint: `/audit state` (this commit). Previous `f0f07be` pushed and verified.
 - Tooling note: `scripts/review_scope.sh` maps `android/app/src/{test,androidTest}` to
   `audio`/`kotlin`; should map to `tests` (fix with next code commit).
 
