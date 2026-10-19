@@ -12,11 +12,11 @@ Chosen scope (confirmed):
 Verification for every phase: `flutter analyze`, `bash scripts/check_rust_backend.sh`
 (cargo fmt/clippy/test), `bash scripts/build_rust_backend.sh android`, then
 `flutter build apk`; run `graphify update .` after code changes.
-**Current user instruction (2026-10-19): remove the song metadata details page and its
-old options while preserving Edit Metadata and moving Audio Quality Analysis into the
-song ellipsis menu. Song taps play. Use artwork/title/explicit E/artist/Play/ellipsis rows
-in Songs, playlists and Loved Songs; use numbers on albums. Rename Loved to Loved Songs
-and add Genres directly below Songs in the Library overview. Implement in source.**
+**Current user instruction (2026-10-19): move Detailed logging to the first option in
+Logs, remove the now-empty App settings page, remove Embed lyrics and its submenu,
+remove the decorative Library preview in Appearance, and reuse album-style circular back
+buttons throughout Settings and Library pages. Push the changes, then build the same
+ARM64-only side-by-side SpotiFLAC Local APK with its existing cream/green icon.**
 
 ---
 
@@ -26,12 +26,27 @@ _Last updated: 2026-10-19_
 
 **Status:** Phases 1-8 implemented, with the missed V3 detail-design port (`0e6c88e`)
 and V2 Apple Music home presentation with local feed (`45e5f17`) now completed. Latest
-source validation passed. The signed ARM64-only side-by-side **build 165** now includes
-all current changes through `c4b79cee`, including Wishlist removal, unified setup,
+source validation passed. The latest published signed ARM64-only side-by-side **build 165** includes
+changes through `c4b79cee`, including Wishlist removal, unified setup,
 Home/Library cleanup, Local Library preference removal and the real-artwork Loved row fix. It retains
 the cream launcher background and updates the previous Local installation. Physical-device
 installation/playback validation remains pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Settings cleanup and Local build 166 (2026-10-19, `3d798c2`):** Detailed logging moves to the
+first content group in Logs, retaining its existing persisted switch and log-buffer behavior.
+The now-empty App settings category/page is removed; settings search routes logging to Logs.
+Embed lyrics, its output-mode submenu, unused preference fields/setters/serialization and
+13 retired labels are removed. Local lyrics playback and metadata/lyrics editing remain.
+Appearance no longer has the decorative Library preview; color, glass, Player view and
+other appearance controls remain. Mornye Settings/Library subpages reuse the album header's
+HeaderCircleButton and back icon; custom selection-mode close controls stay functional.
+Build/log numbers increment to 166 for the ARM64 side-by-side Local release.
+Validation: generated settings/localizations refreshed; `flutter analyze` reports
+**No issues found**, and the full `flutter test` run passes **1,590 tests, 3 skipped**.
+The existing log-selection test now scrolls to the first log row after the new switch
+increases content height. Removed settings/preview symbols and search entries are absent.
+APK build and package/signature validation follow the source push.
 
 **Local song controls, metadata-page retirement and Genres (2026-10-19, `26f8e71`):** The separate
 metadata details route and its display/cover/lyrics/menu/file-action modules are removed,

@@ -25,6 +25,12 @@ Home has no Recent access-history section. Latest Releases uses valid release-da
 from local songs, normalized chronologically without scan/add-date fallback; keep Home's
 Recently Added shelf unchanged. Do not replace the feed with only access history.
 
+Detailed logging is the first option in Logs; there is no separate App settings page.
+Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
+Local lyrics reading and per-file metadata/lyrics editing remain supported. Appearance has
+no decorative Library preview card. Settings and Library subpages reuse the album header's
+circular back button in Mornye.
+
 Settings no longer include the obsolete output-folder Files & Folders page or the
 download-era Metadata page. Music scanning stays under Local Library; local per-file tag
 editing remains supported. Local Library settings have no Default view or Audio quality
