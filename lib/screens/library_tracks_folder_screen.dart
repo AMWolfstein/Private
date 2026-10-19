@@ -316,23 +316,22 @@ class _LibraryTracksFolderScreenState
                 final isSelected = selectedIds.contains(entry.key);
                 return KeyedSubtree(
                   key: ValueKey(entry.key),
-                  child: StaggeredListItem(
-                    index: index,
-                    child: _CollectionTrackTile(
-                      entry: entry,
-                      mode: widget.mode,
-                      playlistId: widget.playlistId,
-                      folderTracks: folderTracks,
-                      trackIndex: index,
-                      isSelectionMode: isSelectionMode,
-                      isSelected: isSelected,
-                      onTap: isSelectionMode
-                          ? () => toggleSelection(entry.key)
-                          : null,
-                      onLongPress: isSelectionMode
-                          ? null
-                          : () => enterSelectionMode(entry.key),
-                    ),
+                  // Collection contents must remain visible even when route
+                  // or tab transitions pause animation tickers.
+                  child: _CollectionTrackTile(
+                    entry: entry,
+                    mode: widget.mode,
+                    playlistId: widget.playlistId,
+                    folderTracks: folderTracks,
+                    trackIndex: index,
+                    isSelectionMode: isSelectionMode,
+                    isSelected: isSelected,
+                    onTap: isSelectionMode
+                        ? () => toggleSelection(entry.key)
+                        : null,
+                    onLongPress: isSelectionMode
+                        ? null
+                        : () => enterSelectionMode(entry.key),
                   ),
                 );
               }, childCount: entries.length),

@@ -142,6 +142,23 @@ class _RemovalCollections extends _Collections {
       _remove('playlist', keys);
 }
 
+class _SingleLovedCollections extends _Collections {
+  @override
+  LibraryCollectionsState build() => LibraryCollectionsState(
+    isLoaded: true,
+    loved: [
+      CollectionTrackEntry(
+        key: 'First',
+        track: _tracks.first,
+        addedAt: DateTime(2026),
+      ),
+    ],
+  );
+
+  void clearLoved() => state = state.copyWith(loved: []);
+  void restoreLoved() => state = build();
+}
+
 class _Library extends LocalLibraryNotifier {
   @override
   LocalLibraryState build() => LocalLibraryState();
@@ -160,6 +177,77 @@ class _PlaylistLibrary extends LocalLibraryNotifier {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  for (final tickersEnabled in [true, false]) {
+    testWidgets('single loved song stays painted (tickers: $tickersEnabled)', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(432, 960);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final collections = _SingleLovedCollections();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            settingsProvider.overrideWith(_Settings.new),
+            musicPlayerControllerProvider.overrideWithValue(_Player()),
+            playbackProvider.overrideWith(_Playback.new),
+            libraryCollectionsProvider.overrideWith(() => collections),
+            localLibraryProvider.overrideWith(_PlaylistLibrary.new),
+            localLibraryCoverProvider.overrideWith(
+              (ref, request) async => null,
+            ),
+            localLibraryFirstCoverProvider.overrideWith(
+              (ref, request) async => null,
+            ),
+          ],
+          child: MaterialApp(
+            theme: MornyeTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TickerMode(
+              enabled: tickersEnabled,
+              child: const LibraryTracksFolderScreen(
+                mode: LibraryTracksFolderMode.loved,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('First').hitTestable(), findsOneWidget);
+      expect(
+        tester
+            .widgetList<Opacity>(
+              find.ancestor(
+                of: find.text('First'),
+                matching: find.byType(Opacity),
+              ),
+            )
+            .every((widget) => widget.opacity == 1),
+        isTrue,
+      );
+      expect(tester.takeException(), isNull);
+      collections.clearLoved();
+      await tester.pumpAndSettle();
+      collections.restoreLoved();
+      await tester.pumpAndSettle();
+      expect(find.text('First').hitTestable(), findsOneWidget);
+      expect(
+        tester
+            .widgetList<Opacity>(
+              find.ancestor(
+                of: find.text('First'),
+                matching: find.byType(Opacity),
+              ),
+            )
+            .every((widget) => widget.opacity == 1),
+        isTrue,
+      );
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   for (final mode in LibraryTracksFolderMode.values) {
     for (final mornye in [false, true]) {
