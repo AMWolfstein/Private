@@ -318,11 +318,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setEmbedLyrics(bool enabled) {
-    state = state.copyWith(embedLyrics: enabled);
-    _saveSettings();
-  }
-
   void setPlaybackNormalization(bool enabled) {
     state = state.copyWith(playbackNormalization: enabled);
     _saveSettings();
@@ -427,13 +422,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void setListeningStatisticsEnabled(bool enabled) {
     state = state.copyWith(listeningStatisticsEnabled: enabled);
     _saveSettings();
-  }
-
-  void setLyricsMode(String mode) {
-    if (mode == 'embed' || mode == 'external' || mode == 'both') {
-      state = state.copyWith(lyricsMode: mode);
-      _saveSettings();
-    }
   }
 
   Future<void> setFirstLaunchComplete() async {

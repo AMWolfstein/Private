@@ -198,10 +198,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Lirik Tersemat",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "Hapus ReplayGain",
   "replayGainRemoving": "Menghapus ReplayGain...",
   "replayGainRemoveConfirmMessage": "Hapus tag ReplayGain dari {count} lagu? Audio, cover, dan metadata lain akan tetap disimpan.",
@@ -886,44 +882,12 @@
       }
     }
   },
-  "sectionDebug": "Debug",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Lirik",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Cegah layar mati saat melihat lirik",
   "lyricsKeepScreenOnSubtitle": "Mencegah layar mati saat sedang membuka layar lirik, berlaku saat pemutaran dijeda.",
-  "lyricsMode": "Mode Lirik",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Tersemat di file",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Lirik disimpan di dalam metadata FLAC",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "File .lrc eksternal",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "File .lrc dipisah untuk pemutar seperti Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Keduanya",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Sematkan lalu simpan file .lrc",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Warna",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2387,10 +2351,6 @@
   "settingsLyrics": "Lirik",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "Aplikasi",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "TTTT-BB-HH atau TTTT",
   "@editMetadataFieldDateHint": {

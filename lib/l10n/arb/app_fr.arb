@@ -130,10 +130,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Intégrer les paroles",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "Supprimer ReplayGain",
   "replayGainRemoving": "Suppression de ReplayGain...",
   "replayGainRemoveConfirmMessage": "Souhaitez-vous supprimer les balises ReplayGain des {count} titres ? Les données audio, les pochettes et les autres métadonnées seront conservées.",
@@ -818,44 +814,12 @@
       }
     }
   },
-  "sectionDebug": "Débogage",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Paroles",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Garder l'écran allumé pendant l'affichage des paroles",
   "lyricsKeepScreenOnSubtitle": "Empêcher la mise en veille de l'écran lorsque les paroles sont affichées, y compris lorsque la lecture est en pause.",
-  "lyricsMode": "Mode Paroles",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Intégrer dans un fichier",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Paroles enregistrées dans les métadonnées FLAC",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "Fichier .lrc externe",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Fichier .lrc distinct pour les lecteurs tels que Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Les deux",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Intégrer et enregistrer le fichier .lrc",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Couleur",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2311,10 +2275,6 @@
   "settingsLyrics": "Paroles",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "Application",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "AAAA-MM-JJ ou AAAA",
   "@editMetadataFieldDateHint": {

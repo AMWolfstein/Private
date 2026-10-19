@@ -130,10 +130,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Incorpora Testo",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "Remove ReplayGain",
   "replayGainRemoving": "Removing ReplayGain...",
   "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
@@ -818,44 +814,12 @@
       }
     }
   },
-  "sectionDebug": "Debug",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Testi",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
   "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
-  "lyricsMode": "Modalità testi",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Incorpora nel file",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Testi memorizzati nei metadata del FLAC",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "File .lrc esterno",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Separa il file .lrc per riproduttori tipo Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Entrambi",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Incorpora e salva file .lrc",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Colori",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2311,10 +2275,6 @@
   "settingsLyrics": "Lyrics",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "App",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
   "@editMetadataFieldDateHint": {

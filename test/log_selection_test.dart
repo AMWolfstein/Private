@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +8,7 @@ import 'package:spotiflac_android/screens/settings/log_screen.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 void main() {
+  setUp(() => SharedPreferences.setMockInitialValues({}));
   test(
     'native log batches notify once and preserve redaction and capacity',
     () {
@@ -121,13 +124,17 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const LogScreen(),
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LogScreen(),
+        ),
       ),
     );
 
+    await tester.ensureVisible(find.text('first selected message'));
+    await tester.pump();
     await tester.longPress(find.text('first selected message'));
     await tester.pump();
     expect(find.text('1 selected'), findsOneWidget);

@@ -130,10 +130,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Şarkı Sözlerini Göm",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "Remove ReplayGain",
   "replayGainRemoving": "Removing ReplayGain...",
   "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
@@ -818,44 +814,12 @@
       }
     }
   },
-  "sectionDebug": "Hata ayıklama",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Şarkı sözleri",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
   "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
-  "lyricsMode": "Şarkı Sözü Modu",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Dosyaya göm",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Şarkı sözleri FLAC meta verilerinin içinde saklanır",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "Harici .lrc dosyası",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Samsung Music gibi oynatıcılar için ayrı .lrc dosyası",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Her ikisi de",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Hem göm hem de .lrc dosyası olarak kaydet",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Renk",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2311,10 +2275,6 @@
   "settingsLyrics": "Lyrics",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "Uygulama",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
   "@editMetadataFieldDateHint": {

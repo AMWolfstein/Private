@@ -16,7 +16,6 @@ class AppSettings {
   final int embeddedCoverMaxDimension;
   final String
   artistTagMode; // 'joined', 'split_vorbis' (Vorbis formats), or 'primary'
-  final bool embedLyrics;
   // Apply ReplayGain/R128 tags as volume normalization in the built-in player.
   final bool playbackNormalization;
   final bool pauseOnMute;
@@ -60,7 +59,6 @@ class AppSettings {
   /// device default".
   final bool forceBackdropBlur;
   final String locale;
-  final String lyricsMode;
   final bool keepScreenOnLyrics;
   final bool listeningStatisticsEnabled;
 
@@ -87,7 +85,6 @@ class AppSettings {
     this.downloadTreeUri = '',
     this.embeddedCoverMaxDimension = 0,
     this.artistTagMode = artistTagModeJoined,
-    this.embedLyrics = true,
     this.playbackNormalization = false,
     this.pauseOnMute = true,
     this.playOnHeadphonesConnected = false,
@@ -113,7 +110,6 @@ class AppSettings {
     this.heroAnimationsEnabled = true,
     this.forceBackdropBlur = false,
     this.locale = 'system',
-    this.lyricsMode = 'embed',
     this.keepScreenOnLyrics = true,
     this.listeningStatisticsEnabled = true,
     this.localLibraryEnabled = false,
@@ -134,7 +130,6 @@ class AppSettings {
     String? downloadTreeUri,
     int? embeddedCoverMaxDimension,
     String? artistTagMode,
-    bool? embedLyrics,
     bool? playbackNormalization,
     bool? pauseOnMute,
     bool? playOnHeadphonesConnected,
@@ -160,7 +155,6 @@ class AppSettings {
     bool? heroAnimationsEnabled,
     bool? forceBackdropBlur,
     String? locale,
-    String? lyricsMode,
     bool? keepScreenOnLyrics,
     bool? listeningStatisticsEnabled,
     bool? localLibraryEnabled,
@@ -182,7 +176,6 @@ class AppSettings {
       embeddedCoverMaxDimension:
           embeddedCoverMaxDimension ?? this.embeddedCoverMaxDimension,
       artistTagMode: artistTagMode ?? this.artistTagMode,
-      embedLyrics: embedLyrics ?? this.embedLyrics,
       playbackNormalization:
           playbackNormalization ?? this.playbackNormalization,
       pauseOnMute: pauseOnMute ?? this.pauseOnMute,
@@ -212,7 +205,6 @@ class AppSettings {
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       forceBackdropBlur: forceBackdropBlur ?? this.forceBackdropBlur,
       locale: locale ?? this.locale,
-      lyricsMode: lyricsMode ?? this.lyricsMode,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       listeningStatisticsEnabled:
           listeningStatisticsEnabled ?? this.listeningStatisticsEnabled,

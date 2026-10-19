@@ -241,23 +241,6 @@ class SettingsSearchCatalog {
           subtitle: l10n.lyricsKeepScreenOnSubtitle,
           keywords: const ['screen timeout', 'awake', 'sleep', 'layar'],
         ),
-        SettingsSearchEntry(
-          icon: Icons.subtitles_outlined,
-          title: l10n.optionsEmbedLyrics,
-          keywords: const ['write lyrics', 'lrc'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.lyrics_outlined,
-          title: l10n.lyricsMode,
-          keywords: const ['synced', 'plain', 'lyrics type'],
-        ),
-      ],
-      app = [
-        SettingsSearchEntry(
-          icon: Icons.bug_report,
-          title: l10n.optionsDetailedLogging,
-          keywords: const ['debug logs', 'diagnostics'],
-        ),
       ],
       cache = [
         SettingsSearchEntry(
@@ -319,6 +302,11 @@ class SettingsSearchCatalog {
         ),
       ],
       logs = [
+        SettingsSearchEntry(
+          icon: Icons.bug_report,
+          title: l10n.optionsDetailedLogging,
+          keywords: const ['debug logs', 'diagnostics'],
+        ),
         SettingsSearchEntry(
           icon: Icons.filter_list,
           title: l10n.logFilterLevel,
@@ -402,7 +390,6 @@ class SettingsSearchCatalog {
   final List<SettingsSearchEntry> library;
   final List<SettingsSearchEntry> playback;
   final List<SettingsSearchEntry> lyrics;
-  final List<SettingsSearchEntry> app;
   final List<SettingsSearchEntry> cache;
   final List<SettingsSearchEntry> backup;
   final List<SettingsSearchEntry> logs;

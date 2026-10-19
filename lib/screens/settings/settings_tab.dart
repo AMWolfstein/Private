@@ -8,7 +8,6 @@ import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/user_profile_provider.dart';
 import 'package:spotiflac_android/screens/settings/profile_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/about_page.dart';
-import 'package:spotiflac_android/screens/settings/app_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
 import 'package:spotiflac_android/screens/settings/backup_restore_page.dart';
 import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
@@ -161,15 +160,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       ),
       _Group(
         destinations: [
-          _Destination(
-            icon: Icons.tune_outlined,
-            iconColor: Colors.blueGrey,
-            title: l10n.settingsApp,
-            subtitle: l10n.settingsAppSubtitle,
-            keywords: const ['update', 'channel', 'debug', 'logging'],
-            searchEntries: searchCatalog.app,
-            pageBuilder: () => const AppSettingsPage(),
-          ),
           _Destination(
             icon: Icons.storage_outlined,
             iconColor: Colors.indigo,

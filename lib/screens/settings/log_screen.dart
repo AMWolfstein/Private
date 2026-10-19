@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:flutter/services.dart';
@@ -9,14 +11,14 @@ import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/utils/ordered_range_selection.dart';
 
-class LogScreen extends StatefulWidget {
+class LogScreen extends ConsumerStatefulWidget {
   const LogScreen({super.key});
 
   @override
-  State<LogScreen> createState() => _LogScreenState();
+  ConsumerState<LogScreen> createState() => _LogScreenState();
 }
 
-class _LogScreenState extends State<LogScreen> {
+class _LogScreenState extends ConsumerState<LogScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   String _selectedLevel = 'ALL';
@@ -241,6 +243,7 @@ class _LogScreenState extends State<LogScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final logs = _filteredLogs;
+    final settings = ref.watch(settingsProvider);
 
     return PopScope(
       canPop: !_selectionMode,
@@ -348,6 +351,25 @@ class _LogScreenState extends State<LogScreen> {
                         ],
                       ),
                     ],
+            ),
+
+            SliverToBoxAdapter(
+              child: SettingsGroup(
+                children: [
+                  SettingsSwitchItem(
+                    icon: Icons.bug_report,
+                    title: context.l10n.optionsDetailedLogging,
+                    subtitle: settings.enableLogging
+                        ? context.l10n.optionsDetailedLoggingOn
+                        : context.l10n.optionsDetailedLoggingOff,
+                    value: settings.enableLogging,
+                    onChanged: (value) => ref
+                        .read(settingsProvider.notifier)
+                        .setEnableLogging(value),
+                    showDivider: false,
+                  ),
+                ],
+              ),
             ),
 
             SliverToBoxAdapter(

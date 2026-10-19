@@ -130,10 +130,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "가사 삽입",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "리플레이게인 제거",
   "replayGainRemoving": "리플레이게인 제거 중...",
   "replayGainRemoveConfirmMessage": "{count} 개의 트랙에서 트랙 및 앨범 리플레이게인 태그를 제거하시겠습니까? 오디오, 앨범 아트 및 기타 메타데이터는 보존됩니다",
@@ -818,44 +814,12 @@
       }
     }
   },
-  "sectionDebug": "디버그",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "가사",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "가사 보는 동안 화면 켜짐 유지",
   "lyricsKeepScreenOnSubtitle": "가사가 열려 있는 동안 재생이 일시정지된 경우를 포함하여 화면이 꺼지지 않도록 합니다",
-  "lyricsMode": "가사 설정",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "파일에 포함",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "FLAC 메타데이터 내에 저장됩니다",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "외부 .lrc 파일",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "삼성 뮤직과 같은 플레이어용 별도 .lrc 파일",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "둘 다",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "가사를 삽입하고 .lrc 파일을 저장합니다",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "색상",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2311,10 +2275,6 @@
   "settingsLyrics": "가사",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "앱",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "YYYY-MM-DD 또는 YYYY",
   "@editMetadataFieldDateHint": {

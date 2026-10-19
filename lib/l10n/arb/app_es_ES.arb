@@ -130,10 +130,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Incrustar letras",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "Eliminar ReplayGain",
   "replayGainRemoving": "Eliminando ReplayGain...",
   "replayGainRemoveConfirmMessage": "¿Deseas eliminar las etiquetas ReplayGain de las {count} pistas? Se conservarán el audio, las imágenes y otros metadatos.",
@@ -818,44 +814,12 @@
       }
     }
   },
-  "sectionDebug": "Depuración",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Letras",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Mantener la pantalla encendida mientras se ven las letras de las canciones",
   "lyricsKeepScreenOnSubtitle": "Evitar que la pantalla se apague mientras están abiertas las letras de las canciones, incluso cuando la reproducción está en pausa.",
-  "lyricsMode": "Modo Letras",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Insertar en archivo",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Letras almacenadas en la información FLAC",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "Archivo .lrc externo",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Archivo .lrc separado para reproductores como Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Ambos",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Insertar y guardar archivo .lrc",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Colores",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2311,10 +2275,6 @@
   "settingsLyrics": "Letra",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "Aplicación",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "AAA-MM-DD o AAAA",
   "@editMetadataFieldDateHint": {

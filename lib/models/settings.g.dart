@@ -14,7 +14,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   embeddedCoverMaxDimension:
       (json['embeddedCoverMaxDimension'] as num?)?.toInt() ?? 0,
   artistTagMode: json['artistTagMode'] as String? ?? artistTagModeJoined,
-  embedLyrics: json['embedLyrics'] as bool? ?? true,
   playbackNormalization: json['playbackNormalization'] as bool? ?? false,
   pauseOnMute: json['pauseOnMute'] as bool? ?? true,
   playOnHeadphonesConnected:
@@ -54,7 +53,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
   forceBackdropBlur: json['forceBackdropBlur'] as bool? ?? false,
   locale: json['locale'] as String? ?? 'system',
-  lyricsMode: json['lyricsMode'] as String? ?? 'embed',
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
   listeningStatisticsEnabled:
       json['listeningStatisticsEnabled'] as bool? ?? true,
@@ -78,7 +76,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'downloadTreeUri': instance.downloadTreeUri,
       'embeddedCoverMaxDimension': instance.embeddedCoverMaxDimension,
       'artistTagMode': instance.artistTagMode,
-      'embedLyrics': instance.embedLyrics,
       'playbackNormalization': instance.playbackNormalization,
       'pauseOnMute': instance.pauseOnMute,
       'playOnHeadphonesConnected': instance.playOnHeadphonesConnected,
@@ -104,7 +101,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,
       'forceBackdropBlur': instance.forceBackdropBlur,
       'locale': instance.locale,
-      'lyricsMode': instance.lyricsMode,
       'keepScreenOnLyrics': instance.keepScreenOnLyrics,
       'listeningStatisticsEnabled': instance.listeningStatisticsEnabled,
       'localLibraryEnabled': instance.localLibraryEnabled,

@@ -66,10 +66,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Embed Lyrics",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "optionsDetailedLogging": "Detailed Logging",
   "@optionsDetailedLogging": {
     "description": "Enable verbose logs for debugging"
@@ -492,10 +488,6 @@
       }
     }
   },
-  "sectionDebug": "Debug",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionColor": "Color",
   "@sectionColor": {
     "description": "Settings section header"
@@ -683,34 +675,6 @@
   "sectionLyrics": "Lyrics",
   "@sectionLyrics": {
     "description": "Settings section header"
-  },
-  "lyricsMode": "Lyrics Mode",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Embed in file",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Lyrics stored inside FLAC metadata",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "External .lrc file",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Separate .lrc file for players like Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Both",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Embed and save .lrc file",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
   },
   "trackInstrumental": "Instrumental track",
   "@trackInstrumental": {
@@ -1637,10 +1601,6 @@
   "settingsLyrics": "Lyrics",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "App",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "settingsSearchHint": "Buscar en los ajustes",
   "settingsSearchNoResults": "Ningún ajuste coincide con \"{query}\"",

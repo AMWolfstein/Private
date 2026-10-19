@@ -1,6 +1,8 @@
 {
   "libraryGenres": "Genres",
-  "@libraryGenres": {"description": "Library category for songs grouped by genre tags"},
+  "@libraryGenres": {
+    "description": "Library category for songs grouped by genre tags"
+  },
   "appearancePlayerView": "Player view",
   "appearancePlayerViewNormal": "Normal view",
   "appearancePlayerViewImmersive": "Immersive view",
@@ -112,9 +114,13 @@
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "Latest Releases in Your Library",
-  "@homeLatestReleases": {"description": "Local home featured releases shelf, ordered by release tags"},
+  "@homeLatestReleases": {
+    "description": "Local home featured releases shelf, ordered by release tags"
+  },
   "artistPopular": "Popular",
-  "@artistPopular": {"description": "Artist songs ranked by local play counts"},
+  "@artistPopular": {
+    "description": "Artist songs ranked by local play counts"
+  },
   "libraryRecentlyAdded": "Recently Added",
   "librarySearchHint": "Search your library",
   "libraryEmptyCollection": "Your music will appear here",
@@ -145,14 +151,6 @@
   "appearanceThemeDark": "Dark",
   "@appearanceThemeDark": {
     "description": "Dark theme"
-  },
-  "optionsEmbedLyrics": "Embed Lyrics",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
-  "optionsEmbedLyricsSubtitle": "Save embedded lyrics or a sidecar LRC file with your local tracks",
-  "@optionsEmbedLyricsSubtitle": {
-    "description": "Subtitle for embed lyrics"
   },
   "trackRemoveReplayGain": "Remove ReplayGain",
   "replayGainRemoving": "Removing ReplayGain...",
@@ -858,48 +856,12 @@
       }
     }
   },
-  "sectionDebug": "Debug",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Lyrics",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
   "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
-  "lyricsMode": "Lyrics Mode",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeDescription": "Choose how lyrics are saved with your local files",
-  "@lyricsModeDescription": {
-    "description": "Lyrics mode picker description"
-  },
-  "lyricsModeEmbed": "Embed in file",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Lyrics stored inside FLAC metadata",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "External .lrc file",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Separate .lrc file for players like Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Both",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Embed and save .lrc file",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Color",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2499,14 +2461,6 @@
   "settingsLyricsSubtitle": "Local lyrics, saving mode and text size",
   "@settingsLyricsSubtitle": {
     "description": "Subtitle for lyrics settings"
-  },
-  "settingsApp": "App",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
-  },
-  "settingsAppSubtitle": "Language, local data and diagnostics",
-  "@settingsAppSubtitle": {
-    "description": "Subtitle for app settings"
   },
   "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
   "@editMetadataFieldDateHint": {

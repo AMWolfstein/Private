@@ -130,10 +130,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "optionsEmbedLyrics": "Вбудований текст пісні",
-  "@optionsEmbedLyrics": {
-    "description": "Embed lyrics in audio files"
-  },
   "trackRemoveReplayGain": "Видалити ReplayGain",
   "replayGainRemoving": "Видалення ReplayGain...",
   "replayGainRemoveConfirmMessage": "Видалити теги ReplayGain для треків та альбомів з {count} трек(s)? Аудіодані, обкладинки та інші метадані буде збережено.",
@@ -790,44 +786,12 @@
       }
     }
   },
-  "sectionDebug": "Налагодження",
-  "@sectionDebug": {
-    "description": "Settings section header"
-  },
   "sectionLyrics": "Тексти пісень",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
   "lyricsKeepScreenOn": "Не вимикати екран під час перегляду тексту пісні",
   "lyricsKeepScreenOnSubtitle": "Запобігати вимкненню екрана, коли відкрито текст пісні, зокрема й під час паузи у відтворенні.",
-  "lyricsMode": "Режим тексту пісні",
-  "@lyricsMode": {
-    "description": "Setting - how to save lyrics"
-  },
-  "lyricsModeEmbed": "Вбудувати у файл",
-  "@lyricsModeEmbed": {
-    "description": "Lyrics mode option - embed in audio file"
-  },
-  "lyricsModeEmbedSubtitle": "Тексти пісень зберігаються в метаданих FLAC",
-  "@lyricsModeEmbedSubtitle": {
-    "description": "Subtitle for embed option"
-  },
-  "lyricsModeExternal": "Зовнішній файл .lrc",
-  "@lyricsModeExternal": {
-    "description": "Lyrics mode option - separate LRC file"
-  },
-  "lyricsModeExternalSubtitle": "Окремий файл .lrc для плеєрів, таких як Samsung Music",
-  "@lyricsModeExternalSubtitle": {
-    "description": "Subtitle for external option"
-  },
-  "lyricsModeBoth": "Обидва",
-  "@lyricsModeBoth": {
-    "description": "Lyrics mode option - embed and external"
-  },
-  "lyricsModeBothSubtitle": "Вбудувати та зберегти файл .lrc",
-  "@lyricsModeBothSubtitle": {
-    "description": "Subtitle for both option"
-  },
   "sectionColor": "Колір",
   "@sectionColor": {
     "description": "Settings section header"
@@ -2287,10 +2251,6 @@
   "settingsLyrics": "Тексти пісень",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
-  },
-  "settingsApp": "Застосунок",
-  "@settingsApp": {
-    "description": "Settings menu item - app settings"
   },
   "editMetadataFieldDateHint": "YYYY-MM-DD або YYYY",
   "@editMetadataFieldDateHint": {
