@@ -10,7 +10,7 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Next audit unit: none — all 10 subsystems and the final dead-code sweep are done. Next:
   user-approved fix batches from `FIX_PLAN.md` (nothing fixed yet).
 - Open findings: 226 (0 P0, 1 P1, 63 P2, 162 P3; see `FINDINGS.md`). MORN-001..017, HOME-001..008 and PLAY-001..004: Mornye parity with upstream artist/album/playlist, Home and Now Playing.
-- Last checkpoint: upstream port batch 6; source 8b7adfe6, graph 1735a8c3. See PORT_EXECUTION.md for per-port commits.
+- Last checkpoint: upstream port batch 7; source b02895b0, graph e0fd4bbe. See PORT_EXECUTION.md for per-port commits.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer
   baseline/rollback, scope hints `NO_TEST_CHANGES`/`SPLIT_SUGGESTED`; android test dirs now
@@ -18,9 +18,9 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Owner decisions (2026-10-20): About credits/links/social and the Search Recent list removed
   (`c29daef`, not yet full-tested); `MANAGE_EXTERNAL_STORAGE` kept; `NativeReplayGainPolicy` kept for Media3.
   Fixes are done by separate modules from `FIX_PLAN.md`; this session only reviews.
-- Upstream ports: batches through 6 complete. PASS: analysis clean; Flutter 1670 passed / 3 skipped / zero failures (03:59); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes).
-  Graph 1735a8c3, source 8b7adfe6: 23,304 unique nodes / 44,944 valid links; synchronized, existing vendor extraction warnings remain.
-  Branch ccr-2fb644cd-nmesyt. No APK. Next: batch 7 (U-308, U-302).
+- Upstream ports: batches through 7 complete. PASS: analysis clean; Flutter 1692 passed / 3 skipped / zero failures (03:55); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes).
+  Graph e0fd4bbe, source b02895b0: 23,480 unique nodes / 45,224 valid links; synchronized, existing vendor extraction warnings remain.
+  Branch ccr-2fb644cd-nmesyt. No APK. Next: batch 8 (U-304, U-305, U-307, U-312).
   User authorizes all remaining PORT_PLAN batches autonomously. Model policy SOL only; runtime identity/effort not exposed. Recommended effort MEDIUM. KT-202 remains OPEN.
   Docs checkpoint pushed after checks; fetch/verify on resume. See HANDOFF.md and PORT_EXECUTION.md.
 

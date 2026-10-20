@@ -4,6 +4,7 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | batch 7, source `b02895b0` | Batch-end analysis/full Flutter tests/Android unit | PASS: analysis clean; Flutter 1692 passed / 3 skipped / zero failures (03:55); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes). Graph e0fd4bbe, source b02895b0: 23,480 unique nodes / 45,224 valid links; synchronized, existing vendor extraction warnings remain. No APK or device execution. Logs /workspace/batch-7-*.log. |
 | 2026-10-20 | batch 6, source `8b7adfe6` | Batch-end analysis/full Flutter tests/Android unit | PASS: analysis clean; Flutter 1670 passed / 3 skipped / zero failures (03:59); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes). Graph 1735a8c3, source 8b7adfe6: 23,304 unique nodes / 44,944 valid links; synchronized, existing vendor extraction warnings remain. No APK or device execution. Logs /workspace/batch-6-*.log. |
 | 2026-10-20 | batch 5 final source `2c4ce3ff` | `flutter analyze` | PASS: No issues found (21.8s). |
 | 2026-10-20 | batch 5 | Full `flutter test --reporter expanded` | PASS: 1,659 passed / 3 skipped / zero failures (4m02s), exit 0. Includes the two upstream Activity lifecycle tests and retained pronunciation/native-parser fixtures. |

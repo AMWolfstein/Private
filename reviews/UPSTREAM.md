@@ -34,8 +34,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 4. DONE — U-205, U-216, U-206 evaluated, U-207
 5. DONE — U-214, U-215, U-208 evaluated, U-209 partial
 6. DONE — U-210, U-303, U-217, U-218
-7. NEXT — U-308 (duets + share cards), U-302 (+ `9acaa760`)
-8. U-304, U-305, U-307, U-312
+7. DONE — U-308 (duets + share cards), U-302 (+ `9acaa760`)
+8. NEXT — U-304, U-305, U-307, U-312
 9. U-301 (equalizer, alone)
 10-14. Mornye parity batches (`FIX_PLAN.md` Tier 2c: M1+M2, M3+M4, M5+M6, M7-M9 + HOME-007,
    M10+M11 + U-311)
@@ -138,12 +138,12 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 | ID | Upstream | What |
 |---|---|---|
 | U-301 | `ecf594aa` (+`68c739df`) | Multiband EQ / native audio processing (~4.5k lines; adds DSP, does not replace the engine). |
-| U-302 | `11c6cf99`, `2455cabc`, `9acaa760` | Music-synced haptics, incl. basic-motor pulses and tuning sliders. |
+| U-302 | `11c6cf99`, `2455cabc`, `9acaa760` | ADAPT, ported in `df164fb1`: optional Android/local music haptics, independently owned SAF decode input/cancellation and bounded cache, sensitivity/strength, basic-motor pulses. Import scheduler/analysis/cancellation and skips/completion/AutoMix transport regressions. No iOS code, player-mode choices or replacement engine. |
 | U-303 | `40f65d3a` | ADAPT, ported in `bd8f88a6`: source/processing/output facts, local read-only Android route worker and tappable quality badge; Mornye grouped sheet and retained analysis card. U-209 number regex included. No iOS/Material/online integration, absent standalone hi-res card or premature EQ subsystem imported; EQ reporting belongs with U-301. |
 | U-304 | `08266c73`, `1d53bf93` | Rewind and listening-statistics highlights. |
 | U-305 | `83a55fb8` | Sectioned library browsing and fast scroll. |
 | U-307 | `75cd4c39` | Refreshed launcher widgets. |
-| U-308 | `78a5e078`, `2782b1f7` | Lyric share cards, on-demand lyrics loading. The timed-vocal part of `78a5e078` is worth taking on its own: scroll holds an unfinished lead line during duets/overlaps (`_focusFor`, `lyricsWithDisplayEnds`), Enhanced LRC last-word end estimate, backing-vocal drop-in. **Partial in `81869c48`:** `_focusFor`, `lyricsWithDisplayEnds` and `LyricBackingTransition` plus overlap fixtures, needed by U-103b. Share cards/entry points, on-demand loading and glow styling remain pending; no online fetch imported. The share screen still needs a Mornye restyle. |
+| U-308 | `78a5e078`, `2782b1f7` | ADAPT: timed-vocal prerequisites in `81869c48`; completed local lyric-card editor, on-demand metadata/parse wait, track-change guard, long-press/menu entry points and held-word glow in `d83068e6`. Mornye circular header/rounded artwork/Cupertino actions replace Expressive shapes/buttons. Reduced motion and settled-clock bounds retained; no online loading. Follow-ups `b02895b0`, `a9433d82`, `de546bd7` correct guard lint and Mornye/virtualized-list test assumptions. |
 | U-309 | `67a346c1`, `4cee16e9` | Home greeting and listening shortcuts (differs from the Apple Music Home). |
 
 ## Do not port
