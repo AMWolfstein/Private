@@ -1680,10 +1680,10 @@
     "semantic_hash": ""
   },
   "lib/widgets/aligned_lyric_pronunciation.dart": {
-    "mtime": 1792356506.5559514,
-    "seen": 1792494608.4830587,
-    "ast_hash": "0c0d3a2b6ee6abc6bf5fd0a1849e5eac",
-    "semantic_hash": "0c0d3a2b6ee6abc6bf5fd0a1849e5eac"
+    "mtime": 1792510422.6541114,
+    "seen": 1792510448.3957286,
+    "ast_hash": "f8eff28418e0170a61af40af83186d59",
+    "semantic_hash": ""
   },
   "lib/widgets/animation_utils.dart": {
     "mtime": 1792356506.5590446,
