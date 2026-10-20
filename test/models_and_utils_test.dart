@@ -258,11 +258,22 @@ void main() {
     ).readAsStringSync();
 
     test('v4 normalizes playback queue and scalar state', () {
-      expect(source, contains('const _dbVersion = 4;'));
-      expect(source, contains('await _migratePlaybackSessionToV4(db);'));
+            expect(source, contains('await _migratePlaybackSessionToV4(db);'));
       expect(source, contains('media_json TEXT NOT NULL'));
       expect(source, contains('position_ms INTEGER NOT NULL DEFAULT 0'));
       expect(source, contains('updatePlaybackSessionState'));
+    });
+
+    test('v5 drops the retired recent-access tables', () {
+      expect(source, contains('const _dbVersion = 5;'));
+      expect(source, contains('DROP TABLE IF EXISTS'));
+      for (final table in [
+        'recent_access_items',
+        'hidden_recent_downloads',
+        'recent_access_state',
+      ]) {
+        expect(source, contains("'$table'"));
+      }
     });
   });
 
