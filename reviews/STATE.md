@@ -19,7 +19,8 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Owner decisions (2026-10-20): About credits/links/social and the Search Recent list removed
   (`c29daef`, not yet full-tested); `MANAGE_EXTERNAL_STORAGE` kept; `NativeReplayGainPolicy` kept for Media3.
   Fixes are done by separate modules from `FIX_PLAN.md`; this session only reviews.
-- Upstream ports: `UPSTREAM.md` (fork base v5.1.1, checked to `21ee30c4`; U-001 tag separators requested).
+- Upstream ports: upstream is now `mornyeapp/Mornye`, checked to `e0563ffa`. Codex implements
+  `PORT_PLAN.md` (batches 1b-16); batch 1 done, U-104/U-201 committed untested, U-202 WIP in stash.
 
 ## Handoff
 
