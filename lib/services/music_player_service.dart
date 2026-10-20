@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/services/music_haptics.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -313,6 +314,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   late MusicPlaybackDeck _player;
   late final _MusicAutoMix _autoMix;
   late final _MusicAutoplay _autoplay;
+  late final MusicHaptics _haptics;
   bool _completing = false;
   double _normalizationVolume = 1;
   final _playerSubscriptions =
@@ -394,6 +396,11 @@ class MusicPlayerHandler extends BaseAudioHandler
         previous.usbBitPerfect != settings.usbBitPerfect) {
       _refreshPlaybackAutomation();
     }
+    if (previous.musicHaptics != settings.musicHaptics ||
+        previous.musicHapticsSensitivity != settings.musicHapticsSensitivity ||
+        previous.musicHapticsStrength != settings.musicHapticsStrength) {
+      _updateHaptics();
+    }
     if (previous.autoplay != settings.autoplay ||
         previous.autoplayPersonalization != settings.autoplayPersonalization ||
         previous.localLibraryEnabled != settings.localLibraryEnabled) {
@@ -406,7 +413,14 @@ class MusicPlayerHandler extends BaseAudioHandler
     AutoMixAnalyzer? autoMixAnalyzer,
     AutoMixEffectRenderer? autoMixEffectRenderer,
     AutoplayLibraryLoader? autoplayLibraryLoader,
+    MusicHapticsAnalyzer? hapticsAnalyzer,
+    HapticPulse? hapticPulse,
   }) : _runtime = runtime ?? musicPlayerRuntime {
+    _haptics = MusicHaptics(
+      state: () => playbackState.value,
+      analyzer: hapticsAnalyzer,
+      pulse: hapticPulse,
+    );
     _sourceCache = ContentUriPlaybackCache(
       copy: PlatformBridge.copyContentUriToTemp,
       isDisposed: () => _disposed,
@@ -522,6 +536,8 @@ class MusicPlayerHandler extends BaseAudioHandler
         if (playing) unawaited(_playbackAutomation.playbackStarted());
       }),
     );
+    _subscriptions.add(mediaItem.listen((_) => _updateHaptics()));
+    _subscriptions.add(playbackState.listen((_) => _updateHaptics()));
     _listeningTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       unawaited(_dependencies.recorder.flush());
     });
@@ -545,6 +561,27 @@ class MusicPlayerHandler extends BaseAudioHandler
         state == AppLifecycleState.paused) {
       unawaited(restoreIosNowPlaying());
     }
+  }
+
+  /// Haptics follow only decodable local files; streams have no full copy.
+  void _updateHaptics() {
+    if (_disposed) return;
+    final extras = mediaItem.value?.extras;
+    final source = extras?['source']?.toString() ?? '';
+    final resolved = extras?['resolvedSource']?.toString().trim() ?? '';
+    final document = source.startsWith('content://');
+    // Use a stable document identity for both direct playback and AutoMix.
+    // Haptics opens its own SAF input; the player's descriptor is short-lived.
+    final path = document ? source : (resolved.isNotEmpty ? resolved : source);
+    final local =
+        path.isNotEmpty &&
+        (document || !path.contains('://')) &&
+        _settings.musicHaptics;
+    _haptics.configure(
+      sensitivity: _settings.musicHapticsSensitivity,
+      strength: _settings.musicHapticsStrength,
+    );
+    _haptics.update(local ? path : null);
   }
 
   void _configurePersonalization() {
@@ -2149,6 +2186,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     await _playbackAutomation.dispose();
     await _sourceChangeTail;
     await _autoMix.dispose();
+    _haptics.dispose();
     for (final sub in _subscriptions) {
       await sub.cancel();
     }

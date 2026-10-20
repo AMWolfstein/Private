@@ -338,6 +338,25 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
+  void setMusicHaptics(bool enabled) {
+    state = state.copyWith(musicHaptics: enabled);
+    _saveSettings();
+  }
+
+  void setMusicHapticsSensitivity(double value) {
+    state = state.copyWith(
+      musicHapticsSensitivity: musicHapticsLevelFromJson(value),
+    );
+    _saveSettings();
+  }
+
+  void setMusicHapticsStrength(double value) {
+    state = state.copyWith(
+      musicHapticsStrength: musicHapticsLevelFromJson(value),
+    );
+    _saveSettings();
+  }
+
   void setPauseOnMute(bool enabled) {
     state = state.copyWith(pauseOnMute: enabled);
     _saveSettings();

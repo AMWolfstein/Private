@@ -684,6 +684,9 @@ class MainActivity: FlutterFragmentActivity() {
         if (!flutterEngine.plugins.has(UsbBitPerfectPlugin::class.java)) {
             flutterEngine.plugins.add(UsbBitPerfectPlugin())
         }
+        if (!flutterEngine.plugins.has(MusicHapticsPlugin::class.java)) {
+            flutterEngine.plugins.add(MusicHapticsPlugin())
+        }
         concertCalendarChannel = MethodChannel(messenger, "com.zarz.spotiflac/concert_calendar").also { channel ->
             channel.setMethodCallHandler { call, result ->
                 if (call.method != "add") {

@@ -15,6 +15,9 @@ double playbackNormalizationPreampFromJson(Object? value) =>
 String playbackNormalizationModeFromJson(Object? value) =>
     value == 'album' ? 'album' : 'track';
 
+double musicHapticsLevelFromJson(Object? value) =>
+    value is num && value.isFinite ? value.toDouble().clamp(0, 1) : 0.5;
+
 @JsonSerializable(explicitToJson: true)
 class AppSettings {
   final String downloadDirectory;
@@ -28,6 +31,12 @@ class AppSettings {
   final String
   artistTagMode; // 'joined', 'split_vorbis' (Vorbis formats), or 'primary'
   final MetadataSeparators metadataSeparators;
+  // Optional pulses follow local playback.
+  final bool musicHaptics;
+  @JsonKey(fromJson: musicHapticsLevelFromJson)
+  final double musicHapticsSensitivity;
+  @JsonKey(fromJson: musicHapticsLevelFromJson)
+  final double musicHapticsStrength;
   // Apply ReplayGain/R128 tags as volume normalization in the built-in player.
   final bool playbackNormalization;
   @JsonKey(fromJson: playbackNormalizationPreampFromJson)
@@ -102,6 +111,9 @@ class AppSettings {
     this.embeddedCoverMaxDimension = 0,
     this.artistTagMode = artistTagModeJoined,
     this.metadataSeparators = const MetadataSeparators(),
+    this.musicHaptics = false,
+    this.musicHapticsSensitivity = 0.5,
+    this.musicHapticsStrength = 0.5,
     this.playbackNormalization = false,
     this.playbackNormalizationPreamp = 0,
     this.playbackNormalizationMode = 'track',
@@ -150,6 +162,9 @@ class AppSettings {
     int? embeddedCoverMaxDimension,
     String? artistTagMode,
     MetadataSeparators? metadataSeparators,
+    bool? musicHaptics,
+    double? musicHapticsSensitivity,
+    double? musicHapticsStrength,
     bool? playbackNormalization,
     double? playbackNormalizationPreamp,
     String? playbackNormalizationMode,
@@ -199,6 +214,10 @@ class AppSettings {
           embeddedCoverMaxDimension ?? this.embeddedCoverMaxDimension,
       artistTagMode: artistTagMode ?? this.artistTagMode,
       metadataSeparators: metadataSeparators ?? this.metadataSeparators,
+      musicHaptics: musicHaptics ?? this.musicHaptics,
+      musicHapticsSensitivity:
+          musicHapticsSensitivity ?? this.musicHapticsSensitivity,
+      musicHapticsStrength: musicHapticsStrength ?? this.musicHapticsStrength,
       playbackNormalization:
           playbackNormalization ?? this.playbackNormalization,
       playbackNormalizationPreamp:

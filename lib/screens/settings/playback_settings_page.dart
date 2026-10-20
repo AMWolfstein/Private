@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/widgets/music_haptics_settings.dart';
 import 'package:spotiflac_android/widgets/playback_normalization_settings.dart';
 import 'dart:io';
 
@@ -76,6 +77,17 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                   PlaybackNormalizationSettings(
                     enabled: !settings.usbBitPerfect,
                   ),
+                SettingsSwitchItem(
+                  icon: Icons.vibration,
+                  title: context.l10n.musicHaptics,
+                  subtitle: context.l10n.musicHapticsDescription,
+                  value: settings.musicHaptics,
+                  onChanged: (value) => ref
+                      .read(settingsProvider.notifier)
+                      .setMusicHaptics(value),
+                ),
+                if (settings.musicHaptics)
+                  const MusicHapticsSettings(enabled: true),
                 SettingsSwitchItem(
                   icon: Icons.compare_arrows,
                   title: 'AutoMix',

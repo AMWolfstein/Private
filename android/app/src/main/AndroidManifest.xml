@@ -5,6 +5,7 @@
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
 
     <!-- Permissions -->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Playback never records audio. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" tools:node="remove" />

@@ -19,6 +19,13 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
       : MetadataSeparators.fromJson(
           json['metadataSeparators'] as Map<String, dynamic>,
         ),
+  musicHaptics: json['musicHaptics'] as bool? ?? false,
+  musicHapticsSensitivity: json['musicHapticsSensitivity'] == null
+      ? 0.5
+      : musicHapticsLevelFromJson(json['musicHapticsSensitivity']),
+  musicHapticsStrength: json['musicHapticsStrength'] == null
+      ? 0.5
+      : musicHapticsLevelFromJson(json['musicHapticsStrength']),
   playbackNormalization: json['playbackNormalization'] as bool? ?? false,
   playbackNormalizationPreamp: json['playbackNormalizationPreamp'] == null
       ? 0
@@ -90,6 +97,9 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'embeddedCoverMaxDimension': instance.embeddedCoverMaxDimension,
       'artistTagMode': instance.artistTagMode,
       'metadataSeparators': instance.metadataSeparators.toJson(),
+      'musicHaptics': instance.musicHaptics,
+      'musicHapticsSensitivity': instance.musicHapticsSensitivity,
+      'musicHapticsStrength': instance.musicHapticsStrength,
       'playbackNormalization': instance.playbackNormalization,
       'playbackNormalizationPreamp': instance.playbackNormalizationPreamp,
       'playbackNormalizationMode': instance.playbackNormalizationMode,
