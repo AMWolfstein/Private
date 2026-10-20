@@ -33,6 +33,16 @@ remains pending.
 `flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
+**Upstream port batch 4 (2026-10-20; requested MEDIUM):** U-205 `6e44c6be` reports
+Android output failures without advancing the queue and supports retry; U-216 `95e2b158`
+notifies open players when a same-ID snapshot gains duration/artwork/metadata. U-206 targets
+the legacy Material fallback and is not imported: retained Mornye title/swipe behavior
+already avoids the outgoing-title stack. U-207 `d0818d7a` resolves verified SAF parents and propagates requested
+LRC write failures; excluded online re-enrichment/download tests remain absent. Current
+engine, UI and vendored descriptor patch retained. Graph checkpoints `a95ffcf6`, `4c66e5e7`,
+`a85b4965`; final graph 23,112 nodes / 44,630 links. No dependency/schema/Rust source changes.
+Batch 4 verification: PASS: analysis clean; full Flutter 1,657 passed / 3 skipped / zero failures (4m10s); Android unit 59 passed / 1 skipped; changed plugin and instrumentation Kotlin/Java compiled (1m58s). No APK. Next is port batch 5.
+
 **Upstream port batch 3 (2026-10-20):** U-203 `e70ae974` recovers missing local album
 artwork in headers/grids, retaining Mornye controls and local images. U-212 `1d8e8f76`
 shares aligned ID3 picture parsing, safely strips recognized-image NUL padding and repairs

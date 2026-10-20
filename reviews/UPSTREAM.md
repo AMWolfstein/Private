@@ -31,8 +31,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 1b. DONE — U-103b (patch-1 follow-up), including U-104/U-201 validation
 2. DONE — U-201b evaluated (no applicable local changes), U-202 ported
 3. DONE — U-203, U-212, U-213, U-204
-4. NEXT — U-205, U-216, U-206, U-207
-5. U-214, U-215, U-208, U-209
+4. DONE — U-205, U-216, U-206 evaluated, U-207
+5. NEXT — U-214, U-215, U-208, U-209
 6. U-210, U-303, U-217, U-218
 7. U-308 (duets + share cards), U-302 (+ `9acaa760`)
 8. U-304, U-305, U-307, U-312
@@ -52,7 +52,7 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 | U-213 | `60d00191` | Ported in `d256e0c7`: local filesystem playback joins SAF artwork recovery; embedded art replaces missing/stale/remote references without fetching remote artwork. Existing generation guard and offline placeholders retained. | 3 DONE |
 | U-214 | `d7798898` | Wait for the Activity before backend startup calls (`services/activity_attachment.dart`). | 5 |
 | U-215 | `205e178e` | Apply renderer (Impeller) compatibility before shared engine creation, incl. the `third_party/audio_service` patch note. | 5 |
-| U-216 | `9ded49f3` | Refresh late duration updates without reopening the player. | 4 |
+| U-216 | `9ded49f3` | Ported in `95e2b158`: identity-based same-ID snapshots notify mounted consumers while ID selectors remain stable; retained Mornye light/dark regressions and test overrides adapted. | 4 DONE |
 | U-217 | `37162363` | Swipe up on the mini player opens Now Playing; mini-player dismissal must keep working (UI-101). | 6 |
 | U-218 | `9eea6a1a` | Normalization pre-amp and track/album gain mode (ReplayGain stays). | 6 |
 | U-312 | `7600c169` (Mornye/library parts: `mornye_artwork_contrast`, `mornye_selection_pill`, `mornye_artist_header`, `settings_group`, `pinned_section_sliver_list`, `animated_library_sliver_grid`, `playback_session_restore`, tests) | Mornye player/library smoothness. Skip Material files. `pinned_section_sliver_list` may belong with U-305. | 8 |
@@ -126,9 +126,9 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 | U-202 | `3dc2d690` | Ported in `0f51f5d0` (ADAPT): integer libFLAC 1.5.0 decoder shared by existing exact PCM output paths; output/source precision reported separately. Fork CMake URLs and branding retained; checksum-pinned dependency and license bundled. Host regression suite and Android fixture imported. Batch 2 verification below. |
 | U-203 | `080df889` | Ported in `e70ae974`: missing/empty/stale scanned covers recover via the bounded embedded-cover cache in local album headers and library grids; async album/disposal guards and valid-cover preference retained. Mornye light/dark tests, no download/Material restoration. |
 | U-204 | `161a216b` | Ported in `a41d3d4e`: wait for effect progress, verify/re-align its position while the live deck stays audible, and render enough source for faster effects. Existing engine, cancellation, fallback and temp ownership retained. |
-| U-205 | `f426b2d1` | Report Android output failures without skipping tracks. |
-| U-206 | `97d8ee36` | No overlapping titles during rapid skips. |
-| U-207 | `186c66ae` | Refresh LRC sidecars in their actual SAF folder. |
+| U-205 | `f426b2d1` | Ported in `6e44c6be`: report ordinary Android output errors, keep selected song/queue and allow retry; native errors handled instead of masquerading as completion. Existing notification controls and no-EQ fork retained. |
+| U-206 | `97d8ee36` | Evaluated: upstream modifies legacy material_player_layout.dart fallback only; REJECT importing Material-specific UI changes. Retained Mornye track header uses a single current PlayerMetadataTitle via PlayerTrackSwipeTitles, not an outgoing-title AnimatedSwitcher. Equivalent non-stacking behavior already present; no source port required. |
+| U-207 | `186c66ae` | Ported local parts in `d0818d7a`: provider-resolved/verified SAF parents and explicit requested LRC write failures. Import native opaque/nested provider fixtures and Dart sidecar regressions; omit removed reEnrichFile online handler and extension/download tests. |
 | U-208 | `47ccf9c9` | Volume slider handle size. |
 | U-209 | `acbc614f`, `ef5fa1cb`, `1b66bc46` | DateFormat/RegExp reuse, fewer history notifications. |
 | U-210 | `d28e3f65` | Album header artwork fit (only the `album_detail_header` part). |
@@ -180,3 +180,18 @@ Code/graph pairs: `e70ae974` → `b680bdd4`; `1d8e8f76` → `c5086af3`;
 Graph validated at final code `a41d3d4e`: 23,093 unique nodes / 44,593 valid links.
 No online/Material/branding/extension restoration, user-file rewrite or APK build.
 Batch 3 verification: PASS: analysis clean; full Flutter 1,644 passed / 3 skipped / zero failures (3m55s); Rust fmt/Clippy clean, 231 passed / 1 ignored.
+
+## Batch 4 evidence (2026-10-20; requested effort MEDIUM)
+
+| Item / upstream source | Decision / code | Existing implementation and affected files | Dependency, benefit, risk/complexity and verification |
+|---|---|---|---|
+| U-205 `f426b2d1f0cc256d34267b511665c0e8de6d16c8` | ADAPT `6e44c6be` | MusicPlaybackDeck handles ordinary event errors; MusicPlayerHandler publishes error state, suppresses completion and serializes stop/retry; PlaybackFeedback shows foreground feedback once. Vendored audioplayers_android MediaPlayerWrapper/WrappedPlayer handle output error and rate startup. Prior platform failure could deliver completion and skip the current song. | No dependencies/EQ imported, no engine rewrite. Preserve current controls, SAF fallback, queue and USB paths. Medium complexity/risk. Tests: five native-channel failure/retry cases and Mornye light/dark feedback; existing Android compilation/unit task. Vendor patch documented in SPOTIFLAC_PATCHES.md. |
+| U-216 `9ded49f31e2d8dd341bba528b7fb3dfe7060a03a` | ADAPT `95e2b158` | currentMediaItemProvider becomes StreamNotifierProvider with identity notification; MediaItem equality compares IDs only. Existing consumers can now see late duration/artwork/metadata; ID-only selectors retain their semantics. Tests/integration fixtures adapt overrideWithBuild. | No dependency change; small provider implementation/API adaptation. Medium regression risk across consumers. New provider lifecycle/selector test and two retained Mornye open-player duration tests; no Material progress widgets imported. Existing UI state and metadata-read count checked. |
+| U-206 `97d8ee3695384cf3f32b89d610f761c90c601f8f` | REJECT Material-only fallback patch; equivalent production behavior ALREADY IMPLEMENTED | Upstream only changes material_player_layout.dart and its Material title test. The legacy fallback file remains, but AppThemeStyle has only mornye and production themes use MornyeTheme. MornyePlayerLayout._trackHeader → PlayerTrackSwipeTitles builds the current title directly, without outgoing-title switcher history. Neighbors are clipped horizontal swipe previews, not overlapping title transitions. | No source/dependency change or claim of an implemented port. Keep Mornye title/swipe/marquee code; full existing player/swipe tests remain the applicable regression coverage. Low review complexity/risk; do not alter legacy fallback styling for a production-inapplicable fix. |
+| U-207 `186c66aeb8c07025402afe78e58a76e4578f6cfa` | ADAPT local parts `d0818d7a` | MainActivitySafIo.safParentDir/writeSafSidecarLrc become Context helpers; ask DocumentsContract.findDocumentPath for opaque IDs, validate tree/end IDs and verify fallback parent lists the child. lyrics_metadata_helper propagates requested filesystem/SAF write failures. Existing channel already reports false as error; removed reEnrichFile handler is not restored. Native fixtures and Dart tests imported. | No Rust/dependency/schema/UI-mode change. Existing user-requested writes now target verified adjacent directory; missing ancestry fails closed. AndroidX DocumentFile 1.1.0 cached bytecode confirms fromTreeUri preserves a document URI's ID. Medium complexity; user-file placement regression risk requires device/provider validation. Three Dart cases check word timestamps, unchanged audio, shorter sidecar replacement and failures. Two instrumentation cases cover opaque root/nested/legacy ancestry and no root fallback; compile separately, execution needs device. Extension/download Rust tests excluded. |
+
+Code → graph: `6e44c6be` → `a95ffcf6`; `95e2b158` → `4c66e5e7`;
+`d0818d7a` → `a85b4965`. Final graph: 23,112 unique nodes / 44,630 valid links,
+built from `d0818d7a`. Existing vendored parser warnings remain.
+No online, Material, EQ or conversion restoration; no APK. No Rust source changes.
+Batch 4 verification: PASS: analysis clean; full Flutter 1,657 passed / 3 skipped / zero failures (4m10s); Android unit 59 passed / 1 skipped; changed plugin and instrumentation Kotlin/Java compiled (1m58s).

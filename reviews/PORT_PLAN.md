@@ -115,7 +115,25 @@ No tests between ports. Testing happens once at the end of each batch.
 - Per-port graph checkpoints: `b680bdd4`, `c5086af3`, `a7cc1b9f`, `de32a041`.
   Final graph validated: 23,093 unique nodes / 44,593 valid links.
 - Batch 3 verification: PASS: analysis clean; full Flutter 1,644 passed / 3 skipped / zero failures (3m55s); Rust fmt/Clippy clean, 231 passed / 1 ignored. No Kotlin changes, no APK; physical audio/SAF tests not run.
-- Next: **batch 4 only** (U-205, U-216, U-206, U-207), only when requested.
+- Historical next step was batch 4, now recorded below.
+
+## Completed batch 4 (2026-10-20; user-requested MEDIUM)
+
+- U-205 `6e44c6be` adapts `f426b2d1`: output errors keep the current song selected,
+  report failure and allow retry. Retains SAF fallback, current notification controls,
+  vendored descriptor patch and existing engine. No equalizer imports.
+- U-216 `95e2b158` adapts `9ded49f3`: identity-based same-ID media snapshots reach mounted
+  consumers; tests use notifier build overrides, including Mornye late-duration regressions.
+- U-206 `97d8ee36`: legacy Material fallback remains, but production is Mornye-only.
+  Do not import the Material-specific patch.
+  The retained Mornye single-current-title/swipe path already has no outgoing-title stack.
+- U-207 `d0818d7a` adapts local `186c66ae` parts: validated SAF ancestry and requested local
+  sidecar error propagation; no reEnrichFile online handler or extension tests restored.
+  Native provider fixtures and three Dart sidecar regressions imported.
+- Graph pairs: `a95ffcf6`, `4c66e5e7`, `a85b4965`; final code `d0818d7a`, validated
+  23,112 unique nodes / 44,630 valid links. Vendor patch note updated with U-205 source.
+- Batch 4 verification: PASS: analysis clean; full Flutter 1,657 passed / 3 skipped / zero failures (4m10s); Android unit 59 passed / 1 skipped; changed plugin and instrumentation Kotlin/Java compiled (1m58s). No Rust source change; no APK or device test execution.
+- Next exact unit: **batch 5 only** (U-214, U-215, U-208, U-209), only when requested.
 
 ## Batches
 
@@ -124,7 +142,7 @@ No tests between ports. Testing happens once at the end of each batch.
 | 1b DONE | U-103b | `7600c169` lyrics parts only (`player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, `lyrics_timeline_test`, `player_lyrics_repaint_test`, lyrics bits of `now_playing_lyrics_transition_test`) + `91add520`. Upstream split `player_lyrics.dart` in `77c8639d`; port behaviour, not the split. If it needs `78a5e078` timed-vocal code (`_focusFor`, `lyricsWithDisplayEnds`, `LyricBackingTransition`), port those pieces here and mark U-308 partly done. Also fix any failures from U-104/U-201. |
 | 2 DONE | U-201b, U-202 | U-201b: local parts of `e58217c8` (`local_library_provider*.dart`), plus `931b1091` `LibraryScanExitInfo` only if U-201 needs it. U-202 ported from reviewed WIP; WIP removed. KT-202 remains open. |
 | 3 DONE | U-203, U-212, U-213, U-204 | U-212 `9dc86e13` without `crates/extensions`. |
-| 4 | U-205, U-216, U-206, U-207 | |
+| 4 DONE | U-205, U-216, U-206, U-207 | U-206 legacy Material fallback patch rejected; production Mornye title behavior already equivalent. |
 | 5 | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |
 | 6 | U-210, U-303, U-217, U-218 | U-210: only the `album_detail_header` part of `d28e3f65`. U-303 brings `audio_info_sheet.dart` (not in this repo). U-217: mini-player dismissal must keep working (UI-101). |
 | 7 | U-308, U-302 | U-308: timed-vocal parts (if not done in 1b) and the lyric share screen restyled for Mornye. U-302: `11c6cf99`, `2455cabc`, `9acaa760`. |

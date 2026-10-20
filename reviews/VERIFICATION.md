@@ -4,6 +4,11 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | batch 4 final source `d0818d7a` | `flutter analyze` | PASS: No issues found (8.1s). |
+| 2026-10-20 | batch 4 | Full `flutter test --reporter expanded` | PASS: 1,657 passed, 3 skipped, zero failures (4m10s); includes 13 new output/retry, feedback, same-ID media and local sidecar regressions. Exit 0. |
+| 2026-10-20 | batch 4 | `SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a ./gradlew :app:testDebugUnitTest :app:compileDebugAndroidTestKotlin :app:compileDebugAndroidTestJavaWithJavac --offline --console=plain --max-workers=2` | PASS: 13 suites, 59 passed / 1 skipped (NativeDataJobsTest), zero errors/failures. Vendored audioplayers Android Kotlin and new SAF instrumentation Kotlin/Java compile. Native Rust dependency rebuilt. Gradle dry-run checked no APK/AAB packaging or assemble tasks; no APK built (1m58s). |
+| 2026-10-20 | batch 4 source/graph checkpoints | Graphify per source port, graph JSON endpoint/ID checks, `git diff --check`; U-206 source inspection | PASS: final graph `a85b4965`, source `d0818d7a`, 23,112 unique nodes / 44,630 valid links; existing vendor parse warnings. U-206 only targets the legacy Material fallback; production theme is Mornye-only and retained Mornye current-title/swipe path has no outgoing-title switcher. No dependencies/schema changes. |
+| 2026-10-20 | batch 4 | Rust checks / Android instrumentation execution / physical device | NOT RUN: no Rust source changed (script not required); instrumentation only compiled, not executed. Real MediaPlayer error/retry, SAF ancestry/write behavior and hardware output need device testing. |
 | 2026-10-20 | batch 3 final code `a41d3d4e` | `flutter analyze` | PASS: No issues found (22.6s). |
 | 2026-10-20 | batch 3 | Full `flutter test --reporter expanded` | PASS: 1,644 passed, 3 skipped, zero failures (3m55s). Includes all 15 added Flutter regressions, retained local menu/navigation and playback tests. |
 | 2026-10-20 | batch 3 U-212 `1d8e8f76` / final source | `bash scripts/check_rust_backend.sh` | PASS: cargo fmt, Clippy workspace/all-targets --locked -D warnings and workspace tests; 231 passed, 0 failed, 1 ignored. Both new id3_cover integration tests passed (PIC/APIC, UTF-16, padding, MP3/WAV/AIFF and unknown-byte preservation). |
