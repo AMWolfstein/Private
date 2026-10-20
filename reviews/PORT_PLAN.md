@@ -87,14 +87,30 @@ No tests between ports. Testing happens once at the end of each batch.
 - U-104 `913faaa` and U-201 `e8cff13` validated; `f34ead84` fixes the U-201 nullable-element lint. Graph checkpoints `dd04bf17`, `1bc2b9e3`, `ec2f8bf3` (no topology change) and `11456f4f` (extraction hash).
 - Generated ignored l10n files refreshed after the branch switch. Final `flutter analyze`: No issues found; full `flutter test`: **1,629 passed, 3 skipped, no failures**. Android `:app:testDebugUnitTest --offline`: **59 passed, 1 skipped**, including 2/2 LibraryScanExitInfo tests. The skipped class is NativeDataJobsTest. No APK packaging task ran. Rust check script not required/run (no Rust source changed in this batch); Gradle rebuilt native dependencies for unit checks.
 - Graph JSON validated: 23,003 unique nodes and 44,612 valid links. Existing vendored C/preprocessor extraction warnings remain; no new application extraction errors. Tests ran at batch end; no tests between the two ports. Source/graph/docs commits remain separate.
-- **Next: batch 2 only (U-201b, U-202)**. WIP FLAC patch remains untouched in `reviews/wip/`; review its native/precision changes before applying and omit its `.rej` entry. Determine whether scan-memory fixes cover KT-202. No APK.
+- Historical next step was batch 2 (U-201b/U-202), now recorded below. No APK.
+
+## Completed batch 2 (2026-10-20)
+
+- U-201b evaluated against complete `e58217c8`: its changes in nominally local provider files
+  own/cancel only NetworkLibraryScanner; this fork removed that subsystem. Existing native
+  local scanner/ingestion cancellation and finally cleanup are already present. No applicable
+  local hunk; no network code restored and no local memory gain claimed.
+- `931b1091` LibraryScanExitInfo adds optional process-importance diagnostics, which existing
+  U-201 recovery does not need. Crash-notice changes stay excluded; no port required.
+- U-201 does **not** fix KT-202 (incremental CUE duplicate standalone row); finding stays OPEN.
+- U-202 `0f51f5d0` ports `3dc2d690`: native integer libFLAC with existing output ownership,
+  source/output depth separation, precision/seek/truncation tests and license. WIP reviewed
+  against upstream; rejected `.rej` omitted and pubspec asset registered manually. Fork build
+  URLs/identity retained. Graph `6361145f`: 23,056 nodes / 44,447 valid links.
+- Verification: PASS: analysis clean; full Flutter 1,629 passed / 3 skipped / zero failures (4m02s); Android unit 59 passed / 1 skipped; native host CTest 1/1 passed; ARM64 JNI/library build passed. No APK. Rust source unchanged; Rust check script not required.
+- Next: **batch 3 only** (U-203, U-212, U-213, U-204); do not start until requested.
 
 ## Batches
 
 | # | Items | Notes |
 |---|---|---|
 | 1b DONE | U-103b | `7600c169` lyrics parts only (`player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, `lyrics_timeline_test`, `player_lyrics_repaint_test`, lyrics bits of `now_playing_lyrics_transition_test`) + `91add520`. Upstream split `player_lyrics.dart` in `77c8639d`; port behaviour, not the split. If it needs `78a5e078` timed-vocal code (`_focusFor`, `lyricsWithDisplayEnds`, `LyricBackingTransition`), port those pieces here and mark U-308 partly done. Also fix any failures from U-104/U-201. |
-| 2 | U-201b, U-202 | U-201b: local parts of `e58217c8` (`local_library_provider*.dart`), plus `931b1091` `LibraryScanExitInfo` only if U-201 needs it. U-202: see the stash above. Say whether U-201 fixes open finding KT-202. |
+| 2 DONE | U-201b, U-202 | U-201b: local parts of `e58217c8` (`local_library_provider*.dart`), plus `931b1091` `LibraryScanExitInfo` only if U-201 needs it. U-202 ported from reviewed WIP; WIP removed. KT-202 remains open. |
 | 3 | U-203, U-212, U-213, U-204 | U-212 `9dc86e13` without `crates/extensions`. |
 | 4 | U-205, U-216, U-206, U-207 | |
 | 5 | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |

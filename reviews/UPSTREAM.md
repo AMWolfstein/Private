@@ -24,12 +24,13 @@ and U-201 (`e8cff13`, subtitle lint fix `f34ead84`) are also covered by batch 1b
 analysis clean; full Flutter suite 1,629 passed / 3 skipped; Android unit suite 59 passed /
 1 skipped (both exit-info tests passed). No APK. U-308 timed-vocal prerequisites are partly
 done; share cards, sharing UI and on-demand lyrics work remain pending.
-Unfinished U-202 is preserved in `reviews/wip/U-202-flac-precision.patch`, not a stash;
-`3dc2d690` is unchanged upstream. Review it in batch 2 before reuse.
+Batch 2: U-202 ported in `0f51f5d0` (upstream `3dc2d690`), graph `6361145f`.
+Saved WIP reviewed against upstream and reused without `pubspec.yaml.rej`; the license asset
+entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation below.
 
 1b. DONE — U-103b (patch-1 follow-up), including U-104/U-201 validation
-2. NEXT — U-201b, U-202
-3. U-203, U-212, U-213, U-204
+2. DONE — U-201b evaluated (no applicable local changes), U-202 ported
+3. NEXT — U-203, U-212, U-213, U-204
 4. U-205, U-216, U-206, U-207
 5. U-214, U-215, U-208, U-209
 6. U-210, U-303, U-217, U-218
@@ -46,7 +47,7 @@ Unfinished U-202 is preserved in `reviews/wip/U-202-flac-precision.patch`, not a
 | ID | Upstream | What | Batch |
 |---|---|---|---|
 | U-103b | `7600c169` (lyrics parts only: `player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, their tests), `91add520` | Ported in `f10f45f6` (spring) and `81869c48` (timeline index, deferred measurement, hidden/background subscriptions and completed-word ticker limits). Kept monolithic widget; timed-vocal prerequisites from `78a5e078` included, U-308 partial below. Tested in batch 1b. | 1b |
-| U-201b | `e58217c8` (local parts only: `local_library_provider*.dart`), `931b1091` (only if U-201 scan recovery needs `LibraryScanExitInfo`) | Release scan memory and cancel active metadata reads; skip network/SMB/WebDAV parts and crash notices. | 2 |
+| U-201b | `e58217c8` (local parts only: `local_library_provider*.dart`), `931b1091` (only if U-201 scan recovery needs `LibraryScanExitInfo`) | Evaluated: no applicable local production hunks. `e58217c8` only tracks/cancels NetworkLibraryScanner and frees network listings, including in the nominally local provider files. Native local ingestion/scan cancellation already exists. `931b1091` adds optional exit importance/process diagnostics; U-201 does not require them, so omitted with crash notices. | 2 DONE |
 | U-212 | `9dc86e13` (drop `crates/extensions`) | Read padded ID3 covers (Rust core `tags/id3.rs`, `write/id3.rs`) and repair cached previews. | 3 |
 | U-213 | `60d00191` | Prefer embedded art for local files (`utils/playback_artwork.dart`). | 3 |
 | U-214 | `d7798898` | Wait for the Activity before backend startup calls (`services/activity_attachment.dart`). | 5 |
@@ -121,8 +122,8 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 
 | ID | Upstream | What |
 |---|---|---|
-| U-201 | `378c8f37` | Recover interrupted scans and stale notifications (may overlap KT-202). Ported in `e8cff13`; source subtitle lint fixed in `f34ead84`; batch 1b analysis/full Flutter and Kotlin unit tests pass. KT-202 mapping remains for batch 2. |
-| U-202 | `3dc2d690` | Keep FLAC precision in bit-perfect playback. |
+| U-201 | `378c8f37` | Recover interrupted scans and stale notifications (may overlap KT-202). Ported in `e8cff13`; source subtitle lint fixed in `f34ead84`; batch 1b analysis/full Flutter and Kotlin unit tests pass. KT-202 remains OPEN: interrupted-scan recovery does not reconcile standalone audio rows after adding a CUE. Verified in batch 2; no SAF scanner hunk changed. |
+| U-202 | `3dc2d690` | Ported in `0f51f5d0` (ADAPT): integer libFLAC 1.5.0 decoder shared by existing exact PCM output paths; output/source precision reported separately. Fork CMake URLs and branding retained; checksum-pinned dependency and license bundled. Host regression suite and Android fixture imported. Batch 2 verification below. |
 | U-203 | `080df889` | Recover missing local album artwork from audio. |
 | U-204 | `161a216b` | AutoMix effect handoffs and source-audio rendering. |
 | U-205 | `f426b2d1` | Report Android output failures without skipping tracks. |
@@ -152,3 +153,15 @@ downloads, network/NAS, extension country settings, Material Expressive/Symbols/
 the 5.2 release tour, the `playerCoverStyle` setting and Material backdrop from `05a56133` (U-311 takes only its Mornye look), About links, crash reports on Home (`cb51d089`, `36694c6e`; owner
 2026-10-20), the On Repeat shelf (`home_tab_intro.dart`; owner 2026-10-20), and `75907951` (bit-depth default badge conflicts with the
 `AGENTS.md` badge policy).
+
+## Batch 2 evidence (2026-10-20)
+
+| Item / source | Decision | Local evidence / dependency impact | Benefit / risk / effort / verification |
+|---|---|---|---|
+| U-201b `e58217c8cdfe36091a6a7465424b0fb15842e453` | REJECT removed-network hunks; ALREADY IMPLEMENTED local cancellation | All production additions in `local_library_provider*.dart` refer to NetworkLibraryScanner; the other production path is network_library_scanner.dart. This fork has no network scanner. Local provider `build`/`cancelScan` already cancel native data jobs/scans; `startScan` finally clears request/completion ownership. No dependency added. | No supported local memory improvement to port or claim. No source mutation/test copied from network/history infrastructure. Low implementation complexity/risk; recommended MEDIUM review. Existing full local library regression suite retained. |
+| Optional `931b10918f1a8a269cbb2bca36487d531b25b5db` | REJECT unnecessary diagnostics / excluded crash notices | LibraryScanExitInfo changes only add importance labels and process_name; current process/time matching and reason diagnostics already support U-201. They do not fix memory handling. | No required U-201 correctness benefit. No dependencies or source changes. MEDIUM review; existing exit-info tests retained. |
+| U-202 `3dc2d69051ff6a61acc1fc0767cc8c6dc42e993f` | ADAPT, code `0f51f5d0` | Android C++ FlacPcmSource, JNI/map/CMake; NativeAudio, UsbPcmSource, UsbBitPerfectPlugin, HiResPlayback, UsbDirectPlayback; Android fixture/test; lib/main.dart, pubspec.yaml, flac license. WIP source matches upstream except retained fork CMake URLs/main setup and manually repaired asset registration. libFLAC is statically linked, pinned by SHA256; no pub/Cargo version change. Existing outputs/worker ownership retained; no engine migration. | Prevent vendor MediaExtractor/MediaCodec from silently truncating FLAC to 16-bit. Integer widening pads only; precision reduction rejects; source handles use existing shared ownership and worker serialization. Medium complexity, medium native/build regression risk; recommended HIGH. Host test verifies 16/24/32-bit mono/stereo precision, multiple output depths, block-boundary seeks, EOF, truncated data and retained descriptor; Android unit/native compilation and full Flutter checks required. |
+| KT-202 / U-201 overlap | NOT FIXED, finding stays OPEN | MainActivitySafScan.kt still removes only existing URIs absent from currentUris; no intersection with cueReferencedAudioUris. U-201 changes recovery/notifications, not incremental CUE reconciliation. | Separate future fix from FIX_PLAN; no unrelated SAF change in this batch. |
+
+Batch 2 verification: PASS: analysis clean; full Flutter 1,629 passed / 3 skipped / zero failures (4m02s); Android unit 59 passed / 1 skipped; native host CTest 1/1 passed; ARM64 JNI/library build passed.
+No APK packaging or instrumentation installation is authorized in this port workflow.

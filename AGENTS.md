@@ -41,6 +41,8 @@ behavior. Library badges use the standard measured/stored bitrate policy, with c
 fallback for legacy lossy files. Audio playback uses only the built-in player, including on old
 settings imports: do not restore player-mode choices, external-player shortcuts or automatic
 external fallback on initialization failure. Keep USB/output-device controls and DSP settings.
+Exact PCM output decodes FLAC through the integer native source; never trust vendor raw
+FLAC decoding to preserve source precision or label padded output as source bit depth.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.

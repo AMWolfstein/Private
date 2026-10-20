@@ -395,6 +395,7 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Root cause: `cueReferencedAudioUris` only skips changed audio; never removes existing standalone rows.
 - Fix: add `existingFiles.keys ∩ cueReferencedAudioUris` to `finalRemovedUris`; ~3 lines.
 - Evidence: full scan avoids it via full swap (:1162).
+- Batch 2 upstream check (2026-10-20): U-201 `e8cff13` does **not** fix this. U-201b `e58217c8` is network-only; neither changes incremental SAF CUE reconciliation. Still OPEN.
 
 ### KT-203 [P2] [confidence: medium] [VALIDATED]
 - Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1003-1012, :1047-1160 (`scanSafTree` resume)

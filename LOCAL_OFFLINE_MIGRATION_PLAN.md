@@ -33,6 +33,16 @@ remains pending.
 `flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
+**Upstream port batch 2 (2026-10-20):** U-202 `0f51f5d0` adapts `3dc2d690` to
+preserve integer FLAC samples in the existing exact PCM output paths, bypassing vendor
+extractors that may reduce precision. Statically linked libFLAC 1.5.0 is checksum-pinned;
+its license and byte-precision/seek/truncation tests are included. No player-engine migration.
+U-201b `e58217c8` has only removed-network production changes, even in local provider files;
+local native cancellation already exists, so none imported. Optional `931b1091` importance
+diagnostics are unnecessary for U-201. KT-202 remains open: scan recovery does not fix
+incremental CUE duplicates. Graph `6361145f` synchronized; WIP patch removed after review.
+Verification: PASS: analysis clean; full Flutter 1,629 passed / 3 skipped / zero failures (4m02s); Android unit 59 passed / 1 skipped; native host CTest 1/1 passed; ARM64 JNI/library build passed. No APK built. Next is port batch 3.
+
 **Upstream port batch 1b (2026-10-20):** U-103b ports lyric spring scrolling (`91add520`,
 code `f10f45f6`) and lyric-only performance improvements (`7600c169`, code `81869c48`):
 indexed overlapping voices, cached prefix geometry, bounded/deferred long-document row
