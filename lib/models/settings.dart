@@ -1,10 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
+import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
 
 part 'settings.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AppSettings {
   final String downloadDirectory;
   final String downloadDirectoryBookmark;
@@ -16,6 +17,7 @@ class AppSettings {
   final int embeddedCoverMaxDimension;
   final String
   artistTagMode; // 'joined', 'split_vorbis' (Vorbis formats), or 'primary'
+  final MetadataSeparators metadataSeparators;
   // Apply ReplayGain/R128 tags as volume normalization in the built-in player.
   final bool playbackNormalization;
   final bool pauseOnMute;
@@ -85,6 +87,7 @@ class AppSettings {
     this.downloadTreeUri = '',
     this.embeddedCoverMaxDimension = 0,
     this.artistTagMode = artistTagModeJoined,
+    this.metadataSeparators = const MetadataSeparators(),
     this.playbackNormalization = false,
     this.pauseOnMute = true,
     this.playOnHeadphonesConnected = false,
@@ -130,6 +133,7 @@ class AppSettings {
     String? downloadTreeUri,
     int? embeddedCoverMaxDimension,
     String? artistTagMode,
+    MetadataSeparators? metadataSeparators,
     bool? playbackNormalization,
     bool? pauseOnMute,
     bool? playOnHeadphonesConnected,
@@ -176,6 +180,7 @@ class AppSettings {
       embeddedCoverMaxDimension:
           embeddedCoverMaxDimension ?? this.embeddedCoverMaxDimension,
       artistTagMode: artistTagMode ?? this.artistTagMode,
+      metadataSeparators: metadataSeparators ?? this.metadataSeparators,
       playbackNormalization:
           playbackNormalization ?? this.playbackNormalization,
       pauseOnMute: pauseOnMute ?? this.pauseOnMute,

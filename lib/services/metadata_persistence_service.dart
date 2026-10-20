@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/services/ffmpeg_service.dart';
 import 'package:spotiflac_android/services/metadata_cover_resources.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -186,7 +187,7 @@ class MetadataPersistenceService {
     }
 
     // Emit empty values too: preserve custom tags while clearing edited fields.
-    return {
+    final tags = {
       for (final entry in const {
         'TITLE': 'title',
         'ARTIST': 'artist',
@@ -210,6 +211,26 @@ class MetadataPersistenceService {
       'TRACKNUMBER': index('track'),
       'DISCNUMBER': index('disc'),
     };
+    // Per-field separators: format list values here, then pass the keys on so
+    // the Vorbis mapper writes a joined artist tag instead of splitting it.
+    final separators = MetadataSeparators.fromJson({
+      for (final field in MetadataSeparators.fields)
+        field: metadata['${field}_separator'] ?? '',
+    });
+    if (separators.isDefault) return tags;
+    final selected = separators.toJson();
+    for (final entry in const {
+      'ARTIST': 'artist',
+      'ALBUMARTIST': 'album_artist',
+      'COMPOSER': 'composer',
+      'GENRE': 'genre',
+    }.entries) {
+      tags[entry.key] = formatMetadataTagValue(
+        tags[entry.key] ?? '',
+        selected[entry.value] ?? '',
+      );
+    }
+    return {...tags, ...separators.writerFields};
   }
 
   static Future<String?> _embed(

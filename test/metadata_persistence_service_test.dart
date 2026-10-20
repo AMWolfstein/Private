@@ -196,6 +196,41 @@ void main() {
   );
 
   test(
+    'separators reach native tags and the FFmpeg fallback without touching other fields',
+    () async {
+      final tags = {
+        'title': 'Title, unchanged',
+        'artist': 'A, B',
+        'album_artist': 'C; D',
+        'composer': 'E, F',
+        'genre': 'Rock, Pop',
+        'artist_separator': ' / ',
+        'composer_separator': ' | ',
+        'genre_separator': '; ',
+      };
+      final service = MetadataPersistenceService(
+        covers: covers,
+        edit: (_, metadata) async {
+          expect(metadata['artist'], 'A, B');
+          expect(metadata['artist_separator'], ' / ');
+          return {'method': 'ffmpeg'};
+        },
+        read: (_) async => throw StateError('Reader unavailable'),
+        embed: (_, path, _, metadata, _) async {
+          expect(metadata['ARTIST'], 'A / B');
+          expect(metadata['ALBUMARTIST'], 'C; D');
+          expect(metadata['COMPOSER'], 'E | F');
+          expect(metadata['GENRE'], 'Rock; Pop');
+          expect(metadata['TITLE'], 'Title, unchanged');
+          expect(metadata['artist_separator'], ' / ');
+          return path;
+        },
+      );
+      expect((await service.save(request(tags: tags))).failure, isNull);
+    },
+  );
+
+  test(
     'resized artwork replaces the cover and is released after saving',
     () async {
       final original = await covers.create();

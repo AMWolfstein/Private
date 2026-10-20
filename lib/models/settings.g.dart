@@ -14,6 +14,11 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   embeddedCoverMaxDimension:
       (json['embeddedCoverMaxDimension'] as num?)?.toInt() ?? 0,
   artistTagMode: json['artistTagMode'] as String? ?? artistTagModeJoined,
+  metadataSeparators: json['metadataSeparators'] == null
+      ? const MetadataSeparators()
+      : MetadataSeparators.fromJson(
+          json['metadataSeparators'] as Map<String, dynamic>,
+        ),
   playbackNormalization: json['playbackNormalization'] as bool? ?? false,
   pauseOnMute: json['pauseOnMute'] as bool? ?? true,
   playOnHeadphonesConnected:
@@ -76,6 +81,7 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'downloadTreeUri': instance.downloadTreeUri,
       'embeddedCoverMaxDimension': instance.embeddedCoverMaxDimension,
       'artistTagMode': instance.artistTagMode,
+      'metadataSeparators': instance.metadataSeparators.toJson(),
       'playbackNormalization': instance.playbackNormalization,
       'pauseOnMute': instance.pauseOnMute,
       'playOnHeadphonesConnected': instance.playOnHeadphonesConnected,

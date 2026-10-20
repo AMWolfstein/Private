@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/settings.dart';
+import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
@@ -519,6 +520,17 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setLocalLibraryShowDuplicates(bool show) {
     state = state.copyWith(localLibraryShowDuplicates: show);
+    _saveSettings();
+  }
+
+  void setMetadataSeparator(String field, String separator) {
+    if (!MetadataSeparators.fields.contains(field) ||
+        MetadataSeparators.validSeparator(separator) != separator) {
+      return;
+    }
+    state = state.copyWith(
+      metadataSeparators: state.metadataSeparators.withField(field, separator),
+    );
     _saveSettings();
   }
 

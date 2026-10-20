@@ -17,6 +17,9 @@ import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/ios_library_folder_sheet.dart';
+import 'package:spotiflac_android/screens/settings/metadata_separator_settings_page.dart';
+import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/widgets/animation_utils.dart';
 
 class LibrarySettingsPage extends ConsumerStatefulWidget {
   const LibrarySettingsPage({super.key});
@@ -584,8 +587,19 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                             settings.localLibraryAutoScan,
                           )
                         : null,
-                    showDivider: false,
                   ),
+                ),
+                SettingsItem(
+                  icon: Icons.format_list_bulleted,
+                  title: context.l10n.metadataSeparators,
+                  onTap: () => Navigator.of(context).push(
+                    slidePageRoute<void>(
+                      page: const MornyeSettingsTheme(
+                        child: MetadataSeparatorSettingsPage(),
+                      ),
+                    ),
+                  ),
+                  showDivider: false,
                 ),
               ],
             ),

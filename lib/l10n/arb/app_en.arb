@@ -217,6 +217,18 @@
       }
     }
   },
+  "metadataSeparators": "Tag separators",
+  "@metadataSeparators": {
+    "description": "Local Library settings entry and page title for per-field tag separators"
+  },
+  "metadataSeparatorsDescription": "Choose how comma- or semicolon-separated values are joined when you save tags with Edit Metadata. Custom artist separators write one joined tag. Names containing & or / are preserved.",
+  "metadataSeparatorSource": "Keep source formatting",
+  "metadataSeparatorComma": "Comma (,)",
+  "metadataSeparatorSemicolon": "Semicolon (;)",
+  "metadataSeparatorSlash": "Slash (/)",
+  "metadataSeparatorCustom": "Custom separator",
+  "metadataSeparatorPreview": "Preview",
+  "metadataSeparatorInvalid": "Use 1–16 characters without line breaks or control characters.",
   "optionsArtistTagMode": "Artist Tag Mode",
   "@optionsArtistTagMode": {
     "description": "Setting title for how artist metadata is written into files"

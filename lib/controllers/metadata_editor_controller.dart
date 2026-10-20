@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 
 /// Editable tags and request generations, independent of sheet navigation.
@@ -86,13 +87,17 @@ class MetadataEditorController {
     if (!hasCover) autoFillFields.add('cover');
   }
 
-  Map<String, String> saveMetadata({required String artistTagMode}) {
+  Map<String, String> saveMetadata({
+    required String artistTagMode,
+    MetadataSeparators separators = const MetadataSeparators(),
+  }) {
     final tags = values;
     tags['track_total'] = tags.remove('total_tracks')!;
     tags['disc_total'] = tags.remove('total_discs')!;
     tags['compilation'] =
         tags['album_type']!.trim().toLowerCase() == 'compilation' ? '1' : '0';
     tags['artist_tag_mode'] = artistTagMode;
+    tags.addAll(separators.writerFields);
     return tags;
   }
 

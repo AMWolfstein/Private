@@ -143,6 +143,20 @@ class SettingsSearchCatalog {
           keywords: const ['automatic scan', 'daily', 'weekly'],
         ),
         SettingsSearchEntry(
+          icon: Icons.format_list_bulleted,
+          title: l10n.metadataSeparators,
+          subtitle: l10n.metadataSeparatorsDescription,
+          keywords: const [
+            'separator',
+            'delimiter',
+            'artist',
+            'composer',
+            'genre',
+            'album artist',
+            'edit metadata',
+          ],
+        ),
+        SettingsSearchEntry(
           icon: Icons.refresh,
           title: l10n.libraryScan,
           subtitle: l10n.libraryScanSubtitle,

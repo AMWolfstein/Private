@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:spotiflac_android/controllers/metadata_editor_controller.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/services/metadata_cover_resources.dart';
 import 'package:spotiflac_android/services/metadata_persistence_service.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -26,6 +27,7 @@ class EditMetadataSheet extends StatefulWidget {
   final String? sourceTrackId;
   final int durationMs;
   final String artistTagMode;
+  final MetadataSeparators metadataSeparators;
 
   const EditMetadataSheet({
     super.key,
@@ -35,6 +37,7 @@ class EditMetadataSheet extends StatefulWidget {
     this.sourceTrackId,
     required this.durationMs,
     required this.artistTagMode,
+    this.metadataSeparators = const MetadataSeparators(),
   });
 
   @override
@@ -325,7 +328,10 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
       final result = await _persistence.save(
         MetadataSaveRequest(
           filePath: widget.filePath,
-          metadata: _form.saveMetadata(artistTagMode: widget.artistTagMode),
+          metadata: _form.saveMetadata(
+            artistTagMode: widget.artistTagMode,
+            separators: widget.metadataSeparators,
+          ),
           artistTagMode: widget.artistTagMode,
           selectedCoverPath: _selectedCoverPath,
           currentCoverPath: _currentCoverPath,
@@ -709,9 +715,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
           _selectionField(
             label: context.l10n.trackCoverResolution,
             value: _coverMaxDimension == null
-                ? _originalCoverResolutionLabel(
-                    context.l10n.metadataOriginal,
-                  )
+                ? _originalCoverResolutionLabel(context.l10n.metadataOriginal)
                 : '${_coverMaxDimension!} px',
             enabled: !_saving,
             onTap: _showCoverResolutionPicker,

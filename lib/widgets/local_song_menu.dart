@@ -253,6 +253,7 @@ Future<bool> editLocalSongMetadata(
   final artistTagMode = artistTagModeForExistingTags(
     ref.read(settingsProvider).artistTagMode,
   );
+  final metadataSeparators = ref.read(settingsProvider).metadataSeparators;
   Map<String, dynamic> tags = {};
   try {
     tags = await PlatformBridge.readFileMetadata(item.filePath);
@@ -293,6 +294,7 @@ Future<bool> editLocalSongMetadata(
       filePath: item.filePath,
       durationMs: (item.duration ?? 0) * 1000,
       artistTagMode: artistTagMode,
+      metadataSeparators: metadataSeparators,
     ),
   );
   if (saved != true) return false;
