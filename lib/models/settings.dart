@@ -5,6 +5,16 @@ import 'package:spotiflac_android/utils/artist_utils.dart';
 
 part 'settings.g.dart';
 
+/// Pre-amp applied on top of ReplayGain during playback, in whole dB.
+/// -7 dB targets -25 LUFS from the -18 LUFS tag reference.
+double playbackNormalizationPreampFromJson(Object? value) =>
+    value is num && value.isFinite
+    ? value.toDouble().roundToDouble().clamp(-15, 6)
+    : 0;
+
+String playbackNormalizationModeFromJson(Object? value) =>
+    value == 'album' ? 'album' : 'track';
+
 @JsonSerializable(explicitToJson: true)
 class AppSettings {
   final String downloadDirectory;
@@ -20,6 +30,10 @@ class AppSettings {
   final MetadataSeparators metadataSeparators;
   // Apply ReplayGain/R128 tags as volume normalization in the built-in player.
   final bool playbackNormalization;
+  @JsonKey(fromJson: playbackNormalizationPreampFromJson)
+  final double playbackNormalizationPreamp;
+  @JsonKey(fromJson: playbackNormalizationModeFromJson)
+  final String playbackNormalizationMode;
   final bool pauseOnMute;
   final bool playOnHeadphonesConnected;
   final bool autoMix;
@@ -89,6 +103,8 @@ class AppSettings {
     this.artistTagMode = artistTagModeJoined,
     this.metadataSeparators = const MetadataSeparators(),
     this.playbackNormalization = false,
+    this.playbackNormalizationPreamp = 0,
+    this.playbackNormalizationMode = 'track',
     this.pauseOnMute = true,
     this.playOnHeadphonesConnected = false,
     this.autoMix = false,
@@ -135,6 +151,8 @@ class AppSettings {
     String? artistTagMode,
     MetadataSeparators? metadataSeparators,
     bool? playbackNormalization,
+    double? playbackNormalizationPreamp,
+    String? playbackNormalizationMode,
     bool? pauseOnMute,
     bool? playOnHeadphonesConnected,
     bool? autoMix,
@@ -183,6 +201,10 @@ class AppSettings {
       metadataSeparators: metadataSeparators ?? this.metadataSeparators,
       playbackNormalization:
           playbackNormalization ?? this.playbackNormalization,
+      playbackNormalizationPreamp:
+          playbackNormalizationPreamp ?? this.playbackNormalizationPreamp,
+      playbackNormalizationMode:
+          playbackNormalizationMode ?? this.playbackNormalizationMode,
       pauseOnMute: pauseOnMute ?? this.pauseOnMute,
       playOnHeadphonesConnected:
           playOnHeadphonesConnected ?? this.playOnHeadphonesConnected,

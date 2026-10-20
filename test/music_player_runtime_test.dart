@@ -1191,6 +1191,9 @@ void main() {
         second.handler!.playbackState.value.controls.first.label,
         'Favorite',
       );
+      first.configure(first.settings.copyWith(playbackNormalizationPreamp: -6));
+      await _settle();
+      expect(firstDecks.single.volumes.last, closeTo(0.251, 0.001));
       first.configure(first.settings.copyWith(playbackNormalization: false));
       await _settle();
       expect(firstDecks.single.volumes.last, 1);

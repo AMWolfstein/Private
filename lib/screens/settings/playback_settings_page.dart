@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/widgets/playback_normalization_settings.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -71,6 +72,10 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                       .read(settingsProvider.notifier)
                       .setPlaybackNormalization(value),
                 ),
+                if (settings.playbackNormalization)
+                  PlaybackNormalizationSettings(
+                    enabled: !settings.usbBitPerfect,
+                  ),
                 SettingsSwitchItem(
                   icon: Icons.compare_arrows,
                   title: 'AutoMix',
