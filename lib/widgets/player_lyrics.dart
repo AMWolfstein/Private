@@ -470,9 +470,14 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     }
     index = _displayLayout.focusForLine[index];
     final row = _displayLayout.rowForLine[index];
+    final seeking = widget.seekPreview.value != null;
     final duration = immediate || MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
-        : Duration(milliseconds: widget.seekPreview.value != null ? 220 : 380);
+        : seeking
+        ? const Duration(milliseconds: 220)
+        : LyricScrollMotion.scrollDuration;
+    // Scrubbing follows the finger quickly; playback eases between lines.
+    final curve = seeking ? Curves.easeOutCubic : LyricScrollMotion.scrollCurve;
     if (duration == Duration.zero) _stopScrollMotion();
     final extents = _targetLineExtents;
     if (context.isMornye && extents != null && row < extents.length) {
@@ -486,11 +491,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
         _scroll.jumpTo(offset);
       } else {
         _startScrollMotion(row, offset - position.pixels);
-        await _scroll.animateTo(
-          offset,
-          duration: duration,
-          curve: Curves.easeOutCubic,
-        );
+        await _scroll.animateTo(offset, duration: duration, curve: curve);
       }
       return;
     }
@@ -512,7 +513,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
           alignment: 0.5,
           alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
           duration: duration,
-          curve: Curves.easeOutCubic,
+          curve: curve,
         );
         return;
       }
@@ -534,7 +535,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       await _scroll.animateTo(
         clamped.toDouble(),
         duration: duration,
-        curve: Curves.easeOutCubic,
+        curve: curve,
       );
     }
     if (!mounted ||
@@ -588,7 +589,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
         ref.watch(mornyeLiquidGlassProvider);
     final motion = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
-        : const Duration(milliseconds: 280);
+        : const Duration(milliseconds: 420);
 
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
@@ -869,6 +870,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 content = TweenAnimationBuilder<double>(
                   tween: Tween(end: sigma),
                   duration: motion,
+                  curve: Curves.easeInOutCubic,
                   child: RepaintBoundary(child: content),
                   builder: (context, value, child) => ImageFiltered(
                     enabled: value > 0,
@@ -913,6 +915,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                             ? (isActive || highContrast ? 1 : 0.48)
                             : (isActive ? 1.0 : (isPast ? 0.55 : 0.85)),
                         duration: motion,
+                        curve: Curves.easeInOutCubic,
                         child: content,
                       ),
                     ),
