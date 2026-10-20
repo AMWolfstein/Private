@@ -2790,10 +2790,10 @@
     "semantic_hash": ""
   },
   "rust_backend/crates/mobile/src/native_lyrics.rs": {
-    "mtime": 1792303773.905964,
-    "seen": 1792494608.4833367,
-    "ast_hash": "84d931be2513080889b3914394608a00",
-    "semantic_hash": "84d931be2513080889b3914394608a00"
+    "mtime": 1792510463.1545084,
+    "seen": 1792510493.3278978,
+    "ast_hash": "341b4d17da57efbeb1e1bee624e44bbd",
+    "semantic_hash": ""
   },
   "rust_backend/crates/mobile/src/native_playlist_write.rs": {
     "mtime": 1792303773.907821,
