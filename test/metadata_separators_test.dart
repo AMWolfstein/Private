@@ -21,7 +21,7 @@ void main() {
         separators.toJson(),
       );
       expect(
-        settings.copyWith(embedLyrics: false).metadataSeparators.toJson(),
+        settings.copyWith(playbackNormalization: true).metadataSeparators.toJson(),
         separators.toJson(),
       );
     },
