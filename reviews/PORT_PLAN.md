@@ -216,6 +216,17 @@ Graph d6b8c566, source ad7e26eb: 23,954 unique nodes / 45,967 valid links; synch
 No APK built; device-only behavior NOT RUN. Six new light/dark collection-state regressions cover selection exit, hydration and current-row toggling. Initial fixture failures were missing duration and duplicate provider setup; corrected before final verification. No dependencies, schemas, music-file writes, native changes or APK. Physical visual checks NOT RUN.
 Next: batch 11 (MORN-006..012; FIX_PLAN M3+M4). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 11 (2026-10-20)
+
+MORN-006..012 adapt local album metadata and artist presentation: genre/year metadata, localized footer duration, first-playable Play-all, ReplayGain section labeling; matching artist controls, slot-specific placeholders, 280px collapse threshold, compact Popular rows and responsive album cards with year/local track counts and explicit single badges.
+
+Source `df09d3ea` → graph `496dd75b`; shelf lint correction `2a6ea366` → `d1dd2638`; CUE-fixture real-song identity correction `b1fd7886` → `ff70d508`. Upstream-latest artist card/row patterns inspected at e0563ffa; adapted to retained local data and menus.
+
+PASS: analysis clean; Flutter 1759 passed / 3 skipped / zero failures (04:13); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph ff70d508, source 2a6ea366: 23,960 unique nodes / 45,975 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. Retained playback regressions now begin with a virtual CUE row and compact release-date metadata, covering both themes; first real-song identity remains explicit in later fixture checks. Artist visual/device checks NOT RUN. Single badges require explicit total-track tags=1. No EP type exists in the local browse model/database, so EP badges are omitted rather than inferred from file counts; EPs remain under Albums. No dependencies, schemas, music-file writes, native changes or APK.
+Next: batch 12 (MORN-013..016; FIX_PLAN M5+M6). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+
 ## Batches
 
 | # | Items | Notes |
@@ -230,7 +241,7 @@ Next: batch 11 (MORN-006..012; FIX_PLAN M3+M4). User authorized continuing throu
 | 8 DONE | U-304, U-305, U-307, U-312 | U-312: Mornye/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
 | 9 DONE | U-301 | Equalizer, alone: `ecf594aa` + `68c739df`, Kotlin/native DSP on the existing player. |
 | 10 DONE | MORN-001..005, MORN-017 | `FIX_PLAN.md` M1+M2. |
-| 11 | MORN-006..012 | M3+M4. |
+| 11 DONE | MORN-006..012 | M3+M4. |
 | 12 | MORN-013..016 | M5+M6; MORN-013 uses the tonal style (owner decision). |
 | 13 | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
 | 14 | PLAY-001..004, U-311 | M10+M11 + the upstream full-screen look for the Immersive view (`UPSTREAM.md` U-311). |

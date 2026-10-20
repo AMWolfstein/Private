@@ -1296,41 +1296,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 artist/album/playlist screens compared with the local screens. Upstream refs are
 `spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
 
-### MORN-006 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
-- Scenario: (a) genre missing (upstream Mornye shows it first, `album_screen.dart:346-349`); (b) year from `split('-')` shows "2024/05"/"20240501" verbatim, upstream uses `(\d{4})`; (c) `'$totalMinutes min'` is hard-coded English; (d) count/duration repeat the footer.
-- Fix: genre item, year regex, localized minutes, drop the duplicate; ~15 lines.
-
-### MORN-007 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_album_screen.dart:409-414` (`_playAll`)
-- Scenario: album whose first sorted row is a CUE virtual track → Play shows the "split first" snackbar instead of playing; `_shuffleAll` already filters CUE rows.
-- Fix: start at the first non-CUE track.
-
-### MORN-008 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_album_screen.dart:559-562`
-- Scenario: selection bar labels the ReplayGain Apply/Remove buttons "Edit Metadata", unstyled.
-- Fix: ReplayGain label with the section-label style.
-
-### MORN-009 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_artist_screen.dart:236-244` (Shuffle), :173-180 (Favorite)
-- Scenario: the two outer header buttons differ: Shuffle uses default icon size 22 and dark glass, Favorite white 0.10 tint; neither uses `iconColor: primary`. Upstream sets size 50/icon 24/primary/white .10 on both (`artist_screen_widgets.dart:87-93,120-128`).
-- Fix: same params on both.
-
-### MORN-010 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_artist_screen.dart:109-120` (`_artwork`)
-- Scenario: one placeholder (`CupertinoIcons.person`, size 64) for header, album cards, featured card and 48px song thumbnails: wrong icon and oversized in small slots. Upstream uses `square_stack` (albums) and `music_note` (tracks).
-- Fix: placeholder per use, sized to the slot.
-
-### MORN-011 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_artist_screen.dart:52`
-- Scenario: collapsed title appears at offset 330; upstream 280.
-- Fix: 280.
-
-### MORN-012 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/local_artist_screen.dart:298-338` (Popular rows), :507-512 and :470-503 (album cards), :414-446 (featured card)
-- Scenario: Popular uses stock `ListTile` (upstream: L20/R10 padding, 17/15px text, radius 4, inset hairline divider, `artist_screen_widgets.dart:664-793`); album cards lack the year · track-count subtitle, `Semantics(button)` and responsive tile size (upstream :1061-1072, :915-920, `artist_screen.dart:192-202`); no Single/EP badge; featured card can print "0 tracks" and lacks the 4/8px gaps.
-- Fix: port the upstream Mornye row/card styling. Verify on device.
-
 ### MORN-013 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/widgets/local_collection_actions.dart:42-77`
 - Scenario: Loved and Add-to-playlist circles use non-tonal glass, so they differ from the Play/Shuffle pills; no red tint when all loved; toggle is silent (upstream `loveAllTracks` snackbars) and its error path reuses `showCannotOpenFileSnackBar`. Affects album and playlist headers.
@@ -1419,6 +1384,49 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: one line.
 
 ## Resolved
+
+### MORN-006 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
+- Scenario: (a) genre missing (upstream Mornye shows it first, `album_screen.dart:346-349`); (b) year from `split('-')` shows "2024/05"/"20240501" verbatim, upstream uses `(\d{4})`; (c) `'$totalMinutes min'` is hard-coded English; (d) count/duration repeat the footer.
+- Fix: genre item, year regex, localized minutes, drop the duplicate; ~15 lines.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-007 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_album_screen.dart:409-414` (`_playAll`)
+- Scenario: album whose first sorted row is a CUE virtual track → Play shows the "split first" snackbar instead of playing; `_shuffleAll` already filters CUE rows.
+- Fix: start at the first non-CUE track.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-008 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_album_screen.dart:559-562`
+- Scenario: selection bar labels the ReplayGain Apply/Remove buttons "Edit Metadata", unstyled.
+- Fix: ReplayGain label with the section-label style.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-009 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_artist_screen.dart:236-244` (Shuffle), :173-180 (Favorite)
+- Scenario: the two outer header buttons differ: Shuffle uses default icon size 22 and dark glass, Favorite white 0.10 tint; neither uses `iconColor: primary`. Upstream sets size 50/icon 24/primary/white .10 on both (`artist_screen_widgets.dart:87-93,120-128`).
+- Fix: same params on both.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-010 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_artist_screen.dart:109-120` (`_artwork`)
+- Scenario: one placeholder (`CupertinoIcons.person`, size 64) for header, album cards, featured card and 48px song thumbnails: wrong icon and oversized in small slots. Upstream uses `square_stack` (albums) and `music_note` (tracks).
+- Fix: placeholder per use, sized to the slot.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-011 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_artist_screen.dart:52`
+- Scenario: collapsed title appears at offset 330; upstream 280.
+- Fix: 280.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-012 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/screens/local_artist_screen.dart:298-338` (Popular rows), :507-512 and :470-503 (album cards), :414-446 (featured card)
+- Scenario: Popular uses stock `ListTile` (upstream: L20/R10 padding, 17/15px text, radius 4, inset hairline divider, `artist_screen_widgets.dart:664-793`); album cards lack the year · track-count subtitle, `Semantics(button)` and responsive tile size (upstream :1061-1072, :915-920, `artist_screen.dart:192-202`); no Single/EP badge; featured card can print "0 tracks" and lacks the 4/8px gaps.
+- Fix: port the upstream Mornye row/card styling. Verify on device.
+- Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable. Adapted to retained local inventory: explicit one-track releases get Single badges; EP type is absent from the local browse model, so EP badges are omitted and never guessed from stored file counts.
+
 
 ### MORN-001 [P2] [confidence: high] [RESOLVED]
 - Location: `lib/screens/local_album_screen.dart:309-385` (no `leading`/`appBarTitle`/actions swap)
