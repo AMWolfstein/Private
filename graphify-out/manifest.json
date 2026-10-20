@@ -756,9 +756,9 @@
     "semantic_hash": "7ebde96630f7941cf93820f3f0c9c284"
   },
   "lib/screens/library_tracks_folder_screen.dart": {
-    "mtime": 1792408874.1403768,
-    "seen": 1792494608.4828603,
-    "ast_hash": "4ab636ab819879e5aaec360d53bcc7bb",
+    "mtime": 1792526290.2660105,
+    "seen": 1792526439.881299,
+    "ast_hash": "ef7b4ef2655415b50e388c403cd28ab0",
     "semantic_hash": ""
   },
   "lib/screens/listening_statistics_screen.dart": {
@@ -768,9 +768,9 @@
     "semantic_hash": ""
   },
   "lib/screens/local_album_screen.dart": {
-    "mtime": 1792499370.1733892,
-    "seen": 1792499410.9422956,
-    "ast_hash": "78e109066d1be73ddd9f4b56f497718e",
+    "mtime": 1792526412.80182,
+    "seen": 1792526439.8813043,
+    "ast_hash": "b8a78d102818f75766e146b42f88479a",
     "semantic_hash": ""
   },
   "lib/screens/main_shell.dart": {
@@ -7278,9 +7278,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792525764.0964708,
-    "seen": 1792525871.3499658,
-    "ast_hash": "219c1882dea79ac5264b4a22d5fd2fea",
+    "mtime": 1792526280.4466238,
+    "seen": 1792526439.8828824,
+    "ast_hash": "c093ce4deb67676c37640dab620136c6",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7434,9 +7434,9 @@
     "semantic_hash": ""
   },
   "lib/screens/local_artist_screen.dart": {
-    "mtime": 1792408919.595895,
-    "seen": 1792494608.4828637,
-    "ast_hash": "62fa5cd9e0796027d5b59abfb74f8c2e",
+    "mtime": 1792526290.2980106,
+    "seen": 1792526439.8813057,
+    "ast_hash": "5ec1615bfa03f17573eca155cb804a6f",
     "semantic_hash": ""
   },
   "lib/widgets/local_collection_actions.dart": {
@@ -7710,15 +7710,15 @@
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792525764.1449766,
-    "seen": 1792525871.3500006,
-    "ast_hash": "9f73db17b84df42a7c62089357fa81d8",
+    "mtime": 1792526280.4469664,
+    "seen": 1792526439.8829165,
+    "ast_hash": "8e22a3a9d5d1ad0d406853cb9866ee84",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792525764.0971491,
-    "seen": 1792525871.3500032,
-    "ast_hash": "6d089656437430eac104dc11f218c3d5",
+    "mtime": 1792526280.4471893,
+    "seen": 1792526439.8829188,
+    "ast_hash": "659c5371957740522d94908e2942b227",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
@@ -7770,9 +7770,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1792525764.096101,
-    "seen": 1792525871.3500018,
-    "ast_hash": "3a0af228cc65a02e9454ea1ac655bb3f",
+    "mtime": 1792526280.4463084,
+    "seen": 1792526439.8829176,
+    "ast_hash": "efc9b24ce834d38324404fba008d25db",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -7788,9 +7788,9 @@
     "semantic_hash": ""
   },
   "reviews/PORT_PLAN.md": {
-    "mtime": 1792525764.095165,
-    "seen": 1792525871.3499973,
-    "ast_hash": "a5f3f4024a83733641874c3e1439d2c5",
+    "mtime": 1792526280.445668,
+    "seen": 1792526439.8829134,
+    "ast_hash": "7461dddc44ff0704a46e6491e88b5d6e",
     "semantic_hash": ""
   },
   "android/app/src/main/cpp/flac_pcm_source.cpp": {
@@ -7830,9 +7830,9 @@
     "semantic_hash": ""
   },
   "reviews/HANDOFF.md": {
-    "mtime": 1792525764.0969357,
-    "seen": 1792525871.3499942,
-    "ast_hash": "0ee11391a62f0f69561a2223a5daed88",
+    "mtime": 1792526280.4470687,
+    "seen": 1792526439.8829107,
+    "ast_hash": "f9cfd497a02fa538f5dacbf30d10664d",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/tests/id3_cover.rs": {
@@ -7920,9 +7920,9 @@
     "semantic_hash": ""
   },
   "reviews/PORT_EXECUTION.md": {
-    "mtime": 1792525764.0953877,
-    "seen": 1792525871.3499959,
-    "ast_hash": "5e90ceeed9be53b6b3ba2de8361979f6",
+    "mtime": 1792526280.4458497,
+    "seen": 1792526439.8829122,
+    "ast_hash": "2cb8c3c84690cf30a436030e44f1673e",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MusicHapticsPlugin.kt": {
@@ -8091,6 +8091,12 @@
     "mtime": 1792525940.7667525,
     "seen": 1792525968.4488025,
     "ast_hash": "53af33beabd4c96a0f762fb7385181c3",
+    "semantic_hash": ""
+  },
+  "test/collection_header_state_test.dart": {
+    "mtime": 1792526412.734377,
+    "seen": 1792526439.8825004,
+    "ast_hash": "2642cd7e2e28484a1a071b80a01b7b92",
     "semantic_hash": ""
   }
 }
