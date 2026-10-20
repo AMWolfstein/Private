@@ -4,13 +4,13 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 `reviews/PROTOCOL.md`. Keep this file short; history lives in git.
 
 - Last reviewed commit: `2b32361`
-- Graph: `graphify-out/` built from `2c4ce3ff`, refreshed in `11d8f750` for batch 5. 23,147 unique nodes / 44,693 valid links. Existing vendor/preprocessor extraction warnings remain. Check with `scripts/review_scope.sh`.
+- Graph 1735a8c3, source 8b7adfe6: 23,304 unique nodes / 44,944 valid links; synchronized, existing vendor extraction warnings remain.
 - Next review unit: `/review` (commits after `2b32361`; review-system commits are
   docs/config only). Suggested first fix batch: FIX_PLAN #1 (DATA-501).
 - Next audit unit: none — all 10 subsystems and the final dead-code sweep are done. Next:
   user-approved fix batches from `FIX_PLAN.md` (nothing fixed yet).
 - Open findings: 226 (0 P0, 1 P1, 63 P2, 162 P3; see `FINDINGS.md`). MORN-001..017, HOME-001..008 and PLAY-001..004: Mornye parity with upstream artist/album/playlist, Home and Now Playing.
-- Last checkpoint: port batch 5 (U-214 `10c04f7a`, U-215 `fa838caa`, U-208 evaluated/rejected, U-209 `ba751b35` / `2c4ce3ff`; final graph `11d8f750`); this docs commit records the batch. Last review checkpoint remains the second dead-code pass.
+- Last checkpoint: upstream port batch 6; source 8b7adfe6, graph 1735a8c3. See PORT_EXECUTION.md for per-port commits.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer
   baseline/rollback, scope hints `NO_TEST_CHANGES`/`SPLIT_SUGGESTED`; android test dirs now
@@ -18,16 +18,11 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Owner decisions (2026-10-20): About credits/links/social and the Search Recent list removed
   (`c29daef`, not yet full-tested); `MANAGE_EXTERNAL_STORAGE` kept; `NativeReplayGainPolicy` kept for Media3.
   Fixes are done by separate modules from `FIX_PLAN.md`; this session only reviews.
-- Upstream ports: upstream `mornyeapp/Mornye`, checked to `e0563ffa`. Codex implements
-  PORT_PLAN; batches 1, 1b, 2, 3, 4 and 5 done. Batch 5 gates startup channels on Activity
-  attachment, configures renderer compatibility before shared engine creation and reuses
-  local lyric patterns. U-208 Material-only patch rejected; U-209 removed history/download
-  hunks rejected and future module formatter hunks deferred to batches 6/8. No dependency,
-  schema, branding or engine changes. KT-202 OPEN. PASS: analysis clean; full Flutter 1,659 passed / 3 skipped / zero failures (4m02s); Rust fmt/Clippy clean, 231 passed / 1 ignored; Android unit 61 passed / 1 skipped (1m06s). No APK; device startup/GPU
-  checks NOT RUN. Continued MEDIUM preference (runtime effort not exposed).
-  Branch `ccr-2fb644cd-nmesyt`; docs checkpoint pushed after validation, fetch/verify on resume.
-  Next: batch 6 (U-210/U-303/U-217/U-218), including U-209 number regex with U-303.
-  See HANDOFF.md.
+- Upstream ports: batches through 6 complete. PASS: analysis clean; Flutter 1670 passed / 3 skipped / zero failures (03:59); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes).
+  Graph 1735a8c3, source 8b7adfe6: 23,304 unique nodes / 44,944 valid links; synchronized, existing vendor extraction warnings remain.
+  Branch ccr-2fb644cd-nmesyt. No APK. Next: batch 7 (U-308, U-302).
+  User authorizes all remaining PORT_PLAN batches autonomously. Model policy SOL only; runtime identity/effort not exposed. Recommended effort MEDIUM. KT-202 remains OPEN.
+  Docs checkpoint pushed after checks; fetch/verify on resume. See HANDOFF.md and PORT_EXECUTION.md.
 
 ## Handoff
 
