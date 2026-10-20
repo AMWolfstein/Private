@@ -113,6 +113,7 @@ flutter:
     - assets/licenses/usb.txt
     - assets/licenses/oboe.txt
     - assets/licenses/wavpack.txt
+    - assets/licenses/flac.txt
     - assets/licenses/native_palette.txt
     - assets/licenses/native_data_jobs.txt
 
