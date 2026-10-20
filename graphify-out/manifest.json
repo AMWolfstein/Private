@@ -1068,10 +1068,10 @@
     "semantic_hash": ""
   },
   "lib/services/downloaded_embedded_cover_resolver.dart": {
-    "mtime": 1792356506.5937488,
-    "seen": 1792494608.4829328,
-    "ast_hash": "33211641a02b7bebd4538ba6991d6de2",
-    "semantic_hash": "33211641a02b7bebd4538ba6991d6de2"
+    "mtime": 1792499430.43093,
+    "seen": 1792499456.3066592,
+    "ast_hash": "043510c6faef45671f85b30439963c66",
+    "semantic_hash": ""
   },
   "lib/services/ffmpeg_decryption.dart": {
     "mtime": 1792356506.594743,
@@ -2550,10 +2550,10 @@
     "semantic_hash": "f39c57b254307731d8d68d795e0dc14a"
   },
   "rust_backend/crates/core/src/tags/id3.rs": {
-    "mtime": 1792303265.0213747,
-    "seen": 1792494608.4832602,
-    "ast_hash": "04df148b70b2c61190085c893a3af7d5",
-    "semantic_hash": "04df148b70b2c61190085c893a3af7d5"
+    "mtime": 1792499430.4224424,
+    "seen": 1792499456.3069975,
+    "ast_hash": "ff1ae7b2da46b68695531638d3b584d2",
+    "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/library.rs": {
     "mtime": 1792323190.8609247,
@@ -2580,10 +2580,10 @@
     "semantic_hash": "351579ef16f8a03b5330c61a8d871dca"
   },
   "rust_backend/crates/core/src/tags/write/id3.rs": {
-    "mtime": 1792303265.0218863,
-    "seen": 1792494608.4832675,
-    "ast_hash": "85aa49545c1694e3006577cfb904a8f9",
-    "semantic_hash": "85aa49545c1694e3006577cfb904a8f9"
+    "mtime": 1792499430.4253438,
+    "seen": 1792499456.3070056,
+    "ast_hash": "42e046b191e30988886f0a9439fe8a64",
+    "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/write/mp4.rs": {
     "mtime": 1792303265.0218863,
@@ -5430,9 +5430,9 @@
     "semantic_hash": ""
   },
   "test/downloaded_embedded_cover_resolver_test.dart": {
-    "mtime": 1792405430.5641694,
-    "seen": 1792494608.483928,
-    "ast_hash": "6a14eb233d477959d2899fb7494fbd53",
+    "mtime": 1792499430.5171454,
+    "seen": 1792499456.3077567,
+    "ast_hash": "9df70eacd194693dc51c3078648b55da",
     "semantic_hash": ""
   },
   "test/duplicate_cleanup_policy_test.dart": {
@@ -7833,6 +7833,12 @@
     "mtime": 1792497882.8094187,
     "seen": 1792499410.9438438,
     "ast_hash": "55801eff3501c3e8b73b1e12945ff0f8",
+    "semantic_hash": ""
+  },
+  "rust_backend/crates/core/tests/id3_cover.rs": {
+    "mtime": 1792499430.4278004,
+    "seen": 1792499456.3070164,
+    "ast_hash": "1c33d4b6c00f5245e94ce6246cbcc648",
     "semantic_hash": ""
   }
 }
