@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +40,35 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
       box.getTransformTo(overlay),
       Offset.zero & box.size,
     );
+  }
+
+  /// Upward travel of the current vertical drag, in logical pixels.
+  double _dragUp = 0;
+
+  void _openNowPlaying() {
+    Navigator.of(context, rootNavigator: true).push(
+      NowPlayingRoute(
+        child: const NowPlayingScreen(),
+        miniPlayerGeometry: context.isMornye
+            ? () {
+                if (!mounted) return null;
+                final surface = _bounds(_surfaceKey);
+                final artwork = _bounds(_artworkKey);
+                if (surface == null || artwork == null) return null;
+                return (surface: surface, artwork: artwork);
+              }
+            : null,
+      ),
+    );
+  }
+
+  // Opens on release rather than under the finger: pushing a route cancels
+  // every active pointer, so the drag could not keep steering the page.
+  void _onVerticalDragEnd(DragEndDetails details) {
+    final travel = _dragUp;
+    _dragUp = 0;
+    final velocity = -(details.primaryVelocity ?? 0);
+    if (velocity > 300 || (velocity >= 0 && travel > 48)) _openNowPlaying();
   }
 
   // Hides the bar in the frames between a swipe-dismiss and the stopped
@@ -92,22 +122,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
               ? Colors.transparent
               : settingsGroupColor(context).withValues(alpha: 0.72),
           child: InkWell(
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                NowPlayingRoute(
-                  child: const NowPlayingScreen(),
-                  miniPlayerGeometry: mornye
-                      ? () {
-                          if (!mounted) return null;
-                          final surface = _bounds(_surfaceKey);
-                          final artwork = _bounds(_artworkKey);
-                          if (surface == null || artwork == null) return null;
-                          return (surface: surface, artwork: artwork);
-                        }
-                      : null,
-                ),
-              );
-            },
+            onTap: _openNowPlaying,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -232,6 +247,15 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
         ),
       ),
     );
+    // Swiping up opens the full player; sideways swipes still dismiss.
+    final swipeable = GestureDetector(
+      // Measure from touch-down so the slop counts toward the swipe.
+      dragStartBehavior: DragStartBehavior.down,
+      onVerticalDragStart: (_) => _dragUp = 0,
+      onVerticalDragUpdate: (details) => _dragUp -= details.primaryDelta ?? 0,
+      onVerticalDragEnd: _onVerticalDragEnd,
+      child: player,
+    );
     return mornye
         ? Padding(
             padding: EdgeInsets.only(bottom: widget.bottomPadding),
@@ -239,10 +263,10 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
               strongTint: true,
               tintOpacity: MornyeTheme.chromeOpacity(context),
               blurEnabled: ref.watch(mornyeBlurEnabledProvider),
-              child: player,
+              child: swipeable,
             ),
           )
-        : player;
+        : swipeable;
   }
 }
 
