@@ -3081,5 +3081,124 @@
   "playbackNormalizationPreampHint": "Lower values play quieter. Normalization only turns tracks down, so it never clips.",
   "@playbackNormalizationPreampHint": {
     "description": "Hint under the normalization pre-amp slider"
-  }
+  },
+  "audioInfoTitle": "Audio info",
+  "@audioInfoTitle": {
+    "description": "Sheet with technical details of the playing track, opened from the quality badge"
+  },
+  "audioInfoSource": "Source file",
+  "audioInfoSignal": "Signal",
+  "audioInfoLoudness": "Loudness",
+  "audioInfoProcessing": "Processing",
+  "audioInfoOutput": "Output",
+  "audioInfoAnalysis": "Spectrum and level analysis",
+  "audioInfoQuality": "Quality",
+  "audioInfoHiResLossless": "Hi-Res Lossless",
+  "audioInfoLossless": "Lossless",
+  "audioInfoLossy": "Lossy",
+  "audioInfoFormat": "Format",
+  "audioInfoCodec": "Codec",
+  "audioInfoSampleRate": "Sample rate",
+  "audioInfoBitDepth": "Bit depth",
+  "audioInfoChannels": "Channels",
+  "audioInfoChannelCount": "{count, plural, =1{Mono} =2{Stereo} other{{count} channels}}",
+  "@audioInfoChannelCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "audioInfoBitrate": "Bitrate",
+  "audioInfoDuration": "Duration",
+  "audioInfoFileSize": "File size",
+  "audioInfoCompression": "Compression",
+  "audioInfoCompressionValue": "{percent}% of uncompressed size",
+  "@audioInfoCompressionValue": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "audioInfoLocation": "Location",
+  "audioInfoLocationLocal": "Device storage",
+  "audioInfoLocationShared": "Shared folder",
+  "audioInfoPcmRate": "Uncompressed data rate",
+  "audioInfoFrequencyRange": "Frequency range",
+  "audioInfoFrequencyRangeValue": "Up to {frequency} (Nyquist)",
+  "@audioInfoFrequencyRangeValue": {
+    "placeholders": {
+      "frequency": {
+        "type": "String"
+      }
+    }
+  },
+  "audioInfoDynamicRange": "Theoretical dynamic range",
+  "audioInfoSamples": "Samples per channel",
+  "audioInfoTrackGain": "Track gain",
+  "audioInfoTrackPeak": "Track peak",
+  "audioInfoAlbumGain": "Album gain",
+  "audioInfoAlbumPeak": "Album peak",
+  "audioInfoNoGainTags": "No ReplayGain tags",
+  "audioInfoApplied": "Applied {gain}",
+  "@audioInfoApplied": {
+    "placeholders": {
+      "gain": {
+        "type": "String"
+      }
+    }
+  },
+  "audioInfoOn": "On",
+  "audioInfoOff": "Off",
+  "audioInfoBypassed": "Bypassed by direct output",
+  "audioInfoPlayer": "Player",
+  "audioInfoPlayerValue": "SpotiFLAC built-in player",
+  "audioInfoSignalPath": "Signal path",
+  "audioInfoPathSystem": "System mixer",
+  "audioInfoPathDirect": "Direct USB, bypasses the system mixer",
+  "audioInfoPathExclusive": "Exclusive output, bypasses the system mixer",
+  "audioInfoDecoder": "Decoder",
+  "audioInfoHardware": "Hardware",
+  "audioInfoSoftware": "Software",
+  "audioInfoBands": "{count} bands",
+  "@audioInfoBands": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "audioInfoTempo": "Tempo",
+  "audioInfoResampling": "Resampling",
+  "audioInfoResamplingNone": "None, rates match",
+  "audioInfoBitPerfect": "Bit-perfect",
+  "audioInfoBitPerfectActive": "Yes, unaltered samples",
+  "audioInfoBitPerfectNo": "No, mixed by the system",
+  "audioInfoDevice": "Device",
+  "audioInfoDeviceType": "{type, select, speaker{Phone speaker} earpiece{Earpiece} wired_headphones{Wired headphones} wired_headset{Wired headset} line{Line out} bluetooth{Bluetooth} bluetooth_le{Bluetooth LE Audio} usb{USB audio} usb_headset{USB headset} hdmi{HDMI} dock{Dock} cast{Cast} hearing_aid{Hearing aid} airplay{AirPlay} car{Car audio} other{Other}}",
+  "@audioInfoDeviceType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "audioInfoOutputRate": "Output sample rate",
+  "audioInfoOutputFormat": "Output format",
+  "audioInfoDeviceRates": "Device sample rates",
+  "audioInfoDeviceFormats": "Device formats",
+  "audioInfoAnyRate": "Any",
+  "audioInfoBuffer": "Mixer buffer",
+  "audioInfoLatency": "Output latency",
+  "audioInfoLowLatency": "Low-latency audio",
+  "audioInfoProAudio": "Pro audio",
+  "audioInfoSupported": "Supported",
+  "audioInfoNotSupported": "Not supported",
+  "audioInfoSpatial": "Spatial audio",
+  "audioInfoHeadTracking": "Head tracking",
+  "audioInfoUnavailable": "Unavailable",
+  "audioInfoFixedVolume": "Controlled by the device",
+  "audioInfoCopy": "Copy report",
+  "audioInfoCopied": "Audio info copied"
 }

@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/widgets/audio_info_sheet.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
@@ -330,7 +331,7 @@ class _QualityBadge extends StatelessWidget {
     final text = metadata.qualityLabel;
     if (text == null || text.isEmpty) return const SizedBox.shrink();
     final mornye = context.isMornye;
-    return Container(
+    final badge = Container(
       padding: EdgeInsets.symmetric(
         horizontal: mornye ? 8 : 10,
         vertical: mornye ? 2 : 5,
@@ -363,6 +364,22 @@ class _QualityBadge extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+    return Semantics(
+      button: true,
+      label: context.l10n.audioInfoTitle,
+      child: Tooltip(
+        message: context.l10n.audioInfoTitle,
+        excludeFromSemantics: true,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => showAudioInfoSheet(context, metadata: metadata),
+            child: badge,
+          ),
+        ),
       ),
     );
   }
