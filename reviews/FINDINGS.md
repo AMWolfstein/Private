@@ -1291,6 +1291,95 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: each is referenced only by its own Kotlin unit test.
 - Fix: delete them with their tests (~150 lines). If `NativeReplayGainPolicy` was meant to gate ReplayGain batches, decide that first: it is never consulted. Related: KT-001, DEAD-208.
 
+<!-- Mornye parity pass (2026-10-20): upstream v5.1.1/latest Mornye path of the online
+artist/album/playlist screens compared with the local screens. Upstream refs are
+`spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
+
+### MORN-001 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_album_screen.dart:309-385` (no `leading`/`appBarTitle`/actions swap)
+- Scenario: long-press a track on an album → selection mode, but Play/Shuffle row stays, Back pops the route instead of leaving selection, no "N selected" title. Upstream `album_screen.dart:611-671` handles all three.
+- Fix: pass close `HeaderCircleButton`, `appBarTitle: selectionSelected(n)` and hide actions while selecting; ~20 lines.
+
+### MORN-002 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:636-654` (`leading:` override)
+- Scenario: playlist/Loved show a Material black 0.4 circle with `Icons.arrow_back` instead of the Mornye glass `chevron_back` back button that albums use (`album_detail_header.dart:147-155`); breaks the AGENTS back-button rule and light mode.
+- Fix: no `leading` outside selection; in selection use `HeaderCircleButton(Icons.close)` (upstream latest :665-676). Same for the M3U/rename/cover buttons at :584-634 (`HeaderCircleButton(iconSize: 20)`).
+
+### MORN-003 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:539-541`
+- Scenario: `appBarTitle` is the collection title outside selection, so the toolbar always draws the title over the artwork next to the hero title; the collapse fade is lost. Upstream passes `null`.
+- Fix: `: null`.
+
+### MORN-004 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:252-258`, :298-305
+- Scenario: open a playlist before `ensurePlaylistLoaded` finishes (or Loved before collections load) → "playlist is empty" state and a header with no actions flash. Upstream shows `TrackListSkeleton`.
+- Fix: skeleton while `!playlist.tracksLoaded` / collections not loaded.
+
+### MORN-005 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:886-899` (`_CollectionTrackTile`)
+- Scenario: playing song in a playlist/Loved never shows Pause; tapping restarts it. `LocalSongRow.isPlaying` exists and the album screen uses it (`local_album_screen.dart:495-516`).
+- Fix: pass `isPlaying` and toggle like the album screen.
+
+### MORN-006 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
+- Scenario: (a) genre missing (upstream Mornye shows it first, `album_screen.dart:346-349`); (b) year from `split('-')` shows "2024/05"/"20240501" verbatim, upstream uses `(\d{4})`; (c) `'$totalMinutes min'` is hard-coded English; (d) count/duration repeat the footer.
+- Fix: genre item, year regex, localized minutes, drop the duplicate; ~15 lines.
+
+### MORN-007 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_album_screen.dart:409-414` (`_playAll`)
+- Scenario: album whose first sorted row is a CUE virtual track → Play shows the "split first" snackbar instead of playing; `_shuffleAll` already filters CUE rows.
+- Fix: start at the first non-CUE track.
+
+### MORN-008 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_album_screen.dart:559-562`
+- Scenario: selection bar labels the ReplayGain Apply/Remove buttons "Edit Metadata", unstyled.
+- Fix: ReplayGain label with the section-label style.
+
+### MORN-009 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_artist_screen.dart:236-244` (Shuffle), :173-180 (Favorite)
+- Scenario: the two outer header buttons differ: Shuffle uses default icon size 22 and dark glass, Favorite white 0.10 tint; neither uses `iconColor: primary`. Upstream sets size 50/icon 24/primary/white .10 on both (`artist_screen_widgets.dart:87-93,120-128`).
+- Fix: same params on both.
+
+### MORN-010 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_artist_screen.dart:109-120` (`_artwork`)
+- Scenario: one placeholder (`CupertinoIcons.person`, size 64) for header, album cards, featured card and 48px song thumbnails: wrong icon and oversized in small slots. Upstream uses `square_stack` (albums) and `music_note` (tracks).
+- Fix: placeholder per use, sized to the slot.
+
+### MORN-011 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_artist_screen.dart:52`
+- Scenario: collapsed title appears at offset 330; upstream 280.
+- Fix: 280.
+
+### MORN-012 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/local_artist_screen.dart:298-338` (Popular rows), :507-512 and :470-503 (album cards), :414-446 (featured card)
+- Scenario: Popular uses stock `ListTile` (upstream: L20/R10 padding, 17/15px text, radius 4, inset hairline divider, `artist_screen_widgets.dart:664-793`); album cards lack the year · track-count subtitle, `Semantics(button)` and responsive tile size (upstream :1061-1072, :915-920, `artist_screen.dart:192-202`); no Single/EP badge; featured card can print "0 tracks" and lacks the 4/8px gaps.
+- Fix: port the upstream Mornye row/card styling. Verify on device.
+
+### MORN-013 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/widgets/local_collection_actions.dart:42-77`
+- Scenario: Loved and Add-to-playlist circles use non-tonal glass, so they differ from the Play/Shuffle pills; no red tint when all loved; toggle is silent (upstream `loveAllTracks` snackbars) and its error path reuses `showCannotOpenFileSnackBar`. Affects album and playlist headers.
+- Fix: `tonal: true`, `iconColor: error` when all loved, reuse `loveAllTracks` feedback. Owner to confirm the tonal look.
+
+### MORN-014 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/library_tracks_folder_screen.dart:220-223`, :481, :545
+- Scenario: backdrop/palette come from the first track's cover while the hero shows the custom cover (playlist) or a grey heart (Loved), so tint and hero disagree.
+- Fix: one shared cover source for hero, surface and palette.
+
+### MORN-015 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/widgets/album_detail_header.dart:126`, :198
+- Scenario: landscape/split-screen: artwork is `width.clamp(0,440)`, so the title and actions fall below the fold; immersive details `Stack` lacks `alignment: topCenter`, so details misalign on wide screens. Upstream latest fixes both (`min(width.clamp(0,440), max(240, height*0.55))`).
+- Fix: port the two upstream lines. Affects album, playlist and Loved.
+
+### MORN-016 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/widgets/mornye_chrome.dart:28`, `lib/theme/mornye_theme.dart:69`, :227
+- Scenario: segmented pill height `scale(15)+36` can drop below 48dp per segment; dark accent `rgb(224,61,60)` and the red-accent `onPrimary` special case have contrast issues. Upstream latest: height clamped to ≥56, accent `rgb(255,69,58)`, luminance-only `onPrimary`.
+- Fix: port the three upstream changes; check contrast.
+
+### MORN-017 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/local_artist_screen.dart:247-268`, :274-291; `lib/screens/local_album_screen.dart:234-260`
+- Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Mornye back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
+- Fix: skeleton + `ErrorCard` + Mornye empty page; hide empty Popular.
+
 ## Resolved
 
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.

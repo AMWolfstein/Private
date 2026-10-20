@@ -46,6 +46,17 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | P5 | PERF-404 (with UX-104), PERF-201, PERF-602 | Dead lookup sets and wasted per-build list work. |
 | P6 | PERF-405, PERF-603, PERF-604 | Home shelf caching and rebuild scope, and startup ordering. Only if measured. |
 
+## Tier 2c: Mornye parity (artist, album, playlist)
+
+| # | Findings | What it fixes |
+|---|---|---|
+| M1 | MORN-002, MORN-003, MORN-001 | Back/close buttons, toolbar title and selection header on album, playlist and Loved. |
+| M2 | MORN-004, MORN-005, MORN-017 | Loading, empty and error states; Pause on the playing playlist row. |
+| M3 | MORN-006, MORN-007, MORN-008 | Album header meta (genre, year, localized minutes), CUE Play-all, ReplayGain label. |
+| M4 | MORN-009, MORN-010, MORN-011, MORN-012 | Artist header buttons, placeholders, collapse threshold, Popular rows and album cards. |
+| M5 | MORN-013, MORN-014 | Collection action styling/feedback and one cover source (owner confirms the tonal look). |
+| M6 | MORN-015, MORN-016 | Upstream-latest landscape header and Mornye contrast/touch-target fixes. |
+
 ## Tier 3: cleanup
 
 Each row is one feature-removal batch, following the `AGENTS.md` graphify-first workflow. The
