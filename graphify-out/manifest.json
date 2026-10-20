@@ -8040,9 +8040,9 @@
     "semantic_hash": ""
   },
   "lib/screens/equalizer_screen.dart": {
-    "mtime": 1792525815.3951957,
-    "seen": 1792525871.3483014,
-    "ast_hash": "5f07aee6bee22548c4e083d14f191d1d",
+    "mtime": 1792525940.7587526,
+    "seen": 1792525968.447534,
+    "ast_hash": "4f351107b1e209e8ec1c4893430e2fd4",
     "semantic_hash": ""
   },
   "lib/services/playback_equalizer.dart": {
@@ -8079,6 +8079,18 @@
     "mtime": 1792525814.1516035,
     "seen": 1792525871.3499234,
     "ast_hash": "d9d2421e719651906d33cd1a7f5f7a22",
+    "semantic_hash": ""
+  },
+  "lib/services/equalizer_preset_io.dart": {
+    "mtime": 1792525940.7627525,
+    "seen": 1792525968.4476316,
+    "ast_hash": "657e37429e9193e7ad0dd8818d4a26ec",
+    "semantic_hash": ""
+  },
+  "test/equalizer_preset_io_test.dart": {
+    "mtime": 1792525940.7667525,
+    "seen": 1792525968.4488025,
+    "ast_hash": "53af33beabd4c96a0f762fb7385181c3",
     "semantic_hash": ""
   }
 }
