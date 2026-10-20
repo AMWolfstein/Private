@@ -138,9 +138,9 @@
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt": {
-    "mtime": 1792494022.5890083,
-    "seen": 1792494608.482709,
-    "ast_hash": "1e6f25dde4f95ceb6dab62dfbbef1f1a",
+    "mtime": 1792510364.6342173,
+    "seen": 1792510413.7479954,
+    "ast_hash": "b022333c74c0635d94cbba745f6bd0c6",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt": {
@@ -6516,10 +6516,10 @@
     "semantic_hash": "dadd7c81b950f77ee10c14d3e540bd20"
   },
   "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServicePlugin.java": {
-    "mtime": 1792303265.0713716,
-    "seen": 1792494608.4841695,
-    "ast_hash": "b8097e8fe0ca0dde6a43d2fdff8de919",
-    "semantic_hash": "b8097e8fe0ca0dde6a43d2fdff8de919"
+    "mtime": 1792510364.6419373,
+    "seen": 1792510413.749827,
+    "ast_hash": "718b9b4263f0046480584356e23c3bdb",
+    "semantic_hash": ""
   },
   "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/CustomMediaAction.java": {
     "mtime": 1792303265.0713716,
@@ -7851,6 +7851,24 @@
     "mtime": 1792510311.155665,
     "seen": 1792510336.9263399,
     "ast_hash": "c7c9df3ea8c0ccccbe6736190eb78074",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/ImpellerCompatibility.kt": {
+    "mtime": 1792510364.6334093,
+    "seen": 1792510413.747991,
+    "ast_hash": "e714acd9e1d712673b5a95baa9fe0eee",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/SpotiFlacApplication.kt": {
+    "mtime": 1792510364.634707,
+    "seen": 1792510413.748026,
+    "ast_hash": "dbacf7745465b6db9fcf61d44bedcf72",
+    "semantic_hash": ""
+  },
+  "android/app/src/test/kotlin/com/zarz/spotiflac/ImpellerCompatibilityTest.kt": {
+    "mtime": 1792510364.6377773,
+    "seen": 1792510413.7480397,
+    "ast_hash": "7802dcb97781588236a7ef438b24d415",
     "semantic_hash": ""
   }
 }
