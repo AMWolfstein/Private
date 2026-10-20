@@ -4,6 +4,8 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | `c0284b1` | final dead-code sweep (dead-code-hunter: l10n usage script, import graph, channel cross-check) | 6 findings |
+| 2026-10-20 | `3494027` | `flutter test` (full) | +1596 ~3 -1; only failure `file_stat_boundary_test` root permission case (TEST-204), matches baseline |
 | 2026-10-20 | `3494027` | `/audit tests`: 3 test-auditor passes + source checks (DEAD-601 re-confirmed; TEST-302 rejected as covered) | 9 findings; full `flutter test` baseline run in progress |
 | 2026-10-20 | `1791ebd` | `/audit build`: dependency-auditor + security-auditor + source check of signing/orientation | 6 findings (all P3, 1 duplicate merged); no builds run |
 | 2026-10-20 | `93be339` | `/audit ui`: 5 reviewers in 2 rounds (round 2 resumed after usage limit) + source validation of P2s | 35 findings (6 P2, 29 P3); no tests run |

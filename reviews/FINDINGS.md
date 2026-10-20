@@ -1049,6 +1049,56 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
 - Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
 
+### DEAD-701 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/l10n/arb/app_*.arb` (20 files)
+- Scenario: 54 of 769 keys are unused (28 with zero references) or used only by code already marked dead:
+  - Zero references:
+    - artist tag mode (9)
+    - embedded cover size (3)
+    - output-folder and Files/Metadata pages (9)
+    - external player (5)
+    - `setupSkip` and `libraryShowMore`
+  - Used only by dead code:
+    - re-enrich (8)
+    - iOS sheet (3)
+    - quick actions (6)
+    - discard dialog (3)
+    - view-queue snackbar (2)
+    - old queue sheet (3)
+    - `libraryInLibrary`
+  - 10 more SAF-repair keys go with API-203: `downloadFolderAccessLost*`, `safMigration*`, `storageAutomaticFolder`, plus `setupSelectFolder` and `updateLater` if they are not used elsewhere.
+- Fix: delete the keys and their `@key` metadata in every arb, then run `flutter gen-l10n`. Re-run the usage scan after the other DEAD batches: build the key list from `app_en.arb`, grep each `\bkey\b` over `lib/` excluding `lib/l10n`, and subtract files that are already dead.
+
+### DEAD-702 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/models/settings.dart:15-16,82` (`artistTagMode`), :76,121 (`lastSeenVersion`), `lib/providers/settings_provider.dart:180`
+- Scenario:
+  - `artistTagMode` has no setter and no UI, so it is always `joined` unless an import sets it. It is still threaded through 44 call sites: the FFmpeg, metadata-mapper, persistence and editor code.
+  - `lastSeenVersion` is written by migration 12 and never read.
+  - The download-folder fields, setters, SAF repair dialog and migration prompt found in the same sweep are already covered by API-203 and UX-003. They were not re-filed here.
+- Fix: keep the JSON parse so old imports still load. Stop writing `lastSeenVersion`. Pin the `artistTagMode` callers to joined and drop the plumbing (~40 lines).
+
+### DEAD-703 [P3] [confidence: high] [VALIDATED]
+- Location: `pubspec.yaml:123-126` (`Google Sans Flex` → `assets/fonts/GoogleSansFlex.ttf`, 277 KB)
+- Scenario: the font of the removed Material Expressive theme is still bundled. Mornye uses `Inter`, and only the test themes name this family.
+- Fix: remove the pubspec font block and the TTF, and update `test/support/material_test_theme.dart`.
+- Repo-only cleanup (not bundled into the app): `assets/readme/*` (1.7 MB, unreferenced).
+
+### DEAD-704 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/platform_bridge.dart:618` (`copyLocalCoverToFile`), :705 (`readDisplayAudioMetadata`)
+- Scenario: no lib/ callers. They are tested only in `offline_artwork_test.dart:44,50` and `platform_bridge_metadata_test.dart:86,125`. Their native handlers stay live through other callers.
+- Channel cross-check: every Kotlin handler has a Dart caller name. The Dart names with no handler (`prepareRuntimeState`, `setDownloadDirectory`, iOS bookmark methods) are all inside DEAD-201/207 methods, which would throw if called.
+- Fix: delete both methods and their tests.
+
+### DEAD-705 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/providers/recent_access_provider.dart:160-218` (`recordArtistAccess`/`recordAlbumAccess`/`recordPlaylistAccess`/`_recordAccess`), `lib/services/app_state_database.dart:512` (`upsertRecentAccessRow`), `lib/screens/home_tab_recent.dart:117-140`
+- Scenario: nothing records recent access any more, so the Search tab's Recent list only shows rows stored before the cleanup and never updates.
+- Fix: product decision. Either re-wire recording from the local artist/album/playlist screens (then this becomes a BUG), or delete the write side and keep reading legacy rows (~70 lines). Related: UX-101.
+
+### DEAD-706 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/file_access_check.dart`, `lib/utils/saf_display_path.dart` (no importers). Transitively dead: `lib/constants/music_services.dart` (via DEAD-501), `lib/widgets/in_library_badge.dart` and `lib/utils/local_playback.dart` (via UX-104).
+- Scenario: an import graph over all of `lib/` shows no live inbound edge to any of them (~290 lines). Every other zero-importer file is already in FINDINGS.
+- Fix: delete them with their tests. Trim, rather than delete, `file_stat_boundary_test.dart` (see TEST-204) and `track_metadata_badges_line_test.dart`.
+
 ## Resolved
 
 _None yet._
