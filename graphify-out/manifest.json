@@ -18,10 +18,10 @@
     "semantic_hash": "fb24849cbec2339cb6782670d7bbef73"
   },
   "android/app/src/androidTest/java/com/zarz/spotiflac/LookupTestDocumentsProvider.java": {
-    "mtime": 1792303264.8395343,
-    "seen": 1792494608.4826689,
-    "ast_hash": "12f6f33ebafc1b12fa56f210bc4c6c57",
-    "semantic_hash": "12f6f33ebafc1b12fa56f210bc4c6c57"
+    "mtime": 1792507371.910307,
+    "seen": 1792507416.7501884,
+    "ast_hash": "176a9acd5dfa94e1a2374cab9d43df68",
+    "semantic_hash": ""
   },
   "android/app/src/androidTest/kotlin/com/zarz/spotiflac/FFmpegCapabilitiesTest.kt": {
     "mtime": 1792304289.2629402,
@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "android/app/src/androidTest/kotlin/com/zarz/spotiflac/SafDocumentLookupTest.kt": {
-    "mtime": 1792304289.2627242,
-    "seen": 1792494608.4826849,
-    "ast_hash": "64d326eea037bd895ba7439cd88f2bf4",
+    "mtime": 1792507371.9105608,
+    "seen": 1792507416.7502046,
+    "ast_hash": "df140aac9fe49facfb3da1767e9df892",
     "semantic_hash": ""
   },
   "android/app/src/androidTest/kotlin/com/zarz/spotiflac/SafScanChildrenTest.kt": {
@@ -144,9 +144,9 @@
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt": {
-    "mtime": 1792323191.084924,
-    "seen": 1792494608.4827104,
-    "ast_hash": "ade7fd4c5c9f3f4e141199e2c69d1f85",
+    "mtime": 1792507371.9107335,
+    "seen": 1792507416.7502596,
+    "ast_hash": "4a4dd3cb8c0019e82f64fc80a34b462b",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt": {
@@ -1548,9 +1548,9 @@
     "semantic_hash": "1694ecfd2e3d374c78c9a28ab278c704"
   },
   "lib/utils/lyrics_metadata_helper.dart": {
-    "mtime": 1792356506.5796745,
-    "seen": 1792494608.4830341,
-    "ast_hash": "09f786529b38aae37372136561f94abd",
+    "mtime": 1792507371.913562,
+    "seen": 1792507416.7505941,
+    "ast_hash": "25c1c9e5668a8a1059f85423afe6400c",
     "semantic_hash": ""
   },
   "lib/utils/lyrics_parser.dart": {
@@ -5814,10 +5814,10 @@
     "semantic_hash": ""
   },
   "test/lyrics_metadata_helper_test.dart": {
-    "mtime": 1792405430.5536218,
-    "seen": 1792494608.4840205,
-    "ast_hash": "3a19981e0b649996c8a16402d13081b3",
-    "semantic_hash": "3a19981e0b649996c8a16402d13081b3"
+    "mtime": 1792507371.9108434,
+    "seen": 1792507416.751691,
+    "ast_hash": "d97c58434d27a5496086c132c8584093",
+    "semantic_hash": ""
   },
   "test/lyrics_parser_test.dart": {
     "mtime": 1792405430.5393538,

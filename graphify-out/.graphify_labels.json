@@ -130,7 +130,6 @@
   "398": "saf_display_path.dart",
   "399": "libusb_config_descriptor",
   "400": "libusb_log_level",
-  "410": "SetupFolderPickerStore",
   "413": "types",
   "419": "TempDir",
   "422": "threads_posix.h",
