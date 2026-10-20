@@ -295,7 +295,6 @@
   "1643": "libusb_ssplus_sublink_attribute",
   "1644": "libusb_ssplus_usb_device_capability_descriptor",
   "1645": "libusb_version",
-  "1649": "libusb_container_id_descriptor",
   "1651": "libusb_ss_endpoint_companion_descriptor",
   "1656": "libusb_usb_2_0_extension_descriptor"
 }
