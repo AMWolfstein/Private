@@ -1,17 +1,17 @@
 # Graph Report - Private  (2026-10-20)
 
 ## Corpus Check
-- 1239 files · ~1,127,622 words
+- 1239 files · ~1,127,635 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 122 file(s) not represented in the graph (top: .xml 37, .arb 20, (none) 16)
 
 ## Summary
-- 23304 nodes · 44942 edges · 717 communities (517 shown, 200 thin omitted)
+- 23304 nodes · 44944 edges · 717 communities (517 shown, 200 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 2460 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bd8f88a6`
+- Built from commit: `8b7adfe6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2787,16 +2787,16 @@ Nodes (5): libusb_usb_2_0_extension_descriptor, bDescriptorType, bDevCapabilityT
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `_` connect `_` to `file`, `music_playback_deck.dart`, `now_playing_screen.dart`, `library_collections_benchmark.dart`, `package:flutter/foundation.dart`, `string`, `MusicPlayerHandler`, `Duration`, `library_tracks_folder_screen.dart`, `List`, `Widget`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `AndroidPlaybackInfo`, `ValueStream`, `playback_automation.dart`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `_RatingMessageExtension`, `MediaItemCopyWith`, `Color?`, `mornye_volume_control.dart`, `_`, `AudioServicePlugin.java`, `mornye_theme.dart`, `AudioService`, `AudioHandler`, `mornye_glass_warmup.dart`, `package:flutter/material.dart`, `PlaybackStateCopyWith`, `cached_cover_image.dart`, `Set`, `playback_seek_preview.dart`, `Future`, `library_collections_hydration.dart`, `audio_format_utils.dart`?**
-  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._
 - **What connects `decoder`, `block`, `offset` to the rest of the system?**
   _8750 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004651162790697674 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `ret`, `Ipv4PathMtuDiscovery`, `OwnedFd`, `PollFd<'fd>`, `borrowed_fd`, `ioctl/mod.rs`, `c`, `Timespec`, `linux_raw/net/read_sockaddr.rs`, `at.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `linux_raw/termios/syscalls.rs`, `Protocol`, `RawFd`, `to_ipv6mr`, `linux_raw/io/syscalls.rs`, `Timeout`, `Uid`, `thread/prctl.rs`, `setsockopt`, `copyfile_state_t`, `super`, `PollFd<'fd>`, `Ipv4Addr`, `.from`, `linux_raw/net/sockopt.rs`, `setns.rs`, `Pid`, `SendAncillaryBuffer<'buf, 'slice, 'fd>`, `linux_raw/mm/syscalls.rs`, `SocketAddrArg`, `libc/net/syscalls.rs`, `Ipv6PathMtuDiscovery`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.03076923076923077 - nodes in this community are weakly interconnected._
 - **Why does `c_int()` connect `process/prctl.rs` to `linux_raw/c.rs`, `ret`, `BorrowedFd`, `borrowed_fd`, `reg.rs`, `vdso_wrappers.rs`, `c`, `Timespec`, `procctl.rs`, `libc_auxv.rs`, `ArgReg`, `Errno`, `to_ipv6mr`, `linux_raw/param/auxv.rs`, `linux_raw/io/syscalls.rs`, `libusb1-sys-0.7.0/src/lib.rs`, `thread/prctl.rs`, `src/constants.rs`, `copyfile_state_t`, `super`, `RetReg`, `system.rs`, `setns.rs`, `src/fs/inotify.rs`, `Pid`, `SendAncillaryBuffer<'buf, 'slice, 'fd>`, `linux_raw/process/wait.rs`, `libc/net/syscalls.rs`, `libc/c.rs`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Should `mornye_library_screen.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.035430988894764676 - nodes in this community are weakly interconnected._
