@@ -133,9 +133,7 @@ void main() {
             const LibraryTracksFolderScreen(
               mode: LibraryTracksFolderMode.loved,
             ),
-            overrides: [
-              libraryCollectionsProvider.overrideWith(() => collections),
-            ],
+            collections: collections,
           ),
         );
         await tester.pump();
