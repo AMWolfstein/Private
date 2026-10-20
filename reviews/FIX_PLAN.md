@@ -67,10 +67,9 @@ tests to delete are listed in TEST-101.
 Remaining P3 items (UX/a11y, PERF, minor KT/RUST/SEC) can ride along with the batch that
 touches the same file.
 
-## Product decisions needed
+## Product decisions (answered 2026-10-20)
 
-- UX-205: the About page loads contributor avatars from github.com. Keep them, or show
-  initials?
-- DEAD-705: the Search tab's Recent list never records new items. Re-wire recording, or delete
-  the write side?
-- SEC-301: drop `MANAGE_EXTERNAL_STORAGE` on API 30–32 if no path-based writes remain?
+- UX-205: done in `c29daef` (About credits/links/social removed).
+- DEAD-705: done in `c29daef` (Search Recent list and tables removed).
+- SEC-301: keep `MANAGE_EXTERNAL_STORAGE`.
+- DEAD-909: keep `NativeReplayGainPolicy` for the Media3/ExoPlayer port.

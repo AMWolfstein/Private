@@ -783,13 +783,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: intersect with visible ids when computing `selectionItems` (or exit selection on query change); derive the count from resolved items; ~10 lines + test.
 - Evidence: `_selectedIds` mutated only in `queue_tab_selection.dart`; verify the search field is reachable in selection mode on device.
 
-### UX-101 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/home_tab_recent.dart:210` (`_navigateToRecentItem`, album case)
-- Scenario: tap a recent album in the Search empty state → `LibraryDatabase.instance.getAll()` loads and maps every row, then filters by album name in Dart.
-- Root cause: whole-library load instead of the keyed bounded loader; match by name + artist string, not album key.
-- Impact: multi-second stall and memory spike on large libraries; with an empty subtitle, same-named albums of different artists merge.
-- Fix: use the keyed loader Home already uses (`getQueueLocalAlbumTracksByKey`, `home_tab_feed.dart:146`) or a bounded album+artist query; ~15 lines.
-
 ### UI-102 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/widgets/player_lyrics.dart:764-766,904-907`, `lib/widgets/player_lyrics_section.dart:82`
 - Scenario: RTL locale with `TextAlign.start` lines → scale origin `Alignment.centerLeft`, gap dots `centerLeft`, options button `Positioned(left:)` sit on the physical left while text hugs the right.
@@ -928,16 +921,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: language rows expose selection only by a check icon; no `Semantics(selected:)` → TalkBack does not announce the active language.
 - Fix: `Semantics(selected: isSelected, button: true)`; ~3 lines.
 
-### UX-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/settings/about_page.dart:368-380` (`CachedCoverImage(imageUrl: 'https://github.com/<user>.png')`)
-- Scenario: About fetches contributor avatars from github.com in an offline-only app ("no remote artwork loading").
-- Fix: product decision — document the exception, or show initials via `ProfileAvatar`; ~10 lines. Related: DEAD-604, DEAD-632.
-
-### UX-206 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/settings/about_page.dart:247-250` (`_launchUrl`)
-- Scenario: no handler for `inAppBrowserView` → `launchUrl` throws/returns false; result and errors ignored → silent no-op or unhandled async error.
-- Fix: check the result / catch and show a snackbar; ~6 lines.
-
 ### DEAD-621 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/widgets/donate_icons.dart`, `priority_settings_scaffold.dart`, `reorderable_priority_item.dart`, `discard_changes_dialog.dart`
 - Scenario: no use in lib/ or test/ outside the files (~500 lines); download/provider-priority/donate leftovers.
@@ -947,12 +930,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Mornye destinations; non-Mornye `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isMornye) const SettingsTab()` :542)
 - Scenario: `isMornye` is always true in production → these branches never run.
 - Fix: collapse the shell to the Mornye path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
-
-### SEC-301 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `android/app/src/main/AndroidManifest.xml:18` (`MANAGE_EXTERNAL_STORAGE`), `lib/screens/setup_screen.dart:145,196-202`
-- Scenario: on API 30–32 setup requests All-files access although library access is SAF-based (`library_settings_page.dart:120` comment) and no Kotlin code checks `isExternalStorageManager`.
-- Fix: if no path-based write remains on 30–32 (check tag-edit fallbacks), drop the permission and the setup branch; ~15 lines.
-- Cross-refs: library_settings_page, kotlin grep. Guards checked: runtime user dialog only.
 
 ### SEC-302 [P3] [confidence: high] [VALIDATED]
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
@@ -1088,11 +1065,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: no lib/ callers. They are tested only in `offline_artwork_test.dart:44,50` and `platform_bridge_metadata_test.dart:86,125`. Their native handlers stay live through other callers.
 - Channel cross-check: every Kotlin handler has a Dart caller name. The Dart names with no handler (`prepareRuntimeState`, `setDownloadDirectory`, iOS bookmark methods) are all inside DEAD-201/207 methods, which would throw if called.
 - Fix: delete both methods and their tests.
-
-### DEAD-705 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/providers/recent_access_provider.dart:160-218` (`recordArtistAccess`/`recordAlbumAccess`/`recordPlaylistAccess`/`_recordAccess`), `lib/services/app_state_database.dart:512` (`upsertRecentAccessRow`), `lib/screens/home_tab_recent.dart:117-140`
-- Scenario: nothing records recent access any more, so the Search tab's Recent list only shows rows stored before the cleanup and never updates.
-- Fix: product decision. Either re-wire recording from the local artist/album/playlist screens (then this becomes a BUG), or delete the write side and keep reading legacy rows (~70 lines). Related: UX-101.
 
 ### DEAD-706 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/services/file_access_check.dart`, `lib/utils/saf_display_path.dart` (no importers). Transitively dead: `lib/constants/music_services.dart` (via DEAD-501), `lib/widgets/in_library_badge.dart` and `lib/utils/local_playback.dart` (via UX-104).
@@ -1321,7 +1293,9 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 
 ## Resolved
 
-_None yet._
+- UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.
+- UX-206 (`c29daef`): `_launchUrl` and the `url_launcher` dependency removed with the links.
+- DEAD-705 (`c29daef`): Search tab Recent list, `recent_access_provider.dart`, its app-state methods and tables removed (app-state schema v5 drops them). UX-101 (whole-library load when opening a recent album) is resolved with it.
 
 ## Rejected
 
@@ -1338,3 +1312,5 @@ _False positives and intentional behavior, with one-line reason._
 - R-009 (build DEP-003, debug-key release signing): duplicate of SEC-302 from the parallel security pass.
 - R-010 (tests TEST-302, settings migration/setup flags untested): covered — `settings_persistence_test.dart:72-73` asserts both flags in one write; `installation_restore_test.dart:97-117` sanitizes legacy download-folder fields.
 - R-011 (perf PERF-403, `shuffleLibrary` full load): its only caller is the dead `player_queue_sheet.dart` (DEAD-601); the live `getAll()` caller is UX-101. DATA-002's `shuffleLibrary` part is likewise on that dead path.
+- R-012 (SEC-301, `MANAGE_EXTERNAL_STORAGE` on API 30–32): owner keeps the permission.
+- R-013 (DEAD-909 `NativeReplayGainPolicy` part): owner keeps it for the planned Media3/ExoPlayer port; the other DEAD-909 symbols stay open.

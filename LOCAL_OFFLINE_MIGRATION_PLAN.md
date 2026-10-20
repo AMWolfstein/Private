@@ -20,7 +20,7 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
-_Last updated: 2026-10-19_
+_Last updated: 2026-10-20_
 
 **Status:** Phases 1-8 and the requested local-player refinements are implemented.
 Latest source validation passed. The signed ARM64-only side-by-side **build 166** includes
@@ -28,6 +28,9 @@ source through `b62b3d9e`: song menus and metadata-page retirement, Genres, Love
 updated rows and the Settings cleanup. It retains the cream/green launcher icon and signing
 certificate, updating the previous SpotiFLAC Local installation. Physical-device validation
 remains pending.
+`c29daef` removes the About page credits, translators, special thanks, links and social sections
+(with `url_launcher`) and the Search tab Recent list (app-state schema v5 drops its tables);
+`flutter analyze` is clean, the full `flutter test` run is still pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
 **Review-agent system (2026-10-19):** Adds a quota-bounded review setup without changing app
