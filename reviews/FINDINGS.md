@@ -1184,6 +1184,141 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
 - Fix: persist the cue→audio URI mapping, or resolve it from the cached listing; ~20 lines.
 
+### DEAD-801 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/history_database.dart:333-370,552-1342` (`HistoryDatabase` query/migration API; `normalizeSpotifyId`, `spotifyLookupCandidates`)
+- Scenario: outside the file, only `.instance.database`, `getAll`, `upsertBatch`, `clearAll` and `schemaVersion` are used (backup paths; source-confirmed). About 25 other methods have no callers, for example `migrateIosContainerPaths`, `migrateFromSharedPreferences`, `upsert`, `findExisting*`, `getBy*`, `deleteBy*`, `updateFilePath`, `updateAudioMetadata` and `getEntriesWithPathsPage` (~700 lines).
+- Fix: keep the schema create/upgrade code and the 5 backup members, and delete the rest. Check the tests that read the file as text (`native_backup_contract_test`, `album_completeness*_test`).
+
+### DEAD-802 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/services/app_state_database.dart:255-352,420-501,534,561-584` (pending download queue, hidden recent downloads, `getRecentDownloadsClearedAt`)
+- Scenario: download-queue persistence. The only live caller is `clearPendingQueueAfterInstallationRestore` (`main.dart:232`), which clears it.
+- Fix: delete the methods (~180 lines) and reduce the restore reset to the session and prefs. Update the fake in `test/recent_access_persistence_test.dart:60-101`.
+
+### DEAD-803 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/providers/theme_provider.dart:14-17,81-84,113-131` (`setStyle`, `setUseDynamicColor`, `setSeedColor`, `setUseAmoled`), `lib/models/theme_settings.dart` (`useDynamicColor`, `seedColorValue`, `useAmoled`, `AppThemeStyle`), `lib/providers/playback_notification_provider.dart:22-24`
+- Scenario: these are multi-theme leftovers. The setters are never called (`setUseAmoled` only in a test), the fields are never read, and `AppThemeStyle` has the single value `mornye`, so the check is always true.
+- Fix: remove them (~80 lines) but keep parsing the old keys for imports. Update `models_and_utils_test.dart:649-679` and `appearance_settings_test.dart:412`.
+
+### DEAD-804 [P3] [confidence: high] [VALIDATED]
+- Location: 22 zero-reference symbols in live D1 files:
+  - `library_collections_provider.dart`: `removeFromLoved`, `removeTrackFromPlaylist`, `exportCollections`, `exportPlaylistCovers`
+  - `settings_provider.dart`: `setLocalLibraryPath`, `setLocalLibraryBookmark`
+  - `download_history.dart`: `isDownloaded`
+  - `library_collections.dart`: `isFavoriteArtist`
+  - `track.dart`: `hasPreview`
+  - `csv_import_service.dart`: `pickAndParseCsv`
+  - `m3u_playlist_service.dart`: `writeExportFile`
+  - `library_database.dart`: `albumKeyFor`, `getCoverPaths`
+  - `mornye_glass_warmup.dart`: `isReady`
+  - `notification_service.dart`: `embeddingMetadataLabel`
+  - `platform_bridge.dart`: `isForegroundServiceStartNotAllowed` (+ its code constant), `notificationPercentTotal`
+  - `music_player_service.dart`: `restoreMusicAudioSessionAfterVideo`, `setPlaybackNormalizationEnabled`, `setUsbOutputOptions`, `musicPlayerHandler`, `musicPlayer{MediaItem,PlaybackState,Queue}Events`
+  - `file_access.dart`: `isSameContentUri`, `openFile`
+  - `supported_locales.dart`: `translationThreshold`
+- Check: `grep -rnw "<name>" lib test android assets rust_backend/crates`
+- Fix: delete (~250 lines). Grep Kotlin for the foreground-service code constant first.
+
+### DEAD-805 [P3] [confidence: high] [VALIDATED]
+- Location: symbols used only by tests. Each is listed with the test that uses it:
+  - `metadata_editor_controller.dart` `beginLookup`/`selectEmptyFields` (metadata_editor_controller_test)
+  - `track.dart` `isDolbyAtmos` (models_and_utils_test:504)
+  - `playback_provider.dart` `playLocalPath` (playlist_playback_test:551)
+  - `album_completeness.dart` `albumInventorySql` (album_completeness_test:150)
+  - `backup_service.dart` `hasExtensions`/`buildEnvelope` (backup_service_v2_test:161,179)
+  - `ffmpeg_service.dart` `parseReplayGainScan` (ffmpeg_replaygain_scan_test). First check whether ReplayGain scan parsing now happens elsewhere.
+  - `history_maintenance.dart` `mergeInto` (history_maintenance_test:102)
+  - `library_collections_database.dart` `loadPlaylistTracks` (library_collections_mutation_test fake)
+  - `library_database.dart` `getQueueAlbumPage` (album_completeness_query_test)
+  - `library_database_models.dart` `withAudioMetadata` (models_and_utils_test:115,234)
+  - `audio_format_utils.dart` `replayGainMetadataWasRead`, `isoBmffAudioExtensionForCodec`, `detectedAudioFormatFromMetadata` (models_and_utils_test)
+  - `isrc_utils.dart` `canonicalIsrcForCopy` (issue_542_utils_test). The same-file wrapper may be live.
+  - `adaptive_layout.dart` `adaptiveContentMaxWidth` (adaptive_layout_test:27)
+  - `local_library_provider.dart:1684-1714` `getByIsrcAsync`/`findByTrackAndArtistAsync`/`findExistingAsync`. These go with PERF-404 (`hasIsrc`/`hasTrack`/`existsInLibrary`).
+  - Fold into existing entries: `useAppFolderStorage` → API-203; `DownloadDecryptionDescriptor.fromDownloadResult` → DEAD-001; `isInstrumentalLyricsMarker` → DEAD-002.
+- Fix: delete each symbol with its test case.
+
+### DEAD-806 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/models/settings.dart:10,83,128,172` (`downloadDirectoryBookmark`), `lib/utils/file_access.dart:22-31` (`shouldValidateIosOutputDir`, `validateIosPath`), `lib/utils/ios_container_paths.dart` (used by `library_database.dart:59` onOpen, `library_schema.dart:408`, `music_player_service.dart:39`)
+- Scenario: these are iOS-only. The bookmark field is read only by the iOS validator. The container-path rebase still runs on every library DB open, but its `/var/mobile/Containers` pattern can never match on Android.
+- Fix: fold the field into the API-203 removal. Decide separately whether to drop the onOpen rebase hook (it is cheap, but it does run on every open).
+
+### DEAD-851 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/settings_group.dart:692-718` (`SettingsChoiceGrid`), `lib/widgets/app_alert_dialog.dart:33-68` (`AppDialogSurface`), `lib/widgets/error_card.dart:1-95` (`ErrorCard`; keep `EmptyState`)
+- Scenario: these three public widgets have zero references in lib/ or test/ (source-confirmed).
+- Fix: delete them (~160 lines).
+
+### DEAD-852 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/widgets/audio_quality_badges.dart:124-210,244-264` (`DolbyAtmosBadge`, `DolbyAtmosLogo`, `DolbyLogoPainter`, `buildQualityBadges`), `lib/models/track.dart:37,70,150,188,221,227` (`audioModes`, `isDolbyAtmos`)
+- Scenario: the only caller of `buildQualityBadges` is the dead `track_list_tile.dart` (UX-104). Nothing produces `audio_modes`/`DOLBY_ATMOS`, so the field is always null.
+- Fix: remove these together with UX-104 (~110 lines), then drop `audioModes`. Keep `ExplicitBadge` and `AudioQualityBadge`.
+
+### DEAD-853 [P3] [confidence: high] [VALIDATED]
+- Location: widget parameters that no call site ever sets, along with the branches they control:
+  - `SettingsGroup.glass` (~36 sites)
+  - `SettingsItem.footer` (~27 sites)
+  - `SettingsInfoCard.tone` (always neutral, so the `warning`/`error` arms are dead) and `.action`
+  - `AppDialogAction.outlined` (~50 sites)
+  - `AppSearchField.prefixIcon`
+  - `StaggeredListItem.staggerDelay`/`.duration`
+  - `EditMetadataSheet.sourceTrackId` (write-only)
+  - `artworkAspectRatio` in `mornye_player_layout.dart`/`mornye_player_background.dart`
+  - `MornyeArtistHeader.listeners`/`.badge`/`logoUrl` and `MornyeArtistSurface.logoSource` (remote-artist leftovers; logo set only in tests)
+  - `AppTokens.coverCompact` (never read)
+- Fix: delete the parameters and branches (~150 lines), and update the tests that set the logo params. Check with `grep -rnE "\b<param>:" lib test`, then confirm which class each hit belongs to.
+
+### DEAD-854 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/widgets/album_description.dart` (`AlbumDescription`), `lib/widgets/mornye_chrome.dart` (`MornyeFilterChip`), `lib/widgets/collection_scaffold.dart:22,38,117` (`bottomInset`), `lib/app.dart:50` (`/tutorial` redirect route)
+- Scenario: these are used only by tests, or never navigated to.
+- Fix: delete the widgets with their tests, decide whether to keep `NowPlayingScreen.metadataControllerFactory` as a test seam, and drop the `/tutorial` alias. The `album_description_test` deletion is shared with DEAD-504.
+
+### DEAD-901 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/progress/{mod,reporter,subscription}.rs` (726 lines), `core/src/lib.rs:15`
+- Scenario: the download progress registry has zero users outside its own directory (source-confirmed).
+- Fix: delete the directory and the `pub mod` line.
+
+### DEAD-902 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/media/hires/**` (~1,920 lines + 1,128 test lines), `mobile/src/hires.rs`, `core/src/tags/write/mp4/ac4.rs`, `core/src/tags/write.rs:217-250`, `local/src/backend/tags.rs:14,259,284`, `mobile/src/tags.rs:218,274,288`; Kotlin `CoreBackend.kt:17`, `SelectedCoreBackend.kt:147,323,351-355`, `MainActivity.kt:1257-1440` handlers, `MainActivitySafIo.kt:295`
+- Scenario: these are the native tails of the dead DEAD-202 Dart wrappers `checkHiResAuthenticity`, `ensureAC4Config`, `writeAC4Metadata` and `rewriteSplitArtistTags`. `platform_bridge.dart:688` has no caller (source-confirmed). About 2,600 Rust and 130 Kotlin lines are unreachable.
+- Fix: delete them together with DEAD-202 and regenerate the uniffi bindings. Keep `native_audio_analysis` (Audio Quality Analysis) and `writeM4aFreeformTags`. Note: RUST-201 (`hires/mod.rs`) sits in this dead code and becomes moot.
+
+### DEAD-903 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/core/src/clock.rs`, `core/src/cancellation.rs:240,256,297` (`observe_thread`, `active_request_cancelled`, `wait_cancelled`), `core/src/cover.rs:10` (`MAX_DOWNLOAD_BYTES`), `core/src/lib.rs:18` (`normalize_json_surrogates` re-export)
+- Scenario: these are transitively dead. `clock` is used only by the dead `filename/date.rs` (DEAD-303), and the others appear only at their declarations.
+- Fix: delete them after DEAD-303, then re-run the orphan check (`text::json_surrogates` may follow).
+
+### DEAD-904 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:118,146,405,419` (`copyContentUriToTemp`, `writeFileToSaf`, `deleteContentUri`, `mimeTypeForExt`), `CoreBackend.kt:9-10,29` (`routesApplication`, `supportsOutputDescriptors`, `scanCueForLibrary`), `SelectedCoreBackend.kt:280`, `mobile/src/tags.rs:130` (`scan_cue_file_for_library` export)
+- Scenario: nothing references these except their declarations (`writeFileToSaf` is used only by an androidTest).
+- Fix: delete them (~90 lines). Keep the local-crate `scan_cue_file_for_library`, which `scan.rs:471` uses.
+
+### DEAD-905 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/crates/mobile/Cargo.toml` and `rust_backend/Cargo.toml` (`scraper`), `core/Cargo.toml:21-22` (`tz-rs`), `local/Cargo.toml` (android dev-dep `libc`)
+- Scenario:
+  - `scraper` (which pulls in html5ever, cssparser and selectors) has zero uses.
+  - `tz-rs` is used only by `clock.rs`, so it goes with DEAD-903.
+  - local's `libc` dev-dep has no uses.
+- Fix: remove the lines, then run `cargo update -w --offline`. After the DEAD-301..303/903 batches, re-check `rustix`, `unicode-normalization`, `unicode-general-category` and `chrono` in core.
+
+### DEAD-906 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/res/drawable/ic_notification_airplay.xml`, `res/values/colors.xml:4-7` (`widget*` colors), `res/values-night/colors.xml`, `res/values-v31/colors.xml`, `res/values-night-v31/colors.xml`
+- Scenario: these resources are unreferenced. The `notification_keep.xml` wildcard only stops the shrinker from removing them; it is not a use.
+- Fix: delete them. Keep `ic_launcher_background`.
+
+### DEAD-907 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:94-400` (`resolveSafFile`, `inspectSafFiles`)
+- Scenario: these are called only by the DEAD-202 handlers (`MainActivity.kt:1083,1090`). They make up ~300 lines, the bulk of that dead feature.
+- Fix: delete them with DEAD-202. Keep `SafFileOps.findDocumentDir` while `MainActivitySafScan.kt:282` uses it.
+
+### DEAD-908 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:26-55,167-242` (unique/collision-aware/if-absent writers, `withSafNameLock`, `PublishTrace`, filename counters), `NativeResourcePools.kt:10` (`KeyedLockPool`), `MainActivity.kt:121-123,1137-1250` (`safCreate{IfAbsent,Unique,CollisionAware}FromPath`)
+- Scenario: the only Dart callers are the DEAD-202 wrappers at `platform_bridge.dart:494,510,528`. This is ~330 lines of download-era collision handling.
+- Fix: delete them with DEAD-202 and update `NativeResourcePoolsTest`. Keep `writeFileToSafLocked`, which `safCreateFromPath` uses.
+
+### DEAD-909 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt`, `NativeResourcePools.kt:35,41` (`activeKeyCount`, `BoundedRegistry`), `SafDocumentIdentity.kt:8` (`safDocumentMatchKey`), `NativeMediaWorkspace.kt:30` (`withOwnedTemporaryMediaFile`)
+- Scenario: each is referenced only by its own Kotlin unit test.
+- Fix: delete them with their tests (~150 lines). If `NativeReplayGainPolicy` was meant to gate ReplayGain batches, decide that first: it is never consulted. Related: KT-001, DEAD-208.
+
 ## Resolved
 
 _None yet._

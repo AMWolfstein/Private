@@ -4,6 +4,7 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | `2db6547` | second dead-code pass: 3 dead-code-hunters (Dart logic, UI, native) + spot checks; `flutter analyze` clean, `cargo check --offline` clean (reviewers) | 19 findings, all P3 (~8,000 dead lines incl. tests) |
 | 2026-10-20 | `c5e9d7d` | performance pass: 3 code-optimization-auditors (DB/queries, scanner+Rust, UI/startup) + source checks (missing `album_artist_norm` index, cover fsync, SAF fallback) | 12 findings (5 P2, 7 P3; 1 rejected); no profiling |
 | 2026-10-20 | `c0284b1` | final dead-code sweep (dead-code-hunter: l10n usage script, import graph, channel cross-check) | 6 findings |
 | 2026-10-20 | `3494027` | `flutter test` (full) | +1596 ~3 -1; only failure `file_stat_boundary_test` root permission case (TEST-204), matches baseline |

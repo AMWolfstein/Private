@@ -10,9 +10,8 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
   docs/config only). Suggested first fix batch: FIX_PLAN #1 (DATA-501).
 - Next audit unit: none — all 10 subsystems and the final dead-code sweep are done. Next:
   user-approved fix batches from `FIX_PLAN.md` (nothing fixed yet).
-- Open findings: 183 (0 P0, 1 P1, 57 P2, 125 P3; see `FINDINGS.md`).
-- Last checkpoint: performance pass (this commit). Previous `c5e9d7d` pushed and verified.
-- Running: second dead-code pass by layer (Dart logic, UI, native).
+- Open findings: 202 (0 P0, 1 P1, 57 P2, 144 P3; see `FINDINGS.md`).
+- Last checkpoint: second dead-code pass (this commit). Previous `2db6547` pushed and verified.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer
   baseline/rollback, scope hints `NO_TEST_CHANGES`/`SPLIT_SUGGESTED`; android test dirs now

@@ -57,6 +57,10 @@ tests to delete are listed in TEST-101.
 | 23 | DEAD-001..004, DEAD-501..504, DEAD-632, DEAD-704 | Download, provider and re-enrich services and helpers. |
 | 24 | UX-104, DEAD-602, DEAD-603, DEAD-621, DEAD-631, DEAD-706 | Unused widgets and files. |
 | 25 | DEAD-201..208, DEAD-301..304, DEAD-401..403 | iOS paths, dead bridge methods, and dead settings fields. Keep the JSON parse. |
+| 25a | DEAD-202 tail: DEAD-902, DEAD-907, DEAD-908, DEAD-904 | Hi-Res/AC4/split-artist native code and SAF collision writers (~3,400 lines); regenerate uniffi bindings. |
+| 25b | DEAD-801, DEAD-802, DEAD-803 | Download-history DB API, download-queue persistence and theme leftovers. Keep the schemas and old-key parsing. |
+| 25c | DEAD-804, DEAD-805, DEAD-806, DEAD-851..854, DEAD-909 | Unused or test-only symbols, widget params and resources. |
+| 25d | DEAD-901, DEAD-903, DEAD-905, DEAD-906 | Rust progress/clock modules, unused crates (`scraper`, `tz-rs`) and unused Android resources. Do this after 25a, then re-run the orphan checks. |
 | 26 | DEAD-701 | Unused l10n keys. Do this last, then re-run the scan. |
 | 27 | TEST-204, TEST-201, TEST-202, TEST-304 | Root skip guard, paging-test timeout, temp dir cleanup and a Kotlin unit-test script. |
 
