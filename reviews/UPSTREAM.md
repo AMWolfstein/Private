@@ -40,9 +40,9 @@ Port:
 Drop: `download_queue_provider`, `download_metadata_embedding`, `download_request_payload`,
 `downloads.rs`, the `extensions` crate, `NativeFinalization*` Kotlin (none exist here).
 
-Owner decision needed: where the page lives. `AGENTS.md` bans the download-era Metadata
-page, so suggest **Local Library settings → Tag separators**, and add one `AGENTS.md` line that
-allows it. Do not restore Artist Tag Mode UI (`settings_search_test` asserts it is absent).
+Placement (owner decision, 2026-10-20): a **Tag separators** entry under **Local Library
+settings**, recorded in `AGENTS.md`. Do not restore the download-era Metadata page or the Artist
+Tag Mode UI (`settings_search_test` asserts both are absent).
 
 ## Clean ports
 

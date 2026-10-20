@@ -73,3 +73,4 @@ touches the same file.
 - DEAD-705: done in `c29daef` (Search Recent list and tables removed).
 - SEC-301: keep `MANAGE_EXTERNAL_STORAGE`.
 - DEAD-909: keep `NativeReplayGainPolicy` for the Media3/ExoPlayer port.
+- U-001 (`UPSTREAM.md`): port upstream tag separators under Local Library settings.
