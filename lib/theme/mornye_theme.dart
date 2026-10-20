@@ -66,7 +66,7 @@ class MornyeTheme extends ThemeExtension<MornyeTheme> {
   }
 
   static const lightAccent = Color.fromRGBO(204, 46, 51, 1);
-  static const darkAccent = Color.fromRGBO(224, 61, 60, 1);
+  static const darkAccent = Color.fromRGBO(255, 69, 58, 1);
 
   static Color accentColor(MornyeAccent accent, Brightness brightness) {
     final dark = brightness == Brightness.dark;
@@ -223,9 +223,7 @@ class MornyeTheme extends ThemeExtension<MornyeTheme> {
           brightness: brightness,
         ).copyWith(
           primary: accent,
-          onPrimary:
-              selectedAccent == MornyeAccent.red ||
-                  accent.computeLuminance() < 0.179
+          onPrimary: accent.computeLuminance() < 0.179
               ? Colors.white
               : Colors.black,
           primaryContainer: grouped,

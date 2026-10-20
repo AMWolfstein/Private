@@ -215,24 +215,39 @@ class _LibraryTracksFolderScreenState
     final collection = widget.mode == LibraryTracksFolderMode.playlist
         ? collections.playlistById(widget.playlistId ?? '')
         : null;
-    final entries = widget.mode == LibraryTracksFolderMode.playlist
-        ? collection?.tracks
-        : collections.loved;
-    final cover =
-        collection?.coverImagePath ??
-        collection?.previewCover ??
-        entries?.firstOrNull?.track.coverUrl;
+    final entries =
+        (widget.mode == LibraryTracksFolderMode.playlist
+            ? collection?.tracks
+            : collections.loved) ??
+        const <CollectionTrackEntry>[];
+    String? nonempty(String? value) =>
+        value?.trim().isNotEmpty == true ? value : null;
+    final loved = widget.mode == LibraryTracksFolderMode.loved;
+    final preferred =
+        nonempty(collection?.coverImagePath) ??
+        nonempty(collection?.previewCover) ??
+        _firstRawCoverUrl(entries);
+    final local = !loved && preferred == null && entries.isNotEmpty
+        ? ref
+              .watch(
+                localLibraryFirstCoverProvider(_coverBatchRequest(entries)),
+              )
+              .asData
+              ?.value
+        : null;
+    // Loved's heart has a neutral surface; playlist art is shared everywhere.
+    final cover = loved ? null : preferred ?? local;
     if (context.isMornye) {
       return MornyeArtistSurface(
         imageSource: cover,
         neutralActions: true,
-        child: Builder(builder: _buildPage),
+        child: Builder(builder: (context) => _buildPage(context, cover)),
       );
     }
-    return _buildPage(context);
+    return _buildPage(context, cover);
   }
 
-  Widget _buildPage(BuildContext context) {
+  Widget _buildPage(BuildContext context, String? coverSource) {
     final colorScheme = Theme.of(context).colorScheme;
     ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
     final List<CollectionTrackEntry> entries;
@@ -300,7 +315,14 @@ class _LibraryTracksFolderScreenState
         entries,
         bottomPadding,
       ),
-      appBar: _buildAppBar(context, colorScheme, title, entries, playlist),
+      appBar: _buildAppBar(
+        context,
+        colorScheme,
+        title,
+        entries,
+        playlist,
+        coverSource,
+      ),
       slivers: [
         if (loading)
           const SliverToBoxAdapter(child: TrackListSkeleton())
@@ -482,21 +504,12 @@ class _LibraryTracksFolderScreenState
     String title,
     List<CollectionTrackEntry> entries,
     UserPlaylistCollection? playlist,
+    String? coverSource,
   ) {
     final expandedHeight = calculateExpandedHeight(context);
     final customCoverPath = playlist?.coverImagePath;
-    final isLovedMode = widget.mode == LibraryTracksFolderMode.loved;
     final isPlaylistMode = widget.mode == LibraryTracksFolderMode.playlist;
-    final rawCoverUrl = isLovedMode ? null : _firstRawCoverUrl(entries);
-    final localCoverUrl =
-        rawCoverUrl == null && !isLovedMode && entries.isNotEmpty
-        ? ref
-              .watch(
-                localLibraryFirstCoverProvider(_coverBatchRequest(entries)),
-              )
-              .maybeWhen(data: (cover) => cover, orElse: () => null)
-        : null;
-    final coverUrl = rawCoverUrl ?? localCoverUrl;
+    final coverUrl = coverSource;
     final hasCustomCover =
         customCoverPath != null && customCoverPath.isNotEmpty;
     final hasCoverUrl = coverUrl != null;
@@ -551,7 +564,7 @@ class _LibraryTracksFolderScreenState
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
       background: background,
-      paletteSource: coverUrl,
+      paletteSource: coverSource,
       blurAndScrimBackground: hasCustomCover || hasCoverUrl,
       coverBuilder: (context, coverSize) {
         if (hasCustomCover) {

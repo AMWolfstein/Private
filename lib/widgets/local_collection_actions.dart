@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart' show Theme, Text;
+import 'package:spotiflac_android/widgets/track_detail_actions.dart'
+    show loveAllTracks;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -47,6 +50,8 @@ class _LocalCollectionActionsState
       leadingAction: HeaderCircleButton(
         icon: loved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
         buttonSize: 48,
+        tonal: true,
+        iconColor: loved ? Theme.of(context).colorScheme.error : null,
         tooltip: loved
             ? context.l10n.trackOptionRemoveFromLoved
             : context.l10n.trackOptionAddToLoved,
@@ -55,12 +60,15 @@ class _LocalCollectionActionsState
             : () async {
                 setState(() => _saving = true);
                 try {
-                  await ref
-                      .read(libraryCollectionsProvider.notifier)
-                      .toggleLovedTracks(widget.tracks);
+                  await loveAllTracks(context, ref, widget.tracks);
                 } catch (error) {
                   if (context.mounted) {
-                    showCannotOpenFileSnackBar(context, error);
+                    showAppSnackBar(
+                      context,
+                      content: Text(
+                        context.l10n.snackbarError(error.toString()),
+                      ),
+                    );
                   }
                 } finally {
                   if (mounted) setState(() => _saving = false);
@@ -70,6 +78,7 @@ class _LocalCollectionActionsState
       trailingAction: HeaderCircleButton(
         icon: CupertinoIcons.text_badge_plus,
         buttonSize: 48,
+        tonal: true,
         tooltip: context.l10n.collectionAddToPlaylist,
         onPressed: widget.tracks.isEmpty
             ? null

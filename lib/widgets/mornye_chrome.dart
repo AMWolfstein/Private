@@ -25,7 +25,10 @@ class MornyeSegmentedControl extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final height = MediaQuery.textScalerOf(context).scale(15) + 36;
+    final height = (MediaQuery.textScalerOf(context).scale(15) + 36).clamp(
+      56.0,
+      double.infinity,
+    );
     final contrastBlocked = ref.watch(
       mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
