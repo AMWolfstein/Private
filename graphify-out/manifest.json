@@ -186,10 +186,10 @@
     "semantic_hash": "b43e27e587af89058eeb038f1426ee77"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt": {
-    "mtime": 1792303264.8405094,
-    "seen": 1792494608.48272,
-    "ast_hash": "3ef920f3de100933c7e3d92bb78152d3",
-    "semantic_hash": "3ef920f3de100933c7e3d92bb78152d3"
+    "mtime": 1792525001.6440578,
+    "seen": 1792525027.8415594,
+    "ast_hash": "6a1d3bb918a5ef7f3660392ee443719a",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/SafCueLookup.kt": {
     "mtime": 1792303264.8405094,
@@ -8001,6 +8001,18 @@
     "mtime": 1792524918.2719467,
     "seen": 1792524971.7854419,
     "ast_hash": "19ee3cb3eb03690d21e7bda820aa5755",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetLayoutPolicy.kt": {
+    "mtime": 1792525001.6442711,
+    "seen": 1792525027.8415568,
+    "ast_hash": "60267c3422b9cbd1ccc18780d63a3b65",
+    "semantic_hash": ""
+  },
+  "android/app/src/test/kotlin/com/zarz/spotiflac/PlayerWidgetLayoutPolicyTest.kt": {
+    "mtime": 1792525001.644471,
+    "seen": 1792525027.8415987,
+    "ast_hash": "4b354a3d88457cedb1dd3d286abe024a",
     "semantic_hash": ""
   }
 }
