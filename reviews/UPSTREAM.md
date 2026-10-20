@@ -54,6 +54,19 @@ Placement (owner decision, 2026-10-20): a **Tag separators** entry under **Local
 settings**, recorded in `AGENTS.md`. Do not restore the download-era Metadata page or the Artist
 Tag Mode UI (`settings_search_test` asserts both are absent).
 
+### U-311: Immersive view looks exactly like upstream full-screen cover (`05a56133`)
+
+Owner request (2026-10-20). Keep this fork's Player view setting (`themeProvider.playerView`,
+persisted, Mornye only, Normal in landscape); take only upstream's Mornye still-cover look:
+- artwork ratio `(screen.width / (screen.height * 0.56)).clamp(0.5, 1.0)` (1.0 in landscape)
+  instead of the fixed 0.66-height box (`mornye_player_background.dart:92-101`,
+  `mornye_player_layout.dart:147-151`), so the cover reaches the title on every screen;
+- `MornyePlayerBackground.fadeStart` parameter, 0.72 in Immersive, 0.58 otherwise;
+- `HeroMode` enabled only when the full-bleed artwork is shown (`!_landscape && page 0`);
+- backdrop saturation 0.12 → 0.2 if U-104 has not already brought it.
+No `playerCoverStyle` setting, no Material backdrop, no motion artwork. Done with PLAY-001/002
+in batch 12 (same files). Compare side by side with upstream on a device after.
+
 ## Clean ports
 
 | ID | Upstream | What |
@@ -95,6 +108,6 @@ Tag Mode UI (`settings_search_test` asserts both are absent).
 
 Online lyrics (QQ, lrc.red, BetterLyrics, Apple fallback, online lyrics search), extensions,
 downloads, network/NAS, extension country settings, Material Expressive/Symbols/spring motion,
-the 5.2 release tour, configurable full-screen cover art (`05a56133`; the Immersive view already covers it), About links, crash reports on Home (`cb51d089`, `36694c6e`; owner
+the 5.2 release tour, the `playerCoverStyle` setting and Material backdrop from `05a56133` (U-311 takes only its Mornye look), About links, crash reports on Home (`cb51d089`, `36694c6e`; owner
 2026-10-20), the On Repeat shelf (`home_tab_intro.dart`; owner 2026-10-20), and `75907951` (bit-depth default badge conflicts with the
 `AGENTS.md` badge policy).
