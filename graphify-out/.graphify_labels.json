@@ -130,7 +130,6 @@
   "398": "saf_display_path.dart",
   "399": "libusb_config_descriptor",
   "400": "libusb_log_level",
-  "402": "libusb_option",
   "410": "SetupFolderPickerStore",
   "413": "types",
   "419": "TempDir",
@@ -293,6 +292,5 @@
   "1643": "libusb_ssplus_sublink_attribute",
   "1644": "libusb_ssplus_usb_device_capability_descriptor",
   "1645": "libusb_version",
-  "1651": "libusb_ss_endpoint_companion_descriptor",
   "1656": "libusb_usb_2_0_extension_descriptor"
 }
