@@ -13,7 +13,8 @@ import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/app_choice_chip.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/services/equalizer_preset_io.dart';
 import 'package:spotiflac_android/widgets/mornye_level_slider.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 
@@ -48,8 +49,9 @@ class EqualizerScreen extends ConsumerWidget {
           ],
         ),
       );
-      if (name != null && name.trim().isNotEmpty)
+      if (name != null && name.trim().isNotEmpty) {
         ref.read(equalizerProvider.notifier).savePreset(name);
+      }
     } catch (error) {
       if (context.mounted) _error(context, error);
     } finally {
@@ -59,18 +61,17 @@ class EqualizerScreen extends ConsumerWidget {
 
   Future<void> _import(BuildContext context, WidgetRef ref) async {
     try {
-      final files = await FilePicker.platform.pickFiles(
+      final file = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['json'],
-        withData: true,
       );
-      if (files == null || !context.mounted) return;
-      final file = files.files.single;
-      if (file.size > 65536 || file.bytes == null)
-        throw FormatException(context.l10n.equalizerImportInvalid);
-      ref
-          .read(equalizerProvider.notifier)
-          .importPreset(utf8.decode(file.bytes!));
+      if (file == null || !context.mounted) return;
+      final source = await readEqualizerPreset(
+        file.readAsByteStream(),
+        declaredSize: file.lengthSync(),
+      );
+      if (!context.mounted) return;
+      ref.read(equalizerProvider.notifier).importPreset(source);
     } catch (error) {
       if (context.mounted) _error(context, error);
     }
@@ -262,10 +263,11 @@ class EqualizerScreen extends ConsumerWidget {
                               ],
                             ),
                           );
-                          if (reset == true)
+                          if (reset == true) {
                             control.update(
                               EqualizerSettings(enabled: settings.enabled),
                             );
+                          }
                         },
                       ),
                     ],
