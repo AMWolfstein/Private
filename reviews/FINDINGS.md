@@ -760,6 +760,194 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: referenced only by `test/album_description_test.dart`.
 - Fix: delete with its test.
 
+### UI-101 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/mini_player.dart:47,56-58,74-77` (`_MiniPlayerState._dismissedItemId`)
+- Scenario: swipe-dismiss the mini player on track A → play A again → pause → `mediaItem.id == _dismissedItemId && !isPlaying` → bar disappears while A is current.
+- Root cause: `_dismissedItemId` is never cleared (meant only for the frames before the service clears the item).
+- Impact: after one dismissal, pausing/buffering that track hides the mini player and its resume control (both player views).
+- Fix: reset the field when `mediaItem == null`, the id differs, or `isPlaying` is true (plain field reset in build); ~4 lines + widget test.
+- Evidence: state stays mounted (`main_shell.dart:741,760`, `mornye_bottom_bar.dart:174`); null-item branch returns early without reset.
+
+### UI-201 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/widgets/batch_progress_dialog.dart:84` (`BatchProgressDialog.dismiss`); caller `lib/services/batch_track_actions.dart:122-125`
+- Scenario: batch ReplayGain running → Android back pops the progress dialog (no `PopScope`; `barrierDismissible: false` does not block back) → loop continues with `cancelled == false` → `dismiss` pops the root navigator's top route, i.e. the Songs/album page.
+- Root cause: `dismiss` pops unconditionally and the dialog neither guards back nor calls `onCancel` when popped.
+- Impact: user is thrown out of the screen when the batch ends; remaining work runs with no progress UI.
+- Fix: `PopScope(canPop: false, onPopInvokedWithResult: → onCancel)` and pop in `dismiss` only while the dialog route is still active; ~10 lines + widget test.
+
+### UI-202 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/queue_tab.dart:97` (`_selectedIds`), `queue_tab_item_widgets.dart:10`, `queue_tab_filter_widgets.dart:673` (`_selectedItemsFromAll`)
+- Scenario: select tracks in Songs, then type in search / a rescan bumps `loadedIndexVersion` → `_selectedIds` keeps ids no longer visible; header and "Delete N tracks" show the stale count while actions apply only to loaded items; select-all never reaches "all selected".
+- Root cause: QueueTab keeps its own selection and never prunes (only folder/album screens call `pruneSelection`).
+- Impact: wrong counts in labels and confirmations; actions touch fewer tracks than shown.
+- Fix: intersect with visible ids when computing `selectionItems` (or exit selection on query change); derive the count from resolved items; ~10 lines + test.
+- Evidence: `_selectedIds` mutated only in `queue_tab_selection.dart`; verify the search field is reachable in selection mode on device.
+
+### UX-101 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/home_tab_recent.dart:210` (`_navigateToRecentItem`, album case)
+- Scenario: tap a recent album in the Search empty state → `LibraryDatabase.instance.getAll()` loads and maps every row, then filters by album name in Dart.
+- Root cause: whole-library load instead of the keyed bounded loader; match by name + artist string, not album key.
+- Impact: multi-second stall and memory spike on large libraries; with an empty subtitle, same-named albums of different artists merge.
+- Fix: use the keyed loader Home already uses (`getQueueLocalAlbumTracksByKey`, `home_tab_feed.dart:146`) or a bounded album+artist query; ~15 lines.
+
+### UI-102 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/widgets/player_lyrics.dart:764-766,904-907`, `lib/widgets/player_lyrics_section.dart:82`
+- Scenario: RTL locale with `TextAlign.start` lines → scale origin `Alignment.centerLeft`, gap dots `centerLeft`, options button `Positioned(left:)` sit on the physical left while text hugs the right.
+- Fix: `AlignmentDirectional.centerStart` / `PositionedDirectional(start:)`; ~5 lines. Not run under RTL.
+
+### UX-102 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_artist_screen.dart:583-607` (Popular page dots)
+- Scenario: dot hit box ≈16×32 px, below the 48px rule.
+- Fix: `ConstrainedBox(minWidth: 48, minHeight: 48)` around the detector, keep the 8px dot; ~3 lines.
+
+### UX-103 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/screens/local_artist_screen.dart:547-548` (`rowHeight`)
+- Scenario: at ~2.0× font scale the fixed row height (92px) is smaller than the ListTile content (~104px) → Popular rows clip/overflow. Arithmetic only.
+- Fix: derive height from scaled title/subtitle line heights or use a min-height row; ~3 lines.
+
+### UX-104 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/home_search_logic.dart` (Spotify URL/URI detection), `lib/screens/track_history_snapshot.dart` + `historyRequest` (`library_tracks_folder_data.dart:13`), `lib/widgets/track_list_tile.dart`, `lib/widgets/track_collection_quick_actions.dart`, `lib/widgets/track_collection_action_policy.dart` (`downloadAnotherQuality`), `loveAllTracks` (`track_detail_actions.dart:80`)
+- Scenario: no production callers; tests only. Provider/download-era leftovers.
+- Fix: delete with their tests (~400 lines) via the graphify feature-removal workflow. Fold into the final dead-code sweep.
+
+### UX-105 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/local_album_screen.dart:402`, `lib/widgets/track_detail_actions.dart:54`
+- Scenario: hard-coded English `min` in album header and list footer in every locale.
+- Fix: l10n key (e.g. `durationMinutes`) + ARB entries; ~6 lines.
+
+### UX-106 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/widgets/album_detail_header.dart:788-820` (`_MornyeHeaderButton`, compact)
+- Scenario: 360dp width at 1.5–2× font scale → Play/Shuffle labels ellipsize (`maxLines: 1`). Arithmetic only.
+- Fix: icon-only with semantics label above ~1.3× text scale; ~10 lines.
+
+### UX-107 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/listening_statistics_screen.dart:150-154,237-263`
+- Scenario: error refresh `IconButton` has no tooltip; activity rows are announced as fragments; fixed 68px date column wraps at large scale.
+- Fix: tooltip, `Semantics(label:, excludeSemantics: true)` per row, min-width instead of fixed width; ~8 lines.
+
+### UI-203 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:177` (`_removeSelected`)
+- Scenario: back out while the playlist/Loved removal awaits → `exitSelectionMode()` (setState) runs before `if (!mounted) return`.
+- Fix: move the mounted check above it; 1 line.
+
+### UI-204 [P3] [confidence: high] [VALIDATED]
+- Location: `queue_tab_navigation.dart:128`, `library_tracks_folder_screen.dart:771`, `playlist_picker_sheet.dart:355`
+- Scenario: dialog-owned `TextEditingController`s are never disposed.
+- Fix: `try/finally { controller.dispose(); }` in each.
+
+### UI-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/widgets/playlist_picker_sheet.dart:221-249` (Create playlist `onTap`)
+- Scenario: create flow bypasses `_isSubmitting` and has no try/catch → a throw is unhandled; double-tap or Done during the awaits can create twice / run concurrently.
+- Fix: set `_isSubmitting` around the flow and catch with `friendlyError`.
+
+### UI-206 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/duplicate_review_sheet.dart:226-232`
+- Scenario: `findIsrcDuplicateGroups()` throws → `snapshot.data ?? const []` shows "no duplicates".
+- Fix: handle `snapshot.hasError` with `friendlyError` + retry; ~8 lines.
+
+### PERF-201 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/queue_tab.dart:1135` (`selectionItems`)
+- Scenario: every QueueTab build recomputes the active filter's page data even outside selection mode.
+- Fix: compute inside the selection branch or reuse the built `filterData`.
+
+### PERF-202 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:213`
+- Scenario: `ref.watch(libraryCollectionsProvider)` (no `==`) rebuilds the whole screen on any collection change; only the cover inputs are needed.
+- Fix: `select` the cover inputs.
+
+### DEAD-601 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/material_player_layout.dart`, `lib/widgets/player_queue_sheet.dart`, `lib/widgets/expressive_seek_track.dart`, and `!isMornye` branches in `now_playing_screen.dart`, `player_playback_controls.dart`, `mini_player.dart`, `player_details_sheet.dart`, `player_lyrics.dart`
+- Scenario: `MornyeThemeWrapper` always builds Mornye (`mornye_theme_wrapper.dart:19,27`), so these are reachable only from dead `!isMornye` paths.
+- Fix: delete (never restore Material Expressive); update `test/expressive_seek_track_test.dart`, `test/now_playing_lyrics_transition_test.dart`. `PlayerPlaybackModeButton` goes with the queue sheet. Final dead-code sweep.
+
+### DEAD-602 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/smoothed_progress.dart`
+- Scenario: download-era progress smoother; zero references in lib/ and test/.
+- Fix: delete.
+
+### DEAD-603 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/view_queue_snackbar_action.dart`
+- Scenario: no lib/ callers; only `test/app_snack_bar_test.dart`, `test/shell_navigation_service_test.dart`.
+- Fix: delete and trim the tests.
+
+### DEAD-604 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/widgets/player_artwork.dart:42-54` (`http` branch), `lib/providers/music_player_provider.dart:258` (`playableFromLocal`)
+- Scenario: `http*` covers still render via `CachedCoverImage`, and `playableFromLocal` passes them through → legacy rows could fetch remote artwork (contradicts "no remote artwork loading").
+- Fix: treat `http` as placeholder in both places; ~4 lines.
+
+### DEAD-611 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/queue_tab.dart:980-988`, `queue_tab_filter_widgets.dart:64-69,261-309`, `queue_tab_collection_items.dart:199-213`, `queue_tab_widgets.dart` (`_FilterChip`)
+- Scenario: in Mornye, overview `QueueTab` always returns `MornyeLibraryScreen` → filter-mode PageView, `_FilterChip`, track grid/pinch resize and `collectionEntries` rows are dead; Songs rows wrap `LibraryPlaylistDragSource` with no `DragTarget` on screen (inert long-press drag).
+- Fix: remove after checking widget tests that build a non-Mornye overview.
+
+### PERF-301 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/theme/cover_palette.dart:366-398` (`didUpdateWidget`/`_maybeResolve`), :60-76 (`cacheKeyFor`)
+- Scenario: every parent rebuild of a `CoverPaletteBuilder` awaits `File(source).stat()` before the cache lookup, even for an unchanged source.
+- Fix: if a host rebuilds >1/s (measure in DevTools on album/now-playing), rate-limit the stat per source or invalidate from the edit path; ~10 lines.
+- Cross-refs: callers by grep only. Guards checked: `_pending` dedups in-flight only.
+
+### DEAD-631 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/animation_utils.dart` (`TrackListSkeleton`, `ArtistHeaderActionsSkeleton`, `ArtistScreenSkeleton`, `HomeSearchSkeleton`, `SkeletonCrossfade`, `DownloadSuccessOverlay`)
+- Scenario: no lib/ caller outside the file (~600 of 1197 lines); download/home-search leftovers.
+- Fix: delete them and their private-only helpers; keep `StaggeredListItem`, `AlbumTrackListSkeleton`, `AnimatedSelectionCheckbox`, `AnimatedBadge`, `slidePageRoute`, `ShimmerLoading`, `SkeletonBox`; trim tests.
+
+### DEAD-632 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/cached_cover_image.dart:302-378` (`resolveMetadataArtworkSource`, `metadataBackdropCacheExtent`, `precacheMetadataBackdrop`, `precacheCoverImage`)
+- Scenario: helpers of the removed details route, incl. http/`remoteCoverUrl` branches; tests only.
+- Fix: delete with `test/cached_cover_decode_test.dart` / `test/downloaded_embedded_cover_resolver_test.dart` cases; keep `cachedCoverImageProvider`.
+
+### DEAD-633 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/theme/material_expressive.dart:8` (`materialExpressiveEnabled`, `MaterialExpressiveScope`) and branches in `expressive_button`, `expressive_icon_button`, `expressive_navigation_bar`, `app_switch`, `app_loading_indicator`, `app_content_card`, `app_choice_chip`, `settings_group`; `ExpressiveNavigationBar` only at `main_shell.dart:773` (non-Mornye arm)
+- Scenario: `materialExpressiveEnabled` is `!isMornye && …` and Mornye is always installed → expressive branches never run; `material_3_expressive`/`material_ui` packages kept for dead code.
+- Fix: collapse callers to the non-expressive branch, delete the scope/helper/nav bar, then drop the packages if unused (cleanup, not restoration). Pair with DEAD-601.
+
+### UX-201 [P2] [confidence: high] [VALIDATED]
+- Location: `lib/screens/settings/cache_management_page.dart:40-60` (`_refreshOverview`), :379 (`build`)
+- Scenario: `_buildOverview()` throws on first load → catch sets `_isLoading=false` and shows a snackbar, `_overview` stays null → `_isLoading || overview == null` keeps an endless spinner.
+- Fix: track a failed flag and render an error card with Retry (or an empty overview); ~15 lines.
+- Cross-refs: `lib/services/cover_cache_manager.dart` (`getStats`). Guards checked: only the small header refresh icon recovers.
+
+### UI-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/settings/log_screen.dart:515-535` (entries mapped into one `SettingsGroup` in a `SliverToBoxAdapter`), :49-76 (`_onLogUpdate`)
+- Scenario: detailed logging on → native poll every 800 ms (`logger.dart:125`) or app logs notify → `setState` rebuilds up to 500 (`maxEntries`) non-lazy tiles plus the page, then auto-scrolls.
+- Fix: `SliverList.builder` with group decoration, or throttle updates; ~30 lines. Measure frame times first.
+- Guards checked: `mounted` only; no throttling.
+
+### UX-202 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/settings/cache_management_page.dart:631-636` (`totalKnownDiskCacheBytes`)
+- Scenario: audio-analysis cache is listed and cleared but left out of "Estimated total".
+- Fix: add `audioAnalysisStats.totalSizeBytes`; 1 line.
+
+### UX-203 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/settings/settings_tab.dart:114-124,146`, `lib/screens/settings/settings_search_catalog.dart`
+- Scenario: search keywords `layout`/`grid`/`amoled`/`provider` point at removed options; catalog misses glass clarity, custom font, lyrics text size and USB sub-options.
+- Fix: drop stale keywords, add catalog entries; ~25 lines.
+
+### UX-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/setup_screen.dart:657-709` (`_buildLanguageList`)
+- Scenario: language rows expose selection only by a check icon; no `Semantics(selected:)` → TalkBack does not announce the active language.
+- Fix: `Semantics(selected: isSelected, button: true)`; ~3 lines.
+
+### UX-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/settings/about_page.dart:368-380` (`CachedCoverImage(imageUrl: 'https://github.com/<user>.png')`)
+- Scenario: About fetches contributor avatars from github.com in an offline-only app ("no remote artwork loading").
+- Fix: product decision — document the exception, or show initials via `ProfileAvatar`; ~10 lines. Related: DEAD-604, DEAD-632.
+
+### UX-206 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/settings/about_page.dart:247-250` (`_launchUrl`)
+- Scenario: no handler for `inAppBrowserView` → `launchUrl` throws/returns false; result and errors ignored → silent no-op or unhandled async error.
+- Fix: check the result / catch and show a snackbar; ~6 lines.
+
+### DEAD-621 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/donate_icons.dart`, `priority_settings_scaffold.dart`, `reorderable_priority_item.dart`, `discard_changes_dialog.dart`
+- Scenario: no use in lib/ or test/ outside the files (~500 lines); download/provider-priority/donate leftovers.
+- Fix: delete, plus arb keys that become unused (e.g. `dialogDiscardChanges`).
+
+### DEAD-622 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Mornye destinations; non-Mornye `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isMornye) const SettingsTab()` :542)
+- Scenario: `isMornye` is always true in production → these branches never run.
+- Fix: collapse the shell to the Mornye path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
+
 ## Resolved
 
 _None yet._

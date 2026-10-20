@@ -4,22 +4,21 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 `reviews/PROTOCOL.md`. Keep this file short; history lives in git.
 
 - Last reviewed commit: `2b32361`
-- Graph: `graphify-out/` built from `98fe1946` (fresh for all app code). Check with
+- Graph: `graphify-out/` built from `a54269a9` (fresh for all app code). Check with
   `scripts/review_scope.sh`.
 - Next review unit: `/review` (commits after `2b32361`; review-system commits are
   docs/config only). Suggested fix batch: BUG-001 + BUG-002 + TEST-002 (CUE split).
-- Next audit unit: `ui`, then build, tests (full audit in progress; audio, storage, scanner,
-  metadata, kotlin, rust, state done). Dead-code sweep at the end (iOS helpers,
-  download/re-enrich l10n keys, `recent_access_provider` callers, `music_services.dart`).
-- Open findings: 115 (0 P0, 1 P1, 44 P2, 70 P3; see `FINDINGS.md`).
-- Last checkpoint: `/audit state` (this commit). Previous `f0f07be` pushed and verified.
+- Next audit unit: `build`, then `tests` (full audit in progress; audio, storage, scanner,
+  metadata, kotlin, rust, state, ui done). Dead-code sweep at the end (iOS helpers,
+  download/re-enrich l10n keys, `recent_access_provider` callers, `music_services.dart`;
+  Mornye-only collapse DEAD-601/622/633, UX-104, DEAD-631/632).
+- Open findings: 150 (0 P0, 1 P1, 50 P2, 99 P3; see `FINDINGS.md`).
+- Last checkpoint: `/audit ui` (this commit). Previous `93be339` (review-system update) pushed and verified.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer
   baseline/rollback, scope hints `NO_TEST_CHANGES`/`SPLIT_SUGGESTED`; android test dirs now
   map to `tests`).
-- UI audit: round 1 (player, Library lists/selection, detail/Home) done, findings drafted but
-  not yet recorded; round 2 (settings/shell U4, shared widgets/theme U5) interrupted by usage
-  limit, to be re-run.
+- Product question: UX-205 (About page loads GitHub avatars over the network).
 
 ## Handoff
 

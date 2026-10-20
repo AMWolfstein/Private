@@ -4,6 +4,7 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | `93be339` | `/audit ui`: 5 reviewers in 2 rounds (round 2 resumed after usage limit) + source validation of P2s | 35 findings (6 P2, 29 P3); no tests run |
 | 2026-10-19 | `f0f07be` | `/audit state`: 3 reviewers + source validation of P2s | 20 findings; no tests run |
 | 2026-10-19 | `d2a8907` | `/audit rust` round 2: 3 reviewers; `cargo test --offline -p spotiflac-mobile native_` (reviewer) | 74 passed; 15 findings |
 | 2026-10-19 | `759e73f` | `/audit rust` round 1: 3 reviewers + Opus escalation (RUST-001) + source validation | 13 findings; no cargo runs (baseline green) |
