@@ -1099,6 +1099,91 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: an import graph over all of `lib/` shows no live inbound edge to any of them (~290 lines). Every other zero-importer file is already in FINDINGS.
 - Fix: delete them with their tests. Trim, rather than delete, `file_stat_boundary_test.dart` (see TEST-204) and `track_metadata_badges_line_test.dart`.
 
+### PERF-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/services/library_schema.dart:231-244` (`_createNormalizedIndexes`), `lib/services/library_queue_store.dart:242,503-506` (`artistPage`, `_appendQueueLocalFilters`)
+- Scenario: these queries filter, group or order by `l.album_artist_norm`, and every one of them is a full scan on a library of 10k–50k tracks:
+  - artist-screen tracks, Popular and discography
+  - the Home Artists shelf
+  - `artistPage` (`GROUP BY album_artist_norm ORDER BY artist_key LIMIT/OFFSET`)
+  - Artists with fewer than 40 tracks cannot stop at the LIMIT, so each page scans the whole table.
+- Root cause: no index covers `album_artist_norm`. A source check confirms that only `match_key`, `album_key`, `*_name_norm` for track/artist/album, `scanned_at` and the queue orders are indexed.
+- Fix: add `album_artist_norm`, or a composite `(album_artist_norm, album_key)`, to `_createNormalizedIndexes` with `IF NOT EXISTS` in an upgrade; ~5 lines.
+- Measure: `EXPLAIN QUERY PLAN` and a Stopwatch around `getQueueTrackPageResult(albumArtist:)` on a 20k fixture, before and after.
+
+### PERF-402 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/services/library_genres.dart:8-48` (`libraryGenreTagsSql`, `LibraryGenres.page`); caller `lib/screens/local_genres_screen.dart:76,142`
+- Scenario: a recursive CTE splits `genre` on `;` across every visible row, then runs DISTINCT/GROUP BY again for each 40-row page of the Genres list and of each genre's tracks. `genre` has no index.
+- Impact: estimated 50–200 ms of SQLite time per page at 20k tracks. Pages load slowly; the UI isolate does not stall.
+- Fix: cache the exploded tags per `loadedIndexVersion` (a table or an in-memory list); ~40 lines.
+- Measure: a Stopwatch around `LibraryGenres(db).page()`, list and detail, on 20k tracks with multi-valued genres.
+
+### PERF-404 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/services/library_database.dart:793-815` (`getLookupIndex`), `lib/providers/local_library_provider.dart:65-76,266-300,538-562`
+- Scenario: about 15 refresh paths (after a scan, edit, delete, clear or source change) load up to 2×N `match_key`/`isrc` strings into two Dart `Set`s.
+  - The only consumer, `existsInLibrary`, is called only from `track_list_tile.dart:52`.
+  - `TrackListTile` is dead code (UX-104).
+- Impact: an estimated 40k–100k strings are decoded and held in memory on every refresh, purely for dead code.
+- Fix: drop `getLookupIndex` and the sets from `LocalLibraryState` together with the UX-104 removal; ~30 lines removed.
+
+### PERF-405 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `lib/screens/home_tab_feed.dart:7-12`, `lib/services/library_queue_store.dart:430-470` (`_queueAlbumUnionSql`), `lib/providers/library_browse_provider.dart:150-170`
+- Scenario: every `loadedIndexVersion` bump re-runs about four full-library aggregates for the Home shelves. The browse notifier also re-reads every loaded page.
+- Fix: only if the measurement is bad, cache shelf results per version or use an album summary table.
+- Measure: a Stopwatch around the shelf queries at Home mount, at 20k and 50k tracks.
+
+### PERF-601 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/providers/local_artist_provider.dart:136-139,147-201` (`localArtistPopularProvider`, play-count loader)
+- Scenario: to pick the top 20, the provider pages the artist's whole catalogue 40 rows at a time. Each page runs a DB query, `fromJson` on the UI isolate, `listeningRecorder.flush()` and `playsForTracks`. A `loadedIndexVersion` bump starts the whole thing again.
+- Fix: as a minimum, flush once before the loop (~5 lines). Better: a SQL top-20 joined with play counts.
+- Measure: a Stopwatch around the provider for an artist with ~2000 tracks.
+
+### PERF-602 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/queue_tab_filter_widgets.dart:53-62,283-300` (`localNavigationItems`, `localNavigationIndexByUnifiedId`)
+- Scenario: every QueueTab build makes an O(N) list and a Map over all loaded rows. `_buildUnifiedLibraryItem`/`_buildUnifiedGridItem` accept them but never read them. This adds to PERF-201 (`selectionItems`), and they would be fixed together.
+- Fix: delete the parameters and the loop (~20 lines removed).
+
+### PERF-603 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/home_tab_feed.dart:14-15` (`_buildLocalFeed`)
+- Scenario: the root `HomeTab.build` watches the whole `libraryCollectionsProvider` (which has no `==`) and sorts playlists. A Loved toggle or playlist edit rebuilds all of Home, including while it is kept alive off-screen.
+- Fix: a `Consumer` or `select` on playlists, with the sort memoised; ~10 lines. Measure with the DevTools rebuild counter while toggling Loved.
+
+### PERF-604 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/main.dart:41,79-87` (`main`)
+- Scenario: the `setAppOrientation()` channel call is awaited before, and in sequence with, the prefs and install-marker steps that it does not depend on.
+- Fix: start it in parallel and await it before `runApp`; ~3 lines. Estimated saving 5–20 ms; check with `--trace-startup`.
+
+### PERF-501 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/local/src/backend/cover.rs:109-183` (`cache_cover`), `rust_backend/crates/local/src/files.rs:586-600` (`StagedFile::publish`)
+- Scenario: the cover cache is keyed per file (`uri|lastModified` or `path|size|mtime`), so every track with embedded art writes its own thumbnail. Each write runs `sync_all` plus a directory fsync (source-confirmed).
+  - Example: 10k tracks across ~800 albums gives ~10k files and ~20k fsyncs for a cache that can be regenerated.
+  - The in-memory dedup (32 entries) only skips the repeated decode.
+- Fix: ~20 lines, either of:
+  - name the file by a hash of the thumbnail bytes and skip it if it exists; this must stay compatible with the cover sweep and with DATA-502/CONC-102;
+  - publish the cache without fsync.
+- Measure: scan time of a 2k-track corpus, `strace -c -e fsync,fdatasync`, and `du` of the cover dir against the distinct album count.
+
+### PERF-502 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:253-270` (`acceptRead`), `SafMetadataReadPolicy.kt:22-28`
+- Scenario: unreadable or missing tags (`metadataFromFilename: true`) make `acceptRead` throw `IOException`. The fallback then:
+  - copies the whole file to temp;
+  - reads it again;
+  - retries the direct read.
+  The file is never stored, so this repeats on every incremental scan. The path is source-confirmed; how often it happens in real libraries is unknown.
+- Fix: return a typed "file readable, tags unreadable" result and skip the copy and retry for it, keeping the fallback for open/seek failures; ~10 lines.
+- Measure: count `copyUriToTemp` calls while scanning 200 untagged MP3s.
+
+### PERF-503 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/local/src/backend/library.rs:89-112`, `rust_backend/crates/core/src/tags/containers.rs:257-310`
+- Scenario: Ogg/Opus covers are reassembled twice on a cache miss: the comment packet with its base64 art goes through `extract_cover` and again through `read_library_metadata`. FLAC already uses a merged pass.
+- Fix: reuse the assembled packet; ~30 lines. Measure on an Opus-heavy corpus first.
+
+### PERF-504 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1555-1575,1508-1509,1098-1099`
+- Scenario:
+  - Every incremental scan copies each unchanged `.cue` to temp, one at a time, just to re-resolve its audio sibling.
+  - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
+- Fix: persist the cue→audio URI mapping, or resolve it from the cached listing; ~20 lines.
+
 ## Resolved
 
 _None yet._
@@ -1117,3 +1202,4 @@ _False positives and intentional behavior, with one-line reason._
 - R-003 (`/code-review` #10, graphify commit title `81577e5` missing "code"): historical pushed commit; fixing needs history rewrite. Future commits follow the AGENTS.md wording.
 - R-009 (build DEP-003, debug-key release signing): duplicate of SEC-302 from the parallel security pass.
 - R-010 (tests TEST-302, settings migration/setup flags untested): covered — `settings_persistence_test.dart:72-73` asserts both flags in one write; `installation_restore_test.dart:97-117` sanitizes legacy download-folder fields.
+- R-011 (perf PERF-403, `shuffleLibrary` full load): its only caller is the dead `player_queue_sheet.dart` (DEAD-601); the live `getAll()` caller is UX-101. DATA-002's `shuffleLibrary` part is likewise on that dead path.

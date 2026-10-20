@@ -35,6 +35,17 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | 20 | DATA-201, DATA-203, DATA-004 | Search tokenization, duplicate keep-best, and singles/albums counts. |
 | 21 | UI-202, UI-401, BUG-203, BUG-204 | Verify each first; then stale selection counts, log list rebuilds and library reload edges. |
 
+## Tier 2b: performance (measure first, then fix)
+
+| # | Findings | What it fixes |
+|---|---|---|
+| P1 | PERF-401 | Add the `album_artist_norm` index; artist screens and the Artists shelf stop doing full scans. |
+| P2 | PERF-501, PERF-504 | One cover file per image without fsync; incremental scans stop re-copying unchanged CUEs. |
+| P3 | PERF-502 | Untagged files stop being copied whole on every scan. |
+| P4 | PERF-402, PERF-601 | Genres exploded once per library version; a one-query top 20 for Artist Popular. |
+| P5 | PERF-404 (with UX-104), PERF-201, PERF-602 | Dead lookup sets and wasted per-build list work. |
+| P6 | PERF-405, PERF-603, PERF-604 | Home shelf caching and rebuild scope, and startup ordering. Only if measured. |
+
 ## Tier 3: cleanup
 
 Each row is one feature-removal batch, following the `AGENTS.md` graphify-first workflow. The
