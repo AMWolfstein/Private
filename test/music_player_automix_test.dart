@@ -1637,6 +1637,32 @@ void main() {
     },
   );
 
+  test('an effect deck that never sounds falls back without a drop', () async {
+    setAutoMixOptions(const AutoMixOptions(effect: AutoMixEffect.echo));
+    await prepare();
+    await _until(
+      () => native.sources.values.any((path) => path.endsWith('/tail.wav')),
+    );
+    final effect = native.sources.entries
+        .singleWhere((entry) => entry.value.endsWith('/tail.wav'))
+        .key;
+    native.stalled.add(effect);
+    native.positions['music-player'] = 55000;
+    await _until(
+      () =>
+          native.calls.any((call) => call.$1 == effect && call.$2 == 'resume'),
+    );
+    // The live song keeps full gain while the silent effect deck is checked.
+    expect(native.lastVolume('music-player'), 1);
+    // Allow the production two-second progress deadline to expire.
+    await handler.mediaItem
+        .firstWhere((item) => item?.id == 'two')
+        .timeout(const Duration(seconds: 4));
+    expect(native.live, isNot(contains(effect)));
+    expect(native.lastVolume(effect), anyOf(isNull, 0));
+    expect(native.playing, contains('music-player'));
+  });
+
   test('effect rendering failure retains ordinary crossfade', () async {
     effectRenderer.fail = true;
     setAutoMixOptions(
