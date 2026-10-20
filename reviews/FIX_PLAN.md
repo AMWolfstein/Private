@@ -54,7 +54,7 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | M2 | MORN-004, MORN-005, MORN-017 | Loading, empty and error states; Pause on the playing playlist row. |
 | M3 | MORN-006, MORN-007, MORN-008 | Album header meta (genre, year, localized minutes), CUE Play-all, ReplayGain label. |
 | M4 | MORN-009, MORN-010, MORN-011, MORN-012 | Artist header buttons, placeholders, collapse threshold, Popular rows and album cards. |
-| M5 | MORN-013, MORN-014 | Collection action styling/feedback and one cover source (owner confirms the tonal look). |
+| M5 | MORN-013, MORN-014 | Collection action styling/feedback (tonal style, owner-approved) and one cover source. |
 | M6 | MORN-015, MORN-016 | Upstream-latest landscape header and Mornye contrast/touch-target fixes. |
 
 ## Tier 3: cleanup
@@ -85,3 +85,4 @@ touches the same file.
 - SEC-301: keep `MANAGE_EXTERNAL_STORAGE`.
 - DEAD-909: keep `NativeReplayGainPolicy` for the Media3/ExoPlayer port.
 - U-001 (`UPSTREAM.md`): port upstream tag separators under Local Library settings.
+- MORN-013: use the tonal style for the Loved and Add-to-playlist circles.

@@ -1358,7 +1358,7 @@ artist/album/playlist screens compared with the local screens. Upstream refs are
 ### MORN-013 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/widgets/local_collection_actions.dart:42-77`
 - Scenario: Loved and Add-to-playlist circles use non-tonal glass, so they differ from the Play/Shuffle pills; no red tint when all loved; toggle is silent (upstream `loveAllTracks` snackbars) and its error path reuses `showCannotOpenFileSnackBar`. Affects album and playlist headers.
-- Fix: `tonal: true`, `iconColor: error` when all loved, reuse `loveAllTracks` feedback. Owner to confirm the tonal look.
+- Fix: `tonal: true` (owner decision 2026-10-20: use the tonal style), `iconColor: error` when all loved, reuse `loveAllTracks` feedback.
 
 ### MORN-014 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/screens/library_tracks_folder_screen.dart:220-223`, :481, :545
