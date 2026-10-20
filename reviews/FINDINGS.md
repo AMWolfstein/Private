@@ -979,6 +979,76 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: NOTICE attributes Go-licensed code to a crate that no longer exists; pubspec comment names a removed section.
 - Fix: repoint or drop the NOTICE sentence; retitle the comment. Docs only.
 
+### TEST-301 [P2] [confidence: medium] [VALIDATED]
+- Location: test/ (no file); `lib/widgets/local_song_file_actions.dart:81` (`deleteLocalSong`)
+- Scenario: the AGENTS.md rule "deleting one virtual CUE row preserves the backing CUE/audio" has no test (`grep deleteLocalSong test` is empty); a regression would delete the album file under every sibling track.
+- Fix: temp dir with album.cue + album.flac and two virtual rows; delete one row; assert both files remain and only that row is removed (~40 lines). Write it with the DATA-001 fix.
+- Guards checked: none found.
+
+### TEST-201 [P2] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `test/library_browse_sqlite_paging_test.dart:25-33`, `test/support/sqlite_process_database.dart:37-52,160-168`, `test/support/library_paging_fixture.dart:84-91`
+- Scenario: probable cause of the known flake — one monolithic test does ~8000 sequential pipe round-trips to a `python3` subprocess to build a 4000-row fixture per setUp, then 7 paging scenarios, all under the default 30 s timeout; parallel/loaded runs can time out. `close()` awaits the subprocess exit with no bound.
+- Fix: explicit timeout, build the fixture in `setUpAll`, split scenarios, optionally one `executemany` request; ~10–20 lines. Confirm by looping the file 10× under `--concurrency=8` and checking for 30 s timeouts.
+
+### TEST-202 [P3] [confidence: high] [VALIDATED]
+- Location: `test/library_collections_hydration_test.dart:106,164,181,211,227,265,292`, `test/library_collections_mutation_test.dart:629,702`, `test/music_player_automix_test.dart:32`
+- Scenario: system temp directories created and never deleted (hydration fixtures reach 20000-row ndjson).
+- Fix: `addTearDown(() => dir.delete(recursive: true))` right after each creation; ~10 lines.
+
+### TEST-203 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `test/library_collections_hydration_test.dart:335-348,455-464` (`expect(ticks, greaterThan(1))`), `test/support/library_collections_benchmark.dart:71`, integration_test native heartbeats
+- Scenario: responsiveness asserted by counting real 1 ms `Timer.periodic` ticks; a fast parse (smaller fixture at :333) can yield 0–1 ticks.
+- Fix: order-based check (timer/microtask scheduled mid-work ran before completion) instead of a count.
+
+### TEST-204 [P3] [confidence: high] [VALIDATED]
+- Location: `test/file_stat_boundary_test.dart:64-84`
+- Scenario: as uid 0, `chmod 000` does not block traversal → known spurious failure in root containers; skip covers only Windows.
+- Fix: condition-based skip when `id -u` is `0`; ~4 lines.
+
+### TEST-205 [P3] [confidence: high] [VALIDATED]
+- Location: repo-wide (~55 `expect(x.length, N)`, ~8 `expect(x.isEmpty, isTrue)`, e.g. `library_collections_database_read_test.dart:151`, `local_artist_popular_test.dart:71-72`)
+- Scenario: weak matchers give poor failure messages; no false passes found.
+- Fix: use `hasLength`/`isEmpty`/`everyElement` only in files already being touched.
+
+### TEST-303 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `rust_backend/crates/mobile/src/native_backup/**/tests.rs`, `test/backup_collections_json_test.dart`
+- Scenario: "old JSON imports ignore Wishlist" has no fixture in Rust or Dart (only the DB schema v3 upgrade is tested in `collections_upgrade_test.dart`).
+- Fix: a legacy backup with a `wishlist` section restores and keeps Loved/playlists/favorite artists; ~40 lines.
+
+### TEST-304 [P3] [confidence: medium] [VALIDATED]
+- Location: `scripts/` (no CI, no `.github`)
+- Scenario: nothing runs the 63 Kotlin unit tests (`android/app/src/test`, 12 files) or the device-only androidTest/integration_test suites; only `check_rust_backend.sh` exists.
+- Fix: `scripts/check_android.sh` running `./gradlew :app:testDebugUnitTest`, referenced from AGENTS.md; ~5 lines.
+
+### TEST-101 [P3] [confidence: high] [VALIDATED]
+- Location: test trim map for the dead-code sweep (one entry instead of per-DEAD edits)
+- Scenario: these tests keep dead code alive and must be deleted or trimmed together with the matching entry:
+  - DEAD-001: delete `ffmpeg_decryption_output_test.dart`.
+  - DEAD-002: delete `lyrics_metadata_helper_test.dart`, `re_enrich_release_policy_test.dart` and `re_enrich_result_test.dart`.
+  - DEAD-003: delete `cover_art_utils_test.dart`.
+  - DEAD-004 and DEAD-632: trim `downloaded_embedded_cover_resolver_test.dart` and `cached_cover_decode_test.dart`.
+  - DEAD-202: trim `platform_bridge_metadata_test.dart:157-167`.
+  - DEAD-203 and DEAD-304: trim `integration_test/lyrics_file_access_test.dart`, plus the `getLyricsLRCWithSource` stubs in `mornye_library_actions_test.dart:50` and `library_search_results_test.dart:54`.
+  - DEAD-207: delete `ios_library_folder_sheet_test.dart`, `ios_container_paths_test.dart` and `file_access_ios_test.dart`, and trim the bookmark cases in `platform_bridge_metadata_test.dart:181-193` and `installation_restore_test.dart:98-120`.
+  - DEAD-401, DEAD-402 and DEAD-403: trim these. Keep the "old JSON still loads" and "key absent" assertions.
+    - `models_and_utils_test.dart:545-615`
+    - `settings_persistence_test.dart:75,124,132`
+    - `native_backup_contract_test.dart:95-132` and `fixtures/native_backup_contract.json`
+    - `integration_test/native_data_jobs_test.dart` and `integration_test/native_history_snapshot_test.dart`
+    - The `downloadDirectory*` and `downloadDirectoryBookmark` model fields are not yet covered by a DEAD entry. Add them to that sweep.
+  - DEAD-501: delete `provider_resource_ids_test.dart`.
+  - DEAD-502: delete `ttl_cache_test.dart`, and trim or delete `cover_cache_maintenance_test.dart`.
+  - DEAD-503: trim `models_and_utils_test.dart:25-49,272-283,892-893` and `artist_utils_test.dart:24-33`.
+  - DEAD-504: delete `album_description_test.dart`.
+  - UX-104: delete `track_history_snapshot_test.dart`, `track_collection_action_policy_test.dart` and `track_list_tile_selection_test.dart`. Trim `library_tracks_folder_data_test.dart` (`historyRequest`) and `maintainability_contracts_test.dart:91-94`.
+  - DEAD-601: delete `expressive_seek_track_test.dart`. Trim `now_playing_lyrics_transition_test.dart:27,274-275`, and rework `player_widget_ownership_test.dart:80` (it builds `MaterialPlayerLayout`).
+    - A reviewer flagged `playback_seek_slider.dart:124` as a live use. It is not: the Mornye branch at `:83` always returns before it.
+  - DEAD-602: delete `smoothed_progress_test.dart`.
+  - DEAD-603: trim `app_snack_bar_test.dart` and `shell_navigation_service_test.dart:162`.
+  - DEAD-631: trim `detail_route_loading_test.dart` and `mornye_loading_and_chrome_test.dart`.
+  - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
+- Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
+
 ## Resolved
 
 _None yet._
@@ -996,3 +1066,4 @@ _False positives and intentional behavior, with one-line reason._
 - R-008 (kotlin DEAD-204/DEAD-205): duplicates of DEAD-002 and DATA-101; native parts added there.
 - R-003 (`/code-review` #10, graphify commit title `81577e5` missing "code"): historical pushed commit; fixing needs history rewrite. Future commits follow the AGENTS.md wording.
 - R-009 (build DEP-003, debug-key release signing): duplicate of SEC-302 from the parallel security pass.
+- R-010 (tests TEST-302, settings migration/setup flags untested): covered — `settings_persistence_test.dart:72-73` asserts both flags in one write; `installation_restore_test.dart:97-117` sanitizes legacy download-folder fields.
