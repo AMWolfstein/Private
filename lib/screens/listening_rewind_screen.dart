@@ -16,7 +16,6 @@ import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/services/listening_rewind.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/theme/app_motion.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
@@ -180,46 +179,53 @@ class _MonthlyRewindBanner extends StatelessWidget {
     final foreground = mornye ? colors.onSurface : colors.onTertiaryContainer;
     final accent = mornye ? colors.primary : colors.tertiary;
     final onAccent = mornye ? colors.onPrimary : colors.onTertiary;
-    return AppContentCard(
-      margin: margin,
-      color: colors.tertiaryContainer,
-      shape: RoundedRectangleBorder(
-        borderRadius: context.tokens.borderRadiusCard,
-      ),
-      onTap: () => openListeningRewind(context, ListeningRewindPeriod.weeks),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            _RewindBadge(
-              size: 48,
-              color: accent,
-              child: Icon(Icons.auto_awesome, color: onAccent),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.listeningRewind,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: foreground,
-                    ),
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: AppContentCard(
+        color: colors.tertiaryContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: context.tokens.borderRadiusCard,
+        ),
+        child: InkWell(
+          onTap: () =>
+              openListeningRewind(context, ListeningRewindPeriod.weeks),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                _RewindBadge(
+                  size: 48,
+                  color: accent,
+                  child: Icon(Icons.auto_awesome, color: onAccent),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.listeningRewind,
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: foreground,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        l10n.listeningRewindMonthlyReady,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: foreground,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    l10n.listeningRewindMonthlyReady,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: textTheme.bodyMedium?.copyWith(color: foreground),
-                  ),
-                ],
-              ),
+                ),
+                Icon(Icons.chevron_right, color: foreground),
+              ],
             ),
-            Icon(Icons.chevron_right, color: foreground),
-          ],
+          ),
         ),
       ),
     );
@@ -546,14 +552,11 @@ class _RewindStoryState extends State<_RewindStory>
 
   void _go(int index) {
     if (index < 0 || index >= _slides.length) return;
-    final motion = AppMotion.spatialSlow(
-      context,
-      AppMotionSpec(
-        MediaQuery.disableAnimationsOf(context)
-            ? Duration.zero
-            : const Duration(milliseconds: 320),
-        Curves.easeOutCubic,
-      ),
+    final motion = (
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
     );
     if (motion.duration == Duration.zero) {
       _pages.jumpToPage(index);
@@ -1341,12 +1344,9 @@ class _Reveal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reduced = MediaQuery.disableAnimationsOf(context);
-    final motion = AppMotion.spatial(
-      context,
-      AppMotionSpec(
-        reduced ? Duration.zero : const Duration(milliseconds: 420),
-        Curves.easeOutCubic,
-      ),
+    final motion = (
+      duration: reduced ? Duration.zero : const Duration(milliseconds: 420),
+      curve: Curves.easeOutCubic,
     );
     if (motion.duration == Duration.zero) return child;
     const stagger = Duration(milliseconds: 90);

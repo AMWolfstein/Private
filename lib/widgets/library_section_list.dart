@@ -51,8 +51,9 @@ class _SectionedLibrarySliverListState<T>
   void didUpdateWidget(covariant SectionedLibrarySliverList<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!identical(oldWidget.items, widget.items) ||
-        oldWidget.groupingKey != widget.groupingKey)
+        oldWidget.groupingKey != widget.groupingKey) {
       _group();
+    }
   }
 
   void _group() {

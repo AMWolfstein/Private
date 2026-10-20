@@ -3,7 +3,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/theme/app_motion.dart';
 
 /// A draggable scroll thumb for long library lists, with a bubble naming the
 /// section under the thumb (a letter or a month).
@@ -203,12 +202,9 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final reduced = MediaQuery.disableAnimationsOf(context);
-    final motion = AppMotion.spatialFast(
-      context,
-      AppMotionSpec(
-        reduced ? Duration.zero : const Duration(milliseconds: 180),
-        Curves.easeOutCubic,
-      ),
+    final motion = (
+      duration: reduced ? Duration.zero : const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
     );
     // NestedScrollView's body slides behind its pinned header. Reserve only
     // the part of that header currently overlapping this body's viewport.
@@ -345,7 +341,7 @@ class _Bubble extends StatelessWidget {
   const _Bubble({super.key, required this.label, required this.motion});
 
   final String label;
-  final AppMotionSpec motion;
+  final ({Duration duration, Curve curve}) motion;
 
   @override
   Widget build(BuildContext context) {

@@ -1357,7 +1357,6 @@ class _AnimatedLibrarySliverGrid extends StatefulWidget {
   final double? maxExtent;
 
   const _AnimatedLibrarySliverGrid({
-    super.key,
     required this.maxCrossAxisExtent,
     required this.mainAxisSpacing,
     required this.crossAxisSpacing,
