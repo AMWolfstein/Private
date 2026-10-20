@@ -20,6 +20,7 @@ import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/app_state_database.dart';
 import 'package:spotiflac_android/services/app_navigation_service.dart';
 import 'package:spotiflac_android/services/app_orientation.dart';
+import 'package:spotiflac_android/services/activity_attachment.dart';
 import 'package:spotiflac_android/services/music_player_service.dart';
 import 'package:spotiflac_android/services/player_widget_service.dart';
 import 'package:spotiflac_android/screens/now_playing_screen.dart';
@@ -37,7 +38,12 @@ void main() {
   // Native (Go) crashes still can't be caught here.
   runZonedGuarded(
     () async {
-      WidgetsFlutterBinding.ensureInitialized();
+      final binding = WidgetsFlutterBinding.ensureInitialized();
+      if (Platform.isAndroid) {
+        // A media service can start the shared engine before MainActivity
+        // registers the local backend and platform channels.
+        await waitForActivityAttachment(binding);
+      }
       await setAppOrientation();
       LicenseRegistry.addLicense(() async* {
         yield LicenseEntryWithLineBreaks(const [
