@@ -165,6 +165,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   bool _isLoaded = false;
   bool _hasLoadedFromDatabase = false;
   Future<void>? _loadFuture;
+  Future<void>? _scanRecovery;
+  Future<void> _scanNotificationTail = Future<void>.value();
   bool _scanCancelRequested = false;
   bool _scanPauseRequested = false;
   bool _scanInProgress = false;
@@ -250,6 +252,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     state = state.copyWith(isLoading: true, loadFailed: false);
 
     try {
+      await _recoverInterruptedScan();
+      if (!ref.mounted) return;
       // Folder configuration is independent of the potentially expensive
       // track index and storage probes. Publish it before either can fail.
       final configuredSources = await _db.getSources();
@@ -725,6 +729,51 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     );
   }
 
+  Future<void> _recoverInterruptedScan() =>
+      _scanRecovery ??= _recoverPreviousScan();
+
+  Future<void> _recoverPreviousScan() async {
+    try {
+      final prefs = await _prefs;
+      final sourceId = prefs.getString(localLibraryActiveScanSourceKey);
+      if (!ref.mounted || sourceId == null || sourceId.trim().isEmpty) return;
+      final startedAfter =
+          prefs.getInt(localLibraryActiveScanStartedAtKey) ?? 0;
+      final recoveryKey = '$sourceId:$startedAfter';
+      if (prefs.getString(localLibraryRecoveredScanKey) == recoveryKey) return;
+      var message = _notificationService.libraryScanInterruptedMessage;
+      try {
+        final exit = await PlatformBridge.getLibraryScanExitInfo(
+          startedAfter: startedAfter,
+        );
+        if (exit != null) {
+          _log.e('Android process exit during library scan: $exit');
+          final reason = exit['reason'] as String?;
+          final description = exit['description'] as String?;
+          message = [
+            message,
+            if (reason != null && reason.isNotEmpty) reason,
+            if (description != null && description.isNotEmpty) description,
+          ].join('\n');
+        }
+      } catch (e) {
+        _log.w('Android did not provide a scan exit report: $e');
+      }
+      _log.e('Interrupted library scan for $sourceId: $message');
+      await _notificationService.endBackgroundWork(
+        NotificationService.libraryScanWorkKind,
+      );
+      await _cancelScanPausedNotification();
+      await _showScanFailedNotification(message);
+      // Keep the checkpoint marker so enabled auto-scan can resume it. This
+      // recovery also runs when auto-scan is off and never deletes tracks.
+      await _db.updateSourceState(sourceId, lastScanError: message);
+      await prefs.setString(localLibraryRecoveredScanKey, recoveryKey);
+    } catch (e, stack) {
+      _log.e('Could not fully recover interrupted library scan: $e', e, stack);
+    }
+  }
+
   Future<({int inserted, int skipped})?> _replaceFromFullScanStream({
     required String sourceId,
     required String folderPath,
@@ -779,6 +828,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     String? iosBookmark,
     String? sourceId,
   }) async {
+    if (!ref.mounted) return;
+    await _recoverInterruptedScan();
     if (!ref.mounted) return;
     if (_scanInProgress || state.isScanning) {
       _log.w('Scan already in progress');
@@ -863,7 +914,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       await _releaseNativeScanPause();
       try {
         final prefs = await _prefs;
+        await prefs.setInt(
+          localLibraryActiveScanStartedAtKey,
+          DateTime.now().millisecondsSinceEpoch,
+        );
         await prefs.setString(localLibraryActiveScanSourceKey, activeSourceId);
+        await prefs.remove(localLibraryRecoveredScanKey);
       } catch (e) {
         _log.w('Failed to persist active library scan marker: $e');
       }
@@ -1254,21 +1310,37 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         return;
       }
       _log.e('Library scan failed: $e', e, stack);
-      if (activeSourceId != null) {
-        await _db.updateSourceState(
-          activeSourceId,
-          lastScanError: e.toString(),
-        );
-        await _refreshSummaryFromStorage();
-      }
-      if (!ref.mounted) return;
       state = state.copyWith(
         isScanning: false,
         scanIsFinalizing: false,
         scanWasCancelled: false,
+        sources: [
+          for (final source in state.sources)
+            source.id == activeSourceId
+                ? source.copyWith(lastScanError: e.toString())
+                : source,
+        ],
       );
+      _stopProgressPolling();
       await _showScanFailedNotification(e.toString());
+      if (activeSourceId != null) {
+        try {
+          await _db.updateSourceState(
+            activeSourceId,
+            lastScanError: e.toString(),
+          );
+          await _refreshSummaryFromStorage();
+        } catch (saveError, saveStack) {
+          _log.e(
+            'Could not save library scan failure: $saveError',
+            saveError,
+            saveStack,
+          );
+        }
+      }
     } finally {
+      _stopProgressPolling();
+      await _scanNotificationTail;
       await _notificationService.endBackgroundWork(
         NotificationService.libraryScanWorkKind,
       );
@@ -1276,7 +1348,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         await PlatformBridge.stopAccessingIosBookmark(securityAccess);
         _log.i('Stopped iOS security-scoped access');
       }
-      _stopProgressPolling();
       if (_scanPauseRequested) {
         _scanPauseRequested = false;
         await _releaseNativeScanPause();
@@ -1286,6 +1357,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         if (prefs.getString(localLibraryActiveScanSourceKey) ==
             activeSourceId) {
           await prefs.remove(localLibraryActiveScanSourceKey);
+          await prefs.remove(localLibraryActiveScanStartedAtKey);
+          await prefs.remove(localLibraryRecoveredScanKey);
         }
       } catch (e) {
         _log.w('Failed to clear active library scan marker: $e');
@@ -1489,8 +1562,10 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
   Future<void> _showScanPausedNotification(int scannedFiles) async {
     try {
-      await _notificationService.showLibraryScanPaused(
-        scannedFiles: scannedFiles,
+      await _queueScanNotification(
+        () => _notificationService.showLibraryScanPaused(
+          scannedFiles: scannedFiles,
+        ),
       );
     } catch (e) {
       _log.w('Failed to show scan paused notification: $e');
@@ -1499,7 +1574,9 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
   Future<void> _cancelScanPausedNotification() async {
     try {
-      await _notificationService.cancelLibraryScanNotification();
+      await _queueScanNotification(
+        _notificationService.cancelLibraryScanNotification,
+      );
     } catch (e) {
       _log.w('Failed to clear scan paused notification: $e');
     }
@@ -1512,12 +1589,15 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     required String? currentFile,
   }) async {
     try {
-      await _notificationService.showLibraryScanProgress(
-        progress: progress,
-        scannedFiles: scannedFiles,
-        totalFiles: totalFiles,
-        currentFile: _shortenFileForNotification(currentFile),
-      );
+      await _queueScanNotification(() async {
+        if (!ref.mounted || !state.isScanning || state.scanIsPaused) return;
+        await _notificationService.showLibraryScanProgress(
+          progress: progress,
+          scannedFiles: scannedFiles,
+          totalFiles: totalFiles,
+          currentFile: _shortenFileForNotification(currentFile),
+        );
+      });
     } catch (e) {
       _log.w('Failed to show scan progress notification: $e');
     }
@@ -1529,10 +1609,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     required int errorCount,
   }) async {
     try {
-      await _notificationService.showLibraryScanComplete(
-        totalTracks: totalTracks,
-        excludedDownloadedCount: excludedDownloadedCount,
-        errorCount: errorCount,
+      await _queueScanNotification(
+        () => _notificationService.showLibraryScanComplete(
+          totalTracks: totalTracks,
+          excludedDownloadedCount: excludedDownloadedCount,
+          errorCount: errorCount,
+        ),
       );
     } catch (e) {
       _log.w('Failed to show scan complete notification: $e');
@@ -1541,7 +1623,9 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
   Future<void> _showScanFailedNotification(String message) async {
     try {
-      await _notificationService.showLibraryScanFailed(message);
+      await _queueScanNotification(
+        () => _notificationService.showLibraryScanFailed(message),
+      );
     } catch (e) {
       _log.w('Failed to show scan failure notification: $e');
     }
@@ -1549,10 +1633,19 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
   Future<void> _showScanCancelledNotification() async {
     try {
-      await _notificationService.showLibraryScanCancelled();
+      await _queueScanNotification(
+        _notificationService.showLibraryScanCancelled,
+      );
     } catch (e) {
       _log.w('Failed to show scan cancelled notification: $e');
     }
+  }
+
+  Future<void> _queueScanNotification(Future<void> Function() notify) {
+    final next = _scanNotificationTail.then((_) => notify());
+    // A failed notification must not prevent the terminal notice or cleanup.
+    _scanNotificationTail = next.catchError((Object _) {});
+    return next;
   }
 
   String? _shortenFileForNotification(String? path) {

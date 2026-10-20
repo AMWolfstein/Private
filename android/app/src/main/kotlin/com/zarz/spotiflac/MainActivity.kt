@@ -94,6 +94,7 @@ class MainActivity: FlutterFragmentActivity() {
         "scanSafTreeIncremental",
         "scanSafTreeIncrementalFromSnapshot",
         "getLibraryScanProgress",
+        "getLibraryScanExitInfo",
         "cancelLibraryScan",
         "pauseLibraryScan",
         "resumeLibraryScan",
@@ -1611,6 +1612,13 @@ class MainActivity: FlutterFragmentActivity() {
                                 }
                             }
                             result.success(parseJsonPayload(response))
+                        }
+                        "getLibraryScanExitInfo" -> {
+                            val startedAfter = call.argument<Number>("started_after")?.toLong() ?: 0L
+                            val response = withContext(Dispatchers.IO) {
+                                LibraryScanExitInfo.read(applicationContext, startedAfter)
+                            }
+                            result.success(response)
                         }
                         "cancelLibraryScan" -> {
                             withContext(Dispatchers.IO) {

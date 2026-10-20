@@ -1065,6 +1065,16 @@ class PlatformBridge {
     return _decodeMapResult(result);
   }
 
+  static Future<Map<String, dynamic>?> getLibraryScanExitInfo({
+    required int startedAfter,
+  }) async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return null;
+    final result = await _channel.invokeMethod('getLibraryScanExitInfo', {
+      'started_after': startedAfter,
+    });
+    return _decodeNullableMapResult(result, 'getLibraryScanExitInfo');
+  }
+
   static Stream<Map<String, dynamic>> libraryScanProgressStream() {
     return _libraryScanProgressEvents.receiveBroadcastStream().map(
       _decodeMapResult,
