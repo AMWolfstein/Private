@@ -10,13 +10,13 @@ import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
 import 'package:spotiflac_android/widgets/library_search_results.dart';
 
 enum MornyeLibraryPage { overview, albums, artists }
@@ -527,26 +527,12 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
   }
 }
 
-class _LibraryBrowseArtwork extends StatefulWidget {
+class _LibraryBrowseArtwork extends StatelessWidget {
   const _LibraryBrowseArtwork({required this.entry});
   final LibraryBrowseEntry entry;
 
   @override
-  State<_LibraryBrowseArtwork> createState() => _LibraryBrowseArtworkState();
-}
-
-class _LibraryBrowseArtworkState extends State<_LibraryBrowseArtwork> {
-  @override
   Widget build(BuildContext context) {
-    final entry = widget.entry;
-    final embedded = entry.cover?.isNotEmpty == true
-        ? null
-        : DownloadedEmbeddedCoverResolver.resolve(
-            entry.samplePath,
-            onChanged: () {
-              if (mounted) setState(() {});
-            },
-          );
     Widget fallback(BuildContext context) => ColoredBox(
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Center(
@@ -557,9 +543,12 @@ class _LibraryBrowseArtworkState extends State<_LibraryBrowseArtwork> {
         ),
       ),
     );
-    final cover = entry.cover?.isNotEmpty == true ? entry.cover! : embedded;
-    return cover == null
-        ? fallback(context)
-        : LocalCoverImage(url: cover, placeholder: fallback);
+    return LocalLibraryArtworkBuilder(
+      coverPath: entry.cover,
+      filePath: entry.samplePath,
+      builder: (context, cover) => cover == null
+          ? fallback(context)
+          : LocalCoverImage(url: cover, placeholder: fallback),
+    );
   }
 }

@@ -36,6 +36,7 @@ import 'package:spotiflac_android/widgets/disc_separator_chip.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
 import 'package:spotiflac_android/widgets/local_collection_actions.dart';
+import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
@@ -214,17 +215,34 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return MornyeArtistSurface(
-        imageSource: widget.coverPath,
-        neutralActions: true,
-        child: Builder(builder: _buildPage),
-      );
-    }
-    return _buildPage(context);
+    final albumCover = widget.coverPath?.trim();
+    final artworkTrack =
+        _sortedTracksCache
+            .where(
+              (track) => albumCover?.isNotEmpty == true
+                  ? track.coverPath == albumCover
+                  : track.coverPath?.isNotEmpty == true,
+            )
+            .firstOrNull ??
+        _sortedTracksCache.firstOrNull;
+    return LocalLibraryArtworkBuilder(
+      coverPath: albumCover?.isNotEmpty == true
+          ? albumCover
+          : artworkTrack?.coverPath,
+      filePath: artworkTrack?.filePath,
+      builder: (context, coverPath) => context.isMornye
+          ? MornyeArtistSurface(
+              imageSource: coverPath,
+              neutralActions: true,
+              child: Builder(
+                builder: (context) => _buildPage(context, coverPath),
+              ),
+            )
+          : _buildPage(context, coverPath),
+    );
   }
 
-  Widget _buildPage(BuildContext context) {
+  Widget _buildPage(BuildContext context, String? coverPath) {
     final colorScheme = Theme.of(context).colorScheme;
     final bottomPadding = isSelectionMode
         ? MediaQuery.paddingOf(context).bottom
@@ -244,7 +262,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       scrollController: scrollController,
       isSelectionMode: isSelectionMode,
       onExitSelectionMode: exitSelectionMode,
-      appBar: _buildAppBar(context, colorScheme),
+      appBar: _buildAppBar(context, colorScheme, coverPath),
       slivers: [
         if (_loadError != null)
           SliverToBoxAdapter(
@@ -285,12 +303,16 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     );
   }
 
-  Widget _buildAppBar(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildAppBar(
+    BuildContext context,
+    ColorScheme colorScheme,
+    String? coverPath,
+  ) {
     final expandedHeight = calculateExpandedHeight(context);
     final cacheWidth = coverCacheWidthForViewport(context);
-    final Widget background = widget.coverPath != null
+    final Widget background = coverPath != null
         ? Image.file(
-            File(widget.coverPath!),
+            File(coverPath),
             fit: BoxFit.cover,
             cacheWidth: cacheWidth,
             gaplessPlayback: true,
@@ -313,11 +335,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
       background: background,
-      paletteSource: widget.coverPath,
-      blurAndScrimBackground: widget.coverPath != null,
-      coverBuilder: (context, coverSize) => widget.coverPath != null
+      paletteSource: coverPath,
+      blurAndScrimBackground: coverPath != null,
+      coverBuilder: (context, coverSize) => coverPath != null
           ? Image.file(
-              File(widget.coverPath!),
+              File(coverPath),
               fit: BoxFit.cover,
               width: coverSize,
               height: coverSize,
@@ -342,7 +364,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
             ),
       subtitle: ClickableArtistName(
         artistName: widget.artistName,
-        coverUrl: widget.coverPath,
+        coverUrl: coverPath,
         style: TextStyle(
           color: context.isMornye
               ? colorScheme.primary

@@ -45,6 +45,7 @@ import 'package:spotiflac_android/widgets/local_song_row.dart';
 import 'package:spotiflac_android/widgets/local_song_menu.dart';
 import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/mornye_library_screen.dart';
