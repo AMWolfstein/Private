@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/screens/listening_rewind_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -61,6 +62,8 @@ class _ListeningStatisticsScreenState
     try {
       await listeningRecorder.clear(ListeningStatisticsStore.instance.clear);
       ref.invalidate(listeningSummaryProvider);
+      ref.invalidate(listeningRewindProvider);
+      ref.invalidate(listeningRewindSpotlightProvider);
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -83,6 +86,7 @@ class _ListeningStatisticsScreenState
         child: CustomScrollView(
           slivers: [
             AppSliverHeader.page(title: context.l10n.listeningStats),
+            const SliverToBoxAdapter(child: ListeningRewindEntry()),
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [

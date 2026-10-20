@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/screens/listening_rewind_screen.dart';
+import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'dart:async';
 import 'package:spotiflac_android/screens/local_genres_screen.dart';
 
@@ -299,6 +301,16 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                   _openPage(MornyeLibraryPage.albums, artist: artist),
             ),
           if (!searchingLibrary) ...[
+            if (_overview &&
+                _query.isEmpty &&
+                ref.watch(
+                  settingsProvider.select((s) => s.listeningStatisticsEnabled),
+                ))
+              const SliverToBoxAdapter(
+                child: ListeningRewindBanner(
+                  margin: EdgeInsets.fromLTRB(24, 0, 24, 16),
+                ),
+              ),
             if (_overview && _query.isEmpty)
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),

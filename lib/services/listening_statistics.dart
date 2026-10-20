@@ -339,6 +339,10 @@ class ListeningStatisticsStore {
     return readListeningPlayCounts(db, keys);
   }
 
+  /// Runs a read-only aggregate against recorded local listening data.
+  Future<T> read<T>(Future<T> Function(DatabaseExecutor db) query) async =>
+      query(await _open());
+
   Future<void> clear() async => (await _open()).delete('listening');
 }
 
