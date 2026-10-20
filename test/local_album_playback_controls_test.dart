@@ -224,7 +224,12 @@ void main() {
         expect(playback._started, ['1', '2']);
 
         // A queue started from a playlist uses its file path as the media ID.
-        media.add(MediaItem(id: tracks.first.filePath, title: 'Song 1'));
+        media.add(
+          MediaItem(
+            id: tracks.firstWhere((track) => track.id == '1').filePath,
+            title: 'Song 1',
+          ),
+        );
         emitPlaying(true);
         await tester.pumpAndSettle();
         expect(
