@@ -33,6 +33,16 @@ remains pending.
 `flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
+**Upstream port batch 3 (2026-10-20):** U-203 `e70ae974` recovers missing local album
+artwork in headers/grids, retaining Mornye controls and local images. U-212 `1d8e8f76`
+shares aligned ID3 picture parsing, safely strips recognized-image NUL padding and repairs
+app-owned cached previews; extension hunks excluded. U-213 `d256e0c7` extends existing
+embedded artwork recovery to filesystem playback without any online fetching. U-204
+`a41d3d4e` waits for audible progress/alignment before effect handoff and renders enough
+input for faster effects; current engine, fallback and cancellation retained. Each source
+commit has its own Graphify checkpoint (last `de32a041`; 23,093 nodes / 44,593 links).
+Batch 3 verification: PASS: analysis clean; full Flutter 1,644 passed / 3 skipped / zero failures (3m55s); Rust fmt/Clippy clean, 231 passed / 1 ignored. No APK. Next is port batch 4.
+
 **Upstream port batch 2 (2026-10-20):** U-202 `0f51f5d0` adapts `3dc2d690` to
 preserve integer FLAC samples in the existing exact PCM output paths, bypassing vendor
 extractors that may reduce precision. Statically linked libFLAC 1.5.0 is checksum-pinned;

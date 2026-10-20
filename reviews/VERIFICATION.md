@@ -4,6 +4,11 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | batch 3 final code `a41d3d4e` | `flutter analyze` | PASS: No issues found (22.6s). |
+| 2026-10-20 | batch 3 | Full `flutter test --reporter expanded` | PASS: 1,644 passed, 3 skipped, zero failures (3m55s). Includes all 15 added Flutter regressions, retained local menu/navigation and playback tests. |
+| 2026-10-20 | batch 3 U-212 `1d8e8f76` / final source | `bash scripts/check_rust_backend.sh` | PASS: cargo fmt, Clippy workspace/all-targets --locked -D warnings and workspace tests; 231 passed, 0 failed, 1 ignored. Both new id3_cover integration tests passed (PIC/APIC, UTF-16, padding, MP3/WAV/AIFF and unknown-byte preservation). |
+| 2026-10-20 | batch 3 per-port graph checkpoints | `graphify update .` after each source commit; JSON node/link validation and `git diff --check` | PASS: final graph `de32a041` built from `a41d3d4e`, 23,093 unique nodes / 44,593 links with valid endpoints. Existing vendor/preprocessor parse warnings only. No pub/Cargo/Gradle dependency changes, extension imports or online/Material restoration. |
+| 2026-10-20 | batch 3 | Kotlin/Gradle, Android instrumentation, APK and physical audio/SAF tests | NOT RUN: no Kotlin changes this batch; no APK authorized. Real hardware artwork/AutoMix behavior and profiling not claimed. |
 | 2026-10-20 | batch 2 U-202 `0f51f5d0` | `flutter analyze` | PASS: No issues found (20s). |
 | 2026-10-20 | batch 2 U-202 | Full `flutter test --reporter expanded` | PASS: 1,629 passed, 3 skipped, zero failures (4m02s). |
 | 2026-10-20 | batch 2 U-202 | `SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a ./gradlew :app:testDebugUnitTest :app:externalNativeBuildDebug --offline --console=plain --max-workers=2` | PASS: 59 passed, 1 skipped (NativeDataJobsTest), 13 suites; 2/2 LibraryScanExitInfo tests and 10/10 BitPerfectPcm tests. ARM64 native decoder/JNI compiled (85 build steps); all five Flac exports checked with llvm-nm. Task dry-run confirmed no APK packaging; no APK built. |

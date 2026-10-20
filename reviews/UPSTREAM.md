@@ -30,8 +30,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 
 1b. DONE — U-103b (patch-1 follow-up), including U-104/U-201 validation
 2. DONE — U-201b evaluated (no applicable local changes), U-202 ported
-3. NEXT — U-203, U-212, U-213, U-204
-4. U-205, U-216, U-206, U-207
+3. DONE — U-203, U-212, U-213, U-204
+4. NEXT — U-205, U-216, U-206, U-207
 5. U-214, U-215, U-208, U-209
 6. U-210, U-303, U-217, U-218
 7. U-308 (duets + share cards), U-302 (+ `9acaa760`)
@@ -48,8 +48,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 |---|---|---|---|
 | U-103b | `7600c169` (lyrics parts only: `player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, their tests), `91add520` | Ported in `f10f45f6` (spring) and `81869c48` (timeline index, deferred measurement, hidden/background subscriptions and completed-word ticker limits). Kept monolithic widget; timed-vocal prerequisites from `78a5e078` included, U-308 partial below. Tested in batch 1b. | 1b |
 | U-201b | `e58217c8` (local parts only: `local_library_provider*.dart`), `931b1091` (only if U-201 scan recovery needs `LibraryScanExitInfo`) | Evaluated: no applicable local production hunks. `e58217c8` only tracks/cancels NetworkLibraryScanner and frees network listings, including in the nominally local provider files. Native local ingestion/scan cancellation already exists. `931b1091` adds optional exit importance/process diagnostics; U-201 does not require them, so omitted with crash notices. | 2 DONE |
-| U-212 | `9dc86e13` (drop `crates/extensions`) | Read padded ID3 covers (Rust core `tags/id3.rs`, `write/id3.rs`) and repair cached previews. | 3 |
-| U-213 | `60d00191` | Prefer embedded art for local files (`utils/playback_artwork.dart`). | 3 |
+| U-212 | `9dc86e13` (drop `crates/extensions`) | Ported in `1d8e8f76`: shared aligned PIC/APIC parsing, recognized-image padding recovery and rejection/re-extraction of legacy NUL-prefixed cached JPEGs. Extension backend omitted. | 3 DONE |
+| U-213 | `60d00191` | Ported in `d256e0c7`: local filesystem playback joins SAF artwork recovery; embedded art replaces missing/stale/remote references without fetching remote artwork. Existing generation guard and offline placeholders retained. | 3 DONE |
 | U-214 | `d7798898` | Wait for the Activity before backend startup calls (`services/activity_attachment.dart`). | 5 |
 | U-215 | `205e178e` | Apply renderer (Impeller) compatibility before shared engine creation, incl. the `third_party/audio_service` patch note. | 5 |
 | U-216 | `9ded49f3` | Refresh late duration updates without reopening the player. | 4 |
@@ -124,8 +124,8 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 |---|---|---|
 | U-201 | `378c8f37` | Recover interrupted scans and stale notifications (may overlap KT-202). Ported in `e8cff13`; source subtitle lint fixed in `f34ead84`; batch 1b analysis/full Flutter and Kotlin unit tests pass. KT-202 remains OPEN: interrupted-scan recovery does not reconcile standalone audio rows after adding a CUE. Verified in batch 2; no SAF scanner hunk changed. |
 | U-202 | `3dc2d690` | Ported in `0f51f5d0` (ADAPT): integer libFLAC 1.5.0 decoder shared by existing exact PCM output paths; output/source precision reported separately. Fork CMake URLs and branding retained; checksum-pinned dependency and license bundled. Host regression suite and Android fixture imported. Batch 2 verification below. |
-| U-203 | `080df889` | Recover missing local album artwork from audio. |
-| U-204 | `161a216b` | AutoMix effect handoffs and source-audio rendering. |
+| U-203 | `080df889` | Ported in `e70ae974`: missing/empty/stale scanned covers recover via the bounded embedded-cover cache in local album headers and library grids; async album/disposal guards and valid-cover preference retained. Mornye light/dark tests, no download/Material restoration. |
+| U-204 | `161a216b` | Ported in `a41d3d4e`: wait for effect progress, verify/re-align its position while the live deck stays audible, and render enough source for faster effects. Existing engine, cancellation, fallback and temp ownership retained. |
 | U-205 | `f426b2d1` | Report Android output failures without skipping tracks. |
 | U-206 | `97d8ee36` | No overlapping titles during rapid skips. |
 | U-207 | `186c66ae` | Refresh LRC sidecars in their actual SAF folder. |
@@ -165,3 +165,18 @@ the 5.2 release tour, the `playerCoverStyle` setting and Material backdrop from 
 
 Batch 2 verification: PASS: analysis clean; full Flutter 1,629 passed / 3 skipped / zero failures (4m02s); Android unit 59 passed / 1 skipped; native host CTest 1/1 passed; ARM64 JNI/library build passed.
 No APK packaging or instrumentation installation is authorized in this port workflow.
+
+## Batch 3 evidence (2026-10-20)
+
+| Item / upstream source | Classification / local commit | Source and existing implementation / dependencies | Benefit, complexity, risk and effort / tests |
+|---|---|---|---|
+| U-203 `080df889d05f70abd390a25d2c6c89f9321a82c3` | ADAPT `e70ae974` | New `widgets/local_library_artwork_builder.dart`; existing local_album_screen, mornye_library_screen, queue_tab/filter/helpers. Existing grids trusted nonempty scan paths; existing bounded DownloadedEmbeddedCoverResolver now supplies fallback. sample_file_path already exists in DB queries, no schema/dependency change. | Missing/empty scan thumbnails no longer hide recoverable art. Keep valid scanned art, async generation/mounted guards, local-only images and current collection controls. Medium complexity/risk; MEDIUM recommended. Eleven adapted upstream widget cases cover missing/empty/file-URI covers, late validation/disposal, album headers and stale grid paths in retained Mornye light/dark. |
+| U-212 `9dc86e13f5190fec410e2f603939a4d1ef2531af` | ADAPT `1d8e8f76`; REJECT extension backend hunks | Rust core tags/id3.rs and tags/write/id3.rs now share picture_frame; aligned existing separator replaces sliding UTF-16 detection. Existing image crate recognizes signatures; only redundant leading NULs before recognized images are stripped. Dart resolver checks first four preview bytes after existing source-sidecar verification. No Cargo/pub dependency or metadata format migration. | Prevent corrupt cover bytes in extraction/preservation; app-owned bad previews are re-extracted, user audio remains read-only. Low implementation complexity, medium metadata/cache risk; HIGH recommended. Two upstream Rust integration tests span PIC/APIC in MP3/WAV/AIFF, padding and UTF-16 descriptions, plus unknown-data preservation; Dart cached-preview repair case. |
+| U-213 `60d00191d9ad25369ac684da0924e02e119d232b` | ADAPT `d256e0c7` | music_player_service.dart / utils/playback_artwork.dart; prior recovery ran for content:// only. All playback requests now enter the helper, which restricts extraction to absolute local paths or content://; stale HTTP artwork references trigger local extraction only. No network branch, fetcher or new dependency added. | Recover embedded art during ordinary local playback too. Valid local art avoids extraction; failures keep existing placeholder behavior. Queue/session updates retain stale-request checks. Low complexity, medium async regression risk; MEDIUM recommended. Adapted playback_artwork tests cover local/SAF missing or remote art, valid local/file URIs, provider failure and rejection of nonlocal sources; existing offline image tests retained. |
+| U-204 `161a216bea552541781c30fc11fff6cd921bad74` | ADOPT production `a41d3d4e` | automix_effect_renderer.dart / music_player_automix.dart; prior resume acknowledgement could fade live audio before wet decoder advanced. Silent effect now waits for progress and checks alignment with 50ms tolerance and at most three corrections. Faster input window is overlap × max(1,speed), output duration remains bounded. No playback engine/dependency change. | Avoid early silence or doubled/misaligned effects, retain dry audio on stalled-effect fallback. Medium complexity/risk; HIGH recommended. Upstream source-window and stalled-effect regressions added; test waits up to 4s for the existing production 2s deadline rather than racing a 2s polling helper. Existing effect pause/cancel/temporary-file tests retained. |
+
+Code/graph pairs: `e70ae974` → `b680bdd4`; `1d8e8f76` → `c5086af3`;
+`d256e0c7` → `a7cc1b9f`; `a41d3d4e` → `de32a041`.
+Graph validated at final code `a41d3d4e`: 23,093 unique nodes / 44,593 valid links.
+No online/Material/branding/extension restoration, user-file rewrite or APK build.
+Batch 3 verification: PASS: analysis clean; full Flutter 1,644 passed / 3 skipped / zero failures (3m55s); Rust fmt/Clippy clean, 231 passed / 1 ignored.

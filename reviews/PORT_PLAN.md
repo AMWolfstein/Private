@@ -68,11 +68,8 @@ No tests between ports. Testing happens once at the end of each batch.
 
 - Initial hand-over: batch 1 (U-001 `5393d1d`, U-101 `a5bc4a8`, U-102 `051ff44`, U-103
   `940fd79`; tested). Batch 2 part: U-104 `913faaa`, U-201 `e8cff13`, now tested by batch 1b (see completed checkpoint below).
-- `reviews/wip/U-202-flac-precision.patch` holds unfinished, untested work for `3dc2d690`
-  (Kotlin/C++ FLAC PCM source, 18 files; it includes a `pubspec.yaml.rej`, i.e. one upstream
-  hunk did not apply). It applies cleanly to `96a1e43` (`git apply`). `3dc2d690` is unchanged in
-  Mornye. In batch 2, review it against `3dc2d690`, then reuse or drop it; never commit the
-  `.rej` file, and delete `reviews/wip/` in that batch's docs commit.
+- Historical U-202 WIP was reviewed/reused in batch 2 and removed in `3e4be675`; no pending
+  patch remains. The rejected `.rej` was never applied.
 - Dependencies were compared with Mornye `e0563ffa`: every shared pub package, Cargo crate,
   the Flutter pin (`.fvmrc` 3.47.7), NDK `30.0.16248370` and Gradle plugin versions are
   identical. Mornye's extra dependencies are online/iOS/Discord only (`cached_network_image`,
@@ -103,7 +100,22 @@ No tests between ports. Testing happens once at the end of each batch.
   against upstream; rejected `.rej` omitted and pubspec asset registered manually. Fork build
   URLs/identity retained. Graph `6361145f`: 23,056 nodes / 44,447 valid links.
 - Verification: PASS: analysis clean; full Flutter 1,629 passed / 3 skipped / zero failures (4m02s); Android unit 59 passed / 1 skipped; native host CTest 1/1 passed; ARM64 JNI/library build passed. No APK. Rust source unchanged; Rust check script not required.
-- Next: **batch 3 only** (U-203, U-212, U-213, U-204); do not start until requested.
+- Historical next step was batch 3, now completed below.
+
+## Completed batch 3 (2026-10-20)
+
+- U-203 `e70ae974` adapts `080df889`: recover missing scan artwork in local album headers
+  and grids through the existing embedded-cover cache, retain current controls/local images.
+- U-212 `1d8e8f76` adapts `9dc86e13` without crates/extensions: aligned ID3 picture parsing,
+  signature-checked NUL padding recovery and re-extraction of bad app-owned JPEG previews.
+- U-213 `d256e0c7` adapts `60d00191`: embedded art recovery covers local paths as well as SAF;
+  legacy remote art references cause local extraction only; offline image policy unchanged.
+- U-204 `a41d3d4e` adopts `161a216b` source: align advancing effect deck before handoff;
+  faster effects render sufficient source. Existing engine and dry-audio fallback retained.
+- Per-port graph checkpoints: `b680bdd4`, `c5086af3`, `a7cc1b9f`, `de32a041`.
+  Final graph validated: 23,093 unique nodes / 44,593 valid links.
+- Batch 3 verification: PASS: analysis clean; full Flutter 1,644 passed / 3 skipped / zero failures (3m55s); Rust fmt/Clippy clean, 231 passed / 1 ignored. No Kotlin changes, no APK; physical audio/SAF tests not run.
+- Next: **batch 4 only** (U-205, U-216, U-206, U-207), only when requested.
 
 ## Batches
 
@@ -111,7 +123,7 @@ No tests between ports. Testing happens once at the end of each batch.
 |---|---|---|
 | 1b DONE | U-103b | `7600c169` lyrics parts only (`player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, `lyrics_timeline_test`, `player_lyrics_repaint_test`, lyrics bits of `now_playing_lyrics_transition_test`) + `91add520`. Upstream split `player_lyrics.dart` in `77c8639d`; port behaviour, not the split. If it needs `78a5e078` timed-vocal code (`_focusFor`, `lyricsWithDisplayEnds`, `LyricBackingTransition`), port those pieces here and mark U-308 partly done. Also fix any failures from U-104/U-201. |
 | 2 DONE | U-201b, U-202 | U-201b: local parts of `e58217c8` (`local_library_provider*.dart`), plus `931b1091` `LibraryScanExitInfo` only if U-201 needs it. U-202 ported from reviewed WIP; WIP removed. KT-202 remains open. |
-| 3 | U-203, U-212, U-213, U-204 | U-212 `9dc86e13` without `crates/extensions`. |
+| 3 DONE | U-203, U-212, U-213, U-204 | U-212 `9dc86e13` without `crates/extensions`. |
 | 4 | U-205, U-216, U-206, U-207 | |
 | 5 | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |
 | 6 | U-210, U-303, U-217, U-218 | U-210: only the `album_detail_header` part of `d28e3f65`. U-303 brings `audio_info_sheet.dart` (not in this repo). U-217: mini-player dismissal must keep working (UI-101). |
