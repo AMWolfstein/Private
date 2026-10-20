@@ -7,13 +7,11 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Graph: `graphify-out/` built from `a54269a9` (fresh for all app code). Check with
   `scripts/review_scope.sh`.
 - Next review unit: `/review` (commits after `2b32361`; review-system commits are
-  docs/config only). Suggested fix batch: BUG-001 + BUG-002 + TEST-002 (CUE split).
+  docs/config only). Suggested first fix batch: FIX_PLAN #1 (DATA-501).
 - Next audit unit: none — all 10 subsystems and the final dead-code sweep are done. Next:
-  user-approved fix batches from `FIX_PLAN.md` (nothing fixed yet). Dead-code sweep at the end (iOS helpers,
-  download/re-enrich l10n keys, `recent_access_provider` callers, `music_services.dart`;
-  Mornye-only collapse DEAD-601/622/633, UX-104, DEAD-631/632).
+  user-approved fix batches from `FIX_PLAN.md` (nothing fixed yet).
 - Open findings: 171 (0 P0, 1 P1, 52 P2, 118 P3; see `FINDINGS.md`).
-- Last checkpoint: final dead-code sweep (this commit). Previous `c0284b1` pushed and verified.
+- Last checkpoint: fix plan (this commit). Previous `eec853b` pushed and verified.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer
   baseline/rollback, scope hints `NO_TEST_CHANGES`/`SPLIT_SUGGESTED`; android test dirs now
