@@ -13,12 +13,12 @@ void main() {
   test(
     'SAF artwork recovers from missing scan covers and tolerates provider errors',
     () async {
-      const source = 'content://example.documents/nas/song.flac';
+      const source = 'content://example.documents/music/song.flac';
       final cover = File('${directory.path}/recovered #1.jpg');
       await cover.writeAsBytes([1]);
       for (final missing in [null, '${directory.path}/removed.jpg']) {
         expect(
-          await resolveMissingDocumentArtworkUri(
+          await resolveEmbeddedArtworkUri(
             source,
             missing,
             extract: (path) async {
@@ -35,13 +35,9 @@ void main() {
         return null;
       }
 
-      for (final existing in [
-        cover.path,
-        cover.uri.toString(),
-        'https://example.test/cover.jpg',
-      ]) {
+      for (final existing in [cover.path, cover.uri.toString()]) {
         expect(
-          await resolveMissingDocumentArtworkUri(
+          await resolveEmbeddedArtworkUri(
             source,
             existing,
             extract: unexpectedRead,
@@ -50,22 +46,61 @@ void main() {
         );
       }
       expect(
-        await resolveMissingDocumentArtworkUri(
+        await resolveEmbeddedArtworkUri(
           source,
           null,
-          extract: (_) async => throw const SocketException('NAS offline'),
+          extract: (_) async =>
+              throw const FileSystemException('Document unavailable'),
         ),
         isNull,
       );
-      expect(
-        await resolveMissingDocumentArtworkUri(
-          '/local/song.flac',
-          null,
-          extract: unexpectedRead,
-        ),
-        isNull,
-      );
+      for (final remote in [
+        'network://share/song.flac',
+        'https://example.test/song.flac',
+      ]) {
+        expect(
+          await resolveEmbeddedArtworkUri(
+            remote,
+            null,
+            extract: unexpectedRead,
+          ),
+          isNull,
+        );
+      }
       expect(unnecessaryReads, 0);
+    },
+  );
+
+  test(
+    'local files prefer embedded art over an online cover for offline use',
+    () async {
+      final cover = File('${directory.path}/embedded.jpg');
+      await cover.writeAsBytes([1]);
+      for (final source in [
+        'content://example.documents/music/song.m4a',
+        '${directory.path}/song.m4a',
+      ]) {
+        expect(
+          await resolveEmbeddedArtworkUri(
+            source,
+            'https://example.test/cover.jpg',
+            extract: (path) async {
+              expect(path, source);
+              return cover.path;
+            },
+          ),
+          cover.uri.toString(),
+        );
+      }
+      // No embedded art leaves the existing value for the offline placeholder.
+      expect(
+        await resolveEmbeddedArtworkUri(
+          '${directory.path}/song.m4a',
+          'https://example.test/cover.jpg',
+          extract: (_) async => null,
+        ),
+        isNull,
+      );
     },
   );
 

@@ -1474,9 +1474,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     _broadcastState(playerState: PlayerState.playing, loading: true);
     await _claimHardwareMediaButtons();
     if (!_isCurrentPlayRequest(generation, media)) return;
-    if (media.isContentUri) {
-      unawaited(_recoverDocumentArtwork(media, generation));
-    }
+    unawaited(_recoverEmbeddedArtwork(media, generation));
 
     // Android opens SAF files through a short-lived file-descriptor lease.
     // MediaPlayer duplicates that descriptor, so the original can be closed
@@ -1610,11 +1608,11 @@ class MusicPlayerHandler extends BaseAudioHandler
     }
   }
 
-  Future<void> _recoverDocumentArtwork(
+  Future<void> _recoverEmbeddedArtwork(
     PlayableMedia media,
     int generation,
   ) async {
-    final artwork = await resolveMissingDocumentArtworkUri(
+    final artwork = await resolveEmbeddedArtworkUri(
       media.source,
       media.artUri,
       extract: (source) =>
