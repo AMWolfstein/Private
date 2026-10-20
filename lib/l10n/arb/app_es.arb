@@ -22,10 +22,6 @@
   "@homeSubtitle": {
     "description": "Subtitle shown below search box"
   },
-  "homeRecent": "Recent",
-  "@homeRecent": {
-    "description": "Section header for recent searches"
-  },
   "historyFilterAll": "All",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
@@ -86,58 +82,6 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutContributors": "Contributors",
-  "@aboutContributors": {
-    "description": "Section for contributors"
-  },
-  "aboutMobileDeveloper": "Mobile version developer",
-  "@aboutMobileDeveloper": {
-    "description": "Role description for mobile dev"
-  },
-  "aboutOriginalCreator": "Creator of the original SpotiFLAC",
-  "@aboutOriginalCreator": {
-    "description": "Role description for original creator"
-  },
-  "aboutLogoArtist": "The talented artist who created our beautiful app logo!",
-  "@aboutLogoArtist": {
-    "description": "Role description for logo artist"
-  },
-  "aboutSpecialThanks": "Special Thanks",
-  "@aboutSpecialThanks": {
-    "description": "Section for special thanks"
-  },
-  "aboutLinks": "Links",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
-  "aboutMobileSource": "Mobile source code",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
-  "aboutPCSource": "PC source code",
-  "@aboutPCSource": {
-    "description": "Link to PC GitHub repo"
-  },
-  "aboutKeepAndroidOpen": "Keep Android Open",
-  "@aboutKeepAndroidOpen": {
-    "description": "Link to Keep Android Open campaign website"
-  },
-  "aboutReportIssue": "Report an issue",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
-  "aboutReportIssueSubtitle": "Report any problems you encounter",
-  "@aboutReportIssueSubtitle": {
-    "description": "Subtitle for report issue"
-  },
-  "aboutFeatureRequest": "Feature request",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
-  "aboutFeatureRequestSubtitle": "Suggest new features for the app",
-  "@aboutFeatureRequestSubtitle": {
-    "description": "Subtitle for feature request"
-  },
   "aboutApp": "App",
   "@aboutApp": {
     "description": "Section for app info"
@@ -145,14 +89,6 @@
   "aboutVersion": "Version",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutBinimumDesc": "The creator of QQDL & HiFi API. This project helped shape lossless download support.",
-  "@aboutBinimumDesc": {
-    "description": "Credit description for binimum"
-  },
-  "aboutSachinsenalDesc": "The original HiFi project creator. A foundation for lossless-source integration.",
-  "@aboutSachinsenalDesc": {
-    "description": "Credit description for sachinsenal0x64"
   },
   "trackMetadataPlay": "Play",
   "@trackMetadataPlay": {
@@ -300,10 +236,6 @@
   "dialogUnsavedChanges": "You have unsaved changes. Do you want to discard them?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
-  },
-  "dialogClearAll": "Clear All",
-  "@dialogClearAll": {
-    "description": "Dialog title - clear all items"
   },
   "dialogDeleteSelectedTitle": "Delete Selected",
   "@dialogDeleteSelectedTitle": {
@@ -616,30 +548,6 @@
   "@optionsArtistTagModeSplitVorbisSubtitle": {
     "description": "Subtitle for split Vorbis artist tag mode"
   },
-  "aboutTranslators": "Translators",
-  "@aboutTranslators": {
-    "description": "Section for translators"
-  },
-  "aboutTelegramChannel": "Telegram Channel",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
-  "aboutTelegramChannelSubtitle": "Announcements and updates",
-  "@aboutTelegramChannelSubtitle": {
-    "description": "Subtitle for Telegram channel"
-  },
-  "aboutTelegramChat": "Telegram Community",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
-  "aboutTelegramChatSubtitle": "Chat with other users",
-  "@aboutTelegramChatSubtitle": {
-    "description": "Subtitle for Telegram chat"
-  },
-  "aboutSocial": "Social",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "setupIcloudNotSupported": "iCloud Drive is not supported. Please use the app Documents folder.",
   "@setupIcloudNotSupported": {
     "description": "Error when user selects iCloud Drive on iOS"
@@ -687,36 +595,6 @@
       "discNumber": {
         "type": "int",
         "example": "1"
-      }
-    }
-  },
-  "recentTypeArtist": "Artist",
-  "@recentTypeArtist": {
-    "description": "Recent access item type - artist"
-  },
-  "recentTypeAlbum": "Album",
-  "@recentTypeAlbum": {
-    "description": "Recent access item type - album"
-  },
-  "recentTypeSong": "Song",
-  "@recentTypeSong": {
-    "description": "Recent access item type - song/track"
-  },
-  "recentTypePlaylist": "Playlist",
-  "@recentTypePlaylist": {
-    "description": "Recent access item type - playlist"
-  },
-  "recentEmpty": "No recent items yet",
-  "@recentEmpty": {
-    "description": "Empty state text for recent access list"
-  },
-  "recentPlaylistInfo": "Playlist: {name}",
-  "@recentPlaylistInfo": {
-    "description": "Snackbar message when tapping playlist in recent access",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "description": "Playlist name"
       }
     }
   },

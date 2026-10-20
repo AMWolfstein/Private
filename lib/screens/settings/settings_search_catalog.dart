@@ -345,45 +345,6 @@ class SettingsSearchCatalog {
           title: l10n.aboutVersion,
           keywords: const ['build number', 'app version'],
         ),
-        SettingsSearchEntry(
-          icon: Icons.people_outline,
-          title: l10n.aboutContributors,
-          keywords: const ['developers', 'credits'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.translate,
-          title: l10n.aboutTranslators,
-          keywords: const ['translation credits'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.code,
-          title: l10n.aboutMobileSource,
-          keywords: const ['github', 'source code'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.bug_report_outlined,
-          title: l10n.aboutReportIssue,
-          subtitle: l10n.aboutReportIssueSubtitle,
-          keywords: const ['bug report'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.lightbulb_outline,
-          title: l10n.aboutFeatureRequest,
-          subtitle: l10n.aboutFeatureRequestSubtitle,
-          keywords: const ['suggestion', 'idea'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.telegram,
-          title: l10n.aboutTelegramChannel,
-          subtitle: l10n.aboutTelegramChannelSubtitle,
-          keywords: const ['social'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.forum_outlined,
-          title: l10n.aboutTelegramChat,
-          subtitle: l10n.aboutTelegramChatSubtitle,
-          keywords: const ['community', 'support chat'],
-        ),
       ];
 
   final List<SettingsSearchEntry> appearance;

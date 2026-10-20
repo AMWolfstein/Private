@@ -83,10 +83,6 @@
   "@homeSubtitle": {
     "description": "Subtitle shown below search box"
   },
-  "homeRecent": "Недавние",
-  "@homeRecent": {
-    "description": "Section header for recent searches"
-  },
   "historyFilterAll": "Все",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
@@ -251,82 +247,6 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutContributors": "Участники",
-  "@aboutContributors": {
-    "description": "Section for contributors"
-  },
-  "aboutMobileDeveloper": "Разработчик мобильной версии",
-  "@aboutMobileDeveloper": {
-    "description": "Role description for mobile dev"
-  },
-  "aboutOriginalCreator": "Создатель оригинального SpotiFLAC",
-  "@aboutOriginalCreator": {
-    "description": "Role description for original creator"
-  },
-  "aboutLogoArtist": "Талантливый художник, который создал наш красивый логотип приложения!",
-  "@aboutLogoArtist": {
-    "description": "Role description for logo artist"
-  },
-  "aboutTranslators": "Переводчики",
-  "@aboutTranslators": {
-    "description": "Section for translators"
-  },
-  "aboutSpecialThanks": "Особая благодарность",
-  "@aboutSpecialThanks": {
-    "description": "Section for special thanks"
-  },
-  "aboutLinks": "Ссылки",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
-  "aboutMobileSource": "Исходный код мобильной версии",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
-  "aboutPCSource": "Исходный код ПК версии",
-  "@aboutPCSource": {
-    "description": "Link to PC GitHub repo"
-  },
-  "aboutKeepAndroidOpen": "Сохранить Android открытым",
-  "@aboutKeepAndroidOpen": {
-    "description": "Link to Keep Android Open campaign website"
-  },
-  "aboutReportIssue": "Сообщить о проблеме",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
-  "aboutReportIssueSubtitle": "Сообщите о возникших проблемах",
-  "@aboutReportIssueSubtitle": {
-    "description": "Subtitle for report issue"
-  },
-  "aboutFeatureRequest": "Предложить новую функцию",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
-  "aboutFeatureRequestSubtitle": "Предложить новые функции для приложения",
-  "@aboutFeatureRequestSubtitle": {
-    "description": "Subtitle for feature request"
-  },
-  "aboutTelegramChannel": "Telegram канал",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
-  "aboutTelegramChannelSubtitle": "Объявления и обновления",
-  "@aboutTelegramChannelSubtitle": {
-    "description": "Subtitle for Telegram channel"
-  },
-  "aboutTelegramChat": "Сообщество в Telegram",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
-  "aboutTelegramChatSubtitle": "Чат с другими пользователями",
-  "@aboutTelegramChatSubtitle": {
-    "description": "Subtitle for Telegram chat"
-  },
-  "aboutSocial": "Соцсети",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "aboutApp": "Приложение",
   "@aboutApp": {
     "description": "Section for app info"
@@ -334,26 +254,6 @@
   "aboutVersion": "Версия",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutBinimumDesc": "Создатель QQDL и HiFi API. Этот проект помог реализовать поддержку скачивания музыки в lossless-качестве.",
-  "@aboutBinimumDesc": {
-    "description": "Credit description for binimum"
-  },
-  "aboutSachinsenalDesc": "Создатель оригинального проекта HiFi. Заложил основу для интеграции lossless-источников.",
-  "@aboutSachinsenalDesc": {
-    "description": "Credit description for sachinsenal0x64"
-  },
-  "aboutUnituneDesc": "Открытый распознаватель музыкальных ссылок от Flaze, используемый для резервного кроссплатформенного определения.",
-  "@aboutUnituneDesc": {
-    "description": "Credit for the UniTune resolver"
-  },
-  "aboutMusicBrainzDesc": "Открытая музыкальная база данных, поддерживаемая MetaBrainz и сообществом. Используется для определения перекрестных ссылок.",
-  "@aboutMusicBrainzDesc": {
-    "description": "Credit for the MusicBrainz database"
-  },
-  "aboutSquiglyDesc": "Универсальный сервис музыкальных ссылок от Лиама Макмиллана, используемый в качестве последнего резервного кроссплатформенного распознавателя.",
-  "@aboutSquiglyDesc": {
-    "description": "Credit for the Squigly resolver"
   },
   "trackMetadataPlay": "Воспроизвести",
   "@trackMetadataPlay": {
@@ -517,10 +417,6 @@
   "dialogUnsavedChanges": "Есть несохраненные изменения. Отменить их?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
-  },
-  "dialogClearAll": "Очистить всё",
-  "@dialogClearAll": {
-    "description": "Dialog title - clear all items"
   },
   "dialogDeleteSelectedTitle": "Удалить выбранные",
   "@dialogDeleteSelectedTitle": {
@@ -947,36 +843,6 @@
       "discNumber": {
         "type": "int",
         "example": "1"
-      }
-    }
-  },
-  "recentTypeArtist": "Исполнитель",
-  "@recentTypeArtist": {
-    "description": "Recent access item type - artist"
-  },
-  "recentTypeAlbum": "Альбом",
-  "@recentTypeAlbum": {
-    "description": "Recent access item type - album"
-  },
-  "recentTypeSong": "Песня",
-  "@recentTypeSong": {
-    "description": "Recent access item type - song/track"
-  },
-  "recentTypePlaylist": "Плейлист",
-  "@recentTypePlaylist": {
-    "description": "Recent access item type - playlist"
-  },
-  "recentEmpty": "Нет недавних элементов",
-  "@recentEmpty": {
-    "description": "Empty state text for recent access list"
-  },
-  "recentPlaylistInfo": "Плейлист: {name}",
-  "@recentPlaylistInfo": {
-    "description": "Snackbar message when tapping playlist in recent access",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "description": "Playlist name"
       }
     }
   },
@@ -2217,10 +2083,6 @@
       }
     }
   },
-  "actionDismiss": "Отклонить",
-  "@actionDismiss": {
-    "description": "Generic action - dismiss"
-  },
   "a11yOpenItemCount": "Открыть {title}, {count} {count, plural, =1{элемент} few{элемента} other{элементов}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2660,10 +2522,6 @@
   "nowPlayingNoMetadata": "Метаданные не доступны",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
-  },
-  "aboutPaxsenixSubtitle": "Прокси на тексты песен Musixmatch, Netease, Apple Music, QQ Music, Spotify, Deezer, YouTube, Kugou и Genius",
-  "@aboutPaxsenixSubtitle": {
-    "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
   "selectionDeletePlaylistsCount": "Удалить {count} {count, plural, =1{плейлист} few{плейлиста} other{плейлистов}}",
   "@selectionDeletePlaylistsCount": {

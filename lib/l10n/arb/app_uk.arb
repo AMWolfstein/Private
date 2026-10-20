@@ -83,10 +83,6 @@
   "@homeSubtitle": {
     "description": "Subtitle shown below search box"
   },
-  "homeRecent": "Нещодавні",
-  "@homeRecent": {
-    "description": "Section header for recent searches"
-  },
   "historyFilterAll": "Усі",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
@@ -247,82 +243,6 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutContributors": "Автори",
-  "@aboutContributors": {
-    "description": "Section for contributors"
-  },
-  "aboutMobileDeveloper": "Розробник мобільної версії",
-  "@aboutMobileDeveloper": {
-    "description": "Role description for mobile dev"
-  },
-  "aboutOriginalCreator": "Творець оригінального SpotiFLAC",
-  "@aboutOriginalCreator": {
-    "description": "Role description for original creator"
-  },
-  "aboutLogoArtist": "Талановитий художник, який створив чудовий логотип нашого додатку!",
-  "@aboutLogoArtist": {
-    "description": "Role description for logo artist"
-  },
-  "aboutTranslators": "Перекладачі",
-  "@aboutTranslators": {
-    "description": "Section for translators"
-  },
-  "aboutSpecialThanks": "Особлива подяка",
-  "@aboutSpecialThanks": {
-    "description": "Section for special thanks"
-  },
-  "aboutLinks": "Посилання",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
-  "aboutMobileSource": "Мобільний вихідний код",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
-  "aboutPCSource": "Вихідний код для ПК",
-  "@aboutPCSource": {
-    "description": "Link to PC GitHub repo"
-  },
-  "aboutKeepAndroidOpen": "Зберігайте Android відкритим",
-  "@aboutKeepAndroidOpen": {
-    "description": "Link to Keep Android Open campaign website"
-  },
-  "aboutReportIssue": "Повідомити про проблему",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
-  "aboutReportIssueSubtitle": "Повідомити про будь-які проблеми, з якими ви зіткнулися",
-  "@aboutReportIssueSubtitle": {
-    "description": "Subtitle for report issue"
-  },
-  "aboutFeatureRequest": "Запит на функцію",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
-  "aboutFeatureRequestSubtitle": "Запропонувати нові функції для програми",
-  "@aboutFeatureRequestSubtitle": {
-    "description": "Subtitle for feature request"
-  },
-  "aboutTelegramChannel": "Телеграм-канал",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
-  "aboutTelegramChannelSubtitle": "Оголошення та оновлення",
-  "@aboutTelegramChannelSubtitle": {
-    "description": "Subtitle for Telegram channel"
-  },
-  "aboutTelegramChat": "Telegram Спільнота",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
-  "aboutTelegramChatSubtitle": "Спілкуватися з іншими користувачами",
-  "@aboutTelegramChatSubtitle": {
-    "description": "Subtitle for Telegram chat"
-  },
-  "aboutSocial": "Соціальні мережі",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "aboutApp": "Додаток",
   "@aboutApp": {
     "description": "Section for app info"
@@ -330,26 +250,6 @@
   "aboutVersion": "Версія",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutBinimumDesc": "Розробник QQDL та HiFi API. Цей проєкт допоміг сформувати підтримку завантаження формату lossless.",
-  "@aboutBinimumDesc": {
-    "description": "Credit description for binimum"
-  },
-  "aboutSachinsenalDesc": "Автор оригінального проєкту HiFi. Основа для інтеграції джерел формату lossless.",
-  "@aboutSachinsenalDesc": {
-    "description": "Credit description for sachinsenal0x64"
-  },
-  "aboutUnituneDesc": "Розв'язувач музичних посилань з відкритим кодом від Flaze, що використовується для кросплатформного підбору альтернативних варіантів.",
-  "@aboutUnituneDesc": {
-    "description": "Credit for the UniTune resolver"
-  },
-  "aboutMusicBrainzDesc": "Відкрита музична база даних, яку підтримують MetaBrainz та її спільнота; використовується для фіксації перехресних посилань.",
-  "@aboutMusicBrainzDesc": {
-    "description": "Credit for the MusicBrainz database"
-  },
-  "aboutSquiglyDesc": "Універсальний сервіс посилань на музику від Liam Macmillan, що використовується як кінцевий резервний варіант для кросплатформного визначення цільової сторінки.",
-  "@aboutSquiglyDesc": {
-    "description": "Credit for the Squigly resolver"
   },
   "trackMetadataPlay": "Прослухати",
   "@trackMetadataPlay": {
@@ -489,10 +389,6 @@
   "dialogUnsavedChanges": "У вас є незбережені зміни. Ви хочете їх скасувати?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
-  },
-  "dialogClearAll": "Очистити все",
-  "@dialogClearAll": {
-    "description": "Dialog title - clear all items"
   },
   "dialogDeleteSelectedTitle": "Видалити вибране",
   "@dialogDeleteSelectedTitle": {
@@ -923,36 +819,6 @@
       "discNumber": {
         "type": "int",
         "example": "1"
-      }
-    }
-  },
-  "recentTypeArtist": "Артист",
-  "@recentTypeArtist": {
-    "description": "Recent access item type - artist"
-  },
-  "recentTypeAlbum": "Альбом",
-  "@recentTypeAlbum": {
-    "description": "Recent access item type - album"
-  },
-  "recentTypeSong": "Пісня",
-  "@recentTypeSong": {
-    "description": "Recent access item type - song/track"
-  },
-  "recentTypePlaylist": "Список відтворення",
-  "@recentTypePlaylist": {
-    "description": "Recent access item type - playlist"
-  },
-  "recentEmpty": "Поки що немає нещодавніх записів",
-  "@recentEmpty": {
-    "description": "Empty state text for recent access list"
-  },
-  "recentPlaylistInfo": "Список відтворення: {name}",
-  "@recentPlaylistInfo": {
-    "description": "Snackbar message when tapping playlist in recent access",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "description": "Playlist name"
       }
     }
   },
@@ -2193,10 +2059,6 @@
       }
     }
   },
-  "actionDismiss": "Відхилити",
-  "@actionDismiss": {
-    "description": "Generic action - dismiss"
-  },
   "a11yOpenItemCount": "Відтворити {title}, {count} {count, plural, =1{item} other{items}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2660,10 +2522,6 @@
   "dialogDone": "Готово",
   "@dialogDone": {
     "description": "Dialog button - action completed"
-  },
-  "aboutPaxsenixSubtitle": "Проксі для текстів пісень із Musixmatch, Netease, Apple Music, QQ Music, Spotify, Deezer, YouTube, Kugou та Genius",
-  "@aboutPaxsenixSubtitle": {
-    "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
   "selectionDeletePlaylistsCount": "Видалити {count} {count, plural, =1{список треків} other{списки треків}}",
   "@selectionDeletePlaylistsCount": {

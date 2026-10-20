@@ -83,10 +83,6 @@
   "@homeSubtitle": {
     "description": "Subtitle shown below search box"
   },
-  "homeRecent": "Recenti",
-  "@homeRecent": {
-    "description": "Section header for recent searches"
-  },
   "historyFilterAll": "Tutti",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
@@ -251,82 +247,6 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutContributors": "Collaboratori",
-  "@aboutContributors": {
-    "description": "Section for contributors"
-  },
-  "aboutMobileDeveloper": "Sviluppatore versione mobile",
-  "@aboutMobileDeveloper": {
-    "description": "Role description for mobile dev"
-  },
-  "aboutOriginalCreator": "Creatore dello SpotiFLAC originale",
-  "@aboutOriginalCreator": {
-    "description": "Role description for original creator"
-  },
-  "aboutLogoArtist": "Il talentuoso artista che ha creato il nostro bellissimo logo!",
-  "@aboutLogoArtist": {
-    "description": "Role description for logo artist"
-  },
-  "aboutTranslators": "Traduttori",
-  "@aboutTranslators": {
-    "description": "Section for translators"
-  },
-  "aboutSpecialThanks": "Ringraziamenti speciali",
-  "@aboutSpecialThanks": {
-    "description": "Section for special thanks"
-  },
-  "aboutLinks": "Link",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
-  "aboutMobileSource": "Codice sorgente mobile",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
-  "aboutPCSource": "Codice sorgente PC",
-  "@aboutPCSource": {
-    "description": "Link to PC GitHub repo"
-  },
-  "aboutKeepAndroidOpen": "Mantieni android aperto",
-  "@aboutKeepAndroidOpen": {
-    "description": "Link to Keep Android Open campaign website"
-  },
-  "aboutReportIssue": "Segnala un problema",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
-  "aboutReportIssueSubtitle": "Segnala ogni problema che incontri",
-  "@aboutReportIssueSubtitle": {
-    "description": "Subtitle for report issue"
-  },
-  "aboutFeatureRequest": "Richiesta di nuove funzionalità",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
-  "aboutFeatureRequestSubtitle": "Suggerisci nuove funzionalità per l'applicazione",
-  "@aboutFeatureRequestSubtitle": {
-    "description": "Subtitle for feature request"
-  },
-  "aboutTelegramChannel": "Canale Telegram",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
-  "aboutTelegramChannelSubtitle": "Annunci e aggiornamenti",
-  "@aboutTelegramChannelSubtitle": {
-    "description": "Subtitle for Telegram channel"
-  },
-  "aboutTelegramChat": "Comunità Telegram",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
-  "aboutTelegramChatSubtitle": "Parla con altri utenti",
-  "@aboutTelegramChatSubtitle": {
-    "description": "Subtitle for Telegram chat"
-  },
-  "aboutSocial": "Social",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "aboutApp": "Applicazione",
   "@aboutApp": {
     "description": "Section for app info"
@@ -334,26 +254,6 @@
   "aboutVersion": "Versione",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutBinimumDesc": "Il creatore di QQDL e HiFi API. Questo progetto ha aiutato a rifinire il supporto per i download lossless.",
-  "@aboutBinimumDesc": {
-    "description": "Credit description for binimum"
-  },
-  "aboutSachinsenalDesc": "Il creatore originale del progetto HiFi. Fondazione per l'integrazione di sorgenti lossless.",
-  "@aboutSachinsenalDesc": {
-    "description": "Credit description for sachinsenal0x64"
-  },
-  "aboutUnituneDesc": "Open-source music link resolver by Flaze, used for cross-platform fallback matching.",
-  "@aboutUnituneDesc": {
-    "description": "Credit for the UniTune resolver"
-  },
-  "aboutMusicBrainzDesc": "Open music database maintained by MetaBrainz and its community, used for recording cross-references.",
-  "@aboutMusicBrainzDesc": {
-    "description": "Credit for the MusicBrainz database"
-  },
-  "aboutSquiglyDesc": "Universal music link service by Liam Macmillan, used as a final cross-platform resolver fallback.",
-  "@aboutSquiglyDesc": {
-    "description": "Credit for the Squigly resolver"
   },
   "trackMetadataPlay": "Riproduci",
   "@trackMetadataPlay": {
@@ -517,10 +417,6 @@
   "dialogUnsavedChanges": "Hai dei cambiamenti non salvati. Vuoi scartarli?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
-  },
-  "dialogClearAll": "Pulisci tutto",
-  "@dialogClearAll": {
-    "description": "Dialog title - clear all items"
   },
   "dialogDeleteSelectedTitle": "Elimina selezionato",
   "@dialogDeleteSelectedTitle": {
@@ -947,36 +843,6 @@
       "discNumber": {
         "type": "int",
         "example": "1"
-      }
-    }
-  },
-  "recentTypeArtist": "Artist",
-  "@recentTypeArtist": {
-    "description": "Recent access item type - artist"
-  },
-  "recentTypeAlbum": "Album",
-  "@recentTypeAlbum": {
-    "description": "Recent access item type - album"
-  },
-  "recentTypeSong": "Song",
-  "@recentTypeSong": {
-    "description": "Recent access item type - song/track"
-  },
-  "recentTypePlaylist": "Playlist",
-  "@recentTypePlaylist": {
-    "description": "Recent access item type - playlist"
-  },
-  "recentEmpty": "No recent items yet",
-  "@recentEmpty": {
-    "description": "Empty state text for recent access list"
-  },
-  "recentPlaylistInfo": "Playlist: {name}",
-  "@recentPlaylistInfo": {
-    "description": "Snackbar message when tapping playlist in recent access",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "description": "Playlist name"
       }
     }
   },
@@ -2217,10 +2083,6 @@
       }
     }
   },
-  "actionDismiss": "Dismiss",
-  "@actionDismiss": {
-    "description": "Generic action - dismiss"
-  },
   "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2660,10 +2522,6 @@
   "nowPlayingNoMetadata": "No metadata available",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
-  },
-  "aboutPaxsenixSubtitle": "Lyrics proxy for Musixmatch, Netease, Apple Music, QQ Music, Spotify, Deezer, YouTube, Kugou, and Genius",
-  "@aboutPaxsenixSubtitle": {
-    "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
   "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
   "@selectionDeletePlaylistsCount": {

@@ -83,10 +83,6 @@
   "@homeSubtitle": {
     "description": "Subtitle shown below search box"
   },
-  "homeRecent": "Recientes",
-  "@homeRecent": {
-    "description": "Section header for recent searches"
-  },
   "historyFilterAll": "Todo",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
@@ -251,82 +247,6 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutContributors": "Colaboradores",
-  "@aboutContributors": {
-    "description": "Section for contributors"
-  },
-  "aboutMobileDeveloper": "Desarrollador de versiones móviles",
-  "@aboutMobileDeveloper": {
-    "description": "Role description for mobile dev"
-  },
-  "aboutOriginalCreator": "Creador original de SpotiFLAC",
-  "@aboutOriginalCreator": {
-    "description": "Role description for original creator"
-  },
-  "aboutLogoArtist": "¡El talentoso artista que creó el hermoso logo de nuestra app!",
-  "@aboutLogoArtist": {
-    "description": "Role description for logo artist"
-  },
-  "aboutTranslators": "Traductores",
-  "@aboutTranslators": {
-    "description": "Section for translators"
-  },
-  "aboutSpecialThanks": "Agradecimientos especiales",
-  "@aboutSpecialThanks": {
-    "description": "Section for special thanks"
-  },
-  "aboutLinks": "Enlaces",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
-  "aboutMobileSource": "Código fuente de la versión móvil",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
-  "aboutPCSource": "Código fuente de la versión para PC",
-  "@aboutPCSource": {
-    "description": "Link to PC GitHub repo"
-  },
-  "aboutKeepAndroidOpen": "Mantener Android activo",
-  "@aboutKeepAndroidOpen": {
-    "description": "Link to Keep Android Open campaign website"
-  },
-  "aboutReportIssue": "Reportar un problema",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
-  "aboutReportIssueSubtitle": "Reporta cualquier problema que encuentres",
-  "@aboutReportIssueSubtitle": {
-    "description": "Subtitle for report issue"
-  },
-  "aboutFeatureRequest": "Sugerir una función",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
-  "aboutFeatureRequestSubtitle": "Sugerir nuevas funciones para la aplicación",
-  "@aboutFeatureRequestSubtitle": {
-    "description": "Subtitle for feature request"
-  },
-  "aboutTelegramChannel": "Canal de Telegram",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
-  "aboutTelegramChannelSubtitle": "Anuncios y actualizaciones",
-  "@aboutTelegramChannelSubtitle": {
-    "description": "Subtitle for Telegram channel"
-  },
-  "aboutTelegramChat": "Comunidad de Telegram",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
-  "aboutTelegramChatSubtitle": "Chatear con otros usuarios",
-  "@aboutTelegramChatSubtitle": {
-    "description": "Subtitle for Telegram chat"
-  },
-  "aboutSocial": "Redes sociales",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "aboutApp": "Aplicación",
   "@aboutApp": {
     "description": "Section for app info"
@@ -334,26 +254,6 @@
   "aboutVersion": "Versión",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutBinimumDesc": "El creador de QQDL & HiFi API. Este proyecto ayudó a impulsar el soporte para descargas sin pérdida de calidad.",
-  "@aboutBinimumDesc": {
-    "description": "Credit description for binimum"
-  },
-  "aboutSachinsenalDesc": "El creador del proyecto HiFi original. Sentó las bases para la integración de fuentes de audio sin pérdida de calidad.",
-  "@aboutSachinsenalDesc": {
-    "description": "Credit description for sachinsenal0x64"
-  },
-  "aboutUnituneDesc": "Resolvedor de links de música por Flaze, usado para coincidencias multiplataforma de respaldo.",
-  "@aboutUnituneDesc": {
-    "description": "Credit for the UniTune resolver"
-  },
-  "aboutMusicBrainzDesc": "Base de datos abierta mantenida por MetaBrainz y su comunidad, usado para grabar multi-referencias.",
-  "@aboutMusicBrainzDesc": {
-    "description": "Credit for the MusicBrainz database"
-  },
-  "aboutSquiglyDesc": "Servicio de enlaces de música universal por Liam Macmillan, usado como resolvedor multiplataforma final de respaldo.",
-  "@aboutSquiglyDesc": {
-    "description": "Credit for the Squigly resolver"
   },
   "trackMetadataPlay": "Reproducir",
   "@trackMetadataPlay": {
@@ -517,10 +417,6 @@
   "dialogUnsavedChanges": "Tienes cambios sin guardar. ¿Quieres descartarlos?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
-  },
-  "dialogClearAll": "Eliminar todo",
-  "@dialogClearAll": {
-    "description": "Dialog title - clear all items"
   },
   "dialogDeleteSelectedTitle": "Borrar Seleccionados",
   "@dialogDeleteSelectedTitle": {
@@ -947,36 +843,6 @@
       "discNumber": {
         "type": "int",
         "example": "1"
-      }
-    }
-  },
-  "recentTypeArtist": "Artista",
-  "@recentTypeArtist": {
-    "description": "Recent access item type - artist"
-  },
-  "recentTypeAlbum": "Álbum",
-  "@recentTypeAlbum": {
-    "description": "Recent access item type - album"
-  },
-  "recentTypeSong": "Canción",
-  "@recentTypeSong": {
-    "description": "Recent access item type - song/track"
-  },
-  "recentTypePlaylist": "Lista de reproducción",
-  "@recentTypePlaylist": {
-    "description": "Recent access item type - playlist"
-  },
-  "recentEmpty": "Aún no hay entradas recientes",
-  "@recentEmpty": {
-    "description": "Empty state text for recent access list"
-  },
-  "recentPlaylistInfo": "Lista de reproducción: {name}",
-  "@recentPlaylistInfo": {
-    "description": "Snackbar message when tapping playlist in recent access",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "description": "Playlist name"
       }
     }
   },
@@ -2217,10 +2083,6 @@
       }
     }
   },
-  "actionDismiss": "Descartar",
-  "@actionDismiss": {
-    "description": "Generic action - dismiss"
-  },
   "a11yOpenItemCount": "Abrir {title}, {count} {count, plural, =1{objeto} other{objetos}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2660,10 +2522,6 @@
   "nowPlayingNoMetadata": "No hay metadatos disponibles",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
-  },
-  "aboutPaxsenixSubtitle": "Servicio de letras de canciones para Musixmatch, Netease, Apple Music, QQ Music, Spotify, Deezer, YouTube, Kugou y Genius",
-  "@aboutPaxsenixSubtitle": {
-    "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
   "selectionDeletePlaylistsCount": "Eliminar {count} {count, plural, =1{lista de reproducción} other{listas de reproducción}}",
   "@selectionDeletePlaylistsCount": {

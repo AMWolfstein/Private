@@ -9,7 +9,6 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/local_home_feed_provider.dart';
 import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/recent_access_provider.dart';
 import 'package:spotiflac_android/screens/home_tab.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/providers/local_artist_provider.dart';
@@ -42,12 +41,6 @@ class _Collections extends LibraryCollectionsNotifier {
       ),
     ],
   );
-}
-
-class _Recent extends RecentAccessNotifier {
-  @override
-  RecentAccessState build() =>
-      throw StateError('Home must not subscribe to access history');
 }
 
 final _item = LocalLibraryItem(
@@ -129,7 +122,6 @@ void main() {
               settingsProvider.overrideWith(_Settings.new),
               localLibraryProvider.overrideWith(_Library.new),
               libraryCollectionsProvider.overrideWith(_Collections.new),
-              recentAccessProvider.overrideWith(_Recent.new),
               localHomeTracksProvider.overrideWith((ref) async => [_item]),
               libraryBrowsePageLoaderProvider.overrideWithValue((
                 request,

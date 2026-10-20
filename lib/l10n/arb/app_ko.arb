@@ -83,10 +83,6 @@
   "@homeSubtitle": {
     "description": "Subtitle shown below search box"
   },
-  "homeRecent": "최근 기록",
-  "@homeRecent": {
-    "description": "Section header for recent searches"
-  },
   "historyFilterAll": "모두",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
@@ -251,82 +247,6 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutContributors": "개발에 힘써주신 분들",
-  "@aboutContributors": {
-    "description": "Section for contributors"
-  },
-  "aboutMobileDeveloper": "모바일 버전 개발자",
-  "@aboutMobileDeveloper": {
-    "description": "Role description for mobile dev"
-  },
-  "aboutOriginalCreator": "SpotiFLAC 오리지널 개발자",
-  "@aboutOriginalCreator": {
-    "description": "Role description for original creator"
-  },
-  "aboutLogoArtist": "아름다운 로고를 만들어주신 재능 있는 아티스트!",
-  "@aboutLogoArtist": {
-    "description": "Role description for logo artist"
-  },
-  "aboutTranslators": "번역에 도움주신 분들",
-  "@aboutTranslators": {
-    "description": "Section for translators"
-  },
-  "aboutSpecialThanks": "특별히 감사드리는 분들",
-  "@aboutSpecialThanks": {
-    "description": "Section for special thanks"
-  },
-  "aboutLinks": "링크",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
-  "aboutMobileSource": "모바일 소스 코드",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
-  "aboutPCSource": "PC 소스 코드",
-  "@aboutPCSource": {
-    "description": "Link to PC GitHub repo"
-  },
-  "aboutKeepAndroidOpen": "Keep Android Open",
-  "@aboutKeepAndroidOpen": {
-    "description": "Link to Keep Android Open campaign website"
-  },
-  "aboutReportIssue": "문제 신고",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
-  "aboutReportIssueSubtitle": "발생하는 모든 문제를 신고해 주세요",
-  "@aboutReportIssueSubtitle": {
-    "description": "Subtitle for report issue"
-  },
-  "aboutFeatureRequest": "기능 요청",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
-  "aboutFeatureRequestSubtitle": "앱의 새 기능을 제안해 주세요",
-  "@aboutFeatureRequestSubtitle": {
-    "description": "Subtitle for feature request"
-  },
-  "aboutTelegramChannel": "텔레그램 채널",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
-  "aboutTelegramChannelSubtitle": "공지 및 업데이트 안내",
-  "@aboutTelegramChannelSubtitle": {
-    "description": "Subtitle for Telegram channel"
-  },
-  "aboutTelegramChat": "텔레그램 그룹",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
-  "aboutTelegramChatSubtitle": "다른 이용자와 소통",
-  "@aboutTelegramChatSubtitle": {
-    "description": "Subtitle for Telegram chat"
-  },
-  "aboutSocial": "소셜 네트워크",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "aboutApp": "앱 정보",
   "@aboutApp": {
     "description": "Section for app info"
@@ -334,26 +254,6 @@
   "aboutVersion": "버전",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutBinimumDesc": "QQDL 및 HiFi API 개발자입니다. 이 프로젝트는 무손실 다운로드 지원을 형성하는 데 도움을 주셨습니다",
-  "@aboutBinimumDesc": {
-    "description": "Credit description for binimum"
-  },
-  "aboutSachinsenalDesc": "HiFi 프로젝트의 원작자이자, 무손실 음원 소스 연동 기능의 토대를 구축한 개발자입니다",
-  "@aboutSachinsenalDesc": {
-    "description": "Credit description for sachinsenal0x64"
-  },
-  "aboutUnituneDesc": "Flaze가 개발한 오픈소스 음악 링크 확인 도구로, 플랫폼 간 대체 매칭에 사용됩니다",
-  "@aboutUnituneDesc": {
-    "description": "Credit for the UniTune resolver"
-  },
-  "aboutMusicBrainzDesc": "MetaBrainz와 커뮤니티가 관리하는 오픈 음악 데이터베이스로, 음원 간 상호 참조 정보를 기록하는데 사용됩니다",
-  "@aboutMusicBrainzDesc": {
-    "description": "Credit for the MusicBrainz database"
-  },
-  "aboutSquiglyDesc": "Liam Macmillan이 개발한 범용 음악 링크 서비스로, 플랫폼 간 링크 확인을 위한 최종 대체 수단으로 사용됩니다",
-  "@aboutSquiglyDesc": {
-    "description": "Credit for the Squigly resolver"
   },
   "trackMetadataPlay": "재생",
   "@trackMetadataPlay": {
@@ -517,10 +417,6 @@
   "dialogUnsavedChanges": "저장되지 않은 변경 사항이 있습니다. 폐기하시겠습니까?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
-  },
-  "dialogClearAll": "모두 지우기",
-  "@dialogClearAll": {
-    "description": "Dialog title - clear all items"
   },
   "dialogDeleteSelectedTitle": "선택 항목 삭제",
   "@dialogDeleteSelectedTitle": {
@@ -947,36 +843,6 @@
       "discNumber": {
         "type": "int",
         "example": "1"
-      }
-    }
-  },
-  "recentTypeArtist": "아티스트",
-  "@recentTypeArtist": {
-    "description": "Recent access item type - artist"
-  },
-  "recentTypeAlbum": "앨범",
-  "@recentTypeAlbum": {
-    "description": "Recent access item type - album"
-  },
-  "recentTypeSong": "노래",
-  "@recentTypeSong": {
-    "description": "Recent access item type - song/track"
-  },
-  "recentTypePlaylist": "재생목록",
-  "@recentTypePlaylist": {
-    "description": "Recent access item type - playlist"
-  },
-  "recentEmpty": "최근 항목이 없음",
-  "@recentEmpty": {
-    "description": "Empty state text for recent access list"
-  },
-  "recentPlaylistInfo": "재생목록: {name}",
-  "@recentPlaylistInfo": {
-    "description": "Snackbar message when tapping playlist in recent access",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "description": "Playlist name"
       }
     }
   },
@@ -2217,10 +2083,6 @@
       }
     }
   },
-  "actionDismiss": "닫기",
-  "@actionDismiss": {
-    "description": "Generic action - dismiss"
-  },
   "a11yOpenItemCount": "{title}, {count} 개의 {count, plural, =1{항목} other{항목}} 열기",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
@@ -2660,10 +2522,6 @@
   "nowPlayingNoMetadata": "사용할 수 있는 메타데이터가 없음",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
-  },
-  "aboutPaxsenixSubtitle": "Musixmatch, Netease, Apple Music, QQ Music, Spotify, Deezer, YouTube, Kugou 및 Genius용 가사 프록시",
-  "@aboutPaxsenixSubtitle": {
-    "description": "Subtitle for Paxsenix special thanks entry on the about page"
   },
   "selectionDeletePlaylistsCount": "{count} 개의 {count, plural, =1{재생목록} other{재생목록}} 삭제",
   "@selectionDeletePlaylistsCount": {

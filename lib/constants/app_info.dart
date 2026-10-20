@@ -12,12 +12,4 @@ class AppInfo {
 
   static const String appName = 'SpotiFLAC Mobile';
   static const String copyright = '© 2026 Zarz Eleutherius';
-
-  static const String mobileAuthor = 'zarzet';
-  static const String originalAuthor = 'afkarxyz';
-
-  static const String githubRepo = 'spotiflacapp/SpotiFLAC-Mobile';
-  static const String githubUrl = 'https://github.com/$githubRepo';
-  static const String originalGithubUrl =
-      'https://github.com/afkarxyz/SpotiFLAC';
 }

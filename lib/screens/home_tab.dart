@@ -4,11 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/local_home_feed_provider.dart';
 import 'package:spotiflac_android/providers/library_browse_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/recent_access_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
@@ -17,9 +15,7 @@ import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.da
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
@@ -28,7 +24,6 @@ import 'package:spotiflac_android/widgets/profile_avatar.dart';
 
 part 'home_tab_helpers.dart';
 part 'home_tab_feed.dart';
-part 'home_tab_recent.dart';
 part 'home_tab_search_results.dart';
 part 'home_tab_widgets.dart';
 
@@ -182,7 +177,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
                   if (_showsHome) _buildHomeIntro(colorScheme),
                   if (_showsHome) ..._buildLocalFeed(colorScheme),
                   if (!_showsHome) _buildRecentlyAdded(colorScheme),
-                  if (!_showsHome) ..._buildRecentAccess(colorScheme),
                 ],
               ),
 
