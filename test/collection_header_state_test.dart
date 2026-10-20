@@ -41,6 +41,7 @@ class _Collections extends LibraryCollectionsNotifier {
                 artistName: 'Artist',
                 albumName: 'Album',
                 source: 'local',
+                duration: 120,
               ),
             ),
           ]
