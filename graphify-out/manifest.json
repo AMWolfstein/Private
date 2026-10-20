@@ -1974,9 +1974,9 @@
     "semantic_hash": "6e0a4513469d536d7d745f996af4112d"
   },
   "lib/widgets/mini_player.dart": {
-    "mtime": 1792356506.5674264,
-    "seen": 1792494608.4831235,
-    "ast_hash": "4c416d55908287f034824f995b339122",
+    "mtime": 1792512868.9309669,
+    "seen": 1792512894.1623373,
+    "ast_hash": "5a355c452e270cdcf1c53379af4ed2f3",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artist_header.dart": {
@@ -6078,9 +6078,9 @@
     "semantic_hash": ""
   },
   "test/now_playing_lyrics_transition_test.dart": {
-    "mtime": 1792507303.737372,
-    "seen": 1792507330.0255084,
-    "ast_hash": "680ff94cb1ccb6d467d3fdc4656fff13",
+    "mtime": 1792512868.9347568,
+    "seen": 1792512894.1633663,
+    "ast_hash": "f28edd0eddfb5d879e6a7e93d414e252",
     "semantic_hash": ""
   },
   "test/now_playing_route_test.dart": {
