@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/widgets/library_fast_scroller.dart';
+import 'package:spotiflac_android/widgets/library_section_list.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'dart:async';
 import 'dart:io';

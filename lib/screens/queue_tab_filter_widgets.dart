@@ -49,6 +49,18 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     final filteredUnifiedItems = allFilteredUnifiedItems;
     final totalTrackCount = filterData.totalTrackCount;
     final totalAlbumCount = filterData.totalAlbumCount;
+    final sectionLocale = Localizations.localeOf(context).toLanguageTag();
+    String? sectionLabel(UnifiedLibraryItem item) => switch (_sortMode) {
+      'a-z' || 'z-a' => librarySectionInitial(item.trackName),
+      'artist' ||
+      'artist-asc' ||
+      'artist-desc' => librarySectionInitial(item.artistName),
+      'album' ||
+      'album-asc' ||
+      'album-desc' => librarySectionInitial(item.albumName),
+      'latest' || 'oldest' => librarySectionMonth(item.addedAt, sectionLocale),
+      _ => null,
+    };
 
     final localNavigationItems = <LocalLibraryItem>[];
     final localNavigationIndexByUnifiedId = <String, int>{};
@@ -310,8 +322,11 @@ extension _QueueTabFilterWidgets on _QueueTabState {
           else
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
+              sliver: SectionedLibrarySliverList<UnifiedLibraryItem>(
+                items: filteredUnifiedItems,
+                groupingKey: (_sortMode, sectionLocale),
+                labelOf: sectionLabel,
+                rowBuilder: (context, index) {
                   if (index < collectionCount) {
                     return _buildAllTabListCollectionItem(
                       context: context,
@@ -348,7 +363,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                     );
                   }
                   return const SizedBox.shrink();
-                }, childCount: collectionCount + filteredUnifiedItems.length),
+                },
               ),
             ),
         ],
@@ -468,7 +483,19 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       child: content,
     );
 
-    if (!showTrackGrid) return scrollAwareContent;
+    if (!showTrackGrid) {
+      return LibraryFastScroller(
+        bottomPadding: context.navBarBottomInset,
+        labelAt: (fraction) => filteredUnifiedItems.isEmpty
+            ? null
+            : sectionLabel(
+                filteredUnifiedItems[(fraction *
+                        (filteredUnifiedItems.length - 1))
+                    .round()],
+              ),
+        child: scrollAwareContent,
+      );
+    }
     return TwoFingerPinchListener(
       onStart: _handleLibraryGridPinchStart,
       onUpdate: _handleLibraryGridPinchUpdate,

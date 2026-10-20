@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/widgets/library_fast_scroller.dart';
+import 'package:spotiflac_android/widgets/library_section_list.dart';
 import 'package:spotiflac_android/screens/listening_rewind_screen.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'dart:async';
@@ -263,7 +265,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
         ),
       ],
     ];
-    return RefreshIndicator(
+    final content = RefreshIndicator(
       onRefresh: () async {
         if (_overview) return;
         ref.invalidate(libraryBrowseProvider(_request));
@@ -392,9 +394,14 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
               ),
             if (_rows.isNotEmpty)
               if (_artists)
-                SliverList.builder(
-                  itemCount: _rows.length,
-                  itemBuilder: (context, index) {
+                SectionedLibrarySliverList<LibraryBrowseEntry>(
+                  items: _rows,
+                  groupingKey: (
+                    _sort,
+                    Localizations.localeOf(context).toLanguageTag(),
+                  ),
+                  labelOf: (entry) => librarySectionInitial(entry.artist),
+                  rowBuilder: (context, index) {
                     final entry = _rows[index];
                     return Column(
                       children: [
@@ -535,6 +542,19 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
           const NavBarSliverSpacer(),
         ],
       ),
+    );
+    if (_overview) return content;
+    return LibraryFastScroller(
+      topPadding: MediaQuery.paddingOf(context).top + kToolbarHeight,
+      bottomPadding: context.navBarBottomInset,
+      labelAt: (fraction) => _rows.isEmpty
+          ? null
+          : librarySectionInitial(
+              _artists
+                  ? _rows[(fraction * (_rows.length - 1)).round()].artist
+                  : _rows[(fraction * (_rows.length - 1)).round()].album,
+            ),
+      child: content,
     );
   }
 }
