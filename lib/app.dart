@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/providers/equalizer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -162,6 +163,7 @@ class SpotiFLACApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(equalizerProvider);
     final router = ref.watch(_routerProvider);
     final localeString = ref.watch(settingsProvider.select((s) => s.locale));
     final heroAnimationsEnabled = ref.watch(

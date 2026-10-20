@@ -21,3 +21,5 @@ The Android implementation of [`audioplayers`](https://pub.dev/packages/audiopla
 This package is [endorsed](https://flutter.dev/docs/development/packages-and-plugins/developing-packages#endorsed-federated-plugin),
 which means you can simply use `audioplayers` normally.
 This package will be automatically included in your app when you do, so you do not need to add it to your `pubspec.yaml`.
+
+Upstream ecf594aa: per-player Android DynamicsProcessing (API 28+), bounded native input validation, explicit error propagation and effect disposal on reset/release. The existing output/SAF patches remain. No Darwin backend or dependency replacement.

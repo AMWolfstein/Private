@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/services/playback_equalizer.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -100,7 +101,12 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: Listenable.merge([widget.metadata, usbAudioStatus]),
+    listenable: Listenable.merge([
+      widget.metadata,
+      usbAudioStatus,
+      playbackEqualizer,
+      playbackEqualizerError,
+    ]),
     builder: (context, _) {
       final facts = _AudioFacts(
         l10n: context.l10n,
@@ -457,11 +463,26 @@ class _AudioFacts {
     } else {
       signalPath = l10n.audioInfoPathSystem;
     }
+    final equalizer = playbackEqualizer.value;
+    final eq = !equalizer.enabled
+        ? l10n.audioInfoOff
+        : direct
+        ? l10n.audioInfoBypassed
+        : playbackEqualizerError.value != null
+        ? playbackEqualizerError.value!
+        : [
+            l10n.audioInfoOn,
+            l10n.audioInfoBands(equalizer.gains.length),
+            if (equalizer.inputGain != 0)
+              '${l10n.equalizerPreamp} ${_db(equalizer.inputGain)}',
+            if (equalizer.compressor) l10n.equalizerCompressor,
+          ].join(' · ');
     final rate = processing?.autoMixRate ?? 1;
     final decoder = route?.stream?.decoder;
     return [
       _Fact(l10n.audioInfoPlayer, l10n.audioInfoPlayerValue),
       _Fact(l10n.audioInfoSignalPath, signalPath),
+      _Fact(l10n.equalizerTitle, eq),
       if (!direct && decoder != null)
         _Fact(
           l10n.audioInfoDecoder,

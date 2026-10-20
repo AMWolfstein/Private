@@ -201,6 +201,12 @@ class SettingsSearchCatalog {
           keywords: const ['wrapped', 'statistics', 'listening', 'stats'],
         ),
         SettingsSearchEntry(
+          icon: Icons.equalizer,
+          title: l10n.equalizerTitle,
+          subtitle: l10n.equalizerDescription,
+          keywords: const ['bands', 'preamp', 'bass', 'treble', 'compressor'],
+        ),
+        SettingsSearchEntry(
           icon: Icons.graphic_eq,
           title: l10n.libraryPlaybackNormalization,
           subtitle: l10n.libraryPlaybackNormalizationSubtitle,

@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/screens/equalizer_screen.dart';
 import 'package:spotiflac_android/screens/lyrics_share_screen.dart';
 import 'package:spotiflac_android/utils/lyrics_parser.dart';
 import 'dart:async';
@@ -974,6 +975,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             metadata: _trackMetadata,
             mediaItem: ref.read(currentMediaItemProvider).value,
           ),
+        );
+        break;
+      case 'equalizer':
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute(builder: (_) => const EqualizerScreen()),
         );
         break;
       case 'sleepTimer':

@@ -126,6 +126,12 @@ class MornyePlayerActionsSheet extends ConsumerWidget {
           [
             _action(
               context,
+              'equalizer',
+              context.l10n.equalizerTitle,
+              CupertinoIcons.slider_horizontal_3,
+            ),
+            _action(
+              context,
               'sleepTimer',
               context.l10n.nowPlayingSleepTimer,
               CupertinoIcons.moon_zzz,

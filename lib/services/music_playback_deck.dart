@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/services/playback_equalizer.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -71,9 +72,14 @@ class UsbAudioStatus {
 /// Keeps the existing transport and AutoMix API while adding a local USB path.
 /// Each prepare owns a token so delayed native events cannot affect a new song.
 class MusicPlaybackDeck {
-  MusicPlaybackDeck({required String playerId, bool? nativeAvailable})
-    : _ordinary = AudioPlayer(playerId: playerId),
-      _nativeAvailable = nativeAvailable ?? Platform.isAndroid {
+  MusicPlaybackDeck({
+    required String playerId,
+    bool? nativeAvailable,
+    bool? equalizerAvailable,
+  }) : _ordinary = AudioPlayer(playerId: playerId),
+       _equalizerAvailable = equalizerAvailable ?? Platform.isAndroid,
+       _nativeAvailable = nativeAvailable ?? Platform.isAndroid {
+    playbackEqualizer.addListener(_equalizerChanged);
     _subscriptions.addAll([
       _ordinary.onPlayerStateChanged.listen((value) {
         if (!_direct) _states.add(value);
@@ -104,6 +110,52 @@ class MusicPlaybackDeck {
   static Stream<dynamic>? _nativeEvents;
   static int _nextToken = 0;
   final AudioPlayer _ordinary;
+  final bool _equalizerAvailable;
+  bool _equalizerDisposed = false;
+  static const _effects = MethodChannel('xyz.luan/audioplayers');
+  bool _equalizerSent = false;
+  Timer? _equalizerTimer;
+  Future<void> _equalizerWrite = Future.value();
+
+  void _equalizerChanged() {
+    _equalizerTimer ??= Timer(const Duration(milliseconds: 32), () {
+      _equalizerTimer = null;
+      _equalizerWrite = _equalizerWrite.then((_) => _syncEqualizer());
+    });
+  }
+
+  Future<void> _syncEqualizer() async {
+    if (_disposed || _equalizerDisposed || !_equalizerAvailable) return;
+    final settings = playbackEqualizer.value;
+    if (!settings.enabled && !_equalizerSent) {
+      reportEqualizerError(_ordinary.playerId, null);
+      return;
+    }
+    try {
+      // Public API waits for native player creation without changing playback.
+      if (!_equalizerSent) await _ordinary.getDuration();
+      if (_disposed || _equalizerDisposed) return;
+      await _effects
+          .invokeMethod<void>('setEqualizer', {
+            'playerId': _ordinary.playerId,
+            'configuration': settings
+                .copyWith(enabled: settings.enabled && !_direct)
+                .toNative(),
+          })
+          .timeout(const Duration(seconds: 3));
+      if (_disposed || _equalizerDisposed) return;
+      _equalizerSent = true;
+      reportEqualizerError(_ordinary.playerId, null);
+    } catch (error) {
+      if (!_disposed && !_equalizerDisposed && settings.enabled) {
+        reportEqualizerError(
+          _ordinary.playerId,
+          'Equalizer is unavailable on this output: $error',
+        );
+      }
+    }
+  }
+
   final bool _nativeAvailable;
   final _states = StreamController<PlayerState>.broadcast();
   final _durations = StreamController<Duration>.broadcast();
@@ -260,6 +312,7 @@ class MusicPlaybackDeck {
     await _ordinary.release();
     _ordinaryError = null;
     await _ordinary.setSource(source);
+    await _syncEqualizer();
   }
 
   void _onNativeEvent(dynamic event) {
@@ -340,7 +393,7 @@ class MusicPlaybackDeck {
       usbAudioStatus.value = const UsbAudioStatus(reason: 'unsupported');
       if (source == null || _disposed) return;
       await _ordinary.setVolume(1);
-      await _ordinary.setSource(source);
+      await _setOrdinarySource(source);
       if (position > Duration.zero) await _ordinary.seek(position);
       return _ordinary.resume();
     }
@@ -408,6 +461,10 @@ class MusicPlaybackDeck {
   }
 
   Future<void> dispose() async {
+    _equalizerDisposed = true;
+    playbackEqualizer.removeListener(_equalizerChanged);
+    _equalizerTimer?.cancel();
+    reportEqualizerError(_ordinary.playerId, null);
     await stop();
     _disposed = true;
     await _nativeSubscription?.cancel();

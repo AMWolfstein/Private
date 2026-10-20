@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/screens/equalizer_screen.dart';
 import 'package:spotiflac_android/widgets/music_haptics_settings.dart';
 import 'package:spotiflac_android/widgets/playback_normalization_settings.dart';
 import 'dart:io';
@@ -55,6 +56,22 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
       body: CustomScrollView(
         slivers: [
           AppSliverHeader.page(title: context.l10n.libraryPlayback),
+          SliverToBoxAdapter(
+            child: SettingsGroup(
+              children: [
+                SettingsItem(
+                  title: context.l10n.equalizerTitle,
+                  subtitle: context.l10n.equalizerDescription,
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const EqualizerScreen(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           SliverToBoxAdapter(
             child: SettingsSectionHeader(
               title: context.l10n.sectionVolumeAndTransitions,
