@@ -1423,6 +1423,30 @@ with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
 - Scenario: re-tapping Home while scrolled down does nothing (pops only); release/track/playlist cards have no keys, so cover state is reused by index when a shelf reorders; no long-press menu on Home cards (upstream Mornye context menu). Upstream also lacks tab-reselect scroll.
 - Fix: scroll to top on reselect; `ValueKey` per card; optional long-press with the local song/album menu.
 
+<!-- Now Playing parity pass (2026-10-20): ours vs upstream v5.1.1/latest Mornye player.
+Ours equals v5.1.1 apart from intentional deltas (Immersive view, no motion artwork,
+external player or download lookups). Upstream-latest items are in `UPSTREAM.md`. -->
+
+### PLAY-001 [P2] [confidence: medium-high] [VALIDATED]
+- Location: `lib/screens/now_playing_screen.dart:474-495` (Immersive artwork inside `MornyePlayerBackground`), `lib/widgets/mornye_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`
+- Scenario: Player view = Immersive, swipe left/right on the cover → nothing happens. The background is a sibling of the layout in the `Stack`, so `PlayerTrackSwipeRegion` finds no `_SwipeScope` and returns its child unwrapped; Normal view works. AGENTS.md requires track changes in both views. Upstream has the same structure but only hits it with motion artwork.
+- Fix: lift `PlayerTrackSwipe` above the `Stack`, or give the background artwork its own scope; ~20 lines plus a widget test for Immersive swipe.
+
+### PLAY-002 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/now_playing_screen.dart:475` (`key: ValueKey(immersive)`)
+- Scenario: `immersive` includes `!_landscape`, so rotating in Immersive recreates the background: `CoverPaletteBuilder` and the 380 ms gradient restart (visible pop), and `_expandedArtworkKey` moves between parents in one frame.
+- Fix: drop the key or key on `squareArtwork` only; test the Hero/GlobalKey move on rotation.
+
+### PLAY-003 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/lyrics_size_setting.dart:46-52`
+- Scenario: TalkBack reads a bare percentage on the lyrics size slider; upstream latest (`befcd2ad`) adds `semanticLabel: lyricsTextSize`.
+- Fix: one line.
+
+### PLAY-004 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/widgets/player_queue_dismissible.dart:57`
+- Scenario: swipe-to-remove background radius 12 vs queue rows 16, so the red reveal shows mismatched corners. Upstream latest uses 16.
+- Fix: one line.
+
 ## Resolved
 
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.

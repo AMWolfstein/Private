@@ -25,3 +25,4 @@ Newest first. One line per run: date, commit, command, result.
 | 2026-10-19 | `2b32361` | `flutter analyze` | No issues found |
 | 2026-10-20 | `11334fb` | Mornye parity: 3 ux-auditor comparisons vs upstream v5.1.1/latest, orchestrator spot-checks of every high item | 17 open (MORN-001..017); no tests run (review only) |
 | 2026-10-20 | `05c5895` | Home parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator checked HOME-001/002/007 and the visual items in source (Riverpod 3.4.3 `skipLoadingOnReload` default false) | 8 open (HOME-001..008); no tests run |
+| 2026-10-20 | `c51713b` | Now Playing parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator traced PLAY-001 and checked PLAY-003/004 in source (reviewer claim that `audio_info_sheet.dart` exists here was wrong) | 4 open (PLAY-001..004); no tests run |

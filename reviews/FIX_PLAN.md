@@ -60,6 +60,8 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | M7 | HOME-002, HOME-001 | Home shelves stop collapsing on library reloads; featured covers stop squashing. |
 | M8 | HOME-003, HOME-004, HOME-005 | Home refresh, empty/loading states, date/text/a11y and upstream sizing. |
 | M9 | HOME-006, HOME-008 | Home cover source, card keys and tab-reselect scroll. |
+| M10 | PLAY-001, PLAY-002 | Immersive cover swipe skips tracks; no background reset on rotation. |
+| M11 | PLAY-003, PLAY-004 | Lyrics size slider label and queue swipe corner radius. |
 
 ## Tier 3: cleanup
 
