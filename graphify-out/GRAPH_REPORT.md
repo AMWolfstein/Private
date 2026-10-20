@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-20)
 
 ## Corpus Check
-- 1228 files · ~1,116,871 words
+- 1228 files · ~1,116,988 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 122 file(s) not represented in the graph (top: .xml 37, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1d8e8f76`
+- Built from commit: `d256e0c7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2858,6 +2858,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `package:flutter/material.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.010046476691235153 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `RawFd`, `linux_raw/net/sockopt.rs`, `PollFd<'fd>`, `borrowed_fd`, `ioctl/mod.rs`, `net/types.rs`, `Timeout`, `Timespec`, `at.rs`, `src/io_uring/mod.rs`, `PollFd<'fd>`, `process/prctl.rs`, `linux_raw/conv.rs`, `ret`, `XdpUmemReg`, `linux_raw/termios/syscalls.rs`, `linux_raw/net/read_sockaddr.rs`, `OwnedFd`, `Ioctl`, `Signal`, `c`, `.from`, `Capability`, `setsockopt`, `setns.rs`, `Ipv4Addr`, `linux_raw/io/syscalls.rs`, `linux_raw/net/syscalls.rs`, `Pid`, `SendAncillaryBuffer<'buf, 'slice, 'fd>`, `LinkNameSpaceType`, `linux_raw/mm/syscalls.rs`, `Ipv4PathMtuDiscovery`, `Ipv6PathMtuDiscovery`, `to_ipv6mr`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Should `Duration` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._

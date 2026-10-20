@@ -1278,9 +1278,9 @@
     "semantic_hash": ""
   },
   "lib/services/music_player_service.dart": {
-    "mtime": 1792356506.5853212,
-    "seen": 1792494608.4829812,
-    "ast_hash": "abf5f425081e68c079b397f8f41ca0b8",
+    "mtime": 1792499503.6199768,
+    "seen": 1792499529.7618413,
+    "ast_hash": "4845964fc98ee2b97e0d59a5d0dbc6a0",
     "semantic_hash": ""
   },
   "lib/services/native_cache_maintenance.dart": {
@@ -1596,10 +1596,10 @@
     "semantic_hash": "45c4a2a6283b32c577c602d7ddac9b27"
   },
   "lib/utils/playback_artwork.dart": {
-    "mtime": 1792356506.575314,
-    "seen": 1792494608.483043,
-    "ast_hash": "eb280d1de5422eb674585d879f47c9fe",
-    "semantic_hash": "eb280d1de5422eb674585d879f47c9fe"
+    "mtime": 1792499503.619116,
+    "seen": 1792499529.761917,
+    "ast_hash": "d719951bb610ef600e3f4b6df636d804",
+    "semantic_hash": ""
   },
   "lib/utils/playback_seek_preview.dart": {
     "mtime": 1792356506.576554,
@@ -6108,10 +6108,10 @@
     "semantic_hash": ""
   },
   "test/playback_artwork_test.dart": {
-    "mtime": 1792405430.5437846,
-    "seen": 1792494608.4840844,
-    "ast_hash": "5075fe962cb1f514f9275faee8ae6a7e",
-    "semantic_hash": "5075fe962cb1f514f9275faee8ae6a7e"
+    "mtime": 1792499503.724971,
+    "seen": 1792499529.7632709,
+    "ast_hash": "2c17b51ccb80e657412af9a3de8f91f9",
+    "semantic_hash": ""
   },
   "test/playback_automation_settings_test.dart": {
     "mtime": 1792405430.5583007,
