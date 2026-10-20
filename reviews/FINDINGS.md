@@ -1296,31 +1296,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 artist/album/playlist screens compared with the local screens. Upstream refs are
 `spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
 
-### MORN-001 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_album_screen.dart:309-385` (no `leading`/`appBarTitle`/actions swap)
-- Scenario: long-press a track on an album → selection mode, but Play/Shuffle row stays, Back pops the route instead of leaving selection, no "N selected" title. Upstream `album_screen.dart:611-671` handles all three.
-- Fix: pass close `HeaderCircleButton`, `appBarTitle: selectionSelected(n)` and hide actions while selecting; ~20 lines.
-
-### MORN-002 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart:636-654` (`leading:` override)
-- Scenario: playlist/Loved show a Material black 0.4 circle with `Icons.arrow_back` instead of the Mornye glass `chevron_back` back button that albums use (`album_detail_header.dart:147-155`); breaks the AGENTS back-button rule and light mode.
-- Fix: no `leading` outside selection; in selection use `HeaderCircleButton(Icons.close)` (upstream latest :665-676). Same for the M3U/rename/cover buttons at :584-634 (`HeaderCircleButton(iconSize: 20)`).
-
-### MORN-003 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart:539-541`
-- Scenario: `appBarTitle` is the collection title outside selection, so the toolbar always draws the title over the artwork next to the hero title; the collapse fade is lost. Upstream passes `null`.
-- Fix: `: null`.
-
-### MORN-004 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart:252-258`, :298-305
-- Scenario: open a playlist before `ensurePlaylistLoaded` finishes (or Loved before collections load) → "playlist is empty" state and a header with no actions flash. Upstream shows `TrackListSkeleton`.
-- Fix: skeleton while `!playlist.tracksLoaded` / collections not loaded.
-
-### MORN-005 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart:886-899` (`_CollectionTrackTile`)
-- Scenario: playing song in a playlist/Loved never shows Pause; tapping restarts it. `LocalSongRow.isPlaying` exists and the album screen uses it (`local_album_screen.dart:495-516`).
-- Fix: pass `isPlaying` and toggle like the album screen.
-
 ### MORN-006 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
 - Scenario: (a) genre missing (upstream Mornye shows it first, `album_screen.dart:346-349`); (b) year from `split('-')` shows "2024/05"/"20240501" verbatim, upstream uses `(\d{4})`; (c) `'$totalMinutes min'` is hard-coded English; (d) count/duration repeat the footer.
@@ -1375,11 +1350,6 @@ artist/album/playlist screens compared with the local screens. Upstream refs are
 - Location: `lib/widgets/mornye_chrome.dart:28`, `lib/theme/mornye_theme.dart:69`, :227
 - Scenario: segmented pill height `scale(15)+36` can drop below 48dp per segment; dark accent `rgb(224,61,60)` and the red-accent `onPrimary` special case have contrast issues. Upstream latest: height clamped to ≥56, accent `rgb(255,69,58)`, luminance-only `onPrimary`.
 - Fix: port the three upstream changes; check contrast.
-
-### MORN-017 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/local_artist_screen.dart:247-268`, :274-291; `lib/screens/local_album_screen.dart:234-260`
-- Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Mornye back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
-- Fix: skeleton + `ErrorCard` + Mornye empty page; hide empty Popular.
 
 <!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Mornye Home (explore feed) compared
 with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
@@ -1449,6 +1419,43 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: one line.
 
 ## Resolved
+
+### MORN-001 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/screens/local_album_screen.dart:309-385` (no `leading`/`appBarTitle`/actions swap)
+- Scenario: long-press a track on an album → selection mode, but Play/Shuffle row stays, Back pops the route instead of leaving selection, no "N selected" title. Upstream `album_screen.dart:611-671` handles all three.
+- Fix: pass close `HeaderCircleButton`, `appBarTitle: selectionSelected(n)` and hide actions while selecting; ~20 lines.
+- Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-002 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:636-654` (`leading:` override)
+- Scenario: playlist/Loved show a Material black 0.4 circle with `Icons.arrow_back` instead of the Mornye glass `chevron_back` back button that albums use (`album_detail_header.dart:147-155`); breaks the AGENTS back-button rule and light mode.
+- Fix: no `leading` outside selection; in selection use `HeaderCircleButton(Icons.close)` (upstream latest :665-676). Same for the M3U/rename/cover buttons at :584-634 (`HeaderCircleButton(iconSize: 20)`).
+- Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-003 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:539-541`
+- Scenario: `appBarTitle` is the collection title outside selection, so the toolbar always draws the title over the artwork next to the hero title; the collapse fade is lost. Upstream passes `null`.
+- Fix: `: null`.
+- Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-004 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:252-258`, :298-305
+- Scenario: open a playlist before `ensurePlaylistLoaded` finishes (or Loved before collections load) → "playlist is empty" state and a header with no actions flash. Upstream shows `TrackListSkeleton`.
+- Fix: skeleton while `!playlist.tracksLoaded` / collections not loaded.
+- Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-005 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:886-899` (`_CollectionTrackTile`)
+- Scenario: playing song in a playlist/Loved never shows Pause; tapping restarts it. `LocalSongRow.isPlaying` exists and the album screen uses it (`local_album_screen.dart:495-516`).
+- Fix: pass `isPlaying` and toggle like the album screen.
+- Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-017 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/screens/local_artist_screen.dart:247-268`, :274-291; `lib/screens/local_album_screen.dart:234-260`
+- Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Mornye back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
+- Fix: skeleton + `ErrorCard` + Mornye empty page; hide empty Popular.
+- Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
+
 
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.
 - UX-206 (`c29daef`): `_launchUrl` and the `url_launcher` dependency removed with the links.

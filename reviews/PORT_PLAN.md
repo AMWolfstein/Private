@@ -205,6 +205,17 @@ Graph fd1a520b, source 892eb173: 23,940 unique nodes / 45,919 valid links; synch
 No APK built; device-only behavior NOT RUN. No dependencies/schema changes, user-music writes, Darwin backend or engine replacement. EQ defaults off and native failures are visible; direct/exclusive output bypass is covered by mocked transport tests. Physical sound/driver support and share/picker targets NOT RUN. Initial Dart/native check failures were installed picker/theme API mismatches, fixed before final verification; focused widget fixtures now settle scrolling before interaction. Model/preset/native-payload/transport/input-boundary tests imported or added. No APK.
 Next: batch 10 (MORN-001..005 and MORN-017; FIX_PLAN M1+M2). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 10 (2026-10-20)
+
+MORN-001..005 and MORN-017 align retained collection UI behavior: album selection owns the toolbar and hides playback actions; playlist/Loved use shared circular toolbar controls and collapse titles; hydration shows skeletons instead of empty flashes; current rows pause/resume without queue restart. Artist/album loading/error/empty presentation now uses retained Mornye primitives and hides an empty Popular heading.
+
+Source `bc983981` → graph `afcb349a`; fixture duration `b55043ba` → `36cdf5d4`; hydration fixture isolation `b602dfb3` → `de2c48ba`, duplicate override correction `ad7e26eb` → `d6b8c566`. Upstream-latest collection patterns inspected at e0563ffa; existing offline behavior retained.
+
+PASS: analysis clean; Flutter 1759 passed / 3 skipped / zero failures (04:13); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph d6b8c566, source ad7e26eb: 23,954 unique nodes / 45,967 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. Six new light/dark collection-state regressions cover selection exit, hydration and current-row toggling. Initial fixture failures were missing duration and duplicate provider setup; corrected before final verification. No dependencies, schemas, music-file writes, native changes or APK. Physical visual checks NOT RUN.
+Next: batch 11 (MORN-006..012; FIX_PLAN M3+M4). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+
 ## Batches
 
 | # | Items | Notes |
@@ -218,7 +229,7 @@ Next: batch 10 (MORN-001..005 and MORN-017; FIX_PLAN M1+M2). User authorized con
 | 7 DONE | U-308, U-302 | U-308: timed-vocal parts (if not done in 1b) and the lyric share screen restyled for Mornye. U-302: `11c6cf99`, `2455cabc`, `9acaa760`. |
 | 8 DONE | U-304, U-305, U-307, U-312 | U-312: Mornye/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
 | 9 DONE | U-301 | Equalizer, alone: `ecf594aa` + `68c739df`, Kotlin/native DSP on the existing player. |
-| 10 | MORN-001..005, MORN-017 | `FIX_PLAN.md` M1+M2. |
+| 10 DONE | MORN-001..005, MORN-017 | `FIX_PLAN.md` M1+M2. |
 | 11 | MORN-006..012 | M3+M4. |
 | 12 | MORN-013..016 | M5+M6; MORN-013 uses the tonal style (owner decision). |
 | 13 | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
