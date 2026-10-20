@@ -90,3 +90,4 @@ touches the same file.
 - DEAD-909: keep `NativeReplayGainPolicy` for the Media3/ExoPlayer port.
 - U-001 (`UPSTREAM.md`): port upstream tag separators under Local Library settings.
 - MORN-013: use the tonal style for the Loved and Add-to-playlist circles.
+- Home: no On Repeat shelf and no crash reports on Home (U-306 dropped).

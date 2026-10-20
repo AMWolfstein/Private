@@ -77,7 +77,6 @@ Tag Mode UI (`settings_search_test` asserts both are absent).
 | U-303 | `40f65d3a` | Audio source/processing/output details. |
 | U-304 | `08266c73`, `1d53bf93` | Rewind and listening-statistics highlights. |
 | U-305 | `83a55fb8` | Sectioned library browsing and fast scroll. |
-| U-306 | `cb51d089`, `36694c6e` | Persistent crash reports on Home. |
 | U-307 | `75cd4c39` | Refreshed launcher widgets. |
 | U-308 | `78a5e078`, `2782b1f7` | Lyric share cards, on-demand lyrics loading. |
 | U-309 | `67a346c1`, `4cee16e9` | Home greeting and listening shortcuts (differs from the Apple Music Home). |
@@ -86,5 +85,6 @@ Tag Mode UI (`settings_search_test` asserts both are absent).
 
 Online lyrics (QQ, lrc.red, BetterLyrics, Apple fallback, online lyrics search), extensions,
 downloads, network/NAS, extension country settings, Material Expressive/Symbols/spring motion,
-the 5.2 release tour, About links, and `75907951` (bit-depth default badge conflicts with the
+the 5.2 release tour, About links, crash reports on Home (`cb51d089`, `36694c6e`; owner
+2026-10-20), the On Repeat shelf (`home_tab_intro.dart`; owner 2026-10-20), and `75907951` (bit-depth default badge conflicts with the
 `AGENTS.md` badge policy).
