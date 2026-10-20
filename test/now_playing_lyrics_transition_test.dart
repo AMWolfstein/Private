@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/screens/lyrics_share_screen.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui' show ImageFilter;
@@ -313,6 +314,45 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets('sharing reads document lyrics before opening the lyrics page', (
+    tester,
+  ) async {
+    await pumpNowPlaying(tester, theme: MornyeTheme.build(Brightness.dark));
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    expect(metadataReads, isEmpty);
+
+    await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
+    await settlePlayer(tester);
+    await tester.tap(find.text('Share lyrics'));
+    await settlePlayer(tester);
+
+    expect(metadataReads, ['content://library/first.flac']);
+    expect(find.byType(LyricsShareScreen), findsOneWidget);
+    expect(find.text('First lyric'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a track change cancels a pending lyrics share', (tester) async {
+    await pumpNowPlaying(tester, theme: MornyeTheme.build(Brightness.dark));
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+
+    await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
+    await settlePlayer(tester);
+    await tester.tap(find.text('Share lyrics'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(lyricsRequests, isNotEmpty);
+
+    mediaItems.add(item('second'));
+    await tester.pump();
+    await settlePlayer(tester);
+
+    expect(find.byType(LyricsShareScreen), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
   for (final mornye in [false, true]) {
     testWidgets(

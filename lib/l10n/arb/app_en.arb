@@ -3200,5 +3200,31 @@
   "audioInfoUnavailable": "Unavailable",
   "audioInfoFixedVolume": "Controlled by the device",
   "audioInfoCopy": "Copy report",
-  "audioInfoCopied": "Audio info copied"
+  "audioInfoCopied": "Audio info copied",
+  "lyricsShareTitle": "Share lyrics",
+  "@lyricsShareTitle": {
+    "description": "Screen that turns selected lyric lines into an image for stories"
+  },
+  "lyricsShareSelectHint": "Select up to {count} lines",
+  "@lyricsShareSelectHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lyricsShareLimit": "You can share up to {count} lines",
+  "@lyricsShareLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lyricsShareAction": "Share",
+  "lyricsShareError": "Couldn't create the lyrics image",
+  "lyricsShareBackgroundArtwork": "Artwork",
+  "lyricsShareBackgroundColor": "Cover color",
+  "lyricsShareBackgroundDark": "Dark",
+  "lyricsShareBackgroundLight": "Light"
 }

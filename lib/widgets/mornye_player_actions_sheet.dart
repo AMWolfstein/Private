@@ -116,6 +116,12 @@ class MornyePlayerActionsSheet extends ConsumerWidget {
               context.l10n.nowPlayingDetails,
               CupertinoIcons.info,
             ),
+            _action(
+              context,
+              'shareLyrics',
+              context.l10n.lyricsShareTitle,
+              CupertinoIcons.quote_bubble,
+            ),
           ],
           [
             _action(

@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart' show HapticFeedback;
+import 'package:spotiflac_android/utils/lyrics_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
@@ -17,6 +19,7 @@ class PlayerLyricsSection extends ConsumerWidget {
     required this.colorScheme,
     required this.isActive,
     this.options,
+    this.onShareLyrics,
   });
 
   final PlayerMetadataController metadata;
@@ -24,6 +27,7 @@ class PlayerLyricsSection extends ConsumerWidget {
   final ColorScheme colorScheme;
   final bool isActive;
   final Widget? options;
+  final ValueChanged<LyricLine?>? onShareLyrics;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,6 +80,7 @@ class PlayerLyricsSection extends ConsumerWidget {
             isActive: isActive,
             showPronunciation: visibility.$1,
             showTranslation: visibility.$2,
+            onLongPressLine: onShareLyrics,
           ),
           if (options != null)
             Positioned(
@@ -91,14 +96,22 @@ class PlayerLyricsSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          LyricsTextScale(
-            child: Text(
-              metadata.lyrics.plainText,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                height: 1.6,
-                color: colorScheme.onSurface,
+          GestureDetector(
+            onLongPress: onShareLyrics == null
+                ? null
+                : () {
+                    HapticFeedback.mediumImpact();
+                    onShareLyrics!(null);
+                  },
+            child: LyricsTextScale(
+              child: Text(
+                metadata.lyrics.plainText,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  height: 1.6,
+                  color: colorScheme.onSurface,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
           ?_lyricsCredits(),
