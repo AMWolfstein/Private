@@ -594,15 +594,15 @@
     "semantic_hash": ""
   },
   "lib/models/settings.dart": {
-    "mtime": 1792486601.369556,
-    "seen": 1792494608.4828227,
-    "ast_hash": "04c36935a68bf2abec0e113c070c5d5a",
+    "mtime": 1792512996.0536587,
+    "seen": 1792513048.685319,
+    "ast_hash": "0df9e2c8b86e9cc713bbec8657f334fd",
     "semantic_hash": ""
   },
   "lib/models/settings.g.dart": {
-    "mtime": 1792486601.369556,
-    "seen": 1792494608.4828236,
-    "ast_hash": "49c7c722103f6f9513a0cc5f8da75674",
+    "mtime": 1792512994.8203886,
+    "seen": 1792513048.6853206,
+    "ast_hash": "11bd3e29412fb2dc442de99a6d2bea62",
     "semantic_hash": ""
   },
   "lib/models/theme_settings.dart": {
@@ -684,9 +684,9 @@
     "semantic_hash": "df0dda6992213b2d72680be004ae229f"
   },
   "lib/providers/settings_provider.dart": {
-    "mtime": 1792486601.369556,
-    "seen": 1792494608.482845,
-    "ast_hash": "8e1c64d0e4c76ab5bb1dd9ae9ccf3080",
+    "mtime": 1792512930.3766253,
+    "seen": 1792513048.6853418,
+    "ast_hash": "5433831f2c4a069bb60b55269e699666",
     "semantic_hash": ""
   },
   "lib/providers/theme_provider.dart": {
@@ -900,9 +900,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/playback_settings_page.dart": {
-    "mtime": 1792356506.598393,
-    "seen": 1792494608.482899,
-    "ast_hash": "07de65025117704014ab4215cb33cece",
+    "mtime": 1792512996.1296582,
+    "seen": 1792513048.6853957,
+    "ast_hash": "a778268e125737efa7b5254568cbc827",
     "semantic_hash": ""
   },
   "lib/screens/settings/profile_settings_page.dart": {
@@ -912,9 +912,9 @@
     "semantic_hash": "4616cd5074b4ce7e4e01fc23185a22d6"
   },
   "lib/screens/settings/settings_search_catalog.dart": {
-    "mtime": 1792486601.373556,
-    "seen": 1792494608.4829013,
-    "ast_hash": "89ea0711645be2218674085608bf5629",
+    "mtime": 1792512996.1336582,
+    "seen": 1792513048.6853983,
+    "ast_hash": "a4bf079e4d44a19d0090aa99e84562ae",
     "semantic_hash": ""
   },
   "lib/screens/settings/settings_tab.dart": {
@@ -1278,9 +1278,9 @@
     "semantic_hash": ""
   },
   "lib/services/music_player_service.dart": {
-    "mtime": 1792507226.9373248,
-    "seen": 1792507271.352476,
-    "ast_hash": "68d868eec2621914a5bfcee31484c082",
+    "mtime": 1792512996.1016583,
+    "seen": 1792513048.6854842,
+    "ast_hash": "2ff3f6c7c44c06aec30d8acba036df64",
     "semantic_hash": ""
   },
   "lib/services/native_cache_maintenance.dart": {
@@ -1320,10 +1320,10 @@
     "semantic_hash": ""
   },
   "lib/services/playback_normalization.dart": {
-    "mtime": 1792356506.5827396,
-    "seen": 1792494608.4829886,
-    "ast_hash": "25e2ab3fdbd05bd18d7938cba576d3cb",
-    "semantic_hash": "25e2ab3fdbd05bd18d7938cba576d3cb"
+    "mtime": 1792512930.3803968,
+    "seen": 1792513048.6854925,
+    "ast_hash": "a315b9431641405ff5bd365c6a717501",
+    "semantic_hash": ""
   },
   "lib/services/playback_notification.dart": {
     "mtime": 1792356506.592062,
@@ -6012,9 +6012,9 @@
     "semantic_hash": ""
   },
   "test/music_player_runtime_test.dart": {
-    "mtime": 1792405430.5398388,
-    "seen": 1792494608.4840636,
-    "ast_hash": "a114e17491ebbf2ab09e37ce44ed98a2",
+    "mtime": 1792512957.6729126,
+    "seen": 1792513048.686664,
+    "ast_hash": "18ea63cc5c4bf49ec6aecdfbee769f01",
     "semantic_hash": ""
   },
   "test/native_backup_contract_test.dart": {
@@ -6132,10 +6132,10 @@
     "semantic_hash": ""
   },
   "test/playback_normalization_test.dart": {
-    "mtime": 1792405430.5568082,
-    "seen": 1792494608.4840894,
-    "ast_hash": "43e393b2dc77cb638fba75322215a94d",
-    "semantic_hash": "43e393b2dc77cb638fba75322215a94d"
+    "mtime": 1792512930.3804913,
+    "seen": 1792513048.6866937,
+    "ast_hash": "8cefba8762f1a9f2055794288a6a1610",
+    "semantic_hash": ""
   },
   "test/playback_path_resolution_test.dart": {
     "mtime": 1792405430.5497172,
@@ -7869,6 +7869,18 @@
     "mtime": 1792510364.6377773,
     "seen": 1792510413.7480397,
     "ast_hash": "7802dcb97781588236a7ef438b24d415",
+    "semantic_hash": ""
+  },
+  "lib/widgets/playback_normalization_settings.dart": {
+    "mtime": 1792512930.3835251,
+    "seen": 1792513048.685673,
+    "ast_hash": "9c6611155c8b33f392e7cfbf01fc798c",
+    "semantic_hash": ""
+  },
+  "test/playback_normalization_settings_test.dart": {
+    "mtime": 1792512930.3865263,
+    "seen": 1792513048.686692,
+    "ast_hash": "16c5e9cd63a4d7c0cc3f3713c0b44930",
     "semantic_hash": ""
   }
 }
