@@ -2142,10 +2142,10 @@
     "semantic_hash": "a956549a7a473ac70cae513e3a06725a"
   },
   "lib/widgets/player_lyrics.dart": {
-    "mtime": 1792438624.2550914,
-    "seen": 1792441084.6946518,
-    "ast_hash": "1905d1117fc2c8d4d13d04ca00a67d8a",
-    "semantic_hash": "1905d1117fc2c8d4d13d04ca00a67d8a"
+    "mtime": 1792479108.10362,
+    "seen": 1792479137.61328,
+    "ast_hash": "5b92079019dbda61e716437d9305f06b",
+    "semantic_hash": ""
   },
   "lib/widgets/player_lyrics_controls.dart": {
     "mtime": 1792438624.2550914,
@@ -6162,10 +6162,10 @@
     "semantic_hash": "e86578d92b122233d9fd6aecd291644e"
   },
   "test/player_lyrics_repaint_test.dart": {
-    "mtime": 1792438624.3350914,
-    "seen": 1792441084.6963909,
-    "ast_hash": "c8a7a295cf5e6e8bdaa6c177490eac6c",
-    "semantic_hash": "c8a7a295cf5e6e8bdaa6c177490eac6c"
+    "mtime": 1792479108.10362,
+    "seen": 1792479137.6144547,
+    "ast_hash": "213a81e095ecd12bb91c0473442811d8",
+    "semantic_hash": ""
   },
   "test/player_metadata_controller_test.dart": {
     "mtime": 1792438624.3350914,
