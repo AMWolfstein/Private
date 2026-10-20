@@ -169,7 +169,9 @@ void main() {
           ),
           if (controller != null)
             musicPlayerControllerProvider.overrideWithValue(controller),
-          currentMediaItemProvider.overrideWith((ref) => mediaItems.stream),
+          currentMediaItemProvider.overrideWithBuild(
+            (ref, notifier) => mediaItems.stream,
+          ),
           playerCollectionTrackProvider.overrideWith(
             (ref, item) async => Track(
               id: item.id,
@@ -245,6 +247,54 @@ void main() {
       frames++;
     } while (tester.binding.hasScheduledFrame || lyricsRequests.isNotEmpty);
     return frames;
+  }
+
+  for (final mornye in [false, true]) {
+    testWidgets(
+      'late duration refreshes the open Mornye player (dark: $mornye)',
+      (tester) async {
+        await pumpNowPlaying(
+          tester,
+          theme: MornyeTheme.build(mornye ? Brightness.dark : Brightness.light),
+          playback: PlaybackState(
+            processingState: AudioProcessingState.ready,
+            updatePosition: const Duration(seconds: 30),
+          ),
+          wrapPlayer: (player) => Column(
+            children: [
+              Expanded(child: player),
+              const HeroMode(enabled: false, child: MiniPlayer()),
+            ],
+          ),
+        );
+        final initial = item('first').copyWith(duration: Duration.zero);
+        mediaItems.add(initial);
+        await settlePlayer(tester);
+        final originalState = tester.state(find.byType(NowPlayingScreen));
+        expect(
+          tester
+              .widget<PlaybackSeekSlider>(find.byType(PlaybackSeekSlider))
+              .duration,
+          Duration.zero,
+        );
+        final readsBefore = metadataReads.length;
+
+        mediaItems.add(initial.copyWith(duration: const Duration(minutes: 3)));
+        await settlePlayer(tester);
+        expect(
+          tester.state(find.byType(NowPlayingScreen)),
+          same(originalState),
+        );
+        expect(
+          tester
+              .widget<PlaybackSeekSlider>(find.byType(PlaybackSeekSlider))
+              .duration,
+          const Duration(minutes: 3),
+        );
+        expect(metadataReads.length, readsBefore);
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 
   testWidgets('Material seek wave follows playback, buffering and pause', (
