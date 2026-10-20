@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-20)
 
 ## Corpus Check
-- 1271 files · ~1,157,462 words
+- 1271 files · ~1,157,464 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 123 file(s) not represented in the graph (top: .xml 38, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bc983981`
+- Built from commit: `b55043ba`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2587,16 +2587,16 @@ Nodes (5): libusb_usb_2_0_extension_descriptor, bDescriptorType, bDevCapabilityT
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `BorrowedFd` connect `BorrowedFd` to `ArgReg`, `ret`, `RawFd`, `PollFd<'fd>`, `linux_raw/net/sockopt.rs`, `Ipv4Addr`, `Timeout`, `borrowed_fd`, `c`, `Timespec`, `Backend`, `at.rs`, `OwnedFd`, `Pid`, `Ipv4PathMtuDiscovery`, `Ipv6PathMtuDiscovery`, `src/io_uring/mod.rs`, `process/prctl.rs`, `libc/io/syscalls.rs`, `setsockopt`, `net/types.rs`, `msg.rs`, `Uid`, `c_void`, `super`, `PollFd<'fd>`, `Capability`, `SocketAddrXdp`, `setns.rs`, `linux_raw/termios/syscalls.rs`, `runtime/syscalls.rs`, `fs/ioctl.rs`, `.from`, `LinkNameSpaceType`, `to_ipv6mr`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **What connects `decoder`, `block`, `offset` to the rest of the system?**
   _9220 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004597701149425287 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `mornye_glass_warmup.dart`, `music_playback_deck.dart`, `mornye_player_layout.dart`, `List`, `package:spotiflac_android/utils/logger.dart`, `datetime`, `StatelessWidget`, `library_cleanup.dart`, `static const`, `_AndroidVolumeDirectionMessageExtension`, `playback_seek_preview.dart`, `int get`, `_HandlerCallbacks`, `playback_feedback.dart`, `AndroidPlaybackInfo`, `ValueStream`, `playback_automation.dart`, `dart:async`, `package:flutter/services.dart`, `CustomMediaAction`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `_RatingMessageExtension`, `mornye_rendering_performance_test.dart`, `Duration`, `Widget`, `MediaItemCopyWith`, `library_scan_scheduling_test.dart`, `music_player_runtime_test.dart`, `AudioHandler`, `AudioService`, `sqlite_helpers.dart`, `RemoteSafPlaybackTest.kt`, `PlaybackStateCopyWith`, `string`, `library_collections_hydration.dart`, `audio_format_utils.dart`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.030303030303030304 - nodes in this community are weakly interconnected._
-- **Why does `c_int()` connect `process/prctl.rs` to `linux_raw/c.rs`, `ArgReg`, `ret`, `borrowed_fd`, `reg.rs`, `vdso_wrappers.rs`, `c`, `Timespec`, `procctl.rs`, `OwnedFd`, `libc_auxv.rs`, `Pid`, `Errno`, `linux_raw/param/auxv.rs`, `msg.rs`, `libusb1-sys-0.7.0/src/lib.rs`, `thread/prctl.rs`, `src/constants.rs`, `super`, `system.rs`, `Capability`, `RetReg`, `setns.rs`, `SendAncillaryBuffer<'buf, 'slice, 'fd>`, `linux_raw/process/wait.rs`, `BorrowedFd`, `to_ipv6mr`, `libc/c.rs`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+- **Why does `Backend` connect `Backend` to `RawFd`, `runtime_448b8ad740e2a26f.rs`, `c`, `Timespec`, `mmap.rs`, `at.rs`, `OwnedFd`, `Pid`, `src/io_uring/mod.rs`, `src/thread/futex.rs`, `CpuSet`, `types`, `xattr.rs`, `T`, `src/termios/types.rs`, `files.rs`, `src/fs/makedev.rs`, `msg.rs`, `Uid`, `fd.rs`, `fsopen.rs`, `src/thread/mod.rs`, `LocalBackendError`, `system.rs`, `core/src/tags.rs`, `linux_raw/termios/syscalls.rs`, `Cpuid`, `src/net/sockopt.rs`, `pipe.rs`, `scan.rs`, `send_recv/mod.rs`, `fs/ioctl.rs`, `madvise.rs`, `lrc.rs`?**
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Should `playlist_picker_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.021460713049498096 - nodes in this community are weakly interconnected._
