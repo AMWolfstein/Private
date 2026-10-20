@@ -564,8 +564,9 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
               if (notification.metrics.axis == Axis.horizontal &&
                   notification.metrics.extentAfter < 400) {
                 final provider = libraryBrowseProvider(_albumsRequest);
-                if (ref.read(provider).asData?.value.loadMoreError == null)
+                if (ref.read(provider).asData?.value.loadMoreError == null) {
                   ref.read(provider.notifier).loadMore();
+                }
               }
               return false;
             },
@@ -576,7 +577,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
               itemBuilder: (context, index) {
                 final album = releases[index];
                 final subtitle = [
-                  if (releaseTagYear(album.releaseDate) case final year?) year,
+                  ?releaseTagYear(album.releaseDate),
                   if (album.trackCount > 0)
                     context.l10n.tracksCount(album.trackCount),
                 ].join(' · ');
