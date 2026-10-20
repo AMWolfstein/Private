@@ -17,6 +17,11 @@ adding another playback engine or native SDK.
   `PinnedMetadataCache`. The active queue and current item stay pinned so
   notification, Android Auto and browser lookups survive recent-item eviction.
   Replacing the queue and clearing the service release their pinned metadata.
+- Android (upstream `205e178e`, local `fa838caa`): accept renderer arguments via
+  `AudioServicePlugin.setFlutterEngineArguments` before shared engine creation.
+  Application startup supplies the existing device compatibility flags, including
+  the scoped Xiaomi/Android 15 workaround. Arguments are copied and late changes
+  rejected so Activity recreation cannot silently reconfigure the cached engine.
 - iOS: allow the active music handler to re-publish retained Now Playing
   metadata after restoring its audio session on app lifecycle/video changes.
   Refresh keeps artwork and extrapolates elapsed time without restarting audio;

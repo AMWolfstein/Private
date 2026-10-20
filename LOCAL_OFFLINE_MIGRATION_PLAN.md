@@ -33,6 +33,18 @@ remains pending.
 `flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
+**Upstream port batch 5 (2026-10-20; continued MEDIUM preference):** U-214
+`10c04f7a` gates local Android startup channels on Activity attachment; U-215 `fa838caa`
+applies the existing renderer rules before shared engine creation and adds the scoped
+Android 15 Xiaomi workaround. Minimal Application registration and vendor patch documented;
+no crash reporter or playback replacement. U-208 Material-only slider hunk rejected.
+U-209 `ba751b35` / `2c4ce3ff` reuse existing Dart lyric-alignment and Rust credit patterns.
+Removed online/download/history hunks rejected; missing audio-info and queue-section
+formatter hunks deferred to their scheduled batches 6/8. Graph `11d8f750` synchronized
+from `2c4ce3ff` (23,147 nodes / 44,693 links). PASS: analysis clean; full Flutter 1,659 passed / 3 skipped / zero failures (4m02s); Rust fmt/Clippy clean, 231 passed / 1 ignored; Android unit 61 passed / 1 skipped (1m06s).
+No APK, dependency/schema changes or physical-device validation. Next: batch 6 only
+(U-210/U-303/U-217/U-218); KT-202 remains open.
+
 **Upstream port batch 4 (2026-10-20; requested MEDIUM):** U-205 `6e44c6be` reports
 Android output failures without advancing the queue and supports retry; U-216 `95e2b158`
 notifies open players when a same-ID snapshot gains duration/artwork/metadata. U-206 targets

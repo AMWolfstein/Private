@@ -32,8 +32,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 2. DONE — U-201b evaluated (no applicable local changes), U-202 ported
 3. DONE — U-203, U-212, U-213, U-204
 4. DONE — U-205, U-216, U-206 evaluated, U-207
-5. NEXT — U-214, U-215, U-208, U-209
-6. U-210, U-303, U-217, U-218
+5. DONE — U-214, U-215, U-208 evaluated, U-209 partial
+6. NEXT — U-210, U-303, U-217, U-218
 7. U-308 (duets + share cards), U-302 (+ `9acaa760`)
 8. U-304, U-305, U-307, U-312
 9. U-301 (equalizer, alone)
@@ -50,8 +50,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 | U-201b | `e58217c8` (local parts only: `local_library_provider*.dart`), `931b1091` (only if U-201 scan recovery needs `LibraryScanExitInfo`) | Evaluated: no applicable local production hunks. `e58217c8` only tracks/cancels NetworkLibraryScanner and frees network listings, including in the nominally local provider files. Native local ingestion/scan cancellation already exists. `931b1091` adds optional exit importance/process diagnostics; U-201 does not require them, so omitted with crash notices. | 2 DONE |
 | U-212 | `9dc86e13` (drop `crates/extensions`) | Ported in `1d8e8f76`: shared aligned PIC/APIC parsing, recognized-image padding recovery and rejection/re-extraction of legacy NUL-prefixed cached JPEGs. Extension backend omitted. | 3 DONE |
 | U-213 | `60d00191` | Ported in `d256e0c7`: local filesystem playback joins SAF artwork recovery; embedded art replaces missing/stale/remote references without fetching remote artwork. Existing generation guard and offline placeholders retained. | 3 DONE |
-| U-214 | `d7798898` | Wait for the Activity before backend startup calls (`services/activity_attachment.dart`). | 5 |
-| U-215 | `205e178e` | Apply renderer (Impeller) compatibility before shared engine creation, incl. the `third_party/audio_service` patch note. | 5 |
+| U-214 | `d7798898` | ADAPT, ported in `10c04f7a`: Android Activity attachment wait before existing local startup channels; upstream lifecycle tests retained. No extension/crash startup imported. | 5 DONE |
+| U-215 | `205e178e` | ADAPT, ported in `fa838caa`: existing inline renderer rules verified equal and extracted to a shared helper; minimal Application plus manifest registration configures audio_service before engine creation. Scoped Android 15 Xiaomi workaround and policy tests retained; no crash reporter. Vendor patch documented. | 5 DONE |
 | U-216 | `9ded49f3` | Ported in `95e2b158`: identity-based same-ID snapshots notify mounted consumers while ID selectors remain stable; retained Mornye light/dark regressions and test overrides adapted. | 4 DONE |
 | U-217 | `37162363` | Swipe up on the mini player opens Now Playing; mini-player dismissal must keep working (UI-101). | 6 |
 | U-218 | `9eea6a1a` | Normalization pre-amp and track/album gain mode (ReplayGain stays). | 6 |
@@ -129,8 +129,8 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 | U-205 | `f426b2d1` | Ported in `6e44c6be`: report ordinary Android output errors, keep selected song/queue and allow retry; native errors handled instead of masquerading as completion. Existing notification controls and no-EQ fork retained. |
 | U-206 | `97d8ee36` | Evaluated: upstream modifies legacy material_player_layout.dart fallback only; REJECT importing Material-specific UI changes. Retained Mornye track header uses a single current PlayerMetadataTitle via PlayerTrackSwipeTitles, not an outgoing-title AnimatedSwitcher. Equivalent non-stacking behavior already present; no source port required. |
 | U-207 | `186c66ae` | Ported local parts in `d0818d7a`: provider-resolved/verified SAF parents and explicit requested LRC write failures. Import native opaque/nested provider fixtures and Dart sidecar regressions; omit removed reEnrichFile online handler and extension/download tests. |
-| U-208 | `47ccf9c9` | Volume slider handle size. |
-| U-209 | `acbc614f`, `ef5fa1cb`, `1b66bc46` | DateFormat/RegExp reuse, fewer history notifications. |
+| U-208 | `47ccf9c9` | REJECT: adds thumbLength to the removed AppSlider/PlayerVolumeControl Material Expressive branch. Retained MornyeVolumeControl uses MornyePlayerSlider with an intentionally thumb-free 6px track. No compatible source hunk; no UI change. |
+| U-209 | `acbc614f`, `ef5fa1cb`, `1b66bc46` | Partial: ADOPT retained lyric alignment patterns in `ba751b35` (`acbc614f`) and local native credit regex reuse in `2c4ce3ff` (`ef5fa1cb`), identical parsing patterns. REJECT removed online album/metadata, extension/download and download-history (`1b66bc46`) hunks. DEFER audio_info_sheet number regex to U-303 batch 6 and locale-cached queue-section DateFormat/letter regex to U-305 batch 8, whose modules do not exist locally yet. No dependency changes or measured performance claim. |
 | U-210 | `d28e3f65` | Album header artwork fit (only the `album_detail_header` part). |
 
 ## Optional features (owner chose all of U-301..U-305, U-307, U-308 on 2026-10-20; U-306 and U-309 not ported)

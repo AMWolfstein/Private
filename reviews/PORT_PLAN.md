@@ -133,7 +133,33 @@ No tests between ports. Testing happens once at the end of each batch.
 - Graph pairs: `a95ffcf6`, `4c66e5e7`, `a85b4965`; final code `d0818d7a`, validated
   23,112 unique nodes / 44,630 valid links. Vendor patch note updated with U-205 source.
 - Batch 4 verification: PASS: analysis clean; full Flutter 1,657 passed / 3 skipped / zero failures (4m10s); Android unit 59 passed / 1 skipped; changed plugin and instrumentation Kotlin/Java compiled (1m58s). No Rust source change; no APK or device test execution.
-- Next exact unit: **batch 5 only** (U-214, U-215, U-208, U-209), only when requested.
+- Historical next unit was batch 5, now recorded below.
+
+## Completed batch 5 (2026-10-20; continued MEDIUM preference)
+
+- U-214 `10c04f7a` adapts `d7798898`: wait for Android Activity attachment before
+  existing local startup channels, with upstream lifecycle tests.
+- U-215 `fa838caa` adapts `205e178e`: existing renderer policy extracted unchanged
+  (verified against upstream), shared by the fragment and a minimal Application.
+  Manifest registers that Application; audio_service copies arguments before cached
+  engine creation and rejects late configuration. Scoped Android 15 Xiaomi workaround
+  and its two unit tests retained. No crash-reporting startup imported.
+- U-208 `47ccf9c9`: REJECT Material-only thumb sizing. Mornye uses its existing
+  intentionally thumb-free player slider; removed AppSlider is not restored.
+- U-209 `ba751b35` adopts retained `acbc614f` lyric alignment regex reuse;
+  `2c4ce3ff` adopts `ef5fa1cb` native local lyric credit regex reuse. Identical patterns,
+  existing pronunciation tests and shared native/Dart credit goldens cover behavior.
+  REJECT removed online album/metadata, download/extension and history-notifier hunks.
+  DEFER number-pattern hunk to U-303 (batch 6) and queue-section locale DateFormat/letter
+  patterns to U-305 (batch 8); those modules do not exist locally yet.
+- Source → graph pairs: `10c04f7a` → `3a5cca2a`, `fa838caa` → `a88e3696`,
+  `ba751b35` → `ffbafbe1`, `2c4ce3ff` → `11d8f750`.
+  Final graph: 23,147 unique nodes / 44,693 valid links. Existing vendor warnings only.
+- Verification: PASS: analysis clean; full Flutter 1,659 passed / 3 skipped / zero failures (4m02s); Rust fmt/Clippy clean, 231 passed / 1 ignored; Android unit 61 passed / 1 skipped (1m06s).
+- No dependencies/schema changes, branding, removed features, replacement player or APK.
+  Physical startup/renderer behavior NOT RUN; no runtime speedup measured. KT-202 remains OPEN.
+- Next exact unit: **batch 6 only** (U-210, U-303, U-217, U-218), when requested.
+  Include U-209 deferred audio_info_sheet number pattern when U-303 introduces that file.
 
 ## Batches
 
@@ -143,7 +169,7 @@ No tests between ports. Testing happens once at the end of each batch.
 | 2 DONE | U-201b, U-202 | U-201b: local parts of `e58217c8` (`local_library_provider*.dart`), plus `931b1091` `LibraryScanExitInfo` only if U-201 needs it. U-202 ported from reviewed WIP; WIP removed. KT-202 remains open. |
 | 3 DONE | U-203, U-212, U-213, U-204 | U-212 `9dc86e13` without `crates/extensions`. |
 | 4 DONE | U-205, U-216, U-206, U-207 | U-206 legacy Material fallback patch rejected; production Mornye title behavior already equivalent. |
-| 5 | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |
+| 5 DONE | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |
 | 6 | U-210, U-303, U-217, U-218 | U-210: only the `album_detail_header` part of `d28e3f65`. U-303 brings `audio_info_sheet.dart` (not in this repo). U-217: mini-player dismissal must keep working (UI-101). |
 | 7 | U-308, U-302 | U-308: timed-vocal parts (if not done in 1b) and the lyric share screen restyled for Mornye. U-302: `11c6cf99`, `2455cabc`, `9acaa760`. |
 | 8 | U-304, U-305, U-307, U-312 | U-312: Mornye/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
