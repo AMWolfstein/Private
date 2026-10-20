@@ -1,26 +1,61 @@
 # Upstream port list
 
-Upstream: `spotiflacapp/SpotiFLAC-Mobile`. This fork started from **v5.1.1** (`78699a91`,
-2026-10-11), the closest match of the fork's first commit's blobs. The histories are not shared,
-so `git merge` is impossible; port one upstream commit per batch, with the `AGENTS.md`
-code → graphify → docs commits, analyze, full `flutter test` and a `/review`.
+Upstream: **`mornyeapp/Mornye`** (renamed from `spotiflacapp/SpotiFLAC-Mobile` on 2026-10-20;
+same git history). This fork started from **v5.1.1** (`78699a91`, 2026-10-11). The histories
+are not shared with this fork, so `git merge` is impossible; port commits by hand in batches,
+with the `AGENTS.md` code → graphify → docs commits and one analyze + full `flutter test` per
+batch.
 
-- Last upstream commit checked: `21ee30c4` (2026-10-19, after v5.2.0). Next check: only commits
-  after it (`git log 21ee30c4..origin/main`).
+- Last upstream commit checked: `e0563ffa` (2026-10-20, v5.2.1). Next check: only commits
+  after it (`git log e0563ffa..origin/main` in a Mornye clone).
+- **Skip all renaming/branding** (owner 2026-10-20): `37e21b57` (app + native backend rename,
+  `package:mornye`), `51d34594`, `f72fe69e`, `ae728525`, `243fee8c`, the rebrand tour
+  `8e4504e7`, release/AltStore bumps. Keep this fork's `spotiflac_android` package, names and
+  `com.zarz.spotiflac` paths; read upstream code through the rename (`package:mornye/` =
+  `package:spotiflac_android/`).
 - Do the ports before any module/folder reorganisation; moved files make every patch fail.
 - Before a `FIX_PLAN.md` batch, check this list for an upstream commit that fixes the same code.
-- "Clean" = `git apply --check` passed against `57601c3`. Everything else needs a manual port;
-  some fail only because an earlier upstream commit is missing.
 
 ## Port order (batches; test once per batch)
 
-1. U-001, U-101, U-102, U-103
-2. U-104, U-201, U-202, U-203
-3. U-204, U-205, U-206, U-207
-4. U-208, U-209, U-210, U-303
-5. U-308 (duets + share cards), U-302
-6. U-304, U-305, U-307
-7. U-301 (equalizer, alone)
+Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`). Batch 2 so far: U-104 `913faaa`,
+U-201 `e8cff13` (committed, not yet tested). Unfinished U-202 work from the old upstream is in
+`git stash` ("WIP U-202 FLAC precision"); `3dc2d690` is unchanged in Mornye, so it may be
+reused after review.
+
+1b. U-103b (patch-1 follow-up)
+2. U-201b, U-202 (then test with U-104, U-201)
+3. U-203, U-212, U-213, U-204
+4. U-205, U-216, U-206, U-207
+5. U-214, U-215, U-208, U-209
+6. U-210, U-303, U-217, U-218
+7. U-308 (duets + share cards), U-302 (+ `9acaa760`)
+8. U-304, U-305, U-307, U-312
+9. U-301 (equalizer, alone)
+10-14. Mornye parity batches (`FIX_PLAN.md` Tier 2c: M1+M2, M3+M4, M5+M6, M7-M9 + HOME-007,
+   M10+M11 + U-311)
+15. Dependency updates from Mornye (`pubspec.*`, `rust_backend` Cargo, Gradle, toolchain pins)
+16. Dead-code removal as one patch (`FIX_PLAN.md` Tier 3)
+
+## New in Mornye (`21ee30c4..e0563ffa`)
+
+| ID | Upstream | What | Batch |
+|---|---|---|---|
+| U-103b | `7600c169` (lyrics parts only: `player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, their tests), `91add520` | Follow-up to U-103: lyric timeline index, deferred row measurement, pause lyrics ticking when hidden/backgrounded, spring scroll on synced line changes. If it needs `78a5e078` timed-vocal code, port those pieces here and mark them in U-308. | 1b |
+| U-201b | `e58217c8` (local parts only: `local_library_provider*.dart`), `931b1091` (only if U-201 scan recovery needs `LibraryScanExitInfo`) | Release scan memory and cancel active metadata reads; skip network/SMB/WebDAV parts and crash notices. | 2 |
+| U-212 | `9dc86e13` (drop `crates/extensions`) | Read padded ID3 covers (Rust core `tags/id3.rs`, `write/id3.rs`) and repair cached previews. | 3 |
+| U-213 | `60d00191` | Prefer embedded art for local files (`utils/playback_artwork.dart`). | 3 |
+| U-214 | `d7798898` | Wait for the Activity before backend startup calls (`services/activity_attachment.dart`). | 5 |
+| U-215 | `205e178e` | Apply renderer (Impeller) compatibility before shared engine creation, incl. the `third_party/audio_service` patch note. | 5 |
+| U-216 | `9ded49f3` | Refresh late duration updates without reopening the player. | 4 |
+| U-217 | `37162363` | Swipe up on the mini player opens Now Playing; mini-player dismissal must keep working (UI-101). | 6 |
+| U-218 | `9eea6a1a` | Normalization pre-amp and track/album gain mode (ReplayGain stays). | 6 |
+| U-312 | `7600c169` (Mornye/library parts: `mornye_artwork_contrast`, `mornye_selection_pill`, `mornye_artist_header`, `settings_group`, `pinned_section_sliver_list`, `animated_library_sliver_grid`, `playback_session_restore`, tests) | Mornye player/library smoothness. Skip Material files. `pinned_section_sliver_list` may belong with U-305. | 8 |
+
+Skip from Mornye: branding (above), crash notices `00b7cf99`/`931b1091` (crash reports dropped,
+U-306), Material-only `ba234d78`, `721a3fa7`, `5ecbb7ac`, Home listening/On Repeat `b946c373`,
+`1829363d`, downloads `a3b14a28`, network `b279733a`, `19056edf` and the network parts of
+`e58217c8`, iOS backup `27a45c04`.
 
 ## Requested by the owner
 
@@ -98,7 +133,7 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 | ID | Upstream | What |
 |---|---|---|
 | U-301 | `ecf594aa` (+`68c739df`) | Multiband EQ / native audio processing (~4.5k lines; adds DSP, does not replace the engine). |
-| U-302 | `11c6cf99`, `2455cabc` | Music-synced haptics. |
+| U-302 | `11c6cf99`, `2455cabc`, `9acaa760` | Music-synced haptics, incl. basic-motor pulses and tuning sliders. |
 | U-303 | `40f65d3a` | Audio source/processing/output details; the quality badge becomes tappable and opens `audio_info_sheet.dart` (not in this fork). |
 | U-304 | `08266c73`, `1d53bf93` | Rewind and listening-statistics highlights. |
 | U-305 | `83a55fb8` | Sectioned library browsing and fast scroll. |
