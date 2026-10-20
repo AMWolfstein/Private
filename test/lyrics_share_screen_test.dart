@@ -73,8 +73,12 @@ void main() {
       matching: find.text('Line $index'),
     );
     for (var i = 0; i < lyricsShareMaxLines; i++) {
+      await tester.ensureVisible(choice(i));
+      await tester.pumpAndSettle();
       await tester.tap(choice(i));
+      await tester.pumpAndSettle();
     }
+    expect(find.text('5/5'), findsOneWidget);
     await tester.pumpAndSettle();
     expect(share().onPressed, isNotNull);
     // The card quotes each selected line once.
@@ -85,7 +89,7 @@ void main() {
     await tester.ensureVisible(choice(6));
     await tester.pumpAndSettle();
     await tester.tap(choice(6));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('You can share up to 5 lines'), findsOneWidget);
     expect(find.text('Line 6'), findsOneWidget);
   });
