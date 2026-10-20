@@ -46,7 +46,10 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | P5 | PERF-404 (with UX-104), PERF-201, PERF-602 | Dead lookup sets and wasted per-build list work. |
 | P6 | PERF-405, PERF-603, PERF-604 | Home shelf caching and rebuild scope, and startup ordering. Only if measured. |
 
-## Tier 2c: Mornye parity (artist, album, playlist)
+## Tier 2c: Mornye parity (artist, album, playlist, Home, Now Playing)
+
+Owner (2026-10-20): done in this session after the upstream port batches, as port batches
+8-12 (M1+M2, M3+M4, M5+M6, M7-M9 with HOME-007, M10+M11), tested once per batch.
 
 | # | Findings | What it fixes |
 |---|---|---|
