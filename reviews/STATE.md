@@ -13,8 +13,13 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
   download/re-enrich l10n keys, `recent_access_provider` callers, `music_services.dart`).
 - Open findings: 115 (0 P0, 1 P1, 44 P2, 70 P3; see `FINDINGS.md`).
 - Last checkpoint: `/audit state` (this commit). Previous `f0f07be` pushed and verified.
-- Tooling note: `scripts/review_scope.sh` maps `android/app/src/{test,androidTest}` to
-  `audio`/`kotlin`; should map to `tests` (fix with next code commit).
+- Review system: adopted checks from external agent/skill repos (gate questions, skeptic
+  validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer
+  baseline/rollback, scope hints `NO_TEST_CHANGES`/`SPLIT_SUGGESTED`; android test dirs now
+  map to `tests`).
+- UI audit: round 1 (player, Library lists/selection, detail/Home) done, findings drafted but
+  not yet recorded; round 2 (settings/shell U4, shared widgets/theme U5) interrupted by usage
+  limit, to be re-run.
 
 ## Handoff
 
