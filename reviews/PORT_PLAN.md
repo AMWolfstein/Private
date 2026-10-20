@@ -69,9 +69,11 @@ No tests between ports. Testing happens once at the end of each batch.
 - Done and pushed: batch 1 (U-001 `5393d1d`, U-101 `a5bc4a8`, U-102 `051ff44`, U-103
   `940fd79`; tested). Batch 2 part: U-104 `913faaa`, U-201 `e8cff13`, pushed but **not yet
   tested**: batch 1b's test run covers them.
-- `git stash` holds "WIP U-202 FLAC precision (batch 2, old upstream)": unfinished, untested
-  work for `3dc2d690` (Kotlin/C++ FLAC PCM source; includes a `pubspec.yaml.rej`, i.e. one
-  hunk did not apply). `3dc2d690` is unchanged in Mornye. Review it in batch 2; reuse or drop.
+- `reviews/wip/U-202-flac-precision.patch` holds unfinished, untested work for `3dc2d690`
+  (Kotlin/C++ FLAC PCM source, 18 files; it includes a `pubspec.yaml.rej`, i.e. one upstream
+  hunk did not apply). It applies cleanly to `96a1e43` (`git apply`). `3dc2d690` is unchanged in
+  Mornye. In batch 2, review it against `3dc2d690`, then reuse or drop it; never commit the
+  `.rej` file, and delete `reviews/wip/` in that batch's docs commit.
 - Dependencies were compared with Mornye `e0563ffa`: every shared pub package, Cargo crate,
   the Flutter pin (`.fvmrc` 3.47.7), NDK `30.0.16248370` and Gradle plugin versions are
   identical. Mornye's extra dependencies are online/iOS/Discord only (`cached_network_image`,
