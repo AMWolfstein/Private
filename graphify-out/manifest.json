@@ -7434,9 +7434,9 @@
     "semantic_hash": ""
   },
   "lib/screens/local_artist_screen.dart": {
-    "mtime": 1792526841.3402498,
-    "seen": 1792526907.0880504,
-    "ast_hash": "ef34a201271835cd2cca53eba5ef1027",
+    "mtime": 1792526938.0804534,
+    "seen": 1792526964.7740986,
+    "ast_hash": "cc8744e97e59898c7536101c0dbea7f8",
     "semantic_hash": ""
   },
   "lib/widgets/local_collection_actions.dart": {

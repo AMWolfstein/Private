@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-20)
 
 ## Corpus Check
-- 1272 files · ~1,158,542 words
+- 1272 files · ~1,158,539 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 123 file(s) not represented in the graph (top: .xml 38, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `df09d3ea`
+- Built from commit: `2a6ea366`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2731,16 +2731,16 @@ Nodes (5): libusb_usb_2_0_extension_descriptor, bDescriptorType, bDevCapabilityT
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `BorrowedFd` connect `BorrowedFd` to `ret`, `RawFd`, `PollFd<'fd>`, `borrowed_fd`, `c`, `Timespec`, `at.rs`, `OwnedFd`, `Pid`, `Ipv4PathMtuDiscovery`, `src/io_uring/mod.rs`, `process/prctl.rs`, `libc/pipe/syscalls.rs`, `net/types.rs`, `IoSlice`, `Uid`, `PollFd<'fd>`, `linux_raw/conv.rs`, `SocketAddrXdp`, `setns.rs`, `msg.rs`, `linux_raw/termios/syscalls.rs`, `runtime/syscalls.rs`, `ioctl/mod.rs`, `fs/ioctl.rs`, `.from`, `LinkNameSpaceType`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **What connects `decoder`, `block`, `offset` to the rest of the system?**
   _9221 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004651162790697674 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `mornye_glass_warmup.dart`, `music_playback_deck.dart`, `mornye_player_layout.dart`, `dart:io`, `MusicPlayerHandler`, `package:flutter/material.dart`, `package:spotiflac_android/utils/logger.dart`, `Set`, `library_tracks_folder_screen.dart`, `datetime`, `package:flutter_test/flutter_test.dart`, `StatelessWidget`, `local_song_file_actions.dart`, `_AndroidVolumeDirectionMessageExtension`, `int get`, `_HandlerCallbacks`, `AndroidPlaybackInfo`, `ValueStream`, `playback_automation.dart`, `ios_library_folder_sheet_test.dart`, `AudioServicePlugin.java`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `_RatingMessageExtension`, `mornye_rendering_performance_test.dart`, `Duration`, `Widget`, `MediaItemCopyWith`, `file`, `progress_stream_poller.dart`, `performance_probe.dart`, `music_player_runtime_test.dart`, `AudioHandler`, `AudioService`, `PlaybackStateCopyWith`, `library_collections_mutation_test.dart`, `string`, `library_collections_hydration.dart`, `audio_format_utils.dart`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.030303030303030304 - nodes in this community are weakly interconnected._
 - **Why does `&CStr` connect `c` to `ret`, `runtime_448b8ad740e2a26f.rs`, `borrowed_fd`, `at.rs`, `libc_auxv.rs`, `OwnedFd`, `Pid`, `process/prctl.rs`, `types`, `F`, `libc/net/read_sockaddr.rs`, `linux_raw/param/auxv.rs`, `Uid`, `thread/prctl.rs`, `CString`, `Arg`, `system.rs`, `vdso.rs`, `linux_raw/conv.rs`, `src/fs/inotify.rs`, `linux_raw/param/init.rs`, `linux_raw/termios/syscalls.rs`, `android_statx_smoke.rs`, `BorrowedFd`, `CancellationError`, `raw_dir.rs`, `Backend`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Should `playlist_picker_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.018659202985472478 - nodes in this community are weakly interconnected._
