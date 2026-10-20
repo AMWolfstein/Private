@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -123,7 +124,11 @@ class AlbumDetailHeader extends StatelessWidget {
     }
     final scheme = Theme.of(context).colorScheme;
     final edgeInset = detailHeaderEdgeInset(context);
-    final artworkSize = MediaQuery.sizeOf(context).width.clamp(0.0, 440.0);
+    final screenSize = MediaQuery.sizeOf(context);
+    final artworkSize = math.min(
+      screenSize.width.clamp(0.0, 440.0),
+      math.max(240.0, screenSize.height * 0.55),
+    );
     final details = _buildMornyeDetails(context);
     Widget toolbar({bool collapsed = true}) => SliverAppBar(
       pinned: true,
@@ -196,6 +201,7 @@ class AlbumDetailHeader extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: Stack(
+            alignment: Alignment.topCenter,
             children: [
               Positioned.fill(
                 child: squareArtwork
@@ -367,9 +373,28 @@ class AlbumDetailHeader extends StatelessWidget {
                         if (coverBuilder != null) ...[
                           Builder(
                             builder: (context) {
-                              final coverSize = (constraints.maxWidth * 0.5)
-                                  .clamp(150.0, 210.0)
-                                  .toDouble();
+                              final toolbarBottom =
+                                  MediaQuery.paddingOf(context).top +
+                                  kToolbarHeight;
+                              final detailsHeight =
+                                  40 +
+                                  20 +
+                                  58 +
+                                  (subtitle == null ? 0 : 28) +
+                                  (meta == null ? 0 : 34) +
+                                  (actions == null ? 0 : 64);
+                              final coverSize = math.min(
+                                (constraints.maxWidth * 0.5).clamp(
+                                  150.0,
+                                  210.0,
+                                ),
+                                math.max(
+                                  96.0,
+                                  expandedHeight -
+                                      toolbarBottom -
+                                      detailsHeight,
+                                ),
+                              );
                               return Container(
                                 width: coverSize,
                                 height: coverSize,
