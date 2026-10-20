@@ -4,6 +4,10 @@ Newest first. One line per run: date, commit, command, result.
 
 | Date | Commit | Command | Result |
 |---|---|---|---|
+| 2026-10-20 | batch 1b `f10f45f6`, `81869c48`, `f34ead84` | `flutter analyze` after `flutter gen-l10n` | PASS: No issues found. Initial branch-switch generated getters were stale; regeneration resolved them. U-201 nullable-element lint fixed in f34ead84. |
+| 2026-10-20 | batch 1b | `flutter test --reporter expanded` (full suite) | PASS: 1,629 passed, 3 skipped, zero failures (4m24s). Covers U-103b, U-308 prerequisites and previously untested U-104/U-201. Initial run with stale generated l10n was interrupted and is not counted as validation. |
+| 2026-10-20 | batch 1b / existing U-201 | `SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a ./gradlew :app:testDebugUnitTest --offline --console=plain --max-workers=2` | PASS: 13 suites, 59 passed / 1 skipped (NativeDataJobsTest); LibraryScanExitInfoTest 2/2 passed. No APK packaging; device lifecycle/API behavior not claimed. |
+| 2026-10-20 | batch 1b graph checkpoints | `graphify update .`, JSON node/link validation, `git diff --check` | PASS: 23,003 unique nodes, 44,612 links with valid endpoints. Existing vendor C/preprocessor warnings only. U-201 lint changes manifest hash, not graph topology. No Rust source changes, Rust fmt/clippy/test script NOT RUN in this batch. |
 | 2026-10-20 | `2db6547` | second dead-code pass: 3 dead-code-hunters (Dart logic, UI, native) + spot checks; `flutter analyze` clean, `cargo check --offline` clean (reviewers) | 19 findings, all P3 (~8,000 dead lines incl. tests) |
 | 2026-10-20 | `c5e9d7d` | performance pass: 3 code-optimization-auditors (DB/queries, scanner+Rust, UI/startup) + source checks (missing `album_artist_norm` index, cover fsync, SAF fallback) | 12 findings (5 P2, 7 P3; 1 rejected); no profiling |
 | 2026-10-20 | `c0284b1` | final dead-code sweep (dead-code-hunter: l10n usage script, import graph, channel cross-check) | 6 findings |

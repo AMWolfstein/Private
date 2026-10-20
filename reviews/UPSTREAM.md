@@ -18,13 +18,17 @@ batch.
 
 ## Port order (batches; test once per batch)
 
-Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`). Batch 2 so far: U-104 `913faaa`,
-U-201 `e8cff13` (committed, not yet tested). Unfinished U-202 work from the old upstream is in
-`git stash` ("WIP U-202 FLAC precision"); `3dc2d690` is unchanged in Mornye, so it may be
-reused after review.
+Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:
+U-103b spring `f10f45f6`, lyric performance/prerequisites `81869c48`. U-104 (`913faaa`)
+and U-201 (`e8cff13`, subtitle lint fix `f34ead84`) are also covered by batch 1b validation:
+analysis clean; full Flutter suite 1,629 passed / 3 skipped; Android unit suite 59 passed /
+1 skipped (both exit-info tests passed). No APK. U-308 timed-vocal prerequisites are partly
+done; share cards, sharing UI and on-demand lyrics work remain pending.
+Unfinished U-202 is preserved in `reviews/wip/U-202-flac-precision.patch`, not a stash;
+`3dc2d690` is unchanged upstream. Review it in batch 2 before reuse.
 
-1b. U-103b (patch-1 follow-up)
-2. U-201b, U-202 (then test with U-104, U-201)
+1b. DONE — U-103b (patch-1 follow-up), including U-104/U-201 validation
+2. NEXT — U-201b, U-202
 3. U-203, U-212, U-213, U-204
 4. U-205, U-216, U-206, U-207
 5. U-214, U-215, U-208, U-209
@@ -41,7 +45,7 @@ reused after review.
 
 | ID | Upstream | What | Batch |
 |---|---|---|---|
-| U-103b | `7600c169` (lyrics parts only: `player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, their tests), `91add520` | Follow-up to U-103: lyric timeline index, deferred row measurement, pause lyrics ticking when hidden/backgrounded, spring scroll on synced line changes. If it needs `78a5e078` timed-vocal code, port those pieces here and mark them in U-308. | 1b |
+| U-103b | `7600c169` (lyrics parts only: `player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, their tests), `91add520` | Ported in `f10f45f6` (spring) and `81869c48` (timeline index, deferred measurement, hidden/background subscriptions and completed-word ticker limits). Kept monolithic widget; timed-vocal prerequisites from `78a5e078` included, U-308 partial below. Tested in batch 1b. | 1b |
 | U-201b | `e58217c8` (local parts only: `local_library_provider*.dart`), `931b1091` (only if U-201 scan recovery needs `LibraryScanExitInfo`) | Release scan memory and cancel active metadata reads; skip network/SMB/WebDAV parts and crash notices. | 2 |
 | U-212 | `9dc86e13` (drop `crates/extensions`) | Read padded ID3 covers (Rust core `tags/id3.rs`, `write/id3.rs`) and repair cached previews. | 3 |
 | U-213 | `60d00191` | Prefer embedded art for local files (`utils/playback_artwork.dart`). | 3 |
@@ -111,13 +115,13 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 | U-101 | `65dbce27` | AutoMix waits for advancing audio before fades. Ported in `a5bc4a8`. |
 | U-102 | `08bc4226` | Cache adjacent track titles during swipes (perf; stops the neighbour title rebuilding and its marquee restarting every drag frame). Ported in `051ff44`. |
 | U-103 | `afab47ae` | Cache timed lyric segment geometry (perf). Ported in `940fd79`. |
-| U-104 | `6debfccb` | Keep dominant cover colours in player backgrounds (`coverSourceColor` hue-bin dominant colour; dark covers stop reading as gray). |
+| U-104 | `6debfccb` | Keep dominant cover colours in player backgrounds (`coverSourceColor` hue-bin dominant colour; dark covers stop reading as gray). Ported in `913faaa`; batch 1b analysis/full tests pass. |
 
 ## Manual ports: fixes and perf
 
 | ID | Upstream | What |
 |---|---|---|
-| U-201 | `378c8f37` | Recover interrupted scans and stale notifications (may overlap KT-202). |
+| U-201 | `378c8f37` | Recover interrupted scans and stale notifications (may overlap KT-202). Ported in `e8cff13`; source subtitle lint fixed in `f34ead84`; batch 1b analysis/full Flutter and Kotlin unit tests pass. KT-202 mapping remains for batch 2. |
 | U-202 | `3dc2d690` | Keep FLAC precision in bit-perfect playback. |
 | U-203 | `080df889` | Recover missing local album artwork from audio. |
 | U-204 | `161a216b` | AutoMix effect handoffs and source-audio rendering. |
@@ -138,7 +142,7 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 | U-304 | `08266c73`, `1d53bf93` | Rewind and listening-statistics highlights. |
 | U-305 | `83a55fb8` | Sectioned library browsing and fast scroll. |
 | U-307 | `75cd4c39` | Refreshed launcher widgets. |
-| U-308 | `78a5e078`, `2782b1f7` | Lyric share cards, on-demand lyrics loading. The timed-vocal part of `78a5e078` is worth taking on its own: scroll holds an unfinished lead line during duets/overlaps (`_focusFor`, `lyricsWithDisplayEnds`), Enhanced LRC last-word end estimate, backing-vocal drop-in. The share screen needs a Mornye restyle. |
+| U-308 | `78a5e078`, `2782b1f7` | Lyric share cards, on-demand lyrics loading. The timed-vocal part of `78a5e078` is worth taking on its own: scroll holds an unfinished lead line during duets/overlaps (`_focusFor`, `lyricsWithDisplayEnds`), Enhanced LRC last-word end estimate, backing-vocal drop-in. **Partial in `81869c48`:** `_focusFor`, `lyricsWithDisplayEnds` and `LyricBackingTransition` plus overlap fixtures, needed by U-103b. Share cards/entry points, on-demand loading and glow styling remain pending; no online fetch imported. The share screen still needs a Mornye restyle. |
 | U-309 | `67a346c1`, `4cee16e9` | Home greeting and listening shortcuts (differs from the Apple Music Home). |
 
 ## Do not port

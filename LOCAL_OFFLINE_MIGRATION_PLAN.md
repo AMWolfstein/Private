@@ -30,8 +30,21 @@ certificate, updating the previous SpotiFLAC Local installation. Physical-device
 remains pending.
 `c29daef` removes the About page credits, translators, special thanks, links and social sections
 (with `url_launcher`) and the Search tab Recent list (app-state schema v5 drops its tables);
-`flutter analyze` is clean, the full `flutter test` run is still pending.
+`flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Upstream port batch 1b (2026-10-20):** U-103b ports lyric spring scrolling (`91add520`,
+code `f10f45f6`) and lyric-only performance improvements (`7600c169`, code `81869c48`):
+indexed overlapping voices, cached prefix geometry, bounded/deferred long-document row
+measurement, stopped subscriptions/timers while hidden or backgrounded and stopped completed
+word tickers. Keeps quick scrubbing, reduced motion, manual-scroll ownership and the existing
+single-file lyric widget. U-308 is partial: display-end estimates, held overlap focus and
+backing-vocal drop-in from `78a5e078` are present; share cards, sharing entry points,
+provider work and glow styling remain pending. No Material-only UI or branding ports.
+U-104 dominant cover colors (`913faaa`) and U-201 scan recovery (`e8cff13`) are validated;
+`f34ead84` fixes the latter's nullable subtitle lint. Analysis is clean; full Flutter suite
+passes **1,629 tests, 3 skipped**. Android unit tests pass **59, 1 skipped**, including both
+scan exit-info tests. No APK built. Graph refreshed and validated; next is port batch 2.
 
 **Upstream port batch 1 (2026-10-20):** U-001 per-field tag separators (`5393d1d`: artist,
 album artist, composer and genre separators applied on Edit Metadata saves through the Rust

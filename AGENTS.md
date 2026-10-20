@@ -128,6 +128,8 @@ conventions below. Review checkpoints commit only `reviews/` (`docs(review): <un
 
 ## Upstream ports
 
+Synced lyrics suspend hidden/background work and settled word tickers; line changes use the lyric spring with reduced-motion support, while scrubbing stays quick and manual scrolling keeps its anchor.
+
 Upstream is `mornyeapp/Mornye` (renamed SpotiFLAC-Mobile). Ports follow `reviews/PORT_PLAN.md`
 (setup, rules, batch order, testing once per batch) with specs in `reviews/UPSTREAM.md`. Never
 port renaming or branding.
