@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
-    "mtime": 1792438624.2168238,
-    "seen": 1792441084.6940334,
-    "ast_hash": "031665d87c8b3c03c5fb2065c952f317",
+    "mtime": 1792474889.0083575,
+    "seen": 1792475232.2354999,
+    "ast_hash": "950990eae65cc6f7caf8ebcc4ee33eb9",
     "semantic_hash": ""
   },
   "lib/constants/language_choices.dart": {
@@ -677,12 +677,6 @@
     "ast_hash": "88929f46b61379925763cd2cbec66b2b",
     "semantic_hash": ""
   },
-  "lib/providers/recent_access_provider.dart": {
-    "mtime": 1792438624.2359095,
-    "seen": 1792441084.6940942,
-    "ast_hash": "7e4f6bf84c27b9d786972ba74ac1f8f7",
-    "semantic_hash": ""
-  },
   "lib/providers/runtime_profile_provider.dart": {
     "mtime": 1792438624.2359095,
     "seen": 1792441084.694096,
@@ -732,21 +726,15 @@
     "semantic_hash": ""
   },
   "lib/screens/home_tab.dart": {
-    "mtime": 1792438624.2375565,
-    "seen": 1792441084.694124,
-    "ast_hash": "2e9bc975a63f4587d265ebac5d2a14ab",
+    "mtime": 1792474996.7658348,
+    "seen": 1792475232.235558,
+    "ast_hash": "3cbd4947165042efc5bf2183a96e2a32",
     "semantic_hash": ""
   },
   "lib/screens/home_tab_helpers.dart": {
-    "mtime": 1792438624.2375565,
-    "seen": 1792441084.694128,
-    "ast_hash": "13992f62d8e24335c5a320bc185fa497",
-    "semantic_hash": ""
-  },
-  "lib/screens/home_tab_recent.dart": {
-    "mtime": 1792438624.2375565,
-    "seen": 1792441084.69413,
-    "ast_hash": "ba7873fe18ed9df2496f99fd78299af7",
+    "mtime": 1792474946.21594,
+    "seen": 1792475232.2355611,
+    "ast_hash": "1b72a38b65cf30b763c2021a640ef628",
     "semantic_hash": ""
   },
   "lib/screens/home_tab_search_results.dart": {
@@ -870,9 +858,9 @@
     "semantic_hash": "e03cf5fb99cd2d172b787dff920377a6"
   },
   "lib/screens/settings/about_page.dart": {
-    "mtime": 1792438624.2375565,
-    "seen": 1792441084.694188,
-    "ast_hash": "9cf49012880a7f4195709e2d3e0f65ac",
+    "mtime": 1792474869.2955134,
+    "seen": 1792475232.2356014,
+    "ast_hash": "9c9aa89c69c570c0b6e3fcc3aeef1f7c",
     "semantic_hash": ""
   },
   "lib/screens/settings/appearance_settings_page.dart": {
@@ -924,9 +912,9 @@
     "semantic_hash": "4616cd5074b4ce7e4e01fc23185a22d6"
   },
   "lib/screens/settings/settings_search_catalog.dart": {
-    "mtime": 1792438624.241553,
-    "seen": 1792441084.6942086,
-    "ast_hash": "f92144b25ecdee0939f40b2b6573d9d8",
+    "mtime": 1792474869.1906369,
+    "seen": 1792475232.2356162,
+    "ast_hash": "f3bb5a5736ed01d1af9dd94ed0fde7e0",
     "semantic_hash": ""
   },
   "lib/screens/settings/settings_tab.dart": {
@@ -972,9 +960,9 @@
     "semantic_hash": "8958f312ec868c97e122139379b2b9be"
   },
   "lib/services/app_state_database.dart": {
-    "mtime": 1792438624.2439177,
-    "seen": 1792441084.694225,
-    "ast_hash": "190e4372045e85dd19cb8df02d0128ad",
+    "mtime": 1792475008.7452762,
+    "seen": 1792475232.2356296,
+    "ast_hash": "bb2764dbf9f114e618855b3464a67ab6",
     "semantic_hash": ""
   },
   "lib/services/audio_analysis_cache.dart": {
@@ -6269,12 +6257,6 @@
     "ast_hash": "f73f5183a064cc7541ed815700235b5e",
     "semantic_hash": "f73f5183a064cc7541ed815700235b5e"
   },
-  "test/recent_access_persistence_test.dart": {
-    "mtime": 1792438624.3350914,
-    "seen": 1792441084.696419,
-    "ast_hash": "b224eff8bdb6894126f650d872e9537a",
-    "semantic_hash": ""
-  },
   "test/replaygain_library_filter_test.dart": {
     "mtime": 1792438624.3350914,
     "seen": 1792441084.6964207,
@@ -6792,9 +6774,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1792438624.2590914,
-    "seen": 1792441084.6966257,
-    "ast_hash": "6b4d6c458f0c2efbaa24631da36deff6",
+    "mtime": 1792474889.008987,
+    "seen": 1792475232.237279,
+    "ast_hash": "7dbdc1a1175a3ef7fe72f95c227b5017",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -7494,9 +7476,9 @@
     "semantic_hash": ""
   },
   "test/local_home_feed_test.dart": {
-    "mtime": 1792438624.3280118,
-    "seen": 1792441084.6962655,
-    "ast_hash": "7d793141b291dc6e3b8e3e6a7eb469f4",
+    "mtime": 1792474946.2166383,
+    "seen": 1792475232.2369661,
+    "ast_hash": "518000caf2f26c23f81263a978442c90",
     "semantic_hash": ""
   },
   "test/local_artist_popular_test.dart": {
@@ -7716,39 +7698,45 @@
     "semantic_hash": ""
   },
   "reviews/FINDINGS.md": {
-    "mtime": 1792444235.8203304,
-    "seen": 1792472504.4718888,
-    "ast_hash": "63844a16234717d304a842b311d67fa8",
+    "mtime": 1792474559.7364502,
+    "seen": 1792475232.2372823,
+    "ast_hash": "2b81fcdf3bba0eae5a2570ca1d289256",
     "semantic_hash": ""
   },
   "reviews/PROTOCOL.md": {
-    "mtime": 1792472427.5291116,
-    "seen": 1792472504.4718902,
-    "ast_hash": "e753f7107da90d8e12a876238e8e7bd0",
+    "mtime": 1792473344.5663848,
+    "seen": 1792475232.237286,
+    "ast_hash": "399da656e068e1f6fd3e541975943a65",
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792472473.655171,
-    "seen": 1792472504.4718912,
-    "ast_hash": "e577b3333acfdd3df14fd13c5995a6ab",
+    "mtime": 1792474571.922585,
+    "seen": 1792475232.2372878,
+    "ast_hash": "34605ed7535a3eba47e7b5773d3d766b",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792444235.8480022,
-    "seen": 1792472504.4718926,
-    "ast_hash": "cd3dd815380d4e2c25776dbfb81519dd",
+    "mtime": 1792474571.92284,
+    "seen": 1792475232.2372892,
+    "ast_hash": "102e4569121cf710dc0da80d1625f891",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
-    "mtime": 1792444235.8210576,
-    "seen": 1792472504.4718938,
-    "ast_hash": "e818afe0e3491ccdb91680c4fb6aadac",
+    "mtime": 1792473006.4661338,
+    "seen": 1792475232.2372901,
+    "ast_hash": "14314cc10eac338fbd21b08677bd06a3",
     "semantic_hash": ""
   },
   "reviews/CALIBRATION.md": {
     "mtime": 1792472440.251369,
     "seen": 1792472504.4718874,
     "ast_hash": "fc38bbbc127bae32e9fb3c2717677e38",
+    "semantic_hash": ""
+  },
+  "reviews/FIX_PLAN.md": {
+    "mtime": 1792474571.9231918,
+    "seen": 1792475232.2372844,
+    "ast_hash": "36a2440056983a8000fe8cdb4dd11ea9",
     "semantic_hash": ""
   }
 }
