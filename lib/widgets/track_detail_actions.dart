@@ -49,7 +49,11 @@ Widget buildTrackListFooter(
     lines.add(formatReleaseDate(releaseDate));
   }
   final countText = context.l10n.tracksCount(tracks.length);
-  lines.add(totalMinutes > 0 ? '$countText • $totalMinutes min' : countText);
+  lines.add(
+    totalMinutes > 0
+        ? '$countText • ${context.l10n.listeningStatsMinutes(totalMinutes)}'
+        : countText,
+  );
 
   return SliverToBoxAdapter(
     child: Padding(

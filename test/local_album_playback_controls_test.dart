@@ -84,6 +84,17 @@ void main() {
           emitPlaying(true);
         });
         final tracks = [
+          LocalLibraryItem(
+            id: 'cue',
+            trackName: 'Virtual intro',
+            artistName: 'Artist',
+            albumName: 'Album',
+            filePath: '/music/album.cue#track01',
+            trackNumber: 1,
+            releaseDate: '20240501',
+            genre: 'Pop',
+            scannedAt: DateTime(2026),
+          ),
           for (final number in [1, 2])
             LocalLibraryItem(
               id: '$number',
@@ -91,7 +102,7 @@ void main() {
               artistName: 'Artist',
               albumName: 'Album',
               filePath: 'content://library/song-$number.flac',
-              trackNumber: number,
+              trackNumber: number + 1,
               scannedAt: DateTime(2026),
             ),
         ];
@@ -125,6 +136,8 @@ void main() {
           tester.element(find.byType(LocalAlbumScreen)),
         );
         await tester.pumpAndSettle();
+        expect(find.text('Pop'), findsOneWidget);
+        expect(find.text('2024'), findsOneWidget);
         final header = find.byType(AlbumPlayActions);
         Finder row(int number) => find.byWidgetPredicate(
           (widget) =>

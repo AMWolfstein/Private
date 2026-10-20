@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/utils/release_date_display.dart';
 import 'package:spotiflac_android/widgets/error_card.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'dart:io';
@@ -430,19 +431,15 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
   Widget _buildLocalHeaderMeta(BuildContext context) {
     final tracks = _sortedTracksCache;
-    final totalSeconds = tracks.fold<int>(
-      0,
-      (sum, t) => sum + ((t.duration ?? 0) > 0 ? t.duration! : 0),
-    );
-    final totalMinutes = (totalSeconds / 60).round();
     final quality = _commonQualityCache;
 
     return HeaderMetaRow(
       items: [
-        if (tracks.firstOrNull?.releaseDate?.isNotEmpty == true)
-          HeaderMetaItem(tracks.first.releaseDate!.split('-').first),
-        HeaderMetaItem(context.l10n.queueTrackCount(tracks.length)),
-        if (totalMinutes > 0) HeaderMetaItem('$totalMinutes min'),
+        if (tracks.firstOrNull?.genre?.trim() case final genre?
+            when genre.isNotEmpty)
+          HeaderMetaItem(genre),
+        if (releaseTagYear(tracks.firstOrNull?.releaseDate) case final year?)
+          HeaderMetaItem(year),
         if (quality != null && quality.isNotEmpty)
           HeaderMetaItem(quality, icon: Icons.graphic_eq),
       ],
@@ -450,7 +447,9 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
   }
 
   Future<void> _playAll() async {
-    final tracks = _sortedTracksCache;
+    final tracks = _sortedTracksCache
+        .where((track) => !isCueVirtualPath(track.filePath))
+        .toList();
     if (tracks.isEmpty) return;
     await ref.read(musicPlayerControllerProvider).setShuffle(false);
     await _openFile(tracks.first);
@@ -601,7 +600,10 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text(context.l10n.trackEditMetadata),
+          child: Text(
+            context.l10n.selectionReplayGainCount(selectedCount),
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
         ),
         LayoutBuilder(
           builder: (context, constraints) {

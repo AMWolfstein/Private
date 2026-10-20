@@ -3487,5 +3487,6 @@
   "equalizerEffectivePreamp": "Input gain after headroom",
   "equalizerDeletePreset": "Delete preset",
   "equalizerCustom": "Custom",
-  "equalizerManagePresets": "Manage presets"
+  "equalizerManagePresets": "Manage presets",
+  "releaseTypeSingle": "Single"
 }

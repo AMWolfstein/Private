@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/utils/release_date_display.dart';
+import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/error_card.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
@@ -51,7 +53,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   void initState() {
     super.initState();
     _scroll.addListener(() {
-      final show = _scroll.offset > 330;
+      final show = _scroll.offset > 280;
       if (show != _showTitle) setState(() => _showTitle = show);
     });
   }
@@ -108,7 +110,12 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     );
   }
 
-  Widget _artwork(String? path, {double? size}) => SizedBox(
+  Widget _artwork(
+    String? path, {
+    double? size,
+    IconData placeholderIcon = CupertinoIcons.square_stack,
+    double? placeholderSize,
+  }) => SizedBox(
     width: size,
     height: size,
     child: LocalCoverImage(
@@ -116,8 +123,12 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
       width: size,
       height: size,
       fit: BoxFit.cover,
-      placeholder: (_) =>
-          const Center(child: Icon(CupertinoIcons.person, size: 64)),
+      placeholder: (_) => Center(
+        child: Icon(
+          placeholderIcon,
+          size: placeholderSize ?? ((size ?? 96) * .5).clamp(16, 48),
+        ),
+      ),
     ),
   );
 
@@ -169,7 +180,11 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
               slivers: [
                 ...MornyeArtistHeader(
                   name: widget.artistName,
-                  artwork: _artwork(cover),
+                  artwork: _artwork(
+                    cover,
+                    placeholderIcon: CupertinoIcons.person,
+                    placeholderSize: 64,
+                  ),
                   showTitle: _showTitle,
                   actions: [
                     HeaderCircleButton(
@@ -178,6 +193,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                           : CupertinoIcons.star,
                       buttonSize: 50,
                       iconSize: 24,
+                      iconColor: colors.primary,
                       glassTintColor: Colors.white,
                       glassTintOpacity: .10,
                       tooltip: favorite
@@ -238,6 +254,10 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     HeaderCircleButton(
                       icon: CupertinoIcons.shuffle,
                       buttonSize: 50,
+                      iconSize: 24,
+                      iconColor: colors.primary,
+                      glassTintColor: Colors.white,
+                      glassTintOpacity: .10,
                       tooltip: context.l10n.actionShuffle,
                       onPressed:
                           tracks?.items.isNotEmpty == true && !_startingPlayback
@@ -294,46 +314,107 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       itemCount: tracks.items.length,
                       itemBuilder: (context, index) {
                         final track = tracks.items[index];
-                        return ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: _artwork(track.coverPath, size: 48),
-                          ),
-                          title: Text(
-                            track.trackName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
-                            track.albumName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                tooltip: context.l10n.tooltipPlay,
-                                icon: const Icon(CupertinoIcons.play_fill),
-                                onPressed: () => _play(start: track),
-                              ),
-                              Builder(
-                                builder: (buttonContext) => IconButton(
-                                  tooltip: MaterialLocalizations.of(
-                                    context,
-                                  ).moreButtonTooltip,
-                                  icon: const Icon(Icons.more_horiz),
-                                  onPressed: () => showLocalSongMenu(
-                                    context,
-                                    ref,
-                                    track,
-                                    anchor: mornyeMenuAnchor(buttonContext),
-                                  ),
+                        final current =
+                            media != null &&
+                            (media.id == track.id ||
+                                media.id == track.filePath ||
+                                source == track.filePath);
+                        void play() => current
+                            ? ref
+                                  .read(musicPlayerControllerProvider)
+                                  .togglePlayPause(isPlaying)
+                            : _play(start: track);
+                        return Stack(
+                          children: [
+                            InkWell(
+                              onTap: play,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  20,
+                                  8,
+                                  10,
+                                  8,
+                                ),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: _artwork(
+                                        track.coverPath,
+                                        size: 48,
+                                        placeholderIcon:
+                                            CupertinoIcons.music_note,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ExplicitTrackTitle(
+                                            title: track.trackName,
+                                            explicit: track.explicit,
+                                            style: const TextStyle(
+                                              fontSize: 17,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            track.albumName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: colors.onSurfaceVariant,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      tooltip: current && isPlaying
+                                          ? context.l10n.actionPause
+                                          : context.l10n.tooltipPlay,
+                                      icon: Icon(
+                                        current && isPlaying
+                                            ? CupertinoIcons.pause_fill
+                                            : CupertinoIcons.play_fill,
+                                      ),
+                                      onPressed: play,
+                                    ),
+                                    Builder(
+                                      builder: (buttonContext) => IconButton(
+                                        tooltip: MaterialLocalizations.of(
+                                          context,
+                                        ).moreButtonTooltip,
+                                        icon: const Icon(Icons.more_horiz),
+                                        onPressed: () => showLocalSongMenu(
+                                          context,
+                                          ref,
+                                          track,
+                                          anchor: mornyeMenuAnchor(
+                                            buttonContext,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                          onTap: () => _play(start: track),
+                            ),
+                            Positioned(
+                              left: 80,
+                              right: 20,
+                              bottom: 0,
+                              child: Divider(
+                                height: 1,
+                                thickness: .5,
+                                color: colors.onSurface.withValues(alpha: .12),
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -410,14 +491,17 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (album.releaseDate?.isNotEmpty == true)
+                        if (releaseTagYear(album.releaseDate)
+                            case final year?) ...[
                           Text(
-                            album.releaseDate!.split('-').first,
+                            year,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
                             ),
                           ),
+                          const SizedBox(height: 4),
+                        ],
                         Text(
                           album.name,
                           maxLines: 2,
@@ -427,14 +511,16 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          context.l10n.tracksCount(album.trackCount),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
+                        if (album.trackCount > 0) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            context.l10n.tracksCount(album.trackCount),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -454,72 +540,128 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     BuildContext context,
     String title,
     List<LibraryBrowseEntry> releases,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
-        child: Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ),
-      SizedBox(
-        height: 174 + MediaQuery.textScalerOf(context).scale(16) * 2.6,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            if (notification.metrics.axis == Axis.horizontal &&
-                notification.metrics.extentAfter < 400) {
-              final provider = libraryBrowseProvider(_albumsRequest);
-              final state = ref.read(provider).asData?.value;
-              if (state?.loadMoreError == null) {
-                ref.read(provider.notifier).loadMore();
-              }
-            }
-            return false;
-          },
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            itemCount: releases.length,
-            itemBuilder: (context, index) {
-              final album = releases[index];
-              return SizedBox(
-                width: 170,
-                child: InkWell(
-                  onTap: () => _openAlbum(album),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SizedBox.square(
-                            dimension: 154,
-                            child: _artwork(album.cover),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          album.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+  ) {
+    final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+    final scale = (MediaQuery.sizeOf(context).width / 400).clamp(.82, 1.05);
+    final tileSize = 140 * scale * (1 + (textScale - 1) * .12);
+    final colors = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+          child: Text(
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
-      ),
-    ],
-  );
+        SizedBox(
+          height: tileSize + 64 + ((textScale - 1) * 14),
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification.metrics.axis == Axis.horizontal &&
+                  notification.metrics.extentAfter < 400) {
+                final provider = libraryBrowseProvider(_albumsRequest);
+                if (ref.read(provider).asData?.value.loadMoreError == null)
+                  ref.read(provider.notifier).loadMore();
+              }
+              return false;
+            },
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemCount: releases.length,
+              itemBuilder: (context, index) {
+                final album = releases[index];
+                final subtitle = [
+                  if (releaseTagYear(album.releaseDate) case final year?) year,
+                  if (album.trackCount > 0)
+                    context.l10n.tracksCount(album.trackCount),
+                ].join(' · ');
+                return Semantics(
+                  key: ValueKey(album.key),
+                  button: true,
+                  excludeSemantics: true,
+                  label: '${album.name}, ${album.artist}, $subtitle',
+                  onTap: () => _openAlbum(album),
+                  child: SizedBox(
+                    width: tileSize + 16,
+                    child: InkWell(
+                      onTap: () => _openAlbum(album),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: SizedBox.square(
+                                    dimension: tileSize,
+                                    child: _artwork(album.cover),
+                                  ),
+                                ),
+                                if (album.isSingleRelease)
+                                  Positioned(
+                                    left: 6,
+                                    bottom: 6,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withValues(
+                                          alpha: .7,
+                                        ),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Text(
+                                        context.l10n.releaseTypeSingle,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              album.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            if (subtitle.isNotEmpty) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                subtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: colors.onSurfaceVariant),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 /// The original five-song artist carousel keeps discography close to the hero.
