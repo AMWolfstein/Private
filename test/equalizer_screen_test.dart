@@ -49,6 +49,7 @@ void main() {
           250,
           scrollable: find.byType(Scrollable).first,
         );
+        await tester.pumpAndSettle();
         await tester.tap(find.text('5'));
         await tester.pumpAndSettle();
         expect(container.read(equalizerProvider).settings.gains.length, 5);
@@ -58,6 +59,7 @@ void main() {
             )
             .first;
         await tester.ensureVisible(fader);
+        await tester.pumpAndSettle();
         await tester.drag(fader, const Offset(0, -30));
         await tester.pumpAndSettle();
         expect(
