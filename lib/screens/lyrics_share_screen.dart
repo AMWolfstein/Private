@@ -109,8 +109,9 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
     if (art == null ||
         (art.scheme.isNotEmpty &&
             art.scheme != 'file' &&
-            art.scheme != 'content'))
+            art.scheme != 'content')) {
       return null;
+    }
     return art.scheme == 'file' ? art.toFilePath() : art.toString();
   }
 
