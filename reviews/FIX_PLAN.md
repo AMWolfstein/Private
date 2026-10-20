@@ -57,6 +57,10 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | M5 | MORN-013, MORN-014 | Collection action styling/feedback (tonal style, owner-approved) and one cover source. |
 | M6 | MORN-015, MORN-016 | Upstream-latest landscape header and Mornye contrast/touch-target fixes. |
 
+| M7 | HOME-002, HOME-001 | Home shelves stop collapsing on library reloads; featured covers stop squashing. |
+| M8 | HOME-003, HOME-004, HOME-005 | Home refresh, empty/loading states, date/text/a11y and upstream sizing. |
+| M9 | HOME-006, HOME-008 | Home cover source, card keys and tab-reselect scroll. |
+
 ## Tier 3: cleanup
 
 Each row is one feature-removal batch, following the `AGENTS.md` graphify-first workflow. The
@@ -66,7 +70,7 @@ tests to delete are listed in TEST-101.
 |---|---|---|
 | 22 | DEAD-601, DEAD-611, DEAD-622, DEAD-633, DEAD-703 | Mornye-only collapse: non-Mornye branches, Material Expressive leftovers and the unused font. |
 | 23 | DEAD-001..004, DEAD-501..504, DEAD-632, DEAD-704 | Download, provider and re-enrich services and helpers. |
-| 24 | UX-104, DEAD-602, DEAD-603, DEAD-621, DEAD-631, DEAD-706 | Unused widgets and files. |
+| 24 | HOME-007, UX-104, DEAD-602, DEAD-603, DEAD-621, DEAD-631, DEAD-706 | Unused widgets and files. |
 | 25 | DEAD-201..208, DEAD-301..304, DEAD-401..403 | iOS paths, dead bridge methods, and dead settings fields. Keep the JSON parse. |
 | 25a | DEAD-202 tail: DEAD-902, DEAD-907, DEAD-908, DEAD-904 | Hi-Res/AC4/split-artist native code and SAF collision writers (~3,400 lines); regenerate uniffi bindings. |
 | 25b | DEAD-801, DEAD-802, DEAD-803 | Download-history DB API, download-queue persistence and theme leftovers. Keep the schemas and old-key parsing. |

@@ -24,3 +24,4 @@ Newest first. One line per run: date, commit, command, result.
 | 2026-10-19 | `2b32361` | `flutter test` | 1596 pass, 3 skip, 1 fail: `file_stat_boundary_test` permission case (root container: `chmod 000` does not deny root) |
 | 2026-10-19 | `2b32361` | `flutter analyze` | No issues found |
 | 2026-10-20 | `11334fb` | Mornye parity: 3 ux-auditor comparisons vs upstream v5.1.1/latest, orchestrator spot-checks of every high item | 17 open (MORN-001..017); no tests run (review only) |
+| 2026-10-20 | `05c5895` | Home parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator checked HOME-001/002/007 and the visual items in source (Riverpod 3.4.3 `skipLoadingOnReload` default false) | 8 open (HOME-001..008); no tests run |

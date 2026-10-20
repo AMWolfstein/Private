@@ -1380,6 +1380,49 @@ artist/album/playlist screens compared with the local screens. Upstream refs are
 - Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Mornye back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
 - Fix: skeleton + `ErrorCard` + Mornye empty page; hide empty Popular.
 
+<!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Mornye Home (explore feed) compared
+with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
+
+### HOME-001 [P2] [confidence: medium-high] [VALIDATED]
+- Location: `lib/screens/home_tab_widgets.dart:92-101` (`Image.file` with `cacheWidth` and `cacheHeight`), called with `height: width / 1.5` from `home_tab_feed.dart:215`
+- Scenario: Latest Releases (3:2 cards) with an embedded cover: the square cover is decoded to the card's exact 3:2 size, so it is squashed; `BoxFit.cover` cannot undo it. `CachedCoverImage` (`cached_cover_image.dart:65-67`) and upstream decode one axis only.
+- Fix: pass only `cacheWidth`; ~3 lines. Check on device.
+
+### HOME-002 [P2] [confidence: medium] [VALIDATED]
+- Location: `lib/screens/home_tab_feed.dart:19-45`, :48-60, :89-112; `lib/screens/home_tab.dart:275-299`
+- Scenario: any `loadedIndexVersion` bump (scan phases, delete, tag edit) re-runs the watched providers → `AsyncLoading` with the previous value; `.when()` uses Riverpod 3.4.3's default `skipLoadingOnReload: false` (`async_value.dart:197`), so Latest Releases turns into a spinner and the other shelves into `SizedBox.shrink()`; the page jumps and shelf scroll offsets reset. `library_browse_provider.dart:186-187` intends to keep the old data visible.
+- Fix: `skipLoadingOnReload: true` (or read the previous value first) in the four `when` calls; ~4 lines. A widget test that bumps `loadedIndexVersion` confirms it.
+
+### HOME-003 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/home_tab_feed.dart:22-29`, :40-43, :58, :110; `lib/screens/home_tab.dart:145`, :296
+- Scenario: no pull-to-refresh (upstream `RefreshIndicator`/`AppRefreshIndicator`); empty library shows bare `libraryEmptyCollection` text (upstream icon + `homeEmptyTitle`/`homeEmptySubtitle`, also not telling "library off" from "no folder"); loading is a bare spinner or nothing (upstream `ShimmerLoading`/`SkeletonBox` shelves, `home_tab_explore.dart:100-160`); `_feedRetry` is unstyled.
+- Fix: refresh indicator invalidating the feed providers, Mornye empty state, skeleton shelves.
+
+### HOME-004 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/home_tab_feed.dart:134`, :216-238, :242, :99
+- Scenario: (a) featured heading prints the raw tag (`2024/3/5`, `20240305`, `2024-03-05T00:00:00Z`); the `?? searchAlbums` fallback is unreachable (SQL drops empty dates). (b) Card text uses hard-coded `TextStyle` 16/14 with no weight; upstream `bodyMedium` w600 title and `bodySmall` `onSurfaceVariant` subtitle. (c) `Semantics(label: name)` omits type/artist and is not `excludeSemantics`, so TalkBack can read the name twice. (d) Artist cards render an empty subtitle line (`subtitle: ''`). (e) Track titles lack the explicit E badge required by AGENTS.md.
+- Fix: format the date, theme text styles, full label with `excludeSemantics`, omit empty subtitle, `ExplicitTrackTitle`.
+
+### HOME-005 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/home_tab_feed.dart:155-159`, :168-189, :178-184, :216
+- Scenario: card width is fixed 156/180 instead of upstream `145 * responsiveScale(0.82..1.32) * text-scale` (`home_tab.dart:163-170`); section height is estimated from text scale, so large fonts can clip; shelf titles use `titleLarge` with 24 top padding (upstream `titleMedium` bold, 20); cover radius 12 vs 10; no `wideListInset`, so titles hug the edge on tablets while Library/Settings are centered.
+- Fix: upstream sizing formula and title style, `wideListInset`. Verify rendered on device.
+
+### HOME-006 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/screens/home_tab_widgets.dart:3-120` (`_DownloadedOrRemoteCover`), `lib/services/library_queue_store.dart:437-440`
+- Scenario: when `samplePath` is set, the card extracts the cover natively per file instead of using the indexed `cover_path`; `sample_file_path` (`MAX(file_path)`) and `cover_path` (`MAX(cover_path)`) can come from different tracks, so the card can show another track's art. After a cover edit with the same path the old art stays until the resolver refresh. The widget keeps download-era naming and an `imageUrl` parameter.
+- Fix: prefer a local `cover`, fall back to the resolver only when empty; rename the widget; ~15 lines.
+
+### HOME-007 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/home_tab_helpers.dart` (alias `_recentlyAddedProvider = localHomeTracksProvider`), `lib/screens/home_tab_search_results.dart` (only `part of`), `lib/screens/home_tab.dart:25,27`, :221-268
+- Scenario: dead leftovers: two empty/alias part files, and the non-Mornye `_buildHomeIntro` branch (brand title, `homeSubtitle`, logo asset) that Mornye-only builds never reach.
+- Fix: delete both part files and the branch, then re-run the dead-code checks for `homeSubtitle` and the logo asset. Tier 3 cleanup.
+
+### HOME-008 [P3] [confidence: medium] [VALIDATED]
+- Location: `lib/screens/main_shell.dart:353-357` (`_resetHomeToMain`), `lib/screens/home_tab_feed.dart:185-191`, :97, :244
+- Scenario: re-tapping Home while scrolled down does nothing (pops only); release/track/playlist cards have no keys, so cover state is reused by index when a shelf reorders; no long-press menu on Home cards (upstream Mornye context menu). Upstream also lacks tab-reselect scroll.
+- Fix: scroll to top on reselect; `ValueKey` per card; optional long-press with the local song/album menu.
+
 ## Resolved
 
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.
