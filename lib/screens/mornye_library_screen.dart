@@ -552,7 +552,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
           : librarySectionInitial(
               _artists
                   ? _rows[(fraction * (_rows.length - 1)).round()].artist
-                  : _rows[(fraction * (_rows.length - 1)).round()].album,
+                  : _rows[(fraction * (_rows.length - 1)).round()].name,
             ),
       child: content,
     );

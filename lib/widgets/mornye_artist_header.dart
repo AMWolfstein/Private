@@ -262,7 +262,7 @@ class MornyeArtistHeader extends StatelessWidget {
                             constraints: BoxConstraints(
                               maxHeight: identityHeight,
                             ),
-                            child: _buildIdentity(),
+                            child: _buildIdentity(context),
                           ),
                           if (listeners != null) ...[
                             const SizedBox(height: 7),
@@ -299,7 +299,7 @@ class MornyeArtistHeader extends StatelessWidget {
     ];
   }
 
-  Widget _buildIdentity() {
+  Widget _buildIdentity(BuildContext context) {
     final fallback = Text(
       name,
       textAlign: TextAlign.center,
@@ -315,15 +315,21 @@ class MornyeArtistHeader extends StatelessWidget {
       label: name,
       image: true,
       excludeSemantics: true,
-      child: CachedCoverImage(
-        imageUrl: logo,
-        fadeInDuration: Duration.zero,
-        fadeOutDuration: Duration.zero,
-        width: 320,
-        height: 96,
+      child: Image(
+        image: ResizeImage(
+          cachedCoverImageProvider(logo),
+          width: (320 * MediaQuery.devicePixelRatioOf(context)).ceil(),
+          height: (96 * MediaQuery.devicePixelRatioOf(context)).ceil(),
+          policy: ResizeImagePolicy.fit,
+        ),
         fit: BoxFit.contain,
-        placeholder: (_, _) => fallback,
-        errorWidget: (_, _, _) => fallback,
+        frameBuilder: (_, child, frame, _) => frame == null
+            ? fallback
+            : ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 320, maxHeight: 96),
+                child: child,
+              ),
+        errorBuilder: (_, _, _) => fallback,
       ),
     );
   }

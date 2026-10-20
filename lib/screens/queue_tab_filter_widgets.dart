@@ -214,6 +214,10 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: _AnimatedLibrarySliverGrid(
               maxCrossAxisExtent: _libraryAlbumGridExtent,
+              extentListenable: _libraryGridExtentNotifier,
+              extentScale: 1.45,
+              minExtent: 150,
+              maxExtent: 300,
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 0.72,
@@ -249,6 +253,10 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: _AnimatedLibrarySliverGrid(
               maxCrossAxisExtent: _libraryAlbumGridExtent,
+              extentListenable: _libraryGridExtentNotifier,
+              extentScale: 1.45,
+              minExtent: 150,
+              maxExtent: 300,
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 0.72,
@@ -276,6 +284,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: _AnimatedLibrarySliverGrid(
                 maxCrossAxisExtent: _libraryGridExtent,
+                extentListenable: _libraryGridExtentNotifier,
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
                 childAspectRatio: 0.66,
@@ -394,6 +403,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: _AnimatedLibrarySliverGrid(
                     maxCrossAxisExtent: _libraryGridExtent,
+                    extentListenable: _libraryGridExtentNotifier,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.66,

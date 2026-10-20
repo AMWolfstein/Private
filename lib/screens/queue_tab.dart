@@ -127,7 +127,10 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   String? _filterFormat;
   String? _filterMetadata;
   String _sortMode = 'latest';
-  double _libraryGridExtent = _libraryGridDefaultExtent;
+  final ValueNotifier<double> _libraryGridExtentNotifier = ValueNotifier(
+    _libraryGridDefaultExtent,
+  );
+  double get _libraryGridExtent => _libraryGridExtentNotifier.value;
   double? _libraryGridPinchStartExtent;
   final Map<String, int> _libraryPageOffsetByFilter = {};
   bool _libraryPageLoadScheduled = false;
@@ -156,7 +159,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       _libraryGridMaxExtent,
     );
     if ((nextExtent - _libraryGridExtent).abs() < 0.5) return;
-    setState(() => _libraryGridExtent = nextExtent);
+    _libraryGridExtentNotifier.value = nextExtent;
   }
 
   void _handleLibraryGridPinchEnd() {
@@ -190,6 +193,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   @override
   void dispose() {
+    _libraryGridExtentNotifier.dispose();
     _hideSelectionOverlay();
     _hidePlaylistSelectionOverlay();
     _fileExistsCache.dispose();
@@ -1347,21 +1351,30 @@ class _AnimatedLibrarySliverGrid extends StatefulWidget {
   final double crossAxisSpacing;
   final double childAspectRatio;
   final SliverChildDelegate delegate;
+  final ValueListenable<double>? extentListenable;
+  final double extentScale;
+  final double? minExtent;
+  final double? maxExtent;
 
   const _AnimatedLibrarySliverGrid({
+    super.key,
     required this.maxCrossAxisExtent,
     required this.mainAxisSpacing,
     required this.crossAxisSpacing,
     required this.childAspectRatio,
     required this.delegate,
+    this.extentListenable,
+    this.extentScale = 1,
+    this.minExtent,
+    this.maxExtent,
   });
 
   @override
   State<_AnimatedLibrarySliverGrid> createState() =>
-      _AnimatedLibrarySliverGridState();
+      __AnimatedLibrarySliverGridState();
 }
 
-class _AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>
+class __AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final CurvedAnimation _curve;
@@ -1381,12 +1394,27 @@ class _AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.stop();
+      _beginExtent = _endExtent = widget.maxCrossAxisExtent;
+      _controller.value = 1;
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant _AnimatedLibrarySliverGrid oldWidget) {
     super.didUpdateWidget(oldWidget);
     if ((widget.maxCrossAxisExtent - _endExtent).abs() < 0.1) return;
     _beginExtent = _currentExtent;
     _endExtent = widget.maxCrossAxisExtent;
-    _controller.forward(from: 0);
+    if (widget.extentListenable != null ||
+        MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1;
+    } else {
+      _controller.forward(from: 0);
+    }
   }
 
   double get _currentExtent =>
@@ -1401,19 +1429,34 @@ class _AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>
 
   @override
   Widget build(BuildContext context) {
+    final extentListenable = widget.extentListenable;
+    if (extentListenable != null) {
+      return ValueListenableBuilder<double>(
+        valueListenable: extentListenable,
+        builder: (context, extent, child) => _grid(
+          (extent * widget.extentScale).clamp(
+            widget.minExtent ?? 0,
+            widget.maxExtent ?? double.infinity,
+          ),
+        ),
+      );
+    }
+    if (MediaQuery.disableAnimationsOf(context)) {
+      return _grid(widget.maxCrossAxisExtent);
+    }
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
-        return SliverGrid(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: _currentExtent,
-            mainAxisSpacing: widget.mainAxisSpacing,
-            crossAxisSpacing: widget.crossAxisSpacing,
-            childAspectRatio: widget.childAspectRatio,
-          ),
-          delegate: widget.delegate,
-        );
-      },
+      builder: (context, child) => _grid(_currentExtent),
     );
   }
+
+  Widget _grid(double extent) => SliverGrid(
+    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+      maxCrossAxisExtent: extent,
+      mainAxisSpacing: widget.mainAxisSpacing,
+      crossAxisSpacing: widget.crossAxisSpacing,
+      childAspectRatio: widget.childAspectRatio,
+    ),
+    delegate: widget.delegate,
+  );
 }

@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/services/playback_session_prepare.dart';
 import 'package:spotiflac_android/services/music_haptics.dart';
 import 'dart:async';
 import 'dart:io';
@@ -2222,49 +2223,29 @@ Future<void> restorePlaybackSession(MusicPlayerRuntime runtime) async {
       return;
     }
 
-    final items = <PlayableMedia>[];
-    final keptOriginalIndices = <int>[];
     final iosDocumentsPath = runtime.dependencies.isIOS
         ? (await getApplicationDocumentsDirectory()).path
         : null;
-    var artworkRelocated = false;
-    for (var i = 0; i < rawMedia.length; i++) {
-      final entry = rawMedia[i];
-      if (entry is! Map) continue;
-      final media = PlayableMedia.fromJson(
-        Map<String, dynamic>.from(entry),
-        iosDocumentsPath: iosDocumentsPath,
-      );
-      if (media == null) continue;
-      if (!media.isContentUri && !await File(media.source).exists()) {
-        continue;
-      }
-      final artwork = await resolveRestoredArtworkUri(
-        media.artUri,
-        loadLibraryCoverPath: () async {
-          final database = runtime.dependencies.libraryDatabase;
-          final row = await database.getById(media.id);
-          if (row != null) return row['coverPath'] as String?;
-          final matches = await database.findByTrackAndArtist(
-            media.title,
-            media.artist,
-          );
-          for (final row in matches) {
-            if (row['filePath'] == media.source) {
-              return row['coverPath'] as String?;
-            }
+    final prepared = await prepareRestoredPlaybackMedia(
+      rawMedia,
+      iosDocumentsPath: iosDocumentsPath,
+      loadLibraryCoverPath: (media) async {
+        final database = runtime.dependencies.libraryDatabase;
+        final row = await database.getById(media.id);
+        if (row != null) return row['coverPath'] as String?;
+        final matches = await database.findByTrackAndArtist(
+          media.title,
+          media.artist,
+        );
+        for (final row in matches) {
+          if (row['filePath'] == media.source) {
+            return row['coverPath'] as String?;
           }
-          return null;
-        },
-      );
-      items.add(
-        artwork == media.artUri
-            ? media
-            : PlayableMedia.fromJson({...media.toJson(), 'artUri': artwork})!,
-      );
-      artworkRelocated |= artwork != entry['artUri'];
-      keptOriginalIndices.add(i);
-    }
+        }
+        return null;
+      },
+    );
+    final (:items, :keptOriginalIndices, :artworkRelocated) = prepared;
     if (items.isEmpty) {
       await database.clearPlaybackSession();
       return;
