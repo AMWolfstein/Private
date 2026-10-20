@@ -15,4 +15,4 @@ mapping). Status: `not reviewed` · `partial` · `reviewed` · `stale` (code cha
 | audio | Audio playback (Dart, Kotlin, C++) | reviewed | b98c51c | 3 chunks: core Dart (concurrency), features (bug-hunter, PASS), native (kotlin-android). Open: AAudio callback quiescence on flush, OEM AudioOutputActivity focus | CONC-001..004, KT-001, KT-002 |
 | storage | SQLite, backups, collections, history | reviewed | 5fef271 | 3 chunks: library DB (data-integrity), collections (data-integrity), backup/history (api-compat). Not covered: Rust native import/backup jobs, settings/collections restoreFromBackup, scan serialization guard for fixed TEMP tables | DATA-002..004, DATA-101, API-001..003 |
 | tests | Tests and integration tests | not reviewed | - | 262 files | - |
-| build | Dependencies, build, toolchains | not reviewed | - | 19 files | - |
+| build | Dependencies, build, toolchains | reviewed | 1791ebd | 14 files + manifest res/xml; dependency + security passes | SEC-301..303, UX-207, DEP-001..002 |

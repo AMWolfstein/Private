@@ -948,6 +948,37 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: `isMornye` is always true in production → these branches never run.
 - Fix: collapse the shell to the Mornye path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
 
+### SEC-301 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `android/app/src/main/AndroidManifest.xml:18` (`MANAGE_EXTERNAL_STORAGE`), `lib/screens/setup_screen.dart:145,196-202`
+- Scenario: on API 30–32 setup requests All-files access although library access is SAF-based (`library_settings_page.dart:120` comment) and no Kotlin code checks `isExternalStorageManager`.
+- Fix: if no path-based write remains on 30–32 (check tag-edit fallbacks), drop the permission and the setup branch; ~15 lines.
+- Cross-refs: library_settings_page, kotlin grep. Guards checked: runtime user dialog only.
+
+### SEC-302 [P3] [confidence: high] [VALIDATED]
+- Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
+- Scenario: no `key.properties` → release silently signs with the debug key; the "CI re-signs" comment has no workflow in the repo.
+- Fix: warn or fail release tasks without a keystore unless an opt-in property is set; ~5 lines. (Also reported by dependency-auditor as DEP-003; merged.)
+
+### SEC-303 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `AndroidManifest.xml:93-101` (exported `AudioService`), `third_party/audio_service/.../AudioService.java:870-879` (`onGetRoot`), `lib/services/music_player_service.dart:1953-1983`
+- Scenario: `onGetRoot` accepts any caller → any installed app can browse the current queue (ids, titles, art URIs; ids may be file paths/URIs) and `playFromMediaId`.
+- Fix: if ids are raw paths/URIs, expose opaque ids, or restrict the root to system/known callers; ~20 lines. Service must stay exported for Auto/Bluetooth.
+
+### UX-207 [P3] [confidence: low] [NEEDS VERIFICATION]
+- Location: `AndroidManifest.xml:46` (`screenOrientation="portrait"`), `lib/services/app_orientation.dart:12-19`
+- Scenario: targetSdk 37 → Android 16+ ignores orientation locks on large screens (sw ≥ 600dp), so every page, not only the full player, can render in landscape there.
+- Fix: check non-player pages on a tablet/foldable emulator in landscape; fix layouts that assume portrait. No manifest change needed.
+
+### DEP-001 [P3] [confidence: high] [VALIDATED]
+- Location: `pubspec.yaml:17` (`timezone`), :40 (`cupertino_icons`), :69 (`synchronized`)
+- Scenario: zero `package:` imports in lib/test/integration_test; `cupertino_icons` bundles an unused font.
+- Fix: remove the three lines, `flutter pub get`.
+
+### DEP-002 [P3] [confidence: high] [VALIDATED]
+- Location: `rust_backend/NOTICE:17` (`crates/network/src/url.rs`), `pubspec.yaml:31` ("# HTTP & Network" over `crypto`)
+- Scenario: NOTICE attributes Go-licensed code to a crate that no longer exists; pubspec comment names a removed section.
+- Fix: repoint or drop the NOTICE sentence; retitle the comment. Docs only.
+
 ## Resolved
 
 _None yet._
@@ -964,3 +995,4 @@ _False positives and intentional behavior, with one-line reason._
 - R-007 (kotlin KT-101, legacy SAF repair dialog probe): merged into UX-003.
 - R-008 (kotlin DEAD-204/DEAD-205): duplicates of DEAD-002 and DATA-101; native parts added there.
 - R-003 (`/code-review` #10, graphify commit title `81577e5` missing "code"): historical pushed commit; fixing needs history rewrite. Future commits follow the AGENTS.md wording.
+- R-009 (build DEP-003, debug-key release signing): duplicate of SEC-302 from the parallel security pass.
