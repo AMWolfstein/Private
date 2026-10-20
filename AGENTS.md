@@ -126,6 +126,12 @@ Codex/OpenCode: act as one named reviewer from `.claude/agents/<name>.md` per pa
 Reviewers never edit code; fixes are separate 1–3 finding batches that follow the commit
 conventions below. Review checkpoints commit only `reviews/` (`docs(review): <unit>`).
 
+## Upstream ports
+
+Upstream is `mornyeapp/Mornye` (renamed SpotiFLAC-Mobile). Ports follow `reviews/PORT_PLAN.md`
+(setup, rules, batch order, testing once per batch) with specs in `reviews/UPSTREAM.md`. Never
+port renaming or branding.
+
 ## Commit conventions
 
 The workflow ends in **three separate commits** — never mix them:
