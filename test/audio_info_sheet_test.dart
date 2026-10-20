@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'dart:async';
 
@@ -14,6 +16,8 @@ const _route = MethodChannel('com.zarz.spotiflac/audio_route');
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() => SharedPreferences.setMockInitialValues({}));
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -74,14 +78,16 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(
-        theme: MornyeTheme.build(Brightness.dark),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) => TextButton(
-            onPressed: () => showAudioInfoSheet(context, metadata: metadata),
-            child: const Text('open'),
+      ProviderScope(
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showAudioInfoSheet(context, metadata: metadata),
+              child: const Text('open'),
+            ),
           ),
         ),
       ),
@@ -129,14 +135,16 @@ void main() {
     );
     await load('a');
     await tester.pumpWidget(
-      MaterialApp(
-        theme: MornyeTheme.build(Brightness.dark),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) => TextButton(
-            onPressed: () => showAudioInfoSheet(context, metadata: metadata),
-            child: const Text('open'),
+      ProviderScope(
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showAudioInfoSheet(context, metadata: metadata),
+              child: const Text('open'),
+            ),
           ),
         ),
       ),
