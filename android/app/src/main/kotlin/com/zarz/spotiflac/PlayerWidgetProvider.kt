@@ -116,8 +116,12 @@ class PlayerWidgetProvider : AppWidgetProvider() {
                 val options = manager.getAppWidgetOptions(id)
                 val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 280)
                 val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 150)
-                val horizontal = width >= 240 && height < 240
-                val views = RemoteViews(context.packageName, if (horizontal) R.layout.widget_player_wide else R.layout.widget_player)
+                val layout = when (PlayerWidgetLayoutPolicy.select(width, height)) {
+                    PlayerWidgetLayout.WIDE -> R.layout.widget_player_wide
+                    PlayerWidgetLayout.COMPACT -> R.layout.widget_player_compact
+                    PlayerWidgetLayout.STANDARD -> R.layout.widget_player
+                }
+                val views = RemoteViews(context.packageName, layout)
                 val theme = prefs.getString("theme_$id", "artwork")
                 val light = theme == "light"
                 val foreground = if (light) Color.rgb(26, 24, 31) else Color.WHITE
