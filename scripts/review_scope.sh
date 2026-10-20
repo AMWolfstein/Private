@@ -28,7 +28,7 @@ subsystem_of() {
   case "$1" in
     graphify-out/*|reviews/*|build/*|.dart_tool/*|rust_backend/vendor/*|third_party/*) echo skip ;;
     lib/l10n/*.arb|*.md|docs/*|.claude/*|.opencode/*) echo docs ;;
-    test/*|integration_test/*|scripts/test_*) echo tests ;;
+    test/*|integration_test/*|scripts/test_*|android/app/src/test/*|android/app/src/androidTest/*) echo tests ;;
     pubspec.*|*.gradle|*.gradle.kts|android/gradle*|android/app/src/main/AndroidManifest.xml|rust_backend/Cargo.*|rust_backend/rust-toolchain.toml|analysis_options.yaml|l10n.yaml|.fvmrc) echo build ;;
     rust_backend/*) echo rust ;;
     android/app/src/main/cpp/*|android/*/NativeAudio*.kt|android/*/HiRes*.kt|android/*/Usb*.kt|android/*/BitPerfect*.kt|android/*/Dsd*.kt|android/*/AudioOutput*.kt|android/*/BackgroundWork*.kt|android/*/ForegroundService*.kt|android/*/PlayerWidget*.kt|android/*/NativeReplayGain*.kt) echo audio ;;
@@ -152,7 +152,7 @@ scope_range() {
 
   local -A lines_by_reviewer=()
   local -A flags=()
-  local files=() code_files=() total=0 docs_lines=0 line add del path sub n reviewer flag
+  local files=() code_files=() total=0 docs_lines=0 test_lines=0 line add del path sub n reviewer flag
   echo "Range: $label"
   if [[ "$range" != HEAD ]]; then
     echo "Commits:"
@@ -171,6 +171,7 @@ scope_range() {
       docs_lines=$((docs_lines + n))
     else
       code_files+=("$path")
+      [[ "$sub" == tests ]] && test_lines=$((test_lines + n))
       reviewer="$(primary_of "$sub")"
       lines_by_reviewer[$reviewer]=$(( ${lines_by_reviewer[$reviewer]:-0} + n ))
     fi
@@ -188,6 +189,13 @@ scope_range() {
 
   for r in "${!lines_by_reviewer[@]}"; do total=$((total + lines_by_reviewer[$r])); done
   echo "Changed lines: $total code, $docs_lines docs/translations"
+  # Heuristics only: a large change with few test lines, or one too big for one brief.
+  if ((total - test_lines > 100 && test_lines * 5 < total)); then
+    echo "NO_TEST_CHANGES: $test_lines of $total changed lines are tests"
+  fi
+  if ((total > 400)); then
+    echo "SPLIT_SUGGESTED: over 400 changed lines; review per commit or subsystem"
+  fi
   if ((${#code_files[@]} == 0)); then
     echo "Graph: not needed (docs only)"
     echo "Suggested reviewers: docs-auditor (or the orchestrator directly for small edits)"

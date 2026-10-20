@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** Lifecycle (controllers, focus nodes, subscriptions, timers disposed; `mounted` checks after `await`), `BuildContext` used across async gaps, Riverpod `watch` vs `read`/`select` misuse causing stale data or rebuild loops, keys and list identity (selection/range selection), overlay/popover bounds captured before async work, RTL handling, setState after dispose.
 
+**Also check:** layout-constraint misuse (`Expanded`/`Flexible` outside a Flex, `Positioned` outside a Stack, unbounded list inside a Column, long `Text`/`TextField` in a Row without `Expanded`); Futures/Streams created in `build` (FutureBuilder refetch, `UniqueKey()` in build); `late` fields read before assignment on async/`initState` paths; `catch` or `on Error` swallowing `TypeError`/`StateError`; `as` casts on MethodChannel/`jsonDecode` results (maps arrive as `Map<Object?, Object?>`); `invokeMethod` without `PlatformException` handling; `default`/`_` on a sealed `switch`; new `// ignore:` or analyzer excludes without a narrow reason. `dart fix --dry-run <dir>` is allowed as a read-only check; mechanical items are P3 at most.
+
 **Max scope:** Changed widgets and the providers they read. At most ~12 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

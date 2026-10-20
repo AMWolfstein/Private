@@ -18,10 +18,16 @@ anything that restores removed features or starts the Media3 migration.
 acceptance criteria, required tests. No review transcripts.
 
 **Do:**
-1. Make the minimal change for each finding; add or update a regression test.
-2. Run `flutter analyze` (must be clean) and the targeted tests, then the full `flutter test`.
-   Rust changes: `scripts/check_rust_backend.sh`.
-3. Do not commit. Return to the orchestrator, which runs the code → graphify → docs commits.
+1. Before editing, grep the callers and sibling sites of each symbol you change (a rule fixed
+   in one caller must not stay broken in another). Record which tests already fail (baseline).
+2. Make the minimal change for each finding; every changed line must be required by a listed
+   finding. Out-of-scope observations go under "Not done" as notes, never edits. Add or update
+   a regression test; never weaken, skip or delete a test to get green.
+3. Run `flutter analyze` (must be clean) and the targeted tests, then the full `flutter test`.
+   Rust changes: `scripts/check_rust_backend.sh`. A failure that is not in the baseline or the
+   known-flaky list → undo your own edit for that finding and report it as `fix_failed`.
+4. Check `git diff --stat` touches only the findings' files and their tests.
+5. Do not commit. Return to the orchestrator, which runs the code → graphify → docs commits.
 
 **Max scope:** files named in the findings plus their tests. Stop and report if the fix
 needs more.
@@ -35,7 +41,7 @@ documented UI behavior → stop and report instead of changing it.
 **Output:**
 ```
 ## Changed
-file: one-line reason (per finding ID)
+<ID>: fixed | partial | fix_failed | needs_refactor — file: one-line reason
 ## Tests
 commands run and results (pass/fail counts)
 ## Not done

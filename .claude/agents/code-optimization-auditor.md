@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** N+1 or unbounded DB queries, missing indexes for new queries, work in `build()` that should be cached, rebuild fan-out from broad providers, full-resolution image decode for thumbnails, sync I/O on the UI isolate, repeated JSON/regex work in loops, cache growth without bounds.
 
+**Also check:** CPU parsing/mapping over ~16 ms on the UI isolate that belongs in `Isolate.run`/`compute`; `MediaQuery.of(context)` where `sizeOf`/`paddingOf` would avoid rebuilds; non-builder long lists; verbose logging in hot paths not gated by Detailed logging. Claim a speedup only with a measured baseline; otherwise NEEDS VERIFICATION.
+
 **Max scope:** Changed hot path plus its direct callers. At most ~10 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

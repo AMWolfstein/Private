@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** Assertions that cannot fail, tests coupled to timing (flaky), missing regression test for the changed behavior, tests that exercise removed features, missing teardown of temp files/DBs, root-only behaviors (permission tests in root containers), golden/l10n coupling.
 
+**Also check:** cleanup through `addTearDown` registered right after creation instead of `try/finally`; real `Future.delayed` waits instead of `fakeAsync`/`Completer`/injected clocks; stream checks without `emitsInOrder`/`expectLater`; weak matchers (`expect(x.length, n)`, `expect(x.isEmpty, true)`, `try { ...; fail(); } catch {}`) instead of `hasLength`/`isEmpty`/`throwsA(isA<T>())` (P3); `pumpAndSettle` with endless animations (use `pump(duration)`); lazily built list items reached without `scrollUntilVisible`.
+
 **Max scope:** Changed tests plus the code they target. At most ~10 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

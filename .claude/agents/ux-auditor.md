@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** AGENTS.md UI rules (header row order Loved/Play/Shuffle/Add, centered Play on artist, Popular caps and paging, Library category order, removed pages/settings not reintroduced, Mornye-only, circular back button), touch targets >= 48px, semantics labels, RTL mirroring, light/dark parity, text overflow at large font scales.
 
+**Also check:** TalkBack announces state changes (Loved toggled, Play/Pause, selection count); contrast meets WCAG 1.4.3 in light and dark Mornye; layout decisions use `LayoutBuilder`/`MediaQuery.sizeOf` and survive split-screen rather than relying on orientation or device type; no new orientation locks (targetSdk 36+ ignores them on large screens).
+
 **Max scope:** Changed UI files only; read AGENTS.md sections that apply.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

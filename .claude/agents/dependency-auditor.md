@@ -24,6 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 toolchains, minSdk/targetSdk/NDK changes and the code paths they gate, license notices for
 vendored code, release build flags (minify, signing config, ABI filters).
 
+**Also check:** `pubspec.lock` diffs that churn unrelated packages (resolve only the conflicting entry); scripts/CI using `flutter pub get --enforce-lockfile`; analyzer plugins pinned as `dev_dependencies`.
+
 **Max scope:** Manifests, lockfiles and build files in the diff plus imports of changed
 packages. Do not read vendored sources beyond the changed files.
 

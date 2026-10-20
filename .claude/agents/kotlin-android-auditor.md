@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** Method-channel argument/result handling and error propagation, main-thread blocking I/O, cursor/stream/ParcelFileDescriptor/MediaCodec/AudioTrack/UsbDeviceConnection release, API-level guards (minSdk paths, statx fallback), Activity/Service lifecycle, JNI local refs and exception checks, wakelocks and foreground-service rules.
 
+**Also check:** `catch (Exception)`/`runCatching` around suspend code that swallows `CancellationException`; `GlobalScope`, bare `Thread` or scopes never cancelled outliving the Activity/Service; blocking calls not on an IO dispatcher/executor; Java platform types used without null checks; non-exhaustive `when`; new or changed `android:exported` components, intent filters and service types, with validation of incoming URIs/extras; Android 15 `dataSync` foreground-service time limits (`onTimeout`); SAF persisted-permission grants and their per-app limit.
+
 **Max scope:** Changed Kotlin/C++ files plus the Dart call sites of changed channel methods. At most ~10 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

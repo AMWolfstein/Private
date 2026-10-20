@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** Races across `await` gaps, re-entrant play/pause/skip/seek, stale completion callbacks after track change, un-awaited futures, stream subscriptions/timers/controllers not cancelled, isolate/port leaks, Kotlin thread/handler/lock misuse, JNI callbacks on wrong threads, audio buffer ownership and lifetime, foreground-service lifecycle.
 
+**Also check:** non-idempotent actions (delete, ReplayGain apply, CUE split, playlist writes) without double-tap/re-entry guards; latest-wins vs first-wins chosen deliberately, and slow in-flight work never overwriting newer or restored state; Riverpod `ref` used after dispose or after `await` without a mounted check; work launched outside a lifecycle-bound scope.
+
 **Max scope:** Changed code plus the state it shares (follow writers/readers of that state). At most ~10 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

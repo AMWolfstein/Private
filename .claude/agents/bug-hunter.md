@@ -18,6 +18,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** Wrong conditions and off-by-one, null/empty handling, error paths that swallow failures, state that diverges between provider and service, incorrect sort/filter/grouping (release-date tags, Singles from total-track tag = 1), queue order, settings import/defaults.
 
+**Also check:** catch blocks or fallbacks that turn a failure into `null`/`[]`/a default the caller treats as success; check-then-act on files (exists → open/delete) instead of try-and-handle; multi-step writes with no rollback on partial failure; a rule fixed in one caller while a sibling caller or the shared helper keeps the old behavior.
+
 **Max scope:** Changed files plus direct callers/callees (graph or grep). At most ~15 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.

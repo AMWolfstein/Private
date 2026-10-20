@@ -7,6 +7,8 @@ Follow `reviews/PROTOCOL.md`. Arguments: optional git range, or `--worktree`.
 
 1. **Scope.** Run `scripts/review_scope.sh <args>`. It prints commits, files by subsystem,
    graph freshness and up to 3 suggested reviewers. Nothing to review → update nothing, stop.
+   `NO_TEST_CHANGES` → add test-auditor focus to the brief if the change is risky;
+   `SPLIT_SUGGESTED` → review per commit or per subsystem instead of one brief.
 2. **Context.** Read `reviews/STATE.md` and only the open entries in `reviews/FINDINGS.md`
    that touch the scoped files (`grep -n '<path>' reviews/FINDINGS.md`).
 3. **Pick reviewers.** Start from the suggestion; drop any whose specialty is not actually
@@ -19,9 +21,9 @@ Follow `reviews/PROTOCOL.md`. Arguments: optional git range, or `--worktree`.
 5. **Brief and run.** Spawn each reviewer with the PROTOCOL brief only (range, files/symbols,
    dependents, graph status, focus, open IDs). Run 2–3 reviewers in parallel only when
    their file sets differ.
-6. **Validate.** Re-check every P0/P1 and NEEDS VERIFICATION finding with one targeted
-   read. Re-run escalated findings with the same agent and `model: opus`, scoped to that
-   finding only.
+6. **Validate.** Apply the PROTOCOL auto-reject list, then the skeptic check to every P0/P1
+   and NEEDS VERIFICATION finding with one targeted read. Re-run escalated findings with the
+   same agent and `model: opus`, scoped to that finding only.
 7. **Record.** Append validated/unverified findings to `reviews/FINDINGS.md` (next free
    IDs), set `Last reviewed commit` and `Next review unit` in `reviews/STATE.md`, log any
    checks run in `reviews/VERIFICATION.md`.
