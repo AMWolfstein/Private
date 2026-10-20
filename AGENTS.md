@@ -33,7 +33,9 @@ circular back button in Mornye.
 
 Settings no longer include the obsolete output-folder Files & Folders page or the
 download-era Metadata page. Music scanning stays under Local Library; local per-file tag
-editing remains supported. Local Library settings have no Default view or Audio quality
+editing remains supported. Per-field tag separators (artist, album artist, composer, genre;
+empty keeps the tag) live under Local Library settings as Tag separators and apply when local
+tags are saved; do not restore Artist Tag Mode UI. Local Library settings have no Default view or Audio quality
 label-mode options: do not restore their preferences, pickers, search entries or tab-reset
 behavior. Library badges use the standard measured/stored bitrate policy, with codec
 fallback for legacy lossy files. Audio playback uses only the built-in player, including on old
