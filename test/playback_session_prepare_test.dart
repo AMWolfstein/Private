@@ -163,7 +163,10 @@ void main() {
             artwork: 'content://example.documents/cover',
           ),
         ],
-        fileExists: (_) => throw StateError('Unexpected file check'),
+        fileExists: (path) async {
+          if (path.startsWith('network://')) return false;
+          throw StateError('Unexpected file check: $path');
+        },
         loadLibraryCoverPath: (_) => throw StateError('Unexpected lookup'),
       );
       expect(result.keptOriginalIndices, [3]);

@@ -435,11 +435,14 @@ class _CloseButton extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => HeaderCircleButton(
-    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-    iconColor: color,
-    icon: CupertinoIcons.xmark,
-    onPressed: () => Navigator.of(context).maybePop(),
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: 48,
+    child: HeaderCircleButton(
+      tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+      iconColor: color,
+      icon: CupertinoIcons.xmark,
+      onPressed: () => Navigator.of(context).maybePop(),
+    ),
   );
 }
 
