@@ -36,7 +36,7 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 6. DONE — U-210, U-303, U-217, U-218
 7. DONE — U-308 (duets + share cards), U-302 (+ `9acaa760`)
 8. DONE — U-304, U-305, U-307, U-312
-9. NEXT — U-301 (equalizer, alone)
+9. DONE — U-301 (equalizer, alone)
 10-14. Mornye parity batches (`FIX_PLAN.md` Tier 2c: M1+M2, M3+M4, M5+M6, M7-M9 + HOME-007,
    M10+M11 + U-311)
 15. Dependency updates from Mornye (`pubspec.*`, `rust_backend` Cargo, Gradle, toolchain pins)
@@ -137,9 +137,9 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 
 | ID | Upstream | What |
 |---|---|---|
-| U-301 | `ecf594aa` (+`68c739df`) | Multiband EQ / native audio processing (~4.5k lines; adds DSP, does not replace the engine). |
+| U-301 | `ecf594aa` (+`68c739df`) | ADAPT, ported in `8e05cbbf` with `892eb173`/`c7924c53`: optional Android per-player DynamicsProcessing, lifecycle/error handling, shared deck settings and native validation; headroom/limiter choices survive presets. Mornye-only editor replaces upstream Material/Expressive presentation, using accessible faders and grouped Settings. Import bytes capped before accumulation; no Darwin backend, dependency replacement or new playback engine. UI uses faders/value labels rather than upstream custom estimated-response chart/decorations. Runtime hardware DSP verification pending. |
 | U-302 | `11c6cf99`, `2455cabc`, `9acaa760` | ADAPT, ported in `df164fb1`: optional Android/local music haptics, independently owned SAF decode input/cancellation and bounded cache, sensitivity/strength, basic-motor pulses. Import scheduler/analysis/cancellation and skips/completion/AutoMix transport regressions. No iOS code, player-mode choices or replacement engine. |
-| U-303 | `40f65d3a` | ADAPT, ported in `bd8f88a6`: source/processing/output facts, local read-only Android route worker and tappable quality badge; Mornye grouped sheet and retained analysis card. U-209 number regex included. No iOS/Material/online integration, absent standalone hi-res card or premature EQ subsystem imported; EQ reporting belongs with U-301. |
+| U-303 | `40f65d3a` | ADAPT in `bd8f88a6` (batch 6), completed EQ facts/error/bypass reporting in `8e05cbbf` (batch 9). Retains local analysis card; no absent online hi-res wrapper, iOS or Material integration. |
 | U-304 | `08266c73`, `1d53bf93` | ADAPT, ported in `f4fb6794`: local statistics queries, Rewind stories and seasonal Library banner. Mornye grouped controls/circular header replace Expressive shapes and renderer. Follow-ups `1c589407`, `c3d79e0d` adapt existing card/motion APIs and bound the close control; no online source or schema migration. |
 | U-305 | `83a55fb8` | ADAPT, ported in `6052f9ea`: section headers, Unicode initials, cached locale month formatters and precise adaptive fast scroll. Dedicated Songs stays songs-only, collection layout/paging/selection preserved. No History/default-view preference or old download lists imported. |
 | U-307 | `75cd4c39` | Partial ADAPT in `2c9c0305`: responsive compact/wide/standard player-widget sizing and boundary unit test. Existing controls, theme and engine bridge retained. REJECT Expressive shape morphs, dynamic theme-role redesign and download widget/service; upstream live configuration preview not imported because coupled to the rejected renderer. |
