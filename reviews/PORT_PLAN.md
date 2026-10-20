@@ -183,6 +183,17 @@ Graph e0fd4bbe, source b02895b0: 23,480 unique nodes / 45,224 valid links; synch
 No APK built; device-only behavior NOT RUN. No dependencies/schema changes or user-music writes. Music haptics defaults off; physical motor sensation/timing and OS share targets NOT RUN. Android VIBRATE permission is the only permission added. Initial quote-limit fixture assumed all rows remained visible; corrected to reveal rows, assert 5/5 and scope preview checks to LyricsShareCard before final verification. New card preserves local artwork policy; no network provider restored.
 Next: batch 8 (U-304, U-305, U-307, U-312). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 8 (2026-10-20)
+
+U-304 adds local Rewind highlights and seasonal invitations using recorded listening statistics and Mornye surfaces. U-305 adds pinned Unicode/month section headers and adaptive fast scrolling without changing the dedicated Songs/category layout or bounded paging. U-307 adapts compact launcher-player sizing, preserving existing controls/themes. U-312 bounds restoration checks, virtualizes Settings search, limits logo decoding, avoids redundant static contrast readbacks and scopes pinch updates to the grid.
+
+Source → graph: U-304 `f4fb6794` → `39f9bf4a`; U-305 `6052f9ea` → `ef111d26` (includes U-209 cached locale formatters and U-312 pinned lists); U-307 `2c9c0305` → `e51d221c`; U-312 `c49d7af9` → `c05701ff`. Compatibility fixes `1c589407` → `4f5bc88d`; Rewind header/offline fixture fix `c3d79e0d` → final graph checkpoint (see history).
+
+PASS: analysis clean; Flutter 1739 passed / 3 skipped / zero failures (04:10); Android unit 62 passed / 1 skipped; Rust script NOT RUN (no Rust source changes).
+Graph 9020a7aa, source c3d79e0d: 23,813 unique nodes / 45,709 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. No dependency/schema changes or user-owned music writes. Rewind share targets and launcher resizing on physical devices NOT RUN. Initial analysis mismatches corrected using retained APIs; initial Flutter failures caught an unbounded close control and an upstream remote-source fixture assumption, both corrected before final checks. No runtime speedup measurement. Android widget visual redesign/preview intentionally excluded.
+Next: batch 9 (U-301 equalizer only). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+
 ## Batches
 
 | # | Items | Notes |
@@ -194,7 +205,7 @@ Next: batch 8 (U-304, U-305, U-307, U-312). User authorized continuing through t
 | 5 DONE | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |
 | 6 DONE | U-210, U-303, U-217, U-218 | U-210: only the `album_detail_header` part of `d28e3f65`. U-303 brings `audio_info_sheet.dart` (not in this repo). U-217: mini-player dismissal must keep working (UI-101). |
 | 7 DONE | U-308, U-302 | U-308: timed-vocal parts (if not done in 1b) and the lyric share screen restyled for Mornye. U-302: `11c6cf99`, `2455cabc`, `9acaa760`. |
-| 8 | U-304, U-305, U-307, U-312 | U-312: Mornye/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
+| 8 DONE | U-304, U-305, U-307, U-312 | U-312: Mornye/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
 | 9 | U-301 | Equalizer, alone: `ecf594aa` + `68c739df`, Kotlin/native DSP on the existing player. |
 | 10 | MORN-001..005, MORN-017 | `FIX_PLAN.md` M1+M2. |
 | 11 | MORN-006..012 | M3+M4. |
