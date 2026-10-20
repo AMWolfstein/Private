@@ -9,6 +9,7 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:spotiflac_android/widgets/collection_scaffold.dart';
 import 'package:spotiflac_android/widgets/local_collection_actions.dart';
 import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
@@ -138,9 +139,13 @@ void main() {
           final surface = tester.widget<MornyeArtistSurface>(
             find.byType(MornyeArtistSurface),
           );
-          final header = tester.widget<AlbumDetailHeader>(
-            find.byType(AlbumDetailHeader),
-          );
+          final header =
+              tester
+                      .widget<CollectionScaffold>(
+                        find.byType(CollectionScaffold),
+                      )
+                      .appBar
+                  as AlbumDetailHeader;
           expect(surface.imageSource, playlist ? '/music/custom.png' : null);
           expect(header.paletteSource, surface.imageSource);
           expect(tester.takeException(), isNull);
