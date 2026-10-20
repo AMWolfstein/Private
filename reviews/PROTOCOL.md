@@ -146,6 +146,7 @@ Optionally re-review only the fix diff once with the finding's original reviewer
 | `coverage.md` | full-audit subsystems, reviewed commit per subsystem |
 | `VERIFICATION.md` | analyze/test/clippy runs tied to commits |
 | `CALIBRATION.md` | short validated/rejected examples, read only at low confidence |
+| `FIX_PLAN.md` | ordered fix batches awaiting approval, and open product decisions |
 
 Update only the files the unit changed. A completed subsystem is not re-reviewed unless
 `git diff <reviewed-sha>..HEAD -- <paths>` is non-empty.
