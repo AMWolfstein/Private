@@ -26,6 +26,8 @@ code → graphify → docs commits, analyze, full `flutter test` and a `/review`
 
 ### U-001: per-field tag separators (`ac8523d7` + `9495a6bf`)
 
+Status: ported in `5393d1d` (Tag separators page under Local Library settings; applied on Edit Metadata saves; no download/extension parts).
+
 Upstream adds separators for artist, album artist, composer and genre (empty = keep the tag as
 is). Lists split on `,`/`;` only, never on `&`, `/` or `and` (AC/DC, R&B). Upstream applies them
 to downloads only; this fork has no downloads, so they apply when **local tags are saved**.
@@ -71,9 +73,9 @@ in batch 12 (same files). Compare side by side with upstream on a device after.
 
 | ID | Upstream | What |
 |---|---|---|
-| U-101 | `65dbce27` | AutoMix waits for advancing audio before fades. |
-| U-102 | `08bc4226` | Cache adjacent track titles during swipes (perf; stops the neighbour title rebuilding and its marquee restarting every drag frame). |
-| U-103 | `afab47ae` | Cache timed lyric segment geometry (perf). |
+| U-101 | `65dbce27` | AutoMix waits for advancing audio before fades. Ported in `a5bc4a8`. |
+| U-102 | `08bc4226` | Cache adjacent track titles during swipes (perf; stops the neighbour title rebuilding and its marquee restarting every drag frame). Ported in `051ff44`. |
+| U-103 | `afab47ae` | Cache timed lyric segment geometry (perf). Ported in `940fd79`. |
 | U-104 | `6debfccb` | Keep dominant cover colours in player backgrounds (`coverSourceColor` hue-bin dominant colour; dark covers stop reading as gray). |
 
 ## Manual ports: fixes and perf

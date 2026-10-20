@@ -33,6 +33,14 @@ remains pending.
 `flutter analyze` is clean, the full `flutter test` run is still pending.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
 
+**Upstream port batch 1 (2026-10-20):** U-001 per-field tag separators (`5393d1d`: artist,
+album artist, composer and genre separators applied on Edit Metadata saves through the Rust
+writers and the FFmpeg fallback; Local Library > Tag separators; backups round-trip),
+U-101 AutoMix advancing-audio wait (`a5bc4a8`), U-102 adjacent-title cache (`051ff44`) and
+U-103 lyric segment geometry cache (`940fd79`). `flutter analyze` clean, Rust backend check
+passes; full `flutter test` has only the accepted `file_stat_boundary_test` failure plus the
+pre-existing `models_and_utils_test` app-state v4 expectation (database is now v5).
+
 **Review-agent system (2026-10-19):** Adds a quota-bounded review setup without changing app
 source: `reviews/PROTOCOL.md` (shared rules), `reviews/` state files, 14 read-only reviewer
 agents plus `review-fixer` in `.claude/agents/`, `/review` and `/audit` skills, and

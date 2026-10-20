@@ -47,6 +47,10 @@ menus, format/bitrate/quality sheets, encoding services or converted-file public
 Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
+Tag separators (artist, album artist, composer, genre) live under Local Library settings and
+apply only when local tags are saved via Edit Metadata; do not restore the download-era
+Metadata page or Artist Tag Mode UI for them.
+
 Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
 view (the existing full-bleed portrait artwork). Persist the choice across restarts; lyrics,
 queue, track changes and mini-player dismissal must work in both views. Landscape retains
