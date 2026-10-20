@@ -240,9 +240,9 @@
     "semantic_hash": "5c8b03fb538b825a835b93d173df4ffe"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbBitPerfectPlugin.kt": {
-    "mtime": 1792497498.7747993,
-    "seen": 1792497548.9426222,
-    "ast_hash": "6419080b781e0f269532cb8430bd2ce3",
+    "mtime": 1792513058.537737,
+    "seen": 1792513121.4715343,
+    "ast_hash": "ab20e2dca6063b33dbc39fcf9414cbc7",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbDirectPlayback.kt": {
@@ -546,9 +546,9 @@
     "semantic_hash": ""
   },
   "lib/controllers/player_metadata_controller.dart": {
-    "mtime": 1792356506.5536509,
-    "seen": 1792494608.48281,
-    "ast_hash": "b29a7dae90458cd4644d3815d1e77c12",
+    "mtime": 1792513058.5318813,
+    "seen": 1792513121.4716032,
+    "ast_hash": "fab5fe102101b13265edea492db856c6",
     "semantic_hash": ""
   },
   "lib/l10n/l10n.dart": {
@@ -1278,9 +1278,9 @@
     "semantic_hash": ""
   },
   "lib/services/music_player_service.dart": {
-    "mtime": 1792512996.1016583,
-    "seen": 1792513048.6854842,
-    "ast_hash": "2ff3f6c7c44c06aec30d8acba036df64",
+    "mtime": 1792513058.5350869,
+    "seen": 1792513121.4717844,
+    "ast_hash": "4d8704bf4d8a2f31fd11c08797f6afe4",
     "semantic_hash": ""
   },
   "lib/services/native_cache_maintenance.dart": {
@@ -2166,10 +2166,10 @@
     "semantic_hash": "faa55e281ee71315b65556bc4d6b0b66"
   },
   "lib/widgets/player_playback_controls.dart": {
-    "mtime": 1792356506.5666301,
-    "seen": 1792494608.4831626,
-    "ast_hash": "72ab77983c8023fabfe9e5c237f25799",
-    "semantic_hash": "72ab77983c8023fabfe9e5c237f25799"
+    "mtime": 1792513058.5379632,
+    "seen": 1792513121.4719877,
+    "ast_hash": "bffa62233ef622593d6721905c96ee26",
+    "semantic_hash": ""
   },
   "lib/widgets/player_queue_dismissible.dart": {
     "mtime": 1792356506.555686,
@@ -7878,9 +7878,33 @@
     "semantic_hash": ""
   },
   "test/playback_normalization_settings_test.dart": {
-    "mtime": 1792512930.3865263,
-    "seen": 1792513048.686692,
-    "ast_hash": "16c5e9cd63a4d7c0cc3f3713c0b44930",
+    "mtime": 1792513094.9812427,
+    "seen": 1792513121.4730525,
+    "ast_hash": "be009d1eda6c5188a71e49721c5ded8c",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/AudioRouteInfo.kt": {
+    "mtime": 1792513058.5283976,
+    "seen": 1792513121.4714873,
+    "ast_hash": "a2e6d8f9776c9a459b783b2a2d899e0e",
+    "semantic_hash": ""
+  },
+  "lib/services/audio_route_info.dart": {
+    "mtime": 1792513058.5259156,
+    "seen": 1792513121.4717133,
+    "ast_hash": "eb9a53a4000dc4dc2d2c800d5d61ea7e",
+    "semantic_hash": ""
+  },
+  "lib/widgets/audio_info_sheet.dart": {
+    "mtime": 1792513062.085392,
+    "seen": 1792513121.4718916,
+    "ast_hash": "1659094d87e240b35fbf36f84cb0caaf",
+    "semantic_hash": ""
+  },
+  "test/audio_info_sheet_test.dart": {
+    "mtime": 1792513094.916001,
+    "seen": 1792513121.4728057,
+    "ast_hash": "f1318e670c835d085e101096d01b7067",
     "semantic_hash": ""
   }
 }
