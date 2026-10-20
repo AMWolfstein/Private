@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/widgets/error_card.dart';
+import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
@@ -246,24 +248,20 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                 ).buildSlivers(context),
                 if (albumsAsync.isLoading || tracksAsync.isLoading)
                   const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
+                    child: TrackListSkeleton(itemCount: 5),
                   ),
                 if (albumsAsync.hasError || tracksAsync.hasError)
                   SliverToBoxAdapter(
-                    child: Center(
-                      child: TextButton.icon(
-                        icon: const Icon(Icons.refresh),
-                        label: Text(context.l10n.dialogRetry),
-                        onPressed: () {
-                          ref.invalidate(libraryBrowseProvider(_albumsRequest));
-                          ref.invalidate(
-                            localArtistPopularProvider(widget.artistName),
-                          );
-                        },
-                      ),
+                    child: ErrorCard(
+                      error: (albumsAsync.error ?? tracksAsync.error)
+                          .toString(),
+                      colorScheme: colors,
+                      onRetry: () {
+                        ref.invalidate(libraryBrowseProvider(_albumsRequest));
+                        ref.invalidate(
+                          localArtistPopularProvider(widget.artistName),
+                        );
+                      },
                     ),
                   ),
                 if (albums?.entries.isNotEmpty == true) ...[
@@ -271,17 +269,18 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     child: _featuredAlbum(context, albums!.entries.first),
                   ),
                 ],
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
-                    child: Text(
-                      context.l10n.artistPopular,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                if (tracks?.items.isNotEmpty == true)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+                      child: Text(
+                        context.l10n.artistPopular,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
                 if (tracks != null && tracks.items.isEmpty)
                   SliverToBoxAdapter(
                     child: Padding(

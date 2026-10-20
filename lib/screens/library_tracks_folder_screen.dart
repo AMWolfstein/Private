@@ -1,3 +1,4 @@
+import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'dart:math';
 import 'dart:io';
 
@@ -278,6 +279,12 @@ class _LibraryTracksFolderScreenState
         context.l10n.collectionPlaylistEmptySubtitle,
     };
     final folderTracks = _folderData.tracks;
+    final loading =
+        !ref.watch(
+          libraryCollectionsProvider.select((state) => state.isLoaded),
+        ) ||
+        (widget.mode == LibraryTracksFolderMode.playlist &&
+            playlist?.tracksLoaded == false);
 
     final bottomPadding = isSelectionMode
         ? MediaQuery.paddingOf(context).bottom
@@ -295,7 +302,9 @@ class _LibraryTracksFolderScreenState
       ),
       appBar: _buildAppBar(context, colorScheme, title, entries, playlist),
       slivers: [
-        if (entries.isEmpty)
+        if (loading)
+          const SliverToBoxAdapter(child: TrackListSkeleton())
+        else if (entries.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
             child: _EmptyFolderState(
@@ -333,7 +342,7 @@ class _LibraryTracksFolderScreenState
               }, childCount: entries.length),
             ),
           ),
-        if (entries.isNotEmpty)
+        if (!loading && entries.isNotEmpty)
           buildTrackListFooter(
             context,
             colorScheme,
@@ -538,7 +547,7 @@ class _LibraryTracksFolderScreenState
       squareArtwork: true,
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
-          : title,
+          : null,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
       background: background,
@@ -579,79 +588,43 @@ class _LibraryTracksFolderScreenState
               ],
             )
           : null,
-      actions: entries.isNotEmpty ? _buildPlayAllCenterButton(entries) : null,
+      actions: !isSelectionMode && entries.isNotEmpty
+          ? _buildPlayAllCenterButton(entries)
+          : null,
       appBarActions: [
         if (!isSelectionMode && entries.isNotEmpty)
-          IconButton(
+          HeaderCircleButton(
+            icon: Icons.ios_share,
+            iconSize: 20,
             tooltip: context.l10n.collectionExportM3u,
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.4),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.ios_share, color: Colors.white, size: 20),
-            ),
             onPressed: () => _exportAsM3u8(context, title, entries),
           ),
         if (isPlaylistMode && !isSelectionMode) ...[
-          IconButton(
+          HeaderCircleButton(
+            icon: Icons.edit_outlined,
+            iconSize: 20,
             tooltip: context.l10n.collectionRenamePlaylist,
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.4),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.edit_outlined,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
             onPressed: () {
               final id = widget.playlistId ?? playlist?.id;
               if (id == null || id.isEmpty) return;
               _showRenamePlaylistDialog(context, id, playlist?.name ?? title);
             },
           ),
-          IconButton(
+          HeaderCircleButton(
+            icon: Icons.camera_alt_outlined,
+            iconSize: 20,
             tooltip: context.l10n.collectionPlaylistChangeCover,
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.4),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.camera_alt_outlined,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
             onPressed: () => _showCoverOptionsSheet(context, hasCustomCover),
           ),
         ],
       ],
-      leading: IconButton(
-        tooltip: isSelectionMode
-            ? MaterialLocalizations.of(context).closeButtonTooltip
-            : MaterialLocalizations.of(context).backButtonTooltip,
-        icon: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.4),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            isSelectionMode ? Icons.close : Icons.arrow_back,
-            color: Colors.white,
-          ),
-        ),
-        onPressed: isSelectionMode
-            ? exitSelectionMode
-            : () => Navigator.pop(context),
-      ),
+      leading: isSelectionMode
+          ? HeaderCircleButton(
+              icon: Icons.close,
+              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+              onPressed: exitSelectionMode,
+            )
+          : null,
     );
   }
 
@@ -883,7 +856,19 @@ class _CollectionTrackTile extends ConsumerWidget {
         )
         .asData
         ?.value;
+    final current = ref.watch(currentMediaItemProvider).asData?.value;
+    final source = current?.extras?['source'];
+    final isCurrent =
+        current != null &&
+        (current.id == track.id ||
+            source == track.id ||
+            fresh != null &&
+                (current.id == fresh.id ||
+                    current.id == fresh.filePath ||
+                    source == fresh.filePath));
+    final playing = isCurrent && ref.watch(playbackPlayingProvider);
     return LocalSongRow(
+      isPlaying: playing,
       title: fresh?.trackName ?? track.name,
       artist: fresh?.artistName ?? track.artistName,
       cover: fresh?.coverPath ?? effectiveCoverUrl,
@@ -892,7 +877,10 @@ class _CollectionTrackTile extends ConsumerWidget {
       isSelected: isSelected,
       onSelect: onTap,
       onLongPress: isSelectionMode ? onTap : onLongPress,
-      onPlay: () => _playFromHere(context, ref),
+      onPlay: isCurrent
+          ? () =>
+                ref.read(musicPlayerControllerProvider).togglePlayPause(playing)
+          : () => _playFromHere(context, ref),
       onMenu: (anchor) => fresh != null
           ? showLocalSongMenu(context, ref, fresh, anchor: anchor)
           : showCollectionSongMenu(context, ref, track, anchor: anchor),

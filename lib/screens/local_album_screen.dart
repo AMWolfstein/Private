@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/widgets/error_card.dart';
+import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'dart:io';
 import 'dart:math';
 import 'package:spotiflac_android/widgets/track_detail_actions.dart';
@@ -249,14 +251,21 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         : 0.0;
     final tracks = _sortedTracksCache;
 
+    pruneSelection(tracks.map((t) => t.id).toSet());
+
     if (tracks.isEmpty && !_loadingTracks && _loadError == null) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.albumName)),
-        body: Center(child: Text(context.l10n.noTracksFoundForAlbum)),
+        body: CustomScrollView(
+          slivers: [
+            AppSliverHeader.page(title: widget.albumName),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: Text(context.l10n.noTracksFoundForAlbum)),
+            ),
+          ],
+        ),
       );
     }
-
-    pruneSelection(tracks.map((t) => t.id).toSet());
 
     return CollectionScaffold(
       scrollController: scrollController,
@@ -266,14 +275,12 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       slivers: [
         if (_loadError != null)
           SliverToBoxAdapter(
-            child: Center(
-              child: TextButton.icon(
-                onPressed: () => setState(() {
-                  _loadTracks();
-                }),
-                icon: const Icon(Icons.refresh),
-                label: Text(context.l10n.dialogRetry),
-              ),
+            child: ErrorCard(
+              error: _loadError.toString(),
+              colorScheme: colorScheme,
+              onRetry: () => setState(() {
+                _loadTracks();
+              }),
             ),
           )
         else if (_loadingTracks)
@@ -330,6 +337,16 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
     return AlbumDetailHeader(
       title: widget.albumName,
+      appBarTitle: isSelectionMode
+          ? context.l10n.selectionSelected(selectedIds.length)
+          : null,
+      leading: isSelectionMode
+          ? HeaderCircleButton(
+              icon: Icons.close,
+              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+              onPressed: exitSelectionMode,
+            )
+          : null,
       immersive: context.isMornye,
       squareArtwork: true,
       expandedHeight: expandedHeight,
@@ -377,33 +394,37 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         overflow: TextOverflow.ellipsis,
       ),
       meta: _buildLocalHeaderMeta(context),
-      actions: Consumer(
-        builder: (context, ref, _) {
-          final isCurrent = ref.watch(
-            currentMediaItemProvider.select(
-              (state) => _sortedTracksCache.any(
-                (track) => _isCurrentTrack(state.value, track),
-              ),
+      actions: isSelectionMode
+          ? null
+          : Consumer(
+              builder: (context, ref, _) {
+                final isCurrent = ref.watch(
+                  currentMediaItemProvider.select(
+                    (state) => _sortedTracksCache.any(
+                      (track) => _isCurrentTrack(state.value, track),
+                    ),
+                  ),
+                );
+                final isPlaying =
+                    isCurrent && ref.watch(playbackPlayingProvider);
+                final tracksForActions = _sortedTracksCache
+                    .map(
+                      (track) =>
+                          UnifiedLibraryItem.fromLocalLibrary(track).toTrack(),
+                    )
+                    .toList();
+                return LocalCollectionActions(
+                  tracks: tracksForActions,
+                  isPlaying: isPlaying,
+                  onPlay: isCurrent
+                      ? () => ref
+                            .read(musicPlayerControllerProvider)
+                            .togglePlayPause(isPlaying)
+                      : _playAll,
+                  onShuffle: _shuffleAll,
+                );
+              },
             ),
-          );
-          final isPlaying = isCurrent && ref.watch(playbackPlayingProvider);
-          final tracksForActions = _sortedTracksCache
-              .map(
-                (track) => UnifiedLibraryItem.fromLocalLibrary(track).toTrack(),
-              )
-              .toList();
-          return LocalCollectionActions(
-            tracks: tracksForActions,
-            isPlaying: isPlaying,
-            onPlay: isCurrent
-                ? () => ref
-                      .read(musicPlayerControllerProvider)
-                      .togglePlayPause(isPlaying)
-                : _playAll,
-            onShuffle: _shuffleAll,
-          );
-        },
-      ),
     );
   }
 
