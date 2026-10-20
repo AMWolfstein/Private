@@ -59,7 +59,6 @@
   "164": "HiResPlayback",
   "166": "track.dart",
   "168": "MediaAction",
-  "170": "linux_raw/param/auxv.rs",
   "174": "download_history.dart",
   "175": "file_access.dart",
   "178": "audio_service/CHANGELOG.md",
@@ -133,7 +132,6 @@
   "398": "saf_display_path.dart",
   "399": "libusb_config_descriptor",
   "400": "libusb_log_level",
-  "401": "MediaItemCopyWith",
   "402": "libusb_option",
   "410": "SetupFolderPickerStore",
   "413": "types",
@@ -143,7 +141,6 @@
   "427": "libusb_endpoint_descriptor",
   "428": "io_uring_sqe",
   "430": "audio_analysis_spectrogram_test.dart",
-  "433": "libusb_superspeedplus_sublink_attribute_exponent",
   "436": "Resource",
   "437": "Operation",
   "438": "provider_resource_ids.dart",
@@ -299,7 +296,6 @@
   "1644": "libusb_ssplus_usb_device_capability_descriptor",
   "1645": "libusb_version",
   "1649": "libusb_container_id_descriptor",
-  "1650": "libusb_control_setup",
   "1651": "libusb_ss_endpoint_companion_descriptor",
   "1656": "libusb_usb_2_0_extension_descriptor"
 }

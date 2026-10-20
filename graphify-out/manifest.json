@@ -78,16 +78,16 @@
     "semantic_hash": "bafdc81ec3b5520459c31eb1140ffe2a"
   },
   "android/app/src/androidTest/kotlin/com/zarz/spotiflac/UsbBitPerfectPluginTest.kt": {
-    "mtime": 1792304289.2646556,
-    "seen": 1792494608.4826903,
-    "ast_hash": "738bdb9766807efccd4f41e563d3b111",
-    "semantic_hash": "738bdb9766807efccd4f41e563d3b111"
+    "mtime": 1792497498.7744687,
+    "seen": 1792497548.94256,
+    "ast_hash": "87d890ac89dc1d55ddb258c8a6d33e0a",
+    "semantic_hash": ""
   },
   "android/app/src/main/cpp/native_audio.cpp": {
-    "mtime": 1792303264.8403149,
-    "seen": 1792494608.482692,
-    "ast_hash": "589fdbd78bc62152f62bf4ac80067969",
-    "semantic_hash": "589fdbd78bc62152f62bf4ac80067969"
+    "mtime": 1792497498.7746515,
+    "seen": 1792497548.9425693,
+    "ast_hash": "2752c3f996441c1aaa7773459f82ea76",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/AudioOutputActivity.kt": {
     "mtime": 1792303264.8404605,
@@ -132,10 +132,10 @@
     "semantic_hash": "2e1b671b76980bb247dd56f08ff33fbf"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt": {
-    "mtime": 1792303264.8405094,
-    "seen": 1792494608.482705,
-    "ast_hash": "6b1cf17d3401ed8888896271a85d2f07",
-    "semantic_hash": "6b1cf17d3401ed8888896271a85d2f07"
+    "mtime": 1792497498.7747073,
+    "seen": 1792497548.9425879,
+    "ast_hash": "56493633e6fa0595026cdd86b6f62da2",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt": {
     "mtime": 1792494022.5890083,
@@ -156,10 +156,10 @@
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/NativeAudio.kt": {
-    "mtime": 1792303264.8405094,
-    "seen": 1792494608.4827135,
-    "ast_hash": "69693f165d32991a68443c8de8e747bc",
-    "semantic_hash": "69693f165d32991a68443c8de8e747bc"
+    "mtime": 1792497498.7747753,
+    "seen": 1792497548.9425983,
+    "ast_hash": "ae217dc4bb7d3fa416608e659f70a079",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/NativeMediaWorkspace.kt": {
     "mtime": 1792303264.8405094,
@@ -240,22 +240,22 @@
     "semantic_hash": "5c8b03fb538b825a835b93d173df4ffe"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbBitPerfectPlugin.kt": {
-    "mtime": 1792303264.8405094,
-    "seen": 1792494608.4827347,
-    "ast_hash": "b747136b5783d53133bab585762640ed",
-    "semantic_hash": "b747136b5783d53133bab585762640ed"
+    "mtime": 1792497498.7747993,
+    "seen": 1792497548.9426222,
+    "ast_hash": "6419080b781e0f269532cb8430bd2ce3",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbDirectPlayback.kt": {
-    "mtime": 1792303264.8405094,
-    "seen": 1792494608.4827359,
-    "ast_hash": "1182cd4aae72fc7e78f020a9d357358e",
-    "semantic_hash": "1182cd4aae72fc7e78f020a9d357358e"
+    "mtime": 1792497498.7748241,
+    "seen": 1792497548.9426234,
+    "ast_hash": "691756d1f7e12f2b6e069556e4650a4a",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbPcmSource.kt": {
-    "mtime": 1792303264.8405094,
-    "seen": 1792494608.4827373,
-    "ast_hash": "31bff6415897654b7788080ab20ed48f",
-    "semantic_hash": "31bff6415897654b7788080ab20ed48f"
+    "mtime": 1792497498.7748497,
+    "seen": 1792497548.942625,
+    "ast_hash": "d92d8e640ceac552d2e37d7fc1bd2f5b",
+    "semantic_hash": ""
   },
   "android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt": {
     "mtime": 1792304153.465361,
@@ -564,9 +564,9 @@
     "semantic_hash": "4b1477d90da533443cd95ca933cbde93"
   },
   "lib/main.dart": {
-    "mtime": 1792356506.5400534,
-    "seen": 1792494608.4828136,
-    "ast_hash": "d7e4fbf7d385b24ba07b30e2ec3a1eba",
+    "mtime": 1792497498.7748497,
+    "seen": 1792497548.9427054,
+    "ast_hash": "5446e469781d1d7c461b8f52f2fcc648",
     "semantic_hash": ""
   },
   "lib/models/album_track_order.dart": {
@@ -6672,9 +6672,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792494022.5850084,
-    "seen": 1792494608.4842417,
-    "ast_hash": "9297a3b9ec7e18a54097be2b4e63fa0f",
+    "mtime": 1792495166.3273778,
+    "seen": 1792497548.9443147,
+    "ast_hash": "28435d8333c7706022688374f29bfa56",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6708,15 +6708,15 @@
     "semantic_hash": ""
   },
   "android/app/src/androidTest/assets/README.md": {
-    "mtime": 1792303264.8392057,
-    "seen": 1792494608.484253,
-    "ast_hash": "dd366cbeea42703e72c72733a159396d",
-    "semantic_hash": "dd366cbeea42703e72c72733a159396d"
+    "mtime": 1792497498.774415,
+    "seen": 1792497548.9443266,
+    "ast_hash": "9526b9106dfae097c3f80b5efedb6563",
+    "semantic_hash": ""
   },
   "android/app/src/main/cpp/CMakeLists.txt": {
-    "mtime": 1792321021.4205196,
-    "seen": 1792494608.4842541,
-    "ast_hash": "2d09cf147fd3ab2fb7cbcaf2a7197da5",
+    "mtime": 1792497498.7744687,
+    "seen": 1792497548.9443278,
+    "ast_hash": "69a7b3ce0bd120f5b0fd6b59f21207b3",
     "semantic_hash": ""
   },
   "assets/fonts/Inter-LICENSE.txt": {
@@ -6774,9 +6774,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1792486601.373556,
-    "seen": 1792494608.4842668,
-    "ast_hash": "7dbdc1a1175a3ef7fe72f95c227b5017",
+    "mtime": 1792497509.738775,
+    "seen": 1792497548.9443438,
+    "ast_hash": "4af70f0dcbfe8b3dd213b797c5af1ad4",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -6786,10 +6786,10 @@
     "semantic_hash": "53b1300b5de2c4dd616c5893a3248081"
   },
   "rust_backend/crates/mobile/src/usb_audio/README.md": {
-    "mtime": 1792303265.0297756,
-    "seen": 1792494608.4842827,
-    "ast_hash": "aa729c6dc72e7392947c5faf08c24c7d",
-    "semantic_hash": "aa729c6dc72e7392947c5faf08c24c7d"
+    "mtime": 1792497498.7748497,
+    "seen": 1792497548.9443622,
+    "ast_hash": "91c1bb434682185dde465f825d52ef64",
+    "semantic_hash": ""
   },
   "rust_backend/vendor/README.md": {
     "mtime": 1792303265.0352106,
@@ -7278,9 +7278,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792486601.0998816,
-    "seen": 1792494608.484247,
-    "ast_hash": "ee1efa6647252bebf6a60908a2016029",
+    "mtime": 1792495166.3271005,
+    "seen": 1792497548.9443214,
+    "ast_hash": "2b4a335c47f0c5ad3df5eaaec702816d",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7710,15 +7710,15 @@
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792494022.6290083,
-    "seen": 1792494608.4842768,
-    "ast_hash": "425c379f19587a33370f918c1cfdbc45",
+    "mtime": 1792495199.0420723,
+    "seen": 1792497548.9443517,
+    "ast_hash": "0b93190eaa2a9446e390fe7174e4dc04",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792486601.377556,
-    "seen": 1792494608.4842792,
-    "ast_hash": "182a7781b9d1a9a52b76145dc7460832",
+    "mtime": 1792495166.3274686,
+    "seen": 1792497548.9443583,
+    "ast_hash": "e335220a756e23af8ec71a5e8d6e59fc",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
@@ -7770,9 +7770,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1792494022.6290083,
-    "seen": 1792494608.484278,
-    "ast_hash": "ba6c29085207fde8c8f0160725f9c68a",
+    "mtime": 1792495166.3263168,
+    "seen": 1792497548.944357,
+    "ast_hash": "0edd4f8f9ba8ecfc745ba2bcd0308cf5",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -7788,9 +7788,33 @@
     "semantic_hash": ""
   },
   "reviews/PORT_PLAN.md": {
-    "mtime": 1792494022.6290083,
-    "seen": 1792494608.4842732,
-    "ast_hash": "9dff33dbefc2a1f3b277ce723e422876",
+    "mtime": 1792495166.3264933,
+    "seen": 1792497548.9443495,
+    "ast_hash": "5e90d85d1e664539b3da007df7a843fe",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/cpp/flac_pcm_source.cpp": {
+    "mtime": 1792497498.7746167,
+    "seen": 1792497548.9425647,
+    "ast_hash": "a44f0f91c71322da63f753918c02835a",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/cpp/flac_pcm_source.h": {
+    "mtime": 1792497498.774635,
+    "seen": 1792497548.9425669,
+    "ast_hash": "ba8c5a14218e63f77e4d040e20bae015",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/cpp/tests/flac_pcm_source_test.cpp": {
+    "mtime": 1792497498.7747073,
+    "seen": 1792497548.9425714,
+    "ast_hash": "ade576d6faf65c63b3a04ce29f4287c1",
+    "semantic_hash": ""
+  },
+  "assets/licenses/flac.txt": {
+    "mtime": 1792497498.7748497,
+    "seen": 1792497548.9443312,
+    "ast_hash": "78a131b2ea50675d245d280ccc34f8b6",
     "semantic_hash": ""
   }
 }
