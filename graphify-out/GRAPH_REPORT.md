@@ -1,17 +1,17 @@
 # Graph Report - Private  (2026-10-20)
 
 ## Corpus Check
-- 1218 files · ~1,103,866 words
+- 1218 files · ~1,104,344 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 121 file(s) not represented in the graph (top: .xml 37, .arb 20, (none) 16)
 
 ## Summary
-- 22880 nodes · 44455 edges · 692 communities (504 shown, 188 thin omitted)
+- 22880 nodes · 44456 edges · 692 communities (504 shown, 188 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 2449 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a5bc4a84`
+- Built from commit: `051ff447`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2716,10 +2716,10 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004640371229698376 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `linux_raw/net/syscalls.rs`, `BorrowedFd`, `Uid`, `PollFd<'fd>`, `Flock`, `linux_raw/termios/syscalls.rs`, `borrowed_fd`, `ioctl/mod.rs`, `libc/thread/syscalls.rs`, `Timespec`, `ArgReg`, `linux_raw/net/read_sockaddr.rs`, `at.rs`, `Action`, `src/io_uring/mod.rs`, `process/prctl.rs`, `linux_raw/fs/syscalls.rs`, `linux_raw/io/syscalls.rs`, `QueueSelector`, `Itimerspec`, `SendAncillaryMessage`, `net/types.rs`, `runtime/syscalls.rs`, `RawFd`, `ret`, `fs/ioctl.rs`, `WaitStatus`, `thread/prctl.rs`, `PollFd<'fd>`, `libc/io/syscalls.rs`, `libc/mm/syscalls.rs`, `.from`, `setns.rs`, `SocketAddrAny`, `src/fs/mod.rs`, `super`, `linux_raw/mm/syscalls.rs`, `libc/process/syscalls.rs`, `OwnedFd`, `libc/c.rs`, `Ipv4PathMtuDiscovery`, `libc/mod.rs`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Should `package:flutter/material.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.012595520421607378 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `file`, `package:flutter/material.dart`, `List`, `music_playback_deck.dart`, `package:spotiflac_android/l10n/l10n.dart`, `StatelessWidget`, `progress_stream_poller.dart`, `package:flutter_test/flutter_test.dart`, `MediaItemCopyWith`, `package:flutter_test/flutter_test.dart`, `static const`, `package:spotiflac_android/utils/logger.dart`, `unified_library_item.dart`, `AudioServicePlugin.java`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `playback_automation.dart`, `@Deprecated`, `_MediaButtonMessageExtension`, `package:flutter/foundation.dart`, `AudioService`, `_MediaItemMessageExtension`, `_RatingMessageExtension`, `library_collections_benchmark.dart`, `Future`, `AudioService`, `AudioHandler`, `AndroidPlaybackInfo`, `notification_service.dart`, `ValueStream`, `PlaybackStateCopyWith`, `MusicPlayerHandler`, `Duration`, `library_collections_hydration.dart`, `audio_format_utils.dart`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Should `mornye_theme.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.03508771929824561 - nodes in this community are weakly interconnected._
