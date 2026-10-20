@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-20)
 
 ## Corpus Check
-- 1246 files · ~1,135,335 words
+- 1246 files · ~1,135,337 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 122 file(s) not represented in the graph (top: .xml 37, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `df164fb1`
+- Built from commit: `b02895b0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2749,10 +2749,10 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004651162790697674 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `linux_raw/conv.rs`, `ret`, `OwnedFd`, `libc/mm/syscalls.rs`, `PollFd<'fd>`, `Ipv4PathMtuDiscovery`, `borrowed_fd`, `c`, `Timespec`, `at.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `linux_raw/termios/syscalls.rs`, `Protocol`, `Signal`, `RawFd`, `to_ipv6mr`, `linux_raw/io/syscalls.rs`, `Timeout`, `Uid`, `fs/ioctl.rs`, `ioctl/mod.rs`, `setsockopt`, `super`, `PollFd<'fd>`, `Ipv4Addr`, `Backend`, `linux_raw/net/sockopt.rs`, `setns.rs`, `Pid`, `linux_raw/mm/syscalls.rs`, `SocketAddrArg`, `Ipv6PathMtuDiscovery`, `LinkNameSpaceType`?**
-  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.030303030303030304 - nodes in this community are weakly interconnected._
 - **Why does `&CStr` connect `super` to `linux_raw/conv.rs`, `ret`, `OwnedFd`, `BorrowedFd`, `borrowed_fd`, `c`, `at.rs`, `libc_auxv.rs`, `&Path`, `process/prctl.rs`, `types`, `F`, `linux_raw/termios/syscalls.rs`, `Signal`, `linux_raw/param/auxv.rs`, `Uid`, `thread/prctl.rs`, `CString`, `Backend`, `vdso.rs`, `linux_raw/net/sockopt.rs`, `src/event/epoll.rs`, `linux_raw/param/init.rs`, `android_statx_smoke.rs`, `Pid`, `libc/net/read_sockaddr.rs`, `Arg`, `CancellationError`, `raw_dir.rs`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Should `mornye_library_screen.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.03773584905660377 - nodes in this community are weakly interconnected._
