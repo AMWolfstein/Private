@@ -61,20 +61,25 @@ class _Player extends MusicPlayerController {
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
   for (final brightness in Brightness.values) {
-    Widget host(Widget page, {List<Override> overrides = const []}) =>
-        ProviderScope(
-          overrides: [
-            localLibraryProvider.overrideWith(_Library.new),
-            libraryCollectionsProvider.overrideWith(() => _Collections()),
-            ...overrides,
-          ],
-          child: MaterialApp(
-            theme: MornyeTheme.build(brightness),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: page,
-          ),
-        );
+    Widget host(
+      Widget page, {
+      _Collections? collections,
+      List<Override> overrides = const [],
+    }) => ProviderScope(
+      overrides: [
+        localLibraryProvider.overrideWith(_Library.new),
+        libraryCollectionsProvider.overrideWith(
+          () => collections ?? _Collections(),
+        ),
+        ...overrides,
+      ],
+      child: MaterialApp(
+        theme: MornyeTheme.build(brightness),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: page,
+      ),
+    );
     testWidgets(
       'album selection owns the header and closes without leaving ($brightness)',
       (tester) async {
