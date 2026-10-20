@@ -138,9 +138,9 @@
     "semantic_hash": "6b1cf17d3401ed8888896271a85d2f07"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt": {
-    "mtime": 1792438623.8764,
-    "seen": 1792441084.693856,
-    "ast_hash": "0a364def9a771931e31b91e1ea65d4c0",
+    "mtime": 1792479737.5878685,
+    "seen": 1792479868.2409687,
+    "ast_hash": "1e6f25dde4f95ceb6dab62dfbbef1f1a",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt": {
@@ -654,9 +654,9 @@
     "semantic_hash": ""
   },
   "lib/providers/local_library_provider.dart": {
-    "mtime": 1792438624.2359095,
-    "seen": 1792441084.6940858,
-    "ast_hash": "c3a71da5bc3df41bafbb4ec50c6c1baa",
+    "mtime": 1792479762.651033,
+    "seen": 1792479868.2411141,
+    "ast_hash": "225de554b743e7858ed5d63560ab9a4e",
     "semantic_hash": ""
   },
   "lib/providers/music_player_provider.dart": {
@@ -882,9 +882,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/library_settings_page.dart": {
-    "mtime": 1792478951.1611392,
-    "seen": 1792479030.9331417,
-    "ast_hash": "98110f39ca00ea3b78c6db1d7c9830ac",
+    "mtime": 1792479784.3407001,
+    "seen": 1792479868.2411804,
+    "ast_hash": "d9bfa315ba19061e6d2cd2a0fa4cc871",
     "semantic_hash": ""
   },
   "lib/screens/settings/log_screen.dart": {
@@ -1296,15 +1296,15 @@
     "semantic_hash": "548f18b4ae29beb2ef623820f87283d1"
   },
   "lib/services/notification_service.dart": {
-    "mtime": 1792438624.2470913,
-    "seen": 1792441084.6943455,
-    "ast_hash": "4a87741784da4837fe22ab2a5b42ecb9",
+    "mtime": 1792479737.5882916,
+    "seen": 1792479868.241314,
+    "ast_hash": "55b6b594811594cc2aa98b1d894024f5",
     "semantic_hash": ""
   },
   "lib/services/platform_bridge.dart": {
-    "mtime": 1792438624.2470913,
-    "seen": 1792441084.6943474,
-    "ast_hash": "fdcf869b36a5a9c4ed8ed2889724327d",
+    "mtime": 1792479737.5881684,
+    "seen": 1792479868.2413154,
+    "ast_hash": "17cb353387105fcbb778b46c63cf33b6",
     "semantic_hash": ""
   },
   "lib/services/playback_automation.dart": {
@@ -1530,10 +1530,10 @@
     "semantic_hash": "38241a6001655584b84f62595cea36c9"
   },
   "lib/utils/local_library_scan_prefs.dart": {
-    "mtime": 1792438624.2515736,
-    "seen": 1792441084.6944296,
-    "ast_hash": "dc2385984462aedccefbce0da305e330",
-    "semantic_hash": "dc2385984462aedccefbce0da305e330"
+    "mtime": 1792479717.0761607,
+    "seen": 1792479868.2413752,
+    "ast_hash": "85de68a5189bd251ee2c99b114d24598",
+    "semantic_hash": ""
   },
   "lib/utils/local_playback.dart": {
     "mtime": 1792438624.2515736,
@@ -5706,10 +5706,10 @@
     "semantic_hash": "e24e8f15a88c97304afb9595d103ea20"
   },
   "test/library_scan_scheduling_test.dart": {
-    "mtime": 1792438624.3280118,
-    "seen": 1792441084.6962278,
-    "ast_hash": "4c55d3c39a1724f982c647cf2d1a49f1",
-    "semantic_hash": "4c55d3c39a1724f982c647cf2d1a49f1"
+    "mtime": 1792479792.6197562,
+    "seen": 1792479868.2426798,
+    "ast_hash": "534240db9109ac12aa316a982cc3eb9f",
+    "semantic_hash": ""
   },
   "test/library_scan_snapshot_test.dart": {
     "mtime": 1792438624.3280118,
@@ -5742,9 +5742,9 @@
     "semantic_hash": ""
   },
   "test/library_settings_cleanup_test.dart": {
-    "mtime": 1792438624.3280118,
-    "seen": 1792441084.696239,
-    "ast_hash": "18b935e2a079f394536c41c8dfa320ba",
+    "mtime": 1792479809.0147717,
+    "seen": 1792479868.2426896,
+    "ast_hash": "bb3c5c47946c07388ec0b119e06b233a",
     "semantic_hash": ""
   },
   "test/library_source_migration_test.dart": {
@@ -7773,6 +7773,18 @@
     "mtime": 1792479561.4657335,
     "seen": 1792479631.7149105,
     "ast_hash": "80551982b5a1a59ef06cd36c9740fbdf",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
+    "mtime": 1792479717.0718017,
+    "seen": 1792479868.240965,
+    "ast_hash": "edf4c0c8d558951bc42e3c8a4d275341",
+    "semantic_hash": ""
+  },
+  "android/app/src/test/kotlin/com/zarz/spotiflac/LibraryScanExitInfoTest.kt": {
+    "mtime": 1792479717.07576,
+    "seen": 1792479868.241013,
+    "ast_hash": "98dac73871d703b99a37df4ded9c5e4a",
     "semantic_hash": ""
   }
 }
