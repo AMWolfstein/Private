@@ -54,31 +54,34 @@ void main() {
     }
   });
 
-  test('metadata artwork prefers embedded and local, rejecting remote URLs', () {
-    expect(
-      resolveMetadataArtworkSource(
-        embeddedCoverPath: ' C:/covers/embedded.jpg ',
-        localCoverPath: 'C:/covers/local.jpg',
-        remoteCoverUrl: 'https://example.com/online.jpg',
-      ),
-      'C:/covers/embedded.jpg',
-    );
-    expect(
-      resolveMetadataArtworkSource(
-        embeddedCoverPath: ' ',
-        localCoverPath: ' C:/covers/local.jpg ',
-        remoteCoverUrl: 'https://example.com/online.jpg',
-      ),
-      'C:/covers/local.jpg',
-    );
-    expect(
-      resolveMetadataArtworkSource(
-        remoteCoverUrl: ' https://example.com/online.jpg ',
-      ),
-      isNull,
-    );
-    expect(resolveMetadataArtworkSource(), isNull);
-  });
+  test(
+    'metadata artwork prefers embedded and local, rejecting remote URLs',
+    () {
+      expect(
+        resolveMetadataArtworkSource(
+          embeddedCoverPath: ' C:/covers/embedded.jpg ',
+          localCoverPath: 'C:/covers/local.jpg',
+          remoteCoverUrl: 'https://example.com/online.jpg',
+        ),
+        'C:/covers/embedded.jpg',
+      );
+      expect(
+        resolveMetadataArtworkSource(
+          embeddedCoverPath: ' ',
+          localCoverPath: ' C:/covers/local.jpg ',
+          remoteCoverUrl: 'https://example.com/online.jpg',
+        ),
+        'C:/covers/local.jpg',
+      );
+      expect(
+        resolveMetadataArtworkSource(
+          remoteCoverUrl: ' https://example.com/online.jpg ',
+        ),
+        isNull,
+      );
+      expect(resolveMetadataArtworkSource(), isNull);
+    },
+  );
 
   test(
     'a temporarily offline SAF cover retries after cooldown without restarting',
@@ -584,6 +587,30 @@ void main() {
     },
   );
 
+  test('legacy NUL-prefixed JPEG previews are re-extracted', () async {
+    final sourcePath = await createAudioFixture('legacy-padded-cover');
+    var extractions = 0;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(backendChannel, (call) async {
+          expect(call.method, 'extractCoverToFile');
+          extractions++;
+          await File(
+            (call.arguments as Map)['output_path'] as String,
+          ).writeAsBytes([0xff, 0xd8, 0xff, 0xe0]);
+          return jsonEncode({'success': true});
+        });
+    final preview = (await DownloadedEmbeddedCoverResolver.resolveOrExtract(
+      sourcePath,
+    ))!;
+    await File(preview).writeAsBytes([0, 0xff, 0xd8, 0xff, 0xe0]);
+    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
+    final refreshed = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
+      sourcePath,
+    );
+    expect(extractions, 2);
+    expect(await File(refreshed!).readAsBytes(), [0xff, 0xd8, 0xff, 0xe0]);
+  });
+
   test('legacy SAF thumbnails are replaced without changing the audio', () async {
     const source = 'content://covers/document/original-artwork.flac';
     sourcePaths.add(source);
@@ -733,5 +760,4 @@ void main() {
       expect(await persistentCacheDirectory.list().toList(), isEmpty);
     },
   );
-
 }
