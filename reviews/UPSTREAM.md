@@ -12,6 +12,16 @@ code → graphify → docs commits, analyze, full `flutter test` and a `/review`
 - "Clean" = `git apply --check` passed against `57601c3`. Everything else needs a manual port;
   some fail only because an earlier upstream commit is missing.
 
+## Port order (batches; test once per batch)
+
+1. U-001, U-101, U-102, U-103
+2. U-104, U-201, U-202, U-203
+3. U-204, U-205, U-206, U-207
+4. U-208, U-209, U-210, U-303
+5. U-308 (duets + share cards), U-302
+6. U-304, U-305, U-307
+7. U-301 (equalizer, alone)
+
 ## Requested by the owner
 
 ### U-001: per-field tag separators (`ac8523d7` + `9495a6bf`)
@@ -68,7 +78,7 @@ Tag Mode UI (`settings_search_test` asserts both are absent).
 | U-209 | `acbc614f`, `ef5fa1cb`, `1b66bc46` | DateFormat/RegExp reuse, fewer history notifications. |
 | U-210 | `d28e3f65` | Album header artwork fit (only the `album_detail_header` part). |
 
-## Optional features (owner chooses)
+## Optional features (owner chose all of U-301..U-305, U-307, U-308 on 2026-10-20; U-306 and U-309 not ported)
 
 | ID | Upstream | What |
 |---|---|---|
