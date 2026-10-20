@@ -82,7 +82,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(share().onPressed, isNotNull);
     // The card quotes each selected line once.
-    expect(find.text('Line 0'), findsNWidgets(2));
+    expect(
+      find.descendant(
+        of: find.byType(LyricsShareCard),
+        matching: find.text('Line 0'),
+      ),
+      findsOneWidget,
+    );
 
     await tester.scrollUntilVisible(choice(6), 100);
     // Fully reveal the row; a partly clipped one cannot be tapped.
