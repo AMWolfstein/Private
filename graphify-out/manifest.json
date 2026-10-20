@@ -564,9 +564,9 @@
     "semantic_hash": "4b1477d90da533443cd95ca933cbde93"
   },
   "lib/main.dart": {
-    "mtime": 1792497498.7748497,
-    "seen": 1792497548.9427054,
-    "ast_hash": "5446e469781d1d7c461b8f52f2fcc648",
+    "mtime": 1792510311.1561916,
+    "seen": 1792510336.9250348,
+    "ast_hash": "116ed33d78aadcccd85e263db1f4fb03",
     "semantic_hash": ""
   },
   "lib/models/album_track_order.dart": {
@@ -6672,9 +6672,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792499652.6904798,
-    "seen": 1792507271.3539968,
-    "ast_hash": "3b0654e4a22b13f960853e03df9d1e3c",
+    "mtime": 1792507618.596759,
+    "seen": 1792510336.9267528,
+    "ast_hash": "7e3660a741a2897e139942cf954a6e39",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6882,10 +6882,10 @@
     "semantic_hash": "c7ad579e792bc443e01bb563760a534c"
   },
   "third_party/audioplayers_android/SPOTIFLAC_PATCHES.md": {
-    "mtime": 1792303265.0736625,
-    "seen": 1792494608.4843063,
-    "ast_hash": "291310c79b5900f3240a6f2dc85381b9",
-    "semantic_hash": "291310c79b5900f3240a6f2dc85381b9"
+    "mtime": 1792507553.7060623,
+    "seen": 1792510336.9268267,
+    "ast_hash": "c2e63a114a13e488b6dc2757d443a2e0",
+    "semantic_hash": ""
   },
   "third_party/audioplayers_android/pubspec.yaml": {
     "mtime": 1792303265.074584,
@@ -7278,9 +7278,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792504586.8995116,
-    "seen": 1792507271.3540027,
-    "ast_hash": "d5583188ee011e734e0b2aaac0e3d7da",
+    "mtime": 1792507759.5324874,
+    "seen": 1792510336.9267592,
+    "ast_hash": "e801af4ece1a167478534ef72068a544",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7710,15 +7710,15 @@
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792504586.8996887,
-    "seen": 1792507271.3540363,
-    "ast_hash": "7ec8311c9c430ba08c7b955bbb90acdb",
+    "mtime": 1792507759.531949,
+    "seen": 1792510336.9267936,
+    "ast_hash": "77fe0e4a4f61b4f6f78f85ff539b246a",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792504586.899885,
-    "seen": 1792507271.3540385,
-    "ast_hash": "f393355c6efa51cb75a3b149d9d5f00c",
+    "mtime": 1792507759.5320375,
+    "seen": 1792510336.926796,
+    "ast_hash": "4b259522e8011c7ab33d18afc585b7b3",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
@@ -7770,9 +7770,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1792504586.898804,
-    "seen": 1792507271.3540375,
-    "ast_hash": "af7be4852b08baddaaa078dc9beb0885",
+    "mtime": 1792507759.5310037,
+    "seen": 1792510336.926795,
+    "ast_hash": "d8cf13fdecd7732991737efab690b6ec",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -7788,9 +7788,9 @@
     "semantic_hash": ""
   },
   "reviews/PORT_PLAN.md": {
-    "mtime": 1792504586.900011,
-    "seen": 1792507271.354033,
-    "ast_hash": "e71f1661932c213dc967f51f9814c515",
+    "mtime": 1792507759.5313413,
+    "seen": 1792510336.9267905,
+    "ast_hash": "e470fc77d56c3c74cd33a800dcbcd657",
     "semantic_hash": ""
   },
   "android/app/src/main/cpp/flac_pcm_source.cpp": {
@@ -7830,15 +7830,27 @@
     "semantic_hash": ""
   },
   "reviews/HANDOFF.md": {
-    "mtime": 1792504586.899767,
-    "seen": 1792507271.354031,
-    "ast_hash": "0f8ef13a4a1a99223e7aa583c8489133",
+    "mtime": 1792507759.5321147,
+    "seen": 1792510336.9267888,
+    "ast_hash": "94869ebaa598376c0d0bdc650ce52b2b",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/tests/id3_cover.rs": {
     "mtime": 1792499430.4278004,
     "seen": 1792499456.3070164,
     "ast_hash": "1c33d4b6c00f5245e94ce6246cbcc648",
+    "semantic_hash": ""
+  },
+  "lib/services/activity_attachment.dart": {
+    "mtime": 1792510311.1526537,
+    "seen": 1792510336.925145,
+    "ast_hash": "7a201976ba7e69472eb7bfba8d616875",
+    "semantic_hash": ""
+  },
+  "test/activity_attachment_test.dart": {
+    "mtime": 1792510311.155665,
+    "seen": 1792510336.9263399,
+    "ast_hash": "c7c9df3ea8c0ccccbe6736190eb78074",
     "semantic_hash": ""
   }
 }
