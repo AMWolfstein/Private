@@ -882,9 +882,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/library_settings_page.dart": {
-    "mtime": 1792494022.6290083,
-    "seen": 1792494608.48289,
-    "ast_hash": "d9bfa315ba19061e6d2cd2a0fa4cc871",
+    "mtime": 1792494864.7395535,
+    "seen": 1792494878.9565163,
+    "ast_hash": "83c7b8d5d6ccd7ee38c4b47deed595ee",
     "semantic_hash": ""
   },
   "lib/screens/settings/log_screen.dart": {
