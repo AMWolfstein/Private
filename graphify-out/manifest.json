@@ -774,9 +774,9 @@
     "semantic_hash": ""
   },
   "lib/screens/now_playing_screen.dart": {
-    "mtime": 1792562298.4205387,
-    "seen": 1792562325.4083064,
-    "ast_hash": "b8486b82fa466cd78e78c7f0d2d95258",
+    "mtime": 1792562442.7690766,
+    "seen": 1792562473.2816339,
+    "ast_hash": "2fd217faf19501b39912a4eb7343ebdf",
     "semantic_hash": ""
   },
   "lib/screens/queue_library_refresh_policy.dart": {
@@ -2040,9 +2040,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mornye_player_background.dart": {
-    "mtime": 1792562237.1954563,
-    "seen": 1792562274.8189163,
-    "ast_hash": "07de571f9e01a4cd0bb8a2d033eaa27c",
+    "mtime": 1792562442.689763,
+    "seen": 1792562473.282065,
+    "ast_hash": "de51d5fc46508cb9221d6365a97ea4ec",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_player_details_sheet.dart": {
