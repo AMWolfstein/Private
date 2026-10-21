@@ -1,7 +1,9 @@
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/utils/release_date_display.dart';
 
 void main() {
+  setUpAll(() => initializeDateFormatting('en'));
   test('release tags retain precision and reject overflow dates', () {
     for (final tag in ['20240305', '2024/3/5', '2024-03-05T00:00:00Z']) {
       expect(formatReleaseTag(tag, 'en'), 'Mar 5, 2024');

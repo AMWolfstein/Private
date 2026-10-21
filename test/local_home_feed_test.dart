@@ -113,6 +113,9 @@ void main() {
   testWidgets(
     'scan refresh keeps existing shelves and pull refresh reloads local queries',
     (tester) async {
+      tester.view.physicalSize = const Size(360, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       var refresh = false;
       var reads = 0;
       final gate = Completer<void>();

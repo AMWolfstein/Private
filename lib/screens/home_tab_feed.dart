@@ -22,6 +22,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
       settingsProvider.select((s) => s.localLibraryEnabled),
     );
     final empty =
+        ref.watch(libraryCollectionsProvider.select((s) => s.isLoaded)) &&
         [
           albumData,
           artistData,
