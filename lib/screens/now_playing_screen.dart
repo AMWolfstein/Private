@@ -477,8 +477,9 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       onSelected: (item) async {
         final latest = ref.read(playQueueProvider).value ?? const <MediaItem>[];
         final index = latest.indexWhere((entry) => identical(entry, item));
-        if (index >= 0)
+        if (index >= 0) {
           await ref.read(musicPlayerControllerProvider).jumpTo(index);
+        }
       },
       child: HeroMode(
         // A route Hero renders outside the panel's gradient and slide, briefly
