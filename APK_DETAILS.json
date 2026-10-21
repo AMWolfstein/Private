@@ -1,0 +1,109 @@
+{
+  "file": "SpotiFLAC-Local-167-arm64-v8a.apk",
+  "application_id": "com.zarz.spotiflac.local",
+  "label": "SpotiFLAC Local",
+  "version": "5.1.1",
+  "build": 167,
+  "version_code": 2167,
+  "source_commit": "c76237c6",
+  "bytes": 52983816,
+  "sha256": "8b5521fe78bbc1640675e26b1838776f370191c440a4288402d63efcc2b80639",
+  "certificate_sha256": "b912cdc7e97b78a19aff3ac8398abc3b36251de2af67243e8a6da2870e15c7b3",
+  "matches_build_166_certificate": true,
+  "abis": [
+    "arm64-v8a"
+  ],
+  "min_sdk": 24,
+  "target_sdk": 37,
+  "internet_permission": false,
+  "cream_icon_background": "#FFF4DF",
+  "native_libraries": [
+    {
+      "path": "lib/arm64-v8a/libapp.so",
+      "bytes": 10421128,
+      "load_alignment": 65536
+    },
+    {
+      "path": "lib/arm64-v8a/libavcodec.so",
+      "bytes": 11506184,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libavdevice.so",
+      "bytes": 55536,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libavfilter.so",
+      "bytes": 2888640,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libavformat.so",
+      "bytes": 3110552,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libavutil.so",
+      "bytes": 555064,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libc++_shared.so",
+      "bytes": 1304848,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libdartjni.so",
+      "bytes": 131248,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "bytes": 7112,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libffmpegkit.so",
+      "bytes": 464120,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libffmpegkit_abidetect.so",
+      "bytes": 30456,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libflutter.so",
+      "bytes": 11747864,
+      "load_alignment": 65536
+    },
+    {
+      "path": "lib/arm64-v8a/libjnidispatch.so",
+      "bytes": 165992,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libspotiflac_audio.so",
+      "bytes": 489976,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libspotiflac_mobile.so",
+      "bytes": 6754304,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libswresample.so",
+      "bytes": 211824,
+      "load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libswscale.so",
+      "bytes": 536176,
+      "load_alignment": 16384
+    }
+  ],
+  "elf_and_zip_16k_alignment": "PASS",
+  "device_testing": "NOT RUN"
+}
