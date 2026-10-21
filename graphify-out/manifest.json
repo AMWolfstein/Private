@@ -774,9 +774,9 @@
     "semantic_hash": ""
   },
   "lib/screens/now_playing_screen.dart": {
-    "mtime": 1792562237.3494735,
-    "seen": 1792562274.818593,
-    "ast_hash": "0ecb29ca7bc07f8f54508bee96b04490",
+    "mtime": 1792562298.4205387,
+    "seen": 1792562325.4083064,
+    "ast_hash": "b8486b82fa466cd78e78c7f0d2d95258",
     "semantic_hash": ""
   },
   "lib/screens/queue_library_refresh_policy.dart": {
