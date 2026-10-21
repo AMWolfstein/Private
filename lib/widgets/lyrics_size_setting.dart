@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/widgets/lyrics_text_scale.dart';
+import 'package:spotiflac_android/widgets/mornye_slider.dart';
 
 class LyricsSizeSetting extends ConsumerWidget {
   const LyricsSizeSetting({super.key});
@@ -45,7 +46,7 @@ class LyricsSizeSetting extends ConsumerWidget {
           ),
           Semantics(
             label: context.l10n.lyricsTextSize,
-            child: Slider(
+            child: MornyeSlider(
               value: scale,
               min: 0.8,
               max: 1.4,

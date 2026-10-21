@@ -5,6 +5,7 @@ import 'package:spotiflac_android/models/automix_options.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:spotiflac_android/widgets/mornye_slider.dart';
 
 class AutoMixSettings extends ConsumerStatefulWidget {
   const AutoMixSettings({super.key});
@@ -94,7 +95,7 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label),
-            Slider(
+            MornyeSlider(
               value: value.clamp(min, max),
               min: min,
               max: max,

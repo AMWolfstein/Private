@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:liquid_glass_easy/liquid_glass_easy.dart';
+import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
+import 'package:spotiflac_android/widgets/mornye_glass_thumb.dart';
 
 /// An iOS-style slider: a thin rounded track and a white shadowed knob.
 ///
@@ -8,7 +12,10 @@ import 'package:flutter/services.dart';
 /// inside the range (gain, balance) and the slider can stand [vertical], with
 /// [min] at the bottom. A vertical slider only claims vertical drags, so a
 /// row of them still scrolls sideways.
-class MornyeLevelSlider extends StatelessWidget {
+///
+/// A horizontal slider's knob turns into liquid glass while touched when the
+/// glass gate allows it; dense vertical faders keep the painted knob.
+class MornyeLevelSlider extends ConsumerStatefulWidget {
   const MornyeLevelSlider({
     super.key,
     required this.value,
@@ -40,7 +47,25 @@ class MornyeLevelSlider extends StatelessWidget {
 
   static const _trackThickness = 4.0;
 
-  double get _origin => (origin ?? min).clamp(min, max);
+  @override
+  ConsumerState<MornyeLevelSlider> createState() => _MornyeLevelSliderState();
+}
+
+class _MornyeLevelSliderState extends ConsumerState<MornyeLevelSlider> {
+  static const _activeKnobSize = Size(58, 38.33);
+  static const _shadow = LiquidGlassShadow(inset: 3);
+
+  /// Whether the current touch shows glass, decided at touch-down.
+  bool? _touchGlass;
+
+  double get value => widget.value;
+  double get min => widget.min;
+  double get max => widget.max;
+  bool get vertical => widget.vertical;
+  double get knobRadius => widget.knobRadius;
+  ValueChanged<double>? get onChanged => widget.onChanged;
+
+  double get _origin => (widget.origin ?? min).clamp(min, max);
 
   void _update(Offset local, Size size) {
     final extent = (vertical ? size.height : size.width) - knobRadius * 2;
@@ -62,13 +87,21 @@ class MornyeLevelSlider extends StatelessWidget {
     final enabled = onChanged != null;
     final active = enabled ? scheme.primary : CupertinoColors.inactiveGray;
     final track = CupertinoColors.systemFill.resolveFrom(context);
-    final increment = step ?? (max - min) / 100;
+    final increment = widget.step ?? (max - min) / 100;
     String format(double v) =>
-        semanticFormatterCallback?.call(v) ?? v.toStringAsFixed(1);
+        widget.semanticFormatterCallback?.call(v) ?? v.toStringAsFixed(1);
+    final glassAllowed =
+        enabled && !vertical && mornyeGlassThumbsEnabled(context, ref);
+    final glass = _touchGlass ?? glassAllowed;
+    final outlines = glass && ref.watch(mornyeGlassOutlinesProvider);
+    void release() {
+      if (_touchGlass != null) setState(() => _touchGlass = null);
+    }
+
     return Semantics(
       slider: true,
       enabled: enabled,
-      label: semanticLabel,
+      label: widget.semanticLabel,
       value: format(value),
       increasedValue: format((value + increment).clamp(min, max)),
       decreasedValue: format((value - increment).clamp(min, max)),
@@ -88,7 +121,8 @@ class MornyeLevelSlider extends StatelessWidget {
             vertical ? constraints.maxHeight : 48,
           );
           void update(Offset local) => _update(local, size);
-          return GestureDetector(
+          final fraction = ((value - min) / (max - min)).clamp(0.0, 1.0);
+          final Widget gestures = GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTapDown: enabled ? (d) => update(d.localPosition) : null,
             onHorizontalDragStart: enabled && !vertical
@@ -106,13 +140,44 @@ class MornyeLevelSlider extends StatelessWidget {
             child: CustomPaint(
               size: size,
               painter: _LevelPainter(
-                fraction: ((value - min) / (max - min)).clamp(0.0, 1.0),
+                fraction: fraction,
                 origin: (_origin - min) / (max - min),
                 vertical: vertical,
                 active: active,
                 track: track,
                 knobRadius: knobRadius,
+                paintKnob: !glass,
               ),
+            ),
+          );
+          if (!glass) return gestures;
+          final r = knobRadius;
+          return Listener(
+            onPointerDown: (_) {
+              if (_touchGlass == null) {
+                setState(() => _touchGlass = glassAllowed);
+              }
+            },
+            onPointerUp: (_) => release(),
+            onPointerCancel: (_) => release(),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                gestures,
+                Positioned.fill(
+                  child: MornyeGlassThumb(
+                    center: Offset(
+                      r + fraction * (size.width - r * 2),
+                      size.height / 2,
+                    ),
+                    held: _touchGlass == true,
+                    restSize: Size.square(r * 2),
+                    activeSize: _activeKnobSize,
+                    style: mornyeGlassThumbStyle(outlines: outlines),
+                    shadow: _shadow,
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -129,10 +194,14 @@ class _LevelPainter extends CustomPainter {
     required this.active,
     required this.track,
     required this.knobRadius,
+    this.paintKnob = true,
   });
 
   final double fraction, origin, knobRadius;
   final bool vertical;
+
+  /// False while the knob is drawn as a glass thumb above the painter.
+  final bool paintKnob;
   final Color active, track;
 
   @override
@@ -163,10 +232,12 @@ class _LevelPainter extends CustomPainter {
         Paint()..color = active,
       );
     }
-    const CupertinoThumbPainter().paint(
-      canvas,
-      Rect.fromCircle(center: at(fraction), radius: r),
-    );
+    if (paintKnob) {
+      const CupertinoThumbPainter().paint(
+        canvas,
+        Rect.fromCircle(center: at(fraction), radius: r),
+      );
+    }
   }
 
   @override
@@ -176,5 +247,6 @@ class _LevelPainter extends CustomPainter {
       oldDelegate.vertical != vertical ||
       oldDelegate.active != active ||
       oldDelegate.track != track ||
-      oldDelegate.knobRadius != knobRadius;
+      oldDelegate.knobRadius != knobRadius ||
+      oldDelegate.paintKnob != paintKnob;
 }

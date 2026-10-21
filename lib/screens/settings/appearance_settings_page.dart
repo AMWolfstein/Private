@@ -12,6 +12,7 @@ import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/custom_font_setting.dart';
+import 'package:spotiflac_android/widgets/mornye_slider.dart';
 
 class AppearanceSettingsPage extends ConsumerWidget {
   const AppearanceSettingsPage({super.key});
@@ -270,7 +271,7 @@ class _MornyeGlassClaritySliderState
           RepaintBoundary(
             child: Semantics(
               label: l10n.appearanceGlassClarity,
-              child: Slider(
+              child: MornyeSlider(
                 key: const ValueKey('mornye-glass-clarity'),
                 value: clarity,
                 divisions: 20,
