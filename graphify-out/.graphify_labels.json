@@ -117,7 +117,6 @@
   "375": "libusb_bos_type",
   "383": "threads_windows.h",
   "385": "AudioServicePlugin",
-  "387": ".convert",
   "389": "PollFd<'fd>",
   "390": "src/net/netdevice.rs",
   "391": "CancellationError",
