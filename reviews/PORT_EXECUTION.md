@@ -110,3 +110,14 @@ Graph 53a17a8e, source 822a4656: 23,988 unique nodes / 46,040 valid links; synch
 No APK built; device-only behavior NOT RUN. 33 shared runtime packages, eight development packages, one common override and 20 shared workspace Cargo dependencies have matching versions; direct mobile workspace declarations resolve to the same roxmltree/rusqlite versions. Local-only crate has no equivalent upstream path. Upstream-only network, service, iOS and branding dependencies rejected. No dependency additions or APK.
 Next: batch 16 (one reviewed dead-code patch and final compatibility report). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 16 (2026-10-21)
+
+Retired unreachable Material Expressive UI and direct dependencies, download/provider/re-enrichment and iOS bridge APIs, dead Rust modules and unused settings/widgets/resources. Preserved offline metadata/lyrics editing, Audio Quality Analysis, CUE, local collections, playback and legacy backup/schema compatibility. Removed 70 unused l10n keys last; added native check script and test resource/timeout cleanup. Disabled selection actions retain explicit accessible state and 48px targets.
+
+One reviewed source patch `ef8ba64d`; Graphify checkpoint recorded below. Cleanup follows FIX_PLAN Tier 3, not an upstream merge. Existing source-to-upstream mappings remain in UPSTREAM.md and prior PORT_EXECUTION checkpoints.
+
+PASS: analysis clean; Flutter 1513 passed / 3 skipped / zero failures (02:09); Android unit 55 passed / 1 skipped; Rust fmt/Clippy PASS, 165 passed / 1 ignored.
+Graph 331ab3d0, source ef8ba64d: 22,436 unique nodes / 42,940 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. Native unit checks and Rust fmt/Clippy/tests pass; regenerated host UniFFI bindings. Instrumentation sources compile, but device execution is NOT RUN. Paging regression passes 10/10. Test-only APIs and their obsolete cases were retired; retained Mornye fixtures were adapted, not skipped. DEAD-806 remains partially open for legacy bookmark/path compatibility; DEAD-702 and unrelated DATA-501/KT-202 remain outside this batch. NativeReplayGainPolicy, MANAGE_EXTERNAL_STORAGE, live skeleton/ErrorCard/artist artwork, canonical ISRC helper and haptics SAF jobs retained. Atomic SAF helper retained per plan. No APK or runtime performance claim. material_ui remains an existing transitive dependency of retained go_router 18.0.2; no production material_ui imports/delegate remain. Replacing the router to remove that transitive dependency is outside this cleanup and needs a separate architectural decision.
+Next: none in PORT_PLAN; physical-device verification and separately approved remaining review fixes. User authorized continuing through the remaining PORT_PLAN batches without asking again.
+

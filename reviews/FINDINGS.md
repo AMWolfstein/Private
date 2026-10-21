@@ -347,32 +347,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: schema version 17 is hard-coded in three places; bumping `LibrarySchema.version` breaks cover pruning (orphan covers accumulate).
 - Fix: use `LibrarySchema.version` and pass it to Rust, or a test asserting all three agree; ~5 lines.
 
-### DEAD-001 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/ffmpeg_decryption.dart` (169), `FFmpegService.decryptWithDescriptor` (`ffmpeg_service.dart:46-57`), `DownloadDecryptionDescriptor` (`ffmpeg_models.dart`), `FFmpegExecution.command`, `FFmpegOutput.plan`, `FFmpegMetadata.embedMetadata`/`FFmpegService.embedMetadata`, `FFmpegMetadata.embedChunkTagsNative`, `returnTempPath`/`onTempReady` params of ReplayGain writers
-- Scenario: download-era decryption and conversion-era helpers with no production callers.
-- Impact: ~250 lines + `test/ffmpeg_decryption_output_test.dart` (215) and part of `test/maintainability_contracts_test.dart`.
-- Fix: delete; trim tests.
-- Evidence: `grep -rln` over lib/ test/ finds only definitions, self-references and tests.
-
-### DEAD-002 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/ffmpeg_reenrich.dart` (145), `lib/utils/re_enrich_result.dart` (51), `lib/utils/re_enrich_release_policy.dart` (8), `lib/utils/lyrics_metadata_helper.dart` (209: `cleanLyricsForDisplay`, `hasUsableLyricsContent`, `hasEmbeddedLyricsMetadata`, `isInstrumentalLyricsMarker`, `mergePlatformMetadataForTagEmbed`, sidecar writers), `PlatformBridge.writeSafSidecarLrc` (`platform_bridge.dart:830`)
-- Scenario: online re-enrich/lyrics flow removed; nothing calls `applyFfmpegReEnrichResult`; the helpers are reachable only from it or tests.
-- Impact: ~410 lines + tests (`re_enrich_result_test`, `re_enrich_release_policy_test`, helper tests), likely orphan `trackReEnrich*` l10n keys and native `write_external_lrc`.
-- Fix: delete with tests, plus the `writeSafSidecarLrc` Kotlin handler (`MainActivity.kt:1447`); keep `writeTempToSaf` (live callers in replaygain/metadata persistence); check l10n keys in the dead-code sweep.
-- Evidence: `grep -rln` per symbol over lib/.
-
-### DEAD-003 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/cover_art_utils.dart` (`highResCoverUrl`), `lib/widgets/cached_cover_image.dart:136,149` (`urlTransform`), callers `library_tracks_folder_screen.dart:530,566`
-- Scenario: Spotify/Deezer CDN URL rewrite passed as `urlTransform`, which `LocalCoverImage` never reads.
-- Impact: dead remote-artwork code (~30 lines + test).
-- Fix: delete the file/test, the parameter and its two uses.
-
-### DEAD-004 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/downloaded_embedded_cover_resolver.dart:210` (`scheduleRefreshForPath`), :232 (`invalidate`), `_pendingRefresh` branches
-- Scenario: no non-test callers; staleness is handled by the mod-time poll. Class name/comments still say "downloaded"/"online fallback".
-- Impact: ~50 lines dead API; misleading naming.
-- Fix: remove dead methods; fix comments; rename if cheap.
-
 ### DATA-501 [P1] [confidence: medium] [VALIDATED]
 - Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:741-757 (`querySafChildrenOrThrow`), consumed at :930, :1355; Dart `library_database.dart:373`, `library_cleanup.dart:18-27`
 - Scenario: a cloud/network DocumentsProvider returns an empty children cursor with `DocumentsContract.EXTRA_ERROR` → treated as an empty folder, `traversalErrors` stays 0 → full scan: `error_count` 0 → `preserveMissing = false` → `deleteReplacedLibraryScanRows` deletes the subtree (or whole source if the root listing is empty); incremental: missing URIs go to `removedUris` → `deleteByPaths`.
@@ -452,36 +426,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Impact: low today (MediaSession allows the same); risk for future handlers.
 - Fix: same allow-list in `handleIntent`; 3 lines.
 
-### DEAD-201 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/platform_bridge.dart:268` (`prepareRuntimeState`), :277 (`setDownloadDirectory`), :305 (`buildFilename`), :316 (`sanitizeFilename`); `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:917`, :925; `CoreBackend.kt:13-14`
-- Scenario: no `PlatformBridge.` callers; native branches for buildFilename/sanitizeFilename unreachable (not in `nativeBackendMethods`), others have no handler.
-- Fix: delete wrappers, branches and interface members (~40 lines). (`SettingsNotifier.setDownloadDirectory` is a different symbol — see UX-003.)
-
-### DEAD-202 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/platform_bridge.dart:415, 429, 494, 510, 528, 563, 688, 776, 792, 808` (`resolveSafFile`, `inspectSafFiles`, three `create*SafFile*` variants, `shareMultipleContentUris`, `checkHiResAuthenticity`, `ensureAC4Config`, `writeAC4Metadata`, `rewriteSplitArtistTags`) and their MainActivity handlers
-- Scenario: download/conversion-era wrappers with zero callers; native handlers unreachable.
-- Fix: remove wrappers, handlers and CoreBackend members in one batch; keep `writeM4AFreeformTags` and `safCreateFromPath`.
-
-### DEAD-203 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/platform_bridge.dart:574, 591, 607, 658` (`getLyricsLRC`, `getLyricsLRCWithSource`, `embedLyricsToFile`, `fetchAndSaveLyrics`); `android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt:34-54`, :390-406
-- Scenario: Embed lyrics and fetch-and-save were removed (AGENTS.md) but remain wired end to end; no `lib/` callers.
-- Fix: delete wrappers, Kotlin branches and plumbing; update tests.
-
-### DEAD-206 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/platform_bridge.dart:223, 333-339`; `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:965-970`; `android/app/src/main/kotlin/com/zarz/spotiflac/SetupFolderPickerStore.kt`
-- Scenario: setup folder step removed; native still persists `for_setup` picks and emits `setupFolderSelectionChanged`; nothing reads it.
-- Fix: remove Dart members, handlers, `for_setup` branch and the store (~60 lines).
-
-### DEAD-207 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/platform_bridge.dart:1167-1230` (iOS bookmark/directory methods), `lib/widgets/ios_library_folder_sheet.dart`, `lib/providers/local_library_provider.dart:636-644, 917, 1586-1608`, `lib/screens/settings/library_settings_page.dart:150`
-- Scenario: Android-only project (no `ios/`); methods have no handler.
-- Fix: remove iOS methods, sheet and branches (~150 lines); include `migrateIosContainerPaths`, `lib/utils/ios_container_paths.dart` in the dead-code sweep.
-
-### DEAD-208 [P3] [confidence: high] [VALIDATED]
-- Location: `android/app/proguard-rules.pro:48-53`
-- Scenario: keep rules for nonexistent `DownloadService` and `DownloadQueueWidgetProvider`.
-- Fix: delete both blocks; update the stale comment in `NativeReplayGainPolicy.kt:4` (see KT-001).
-
 ### RUST-101 [P2] [confidence: high] [VALIDATED]
 - Location: `rust_backend/crates/core/src/tags/id3.rs:404-407` (`decode`), :489 (`v1`), :296 (`picture_frame`); `rust_backend/crates/core/src/text.rs:3` (`utf8`)
 - Scenario: ID3v1/v2.2/v2.3 text in ISO-8859-1 (encoding 0, e.g. "Beyoncé" with 0xE9) → decoded as lossy UTF-8 → "Beyonc\u{FFFD}"; UTF-16 surrogate pairs (emoji) become two U+FFFD.
@@ -497,13 +441,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Impact: loss of untouched artwork/metadata and gapless info in MP3s with slightly malformed tags.
 - Fix: copy remaining raw bytes or return Err instead of truncating; drop only COMM with empty descriptor and same language; pass through encrypted frames raw; ~30 lines + tests. Related: BUG-104 (Dart USLT writer has the same `break` pattern).
 - Evidence: `break` at :298-300.
-
-### RUST-201 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/media/hires/mod.rs:567-568` (`Source::analyze_window`, FLAC)
-- Scenario: FLAC whose STREAMINFO declares more channels than frames carry → `block.channel(index)` slices out of range in claxon → panic inside an FFI call (Audio Quality Analysis).
-- Root cause: claxon does not check frame vs STREAMINFO channels; guard exists in `replacement.rs:93-95` but not here.
-- Impact: panic on untrusted file data (surfaced as a generic error if uniffi catches it; unverified).
-- Fix: return Err when `block.channels()` differs; ~3 lines + test.
 
 ### RUST-202 [P2] [confidence: high] [VALIDATED]
 - Location: `rust_backend/crates/core/src/cue.rs:117-122` (`parse`, FILE), `CueTrack` :25-35; consumers `rust_backend/crates/local/src/backend/library.rs:232,284`, `scan.rs:446`
@@ -623,26 +560,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: a library row whose path contains `\n`/`\r` makes every `library_snapshot` fail → incremental scans of that source never succeed (Dart fallback not traced).
 - Fix: skip/flag such rows or reject them at import; ~3 lines.
 
-### DEAD-301 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/isrc/**` (931 lines), `rust_backend/crates/local/src/files/index.rs` (~110), `pub mod isrc` in `core/src/lib.rs`
-- Scenario: ISRC duplicate index (`IndexCache`, `IndexFiles`, `NativeFiles`, `read_isrc`) has no consumer outside its own tests.
-- Fix: delete (~1,050 lines).
-
-### DEAD-302 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/lyrics/models.rs`, `lyrics/matching.rs`, `lyrics/json.rs`, parts of `lyrics.rs` and `lyrics/lrc.rs`, `core/src/metadata.rs`, `core/src/matching.rs` (`normalize`, `compare_*`)
-- Scenario: online lyrics provider schemas (Netease/Apple/QQ/Kugou/Genius/Spotify/YouTube) and matching with zero callers.
-- Fix: delete (~1,000 lines); keep `lowercase`/`uppercase`, `lyrics::file::{extract,sidecar}`, `lrc::has_usable_content`; check internal dependencies first.
-
-### DEAD-303 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/filename/**` (565), `rust_backend/crates/core/src/filename.rs` (99), `rust_backend/crates/mobile/src/filename.rs`, `rust_backend/crates/mobile/src/lib.rs:25-27`, `SelectedCoreBackend.kt:411-414`
-- Scenario: Rust side of DEAD-201 (download filename templating).
-- Fix: delete with DEAD-201 (~700 lines); regenerate uniffi bindings.
-
-### DEAD-304 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/local/src/backend/lyrics.rs` (~190), `rust_backend/crates/mobile/src/lyrics.rs` (~75)
-- Scenario: Rust side of DEAD-203 (embed/fetch lyrics); only integration test and mocks reach it.
-- Fix: delete with DEAD-203; update `integration_test/lyrics_file_access_test.dart`.
-
 ### API-201 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/providers/settings_provider.dart:224-249` (`restoreFromBackup`), `lib/models/settings.g.dart:47,65`, `lib/app.dart:24`
 - Scenario: restoring a backup with `isFirstLaunch:false` and no `hasCompletedTutorial` (older version or mid-setup device) → flag falls back to false → router rebuilds to `/setup`; a backup with `isFirstLaunch:true` forces setup on a configured device. Foreign `localLibraryPath`/bookmark is restored and fed to `_migrateLegacySource`.
@@ -726,41 +643,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: DB error swallowed by `catch (_) {}` → "album information unavailable", nothing logged.
 - Fix: log via `AppLogger`; ~3 lines.
 
-### DEAD-401 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/models/settings.dart` (`albumFolderStructure`, `hasSearchedBefore`, `embeddedCoverMaxDimension`), `lib/providers/settings_provider.dart:89-95, 241-243, 275-277, 317-322, 459-464, 477-480`
-- Scenario: download-era settings with no readers outside settings files; `artistTagMode` has no setter.
-- Fix: delete (~40 lines); old JSON still loads.
-
-### DEAD-402 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/models/track.dart:236-262` (`ServiceAvailability`), `Track.deezerId`/`spotifyId` fallbacks :107-111
-- Scenario: provider-era model (tidal/qobuz/amazon/deezer) with no references.
-- Fix: delete and regenerate; check `deezerId` users first.
-
-### DEAD-403 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/models/download_history.dart:257` (`DownloadHistoryState`), `DownloadHistoryItem.storageMode/downloadTreeUri`
-- Scenario: `DownloadHistoryState` unused; the rest ties into history DB columns and backups.
-- Fix: delete `DownloadHistoryState` now; history schema cleanup is a separate decision (see API-001).
-
-### DEAD-501 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/provider_resource_ids.dart`
-- Scenario: provider-era helpers referenced only by their test.
-- Fix: delete file and test; then check `lib/constants/music_services.dart`.
-
-### DEAD-502 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/ttl_cache.dart`, `chunked_list.dart`, `periodic_async_task.dart`, `cache_byte_budget.dart`
-- Scenario: not imported in `lib/`; tests only (ChunkedList: nowhere).
-- Fix: delete with tests; check `native_cache_maintenance.dart` afterwards.
-
-### DEAD-503 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/audio_format_utils.dart` (quality-variant filename helpers, `resolveDisplayQuality`, `finalizedAudioFileName`, `estimateAverageBitrateKbps`, etc.), `lib/utils/string_utils.dart` (`formatMegabytes`, `shortMonthNames`, `isPlaceholderQualityLabel`), `lib/utils/artist_utils.dart` (`primaryArtistName`)
-- Scenario: download/quality-variant naming logic with zero `lib/` callers.
-- Fix: delete the group; keep `buildLibraryAudioQualityLabel`.
-
-### DEAD-504 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/editorial_notes.dart:15` (`albumDescriptionFromMetadata`)
-- Scenario: referenced only by `test/album_description_test.dart`.
-- Fix: delete with its test.
-
 ### UI-101 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/widgets/mini_player.dart:47,56-58,74-77` (`_MiniPlayerState._dismissedItemId`)
 - Scenario: swipe-dismiss the mini player on track A → play A again → pause → `mediaItem.id == _dismissedItemId && !isPlaying` → bar disappears while A is current.
@@ -798,11 +680,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `lib/screens/local_artist_screen.dart:547-548` (`rowHeight`)
 - Scenario: at ~2.0× font scale the fixed row height (92px) is smaller than the ListTile content (~104px) → Popular rows clip/overflow. Arithmetic only.
 - Fix: derive height from scaled title/subtitle line heights or use a min-height row; ~3 lines.
-
-### UX-104 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/home_search_logic.dart` (Spotify URL/URI detection), `lib/screens/track_history_snapshot.dart` + `historyRequest` (`library_tracks_folder_data.dart:13`), `lib/widgets/track_list_tile.dart`, `lib/widgets/track_collection_quick_actions.dart`, `lib/widgets/track_collection_action_policy.dart` (`downloadAnotherQuality`), `loveAllTracks` (`track_detail_actions.dart:80`)
-- Scenario: no production callers; tests only. Provider/download-era leftovers.
-- Fix: delete with their tests (~400 lines) via the graphify feature-removal workflow. Fold into the final dead-code sweep.
 
 ### UX-105 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/local_album_screen.dart:402`, `lib/widgets/track_detail_actions.dart:54`
@@ -849,51 +726,16 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: `ref.watch(libraryCollectionsProvider)` (no `==`) rebuilds the whole screen on any collection change; only the cover inputs are needed.
 - Fix: `select` the cover inputs.
 
-### DEAD-601 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/material_player_layout.dart`, `lib/widgets/player_queue_sheet.dart`, `lib/widgets/expressive_seek_track.dart`, and `!isMornye` branches in `now_playing_screen.dart`, `player_playback_controls.dart`, `mini_player.dart`, `player_details_sheet.dart`, `player_lyrics.dart`
-- Scenario: `MornyeThemeWrapper` always builds Mornye (`mornye_theme_wrapper.dart:19,27`), so these are reachable only from dead `!isMornye` paths.
-- Fix: delete (never restore Material Expressive); update `test/expressive_seek_track_test.dart`, `test/now_playing_lyrics_transition_test.dart`. `PlayerPlaybackModeButton` goes with the queue sheet. Final dead-code sweep.
-
-### DEAD-602 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/smoothed_progress.dart`
-- Scenario: download-era progress smoother; zero references in lib/ and test/.
-- Fix: delete.
-
-### DEAD-603 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/view_queue_snackbar_action.dart`
-- Scenario: no lib/ callers; only `test/app_snack_bar_test.dart`, `test/shell_navigation_service_test.dart`.
-- Fix: delete and trim the tests.
-
 ### DEAD-604 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/widgets/player_artwork.dart:42-54` (`http` branch), `lib/providers/music_player_provider.dart:258` (`playableFromLocal`)
 - Scenario: `http*` covers still render via `CachedCoverImage`, and `playableFromLocal` passes them through → legacy rows could fetch remote artwork (contradicts "no remote artwork loading").
 - Fix: treat `http` as placeholder in both places; ~4 lines.
-
-### DEAD-611 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/queue_tab.dart:980-988`, `queue_tab_filter_widgets.dart:64-69,261-309`, `queue_tab_collection_items.dart:199-213`, `queue_tab_widgets.dart` (`_FilterChip`)
-- Scenario: in Mornye, overview `QueueTab` always returns `MornyeLibraryScreen` → filter-mode PageView, `_FilterChip`, track grid/pinch resize and `collectionEntries` rows are dead; Songs rows wrap `LibraryPlaylistDragSource` with no `DragTarget` on screen (inert long-press drag).
-- Fix: remove after checking widget tests that build a non-Mornye overview.
 
 ### PERF-301 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/theme/cover_palette.dart:366-398` (`didUpdateWidget`/`_maybeResolve`), :60-76 (`cacheKeyFor`)
 - Scenario: every parent rebuild of a `CoverPaletteBuilder` awaits `File(source).stat()` before the cache lookup, even for an unchanged source.
 - Fix: if a host rebuilds >1/s (measure in DevTools on album/now-playing), rate-limit the stat per source or invalidate from the edit path; ~10 lines.
 - Cross-refs: callers by grep only. Guards checked: `_pending` dedups in-flight only.
-
-### DEAD-631 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/animation_utils.dart` (`TrackListSkeleton`, `ArtistHeaderActionsSkeleton`, `ArtistScreenSkeleton`, `HomeSearchSkeleton`, `SkeletonCrossfade`, `DownloadSuccessOverlay`)
-- Scenario: no lib/ caller outside the file (~600 of 1197 lines); download/home-search leftovers.
-- Fix: delete them and their private-only helpers; keep `StaggeredListItem`, `AlbumTrackListSkeleton`, `AnimatedSelectionCheckbox`, `AnimatedBadge`, `slidePageRoute`, `ShimmerLoading`, `SkeletonBox`; trim tests.
-
-### DEAD-632 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/cached_cover_image.dart:302-378` (`resolveMetadataArtworkSource`, `metadataBackdropCacheExtent`, `precacheMetadataBackdrop`, `precacheCoverImage`)
-- Scenario: helpers of the removed details route, incl. http/`remoteCoverUrl` branches; tests only.
-- Fix: delete with `test/cached_cover_decode_test.dart` / `test/downloaded_embedded_cover_resolver_test.dart` cases; keep `cachedCoverImageProvider`.
-
-### DEAD-633 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/theme/material_expressive.dart:8` (`materialExpressiveEnabled`, `MaterialExpressiveScope`) and branches in `expressive_button`, `expressive_icon_button`, `expressive_navigation_bar`, `app_switch`, `app_loading_indicator`, `app_content_card`, `app_choice_chip`, `settings_group`; `ExpressiveNavigationBar` only at `main_shell.dart:773` (non-Mornye arm)
-- Scenario: `materialExpressiveEnabled` is `!isMornye && …` and Mornye is always installed → expressive branches never run; `material_3_expressive`/`material_ui` packages kept for dead code.
-- Fix: collapse callers to the non-expressive branch, delete the scope/helper/nav bar, then drop the packages if unused (cleanup, not restoration). Pair with DEAD-601.
 
 ### UX-201 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/screens/settings/cache_management_page.dart:40-60` (`_refreshOverview`), :379 (`build`)
@@ -921,16 +763,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `lib/screens/setup_screen.dart:657-709` (`_buildLanguageList`)
 - Scenario: language rows expose selection only by a check icon; no `Semantics(selected:)` → TalkBack does not announce the active language.
 - Fix: `Semantics(selected: isSelected, button: true)`; ~3 lines.
-
-### DEAD-621 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/donate_icons.dart`, `priority_settings_scaffold.dart`, `reorderable_priority_item.dart`, `discard_changes_dialog.dart`
-- Scenario: no use in lib/ or test/ outside the files (~500 lines); download/provider-priority/donate leftovers.
-- Fix: delete, plus arb keys that become unused (e.g. `dialogDiscardChanges`).
-
-### DEAD-622 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Mornye destinations; non-Mornye `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isMornye) const SettingsTab()` :542)
-- Scenario: `isMornye` is always true in production → these branches never run.
-- Fix: collapse the shell to the Mornye path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
 
 ### SEC-302 [P3] [confidence: high] [VALIDATED]
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
@@ -963,25 +795,10 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: temp dir with album.cue + album.flac and two virtual rows; delete one row; assert both files remain and only that row is removed (~40 lines). Write it with the DATA-001 fix.
 - Guards checked: none found.
 
-### TEST-201 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `test/library_browse_sqlite_paging_test.dart:25-33`, `test/support/sqlite_process_database.dart:37-52,160-168`, `test/support/library_paging_fixture.dart:84-91`
-- Scenario: probable cause of the known flake — one monolithic test does ~8000 sequential pipe round-trips to a `python3` subprocess to build a 4000-row fixture per setUp, then 7 paging scenarios, all under the default 30 s timeout; parallel/loaded runs can time out. `close()` awaits the subprocess exit with no bound.
-- Fix: explicit timeout, build the fixture in `setUpAll`, split scenarios, optionally one `executemany` request; ~10–20 lines. Confirm by looping the file 10× under `--concurrency=8` and checking for 30 s timeouts.
-
-### TEST-202 [P3] [confidence: high] [VALIDATED]
-- Location: `test/library_collections_hydration_test.dart:106,164,181,211,227,265,292`, `test/library_collections_mutation_test.dart:629,702`, `test/music_player_automix_test.dart:32`
-- Scenario: system temp directories created and never deleted (hydration fixtures reach 20000-row ndjson).
-- Fix: `addTearDown(() => dir.delete(recursive: true))` right after each creation; ~10 lines.
-
 ### TEST-203 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `test/library_collections_hydration_test.dart:335-348,455-464` (`expect(ticks, greaterThan(1))`), `test/support/library_collections_benchmark.dart:71`, integration_test native heartbeats
 - Scenario: responsiveness asserted by counting real 1 ms `Timer.periodic` ticks; a fast parse (smaller fixture at :333) can yield 0–1 ticks.
 - Fix: order-based check (timer/microtask scheduled mid-work ran before completion) instead of a count.
-
-### TEST-204 [P3] [confidence: high] [VALIDATED]
-- Location: `test/file_stat_boundary_test.dart:64-84`
-- Scenario: as uid 0, `chmod 000` does not block traversal → known spurious failure in root containers; skip covers only Windows.
-- Fix: condition-based skip when `id -u` is `0`; ~4 lines.
 
 ### TEST-205 [P3] [confidence: high] [VALIDATED]
 - Location: repo-wide (~55 `expect(x.length, N)`, ~8 `expect(x.isEmpty, isTrue)`, e.g. `library_collections_database_read_test.dart:151`, `local_artist_popular_test.dart:71-72`)
@@ -992,11 +809,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `rust_backend/crates/mobile/src/native_backup/**/tests.rs`, `test/backup_collections_json_test.dart`
 - Scenario: "old JSON imports ignore Wishlist" has no fixture in Rust or Dart (only the DB schema v3 upgrade is tested in `collections_upgrade_test.dart`).
 - Fix: a legacy backup with a `wishlist` section restores and keeps Loved/playlists/favorite artists; ~40 lines.
-
-### TEST-304 [P3] [confidence: medium] [VALIDATED]
-- Location: `scripts/` (no CI, no `.github`)
-- Scenario: nothing runs the 63 Kotlin unit tests (`android/app/src/test`, 12 files) or the device-only androidTest/integration_test suites; only `check_rust_backend.sh` exists.
-- Fix: `scripts/check_android.sh` running `./gradlew :app:testDebugUnitTest`, referenced from AGENTS.md; ~5 lines.
 
 ### TEST-101 [P3] [confidence: high] [VALIDATED]
 - Location: test trim map for the dead-code sweep (one entry instead of per-DEAD edits)
@@ -1027,26 +839,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
 - Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
 
-### DEAD-701 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/l10n/arb/app_*.arb` (20 files)
-- Scenario: 54 of 769 keys are unused (28 with zero references) or used only by code already marked dead:
-  - Zero references:
-    - artist tag mode (9)
-    - embedded cover size (3)
-    - output-folder and Files/Metadata pages (9)
-    - external player (5)
-    - `setupSkip` and `libraryShowMore`
-  - Used only by dead code:
-    - re-enrich (8)
-    - iOS sheet (3)
-    - quick actions (6)
-    - discard dialog (3)
-    - view-queue snackbar (2)
-    - old queue sheet (3)
-    - `libraryInLibrary`
-  - 10 more SAF-repair keys go with API-203: `downloadFolderAccessLost*`, `safMigration*`, `storageAutomaticFolder`, plus `setupSelectFolder` and `updateLater` if they are not used elsewhere.
-- Fix: delete the keys and their `@key` metadata in every arb, then run `flutter gen-l10n`. Re-run the usage scan after the other DEAD batches: build the key list from `app_en.arb`, grep each `\bkey\b` over `lib/` excluding `lib/l10n`, and subtract files that are already dead.
-
 ### DEAD-702 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/models/settings.dart:15-16,82` (`artistTagMode`), :76,121 (`lastSeenVersion`), `lib/providers/settings_provider.dart:180`
 - Scenario:
@@ -1054,23 +846,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - `lastSeenVersion` is written by migration 12 and never read.
   - The download-folder fields, setters, SAF repair dialog and migration prompt found in the same sweep are already covered by API-203 and UX-003. They were not re-filed here.
 - Fix: keep the JSON parse so old imports still load. Stop writing `lastSeenVersion`. Pin the `artistTagMode` callers to joined and drop the plumbing (~40 lines).
-
-### DEAD-703 [P3] [confidence: high] [VALIDATED]
-- Location: `pubspec.yaml:123-126` (`Google Sans Flex` → `assets/fonts/GoogleSansFlex.ttf`, 277 KB)
-- Scenario: the font of the removed Material Expressive theme is still bundled. Mornye uses `Inter`, and only the test themes name this family.
-- Fix: remove the pubspec font block and the TTF, and update `test/support/material_test_theme.dart`.
-- Repo-only cleanup (not bundled into the app): `assets/readme/*` (1.7 MB, unreferenced).
-
-### DEAD-704 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/platform_bridge.dart:618` (`copyLocalCoverToFile`), :705 (`readDisplayAudioMetadata`)
-- Scenario: no lib/ callers. They are tested only in `offline_artwork_test.dart:44,50` and `platform_bridge_metadata_test.dart:86,125`. Their native handlers stay live through other callers.
-- Channel cross-check: every Kotlin handler has a Dart caller name. The Dart names with no handler (`prepareRuntimeState`, `setDownloadDirectory`, iOS bookmark methods) are all inside DEAD-201/207 methods, which would throw if called.
-- Fix: delete both methods and their tests.
-
-### DEAD-706 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/file_access_check.dart`, `lib/utils/saf_display_path.dart` (no importers). Transitively dead: `lib/constants/music_services.dart` (via DEAD-501), `lib/widgets/in_library_badge.dart` and `lib/utils/local_playback.dart` (via UX-104).
-- Scenario: an import graph over all of `lib/` shows no live inbound edge to any of them (~290 lines). Every other zero-importer file is already in FINDINGS.
-- Fix: delete them with their tests. Trim, rather than delete, `file_stat_boundary_test.dart` (see TEST-204) and `track_metadata_badges_line_test.dart`.
 
 ### PERF-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/services/library_schema.dart:231-244` (`_createNormalizedIndexes`), `lib/services/library_queue_store.dart:242,503-506` (`artistPage`, `_appendQueueLocalFilters`)
@@ -1157,22 +932,300 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
 - Fix: persist the cue→audio URI mapping, or resolve it from the cached listing; ~20 lines.
 
-### DEAD-801 [P3] [confidence: high] [VALIDATED]
+### DEAD-806 [P3] [confidence: medium] [NEEDS VERIFICATION]
+- Location: `lib/models/settings.dart:10,83,128,172` (`downloadDirectoryBookmark`), `lib/utils/file_access.dart:22-31` (`shouldValidateIosOutputDir`, `validateIosPath`), `lib/utils/ios_container_paths.dart` (used by `library_database.dart:59` onOpen, `library_schema.dart:408`, `music_player_service.dart:39`)
+- Scenario: these are iOS-only. The bookmark field is read only by the iOS validator. The container-path rebase still runs on every library DB open, but its `/var/mobile/Containers` pattern can never match on Android.
+- Fix: fold the field into the API-203 removal. Decide separately whether to drop the onOpen rebase hook (it is cheap, but it does run on every open).
+
+<!-- Mornye parity pass (2026-10-20): upstream v5.1.1/latest Mornye path of the online
+artist/album/playlist screens compared with the local screens. Upstream refs are
+`spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
+
+<!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Mornye Home (explore feed) compared
+with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
+
+<!-- Now Playing parity pass (2026-10-20): ours vs upstream v5.1.1/latest Mornye player.
+Ours equals v5.1.1 apart from intentional deltas (Immersive view, no motion artwork,
+external player or download lookups). Upstream-latest items are in `UPSTREAM.md`. -->
+
+## Resolved
+
+### DEAD-001 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/ffmpeg_decryption.dart` (169), `FFmpegService.decryptWithDescriptor` (`ffmpeg_service.dart:46-57`), `DownloadDecryptionDescriptor` (`ffmpeg_models.dart`), `FFmpegExecution.command`, `FFmpegOutput.plan`, `FFmpegMetadata.embedMetadata`/`FFmpegService.embedMetadata`, `FFmpegMetadata.embedChunkTagsNative`, `returnTempPath`/`onTempReady` params of ReplayGain writers
+- Scenario: download-era decryption and conversion-era helpers with no production callers.
+- Impact: ~250 lines + `test/ffmpeg_decryption_output_test.dart` (215) and part of `test/maintainability_contracts_test.dart`.
+- Fix: delete; trim tests.
+- Evidence: `grep -rln` over lib/ test/ finds only definitions, self-references and tests.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-002 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/utils/ffmpeg_reenrich.dart` (145), `lib/utils/re_enrich_result.dart` (51), `lib/utils/re_enrich_release_policy.dart` (8), `lib/utils/lyrics_metadata_helper.dart` (209: `cleanLyricsForDisplay`, `hasUsableLyricsContent`, `hasEmbeddedLyricsMetadata`, `isInstrumentalLyricsMarker`, `mergePlatformMetadataForTagEmbed`, sidecar writers), `PlatformBridge.writeSafSidecarLrc` (`platform_bridge.dart:830`)
+- Scenario: online re-enrich/lyrics flow removed; nothing calls `applyFfmpegReEnrichResult`; the helpers are reachable only from it or tests.
+- Impact: ~410 lines + tests (`re_enrich_result_test`, `re_enrich_release_policy_test`, helper tests), likely orphan `trackReEnrich*` l10n keys and native `write_external_lrc`.
+- Fix: delete with tests, plus the `writeSafSidecarLrc` Kotlin handler (`MainActivity.kt:1447`); keep `writeTempToSaf` (live callers in replaygain/metadata persistence); check l10n keys in the dead-code sweep.
+- Evidence: `grep -rln` per symbol over lib/.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-003 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/utils/cover_art_utils.dart` (`highResCoverUrl`), `lib/widgets/cached_cover_image.dart:136,149` (`urlTransform`), callers `library_tracks_folder_screen.dart:530,566`
+- Scenario: Spotify/Deezer CDN URL rewrite passed as `urlTransform`, which `LocalCoverImage` never reads.
+- Impact: dead remote-artwork code (~30 lines + test).
+- Fix: delete the file/test, the parameter and its two uses.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-004 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/downloaded_embedded_cover_resolver.dart:210` (`scheduleRefreshForPath`), :232 (`invalidate`), `_pendingRefresh` branches
+- Scenario: no non-test callers; staleness is handled by the mod-time poll. Class name/comments still say "downloaded"/"online fallback".
+- Impact: ~50 lines dead API; misleading naming.
+- Fix: remove dead methods; fix comments; rename if cheap.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-201 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/platform_bridge.dart:268` (`prepareRuntimeState`), :277 (`setDownloadDirectory`), :305 (`buildFilename`), :316 (`sanitizeFilename`); `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:917`, :925; `CoreBackend.kt:13-14`
+- Scenario: no `PlatformBridge.` callers; native branches for buildFilename/sanitizeFilename unreachable (not in `nativeBackendMethods`), others have no handler.
+- Fix: delete wrappers, branches and interface members (~40 lines). (`SettingsNotifier.setDownloadDirectory` is a different symbol — see UX-003.)
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-202 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/platform_bridge.dart:415, 429, 494, 510, 528, 563, 688, 776, 792, 808` (`resolveSafFile`, `inspectSafFiles`, three `create*SafFile*` variants, `shareMultipleContentUris`, `checkHiResAuthenticity`, `ensureAC4Config`, `writeAC4Metadata`, `rewriteSplitArtistTags`) and their MainActivity handlers
+- Scenario: download/conversion-era wrappers with zero callers; native handlers unreachable.
+- Fix: remove wrappers, handlers and CoreBackend members in one batch; keep `writeM4AFreeformTags` and `safCreateFromPath`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-203 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/platform_bridge.dart:574, 591, 607, 658` (`getLyricsLRC`, `getLyricsLRCWithSource`, `embedLyricsToFile`, `fetchAndSaveLyrics`); `android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt:34-54`, :390-406
+- Scenario: Embed lyrics and fetch-and-save were removed (AGENTS.md) but remain wired end to end; no `lib/` callers.
+- Fix: delete wrappers, Kotlin branches and plumbing; update tests.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-206 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/platform_bridge.dart:223, 333-339`; `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:965-970`; `android/app/src/main/kotlin/com/zarz/spotiflac/SetupFolderPickerStore.kt`
+- Scenario: setup folder step removed; native still persists `for_setup` picks and emits `setupFolderSelectionChanged`; nothing reads it.
+- Fix: remove Dart members, handlers, `for_setup` branch and the store (~60 lines).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-207 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/platform_bridge.dart:1167-1230` (iOS bookmark/directory methods), `lib/widgets/ios_library_folder_sheet.dart`, `lib/providers/local_library_provider.dart:636-644, 917, 1586-1608`, `lib/screens/settings/library_settings_page.dart:150`
+- Scenario: Android-only project (no `ios/`); methods have no handler.
+- Fix: remove iOS methods, sheet and branches (~150 lines); include `migrateIosContainerPaths`, `lib/utils/ios_container_paths.dart` in the dead-code sweep.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-208 [P3] [confidence: high] [RESOLVED]
+- Location: `android/app/proguard-rules.pro:48-53`
+- Scenario: keep rules for nonexistent `DownloadService` and `DownloadQueueWidgetProvider`.
+- Fix: delete both blocks; update the stale comment in `NativeReplayGainPolicy.kt:4` (see KT-001).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Kept independently owned haptic/decoder SAF jobs. Removed orphan resource-pool types only.
+
+### DEAD-301 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/isrc/**` (931 lines), `rust_backend/crates/local/src/files/index.rs` (~110), `pub mod isrc` in `core/src/lib.rs`
+- Scenario: ISRC duplicate index (`IndexCache`, `IndexFiles`, `NativeFiles`, `read_isrc`) has no consumer outside its own tests.
+- Fix: delete (~1,050 lines).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-302 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/lyrics/models.rs`, `lyrics/matching.rs`, `lyrics/json.rs`, parts of `lyrics.rs` and `lyrics/lrc.rs`, `core/src/metadata.rs`, `core/src/matching.rs` (`normalize`, `compare_*`)
+- Scenario: online lyrics provider schemas (Netease/Apple/QQ/Kugou/Genius/Spotify/YouTube) and matching with zero callers.
+- Fix: delete (~1,000 lines); keep `lowercase`/`uppercase`, `lyrics::file::{extract,sidecar}`, `lrc::has_usable_content`; check internal dependencies first.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-303 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/filename/**` (565), `rust_backend/crates/core/src/filename.rs` (99), `rust_backend/crates/mobile/src/filename.rs`, `rust_backend/crates/mobile/src/lib.rs:25-27`, `SelectedCoreBackend.kt:411-414`
+- Scenario: Rust side of DEAD-201 (download filename templating).
+- Fix: delete with DEAD-201 (~700 lines); regenerate uniffi bindings.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-304 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/local/src/backend/lyrics.rs` (~190), `rust_backend/crates/mobile/src/lyrics.rs` (~75)
+- Scenario: Rust side of DEAD-203 (embed/fetch lyrics); only integration test and mocks reach it.
+- Fix: delete with DEAD-203; update `integration_test/lyrics_file_access_test.dart`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-401 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/models/settings.dart` (`albumFolderStructure`, `hasSearchedBefore`, `embeddedCoverMaxDimension`), `lib/providers/settings_provider.dart:89-95, 241-243, 275-277, 317-322, 459-464, 477-480`
+- Scenario: download-era settings with no readers outside settings files; `artistTagMode` has no setter.
+- Fix: delete (~40 lines); old JSON still loads.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-402 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/models/track.dart:236-262` (`ServiceAvailability`), `Track.deezerId`/`spotifyId` fallbacks :107-111
+- Scenario: provider-era model (tidal/qobuz/amazon/deezer) with no references.
+- Fix: delete and regenerate; check `deezerId` users first.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-403 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/models/download_history.dart:257` (`DownloadHistoryState`), `DownloadHistoryItem.storageMode/downloadTreeUri`
+- Scenario: `DownloadHistoryState` unused; the rest ties into history DB columns and backups.
+- Fix: delete `DownloadHistoryState` now; history schema cleanup is a separate decision (see API-001).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-501 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/utils/provider_resource_ids.dart`
+- Scenario: provider-era helpers referenced only by their test.
+- Fix: delete file and test; then check `lib/constants/music_services.dart`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-502 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/utils/ttl_cache.dart`, `chunked_list.dart`, `periodic_async_task.dart`, `cache_byte_budget.dart`
+- Scenario: not imported in `lib/`; tests only (ChunkedList: nowhere).
+- Fix: delete with tests; check `native_cache_maintenance.dart` afterwards.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-503 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/utils/audio_format_utils.dart` (quality-variant filename helpers, `resolveDisplayQuality`, `finalizedAudioFileName`, `estimateAverageBitrateKbps`, etc.), `lib/utils/string_utils.dart` (`formatMegabytes`, `shortMonthNames`, `isPlaceholderQualityLabel`), `lib/utils/artist_utils.dart` (`primaryArtistName`)
+- Scenario: download/quality-variant naming logic with zero `lib/` callers.
+- Fix: delete the group; keep `buildLibraryAudioQualityLabel`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-504 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/utils/editorial_notes.dart:15` (`albumDescriptionFromMetadata`)
+- Scenario: referenced only by `test/album_description_test.dart`.
+- Fix: delete with its test.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### UX-104 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/screens/home_search_logic.dart` (Spotify URL/URI detection), `lib/screens/track_history_snapshot.dart` + `historyRequest` (`library_tracks_folder_data.dart:13`), `lib/widgets/track_list_tile.dart`, `lib/widgets/track_collection_quick_actions.dart`, `lib/widgets/track_collection_action_policy.dart` (`downloadAnotherQuality`), `loveAllTracks` (`track_detail_actions.dart:80`)
+- Scenario: no production callers; tests only. Provider/download-era leftovers.
+- Fix: delete with their tests (~400 lines) via the graphify feature-removal workflow. Fold into the final dead-code sweep.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-601 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/material_player_layout.dart`, `lib/widgets/player_queue_sheet.dart`, `lib/widgets/expressive_seek_track.dart`, and `!isMornye` branches in `now_playing_screen.dart`, `player_playback_controls.dart`, `mini_player.dart`, `player_details_sheet.dart`, `player_lyrics.dart`
+- Scenario: `MornyeThemeWrapper` always builds Mornye (`mornye_theme_wrapper.dart:19,27`), so these are reachable only from dead `!isMornye` paths.
+- Fix: delete (never restore Material Expressive); update `test/expressive_seek_track_test.dart`, `test/now_playing_lyrics_transition_test.dart`. `PlayerPlaybackModeButton` goes with the queue sheet. Final dead-code sweep.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-602 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/smoothed_progress.dart`
+- Scenario: download-era progress smoother; zero references in lib/ and test/.
+- Fix: delete.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-603 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/view_queue_snackbar_action.dart`
+- Scenario: no lib/ callers; only `test/app_snack_bar_test.dart`, `test/shell_navigation_service_test.dart`.
+- Fix: delete and trim the tests.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-611 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/screens/queue_tab.dart:980-988`, `queue_tab_filter_widgets.dart:64-69,261-309`, `queue_tab_collection_items.dart:199-213`, `queue_tab_widgets.dart` (`_FilterChip`)
+- Scenario: in Mornye, overview `QueueTab` always returns `MornyeLibraryScreen` → filter-mode PageView, `_FilterChip`, track grid/pinch resize and `collectionEntries` rows are dead; Songs rows wrap `LibraryPlaylistDragSource` with no `DragTarget` on screen (inert long-press drag).
+- Fix: remove after checking widget tests that build a non-Mornye overview.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-631 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/animation_utils.dart` (`TrackListSkeleton`, `ArtistHeaderActionsSkeleton`, `ArtistScreenSkeleton`, `HomeSearchSkeleton`, `SkeletonCrossfade`, `DownloadSuccessOverlay`)
+- Scenario: no lib/ caller outside the file (~600 of 1197 lines); download/home-search leftovers.
+- Fix: delete them and their private-only helpers; keep `StaggeredListItem`, `AlbumTrackListSkeleton`, `AnimatedSelectionCheckbox`, `AnimatedBadge`, `slidePageRoute`, `ShimmerLoading`, `SkeletonBox`; trim tests.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. TrackListSkeleton remains: new artist/library loading screens use it. Only orphan skeletons/overlays retired.
+
+### DEAD-632 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/cached_cover_image.dart:302-378` (`resolveMetadataArtworkSource`, `metadataBackdropCacheExtent`, `precacheMetadataBackdrop`, `precacheCoverImage`)
+- Scenario: helpers of the removed details route, incl. http/`remoteCoverUrl` branches; tests only.
+- Fix: delete with `test/cached_cover_decode_test.dart` / `test/downloaded_embedded_cover_resolver_test.dart` cases; keep `cachedCoverImageProvider`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-633 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/theme/material_expressive.dart:8` (`materialExpressiveEnabled`, `MaterialExpressiveScope`) and branches in `expressive_button`, `expressive_icon_button`, `expressive_navigation_bar`, `app_switch`, `app_loading_indicator`, `app_content_card`, `app_choice_chip`, `settings_group`; `ExpressiveNavigationBar` only at `main_shell.dart:773` (non-Mornye arm)
+- Scenario: `materialExpressiveEnabled` is `!isMornye && …` and Mornye is always installed → expressive branches never run; `material_3_expressive`/`material_ui` packages kept for dead code.
+- Fix: collapse callers to the non-expressive branch, delete the scope/helper/nav bar, then drop the packages if unused (cleanup, not restoration). Pair with DEAD-601.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-621 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/donate_icons.dart`, `priority_settings_scaffold.dart`, `reorderable_priority_item.dart`, `discard_changes_dialog.dart`
+- Scenario: no use in lib/ or test/ outside the files (~500 lines); download/provider-priority/donate leftovers.
+- Fix: delete, plus arb keys that become unused (e.g. `dialogDiscardChanges`).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-622 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Mornye destinations; non-Mornye `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isMornye) const SettingsTab()` :542)
+- Scenario: `isMornye` is always true in production → these branches never run.
+- Fix: collapse the shell to the Mornye path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### TEST-201 [P2] [confidence: medium] [RESOLVED]
+- Location: `test/library_browse_sqlite_paging_test.dart:25-33`, `test/support/sqlite_process_database.dart:37-52,160-168`, `test/support/library_paging_fixture.dart:84-91`
+- Scenario: probable cause of the known flake — one monolithic test does ~8000 sequential pipe round-trips to a `python3` subprocess to build a 4000-row fixture per setUp, then 7 paging scenarios, all under the default 30 s timeout; parallel/loaded runs can time out. `close()` awaits the subprocess exit with no bound.
+- Fix: explicit timeout, build the fixture in `setUpAll`, split scenarios, optionally one `executemany` request; ~10–20 lines. Confirm by looping the file 10× under `--concurrency=8` and checking for 30 s timeouts.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Fixture is initialized once per file with a 3-minute timeout and bounded subprocess close; ten runs with --concurrency=8 pass. No performance claim.
+
+### TEST-202 [P3] [confidence: high] [RESOLVED]
+- Location: `test/library_collections_hydration_test.dart:106,164,181,211,227,265,292`, `test/library_collections_mutation_test.dart:629,702`, `test/music_player_automix_test.dart:32`
+- Scenario: system temp directories created and never deleted (hydration fixtures reach 20000-row ndjson).
+- Fix: `addTearDown(() => dir.delete(recursive: true))` right after each creation; ~10 lines.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### TEST-204 [P3] [confidence: high] [RESOLVED]
+- Location: `test/file_stat_boundary_test.dart:64-84`
+- Scenario: as uid 0, `chmod 000` does not block traversal → known spurious failure in root containers; skip covers only Windows.
+- Fix: condition-based skip when `id -u` is `0`; ~4 lines.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### TEST-304 [P3] [confidence: medium] [RESOLVED]
+- Location: `scripts/` (no CI, no `.github`)
+- Scenario: nothing runs the 63 Kotlin unit tests (`android/app/src/test`, 12 files) or the device-only androidTest/integration_test suites; only `check_rust_backend.sh` exists.
+- Fix: `scripts/check_android.sh` running `./gradlew :app:testDebugUnitTest`, referenced from AGENTS.md; ~5 lines.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Added scripts/check_android.sh. Unit tests run on host; instrumentation sources compile only. Physical/device tests NOT RUN.
+
+### DEAD-701 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/l10n/arb/app_*.arb` (20 files)
+- Scenario: 54 of 769 keys are unused (28 with zero references) or used only by code already marked dead:
+  - Zero references:
+    - artist tag mode (9)
+    - embedded cover size (3)
+    - output-folder and Files/Metadata pages (9)
+    - external player (5)
+    - `setupSkip` and `libraryShowMore`
+  - Used only by dead code:
+    - re-enrich (8)
+    - iOS sheet (3)
+    - quick actions (6)
+    - discard dialog (3)
+    - view-queue snackbar (2)
+    - old queue sheet (3)
+    - `libraryInLibrary`
+  - 10 more SAF-repair keys go with API-203: `downloadFolderAccessLost*`, `safMigration*`, `storageAutomaticFolder`, plus `setupSelectFolder` and `updateLater` if they are not used elsewhere.
+- Fix: delete the keys and their `@key` metadata in every arb, then run `flutter gen-l10n`. Re-run the usage scan after the other DEAD batches: build the key list from `app_en.arb`, grep each `\bkey\b` over `lib/` excluding `lib/l10n`, and subtract files that are already dead.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-703 [P3] [confidence: high] [RESOLVED]
+- Location: `pubspec.yaml:123-126` (`Google Sans Flex` → `assets/fonts/GoogleSansFlex.ttf`, 277 KB)
+- Scenario: the font of the removed Material Expressive theme is still bundled. Mornye uses `Inter`, and only the test themes name this family.
+- Fix: remove the pubspec font block and the TTF, and update `test/support/material_test_theme.dart`.
+- Repo-only cleanup (not bundled into the app): `assets/readme/*` (1.7 MB, unreferenced).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-704 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/platform_bridge.dart:618` (`copyLocalCoverToFile`), :705 (`readDisplayAudioMetadata`)
+- Scenario: no lib/ callers. They are tested only in `offline_artwork_test.dart:44,50` and `platform_bridge_metadata_test.dart:86,125`. Their native handlers stay live through other callers.
+- Channel cross-check: every Kotlin handler has a Dart caller name. The Dart names with no handler (`prepareRuntimeState`, `setDownloadDirectory`, iOS bookmark methods) are all inside DEAD-201/207 methods, which would throw if called.
+- Fix: delete both methods and their tests.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-706 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/file_access_check.dart`, `lib/utils/saf_display_path.dart` (no importers). Transitively dead: `lib/constants/music_services.dart` (via DEAD-501), `lib/widgets/in_library_badge.dart` and `lib/utils/local_playback.dart` (via UX-104).
+- Scenario: an import graph over all of `lib/` shows no live inbound edge to any of them (~290 lines). Every other zero-importer file is already in FINDINGS.
+- Fix: delete them with their tests. Trim, rather than delete, `file_stat_boundary_test.dart` (see TEST-204) and `track_metadata_badges_line_test.dart`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
+
+### DEAD-801 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/services/history_database.dart:333-370,552-1342` (`HistoryDatabase` query/migration API; `normalizeSpotifyId`, `spotifyLookupCandidates`)
 - Scenario: outside the file, only `.instance.database`, `getAll`, `upsertBatch`, `clearAll` and `schemaVersion` are used (backup paths; source-confirmed). About 25 other methods have no callers, for example `migrateIosContainerPaths`, `migrateFromSharedPreferences`, `upsert`, `findExisting*`, `getBy*`, `deleteBy*`, `updateFilePath`, `updateAudioMetadata` and `getEntriesWithPathsPage` (~700 lines).
 - Fix: keep the schema create/upgrade code and the 5 backup members, and delete the rest. Check the tests that read the file as text (`native_backup_contract_test`, `album_completeness*_test`).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-802 [P3] [confidence: high] [VALIDATED]
+### DEAD-802 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/services/app_state_database.dart:255-352,420-501,534,561-584` (pending download queue, hidden recent downloads, `getRecentDownloadsClearedAt`)
 - Scenario: download-queue persistence. The only live caller is `clearPendingQueueAfterInstallationRestore` (`main.dart:232`), which clears it.
 - Fix: delete the methods (~180 lines) and reduce the restore reset to the session and prefs. Update the fake in `test/recent_access_persistence_test.dart:60-101`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-803 [P3] [confidence: high] [VALIDATED]
+### DEAD-803 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/providers/theme_provider.dart:14-17,81-84,113-131` (`setStyle`, `setUseDynamicColor`, `setSeedColor`, `setUseAmoled`), `lib/models/theme_settings.dart` (`useDynamicColor`, `seedColorValue`, `useAmoled`, `AppThemeStyle`), `lib/providers/playback_notification_provider.dart:22-24`
 - Scenario: these are multi-theme leftovers. The setters are never called (`setUseAmoled` only in a test), the fields are never read, and `AppThemeStyle` has the single value `mornye`, so the check is always true.
 - Fix: remove them (~80 lines) but keep parsing the old keys for imports. Update `models_and_utils_test.dart:649-679` and `appearance_settings_test.dart:412`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Old JSON/preference keys are accepted and ignored; retained theme/player/font fields round-trip. No persisted schema migration.
 
-### DEAD-804 [P3] [confidence: high] [VALIDATED]
+### DEAD-804 [P3] [confidence: high] [RESOLVED]
 - Location: 22 zero-reference symbols in live D1 files:
   - `library_collections_provider.dart`: `removeFromLoved`, `removeTrackFromPlaylist`, `exportCollections`, `exportPlaylistCovers`
   - `settings_provider.dart`: `setLocalLibraryPath`, `setLocalLibraryBookmark`
@@ -1190,8 +1243,9 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - `supported_locales.dart`: `translationThreshold`
 - Check: `grep -rnw "<name>" lib test android assets rust_backend/crates`
 - Fix: delete (~250 lines). Grep Kotlin for the foreground-service code constant first.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-805 [P3] [confidence: high] [VALIDATED]
+### DEAD-805 [P3] [confidence: high] [RESOLVED]
 - Location: symbols used only by tests. Each is listed with the test that uses it:
   - `metadata_editor_controller.dart` `beginLookup`/`selectEmptyFields` (metadata_editor_controller_test)
   - `track.dart` `isDolbyAtmos` (models_and_utils_test:504)
@@ -1209,23 +1263,21 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - `local_library_provider.dart:1684-1714` `getByIsrcAsync`/`findByTrackAndArtistAsync`/`findExistingAsync`. These go with PERF-404 (`hasIsrc`/`hasTrack`/`existsInLibrary`).
   - Fold into existing entries: `useAppFolderStorage` → API-203; `DownloadDecryptionDescriptor.fromDownloadResult` → DEAD-001; `isInstrumentalLyricsMarker` → DEAD-002.
 - Fix: delete each symbol with its test case.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. canonicalIsrcForCopy remains live through same-file isrcForCopy. Retained ReplayGain scan parser is tested directly; only its unused facade removed.
 
-### DEAD-806 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/models/settings.dart:10,83,128,172` (`downloadDirectoryBookmark`), `lib/utils/file_access.dart:22-31` (`shouldValidateIosOutputDir`, `validateIosPath`), `lib/utils/ios_container_paths.dart` (used by `library_database.dart:59` onOpen, `library_schema.dart:408`, `music_player_service.dart:39`)
-- Scenario: these are iOS-only. The bookmark field is read only by the iOS validator. The container-path rebase still runs on every library DB open, but its `/var/mobile/Containers` pattern can never match on Android.
-- Fix: fold the field into the API-203 removal. Decide separately whether to drop the onOpen rebase hook (it is cheap, but it does run on every open).
-
-### DEAD-851 [P3] [confidence: high] [VALIDATED]
+### DEAD-851 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/widgets/settings_group.dart:692-718` (`SettingsChoiceGrid`), `lib/widgets/app_alert_dialog.dart:33-68` (`AppDialogSurface`), `lib/widgets/error_card.dart:1-95` (`ErrorCard`; keep `EmptyState`)
 - Scenario: these three public widgets have zero references in lib/ or test/ (source-confirmed).
 - Fix: delete them (~160 lines).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. ErrorCard remains: album, artist and Home error states now use it. Orphan SettingsChoiceGrid/AppDialogSurface removed.
 
-### DEAD-852 [P3] [confidence: medium] [VALIDATED]
+### DEAD-852 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/widgets/audio_quality_badges.dart:124-210,244-264` (`DolbyAtmosBadge`, `DolbyAtmosLogo`, `DolbyLogoPainter`, `buildQualityBadges`), `lib/models/track.dart:37,70,150,188,221,227` (`audioModes`, `isDolbyAtmos`)
 - Scenario: the only caller of `buildQualityBadges` is the dead `track_list_tile.dart` (UX-104). Nothing produces `audio_modes`/`DOLBY_ATMOS`, so the field is always null.
 - Fix: remove these together with UX-104 (~110 lines), then drop `audioModes`. Keep `ExplicitBadge` and `AudioQualityBadge`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-853 [P3] [confidence: high] [VALIDATED]
+### DEAD-853 [P3] [confidence: high] [RESOLVED]
 - Location: widget parameters that no call site ever sets, along with the branches they control:
   - `SettingsGroup.glass` (~36 sites)
   - `SettingsItem.footer` (~27 sites)
@@ -1238,72 +1290,79 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
   - `MornyeArtistHeader.listeners`/`.badge`/`logoUrl` and `MornyeArtistSurface.logoSource` (remote-artist leftovers; logo set only in tests)
   - `AppTokens.coverCompact` (never read)
 - Fix: delete the parameters and branches (~150 lines), and update the tests that set the logo params. Check with `grep -rnE "\b<param>:" lib test`, then confirm which class each hit belongs to.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. artworkAspectRatio remains live in Immersive view. SettingsInfoCard.glass remains live. Only parameters with no retained caller removed.
 
-### DEAD-854 [P3] [confidence: medium] [VALIDATED]
+### DEAD-854 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/widgets/album_description.dart` (`AlbumDescription`), `lib/widgets/mornye_chrome.dart` (`MornyeFilterChip`), `lib/widgets/collection_scaffold.dart:22,38,117` (`bottomInset`), `lib/app.dart:50` (`/tutorial` redirect route)
 - Scenario: these are used only by tests, or never navigated to.
 - Fix: delete the widgets with their tests, decide whether to keep `NowPlayingScreen.metadataControllerFactory` as a test seam, and drop the `/tutorial` alias. The `album_description_test` deletion is shared with DEAD-504.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. NowPlayingScreen.metadataControllerFactory remains a useful test seam. /tutorial alias and orphan widgets removed.
 
-### DEAD-901 [P3] [confidence: high] [VALIDATED]
+### DEAD-901 [P3] [confidence: high] [RESOLVED]
 - Location: `rust_backend/crates/core/src/progress/{mod,reporter,subscription}.rs` (726 lines), `core/src/lib.rs:15`
 - Scenario: the download progress registry has zero users outside its own directory (source-confirmed).
 - Fix: delete the directory and the `pub mod` line.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-902 [P3] [confidence: high] [VALIDATED]
+### DEAD-902 [P3] [confidence: high] [RESOLVED]
 - Location: `rust_backend/crates/core/src/media/hires/**` (~1,920 lines + 1,128 test lines), `mobile/src/hires.rs`, `core/src/tags/write/mp4/ac4.rs`, `core/src/tags/write.rs:217-250`, `local/src/backend/tags.rs:14,259,284`, `mobile/src/tags.rs:218,274,288`; Kotlin `CoreBackend.kt:17`, `SelectedCoreBackend.kt:147,323,351-355`, `MainActivity.kt:1257-1440` handlers, `MainActivitySafIo.kt:295`
 - Scenario: these are the native tails of the dead DEAD-202 Dart wrappers `checkHiResAuthenticity`, `ensureAC4Config`, `writeAC4Metadata` and `rewriteSplitArtistTags`. `platform_bridge.dart:688` has no caller (source-confirmed). About 2,600 Rust and 130 Kotlin lines are unreachable.
 - Fix: delete them together with DEAD-202 and regenerate the uniffi bindings. Keep `native_audio_analysis` (Audio Quality Analysis) and `writeM4aFreeformTags`. Note: RUST-201 (`hires/mod.rs`) sits in this dead code and becomes moot.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-903 [P3] [confidence: high] [VALIDATED]
+### DEAD-903 [P3] [confidence: high] [RESOLVED]
 - Location: `rust_backend/crates/core/src/clock.rs`, `core/src/cancellation.rs:240,256,297` (`observe_thread`, `active_request_cancelled`, `wait_cancelled`), `core/src/cover.rs:10` (`MAX_DOWNLOAD_BYTES`), `core/src/lib.rs:18` (`normalize_json_surrogates` re-export)
 - Scenario: these are transitively dead. `clock` is used only by the dead `filename/date.rs` (DEAD-303), and the others appear only at their declarations.
 - Fix: delete them after DEAD-303, then re-run the orphan check (`text::json_surrogates` may follow).
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-904 [P3] [confidence: high] [VALIDATED]
+### DEAD-904 [P3] [confidence: high] [RESOLVED]
 - Location: `android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:118,146,405,419` (`copyContentUriToTemp`, `writeFileToSaf`, `deleteContentUri`, `mimeTypeForExt`), `CoreBackend.kt:9-10,29` (`routesApplication`, `supportsOutputDescriptors`, `scanCueForLibrary`), `SelectedCoreBackend.kt:280`, `mobile/src/tags.rs:130` (`scan_cue_file_for_library` export)
 - Scenario: nothing references these except their declarations (`writeFileToSaf` is used only by an androidTest).
 - Fix: delete them (~90 lines). Keep the local-crate `scan_cue_file_for_library`, which `scan.rs:471` uses.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-905 [P3] [confidence: high] [VALIDATED]
+### DEAD-905 [P3] [confidence: high] [RESOLVED]
 - Location: `rust_backend/crates/mobile/Cargo.toml` and `rust_backend/Cargo.toml` (`scraper`), `core/Cargo.toml:21-22` (`tz-rs`), `local/Cargo.toml` (android dev-dep `libc`)
 - Scenario:
   - `scraper` (which pulls in html5ever, cssparser and selectors) has zero uses.
   - `tz-rs` is used only by `clock.rs`, so it goes with DEAD-903.
   - local's `libc` dev-dep has no uses.
 - Fix: remove the lines, then run `cargo update -w --offline`. After the DEAD-301..303/903 batches, re-check `rustix`, `unicode-normalization`, `unicode-general-category` and `chrono` in core.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-906 [P3] [confidence: high] [VALIDATED]
+### DEAD-906 [P3] [confidence: high] [RESOLVED]
 - Location: `android/app/src/main/res/drawable/ic_notification_airplay.xml`, `res/values/colors.xml:4-7` (`widget*` colors), `res/values-night/colors.xml`, `res/values-v31/colors.xml`, `res/values-night-v31/colors.xml`
 - Scenario: these resources are unreferenced. The `notification_keep.xml` wildcard only stops the shrinker from removing them; it is not a use.
 - Fix: delete them. Keep `ic_launcher_background`.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-907 [P3] [confidence: high] [VALIDATED]
+### DEAD-907 [P3] [confidence: high] [RESOLVED]
 - Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:94-400` (`resolveSafFile`, `inspectSafFiles`)
 - Scenario: these are called only by the DEAD-202 handlers (`MainActivity.kt:1083,1090`). They make up ~300 lines, the bulk of that dead feature.
 - Fix: delete them with DEAD-202. Keep `SafFileOps.findDocumentDir` while `MainActivitySafScan.kt:282` uses it.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
-### DEAD-908 [P3] [confidence: high] [VALIDATED]
+### DEAD-908 [P3] [confidence: high] [RESOLVED]
 - Location: `android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:26-55,167-242` (unique/collision-aware/if-absent writers, `withSafNameLock`, `PublishTrace`, filename counters), `NativeResourcePools.kt:10` (`KeyedLockPool`), `MainActivity.kt:121-123,1137-1250` (`safCreate{IfAbsent,Unique,CollisionAware}FromPath`)
 - Scenario: the only Dart callers are the DEAD-202 wrappers at `platform_bridge.dart:494,510,528`. This is ~330 lines of download-era collision handling.
 - Fix: delete them with DEAD-202 and update `NativeResourcePoolsTest`. Keep `writeFileToSafLocked`, which `safCreateFromPath` uses.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Atomic writeFileToSafLocked helper retained as directed. Removed only dead collision entry points; active metadata publication uses MainActivity SAF I/O.
 
-### DEAD-909 [P3] [confidence: high] [VALIDATED]
+### DEAD-909 [P3] [confidence: high] [RESOLVED]
 - Location: `android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt`, `NativeResourcePools.kt:35,41` (`activeKeyCount`, `BoundedRegistry`), `SafDocumentIdentity.kt:8` (`safDocumentMatchKey`), `NativeMediaWorkspace.kt:30` (`withOwnedTemporaryMediaFile`)
 - Scenario: each is referenced only by its own Kotlin unit test.
 - Fix: delete them with their tests (~150 lines). If `NativeReplayGainPolicy` was meant to gate ReplayGain batches, decide that first: it is never consulted. Related: KT-001, DEAD-208.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Owner decision: NativeReplayGainPolicy and tests retained for future Media3 work; only orphan NativeResourcePools/SafDocumentIdentity/temp-ownership wrapper removed. This is a disposition, not removal of the policy.
 
-<!-- Mornye parity pass (2026-10-20): upstream v5.1.1/latest Mornye path of the online
-artist/album/playlist screens compared with the local screens. Upstream refs are
-`spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
+### RUST-201 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/media/hires/mod.rs:567-568` (`Source::analyze_window`, FLAC)
+- Scenario: FLAC whose STREAMINFO declares more channels than frames carry → `block.channel(index)` slices out of range in claxon → panic inside an FFI call (Audio Quality Analysis).
+- Root cause: claxon does not check frame vs STREAMINFO channels; guard exists in `replacement.rs:93-95` but not here.
+- Impact: panic on untrusted file data (surfaced as a generic error if uniffi catches it; unverified).
+- Fix: return Err when `block.channels()` differs; ~3 lines + test.
+- Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. The finding belonged to the unreachable Hi-Res module removed with DEAD-902; active native_audio_analysis remains.
 
-<!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Mornye Home (explore feed) compared
-with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
-
-<!-- Now Playing parity pass (2026-10-20): ours vs upstream v5.1.1/latest Mornye player.
-Ours equals v5.1.1 apart from intentional deltas (Immersive view, no motion artwork,
-external player or download lookups). Upstream-latest items are in `UPSTREAM.md`. -->
-
-## Resolved
 
 ### PLAY-001 [P2] [confidence: medium-high] [RESOLVED]
 - Location: `lib/screens/now_playing_screen.dart:474-495` (Immersive artwork inside `MornyePlayerBackground`), `lib/widgets/mornye_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`

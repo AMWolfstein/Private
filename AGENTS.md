@@ -155,3 +155,10 @@ work). Stage paths explicitly (e.g. `git add -u` then list `graphify-out/...` fi
 `git add -A` because generated artifacts (`.dart_tool/`, `build/`,
 `lib/l10n/app_localizations*.dart`, `.flutter-plugins-dependencies`, `graphify-out/cache/`) are
 untracked.
+
+## Local verification commands
+
+Activate the repository toolchain, then run `flutter analyze` and the full `flutter test`.
+Rust changes require `bash scripts/check_rust_backend.sh`; Android native changes require
+`bash scripts/check_android.sh` (host unit tests; no APK packaging). Instrumentation source
+compilation is separate from device execution; never report compilation as a device pass.
