@@ -45,6 +45,10 @@ Playback errors keep the selected song for retry; same-ID duration/artwork updat
 Scanned artwork that is absent or stale falls back to the bounded local embedded-cover cache.
 Exact PCM output decodes FLAC through the integer native source; never trust vendor raw
 FLAC decoding to preserve source precision or label padded output as source bit depth.
+Switch and slider thumbs (AppSwitch, MornyeSlider, horizontal MornyeLevelSlider) turn into
+liquid glass only while touched and only when the glass thumb gate allows it; no lens or
+capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
+faders keep their painted controls.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
