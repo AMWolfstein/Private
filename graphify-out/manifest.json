@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
-    "mtime": 1792563009.8959544,
-    "seen": 1792582837.2503595,
-    "ast_hash": "950990eae65cc6f7caf8ebcc4ee33eb9",
+    "mtime": 1792583467.1160252,
+    "seen": 1792583516.8162673,
+    "ast_hash": "40b04b26b0788b8f215bf1c169c18c13",
     "semantic_hash": ""
   },
   "lib/constants/language_choices.dart": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792507618.596759,
-    "seen": 1792510336.9267528,
-    "ast_hash": "7e3660a741a2897e139942cf954a6e39",
+    "mtime": 1792582859.100041,
+    "seen": 1792583516.9171355,
+    "ast_hash": "d11d07fed04e999d2721dcd131b558fd",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6240,9 +6240,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1792563538.837586,
-    "seen": 1792582837.2518928,
-    "ast_hash": "6d8cc8f3092bff2b164ccc23964ce5b0",
+    "mtime": 1792583467.1158707,
+    "seen": 1792583516.9171717,
+    "ast_hash": "19afdf573c110132edfa6a1b9517b321",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792562916.416986,
-    "seen": 1792582837.2518697,
-    "ast_hash": "55d727366d3fbcadd4434517239b1322",
+    "mtime": 1792582897.371905,
+    "seen": 1792583516.9171443,
+    "ast_hash": "69058defea2d18b5777a523af93ed7fc",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7152,9 +7152,9 @@
     "semantic_hash": ""
   },
   "reviews/FINDINGS.md": {
-    "mtime": 1792562895.2044811,
-    "seen": 1792582837.2518961,
-    "ast_hash": "70c13d996319bcf9e5f70538bf334bf0",
+    "mtime": 1792582858.8246145,
+    "seen": 1792583516.9171789,
+    "ast_hash": "3ae1dcb28e6ea7ccde377daabaa6ee75",
     "semantic_hash": ""
   },
   "reviews/PROTOCOL.md": {
@@ -7164,15 +7164,15 @@
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792562916.4174225,
-    "seen": 1792582837.2519042,
-    "ast_hash": "e3dddef7ca3d8c30e2998bfeccbd3886",
+    "mtime": 1792582897.3714175,
+    "seen": 1792583516.9171898,
+    "ast_hash": "5916b380aa6127f1f5cab6ee81a65310",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792562916.41763,
-    "seen": 1792582837.251907,
-    "ast_hash": "2eb54ef64feb3ac089b9d5d6a2f7a2b6",
+    "mtime": 1792582858.8259218,
+    "seen": 1792583516.9171925,
+    "ast_hash": "d074c2e3d0e0f4c228385d3a791ab4e0",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
@@ -7224,9 +7224,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1792562916.4166467,
-    "seen": 1792582837.2519057,
-    "ast_hash": "f3206493e44b869776d6956ecc1c5232",
+    "mtime": 1792582859.099834,
+    "seen": 1792583516.9171915,
+    "ast_hash": "ff755cfec40b1e798f4f8d5e1d23b5f5",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -7242,9 +7242,9 @@
     "semantic_hash": ""
   },
   "reviews/PORT_PLAN.md": {
-    "mtime": 1792562916.4162812,
-    "seen": 1792582837.2519016,
-    "ast_hash": "ac9ee1dc8f315ae1d0f50f581da9cabd",
+    "mtime": 1792582858.803118,
+    "seen": 1792583516.917186,
+    "ast_hash": "a02d42f4caca0d566632c08d02e1f1e3",
     "semantic_hash": ""
   },
   "android/app/src/main/cpp/flac_pcm_source.cpp": {
@@ -7284,9 +7284,9 @@
     "semantic_hash": ""
   },
   "reviews/HANDOFF.md": {
-    "mtime": 1792564129.423274,
-    "seen": 1792582837.2518988,
-    "ast_hash": "1f47bb6737b346011ddbfd40d65bac5b",
+    "mtime": 1792582897.3720875,
+    "seen": 1792583516.9171824,
+    "ast_hash": "4a813b23f8264cd487c6a3957d3186f3",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/tests/id3_cover.rs": {
@@ -7374,9 +7374,9 @@
     "semantic_hash": ""
   },
   "reviews/PORT_EXECUTION.md": {
-    "mtime": 1792562916.4164836,
-    "seen": 1792582837.2519002,
-    "ast_hash": "b4378712130720e2418fdbe2d505eada",
+    "mtime": 1792582858.8033924,
+    "seen": 1792583516.917184,
+    "ast_hash": "980d520dc40ca646446a81aa284cca2e",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MusicHapticsPlugin.kt": {
@@ -7581,6 +7581,30 @@
     "mtime": 1792564187.9705822,
     "seen": 1792582837.2514718,
     "ast_hash": "a06c2d4598738faf3ead0b0b5385b2a4",
+    "semantic_hash": ""
+  },
+  "reviews/BACKLOG.md": {
+    "mtime": 1792582859.0150802,
+    "seen": 1792583516.9171743,
+    "ast_hash": "671a5705506aa9edb442a05f2053286d",
+    "semantic_hash": ""
+  },
+  "reviews/upstream-v5.2.0-audit.md": {
+    "mtime": 1792582859.0148885,
+    "seen": 1792583516.9171953,
+    "ast_hash": "f6f67be3e322dce551810be28bcd4f6e",
+    "semantic_hash": ""
+  },
+  "reviews/upstream-v5.2.0-backlog.md": {
+    "mtime": 1792582859.0150325,
+    "seen": 1792583516.9171968,
+    "ast_hash": "4e1bed2c1d5b3fc5da8f7e8954a2100b",
+    "semantic_hash": ""
+  },
+  "reviews/upstream-v5.2.0-final-report.md": {
+    "mtime": 1792582897.3721778,
+    "seen": 1792583516.9171982,
+    "ast_hash": "6e3f374539670a1e8bdaf7a2e8a96a80",
     "semantic_hash": ""
   }
 }
