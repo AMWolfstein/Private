@@ -66,3 +66,14 @@ Graph ff70d508, source 2a6ea366: 23,960 unique nodes / 45,975 valid links; synch
 No APK built; device-only behavior NOT RUN. Retained playback regressions now begin with a virtual CUE row and compact release-date metadata, covering both themes; first real-song identity remains explicit in later fixture checks. Artist visual/device checks NOT RUN. Single badges require explicit total-track tags=1. No EP type exists in the local browse model/database, so EP badges are omitted rather than inferred from file counts; EPs remain under Albums. No dependencies, schemas, music-file writes, native changes or APK.
 Next: batch 12 (MORN-013..016; FIX_PLAN M5+M6). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 12 (2026-10-21)
+
+MORN-013..016 unify effective collection artwork, use tonal Loved/playlist actions with feedback, fit short-screen covers, and improve Mornye contrast and segmented touch targets.
+
+Source `ce2538bf` → graph `5c2bdc49`; header fixture correction `8477c4bc` → final graph checkpoint. MORN-015 was already implemented by U-210 `c2f38c86` in batch 6.
+
+PASS: analysis clean; Flutter 1769 passed / 3 skipped / zero failures (04:17); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph 4bb91e88, source 8477c4bc: 23,970 unique nodes / 46,006 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. Ten light/dark artwork, feedback, contrast and accessibility regressions pass. Initial fixture lookup failures corrected to inspect the configured header before sliver flattening. No native/dependency/schema changes or music-file writes. Physical visual checks NOT RUN.
+Next: batch 13 (HOME-001..008; FIX_PLAN M7–M9). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+

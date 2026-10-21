@@ -1296,26 +1296,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 artist/album/playlist screens compared with the local screens. Upstream refs are
 `spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
 
-### MORN-013 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/local_collection_actions.dart:42-77`
-- Scenario: Loved and Add-to-playlist circles use non-tonal glass, so they differ from the Play/Shuffle pills; no red tint when all loved; toggle is silent (upstream `loveAllTracks` snackbars) and its error path reuses `showCannotOpenFileSnackBar`. Affects album and playlist headers.
-- Fix: `tonal: true` (owner decision 2026-10-20: use the tonal style), `iconColor: error` when all loved, reuse `loveAllTracks` feedback.
-
-### MORN-014 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/library_tracks_folder_screen.dart:220-223`, :481, :545
-- Scenario: backdrop/palette come from the first track's cover while the hero shows the custom cover (playlist) or a grey heart (Loved), so tint and hero disagree.
-- Fix: one shared cover source for hero, surface and palette.
-
-### MORN-015 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/album_detail_header.dart:126`, :198
-- Scenario: landscape/split-screen: artwork is `width.clamp(0,440)`, so the title and actions fall below the fold; immersive details `Stack` lacks `alignment: topCenter`, so details misalign on wide screens. Upstream latest fixes both (`min(width.clamp(0,440), max(240, height*0.55))`).
-- Fix: port the two upstream lines. Affects album, playlist and Loved.
-
-### MORN-016 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/mornye_chrome.dart:28`, `lib/theme/mornye_theme.dart:69`, :227
-- Scenario: segmented pill height `scale(15)+36` can drop below 48dp per segment; dark accent `rgb(224,61,60)` and the red-accent `onPrimary` special case have contrast issues. Upstream latest: height clamped to ≥56, accent `rgb(255,69,58)`, luminance-only `onPrimary`.
-- Fix: port the three upstream changes; check contrast.
-
 <!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Mornye Home (explore feed) compared
 with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
 
@@ -1384,6 +1364,31 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: one line.
 
 ## Resolved
+
+### MORN-013 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/local_collection_actions.dart:42-77`
+- Scenario: Loved and Add-to-playlist circles use non-tonal glass, so they differ from the Play/Shuffle pills; no red tint when all loved; toggle is silent (upstream `loveAllTracks` snackbars) and its error path reuses `showCannotOpenFileSnackBar`. Affects album and playlist headers.
+- Fix: `tonal: true` (owner decision 2026-10-20: use the tonal style), `iconColor: error` when all loved, reuse `loveAllTracks` feedback.
+- Resolution: `ce2538bf`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-014 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/screens/library_tracks_folder_screen.dart:220-223`, :481, :545
+- Scenario: backdrop/palette come from the first track's cover while the hero shows the custom cover (playlist) or a grey heart (Loved), so tint and hero disagree.
+- Fix: one shared cover source for hero, surface and palette.
+- Resolution: `ce2538bf`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable.
+
+### MORN-015 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/album_detail_header.dart:126`, :198
+- Scenario: landscape/split-screen: artwork is `width.clamp(0,440)`, so the title and actions fall below the fold; immersive details `Stack` lacks `alignment: topCenter`, so details misalign on wide screens. Upstream latest fixes both (`min(width.clamp(0,440), max(240, height*0.55))`).
+- Fix: port the two upstream lines. Affects album, playlist and Loved.
+- Resolution: `c2f38c86`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable. ALREADY IMPLEMENTED by U-210 in batch 6; no duplicate change.
+
+### MORN-016 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/mornye_chrome.dart:28`, `lib/theme/mornye_theme.dart:69`, :227
+- Scenario: segmented pill height `scale(15)+36` can drop below 48dp per segment; dark accent `rgb(224,61,60)` and the red-accent `onPrimary` special case have contrast issues. Upstream latest: height clamped to ≥56, accent `rgb(255,69,58)`, luminance-only `onPrimary`.
+- Fix: port the three upstream changes; check contrast.
+- Resolution: `ce2538bf`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable.
+
 
 ### MORN-006 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
