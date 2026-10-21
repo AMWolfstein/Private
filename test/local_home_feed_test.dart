@@ -153,7 +153,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(find.text('Latest Releases in Your Library'), findsOneWidget);
-        expect(find.text('2026-10-18'), findsOneWidget);
+        expect(find.text('Oct 18, 2026'), findsOneWidget);
         expect(find.text('Recently Added'), findsOneWidget);
         expect(find.text('Recent'), findsNothing);
         expect(find.text('No recent items yet'), findsNothing);

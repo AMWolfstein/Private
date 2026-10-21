@@ -119,6 +119,9 @@
   },
   "libraryRecentlyAdded": "Recently Added",
   "librarySearchHint": "Search your library",
+  "homeLibraryDisabled": "Enable Local Library to show your music here.",
+  "homeChooseLibraryFolder": "Choose a music folder in Local Library settings.",
+  "homeLibraryEmpty": "Add music to your library folders, then scan your library.",
   "libraryEmptyCollection": "Your music will appear here",
   "settingsTitle": "Settings",
   "@settingsTitle": {

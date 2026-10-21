@@ -46,6 +46,7 @@ class MainShell extends ConsumerStatefulWidget {
 class _MainShellState extends ConsumerState<MainShell>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _currentIndex = 0;
+  final _homeFeedScrollController = ScrollController();
   final _mornyeChrome = MornyeChromeController();
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
@@ -343,6 +344,7 @@ class _MainShellState extends ConsumerState<MainShell>
     WidgetsBinding.instance.removeObserver(this);
     usbAudioStatus.removeListener(_onUsbAudioStatusChanged);
     ShellNavigationService.unregisterTabSelectionHandler(this);
+    _homeFeedScrollController.dispose();
     _pageController.dispose();
     _tabJumpOpacity.dispose();
     _tabJumpTransitionController.dispose();
@@ -350,7 +352,22 @@ class _MainShellState extends ConsumerState<MainShell>
     super.dispose();
   }
 
-  void _resetHomeToMain() {
+  void _resetHomeToMain({bool scrollToTop = false}) {
+    if (scrollToTop)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || !_homeFeedScrollController.hasClients) return;
+        if (MediaQuery.disableAnimationsOf(context)) {
+          _homeFeedScrollController.jumpTo(0);
+        } else {
+          unawaited(
+            _homeFeedScrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+            ),
+          );
+        }
+      });
     final homeNavigator = _navigatorForTab(0);
     homeNavigator?.popUntil((route) => route.isFirst);
     FocusManager.instance.primaryFocus?.unfocus();
@@ -390,7 +407,7 @@ class _MainShellState extends ConsumerState<MainShell>
   void _onNavTap(int index, {bool resetHome = true}) {
     _mornyeChrome.expand();
     if (index == 0 && resetHome && (context.isMornye || _currentIndex == 0)) {
-      _resetHomeToMain();
+      _resetHomeToMain(scrollToTop: _currentIndex == 0);
     }
     if (index == 0 && _currentIndex == 0) {
       return;
@@ -529,6 +546,7 @@ class _MainShellState extends ConsumerState<MainShell>
         heroAnimationsEnabled: heroAnimationsEnabled,
         child: Builder(
           builder: (context) => HomeTab(
+            scrollController: _homeFeedScrollController,
             mode: context.isMornye ? HomeTabMode.browse : HomeTabMode.combined,
           ),
         ),

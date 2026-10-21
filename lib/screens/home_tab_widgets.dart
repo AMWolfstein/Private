@@ -1,18 +1,10 @@
 part of 'home_tab.dart';
 
-class _DownloadedOrRemoteCover extends StatefulWidget {
-  final String? downloadedFilePath;
-  final String? imageUrl;
-  final double width;
-  final double height;
-  final BorderRadius borderRadius;
-  final IconData fallbackIcon;
-  final double fallbackIconSize;
-  final ColorScheme colorScheme;
-
-  const _DownloadedOrRemoteCover({
-    required this.downloadedFilePath,
-    required this.imageUrl,
+/// Indexed local artwork first; extract only when the scanned thumbnail expires.
+class _LocalFeedCover extends StatelessWidget {
+  const _LocalFeedCover({
+    required this.coverPath,
+    required this.filePath,
     required this.width,
     required this.height,
     required this.borderRadius,
@@ -20,101 +12,38 @@ class _DownloadedOrRemoteCover extends StatefulWidget {
     required this.colorScheme,
     this.fallbackIconSize = 24,
   });
-
+  final String? coverPath, filePath;
+  final double width, height, fallbackIconSize;
+  final BorderRadius borderRadius;
+  final IconData fallbackIcon;
+  final ColorScheme colorScheme;
+  Widget _fallback(BuildContext context) => Container(
+    width: width,
+    height: height,
+    color: colorScheme.surfaceContainerHighest,
+    child: Icon(
+      fallbackIcon,
+      color: colorScheme.onSurfaceVariant,
+      size: fallbackIconSize,
+    ),
+  );
   @override
-  State<_DownloadedOrRemoteCover> createState() =>
-      _DownloadedOrRemoteCoverState();
-}
-
-class _DownloadedOrRemoteCoverState extends State<_DownloadedOrRemoteCover> {
-  String? _embeddedCoverPath;
-  bool _refreshScheduled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _embeddedCoverPath = _resolveEmbeddedCoverPath();
-  }
-
-  @override
-  void didUpdateWidget(covariant _DownloadedOrRemoteCover oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.downloadedFilePath != widget.downloadedFilePath ||
-        oldWidget.imageUrl != widget.imageUrl) {
-      final nextPath = _resolveEmbeddedCoverPath();
-      if (nextPath != _embeddedCoverPath) {
-        setState(() => _embeddedCoverPath = nextPath);
-      }
-    }
-  }
-
-  String? _resolveEmbeddedCoverPath() {
-    final filePath = widget.downloadedFilePath;
-    if (filePath == null || filePath.isEmpty) return null;
-    return DownloadedEmbeddedCoverResolver.resolve(
-      filePath,
-      onChanged: _onEmbeddedCoverChanged,
-    );
-  }
-
-  void _onEmbeddedCoverChanged() {
-    if (!mounted || _refreshScheduled) return;
-    _refreshScheduled = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _refreshScheduled = false;
-      if (!mounted) return;
-      final nextPath = _resolveEmbeddedCoverPath();
-      if (nextPath != _embeddedCoverPath) {
-        setState(() => _embeddedCoverPath = nextPath);
-      }
-    });
-  }
-
-  Widget _fallback() {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      color: widget.colorScheme.surfaceContainerHighest,
-      child: Icon(
-        widget.fallbackIcon,
-        color: widget.colorScheme.onSurfaceVariant,
-        size: widget.fallbackIconSize,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cacheWidth = (widget.width * 2).round();
-    final cacheHeight = (widget.height * 2).round();
-
-    Widget child;
-    if (_embeddedCoverPath != null) {
-      child = Image.file(
-        File(_embeddedCoverPath!),
-        width: widget.width,
-        height: widget.height,
-        fit: BoxFit.cover,
-        cacheWidth: cacheWidth,
-        cacheHeight: cacheHeight,
-        gaplessPlayback: true,
-        filterQuality: FilterQuality.low,
-        errorBuilder: (_, _, _) => _fallback(),
-      );
-    } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
-      child = CachedCoverImage(
-        imageUrl: widget.imageUrl!,
-        width: widget.width,
-        height: widget.height,
-        fit: BoxFit.cover,
-        memCacheWidth: cacheWidth,
-        memCacheHeight: cacheHeight,
-        errorWidget: (_, _, _) => _fallback(),
-      );
-    } else {
-      child = _fallback();
-    }
-
-    return ClipRRect(borderRadius: widget.borderRadius, child: child);
-  }
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: borderRadius,
+    child: LocalLibraryArtworkBuilder(
+      coverPath: coverPath,
+      filePath: filePath,
+      builder: (context, cover) => cover == null
+          ? _fallback(context)
+          : LocalCoverImage(
+              url: cover,
+              width: width,
+              height: height,
+              fit: BoxFit.cover,
+              localCacheWidth: (width * MediaQuery.devicePixelRatioOf(context))
+                  .ceil(),
+              placeholder: _fallback,
+            ),
+    ),
+  );
 }

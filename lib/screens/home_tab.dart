@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +10,6 @@ import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -22,17 +20,30 @@ import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:spotiflac_android/widgets/library_search_results.dart';
 import 'package:spotiflac_android/widgets/profile_avatar.dart';
 
-part 'home_tab_helpers.dart';
+import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:spotiflac_android/providers/local_library_provider.dart';
+import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
+import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:spotiflac_android/utils/release_date_display.dart';
+import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
+import 'package:spotiflac_android/widgets/animation_utils.dart';
+import 'package:spotiflac_android/widgets/error_card.dart';
+import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
+
 part 'home_tab_feed.dart';
-part 'home_tab_search_results.dart';
 part 'home_tab_widgets.dart';
 
 enum HomeTabMode { combined, browse, search }
 
 class HomeTab extends ConsumerStatefulWidget {
-  const HomeTab({super.key, this.mode = HomeTabMode.combined});
+  const HomeTab({
+    super.key,
+    this.mode = HomeTabMode.combined,
+    this.scrollController,
+  });
 
   final HomeTabMode mode;
+  final ScrollController? scrollController;
 
   @override
   ConsumerState<HomeTab> createState() => _HomeTabState();
@@ -45,7 +56,9 @@ class _HomeTabState extends ConsumerState<HomeTab>
 
   final _urlController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
-  final _homeScrollController = ScrollController();
+  final _ownedHomeScrollController = ScrollController();
+  ScrollController get _homeScrollController =>
+      widget.scrollController ?? _ownedHomeScrollController;
 
   String _query = '';
   Timer? _searchDebounce;
@@ -66,7 +79,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
   @override
   void dispose() {
     ShellNavigationService.searchRequests.removeListener(_focusSearchFromShell);
-    _homeScrollController.dispose();
+    _ownedHomeScrollController.dispose();
     _searchDebounce?.cancel();
     _urlController.removeListener(_onSearchChanged);
     _searchFocusNode.removeListener(_onSearchFocusChanged);
@@ -142,46 +155,49 @@ class _HomeTabState extends ConsumerState<HomeTab>
       },
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
-        body: CustomScrollView(
-          controller: _homeScrollController,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          slivers: [
-            AppSliverHeader.tabRoot(
-              title: widget.mode == HomeTabMode.search
-                  ? l10n.mornyeSearch
-                  : l10n.homeTitle,
-              actions: context.isMornye && _showsHome
-                  ? const [HomeProfileButton()]
-                  : null,
-            ),
+        body: RefreshIndicator(
+          onRefresh: _refreshHome,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: _homeScrollController,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            slivers: [
+              AppSliverHeader.tabRoot(
+                title: widget.mode == HomeTabMode.search
+                    ? l10n.mornyeSearch
+                    : l10n.homeTitle,
+                actions: context.isMornye && _showsHome
+                    ? const [HomeProfileButton()]
+                    : null,
+              ),
 
-            if (_showsSearch)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    showSearchResults ? 8 : 24,
-                    16,
-                    8,
+              if (_showsSearch)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      16,
+                      showSearchResults ? 8 : 24,
+                      16,
+                      8,
+                    ),
+                    child: _buildSearchBar(),
                   ),
-                  child: _buildSearchBar(),
                 ),
-              ),
 
-            if (showSearchResults)
-              LibrarySearchResults(query: query, onOpenArtist: _openArtist),
+              if (showSearchResults)
+                LibrarySearchResults(query: query, onOpenArtist: _openArtist),
 
-            if (!showSearchResults && (_showsHome || isSearchTabEmpty))
-              SliverMainAxisGroup(
-                slivers: [
-                  if (_showsHome) _buildHomeIntro(colorScheme),
-                  if (_showsHome) ..._buildLocalFeed(colorScheme),
-                  if (!_showsHome) _buildRecentlyAdded(colorScheme),
-                ],
-              ),
+              if (!showSearchResults && (_showsHome || isSearchTabEmpty))
+                SliverMainAxisGroup(
+                  slivers: [
+                    if (_showsHome) ..._buildLocalFeed(colorScheme),
+                    if (!_showsHome) _buildRecentlyAdded(colorScheme),
+                  ],
+                ),
 
-            const NavBarSliverSpacer(),
-          ],
+              const NavBarSliverSpacer(),
+            ],
+          ),
         ),
       ),
     );
@@ -208,78 +224,22 @@ class _HomeTabState extends ConsumerState<HomeTab>
     );
   }
 
-  SliverToBoxAdapter _buildHomeIntro(ColorScheme colorScheme) {
-    final screenHeight = MediaQuery.sizeOf(context).height;
-
-    // The Mornye style uses the navigation title as the page identity. Keep
-    // the search surface directly beneath it instead of repeating app
-    // branding in the content area.
-    if (context.isMornye) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
-    }
-
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          children: [
-            SizedBox(height: screenHeight * 0.04),
-            Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                color: colorScheme.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset(
-                'assets/images/logo-transparent.png',
-                color: colorScheme.onPrimary,
-                fit: BoxFit.contain,
-                errorBuilder: (_, _, _) => ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    width: 96,
-                    height: 96,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'SpotiFLAC Mobile',
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              context.l10n.homeSubtitle,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   SliverToBoxAdapter _buildRecentlyAdded(ColorScheme colorScheme) {
     return SliverToBoxAdapter(
       child: Consumer(
         builder: (context, ref, _) {
           return ref
-              .watch(_recentlyAddedProvider)
+              .watch(localHomeTracksProvider)
               .when(
+                skipLoadingOnReload: true,
                 data: (items) => _feedShelf(
                   context.l10n.libraryRecentlyAdded,
                   items
                       .map(
                         (item) => _feedCard(
+                          cardKey: ValueKey('home-track-${item.id}'),
+                          explicit: item.explicit,
+                          semanticType: context.l10n.searchSongs,
                           name: item.trackName,
                           subtitle: item.artistName,
                           cover: item.coverPath,
@@ -293,9 +253,9 @@ class _HomeTabState extends ConsumerState<HomeTab>
                       )
                       .toList(),
                 ),
-                loading: () => const SizedBox.shrink(),
+                loading: _feedSkeleton,
                 error: (_, _) =>
-                    _feedRetry(() => ref.invalidate(_recentlyAddedProvider)),
+                    _feedRetry(() => ref.invalidate(localHomeTracksProvider)),
               );
         },
       ),
