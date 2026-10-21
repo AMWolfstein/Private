@@ -91,6 +91,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   final _artworkControlsKey = GlobalKey();
   final _artworkVolumeKey = GlobalKey();
   final _expandedArtworkKey = GlobalKey();
+  final _immersiveArtworkKey = GlobalKey();
   final _compactArtworkKey = GlobalKey();
   final _artworkForeground = ValueNotifier<Map<String, Color>>({});
   final _seekPreview = PlaybackSeekPreview();
@@ -222,6 +223,8 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             ? _expandedArtworkKey
             : _currentPage != 0
             ? _compactArtworkKey
+            : immersive
+            ? _immersiveArtworkKey
             : _expandedArtworkKey;
         final box = key.currentContext?.findRenderObject();
         if (box is! RenderBox || !box.attached || !box.hasSize) return null;
@@ -463,7 +466,9 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     if (!mornye) return player;
     final swipeQueue =
         ref.watch(playQueueProvider).value ?? const <MediaItem>[];
-    final reportedIndex = ref.watch(playbackStateProvider).value?.queueIndex;
+    final reportedIndex = ref.watch(
+      playbackStateProvider.select((state) => state.value?.queueIndex),
+    );
     final swipeIndex =
         reportedIndex != null &&
             reportedIndex >= 0 &&
@@ -510,7 +515,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                   artwork: immersive
                       ? PlayerArtworkDragRegion(
                           child: PlayerTransitionArtwork(
-                            artworkKey: _expandedArtworkKey,
+                            artworkKey: _immersiveArtworkKey,
                             child: Hero(
                               tag: kNowPlayingArtworkHeroTag,
                               child: PlayerArtwork(

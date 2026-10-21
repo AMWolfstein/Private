@@ -123,27 +123,15 @@ class MornyePlayerBackground extends StatelessWidget {
                             // The compact header owns the route hero while the
                             // full cover is fading out behind the lyrics.
                             enabled: artwork != null && showArtwork,
-                            child: AnimatedSwitcher(
-                              duration: motion,
-                              switchInCurve: Curves.easeInOutCubic,
-                              switchOutCurve: Curves.easeInOutCubic,
-                              layoutBuilder: (current, previous) => Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  for (final child in previous)
-                                    HeroMode(enabled: false, child: child),
-                                  ?current,
-                                ],
-                              ),
-                              child: artwork == null
-                                  ? null
-                                  : KeyedSubtree(
-                                      key: const ValueKey(
-                                        'full-player-artwork',
-                                      ),
-                                      child: artwork!,
-                                    ),
-                            ),
+                            // Opacity above owns panel fades. Do not retain an
+                            // outgoing globally keyed artwork during rotation
+                            // or rapid Normal/Immersive preference changes.
+                            child: artwork == null
+                                ? const SizedBox.shrink()
+                                : KeyedSubtree(
+                                    key: const ValueKey('full-player-artwork'),
+                                    child: artwork!,
+                                  ),
                           ),
                         ),
                       ),
