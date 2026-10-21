@@ -9,6 +9,7 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 - Next audit unit: none — all 10 subsystems and the final dead-code sweep are done. Next:
   remaining independent fix batches from `FIX_PLAN.md`; completed port/cleanup resolutions are archived in FINDINGS.md.
 - Open findings: 139 (0 P0, 1 P1, 54 P2, 84 P3; see FINDINGS.md). Remaining findings are outside completed port/refinement batches.
+- Release checkpoint: Local ARM64 APK build 167, source `c76237c6`, graph `a08624d2`; certificate matches 166, audits/tests PASS. Artifact branch `apk-local-arm64-167`; device checks NOT RUN.
 - Last checkpoint: upstream port batch 16; source ef8ba64d, graph 331ab3d0. See PORT_EXECUTION.md for per-port commits.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer

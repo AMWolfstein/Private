@@ -23,15 +23,22 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 _Last updated: 2026-10-21_
 
 **Status:** Phases 1-8 and the requested local-player refinements are implemented.
-Latest source validation passed. The signed ARM64-only side-by-side **build 166** includes
-source through `b62b3d9e`: song menus and metadata-page retirement, Genres, Loved Songs,
-updated rows and the Settings cleanup. It retains the cream/green launcher icon and signing
-certificate, updating the previous SpotiFLAC Local installation. Physical-device validation
-remains pending.
+Latest source validation passed. The signed ARM64-only side-by-side **build 167** includes
+source through `c76237c6`, all completed upstream port batches and Batch 16 cleanup.
+It retains **SpotiFLAC Local** (`com.zarz.spotiflac.local`), the cream/green launcher icon
+and the certificate used by build 166. Physical-device validation remains pending.
 `c29daef` removes the About page credits, translators, special thanks, links and social sections
 (with `url_launcher`) and the Search tab Recent list (app-state schema v5 drops its tables);
 `flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Local ARM64 build 167 (2026-10-21):** Built from `c76237c6`, incorporating all completed upstream ports and Batch 16 cleanup. Version 5.1.1 / build 167, split versionCode 2167. Release flags: `SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a flutter build apk --release --target-platform android-arm64 --split-per-abi --dart-define=GIT_COMMIT=c76237c6`.
+
+APK `SpotiFLAC-Local-167-arm64-v8a.apk`, 52,983,816 bytes; SHA-256 `8b5521fe78bbc1640675e26b1838776f370191c440a4288402d63efcc2b80639`. Package `com.zarz.spotiflac.local`, label SpotiFLAC Local, minimum API 24 / target API 37, ARM64 only. All 17 native libraries are AArch64 ELF64 with at least 16KB LOAD alignment; ZIP 16KB alignment, CRC/backend audit, embedded source revision, cream icon background and absence of INTERNET permission verified. APK signature verifies and certificate matches build 166 (`b912cdc7e97b78a19aff3ac8398abc3b36251de2af67243e8a6da2870e15c7b3`). This is an update to the existing Local app and installs alongside the original package.
+
+Analysis clean; full Flutter suite PASS: `03:16 +1513 ~3: All tests passed!`. Physical-device installation/playback NOT RUN. Initial build encountered a generated-plugin race when tests ran concurrently; after tests completed, release was rebuilt serially and passed. Do not run Flutter tests and APK builds concurrently in this checkout.
+
+Download branch: `apk-local-arm64-167`, containing APK, README, SHA256SUMS and APK_DETAILS.json. [Download APK](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-167/SpotiFLAC-Local-167-arm64-v8a.apk). Source → graph checkpoints: `c76237c6` → `a08624d2`; release docs checkpoint follows.
 
 **Upstream port batch 16 (2026-10-21):** Retired unreachable Material Expressive UI and direct dependencies, download/provider/re-enrichment and iOS bridge APIs, dead Rust modules and unused settings/widgets/resources. Preserved offline metadata/lyrics editing, Audio Quality Analysis, CUE, local collections, playback and legacy backup/schema compatibility. Removed 70 unused l10n keys last; added native check script and test resource/timeout cleanup. Disabled selection actions retain explicit accessible state and 48px targets.
 

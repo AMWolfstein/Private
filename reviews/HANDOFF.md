@@ -4,6 +4,8 @@ User authorization: continue all remaining PORT_PLAN batches through completion,
 asking again. This supersedes older one-batch stopping notes. Keep checks/checkpoints per
 batch, all feature exclusions and no APK. No worktrees or force-push.
 
+Latest APK: build 167 (`c76237c6`), signed ARM64 Local; download branch `apk-local-arm64-167`. Certificate matches build 166. Build/audit/analysis/full tests pass; physical-device checks remain NOT RUN. [Download](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-167/SpotiFLAC-Local-167-arm64-v8a.apk).
+
 Current phase: batch 16 complete. Next: none in PORT_PLAN; physical-device verification and separately approved remaining review fixes.
 Branch/repository: ccr-2fb644cd-nmesyt, /workspace/Private.
 Read-only upstream /workspace/mornye-upstream at e0563ffa; divergence v5.1.1 78699a91.

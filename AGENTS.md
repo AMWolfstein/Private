@@ -162,3 +162,5 @@ Activate the repository toolchain, then run `flutter analyze` and the full `flut
 Rust changes require `bash scripts/check_rust_backend.sh`; Android native changes require
 `bash scripts/check_android.sh` (host unit tests; no APK packaging). Instrumentation source
 compilation is separate from device execution; never report compilation as a device pass.
+
+Run Flutter test commands and APK builds serially in this checkout: both regenerate Android plugin registrants, and a test can add a dev-only plugin while release Java compilation excludes it.
