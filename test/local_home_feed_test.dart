@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -108,6 +110,67 @@ void main() {
       }
     },
   );
+  testWidgets(
+    'scan refresh keeps existing shelves and pull refresh reloads local queries',
+    (tester) async {
+      var refresh = false;
+      var reads = 0;
+      final gate = Completer<void>();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            settingsProvider.overrideWith(_Settings.new),
+            localLibraryProvider.overrideWith(_Library.new),
+            libraryCollectionsProvider.overrideWith(_Collections.new),
+            localHomeTracksProvider.overrideWith((ref) async {
+              ref.watch(
+                localLibraryProvider.select((s) => s.loadedIndexVersion),
+              );
+              if (refresh) await gate.future;
+              return [_item];
+            }),
+            libraryBrowsePageLoaderProvider.overrideWithValue((request) async {
+              reads++;
+              if (refresh) await gate.future;
+              return _browse(request);
+            }),
+          ],
+          child: MaterialApp(
+            theme: MornyeTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const HomeTab(mode: HomeTabMode.browse),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final before = reads;
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(HomeTab)),
+      );
+      refresh = true;
+      (container.read(localLibraryProvider.notifier) as _Library)
+          .scanFinished();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('Latest Releases in Your Library'), findsOneWidget);
+      expect(find.text('Recently Added'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(reads, greaterThan(before));
+      gate.complete();
+      await tester.pumpAndSettle();
+      final afterScan = reads;
+      unawaited(
+        tester
+            .state<RefreshIndicatorState>(find.byType(RefreshIndicator))
+            .show(),
+      );
+      await tester.pumpAndSettle();
+      expect(reads, greaterThan(afterScan));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final brightness in Brightness.values) {
     testWidgets(
       'local editorial home shelves and artist navigation ($brightness)',
@@ -172,7 +235,7 @@ void main() {
         );
         expect(find.text('My mix'), findsOneWidget);
         await tester.scrollUntilVisible(
-          find.byKey(const ValueKey('home-artist-album')),
+          find.byKey(const ValueKey('home-artist-album')).hitTestable(),
           300,
           scrollable: find.byType(Scrollable).first,
         );
