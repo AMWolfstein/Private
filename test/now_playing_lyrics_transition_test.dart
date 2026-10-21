@@ -468,15 +468,11 @@ void main() {
           );
           await settlePlayer(tester);
         }
-        final cover = find
-            .byKey(
-              ValueKey(
-                page == 'player'
-                    ? 'full-player-artwork'
-                    : 'compact-player-artwork',
-              ),
-            )
-            .hitTestable();
+        final cover = find.byKey(
+          ValueKey(
+            page == 'player' ? 'full-player-artwork' : 'compact-player-artwork',
+          ),
+        );
         final rect = tester.getRect(cover);
         final gesture = await tester.startGesture(rect.center);
         await gesture.moveBy(const Offset(-110, 0));
