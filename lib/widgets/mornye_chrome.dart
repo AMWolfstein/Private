@@ -81,6 +81,7 @@ class MornyeGlassPanel extends ConsumerWidget {
     this.smoothCorners = false,
     this.highlightIntensity = 1,
     this.glassProgress = 1,
+    this.clarity,
   }) : _composedBackdrop = false;
 
   const MornyeGlassPanel.overlay({
@@ -97,6 +98,7 @@ class MornyeGlassPanel extends ConsumerWidget {
     this.highlightIntensity = 1,
     this.glassProgress = 1,
   }) : strongTint = true,
+       clarity = null,
        _composedBackdrop = true;
 
   final Widget child;
@@ -111,6 +113,10 @@ class MornyeGlassPanel extends ConsumerWidget {
   final bool smoothCorners;
   final double highlightIntensity;
   final double glassProgress;
+
+  /// Renders this panel at a fixed clarity instead of the saved preference,
+  /// e.g. the Appearance preview while its slider is being dragged.
+  final double? clarity;
   final bool _composedBackdrop;
 
   @override
@@ -127,6 +133,7 @@ class MornyeGlassPanel extends ConsumerWidget {
       smoothCorners: smoothCorners,
       highlightIntensity: highlightIntensity,
       glassProgress: glassProgress,
+      clarity: clarity,
       // Tile ink must paint above the glass tint rather than beneath it.
       child: Material(type: MaterialType.transparency, child: child),
     );
@@ -155,7 +162,8 @@ class MornyeGlass extends ConsumerWidget {
     this.glassProgress = 1,
   }) : firstInGroup = true,
        lastInGroup = true,
-       samplesBackdrop = true;
+       samplesBackdrop = true,
+       clarity = null;
 
   const MornyeGlass.navigation({
     super.key,
@@ -173,6 +181,7 @@ class MornyeGlass extends ConsumerWidget {
     this.smoothCorners = false,
     this.highlightIntensity = 1,
     this.glassProgress = 1,
+    this.clarity,
   });
 
   // Quantized and shared across surfaces. Avoid composed color filters and
@@ -204,10 +213,14 @@ class MornyeGlass extends ConsumerWidget {
   /// Plain-page surfaces keep their tint without filtering a uniform backdrop.
   final bool samplesBackdrop;
 
+  /// Overrides the saved clarity preference for this surface only.
+  final double? clarity;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
-    final clarity = ref.watch(mornyeGlassClarityProvider);
+    final double clarity =
+        this.clarity ?? ref.watch(mornyeGlassClarityProvider);
     final level = ref.watch(mornyeGlassLevelProvider);
     final reveal = glassProgress.clamp(0.0, 1.0);
     final translucent =

@@ -162,14 +162,22 @@ class AppearanceSettingsPage extends ConsumerWidget {
   }
 }
 
-class _MornyeGlassClaritySlider extends ConsumerWidget {
+class _MornyeGlassClaritySlider extends ConsumerStatefulWidget {
   const _MornyeGlassClaritySlider();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final clarity = ref.watch(
-      themeProvider.select((settings) => settings.mornyeGlassClarity),
-    );
+  ConsumerState<_MornyeGlassClaritySlider> createState() =>
+      _MornyeGlassClaritySliderState();
+}
+
+class _MornyeGlassClaritySliderState
+    extends ConsumerState<_MornyeGlassClaritySlider> {
+  /// Only the preview follows a drag; the rest of the app updates on release.
+  double? _dragValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final double clarity = _dragValue ?? ref.watch(mornyeGlassClarityProvider);
     final notifier = ref.read(themeProvider.notifier);
     final theme = Theme.of(context);
     final l10n = context.l10n;
@@ -233,6 +241,7 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
                     padding: const EdgeInsets.all(18),
                     child: MornyeGlassPanel(
                       radius: 22,
+                      clarity: clarity,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 18,
@@ -267,10 +276,15 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
                 divisions: 20,
                 label: '${(clarity * 100).round()}%',
                 onChanged: adjustable
-                    ? (value) =>
-                          notifier.setMornyeGlassClarity(value, persist: false)
+                    ? (value) => setState(() => _dragValue = value)
                     : null,
-                onChangeEnd: adjustable ? notifier.setMornyeGlassClarity : null,
+                onChangeEnd: adjustable
+                    ? (value) {
+                        // Commit, persist and update the app in a single step.
+                        notifier.setMornyeGlassClarity(value);
+                        setState(() => _dragValue = null);
+                      }
+                    : null,
               ),
             ),
           ),
