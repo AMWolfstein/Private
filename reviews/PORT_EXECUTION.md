@@ -99,3 +99,14 @@ Graph 53a17a8e, source 822a4656: 23,988 unique nodes / 46,040 valid links; synch
 No APK built; device-only behavior NOT RUN. Normal remains default; persisted Immersive and landscape two-column behavior retained. Existing backdrop saturation and full-bleed Hero gating already match useful upstream behavior. Focused regressions caught and fixed GlobalKey ownership and clock-rebuild defects; ten corrected regressions pass. Transparent foreground artwork gesture region intentionally receives Immersive drags. Physical side-by-side visuals NOT RUN. No engine/dependencies/native changes, user-music writes or APK.
 Next: batch 15 (shared dependency comparison against refreshed upstream main). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 15 (2026-10-21)
+
+Refreshed upstream main remains e0563ffa. Compared all shared Pub declarations and overrides, resolved shared Cargo versions through both workspaces, and checked Flutter/Gradle/Android toolchain pins. No retained dependency version changes are available; no manifest or lockfile changes required.
+
+Comparison-only checkpoint. Evidence: reviews/upstream-v5.2.0-dependencies.json; upstream e0563ffad6df9f01d3e73e6099f74417422374de. Source remains batch 14.
+
+REUSED batch 14 verification for identical source; no redundant test execution in documentation-only batch 15. PASS: analysis clean; Flutter 1775 passed / 3 skipped / zero failures (04:18); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph 53a17a8e, source 822a4656: 23,988 unique nodes / 46,040 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. 33 shared runtime packages, eight development packages, one common override and 20 shared workspace Cargo dependencies have matching versions; direct mobile workspace declarations resolve to the same roxmltree/rusqlite versions. Local-only crate has no equivalent upstream path. Upstream-only network, service, iOS and branding dependencies rejected. No dependency additions or APK.
+Next: batch 16 (one reviewed dead-code patch and final compatibility report). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+

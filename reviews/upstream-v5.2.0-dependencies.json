@@ -1,0 +1,141 @@
+{
+  "upstream": "e0563ffad6df9f01d3e73e6099f74417422374de",
+  "pub": {
+    "dependencies": {
+      "shared_count": 33,
+      "differences": {},
+      "fork_only": [],
+      "upstream_only": [
+        "cached_network_image",
+        "connectivity_plus",
+        "dart_smb2",
+        "dynamic_color",
+        "flutter_cache_manager",
+        "flutter_secure_storage",
+        "http",
+        "material_symbols_icons",
+        "mornye_discord",
+        "receive_sharing_intent",
+        "url_launcher",
+        "video_player"
+      ]
+    },
+    "dev_dependencies": {
+      "shared_count": 8,
+      "differences": {},
+      "fork_only": [],
+      "upstream_only": [
+        "path_provider_platform_interface",
+        "video_player_platform_interface"
+      ]
+    },
+    "dependency_overrides": {
+      "shared_count": 1,
+      "differences": {},
+      "fork_only": [],
+      "upstream_only": [
+        "audioplayers_darwin",
+        "flutter_secure_storage_darwin"
+      ]
+    }
+  },
+  "cargo": {
+    "Cargo.toml:workspace": {
+      "shared_count": 20,
+      "version_differences": {},
+      "upstream_only": [
+        "aes",
+        "aes-gcm",
+        "async-compression",
+        "blowfish",
+        "bytes",
+        "cookie",
+        "futures-util",
+        "hickory-proto",
+        "hmac",
+        "html5ever",
+        "http",
+        "http-body-util",
+        "httpdate",
+        "hyper-rustls",
+        "hyper-util",
+        "libc",
+        "md-5",
+        "mornye-core",
+        "mornye-extensions",
+        "mornye-network",
+        "mornye-providers",
+        "roxmltree",
+        "rquickjs",
+        "rusqlite",
+        "rustls",
+        "rustls-native-certs",
+        "rustls-pemfile",
+        "rustls-platform-verifier",
+        "sha1",
+        "time",
+        "tokio",
+        "tokio-util",
+        "tower-service",
+        "zeroize"
+      ]
+    },
+    "crates/core/Cargo.toml:dependencies": {
+      "shared_count": 10,
+      "version_differences": {},
+      "upstream_only": [
+        "roxmltree",
+        "tempfile"
+      ]
+    },
+    "crates/core/Cargo.toml:dev-dependencies": {
+      "shared_count": 0,
+      "version_differences": {},
+      "upstream_only": []
+    },
+    "crates/mobile/Cargo.toml:dependencies": {
+      "shared_count": 15,
+      "version_differences": {},
+      "upstream_only": [
+        "mornye-core",
+        "mornye-extensions",
+        "mornye-network",
+        "zeroize"
+      ]
+    },
+    "crates/mobile/Cargo.toml:dev-dependencies": {
+      "shared_count": 0,
+      "version_differences": {},
+      "upstream_only": []
+    },
+    "crates/bindgen/Cargo.toml:dependencies": {
+      "shared_count": 1,
+      "version_differences": {},
+      "upstream_only": []
+    },
+    "crates/bindgen/Cargo.toml:dev-dependencies": {
+      "shared_count": 0,
+      "version_differences": {},
+      "upstream_only": []
+    }
+  },
+  "pins": {
+    ".fvmrc": {
+      "identical": true
+    },
+    "android/settings.gradle.kts": {
+      "identical": true
+    },
+    "android/gradle/wrapper/gradle-wrapper.properties": {
+      "identical": true
+    },
+    "Android SDK / NDK / JVM": {
+      "identical": true,
+      "values": "SDK 37; NDK 30.0.16248370; JVM 25"
+    }
+  },
+  "notes": [
+    "Fork local crate has no upstream path counterpart; shared dependency versions resolved through each workspace before comparison.",
+    "No retained dependency version changes. Upstream-only online/iOS/branding dependencies rejected."
+  ]
+}

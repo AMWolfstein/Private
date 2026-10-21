@@ -260,6 +260,17 @@ Graph 53a17a8e, source 822a4656: 23,988 unique nodes / 46,040 valid links; synch
 No APK built; device-only behavior NOT RUN. Normal remains default; persisted Immersive and landscape two-column behavior retained. Existing backdrop saturation and full-bleed Hero gating already match useful upstream behavior. Focused regressions caught and fixed GlobalKey ownership and clock-rebuild defects; ten corrected regressions pass. Transparent foreground artwork gesture region intentionally receives Immersive drags. Physical side-by-side visuals NOT RUN. No engine/dependencies/native changes, user-music writes or APK.
 Next: batch 15 (shared dependency comparison against refreshed upstream main). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 15 (2026-10-21)
+
+Refreshed upstream main remains e0563ffa. Compared all shared Pub declarations and overrides, resolved shared Cargo versions through both workspaces, and checked Flutter/Gradle/Android toolchain pins. No retained dependency version changes are available; no manifest or lockfile changes required.
+
+Comparison-only checkpoint. Evidence: reviews/upstream-v5.2.0-dependencies.json; upstream e0563ffad6df9f01d3e73e6099f74417422374de. Source remains batch 14.
+
+REUSED batch 14 verification for identical source; no redundant test execution in documentation-only batch 15. PASS: analysis clean; Flutter 1775 passed / 3 skipped / zero failures (04:18); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph 53a17a8e, source 822a4656: 23,988 unique nodes / 46,040 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. 33 shared runtime packages, eight development packages, one common override and 20 shared workspace Cargo dependencies have matching versions; direct mobile workspace declarations resolve to the same roxmltree/rusqlite versions. Local-only crate has no equivalent upstream path. Upstream-only network, service, iOS and branding dependencies rejected. No dependency additions or APK.
+Next: batch 16 (one reviewed dead-code patch and final compatibility report). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+
 ## Batches
 
 | # | Items | Notes |
@@ -278,7 +289,7 @@ Next: batch 15 (shared dependency comparison against refreshed upstream main). U
 | 12 DONE | MORN-013..016 | M5+M6; MORN-013 uses the tonal style (owner decision). |
 | 13 DONE | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
 | 14 DONE | PLAY-001..004, U-311 | M10+M11 + the upstream full-screen look for the Immersive view (`UPSTREAM.md` U-311). |
-| 15 | Dependencies | Re-run the comparison above against the then-current Mornye `main` and against anything the ports added. Apply version bumps only for packages/crates this repo uses. Expected: no change. |
+| 15 DONE | Dependencies | Re-run the comparison above against the then-current Mornye `main` and against anything the ports added. Apply version bumps only for packages/crates this repo uses. Expected: no change. |
 | 16 | Dead code, one patch | `FIX_PLAN.md` Tier 3 (rows 22-27, 25a-d) and HOME-007 leftovers if still present. First re-run the dead-code checks with graphify and grep, because ports may now use code that was dead (e.g. widgets, l10n keys). Keep `NativeReplayGainPolicy` (owner decision) and `MANAGE_EXTERNAL_STORAGE`. Follow the `AGENTS.md` feature-removal workflow; delete the l10n keys last and re-scan. |
 
 Batches 10-14 come after the ports because the ports touch the same screens.

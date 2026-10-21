@@ -39,8 +39,8 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 9. DONE — U-301 (equalizer, alone)
 10-14. DONE — Mornye parity batches (`FIX_PLAN.md` Tier 2c: M1+M2, M3+M4, M5+M6, M7-M9 + HOME-007,
    M10+M11 + U-311)
-15. NEXT — Dependency updates from Mornye (`pubspec.*`, `rust_backend` Cargo, Gradle, toolchain pins)
-16. Dead-code removal as one patch (`FIX_PLAN.md` Tier 3)
+15. DONE — Dependency updates from Mornye (`pubspec.*`, `rust_backend` Cargo, Gradle, toolchain pins)
+16. NEXT — Dead-code removal as one patch (`FIX_PLAN.md` Tier 3)
 
 ## New in Mornye (`21ee30c4..e0563ffa`)
 
