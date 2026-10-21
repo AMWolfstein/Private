@@ -238,6 +238,17 @@ Graph 4bb91e88, source 8477c4bc: 23,970 unique nodes / 46,006 valid links; synch
 No APK built; device-only behavior NOT RUN. Ten light/dark artwork, feedback, contrast and accessibility regressions pass. Initial fixture lookup failures corrected to inspect the configured header before sliver flattening. No native/dependency/schema changes or music-file writes. Physical visual checks NOT RUN.
 Next: batch 13 (HOME-001..008; FIX_PLAN M7–M9). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 13 (2026-10-21)
+
+HOME-001..008 adapt the local editorial feed: aspect-preserving indexed artwork with embedded fallback, cached shelves across scans, pull-to-refresh, guided empty/retry states and loading skeletons; localized dates, explicit labels and responsive themed cards; stable identities and Home reselect scrolling. Removed two unused Home parts and the unreachable branding intro.
+
+Source `0d9dbf9c`, lint correction `504a38df` → graph `4b4fe09f`; cached-refresh fixture `f5ec3973` and hydration guard `c4e9e536` → graph `8ad07efd`. Compared upstream Home sizing/skeleton patterns at e0563ffa.
+
+PASS: analysis clean; Flutter 1771 passed / 3 skipped / zero failures (04:18); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph 8ad07efd, source c4e9e536: 23,983 unique nodes / 46,028 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. Recently Added ordering and release-tag-only Latest Releases queries unchanged. Optional long-press menus omitted; existing local detail navigation retained. Initial tests exposed viewport assumptions and missing standalone Intl date initialization, corrected before final checks. No music-file writes/dependencies/native changes or APK. Home same-path image invalidation remains with existing metadata/cache ownership. Tablet/device visual comparisons NOT RUN.
+Next: batch 14 (PLAY-001..004 and U-311). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+
 ## Batches
 
 | # | Items | Notes |
@@ -254,7 +265,7 @@ Next: batch 13 (HOME-001..008; FIX_PLAN M7–M9). User authorized continuing thr
 | 10 DONE | MORN-001..005, MORN-017 | `FIX_PLAN.md` M1+M2. |
 | 11 DONE | MORN-006..012 | M3+M4. |
 | 12 DONE | MORN-013..016 | M5+M6; MORN-013 uses the tonal style (owner decision). |
-| 13 | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
+| 13 DONE | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
 | 14 | PLAY-001..004, U-311 | M10+M11 + the upstream full-screen look for the Immersive view (`UPSTREAM.md` U-311). |
 | 15 | Dependencies | Re-run the comparison above against the then-current Mornye `main` and against anything the ports added. Apply version bumps only for packages/crates this repo uses. Expected: no change. |
 | 16 | Dead code, one patch | `FIX_PLAN.md` Tier 3 (rows 22-27, 25a-d) and HOME-007 leftovers if still present. First re-run the dead-code checks with graphify and grep, because ports may now use code that was dead (e.g. widgets, l10n keys). Keep `NativeReplayGainPolicy` (owner decision) and `MANAGE_EXTERNAL_STORAGE`. Follow the `AGENTS.md` feature-removal workflow; delete the l10n keys last and re-scan. |
