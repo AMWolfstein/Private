@@ -249,6 +249,17 @@ Graph 8ad07efd, source c4e9e536: 23,983 unique nodes / 46,028 valid links; synch
 No APK built; device-only behavior NOT RUN. Recently Added ordering and release-tag-only Latest Releases queries unchanged. Optional long-press menus omitted; existing local detail navigation retained. Initial tests exposed viewport assumptions and missing standalone Intl date initialization, corrected before final checks. No music-file writes/dependencies/native changes or APK. Home same-path image invalidation remains with existing metadata/cache ownership. Tablet/device visual comparisons NOT RUN.
 Next: batch 14 (PLAY-001..004 and U-311). User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
+## Completed batch 14 (2026-10-21)
+
+PLAY-001..004 and U-311 adapt Immersive cover proportions/fade and a shared artwork/title swipe scope, retain the background across rotation, label the lyrics-size control and match queue swipe corners. Separate inset/full-bleed artwork keys and bounded ownership prevent rotation/rapid-view conflicts; queue-index selection avoids transport rebuilds on clock updates.
+
+U-311 upstream `05a56133` → source `3dfa8b73` → graph `140ecef1`; lint `45c40118` → `9f62788e`; fixtures `5fd4892a` → `72145734`; ownership/subscription correction `822a4656` → `3c9fe836`, labels `53a17a8e`. PLAY-003 behavior also present in upstream befcd2ad; adapted using Semantics around the installed Flutter Slider.
+
+PASS: analysis clean; Flutter 1775 passed / 3 skipped / zero failures (04:18); Kotlin checks NOT RUN (no Kotlin source changes); Rust script NOT RUN (no Rust source changes).
+Graph 53a17a8e, source 822a4656: 23,988 unique nodes / 46,040 valid links; synchronized, existing vendor extraction warnings remain.
+No APK built; device-only behavior NOT RUN. Normal remains default; persisted Immersive and landscape two-column behavior retained. Existing backdrop saturation and full-bleed Hero gating already match useful upstream behavior. Focused regressions caught and fixed GlobalKey ownership and clock-rebuild defects; ten corrected regressions pass. Transparent foreground artwork gesture region intentionally receives Immersive drags. Physical side-by-side visuals NOT RUN. No engine/dependencies/native changes, user-music writes or APK.
+Next: batch 15 (shared dependency comparison against refreshed upstream main). User authorized continuing through the remaining PORT_PLAN batches without asking again.
+
 ## Batches
 
 | # | Items | Notes |
@@ -266,7 +277,7 @@ Next: batch 14 (PLAY-001..004 and U-311). User authorized continuing through the
 | 11 DONE | MORN-006..012 | M3+M4. |
 | 12 DONE | MORN-013..016 | M5+M6; MORN-013 uses the tonal style (owner decision). |
 | 13 DONE | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
-| 14 | PLAY-001..004, U-311 | M10+M11 + the upstream full-screen look for the Immersive view (`UPSTREAM.md` U-311). |
+| 14 DONE | PLAY-001..004, U-311 | M10+M11 + the upstream full-screen look for the Immersive view (`UPSTREAM.md` U-311). |
 | 15 | Dependencies | Re-run the comparison above against the then-current Mornye `main` and against anything the ports added. Apply version bumps only for packages/crates this repo uses. Expected: no change. |
 | 16 | Dead code, one patch | `FIX_PLAN.md` Tier 3 (rows 22-27, 25a-d) and HOME-007 leftovers if still present. First re-run the dead-code checks with graphify and grep, because ports may now use code that was dead (e.g. widgets, l10n keys). Keep `NativeReplayGainPolicy` (owner decision) and `MANAGE_EXTERNAL_STORAGE`. Follow the `AGENTS.md` feature-removal workflow; delete the l10n keys last and re-scan. |
 

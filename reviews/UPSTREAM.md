@@ -37,9 +37,9 @@ entry was added manually. WIP removed in the batch 2 docs checkpoint. Validation
 7. DONE — U-308 (duets + share cards), U-302 (+ `9acaa760`)
 8. DONE — U-304, U-305, U-307, U-312
 9. DONE — U-301 (equalizer, alone)
-10-14. NEXT — Mornye parity batches (`FIX_PLAN.md` Tier 2c: M1+M2, M3+M4, M5+M6, M7-M9 + HOME-007,
+10-14. DONE — Mornye parity batches (`FIX_PLAN.md` Tier 2c: M1+M2, M3+M4, M5+M6, M7-M9 + HOME-007,
    M10+M11 + U-311)
-15. Dependency updates from Mornye (`pubspec.*`, `rust_backend` Cargo, Gradle, toolchain pins)
+15. NEXT — Dependency updates from Mornye (`pubspec.*`, `rust_backend` Cargo, Gradle, toolchain pins)
 16. Dead-code removal as one patch (`FIX_PLAN.md` Tier 3)
 
 ## New in Mornye (`21ee30c4..e0563ffa`)
@@ -97,6 +97,8 @@ settings**, recorded in `AGENTS.md`. Do not restore the download-era Metadata pa
 Tag Mode UI (`settings_search_test` asserts both are absent).
 
 ### U-311: Immersive view looks exactly like upstream full-screen cover (`05a56133`)
+
+ADAPT completed in batch 14: `3dfa8b73`, ownership/clock correction `822a4656`. Normal default/retained PlayerView setting and landscape layout preserved; background palette state survives rotation. No Material backdrop, motion artwork or extra cover-style setting.
 
 Owner request (2026-10-20). Keep this fork's Player view setting (`themeProvider.playerView`,
 persisted, Mornye only, Normal in landscape); take only upstream's Mornye still-cover look:
