@@ -8106,9 +8106,9 @@
     "semantic_hash": ""
   },
   "test/collection_visual_contract_test.dart": {
-    "mtime": 1792527314.8230338,
-    "seen": 1792527375.8047254,
-    "ast_hash": "0bd185ab36aac2ecb708f00fcf1b19ee",
+    "mtime": 1792527635.0545871,
+    "seen": 1792527660.701403,
+    "ast_hash": "6a2f936434a85d031949faf31fb23486",
     "semantic_hash": ""
   }
 }
