@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
@@ -14,6 +15,8 @@ ui.FragmentProgram? _loadedSelectionMaskProgram;
 const _heldWidthGrowth = 0.28;
 const _heldHeightGrowth = 0.24;
 const _pillRadius = 32.0;
+// The package nav bar's tab-scale squash/stretch (deformation capped at 12%).
+const _dragMotion = LiquidGlassLensMotionSpec(maxDeformation: 0.12);
 
 /// Selection with a transient lens over the fixed-size foreground while held.
 /// It refracts both the bar's backdrop and its icons, rendered only once.
@@ -61,7 +64,7 @@ class MornyeSelectionPill extends ConsumerStatefulWidget {
 }
 
 class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   int? _dragIndex;
   bool _dragCancelled = false;
   bool _pressed = false;
@@ -74,6 +77,12 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
   ui.FragmentProgram? _maskProgram;
   Widget? _items;
   int? _itemsSelected;
+
+  /// Squash/stretch of the held pill while it is dragged between tabs.
+  final _motion = LiquidGlassLensMotion(spec: _dragMotion);
+  Ticker? _motionTicker;
+  Duration? _motionLast;
+  double _laneWidth = 0;
 
   @override
   void initState() {
@@ -104,8 +113,41 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
     }
   }
 
+  /// Samples the dragged pill's centre each frame; drags move it 1:1, so
+  /// the model sees real finger motion rather than the tap glide.
+  void _startMotion() {
+    if (_motion.isTracking) return;
+    _motion.start();
+    _motionLast = null;
+    final ticker = _motionTicker ??= createTicker(_trackMotion);
+    if (!ticker.isActive) ticker.start();
+  }
+
+  void _stopMotion() {
+    if (!_motion.isTracking) return;
+    // Reset at release, masked by the lens contracting, as in the package.
+    _motion.stop();
+    _motionTicker?.stop();
+  }
+
+  void _trackMotion(Duration elapsed) {
+    final alignment = _dragAlignment;
+    final count = widget.labels.length;
+    if (alignment == null || count == 0) return;
+    final last = _motionLast ?? elapsed;
+    _motionLast = elapsed;
+    final dt = (elapsed - last).inMicroseconds / 1e6;
+    if (dt <= 0) return;
+    final item = _laneWidth / count;
+    final x = (alignment + 1) / 2 * (_laneWidth - item) + item / 2;
+    final before = _motion.deviation;
+    _motion.track(Offset(x, 0), now: elapsed.inMicroseconds / 1e6, dt: dt);
+    if (_motion.deviation != before) setState(() {});
+  }
+
   @override
   void dispose() {
+    _motionTicker?.dispose();
     _pressAnimation.dispose();
     _pressController.dispose();
     super.dispose();
@@ -148,12 +190,14 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
                       (width - 2 * halfItem)) *
                   2 -
               1;
+    _laneWidth = width;
     setState(() {
       _dragIndex = logical;
       _dragAlignment = Directionality.of(context) == TextDirection.rtl
           ? -position
           : position;
     });
+    if (_pressed) _startMotion();
   }
 
   @override
@@ -165,10 +209,12 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
     final outlines = ref.watch(mornyeGlassOutlinesProvider);
     final lensEnabled =
         widget.liquidInteraction &&
-        ui.ImageFilter.isShaderFilterSupported &&
+        ref.watch(mornyeShaderFiltersSupportedProvider) &&
         !MediaQuery.disableAnimationsOf(context) &&
         !(widget.contrastBlocked ?? MediaQuery.highContrastOf(context));
     final pressProgress = lensEnabled ? _pressAnimation.value : 0.0;
+    // Only the held glass deforms; the resting pill keeps its shape.
+    final deviation = lensEnabled ? _motion.deviation * pressProgress : 0.0;
     final restingOpacity = 1 - pressProgress;
     final content = Listener(
       // An accepted drag can end with a PointerCancelEvent. Do not navigate
@@ -196,6 +242,7 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
       onPointerUp: (event) {
         if (event.pointer != _activePointer) return;
         _activePointer = null;
+        _stopMotion();
         _pressController.reverse();
         setState(() {
           _pressed = false;
@@ -206,6 +253,7 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
       onPointerCancel: (event) {
         if (event.pointer != _activePointer) return;
         _activePointer = null;
+        _stopMotion();
         _pressController.reverse();
         setState(() {
           _dragCancelled = true;
@@ -263,16 +311,22 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
                           // fixed resting pill leaves a second capsule inside
                           // the held glass, especially during release.
                           child: Transform.scale(
-                            scaleX: 1 + _heldWidthGrowth * pressProgress,
-                            scaleY: 1 + _heldHeightGrowth * pressProgress,
+                            scaleX:
+                                (1 + _heldWidthGrowth * pressProgress) *
+                                (1 + deviation),
+                            scaleY:
+                                (1 + _heldHeightGrowth * pressProgress) *
+                                (1 - deviation),
                             child: DecoratedBox(
                               decoration: BoxDecoration(
                                 color: scheme.onSurface.withValues(
                                   alpha:
                                       restingOpacity *
+                                      // A soft light highlight, as in
+                                      // Apple Music's floating tab bar.
                                       (scheme.brightness == Brightness.dark
                                           ? 0.12
-                                          : 0.08),
+                                          : 0.04),
                                 ),
                                 borderRadius: BorderRadius.circular(
                                   _pillRadius,
@@ -292,6 +346,9 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
                                     ),
                                     blurRadius: 1,
                                     offset: const Offset(0, 0.5),
+                                    // Edge only: under the translucent
+                                    // fill it would darken the pill.
+                                    blurStyle: BlurStyle.outer,
                                   ),
                                 ],
                               ),
@@ -310,7 +367,13 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
                 // The lens must sample the foreground as well as the page.
                 // Below the icons it would look like a rim on a flat backdrop.
                 if (lensEnabled && selected >= 0 && selected < count)
-                  _interactionLens(selected, count, pressProgress, outlines),
+                  _interactionLens(
+                    selected,
+                    count,
+                    pressProgress,
+                    outlines,
+                    deviation,
+                  ),
               ],
             ),
           ),
@@ -413,6 +476,7 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
     int count,
     double progress,
     bool outlines,
+    double deviation,
   ) => Positioned.fill(
     child: IgnorePointer(
       child: AnimatedAlign(
@@ -428,8 +492,8 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
           widthFactor: 1 / count,
           heightFactor: 1,
           child: Transform.scale(
-            scaleX: 1 + _heldWidthGrowth * progress,
-            scaleY: 1 + _heldHeightGrowth * progress,
+            scaleX: (1 + _heldWidthGrowth * progress) * (1 + deviation),
+            scaleY: (1 + _heldHeightGrowth * progress) * (1 - deviation),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(_pillRadius),
               child: LiquidGlassBatch.exclude(
