@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
@@ -11,7 +10,7 @@ Future<T?> showAppDialog<T>({
   bool barrierDismissible = true,
   bool useRootNavigator = true,
 }) {
-  if (context.isMornye) {
+  {
     final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
     final themes = InheritedTheme.capture(from: context, to: navigator.context);
     return navigator.push<T>(
@@ -19,51 +18,6 @@ Future<T?> showAppDialog<T>({
         context: context,
         builder: (context) => themes.wrap(Builder(builder: builder)),
         barrierDismissible: barrierDismissible,
-      ),
-    );
-  }
-  return showDialog<T>(
-    context: context,
-    builder: builder,
-    barrierDismissible: barrierDismissible,
-    useRootNavigator: useRootNavigator,
-  );
-}
-
-/// The confirmation glass also hosts larger dialogs such as release notes.
-class AppDialogSurface extends StatelessWidget {
-  const AppDialogSurface({
-    super.key,
-    required this.child,
-    this.maxWidth = 480,
-    this.backgroundColor,
-    this.shape,
-  });
-
-  final Widget child;
-  final double maxWidth;
-  final Color? backgroundColor;
-  final ShapeBorder? shape;
-
-  @override
-  Widget build(BuildContext context) {
-    final mornye = context.isMornye;
-    return Dialog(
-      backgroundColor: mornye ? Colors.transparent : backgroundColor,
-      surfaceTintColor: mornye ? Colors.transparent : null,
-      elevation: mornye ? 0 : null,
-      shape: shape,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: context.tokens.dialogInsetH,
-        vertical: 24,
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: mornye
-            ? MornyeGlassPanel.overlay(
-                child: SingleChildScrollView(child: child),
-              )
-            : child,
       ),
     );
   }
@@ -145,16 +99,6 @@ class AppAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
-      return AlertDialog(
-        backgroundColor: backgroundColor,
-        shape: shape,
-        icon: icon,
-        title: title,
-        content: content,
-        actions: actions,
-      );
-    }
     final theme = Theme.of(context);
     final primaryActions = actions.where(
       (action) =>
@@ -239,7 +183,7 @@ class AppDialogAction extends StatelessWidget {
     this.isDestructive = false,
     this.isDefault = false,
     this.filled = false,
-    this.outlined = false,
+
     this.style,
   });
 
@@ -248,12 +192,12 @@ class AppDialogAction extends StatelessWidget {
   final bool isDestructive;
   final bool isDefault;
   final bool filled;
-  final bool outlined;
+
   final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    {
       final theme = Theme.of(context);
       final scheme = theme.colorScheme;
       final color = onPressed == null
@@ -283,10 +227,5 @@ class AppDialogAction extends StatelessWidget {
         ),
       );
     }
-    return filled
-        ? FilledButton(onPressed: onPressed, style: style, child: child)
-        : outlined
-        ? OutlinedButton(onPressed: onPressed, style: style, child: child)
-        : TextButton(onPressed: onPressed, style: style, child: child);
   }
 }

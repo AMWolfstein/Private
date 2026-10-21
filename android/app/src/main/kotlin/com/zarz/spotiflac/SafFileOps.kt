@@ -23,19 +23,9 @@ object SafFileOps {
     // cannot interleave writes into one document. Different names keep
     // writing in parallel; the second same-name caller blocks, then hits
     // the exists check and reports already_exists.
-    private val safNameLocks = KeyedLockPool<String>()
 
-    data class UniqueWriteResult(
-        val uri: String,
-        val fileName: String,
-        val publishTimingsMs: Map<String, Long> = emptyMap(),
-    )
-    data class ExistingAwareWriteResult(
-        val uri: String,
-        val fileName: String,
-        val alreadyExists: Boolean,
-        val publishTimingsMs: Map<String, Long> = emptyMap(),
-    )
+
+
 
     private class PublishTrace {
         private val started = System.nanoTime()
@@ -52,15 +42,7 @@ object SafFileOps {
             ("total" to (System.nanoTime() - started) / 1_000_000)
     }
 
-    private fun <T> withSafNameLock(
-        treeUriStr: String,
-        relativeDir: String,
-        fileName: String,
-        block: () -> T
-    ): T {
-        val key = "$treeUriStr|$relativeDir|${fileName.lowercase(Locale.ROOT)}"
-        return safNameLocks.withLock(key, block)
-    }
+
 
     /**
      * Flushes and fsyncs a SAF output stream so the copied bytes are durable
@@ -115,243 +97,21 @@ object SafFileOps {
         return "${sanitizeFilename(fileName)}.replaced"
     }
 
-    fun copyContentUriToTemp(context: Context, uriStr: String): String? {
-        var temp: File? = null
-        return try {
-            val uri = Uri.parse(uriStr)
-            val extension = DocumentFile.fromSingleUri(context, uri)
-                ?.name
-                ?.substringAfterLast('.', "")
-                ?.takeIf { it.isNotBlank() }
-                ?.let { ".$it" }
-                ?: ".tmp"
-            val createdTemp = createCoreBackend(context).createTemporaryMediaFile(context, "native_saf_", extension)
-            temp = createdTemp
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                createdTemp.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            } ?: run {
-                createdTemp.delete()
-                return null
-            }
-            createdTemp.absolutePath
-        } catch (e: Exception) {
-            try { temp?.delete() } catch (_: Exception) {}
-            android.util.Log.w("SpotiFLAC", "Failed to copy SAF URI to temp: ${e.message}")
-            null
-        }
-    }
 
-    fun writeFileToSaf(
-        context: Context,
-        treeUriStr: String,
-        relativeDir: String,
-        fileName: String,
-        mimeType: String,
-        srcPath: String
-    ): String? {
-        val finalName = sanitizeFilename(fileName)
-        return withSafNameLock(treeUriStr, sanitizeRelativeDir(relativeDir), finalName) {
-            try {
-                val targetDir = ensureDocumentDir(context, Uri.parse(treeUriStr), relativeDir)
-                    ?: return@withSafNameLock null
-                writeFileToSafLocked(context, targetDir, finalName, srcPath)
-            } catch (e: Exception) {
-                android.util.Log.w("SpotiFLAC", "Failed to write file to SAF: ${e.message}")
-                null
-            }
-        }
-    }
 
-    fun writeFileToSafUnique(
-        context: Context,
-        treeUriStr: String,
-        relativeDir: String,
-        fileName: String,
-        mimeType: String,
-        srcPath: String,
-        preservedSuffix: String = "",
-    ): UniqueWriteResult? {
-        val safeRelativeDir = sanitizeRelativeDir(relativeDir)
-        val preferredName = sanitizeFilenamePreservingSuffix(fileName, preservedSuffix)
-        val trace = PublishTrace()
-        return withSafNameLock(treeUriStr, safeRelativeDir, preferredName) {
-            trace.mark("lock_wait")
-            val treeUri = Uri.parse(treeUriStr)
-            val targetDir = ensureDocumentDir(context, treeUri, safeRelativeDir) ?: return@withSafNameLock null
-            trace.mark("directory")
-            val availableName = findAvailableFileName(
-                context,
-                targetDir,
-                preferredName,
-                preservedSuffix,
-            )
-            trace.mark("existing_check")
-            val uri = writeFileToSafLocked(
-                context,
-                targetDir,
-                availableName,
-                srcPath,
-                trace,
-            ) ?: return@withSafNameLock null
-            UniqueWriteResult(uri = uri, fileName = availableName, publishTimingsMs = trace.finish())
-        }
-    }
 
-    fun writeFileToSafCollisionAware(
-        context: Context,
-        treeUriStr: String,
-        relativeDir: String,
-        cleanFileName: String,
-        variantFileName: String,
-        mimeType: String,
-        srcPath: String,
-        preservedSuffix: String = "",
-    ): UniqueWriteResult? {
-        val safeRelativeDir = sanitizeRelativeDir(relativeDir)
-        val cleanName = sanitizeFilename(cleanFileName)
-        val preferredVariant = sanitizeFilenamePreservingSuffix(
-            variantFileName,
-            preservedSuffix,
-        )
-        val trace = PublishTrace()
-        return withSafNameLock(treeUriStr, safeRelativeDir, cleanName) {
-            trace.mark("lock_wait")
-            val treeUri = Uri.parse(treeUriStr)
-            val targetDir = ensureDocumentDir(context, treeUri, safeRelativeDir)
-                ?: return@withSafNameLock null
-            trace.mark("directory")
-            val selectedName = if (findSafChild(context, targetDir, cleanName) == null) {
-                cleanName
-            } else {
-                findAvailableFileName(context, targetDir, preferredVariant, preservedSuffix)
-            }
-            trace.mark("existing_check")
-            val uri = writeFileToSafLocked(
-                context,
-                targetDir,
-                selectedName,
-                srcPath,
-                trace,
-            ) ?: return@withSafNameLock null
-            UniqueWriteResult(uri = uri, fileName = selectedName, publishTimingsMs = trace.finish())
-        }
-    }
 
-    fun writeFileToSafIfAbsent(
-        context: Context,
-        treeUriStr: String,
-        relativeDir: String,
-        fileName: String,
-        mimeType: String,
-        srcPath: String,
-    ): ExistingAwareWriteResult? {
-        val safeRelativeDir = sanitizeRelativeDir(relativeDir)
-        val finalName = sanitizeFilename(fileName)
-        val trace = PublishTrace()
-        return withSafNameLock(treeUriStr, safeRelativeDir, finalName) {
-            trace.mark("lock_wait")
-            val treeUri = Uri.parse(treeUriStr)
-            val targetDir = ensureDocumentDir(context, treeUri, safeRelativeDir)
-                ?: return@withSafNameLock null
-            trace.mark("directory")
-            val existing = findSafChild(context, targetDir, finalName)
-            trace.mark("existing_check")
-            if (existing != null && existing.isFile && existing.length() > 0L) {
-                return@withSafNameLock ExistingAwareWriteResult(
-                    uri = existing.uri.toString(),
-                    fileName = existing.name ?: finalName,
-                    alreadyExists = true,
-                    publishTimingsMs = trace.finish(),
-                )
-            }
-            val uri = writeFileToSafLocked(
-                context,
-                targetDir,
-                finalName,
-                srcPath,
-                trace,
-            ) ?: return@withSafNameLock null
-            ExistingAwareWriteResult(
-                uri = uri,
-                fileName = finalName,
-                alreadyExists = false,
-                publishTimingsMs = trace.finish(),
-            )
-        }
-    }
 
-    private fun sanitizeFilenamePreservingSuffix(fileName: String, suffix: String): String {
-        val sanitized = sanitizeFilename(fileName)
-        val trimmedSuffix = suffix.trim()
-        if (trimmedSuffix.isEmpty() || sanitized.contains(trimmedSuffix)) return sanitized
 
-        val dotIndex = fileName.lastIndexOf('.')
-        val hasExtension = dotIndex > 0 && dotIndex < fileName.length - 1
-        val extension = if (hasExtension) fileName.substring(dotIndex) else ""
-        val rawStem = if (hasExtension) fileName.substring(0, dotIndex) else fileName
-        val rawPrefix = rawStem.replace(trimmedSuffix, "").trim(' ', '_', '-')
-        val safeSuffix = sanitizeFilename(trimmedSuffix)
-        val reserved = " - $safeSuffix$extension"
-        val prefixBytes = (MAX_SAF_DISPLAY_NAME_UTF8_BYTES - reserved.toByteArray(Charsets.UTF_8).size)
-            .coerceAtLeast(1)
-        val safePrefix = truncateUtf8Bytes(sanitizeFilename(rawPrefix), prefixBytes)
-            .trim()
-            .trim('.', ' ', '_', '-')
-            .ifBlank { "track" }
-        return "$safePrefix$reserved"
-    }
 
-    private fun findAvailableFileName(
-        context: Context,
-        parent: DocumentFile,
-        preferredName: String,
-        preservedSuffix: String,
-    ): String {
-        if (findSafChild(context, parent, preferredName) == null) return preferredName
-        for (counter in 2..9999) {
-            val candidate = appendFilenameCounter(
-                preferredName,
-                counter.toLong(),
-                preservedSuffix,
-            )
-            if (findSafChild(context, parent, candidate) == null) return candidate
-        }
-        return appendFilenameCounter(
-            preferredName,
-            System.currentTimeMillis(),
-            preservedSuffix,
-        )
-    }
 
-    private fun appendFilenameCounter(
-        fileName: String,
-        counter: Long,
-        preservedSuffix: String,
-    ): String {
-        val dotIndex = fileName.lastIndexOf('.')
-        val hasExtension = dotIndex > 0 && dotIndex < fileName.length - 1
-        val extension = if (hasExtension) fileName.substring(dotIndex) else ""
-        val originalStem = if (hasExtension) fileName.substring(0, dotIndex) else fileName
-        val safePreservedSuffix = preservedSuffix.trim()
-        val hasPreservedSuffix = safePreservedSuffix.isNotEmpty() && originalStem.contains(safePreservedSuffix)
-        val stem = if (hasPreservedSuffix) {
-            originalStem.replace(safePreservedSuffix, "").trim(' ', '_', '-')
-        } else {
-            originalStem
-        }
-        val suffix = if (hasPreservedSuffix) {
-            " - $safePreservedSuffix ($counter)"
-        } else {
-            " ($counter)"
-        }
-        val reservedBytes = extension.toByteArray(Charsets.UTF_8).size +
-            suffix.toByteArray(Charsets.UTF_8).size
-        val maxStemBytes = (MAX_SAF_DISPLAY_NAME_UTF8_BYTES - reservedBytes).coerceAtLeast(1)
-        val safeStem = truncateUtf8Bytes(stem, maxStemBytes).trim().trim('.', ' ').ifBlank { "track" }
-        return "$safeStem$suffix$extension"
-    }
+
+
+
+
+
+
+
 
     private fun writeFileToSafLocked(
         context: Context,
@@ -402,13 +162,7 @@ object SafFileOps {
         }
     }
 
-    fun deleteContentUri(context: Context, uriStr: String): Boolean {
-        return try {
-            DocumentFile.fromSingleUri(context, Uri.parse(uriStr))?.delete() == true
-        } catch (_: Exception) {
-            false
-        }
-    }
+
 
     internal fun normalizeExt(ext: String?): String {
         val trimmed = ext?.trim().orEmpty()
@@ -416,18 +170,7 @@ object SafFileOps {
         return if (trimmed.startsWith(".")) trimmed.lowercase(Locale.ROOT) else ".${trimmed.lowercase(Locale.ROOT)}"
     }
 
-    internal fun mimeTypeForExt(ext: String?): String {
-        return when (normalizeExt(ext)) {
-            ".m4a", ".mp4" -> "audio/mp4"
-            ".mp3" -> "audio/mpeg"
-            ".opus", ".ogg" -> "audio/ogg"
-            ".flac" -> "audio/flac"
-            ".wav" -> "audio/wav"
-            ".aiff", ".aif", ".aifc" -> "audio/aiff"
-            ".lrc" -> "application/octet-stream"
-            else -> "application/octet-stream"
-        }
-    }
+
 
     private fun buildStagedSafFileName(fileName: String): String {
         val safeName = sanitizeFilename(fileName)

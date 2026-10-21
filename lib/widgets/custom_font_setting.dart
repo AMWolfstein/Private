@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/services/custom_font_service.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 
 class CustomFontSetting extends ConsumerStatefulWidget {
   const CustomFontSetting({super.key});
@@ -47,7 +46,7 @@ class _CustomFontSettingState extends ConsumerState<CustomFontSetting> {
   Widget build(BuildContext context) {
     final theme = ref.watch(themeProvider);
     return ListTile(
-      leading: context.isMornye ? null : const Icon(Icons.text_fields),
+      leading: null,
       title: Text(context.l10n.appearanceCustomFont),
       subtitle: Text(
         theme.customFontId.isEmpty

@@ -143,48 +143,6 @@ class LocalLibraryItem {
         format: json['format'] as String?,
       );
 
-  LocalLibraryItem withAudioMetadata({
-    int? duration,
-    int? bitDepth,
-    int? sampleRate,
-    int? bitrate,
-    bool? explicit,
-    bool? hasLyrics,
-    bool? hasReplayGain,
-    String? format,
-  }) {
-    return LocalLibraryItem(
-      id: id,
-      sourceId: sourceId,
-      trackName: trackName,
-      artistName: artistName,
-      albumName: albumName,
-      albumArtist: albumArtist,
-      filePath: filePath,
-      coverPath: coverPath,
-      scannedAt: scannedAt,
-      fileModTime: fileModTime,
-      isrc: isrc,
-      trackNumber: trackNumber,
-      totalTracks: totalTracks,
-      discNumber: discNumber,
-      totalDiscs: totalDiscs,
-      duration: duration ?? this.duration,
-      releaseDate: releaseDate,
-      bitDepth: bitDepth ?? this.bitDepth,
-      sampleRate: sampleRate ?? this.sampleRate,
-      bitrate: bitrate ?? this.bitrate,
-      genre: genre,
-      composer: composer,
-      label: label,
-      copyright: copyright,
-      explicit: explicit ?? this.explicit,
-      hasLyrics: hasLyrics ?? this.hasLyrics,
-      hasReplayGain: hasReplayGain ?? this.hasReplayGain,
-      format: format ?? this.format,
-    );
-  }
-
   String get matchKey =>
       '${sqlite.normalizeLookupText(trackName)}|${sqlite.normalizeLookupText(artistName)}';
   String get albumKey =>

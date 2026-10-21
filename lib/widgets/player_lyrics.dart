@@ -346,9 +346,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     if (widget.seekPreview.value != null) {
       return LyricsParser.activeIndex(_lines, position);
     }
-    if (context.isMornye) {
-      // Read one transport snapshot: playing/loading derived providers can
-      // notify separately during the same playback event.
+    {
       final playback = ref.read(playbackStateProvider).value;
       if (playback?.processingState == AudioProcessingState.loading ||
           playback?.processingState == AudioProcessingState.buffering) {
@@ -654,7 +652,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final curve = seeking ? Curves.easeOutCubic : LyricScrollMotion.scrollCurve;
     if (duration == Duration.zero) _stopScrollMotion();
     final extents = _targetLineExtents;
-    if (context.isMornye && extents != null && row < extents.length) {
+    if (extents != null && row < extents.length) {
       final position = _scroll.position;
       final target = extents.offsetForRow(row);
       final offset = target.clamp(
@@ -759,7 +757,6 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final mornye = context.isMornye;
     final highContrast = MediaQuery.highContrastOf(context);
     final blurLyrics =
-        mornye &&
         !highContrast &&
         // Every defocused line is filtered again on each playback frame.
         ref.watch(mornyeLiquidGlassProvider);
@@ -1371,7 +1368,7 @@ class LyricsCredits extends StatelessWidget {
 
   TextStyle _style(BuildContext context) =>
       Theme.of(context).textTheme.bodyMedium!.copyWith(
-        fontSize: context.isMornye ? 17 : 14,
+        fontSize: 17,
         fontWeight: FontWeight.w600,
         height: 1.4,
         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.48),
@@ -1408,15 +1405,9 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
     yield (
       text,
       base.copyWith(
-        fontSize:
-            (context.isMornye
-                ? (translation ? 18.0 : 22.0)
-                : (translation ? 14.0 : 16.0)) *
-            (line.isBackground ? 0.8 : 1),
+        fontSize: ((translation ? 18.0 : 22.0)) * (line.isBackground ? 0.8 : 1),
         height: 1.35,
-        fontWeight: context.isMornye
-            ? (translation ? FontWeight.w600 : FontWeight.bold)
-            : FontWeight.w500,
+        fontWeight: (translation ? FontWeight.w600 : FontWeight.bold),
       ),
       translation ? const <LyricWord>[] : line.romanizationWords,
       translation,
@@ -1434,7 +1425,7 @@ TextStyle _mornyeLyricStyle(BuildContext context, {bool background = false}) =>
 TextAlign _lyricTextAlign(BuildContext context, LyricLine line) {
   final voice = line.voice;
   if (voice == null) {
-    return context.isMornye ? TextAlign.start : TextAlign.center;
+    return TextAlign.start;
   }
   if (voice.isGroup) return TextAlign.left;
   // Provider declarations can be missing or ordered by first appearance.
@@ -1492,8 +1483,7 @@ Widget _withLyricSupplements(
           ),
     ],
   );
-  if (!context.isMornye ||
-      line.romanizationWords.isEmpty ||
+  if (line.romanizationWords.isEmpty ||
       line.romanization?.trim().isNotEmpty != true) {
     return withSupplements(primary);
   }
@@ -1736,8 +1726,7 @@ class _WordHighlightedLyricLineState
   }
 
   void _updateVisualEnd() {
-    final decorativeMotion =
-        context.isMornye && !MediaQuery.disableAnimationsOf(context);
+    final decorativeMotion = !MediaQuery.disableAnimationsOf(context);
     var end = Duration.zero;
     for (final words in [widget.line.words, widget.line.romanizationWords]) {
       for (var index = 0; index < words.length; index++) {
@@ -1782,14 +1771,10 @@ class _WordHighlightedLyricLineState
 
   @override
   Widget build(BuildContext context) {
-    final style = context.isMornye
-        ? _mornyeLyricStyle(context, background: widget.line.isBackground)
-        : (Theme.of(context).textTheme.headlineSmall ?? const TextStyle())
-              .copyWith(
-                fontSize: widget.line.isBackground ? 18 : null,
-                height: context.tokens.lyricsLineHeight,
-                fontWeight: FontWeight.bold,
-              );
+    final style = _mornyeLyricStyle(
+      context,
+      background: widget.line.isBackground,
+    );
     final primary = widget.line.hasWordTiming
         ? _buildTimedText(widget.line.text, widget.line.words, style)
         : Text(
@@ -1820,10 +1805,8 @@ class _WordHighlightedLyricLineState
     bool lift = true,
   }) {
     final highlightedColor = widget.colorScheme.onSurface;
-    final mornye = context.isMornye;
-    final pendingColor = mornye
-        ? Colors.white.withValues(alpha: 0.4)
-        : widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.6);
+
+    final pendingColor = Colors.white.withValues(alpha: 0.4);
     return _SweepingTimedLyricText(
       segments: [for (final word in words) word.text],
       starts: [for (final word in words) word.time],
@@ -1838,7 +1821,7 @@ class _WordHighlightedLyricLineState
       pendingColor: pendingColor,
       highlightedColor: highlightedColor,
       semanticsLabel: text,
-      liftEnabled: lift && mornye && !MediaQuery.disableAnimationsOf(context),
+      liftEnabled: lift && !MediaQuery.disableAnimationsOf(context),
     );
   }
 }

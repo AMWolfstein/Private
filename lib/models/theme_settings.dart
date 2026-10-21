@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 const String kThemeModeKey = 'theme_mode';
-const String kUseDynamicColorKey = 'use_dynamic_color';
-const String kSeedColorKey = 'seed_color';
-const String kUseAmoledKey = 'use_amoled';
-const String kThemeStyleKey = 'theme_style';
 const String kMornyeAccentKey = 'mornye_accent';
 const String kUseSystemFontKey = 'use_system_font';
 const String kCustomFontIdKey = 'custom_font_id';
@@ -30,8 +26,6 @@ PlayerView playerViewFromString(String? value) => PlayerView.values.firstWhere(
   orElse: () => PlayerView.normal,
 );
 
-enum AppThemeStyle { mornye }
-
 enum MornyeAccent { red, orange, green, teal, blue, purple, pink }
 
 MornyeAccent mornyeAccentFromString(String? value) =>
@@ -40,22 +34,10 @@ MornyeAccent mornyeAccentFromString(String? value) =>
       orElse: () => MornyeAccent.red,
     );
 
-AppThemeStyle themeStyleFromString(String? value) =>
-    AppThemeStyle.values.firstWhere(
-      (style) => style.name == value,
-      orElse: () => AppThemeStyle.mornye,
-    );
-
-/// Default Spotify green color for fallback
-const int kDefaultSeedColor = 0xFF1DB954;
-
 class ThemeSettings {
   final ThemeMode themeMode;
   final PlayerView playerView;
-  final bool useDynamicColor;
-  final int seedColorValue;
-  final bool useAmoled;
-  final AppThemeStyle style;
+
   final MornyeAccent mornyeAccent;
   final bool useSystemFont;
   final String customFontId;
@@ -67,10 +49,7 @@ class ThemeSettings {
   const ThemeSettings({
     this.themeMode = ThemeMode.system,
     this.playerView = PlayerView.normal,
-    this.useDynamicColor = true,
-    this.seedColorValue = kDefaultSeedColor,
-    this.useAmoled = false,
-    this.style = AppThemeStyle.mornye,
+
     this.mornyeAccent = MornyeAccent.red,
     this.useSystemFont = false,
     this.customFontId = '',
@@ -80,15 +59,10 @@ class ThemeSettings {
     this.mornyeGlassOutlines = true,
   });
 
-  Color get seedColor => Color(seedColorValue);
-
   ThemeSettings copyWith({
     ThemeMode? themeMode,
     PlayerView? playerView,
-    bool? useDynamicColor,
-    int? seedColorValue,
-    bool? useAmoled,
-    AppThemeStyle? style,
+
     MornyeAccent? mornyeAccent,
     bool? useSystemFont,
     String? customFontId,
@@ -100,10 +74,7 @@ class ThemeSettings {
     return ThemeSettings(
       themeMode: themeMode ?? this.themeMode,
       playerView: playerView ?? this.playerView,
-      useDynamicColor: useDynamicColor ?? this.useDynamicColor,
-      seedColorValue: seedColorValue ?? this.seedColorValue,
-      useAmoled: useAmoled ?? this.useAmoled,
-      style: style ?? this.style,
+
       mornyeAccent: mornyeAccent ?? this.mornyeAccent,
       useSystemFont: useSystemFont ?? this.useSystemFont,
       customFontId: customFontId ?? this.customFontId,
@@ -121,10 +92,6 @@ class ThemeSettings {
   Map<String, dynamic> toJson() => {
     kThemeModeKey: themeMode.name,
     kPlayerViewKey: playerView.name,
-    kUseDynamicColorKey: useDynamicColor,
-    kSeedColorKey: seedColorValue,
-    kUseAmoledKey: useAmoled,
-    kThemeStyleKey: style.name,
     kMornyeAccentKey: mornyeAccent.name,
     kUseSystemFontKey: useSystemFont,
     kCustomFontIdKey: customFontId,
@@ -138,10 +105,7 @@ class ThemeSettings {
     return ThemeSettings(
       themeMode: themeModeFromString(json[kThemeModeKey] as String?),
       playerView: playerViewFromString(json[kPlayerViewKey]?.toString()),
-      useDynamicColor: json[kUseDynamicColorKey] as bool? ?? true,
-      seedColorValue: json[kSeedColorKey] as int? ?? kDefaultSeedColor,
-      useAmoled: json[kUseAmoledKey] as bool? ?? false,
-      style: themeStyleFromString(json[kThemeStyleKey] as String?),
+
       mornyeAccent: mornyeAccentFromString(json[kMornyeAccentKey] as String?),
       useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
       customFontId: json[kCustomFontIdKey] as String? ?? '',
@@ -162,10 +126,6 @@ class ThemeSettings {
     return other is ThemeSettings &&
         other.themeMode == themeMode &&
         other.playerView == playerView &&
-        other.useDynamicColor == useDynamicColor &&
-        other.seedColorValue == seedColorValue &&
-        other.useAmoled == useAmoled &&
-        other.style == style &&
         other.mornyeAccent == mornyeAccent &&
         other.useSystemFont == useSystemFont &&
         other.customFontId == customFontId &&
@@ -179,10 +139,6 @@ class ThemeSettings {
   int get hashCode =>
       themeMode.hashCode ^
       playerView.hashCode ^
-      useDynamicColor.hashCode ^
-      seedColorValue.hashCode ^
-      useAmoled.hashCode ^
-      style.hashCode ^
       mornyeAccent.hashCode ^
       useSystemFont.hashCode ^
       customFontId.hashCode ^

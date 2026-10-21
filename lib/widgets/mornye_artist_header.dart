@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
@@ -16,12 +15,12 @@ class MornyeArtistSurface extends StatefulWidget {
     super.key,
     required this.imageSource,
     required this.child,
-    this.logoSource,
+
     this.neutralActions = false,
   });
 
   final String? imageSource;
-  final String? logoSource;
+
   final Widget child;
 
   /// Album and playlist actions use white controls over the artwork tint.
@@ -84,15 +83,9 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
               surface: surface,
             );
           }
-          return CoverPaletteBuilder(
-            imageSource: widget.neutralActions ? null : widget.logoSource,
-            builder: (context, _) {
-              final logo = widget.logoSource;
-              // Use the logo's original pixels, including white lettering,
-              // without Material's pastel accent mapping.
-              final logoColor = logo == null
-                  ? null
-                  : CoverPalette.sourceColor(logo, Brightness.dark);
+          return Builder(
+            builder: (context) {
+              const Color? logoColor = null;
               // Keep the artwork accent for colorful portraits. A neutral
               // portrait can acquire a blue Material accent; use white there,
               // while allowing an explicit logo color to take precedence.
@@ -150,18 +143,12 @@ class MornyeArtistHeader extends StatelessWidget {
     required this.artwork,
     required this.actions,
     required this.showTitle,
-    this.listeners,
-    this.logoUrl,
-    this.badge,
   });
 
   final String name;
   final Widget artwork;
   final List<Widget> actions;
   final bool showTitle;
-  final String? listeners;
-  final String? logoUrl;
-  final Widget? badge;
 
   // A SliverMainAxisGroup clamps negative overlap, preventing this header from
   // receiving the overscroll used for its stretch animation.
@@ -197,13 +184,8 @@ class MornyeArtistHeader extends StatelessWidget {
             name,
             const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           );
-          final hasLogo = logoUrl?.trim().isNotEmpty == true;
-          final identityHeight = hasLogo
-              ? nameHeight.clamp(96.0, double.infinity)
-              : nameHeight;
-          final listenersHeight = listeners == null
-              ? 0.0
-              : 7 + textHeight(listeners!, const TextStyle(fontSize: 13));
+          final identityHeight = nameHeight;
+          const listenersHeight = 0.0;
           final photoHeight = (width * 0.76).clamp(240.0, 340.0);
           final expandedHeight =
               photoHeight +
@@ -253,28 +235,14 @@ class MornyeArtistHeader extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (badge != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: badge,
-                            ),
+                          ...[],
                           ConstrainedBox(
                             constraints: BoxConstraints(
                               maxHeight: identityHeight,
                             ),
                             child: _buildIdentity(context),
                           ),
-                          if (listeners != null) ...[
-                            const SizedBox(height: 7),
-                            Text(
-                              listeners!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.white.withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
+                          ...[],
                           if (actions.isNotEmpty) ...[
                             const SizedBox(height: 16),
                             SizedBox(
@@ -309,29 +277,7 @@ class MornyeArtistHeader extends StatelessWidget {
         color: Colors.white,
       ),
     );
-    final logo = logoUrl?.trim();
-    if (logo == null || logo.isEmpty) return fallback;
-    return Semantics(
-      label: name,
-      image: true,
-      excludeSemantics: true,
-      child: Image(
-        image: ResizeImage(
-          cachedCoverImageProvider(logo),
-          width: (320 * MediaQuery.devicePixelRatioOf(context)).ceil(),
-          height: (96 * MediaQuery.devicePixelRatioOf(context)).ceil(),
-          policy: ResizeImagePolicy.fit,
-        ),
-        fit: BoxFit.contain,
-        frameBuilder: (_, child, frame, _) => frame == null
-            ? fallback
-            : ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 320, maxHeight: 96),
-                child: child,
-              ),
-        errorBuilder: (_, _, _) => fallback,
-      ),
-    );
+    return fallback;
   }
 }
 

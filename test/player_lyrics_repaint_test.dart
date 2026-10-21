@@ -67,7 +67,7 @@ Future<List<int>> _pixels(WidgetTester tester) async {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'playing lyrics retain their painter and refresh stopped highlights ($mornye)',
       (tester) async {
@@ -414,7 +414,7 @@ void main() {
         ],
       );
       var width = 620.0;
-      var fontSize = 28.0;
+      var letterSpacing = 0.0;
       var scale = 1.0;
       var direction = TextDirection.ltr;
       var locale = const Locale('en');
@@ -423,7 +423,10 @@ void main() {
       Future<void> pump() async {
         final theme = ThemeData.dark().copyWith(
           textTheme: ThemeData.dark().textTheme.copyWith(
-            headlineSmall: TextStyle(fontSize: fontSize),
+            headlineSmall: TextStyle(
+              fontSize: 28,
+              letterSpacing: letterSpacing,
+            ),
           ),
         );
         await tester.pumpWidget(
@@ -510,7 +513,7 @@ void main() {
         () => width = 180,
         () => direction = TextDirection.rtl,
         () => scale = 1.4,
-        () => fontSize = 32,
+        () => letterSpacing = 1.5,
         () => locale = const Locale('en', 'US'),
         () => width = 620,
       ]) {

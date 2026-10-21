@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart' as p;
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/services/m3u_playlist_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -24,31 +22,6 @@ List<Track> _hydratePlaylistInBackground(List<dynamic> rows) => [
 class CsvImportService {
   static final _log = AppLogger('CsvImportService');
   static final RegExp _lineSplitPattern = RegExp(r'\r\n|\r|\n');
-
-  static Future<List<Track>> pickAndParseCsv({
-    void Function(int current, int total)? onProgress,
-  }) async {
-    try {
-      final picked = await FilePicker.pickFile(
-        type: FileType.custom,
-        allowedExtensions: ['csv', 'm3u', 'm3u8'],
-      );
-
-      if (picked != null) {
-        final bytes = await picked.readAsBytes();
-        final extension = p.extension(picked.name).toLowerCase();
-        final tracks = await parsePlaylistInBackground(
-          bytes,
-          format: (extension == '.m3u' || extension == '.m3u8') ? 'm3u' : 'csv',
-        );
-
-        return tracks;
-      }
-    } catch (e) {
-      _log.e('Error picking/parsing playlist file: $e');
-    }
-    return [];
-  }
 
   /// Native parsing consumes bytes directly. Old native binaries and test
   /// hosts retain the same parser in an isolate, never the Flutter frame.

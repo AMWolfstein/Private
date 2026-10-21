@@ -336,15 +336,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     dbDelete: _db.deleteFavoriteArtistEntry,
   );
 
-  Future<void> removeFromLoved(String trackKey) => _removeEntry(
-    trackKey,
-    contains: (key) => state.containsLovedKey(key),
-    select: (state) => state.loved,
-    keyOf: (entry) => entry.key,
-    withList: (list) => state.copyWith(loved: list),
-    dbDelete: _db.deleteLovedEntry,
-  );
-
   Future<int> _removeTrackEntries(
     Iterable<String> trackKeys, {
     required bool Function(String key) contains,
@@ -556,31 +547,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     }
   });
 
-  Future<void> removeTrackFromPlaylist(String playlistId, String trackKey) =>
-      _mutate(() async {
-        var playlist = state.playlistById(playlistId);
-        if (playlist == null || !playlist.containsTrackKey(trackKey)) return;
-        await ensurePlaylistLoaded(playlistId);
-        if (!ref.mounted) return;
-        playlist = state.playlistById(playlistId);
-        if (playlist == null) return;
-
-        final now = DateTime.now();
-        await _db.deletePlaylistTrack(
-          playlistId: playlistId,
-          trackKey: trackKey,
-          playlistUpdatedAt: now.toIso8601String(),
-        );
-        _replacePlaylistById(playlistId, (playlist) {
-          final nextTracks = playlist.tracks
-              .where((entry) => entry.key != trackKey)
-              .toList(growable: false);
-          if (nextTracks.length == playlist.tracks.length) return playlist;
-          return playlist.copyWith(tracks: nextTracks, updatedAt: now);
-        });
-        _invalidatePlaylistPickerSummaries();
-      });
-
   Future<int> removeTracksFromPlaylist(
     String playlistId,
     Iterable<String> trackKeys,
@@ -751,48 +717,10 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     _invalidatePlaylistPickerSummaries();
   });
 
-  /// Returns the full collections snapshot (loved, playlists,
-  /// favorite artists) for a backup, ensuring data is loaded first.
-  Future<Map<String, dynamic>> exportCollections() async {
-    await _ensureLoaded();
-    await ensurePlaylistsLoaded(state.playlists.map((playlist) => playlist.id));
-    return exportLibraryCollectionsState(state);
-  }
-
   Future<String> exportCollectionsJson() async {
     await _ensureLoaded();
     await ensurePlaylistsLoaded(state.playlists.map((playlist) => playlist.id));
     return exportLibraryCollectionsJson(state);
-  }
-
-  /// Exports custom playlist cover images as base64, keyed by playlist id.
-  /// Each value contains the original file extension and the encoded bytes so a
-  /// restore on another device can recreate the cover files.
-  Future<Map<String, Map<String, String>>> exportPlaylistCovers() async {
-    await _ensureLoaded();
-    final covers = <String, Map<String, String>>{};
-    final playlists = List<UserPlaylistCollection>.of(state.playlists);
-    for (final playlist in playlists) {
-      var path = playlist.coverImagePath;
-      if (path == null || path.isEmpty) continue;
-      try {
-        if (await _playlistCoverNeedsNormalization(path)) {
-          await setPlaylistCover(playlist.id, path);
-          path = state.playlistById(playlist.id)?.coverImagePath ?? path;
-        }
-        final file = File(path);
-        if (!await file.exists()) continue;
-        final bytes = await file.readAsBytes();
-        if (bytes.isEmpty) continue;
-        covers[playlist.id] = {
-          'ext': p.extension(path).toLowerCase(),
-          'data': base64Encode(bytes),
-        };
-      } catch (_) {
-        // Skip unreadable cover; the rest of the backup still succeeds.
-      }
-    }
-    return covers;
   }
 
   /// Returns cover file references for the streaming ZIP backup format. The
@@ -826,7 +754,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
   /// Replaces all collections (loved, playlists, favorite artists)
   /// with the contents of a backup. [collectionsJson] uses the
   /// [LibraryCollectionsState.toJson] shape; [coverImages] is the map produced
-  /// by [exportPlaylistCovers]. Cover images are rewritten into this device's
+  /// from a backup. Cover images are rewritten into this device's
   /// covers directory and their paths fixed up before persisting.
   Future<void> restoreFromBackup(
     Map<String, dynamic> collectionsJson, {

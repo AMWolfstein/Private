@@ -124,9 +124,6 @@ class SafScanChildrenTest {
         assertFalse(requireNotNull(entries["Null.flac"]).isFile)
         assertFalse(requireNotNull(entries["Empty.flac"]).isFile)
         assertTrue(requireNotNull(entries["Generic.flac"]).isFile)
-        assertEquals("", JSONObject(context.resolveSafFile(treeUri.toString(), "", "Null.flac")).getString("uri"))
-        assertEquals("", JSONObject(context.resolveSafFile(treeUri.toString(), "", "Empty.flac")).getString("uri"))
-        assertTrue(JSONObject(context.resolveSafFile(treeUri.toString(), "", "Generic.flac")).getString("uri").isNotBlank())
     }
 
     @Test
@@ -142,38 +139,9 @@ class SafScanChildrenTest {
         assertTrue(entries.values.all { it.lastModified == 1234L })
     }
 
-    @Test
-    fun resolverWalksNestedDirectoriesWithConstantQueryCount() {
-        reset(count = 2000)
-        val result = JSONObject(context.resolveSafFile(treeUri.toString(), "", "歌 🎵.flac"))
-        assertEquals("song:opaque/%", DocumentsContract.getDocumentId(Uri.parse(result.getString("uri"))))
-        assertEquals("音楽 🎵", result.getString("relative_dir"))
-        assertEquals(3, stats().getInt("children"))
-        assertEquals(0, stats().getInt("documents"))
-    }
 
-    private fun inspect(vararg names: String): JSONArray {
-        val requests = JSONArray()
-        for ((index, name) in names.withIndex()) {
-            requests.put(JSONObject().put("key", index.toString()).put("tree_uri", treeUri.toString())
-                .put("relative_dir", "").put("current_uri", "").put("file_names", JSONArray().put(name)))
-        }
-        return JSONObject(context.inspectSafFiles(requests.toString())).getJSONArray("results")
-    }
 
-    @Test
-    fun batchInspectionFindsNestedRowsAndSeparatesMissingFromUnreadable() {
-        reset(count = 2000)
-        val results = inspect("歌 🎵.flac", "Missing.flac")
-        assertEquals("found", results.getJSONObject(0).getString("status"))
-        assertEquals("音楽 🎵", results.getJSONObject(0).getString("relative_dir"))
-        assertEquals("missing", results.getJSONObject(1).getString("status"))
-        assertEquals(3, stats().getInt("children"))
-        // Only fixed root permission/type checks; no per-child lookups.
-        assertTrue(stats().getInt("documents") < 10)
 
-        val root = reset(mode = "all-null")
-        assertThrows(IOException::class.java) { context.listSafChildrenOrThrow(root) }
-        assertEquals("unknown", inspect("Missing.flac").getJSONObject(0).getString("status"))
-    }
+
+
 }

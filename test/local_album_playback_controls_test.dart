@@ -59,7 +59,7 @@ class _Playback extends PlaybackController {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'local album controls pause and resume without restarting ($mornye)',
       (tester) async {

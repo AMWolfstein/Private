@@ -188,7 +188,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('blank album cover keeps the scanned track cover ($mornye)', (
       tester,
     ) async {

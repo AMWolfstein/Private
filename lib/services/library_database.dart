@@ -181,14 +181,6 @@ class LibraryDatabase {
     return '${normalizeLookupText(trackName)}|${normalizeLookupText(artistName)}';
   }
 
-  static String albumKeyFor(
-    String albumName,
-    String? albumArtist,
-    String artistName,
-  ) {
-    return '${normalizeLookupText(albumName)}|${normalizeLookupText(albumArtist ?? artistName)}';
-  }
-
   Future<void> upsert(Map<String, dynamic> json, {String? sourceId}) async {
     final db = await database;
     await sqlite.transactionWithBusyRetry(db, (txn) async {
@@ -625,12 +617,6 @@ class LibraryDatabase {
     QueueLibraryDbQuery request,
   ) async => (await _queueStore()).counts(request);
 
-  Future<List<Map<String, dynamic>>> getQueueAlbumPage(
-    QueueLibraryDbQuery request,
-  ) async {
-    return (await getQueueAlbumPageResult(request)).rows;
-  }
-
   Future<QueueLibraryDbPage> getQueueAlbumPageResult(
     QueueLibraryDbQuery request,
   ) async => (await _queueStore()).albumPage(request);
@@ -814,21 +800,6 @@ class LibraryDatabase {
       isrcs: Set<String>.unmodifiable(isrcs),
       matchKeys: Set<String>.unmodifiable(matchKeys),
     );
-  }
-
-  Future<List<String>> getCoverPaths({int? limit, int? offset}) async {
-    final db = await database;
-    final rows = await db.query(
-      'library',
-      columns: ['cover_path'],
-      where: 'cover_path IS NOT NULL AND cover_path != ""',
-      limit: limit,
-      offset: offset,
-    );
-    return rows
-        .map((row) => row['cover_path'] as String?)
-        .whereType<String>()
-        .toList(growable: false);
   }
 
   /// Physical copies sharing one ISRC, excluding inactive NAS sources and

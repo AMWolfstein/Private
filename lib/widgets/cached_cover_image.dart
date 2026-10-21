@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/utils/image_cache_utils.dart';
 
 class CachedCoverImage extends StatelessWidget {
   static const int _defaultMinCacheExtent = 64;
@@ -133,7 +132,6 @@ class LocalCoverImage extends StatelessWidget {
   final int? localCacheWidth;
   final Duration? fadeInDuration;
   final Duration fadeOutDuration;
-  final String Function(String)? urlTransform;
   final Widget Function(BuildContext) placeholder;
 
   const LocalCoverImage({
@@ -146,7 +144,6 @@ class LocalCoverImage extends StatelessWidget {
     this.localCacheWidth,
     this.fadeInDuration,
     this.fadeOutDuration = Duration.zero,
-    this.urlTransform,
     required this.placeholder,
   });
 
@@ -298,81 +295,3 @@ class _FittedLocalFileImage extends FileImage {
 FileImage cachedCoverImageProvider(String path) => FileImage(
   File(path.startsWith('file://') ? Uri.parse(path).toFilePath() : path),
 );
-
-/// Chooses one artwork source for both the Metadata foreground cover and its
-/// blurred backdrop. Embedded file artwork is authoritative; local scan artwork
-/// is next. Stale remote metadata is ignored.
-String? resolveMetadataArtworkSource({
-  String? embeddedCoverPath,
-  String? localCoverPath,
-  String? remoteCoverUrl,
-}) {
-  for (final candidate in [embeddedCoverPath, localCoverPath, remoteCoverUrl]) {
-    final normalized = candidate?.trim();
-    if (normalized != null &&
-        normalized.isNotEmpty &&
-        !normalized.startsWith('http://') &&
-        !normalized.startsWith('https://')) {
-      return normalized;
-    }
-  }
-  return null;
-}
-
-/// Decode size shared by Track Metadata's blurred backdrop and its prewarm.
-/// The backdrop is heavily blurred, so a modest square bitmap is sufficient
-/// and avoids allocating a second full-viewport image beside the Hero cover.
-int metadataBackdropCacheExtent(BuildContext context) {
-  final dpr = MediaQuery.devicePixelRatioOf(context).clamp(1.0, 3.0);
-  final logicalWidth = MediaQuery.sizeOf(context).width;
-  return (logicalWidth * dpr * 0.35).round().clamp(192, 384).toInt();
-}
-
-/// Warms the exact resized image used by Track Metadata's blurred backdrop.
-/// A bounded wait keeps slow local storage from delaying navigation.
-Future<void> precacheMetadataBackdrop(
-  BuildContext context,
-  String? source,
-) async {
-  final normalized = source?.trim();
-  if (normalized == null || normalized.isEmpty) return;
-
-  final ImageProvider provider;
-  final network =
-      normalized.startsWith('http://') || normalized.startsWith('https://');
-  if (network) {
-    return;
-  } else if (!normalized.startsWith('content://')) {
-    final filePath = normalized.startsWith('file://')
-        ? Uri.parse(normalized).toFilePath()
-        : normalized;
-    provider = FileImage(File(filePath));
-  } else {
-    return;
-  }
-
-  final extent = metadataBackdropCacheExtent(context);
-  try {
-    await precacheImage(
-      ResizeImage(provider, width: extent, height: network ? null : extent),
-      context,
-      onError: (_, _) {},
-    ).timeout(const Duration(milliseconds: 200));
-  } catch (_) {}
-}
-
-/// Pre-warms the cover cache at the metadata-screen display size so the hero
-/// transition does not pop in a low-resolution frame. Local files only.
-void precacheCoverImage(BuildContext context, String? url) {
-  if (url == null || url.isEmpty) return;
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return;
-  }
-  precacheImage(
-    ResizeImage(
-      cachedCoverImageProvider(url),
-      width: coverCacheWidthForViewport(context),
-    ),
-    context,
-  );
-}

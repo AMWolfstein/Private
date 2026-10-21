@@ -11,7 +11,8 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/routes/now_playing_route.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/material_player_layout.dart';
+import 'package:spotiflac_android/widgets/mornye_player_layout.dart';
+import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/player_details_sheet.dart';
 import 'package:spotiflac_android/widgets/player_gesture_regions.dart';
 
@@ -47,6 +48,9 @@ void main() {
   testWidgets('metadata and mode changes leave the player visual intact', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(430, 932);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     final read = Completer<Map<String, dynamic>>();
     final metadata = PlayerMetadataController(readMetadata: (_) => read.future);
     final seekPreview = PlaybackSeekPreview();
@@ -54,6 +58,8 @@ void main() {
     addTearDown(metadata.dispose);
     addTearDown(seekPreview.dispose);
     addTearDown(playback.close);
+    final artworkForeground = ValueNotifier<Map<String, Color>>({});
+    addTearDown(artworkForeground.dispose);
     final item = _item('First');
     final pending = metadata.load(item);
     var visualBuilds = 0;
@@ -73,21 +79,38 @@ void main() {
           ),
         ],
         child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
-              body: MaterialPlayerLayout(
+              body: MornyePlayerLayout(
                 mediaItem: item,
                 metadata: metadata,
                 seekPreview: seekPreview,
                 colorScheme: Theme.of(context).colorScheme,
-                showLyrics: true,
+                page: 1,
+                motionArtwork: const SizedBox(),
+                insetArtwork: true,
+                artworkTopInset: 0,
+                artworkKeys: (
+                  header: GlobalKey(),
+                  controls: GlobalKey(),
+                  volume: GlobalKey(),
+                  expanded: GlobalKey(),
+                  compact: GlobalKey(),
+                ),
+                artworkForeground: artworkForeground,
+                lyricsControlsHidden: false,
+                lyricsOptionsOpen: false,
+                lyricsOptions: null,
+                onPageChanged: (_) {},
+                onTrackNavigation: (_, _) async {},
+                onMoreActions: (_, _, _) async {},
                 lyricsBuilder: (_) {
                   visualBuilds++;
-                  return const SizedBox.expand();
+                  return const SizedBox.expand(key: ValueKey('lyrics-visual'));
                 },
-                onOpenQueue: () {},
               ),
             ),
           ),
@@ -95,7 +118,9 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    final beforeMetadata = visualBuilds;
+    final visualElement = tester.element(
+      find.byKey(const ValueKey('lyrics-visual')),
+    );
     read.complete({
       'explicit': true,
       'format': 'FLAC',
@@ -104,13 +129,17 @@ void main() {
     });
     await pending;
     await tester.pumpAndSettle();
-    expect(visualBuilds, beforeMetadata);
+    expect(
+      tester.element(find.byKey(const ValueKey('lyrics-visual'))),
+      same(visualElement),
+    );
     expect(
       tester
           .widget<ExplicitTrackTitle>(find.byType(ExplicitTrackTitle))
           .explicit,
       isTrue,
     );
+    final beforeClock = visualBuilds;
     const quality = 'FLAC  ·  24-bit  ·  48 kHz';
     final qualityWidget = tester.widget<Text>(find.text(quality));
 
@@ -124,8 +153,8 @@ void main() {
     );
     await tester.pump();
     await tester.pump();
-    expect(visualBuilds, beforeMetadata);
-    expect(find.text('0:45'), findsOneWidget);
+    expect(visualBuilds, beforeClock);
+    expect(find.bySemanticsLabel('0:45'), findsOneWidget);
     expect(
       identical(tester.widget<Text>(find.text(quality)), qualityWidget),
       isTrue,
@@ -146,19 +175,21 @@ void main() {
     final first = _item('First', source: 'content://library/first.flac');
     await metadata.load(first);
     await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) => Scaffold(
-            body: TextButton(
-              onPressed: () => showPlayerDetailsSheet(
-                context,
-                Theme.of(context).colorScheme,
-                metadata: metadata,
-                mediaItem: first,
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () => showPlayerDetailsSheet(
+                  context,
+                  Theme.of(context).colorScheme,
+                  metadata: metadata,
+                  mediaItem: first,
+                ),
+                child: const Text('Details'),
               ),
-              child: const Text('Details'),
             ),
           ),
         ),
@@ -166,7 +197,7 @@ void main() {
     );
     await tester.tap(find.text('Details'));
     await tester.pumpAndSettle();
-    expect(find.text('First'), findsOneWidget);
+    expect(find.text('First'), findsNWidgets(2));
     await metadata.load(_item('Second'));
     read.complete({'title': 'First tags'});
     await tester.pumpAndSettle();
@@ -181,7 +212,9 @@ void main() {
     final navigator = GlobalKey<NavigatorState>();
     var queueOpens = 0;
     await tester.pumpWidget(
-      MaterialApp(navigatorKey: navigator, home: const SizedBox()),
+      ProviderScope(
+        child: MaterialApp(navigatorKey: navigator, home: const SizedBox()),
+      ),
     );
     navigator.currentState!.push(_FooterRoute(() => queueOpens++));
     await tester.pumpAndSettle();

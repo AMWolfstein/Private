@@ -57,7 +57,6 @@ class MetadataEditorController {
     'explicit': explicit ? '1' : '0',
   };
 
-  int beginLookup() => ++_generation;
   void invalidateLookup() => _generation++;
   bool isCurrent(int generation) => !_disposed && generation == _generation;
 
@@ -78,13 +77,6 @@ class MetadataEditorController {
       filled++;
     }
     return filled;
-  }
-
-  void selectEmptyFields({required bool hasCover}) {
-    autoFillFields
-      ..clear()
-      ..addAll(_fields.keys.where((key) => _fields[key]!.text.trim().isEmpty));
-    if (!hasCover) autoFillFields.add('cover');
   }
 
   Map<String, String> saveMetadata({

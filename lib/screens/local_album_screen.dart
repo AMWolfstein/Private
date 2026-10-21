@@ -9,7 +9,6 @@ import 'package:spotiflac_android/services/deleted_library_files.dart';
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
@@ -233,15 +232,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           ? albumCover
           : artworkTrack?.coverPath,
       filePath: artworkTrack?.filePath,
-      builder: (context, coverPath) => context.isMornye
-          ? MornyeArtistSurface(
-              imageSource: coverPath,
-              neutralActions: true,
-              child: Builder(
-                builder: (context) => _buildPage(context, coverPath),
-              ),
-            )
-          : _buildPage(context, coverPath),
+      builder: (context, coverPath) => MornyeArtistSurface(
+        imageSource: coverPath,
+        neutralActions: true,
+        child: Builder(builder: (context) => _buildPage(context, coverPath)),
+      ),
     );
   }
 
@@ -384,11 +379,9 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         artistName: widget.artistName,
         coverUrl: coverPath,
         style: TextStyle(
-          color: context.isMornye
-              ? colorScheme.primary
-              : HeaderPalette.of(context).onSurfaceVariant,
+          color: colorScheme.primary,
           fontSize: context.tokens.headerSubtitleSize,
-          fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+          fontWeight: FontWeight.w400,
         ),
         textAlign: TextAlign.center,
         maxLines: 1,

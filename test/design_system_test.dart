@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
@@ -65,9 +66,11 @@ class _IconButtonTooltipVisitor extends RecursiveAstVisitor<void> {
 }
 
 Widget _hostSliver(Widget sliver) {
-  return MaterialApp(
-    theme: AppTheme.light(),
-    home: Scaffold(body: CustomScrollView(slivers: [sliver])),
+  return ProviderScope(
+    child: MaterialApp(
+      theme: AppTheme.light(),
+      home: Scaffold(body: CustomScrollView(slivers: [sliver])),
+    ),
   );
 }
 
@@ -122,14 +125,15 @@ void main() {
     ) async {
       AppTokens? seen;
       await tester.pumpWidget(
-        MaterialApp(
-          // A bare ThemeData registers no extension; widgets must still work.
-          theme: ThemeData(),
-          home: Builder(
-            builder: (context) {
-              seen = context.tokens;
-              return const SizedBox.shrink();
-            },
+        ProviderScope(
+          child: MaterialApp(
+            theme: ThemeData(),
+            home: Builder(
+              builder: (context) {
+                seen = context.tokens;
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
       );
@@ -188,15 +192,17 @@ void main() {
       final semantics = tester.ensureSemantics();
       try {
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
-            home: Scaffold(
-              body: Center(
-                child: SelectionActionButton(
-                  icon: Icons.delete,
-                  label: 'Delete selected tracks',
-                  onPressed: null,
-                  colorScheme: AppTheme.light().colorScheme,
+          ProviderScope(
+            child: MaterialApp(
+              theme: AppTheme.light(),
+              home: Scaffold(
+                body: Center(
+                  child: SelectionActionButton(
+                    icon: Icons.delete,
+                    label: 'Delete selected tracks',
+                    onPressed: null,
+                    colorScheme: AppTheme.light().colorScheme,
+                  ),
                 ),
               ),
             ),
@@ -204,7 +210,7 @@ void main() {
         );
 
         expect(
-          tester.getSemantics(find.byType(SelectionActionButton)),
+          tester.getSemantics(find.bySemanticsLabel('Delete selected tracks')),
           matchesSemantics(
             label: 'Delete selected tracks',
             isButton: true,
@@ -350,15 +356,17 @@ void main() {
       addTearDown(controller.dispose);
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: AppSearchField(
-              controller: controller,
-              hintText: 'Search settings',
-              clearTooltip: 'Clear',
-              onChanged: (_) {},
-              onClear: () => cleared = true,
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(
+              body: AppSearchField(
+                controller: controller,
+                hintText: 'Search settings',
+                clearTooltip: 'Clear',
+                onChanged: (_) {},
+                onClear: () => cleared = true,
+              ),
             ),
           ),
         ),
@@ -369,9 +377,9 @@ void main() {
 
       expect(field.decoration!.filled, isTrue);
       expect(border.borderRadius.topLeft.x, AppTokens.standard.radiusSheet);
-      expect(find.byIcon(Icons.clear), findsOneWidget);
+      expect(find.byTooltip('Clear'), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.clear));
+      await tester.tap(find.byTooltip('Clear'));
       await tester.pump();
 
       expect(controller.text, isEmpty);
@@ -426,19 +434,21 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light().copyWith(platform: TargetPlatform.iOS),
-          home: Scaffold(
-            body: CustomScrollView(
-              slivers: const [
-                AlbumDetailHeader(
-                  title: 'Album',
-                  expandedHeight: 500,
-                  showTitleInAppBar: false,
-                  background: ColoredBox(color: Colors.orange),
-                  appBarActions: [SizedBox.square(dimension: 48)],
-                ),
-              ],
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light().copyWith(platform: TargetPlatform.iOS),
+            home: Scaffold(
+              body: CustomScrollView(
+                slivers: const [
+                  AlbumDetailHeader(
+                    title: 'Album',
+                    expandedHeight: 500,
+                    showTitleInAppBar: false,
+                    background: ColoredBox(color: Colors.orange),
+                    appBarActions: [SizedBox.square(dimension: 48)],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -461,28 +471,30 @@ void main() {
       );
 
       expect(find.text('Library'), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_back), findsNothing);
+      expect(find.byIcon(CupertinoIcons.chevron_back), findsNothing);
     });
 
     testWidgets('page variant shows a back button that pops the route', (
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const Scaffold(
-                      body: CustomScrollView(
-                        slivers: [AppSliverHeader.page(title: 'Downloads')],
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const Scaffold(
+                        body: CustomScrollView(
+                          slivers: [AppSliverHeader.page(title: 'Downloads')],
+                        ),
                       ),
                     ),
                   ),
+                  child: const Text('open'),
                 ),
-                child: const Text('open'),
               ),
             ),
           ),
@@ -493,7 +505,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Downloads'), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.tap(find.byIcon(CupertinoIcons.chevron_back));
       await tester.pumpAndSettle();
       expect(find.text('Downloads'), findsNothing);
     });
@@ -516,20 +528,22 @@ void main() {
           final topInset = platform == TargetPlatform.iOS ? 59.0 : 24.0;
 
           await tester.pumpWidget(
-            MaterialApp(
-              theme: AppTheme.light().copyWith(platform: platform),
-              home: MediaQuery(
-                data: MediaQueryData(
-                  size: const Size(430, 932),
-                  padding: EdgeInsets.only(top: topInset),
-                ),
-                child: Scaffold(
-                  body: CustomScrollView(
-                    controller: controller,
-                    slivers: const [
-                      AppSliverHeader.page(title: 'Metadata'),
-                      SliverToBoxAdapter(child: SizedBox(height: 1200)),
-                    ],
+            ProviderScope(
+              child: MaterialApp(
+                theme: AppTheme.light().copyWith(platform: platform),
+                home: MediaQuery(
+                  data: MediaQueryData(
+                    size: const Size(430, 932),
+                    padding: EdgeInsets.only(top: topInset),
+                  ),
+                  child: Scaffold(
+                    body: CustomScrollView(
+                      controller: controller,
+                      slivers: const [
+                        AppSliverHeader.page(title: 'Metadata'),
+                        SliverToBoxAdapter(child: SizedBox(height: 1200)),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -540,7 +554,7 @@ void main() {
           await tester.pump();
 
           final title = find.text('Metadata');
-          final backIcon = find.byIcon(Icons.arrow_back);
+          final backIcon = find.byIcon(CupertinoIcons.chevron_back);
           expect(
             tester.getRect(title).overlaps(tester.getRect(backIcon)),
             isFalse,
@@ -576,18 +590,20 @@ void main() {
   group('AppBottomSheet', () {
     testWidgets('supplies one handle plus the title block', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => showAppBottomSheet<void>(
-                  context: context,
-                  title: 'Open on',
-                  subtitle: 'Track - Artist',
-                  builder: (_) => const Text('body'),
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showAppBottomSheet<void>(
+                    context: context,
+                    title: 'Open on',
+                    subtitle: 'Track - Artist',
+                    builder: (_) => const Text('body'),
+                  ),
+                  child: const Text('open'),
                 ),
-                child: const Text('open'),
               ),
             ),
           ),
@@ -656,11 +672,13 @@ void main() {
   });
 
   group('TrackCard', () {
-    Widget host(Widget child) => MaterialApp(
-      theme: AppTheme.light(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(body: child),
+    Widget host(Widget child) => ProviderScope(
+      child: MaterialApp(
+        theme: AppTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(body: child),
+      ),
     );
 
     testWidgets('lays out leading, title, subtitle and trailing', (
@@ -837,13 +855,15 @@ void main() {
       var sheetTaps = 0;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: SelectionOverlayHost(
-            child: Builder(
-              builder: (context) {
-                pageContext = context;
-                return const Scaffold(body: SizedBox.expand());
-              },
+        ProviderScope(
+          child: MaterialApp(
+            home: SelectionOverlayHost(
+              child: Builder(
+                builder: (context) {
+                  pageContext = context;
+                  return const Scaffold(body: SizedBox.expand());
+                },
+              ),
             ),
           ),
         ),
@@ -896,16 +916,17 @@ void main() {
     testWidgets('mounts the selection bar only while selecting', (
       tester,
     ) async {
-      Widget host({required bool selecting}) => MaterialApp(
-        theme: AppTheme.light(),
-        home: CollectionScaffold(
-          scrollController: ScrollController(),
-          isSelectionMode: selecting,
-          onExitSelectionMode: () {},
-          bottomInset: 0,
-          appBar: const SliverToBoxAdapter(child: SizedBox(height: 10)),
-          slivers: const [SliverToBoxAdapter(child: Text('content'))],
-          selectionBar: const Text('selection-bar'),
+      Widget host({required bool selecting}) => ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: CollectionScaffold(
+            scrollController: ScrollController(),
+            isSelectionMode: selecting,
+            onExitSelectionMode: () {},
+            appBar: const SliverToBoxAdapter(child: SizedBox(height: 10)),
+            slivers: const [SliverToBoxAdapter(child: Text('content'))],
+            selectionBar: const Text('selection-bar'),
+          ),
         ),
       );
 
@@ -926,16 +947,17 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: CollectionScaffold(
-            scrollController: ScrollController(),
-            isSelectionMode: true,
-            onExitSelectionMode: () {},
-            bottomInset: 0,
-            appBar: const SliverToBoxAdapter(child: SizedBox(height: 10)),
-            slivers: const [SliverToBoxAdapter(child: Text('content'))],
-            selectionBar: const SizedBox(height: 260),
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: CollectionScaffold(
+              scrollController: ScrollController(),
+              isSelectionMode: true,
+              onExitSelectionMode: () {},
+              appBar: const SliverToBoxAdapter(child: SizedBox(height: 10)),
+              slivers: const [SliverToBoxAdapter(child: Text('content'))],
+              selectionBar: const SizedBox(height: 260),
+            ),
           ),
         ),
       );
@@ -973,24 +995,25 @@ void main() {
             'album-style screens drift apart.',
       );
     });
-
   });
 
   group('settings components', () {
     testWidgets('choice chip meets the minimum touch target', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: Row(
-              children: [
-                SettingsChoiceChip(
-                  label: 'Stable',
-                  isSelected: true,
-                  onTap: () {},
-                  expand: true,
-                ),
-              ],
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(
+              body: Row(
+                children: [
+                  SettingsChoiceChip(
+                    label: 'Stable',
+                    isSelected: true,
+                    onTap: () {},
+                    expand: true,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1001,27 +1024,6 @@ void main() {
         size.height,
         greaterThanOrEqualTo(AppTokens.standard.minTouchTarget),
       );
-    });
-
-    testWidgets('info card renders title, message and action', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: SettingsInfoCard(
-              icon: Icons.warning_amber_outlined,
-              tone: SettingsInfoTone.error,
-              title: 'Folder lost',
-              message: 'Pick it again',
-              action: TextButton(onPressed: () {}, child: const Text('Fix')),
-            ),
-          ),
-        ),
-      );
-
-      expect(find.text('Folder lost'), findsOneWidget);
-      expect(find.text('Pick it again'), findsOneWidget);
-      expect(find.text('Fix'), findsOneWidget);
     });
   });
 }

@@ -61,7 +61,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'effect picker follows app theme and saves selection ($mornye)',
       (tester) async {

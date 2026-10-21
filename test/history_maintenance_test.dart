@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/models/download_history.dart';
 import 'package:spotiflac_android/services/history_maintenance.dart';
 
 import 'support/sqlite_process_database.dart';
@@ -72,39 +71,8 @@ class _PathKeys implements Batch {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-DownloadHistoryItem _track(String id) => DownloadHistoryItem(
-  id: id,
-  trackName: 'Song $id',
-  artistName: 'Artist',
-  albumName: 'Album',
-  filePath: '/music/$id.flac',
-  service: 'test',
-  downloadedAt: DateTime.utc(2026),
-);
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  test('newer tag scan results survive an older metadata probe', () {
-    final original = _track('kept');
-    final current = original.copyWith(
-      lyricsMetadataScanVersion: 2,
-      replayGainMetadataScanVersion: 2,
-    );
-    final merged = HistoryMaintenanceUpdate(
-      original: original,
-      updated: original.copyWith(
-        hasLyrics: true,
-        lyricsMetadataScanVersion: 1,
-        hasReplayGain: true,
-        replayGainMetadataScanVersion: 1,
-      ),
-    ).mergeInto(current)!;
-    expect(merged.hasLyrics, isFalse);
-    expect(merged.hasReplayGain, isFalse);
-    expect(merged.lyricsMetadataScanVersion, 2);
-    expect(merged.replayGainMetadataScanVersion, 2);
-  });
 
   test('atomic streaming restore rolls back a late stream failure', () async {
     final db = await SqliteProcessDatabase.open();

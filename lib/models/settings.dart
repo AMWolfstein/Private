@@ -25,9 +25,6 @@ class AppSettings {
   final String storageMode; // 'app' or 'saf'
   final String downloadTreeUri; // SAF persistable tree URI
 
-  /// Maximum width or height of selected local artwork before embedding.
-  /// Zero preserves the original image.
-  final int embeddedCoverMaxDimension;
   final String
   artistTagMode; // 'joined', 'split_vorbis' (Vorbis formats), or 'primary'
   final MetadataSeparators metadataSeparators;
@@ -72,8 +69,7 @@ class AppSettings {
   final bool autoplay;
   final bool autoplayPersonalization;
   final bool isFirstLaunch;
-  final bool hasSearchedBefore;
-  final String albumFolderStructure;
+
   final String historyFilterMode;
 
   final bool enableLogging;
@@ -108,7 +104,7 @@ class AppSettings {
     this.downloadDirectoryBookmark = '',
     this.storageMode = 'app',
     this.downloadTreeUri = '',
-    this.embeddedCoverMaxDimension = 0,
+
     this.artistTagMode = artistTagModeJoined,
     this.metadataSeparators = const MetadataSeparators(),
     this.musicHaptics = false,
@@ -134,8 +130,7 @@ class AppSettings {
     this.autoplay = false,
     this.autoplayPersonalization = false,
     this.isFirstLaunch = true,
-    this.hasSearchedBefore = false,
-    this.albumFolderStructure = 'artist_album',
+
     this.historyFilterMode = 'all',
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
@@ -159,7 +154,7 @@ class AppSettings {
     String? downloadDirectoryBookmark,
     String? storageMode,
     String? downloadTreeUri,
-    int? embeddedCoverMaxDimension,
+
     String? artistTagMode,
     MetadataSeparators? metadataSeparators,
     bool? musicHaptics,
@@ -185,8 +180,7 @@ class AppSettings {
     bool? autoplay,
     bool? autoplayPersonalization,
     bool? isFirstLaunch,
-    bool? hasSearchedBefore,
-    String? albumFolderStructure,
+
     String? historyFilterMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
@@ -210,8 +204,7 @@ class AppSettings {
           downloadDirectoryBookmark ?? this.downloadDirectoryBookmark,
       storageMode: storageMode ?? this.storageMode,
       downloadTreeUri: downloadTreeUri ?? this.downloadTreeUri,
-      embeddedCoverMaxDimension:
-          embeddedCoverMaxDimension ?? this.embeddedCoverMaxDimension,
+
       artistTagMode: artistTagMode ?? this.artistTagMode,
       metadataSeparators: metadataSeparators ?? this.metadataSeparators,
       musicHaptics: musicHaptics ?? this.musicHaptics,
@@ -243,8 +236,7 @@ class AppSettings {
       autoplayPersonalization:
           autoplayPersonalization ?? this.autoplayPersonalization,
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
-      hasSearchedBefore: hasSearchedBefore ?? this.hasSearchedBefore,
-      albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,
+
       historyFilterMode: historyFilterMode ?? this.historyFilterMode,
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:

@@ -1,9 +1,7 @@
 //! Owner of local file capabilities and in-flight scan/tag operations.
 mod cover;
 mod library;
-mod lyrics;
 mod tags;
-pub use lyrics::LyricsRequest;
 
 use crate::files::{FileRegistry, LocalFiles, TemporaryGrant};
 use std::path::{Path, PathBuf};
@@ -193,73 +191,6 @@ mod tests {
         assert!(
             backend
                 .set_allowed_directories(&[media.path().into()])
-                .is_err()
-        );
-    }
-
-    #[test]
-    fn lyrics_read_only_local_sidecars_and_do_not_fetch_without_a_file() {
-        let directory = tempfile::tempdir().unwrap();
-        let backend = Backend::new(directory.path()).unwrap();
-        let audio = directory.path().join("track.wav");
-        fs::write(&audio, wav()).unwrap();
-        fs::write(audio.with_extension("lrc"), "[00:01.00]Offline words\n").unwrap();
-        let request = LyricsRequest {
-            file_path: audio.to_string_lossy().into(),
-            ..Default::default()
-        };
-        assert!(
-            backend
-                .get_lyrics_lrc(&request, &|| Ok(()))
-                .unwrap()
-                .contains("Offline words")
-        );
-        assert_eq!(
-            backend
-                .get_lyrics_lrc(&LyricsRequest::default(), &|| Ok(()))
-                .unwrap(),
-            ""
-        );
-        let output = directory.path().join("export.lrc");
-        fs::write(&output, "previous export").unwrap();
-        let original = fs::read(&audio).unwrap();
-        let check = || {
-            if fs::read_dir(directory.path()).unwrap().any(|entry| {
-                entry
-                    .unwrap()
-                    .file_name()
-                    .to_string_lossy()
-                    .ends_with(".partial")
-            }) {
-                Err("cancelled".into())
-            } else {
-                Ok(())
-            }
-        };
-        assert!(
-            backend
-                .save_local_lyrics(&request, output.to_str().unwrap(), &check)
-                .is_err()
-        );
-        assert_eq!(fs::read_to_string(&output).unwrap(), "previous export");
-        backend
-            .save_local_lyrics(&request, output.to_str().unwrap(), &|| Ok(()))
-            .unwrap();
-        assert_eq!(
-            fs::read_to_string(&output).unwrap(),
-            "[00:01.00]Offline words"
-        );
-        assert_eq!(fs::read(&audio).unwrap(), original);
-        assert!(
-            backend
-                .save_local_lyrics(&request, audio.to_str().unwrap(), &|| Ok(()))
-                .is_err()
-        );
-        assert!(
-            backend
-                .save_local_lyrics(&LyricsRequest::default(), output.to_str().unwrap(), &|| Ok(
-                    ()
-                ))
                 .is_err()
         );
     }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
@@ -200,9 +199,7 @@ class _AboutSettingsItem extends StatelessWidget {
                 height: 40,
                 child: Icon(
                   context.adaptiveIcon(icon),
-                  color: context.isMornye
-                      ? colorScheme.primary
-                      : colorScheme.onSurfaceVariant,
+                  color: colorScheme.primary,
                   size: 24,
                 ),
               ),

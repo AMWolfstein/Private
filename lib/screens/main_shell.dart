@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui' show ImageFilter;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
@@ -23,10 +22,8 @@ import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/lazy_tab_view.dart';
-import 'package:spotiflac_android/widgets/expressive_navigation_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -51,18 +48,6 @@ class _MainShellState extends ConsumerState<MainShell>
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
-  late final PageController _pageController;
-  late final AnimationController _tabJumpTransitionController;
-  // Transitions update their layers directly; no shell subtree rebuilds per
-  // animation frame.
-  late final CurvedAnimation _tabJumpOpacity = CurvedAnimation(
-    parent: _tabJumpTransitionController,
-    curve: Curves.easeOutCubic,
-  );
-  late final Animation<double> _tabJumpScale = Tween<double>(
-    begin: 0.985,
-    end: 1,
-  ).animate(_tabJumpOpacity);
   bool _initialSafRepairComplete = false;
   bool _safRepairDialogVisible = false;
   bool _usbVolumeWarningShown = false;
@@ -94,12 +79,6 @@ class _MainShellState extends ConsumerState<MainShell>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     usbAudioStatus.addListener(_onUsbAudioStatusChanged);
-    _pageController = PageController(initialPage: _currentIndex);
-    _tabJumpTransitionController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 180),
-      value: 1,
-    );
     ShellNavigationService.registerTabSelectionHandler(
       owner: this,
       handler: _onShellTabRequested,
@@ -345,9 +324,6 @@ class _MainShellState extends ConsumerState<MainShell>
     usbAudioStatus.removeListener(_onUsbAudioStatusChanged);
     ShellNavigationService.unregisterTabSelectionHandler(this);
     _homeFeedScrollController.dispose();
-    _pageController.dispose();
-    _tabJumpOpacity.dispose();
-    _tabJumpTransitionController.dispose();
     _mornyeChrome.dispose();
     super.dispose();
   }
@@ -375,13 +351,13 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _onShellTabRequested(ShellTab tab) {
-    if (tab == ShellTab.settings && context.isMornye) {
+    if (tab == ShellTab.settings) {
       unawaited(_openProfileSettings());
       return;
     }
     final index = switch (tab) {
       ShellTab.home => 0,
-      ShellTab.search => context.isMornye ? 2 : 0,
+      ShellTab.search => 2,
       ShellTab.library => 1,
       ShellTab.settings => 2,
     };
@@ -407,7 +383,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
   void _onNavTap(int index, {bool resetHome = true}) {
     _mornyeChrome.expand();
-    if (index == 0 && resetHome && (context.isMornye || _currentIndex == 0)) {
+    if (index == 0 && resetHome) {
       _resetHomeToMain(scrollToTop: _currentIndex == 0);
     }
     if (index == 0 && _currentIndex == 0) {
@@ -415,8 +391,6 @@ class _MainShellState extends ConsumerState<MainShell>
     }
 
     if (_currentIndex != index) {
-      final previousIndex = _currentIndex;
-      final isNonAdjacentJump = (previousIndex - index).abs() > 1;
       HapticFeedback.selectionClick();
       setState(() => _currentIndex = index);
       ShellNavigationService.syncState(
@@ -427,32 +401,6 @@ class _MainShellState extends ConsumerState<MainShell>
       // Jump directly when skipping intermediate tabs to avoid
       // sliding through them. For those jumps, keep a short fade-in
       // so the transition still feels intentional.
-      if (context.isMornye) {
-        // The glass pill owns the tab transition. Sliding/fading the whole
-        // page at the same time continuously invalidates its live backdrop.
-        _tabJumpTransitionController.value = 1;
-      } else if (isNonAdjacentJump) {
-        _pageController.jumpToPage(index);
-        _tabJumpTransitionController.forward(from: 0);
-      } else {
-        _pageController.animateToPage(
-          index,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
-        );
-      }
-    }
-  }
-
-  void _onPageChanged(int index) {
-    _mornyeChrome.expand();
-    if (_currentIndex != index) {
-      setState(() => _currentIndex = index);
-      ShellNavigationService.syncState(
-        currentTabIndex: _currentIndex,
-        showSearchTab: context.isMornye,
-      );
-      FocusManager.instance.primaryFocus?.unfocus();
     }
   }
 
@@ -474,7 +422,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
     if (!mounted) return;
 
-    final isSearchTab = _currentIndex == (context.isMornye ? 2 : 0);
+    final isSearchTab = _currentIndex == (2);
 
     final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
@@ -509,7 +457,7 @@ class _MainShellState extends ConsumerState<MainShell>
   NavigatorState? _navigatorForTab(int index) {
     if (index == 0) return _homeTabNavigatorKey.currentState;
     if (index == 1) return _libraryTabNavigatorKey.currentState;
-    if (context.isMornye && index == 2) {
+    if (index == 2) {
       return _searchTabNavigatorKey.currentState;
     }
     return null;
@@ -548,7 +496,7 @@ class _MainShellState extends ConsumerState<MainShell>
         child: Builder(
           builder: (context) => HomeTab(
             scrollController: _homeFeedScrollController,
-            mode: context.isMornye ? HomeTabMode.browse : HomeTabMode.combined,
+            mode: HomeTabMode.browse,
           ),
         ),
       ),
@@ -556,53 +504,40 @@ class _MainShellState extends ConsumerState<MainShell>
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
-        child: _LibraryTabRoot(parentPageController: _pageController),
+        child: const _LibraryTabRoot(),
       ),
-      if (!context.isMornye) const SettingsTab(),
-      if (context.isMornye)
-        _TabNavigator(
-          key: const ValueKey('tab-search'),
-          navigatorKey: _searchTabNavigatorKey,
-          heroAnimationsEnabled: heroAnimationsEnabled,
-          child: const HomeTab(mode: HomeTabMode.search),
-        ),
+      ...[],
+      _TabNavigator(
+        key: const ValueKey('tab-search'),
+        navigatorKey: _searchTabNavigatorKey,
+        heroAnimationsEnabled: heroAnimationsEnabled,
+        child: const HomeTab(mode: HomeTabMode.search),
+      ),
     ];
 
     final l10n = context.l10n;
     final destinations = <NavigationDestination>[
       NavigationDestination(
-        icon: Icon(
-          context.isMornye ? CupertinoIcons.house_fill : Icons.home_outlined,
-        ),
-        selectedIcon: BouncingIcon(child: const Icon(Icons.home)),
+        icon: Icon(CupertinoIcons.house_fill),
+        selectedIcon: const Icon(CupertinoIcons.house_fill),
         label: l10n.navHome,
       ),
       NavigationDestination(
-        icon: context.isMornye
-            ? const MornyeNavigationIcon(
-                icon: CupertinoIcons.square_stack_fill,
-                badgeCount: 0,
-              )
-            : const Icon(Icons.library_music_outlined),
-        selectedIcon: context.isMornye
-            ? const MornyeNavigationIcon(
-                icon: CupertinoIcons.square_stack_fill,
-                badgeCount: 0,
-              )
-            : const Icon(Icons.library_music),
+        icon: const MornyeNavigationIcon(
+          icon: CupertinoIcons.square_stack_fill,
+          badgeCount: 0,
+        ),
+        selectedIcon: const MornyeNavigationIcon(
+          icon: CupertinoIcons.square_stack_fill,
+          badgeCount: 0,
+        ),
         label: l10n.navLibrary,
       ),
-      if (!context.isMornye)
-        NavigationDestination(
-          icon: const Icon(Icons.settings_outlined),
-          selectedIcon: SpinIcon(child: const Icon(Icons.settings)),
-          label: l10n.navSettings,
-        ),
-      if (context.isMornye)
-        NavigationDestination(
-          icon: const Icon(CupertinoIcons.search),
-          label: l10n.mornyeSearch,
-        ),
+      ...[],
+      NavigationDestination(
+        icon: const Icon(CupertinoIcons.search),
+        label: l10n.mornyeSearch,
+      ),
     ];
 
     final maxIndex = tabs.length - 1;
@@ -611,21 +546,17 @@ class _MainShellState extends ConsumerState<MainShell>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() => _currentIndex = maxIndex);
-          if (_pageController.hasClients) {
-            _pageController.jumpToPage(maxIndex);
-          }
         }
       });
     }
 
     final screenSize = MediaQuery.sizeOf(context);
-    final isTablet = screenSize.shortestSide >= 600;
+
     // Tablets remain touch-first in both orientations. Reserving the rail for
     // desktop-width windows keeps all primary destinations at the reachable
     // bottom edge on iPad and large Android tablets.
     final useNavigationRail = useNavigationRailForWidth(screenSize.width);
     final canMinimizeChrome =
-        context.isMornye &&
         !useNavigationRail &&
         MediaQuery.viewInsetsOf(context).bottom == 0 &&
         MediaQuery.textScalerOf(context).scale(15) <= 20;
@@ -643,40 +574,17 @@ class _MainShellState extends ConsumerState<MainShell>
 
     final pageView = KeyedSubtree(
       key: _pageViewKey,
-      child: context.isMornye
-          ? LazyTabView(
-              index: selectedDestination,
-              preloadKeys: {const ValueKey('tab-search')},
-              children: [
-                for (var index = 0; index < tabs.length; index++)
-                  KeyedSubtree(
-                    key: tabs[index].key,
-                    child: observeScroll(tabs[index], index),
-                  ),
-              ],
-            )
-          : FadeTransition(
-              opacity: _tabJumpOpacity,
-              child: ScaleTransition(
-                scale: _tabJumpScale,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: tabs.length,
-                  onPageChanged: _onPageChanged,
-                  physics: const NeverScrollableScrollPhysics(),
-                  // TickerMode mutes animations and lets visibility-aware widgets
-                  // pause when their tab is hidden — kept-alive pages otherwise
-                  // keep running offscreen.
-                  itemBuilder: (context, index) => _KeepAliveTabPage(
-                    key: ValueKey('page-$index'),
-                    child: TickerMode(
-                      enabled: index == _currentIndex,
-                      child: observeScroll(tabs[index], index),
-                    ),
-                  ),
-                ),
-              ),
+      child: LazyTabView(
+        index: selectedDestination,
+        preloadKeys: {const ValueKey('tab-search')},
+        children: [
+          for (var index = 0; index < tabs.length; index++)
+            KeyedSubtree(
+              key: tabs[index].key,
+              child: observeScroll(tabs[index], index),
             ),
+        ],
+      ),
     );
 
     final shell = SelectionOverlayHost(
@@ -735,7 +643,7 @@ class _MainShellState extends ConsumerState<MainShell>
               : pageView,
           bottomNavigationBar: Builder(
             builder: (context) {
-              if (context.isMornye) {
+              {
                 return ListenableBuilder(
                   listenable: Listenable.merge([
                     ShellNavigationService.chromeBrightness,
@@ -773,50 +681,6 @@ class _MainShellState extends ConsumerState<MainShell>
                   ),
                 );
               }
-              final bottomBar = Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const MiniPlayer(),
-                  if (!useNavigationRail)
-                    DecoratedBox(
-                      position: DecorationPosition.foreground,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-                          ),
-                        ),
-                      ),
-                      child: ExpressiveNavigationBar(
-                        selectedIndex: _currentIndex.clamp(0, maxIndex),
-                        onDestinationSelected: _onNavTap,
-                        isTablet: isTablet,
-                        backgroundColor: settingsGroupColor(
-                          context,
-                        ).withValues(alpha: 0.72),
-                        destinations: destinations,
-                      ),
-                    ),
-                ],
-              );
-              // The backdrop blur re-filters everything scrolling underneath on
-              // every frame; low-end devices get an opaque base instead unless
-              // the user forces blur on in appearance settings.
-              if (!ref.watch(backdropBlurEnabledProvider)) {
-                return ColoredBox(
-                  color: settingsGroupColor(context),
-                  child: bottomBar,
-                );
-              }
-              return ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  blendMode: BlendMode.src,
-                  child: bottomBar,
-                ),
-              );
             },
           ),
         ),
@@ -874,23 +738,18 @@ class _TabNavigatorState extends State<_TabNavigator> {
 }
 
 class _LibraryTabRoot extends ConsumerWidget {
-  final PageController parentPageController;
-
-  const _LibraryTabRoot({required this.parentPageController});
+  const _LibraryTabRoot();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return QueueTab(
-      parentPageController: parentPageController,
-      parentPageIndex: 1,
-    );
+    return const QueueTab();
   }
 }
 
 class _KeepAliveTabPage extends StatefulWidget {
   final Widget child;
 
-  const _KeepAliveTabPage({super.key, required this.child});
+  const _KeepAliveTabPage({required this.child});
 
   @override
   State<_KeepAliveTabPage> createState() => _KeepAliveTabPageState();
@@ -905,130 +764,5 @@ class _KeepAliveTabPageState extends State<_KeepAliveTabPage>
   Widget build(BuildContext context) {
     super.build(context);
     return widget.child;
-  }
-}
-
-class BouncingIcon extends StatefulWidget {
-  final Widget child;
-  const BouncingIcon({super.key, required this.child});
-
-  @override
-  State<BouncingIcon> createState() => _BouncingIconState();
-}
-
-class _BouncingIconState extends State<BouncingIcon>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(
-      begin: 0.1,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaleTransition(scale: _scaleAnimation, child: widget.child);
-  }
-}
-
-class SlidingIcon extends StatefulWidget {
-  final Widget child;
-  const SlidingIcon({super.key, required this.child});
-
-  @override
-  State<SlidingIcon> createState() => _SlidingIconState();
-}
-
-class _SlidingIconState extends State<SlidingIcon>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Offset> _offsetAnimation;
-  late Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 350),
-      vsync: this,
-    );
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(position: _offsetAnimation, child: widget.child),
-    );
-  }
-}
-
-class SpinIcon extends StatefulWidget {
-  final Widget child;
-  const SpinIcon({super.key, required this.child});
-
-  @override
-  State<SpinIcon> createState() => _SpinIconState();
-}
-
-class _SpinIconState extends State<SpinIcon>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _rotationAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _rotationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 0.5,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RotationTransition(turns: _rotationAnimation, child: widget.child);
   }
 }

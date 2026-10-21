@@ -141,12 +141,12 @@ class LibrarySearchStore {
       // Views do not expose their underlying table's implicit rowid.
       rowId: '$alias.id',
       ftsContentTable: 'library',
-      ftsTable:
-          kind != LibrarySearchKind.songs
-              ? null
-              : (localFts ? 'library_search_fts' : null),
+      ftsTable: kind != LibrarySearchKind.songs
+          ? null
+          : (localFts ? 'library_search_fts' : null),
     );
-    final rows = '''
+    final rows =
+        '''
       SELECT 'local' AS source, $alias.id, $alias.track_name AS title,
         $alias.artist_name AS artist, $alias.album_name AS album,
         COALESCE(NULLIF($alias.album_artist, ''), $alias.artist_name) AS album_artist,

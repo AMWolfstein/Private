@@ -22,10 +22,7 @@ import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/screens/now_playing_screen.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'support/material_test_theme.dart';
 import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/widgets/expressive_icon_button.dart';
-import 'package:spotiflac_android/widgets/expressive_seek_track.dart';
 import 'package:spotiflac_android/widgets/mornye_volume_control.dart';
 import 'package:spotiflac_android/widgets/lyric_gap_indicator.dart';
 import 'package:spotiflac_android/widgets/mornye_player_queue.dart';
@@ -39,7 +36,6 @@ import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_player_background.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/playback_seek_slider.dart';
-import 'package:spotiflac_android/widgets/player_artwork.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -354,7 +350,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'late duration refreshes the open Mornye player (dark: $mornye)',
       (tester) async {
@@ -401,42 +397,6 @@ void main() {
       },
     );
   }
-
-  testWidgets('Material seek wave follows playback, buffering and pause', (
-    tester,
-  ) async {
-    final playback = StreamController<PlaybackState>.broadcast();
-    addTearDown(playback.close);
-    await pumpNowPlaying(tester, playbackEvents: playback.stream);
-    mediaItems.add(item('first'));
-    await settlePlayer(tester);
-
-    for (final state in [
-      PlaybackState(playing: true, processingState: AudioProcessingState.ready),
-      PlaybackState(
-        playing: true,
-        processingState: AudioProcessingState.buffering,
-      ),
-      PlaybackState(playing: true, processingState: AudioProcessingState.ready),
-      PlaybackState(
-        playing: false,
-        processingState: AudioProcessingState.ready,
-      ),
-    ]) {
-      playback.add(state);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      final track = tester.widget<ExpressiveSeekTrack>(
-        find.byType(ExpressiveSeekTrack),
-      );
-      expect(
-        track.playing,
-        state.playing && state.processingState == AudioProcessingState.ready,
-      );
-    }
-    await settlePlayer(tester);
-    expect(tester.takeException(), isNull);
-  });
 
   for (final view in PlayerView.values) {
     for (final page in ['player', 'lyrics', 'queue']) {
@@ -1640,7 +1600,7 @@ void main() {
     },
   );
 
-  for (final layout in ['material', 'portrait', 'landscape']) {
+  for (final layout in ['portrait', 'landscape']) {
     testWidgets('instrumental dots follow intro, break and seeks ($layout)', (
       tester,
     ) async {
@@ -1663,7 +1623,7 @@ void main() {
       mediaItems.add(item('first'));
       await settlePlayer(tester);
       if (layout == 'material') {
-        await tester.tap(find.byKey(const ValueKey('material-lyrics-toggle')));
+        await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       } else {
         await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       }
@@ -2020,168 +1980,6 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
-  }
-
-  for (final width in [320.0, 430.0]) {
-    testWidgets('Material transport fits a $width dp phone', (tester) async {
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.light(),
-        size: Size(width, 900),
-      );
-      mediaItems.add(item('first'));
-      await settlePlayer(tester);
-      expect(find.byType(ExpressiveIconButton), findsNWidgets(6));
-      for (final element in find.byType(ExpressiveIconButton).evaluate()) {
-        final bounds = tester.getRect(find.byWidget(element.widget));
-        expect(bounds.left, greaterThanOrEqualTo(0));
-        expect(bounds.right, lessThanOrEqualTo(width));
-        expect(bounds.width, greaterThanOrEqualTo(48));
-      }
-      expect(tester.takeException(), isNull);
-    });
-  }
-
-  for (final size in [
-    const Size(320, 568),
-    const Size(430, 932),
-    const Size(852, 393),
-  ]) {
-    testWidgets(
-      'Material lyrics share the player and keep controls fixed ($size)',
-      (tester) async {
-        final controller = _SeekController();
-        metadataOverrides.addAll({
-          'format': 'flac',
-          'bit_depth': 16,
-          'sample_rate': 44100,
-        });
-        await pumpNowPlaying(
-          tester,
-          theme: AppTheme.dark(),
-          size: size,
-          controller: controller,
-          wrapPlayer: (player) => MediaQuery(
-            data: MediaQueryData(
-              size: size,
-              textScaler: TextScaler.linear(1.3),
-            ),
-            child: player,
-          ),
-        );
-        mediaItems.add(
-          item('first').copyWith(
-            title: 'A longer track title that needs more than one line',
-            extras: {'source': '/music/first.flac'},
-          ),
-        );
-        await settlePlayer(tester);
-        expect(find.byType(PageView), findsNothing);
-        final slider = find.byType(PlaybackSeekSlider);
-        final play = find.byTooltip('Play');
-        final toggle = find.byKey(const ValueKey('material-lyrics-toggle'));
-        final sliderState = tester.state(slider);
-        final sliderBounds = tester.getRect(slider);
-        final playBounds = tester.getRect(play);
-        expect(sliderBounds.bottom, lessThan(size.height));
-        expect(play.hitTestable(), findsOneWidget);
-
-        await tester.tap(toggle);
-        await tester.pump();
-        for (var frame = 0; frame < 20; frame++) {
-          await tester.pump(const Duration(milliseconds: 16));
-          expect(tester.getRect(slider), sliderBounds);
-          expect(tester.getRect(play), playBounds);
-          expect(tester.state(slider), same(sliderState));
-        }
-        await settlePlayer(tester);
-        expect(find.text('First lyric').hitTestable(), findsOneWidget);
-        expect(
-          find.byKey(const ValueKey('material-player-cover')),
-          findsNothing,
-        );
-        expect(play.hitTestable(), findsOneWidget);
-        await tester.tapAt(seekTrackBounds(tester).center);
-        await tester.pump();
-        expect(controller.seeks, hasLength(1));
-        expect(controller.seeks.single.inSeconds, closeTo(90, 1));
-        controller.completions.single.complete();
-        await settlePlayer(tester);
-
-        await tester.tap(toggle);
-        await settlePlayer(tester);
-        expect(
-          find.byKey(const ValueKey('material-player-cover')),
-          findsOneWidget,
-        );
-        expect(find.text('First lyric').hitTestable(), findsNothing);
-        expect(tester.getRect(slider), sliderBounds);
-        expect(tester.getRect(play), playBounds);
-        expect(tester.takeException(), isNull);
-      },
-    );
-  }
-
-  for (final width in [320.0, 430.0]) {
-    testWidgets('Material queue shows covers and selected controls at $width', (
-      tester,
-    ) async {
-      final queue = [item('first'), item('second')];
-      final controller = _QueueController(
-        (index) => mediaItems.add(queue[index]),
-      );
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.dark(),
-        size: Size(width, 852),
-        queue: queue,
-        controller: controller,
-        playback: PlaybackState(
-          queueIndex: 0,
-          shuffleMode: AudioServiceShuffleMode.all,
-          repeatMode: AudioServiceRepeatMode.all,
-        ),
-      );
-      mediaItems.add(queue.first);
-      await settlePlayer(tester);
-      await tester.tap(find.byIcon(Icons.queue_music));
-      await settlePlayer(tester);
-      final rows = find.descendant(
-        of: find.byType(ReorderableListView),
-        matching: find.byType(ListTile),
-      );
-      expect(rows, findsNWidgets(2));
-      expect(
-        find.descendant(of: rows, matching: find.byType(PlayerArtwork)),
-        findsNWidgets(2),
-      );
-      expect(tester.widgetList<ListTile>(rows).map((row) => row.selected), [
-        true,
-        false,
-      ]);
-      final toggles = tester.widgetList<ExpressiveIconButton>(
-        find.descendant(
-          of: find.byType(DraggableScrollableSheet),
-          matching: find.byType(ExpressiveIconButton),
-        ),
-      );
-      expect(
-        toggles.where((button) => button.selected == true).length,
-        greaterThanOrEqualTo(2),
-      );
-      expect(
-        toggles
-            .where((button) => button.selected == true)
-            .every((button) => button.backgroundColor != null),
-        isTrue,
-      );
-      await tester.tap(
-        find.descendant(of: rows, matching: find.text('Second')),
-      );
-      await settlePlayer(tester);
-      expect(controller.selected, [1]);
-      expect(tester.takeException(), isNull);
-    });
   }
 
   testWidgets('Mornye player renders Apple-style transport controls', (
@@ -2996,7 +2794,7 @@ void main() {
 
       mediaItems.add(item('first'));
       await settlePlayer(tester);
-      await tester.tap(find.byKey(const ValueKey('material-lyrics-toggle')));
+      await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       await settlePlayer(tester);
       expect(find.text('First lyric'), findsOneWidget);
 
@@ -3191,7 +2989,7 @@ void main() {
     );
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'TTML V3 without group metadata keeps the primary side ($mornye)',
       (tester) async {
@@ -3213,9 +3011,7 @@ void main() {
         if (mornye) {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         } else {
-          await tester.tap(
-            find.byKey(const ValueKey('material-lyrics-toggle')),
-          );
+          await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         }
         await settlePlayer(tester);
         for (final seconds in [0, 2, 4, 7, 4]) {
@@ -3268,9 +3064,7 @@ void main() {
           if (mornye) {
             await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
           } else {
-            await tester.tap(
-              find.byKey(const ValueKey('material-lyrics-toggle')),
-            );
+            await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
           }
           await settlePlayer(tester);
           final lead = tester.widget<Text>(find.text('Lead'));
@@ -3382,7 +3176,7 @@ void main() {
         await tester.tap(
           mornye
               ? find.byIcon(CupertinoIcons.quote_bubble)
-              : find.byKey(const ValueKey('material-lyrics-toggle')),
+              : find.byIcon(CupertinoIcons.quote_bubble),
         );
         await settlePlayer(tester);
         playback.add(
@@ -3436,9 +3230,7 @@ void main() {
         if (mornye) {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         } else {
-          await tester.tap(
-            find.byKey(const ValueKey('material-lyrics-toggle')),
-          );
+          await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         }
         await settlePlayer(tester);
         expect(
@@ -3553,7 +3345,7 @@ void main() {
       if (mornye) {
         await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       } else {
-        await tester.tap(find.byKey(const ValueKey('material-lyrics-toggle')));
+        await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       }
       await settlePlayer(tester);
       for (final text in ['Original text', 'Romanized text', 'English text']) {
@@ -3599,9 +3391,7 @@ void main() {
           if (mornye) {
             await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
           } else {
-            await tester.tap(
-              find.byKey(const ValueKey('material-lyrics-toggle')),
-            );
+            await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
           }
           await settlePlayer(tester);
         }
@@ -3686,7 +3476,7 @@ void main() {
       await tester.tap(
         mornye
             ? find.byIcon(CupertinoIcons.quote_bubble)
-            : find.byKey(const ValueKey('material-lyrics-toggle')),
+            : find.byIcon(CupertinoIcons.quote_bubble),
       );
       await settlePlayer(tester);
 
@@ -3737,7 +3527,7 @@ void main() {
       await tester.tap(
         mornye
             ? find.byIcon(CupertinoIcons.quote_bubble)
-            : find.byKey(const ValueKey('material-lyrics-toggle')),
+            : find.byIcon(CupertinoIcons.quote_bubble),
       );
       await settlePlayer(tester);
 
@@ -3801,9 +3591,7 @@ void main() {
         if (mornye) {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         } else {
-          await tester.tap(
-            find.byKey(const ValueKey('material-lyrics-toggle')),
-          );
+          await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         }
         await settlePlayer(tester);
 
@@ -4096,19 +3884,20 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('short timed lyric remains horizontally centered', (
+  testWidgets('short timed lyric keeps its Mornye leading alignment', (
     tester,
   ) async {
     await pumpNowPlaying(tester);
 
     mediaItems.add(item('timed'));
     await settlePlayer(tester);
-    await tester.tap(find.byKey(const ValueKey('material-lyrics-toggle')));
+    await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
     await settlePlayer(tester);
 
     final lyric = find.bySemanticsLabel('Short');
     expect(lyric, findsOneWidget);
-    expect(tester.getCenter(lyric).dx, closeTo(540, 1));
+    expect(tester.getRect(lyric).left, greaterThanOrEqualTo(24));
+    expect(tester.getRect(lyric).left, lessThan(200));
   });
 
   testWidgets('Now Playing menu exposes Go to Album when album is known', (
@@ -4118,11 +3907,11 @@ void main() {
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
-    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
     await settlePlayer(tester);
 
     expect(find.text('Go to Album'), findsOneWidget);
-    expect(find.byIcon(Icons.album_outlined), findsOneWidget);
+    expect(find.byIcon(CupertinoIcons.square_stack), findsOneWidget);
   });
 
   testWidgets('Now Playing menu exposes sleep timer duration choices', (
@@ -4132,7 +3921,7 @@ void main() {
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
-    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
     await settlePlayer(tester);
     await tester.tap(find.text('Sleep timer'));
     await settlePlayer(tester);

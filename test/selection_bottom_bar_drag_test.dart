@@ -8,7 +8,7 @@ import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final name = mornye ? 'Mornye' : 'Material';
 
     Future<void> showPanel(

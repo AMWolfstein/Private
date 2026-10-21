@@ -1,6 +1,5 @@
 import 'package:spotiflac_android/providers/equalizer_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +47,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/', builder: (context, state) => const MainShell()),
       GoRoute(path: '/setup', builder: (context, state) => const SetupScreen()),
-      GoRoute(path: '/tutorial', redirect: (context, state) => '/setup'),
     ],
     // Safety net: if a deep link URL (e.g. Spotify/Deezer) somehow reaches
     // GoRouter, redirect to home instead of showing "Page Not Found".
@@ -235,7 +233,6 @@ class SpotiFLACApp extends ConsumerWidget {
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
-            material_ui.GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],

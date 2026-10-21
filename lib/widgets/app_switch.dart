@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoColors;
-import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:spotiflac_android/theme/material_expressive.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 
 /// One switch style for settings, extension controls and editing sheets.
 /// Mornye keeps its wide oval thumb even when glass or motion is disabled.
@@ -22,21 +19,6 @@ class AppSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (materialExpressiveEnabled(context)) {
-      return MaterialExpressiveScope(
-        child: M3ESwitch(
-          value: value,
-          onChanged: onChanged,
-          semanticLabel: semanticLabel,
-        ),
-      );
-    }
-    if (!context.isMornye) {
-      return adaptive
-          ? Switch.adaptive(value: value, onChanged: onChanged)
-          : Switch(value: value, onChanged: onChanged);
-    }
-
     return _MornyeSwitch(
       value: value,
       onChanged: onChanged,
@@ -184,23 +166,6 @@ class AppSwitchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye && !materialExpressiveEnabled(context)) {
-      return adaptive
-          ? SwitchListTile.adaptive(
-              value: value,
-              onChanged: onChanged,
-              title: title,
-              subtitle: subtitle,
-              contentPadding: contentPadding,
-            )
-          : SwitchListTile(
-              value: value,
-              onChanged: onChanged,
-              title: title,
-              subtitle: subtitle,
-              contentPadding: contentPadding,
-            );
-    }
     return MergeSemantics(
       child: ListTile(
         title: title,

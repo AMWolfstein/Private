@@ -22,7 +22,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.gapLg,
     required this.gapXl,
     required this.coverMini,
-    required this.coverCompact,
+
     required this.coverList,
     required this.badgeFontSize,
     required this.badgePadding,
@@ -64,7 +64,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
     gapLg: 16,
     gapXl: 24,
     coverMini: 44,
-    coverCompact: 48,
+
     coverList: 56,
     badgeFontSize: 11,
     badgePadding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -104,9 +104,6 @@ class AppTokens extends ThemeExtension<AppTokens> {
 
   /// Mini player artwork.
   final double coverMini;
-
-  /// Dense rows (album track lists, pickers).
-  final double coverCompact;
 
   /// Standard list row artwork.
   final double coverList;
@@ -200,7 +197,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
     double? gapLg,
     double? gapXl,
     double? coverMini,
-    double? coverCompact,
+
     double? coverList,
     double? badgeFontSize,
     EdgeInsets? badgePadding,
@@ -238,7 +235,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
       gapLg: gapLg ?? this.gapLg,
       gapXl: gapXl ?? this.gapXl,
       coverMini: coverMini ?? this.coverMini,
-      coverCompact: coverCompact ?? this.coverCompact,
+
       coverList: coverList ?? this.coverList,
       badgeFontSize: badgeFontSize ?? this.badgeFontSize,
       badgePadding: badgePadding ?? this.badgePadding,
@@ -283,7 +280,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
       gapLg: lerpDouble(gapLg, other.gapLg, t),
       gapXl: lerpDouble(gapXl, other.gapXl, t),
       coverMini: lerpDouble(coverMini, other.coverMini, t),
-      coverCompact: lerpDouble(coverCompact, other.coverCompact, t),
+
       coverList: lerpDouble(coverList, other.coverList, t),
       badgeFontSize: lerpDouble(badgeFontSize, other.badgeFontSize, t),
       badgePadding:

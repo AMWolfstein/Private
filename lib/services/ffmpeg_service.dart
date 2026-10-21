@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:spotiflac_android/services/ffmpeg_cue.dart';
-import 'package:spotiflac_android/services/ffmpeg_decryption.dart';
 import 'package:spotiflac_android/services/ffmpeg_metadata.dart';
 import 'package:spotiflac_android/services/ffmpeg_models.dart';
 import 'package:spotiflac_android/services/ffmpeg_probe.dart';
@@ -43,18 +42,6 @@ class FFmpegService {
     String filePath,
   ) => FFmpegProbe.imageDimensions(filePath);
 
-  static Future<String?> decryptWithDescriptor({
-    required String inputPath,
-    required DownloadDecryptionDescriptor descriptor,
-    bool deleteOriginal = true,
-    Future<void> Function(String)? prepareOutput,
-  }) => FFmpegDecryption.decrypt(
-    inputPath: inputPath,
-    descriptor: descriptor,
-    deleteOriginal: deleteOriginal,
-    prepareOutput: prepareOutput,
-  );
-
   /// Measures EBU R128 loudness and true peak using a -18 LUFS reference.
   static Future<ReplayGainResult?> scanReplayGain(
     String filePath, {
@@ -64,48 +51,18 @@ class FFmpegService {
     onUnsupportedDecoder: onUnsupportedDecoder,
   );
 
-  @visibleForTesting
-  static ReplayGainResult? parseReplayGainScan(
-    FFmpegResult result, {
-    void Function()? onUnsupportedDecoder,
-  }) => FFmpegReplayGain.parseScan(
-    result,
-    onUnsupportedDecoder: onUnsupportedDecoder,
-  );
-
-  /// With [returnTempPath], hands temp output to [onTempReady] for SAF write and
-  /// cleanup by the caller. Otherwise publishes to the local file.
+  /// Publishes ReplayGain tags to the local file through the atomic output path.
   static Future<bool> writeAlbumReplayGainTags(
     String filePath,
     String albumGain,
-    String albumPeak, {
-    bool returnTempPath = false,
-    void Function(String tempPath)? onTempReady,
-  }) => FFmpegReplayGain.writeAlbumTags(
-    filePath,
-    albumGain,
-    albumPeak,
-    returnTempPath: returnTempPath,
-    onTempReady: onTempReady,
-  );
+    String albumPeak,
+  ) => FFmpegReplayGain.writeAlbumTags(filePath, albumGain, albumPeak);
 
   static Future<bool> writeTrackReplayGainTags(
     String filePath,
     String trackGain,
     String trackPeak,
   ) => FFmpegReplayGain.writeTrackTags(filePath, trackGain, trackPeak);
-
-  static Future<String?> embedMetadata({
-    required String flacPath,
-    String? coverPath,
-    Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
-  }) => FFmpegMetadata.embedMetadata(
-    flacPath: flacPath,
-    coverPath: coverPath,
-    metadata: metadata,
-    artistTagMode: artistTagMode,
-  );
 
   static Future<String?> embedMetadataToMp3({
     required String mp3Path,

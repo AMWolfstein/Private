@@ -82,32 +82,5 @@ class NativeTemporaryMediaFileTest {
         }
     }
 
-    @Test
-    fun postProcessingAlwaysRetiresItsInputWithoutClaimingSourceOrReplacementFiles() {
-        val directory = Files.createTempDirectory("native-media-scope-test").toFile()
-        try {
-            val source = File(directory, "saved.flac").also { it.writeText("saved audio") }
-            val replacement = File(directory, "shared.flac").also { it.writeText("shared audio") }
-            for (response in listOf("success", "hook rejected", "output missing", "SAF write failed")) {
-                val temporary = File.createTempFile("saf_", ".flac", directory)
-                temporary.writeText("temporary audio")
-                assertEquals(response, withOwnedTemporaryMediaFile(temporary) { input ->
-                    assertEquals("temporary audio", input.readText())
-                    response
-                })
-                assertFalse(temporary.exists())
-            }
 
-            val temporary = File.createTempFile("saf_", ".flac", directory)
-            val failure = IllegalStateException("postProcess failed")
-            assertSame(failure, assertThrows(IllegalStateException::class.java) {
-                withOwnedTemporaryMediaFile(temporary) { throw failure }
-            })
-            assertFalse(temporary.exists())
-            assertEquals("saved audio", source.readText())
-            assertEquals("shared audio", replacement.readText())
-        } finally {
-            directory.deleteRecursively()
-        }
-    }
 }

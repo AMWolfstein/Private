@@ -273,7 +273,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final compact in [false, true]) {
       testWidgets(
         'mini player scrolls title and artist (Mornye: $mornye, compact: $compact)',

@@ -58,37 +58,11 @@ bool metadataHasReplayGain(Map<String, dynamic> metadata) {
   return false;
 }
 
-bool replayGainMetadataWasRead(Map<String, dynamic> metadata) =>
-    metadata['error'] == null &&
-    metadata['metadataFromFilename'] != true &&
-    (metadata['audio_codec'] != null ||
-        metadata['format'] != null ||
-        metadata.containsKey('replaygain_track_gain') ||
-        metadata.containsKey('replaygain_album_gain'));
-
 int? readPositiveBitrateKbps(dynamic value) {
   final parsed = readPositiveInt(value);
   if (parsed == null) return null;
   final kbps = parsed >= 10000 ? (parsed / 1000).round() : parsed;
   return kbps >= 16 ? kbps : null;
-}
-
-/// Estimates average stream bitrate without decoding audio. Older SAF-backed
-/// Library rows can therefore be updated with a cheap size query instead of
-/// copying the complete audio file into app cache.
-int? estimateAverageBitrateKbps({
-  required int? fileSizeBytes,
-  required int? durationSeconds,
-}) {
-  if (fileSizeBytes == null ||
-      fileSizeBytes <= 0 ||
-      durationSeconds == null ||
-      durationSeconds <= 0) {
-    return null;
-  }
-  return readPositiveBitrateKbps(
-    (fileSizeBytes * 8 / durationSeconds / 1000).round(),
-  );
 }
 
 String? audioFormatForPath(String? filePath, {String? fileName}) {
@@ -150,41 +124,6 @@ String? normalizeAudioFormatValue(String? value) {
     'm4a' || 'mp4' => 'm4a',
     _ => null,
   };
-}
-
-/// Chooses the user-facing extension for an audio-only ISO-BMFF container.
-/// AC-4 stays `.mp4` because its compatibility repair and passthrough path
-/// depend on that container identity; other audio codecs use the conventional
-/// `.m4a` extension, including Opus and E-AC-3 streams carried inside MP4.
-String isoBmffAudioExtensionForCodec(String? codec) {
-  return normalizeAudioFormatValue(codec) == 'ac4' ? '.mp4' : '.m4a';
-}
-
-/// Uses the finalized local container extension when publishing a file to SAF.
-String finalizedAudioFileName({
-  required String fileName,
-  required String localPath,
-  required String fallbackExtension,
-}) {
-  final extension =
-      RegExp(
-        r'\.(flac|m4a|mp4|mp3|opus|ogg|aac|wav|aiff)$',
-        caseSensitive: false,
-      ).firstMatch(localPath)?.group(0)?.toLowerCase() ??
-      fallbackExtension;
-  final stem = fileName.replaceFirst(RegExp(r'\.[^.]+$'), '');
-  return '$stem$extension';
-}
-
-/// Resolves the actual audio codec reported by native metadata probing, while
-/// falling back to the container format when the codec is absent or generic.
-///
-/// This distinction matters for MP4/M4A files: the same container may hold
-/// AAC, ALAC, Dolby, or other codecs.
-String? detectedAudioFormatFromMetadata(Map<String, dynamic> metadata) {
-  final codec = normalizeAudioFormatValue(metadata['audio_codec']?.toString());
-  if (codec != null) return codec;
-  return normalizeAudioFormatValue(metadata['format']?.toString());
 }
 
 bool isLossyAudioFormat(String? value) {
@@ -251,101 +190,6 @@ int? _bitrateFromQuality(String? quality) {
   }
   final sampleRate = rate < 1000 ? (rate * 1000).round() : rate.round();
   return (bitDepth, sampleRate);
-}
-
-String qualityVariantStagingLabel(String itemId) {
-  var hash = 0x811c9dc5;
-  for (final byte in itemId.codeUnits) {
-    hash ^= byte;
-    hash = (hash * 0x01000193) & 0xffffffff;
-  }
-  return 'qv_${hash.toRadixString(16).padLeft(8, '0')}';
-}
-
-String applyQualityVariantFilenameLabel({
-  required String fileName,
-  required String stagingLabel,
-  required String qualityLabel,
-}) {
-  if (stagingLabel.isNotEmpty && fileName.contains(stagingLabel)) {
-    return fileName.replaceAll(stagingLabel, qualityLabel);
-  }
-  if (fileName.contains(qualityLabel)) {
-    return fileName;
-  }
-  final dotIndex = fileName.lastIndexOf('.');
-  final hasExtension = dotIndex > 0;
-  final stem = hasExtension ? fileName.substring(0, dotIndex) : fileName;
-  final extension = hasExtension ? fileName.substring(dotIndex) : '';
-  return '$stem - $qualityLabel$extension';
-}
-
-String removeQualityVariantStagingLabel({
-  required String fileName,
-  required String stagingLabel,
-}) {
-  if (stagingLabel.isEmpty || !fileName.contains(stagingLabel)) {
-    return fileName;
-  }
-  final dotIndex = fileName.lastIndexOf('.');
-  final hasExtension = dotIndex > 0;
-  final stem = hasExtension ? fileName.substring(0, dotIndex) : fileName;
-  final extension = hasExtension ? fileName.substring(dotIndex) : '';
-  final cleanedStem = stem
-      .replaceAll(stagingLabel, '')
-      .replaceFirst(RegExp(r'[\s_-]+$'), '')
-      .trim();
-  return '${cleanedStem.isEmpty ? 'track' : cleanedStem}$extension';
-}
-
-String resolveQualityVariantFilename({
-  required String fileName,
-  required String stagingLabel,
-  required String qualityLabel,
-  required bool collisionOnly,
-  required bool cleanNameExists,
-}) {
-  if (!collisionOnly || cleanNameExists) {
-    return applyQualityVariantFilenameLabel(
-      fileName: fileName,
-      stagingLabel: stagingLabel,
-      qualityLabel: qualityLabel,
-    );
-  }
-  return removeQualityVariantStagingLabel(
-    fileName: fileName,
-    stagingLabel: stagingLabel,
-  );
-}
-
-String? resolveDisplayQuality({
-  required String? filePath,
-  String? fileName,
-  String? detectedFormat,
-  int? bitDepth,
-  int? sampleRate,
-  int? bitrateKbps,
-  String? storedQuality,
-}) {
-  final format =
-      displayFormatForCodec(detectedFormat) ??
-      audioFormatForPath(filePath, fileName: fileName);
-  if (format == 'OPUS' ||
-      format == 'MP3' ||
-      format == 'AAC' ||
-      format == 'EAC3' ||
-      format == 'AC3' ||
-      format == 'AC4' ||
-      (format == 'M4A' && (bitDepth == null || bitDepth <= 0))) {
-    return buildDisplayAudioQuality(bitrateKbps: bitrateKbps, format: format) ??
-        nonPlaceholderQuality(storedQuality) ??
-        format;
-  }
-  return buildDisplayAudioQuality(
-    bitDepth: bitDepth,
-    sampleRate: sampleRate,
-    storedQuality: nonPlaceholderQuality(storedQuality) ?? storedQuality,
-  );
 }
 
 String? displayFormatForCodec(String? value) {

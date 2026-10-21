@@ -316,18 +316,30 @@ void main() {
         ],
       ),
     );
-    Future<void> sample() async {
-      await tester.pump(const Duration(milliseconds: 334));
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 30)),
-      );
+    Future<void> sample({Map<String, Color>? expected}) async {
+      // GPU readback completes outside the fake clock. Wait for the expected
+      // result rather than assuming a loaded runner finishes within 30 ms.
+      for (var attempt = 0; attempt < 100; attempt++) {
+        await tester.pump(const Duration(milliseconds: 334));
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 20)),
+        );
+        if (expected == null ||
+            (colors.length == expected.length &&
+                expected.entries.every(
+                  (entry) => colors[entry.key] == entry.value,
+                ))) {
+          return;
+        }
+      }
+      expect(colors, expected, reason: 'Artwork readback did not settle');
     }
 
     await tester.pumpWidget(app(Colors.white, Colors.black));
-    await sample();
+    await sample(expected: {'header': Colors.black, 'controls': Colors.white});
     expect(colors, {'header': Colors.black, 'controls': Colors.white});
     await tester.pumpWidget(app(Colors.black, Colors.white));
-    await sample();
+    await sample(expected: {'header': Colors.white, 'controls': Colors.black});
     expect(colors, {'header': Colors.white, 'controls': Colors.black});
     final previousChanges = changes;
     await sample();
@@ -338,27 +350,27 @@ void main() {
     expect(changes, previousChanges);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pump();
-    await sample();
+    await sample(expected: {'header': Colors.black, 'controls': Colors.white});
     expect(colors, {'header': Colors.black, 'controls': Colors.white});
 
     // A muted pink frame still supports white player labels, including after
     // a bright frame temporarily required black labels.
     const pastel = Color(0xffa08398);
     await tester.pumpWidget(app(pastel, pastel));
-    await sample();
+    await sample(expected: {'header': Colors.white, 'controls': Colors.white});
     expect(colors, {'header': Colors.white, 'controls': Colors.white});
     final pastelChanges = changes;
     await tester.pumpWidget(app(const Color(0xff939393), pastel));
     await sample();
     expect(changes, pastelChanges);
     await tester.pumpWidget(app(Colors.white, pastel));
-    await sample();
+    await sample(expected: {'header': Colors.black, 'controls': Colors.white});
     expect(colors, {'header': Colors.black, 'controls': Colors.white});
     await tester.pumpWidget(app(const Color(0xff939393), pastel));
-    await sample();
+    await sample(expected: {'header': Colors.black, 'controls': Colors.white});
     expect(colors, {'header': Colors.black, 'controls': Colors.white});
     await tester.pumpWidget(app(pastel, pastel));
-    await sample();
+    await sample(expected: {'header': Colors.white, 'controls': Colors.white});
     expect(colors, {'header': Colors.white, 'controls': Colors.white});
     await tester.pumpWidget(const SizedBox());
   });

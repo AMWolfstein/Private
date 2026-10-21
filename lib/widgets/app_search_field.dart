@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
@@ -20,7 +19,7 @@ class AppSearchField extends StatelessWidget {
     this.onChanged,
     required this.onClear,
     this.onSubmitted,
-    this.prefixIcon,
+
     this.suffixIcon,
     this.focusNode,
     this.autofocus = false,
@@ -33,7 +32,7 @@ class AppSearchField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback onClear;
   final ValueChanged<String>? onSubmitted;
-  final Widget? prefixIcon;
+
   final Widget? suffixIcon;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -46,9 +45,7 @@ class AppSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final mornye = context.isMornye;
-    final radius = BorderRadius.circular(
-      mornye ? 28 : context.tokens.radiusSheet,
-    );
+    final radius = BorderRadius.circular(28);
 
     final field = ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
@@ -59,8 +56,8 @@ class AppSearchField extends StatelessWidget {
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: hintText,
-          prefixIcon:
-              prefixIcon ?? Icon(mornye ? CupertinoIcons.search : Icons.search),
+          prefixIcon: const Icon(CupertinoIcons.search),
+
           suffixIcon:
               suffixIcon ??
               (value.text.isEmpty
@@ -107,7 +104,7 @@ class AppSearchField extends StatelessWidget {
         onTapOutside: (_) => FocusScope.of(context).unfocus(),
       ),
     );
-    if (!mornye) return field;
+
     return Consumer(
       builder: (context, ref, child) => MornyeGlass.navigation(
         radius: 28,

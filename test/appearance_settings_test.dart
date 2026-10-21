@@ -157,7 +157,7 @@ void main() {
       'glass outlines toggle survives restart and local themes ($mode)',
       (tester) async {
         SharedPreferences.setMockInitialValues({
-          kThemeStyleKey: 'mornye',
+          'theme_style': 'mornye',
           kThemeModeKey: mode.name,
         });
         final prefs = await SharedPreferences.getInstance();
@@ -195,7 +195,7 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        kThemeStyleKey: 'mornye',
+        'theme_style': 'mornye',
         kThemeModeKey: mode.name,
       });
       final prefs = await SharedPreferences.getInstance();
@@ -240,7 +240,7 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        kThemeStyleKey: 'mornye',
+        'theme_style': 'mornye',
         kThemeModeKey: mode.name,
       });
       final prefs = await SharedPreferences.getInstance();
@@ -299,7 +299,7 @@ void main() {
         tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
       );
       SharedPreferences.setMockInitialValues({
-        kThemeStyleKey: 'mornye',
+        'theme_style': 'mornye',
         kThemeModeKey: mode.name,
       });
       final prefs = await SharedPreferences.getInstance();
@@ -358,9 +358,9 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        kThemeStyleKey: 'mornye',
+        'theme_style': 'mornye',
         kThemeModeKey: mode.name,
-        kSeedColorKey: 0xff123456,
+        'seed_color': 0xff123456,
       });
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
@@ -381,7 +381,7 @@ void main() {
         MornyeTheme.accentColor(MornyeAccent.blue, theme.brightness),
       );
       expect(prefs.getString(kMornyeAccentKey), 'blue');
-      expect(prefs.getInt(kSeedColorKey), 0xff123456);
+      expect(prefs.getInt('seed_color'), 0xff123456);
       final overlay = MornyeTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
@@ -409,14 +409,14 @@ void main() {
     });
   }
 
-  for (final style in AppThemeStyle.values) {
+  for (final style in ['mornye']) {
     testWidgets(
       'system font persists and restores the default ($style)',
       (tester) async {
         SharedPreferences.setMockInitialValues({
-          kThemeStyleKey: style.name,
+          'theme_style': style,
           kMornyeAccentKey: 'blue',
-          kUseDynamicColorKey: false,
+          'use_dynamic_color': false,
         });
         final prefs = await SharedPreferences.getInstance();
         await openSettings(tester, prefs);
@@ -436,9 +436,8 @@ void main() {
         final theme = Theme.of(tester.element(page));
         final systemFamily = theme.textTheme.bodyLarge!.fontFamily;
         expect(systemFamily, isNot('Inter'));
-        expect(systemFamily, isNot('Google Sans Flex'));
         expect(prefs.getBool(kUseSystemFontKey), isTrue);
-        if (style == AppThemeStyle.mornye) {
+        if (style == 'mornye') {
           final overlay = MornyeTheme.fromContext(
             tester.element(page),
             brightness: Brightness.dark,

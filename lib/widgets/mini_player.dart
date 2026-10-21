@@ -12,7 +12,6 @@ import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/overflow_marquee.dart';
 import 'package:spotiflac_android/widgets/player_artwork.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
@@ -49,15 +48,13 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     Navigator.of(context, rootNavigator: true).push(
       NowPlayingRoute(
         child: const NowPlayingScreen(),
-        miniPlayerGeometry: context.isMornye
-            ? () {
-                if (!mounted) return null;
-                final surface = _bounds(_surfaceKey);
-                final artwork = _bounds(_artworkKey);
-                if (surface == null || artwork == null) return null;
-                return (surface: surface, artwork: artwork);
-              }
-            : null,
+        miniPlayerGeometry: () {
+          if (!mounted) return null;
+          final surface = _bounds(_surfaceKey);
+          final artwork = _bounds(_artworkKey);
+          if (surface == null || artwork == null) return null;
+          return (surface: surface, artwork: artwork);
+        },
       ),
     );
   }
@@ -89,13 +86,13 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
 
     final controller = ref.read(musicPlayerControllerProvider);
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
-    final compact = mornye && widget.compact;
+
+    final compact = widget.compact;
     // Frosted and flat glass levels run on constrained Android hardware. They
     // skip keeping a paused video decoder for the full player's motion cover,
     // and stop the title marquee after a few passes: every marquee frame
     // re-filters the blurred chrome around it.
-    final fullEffects = !mornye || ref.watch(mornyeLiquidGlassProvider);
+    final fullEffects = ref.watch(mornyeLiquidGlassProvider);
     final marqueeCycles = fullEffects ? null : 2;
 
     final player = Dismissible(
@@ -108,33 +105,19 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
       child: DecoratedBox(
         key: _surfaceKey,
         position: DecorationPosition.foreground,
-        decoration: BoxDecoration(
-          border: mornye
-              ? null
-              : Border(
-                  top: BorderSide(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  ),
-                ),
-        ),
+        decoration: BoxDecoration(border: null),
         child: Material(
-          color: mornye
-              ? Colors.transparent
-              : settingsGroupColor(context).withValues(alpha: 0.72),
+          color: Colors.transparent,
           child: InkWell(
             onTap: _openNowPlaying,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (!mornye)
-                  _MiniPlayerProgress(
-                    duration: mediaItem.duration ?? Duration.zero,
-                    backgroundColor: colorScheme.surfaceContainerHighest,
-                  ),
+                ...[],
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: compact ? 8 : 12,
-                    vertical: mornye ? 0 : 8,
+                    vertical: 0,
                   ),
                   child: Row(
                     children: [
@@ -184,16 +167,14 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                                 mediaItem.artist ?? '',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
-                                      color: mornye
-                                          ? Color.lerp(
-                                              colorScheme.onSurfaceVariant,
-                                              colorScheme.onSurface,
-                                              colorScheme.brightness ==
-                                                      Brightness.dark
-                                                  ? 0.7
-                                                  : 0.6,
-                                            )
-                                          : colorScheme.onSurfaceVariant,
+                                      color: Color.lerp(
+                                        colorScheme.onSurfaceVariant,
+                                        colorScheme.onSurface,
+                                        colorScheme.brightness ==
+                                                Brightness.dark
+                                            ? 0.7
+                                            : 0.6,
+                                      ),
                                     ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -203,7 +184,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                         ),
                       ),
                       IconButton(
-                        color: mornye ? colorScheme.onSurface : null,
+                        color: colorScheme.onSurface,
                         tooltip: isPlaying
                             ? context.l10n.actionPause
                             : context.l10n.tooltipPlay,
@@ -215,13 +196,9 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                                 ),
                               )
                             : Icon(
-                                mornye
-                                    ? (isPlaying
-                                          ? CupertinoIcons.pause_fill
-                                          : CupertinoIcons.play_fill)
-                                    : (isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow),
+                                (isPlaying
+                                    ? CupertinoIcons.pause_fill
+                                    : CupertinoIcons.play_fill),
                               ),
                         onPressed: isLoading
                             ? null
@@ -229,13 +206,9 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                       ),
                       if (!compact)
                         IconButton(
-                          color: mornye ? colorScheme.onSurface : null,
+                          color: colorScheme.onSurface,
                           tooltip: context.l10n.nowPlayingNextTrack,
-                          icon: Icon(
-                            mornye
-                                ? CupertinoIcons.forward_fill
-                                : Icons.skip_next,
-                          ),
+                          icon: Icon(CupertinoIcons.forward_fill),
                           onPressed: controller.next,
                         ),
                     ],
@@ -256,40 +229,14 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
       onVerticalDragEnd: _onVerticalDragEnd,
       child: player,
     );
-    return mornye
-        ? Padding(
-            padding: EdgeInsets.only(bottom: widget.bottomPadding),
-            child: MornyeGlass.navigation(
-              strongTint: true,
-              tintOpacity: MornyeTheme.chromeOpacity(context),
-              blurEnabled: ref.watch(mornyeBlurEnabledProvider),
-              child: swipeable,
-            ),
-          )
-        : swipeable;
-  }
-}
-
-class _MiniPlayerProgress extends ConsumerWidget {
-  final Duration duration;
-  final Color backgroundColor;
-
-  const _MiniPlayerProgress({
-    required this.duration,
-    required this.backgroundColor,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final durationMs = duration.inMilliseconds;
-    final positionMs = ref.watch(playbackPositionProvider).inMilliseconds;
-    final progress = durationMs > 0
-        ? (positionMs / durationMs).clamp(0.0, 1.0)
-        : 0.0;
-    return LinearProgressIndicator(
-      value: progress,
-      minHeight: 2,
-      backgroundColor: backgroundColor,
+    return Padding(
+      padding: EdgeInsets.only(bottom: widget.bottomPadding),
+      child: MornyeGlass.navigation(
+        strongTint: true,
+        tintOpacity: MornyeTheme.chromeOpacity(context),
+        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        child: swipeable,
+      ),
     );
   }
 }

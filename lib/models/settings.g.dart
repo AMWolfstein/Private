@@ -11,8 +11,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   downloadDirectoryBookmark: json['downloadDirectoryBookmark'] as String? ?? '',
   storageMode: json['storageMode'] as String? ?? 'app',
   downloadTreeUri: json['downloadTreeUri'] as String? ?? '',
-  embeddedCoverMaxDimension:
-      (json['embeddedCoverMaxDimension'] as num?)?.toInt() ?? 0,
   artistTagMode: json['artistTagMode'] as String? ?? artistTagModeJoined,
   metadataSeparators: json['metadataSeparators'] == null
       ? const MetadataSeparators()
@@ -65,9 +63,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   autoplay: json['autoplay'] as bool? ?? false,
   autoplayPersonalization: json['autoplayPersonalization'] as bool? ?? false,
   isFirstLaunch: json['isFirstLaunch'] as bool? ?? true,
-  hasSearchedBefore: json['hasSearchedBefore'] as bool? ?? false,
-  albumFolderStructure:
-      json['albumFolderStructure'] as String? ?? 'artist_album',
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
   enableLogging: json['enableLogging'] as bool? ?? false,
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
@@ -94,7 +89,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'downloadDirectoryBookmark': instance.downloadDirectoryBookmark,
       'storageMode': instance.storageMode,
       'downloadTreeUri': instance.downloadTreeUri,
-      'embeddedCoverMaxDimension': instance.embeddedCoverMaxDimension,
       'artistTagMode': instance.artistTagMode,
       'metadataSeparators': instance.metadataSeparators.toJson(),
       'musicHaptics': instance.musicHaptics,
@@ -120,8 +114,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'autoplay': instance.autoplay,
       'autoplayPersonalization': instance.autoplayPersonalization,
       'isFirstLaunch': instance.isFirstLaunch,
-      'hasSearchedBefore': instance.hasSearchedBefore,
-      'albumFolderStructure': instance.albumFolderStructure,
       'historyFilterMode': instance.historyFilterMode,
       'enableLogging': instance.enableLogging,
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,

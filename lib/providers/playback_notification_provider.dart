@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/services/playback_notification.dart';
 
 /// Kept alive by the app shell so notification favorites share the exact
@@ -19,9 +17,7 @@ final playbackNotificationProvider = Provider.autoDispose
         String shuffleOff,
       })
     >((ref, labels) {
-      final mornye = ref.watch(
-        themeProvider.select((theme) => theme.style == AppThemeStyle.mornye),
-      );
+      const mornye = true;
       final item = ref.watch(currentMediaItemProvider).value;
       final track = item == null
           ? null

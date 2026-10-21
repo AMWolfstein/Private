@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
@@ -241,36 +240,25 @@ class SelectionBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = context.tokens;
     final colorScheme = Theme.of(context).colorScheme;
 
     final header = LayoutBuilder(
       builder: (context, constraints) => Row(
         children: [
-          if (context.isMornye)
-            Tooltip(
-              message: MaterialLocalizations.of(context).closeButtonTooltip,
-              child: CupertinoButton(
-                color: MornyeTheme.controlFill(context),
-                borderRadius: BorderRadius.circular(28),
-                padding: const EdgeInsets.all(12),
-                onPressed: onClose,
-                child: Icon(
-                  CupertinoIcons.xmark,
-                  color: colorScheme.onSurface,
-                  size: 24,
-                ),
-              ),
-            )
-          else
-            IconButton.filledTonal(
+          Tooltip(
+            message: MaterialLocalizations.of(context).closeButtonTooltip,
+            child: CupertinoButton(
+              color: MornyeTheme.controlFill(context),
+              borderRadius: BorderRadius.circular(28),
+              padding: const EdgeInsets.all(12),
               onPressed: onClose,
-              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-              icon: const Icon(Icons.close),
-              style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerHighest,
+              child: Icon(
+                CupertinoIcons.xmark,
+                color: colorScheme.onSurface,
+                size: 24,
               ),
             ),
+          ),
           const SizedBox(width: 12),
 
           Expanded(
@@ -298,34 +286,18 @@ class SelectionBottomBar extends StatelessWidget {
 
           ConstrainedBox(
             constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.4),
-            child: context.isMornye
-                ? CupertinoButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    onPressed: onToggleSelectAll,
-                    child: Text(
-                      allSelected
-                          ? context.l10n.actionDeselect
-                          : context.l10n.actionSelectAll,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  )
-                : TextButton.icon(
-                    onPressed: onToggleSelectAll,
-                    icon: Icon(
-                      allSelected ? Icons.deselect : Icons.select_all,
-                      size: 20,
-                    ),
-                    label: Text(
-                      allSelected
-                          ? context.l10n.actionDeselect
-                          : context.l10n.actionSelectAll,
-                    ),
-                    style: TextButton.styleFrom(
-                      foregroundColor: colorScheme.primary,
-                    ),
-                  ),
+            child: CupertinoButton(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              onPressed: onToggleSelectAll,
+              child: Text(
+                allSelected
+                    ? context.l10n.actionDeselect
+                    : context.l10n.actionSelectAll,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: colorScheme.primary),
+              ),
+            ),
           ),
         ],
       ),
@@ -336,25 +308,9 @@ class SelectionBottomBar extends StatelessWidget {
       bottomPadding: bottomPadding,
       children: children,
       surfaceBuilder: (content) {
-        if (context.isMornye) {
+        {
           return MornyeGlassPanel.overlay(child: content);
         }
-        return Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(tokens.radiusSheet),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: 0.15),
-                blurRadius: 12,
-                offset: const Offset(0, -4),
-              ),
-            ],
-          ),
-          child: content,
-        );
       },
     );
   }

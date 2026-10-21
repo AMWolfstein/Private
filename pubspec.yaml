@@ -39,9 +39,7 @@ dependencies:
   cupertino_icons: ^2.0.0
   volume_controller: ^3.7.1
 
-  # Material Expressive 3 / Dynamic Color
-  material_ui: ^1.6.0
-  material_3_expressive: ^1.1.6
+  # Local artwork color extraction
   material_color_utilities: 0.13.0
 
   # Permissions
@@ -121,6 +119,3 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/InterVariable.ttf
-    - family: Google Sans Flex
-      fonts:
-        - asset: assets/fonts/GoogleSansFlex.ttf

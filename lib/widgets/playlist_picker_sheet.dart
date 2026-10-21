@@ -39,7 +39,7 @@ Future<void> showAddTracksToPlaylistSheet(
     context: context,
     useRootNavigator: true,
     showDragHandle: !context.isMornye,
-    backgroundColor: context.isMornye ? Colors.transparent : null,
+    backgroundColor: Colors.transparent,
     isScrollControlled: true,
     builder: (sheetContext) {
       final content = _PlaylistPickerSheetContent(
@@ -176,7 +176,7 @@ class _PlaylistPickerSheetContentState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (context.isMornye) ...[
+          ...[
             const AppSheetHandle(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
@@ -202,18 +202,11 @@ class _PlaylistPickerSheetContentState
                 ),
               ),
             ),
-          ] else
-            ListTile(
-              leading: const Icon(Icons.playlist_add),
-              title: Text(context.l10n.collectionAddToPlaylist),
-              subtitle: Text(subtitle),
-            ),
+          ],
           const Divider(height: 1),
           _PlaylistPickerRow(
             leading: Icon(
-              context.isMornye
-                  ? CupertinoIcons.add_circled
-                  : Icons.add_circle_outline,
+              CupertinoIcons.add_circled,
               color: Theme.of(context).colorScheme.primary,
             ),
             title: Text(context.l10n.collectionCreatePlaylist),
@@ -330,16 +323,11 @@ class _PlaylistPickerSheetContentState
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: SizedBox(
               width: double.infinity,
-              child: context.isMornye
-                  ? AppActionButton(
-                      onPressed: _isSubmitting ? null : onDone,
-                      icon: const Icon(CupertinoIcons.checkmark),
-                      label: Text(context.l10n.dialogDone),
-                    )
-                  : FilledButton(
-                      onPressed: _isSubmitting ? null : onDone,
-                      child: Text(context.l10n.dialogDone),
-                    ),
+              child: AppActionButton(
+                onPressed: _isSubmitting ? null : onDone,
+                icon: const Icon(CupertinoIcons.checkmark),
+                label: Text(context.l10n.dialogDone),
+              ),
             ),
           ),
         ],
@@ -423,15 +411,6 @@ class _PlaylistPickerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
-      return ListTile(
-        leading: leading,
-        title: title,
-        subtitle: subtitle,
-        enabled: enabled,
-        onTap: onTap,
-      );
-    }
     final theme = Theme.of(context);
     return Semantics(
       selected: selected,
@@ -590,7 +569,7 @@ class _PlaylistPickerThumbnail extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
-        context.isMornye ? CupertinoIcons.music_note_list : Icons.queue_music,
+        CupertinoIcons.music_note_list,
         color: colorScheme.onSurfaceVariant,
       ),
     );

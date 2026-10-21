@@ -82,7 +82,6 @@ class MainActivity: FlutterFragmentActivity() {
 
         "readAudioMetadata",
         "readFileMetadata",
-        "checkHiResAuthenticity",
         "editFileMetadata",
 
         "setLibraryCoverCacheDir",
@@ -99,8 +98,6 @@ class MainActivity: FlutterFragmentActivity() {
         "resumeLibraryScan",
         "parseCueSheet",
         "pickSafTree",
-        "readSetupFolderSelection",
-        "acknowledgeSetupFolderSelection",
 
         "safExists",
         "safExistsBatch",
@@ -108,27 +105,17 @@ class MainActivity: FlutterFragmentActivity() {
         "probeSafTreeReadAccess",
         "safDelete",
         "safStat",
-        "resolveSafFile",
-        "inspectSafFiles",
         "safCopyToTemp",
         "safOpenPlaybackLease",
         "safClosePlaybackLease",
         "openContentUri",
         "shareContentUri",
-        "shareMultipleContentUris",
         "getSafFileModTimes",
         "safCreateFromPath",
-        "safCreateIfAbsentFromPath",
-        "safCreateUniqueFromPath",
-        "safCreateCollisionAwareFromPath",
         "writeTempToSaf",
-        "writeSafSidecarLrc",
 
         "extractCoverToFile",
-        "rewriteSplitArtistTags",
         "writeM4AFreeformTags",
-        "ensureAC4Config",
-        "writeAC4Metadata",
         "releaseMemory",
         "releaseMemoryUnderPressure",
 
@@ -140,9 +127,7 @@ class MainActivity: FlutterFragmentActivity() {
     )
     private var libraryStorageReceiver: BroadcastReceiver? = null
 
-    private val setupFolderPickerStore by lazy {
-        SetupFolderPickerStore(getSharedPreferences("setup_folder_picker", Context.MODE_PRIVATE))
-    }
+
     internal val safScanLock = Any()
     internal var safScanProgress = SafScanProgress()
 
@@ -162,17 +147,6 @@ class MainActivity: FlutterFragmentActivity() {
         pendingSafTreeResult = null
 
         fun deliver(payload: String?) {
-            // Android can return to a new process with no Dart method reply.
-            // Persist the grant/result anyway, then notify the restored setup.
-            try {
-                if (setupFolderPickerStore.complete(payload)) {
-                    backendChannel?.invokeMethod("setupFolderSelectionChanged", null)
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("SpotiFLAC", "Could not retain setup folder selection", e)
-                result?.error("saf_save_failed", "Could not save selected folder", null)
-                return
-            }
             result?.success(payload)
         }
 
@@ -801,21 +775,8 @@ class MainActivity: FlutterFragmentActivity() {
                                 )
                             )
                         }
-                        "buildFilename" -> {
-                            val template = call.argument<String>("template") ?: ""
-                            val metadata = call.argument<String>("metadata") ?: "{}"
-                            val response = withContext(Dispatchers.IO) {
-                                coreBackend.buildFilename(template, metadata)
-                            }
-                            result.success(response)
-                        }
-                        "sanitizeFilename" -> {
-                            val filename = call.argument<String>("filename") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                coreBackend.sanitizeFilename(filename)
-                            }
-                            result.success(response)
-                        }
+
+
                         "pickSafTree" -> {
                             if (pendingSafTreeResult != null) {
                                 result.error("saf_pending", "SAF picker already active", null)
@@ -833,14 +794,12 @@ class MainActivity: FlutterFragmentActivity() {
                                 result.error("saf_unavailable", "No folder picker available on this device", null)
                                 return@launch
                             }
-                            setupFolderPickerStore.begin(call.argument<Boolean>("for_setup") == true)
                             pendingSafTreeResult = result
                             try {
                                 android.util.Log.i("SpotiFLAC", "Launching SAF picker via $resolver")
                                 safTreeLauncher.launch(intent)
                             } catch (e: Exception) {
                                 pendingSafTreeResult = null
-                                setupFolderPickerStore.complete(null)
                                 android.util.Log.e("SpotiFLAC", "Failed to launch SAF picker: ${e.message}", e)
                                 result.error(
                                     "saf_launch_failed",
@@ -849,13 +808,8 @@ class MainActivity: FlutterFragmentActivity() {
                                 )
                             }
                         }
-                        "readSetupFolderSelection" -> {
-                            result.success(setupFolderPickerStore.read())
-                        }
-                        "acknowledgeSetupFolderSelection" -> {
-                            setupFolderPickerStore.acknowledge(call.argument<String>("payload") ?: "")
-                            result.success(null)
-                        }
+
+
                         "safExists" -> {
                             val uriStr = call.argument<String>("uri") ?: ""
                             val exists = withContext(Dispatchers.IO) {
@@ -962,22 +916,8 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "resolveSafFile" -> {
-                            val treeUriStr = call.argument<String>("tree_uri") ?: ""
-                            val relativeDir = call.argument<String>("relative_dir") ?: ""
-                            val fileName = call.argument<String>("file_name") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                resolveSafFile(treeUriStr, relativeDir, fileName)
-                            }
-                            result.success(response)
-                        }
-                        "inspectSafFiles" -> {
-                            val requestsJson = call.argument<String>("requests_json") ?: "[]"
-                            val response = withContext(Dispatchers.IO) {
-                                inspectSafFiles(requestsJson)
-                            }
-                            result.success(response)
-                        }
+
+
                         "safCopyToTemp" -> {
                             val uriStr = call.argument<String>("uri") ?: ""
                             val tempPath = withContext(Dispatchers.IO) {
@@ -1021,92 +961,9 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(createdUri)
                         }
-                        "safCreateIfAbsentFromPath" -> {
-                            val treeUriStr = call.argument<String>("tree_uri") ?: ""
-                            val relativeDir = call.argument<String>("relative_dir") ?: ""
-                            val fileName = call.argument<String>("file_name") ?: ""
-                            val mimeType = call.argument<String>("mime_type") ?: "application/octet-stream"
-                            val srcPath = call.argument<String>("src_path") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                if (treeUriStr.isBlank() || fileName.isBlank()) return@withContext null
-                                SafFileOps.writeFileToSafIfAbsent(
-                                    context = this@MainActivity,
-                                    treeUriStr = treeUriStr,
-                                    relativeDir = relativeDir,
-                                    fileName = fileName,
-                                    mimeType = mimeType,
-                                    srcPath = srcPath,
-                                )?.let { writeResult ->
-                                    JSONObject()
-                                        .put("uri", writeResult.uri)
-                                        .put("file_name", writeResult.fileName)
-                                        .put("already_exists", writeResult.alreadyExists)
-                                        .put("publish_timings_ms", JSONObject(writeResult.publishTimingsMs))
-                                        .toString()
-                                }
-                            }
-                            result.success(response)
-                        }
-                        "safCreateUniqueFromPath" -> {
-                            val treeUriStr = call.argument<String>("tree_uri") ?: ""
-                            val relativeDir = call.argument<String>("relative_dir") ?: ""
-                            val fileName = call.argument<String>("file_name") ?: ""
-                            val mimeType = call.argument<String>("mime_type") ?: "application/octet-stream"
-                            val srcPath = call.argument<String>("src_path") ?: ""
-                            val preservedSuffix = call.argument<String>("preserved_suffix") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                if (treeUriStr.isBlank() || fileName.isBlank()) return@withContext null
-                                SafFileOps.writeFileToSafUnique(
-                                    context = this@MainActivity,
-                                    treeUriStr = treeUriStr,
-                                    relativeDir = relativeDir,
-                                    fileName = fileName,
-                                    mimeType = mimeType,
-                                    srcPath = srcPath,
-                                    preservedSuffix = preservedSuffix,
-                                )?.let { writeResult ->
-                                    JSONObject()
-                                        .put("uri", writeResult.uri)
-                                        .put("file_name", writeResult.fileName)
-                                        .put("publish_timings_ms", JSONObject(writeResult.publishTimingsMs))
-                                        .toString()
-                                }
-                            }
-                            result.success(response)
-                        }
-                        "safCreateCollisionAwareFromPath" -> {
-                            val treeUriStr = call.argument<String>("tree_uri") ?: ""
-                            val relativeDir = call.argument<String>("relative_dir") ?: ""
-                            val cleanFileName = call.argument<String>("clean_file_name") ?: ""
-                            val variantFileName = call.argument<String>("variant_file_name") ?: ""
-                            val mimeType = call.argument<String>("mime_type") ?: "application/octet-stream"
-                            val srcPath = call.argument<String>("src_path") ?: ""
-                            val preservedSuffix = call.argument<String>("preserved_suffix") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                if (
-                                    treeUriStr.isBlank() ||
-                                    cleanFileName.isBlank() ||
-                                    variantFileName.isBlank()
-                                ) return@withContext null
-                                SafFileOps.writeFileToSafCollisionAware(
-                                    context = this@MainActivity,
-                                    treeUriStr = treeUriStr,
-                                    relativeDir = relativeDir,
-                                    cleanFileName = cleanFileName,
-                                    variantFileName = variantFileName,
-                                    mimeType = mimeType,
-                                    srcPath = srcPath,
-                                    preservedSuffix = preservedSuffix,
-                                )?.let { writeResult ->
-                                    JSONObject()
-                                        .put("uri", writeResult.uri)
-                                        .put("file_name", writeResult.fileName)
-                                        .put("publish_timings_ms", JSONObject(writeResult.publishTimingsMs))
-                                        .toString()
-                                }
-                            }
-                            result.success(response)
-                        }
+
+
+
                         "openContentUri" -> {
                             val uriStr = call.argument<String>("uri") ?: ""
                             val mimeType = call.argument<String>("mime_type") ?: ""
@@ -1141,63 +998,8 @@ class MainActivity: FlutterFragmentActivity() {
                                 result.error("share_failed", e.message, null)
                             }
                         }
-                        "shareMultipleContentUris" -> {
-                            val uriStrings = call.argument<List<String>>("uris") ?: emptyList()
-                            val title = call.argument<String>("title") ?: ""
-                            try {
-                                val uris = ArrayList<Uri>(uriStrings.size)
-                                for (s in uriStrings) {
-                                    uris.add(Uri.parse(s))
-                                }
-                                val shareIntent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
-                                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
-                                    setType("audio/*")
-                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                    if (title.isNotBlank()) {
-                                        putExtra(Intent.EXTRA_SUBJECT, title)
-                                    }
-                                }
-                                startActivity(Intent.createChooser(shareIntent, title.ifBlank { "Share" }))
-                                result.success(true)
-                            } catch (e: Exception) {
-                                result.error("share_failed", e.message, null)
-                            }
-                        }
-                        "rewriteSplitArtistTags" -> {
-                            val filePath = call.argument<String>("file_path") ?: ""
-                            val artist = call.argument<String>("artist") ?: ""
-                            val albumArtist = call.argument<String>("album_artist") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                if (filePath.startsWith("content://")) {
-                                    val uri = Uri.parse(filePath)
-                                    val tempPath = copyUriToTemp(uri, ".flac")
-                                        ?: return@withContext errorJson("Failed to copy SAF file to temp")
-                                    try {
-                                        val raw = coreBackend.rewriteSplitArtistTags(tempPath, artist, albumArtist)
-                                        val obj = JSONObject(raw)
-                                        if (!obj.optBoolean("success", false)) {
-                                            return@withContext raw
-                                        }
 
-                                        if (!writeUriFromPath(uri, tempPath)) {
-                                            return@withContext errorJson("Failed to write rewritten tags back to SAF file")
-                                        }
 
-                                        obj.put("file_path", filePath)
-                                        obj.toString()
-                                    } catch (e: Exception) {
-                                        errorJson("Failed to rewrite split artist tags in SAF file: ${e.message}")
-                                    } finally {
-                                        try {
-                                            File(tempPath).delete()
-                                        } catch (_: Exception) {}
-                                    }
-                                } else {
-                                    coreBackend.rewriteSplitArtistTags(filePath, artist, albumArtist)
-                                }
-                            }
-                            result.success(response)
-                        }
                         "readFileMetadata" -> {
                             val filePath = call.argument<String>("file_path") ?: ""
                             val displayName = call.argument<String>("display_name") ?: ""
@@ -1215,24 +1017,7 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "checkHiResAuthenticity" -> {
-                            val filePath = call.argument<String>("file_path") ?: ""
-                            val optionsJson = call.argument<String>("options_json") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    if (filePath.startsWith("content://")) {
-                                        checkHiResAuthenticityFromUri(Uri.parse(filePath), optionsJson)
-                                            ?.toString()
-                                            ?: errorJson("Failed to read SAF audio file")
-                                    } else {
-                                        coreBackend.checkHiResAuthenticity(filePath, optionsJson)
-                                    }
-                                } catch (e: Exception) {
-                                    errorJson(e.message ?: "Hi-Res check failed")
-                                }
-                            }
-                            result.success(response)
-                        }
+
                         "editFileMetadata" -> {
                             val filePath = call.argument<String>("file_path") ?: ""
                             val metadataJson = call.argument<String>("metadata_json") ?: "{}"
@@ -1287,33 +1072,8 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "ensureAC4Config" -> {
-                            val filePath = call.argument<String>("file_path") ?: ""
-                            val sourcePath = call.argument<String>("source_path") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    coreBackend.ensureAc4Config(filePath, sourcePath)
-                                } catch (e: Exception) {
-                                    android.util.Log.e("SpotiFLAC", "ensureAC4Config failed: ${e.message}", e)
-                                    """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
-                                }
-                            }
-                            result.success(response)
-                        }
-                        "writeAC4Metadata" -> {
-                            val filePath = call.argument<String>("file_path") ?: ""
-                            val metadataJson = call.argument<String>("metadata_json") ?: "{}"
-                            val coverPath = call.argument<String>("cover_path") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    coreBackend.writeAc4Metadata(filePath, metadataJson, coverPath)
-                                } catch (e: Exception) {
-                                    android.util.Log.e("SpotiFLAC", "writeAC4Metadata failed: ${e.message}", e)
-                                    """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
-                                }
-                            }
-                            result.success(response)
-                        }
+
+
                         "writeTempToSaf" -> {
                             val tempPath = call.argument<String>("temp_path") ?: ""
                             val safUri = call.argument<String>("saf_uri") ?: ""
@@ -1331,23 +1091,7 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "writeSafSidecarLrc" -> {
-                            val safUri = call.argument<String>("saf_uri") ?: ""
-                            val lyrics = call.argument<String>("lyrics") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    val uri = Uri.parse(safUri)
-                                    if (writeSafSidecarLrc(uri, lyrics)) {
-                                        """{"success":true}"""
-                                    } else {
-                                        """{"success":false,"error":"Failed to write LRC sidecar"}"""
-                                    }
-                                } catch (e: Exception) {
-                                    """{"success":false,"error":"${e.message?.replace("\"", "'")}"}"""
-                                }
-                            }
-                            result.success(response)
-                        }
+
 
                         "extractCoverToFile" -> {
                             val audioPath = call.argument<String>("audio_path") ?: ""

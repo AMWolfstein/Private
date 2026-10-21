@@ -320,43 +320,4 @@ extension _QueueTabNavigation on _QueueTabState {
       ),
     );
   }
-
-  Widget _buildDragFeedback(
-    BuildContext context,
-    UnifiedLibraryItem item,
-    ColorScheme colorScheme,
-  ) {
-    final isDraggingMultiple =
-        _isSelectionMode &&
-        _selectedIds.contains(item.id) &&
-        _selectedIds.length > 1;
-    final count = isDraggingMultiple ? _selectedIds.length : 1;
-
-    return Material(
-      elevation: 6,
-      borderRadius: BorderRadius.circular(12),
-      color: colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.playlist_add, size: 18, color: colorScheme.primary),
-            const SizedBox(width: 8),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 180),
-              child: Text(
-                isDraggingMultiple ? '$count tracks' : item.trackName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

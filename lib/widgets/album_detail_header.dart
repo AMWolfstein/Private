@@ -8,11 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/expressive_button.dart';
-import 'package:spotiflac_android/widgets/expressive_icon_button.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 
 /// Collapsing album-detail header shared by the album, local-album, and
@@ -100,7 +97,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye && (coverBuilder != null || immersive)) {
+    if ((coverBuilder != null || immersive)) {
       final scheme = Theme.of(context).colorScheme;
       return HeaderPalette(
         scheme: scheme,
@@ -119,7 +116,7 @@ class AlbumDetailHeader extends StatelessWidget {
   /// Keep the toolbar at the collection scroll-view level so it stays pinned
   /// after the dynamically sized artwork and metadata have scrolled away.
   List<Widget> buildSlivers(BuildContext context) {
-    if (!context.isMornye || (coverBuilder == null && !immersive)) {
+    if ((coverBuilder == null && !immersive)) {
       return [this];
     }
     final scheme = Theme.of(context).colorScheme;
@@ -285,7 +282,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
-    final plainArtworkHeader = context.isMornye && coverBuilder != null;
+    final plainArtworkHeader = coverBuilder != null;
     // iOS does not add horizontal safe-area padding in portrait. Give toolbar
     // controls and header content an explicit inset so circular actions do not
     // sit against the glass edge on either iPhone or iPad. Android retains its
@@ -466,9 +463,7 @@ class AlbumDetailHeader extends StatelessWidget {
             leading ??
             IconButton.filledTonal(
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              icon: Icon(
-                context.isMornye ? Icons.chevron_left : Icons.arrow_back,
-              ),
+              icon: Icon(Icons.chevron_left),
               style: IconButton.styleFrom(
                 minimumSize: Size.square(tokens.minTouchTarget),
                 backgroundColor: headerScheme.surfaceContainerHigh.withValues(
@@ -571,14 +566,10 @@ class AlbumPlayActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    final scheme = HeaderPalette.of(context);
-    if (context.isMornye) {
+    {
       final compact = leadingAction != null || trailingAction != null;
       final gap = compact ? 6.0 : 12.0;
       return Row(
-        // Keep the transport pair between Loved (left) and playlist (right),
-        // including when the track metadata uses a right-to-left language.
         textDirection: TextDirection.ltr,
         children: [
           if (leadingAction != null) ...[leadingAction!, SizedBox(width: gap)],
@@ -608,37 +599,6 @@ class AlbumPlayActions extends StatelessWidget {
         ],
       );
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Flexible(
-          child: ExpressiveButton(
-            onPressed: onPlay,
-            icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, size: 20),
-            style: FilledButton.styleFrom(
-              backgroundColor: scheme.primary,
-              foregroundColor: scheme.onPrimary,
-              minimumSize: Size(0, tokens.minTouchTarget),
-              shape: const StadiumBorder(),
-            ),
-            child: Text(
-              playLabel,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        SizedBox(width: tokens.gapMd),
-        ExpressiveIconButton(
-          tooltip: shuffleTooltip,
-          onPressed: onShuffle,
-          icon: const Icon(Icons.shuffle),
-          size: tokens.minTouchTarget,
-          backgroundColor: scheme.secondaryContainer.withValues(alpha: 0.8),
-          foregroundColor: scheme.onSecondaryContainer,
-        ),
-      ],
-    );
   }
 }
 
@@ -662,9 +622,7 @@ class HeaderFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    final scheme = HeaderPalette.of(context);
-    if (context.isMornye) {
+    {
       return _MornyeHeaderButton(
         icon: mornyeIconFor(icon),
         label: label,
@@ -673,19 +631,6 @@ class HeaderFilledButton extends StatelessWidget {
         compact: compact,
       );
     }
-    return ExpressiveButton(
-      onPressed: onPressed,
-      icon: Icon(icon, size: 18),
-      style: FilledButton.styleFrom(
-        backgroundColor: scheme.primary,
-        foregroundColor: scheme.onPrimary,
-        disabledBackgroundColor: scheme.primary.withValues(alpha: 0.4),
-        disabledForegroundColor: scheme.onPrimary.withValues(alpha: 0.7),
-        minimumSize: Size(0, tokens.minTouchTarget),
-        shape: const StadiumBorder(),
-      ),
-      child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-    );
   }
 }
 
@@ -723,9 +668,8 @@ class HeaderCircleButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
-    if (context.isMornye) {
+    {
       if (tonal) {
         return Tooltip(
           message: tooltip,
@@ -776,14 +720,6 @@ class HeaderCircleButton extends ConsumerWidget {
         ),
       );
     }
-    return ExpressiveIconButton(
-      onPressed: onPressed,
-      icon: Icon(icon, size: iconSize),
-      tooltip: tooltip,
-      size: buttonSize ?? tokens.minTouchTarget,
-      backgroundColor: scheme.surfaceContainerHighest.withValues(alpha: 0.7),
-      foregroundColor: iconColor ?? scheme.onSurfaceVariant,
-    );
   }
 }
 
@@ -895,7 +831,7 @@ class HeaderMetaItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = HeaderPalette.of(context);
     final textStyle = TextStyle(
-      color: context.isMornye ? scheme.onSurfaceVariant : scheme.onSurface,
+      color: scheme.onSurfaceVariant,
       fontSize: 13,
       fontWeight: FontWeight.w500,
     );

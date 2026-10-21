@@ -213,39 +213,6 @@ pub fn rewrite_m4a_freeform(
     write_optional_sections(&mut source, output, sections, check)
 }
 
-/// Normalize an AC-4 container and lazily open its original configuration source.
-pub fn rewrite_ac4_config<R: Read + Seek>(
-    source: &mut (impl Read + Seek),
-    output: &mut impl Write,
-    reference: impl FnOnce() -> Result<R, String>,
-    check: &dyn Fn() -> Result<(), String>,
-) -> Result<bool, String> {
-    check()?;
-    let mut source = BufReader::new(CheckedReader {
-        reader: source,
-        check,
-    });
-    let sections = mp4::ac4::config(&mut source, reference, check)?;
-    write_optional_sections(&mut source, output, sections, check)
-}
-
-/// Replace AC-4 metadata; false means no output, and the cover is read only for AC-4.
-pub fn rewrite_ac4_metadata(
-    source: &mut (impl Read + Seek),
-    output: &mut impl Write,
-    metadata_json: &str,
-    cover: impl FnOnce() -> Result<Option<Vec<u8>>, String>,
-    check: &dyn Fn() -> Result<(), String>,
-) -> Result<bool, String> {
-    check()?;
-    let mut source = BufReader::new(CheckedReader {
-        reader: source,
-        check,
-    });
-    let sections = mp4::ac4::metadata(&mut source, metadata_json, cover, check)?;
-    write_optional_sections(&mut source, output, sections, check)
-}
-
 fn write_optional_sections(
     source: &mut (impl Read + Seek),
     output: &mut impl Write,

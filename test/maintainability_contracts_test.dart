@@ -2,137 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/screens/home_search_logic.dart';
 import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
-import 'package:spotiflac_android/services/ffmpeg_models.dart';
 import 'package:spotiflac_android/services/id3v23_lyrics.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
 
 void main() {
-  Track track({
-    required String id,
-    required String name,
-    String artist = 'Artist',
-    int duration = 180,
-    String? releaseDate,
-    String? itemType,
-  }) {
-    return Track(
-      id: id,
-      name: name,
-      artistName: artist,
-      albumName: 'Album',
-      duration: duration,
-      releaseDate: releaseDate,
-      itemType: itemType,
-    );
-  }
+  group('home search logic', () {});
 
-  group('home search logic', () {
-    test('separates playable tracks from collection result types', () {
-      final results = [
-        track(id: 'track', name: 'Track'),
-        track(id: 'album', name: 'Album', itemType: 'album'),
-        track(id: 'playlist', name: 'Playlist', itemType: 'playlist'),
-        track(id: 'artist', name: 'Artist', itemType: 'artist'),
-      ];
-
-      final buckets = bucketHomeSearchResults(results);
-
-      expect(buckets.realTracks.map((item) => item.id), ['track']);
-      expect(buckets.realTrackIndexes, [0]);
-      expect(buckets.albumItems.single.id, 'album');
-      expect(buckets.playlistItems.single.id, 'playlist');
-      expect(buckets.artistItems.single.id, 'artist');
-    });
-
-    test('sorts a copy and preserves default result identity', () {
-      final results = [
-        track(
-          id: 'later',
-          name: 'Zulu',
-          artist: 'Beta',
-          duration: 220,
-          releaseDate: '2026-02-01',
-        ),
-        track(
-          id: 'earlier',
-          name: 'Alpha',
-          artist: 'Alpha',
-          duration: 120,
-          releaseDate: '2025-01-01',
-        ),
-      ];
-
-      final unchanged = sortHomeSearchItems(
-        items: results,
-        option: HomeSearchSortOption.defaultOrder,
-        nameOf: (item) => item.name,
-        artistOf: (item) => item.artistName,
-        durationOf: (item) => item.duration,
-        dateOf: (item) => item.releaseDate,
-      );
-      final sorted = sortHomeSearchItems(
-        items: results,
-        option: HomeSearchSortOption.titleAsc,
-        nameOf: (item) => item.name,
-        artistOf: (item) => item.artistName,
-        durationOf: (item) => item.duration,
-        dateOf: (item) => item.releaseDate,
-      );
-
-      expect(identical(unchanged, results), isTrue);
-      expect(identical(sorted, results), isFalse);
-      expect(sorted.map((item) => item.id), ['earlier', 'later']);
-      expect(results.first.id, 'later');
-    });
-
-    test('recognizes URLs and Spotify URIs without treating text as a URL', () {
-      expect(looksLikeUrlOrSpotifyUri('https://example.test/track'), isTrue);
-      expect(looksLikeUrlOrSpotifyUri('spotify:track:123'), isTrue);
-      expect(looksLikeUrlOrSpotifyUri('artist track title'), isFalse);
-    });
-  });
-
-  group('FFmpeg value models', () {
-    test('normalizes structured and legacy decryption descriptors', () {
-      final structured = DownloadDecryptionDescriptor.fromDownloadResult({
-        'output_extension': 'M4A',
-        'decryption': {
-          'strategy': 'ffmpeg_mov_key',
-          'key': ' secret ',
-          'options': {'repair_ac4': true},
-        },
-      });
-      final legacy = DownloadDecryptionDescriptor.fromDownloadResult({
-        'decryption_key': 'legacy',
-        'output_extension': '.flac',
-      });
-
-      expect(structured, isNotNull);
-      expect(structured!.normalizedStrategy, 'ffmpeg.mov_key');
-      expect(structured.normalizedOutputExtension, '.m4a');
-      expect(structured.key, 'secret');
-      expect(legacy!.inputFormat, 'mov');
-      expect(legacy.normalizedOutputExtension, '.flac');
-    });
-
-    test('rejects empty or unsupported structured decryption requests', () {
-      expect(
-        DownloadDecryptionDescriptor.fromDownloadResult({
-          'decryption': {'strategy': 'custom', 'key': 'secret'},
-        }),
-        isNull,
-      );
-      expect(
-        DownloadDecryptionDescriptor.fromDownloadResult({
-          'decryption': {'strategy': 'ffmpeg.mov_key', 'key': ' '},
-        }),
-        isNull,
-      );
-    });
-  });
+  group('FFmpeg value models', () {});
 
   group('audio metadata modules', () {
     test('maps shared tags consistently for native, M4A, and ID3 writers', () {

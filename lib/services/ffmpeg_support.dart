@@ -10,21 +10,6 @@ final _log = AppLogger('FFmpeg');
 
 /// Shared native execution boundary; feature modules supply their own commands.
 abstract final class FFmpegExecution {
-  static Future<FFmpegResult> command(String command) async {
-    try {
-      final session = await FFmpegKit.execute(command);
-      final code = await session.getReturnCode();
-      return FFmpegResult(
-        success: ReturnCode.isSuccess(code),
-        returnCode: code?.getValue() ?? -1,
-        output: await session.getOutput() ?? '',
-      );
-    } catch (e) {
-      _log.e('FFmpeg execute error: $e');
-      return FFmpegResult(success: false, returnCode: -1, output: e.toString());
-    }
-  }
-
   static Future<FFmpegResult> arguments(List<String> arguments) async {
     try {
       final session = await FFmpegKit.executeWithArguments(arguments);
@@ -98,29 +83,6 @@ abstract final class FFmpegOutput {
         }
       }
     }
-  }
-
-  static Future<FFmpegOutputPlan> plan(
-    String inputPath,
-    String extension, {
-    required bool deleteOriginal,
-  }) async {
-    final ext = extension.startsWith('.') ? extension : '.$extension';
-    final file = File(inputPath);
-    final name = file.uri.pathSegments.last;
-    final dot = name.lastIndexOf('.');
-    final base = dot > 0 ? name.substring(0, dot) : name;
-    final requested = '${file.parent.path}${Platform.pathSeparator}$base$ext';
-    if (samePath(requested, inputPath) && deleteOriginal) {
-      return FFmpegOutputPlan(
-        workingPath: await reserve(
-          '${file.parent.path}${Platform.pathSeparator}.$base.spotiflac-${DateTime.now().microsecondsSinceEpoch}$ext',
-        ),
-        finalPath: inputPath,
-      );
-    }
-    final finalPath = await reserve(requested);
-    return FFmpegOutputPlan(workingPath: finalPath, finalPath: finalPath);
   }
 
   static Future<String> tempPath(String extension) async {

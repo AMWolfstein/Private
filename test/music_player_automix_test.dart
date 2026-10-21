@@ -32,6 +32,9 @@ class _EffectRenderer extends AutoMixEffectRenderer {
   }) async {
     if (fail) return null;
     final work = await Directory.systemTemp.createTemp('fake-mix-tail-');
+    addTearDown(() async {
+      if (await work.exists()) await work.delete(recursive: true);
+    });
     final tail = RenderedMixTail(work, '${work.path}/tail.wav');
     tails.add(tail);
     return tail;

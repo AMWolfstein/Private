@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:spotiflac_android/widgets/app_choice_chip.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -20,12 +21,11 @@ void main() {
                     children: [
                       MornyeGlassPanel.overlay(
                         radius: 24,
-                        child: MornyeFilterChip(
-                          label: 'Albums',
+                        child: AppChoiceChip(
+                          label: const Text('Albums'),
                           selected: selected,
-                          glass: false,
-                          tonal: selected,
-                          onTap: () => setState(() => selected = !selected),
+                          onSelected: (value) =>
+                              setState(() => selected = value),
                         ),
                       ),
                       Expanded(

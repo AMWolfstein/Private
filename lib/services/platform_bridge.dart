@@ -4,18 +4,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('PlatformBridge');
-
-const foregroundServiceStartNotAllowedCode =
-    'foreground_service_start_not_allowed';
-
-bool isForegroundServiceStartNotAllowed(Object error) {
-  return error is PlatformException &&
-      error.code == foregroundServiceStartNotAllowedCode;
-}
 
 Object? _decodeJsonInBackground(String json) => jsonDecode(json);
 String _encodeJsonInBackground(Object? value) => jsonEncode(value);
@@ -68,22 +59,6 @@ class LibraryScanNDJSONFile {
   }
 }
 
-/// Folder picked via the native iOS document picker: the filesystem path plus
-/// the security-scoped bookmark that re-grants access across app launches.
-class IosPickedDirectory {
-  final String path;
-  final String bookmark;
-
-  const IosPickedDirectory({required this.path, required this.bookmark});
-}
-
-class IosSecurityScopedAccess {
-  final String path;
-  final String token;
-
-  const IosSecurityScopedAccess({required this.path, required this.token});
-}
-
 class ContentUriPlaybackLease {
   final String path;
   final String token;
@@ -133,10 +108,6 @@ bool shouldResetRestoredInstallation({
 }
 
 class PlatformBridge {
-  /// Sentinel shared with Android's foreground service for progress reports
-  /// that contain a percentage but no byte counts.
-  static const int notificationPercentTotal = 10000;
-
   static const _channel = MethodChannel('com.zarz.spotiflac/backend');
 
   static int _nativeDataJobSerial = 0;
@@ -209,20 +180,14 @@ class PlatformBridge {
   );
   static final StreamController<void> _libraryStorageEvents =
       StreamController<void>.broadcast();
-  static final StreamController<void> _setupFolderSelectionEvents =
-      StreamController<void>.broadcast();
+
   static bool _backendEventHandlerInstalled = false;
 
-  static bool get supportsCoreBackend => Platform.isAndroid || Platform.isIOS;
+  static bool get supportsCoreBackend => Platform.isAndroid;
 
   static Stream<void> libraryStorageEvents() {
     _ensureBackendEventHandler();
     return _libraryStorageEvents.stream;
-  }
-
-  static Stream<void> setupFolderSelectionEvents() {
-    _ensureBackendEventHandler();
-    return _setupFolderSelectionEvents.stream;
   }
 
   static void _ensureBackendEventHandler() {
@@ -230,9 +195,6 @@ class PlatformBridge {
     _backendEventHandlerInstalled = true;
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
-        case 'setupFolderSelectionChanged':
-          _setupFolderSelectionEvents.add(null);
-          return null;
         case 'libraryScanError':
           final args = call.arguments;
           if (args is Map) {
@@ -265,17 +227,8 @@ class PlatformBridge {
     return InstallationState.fromMap(result);
   }
 
-  static Future<void> prepareRuntimeState(String dataDir) async {
-    if (!Platform.isAndroid) return;
-    await _invokeMap('prepareRuntimeState', {'data_dir': dataDir});
-  }
-
   static Future<void> exitApp() async {
     await _channel.invokeMethod('exitApp');
-  }
-
-  static Future<void> setDownloadDirectory(String path) async {
-    await _channel.invokeMethod('setDownloadDirectory', {'path': path});
   }
 
   /// Holds local backend access until the media operation finishes.
@@ -302,24 +255,6 @@ class PlatformBridge {
     return result ?? const {};
   }
 
-  static Future<String> buildFilename(
-    String template,
-    Map<String, dynamic> metadata,
-  ) async {
-    final result = await _channel.invokeMethod('buildFilename', {
-      'template': template,
-      'metadata': jsonEncode(metadata),
-    });
-    return result as String;
-  }
-
-  static Future<String> sanitizeFilename(String filename) async {
-    final result = await _channel.invokeMethod('sanitizeFilename', {
-      'filename': filename,
-    });
-    return result as String;
-  }
-
   static Future<Map<String, dynamic>?> pickSafTree({
     bool forSetup = false,
   }) async {
@@ -329,14 +264,6 @@ class PlatformBridge {
     );
     return _decodeNullableMapResult(result, 'pickSafTree');
   }
-
-  static Future<String?> readSetupFolderSelection() =>
-      _channel.invokeMethod<String>('readSetupFolderSelection');
-
-  static Future<void> acknowledgeSetupFolderSelection(String payload) =>
-      _channel.invokeMethod<void>('acknowledgeSetupFolderSelection', {
-        'payload': payload,
-      });
 
   static Future<bool> safExists(String uri) async {
     final result = await _channel.invokeMethod('safExists', {'uri': uri});
@@ -412,35 +339,6 @@ class PlatformBridge {
     return _invokeMap('safStat', {'uri': uri});
   }
 
-  static Future<Map<String, dynamic>> resolveSafFile({
-    required String treeUri,
-    required String fileName,
-    String relativeDir = '',
-  }) {
-    return _invokeMap('resolveSafFile', {
-      'tree_uri': treeUri,
-      'relative_dir': relativeDir,
-      'file_name': fileName,
-    });
-  }
-
-  /// Checks and repairs many SAF file references in a single native pass.
-  /// Android groups requests by tree and scans each tree no more than once.
-  static Future<List<Map<String, dynamic>>> inspectSafFiles(
-    List<Map<String, dynamic>> requests,
-  ) async {
-    if (requests.isEmpty) return const [];
-    final response = await _invokeMap('inspectSafFiles', {
-      'requests_json': jsonEncode(requests),
-    });
-    final results = response['results'];
-    if (results is! List) return const [];
-    return results
-        .whereType<Map<Object?, Object?>>()
-        .map((result) => result.map((key, value) => MapEntry('$key', value)))
-        .toList(growable: false);
-  }
-
   static Future<String?> copyContentUriToTemp(String uri) async {
     final result = await _channel.invokeMethod('safCopyToTemp', {'uri': uri});
     return result as String?;
@@ -491,60 +389,6 @@ class PlatformBridge {
     return result as String?;
   }
 
-  static Future<Map<String, dynamic>> createSafFileIfAbsentFromPath({
-    required String treeUri,
-    required String relativeDir,
-    required String fileName,
-    required String mimeType,
-    required String srcPath,
-  }) {
-    return _invokeMap('safCreateIfAbsentFromPath', {
-      'tree_uri': treeUri,
-      'relative_dir': relativeDir,
-      'file_name': fileName,
-      'mime_type': mimeType,
-      'src_path': srcPath,
-    });
-  }
-
-  static Future<Map<String, dynamic>> createUniqueSafFileFromPath({
-    required String treeUri,
-    required String relativeDir,
-    required String fileName,
-    required String mimeType,
-    required String srcPath,
-    String preservedSuffix = '',
-  }) {
-    return _invokeMap('safCreateUniqueFromPath', {
-      'tree_uri': treeUri,
-      'relative_dir': relativeDir,
-      'file_name': fileName,
-      'mime_type': mimeType,
-      'src_path': srcPath,
-      'preserved_suffix': preservedSuffix,
-    });
-  }
-
-  static Future<Map<String, dynamic>> createCollisionAwareSafFileFromPath({
-    required String treeUri,
-    required String relativeDir,
-    required String cleanFileName,
-    required String variantFileName,
-    required String mimeType,
-    required String srcPath,
-    String preservedSuffix = '',
-  }) {
-    return _invokeMap('safCreateCollisionAwareFromPath', {
-      'tree_uri': treeUri,
-      'relative_dir': relativeDir,
-      'clean_file_name': cleanFileName,
-      'variant_file_name': variantFileName,
-      'mime_type': mimeType,
-      'src_path': srcPath,
-      'preserved_suffix': preservedSuffix,
-    });
-  }
-
   static Future<void> openContentUri(String uri, {String mimeType = ''}) async {
     await _channel.invokeMethod('openContentUri', {
       'uri': uri,
@@ -560,89 +404,6 @@ class PlatformBridge {
     return result as bool? ?? false;
   }
 
-  static Future<bool> shareMultipleContentUris(
-    List<String> uris, {
-    String title = '',
-  }) async {
-    final result = await _channel.invokeMethod('shareMultipleContentUris', {
-      'uris': uris,
-      'title': title,
-    });
-    return result as bool? ?? false;
-  }
-
-  static Future<String> getLyricsLRC(
-    String spotifyId,
-    String trackName,
-    String artistName, {
-    String? filePath,
-    int durationMs = 0,
-  }) async {
-    final result = await _channel.invokeMethod('getLyricsLRC', {
-      'spotify_id': spotifyId,
-      'track_name': trackName,
-      'artist_name': artistName,
-      'file_path': filePath ?? '',
-      'duration_ms': durationMs,
-    });
-    return result as String;
-  }
-
-  static Future<Map<String, dynamic>> getLyricsLRCWithSource(
-    String spotifyId,
-    String trackName,
-    String artistName, {
-    String? filePath,
-    int durationMs = 0,
-  }) {
-    return _invokeMap('getLyricsLRCWithSource', {
-      'spotify_id': spotifyId,
-      'track_name': trackName,
-      'artist_name': artistName,
-      'file_path': filePath ?? '',
-      'duration_ms': durationMs,
-    });
-  }
-
-  static Future<Map<String, dynamic>> embedLyricsToFile(
-    String filePath,
-    String lyrics,
-  ) {
-    return _invokeMap('embedLyricsToFile', {
-      'file_path': filePath,
-      'lyrics': lyrics,
-    });
-  }
-
-  /// Copies local sidecar artwork; stale online URLs are rejected.
-  static Future<Map<String, dynamic>> copyLocalCoverToFile(
-    String source,
-    String destination,
-  ) async {
-    final uri = Uri.tryParse(source);
-    if (uri == null || (uri.hasScheme && uri.scheme != 'file')) {
-      return {'error': 'Local artwork required'};
-    }
-    try {
-      final file = File(uri.scheme == 'file' ? uri.toFilePath() : source);
-      if (!await file.exists()) return {'error': 'Local artwork is missing'};
-      if (file.absolute.path != File(destination).absolute.path) {
-        final staging = await File(
-          destination,
-        ).parent.createTemp('.cover-export-');
-        try {
-          final pending = await file.copy('${staging.path}/cover.jpg');
-          await pending.rename(destination);
-        } finally {
-          await staging.delete(recursive: true);
-        }
-      }
-      return {'success': true, 'path': destination};
-    } catch (error) {
-      return {'error': error.toString()};
-    }
-  }
-
   static Future<Map<String, dynamic>> extractCoverToFile(
     String audioPath,
     String outputPath,
@@ -655,24 +416,6 @@ class PlatformBridge {
     });
   }
 
-  static Future<Map<String, dynamic>> fetchAndSaveLyrics({
-    required String trackName,
-    required String artistName,
-    required String spotifyId,
-    required int durationMs,
-    required String outputPath,
-    String audioFilePath = '',
-  }) {
-    return _invokeMap('fetchAndSaveLyrics', {
-      'track_name': trackName,
-      'artist_name': artistName,
-      'spotify_id': spotifyId,
-      'duration_ms': durationMs,
-      'output_path': outputPath,
-      'audio_file_path': audioFilePath,
-    });
-  }
-
   static Future<Map<String, dynamic>> readFileMetadata(
     String filePath, {
     String? displayName,
@@ -681,37 +424,6 @@ class PlatformBridge {
       'file_path': filePath,
       'display_name': ?displayName,
     });
-  }
-
-  /// Runs the Rust Hi-Res check (spectral cutoff + padded bit depth) on
-  /// a FLAC or WAV file. Returns `{"supported": false}` for other formats.
-  static Future<Map<String, dynamic>> checkHiResAuthenticity(
-    String filePath, {
-    Map<String, dynamic>? options,
-  }) {
-    return _invokeMap('checkHiResAuthenticity', {
-      'file_path': filePath,
-      'options_json': options == null ? '' : jsonEncode(options),
-    });
-  }
-
-  /// Reads the tags and quality fields used for automatic Library display.
-  ///
-  /// Android's readAudioMetadata implementation can inspect most SAF files
-  /// through /proc/self/fd, avoiding the full-file cache copy required by tag
-  /// editing. Keep the complete reader as a compatibility fallback for
-  /// malformed or incorrectly named files that the lightweight scanner could
-  /// only identify from their filename.
-  static Future<Map<String, dynamic>> readDisplayAudioMetadata(
-    String filePath,
-  ) async {
-    final scanned = await readAudioMetadata(filePath);
-    if (scanned != null &&
-        scanned['error'] == null &&
-        scanned['metadataFromFilename'] != true) {
-      return normalizeScannedAudioMetadata(scanned);
-    }
-    return readFileMetadata(filePath);
   }
 
   static Future<Map<String, dynamic>> editFileMetadata(
@@ -769,68 +481,10 @@ class PlatformBridge {
     });
   }
 
-  /// Normalizes a decrypted AC-4 file to a standards-compliant ISO MP4 and
-  /// injects the dac4 configuration box from the encrypted [sourcePath]. The
-  /// FFmpeg mov muxer drops dac4 and writes a QuickTime-flavored container that
-  /// players reject, so this repair is required for AC-4 to be playable.
-  static Future<Map<String, dynamic>> ensureAC4Config(
-    String filePath,
-    String sourcePath,
-  ) {
-    return _withMediaFileAccess([filePath, sourcePath], () {
-      return _invokeMap('ensureAC4Config', {
-        'file_path': filePath,
-        'source_path': sourcePath,
-      });
-    });
-  }
-
-  /// Writes iTunes-style metadata (and cover art) into an AC-4 MP4. Returns a
-  /// map whose `handled` flag is `true` when the file was AC-4 and metadata was
-  /// written natively, signalling the caller to skip the FFmpeg metadata pass
-  /// (which would re-wrap the file as QuickTime).
-  static Future<Map<String, dynamic>> writeAC4Metadata(
-    String filePath,
-    Map<String, String> metadata,
-    String coverPath,
-  ) {
-    return _withMediaFileAccess([filePath, coverPath], () {
-      return _invokeMap('writeAC4Metadata', {
-        'file_path': filePath,
-        'metadata_json': jsonEncode(metadata),
-        'cover_path': coverPath,
-      });
-    });
-  }
-
-  /// Rewrites ARTIST/ALBUMARTIST Vorbis comments as multiple split entries
-  /// using the selected native FLAC writer, fixing FFmpeg's tag deduplication.
-  static Future<Map<String, dynamic>> rewriteSplitArtistTags(
-    String filePath,
-    String artist,
-    String albumArtist,
-  ) {
-    return _withMediaFileAccess([filePath], () {
-      return _invokeMap('rewriteSplitArtistTags', {
-        'file_path': filePath,
-        'artist': artist,
-        'album_artist': albumArtist,
-      });
-    });
-  }
-
   static Future<bool> writeTempToSaf(String tempPath, String safUri) async {
     final map = await _invokeMap('writeTempToSaf', {
       'temp_path': tempPath,
       'saf_uri': safUri,
-    });
-    return map['success'] == true;
-  }
-
-  static Future<bool> writeSafSidecarLrc(String safUri, String lyrics) async {
-    final map = await _invokeMap('writeSafSidecarLrc', {
-      'saf_uri': safUri,
-      'lyrics': lyrics,
     });
     return map['success'] == true;
   }
@@ -1168,75 +822,6 @@ class PlatformBridge {
       }
     }
     return const <String, dynamic>{};
-  }
-
-  /// Present the native iOS folder picker. The security-scoped bookmark is
-  /// created inside the picker callback while its access grant is still
-  /// active; creating it later from a bare path loses the grant.
-  /// Returns null when the user cancels; throws on picker/bookmark failure.
-  static Future<IosPickedDirectory?> pickIosDirectory() async {
-    _log.i('Opening iOS folder picker');
-    try {
-      final result = await _channel.invokeMethod('pickIosDirectory');
-      final map = _decodeNullableMapResult(result, 'pickIosDirectory');
-      if (map == null) {
-        _log.i('iOS folder selection cancelled');
-        return null;
-      }
-      final path = map['path'] as String? ?? '';
-      final bookmark = map['bookmark'] as String? ?? '';
-      if (!path.startsWith('/') || bookmark.trim().isEmpty) {
-        throw const FormatException('Invalid iOS folder selection');
-      }
-      _log.i('iOS folder selected with an access bookmark');
-      return IosPickedDirectory(path: path, bookmark: bookmark);
-    } catch (error, stack) {
-      _log.e('iOS folder selection failed', error, stack);
-      rethrow;
-    }
-  }
-
-  /// Resolve a base64-encoded iOS security-scoped bookmark and start accessing
-  /// the resource. The returned lease must be passed to
-  /// [stopAccessingIosBookmark] by the operation that acquired it.
-  static Future<IosSecurityScopedAccess?> startAccessingIosBookmark(
-    String bookmark,
-  ) async {
-    try {
-      final result = await _channel.invokeMethod('startAccessingIosBookmark', {
-        'bookmark': bookmark,
-      });
-      if (result is! Map) {
-        throw FormatException(
-          'startAccessingIosBookmark returned ${result.runtimeType}',
-        );
-      }
-      final path = result['path'];
-      final token = result['token'];
-      if (path is! String ||
-          path.trim().isEmpty ||
-          token is! String ||
-          token.trim().isEmpty) {
-        throw const FormatException('Invalid iOS bookmark access lease');
-      }
-      return IosSecurityScopedAccess(path: path, token: token);
-    } catch (e) {
-      _log.w('Failed to start accessing iOS bookmark: $e');
-      return null;
-    }
-  }
-
-  /// Releases exactly the security-scoped lease acquired by the caller.
-  static Future<void> stopAccessingIosBookmark(
-    IosSecurityScopedAccess access,
-  ) async {
-    try {
-      await _channel.invokeMethod('stopAccessingIosBookmark', {
-        'token': access.token,
-      });
-    } catch (e) {
-      _log.w('Failed to stop accessing iOS bookmark: $e');
-    }
   }
 
   static Future<Map<String, dynamic>?> readAudioMetadata(

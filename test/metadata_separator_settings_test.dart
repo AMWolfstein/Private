@@ -17,7 +17,7 @@ class _Settings extends SettingsNotifier {
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final size in [const Size(390, 844), const Size(844, 390)]) {
       testWidgets(
         'separator preview, save, cancel and reset ($mornye, $size)',

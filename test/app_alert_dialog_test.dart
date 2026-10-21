@@ -89,7 +89,7 @@ void main() {
     }
   }
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     testWidgets(
       'confirmation preserves cancel and confirm results (Mornye: $mornye)',
       (tester) async {

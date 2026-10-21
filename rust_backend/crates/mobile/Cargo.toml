@@ -20,7 +20,6 @@ serde.workspace = true
 rustix.workspace = true
 sha2.workspace = true
 tempfile.workspace = true
-scraper.workspace = true
 url.workspace = true
 chrono.workspace = true
 regex.workspace = true

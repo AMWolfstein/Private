@@ -10,9 +10,7 @@ import 'package:spotiflac_android/widgets/app_choice_chip.dart';
 import 'package:spotiflac_android/services/local_track_batch_actions.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/widgets/error_card.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
@@ -20,13 +18,10 @@ import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/library_search_results.dart';
 import 'package:spotiflac_android/widgets/library_track_selection_bar.dart';
 import 'package:spotiflac_android/widgets/library_selection_playback_actions.dart';
-import 'package:spotiflac_android/widgets/library_playlist_drag_source.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/audio_quality_badge_policy.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/library_format_filters.dart';
@@ -37,12 +32,10 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/services/music_player_service.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/widgets/local_song_row.dart';
 import 'package:spotiflac_android/widgets/local_song_menu.dart';
 import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
@@ -55,8 +48,6 @@ import 'package:spotiflac_android/screens/queue_library_refresh_policy.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/scroll_edge_fade.dart';
-import 'package:spotiflac_android/widgets/two_finger_pinch_listener.dart';
 
 part 'queue_tab_helpers.dart';
 part 'queue_tab_widgets.dart';
@@ -69,15 +60,8 @@ part 'queue_tab_item_widgets.dart';
 
 class QueueTab extends ConsumerStatefulWidget {
   final String? librarySection;
-  final PageController? parentPageController;
-  final int parentPageIndex;
 
-  const QueueTab({
-    super.key,
-    this.librarySection,
-    this.parentPageController,
-    this.parentPageIndex = 1,
-  });
+  const QueueTab({super.key, this.librarySection});
 
   @override
   ConsumerState<QueueTab> createState() => _QueueTabState();
@@ -85,18 +69,14 @@ class QueueTab extends ConsumerStatefulWidget {
 
 class _QueueTabState extends ConsumerState<QueueTab> {
   static const int _libraryPageSize = 300;
-  final LibraryFileAvailabilityCache _fileExistsCache =
-      LibraryFileAvailabilityCache();
-  static const double _libraryGridMinExtent = 92;
+
   static const double _libraryGridDefaultExtent = 126;
-  static const double _libraryGridMaxExtent = 190;
-  bool _embeddedCoverRefreshScheduled = false;
+
   // Version counter to trigger targeted cover image rebuilds
   // without rebuilding the entire widget tree via setState.
-  final ValueNotifier<int> _embeddedCoverVersion = ValueNotifier<int>(0);
 
   bool _isSelectionMode = false;
-  bool _isDraggingLibraryTrack = false;
+
   final Set<String> _selectedIds = {};
   String? _selectionAnchorId;
   final SelectionOverlayController _selectionOverlay =
@@ -115,9 +95,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   List<UserPlaylistCollection> _playlistSelectionOverlayItems = const [];
   double _playlistSelectionOverlayBottomPadding = 0;
 
-  PageController? _filterPageController;
-  final List<String> _filterModes = ['all', 'albums', 'singles', 'playlists'];
-  bool _isPageControllerInitialized = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   String _searchQuery = '';
@@ -131,7 +108,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     _libraryGridDefaultExtent,
   );
   double get _libraryGridExtent => _libraryGridExtentNotifier.value;
-  double? _libraryGridPinchStartExtent;
+
   final Map<String, int> _libraryPageOffsetByFilter = {};
   bool _libraryPageLoadScheduled = false;
   final Map<_QueueLibraryCountsRequest, QueueLibraryCounts>
@@ -146,49 +123,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   /// through this forwarder.
   void _setState(VoidCallback fn) => setState(fn);
 
-  void _handleLibraryGridPinchStart() {
-    _libraryGridPinchStartExtent = _libraryGridExtent;
-  }
-
-  void _handleLibraryGridPinchUpdate(double scale) {
-    final startExtent = _libraryGridPinchStartExtent;
-    if (startExtent == null) return;
-
-    final nextExtent = (startExtent * scale).clamp(
-      _libraryGridMinExtent,
-      _libraryGridMaxExtent,
-    );
-    if ((nextExtent - _libraryGridExtent).abs() < 0.5) return;
-    _libraryGridExtentNotifier.value = nextExtent;
-  }
-
-  void _handleLibraryGridPinchEnd() {
-    _libraryGridPinchStartExtent = null;
-  }
-
   @override
   void initState() {
     super.initState();
-  }
-
-  void _initializePageController() {
-    if (_isPageControllerInitialized) return;
-    _isPageControllerInitialized = true;
-    final settings = ref.read(settingsProvider);
-    final initialFilter = widget.librarySection ?? settings.historyFilterMode;
-    final initialPage = _filterModes
-        .indexOf(initialFilter)
-        .clamp(0, _filterModes.length - 1);
-    if (widget.librarySection == null &&
-        settings.historyFilterMode != _filterModes[initialPage]) {
-      Future.microtask(() {
-        if (!mounted) return;
-        ref
-            .read(settingsProvider.notifier)
-            .setHistoryFilterMode(_filterModes[initialPage]);
-      });
-    }
-    _filterPageController = PageController(initialPage: initialPage);
   }
 
   @override
@@ -196,9 +133,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     _libraryGridExtentNotifier.dispose();
     _hideSelectionOverlay();
     _hidePlaylistSelectionOverlay();
-    _fileExistsCache.dispose();
-    _embeddedCoverVersion.dispose();
-    _filterPageController?.dispose();
+
     _searchController.dispose();
     _searchFocusNode.dispose();
     _searchDebounce?.cancel();
@@ -418,49 +353,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       hasMoreLibrary: hasMoreLibrary,
     );
     return false;
-  }
-
-  void _onFilterPageChanged(int index) {
-    if (widget.librarySection != null) return;
-    HapticFeedback.selectionClick();
-    final filterMode = _filterModes[index];
-    ref.read(settingsProvider.notifier).setHistoryFilterMode(filterMode);
-  }
-
-  void _animateToFilterPage(int index) {
-    if (index >= 0 && index < _filterModes.length) {
-      final filterMode = _filterModes[index];
-      if (ref.read(settingsProvider).historyFilterMode != filterMode) {
-        ref.read(settingsProvider.notifier).setHistoryFilterMode(filterMode);
-      }
-    }
-    _filterPageController?.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutCubic,
-    );
-  }
-
-  void _onEmbeddedCoverChanged() {
-    if (!mounted || _embeddedCoverRefreshScheduled) return;
-    _embeddedCoverRefreshScheduled = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _embeddedCoverRefreshScheduled = false;
-      if (mounted) {
-        _embeddedCoverVersion.value++;
-      }
-    });
-  }
-
-  String? _resolveDownloadedEmbeddedCoverPath(String? filePath) {
-    return DownloadedEmbeddedCoverResolver.resolve(
-      filePath,
-      onChanged: _onEmbeddedCoverChanged,
-    );
-  }
-
-  ValueListenable<bool> _fileExistsListenable(String? filePath) {
-    return _fileExistsCache.listenable(filePath);
   }
 
   int get _activeFilterCount {
@@ -959,12 +851,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                                   _resetLibraryPaging();
                                 });
                                 Navigator.pop(context);
-                                if (widget.librarySection == null &&
-                                    isAlbumCompletenessFilter(tempMetadata)) {
-                                  _animateToFilterPage(
-                                    _filterModes.indexOf('albums'),
-                                  );
-                                }
                               },
                               child: Text(context.l10n.libraryFilterApply),
                             ),
@@ -984,7 +870,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye && widget.librarySection == null) {
+    if (widget.librarySection == null) {
       return MornyeLibraryScreen(
         onOpenSection: (section) => Navigator.of(context).push(
           MaterialPageRoute<void>(
@@ -993,7 +879,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         ),
       );
     }
-    _initializePageController();
+
     final localLibraryEnabled = ref.watch(
       settingsProvider.select((s) => s.localLibraryEnabled),
     );
@@ -1181,14 +1067,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             ).copyWith(overscroll: false),
             child: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                if (widget.librarySection == null)
-                  AppSliverHeader.tabRoot(title: context.l10n.navLibrary)
-                else
-                  AppSliverHeader.page(
-                    title: widget.librarySection == 'playlists'
-                        ? context.l10n.searchPlaylists
-                        : context.l10n.searchSongs,
-                  ),
+                AppSliverHeader.page(
+                  title: widget.librarySection == 'playlists'
+                      ? context.l10n.searchPlaylists
+                      : context.l10n.searchSongs,
+                ),
 
                 if (shouldShowLibraryControls)
                   SliverToBoxAdapter(
@@ -1211,84 +1094,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                     ),
                   ),
 
-                if (!searchingLibrary &&
-                    shouldShowLibraryControls &&
-                    widget.librarySection == null)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          int filteredAllCount;
-                          int filteredAlbumCount;
-                          int filteredSingleCount;
-
-                          filteredAllCount = queueCounts.allTrackCount;
-                          filteredAlbumCount = queueCounts.albumCount;
-                          filteredSingleCount = queueCounts.singleTrackCount;
-
-                          return ScrollEdgeFade(
-                            axis: Axis.horizontal,
-                            size: 48,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: context.isMornye
-                                  ? const EdgeInsets.symmetric(vertical: 4)
-                                  : EdgeInsets.zero,
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minWidth: constraints.maxWidth,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _FilterChip(
-                                      label: context.l10n.historyFilterAll,
-                                      count: filteredAllCount,
-                                      isSelected: historyFilterMode == 'all',
-                                      onTap: () {
-                                        _animateToFilterPage(0);
-                                      },
-                                    ),
-                                    const SizedBox(width: 8),
-                                    _FilterChip(
-                                      label: context.l10n.historyFilterAlbums,
-                                      count: filteredAlbumCount,
-                                      isSelected: historyFilterMode == 'albums',
-                                      onTap: () {
-                                        _animateToFilterPage(1);
-                                      },
-                                    ),
-                                    const SizedBox(width: 8),
-                                    _FilterChip(
-                                      label: context.l10n.historyFilterSingles,
-                                      count: filteredSingleCount,
-                                      isSelected:
-                                          historyFilterMode == 'singles',
-                                      onTap: () {
-                                        _animateToFilterPage(2);
-                                      },
-                                    ),
-                                    const SizedBox(width: 8),
-                                    _FilterChip(
-                                      label: context.l10n.searchPlaylists,
-                                      count: collectionState.playlists.length,
-                                      isSelected:
-                                          historyFilterMode == 'playlists',
-                                      onTap: () {
-                                        _animateToFilterPage(3);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                ...[],
               ],
               body: searchingLibrary
                   ? CustomScrollView(
@@ -1306,8 +1112,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         const NavBarSliverSpacer(),
                       ],
                     )
-                  : widget.librarySection != null
-                  ? _buildFilterContent(
+                  : _buildFilterContent(
                       context: context,
                       colorScheme: colorScheme,
                       filterMode: historyFilterMode,
@@ -1315,27 +1120,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                       collectionState: collectionState,
                       hasMoreLibrary: hasMoreLibrary,
                       isPageLoading: isLibraryPageLoading,
-                    )
-                  : PageView.builder(
-                      controller: _filterPageController!,
-                      physics: const ClampingScrollPhysics(),
-                      onPageChanged: _onFilterPageChanged,
-                      itemCount: _filterModes.length,
-                      itemBuilder: (context, index) {
-                        final filterMode = _filterModes[index];
-                        final filterData = getFilterData(filterMode);
-                        return _buildFilterContent(
-                          context: context,
-                          colorScheme: colorScheme,
-                          filterMode: filterMode,
-                          filterData: filterData,
-                          collectionState: collectionState,
-                          hasMoreLibrary: filterMode == historyFilterMode
-                              ? hasMoreLibrary
-                              : false,
-                          isPageLoading: isLibraryPageLoading,
-                        );
-                      },
                     ),
             ),
           ), // ScrollConfiguration

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/widgets/expressive_seek_track.dart';
 import 'package:spotiflac_android/widgets/mornye_player_slider.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.
@@ -80,7 +78,7 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
     final durationMs = widget.duration.inMilliseconds;
     final enabled = durationMs > 0;
     final maxMs = enabled ? durationMs.toDouble() : 1.0;
-    if (context.isMornye) {
+    {
       final currentMs = (_previewMs ?? widget.position.inMilliseconds)
           .clamp(0, maxMs)
           .toDouble();
@@ -121,24 +119,5 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
         ),
       );
     }
-    return ExpressiveSeekTrack(
-      playing:
-          widget.playing &&
-          enabled &&
-          widget.position < widget.duration &&
-          _previewMs == null,
-      child: Slider(
-        value: enabled
-            ? (_previewMs ?? widget.position.inMilliseconds.toDouble()).clamp(
-                0,
-                maxMs,
-              )
-            : 0,
-        max: maxMs,
-        onChangeStart: enabled ? _start : null,
-        onChanged: enabled ? _preview : null,
-        onChangeEnd: enabled ? _commit : null,
-      ),
-    );
   }
 }

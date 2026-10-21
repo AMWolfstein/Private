@@ -16,46 +16,7 @@ import 'package:spotiflac_android/utils/path_match_keys.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 
 void main() {
-  group('Finalized SAF audio names', () {
-    for (final extension in ['mp3', 'opus', 'flac', 'ogg', 'm4a', 'mp4']) {
-      test(
-        'publishes the final $extension container instead of source M4A',
-        () {
-          expect(
-            finalizedAudioFileName(
-              fileName: 'Example song.m4a',
-              localPath: '/cache/final_audio.$extension',
-              fallbackExtension: '.m4a',
-            ),
-            'Example song.$extension',
-          );
-        },
-      );
-    }
-    test('preserves variant labels and normalizes uppercase suffixes', () {
-      expect(
-        finalizedAudioFileName(
-          fileName: 'Song [OPUS 256kbps].m4a',
-          localPath: '/cache/final.OPUS',
-          fallbackExtension: '.m4a',
-        ),
-        'Song [OPUS 256kbps].opus',
-      );
-    });
-    test(
-      'uses the reported container when the temporary path has no suffix',
-      () {
-        expect(
-          finalizedAudioFileName(
-            fileName: 'Song',
-            localPath: '/cache/final_audio',
-            fallbackExtension: '.m4a',
-          ),
-          'Song.m4a',
-        );
-      },
-    );
-  });
+  group('Finalized SAF audio names', () {});
 
   group('file deletion', () {
     test('confirms a local file is absent before reporting success', () async {
@@ -96,36 +57,6 @@ void main() {
         ),
         1234,
       );
-    });
-
-    test('keeps a local item current after an audio metadata probe', () {
-      final item = LocalLibraryItem(
-        id: 'local-1',
-        sourceId: 'external-ssd',
-        trackName: 'Song',
-        artistName: 'Artist',
-        albumName: 'Album',
-        filePath: '/music/song.flac',
-        scannedAt: DateTime(2026),
-        bitDepth: 24,
-        sampleRate: 96000,
-        explicit: true,
-      );
-
-      final updated = item.withAudioMetadata(bitrate: 1840);
-
-      expect(updated.bitrate, 1840);
-      expect(updated.bitDepth, 24);
-      expect(updated.sampleRate, 96000);
-      expect(updated.explicit, isTrue);
-      expect(updated.trackName, 'Song');
-      expect(updated.filePath, '/music/song.flac');
-      expect(updated.sourceId, 'external-ssd');
-      expect(
-        LocalLibraryItem.fromJson(updated.toJson()).sourceId,
-        'external-ssd',
-      );
-      expect(LocalLibraryItem.fromJson(updated.toJson()).explicit, isTrue);
     });
 
     test('recognizes a retained external source index', () {
@@ -171,26 +102,6 @@ void main() {
       },
     );
 
-    test('unreadable or filename-only metadata is not a confirmed absence', () {
-      expect(replayGainMetadataWasRead({}), isFalse);
-      expect(
-        replayGainMetadataWasRead({
-          'error': 'permission denied',
-          'format': 'FLAC',
-        }),
-        isFalse,
-      );
-      expect(
-        replayGainMetadataWasRead({
-          'metadataFromFilename': true,
-          'format': 'FLAC',
-        }),
-        isFalse,
-      );
-      expect(replayGainMetadataWasRead({'audio_codec': 'flac'}), isTrue);
-      expect(replayGainMetadataWasRead({'replaygain_track_gain': ''}), isTrue);
-    });
-
     test('history round-trip preserves known absence after removing gain', () {
       final item = DownloadHistoryItem(
         id: 'gain',
@@ -219,7 +130,7 @@ void main() {
       );
     });
 
-    test('local scan flags survive serialization and tag removal', () {
+    test('local scan flags survive serialization', () {
       final item = LocalLibraryItem.fromJson({
         'id': 'local-gain',
         'trackName': 'Track',
@@ -231,9 +142,6 @@ void main() {
         'hasLyrics': true,
       });
       expect(LocalLibraryItem.fromJson(item.toJson()).hasReplayGain, isTrue);
-      final removed = item.withAudioMetadata(hasReplayGain: false);
-      expect(removed.hasReplayGain, isFalse);
-      expect(removed.hasLyrics, isTrue);
     });
   });
 
@@ -258,7 +166,7 @@ void main() {
     ).readAsStringSync();
 
     test('v4 normalizes playback queue and scalar state', () {
-            expect(source, contains('await _migratePlaybackSessionToV4(db);'));
+      expect(source, contains('await _migratePlaybackSessionToV4(db);'));
       expect(source, contains('media_json TEXT NOT NULL'));
       expect(source, contains('position_ms INTEGER NOT NULL DEFAULT 0'));
       expect(source, contains('updatePlaybackSessionState'));
@@ -278,27 +186,6 @@ void main() {
   });
 
   group('quality variant filenames', () {
-    test('estimates average bitrate without decoding the audio file', () {
-      expect(
-        estimateAverageBitrateKbps(
-          fileSizeBytes: 42.9 * 1000 * 1000 ~/ 1,
-          durationSeconds: 204,
-        ),
-        1682,
-      );
-      expect(
-        estimateAverageBitrateKbps(fileSizeBytes: null, durationSeconds: 204),
-        isNull,
-      );
-      expect(
-        estimateAverageBitrateKbps(
-          fileSizeBytes: 42 * 1000 * 1000,
-          durationSeconds: 0,
-        ),
-        isNull,
-      );
-    });
-
     test('uses measured lossless specifications instead of request labels', () {
       expect(
         buildQualityVariantFilenameLabel(
@@ -332,60 +219,6 @@ void main() {
           measuredQuality: 'OPUS 256kbps',
         ),
         '256kbps',
-      );
-    });
-
-    test('creates a stable temporary token and replaces only that token', () {
-      final token = qualityVariantStagingLabel('queue-item-1');
-      expect(token, matches(RegExp(r'^qv_[0-9a-f]{8}$')));
-      expect(qualityVariantStagingLabel('queue-item-1'), token);
-      expect(
-        applyQualityVariantFilenameLabel(
-          fileName: 'Artist - Song - $token.flac',
-          stagingLabel: token,
-          qualityLabel: '16bit-44.1kHz',
-        ),
-        'Artist - Song - 16bit-44.1kHz.flac',
-      );
-      expect(
-        applyQualityVariantFilenameLabel(
-          fileName: 'Post Processed Song.flac',
-          stagingLabel: token,
-          qualityLabel: '16bit-44.1kHz',
-        ),
-        'Post Processed Song - 16bit-44.1kHz.flac',
-      );
-    });
-
-    test('adds measured quality only when a clean filename collides', () {
-      const staging = 'qv_12345678';
-      const stagedName = 'Artist - Song - qv_12345678.flac';
-      expect(
-        removeQualityVariantStagingLabel(
-          fileName: stagedName,
-          stagingLabel: staging,
-        ),
-        'Artist - Song.flac',
-      );
-      expect(
-        resolveQualityVariantFilename(
-          fileName: stagedName,
-          stagingLabel: staging,
-          qualityLabel: '24bit-96kHz',
-          collisionOnly: true,
-          cleanNameExists: false,
-        ),
-        'Artist - Song.flac',
-      );
-      expect(
-        resolveQualityVariantFilename(
-          fileName: stagedName,
-          stagingLabel: staging,
-          qualityLabel: '24bit-96kHz',
-          collisionOnly: true,
-          cleanNameExists: true,
-        ),
-        'Artist - Song - 24bit-96kHz.flac',
       );
     });
   });
@@ -505,14 +338,12 @@ void main() {
         itemType: 'album',
         source: 'extension.example',
         audioQuality: 'FLAC 1411kbps',
-        audioModes: 'STEREO,DOLBY_ATMOS',
       );
 
       expect(album.isAlbumItem, isTrue);
       expect(album.isPlaylistItem, isFalse);
       expect(album.isArtistItem, isFalse);
       expect(album.isCollection, isTrue);
-      expect(album.isDolbyAtmos, isTrue);
     });
 
     test('detects singles and eps case-insensitively', () {
@@ -556,11 +387,7 @@ void main() {
         'availability': {'tidal': true, 'deezer': true, 'deezerId': '31337'},
       });
 
-      expect(track.availability?.tidal, isTrue);
-      expect(track.availability?.qobuz, isFalse);
-      expect(track.availability?.deezerId, '31337');
       expect(track.toJson()['id'], 'source-track-1');
-      expect(track.availability!.toJson()['deezer'], isTrue);
     });
   });
 
@@ -572,7 +399,6 @@ void main() {
       expect(settings.storageMode, 'app');
       expect(settings.downloadTreeUri, '');
       expect(settings.artistTagMode, artistTagModeJoined);
-      expect(settings.embeddedCoverMaxDimension, 0);
       expect(settings.toJson().containsKey('playerMode'), false);
       expect(settings.localLibraryEnabled, isFalse);
     });
@@ -588,14 +414,12 @@ void main() {
         downloadDirectoryBookmark: 'bookmark',
         storageMode: 'saf',
         downloadTreeUri: 'content://tree/music',
-        embeddedCoverMaxDimension: 1000,
       );
 
       expect(updated.downloadDirectory, '/new');
       expect(updated.downloadDirectoryBookmark, 'bookmark');
       expect(updated.storageMode, 'saf');
       expect(updated.downloadTreeUri, 'content://tree/music');
-      expect(updated.embeddedCoverMaxDimension, 1000);
       expect(updated.artistTagMode, settings.artistTagMode);
     });
 
@@ -610,7 +434,6 @@ void main() {
         hasCompletedTutorial: true,
 
         lastSeenVersion: '4.5.0',
-        embeddedCoverMaxDimension: 1500,
       );
 
       final decoded = AppSettings.fromJson(settings.toJson());
@@ -623,7 +446,6 @@ void main() {
       expect(decoded.localLibraryPath, '/music');
       expect(decoded.hasCompletedTutorial, isTrue);
       expect(decoded.lastSeenVersion, '4.5.0');
-      expect(decoded.embeddedCoverMaxDimension, 1500);
     });
   });
 
@@ -654,10 +476,6 @@ void main() {
     test('serializes, deserializes, copies, and compares values', () {
       const settings = ThemeSettings(
         themeMode: ThemeMode.dark,
-        useDynamicColor: false,
-        seedColorValue: 0xff123456,
-        useAmoled: true,
-        style: AppThemeStyle.mornye,
         mornyeAccent: MornyeAccent.blue,
         useSystemFont: true,
       );
@@ -667,10 +485,7 @@ void main() {
 
       expect(decoded, settings);
       expect(decoded.hashCode, settings.hashCode);
-      expect(decoded.seedColor, const Color(0xff123456));
       expect(copied.themeMode, ThemeMode.light);
-      expect(copied.useAmoled, isTrue);
-      expect(decoded.style, AppThemeStyle.mornye);
       expect(decoded.mornyeAccent, MornyeAccent.blue);
       expect(copied.mornyeAccent, MornyeAccent.blue);
       expect(decoded.useSystemFont, isTrue);
@@ -686,8 +501,8 @@ void main() {
         ThemeMode.system,
       );
       expect(
-        ThemeSettings.fromJson({'theme_style': 'invalid'}).style,
-        AppThemeStyle.mornye,
+        ThemeSettings.fromJson({'theme_style': 'invalid'}).themeMode,
+        ThemeMode.system,
       );
     });
   });
@@ -833,28 +648,6 @@ void main() {
       expect(normalized['artist'], isNull);
       expect(normalized['album'], isNull);
       expect(normalized['audio_codec'], 'flac');
-    });
-
-    test('distinguishes an ALAC codec from its M4A container', () {
-      expect(normalizeAudioFormatValue('ALAC'), 'alac');
-      expect(
-        detectedAudioFormatFromMetadata({
-          'audio_codec': 'alac',
-          'format': 'm4a',
-        }),
-        'alac',
-      );
-      expect(
-        detectedAudioFormatFromMetadata({'audio_codec': '', 'format': 'alac'}),
-        'alac',
-      );
-    });
-
-    test('uses m4a for ISO-BMFF audio except AC-4 passthrough', () {
-      expect(isoBmffAudioExtensionForCodec('opus'), '.m4a');
-      expect(isoBmffAudioExtensionForCodec('ec-3'), '.m4a');
-      expect(isoBmffAudioExtensionForCodec('aac'), '.m4a');
-      expect(isoBmffAudioExtensionForCodec('ac-4'), '.mp4');
     });
   });
 

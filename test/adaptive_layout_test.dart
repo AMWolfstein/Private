@@ -22,10 +22,6 @@ void main() {
       expect(wideInsetForWidth(1024), 32);
       expect(wideInsetForWidth(1366), maxWideContentInset);
     });
-
-    test('never removes more than the shared gutter from each side', () {
-      expect(adaptiveContentMaxWidth(1366), 1302);
-    });
   });
 
   group('adaptive UI scale', () {

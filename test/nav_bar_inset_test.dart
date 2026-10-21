@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
 
 void main() {
@@ -38,9 +37,7 @@ void main() {
                     scrollController: scroll,
                     isSelectionMode: false,
                     onExitSelectionMode: () {},
-                    bottomInset: explicitInset
-                        ? context.navBarBottomInset
-                        : null,
+
                     appBar: const SliverToBoxAdapter(
                       child: SizedBox(height: 120, child: Text('Collection')),
                     ),

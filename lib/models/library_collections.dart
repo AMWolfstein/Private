@@ -340,14 +340,6 @@ class LibraryCollectionsState {
     return _lovedKeys.contains(trackKey);
   }
 
-  bool isFavoriteArtist({
-    required String artistId,
-    required String? providerId,
-  }) {
-    final key = artistCollectionKey(artistId: artistId, providerId: providerId);
-    return _favoriteArtistKeys.contains(key);
-  }
-
   bool containsFavoriteArtistKey(String artistKey) {
     return _favoriteArtistKeys.contains(artistKey);
   }

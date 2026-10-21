@@ -319,22 +319,6 @@ class LibraryCollectionsDatabase {
     });
   }
 
-  Future<List<Map<String, dynamic>>> loadPlaylistTracks(
-    String playlistId,
-  ) async {
-    final db = await database;
-    return db.transaction(
-      (txn) => _readDateOrderedRows(
-        txn,
-        _tablePlaylistTracks,
-        'added_at',
-        ascending: true,
-        where: 'playlist_id=?',
-        whereArgs: [playlistId],
-      ),
-    );
-  }
-
   Future<LibraryPlaylistTracksSnapshot> loadPlaylistTracksSnapshot(
     String playlistId,
   ) async => readDatabasePlaylistTracks(await database, playlistId);

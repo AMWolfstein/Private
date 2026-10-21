@@ -19,7 +19,7 @@ class CollectionScaffold extends StatefulWidget {
     required this.onExitSelectionMode,
     required this.appBar,
     required this.slivers,
-    this.bottomInset,
+
     this.selectionBar,
     this.backgroundColor,
   });
@@ -33,9 +33,6 @@ class CollectionScaffold extends StatefulWidget {
 
   /// Content slivers below the header (track list, error card, footer, ...).
   final List<Widget> slivers;
-
-  /// Overrides the shell inset; otherwise only the trailing spacer watches it.
-  final double? bottomInset;
 
   /// Rebuilt by the caller each frame; shown only while [isSelectionMode] is
   /// true. Null means the screen has no multi-select.
@@ -114,7 +111,7 @@ class _CollectionScaffoldState extends State<CollectionScaffold> {
                 height: widget.isSelectionMode ? _selectionBarHeight : 32,
               ),
             ),
-            NavBarSliverSpacer(bottomInset: widget.bottomInset),
+            const NavBarSliverSpacer(),
           ],
         ),
       ),

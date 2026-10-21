@@ -1,5 +1,3 @@
-pub(super) mod ac4;
-
 use super::{Fields, MAX_TAG_BYTES, Section, bytes, seek};
 use crate::matching::uppercase;
 use crate::media::mp4::{Atom, Reader};

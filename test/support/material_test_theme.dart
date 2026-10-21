@@ -2,11 +2,10 @@
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 
 class AppTheme {
-  static const Color defaultSeedColor = Color(kDefaultSeedColor);
+  static const Color defaultSeedColor = Color(0xFF1DB954);
 
   /// Shared surfaces use one radius scale; actions use round Material shapes.
   static const AppTokens _tokens = AppTokens.standard;
@@ -63,7 +62,7 @@ class AppTheme {
       chipTheme: _chipTheme(scheme),
       dividerTheme: _dividerTheme(scheme),
       extensions: const <ThemeExtension<dynamic>>[AppTokens.standard],
-      fontFamily: fontFamily ?? (useSystemFont ? null : 'Google Sans Flex'),
+      fontFamily: fontFamily ?? (useSystemFont ? null : 'Inter'),
     );
   }
 
@@ -104,7 +103,7 @@ class AppTheme {
       chipTheme: _chipTheme(scheme),
       dividerTheme: _dividerTheme(scheme),
       extensions: const <ThemeExtension<dynamic>>[AppTokens.standard],
-      fontFamily: fontFamily ?? (useSystemFont ? null : 'Google Sans Flex'),
+      fontFamily: fontFamily ?? (useSystemFont ? null : 'Inter'),
     );
   }
 

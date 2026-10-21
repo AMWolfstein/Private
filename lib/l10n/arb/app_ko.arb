@@ -1,7 +1,6 @@
 {
   "libraryGenres": "장르",
   "settingsPlaybackSubtitle": "플레이어, 볼륨, AutoMix, 및 오디오 출력",
-  "sectionPlayer": "플레이어",
   "sectionVolumeAndTransitions": "볼륨 및 전환",
   "sectionAudioOutput": "오디오 출력",
   "usbBitPerfect": "Hi-res 및 bit-perfect 오디오",
@@ -71,25 +70,13 @@
   "@navLibrary": {
     "description": "Bottom navigation - Library tab"
   },
-  "navSettings": "설정",
-  "@navSettings": {
-    "description": "Bottom navigation - Settings tab"
-  },
   "homeTitle": "홈",
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "homeSubtitle": "지원 URL 붙여넣기 또는 이름으로 검색",
-  "@homeSubtitle": {
-    "description": "Subtitle shown below search box"
-  },
   "historyFilterAll": "모두",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
-  },
-  "historyFilterAlbums": "앨범",
-  "@historyFilterAlbums": {
-    "description": "Filter chip - show albums only"
   },
   "historyFilterSingles": "싱글",
   "@historyFilterSingles": {
@@ -195,38 +182,6 @@
       }
     }
   },
-  "optionsArtistTagMode": "아티스트 태그 모드",
-  "@optionsArtistTagMode": {
-    "description": "Setting title for how artist metadata is written into files"
-  },
-  "optionsArtistTagModeDescription": "여러 아티스트를 내장 태그에 작성하는 방법을 선택하세요",
-  "@optionsArtistTagModeDescription": {
-    "description": "Bottom-sheet description for artist tag mode setting"
-  },
-  "optionsArtistTagModeJoined": "단일 결합 값",
-  "@optionsArtistTagModeJoined": {
-    "description": "Artist tag mode option that joins multiple artists into one value"
-  },
-  "optionsArtistTagModeJoinedSubtitle": "플레이어 호환성을 최대화하려면 '아티스트 A, 아티스트 B'와 같이 하나의 아티스트 값을 입력하세요",
-  "@optionsArtistTagModeJoinedSubtitle": {
-    "description": "Subtitle for joined artist tag mode"
-  },
-  "optionsArtistTagModeSplitVorbis": "FLAC/Opus용 태그 분할",
-  "@optionsArtistTagModeSplitVorbis": {
-    "description": "Artist tag mode option that writes repeated ARTIST tags for Vorbis formats"
-  },
-  "optionsArtistTagModeSplitVorbisSubtitle": "FLAC 및 Opus의 경우 아티스트당 하나의 아티스트 태그를 작성하세요. MP3 및 M4A는 병합된 상태로 유지됩니다",
-  "@optionsArtistTagModeSplitVorbisSubtitle": {
-    "description": "Subtitle for split Vorbis artist tag mode"
-  },
-  "optionsArtistTagModePrimary": "주요 아티스트만",
-  "@optionsArtistTagModePrimary": {
-    "description": "Artist tag mode option that writes only the first credited artist"
-  },
-  "optionsArtistTagModePrimarySubtitle": "모든 형식에서 아티스트 및 앨범 아티스트 필드에 '아티스트 A'와 같은 첫 번째 아티스트만 입력하여, 플레이어에 하나의 아티스트만 표시되도록 합니다",
-  "@optionsArtistTagModePrimarySubtitle": {
-    "description": "Subtitle for the primary-artist tag mode. Applies when downloading and re-enriching; manual edits keep what the user typed."
-  },
   "optionsDetailedLogging": "상세 로깅",
   "@optionsDetailedLogging": {
     "description": "Enable verbose logs for debugging"
@@ -255,10 +210,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "trackMetadataPlay": "재생",
-  "@trackMetadataPlay": {
-    "description": "Action button - play track"
-  },
   "trackMetadataShare": "공유",
   "@trackMetadataShare": {
     "description": "Action button - share track"
@@ -266,10 +217,6 @@
   "setupGrantPermission": "권한 부여",
   "@setupGrantPermission": {
     "description": "Button to request permission"
-  },
-  "setupSkip": "건너뛰기",
-  "@setupSkip": {
-    "description": "Skip current step button"
   },
   "setupStorageAccessRequired": "저장소 접근 권한 필요",
   "@setupStorageAccessRequired": {
@@ -301,30 +248,6 @@
         "type": "String"
       }
     }
-  },
-  "setupAppDocumentsFolder": "앱 문서 폴더",
-  "@setupAppDocumentsFolder": {
-    "description": "iOS documents folder option"
-  },
-  "setupAppDocumentsFolderSubtitle": "권장 사항 - 파일 앱을 통해 접근 가능",
-  "@setupAppDocumentsFolderSubtitle": {
-    "description": "Subtitle for documents folder"
-  },
-  "setupChooseFromFiles": "파일 탐색기에서 선택",
-  "@setupChooseFromFiles": {
-    "description": "iOS file picker option"
-  },
-  "setupChooseFromFilesSubtitle": "iCloud 또는 다른 위치를 선택하세요",
-  "@setupChooseFromFilesSubtitle": {
-    "description": "Subtitle for file picker"
-  },
-  "setupIosEmptyFolderWarning": "iOS 제한 사항: 빈 폴더는 선택할 수 없습니다. 파일이 하나 이상 있는 폴더를 선택하세요",
-  "@setupIosEmptyFolderWarning": {
-    "description": "iOS folder selection warning"
-  },
-  "setupIcloudNotSupported": "iCloud Drive는 지원되지 않습니다. 앱의 문서 폴더를 사용해 주세요",
-  "@setupIcloudNotSupported": {
-    "description": "Error when user selects iCloud Drive on iOS"
   },
   "setupStorageGranted": "저장소 접근 권한이 부여되었습니다!",
   "@setupStorageGranted": {
@@ -402,21 +325,9 @@
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogDiscard": "폐기",
-  "@dialogDiscard": {
-    "description": "Dialog button - discard changes"
-  },
   "dialogRemove": "제거",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
-  },
-  "dialogDiscardChanges": "변경 사항 폐기",
-  "@dialogDiscardChanges": {
-    "description": "Dialog title - unsaved changes warning"
-  },
-  "dialogUnsavedChanges": "저장되지 않은 변경 사항이 있습니다. 폐기하시겠습니까?",
-  "@dialogUnsavedChanges": {
-    "description": "Dialog message - unsaved changes"
   },
   "dialogDeleteSelectedTitle": "선택 항목 삭제",
   "@dialogDeleteSelectedTitle": {
@@ -508,15 +419,6 @@
       }
     }
   },
-  "snackbarAddedToQueue": "'{trackName}'가 다운로드 목록에 추가됨",
-  "@snackbarAddedToQueue": {
-    "description": "Snackbar - track added to download queue",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
   "snackbarDeletedTracks": "{count} 개의 {count, plural, =1{트랙} other{트랙}}이 삭제됨",
   "@snackbarDeletedTracks": {
     "description": "Snackbar - tracks deleted",
@@ -534,10 +436,6 @@
         "type": "String"
       }
     }
-  },
-  "snackbarViewQueue": "다운로드 목록 보기",
-  "@snackbarViewQueue": {
-    "description": "Snackbar action - view download queue"
   },
   "snackbarFileNotFound": "파일을 찾을 수 없음",
   "@snackbarFileNotFound": {
@@ -764,14 +662,6 @@
   "trackAlbum": "앨범",
   "@trackAlbum": {
     "description": "Metadata label - album name"
-  },
-  "trackLyricsNotAvailable": "이 트랙의 가사를 사용할 수 없음",
-  "@trackLyricsNotAvailable": {
-    "description": "Message when lyrics not found"
-  },
-  "trackInstrumental": "반주 트랙",
-  "@trackInstrumental": {
-    "description": "Message when track is instrumental (no lyrics)"
   },
   "trackCopiedToClipboard": "클립보드에 복사됨",
   "@trackCopiedToClipboard": {
@@ -1055,10 +945,6 @@
         "type": "int"
       }
     }
-  },
-  "libraryInLibrary": "in 라이브러리",
-  "@libraryInLibrary": {
-    "description": "Badge shown on tracks that exist in local library"
   },
   "libraryRemovedMissingFiles": "라이브러리에서 {count} 개의 누락된 파일이 삭제됨",
   "@libraryRemovedMissingFiles": {
@@ -1349,13 +1235,6 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "trackReEnrichSuccess": "메타데이터 재구성 성공",
-  "trackReEnrichMetadataSaved": "메타데이터 저장됨",
-  "trackReEnrichLyricsUpdated": "가사 업데이트됨",
-  "trackReEnrichLyricsPreserved": "새 가사가 없습니다; 기존 가사가 유지됩니다",
-  "@trackReEnrichSuccess": {
-    "description": "Snackbar after successful re-enrichment"
-  },
   "audioBitrate": "비트레이트",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
@@ -1363,10 +1242,6 @@
   "actionCreate": "만들기",
   "@actionCreate": {
     "description": "Generic action button - create"
-  },
-  "collectionFoldersTitle": "내 폴더",
-  "@collectionFoldersTitle": {
-    "description": "Library section title for custom folders"
   },
   "collectionLoved": "좋아하는 노래",
   "@collectionLoved": {
@@ -1395,15 +1270,6 @@
   "collectionPlaylistTracks": "{count, plural, =1{1 개의 트랙} other{{count} 개의 트랙}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "collectionArtistCount": "{count, plural, =1{1 명의 아티스트} other{{count} 명의 아티스트}}",
-  "@collectionArtistCount": {
-    "description": "Artist count label for favorite artists",
     "placeholders": {
       "count": {
         "type": "int"
@@ -1479,24 +1345,6 @@
   "collectionRemoveFromFolder": "폴더에서 제거",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
-  },
-  "collectionAddedToLoved": "'{trackName}'이 '좋아요 표시한 음악'에 추가됨",
-  "@collectionAddedToLoved": {
-    "description": "Snackbar after adding track to loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromLoved": "'{trackName}'이 '좋아요 표시한 음악'에서 제거됨",
-  "@collectionRemovedFromLoved": {
-    "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
   },
   "collectionRemovedFromFavoriteArtists": "'{artistName}'가 좋아하는 아티스트에서 제거됨",
   "@collectionRemovedFromFavoriteArtists": {
@@ -1685,7 +1533,6 @@
     "description": "Empty state message when an album has no tracks"
   },
   "storageAutomaticFolder": "자동 폴더",
-  "storageSafRecommended": "폴더 선택 (추천)",
   "downloadFolderReselect": "폴더 다시 선택",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -1901,19 +1748,6 @@
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "snackbarFolderPickerFailed": "폴더 선택기 열기 실패: {error}",
-  "@snackbarFolderPickerFailed": {
-    "description": "Snackbar shown when folder picker fails to open",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "notifEmbeddingMetadata": "메타데이터를 삽입하는 중...",
-  "@notifEmbeddingMetadata": {
-    "description": "Notification body while embedding metadata into a downloaded track"
-  },
   "notifScanningLibrary": "로컬 라이브러리를 스캔하는 중",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
@@ -2110,30 +1944,6 @@
       }
     }
   },
-  "a11yTrackByArtist": "'{artistName}'의 '{trackName}'",
-  "@a11yTrackByArtist": {
-    "description": "Accessibility label for a queue or list track item",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      },
-      "artistName": {
-        "type": "String"
-      }
-    }
-  },
-  "settingsFiles": "파일 및 폴더",
-  "@settingsFiles": {
-    "description": "Settings menu item - file and folder settings"
-  },
-  "settingsFilesSubtitle": "다운로드 위치, 파일 이름, 폴더 구조",
-  "@settingsFilesSubtitle": {
-    "description": "Subtitle for files & folders settings"
-  },
-  "settingsMetadata": "메타데이터",
-  "@settingsMetadata": {
-    "description": "Settings menu item - metadata settings"
-  },
   "settingsLyrics": "가사",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
@@ -2268,21 +2078,6 @@
       }
     }
   },
-  "trackReEnrichSuccessWithFailures": "메타데이터 재구성 성공 ({successCount}/{total}) - 실패: {failedCount}",
-  "@trackReEnrichSuccessWithFailures": {
-    "description": "Snackbar summary after batch metadata re-enrichment finishes with failures",
-    "placeholders": {
-      "successCount": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      },
-      "failedCount": {
-        "type": "int"
-      }
-    }
-  },
   "selectionDeleteTracksCount": "{count} 개의 {count, plural, =1{트랙} other{트랙}} 삭제",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
@@ -2360,26 +2155,6 @@
   "libraryPlayback": "재생",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
-  },
-  "libraryExternalPlayer": "외부 플레이어",
-  "@libraryExternalPlayer": {
-    "description": "Setting option to use an external music player"
-  },
-  "libraryExternalPlayerSubtitle": "감상용으로 권장됩니다. 최고 음질, 갭리스 재생, EQ 및 다양한 오디오 형식을 지원합니다",
-  "@libraryExternalPlayerSubtitle": {
-    "description": "Subtitle for external player option"
-  },
-  "libraryBuiltInPreviewPlayer": "내부 미리듣기 플레이어",
-  "@libraryBuiltInPreviewPlayer": {
-    "description": "Setting option to use the built-in preview player"
-  },
-  "libraryBuiltInPreviewPlayerSubtitle": "SpotiFLAC Mobile에서 빠르게 미리 들을 수 있습니다 ",
-  "@libraryBuiltInPreviewPlayerSubtitle": {
-    "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "현재 재생 중",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "재생 중인 노래가 없음",
   "@nowPlayingNothingPlaying": {
@@ -2462,10 +2237,6 @@
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingOpenInExternalPlayer": "외부 플레이어에서 열기",
-  "@nowPlayingOpenInExternalPlayer": {
-    "description": "Menu item to open the current track in an external player"
-  },
   "nowPlayingTabPlayer": "플레이어",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
@@ -2489,19 +2260,6 @@
   "nowPlayingShowTranslation": "번역 보기",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
-  },
-  "nowPlayingLibraryEmpty": "라이브러리가 비어 있음",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "라이브러리에서 셔플을 사용할 수 없음: {error}",
-  "@nowPlayingShuffleLibraryFailed": {
-    "description": "Snackbar when shuffling the library fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
   },
   "nowPlayingShuffleOn": "셔플 켜기",
   "@nowPlayingShuffleOn": {
@@ -2573,24 +2331,8 @@
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
-  "trackOptionCopyTrackName": "트랙 제목 복사",
-  "@trackOptionCopyTrackName": {
-    "description": "Track menu action that copies the track title"
-  },
-  "trackOptionCopyArtist": "아티스트 복사",
-  "@trackOptionCopyArtist": {
-    "description": "Track menu action that copies the artist name"
-  },
-  "trackOptionCopyTrackAndArtist": "트랙 및 아티스트 복사",
-  "@trackOptionCopyTrackAndArtist": {
-    "description": "Track menu action that copies the track title and artist"
-  },
   "mornyeSearch": "검색",
   "mornyeContinuePlaying": "계속 재생",
-  "optionsEmbeddedCoverSize": "내장된 앨범 커버 크기",
-  "@optionsEmbeddedCoverSize": {
-    "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"
-  },
   "mornyeFavorite": "즐겨찾기",
   "mornyeGoToArtist": "아티스트로 이동",
   "@mornyeFavorite": {
@@ -2616,10 +2358,6 @@
   "profileRemovePhoto": "사진 삭제",
   "profilePhotoError": "20MB보다 작은 유효한 이미지를 선택하세요",
   "profileSaveError": "프로필을 저장할 수 없습니다. 다시 시도하세요",
-  "optionsEmbeddedCoverSizeOriginal": "원본 해상도",
-  "@optionsEmbeddedCoverSizeOriginal": {
-    "description": "Option that preserves the provider artwork at its original resolution"
-  },
   "cueSplitButton": "트랙으로 분할",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"

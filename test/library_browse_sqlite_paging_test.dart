@@ -1,3 +1,6 @@
+@Timeout(Duration(minutes: 3))
+library;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/models/settings.dart';
@@ -22,13 +25,14 @@ class _Local extends LocalLibraryNotifier {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  // The subprocess-backed 4,000-row fixture is intentionally built once.
   late SqliteProcessDatabase db;
   late LibraryQueueStore store;
-  setUp(() async {
+  setUpAll(() async {
     db = await SqliteProcessDatabase.open();
     store = await createLibraryPagingFixture(db);
   });
-  tearDown(() => db.close());
+  tearDownAll(() => db.close());
 
   test(
     '1000 albums preserve source ties, dedup, filters and order on paging',

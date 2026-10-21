@@ -11,10 +11,6 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
     playerView: playerViewFromString(prefs.getString(kPlayerViewKey)),
-    useDynamicColor: prefs.getBool(kUseDynamicColorKey) ?? true,
-    seedColorValue: prefs.getInt(kSeedColorKey) ?? kDefaultSeedColor,
-    useAmoled: prefs.getBool(kUseAmoledKey) ?? false,
-    style: themeStyleFromString(prefs.getString(kThemeStyleKey)),
     mornyeAccent: mornyeAccentFromString(prefs.getString(kMornyeAccentKey)),
     useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
     customFontId: prefs.getString(kCustomFontIdKey) ?? '',
@@ -78,10 +74,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       final snapshot = state;
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
       await prefs.setString(kPlayerViewKey, snapshot.playerView.name);
-      await prefs.setBool(kUseDynamicColorKey, snapshot.useDynamicColor);
-      await prefs.setInt(kSeedColorKey, snapshot.seedColorValue);
-      await prefs.setBool(kUseAmoledKey, snapshot.useAmoled);
-      await prefs.setString(kThemeStyleKey, snapshot.style.name);
       await prefs.setString(kMornyeAccentKey, snapshot.mornyeAccent.name);
       await prefs.setBool(kUseSystemFontKey, snapshot.useSystemFont);
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
@@ -107,26 +99,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
 
   Future<void> setThemeMode(ThemeMode mode) async {
     _editState((current) => current.copyWith(themeMode: mode));
-    await _saveToStorage();
-  }
-
-  Future<void> setStyle(AppThemeStyle style) async {
-    _editState((current) => current.copyWith(style: style));
-    await _saveToStorage();
-  }
-
-  Future<void> setUseDynamicColor(bool value) async {
-    _editState((current) => current.copyWith(useDynamicColor: value));
-    await _saveToStorage();
-  }
-
-  Future<void> setSeedColor(Color color) async {
-    _editState((current) => current.copyWith(seedColorValue: color.toARGB32()));
-    await _saveToStorage();
-  }
-
-  Future<void> setUseAmoled(bool value) async {
-    _editState((current) => current.copyWith(useAmoled: value));
     await _saveToStorage();
   }
 

@@ -20,8 +20,6 @@ rustix.workspace = true
 [dev-dependencies]
 tempfile.workspace = true
 
-[target.'cfg(target_os = "android")'.dev-dependencies]
-libc = "0.2"
 
 [lints]
 workspace = true

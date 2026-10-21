@@ -22,8 +22,7 @@ class Track {
   final int? discNumber;
   final int? totalDiscs;
   final String? releaseDate;
-  final String? deezerId;
-  final ServiceAvailability? availability;
+
   final String? source;
   final String? albumType;
   final int? totalTracks;
@@ -34,7 +33,7 @@ class Track {
   final String? comment;
   final String? itemType;
   final String? audioQuality;
-  final String? audioModes;
+
   final bool? explicit;
   final String? upc;
 
@@ -55,8 +54,7 @@ class Track {
     this.discNumber,
     this.totalDiscs,
     this.releaseDate,
-    this.deezerId,
-    this.availability,
+
     this.source,
     this.albumType,
     this.totalTracks,
@@ -67,7 +65,7 @@ class Track {
     this.comment,
     this.itemType,
     this.audioQuality,
-    this.audioModes,
+
     this.explicit,
     this.upc,
   });
@@ -147,7 +145,7 @@ class Track {
       comment: data['comment']?.toString(),
       itemType: itemType,
       audioQuality: data['audio_quality']?.toString(),
-      audioModes: data['audio_modes']?.toString(),
+
       previewUrl: data['preview_url']?.toString(),
       explicit: parseExplicitFlag(data['explicit']),
       upc: normalizeOptionalString(
@@ -173,8 +171,7 @@ class Track {
     int? discNumber,
     int? totalDiscs,
     String? releaseDate,
-    String? deezerId,
-    ServiceAvailability? availability,
+
     String? source,
     String? albumType,
     int? totalTracks,
@@ -185,7 +182,7 @@ class Track {
     String? comment,
     String? itemType,
     String? audioQuality,
-    String? audioModes,
+
     bool? explicit,
     String? upc,
   }) {
@@ -206,8 +203,7 @@ class Track {
       discNumber: discNumber ?? this.discNumber,
       totalDiscs: totalDiscs ?? this.totalDiscs,
       releaseDate: releaseDate ?? this.releaseDate,
-      deezerId: deezerId ?? this.deezerId,
-      availability: availability ?? this.availability,
+
       source: source ?? this.source,
       albumType: albumType ?? this.albumType,
       totalTracks: totalTracks ?? this.totalTracks,
@@ -218,45 +214,11 @@ class Track {
       comment: comment ?? this.comment,
       itemType: itemType ?? this.itemType,
       audioQuality: audioQuality ?? this.audioQuality,
-      audioModes: audioModes ?? this.audioModes,
+
       explicit: explicit ?? this.explicit,
       upc: upc ?? this.upc,
     );
   }
 
-  bool get isDolbyAtmos =>
-      audioModes != null && audioModes!.contains('DOLBY_ATMOS');
-
   bool get isExplicit => explicit == true;
-
-  bool get hasPreview => previewUrl != null && previewUrl!.isNotEmpty;
-}
-
-@JsonSerializable()
-class ServiceAvailability {
-  final bool tidal;
-  final bool qobuz;
-  final bool amazon;
-  final bool deezer;
-  final String? tidalUrl;
-  final String? qobuzUrl;
-  final String? amazonUrl;
-  final String? deezerUrl;
-  final String? deezerId;
-
-  const ServiceAvailability({
-    this.tidal = false,
-    this.qobuz = false,
-    this.amazon = false,
-    this.deezer = false,
-    this.tidalUrl,
-    this.qobuzUrl,
-    this.amazonUrl,
-    this.deezerUrl,
-    this.deezerId,
-  });
-
-  factory ServiceAvailability.fromJson(Map<String, dynamic> json) =>
-      _$ServiceAvailabilityFromJson(json);
-  Map<String, dynamic> toJson() => _$ServiceAvailabilityToJson(this);
 }

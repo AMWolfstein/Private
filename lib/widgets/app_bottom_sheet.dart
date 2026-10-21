@@ -103,7 +103,7 @@ class AppBottomSheet extends StatelessWidget {
             ),
             child: Text(
               subtitle!,
-              maxLines: context.isMornye ? 3 : 1,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -189,11 +189,12 @@ Future<T?> showAppModalBottomSheet<T>({
     useRootNavigator: useRootNavigator,
     useSafeArea: useSafeArea,
     constraints: constraints,
-    backgroundColor: mornye ? Colors.transparent : backgroundColor,
-    barrierColor: mornye
-        ? CupertinoDynamicColor.resolve(kCupertinoModalBarrierColor, context)
-        : null,
-    elevation: mornye ? 0 : null,
+    backgroundColor: Colors.transparent,
+    barrierColor: CupertinoDynamicColor.resolve(
+      kCupertinoModalBarrierColor,
+      context,
+    ),
+    elevation: 0,
     builder: (context) => mornye
         ? MornyeGlassPanel.overlay(child: Builder(builder: builder))
         : builder(context),
@@ -223,17 +224,6 @@ class AppSheetOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
-      return ListTile(
-        title: title,
-        subtitle: subtitle,
-        leading: leading,
-        trailing: trailing,
-        onTap: onTap,
-        contentPadding: contentPadding,
-        enabled: enabled,
-      );
-    }
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     Widget adaptedIcon(Widget widget, double size) {

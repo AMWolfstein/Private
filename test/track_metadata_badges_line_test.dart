@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/in_library_badge.dart';
 
 void main() {
   testWidgets('track metadata badges wrap on a narrow result row', (
@@ -30,8 +29,10 @@ void main() {
                         label: '16-bit',
                         colorScheme: colorScheme,
                       ),
-                      DolbyAtmosBadge(colorScheme: colorScheme),
-                      const InLibraryBadge(),
+                      AudioQualityBadge(
+                        label: '96 kHz',
+                        colorScheme: colorScheme,
+                      ),
                     ],
                   );
                 },
@@ -44,7 +45,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(
-      tester.getTopLeft(find.byType(InLibraryBadge)).dy,
+      tester.getTopLeft(find.text('96 kHz')).dy,
       greaterThan(tester.getTopLeft(find.text('RADWIMPS')).dy),
     );
   });

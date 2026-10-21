@@ -123,7 +123,6 @@ class NowPlayingRoute extends PageRoute<void> {
   bool didPop(void result) {
     final context = subtreeContext;
     if (context != null &&
-        context.isMornye &&
         !MediaQuery.disableAnimationsOf(context) &&
         (controller?.value ?? 0) > 0) {
       final coveredSize = _coveredOverlaySize;

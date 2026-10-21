@@ -96,7 +96,7 @@ Future<void> _mount(
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('source shows the scan failure reason (Mornye: $mornye)', (
       tester,
     ) async {
@@ -117,11 +117,7 @@ void main() {
         ),
         () async => 0,
       );
-      await _mount(
-        tester,
-        mornye: mornye,
-        library: library,
-      );
+      await _mount(tester, mornye: mornye, library: library);
       await tester.scrollUntilVisible(find.text('Saved music'), 200);
       await tester.pumpAndSettle();
       expect(find.textContaining(error), findsOneWidget);

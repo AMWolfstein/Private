@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
 import 'package:spotiflac_android/widgets/app_loading_indicator.dart';
 import 'package:spotiflac_android/widgets/player_lyrics.dart';
@@ -84,7 +83,7 @@ class PlayerLyricsSection extends ConsumerWidget {
           ),
           if (options != null)
             Positioned(
-              left: context.isMornye ? mornyeLyricsContentInset : 24,
+              left: mornyeLyricsContentInset,
               bottom: 8,
               child: options!,
             ),

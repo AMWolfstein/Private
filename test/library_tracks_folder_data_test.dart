@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_data.dart';
-import 'package:spotiflac_android/services/history_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _ReadCountingList<T> extends ListBase<T> {
@@ -43,23 +42,19 @@ void main() {
       ),
     );
     final data = LibraryTracksFolderData()..update(entries);
-    final request = data.historyRequest;
+    final snapshot = data.tracks;
+    final keys = data.keys;
     final reads = entries.reads;
-    final hash = request.hashCode;
     for (var i = 0; i < 100; i++) {
       data.update(entries);
-      expect(identical(data.historyRequest, request), isTrue);
-      expect(data.historyRequest.hashCode, hash);
+      expect(identical(data.tracks, snapshot), isTrue);
+      expect(identical(data.keys, keys), isTrue);
     }
     expect(entries.reads, reads);
     expect(data.keys.length, 4000);
     expect(() => data.tracks.clear(), throwsUnsupportedError);
-    expect(() => request.tracks.clear(), throwsUnsupportedError);
-    expect(request, HistoryBatchLookupRequest(request.tracks));
-    expect(hash, HistoryBatchLookupRequest(request.tracks).hashCode);
     data.update(entries.take(2).toList());
     expect(data.keys, {'0', '1'});
     expect(data.tracks.length, 2);
-    expect(identical(data.historyRequest, request), isFalse);
   });
 }

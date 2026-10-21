@@ -31,12 +31,8 @@ thiserror = "2.0"
 uniffi = { version = "=0.32.2", default-features = false }
 url = "2.5"
 regex = "=1.13.1"
-scraper = { version = "=0.27.0", default-features = false }
-unicode-normalization = "=0.1.22"
-unicode-general-category = "=0.6.0"
 claxon = "=0.4.3"
 chrono = { version = "=0.4.45", default-features = false, features = ["clock"] }
-tz-rs = "=0.7.3"
 cap-std = "=4.0.3"
 rustix = { version = "=1.1.5", features = ["fs"] }
 

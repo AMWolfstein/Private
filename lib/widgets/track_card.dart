@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 
 /// How a [TrackCard] paints its container.
@@ -78,10 +77,8 @@ class TrackCard extends StatelessWidget {
     final Color? cardColor;
     if (isSelected) {
       cardColor = colorScheme.primaryContainer.withValues(alpha: 0.3);
-    } else if (style == TrackCardStyle.flat || context.isMornye) {
-      cardColor = Colors.transparent;
     } else {
-      cardColor = null; // Inherits cardTheme.color.
+      cardColor = Colors.transparent;
     }
 
     final card = Card(
@@ -169,7 +166,7 @@ class TrackCard extends StatelessWidget {
         ),
       ),
     );
-    if (!context.isMornye) return card;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -6,7 +6,6 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/app_content_card.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/expressive_button.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 
 /// Per-field separators applied when local tags are saved from Edit Metadata.
@@ -182,7 +181,7 @@ class _SeparatorPickerState extends State<_SeparatorPicker> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  ExpressiveButton(
+                  FilledButton(
                     onPressed: valid
                         ? () => Navigator.of(context).pop(separator)
                         : null,

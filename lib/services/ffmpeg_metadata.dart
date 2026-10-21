@@ -121,41 +121,6 @@ abstract final class FFmpegMetadata {
     return null;
   }
 
-  static Future<String?> embedMetadata({
-    required String flacPath,
-    String? coverPath,
-    Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
-  }) async {
-    final tempOutput = await FFmpegOutput.tempPath('.flac');
-    final arguments = <String>['-v', 'error', '-hide_banner', '-i', flacPath];
-    if (coverPath != null) arguments.addAll(['-i', coverPath]);
-    arguments.addAll(['-map', '0:a']);
-    if (coverPath != null) {
-      appendCoverInputArguments(
-        arguments,
-        map: '1:0',
-        disposition: '-disposition:v',
-      );
-    }
-    arguments.addAll(['-c:a', 'copy']);
-    if (metadata != null) {
-      AudioMetadataMapper.appendVorbisMetadataArguments(
-        arguments,
-        metadata,
-        artistTagMode: artistTagMode,
-      );
-    }
-    arguments.addAll([tempOutput, '-y']);
-    _log.d('Executing FFmpeg FLAC embed command');
-    return _finish(
-      await FFmpegExecution.arguments(arguments),
-      tempOutput,
-      flacPath,
-      'FLAC',
-    );
-  }
-
   static Future<String?> embedMetadataToMp3({
     required String mp3Path,
     String? coverPath,
@@ -435,29 +400,6 @@ abstract final class FFmpegMetadata {
     } catch (e) {
       _log.e('Error creating METADATA_BLOCK_PICTURE: $e');
       return null;
-    }
-  }
-
-  static Future<bool> embedChunkTagsNative(
-    String path,
-    Map<String, String> metadata,
-    String? coverPath,
-  ) async {
-    final fields = AudioMetadataMapper.vorbisToNativeChunkFields(metadata);
-    if (coverPath != null && coverPath.trim().isNotEmpty) {
-      fields['cover_path'] = coverPath;
-    }
-    if (fields.isEmpty) return true;
-    try {
-      final result = await PlatformBridge.editFileMetadata(path, fields);
-      if (result['error'] != null) {
-        _log.w('editFileMetadata for $path failed: ${result['error']}');
-        return false;
-      }
-      return result['success'] == true;
-    } catch (e) {
-      _log.w('editFileMetadata for $path failed: $e');
-      return false;
     }
   }
 

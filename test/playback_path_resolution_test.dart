@@ -41,7 +41,8 @@ void main() {
 
   test('large SAF queues use bounded batches and deduplicate paths', () async {
     final paths = [
-      for (var index = 0; index < 131; index++) 'content://music/${index % 130}',
+      for (var index = 0; index < 131; index++)
+        'content://music/${index % 130}',
     ];
     final batches = <List<String>>[];
     messenger.setMockMethodCallHandler(channel, (call) async {

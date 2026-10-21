@@ -639,15 +639,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       if (Platform.isAndroid && path.startsWith('content://')) {
         return await PlatformBridge.probeSafTreeReadAccess(path);
       }
-      if (Platform.isIOS && bookmark != null && bookmark.trim().isNotEmpty) {
-        final access = await PlatformBridge.startAccessingIosBookmark(bookmark);
-        if (access == null) return false;
-        try {
-          return await Directory(access.path).exists();
-        } finally {
-          await PlatformBridge.stopAccessingIosBookmark(access);
-        }
-      }
+
       return await Directory(path).exists();
     } catch (error) {
       // A busy provider or a filesystem exception cannot prove detachment.
@@ -875,7 +867,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     required String? sourceId,
   }) async {
     var activeSourceId = sourceId;
-    IosSecurityScopedAccess? securityAccess;
     try {
       if (activeSourceId == null) {
         final existingSource = await _db.getSourceByPath(folderPath);
@@ -969,28 +960,14 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       _startProgressPolling();
 
       String? resolvedPath;
-      if (Platform.isIOS && iosBookmark != null && iosBookmark.isNotEmpty) {
-        securityAccess = await PlatformBridge.startAccessingIosBookmark(
-          iosBookmark,
-        );
-        resolvedPath = securityAccess?.path;
-        if (securityAccess != null) {
-          _log.i('Started iOS security-scoped access: $resolvedPath');
-        } else {
-          _log.w(
-            'Failed to start iOS security-scoped access, '
-            'falling back to original path',
-          );
-        }
-      }
+
       if (!ref.mounted || _scanCancelRequested) return;
       final effectiveFolderPath = resolvedPath ?? folderPath;
 
       final isSaf = effectiveFolderPath.startsWith('content://');
 
       final useStreamingFullScan =
-          forceFullScan ||
-          await _db.getSourceCount(activeSourceId) == 0;
+          forceFullScan || await _db.getSourceCount(activeSourceId) == 0;
       if (useStreamingFullScan) {
         if (await _sourceForScan(activeSourceId) == null ||
             !ref.mounted ||
@@ -1344,10 +1321,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       await _notificationService.endBackgroundWork(
         NotificationService.libraryScanWorkKind,
       );
-      if (securityAccess != null) {
-        await PlatformBridge.stopAccessingIosBookmark(securityAccess);
-        _log.i('Stopped iOS security-scoped access');
-      }
+
       if (_scanPauseRequested) {
         _scanPauseRequested = false;
         await _releaseNativeScanPause();
@@ -1367,7 +1341,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   }
 
   void _startProgressPolling() {
-    final useStream = Platform.isAndroid || Platform.isIOS;
+    final useStream = Platform.isAndroid;
     _progressPoller.start(useStream: useStream);
     if (useStream) {
       Future<void>.microtask(
@@ -1671,16 +1645,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     var removed = 0;
     for (final source in state.sources) {
       if (!source.enabled || !source.available) continue;
-      IosSecurityScopedAccess? securityAccess;
       try {
-        if (Platform.isIOS &&
-            source.bookmark != null &&
-            source.bookmark!.isNotEmpty) {
-          securityAccess = await PlatformBridge.startAccessingIosBookmark(
-            source.bookmark!,
-          );
-          if (securityAccess == null) continue;
-        }
         removed += await _db.cleanupMissingFiles(
           sourceId: source.id,
           canDelete: () async {
@@ -1691,16 +1656,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
             // Recheck access after the file probes, before deleting a page.
             // An empty but readable source is valid; an offline one throws.
             await Directory(
-              securityAccess?.path ?? source.path,
+              source.path,
             ).list(followLinks: false).take(1).drain<void>();
             return true;
           },
         );
-      } finally {
-        if (securityAccess != null) {
-          await PlatformBridge.stopAccessingIosBookmark(securityAccess);
-        }
-      }
+      } finally {}
     }
     if (removed > 0) await _refreshSummaryFromStorage();
     return removed;
@@ -1773,39 +1734,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<LocalLibraryItem?> getById(String id) async {
     final json = await _db.getById(id);
     return json == null ? null : LocalLibraryItem.fromJson(json);
-  }
-
-  Future<LocalLibraryItem?> getByIsrcAsync(String isrc) async {
-    final json = await _db.getByIsrc(isrc);
-    return json == null ? null : LocalLibraryItem.fromJson(json);
-  }
-
-  Future<LocalLibraryItem?> findByTrackAndArtistAsync(
-    String trackName,
-    String artistName,
-  ) async {
-    final json = await _db.findFirstByTrackAndArtist(trackName, artistName);
-    return json == null ? null : LocalLibraryItem.fromJson(json);
-  }
-
-  Future<LocalLibraryItem?> findExistingAsync({
-    String? id,
-    String? isrc,
-    String? trackName,
-    String? artistName,
-  }) async {
-    if (id != null && id.isNotEmpty) {
-      final byId = await getById(id);
-      if (byId != null) return byId;
-    }
-    if (isrc != null && isrc.isNotEmpty) {
-      final byIsrc = await getByIsrcAsync(isrc);
-      if (byIsrc != null) return byIsrc;
-    }
-    if (trackName != null && artistName != null) {
-      return findByTrackAndArtistAsync(trackName, artistName);
-    }
-    return null;
   }
 
   Future<Map<String, int>> _backfillLegacyFileModTimes({

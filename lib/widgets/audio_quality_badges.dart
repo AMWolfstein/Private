@@ -121,89 +121,6 @@ class ExplicitTrackTitle extends StatelessWidget {
   }
 }
 
-class DolbyAtmosBadge extends StatelessWidget {
-  final ColorScheme colorScheme;
-
-  const DolbyAtmosBadge({super.key, required this.colorScheme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-      decoration: BoxDecoration(
-        color: colorScheme.tertiaryContainer.withValues(alpha: 0.6),
-        borderRadius: context.tokens.borderRadiusBadge,
-      ),
-      child: DolbyAtmosLogo(color: colorScheme.onTertiaryContainer),
-    );
-  }
-}
-
-class DolbyAtmosLogo extends StatelessWidget {
-  const DolbyAtmosLogo({
-    super.key,
-    required this.color,
-    this.size = const Size(14, 10),
-  });
-
-  final Color color;
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) => Tooltip(
-    message: 'Dolby Atmos',
-    child: CustomPaint(
-      size: size,
-      painter: DolbyLogoPainter(color: color),
-    ),
-  );
-}
-
-class DolbyLogoPainter extends CustomPainter {
-  final Color color;
-
-  DolbyLogoPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    final h = size.height;
-    final w = size.width;
-    final cy = h / 2;
-
-    final leftPath = Path()
-      ..moveTo(w * 0.08, 0)
-      ..lineTo(w * 0.08, h)
-      ..lineTo(w * 0.20, h)
-      ..arcToPoint(
-        Offset(w * 0.20, 0),
-        radius: Radius.elliptical(w * 0.25, cy),
-        clockwise: false,
-      )
-      ..close();
-    canvas.drawPath(leftPath, paint);
-
-    final rightPath = Path()
-      ..moveTo(w * 0.92, 0)
-      ..lineTo(w * 0.92, h)
-      ..lineTo(w * 0.80, h)
-      ..arcToPoint(
-        Offset(w * 0.80, 0),
-        radius: Radius.elliptical(w * 0.25, cy),
-        clockwise: true,
-      )
-      ..close();
-    canvas.drawPath(rightPath, paint);
-  }
-
-  @override
-  bool shouldRepaint(DolbyLogoPainter oldDelegate) =>
-      color != oldDelegate.color;
-}
-
 /// Keeps artist text and optional track badges responsive on narrow rows.
 ///
 /// A [Row] with a flexible artist still overflows when the badges themselves
@@ -238,27 +155,4 @@ class TrackMetadataBadgesLine extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Returns the quality-related badge widgets for a track. Spacing and wrapping
-/// belong to [TrackMetadataBadgesLine] so the group stays responsive.
-List<Widget> buildQualityBadges({
-  required String? audioQuality,
-  required String? audioModes,
-  required ColorScheme colorScheme,
-  bool explicit = false,
-}) {
-  final badges = <Widget>[];
-  if (explicit) {
-    badges.add(ExplicitBadge(colorScheme: colorScheme));
-  }
-  if (audioQuality != null && audioQuality.isNotEmpty) {
-    badges.add(
-      AudioQualityBadge(label: audioQuality, colorScheme: colorScheme),
-    );
-  }
-  if (audioModes != null && audioModes.contains('DOLBY_ATMOS')) {
-    badges.add(DolbyAtmosBadge(colorScheme: colorScheme));
-  }
-  return badges;
 }

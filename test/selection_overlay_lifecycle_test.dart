@@ -26,7 +26,7 @@ Widget _app(ThemeData theme, GlobalKey<NavigatorState> navigator) {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final name = mornye ? 'Mornye' : 'Material';
     final theme = mornye
         ? MornyeTheme.build(Brightness.light)

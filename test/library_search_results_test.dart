@@ -40,7 +40,7 @@ LibrarySearchHit _hit(
 );
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('search song tap and Play both start audio ($mornye)', (
       tester,
     ) async {
@@ -124,7 +124,7 @@ void main() {
     });
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('Library shows every result type and paginates ($mornye)', (
       tester,
     ) async {
@@ -225,7 +225,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'long-press selects songs for Library batch actions ($mornye)',
       (tester) async {

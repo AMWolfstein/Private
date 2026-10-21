@@ -16,7 +16,6 @@ import 'package:spotiflac_android/widgets/duplicate_review_sheet.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/ios_library_folder_sheet.dart';
 import 'package:spotiflac_android/screens/settings/metadata_separator_settings_page.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
@@ -73,8 +72,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
           }
         }
       }
-    } else if (Platform.isIOS) {
-      setState(() => _hasStoragePermission = true);
     } else {
       setState(() => _hasStoragePermission = true);
     }
@@ -146,38 +143,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         final granted = await _requestStoragePermission();
         if (!granted) return;
       }
-      if (Platform.isIOS) {
-        if (!mounted) return;
-        IosPickedDirectory? picked;
-        try {
-          picked = await showIosLibraryFolderSheet(context);
-        } catch (e) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  context.l10n.snackbarFolderPickerFailed(
-                    context.friendlyError(e),
-                  ),
-                ),
-              ),
-            );
-          }
-          return;
-        }
-        if (picked != null && mounted) {
-          final library = ref.read(localLibraryProvider.notifier);
-          final source = await library.addSource(
-            path: picked.path,
-            displayName: picked.bookmark.isEmpty
-                ? context.l10n.setupAppDocumentsFolder
-                : picked.path,
-            bookmark: picked.bookmark,
-          );
-          await library.startSourceScan(source.id);
-        }
-        return;
-      }
+
       final result = await FilePicker.getDirectoryPath();
       if (result != null) {
         final source = await ref

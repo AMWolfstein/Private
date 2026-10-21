@@ -1,6 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
@@ -100,36 +102,38 @@ void main() {
       int? result;
       Object? failure;
       await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => TextButton(
-                onPressed: () async {
-                  try {
-                    result = await confirmAndDeleteTracks(
-                      context: context,
-                      ids: ['first', 'failed', 'last'],
-                      deleteItem: (id) async {
-                        events.add(id);
-                        if (mode == 'throw' && id == 'last') {
-                          throw StateError('file delete failed');
-                        }
-                        return mode != 'none' && id != 'failed';
-                      },
-                      persistDeletedItems: (ids) async {
-                        persisted.add(List.of(ids));
-                        await commit.future;
-                        events.add('committed');
-                      },
-                      onExitSelectionMode: () => events.add('exit'),
-                    );
-                  } catch (error) {
-                    failure = error;
-                  }
-                },
-                child: const Text('Start'),
+        ProviderScope(
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => TextButton(
+                  onPressed: () async {
+                    try {
+                      result = await confirmAndDeleteTracks(
+                        context: context,
+                        ids: ['first', 'failed', 'last'],
+                        deleteItem: (id) async {
+                          events.add(id);
+                          if (mode == 'throw' && id == 'last') {
+                            throw StateError('file delete failed');
+                          }
+                          return mode != 'none' && id != 'failed';
+                        },
+                        persistDeletedItems: (ids) async {
+                          persisted.add(List.of(ids));
+                          await commit.future;
+                          events.add('committed');
+                        },
+                        onExitSelectionMode: () => events.add('exit'),
+                      );
+                    } catch (error) {
+                      failure = error;
+                    }
+                  },
+                  child: const Text('Start'),
+                ),
               ),
             ),
           ),
@@ -138,9 +142,9 @@ void main() {
       await tester.tap(find.text('Start'));
       await tester.pumpAndSettle();
       if (mode == 'cancel') {
-        await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+        await tester.tap(find.widgetWithText(AppDialogAction, 'Cancel'));
       } else {
-        await tester.tap(find.byType(FilledButton));
+        await tester.tap(find.widgetWithText(AppDialogAction, 'Delete'));
       }
       await tester.pumpAndSettle();
       if (mode == 'cancel' || mode == 'none') {

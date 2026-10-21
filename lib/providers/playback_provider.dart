@@ -40,40 +40,6 @@ class PlaybackController extends Notifier<PlaybackState> {
     return Uri.file(value).toString();
   }
 
-  Future<void> playLocalPath({
-    required String path,
-    required String title,
-    required String artist,
-    String album = '',
-    String coverUrl = '',
-    Track? track,
-    bool? explicit,
-  }) async {
-    if (isCueVirtualPath(path)) {
-      throw Exception(cueVirtualTrackRequiresSplitMessage);
-    }
-
-    await _ensureInternalPlayer();
-    _log.d('Playing "$title" in the internal player: $path');
-    await ref
-        .read(musicPlayerControllerProvider)
-        .playSingle(
-          PlayableMedia(
-            id: path,
-            source: path,
-            title: title,
-            artist: artist,
-            album: album,
-            artUri: _normalizeArtUri(coverUrl),
-            duration: (track != null && track.duration > 0)
-                ? Duration(seconds: track.duration)
-                : null,
-            explicit: explicit ?? track?.isExplicit ?? false,
-          ),
-        );
-    return;
-  }
-
   /// Plays a local-library album/list starting at [startItem], queuing the rest
   /// so playback continues to the next track automatically.
   Future<void> playLocalLibraryQueue(

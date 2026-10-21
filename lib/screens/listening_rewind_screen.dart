@@ -17,7 +17,6 @@ import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/services/listening_rewind.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
 import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:spotiflac_android/widgets/app_content_card.dart';
@@ -174,11 +173,11 @@ class _MonthlyRewindBanner extends StatelessWidget {
     final l10n = context.l10n;
     final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final mornye = context.isMornye;
+
     // Mornye keeps its neutral control fill and accent tint.
-    final foreground = mornye ? colors.onSurface : colors.onTertiaryContainer;
-    final accent = mornye ? colors.primary : colors.tertiary;
-    final onAccent = mornye ? colors.onPrimary : colors.onTertiary;
+    final foreground = colors.onSurface;
+    final accent = colors.primary;
+    final onAccent = colors.onPrimary;
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: AppContentCard(
@@ -246,9 +245,7 @@ class _YearlyRewindBanner extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final year = '${DateTime.now().year}';
     final foreground = colors.onPrimary;
-    final radius = context.isMornye
-        ? BorderRadius.circular(28)
-        : context.tokens.borderRadiusCard;
+    final radius = BorderRadius.circular(28);
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: Material(
@@ -374,10 +371,9 @@ class ListeningRewindScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rewind = ref.watch(listeningRewindProvider(period));
-    final mornye = context.isMornye;
-    final colors = Theme.of(context).colorScheme;
-    final background = mornye ? Colors.black : colors.surface;
-    final foreground = mornye ? Colors.white : colors.onSurface;
+
+    final background = Colors.black;
+    final foreground = Colors.white;
     Widget message(String text) => _RewindMessage(
       text: text,
       background: background,
@@ -1521,11 +1517,7 @@ class _Artwork extends StatelessWidget {
             ),
     );
     if (artist) return ClipOval(child: image);
-    final radius = context.isMornye
-        ? size * 0.06
-        : size >= 120
-        ? 28.0
-        : 12.0;
+    final radius = size * 0.06;
     return ClipRRect(borderRadius: BorderRadius.circular(radius), child: image);
   }
 }

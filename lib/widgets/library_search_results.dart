@@ -12,7 +12,6 @@ import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/library_search.dart';
 import 'package:spotiflac_android/services/local_track_batch_actions.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_choice_chip.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:spotiflac_android/widgets/library_track_selection_bar.dart';
@@ -257,9 +256,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     final song = hit.kind == LibrarySearchKind.songs;
     return TrackCard(
       key: ValueKey('${hit.kind.name}:${hit.source}:${hit.id}'),
-      style: hit.kind == LibrarySearchKind.songs && !context.isMornye
-          ? TrackCardStyle.filled
-          : TrackCardStyle.flat,
+      style: TrackCardStyle.flat,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(
           hit.kind == LibrarySearchKind.artists ? 28 : 8,

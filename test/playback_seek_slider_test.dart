@@ -191,7 +191,15 @@ void main() {
     );
     final slider = tester.widget<Slider>(find.byType(Slider));
     expect(slider.value, 0);
-    expect(slider.onChanged, isNull);
+    final ignore = tester.widget<IgnorePointer>(
+      find
+          .ancestor(
+            of: find.byType(Slider),
+            matching: find.byType(IgnorePointer),
+          )
+          .first,
+    );
+    expect(ignore.ignoring, isTrue);
     await tester.tap(find.byType(Slider));
     expect(seeks, isEmpty);
   });

@@ -224,9 +224,7 @@ void main() {
   test(
     'unfiltered albums match the original aggregation across sources and pages',
     () async {
-      await db.update('library', {
-        'sort_added': 900,
-      }, where: "id = 'l1'");
+      await db.update('library', {'sort_added': 900}, where: "id = 'l1'");
       await addHistory('edition1', 'Downloaded', 1, artist: 'Other Artist');
       await addHistory('edition2', 'Downloaded', 2, artist: 'Other Artist');
       await addHistory('null-key', 'Invalid', 1);
@@ -280,7 +278,10 @@ void main() {
         }
       }
       final albums = (await store.albumPage(const QueueLibraryDbQuery())).rows;
-      expect(albums.map((row) => row['track_count']), everyElement(greaterThan(1)));
+      expect(
+        albums.map((row) => row['track_count']),
+        everyElement(greaterThan(1)),
+      );
       expect(albums, hasLength(2));
       expect(
         (await store.albumPage(

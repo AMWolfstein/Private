@@ -1,7 +1,6 @@
 {
   "libraryGenres": "Genres",
   "settingsPlaybackSubtitle": "Lecteur, volume, AutoMix et sortie audio",
-  "sectionPlayer": "Lecteur",
   "sectionVolumeAndTransitions": "Volume et transitions",
   "sectionAudioOutput": "Sortie audio",
   "usbBitPerfect": "Audio haute résolution et sans perte",
@@ -71,25 +70,13 @@
   "@navLibrary": {
     "description": "Bottom navigation - Library tab"
   },
-  "navSettings": "Paramètres",
-  "@navSettings": {
-    "description": "Bottom navigation - Settings tab"
-  },
   "homeTitle": "Accueil",
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "homeSubtitle": "Collez une URL prise en charge ou effectuez une recherche par nom",
-  "@homeSubtitle": {
-    "description": "Subtitle shown below search box"
-  },
   "historyFilterAll": "Tous",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
-  },
-  "historyFilterAlbums": "Albums",
-  "@historyFilterAlbums": {
-    "description": "Filter chip - show albums only"
   },
   "historyFilterSingles": "Titres",
   "@historyFilterSingles": {
@@ -195,38 +182,6 @@
       }
     }
   },
-  "optionsArtistTagMode": "Mode « Artiste »",
-  "@optionsArtistTagMode": {
-    "description": "Setting title for how artist metadata is written into files"
-  },
-  "optionsArtistTagModeDescription": "Choisissez comment les noms de plusieurs artistes doivent apparaître dans les balises intégrées.",
-  "@optionsArtistTagModeDescription": {
-    "description": "Bottom-sheet description for artist tag mode setting"
-  },
-  "optionsArtistTagModeJoined": "Valeur unique combinée",
-  "@optionsArtistTagModeJoined": {
-    "description": "Artist tag mode option that joins multiple artists into one value"
-  },
-  "optionsArtistTagModeJoinedSubtitle": "Indiquez une seule valeur ARTIST, par exemple « Artiste A, Artiste B », pour garantir une compatibilité maximale avec les lecteurs.",
-  "@optionsArtistTagModeJoinedSubtitle": {
-    "description": "Subtitle for joined artist tag mode"
-  },
-  "optionsArtistTagModeSplitVorbis": "Diviser les balises pour FLAC/Opus",
-  "@optionsArtistTagModeSplitVorbis": {
-    "description": "Artist tag mode option that writes repeated ARTIST tags for Vorbis formats"
-  },
-  "optionsArtistTagModeSplitVorbisSubtitle": "Créez une balise « artiste » par artiste pour les fichiers FLAC et Opus ; les fichiers MP3 et M4A restent regroupés.",
-  "@optionsArtistTagModeSplitVorbisSubtitle": {
-    "description": "Subtitle for split Vorbis artist tag mode"
-  },
-  "optionsArtistTagModePrimary": "Artiste principal uniquement",
-  "@optionsArtistTagModePrimary": {
-    "description": "Artist tag mode option that writes only the first credited artist"
-  },
-  "optionsArtistTagModePrimarySubtitle": "Dans tous les formats, indiquez uniquement le premier artiste (par exemple « Artiste A ») dans les champs « Artiste » et « Artiste de l'album », afin que les lecteurs n'affichent qu'un seul artiste.",
-  "@optionsArtistTagModePrimarySubtitle": {
-    "description": "Subtitle for the primary-artist tag mode. Applies when downloading and re-enriching; manual edits keep what the user typed."
-  },
   "optionsDetailedLogging": "Journalisation détaillée",
   "@optionsDetailedLogging": {
     "description": "Enable verbose logs for debugging"
@@ -255,10 +210,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "trackMetadataPlay": "Lire",
-  "@trackMetadataPlay": {
-    "description": "Action button - play track"
-  },
   "trackMetadataShare": "Partager",
   "@trackMetadataShare": {
     "description": "Action button - share track"
@@ -266,10 +217,6 @@
   "setupGrantPermission": "Accorder l'autorisation",
   "@setupGrantPermission": {
     "description": "Button to request permission"
-  },
-  "setupSkip": "Ignorer pour le moment",
-  "@setupSkip": {
-    "description": "Skip current step button"
   },
   "setupStorageAccessRequired": "Accès au stockage requis",
   "@setupStorageAccessRequired": {
@@ -301,30 +248,6 @@
         "type": "String"
       }
     }
-  },
-  "setupAppDocumentsFolder": "Dossier « Documents » de l'application",
-  "@setupAppDocumentsFolder": {
-    "description": "iOS documents folder option"
-  },
-  "setupAppDocumentsFolderSubtitle": "Recommandé - accessible via l'application Fichiers",
-  "@setupAppDocumentsFolderSubtitle": {
-    "description": "Subtitle for documents folder"
-  },
-  "setupChooseFromFiles": "Sélectionnez un fichier",
-  "@setupChooseFromFiles": {
-    "description": "iOS file picker option"
-  },
-  "setupChooseFromFilesSubtitle": "Sélectionnez iCloud ou un autre emplacement",
-  "@setupChooseFromFilesSubtitle": {
-    "description": "Subtitle for file picker"
-  },
-  "setupIosEmptyFolderWarning": "Limitation iOS : les dossiers vides ne peuvent pas être sélectionnés. Choisissez un dossier contenant au moins un fichier.",
-  "@setupIosEmptyFolderWarning": {
-    "description": "iOS folder selection warning"
-  },
-  "setupIcloudNotSupported": "iCloud Drive n'est pas pris en charge. Veuillez utiliser le dossier « Documents » de l'application.",
-  "@setupIcloudNotSupported": {
-    "description": "Error when user selects iCloud Drive on iOS"
   },
   "setupStorageGranted": "Autorisation de stockage accordée !",
   "@setupStorageGranted": {
@@ -402,21 +325,9 @@
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogDiscard": "Ignorer",
-  "@dialogDiscard": {
-    "description": "Dialog button - discard changes"
-  },
   "dialogRemove": "Supprimer",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
-  },
-  "dialogDiscardChanges": "Ignorer les modifications ?",
-  "@dialogDiscardChanges": {
-    "description": "Dialog title - unsaved changes warning"
-  },
-  "dialogUnsavedChanges": "Vous avez des modifications non enregistrées. Voulez-vous les ignorer ?",
-  "@dialogUnsavedChanges": {
-    "description": "Dialog message - unsaved changes"
   },
   "dialogDeleteSelectedTitle": "Supprimer la sélection",
   "@dialogDeleteSelectedTitle": {
@@ -508,15 +419,6 @@
       }
     }
   },
-  "snackbarAddedToQueue": "Ajout de « {trackName} » à la file d'attente",
-  "@snackbarAddedToQueue": {
-    "description": "Snackbar - track added to download queue",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
   "snackbarDeletedTracks": "Supprimé {count} {count, plural, =1{titre} other{titres}}",
   "@snackbarDeletedTracks": {
     "description": "Snackbar - tracks deleted",
@@ -534,10 +436,6 @@
         "type": "String"
       }
     }
-  },
-  "snackbarViewQueue": "Afficher la file d'attente",
-  "@snackbarViewQueue": {
-    "description": "Snackbar action - view download queue"
   },
   "snackbarFileNotFound": "Fichier introuvable",
   "@snackbarFileNotFound": {
@@ -764,14 +662,6 @@
   "trackAlbum": "Album",
   "@trackAlbum": {
     "description": "Metadata label - album name"
-  },
-  "trackLyricsNotAvailable": "Les paroles de ce morceau ne sont pas disponibles",
-  "@trackLyricsNotAvailable": {
-    "description": "Message when lyrics not found"
-  },
-  "trackInstrumental": "Morceau instrumental",
-  "@trackInstrumental": {
-    "description": "Message when track is instrumental (no lyrics)"
   },
   "trackCopiedToClipboard": "Copié dans le presse-papiers",
   "@trackCopiedToClipboard": {
@@ -1055,10 +945,6 @@
         "type": "int"
       }
     }
-  },
-  "libraryInLibrary": "Dans la bibliothèque",
-  "@libraryInLibrary": {
-    "description": "Badge shown on tracks that exist in local library"
   },
   "libraryRemovedMissingFiles": "{count} fichiers manquants ont été supprimés de la bibliothèque",
   "@libraryRemovedMissingFiles": {
@@ -1349,13 +1235,6 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "trackReEnrichSuccess": "Métadonnées réenrichies avec succès",
-  "trackReEnrichMetadataSaved": "Métadonnées enregistrées",
-  "trackReEnrichLyricsUpdated": "Paroles mises à jour",
-  "trackReEnrichLyricsPreserved": "Aucune nouvelle parole n'a été trouvée ; les paroles existantes ont été conservées",
-  "@trackReEnrichSuccess": {
-    "description": "Snackbar after successful re-enrichment"
-  },
   "audioBitrate": "Débit binaire",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
@@ -1363,10 +1242,6 @@
   "actionCreate": "Créer",
   "@actionCreate": {
     "description": "Generic action button - create"
-  },
-  "collectionFoldersTitle": "Mes dossiers",
-  "@collectionFoldersTitle": {
-    "description": "Library section title for custom folders"
   },
   "collectionLoved": "Titres aimés",
   "@collectionLoved": {
@@ -1395,15 +1270,6 @@
   "collectionPlaylistTracks": "{count, plural, =1{1 titre} other{{count} titres}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "collectionArtistCount": "{count, plural, =1{1 artiste} other{{count} artistes}}",
-  "@collectionArtistCount": {
-    "description": "Artist count label for favorite artists",
     "placeholders": {
       "count": {
         "type": "int"
@@ -1479,24 +1345,6 @@
   "collectionRemoveFromFolder": "Supprimer du dossier",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
-  },
-  "collectionAddedToLoved": "\"{trackName}\" ajouté aux Favoris",
-  "@collectionAddedToLoved": {
-    "description": "Snackbar after adding track to loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromLoved": "\"{trackName}\" supprimé des Favoris",
-  "@collectionRemovedFromLoved": {
-    "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
   },
   "collectionRemovedFromFavoriteArtists": "« {artistName} » a été supprimé de vos artistes favoris",
   "@collectionRemovedFromFavoriteArtists": {
@@ -1685,7 +1533,6 @@
     "description": "Empty state message when an album has no tracks"
   },
   "storageAutomaticFolder": "Dossier automatique",
-  "storageSafRecommended": "Choisir un dossier (recommandé)",
   "downloadFolderReselect": "Sélectionner à nouveau le dossier",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -1901,19 +1748,6 @@
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "snackbarFolderPickerFailed": "Impossible d'ouvrir le sélecteur de dossiers : {error}",
-  "@snackbarFolderPickerFailed": {
-    "description": "Snackbar shown when folder picker fails to open",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "notifEmbeddingMetadata": "Intégration des métadonnées...",
-  "@notifEmbeddingMetadata": {
-    "description": "Notification body while embedding metadata into a downloaded track"
-  },
   "notifScanningLibrary": "Numérisation de la bibliothèque locale",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
@@ -2110,30 +1944,6 @@
       }
     }
   },
-  "a11yTrackByArtist": "{trackName} de {artistName}",
-  "@a11yTrackByArtist": {
-    "description": "Accessibility label for a queue or list track item",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      },
-      "artistName": {
-        "type": "String"
-      }
-    }
-  },
-  "settingsFiles": "Fichiers & Dossiers",
-  "@settingsFiles": {
-    "description": "Settings menu item - file and folder settings"
-  },
-  "settingsFilesSubtitle": "Emplacement de téléchargement, nom de fichier, structure des dossiers",
-  "@settingsFilesSubtitle": {
-    "description": "Subtitle for files & folders settings"
-  },
-  "settingsMetadata": "Métadonnées",
-  "@settingsMetadata": {
-    "description": "Settings menu item - metadata settings"
-  },
   "settingsLyrics": "Paroles",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
@@ -2268,21 +2078,6 @@
       }
     }
   },
-  "trackReEnrichSuccessWithFailures": "Les métadonnées ont été réenrichies avec succès ({successCount}/{total}) - Échec : {failedCount}",
-  "@trackReEnrichSuccessWithFailures": {
-    "description": "Snackbar summary after batch metadata re-enrichment finishes with failures",
-    "placeholders": {
-      "successCount": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      },
-      "failedCount": {
-        "type": "int"
-      }
-    }
-  },
   "selectionDeleteTracksCount": "Supprimer {count} {count, plural, =1{titre} other{titres}}",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
@@ -2360,26 +2155,6 @@
   "libraryPlayback": "Lecture",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
-  },
-  "libraryExternalPlayer": "Lecteur externe",
-  "@libraryExternalPlayer": {
-    "description": "Setting option to use an external music player"
-  },
-  "libraryExternalPlayerSubtitle": "Recommandé pour l'écoute, la meilleure qualité, la lecture en continu, l'égaliseur et la prise en charge d'un plus grand nombre de formats",
-  "@libraryExternalPlayerSubtitle": {
-    "description": "Subtitle for external player option"
-  },
-  "libraryBuiltInPreviewPlayer": "Lecteur de prévisualisation intégré",
-  "@libraryBuiltInPreviewPlayer": {
-    "description": "Setting option to use the built-in preview player"
-  },
-  "libraryBuiltInPreviewPlayerSubtitle": "Aperçus rapides en local dans SpotiFLAC Mobile",
-  "@libraryBuiltInPreviewPlayerSubtitle": {
-    "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "En cours de lecture",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Il n'y a rien à l'écran",
   "@nowPlayingNothingPlaying": {
@@ -2462,10 +2237,6 @@
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingOpenInExternalPlayer": "Ouvrir dans un lecteur externe",
-  "@nowPlayingOpenInExternalPlayer": {
-    "description": "Menu item to open the current track in an external player"
-  },
   "nowPlayingTabPlayer": "Lecteur",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
@@ -2489,19 +2260,6 @@
   "nowPlayingShowTranslation": "Afficher la traduction",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
-  },
-  "nowPlayingLibraryEmpty": "Votre bibliothèque est vide",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "Impossible de lire aléatoirement la bibliothèque : {error}",
-  "@nowPlayingShuffleLibraryFailed": {
-    "description": "Snackbar when shuffling the library fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
   },
   "nowPlayingShuffleOn": "Lecture aléatoire activée",
   "@nowPlayingShuffleOn": {
@@ -2573,24 +2331,8 @@
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
-  "trackOptionCopyTrackName": "Copier le titre de la piste",
-  "@trackOptionCopyTrackName": {
-    "description": "Track menu action that copies the track title"
-  },
-  "trackOptionCopyArtist": "Copier l'artiste",
-  "@trackOptionCopyArtist": {
-    "description": "Track menu action that copies the artist name"
-  },
-  "trackOptionCopyTrackAndArtist": "Copier le titre et l'interprète",
-  "@trackOptionCopyTrackAndArtist": {
-    "description": "Track menu action that copies the track title and artist"
-  },
   "mornyeSearch": "Rechercher",
   "mornyeContinuePlaying": "Continuer à lire",
-  "optionsEmbeddedCoverSize": "Dimensions de la pochette intégrée",
-  "@optionsEmbeddedCoverSize": {
-    "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"
-  },
   "mornyeFavorite": "Favoris",
   "mornyeGoToArtist": "Aller à la page de l'artiste",
   "@mornyeFavorite": {
@@ -2616,10 +2358,6 @@
   "profileRemovePhoto": "Supprimer la photo",
   "profilePhotoError": "Choisissez une image valide dont la taille est inférieure à 20 Mo.",
   "profileSaveError": "Impossible d'enregistrer votre profil. Veuillez réessayer.",
-  "optionsEmbeddedCoverSizeOriginal": "Résolution originale",
-  "@optionsEmbeddedCoverSizeOriginal": {
-    "description": "Option that preserves the provider artwork at its original resolution"
-  },
   "cueSplitButton": "Diviser en pistes",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"

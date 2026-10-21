@@ -238,7 +238,7 @@ Future<void> _prepareAndroidInstallationState(SharedPreferences prefs) async {
     await resetRestoredInstallationSettings(prefs);
     await prefs.remove(_runtimeProfileTierKey);
     await prefs.remove(localLibraryLastScannedAtKey);
-    await AppStateDatabase.instance.clearPendingQueueAfterInstallationRestore();
+    await AppStateDatabase.instance.clearRestoredPlaybackState();
   } catch (e) {
     // Startup SAF validation remains the second line of defense if an OEM or
     // bridge implementation prevents install-marker inspection.

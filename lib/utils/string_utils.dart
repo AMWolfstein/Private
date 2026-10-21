@@ -55,11 +55,6 @@ String? normalizeRemoteHttpUrl(String? value) {
   return null;
 }
 
-/// Byte count expressed as a plain megabyte number with 1 decimal, e.g. "3.4".
-String formatMegabytes(num bytes) {
-  return (bytes / (1024 * 1024)).toStringAsFixed(1);
-}
-
 /// Human-readable byte size: "512 B", "3.4 KB", "12.0 MB", "1.25 GB".
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes B';
@@ -69,22 +64,6 @@ String formatBytes(int bytes) {
   }
   return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
 }
-
-/// English month abbreviations indexed by `DateTime.month - 1`.
-const List<String> shortMonthNames = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
 
 /// "m:ss" clock formatting for track durations.
 String formatClock(num seconds) {

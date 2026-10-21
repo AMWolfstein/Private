@@ -140,7 +140,6 @@ void main() {
       expect(bundle.hasSettings, hasSettings);
       expect(bundle.hasHistory, hasHistory);
       expect(bundle.hasCollections, hasCollections);
-      expect(bundle.hasExtensions, hasExtensions);
       expect(bundle.profile!.name, 'Listener');
       expect(await File(bundle.profile!.photoPath!).readAsBytes(), [1, 2, 3]);
       if (hasCollections) {

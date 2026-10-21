@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -340,16 +339,14 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
 
   Widget _overviewSurface({required Widget child}) {
     final scheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+
     final content = Padding(padding: const EdgeInsets.all(16), child: child);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: mornye
-              ? scheme.surfaceContainer
-              : scheme.primaryContainer.withValues(alpha: 0.28),
-          borderRadius: BorderRadius.circular(mornye ? 28 : 18),
+          color: scheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(28),
         ),
         child: content,
       ),
@@ -359,7 +356,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+
     final overview = _overview;
 
     return Scaffold(
@@ -390,9 +387,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                       context.l10n.cacheSummaryTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: mornye
-                            ? colorScheme.onSurface
-                            : colorScheme.onPrimaryContainer,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -401,20 +396,14 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                         formatBytes(overview.totalKnownDiskCacheBytes),
                       ),
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: mornye
-                            ? colorScheme.onSurface
-                            : colorScheme.onPrimaryContainer,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       context.l10n.cacheSummarySubtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: mornye
-                            ? colorScheme.onSurfaceVariant
-                            : colorScheme.onPrimaryContainer.withValues(
-                                alpha: 0.85,
-                              ),
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 12),

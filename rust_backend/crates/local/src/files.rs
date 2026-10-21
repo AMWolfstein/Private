@@ -1,7 +1,5 @@
 //! File capabilities granted by the native local backend.
 
-mod index;
-
 use cap_std::ambient_authority;
 use cap_std::fs::{Dir, File, OpenOptions};
 use std::collections::BTreeMap;

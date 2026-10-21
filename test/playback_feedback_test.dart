@@ -13,7 +13,7 @@ import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/playback_feedback.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('playback errors show once in Mornye (dark: $mornye)', (
       tester,
     ) async {

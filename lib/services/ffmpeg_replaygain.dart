@@ -115,17 +115,8 @@ abstract final class FFmpegReplayGain {
   static Future<bool> writeAlbumTags(
     String filePath,
     String gain,
-    String peak, {
-    bool returnTempPath = false,
-    void Function(String tempPath)? onTempReady,
-  }) => _writeTags(
-    filePath,
-    'Album',
-    gain,
-    peak,
-    returnTempPath: returnTempPath,
-    onTempReady: onTempReady,
-  );
+    String peak,
+  ) => _writeTags(filePath, 'Album', gain, peak);
 
   static Future<bool> writeTrackTags(
     String filePath,
@@ -137,10 +128,8 @@ abstract final class FFmpegReplayGain {
     String filePath,
     String scope,
     String gain,
-    String peak, {
-    bool returnTempPath = false,
-    void Function(String tempPath)? onTempReady,
-  }) async {
+    String peak,
+  ) async {
     final ext = filePath.contains('.')
         ? '.${filePath.split('.').last}'
         : '.tmp';
@@ -174,17 +163,6 @@ abstract final class FFmpegReplayGain {
       _log.e(
         '$scope ReplayGain write failed (code ${result.returnCode}): ${result.output}',
       );
-    } else if (returnTempPath) {
-      try {
-        if (await File(tempOutput).exists()) {
-          onTempReady?.call(tempOutput);
-          return true;
-        }
-      } catch (e) {
-        _log.w(
-          'Failed to replace file with ${scope.toLowerCase()} ReplayGain: $e',
-        );
-      }
     } else if (await FFmpegOutput.promote(
       tempOutput,
       filePath,

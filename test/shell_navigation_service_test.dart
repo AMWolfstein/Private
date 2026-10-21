@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/widgets/view_queue_snackbar_action.dart';
 
 void main() {
   for (final separateSearch in [false, true]) {
@@ -10,9 +8,7 @@ void main() {
       'first search request reaches the lazy page (separate=$separateSearch)',
       (tester) async {
         await tester.pumpWidget(
-          MaterialApp(
-            home: _SearchShell(separateSearch: separateSearch),
-          ),
+          MaterialApp(home: _SearchShell(separateSearch: separateSearch)),
         );
         await tester.pumpAndSettle();
         expect(find.byType(TextField), findsNothing);
@@ -29,9 +25,7 @@ void main() {
       'search returns from an album to its own tab (separate=$separateSearch)',
       (tester) async {
         await tester.pumpWidget(
-          MaterialApp(
-            home: _SearchShell(separateSearch: separateSearch),
-          ),
+          MaterialApp(home: _SearchShell(separateSearch: separateSearch)),
         );
         await tester.tap(find.text('Search'));
         await tester.pumpAndSettle();
@@ -138,36 +132,6 @@ void main() {
       ShellNavigationService.unregisterTabSelectionHandler(owner);
 
       expect(ShellNavigationService.requestTab(ShellTab.library), isFalse);
-    });
-
-    testWidgets('View Queue snackbar action requests the Library tab', (
-      tester,
-    ) async {
-      final owner = Object();
-      ShellTab? requestedTab;
-      addTearDown(
-        () => ShellNavigationService.unregisterTabSelectionHandler(owner),
-      );
-      ShellNavigationService.registerTabSelectionHandler(
-        owner: owner,
-        handler: (tab) => requestedTab = tab,
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => buildViewQueueSnackBarAction(context),
-            ),
-          ),
-        ),
-      );
-
-      await tester.tap(find.text('View Queue'));
-
-      expect(requestedTab, ShellTab.library);
     });
   });
 }

@@ -23,7 +23,7 @@ class _Playback extends PlaybackController {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('album row and Play both play ($mornye)', (tester) async {
       SharedPreferences.setMockInitialValues({});
       tester.view.physicalSize = const Size(430, 1200);

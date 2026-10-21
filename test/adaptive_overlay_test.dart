@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -19,7 +18,7 @@ Widget _app(ThemeData theme, Widget home) => ProviderScope(
 );
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final brightness in Brightness.values) {
       final theme = mornye
           ? MornyeTheme.build(brightness)
@@ -87,7 +86,6 @@ void main() {
           find.byType(MornyeGlassPanel),
           mornye ? findsOneWidget : findsNothing,
         );
-        expect(find.byType(M3EChip), mornye ? findsNothing : findsOneWidget);
         await tester.tap(find.text('Unavailable'));
         expect(disabledTaps, 0);
         await tester.tap(find.text('Downloaded tracks'));

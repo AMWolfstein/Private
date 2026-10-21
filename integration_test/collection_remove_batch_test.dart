@@ -208,9 +208,9 @@ void main() {
                 for (final key in keys) {
                   switch (kind) {
                     case 'loved':
-                      await notifier.removeFromLoved(key);
+                      await notifier.removeLovedTracks([key]);
                     case 'playlist':
-                      await notifier.removeTrackFromPlaylist('p', key);
+                      await notifier.removeTracksFromPlaylist('p', [key]);
                   }
                 }
               }

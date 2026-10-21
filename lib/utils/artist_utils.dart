@@ -46,22 +46,6 @@ List<String> splitArtistNames(String rawArtists, {int? creditedArtistCount}) {
   return names;
 }
 
-String primaryArtistName(String artists, {String? albumArtist}) {
-  final preferred = albumArtist?.trim() ?? '';
-  final normalizedPreferred = preferred.toLowerCase();
-  final useAlbumArtist =
-      preferred.isNotEmpty &&
-      normalizedPreferred != 'various artists' &&
-      normalizedPreferred != 'various' &&
-      normalizedPreferred != 'va';
-  final source = useAlbumArtist ? preferred : artists.trim();
-  final split = splitArtistNames(source);
-  if (split.isNotEmpty) return split.first;
-
-  final fallback = splitArtistNames(artists);
-  return fallback.isNotEmpty ? fallback.first : artists.trim();
-}
-
 bool shouldSplitVorbisArtistTags(String mode) {
   return mode == artistTagModeSplitVorbis;
 }

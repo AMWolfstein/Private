@@ -352,7 +352,7 @@ class _ThemeModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    {
       final labels = {
         ThemeMode.system: context.l10n.appearanceThemeSystem,
         ThemeMode.light: context.l10n.appearanceThemeLight,
@@ -367,39 +367,6 @@ class _ThemeModeSelector extends StatelessWidget {
         ),
       );
     }
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          SettingsChoiceChip(
-            expand: true,
-            layout: SettingsChipLayout.column,
-            icon: Icons.brightness_auto,
-            label: context.l10n.appearanceThemeSystem,
-            isSelected: currentMode == ThemeMode.system,
-            onTap: () => onChanged(ThemeMode.system),
-          ),
-          const SizedBox(width: 8),
-          SettingsChoiceChip(
-            expand: true,
-            layout: SettingsChipLayout.column,
-            icon: Icons.light_mode,
-            label: context.l10n.appearanceThemeLight,
-            isSelected: currentMode == ThemeMode.light,
-            onTap: () => onChanged(ThemeMode.light),
-          ),
-          const SizedBox(width: 8),
-          SettingsChoiceChip(
-            expand: true,
-            layout: SettingsChipLayout.column,
-            icon: Icons.dark_mode,
-            label: context.l10n.appearanceThemeDark,
-            isSelected: currentMode == ThemeMode.dark,
-            onTap: () => onChanged(ThemeMode.dark),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -458,9 +425,7 @@ class _LanguageSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final content = ListTile(
-      leading: context.isMornye
-          ? null
-          : Icon(Icons.language, color: colorScheme.onSurfaceVariant),
+      leading: null,
       title: Text(context.l10n.appearanceLanguage),
       subtitle: Text(_getLanguageName(currentLocale)),
       trailing: Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),

@@ -114,74 +114,68 @@ void main() {
           ]);
         },
       );
-      test(
-        'ranks exact titles first and excludes hidden sources',
-        () async {
-          expect((await search('lilac')).map((hit) => hit.id), [
-            '1',
-            'duplicate',
-            'local',
-            '3',
-          ]);
-          expect(await search('lilac', includeLocal: false), isEmpty);
-        },
-      );
-      test(
-        'SAF tree paths remain searchable local results',
-        () async {
-          const provider = 'org.example.documents';
-          const documentId = 'account:Music/Album/Tree Song.flac';
-          String path(String tree, String document) => Uri(
-            scheme: 'content',
-            host: provider,
-            pathSegments: ['tree', tree, 'document', document],
-          ).toString();
-          Map<String, Object?> row(
-            String id,
-            bool local,
-            String file,
-            String album,
-          ) => {
-            'id': id,
-            'local': local,
-            'title': 'Tree Song',
-            'album': album,
-            'path': file,
-            'keys': buildPathMatchKeys(file).toList(),
-          };
-          final treeStore = LibrarySearchStore(
-            _SearchDatabase(
-              extraTracks: [
-                row(
-                  'tree-download',
-                  false,
-                  path('account:Music/Album', documentId),
-                  'Album',
-                ),
-                row(
-                  'tree-scan',
-                  true,
-                  path('account:Music', documentId),
-                  'Unknown Album',
-                ),
-                row(
-                  'tree-other',
-                  true,
-                  path('account:Music', 'account:Music/Other/Tree Song.flac'),
-                  'Other Album',
-                ),
-              ],
-            ),
-            localFts: fts,
-          );
-          final hits = await treeStore.search(
-            query: 'Tree Song',
-            kind: LibrarySearchKind.songs,
-            includeLocal: true,
-          );
-          expect(hits.map((hit) => hit.id), ['tree-other', 'tree-scan']);
-        },
-      );
+      test('ranks exact titles first and excludes hidden sources', () async {
+        expect((await search('lilac')).map((hit) => hit.id), [
+          '1',
+          'duplicate',
+          'local',
+          '3',
+        ]);
+        expect(await search('lilac', includeLocal: false), isEmpty);
+      });
+      test('SAF tree paths remain searchable local results', () async {
+        const provider = 'org.example.documents';
+        const documentId = 'account:Music/Album/Tree Song.flac';
+        String path(String tree, String document) => Uri(
+          scheme: 'content',
+          host: provider,
+          pathSegments: ['tree', tree, 'document', document],
+        ).toString();
+        Map<String, Object?> row(
+          String id,
+          bool local,
+          String file,
+          String album,
+        ) => {
+          'id': id,
+          'local': local,
+          'title': 'Tree Song',
+          'album': album,
+          'path': file,
+          'keys': buildPathMatchKeys(file).toList(),
+        };
+        final treeStore = LibrarySearchStore(
+          _SearchDatabase(
+            extraTracks: [
+              row(
+                'tree-download',
+                false,
+                path('account:Music/Album', documentId),
+                'Album',
+              ),
+              row(
+                'tree-scan',
+                true,
+                path('account:Music', documentId),
+                'Unknown Album',
+              ),
+              row(
+                'tree-other',
+                true,
+                path('account:Music', 'account:Music/Other/Tree Song.flac'),
+                'Other Album',
+              ),
+            ],
+          ),
+          localFts: fts,
+        );
+        final hits = await treeStore.search(
+          query: 'Tree Song',
+          kind: LibrarySearchKind.songs,
+          includeLocal: true,
+        );
+        expect(hits.map((hit) => hit.id), ['tree-other', 'tree-scan']);
+      });
       test(
         'handles short, non-Latin and punctuated queries as literal terms',
         () async {
@@ -206,14 +200,11 @@ void main() {
           );
         },
       );
-      test(
-        'artists group every matching local song',
-        () async {
-          final hits = await search('green', kind: LibrarySearchKind.artists);
-          expect(hits.single.title, 'Mrs. GREEN APPLE');
-          expect(hits.single.trackCount, 4);
-        },
-      );
+      test('artists group every matching local song', () async {
+        final hits = await search('green', kind: LibrarySearchKind.artists);
+        expect(hits.single.title, 'Mrs. GREEN APPLE');
+        expect(hits.single.trackCount, 4);
+      });
       test(
         'pagination has stable ordering without missing or repeated hits',
         () async {

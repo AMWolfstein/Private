@@ -87,14 +87,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
   SettingsNotifier({Future<SharedPreferences> Function()? preferences})
     : _loadPreferences = preferences ?? SharedPreferences.getInstance;
 
-  static const Set<int> _embeddedCoverMaxDimensionValues = {
-    0,
-    500,
-    1000,
-    1500,
-    2000,
-  };
-
   final Future<SharedPreferences> Function() _loadPreferences;
   Future<SharedPreferences> get _prefs => _loadPreferences();
   Future<void>? _saveSettingsFuture;
@@ -145,11 +137,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
       }
 
       if (loaded != null) {
-        state = loaded.copyWith(
-          embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
-            loaded.embeddedCoverMaxDimension,
-          ),
-        );
+        state = loaded.copyWith();
 
         await _runMigrations(prefs);
         await _normalizeIosDownloadDirectoryIfNeeded();
@@ -239,9 +227,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       downloadDirectoryBookmark: current.downloadDirectoryBookmark,
       storageMode: current.storageMode,
       downloadTreeUri: current.downloadTreeUri,
-      embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
-        restored.embeddedCoverMaxDimension,
-      ),
     );
 
     await _saveSettings();
@@ -271,10 +256,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       downloadDirectoryBookmark: '',
     );
     await _saveSettings();
-  }
-
-  int _normalizeEmbeddedCoverMaxDimension(int value) {
-    return _embeddedCoverMaxDimensionValues.contains(value) ? value : 0;
   }
 
   void setDownloadDirectory(String directory, {String? iosBookmark}) {
@@ -490,13 +471,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     }
   }
 
-  void setHasSearchedBefore() {
-    if (!state.hasSearchedBefore) {
-      state = state.copyWith(hasSearchedBefore: true);
-      _saveSettings();
-    }
-  }
-
   void setHistoryFilterMode(String mode) {
     state = state.copyWith(historyFilterMode: mode);
     _saveSettings();
@@ -506,11 +480,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     state = state.copyWith(enableLogging: enabled);
     _saveSettings();
     LogBuffer.loggingEnabled = enabled;
-  }
-
-  void setAlbumFolderStructure(String structure) {
-    state = state.copyWith(albumFolderStructure: structure);
-    _saveSettings();
   }
 
   void setHeroAnimationsEnabled(bool enabled) {
@@ -530,16 +499,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setLocalLibraryEnabled(bool enabled) {
     state = state.copyWith(localLibraryEnabled: enabled);
-    _saveSettings();
-  }
-
-  void setLocalLibraryPath(String path) {
-    state = state.copyWith(localLibraryPath: path);
-    _saveSettings();
-  }
-
-  void setLocalLibraryBookmark(String bookmark) {
-    state = state.copyWith(localLibraryBookmark: bookmark);
     _saveSettings();
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
 import 'support/material_test_theme.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/app_loading_indicator.dart';
@@ -44,7 +43,7 @@ void main() {
         await tester.pump();
         await tester.pump(const Duration(seconds: 2));
         expect(tester.binding.hasScheduledFrame, isFalse);
-        expect(find.byType(M3ELoadingIndicator), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
         if (reduced) expect(find.byType(ShaderMask), findsNothing);
         update(() => stopped = false);
         await tester.pump();

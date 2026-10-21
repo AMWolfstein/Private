@@ -227,7 +227,7 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('playlist selection confirms one deletion (Mornye: $mornye)', (
       tester,
     ) async {

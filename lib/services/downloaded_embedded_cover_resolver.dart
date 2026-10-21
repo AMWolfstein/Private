@@ -59,7 +59,7 @@ class _PendingEmbeddedCoverExtraction {
   Future<String?> get future => completer.future;
 }
 
-/// Shared resolver for embedded cover previews from downloaded/local files.
+/// Shared resolver for embedded cover previews from local music files.
 ///
 /// The in-memory LRU is backed by a source-versioned persistent cache, while
 /// all misses still pass through the bounded, foreground-prioritized scheduler
@@ -88,7 +88,7 @@ class DownloadedEmbeddedCoverResolver {
   static int _activeExtractions = 0;
   static bool _drainScheduled = false;
   static final Map<String, int> _cacheGeneration = <String, int>{};
-  static final Set<String> _pendingRefresh = <String>{};
+
   static final _pendingPreviewValidation =
       <String, _PendingPreviewValidation>{};
   static Future<void>? _previewValidationFuture;
@@ -141,17 +141,6 @@ class DownloadedEmbeddedCoverResolver {
     final cleanPath = cleanFilePath(filePath);
     if (cleanPath.isEmpty) return null;
 
-    if (_pendingRefresh.remove(cleanPath)) {
-      unawaited(
-        _ensureCover(
-          cleanPath,
-          forceRefresh: true,
-          onChanged: onChanged,
-          isForeground: true,
-        ),
-      );
-    }
-
     final cached = _cache[cleanPath];
     if (cached != null) {
       _touch(cleanPath, cached);
@@ -159,16 +148,15 @@ class DownloadedEmbeddedCoverResolver {
       return cached.previewPath;
     }
 
-    // A downloaded file is the source of truth for its artwork. Start the
-    // extraction on a cold cache so Library does not remain stuck on the
-    // metadata provider's online cover until Metadata Screen is opened.
+    // The local file is the source of truth for its artwork. Extract on a
+    // cold cache so library rows can display their embedded cover.
     unawaited(_ensureCover(cleanPath, onChanged: onChanged));
     return null;
   }
 
   /// Returns the cached embedded cover, waiting for one shared extraction when
   /// needed. Navigation uses this to start its Hero and blurred backdrop from
-  /// the same file artwork instead of swapping from the online fallback after
+  /// the same file artwork instead of swapping from a placeholder after
   /// the route is already visible.
   static Future<String?> resolveOrExtract(
     String? filePath, {
@@ -176,15 +164,6 @@ class DownloadedEmbeddedCoverResolver {
   }) async {
     final cleanPath = cleanFilePath(filePath);
     if (cleanPath.isEmpty) return null;
-
-    if (_pendingRefresh.remove(cleanPath)) {
-      return _ensureCover(
-        cleanPath,
-        forceRefresh: true,
-        onChanged: onChanged,
-        isForeground: true,
-      );
-    }
 
     final cached = _cache[cleanPath];
     if (cached != null) {
@@ -207,45 +186,6 @@ class DownloadedEmbeddedCoverResolver {
     return _isPathInsidePersistentRoot(previewPath);
   }
 
-  static Future<void> scheduleRefreshForPath(
-    String? filePath, {
-    int? beforeModTime,
-    bool force = false,
-    VoidCallback? onChanged,
-  }) async {
-    final cleanPath = cleanFilePath(filePath);
-    if (cleanPath.isEmpty) return;
-
-    if (!force) {
-      if (beforeModTime == null) return;
-      final afterModTime = await readFileModTimeMillis(cleanPath);
-      if (afterModTime != null && afterModTime == beforeModTime) {
-        return;
-      }
-    }
-
-    _pendingRefresh.add(cleanPath);
-    _failedExtract.remove(cleanPath);
-    onChanged?.call();
-  }
-
-  static Future<void> invalidate(String? filePath) async {
-    final cleanPath = cleanFilePath(filePath);
-    if (cleanPath.isEmpty) return;
-
-    _cacheGeneration[cleanPath] = (_cacheGeneration[cleanPath] ?? 0) + 1;
-    final cached = _cache.remove(cleanPath);
-    _cancelPendingExtraction(cleanPath);
-    _cacheGeneration.remove(cleanPath);
-    _pendingRefresh.remove(cleanPath);
-    _pendingPreviewValidation.remove(cleanPath);
-    _failedExtract.remove(cleanPath);
-    if (cached != null) {
-      await _cleanupCacheEntry(cached);
-    }
-    await _deletePersistentVariantsForSource(cleanPath);
-  }
-
   /// Clears resolver state together with its App Cache-backed disk entries.
   /// Running native work is generation-cancelled and awaited before the disk
   /// directory is wiped, so a completed clear leaves no late staging output.
@@ -263,7 +203,6 @@ class DownloadedEmbeddedCoverResolver {
 
     final entries = _cache.values.toList(growable: false);
     _cache.clear();
-    _pendingRefresh.clear();
     _pendingPreviewValidation.clear();
     await _previewValidationFuture;
     _failedExtract.clear();
@@ -311,7 +250,6 @@ class DownloadedEmbeddedCoverResolver {
     _pendingExtract.clear();
     _foregroundExtractionQueue.clear();
     _backgroundExtractionQueue.clear();
-    _pendingRefresh.clear();
     _pendingPreviewValidation.clear();
     await _previewValidationFuture;
     _validationClock = DateTime.now;
@@ -361,7 +299,6 @@ class DownloadedEmbeddedCoverResolver {
       _cacheGeneration[oldestKey] = (_cacheGeneration[oldestKey] ?? 0) + 1;
       _cancelPendingExtraction(oldestKey);
       _cacheGeneration.remove(oldestKey);
-      _pendingRefresh.remove(oldestKey);
       _pendingPreviewValidation.remove(oldestKey);
       _failedExtract.remove(oldestKey);
     }

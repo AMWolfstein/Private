@@ -173,7 +173,13 @@ for line in sys.stdin:
   @override
   Future<void> close() async {
     await _process.stdin.close();
-    await _process.exitCode;
+    await _process.exitCode.timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        _process.kill();
+        throw StateError('SQLite fixture did not exit after stdin closed');
+      },
+    );
     await _responses.cancel();
   }
 

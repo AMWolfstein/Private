@@ -221,16 +221,14 @@ class _FactRow extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final tokens = context.tokens;
-    final mornye = context.isMornye;
+
     // Mornye rows line up with the section header, as in iOS inset lists.
-    final inset = mornye ? 16.0 : tokens.rowPaddingH;
-    final valueStyle =
-        (mornye ? theme.textTheme.bodyLarge : theme.textTheme.bodyMedium)
-            ?.copyWith(
-              color: fact.emphasis ? colors.primary : colors.onSurfaceVariant,
-              fontWeight: fact.emphasis ? FontWeight.w600 : null,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            );
+    final inset = 16.0;
+    final valueStyle = (theme.textTheme.bodyLarge)?.copyWith(
+      color: fact.emphasis ? colors.primary : colors.onSurfaceVariant,
+      fontWeight: fact.emphasis ? FontWeight.w600 : null,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return MergeSemantics(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -270,10 +268,8 @@ class _FactRow extends StatelessWidget {
             Divider(
               height: 1,
               indent: inset,
-              endIndent: mornye ? 0 : inset,
-              color: mornye
-                  ? MornyeTheme.metadataDividerColor(context)
-                  : colors.outlineVariant.withValues(alpha: 0.3),
+              endIndent: 0,
+              color: MornyeTheme.metadataDividerColor(context),
             ),
         ],
       ),

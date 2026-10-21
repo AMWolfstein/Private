@@ -80,18 +80,8 @@ class AdaptiveUiScaler extends StatelessWidget {
   }
 }
 
-/// Widest content span for a surface of [maxWidth]: content is never narrower
-/// than [contentMaxWidth], and the centering margin never exceeds 32dp per
-/// side so tablets retain near-full-width rows.
-double adaptiveContentMaxWidth(
-  double maxWidth, {
-  double contentMaxWidth = defaultWideContentMaxWidth,
-}) => maxWidth > contentMaxWidth + (maxWideContentInset * 2)
-    ? maxWidth - (maxWideContentInset * 2)
-    : contentMaxWidth;
-
 /// Horizontal inset that centers content of [maxWidth] at
-/// [adaptiveContentMaxWidth]; zero once it fits. Prefer this constraint-based
+/// the adaptive content limit; zero once it fits. Prefer this constraint-based
 /// form when the widget may live inside an already clamped box (e.g. a bottom
 /// sheet), where screen width would over-inset.
 double wideInsetForWidth(

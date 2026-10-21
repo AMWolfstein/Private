@@ -280,7 +280,7 @@ void main() {
   }
 
   for (final mode in LibraryTracksFolderMode.values) {
-    for (final mornye in [false, true]) {
+    for (final mornye in [true]) {
       testWidgets(
         'selection dispatches one ${mode.name} removal (Mornye: $mornye)',
         (tester) async {
@@ -348,7 +348,7 @@ void main() {
     }
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('playlist row queues its neighbors (Mornye: $mornye)', (
       tester,
     ) async {
@@ -527,46 +527,4 @@ void main() {
       expect(calls, isEmpty);
     },
   );
-  test('initialization failure never launches an external player', () async {
-    player.available = false;
-    final calls = <MethodCall>[];
-    const channel = MethodChannel('com.zarz.spotiflac/backend');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(channel, (call) async {
-      calls.add(call);
-      return null;
-    });
-    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
-    final controller = container.read(playbackProvider.notifier);
-    final local = LocalLibraryItem(
-      id: 'local',
-      trackName: 'Song',
-      artistName: 'Artist',
-      albumName: 'Album',
-      filePath: 'content://library/song',
-      scannedAt: DateTime(2026),
-    );
-    for (final operation in <Future<void> Function()>[
-      () => controller.playLocalPath(
-        path: local.filePath,
-        title: 'Song',
-        artist: 'Artist',
-      ),
-      () => controller.playLocalLibraryQueue([local], startItem: local),
-      () => controller.playMediaQueue([
-        const PlayableMedia(
-          id: 'song',
-          source: 'content://library/song',
-          title: 'Song',
-          artist: 'Artist',
-        ),
-      ], startIndex: 0),
-      () => controller.playTrackList(_tracks),
-    ]) {
-      await expectLater(operation(), throwsA(isA<Exception>()));
-    }
-    expect(calls, isEmpty);
-    expect(player.queue, isEmpty);
-  });
 }

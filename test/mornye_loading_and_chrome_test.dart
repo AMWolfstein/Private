@@ -14,7 +14,6 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       for (final skeleton in const [
-        ArtistScreenSkeleton(showCoverHeader: false),
         AlbumTrackListSkeleton(showCoverHeader: true),
         TrackListSkeleton(showCoverHeader: true),
       ]) {

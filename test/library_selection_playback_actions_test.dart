@@ -24,7 +24,7 @@ class _Controller extends MusicPlayerController {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final size in [const Size(390, 844), const Size(844, 390)]) {
       testWidgets('batch playback preserves selection order ($mornye, $size)', (
         tester,

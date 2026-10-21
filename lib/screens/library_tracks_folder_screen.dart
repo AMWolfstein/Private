@@ -27,7 +27,6 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/cover_art_utils.dart';
 import 'package:spotiflac_android/screens/collapsing_header_scroll_mixin.dart';
 import 'package:spotiflac_android/screens/selection_mode_mixin.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_data.dart';
@@ -237,14 +236,13 @@ class _LibraryTracksFolderScreenState
         : null;
     // Loved's heart has a neutral surface; playlist art is shared everywhere.
     final cover = loved ? null : preferred ?? local;
-    if (context.isMornye) {
+    {
       return MornyeArtistSurface(
         imageSource: cover,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, cover)),
       );
     }
-    return _buildPage(context, cover);
   }
 
   Widget _buildPage(BuildContext context, String? coverSource) {
@@ -549,7 +547,6 @@ class _LibraryTracksFolderScreenState
             fit: BoxFit.cover,
             localCacheWidth: cacheWidth,
             fadeInDuration: Duration.zero,
-            urlTransform: (u) => highResCoverUrl(u) ?? u,
             placeholder: (_) => Container(color: colorScheme.surface),
           )
         : coverFallback;
@@ -585,7 +582,6 @@ class _LibraryTracksFolderScreenState
             width: coverSize,
             height: coverSize,
             localCacheWidth: cacheWidth,
-            urlTransform: (u) => highResCoverUrl(u) ?? u,
             placeholder: (_) => squarePlaceholder(),
           );
         }
@@ -690,23 +686,10 @@ class _LibraryTracksFolderScreenState
                 horizontal: 24,
                 vertical: 4,
               ),
-              leading: context.isMornye
-                  ? Icon(
-                      mornyeIconFor(Icons.image_outlined),
-                      color: colorScheme.primary,
-                    )
-                  : Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.image_outlined,
-                        color: colorScheme.onPrimaryContainer,
-                      ),
-                    ),
+              leading: Icon(
+                mornyeIconFor(Icons.image_outlined),
+                color: colorScheme.primary,
+              ),
               title: Text(context.l10n.collectionPlaylistChangeCover),
               onTap: () {
                 Navigator.pop(sheetContext);
@@ -719,23 +702,10 @@ class _LibraryTracksFolderScreenState
                   horizontal: 24,
                   vertical: 4,
                 ),
-                leading: context.isMornye
-                    ? Icon(
-                        mornyeIconFor(Icons.delete_outline),
-                        color: colorScheme.primary,
-                      )
-                    : Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: colorScheme.errorContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.delete_outline,
-                          color: colorScheme.onErrorContainer,
-                        ),
-                      ),
+                leading: Icon(
+                  mornyeIconFor(Icons.delete_outline),
+                  color: colorScheme.primary,
+                ),
                 title: Text(context.l10n.collectionPlaylistRemoveCover),
                 onTap: () {
                   Navigator.pop(sheetContext);

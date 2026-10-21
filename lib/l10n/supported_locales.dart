@@ -7,9 +7,6 @@
 
 import 'package:flutter/widgets.dart';
 
-/// Minimum translation completion threshold used to filter languages.
-const int translationThreshold = 70;
-
 /// List of locales that meet the translation threshold.
 /// Only these languages will be available in the app.
 const List<Locale> filteredSupportedLocales = <Locale>[

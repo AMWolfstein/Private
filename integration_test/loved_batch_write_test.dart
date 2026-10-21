@@ -189,7 +189,7 @@ void main() {
                   return;
                 }
                 for (final track in tracks) {
-                  await notifier.removeFromLoved(trackCollectionKey(track));
+                  await notifier.removeLovedTracks([trackCollectionKey(track)]);
                 }
               });
               expect(container.read(libraryCollectionsProvider).loved, isEmpty);

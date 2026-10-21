@@ -12,7 +12,6 @@ import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
@@ -166,9 +165,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
                 title: widget.mode == HomeTabMode.search
                     ? l10n.mornyeSearch
                     : l10n.homeTitle,
-                actions: context.isMornye && _showsHome
-                    ? const [HomeProfileButton()]
-                    : null,
+                actions: _showsHome ? const [HomeProfileButton()] : null,
               ),
 
               if (_showsSearch)

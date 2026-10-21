@@ -3,69 +3,13 @@ use crate::files::LocalFiles;
 use cap_std::fs::{File, OpenOptions};
 use serde_json::{Value, json};
 use spotiflac_core::tags::{
-    embed_flac_metadata, rewrite_ac4_config, rewrite_ac4_metadata, rewrite_audio_tags,
-    rewrite_flac_tags_if_changed, rewrite_m4a_freeform,
+    rewrite_audio_tags, rewrite_flac_tags_if_changed, rewrite_m4a_freeform,
 };
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::io::Read;
 
 impl Backend {
-    pub fn rewrite_split_artist_tags(
-        &self,
-        path: &str,
-        artist: &str,
-        album_artist: &str,
-        check: &dyn Fn() -> Result<(), String>,
-    ) -> Result<String, String> {
-        let fields = BTreeMap::from([
-            ("ARTIST".into(), artist.into()),
-            ("ALBUMARTIST".into(), album_artist.into()),
-        ]);
-        self.embed_flac_fields_response(
-            path,
-            &fields,
-            "split_vorbis",
-            (
-                "Failed to rewrite artist tags",
-                "Split artist tags written successfully",
-            ),
-            check,
-        )
-    }
-
-    pub(super) fn embed_flac_fields_response(
-        &self,
-        path: &str,
-        fields: &BTreeMap<String, String>,
-        artist_mode: &str,
-        messages: (&str, &str),
-        check: &dyn Fn() -> Result<(), String>,
-    ) -> Result<String, String> {
-        let _operation = self.enter()?;
-        let failure = RefCell::new(None::<String>);
-        let check = || {
-            if let Some(error) = failure.borrow().as_ref() {
-                return Err(error.clone());
-            }
-            self.check().and_then(|()| check()).inspect_err(|error| {
-                *failure.borrow_mut() = Some(error.clone());
-            })
-        };
-        check()?;
-        self.files()?.resolve_legacy(path)?.native_display()?;
-        if let Err(error) = self.rewrite_tag_file(path, &check, |source, output, _| {
-            embed_flac_metadata(source, output, fields, artist_mode, None, &check)?;
-            Ok(true)
-        }) {
-            check()?;
-            return Ok(
-                json!({"success": false, "error": format!("{}: {error}", messages.0)}).to_string(),
-            );
-        }
-        Ok(json!({"success":true,"message":messages.1}).to_string())
-    }
-
     /// Preserve the application facade, including native-editor fallback to
     /// FFmpeg. Permission and lifecycle failures must never become success.
     pub fn edit_file_metadata(
@@ -253,52 +197,6 @@ impl Backend {
         }
         self.rewrite_tag_file(path, &check, |source, output, _| {
             rewrite_m4a_freeform(source, output, fields, replay_gain_only, &check)
-        })
-    }
-
-    pub fn ensure_ac4_config(
-        &self,
-        path: &str,
-        reference: &str,
-        check: &dyn Fn() -> Result<(), String>,
-    ) -> Result<(), String> {
-        let _operation = self.enter()?;
-        let check = || self.check().and_then(|()| check());
-        check()?;
-        self.rewrite_tag_file(path, &check, |source, output, files| {
-            rewrite_ac4_config(
-                source,
-                output,
-                || {
-                    files
-                        .resolve_legacy(reference)?
-                        .open(OpenOptions::new().read(true))
-                        .map_err(|error| error.to_string())
-                },
-                &check,
-            )
-        })
-        .map(|_| ())
-    }
-
-    pub fn write_ac4_metadata(
-        &self,
-        path: &str,
-        metadata_json: &str,
-        cover_path: &str,
-        check: &dyn Fn() -> Result<(), String>,
-    ) -> Result<bool, String> {
-        let _operation = self.enter()?;
-        let check = || self.check().and_then(|()| check());
-        check()?;
-        self.rewrite_tag_file(path, &check, |source, output, files| {
-            rewrite_ac4_metadata(
-                source,
-                output,
-                metadata_json,
-                || read_cover(files, Some(cover_path), false, &check),
-                &check,
-            )
         })
     }
 

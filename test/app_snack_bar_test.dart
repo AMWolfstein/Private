@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/view_queue_snackbar_action.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -107,7 +104,7 @@ void main() {
     });
   }
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     testWidgets(
       'new messages replace old ones and still dismiss (Mornye: $mornye)',
       (tester) async {
@@ -148,92 +145,6 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
-
-    testWidgets('View Queue times out and has a close button ($mornye)', (
-      tester,
-    ) async {
-      late BuildContext messageContext;
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
-            builder: (_, child) => AppScaffoldMessenger(child: child!),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Builder(
-              builder: (context) {
-                messageContext = context;
-                return const Scaffold(body: SizedBox.expand());
-              },
-            ),
-          ),
-        ),
-      );
-      showAddedToQueueSnackBar(messageContext, 'Track');
-      await tester.pumpAndSettle();
-      expect(find.text('View Queue'), findsOneWidget);
-      expect(find.byTooltip('Close'), findsOneWidget);
-      expect(
-        find.byType(MornyeGlassPanel),
-        mornye ? findsOneWidget : findsNothing,
-      );
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNothing);
-
-      showAddedToQueueSnackBar(messageContext, 'Another track');
-      await tester.pumpAndSettle();
-      await tester.tap(find.byTooltip('Close'));
-      await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNothing);
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('queue confirmation keeps its View action ($mornye)', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(320, 780);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      late BuildContext messageContext;
-      ShellTab? requestedTab;
-      final owner = Object();
-      ShellNavigationService.registerTabSelectionHandler(
-        owner: owner,
-        handler: (tab) => requestedTab = tab,
-      );
-      addTearDown(
-        () => ShellNavigationService.unregisterTabSelectionHandler(owner),
-      );
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.light) : ThemeData(),
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(mornye ? 2 : 1)),
-              child: AppScaffoldMessenger(child: child!),
-            ),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Builder(
-              builder: (context) {
-                messageContext = context;
-                return const Scaffold(body: SizedBox.expand());
-              },
-            ),
-          ),
-        ),
-      );
-      showAddedToQueueSnackBar(messageContext, 'Track');
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('View Queue'));
-      await tester.pumpAndSettle();
-      expect(requestedTab, ShellTab.library);
-      expect(find.byType(SnackBar), findsNothing);
-      expect(tester.takeException(), isNull);
-    });
   }
 
   testWidgets('rapid messages never leave a backlog or persist an action', (

@@ -4,10 +4,6 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 
-String _tableDefinition(String path, String table) => RegExp(
-  'CREATE TABLE $table\\s*\\([\\s\\S]*?\\n\\s*\\)',
-).firstMatch(File(path).readAsStringSync())!.group(0)!;
-
 void main() {
   test(
     'album assessment counts unique positions and rejects uncertain tags',
@@ -84,78 +80,6 @@ print('assessment passed')
       ]);
       expect(result.exitCode, 0, reason: '${result.stderr}');
       expect(result.stdout, contains('assessment passed'));
-    },
-  );
-
-  test(
-    'inventory combines both databases, deduplicates stored paths and retains offline evidence',
-    () async {
-      final result = await Process.run('python3', [
-        '-c',
-        r'''
-import json, sqlite3, sys
-data = json.loads(sys.argv[1])
-db = sqlite3.connect(':memory:')
-db.row_factory = sqlite3.Row
-db.execute("ATTACH DATABASE ':memory:' AS history_db")
-db.execute(data['history'].replace('CREATE TABLE history', 'CREATE TABLE history_db.history', 1))
-db.execute(data['library'])
-db.execute('CREATE TABLE library_sources (id TEXT PRIMARY KEY, enabled INTEGER, available INTEGER)')
-for table in ['library_path_keys', 'history_db.history_path_keys']:
-    db.execute('CREATE TABLE '+table+' (item_id TEXT, path_key TEXT)')
-db.execute("INSERT INTO library_sources VALUES ('internal',1,1)")
-db.execute("INSERT INTO library_sources VALUES ('sd',1,0)")
-def add(local, id, album, number, path=None, source='internal'):
-    table = 'library' if local else 'history_db.history'
-    path = path or '/'+id+'.flac'
-    fields = dict(id=id, track_name='Song '+str(number), artist_name='Artist',
-                  album_name=album, album_key=album, file_path=path, track_number=number,
-                  total_tracks=4, disc_number=1, total_discs=1)
-    fields.update(dict(scanned_at='2026-01-01', source_id=source) if local
-                  else dict(downloaded_at='2026-01-01', service='example-provider'))
-    db.execute('INSERT INTO '+table+' ('+','.join(fields)+') VALUES ('+','.join('?' for _ in fields)+')', list(fields.values()))
-    keys = 'library_path_keys' if local else 'history_db.history_path_keys'
-    db.execute('INSERT INTO '+keys+' VALUES (?,?)', (id,path))
-add(False, 'dl1', 'mixed', 1)
-add(False, 'dl2', 'mixed', 2)
-add(True, 'local1', 'mixed', 1, '/dl1.flac')
-add(True, 'local3', 'mixed', 3)
-add(True, 'local4', 'mixed', 4)
-add(True, 'offline1', 'offline', 1, source='sd')
-add(False, 'dl-offline', 'offline', 1, '/offline1.flac')
-add(True, 'offline2', 'offline', 2, source='sd')
-def rows(query):
-    return {row['album_key']: dict(row) for row in db.execute(query)}
-combined = rows(data['combined'])
-assert combined['mixed']['album_completeness'] == 'complete', combined
-assert combined['mixed']['album_present_tracks'] == 4, combined
-assert combined['offline']['album_completeness'] == 'unknown', combined
-downloads = rows(data['downloads'])
-assert downloads['mixed']['album_completeness'] == 'incomplete', downloads
-assert downloads['mixed']['album_present_tracks'] == 2, downloads
-db.execute("DELETE FROM library WHERE id = 'local4'")
-assert rows(data['combined'])['mixed']['album_completeness'] == 'incomplete'
-print('inventory passed')
-''',
-        jsonEncode({
-          'history': _tableDefinition(
-            'lib/services/history_database.dart',
-            'history',
-          ),
-          'library': _tableDefinition(
-            'lib/services/library_schema.dart',
-            'library',
-          ),
-          'combined': albumCompletenessSql(
-            albumInventorySql(includeLocal: true),
-          ),
-          'downloads': albumCompletenessSql(
-            albumInventorySql(includeLocal: false),
-          ),
-        }),
-      ]);
-      expect(result.exitCode, 0, reason: '${result.stderr}');
-      expect(result.stdout, contains('inventory passed'));
     },
   );
 

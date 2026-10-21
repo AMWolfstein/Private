@@ -67,7 +67,6 @@
   "playbackOnHeadphonesConnected": "Putar saat earphone terhubung",
   "playbackOnHeadphonesConnectedDescription": "Lanjutkan lagu saat earphone kabel atau Bluetooth terhubung. Pemutaran dijeda saat dilepas. Hanya untuk pemutar bawaan.",
   "settingsPlaybackSubtitle": "Pemutar, volume, AutoMix, dan output audio",
-  "sectionPlayer": "Pemutar",
   "sectionVolumeAndTransitions": "Volume dan transisi",
   "sectionAudioOutput": "Output audio",
   "usbBitPerfect": "Audio Hi-Res dan Bit-Perfect",
@@ -139,25 +138,13 @@
   "@navLibrary": {
     "description": "Bottom navigation - Library tab"
   },
-  "navSettings": "Setelan",
-  "@navSettings": {
-    "description": "Bottom navigation - Settings tab"
-  },
   "homeTitle": "Beranda",
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "homeSubtitle": "Tempel URL yang didukung atau cari berdasarkan nama",
-  "@homeSubtitle": {
-    "description": "Subtitle shown below search box"
-  },
   "historyFilterAll": "Semua",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
-  },
-  "historyFilterAlbums": "Album",
-  "@historyFilterAlbums": {
-    "description": "Filter chip - show albums only"
   },
   "historyFilterSingles": "Single",
   "@historyFilterSingles": {
@@ -263,38 +250,6 @@
       }
     }
   },
-  "optionsArtistTagMode": "Mode Tag Artis",
-  "@optionsArtistTagMode": {
-    "description": "Setting title for how artist metadata is written into files"
-  },
-  "optionsArtistTagModeDescription": "Pilih cara mencantumkan artis di tag tersemat.",
-  "@optionsArtistTagModeDescription": {
-    "description": "Bottom-sheet description for artist tag mode setting"
-  },
-  "optionsArtistTagModeJoined": "Gabungkan semuanya",
-  "@optionsArtistTagModeJoined": {
-    "description": "Artist tag mode option that joins multiple artists into one value"
-  },
-  "optionsArtistTagModeJoinedSubtitle": "Tulis semua ARTIS dalam satu tag \"Artis A, Artis B\", mendukung lebih banyak pemutar.",
-  "@optionsArtistTagModeJoinedSubtitle": {
-    "description": "Subtitle for joined artist tag mode"
-  },
-  "optionsArtistTagModeSplitVorbis": "Pisahkan tag (hanya FLAC/Opus)",
-  "@optionsArtistTagModeSplitVorbis": {
-    "description": "Artist tag mode option that writes repeated ARTIST tags for Vorbis formats"
-  },
-  "optionsArtistTagModeSplitVorbisSubtitle": "Pisahkan tag hanya untuk satu artis untuk file FLAC/Opus; MP3 dan M4A tetap tergabung.",
-  "@optionsArtistTagModeSplitVorbisSubtitle": {
-    "description": "Subtitle for split Vorbis artist tag mode"
-  },
-  "optionsArtistTagModePrimary": "Artis utama saja",
-  "@optionsArtistTagModePrimary": {
-    "description": "Artist tag mode option that writes only the first credited artist"
-  },
-  "optionsArtistTagModePrimarySubtitle": "Hanya cantumkan artis utama, seperti \"Artis A\", pada Artis dan Artis Album di semua format, jadi pemutar hanya memunculkan satu artis.",
-  "@optionsArtistTagModePrimarySubtitle": {
-    "description": "Subtitle for the primary-artist tag mode. Applies when downloading and re-enriching; manual edits keep what the user typed."
-  },
   "optionsDetailedLogging": "Logging Mendetail",
   "@optionsDetailedLogging": {
     "description": "Enable verbose logs for debugging"
@@ -323,10 +278,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "trackMetadataPlay": "Putar",
-  "@trackMetadataPlay": {
-    "description": "Action button - play track"
-  },
   "trackMetadataShare": "Bagikan",
   "@trackMetadataShare": {
     "description": "Action button - share track"
@@ -334,10 +285,6 @@
   "setupGrantPermission": "Berikan Izin",
   "@setupGrantPermission": {
     "description": "Button to request permission"
-  },
-  "setupSkip": "Lewati untuk sekarang",
-  "@setupSkip": {
-    "description": "Skip current step button"
   },
   "setupStorageAccessRequired": "Akses Penyimpanan Diperlukan",
   "@setupStorageAccessRequired": {
@@ -369,30 +316,6 @@
         "type": "String"
       }
     }
-  },
-  "setupAppDocumentsFolder": "Folder Documents Aplikasi",
-  "@setupAppDocumentsFolder": {
-    "description": "iOS documents folder option"
-  },
-  "setupAppDocumentsFolderSubtitle": "Disarankan - dapat diakses via aplikasi Files",
-  "@setupAppDocumentsFolderSubtitle": {
-    "description": "Subtitle for documents folder"
-  },
-  "setupChooseFromFiles": "Pilih dari Files",
-  "@setupChooseFromFiles": {
-    "description": "iOS file picker option"
-  },
-  "setupChooseFromFilesSubtitle": "Pilih lokasi iCloud atau lainnya",
-  "@setupChooseFromFilesSubtitle": {
-    "description": "Subtitle for file picker"
-  },
-  "setupIosEmptyFolderWarning": "Batasan iOS: Folder kosong tidak dapat dipilih. Pilih folder dengan minimal satu file.",
-  "@setupIosEmptyFolderWarning": {
-    "description": "iOS folder selection warning"
-  },
-  "setupIcloudNotSupported": "iCloud Drive tidak didukung. Silakan gunakan folder Dokumen di aplikasi.",
-  "@setupIcloudNotSupported": {
-    "description": "Error when user selects iCloud Drive on iOS"
   },
   "setupStorageGranted": "Akses Penyimpanan Diberikan!",
   "@setupStorageGranted": {
@@ -470,21 +393,9 @@
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogDiscard": "Buang",
-  "@dialogDiscard": {
-    "description": "Dialog button - discard changes"
-  },
   "dialogRemove": "Hapus",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
-  },
-  "dialogDiscardChanges": "Buang Perubahan?",
-  "@dialogDiscardChanges": {
-    "description": "Dialog title - unsaved changes warning"
-  },
-  "dialogUnsavedChanges": "Ada perubahan yang belum disimpan. Anda ingin membuangnya?",
-  "@dialogUnsavedChanges": {
-    "description": "Dialog message - unsaved changes"
   },
   "dialogDeleteSelectedTitle": "Hapus Terpilih",
   "@dialogDeleteSelectedTitle": {
@@ -576,15 +487,6 @@
       }
     }
   },
-  "snackbarAddedToQueue": "Menambahkan \"{trackName}\" ke antrean",
-  "@snackbarAddedToQueue": {
-    "description": "Snackbar - track added to download queue",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
   "snackbarDeletedTracks": "Menghapus {count} {count, plural, =1{lagu} other{lagu}}",
   "@snackbarDeletedTracks": {
     "description": "Snackbar - tracks deleted",
@@ -602,10 +504,6 @@
         "type": "String"
       }
     }
-  },
-  "snackbarViewQueue": "Lihat Antrean",
-  "@snackbarViewQueue": {
-    "description": "Snackbar action - view download queue"
   },
   "snackbarFileNotFound": "File tidak ditemukan",
   "@snackbarFileNotFound": {
@@ -832,14 +730,6 @@
   "trackAlbum": "Album",
   "@trackAlbum": {
     "description": "Metadata label - album name"
-  },
-  "trackLyricsNotAvailable": "Lirik tidak tersedia untuk lagu ini",
-  "@trackLyricsNotAvailable": {
-    "description": "Message when lyrics not found"
-  },
-  "trackInstrumental": "Lagu instrumental",
-  "@trackInstrumental": {
-    "description": "Message when track is instrumental (no lyrics)"
   },
   "trackCopiedToClipboard": "Tersalin ke clipboard",
   "@trackCopiedToClipboard": {
@@ -1132,10 +1022,6 @@
       }
     }
   },
-  "libraryInLibrary": "Di Koleksi",
-  "@libraryInLibrary": {
-    "description": "Badge shown on tracks that exist in local library"
-  },
   "libraryRemovedMissingFiles": "Menghapus {count} file hilang dari Koleksi",
   "@libraryRemovedMissingFiles": {
     "description": "Snackbar after cleanup",
@@ -1425,13 +1311,6 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "trackReEnrichSuccess": "Metadata berhasil diupdate",
-  "trackReEnrichMetadataSaved": "Metadata disimpan",
-  "trackReEnrichLyricsUpdated": "Lirik diupdate",
-  "trackReEnrichLyricsPreserved": "Tidak menemukan lirik baru; lirik tidak diubah",
-  "@trackReEnrichSuccess": {
-    "description": "Snackbar after successful re-enrichment"
-  },
   "audioBitrate": "Bitrate",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
@@ -1439,10 +1318,6 @@
   "actionCreate": "Buat",
   "@actionCreate": {
     "description": "Generic action button - create"
-  },
-  "collectionFoldersTitle": "Folder saya",
-  "@collectionFoldersTitle": {
-    "description": "Library section title for custom folders"
   },
   "collectionLoved": "Lagu yang Disukai",
   "@collectionLoved": {
@@ -1471,15 +1346,6 @@
   "collectionPlaylistTracks": "{count, plural,=1{1 lagu} other{{count} lagu}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "collectionArtistCount": "{count, plural,=1{1 artis}other{{count} artis}}",
-  "@collectionArtistCount": {
-    "description": "Artist count label for favorite artists",
     "placeholders": {
       "count": {
         "type": "int"
@@ -1555,24 +1421,6 @@
   "collectionRemoveFromFolder": "Hapus dari folder",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
-  },
-  "collectionAddedToLoved": "\"{trackName}\" ditambahkan ke Disukai",
-  "@collectionAddedToLoved": {
-    "description": "Snackbar after adding track to loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromLoved": "\"{trackName}\" dihapus dari Disukai",
-  "@collectionRemovedFromLoved": {
-    "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
   },
   "collectionRemovedFromFavoriteArtists": "\"{artistName}\" dihapus dari Artis Favorit",
   "@collectionRemovedFromFavoriteArtists": {
@@ -1761,7 +1609,6 @@
     "description": "Empty state message when an album has no tracks"
   },
   "storageAutomaticFolder": "Folder bawaan",
-  "storageSafRecommended": "Pilih folder (Disarankan)",
   "downloadFolderReselect": "Pilih Folder Baru",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -1977,19 +1824,6 @@
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "snackbarFolderPickerFailed": "Gagal membuka pemilih folder: {error}",
-  "@snackbarFolderPickerFailed": {
-    "description": "Snackbar shown when folder picker fails to open",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "notifEmbeddingMetadata": "Menyematkan metadata...",
-  "@notifEmbeddingMetadata": {
-    "description": "Notification body while embedding metadata into a downloaded track"
-  },
   "notifScanningLibrary": "Memindai koleksi lokal",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
@@ -2190,30 +2024,6 @@
       }
     }
   },
-  "a11yTrackByArtist": "{trackName} oleh {artistName}",
-  "@a11yTrackByArtist": {
-    "description": "Accessibility label for a queue or list track item",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      },
-      "artistName": {
-        "type": "String"
-      }
-    }
-  },
-  "settingsFiles": "File & Folder",
-  "@settingsFiles": {
-    "description": "Settings menu item - file and folder settings"
-  },
-  "settingsFilesSubtitle": "Folder download, nama file, struktur folder",
-  "@settingsFilesSubtitle": {
-    "description": "Subtitle for files & folders settings"
-  },
-  "settingsMetadata": "Metadata",
-  "@settingsMetadata": {
-    "description": "Settings menu item - metadata settings"
-  },
   "settingsLyrics": "Lirik",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
@@ -2348,21 +2158,6 @@
       }
     }
   },
-  "trackReEnrichSuccessWithFailures": "Metadata berhasil diupdate ulang ({successCount}/{total}) - Gagal: {failedCount}",
-  "@trackReEnrichSuccessWithFailures": {
-    "description": "Snackbar summary after batch metadata re-enrichment finishes with failures",
-    "placeholders": {
-      "successCount": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      },
-      "failedCount": {
-        "type": "int"
-      }
-    }
-  },
   "selectionDeleteTracksCount": "Hapus {count} {count, plural, =1{lagu} other{lagu}}",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
@@ -2440,26 +2235,6 @@
   "libraryPlayback": "Pemutaran",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
-  },
-  "libraryExternalPlayer": "Pemutar eksternal",
-  "@libraryExternalPlayer": {
-    "description": "Setting option to use an external music player"
-  },
-  "libraryExternalPlayerSubtitle": "Bagus untuk mendengarkan harian, kualitas terbaik, pemutaran lancar, EQ, dan dukungan format luas",
-  "@libraryExternalPlayerSubtitle": {
-    "description": "Subtitle for external player option"
-  },
-  "libraryBuiltInPreviewPlayer": "Pemutar bawaan preview",
-  "@libraryBuiltInPreviewPlayer": {
-    "description": "Setting option to use the built-in preview player"
-  },
-  "libraryBuiltInPreviewPlayerSubtitle": "Pemutar bawaan preview SpotiFLAC Mobile",
-  "@libraryBuiltInPreviewPlayerSubtitle": {
-    "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "Sedang Memutar",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Tidak memutar apapun",
   "@nowPlayingNothingPlaying": {
@@ -2542,10 +2317,6 @@
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingOpenInExternalPlayer": "Buka di pemutar eksternal",
-  "@nowPlayingOpenInExternalPlayer": {
-    "description": "Menu item to open the current track in an external player"
-  },
   "nowPlayingTabPlayer": "Pemutar",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
@@ -2569,19 +2340,6 @@
   "nowPlayingShowTranslation": "Tampilkan Terjemahan",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
-  },
-  "nowPlayingLibraryEmpty": "Koleksi Anda kosong",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "Tidak dapat mengacak koleksi: {error}",
-  "@nowPlayingShuffleLibraryFailed": {
-    "description": "Snackbar when shuffling the library fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
   },
   "nowPlayingShuffleOn": "Acak hidup",
   "@nowPlayingShuffleOn": {
@@ -2657,24 +2415,8 @@
   "@libraryFilterMetadataHasReplayGain": {
     "description": "Filter option for tracks with indexed ReplayGain track or album gain tags"
   },
-  "trackOptionCopyTrackName": "Salin nama lagu",
-  "@trackOptionCopyTrackName": {
-    "description": "Track menu action that copies the track title"
-  },
-  "trackOptionCopyArtist": "Salin artis",
-  "@trackOptionCopyArtist": {
-    "description": "Track menu action that copies the artist name"
-  },
-  "trackOptionCopyTrackAndArtist": "Salin lagu dan artis",
-  "@trackOptionCopyTrackAndArtist": {
-    "description": "Track menu action that copies the track title and artist"
-  },
   "mornyeSearch": "Telusuri",
   "mornyeContinuePlaying": "Lanjut Memutar",
-  "optionsEmbeddedCoverSize": "Ukuran Cover Tersemat",
-  "@optionsEmbeddedCoverSize": {
-    "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"
-  },
   "mornyeFavorite": "Favorit",
   "mornyeGoToArtist": "Buka Artis",
   "@mornyeFavorite": {
@@ -2710,10 +2452,6 @@
   "appearanceCustomFontReset": "Gunakan font tema",
   "lyricsTextSize": "Ukuran teks lirik",
   "lyricsTextPreview": "Ikuti setiap baris lagu favoritmu",
-  "optionsEmbeddedCoverSizeOriginal": "Resolusi asli",
-  "@optionsEmbeddedCoverSizeOriginal": {
-    "description": "Option that preserves the provider artwork at its original resolution"
-  },
   "cueSplitButton": "Pisah menjadi Lagu",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"

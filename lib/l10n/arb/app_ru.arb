@@ -1,7 +1,6 @@
 {
   "libraryGenres": "Жанры",
   "settingsPlaybackSubtitle": "Воспроизведение, громкость, автомикс и аудиовыход",
-  "sectionPlayer": "Плеер",
   "sectionVolumeAndTransitions": "Громкость и переходы",
   "sectionAudioOutput": "Аудиовыход",
   "usbBitPerfect": "Hi-Res и Bit-perfect",
@@ -71,25 +70,13 @@
   "@navLibrary": {
     "description": "Bottom navigation - Library tab"
   },
-  "navSettings": "Настройки",
-  "@navSettings": {
-    "description": "Bottom navigation - Settings tab"
-  },
   "homeTitle": "Главная",
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "homeSubtitle": "Вставьте URL или ищите по названию",
-  "@homeSubtitle": {
-    "description": "Subtitle shown below search box"
-  },
   "historyFilterAll": "Все",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
-  },
-  "historyFilterAlbums": "Альбомы",
-  "@historyFilterAlbums": {
-    "description": "Filter chip - show albums only"
   },
   "historyFilterSingles": "Синглы",
   "@historyFilterSingles": {
@@ -195,38 +182,6 @@
       }
     }
   },
-  "optionsArtistTagMode": "Режим тега исполнителя",
-  "@optionsArtistTagMode": {
-    "description": "Setting title for how artist metadata is written into files"
-  },
-  "optionsArtistTagModeDescription": "Выберите, как несколько исполнителей записываются встроенные теги.",
-  "@optionsArtistTagModeDescription": {
-    "description": "Bottom-sheet description for artist tag mode setting"
-  },
-  "optionsArtistTagModeJoined": "Объединять в одну строку",
-  "@optionsArtistTagModeJoined": {
-    "description": "Artist tag mode option that joins multiple artists into one value"
-  },
-  "optionsArtistTagModeJoinedSubtitle": "Записывать исполнителей через запятую для максимальной совместимости с плеерами.",
-  "@optionsArtistTagModeJoinedSubtitle": {
-    "description": "Subtitle for joined artist tag mode"
-  },
-  "optionsArtistTagModeSplitVorbis": "Разделить теги для FLAC/Opus",
-  "@optionsArtistTagModeSplitVorbis": {
-    "description": "Artist tag mode option that writes repeated ARTIST tags for Vorbis formats"
-  },
-  "optionsArtistTagModeSplitVorbisSubtitle": "Один тег на исполнителя для FLAC/Opus; Для MP3/M4A — один общий.",
-  "@optionsArtistTagModeSplitVorbisSubtitle": {
-    "description": "Subtitle for split Vorbis artist tag mode"
-  },
-  "optionsArtistTagModePrimary": "Primary artist only",
-  "@optionsArtistTagModePrimary": {
-    "description": "Artist tag mode option that writes only the first credited artist"
-  },
-  "optionsArtistTagModePrimarySubtitle": "Write only the first artist, like \"Artist A\", to Artist and Album Artist in every format, so players list one artist.",
-  "@optionsArtistTagModePrimarySubtitle": {
-    "description": "Subtitle for the primary-artist tag mode. Applies when downloading and re-enriching; manual edits keep what the user typed."
-  },
   "optionsDetailedLogging": "Подробный лог",
   "@optionsDetailedLogging": {
     "description": "Enable verbose logs for debugging"
@@ -255,10 +210,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "trackMetadataPlay": "Воспроизвести",
-  "@trackMetadataPlay": {
-    "description": "Action button - play track"
-  },
   "trackMetadataShare": "Поделиться",
   "@trackMetadataShare": {
     "description": "Action button - share track"
@@ -266,10 +217,6 @@
   "setupGrantPermission": "Предоставить разрешение",
   "@setupGrantPermission": {
     "description": "Button to request permission"
-  },
-  "setupSkip": "Пропустить",
-  "@setupSkip": {
-    "description": "Skip current step button"
   },
   "setupStorageAccessRequired": "Требуется доступ к хранилищу",
   "@setupStorageAccessRequired": {
@@ -301,30 +248,6 @@
         "type": "String"
       }
     }
-  },
-  "setupAppDocumentsFolder": "Папка Документы приложения",
-  "@setupAppDocumentsFolder": {
-    "description": "iOS documents folder option"
-  },
-  "setupAppDocumentsFolderSubtitle": "Рекомендуется - доступ через Файлы",
-  "@setupAppDocumentsFolderSubtitle": {
-    "description": "Subtitle for documents folder"
-  },
-  "setupChooseFromFiles": "Выбрать из файлов",
-  "@setupChooseFromFiles": {
-    "description": "iOS file picker option"
-  },
-  "setupChooseFromFilesSubtitle": "Выберите iCloud или другое местоположение",
-  "@setupChooseFromFilesSubtitle": {
-    "description": "Subtitle for file picker"
-  },
-  "setupIosEmptyFolderWarning": "Ограничение iOS: пустые папки не могут быть выбраны. Выберите папку, содержащую хотя бы один файл.",
-  "@setupIosEmptyFolderWarning": {
-    "description": "iOS folder selection warning"
-  },
-  "setupIcloudNotSupported": "iCloud Drive не поддерживается. Пожалуйста, используйте папку Документы.",
-  "@setupIcloudNotSupported": {
-    "description": "Error when user selects iCloud Drive on iOS"
   },
   "setupStorageGranted": "Доступ к хранилищу предоставлен!",
   "@setupStorageGranted": {
@@ -402,21 +325,9 @@
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogDiscard": "Отменить",
-  "@dialogDiscard": {
-    "description": "Dialog button - discard changes"
-  },
   "dialogRemove": "Убрать",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
-  },
-  "dialogDiscardChanges": "Отменить изменения?",
-  "@dialogDiscardChanges": {
-    "description": "Dialog title - unsaved changes warning"
-  },
-  "dialogUnsavedChanges": "Есть несохраненные изменения. Отменить их?",
-  "@dialogUnsavedChanges": {
-    "description": "Dialog message - unsaved changes"
   },
   "dialogDeleteSelectedTitle": "Удалить выбранные",
   "@dialogDeleteSelectedTitle": {
@@ -508,15 +419,6 @@
       }
     }
   },
-  "snackbarAddedToQueue": "\"{trackName}\" добавлен в очередь",
-  "@snackbarAddedToQueue": {
-    "description": "Snackbar - track added to download queue",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
   "snackbarDeletedTracks": "Удалено {count} {count, plural, one {трек} few {трека} many {треков} =1{трек} other{треков}}",
   "@snackbarDeletedTracks": {
     "description": "Snackbar - tracks deleted",
@@ -534,10 +436,6 @@
         "type": "String"
       }
     }
-  },
-  "snackbarViewQueue": "Просмотр очереди",
-  "@snackbarViewQueue": {
-    "description": "Snackbar action - view download queue"
   },
   "snackbarFileNotFound": "Файл не найден",
   "@snackbarFileNotFound": {
@@ -764,14 +662,6 @@
   "trackAlbum": "Альбом",
   "@trackAlbum": {
     "description": "Metadata label - album name"
-  },
-  "trackLyricsNotAvailable": "Текст песни недоступен для этого трека",
-  "@trackLyricsNotAvailable": {
-    "description": "Message when lyrics not found"
-  },
-  "trackInstrumental": "Инструментальный трек",
-  "@trackInstrumental": {
-    "description": "Message when track is instrumental (no lyrics)"
   },
   "trackCopiedToClipboard": "Скопировано в буфер обмена",
   "@trackCopiedToClipboard": {
@@ -1055,10 +945,6 @@
         "type": "int"
       }
     }
-  },
-  "libraryInLibrary": "В медиатеке",
-  "@libraryInLibrary": {
-    "description": "Badge shown on tracks that exist in local library"
   },
   "libraryRemovedMissingFiles": "Удалено {count} {count, plural, one{отсутствующий файл} few{трека} many{отсутствующих файлов} other{отсутствующих файлов}} в медиатеке",
   "@libraryRemovedMissingFiles": {
@@ -1349,13 +1235,6 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "trackReEnrichSuccess": "Метаданные успешно обновлены",
-  "trackReEnrichMetadataSaved": "Метаданные сохранены",
-  "trackReEnrichLyricsUpdated": "Текст обновлён",
-  "trackReEnrichLyricsPreserved": "Новые тексты не найдены; старые сохранены",
-  "@trackReEnrichSuccess": {
-    "description": "Snackbar after successful re-enrichment"
-  },
   "audioBitrate": "Битрейт",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
@@ -1363,10 +1242,6 @@
   "actionCreate": "Создать",
   "@actionCreate": {
     "description": "Generic action button - create"
-  },
-  "collectionFoldersTitle": "Мои папки",
-  "@collectionFoldersTitle": {
-    "description": "Library section title for custom folders"
   },
   "collectionLoved": "Любимые песни",
   "@collectionLoved": {
@@ -1395,15 +1270,6 @@
   "collectionPlaylistTracks": "{count, plural, one{{count} трек} few{{count} трека} other{{count} треков}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "collectionArtistCount": "{count, plural, one{{count} исполнитель} few{{count} исполнителя} other{{count} исполнителей}}",
-  "@collectionArtistCount": {
-    "description": "Artist count label for favorite artists",
     "placeholders": {
       "count": {
         "type": "int"
@@ -1479,24 +1345,6 @@
   "collectionRemoveFromFolder": "Убрать из папки",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
-  },
-  "collectionAddedToLoved": "\"{trackName}\" добавлен в Любимые",
-  "@collectionAddedToLoved": {
-    "description": "Snackbar after adding track to loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromLoved": "\"{trackName}\" удалено из Любимых",
-  "@collectionRemovedFromLoved": {
-    "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
   },
   "collectionRemovedFromFavoriteArtists": "\"{artistName}\" удалено из избранных исполнителей",
   "@collectionRemovedFromFavoriteArtists": {
@@ -1685,7 +1533,6 @@
     "description": "Empty state message when an album has no tracks"
   },
   "storageAutomaticFolder": "Автоматическая папка",
-  "storageSafRecommended": "Выбрать папку (Рекомендуется)",
   "downloadFolderReselect": "Выбрать папку заново",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
@@ -1901,19 +1748,6 @@
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "snackbarFolderPickerFailed": "Не удалось открыть выбор папок: {error}",
-  "@snackbarFolderPickerFailed": {
-    "description": "Snackbar shown when folder picker fails to open",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "notifEmbeddingMetadata": "Встраивание метаданных...",
-  "@notifEmbeddingMetadata": {
-    "description": "Notification body while embedding metadata into a downloaded track"
-  },
   "notifScanningLibrary": "Сканирование локальной медиатеки",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
@@ -2110,30 +1944,6 @@
       }
     }
   },
-  "a11yTrackByArtist": "{trackName} от {artistName}",
-  "@a11yTrackByArtist": {
-    "description": "Accessibility label for a queue or list track item",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      },
-      "artistName": {
-        "type": "String"
-      }
-    }
-  },
-  "settingsFiles": "Файлы и папки",
-  "@settingsFiles": {
-    "description": "Settings menu item - file and folder settings"
-  },
-  "settingsFilesSubtitle": "Расположение загрузок, имя файла и структура папок",
-  "@settingsFilesSubtitle": {
-    "description": "Subtitle for files & folders settings"
-  },
-  "settingsMetadata": "Метаданные",
-  "@settingsMetadata": {
-    "description": "Settings menu item - metadata settings"
-  },
   "settingsLyrics": "Тексты песен",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
@@ -2268,21 +2078,6 @@
       }
     }
   },
-  "trackReEnrichSuccessWithFailures": "Метаданные успешно дополнены ({successCount}/{total}). Ошибок: {failedCount}",
-  "@trackReEnrichSuccessWithFailures": {
-    "description": "Snackbar summary after batch metadata re-enrichment finishes with failures",
-    "placeholders": {
-      "successCount": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      },
-      "failedCount": {
-        "type": "int"
-      }
-    }
-  },
   "selectionDeleteTracksCount": "Удалить {count} {count, plural, =1{трек} few{трека} other{треков}}",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
@@ -2360,26 +2155,6 @@
   "libraryPlayback": "Воспроизведение",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
-  },
-  "libraryExternalPlayer": "Внешний плеер",
-  "@libraryExternalPlayer": {
-    "description": "Setting option to use an external music player"
-  },
-  "libraryExternalPlayerSubtitle": "Рекомендуется для прослушивания, лучшее качество, воспроизведение без пауз, эквалайзер и поддержка более широкого спектра форматов",
-  "@libraryExternalPlayerSubtitle": {
-    "description": "Subtitle for external player option"
-  },
-  "libraryBuiltInPreviewPlayer": "Встроенный плеер для предпросмотра",
-  "@libraryBuiltInPreviewPlayer": {
-    "description": "Setting option to use the built-in preview player"
-  },
-  "libraryBuiltInPreviewPlayerSubtitle": "Быстрое предварительное прослушивание внутри SpotiFLAC Mobile",
-  "@libraryBuiltInPreviewPlayerSubtitle": {
-    "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "Сейчас играет",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Ничего не играет",
   "@nowPlayingNothingPlaying": {
@@ -2462,10 +2237,6 @@
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingOpenInExternalPlayer": "Открыть во внешнем плеере",
-  "@nowPlayingOpenInExternalPlayer": {
-    "description": "Menu item to open the current track in an external player"
-  },
   "nowPlayingTabPlayer": "Плеер",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
@@ -2489,19 +2260,6 @@
   "nowPlayingShowTranslation": "Показать перевод",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
-  },
-  "nowPlayingLibraryEmpty": "Ваша медиатека пуста",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "Не удалось перемешать медиатеку: {error}",
-  "@nowPlayingShuffleLibraryFailed": {
-    "description": "Snackbar when shuffling the library fails",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
   },
   "nowPlayingShuffleOn": "Перемешивание вкл",
   "@nowPlayingShuffleOn": {
@@ -2573,24 +2331,8 @@
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
-  "trackOptionCopyTrackName": "Копировать название трека",
-  "@trackOptionCopyTrackName": {
-    "description": "Track menu action that copies the track title"
-  },
-  "trackOptionCopyArtist": "Копировать исполнителя",
-  "@trackOptionCopyArtist": {
-    "description": "Track menu action that copies the artist name"
-  },
-  "trackOptionCopyTrackAndArtist": "Копировать трек и исполнителя",
-  "@trackOptionCopyTrackAndArtist": {
-    "description": "Track menu action that copies the track title and artist"
-  },
   "mornyeSearch": "Поиск",
   "mornyeContinuePlaying": "Продолжить воспроизведение",
-  "optionsEmbeddedCoverSize": "Размер встраиваемой обложки",
-  "@optionsEmbeddedCoverSize": {
-    "description": "Metadata setting that limits downloaded artwork resolution before it is embedded"
-  },
   "mornyeFavorite": "В избранное",
   "mornyeGoToArtist": "Перейти к исполнителю",
   "@mornyeFavorite": {
@@ -2616,10 +2358,6 @@
   "profileRemovePhoto": "Удалить фото",
   "profilePhotoError": "Выберите изображение размером менее 20 МБ.",
   "profileSaveError": "Не удалось сохранить ваш профиль. Пожалуйста, попробуйте еще раз.",
-  "optionsEmbeddedCoverSizeOriginal": "Оригинальное разрешение",
-  "@optionsEmbeddedCoverSizeOriginal": {
-    "description": "Option that preserves the provider artwork at its original resolution"
-  },
   "cueSplitButton": "Разделить на Треки",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"

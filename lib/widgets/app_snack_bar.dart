@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
 /// Applies the same transient-message policy to existing snackbar call sites.
@@ -90,18 +89,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   SnackBarAction? action,
 }) {
   final messenger = ScaffoldMessenger.of(context);
-  if (!context.isMornye) {
-    return messenger.showSnackBar(
-      SnackBar(
-        content: content,
-        duration: duration,
-        behavior: behavior,
-        action: action,
-        persist: false,
-        showCloseIcon: true,
-      ),
-    );
-  }
+
   final theme = Theme.of(context);
   final reduceMotion = MediaQuery.disableAnimationsOf(context);
   final snackBar = _MornyeSnackBar(

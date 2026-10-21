@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -53,35 +52,6 @@ void main() {
       await persistentCacheDirectory.delete(recursive: true);
     }
   });
-
-  test(
-    'metadata artwork prefers embedded and local, rejecting remote URLs',
-    () {
-      expect(
-        resolveMetadataArtworkSource(
-          embeddedCoverPath: ' C:/covers/embedded.jpg ',
-          localCoverPath: 'C:/covers/local.jpg',
-          remoteCoverUrl: 'https://example.com/online.jpg',
-        ),
-        'C:/covers/embedded.jpg',
-      );
-      expect(
-        resolveMetadataArtworkSource(
-          embeddedCoverPath: ' ',
-          localCoverPath: ' C:/covers/local.jpg ',
-          remoteCoverUrl: 'https://example.com/online.jpg',
-        ),
-        'C:/covers/local.jpg',
-      );
-      expect(
-        resolveMetadataArtworkSource(
-          remoteCoverUrl: ' https://example.com/online.jpg ',
-        ),
-        isNull,
-      );
-      expect(resolveMetadataArtworkSource(), isNull);
-    },
-  );
 
   test(
     'a temporarily offline SAF cover retries after cooldown without restarting',
@@ -271,67 +241,6 @@ void main() {
   );
 
   test(
-    'cached SAF previews batch validation and throttle repeated hits',
-    () async {
-      var now = DateTime.utc(2026);
-      DownloadedEmbeddedCoverResolver.setValidationClockForTesting(() => now);
-      final paths = List.generate(
-        18,
-        (index) => 'content://covers/document/$index',
-      );
-      final batches = <List<String>>[];
-      var extractions = 0;
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(backendChannel, (call) async {
-            final args = call.arguments as Map;
-            if (call.method == 'getSafFileModTimes') {
-              final uris = (jsonDecode(args['uris'] as String) as List)
-                  .cast<String>();
-              batches.add(uris);
-              return jsonEncode({for (final path in uris) path: 1234});
-            }
-            expect(call.method, 'extractCoverToFile');
-            extractions++;
-            await File(args['output_path'] as String).writeAsBytes([1, 2, 3]);
-            return jsonEncode({'success': true});
-          });
-      for (final path in paths) {
-        expect(
-          await DownloadedEmbeddedCoverResolver.resolveOrExtract(path),
-          isNotNull,
-        );
-      }
-      batches.clear();
-      for (final path in paths) {
-        DownloadedEmbeddedCoverResolver.resolve(path);
-        DownloadedEmbeddedCoverResolver.resolve(path);
-      }
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
-      expect(batches.map((batch) => batch.length), [8, 8, 2]);
-      expect(batches.expand((batch) => batch).toSet(), paths.toSet());
-      for (final path in paths) {
-        DownloadedEmbeddedCoverResolver.resolve(path);
-      }
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
-      expect(batches.length, 3);
-      now = now.add(const Duration(seconds: 5));
-      for (final path in paths) {
-        DownloadedEmbeddedCoverResolver.resolve(path);
-      }
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
-      expect(batches.length, 6);
-      expect(extractions, paths.length);
-      // Explicit edits bypass the interval, even immediately after validation.
-      await DownloadedEmbeddedCoverResolver.scheduleRefreshForPath(
-        paths.first,
-        force: true,
-      );
-      await DownloadedEmbeddedCoverResolver.resolveOrExtract(paths.first);
-      expect(extractions, paths.length + 1);
-    },
-  );
-
-  test(
     'validation shares callbacks and detects external changes after interval',
     () async {
       var now = DateTime.utc(2026);
@@ -376,52 +285,6 @@ void main() {
       expect(extractions, 2);
       expect(firstNotified, 1);
       expect(secondNotified, 1);
-    },
-  );
-
-  test(
-    'invalidation during a pending validation cannot restore stale artwork',
-    () async {
-      const path = 'content://covers/document/invalidation';
-      final entered = Completer<void>();
-      final release = Completer<void>();
-      addTearDown(() {
-        if (!release.isCompleted) release.complete();
-      });
-      var modTimeCalls = 0;
-      var extractions = 0;
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(backendChannel, (call) async {
-            if (call.method == 'getSafFileModTimes') {
-              if (++modTimeCalls == 2) {
-                entered.complete();
-                await release.future;
-                return jsonEncode({path: 5678});
-              }
-              return jsonEncode({path: 1234});
-            }
-            expect(call.method, 'extractCoverToFile');
-            extractions++;
-            await File(
-              (call.arguments as Map)['output_path'] as String,
-            ).writeAsBytes([1, 2, 3]);
-            return jsonEncode({'success': true});
-          });
-      final preview = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-        path,
-      );
-      var notified = false;
-      DownloadedEmbeddedCoverResolver.resolve(
-        path,
-        onChanged: () => notified = true,
-      );
-      await entered.future.timeout(const Duration(seconds: 2));
-      await DownloadedEmbeddedCoverResolver.invalidate(path);
-      release.complete();
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
-      expect(extractions, 1);
-      expect(notified, isFalse);
-      expect(await File(preview!).exists(), isFalse);
     },
   );
 
@@ -491,50 +354,6 @@ void main() {
     expect(await foreground, isNotNull);
     await allCompleted.future.timeout(const Duration(seconds: 2));
     expect(startedPaths, hasLength(paths.length));
-  });
-
-  test('force refresh drops a stale cover when artwork is removed', () async {
-    final sourcePath = await createAudioFixture('removed-cover');
-    var extractionCalls = 0;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(backendChannel, (call) async {
-          expect(call.method, 'extractCoverToFile');
-          extractionCalls++;
-          if (extractionCalls == 1) {
-            final arguments = call.arguments as Map<Object?, Object?>;
-            await File(
-              arguments['output_path']! as String,
-            ).writeAsBytes(const [10, 11, 12]);
-            return jsonEncode({'success': true});
-          }
-          return jsonEncode({'error': 'embedded cover not found'});
-        });
-
-    final original = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      sourcePath,
-    );
-    expect(original, isNotNull);
-    expect(
-      DownloadedEmbeddedCoverResolver.isManagedPreviewPath(original),
-      isTrue,
-    );
-
-    await DownloadedEmbeddedCoverResolver.scheduleRefreshForPath(
-      sourcePath,
-      force: true,
-    );
-    final refreshed = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      sourcePath,
-    );
-
-    expect(extractionCalls, 2);
-    expect(refreshed, isNull);
-    expect(await File(original!).exists(), isFalse);
-    expect(
-      DownloadedEmbeddedCoverResolver.isManagedPreviewPath(original),
-      isTrue,
-    );
-    expect(DownloadedEmbeddedCoverResolver.resolve(sourcePath), isNull);
   });
 
   test(
@@ -645,32 +464,6 @@ void main() {
     await DownloadedEmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting();
     expect(await File(legacy).exists(), isFalse);
     expect(await File('$legacy.source').exists(), isFalse);
-  });
-
-  test('invalidate removes persistent variants after memory reset', () async {
-    final sourcePath = await createAudioFixture('persistent-invalidate');
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(backendChannel, (call) async {
-          final arguments = call.arguments as Map<Object?, Object?>;
-          await File(
-            arguments['output_path']! as String,
-          ).writeAsBytes(const [22, 23, 24]);
-          return jsonEncode({'success': true});
-        });
-
-    final preview = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      sourcePath,
-    );
-    expect(preview, isNotNull);
-    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
-    await DownloadedEmbeddedCoverResolver.invalidate(sourcePath);
-
-    expect(await File(preview!).exists(), isFalse);
-    final remainingPreviews = await persistentCacheDirectory
-        .list()
-        .where((entity) => entity is File && entity.path.endsWith('.jpg'))
-        .toList();
-    expect(remainingPreviews, isEmpty);
   });
 
   test('persistent maintenance enforces entry and byte caps', () async {

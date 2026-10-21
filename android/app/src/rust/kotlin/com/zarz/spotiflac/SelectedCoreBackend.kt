@@ -3,7 +3,6 @@ package com.zarz.spotiflac
 import android.content.Context
 import android.net.Uri
 import com.spotiflac.backend.LocalBackend
-import com.spotiflac.backend.LyricsRequest
 import com.spotiflac.backend.RequestLease
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -31,27 +30,8 @@ internal suspend fun MainActivity.dispatchBackendApplication(call: MethodCall, r
         withContext(Dispatchers.IO) {
             when (call.method) {
                 "runNativeDataJob" -> runNativeDataJobPlatform(call.arguments, checkNotNull(jobLease))
-                "fetchAndSaveLyrics" -> {
-                    val arguments = call.arguments as? Map<*, *> ?: emptyMap<Any, Any>()
-                    readLyricsWithSafCopy(
-                        arguments["audio_file_path"] as? String ?: "",
-                        copyToTemp = { copyUriToTemp(Uri.parse(it))?.let(::File) },
-                        read = { localPath -> coreBackend.invokeApplication(call.method, arguments + ("audio_file_path" to localPath)) },
-                    ) ?: """{"success":false,"error":"Could not read local lyrics"}"""
-                }
-                "getLyricsLRC", "getLyricsLRCWithSource" -> {
-                    val arguments = call.arguments as? Map<*, *> ?: emptyMap<Any, Any>()
-                    val path = arguments["file_path"] as? String ?: ""
-                    readLyricsWithSafCopy(
-                        path,
-                        copyToTemp = { copyUriToTemp(Uri.parse(it))?.let(::File) },
-                        read = { localPath ->
-                            coreBackend.invokeApplication(call.method, arguments + ("file_path" to localPath))
-                        },
-                    ) ?: if (call.method == "getLyricsLRC") "" else {
-                        """{"lyrics":"","source":"","sync_type":"","instrumental":false}"""
-                    }
-                }
+
+
                 else -> coreBackend.invokeApplication(call.method, call.arguments)
             }
         }
@@ -64,7 +44,6 @@ internal suspend fun MainActivity.dispatchBackendApplication(call: MethodCall, r
 
 internal object RustCoreBackend : CoreBackend {
     override val implementation = "rust"
-    override val routesApplication = true
     private lateinit var workspace: NativeMediaWorkspace
     private var manager: LocalBackend? = null
     private val directoryScopes = mutableMapOf<String, AutoCloseable>()
@@ -144,8 +123,7 @@ internal object RustCoreBackend : CoreBackend {
     override fun readFileMetadata(path: String, hint: String): String =
         com.spotiflac.backend.readFileMetadata(path, hint, null)
 
-    override fun checkHiResAuthenticity(path: String, optionsJson: String): String =
-        com.spotiflac.backend.checkHiresAuthenticity(path, optionsJson, null)
+
 
     override fun readAudioMetadata(path: String, hint: String, cacheKey: String): String {
         val descriptor = path.removePrefix("/proc/self/fd/").toIntOrNull()
@@ -277,13 +255,7 @@ internal object RustCoreBackend : CoreBackend {
         }
     }
 
-    override fun scanCueForLibrary(path: String, audioDirectory: String, virtualPrefix: String, modTime: Long, cacheKey: String): String {
-        val cue = File(path).canonicalFile
-        val audio = if (audioDirectory.isEmpty()) cue.parentFile!! else File(audioDirectory).canonicalFile
-        return withLibraryDirectories(listOf(cue.parent, audio.path)) {
-            it.scanCueFileForLibrary(cue.path, audio.path, virtualPrefix, modTime, cacheKey, java.time.Instant.now().toString(), null)
-        }
-    }
+
 
     override fun scanCueForLibraryWithResolvedAudio(path: String, audioPath: String, audioName: String, virtualPrefix: String, modTime: Long, cacheKey: String): String {
         val cue = File(path).canonicalFile
@@ -320,8 +292,7 @@ internal object RustCoreBackend : CoreBackend {
 
     private fun mediaPath(path: String): String = if (path.isEmpty()) "" else File(path).canonicalPath
 
-    override fun rewriteSplitArtistTags(path: String, artist: String, albumArtist: String): String =
-        withMediaFiles(listOf(path)) { it.rewriteSplitArtistTags(mediaPath(path), artist, albumArtist, null) }
+
 
     override fun extractCoverToFile(audioPath: String, outputPath: String, hint: String) {
         val descriptor = if (audioPath.startsWith("/proc/self/fd/")) {
@@ -348,17 +319,12 @@ internal object RustCoreBackend : CoreBackend {
     override fun writeM4aFreeformTags(path: String, metadataJson: String): String =
         withMediaFiles(listOf(path)) { it.writeM4aFreeformTags(mediaPath(path), metadataJson, null) }
 
-    override fun ensureAc4Config(path: String, reference: String): String =
-        withMediaFiles(listOf(path, reference)) { it.ensureAc4Config(mediaPath(path), mediaPath(reference), null) }
-
-    override fun writeAc4Metadata(path: String, metadataJson: String, coverPath: String): String =
-        withMediaFiles(listOf(path, coverPath)) { it.writeAc4Metadata(mediaPath(path), metadataJson, mediaPath(coverPath), null) }
 
 
-    override fun getLyricsLrc(spotifyId: String, trackName: String, artistName: String, filePath: String, durationMs: Long): String =
-        withMediaFiles(listOf(filePath)) {
-            it.getLyricsLrc(LyricsRequest(spotifyId, trackName, artistName, mediaPath(filePath), durationMs), null)
-        }
+
+
+
+
 
     // Local operations retain no provider caches or network connections.
     override fun releaseIdleResources() {}
@@ -387,29 +353,13 @@ internal object RustCoreBackend : CoreBackend {
             "getLogsSince" -> logs.since((args["index"] as? Number)?.toLong() ?: 0L)
             "clearLogs" -> { logs.clear(); null }
             "setLoggingEnabled" -> { logs.setEnabled(args["enabled"] as? Boolean ?: false); null }
-            "getLyricsLRC", "getLyricsLRCWithSource" -> withMediaFiles(listOf(string("file_path"))) {
-                val request = LyricsRequest(string("spotify_id"), string("track_name"), string("artist_name"), mediaPath(string("file_path")), (args["duration_ms"] as? Number)?.toLong() ?: 0L)
-                if (method == "getLyricsLRC") it.getLyricsLrc(request, null)
-                else it.getLyricsLrcWithSource(request, null)
-            }
-            "fetchAndSaveLyrics" -> try {
-                withMediaFiles(listOf(string("audio_file_path"), string("output_path"))) {
-                    val request = LyricsRequest(string("spotify_id"), string("track_name"), string("artist_name"), mediaPath(string("audio_file_path")), (args["duration_ms"] as? Number)?.toLong() ?: 0L)
-                    it.saveLocalLyrics(request, mediaPath(string("output_path")), null)
-                    """{"success":true}"""
-                }
-            } catch (error: Exception) {
-                JSONObject().put("success", false).put("error", error.message ?: "Local lyrics export failed").toString()
-            }
-            "embedLyricsToFile" -> withMediaFiles(listOf(string("file_path"))) {
-                it.embedLyricsToFile(mediaPath(string("file_path")), string("lyrics"), null)
-            }
+
+
+
             else -> error("Unknown local backend method: $method")
         }
     }
 
-    override fun buildFilename(template: String, metadataJson: String): String =
-        com.spotiflac.backend.buildFilename(template, metadataJson)
-    override fun sanitizeFilename(filename: String): String =
-        com.spotiflac.backend.sanitizeFilename(filename)
+
+
 }

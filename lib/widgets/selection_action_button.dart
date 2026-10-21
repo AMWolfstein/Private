@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/app_action_button.dart';
-import 'package:spotiflac_android/widgets/expressive_button.dart';
 
 /// Icon+label pill used in selection-mode bottom bars, with the active theme's
 /// disabled tones and room for a two-line label.
@@ -22,35 +19,25 @@ class SelectionActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return AppActionButton(
-        outlined: true,
-        tonal: true,
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),
-        fontSize: 15,
+    {
+      return Semantics(
+        label: label,
+        button: true,
+        enabled: onPressed != null,
+        onTap: onPressed,
+        excludeSemantics: true,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: AppActionButton(
+            outlined: true,
+            tonal: true,
+            onPressed: onPressed,
+            icon: Icon(icon),
+            label: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),
+            fontSize: 15,
+          ),
+        ),
       );
     }
-    return Semantics(
-      button: true,
-      enabled: onPressed != null,
-      label: label,
-      onTap: onPressed,
-      excludeSemantics: true,
-      child: ExpressiveButton(
-        tonal: true,
-        onPressed: onPressed,
-        icon: Icon(icon, size: 18),
-        style: FilledButton.styleFrom(
-          backgroundColor: colorScheme.secondaryContainer,
-          foregroundColor: colorScheme.onSecondaryContainer,
-          minimumSize: Size(48, context.tokens.minTouchTarget),
-          padding: const EdgeInsets.all(12),
-          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-        ),
-        child: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),
-      ),
-    );
   }
 }

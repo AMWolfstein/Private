@@ -27,13 +27,7 @@ internal class NativeMediaWorkspace(privateDirectory: File) {
 }
 
 /** Only the caller's newly created input belongs to this operation, not a hook's replacement. */
-internal inline fun <T> withOwnedTemporaryMediaFile(file: File, block: (File) -> T): T {
-    try {
-        return block(file)
-    } finally {
-        try { file.delete() } catch (_: Exception) {}
-    }
-}
+
 
 /** Transfers ownership only after a complete copy; failed reads retire the partial input. */
 internal fun copyToTemporaryMediaFile(file: File, openInput: () -> InputStream?): File? {

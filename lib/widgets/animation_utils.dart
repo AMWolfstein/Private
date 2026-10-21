@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 
 /// Wraps a child in a staggered fade-in + slide-up animation.
 ///
-/// [index] controls the stagger delay (each item delayed by [staggerDelay]).
+/// [index] adds 40ms of stagger delay for each item.
 /// Set [animate] to false to skip the animation (e.g. when scrolling back).
 class StaggeredListItem extends StatelessWidget {
   static const int _maxAnimatedItems = 10;
 
   final int index;
   final Widget child;
-  final Duration duration;
-  final Duration staggerDelay;
+
   final bool animate;
 
   const StaggeredListItem({
     super.key,
     required this.index,
     required this.child,
-    this.duration = const Duration(milliseconds: 250),
-    this.staggerDelay = const Duration(milliseconds: 40),
+
     this.animate = true,
   });
 
@@ -32,13 +28,14 @@ class StaggeredListItem extends StatelessWidget {
       return child;
     }
     final cappedIndex = index.clamp(0, _maxAnimatedItems - 1);
-    final delay = staggerDelay * cappedIndex;
-    final totalDuration = duration + delay;
+    final delay = const Duration(milliseconds: 40) * cappedIndex;
+    final totalDuration = const Duration(milliseconds: 250) + delay;
 
     return TweenAnimationBuilder<double>(
+      duration: totalDuration,
       key: ValueKey('stagger_$index'),
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: totalDuration,
+
       curve: Curves.easeOutCubic,
       builder: (context, value, child) {
         final delayFraction = totalDuration.inMilliseconds > 0
@@ -198,7 +195,8 @@ class SkeletonBox extends StatelessWidget {
   }
 }
 
-/// Track list skeleton – mimics a list of track items while loading.
+/// Album track list skeleton – mimics the album screen track list layout
+/// (track number + title + artist + trailing icon, no cover art thumbnail).
 class TrackListSkeleton extends StatelessWidget {
   final int itemCount;
   final bool showCoverHeader;
@@ -211,7 +209,7 @@ class TrackListSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    {
       return ShimmerLoading(
         child: SingleChildScrollView(
           child: Column(
@@ -229,60 +227,6 @@ class TrackListSkeleton extends StatelessWidget {
         ),
       );
     }
-    return ShimmerLoading(
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            if (showCoverHeader) const _CollectionHeaderSkeleton(),
-            ...List.generate(itemCount, (index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    const SkeletonBox(width: 48, height: 48, borderRadius: 8),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SkeletonBox(
-                            width: 150 + (index % 3) * 30,
-                            height: 15,
-                            borderRadius: 4,
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              SkeletonBox(
-                                width: 90 + (index % 2) * 20,
-                                height: 12,
-                                borderRadius: 4,
-                              ),
-                              const SizedBox(width: 8),
-                              const SkeletonBox(
-                                width: 38,
-                                height: 12,
-                                borderRadius: 6,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const SkeletonBox(width: 24, height: 24, borderRadius: 12),
-                  ],
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -300,7 +244,7 @@ class AlbumTrackListSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    {
       return ShimmerLoading(
         child: SingleChildScrollView(
           child: Column(
@@ -317,69 +261,6 @@ class AlbumTrackListSkeleton extends StatelessWidget {
         ),
       );
     }
-    return ShimmerLoading(
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            if (showCoverHeader) const _CollectionHeaderSkeleton(),
-            ...List.generate(itemCount, (index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 32,
-                      child: Center(
-                        child: SkeletonBox(
-                          width: 16,
-                          height: 14,
-                          borderRadius: 4,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SkeletonBox(
-                            width: 130 + (index % 4) * 35,
-                            height: 15,
-                            borderRadius: 4,
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              SkeletonBox(
-                                width: 70 + (index % 3) * 20,
-                                height: 12,
-                                borderRadius: 4,
-                              ),
-                              const SizedBox(width: 8),
-                              const SkeletonBox(
-                                width: 38,
-                                height: 12,
-                                borderRadius: 6,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const SkeletonBox(width: 24, height: 24, borderRadius: 12),
-                  ],
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -392,7 +273,7 @@ class _CollectionHeaderSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    {
       return LayoutBuilder(
         builder: (context, constraints) {
           final coverSize = constraints.maxWidth.clamp(0.0, 440.0);
@@ -476,318 +357,6 @@ class _CollectionHeaderSkeleton extends StatelessWidget {
         },
       );
     }
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final coverSize = (screenWidth * 0.5).clamp(150.0, 210.0).toDouble();
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
-      child: Column(
-        children: [
-          SkeletonBox(width: coverSize, height: coverSize, borderRadius: 16),
-          const SizedBox(height: 20),
-          SkeletonBox(width: screenWidth * 0.6, height: 22, borderRadius: 6),
-          const SizedBox(height: 10),
-          SkeletonBox(width: screenWidth * 0.35, height: 15, borderRadius: 4),
-          const SizedBox(height: 14),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              SkeletonBox(width: 44, height: 14, borderRadius: 6),
-              SizedBox(width: 10),
-              SkeletonBox(width: 70, height: 14, borderRadius: 6),
-              SizedBox(width: 10),
-              SkeletonBox(width: 60, height: 14, borderRadius: 6),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SkeletonBox(width: 48, height: 48, borderRadius: 24),
-              const SizedBox(width: 16),
-              Flexible(
-                child: SkeletonBox(
-                  width: screenWidth * 0.45,
-                  height: 48,
-                  borderRadius: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              const SkeletonBox(width: 48, height: 48, borderRadius: 24),
-            ],
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-}
-
-/// Mirrors the larger primary action and two smaller artist header actions.
-class ArtistHeaderActionsSkeleton extends StatelessWidget {
-  const ArtistHeaderActionsSkeleton({super.key});
-
-  @override
-  Widget build(BuildContext context) => const Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    spacing: 24,
-    children: [
-      SkeletonBox(width: 50, height: 50, borderRadius: 25),
-      SkeletonBox(width: 74, height: 74, borderRadius: 37),
-      SkeletonBox(width: 50, height: 50, borderRadius: 25),
-    ],
-  );
-}
-
-/// Artist screen skeleton shown below the SliverAppBar header while the
-/// discography loads: optional cover placeholder, "Popular" section, and the
-/// horizontal album sections.
-class ArtistScreenSkeleton extends StatelessWidget {
-  static const int _popularCount = 5;
-
-  final int albumCount;
-  final bool showCoverHeader;
-  final bool showPopularSection;
-
-  const ArtistScreenSkeleton({
-    super.key,
-    this.albumCount = 5,
-    this.showCoverHeader = true,
-    this.showPopularSection = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return ShimmerLoading(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (showCoverHeader)
-                LayoutBuilder(
-                  builder: (context, constraints) => Stack(
-                    children: [
-                      Positioned.fill(
-                        child: ShaderMask(
-                          blendMode: BlendMode.dstIn,
-                          shaderCallback: (bounds) => const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [0, 0.48, 1],
-                            colors: [
-                              Colors.white,
-                              Colors.white,
-                              Colors.transparent,
-                            ],
-                          ).createShader(bounds),
-                          child: const SkeletonBox(
-                            width: double.infinity,
-                            height: double.infinity,
-                            borderRadius: 0,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          24,
-                          (constraints.maxWidth * 0.76).clamp(240.0, 340.0) + 4,
-                          24,
-                          32,
-                        ),
-                        child: const Column(
-                          children: [
-                            Center(child: SkeletonBox(width: 220, height: 36)),
-                            SizedBox(height: 16),
-                            ArtistHeaderActionsSkeleton(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Row(
-                    spacing: 14,
-                    children: [
-                      SkeletonBox(width: 76, height: 76, borderRadius: 5),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 6,
-                          children: [
-                            SkeletonBox(width: 38, height: 12, borderRadius: 4),
-                            FractionallySizedBox(
-                              widthFactor: 0.9,
-                              child: SkeletonBox(
-                                width: double.infinity,
-                                height: 18,
-                                borderRadius: 4,
-                              ),
-                            ),
-                            SkeletonBox(width: 62, height: 12, borderRadius: 4),
-                          ],
-                        ),
-                      ),
-                      SkeletonBox(width: 10, height: 14, borderRadius: 4),
-                    ],
-                  ),
-                ),
-              ),
-              if (showPopularSection) ...[
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
-                  child: SkeletonBox(width: 110, height: 24, borderRadius: 4),
-                ),
-                for (var index = 0; index < _popularCount; index++)
-                  _MornyeTrackSkeleton(numbered: false, index: index),
-              ],
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
-                child: SkeletonBox(width: 120, height: 24, borderRadius: 4),
-              ),
-              SizedBox(
-                height: 208,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: albumCount,
-                  separatorBuilder: (_, _) => const SizedBox(width: 12),
-                  itemBuilder: (_, index) => const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SkeletonBox(width: 156, height: 156, borderRadius: 8),
-                      SizedBox(height: 8),
-                      SkeletonBox(width: 120, height: 16, borderRadius: 4),
-                      SizedBox(height: 4),
-                      SkeletonBox(width: 45, height: 12, borderRadius: 4),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
-        ),
-      );
-    }
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    return ShimmerLoading(
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (showCoverHeader)
-              SkeletonBox(
-                width: screenWidth,
-                height: screenWidth * 0.75,
-                borderRadius: 0,
-              ),
-            if (showPopularSection) ...[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 24, 16, 12),
-                child: SkeletonBox(width: 110, height: 22, borderRadius: 4),
-              ),
-              ...List.generate(_popularCount, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 24,
-                        child: Center(
-                          child: SkeletonBox(
-                            width: 12,
-                            height: 14,
-                            borderRadius: 4,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const SkeletonBox(width: 48, height: 48, borderRadius: 4),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SkeletonBox(
-                              width: 120 + (index % 4) * 30,
-                              height: 14,
-                              borderRadius: 4,
-                            ),
-                            const SizedBox(height: 8),
-
-                            const SkeletonBox(
-                              width: 64,
-                              height: 14,
-                              borderRadius: 4,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const SkeletonBox(width: 18, height: 18, borderRadius: 4),
-                    ],
-                  ),
-                );
-              }),
-              const SizedBox(height: 16),
-            ],
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 12),
-              child: SkeletonBox(width: 120, height: 22, borderRadius: 4),
-            ),
-            SizedBox(
-              height: 190,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                itemCount: albumCount,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SkeletonBox(width: 140, height: 140),
-                        const SizedBox(height: 8),
-                        SkeletonBox(
-                          width: 80 + (index % 3) * 20,
-                          height: 12,
-                          borderRadius: 4,
-                        ),
-                        const SizedBox(height: 4),
-                        SkeletonBox(
-                          width: 50 + (index % 2) * 15,
-                          height: 10,
-                          borderRadius: 4,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -862,159 +431,6 @@ class _MornyeTrackSkeleton extends StatelessWidget {
   }
 }
 
-/// Home search skeleton – mimics filter chips + sectioned results
-/// (Artists section with rounded card items, Albums section, etc.)
-class HomeSearchSkeleton extends StatelessWidget {
-  const HomeSearchSkeleton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ShimmerLoading(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const NeverScrollableScrollPhysics(),
-              child: Row(
-                children: [
-                  SkeletonBox(width: 48, height: 32, borderRadius: 16),
-                  const SizedBox(width: 8),
-                  SkeletonBox(width: 64, height: 32, borderRadius: 16),
-                  const SizedBox(width: 8),
-                  SkeletonBox(width: 72, height: 32, borderRadius: 16),
-                  const SizedBox(width: 8),
-                  SkeletonBox(width: 60, height: 32, borderRadius: 16),
-                  const SizedBox(width: 8),
-                  SkeletonBox(width: 70, height: 32, borderRadius: 16),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          _sectionSkeleton(context, 70, 2),
-          const SizedBox(height: 16),
-          _sectionSkeleton(context, 65, 4),
-        ],
-      ),
-    );
-  }
-
-  static Widget _sectionSkeleton(
-    BuildContext context,
-    double headerWidth,
-    int itemCount,
-  ) {
-    final mornye = context.isMornye;
-    final rows = List.generate(itemCount, (index) {
-      return Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: mornye ? 12 : 16,
-          vertical: context.tokens.trackRowPaddingV,
-        ),
-        child: Row(
-          children: [
-            SkeletonBox(
-              width: mornye ? 56 : 48,
-              height: mornye ? 56 : 48,
-              borderRadius: 24,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SkeletonBox(
-                    width: 100 + (index % 3) * 40,
-                    height: 14,
-                    borderRadius: 4,
-                  ),
-                  const SizedBox(height: 6),
-                  SkeletonBox(
-                    width: 60 + (index % 2) * 25,
-                    height: 12,
-                    borderRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-            if (!mornye)
-              const SkeletonBox(width: 20, height: 20, borderRadius: 10),
-          ],
-        ),
-      );
-    });
-    final decoration = BoxDecoration(
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      borderRadius: BorderRadius.circular(mornye ? 24 : 20),
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              SkeletonBox(width: headerWidth, height: 18, borderRadius: 4),
-              const Spacer(),
-              const SkeletonBox(width: 50, height: 16, borderRadius: 4),
-            ],
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: decoration,
-          child: Column(
-            children: [
-              for (var index = 0; index < rows.length; index++) ...[
-                if (mornye && index > 0)
-                  const Divider(height: 1, indent: 80, endIndent: 12),
-                rows[index],
-              ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Crossfades when the child's runtime type changes — used to swap a loading
-/// skeleton for the loaded screen without a single-frame hard cut.
-class SkeletonCrossfade extends StatelessWidget {
-  final Widget child;
-
-  const SkeletonCrossfade({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      // Loading and loaded screens may carry the same Hero tag (both render
-      // the header cover); mute the outgoing child's heroes so a pop during
-      // the fade doesn't find duplicate tags.
-      transitionBuilder: (child, animation) => FadeTransition(
-        opacity: animation,
-        child: AnimatedBuilder(
-          animation: animation,
-          child: child,
-          builder: (context, child) => HeroMode(
-            enabled:
-                animation.status == AnimationStatus.forward ||
-                animation.status == AnimationStatus.completed,
-            child: child!,
-          ),
-        ),
-      ),
-      child: child,
-    );
-  }
-}
-
 /// An animated selection indicator that scales in/out and crossfades the
 /// checked/unchecked state.
 class AnimatedSelectionCheckbox extends StatelessWidget {
@@ -1071,75 +487,6 @@ class AnimatedSelectionCheckbox extends StatelessWidget {
                 ),
         ),
       ),
-    );
-  }
-}
-
-/// A widget that briefly flashes a success color behind its child and shows
-/// an animated checkmark when [showSuccess] transitions to true.
-class DownloadSuccessOverlay extends StatefulWidget {
-  final bool showSuccess;
-  final Widget child;
-
-  const DownloadSuccessOverlay({
-    super.key,
-    required this.showSuccess,
-    required this.child,
-  });
-
-  @override
-  State<DownloadSuccessOverlay> createState() => _DownloadSuccessOverlayState();
-}
-
-class _DownloadSuccessOverlayState extends State<DownloadSuccessOverlay>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _flashAnimation;
-  late bool _wasSuccess;
-
-  @override
-  void initState() {
-    super.initState();
-    _wasSuccess = widget.showSuccess;
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _flashAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: 0.15), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 0.15, end: 0.0), weight: 70),
-    ]).animate(_controller);
-  }
-
-  @override
-  void didUpdateWidget(DownloadSuccessOverlay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.showSuccess && !_wasSuccess) {
-      _controller.forward(from: 0);
-    }
-    _wasSuccess = widget.showSuccess;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.green.withValues(alpha: _flashAnimation.value),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: child,
-        );
-      },
-      child: widget.child,
     );
   }
 }

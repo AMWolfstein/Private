@@ -50,7 +50,7 @@ Widget _app(ProviderContainer container, Widget child, {bool mornye = false}) =>
     );
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'Love All action keeps its add/remove feedback in Mornye=$mornye',
       (tester) async {

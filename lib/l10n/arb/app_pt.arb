@@ -10,25 +10,13 @@
   "@navHome": {
     "description": "Bottom navigation - Home tab"
   },
-  "navSettings": "Settings",
-  "@navSettings": {
-    "description": "Bottom navigation - Settings tab"
-  },
   "homeTitle": "Home",
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "homeSubtitle": "Paste a Spotify link or search by name",
-  "@homeSubtitle": {
-    "description": "Subtitle shown below search box"
-  },
   "historyFilterAll": "All",
   "@historyFilterAll": {
     "description": "Filter chip - show all items"
-  },
-  "historyFilterAlbums": "Albums",
-  "@historyFilterAlbums": {
-    "description": "Filter chip - show albums only"
   },
   "historyFilterSingles": "Singles",
   "@historyFilterSingles": {
@@ -90,10 +78,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "trackMetadataPlay": "Play",
-  "@trackMetadataPlay": {
-    "description": "Action button - play track"
-  },
   "trackMetadataShare": "Share",
   "@trackMetadataShare": {
     "description": "Action button - share track"
@@ -101,10 +85,6 @@
   "setupGrantPermission": "Grant Permission",
   "@setupGrantPermission": {
     "description": "Button to request permission"
-  },
-  "setupSkip": "Skip for now",
-  "@setupSkip": {
-    "description": "Skip current step button"
   },
   "setupStorageAccessRequired": "Storage Access Required",
   "@setupStorageAccessRequired": {
@@ -136,26 +116,6 @@
         "type": "String"
       }
     }
-  },
-  "setupAppDocumentsFolder": "App Documents Folder",
-  "@setupAppDocumentsFolder": {
-    "description": "iOS documents folder option"
-  },
-  "setupAppDocumentsFolderSubtitle": "Recommended - accessible via Files app",
-  "@setupAppDocumentsFolderSubtitle": {
-    "description": "Subtitle for documents folder"
-  },
-  "setupChooseFromFiles": "Choose from Files",
-  "@setupChooseFromFiles": {
-    "description": "iOS file picker option"
-  },
-  "setupChooseFromFilesSubtitle": "Select iCloud or other location",
-  "@setupChooseFromFilesSubtitle": {
-    "description": "Subtitle for file picker"
-  },
-  "setupIosEmptyFolderWarning": "iOS limitation: Empty folders cannot be selected. Choose a folder with at least one file.",
-  "@setupIosEmptyFolderWarning": {
-    "description": "iOS folder selection warning"
   },
   "setupStorageGranted": "Storage Permission Granted!",
   "@setupStorageGranted": {
@@ -221,21 +181,9 @@
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogDiscard": "Discard",
-  "@dialogDiscard": {
-    "description": "Dialog button - discard changes"
-  },
   "dialogRemove": "Remove",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
-  },
-  "dialogDiscardChanges": "Discard Changes?",
-  "@dialogDiscardChanges": {
-    "description": "Dialog title - unsaved changes warning"
-  },
-  "dialogUnsavedChanges": "You have unsaved changes. Do you want to discard them?",
-  "@dialogUnsavedChanges": {
-    "description": "Dialog message - unsaved changes"
   },
   "dialogDeleteSelectedTitle": "Delete Selected",
   "@dialogDeleteSelectedTitle": {
@@ -247,15 +195,6 @@
     "placeholders": {
       "count": {
         "type": "int"
-      }
-    }
-  },
-  "snackbarAddedToQueue": "Added \"{trackName}\" to queue",
-  "@snackbarAddedToQueue": {
-    "description": "Snackbar - track added to download queue",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
       }
     }
   },
@@ -276,10 +215,6 @@
         "type": "String"
       }
     }
-  },
-  "snackbarViewQueue": "View Queue",
-  "@snackbarViewQueue": {
-    "description": "Snackbar action - view download queue"
   },
   "snackbarFileNotFound": "File not found",
   "@snackbarFileNotFound": {
@@ -469,10 +404,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackLyricsNotAvailable": "Lyrics not available for this track",
-  "@trackLyricsNotAvailable": {
-    "description": "Message when lyrics not found"
-  },
   "trackCopiedToClipboard": "Copied to clipboard",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
@@ -524,34 +455,6 @@
   "@navLibrary": {
     "description": "Bottom navigation - Library tab"
   },
-  "optionsArtistTagMode": "Artist Tag Mode",
-  "@optionsArtistTagMode": {
-    "description": "Setting title for how artist metadata is written into files"
-  },
-  "optionsArtistTagModeDescription": "Choose how multiple artists are written into embedded tags.",
-  "@optionsArtistTagModeDescription": {
-    "description": "Bottom-sheet description for artist tag mode setting"
-  },
-  "optionsArtistTagModeJoined": "Single joined value",
-  "@optionsArtistTagModeJoined": {
-    "description": "Artist tag mode option that joins multiple artists into one value"
-  },
-  "optionsArtistTagModeJoinedSubtitle": "Write one ARTIST value like \"Artist A, Artist B\" for maximum player compatibility.",
-  "@optionsArtistTagModeJoinedSubtitle": {
-    "description": "Subtitle for joined artist tag mode"
-  },
-  "optionsArtistTagModeSplitVorbis": "Split tags for FLAC/Opus",
-  "@optionsArtistTagModeSplitVorbis": {
-    "description": "Artist tag mode option that writes repeated ARTIST tags for Vorbis formats"
-  },
-  "optionsArtistTagModeSplitVorbisSubtitle": "Write one artist tag per artist for FLAC and Opus; MP3 and M4A stay joined.",
-  "@optionsArtistTagModeSplitVorbisSubtitle": {
-    "description": "Subtitle for split Vorbis artist tag mode"
-  },
-  "setupIcloudNotSupported": "iCloud Drive is not supported. Please use the app Documents folder.",
-  "@setupIcloudNotSupported": {
-    "description": "Error when user selects iCloud Drive on iOS"
-  },
   "searchSortTitle": "Sort Results",
   "@searchSortTitle": {
     "description": "Bottom sheet title for search sort options"
@@ -583,10 +486,6 @@
   "sectionLyrics": "Lyrics",
   "@sectionLyrics": {
     "description": "Settings section header"
-  },
-  "trackInstrumental": "Instrumental track",
-  "@trackInstrumental": {
-    "description": "Message when track is instrumental (no lyrics)"
   },
   "downloadedAlbumDiscHeader": "Disc {discNumber}",
   "@downloadedAlbumDiscHeader": {
@@ -760,10 +659,6 @@
         "type": "int"
       }
     }
-  },
-  "libraryInLibrary": "In Library",
-  "@libraryInLibrary": {
-    "description": "Badge shown on tracks that exist in local library"
   },
   "libraryRemovedMissingFiles": "Removed {count} missing files from library",
   "@libraryRemovedMissingFiles": {
@@ -1038,10 +933,6 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "trackReEnrichSuccess": "Metadata re-enriched successfully",
-  "@trackReEnrichSuccess": {
-    "description": "Snackbar after successful re-enrichment"
-  },
   "audioBitrate": "Bitrate",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
@@ -1049,10 +940,6 @@
   "actionCreate": "Create",
   "@actionCreate": {
     "description": "Generic action button - create"
-  },
-  "collectionFoldersTitle": "My folders",
-  "@collectionFoldersTitle": {
-    "description": "Library section title for custom folders"
   },
   "collectionLoved": "Músicas favoritas",
   "@collectionLoved": {
@@ -1144,24 +1031,6 @@
   "collectionRemoveFromFolder": "Remove from folder",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
-  },
-  "collectionAddedToLoved": "\"{trackName}\" added to Loved",
-  "@collectionAddedToLoved": {
-    "description": "Snackbar after adding track to loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
-  },
-  "collectionRemovedFromLoved": "\"{trackName}\" removed from Loved",
-  "@collectionRemovedFromLoved": {
-    "description": "Snackbar after removing track from loved folder",
-    "placeholders": {
-      "trackName": {
-        "type": "String"
-      }
-    }
   },
   "trackOptionAddToLoved": "Add to Loved",
   "@trackOptionAddToLoved": {
@@ -1380,19 +1249,6 @@
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "snackbarFolderPickerFailed": "Failed to open folder picker: {error}",
-  "@snackbarFolderPickerFailed": {
-    "description": "Snackbar shown when folder picker fails to open",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "notifEmbeddingMetadata": "Embedding metadata...",
-  "@notifEmbeddingMetadata": {
-    "description": "Notification body while embedding metadata into a downloaded track"
-  },
   "notifScanningLibrary": "Scanning local library",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
@@ -1463,18 +1319,6 @@
   "notifLibraryScanStopped": "Scan stopped before completion.",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
-  },
-  "settingsFiles": "Files & Folders",
-  "@settingsFiles": {
-    "description": "Settings menu item - file and folder settings"
-  },
-  "settingsFilesSubtitle": "Download location, filename, folder structure",
-  "@settingsFilesSubtitle": {
-    "description": "Subtitle for files & folders settings"
-  },
-  "settingsMetadata": "Metadata",
-  "@settingsMetadata": {
-    "description": "Settings menu item - metadata settings"
   },
   "settingsLyrics": "Lyrics",
   "@settingsLyrics": {

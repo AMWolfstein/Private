@@ -103,50 +103,9 @@ class SafDocumentLookupTest {
         assertNotNull(directory.createDirectory("Created"))
     }
 
-    @Test
-    fun lyricsRefreshReplacesSidecarBesideOpaqueRootAndNestedDocuments() {
-        val root = reset()
-        val nested = requireNotNull(findSafChild(context, root, "音楽 🎵"))
-        for ((parent, name) in listOf(root to "Song.flac", nested to "歌 🎵.flac")) {
-            val audio = requireNotNull(findSafChild(context, parent, name))
-            val sidecarName = name.substringBeforeLast('.') + ".lrc"
-            val sidecar = requireNotNull(parent.createFile("text/plain", sidecarName))
-            context.contentResolver.openOutputStream(sidecar.uri, "wt")!!.use {
-                it.write("[00:01.00]Old lyrics that must be replaced completely".toByteArray())
-            }
-            context.contentResolver.openOutputStream(audio.uri, "wt")!!.use {
-                it.write("unchanged audio".toByteArray())
-            }
-            val original = context.contentResolver.openInputStream(audio.uri)?.use { it.readBytes() }
-            val replacement = "[00:01.00]<00:01.00>New <00:01.50>words<00:02.00>"
-            assertEquals(parent.uri, context.safParentDir(audio.uri)?.uri)
-            assertTrue(context.writeSafSidecarLrc(audio.uri, replacement))
-            val saved = requireNotNull(findSafChild(context, parent, sidecarName))
-            assertEquals(sidecar.uri, saved.uri)
-            assertEquals(replacement, context.contentResolver.openInputStream(saved.uri)?.bufferedReader()?.use { it.readText() })
-            assertArrayEquals(original, context.contentResolver.openInputStream(audio.uri)?.use { it.readBytes() })
-            if (parent == nested) assertNull(findSafChild(context, root, sidecarName))
-        }
-        assertNull(context.safParentDir(root.uri))
-    }
 
-    @Test
-    fun unavailableParentDoesNotWriteLyricsToTheGrantedRoot() {
-        val root = reset(mode = "no-path")
-        val nested = requireNotNull(findSafChild(context, root, "音楽 🎵"))
-        val audio = requireNotNull(findSafChild(context, nested, "歌 🎵.flac"))
-        assertTrue(!context.writeSafSidecarLrc(audio.uri, "[00:01.00]New lyrics"))
-        assertNull(findSafChild(context, root, "歌 🎵.lrc"))
-        assertNull(findSafChild(context, nested, "歌 🎵.lrc"))
 
-        // Providers without findDocumentPath can still use verified path IDs.
-        val legacy = requireNotNull(findSafChild(context, root, "Legacy"))
-        val legacyAudio = requireNotNull(findSafChild(context, legacy, "Legacy.flac"))
-        assertEquals(legacy.uri, context.safParentDir(legacyAudio.uri)?.uri)
-        assertTrue(context.writeSafSidecarLrc(legacyAudio.uri, "[00:01.00]New lyrics"))
-        assertNotNull(findSafChild(context, legacy, "Legacy.lrc"))
-        assertNull(findSafChild(context, root, "Legacy.lrc"))
-    }
+
 
     @Test
     fun unsupportedProjectionNullCursorAndMissingColumnUseLegacyLookup() {
@@ -172,70 +131,9 @@ class SafDocumentLookupTest {
         }
     }
 
-    @Test
-    fun malformedTreeUriLeavesSourceIntact() {
-        val source = File(context.cacheDir, "lookup-invalid.flac").apply { writeText("original audio") }
-        try {
-            assertNull(SafFileOps.writeFileToSaf(
-                context, "content://$authority/invalid", "", "Song.flac", "audio/flac", source.path,
-            ))
-            assertEquals("original audio", source.readText())
-        } finally {
-            source.delete()
-        }
-    }
 
-    @Test
-    fun failedPublicationRenameRestoresOriginalWhenProviderChangesDocumentIds() {
-        val parent = reset(failFinalRename = true)
-        val source = File(context.cacheDir, "lookup-source.flac").apply { writeText("replacement") }
-        try {
-            assertNull(SafFileOps.writeFileToSaf(context, treeUri.toString(), "", "Song.flac", "audio/flac", source.path))
-            val restored = requireNotNull(findSafChild(context, parent, "Song.flac"))
-            val content = context.contentResolver.openInputStream(restored.uri)?.bufferedReader()?.use { it.readText() }
-            assertEquals("original", content)
-            assertEquals("replacement", source.readText())
-            assertNull(findSafChild(context, parent, "Song.flac.replaced"))
-            assertNull(findSafChild(context, parent, "Song.flac.partial"))
-        } finally {
-            source.delete()
-        }
-    }
 
-    @Test
-    fun publicationPreservesBytesReportsStagesAndDetectsLaterExistingFile() {
-        val parent = reset(count = 2000)
-        val bytes = ByteArray(262144) { (it % 251).toByte() }
-        val source = File(context.cacheDir, "lookup-publish.flac").apply { writeBytes(bytes) }
-        try {
-            assertNull(findSafChild(context, parent, "Fresh.flac"))
-            clearCounters()
-            val result = requireNotNull(SafFileOps.writeFileToSafIfAbsent(
-                context, treeUri.toString(), "", "Fresh.flac", "audio/flac", source.path,
-            ))
-            assertTrue(!result.alreadyExists)
-            assertEquals(4, stats().getInt("children"))
-            assertEquals(1, stats().getInt("documents"))
-            val expectedStages = setOf(
-                "lock_wait", "directory", "existing_check", "cleanup", "create",
-                "open", "copy", "sync", "close", "replace", "total",
-            )
-            assertTrue(result.publishTimingsMs.keys.containsAll(expectedStages))
-            assertTrue(result.publishTimingsMs.values.all { it >= 0 })
-            val actual = context.contentResolver.openInputStream(Uri.parse(result.uri))?.use { it.readBytes() }
-            assertArrayEquals(bytes, actual)
-            assertEquals(result.uri, findSafChild(context, parent, "Fresh.flac")?.uri.toString())
-            assertNull(findSafChild(context, parent, "Fresh.flac.partial"))
 
-            source.writeText("must not replace existing audio")
-            val existing = requireNotNull(SafFileOps.writeFileToSafIfAbsent(
-                context, treeUri.toString(), "", "Fresh.flac", "audio/flac", source.path,
-            ))
-            assertTrue(existing.alreadyExists)
-            assertEquals(result.uri, existing.uri)
-            assertArrayEquals(bytes, context.contentResolver.openInputStream(Uri.parse(existing.uri))?.use { it.readBytes() })
-        } finally {
-            source.delete()
-        }
-    }
+
+
 }

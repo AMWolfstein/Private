@@ -58,7 +58,6 @@ class _CollectionsDatabase implements LibraryCollectionsDatabase {
         );
   }
 
-  @override
   Future<List<Map<String, dynamic>>> loadPlaylistTracks(
     String playlistId,
   ) async {
@@ -629,6 +628,9 @@ void main() {
     final directory = await Directory.systemTemp.createTemp(
       'collection-read-disposed-',
     );
+    addTearDown(() async {
+      if (await directory.exists()) await directory.delete(recursive: true);
+    });
     final path = '${directory.path}/rows.ndjson';
     await File(path).writeAsString('must never be parsed');
     final reply = Completer<LibraryCollectionsSnapshot>();
@@ -702,6 +704,9 @@ void main() {
     final directory = await Directory.systemTemp.createTemp(
       'collection-read-disposed-',
     );
+    addTearDown(() async {
+      if (await directory.exists()) await directory.delete(recursive: true);
+    });
     final path = '${directory.path}/rows.ndjson';
     await File(path).writeAsString('must never be parsed');
     db.stagedPlaylistRows = LibraryPlaylistTracksSnapshot(

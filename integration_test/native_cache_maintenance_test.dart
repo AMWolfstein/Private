@@ -8,7 +8,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
 import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/services/native_cache_maintenance.dart';
-import 'package:spotiflac_android/utils/cache_byte_budget.dart';
 
 Future<File> _payload(
   Directory directory,
@@ -97,34 +96,6 @@ void main() {
     root = await Directory.systemTemp.createTemp('native-cache-maintenance-');
   });
   tearDown(() => root.delete(recursive: true));
-
-  testWidgets(
-    'production byte-budget route retains metadata, active files and symlinks',
-    (tester) async {
-      final cache = await Directory('${root.path}/cache').create();
-      final oldest = await _payload(cache, 'oldest');
-      final newer = await _payload(cache, 'newer');
-      await newer.setLastModified(DateTime(2021));
-      final active = await _payload(cache, 'active', recent: true);
-      final metadata = await _payload(cache, 'metadata.json');
-      final outside = await _payload(root, 'outside');
-      await Link('${cache.path}/outside-link').create(outside.path);
-      expect(
-        await trimCacheToByteBudget(cache, maxBytes: 350, targetBytes: 150),
-        0,
-      );
-      expect(
-        await trimCacheToByteBudget(cache, maxBytes: 250, targetBytes: 150),
-        2,
-      );
-      expect(await oldest.exists(), false);
-      expect(await newer.exists(), false);
-      expect(await active.exists(), true);
-      expect(await metadata.exists(), true);
-      expect(await outside.length(), 100);
-      expect(await Link('${cache.path}/outside-link').exists(), true);
-    },
-  );
 
   testWidgets(
     'production pruning retains all source references, aliases and recent uncommitted covers',

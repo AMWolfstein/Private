@@ -15,7 +15,7 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('personalization switch persists and is searchable ($mornye)', (
       tester,
     ) async {

@@ -295,12 +295,7 @@ internal fun MainActivity.readAudioMetadataFromUri(
 
 /** The Hi-Res check reads only a window from the middle of the file, so a
  * seekable descriptor avoids copying the whole track out of SAF. */
-internal fun MainActivity.checkHiResAuthenticityFromUri(
-    uri: Uri,
-    optionsJson: String,
-): JSONObject? = readMetadataFromUri(uri) { path, _ ->
-    JSONObject(coreBackend.checkHiResAuthenticity(path, optionsJson))
-}?.put("file_path", uri.toString())
+
 
 internal fun MainActivity.readCompleteMetadataFromUri(
     uri: Uri,
@@ -407,38 +402,3 @@ internal fun Context.safParentDir(childUri: Uri): DocumentFile? {
      * mode requests an external/both sidecar. Callers must handle false so a
      * failed lyrics write cannot be reported as a successful refresh.
      */
-internal fun Context.writeSafSidecarLrc(audioUri: Uri, lrcContent: String): Boolean {
-        if (lrcContent.isBlank()) return false
-        try {
-            val parent = safParentDir(audioUri) ?: run {
-                android.util.Log.w("SpotiFLAC", "LRC sidecar: no SAF parent dir")
-                return false
-            }
-            val audioName = try {
-                DocumentFile.fromSingleUri(this, audioUri)?.name
-            } catch (_: Exception) {
-                null
-            } ?: return false
-            val baseName = audioName.substringBeforeLast('.', audioName)
-            val lrcName = "$baseName.lrc"
-
-            val target = SafFileOps.createOrReuseDocumentFile(
-                this,
-                parent,
-                "application/octet-stream",
-                lrcName
-            ) ?: run {
-                android.util.Log.w("SpotiFLAC", "LRC sidecar: failed to create $lrcName")
-                return false
-            }
-
-            contentResolver.openOutputStream(target.uri, "wt")?.use { output ->
-                output.write(lrcContent.toByteArray(Charsets.UTF_8))
-            } ?: return false
-            android.util.Log.d("SpotiFLAC", "LRC sidecar written: $lrcName")
-            return true
-        } catch (e: Exception) {
-            android.util.Log.w("SpotiFLAC", "LRC sidecar write failed: ${e.message}")
-            return false
-        }
-    }

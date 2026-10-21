@@ -19,12 +19,6 @@ Map<String, dynamic> trackRow(int index) => {
       duration: 180,
       source: 'example',
       coverUrl: 'https://example.com/cover-$index.jpg',
-      availability: ServiceAvailability(
-        tidal: true,
-        qobuz: false,
-        amazon: false,
-        deezer: false,
-      ),
     ).toJson(),
   ),
   'added_at': '2026-01-02T03:04:05Z',
@@ -106,6 +100,9 @@ void main() {
       final directory = await Directory.systemTemp.createTemp(
         'collection-row-groups-',
       );
+      addTearDown(() async {
+        if (await directory.exists()) await directory.delete(recursive: true);
+      });
       final mainRows = List.generate(513, trackRow);
       final loved = List.generate(3, (index) => trackRow(900 + index));
       final snapshot = LibraryCollectionsSnapshot(
@@ -164,6 +161,11 @@ void main() {
       final unicodeDirectory = await Directory.systemTemp.createTemp(
         'collection-utf8-boundary-',
       );
+      addTearDown(() async {
+        if (await unicodeDirectory.exists()) {
+          await unicodeDirectory.delete(recursive: true);
+        }
+      });
       final unicode = await nativeBytes(unicodeBytes, 1, unicodeDirectory);
       expect(
         unicode.loved.single.track.comment,
@@ -181,6 +183,11 @@ void main() {
       final crDirectory = await Directory.systemTemp.createTemp(
         'collection-crlf-boundary-',
       );
+      addTearDown(() async {
+        if (await crDirectory.exists()) {
+          await crDirectory.delete(recursive: true);
+        }
+      });
       final crlf = await nativeBytes(crBytes, 2, crDirectory);
       expect(crlf.loved.map((entry) => entry.key), ['example:1', 'example:2']);
       expect(
@@ -211,6 +218,9 @@ void main() {
         final directory = await Directory.systemTemp.createTemp(
           'collection-invalid-chunks-',
         );
+        addTearDown(() async {
+          if (await directory.exists()) await directory.delete(recursive: true);
+        });
         await expectLater(
           nativeBytes(input.bytes, input.count, directory),
           throwsA(isA<Error>()),
@@ -227,6 +237,9 @@ void main() {
       final temporary = await Directory.systemTemp.createTemp(
         'collection-read-test-',
       );
+      addTearDown(() async {
+        if (await temporary.exists()) await temporary.delete(recursive: true);
+      });
       final file = File('${temporary.path}/rows.ndjson');
       final rows = [
         for (final row in snapshot.lovedRows) {'kind': 'loved', 'row': row},
@@ -265,6 +278,9 @@ void main() {
         final directory = await Directory.systemTemp.createTemp(
           'collection-read-test-',
         );
+        addTearDown(() async {
+          if (await directory.exists()) await directory.delete(recursive: true);
+        });
         final path = '${directory.path}/rows.ndjson';
         await File(path).writeAsString(content);
         await expectLater(
@@ -292,6 +308,9 @@ void main() {
       final directory = await Directory.systemTemp.createTemp(
         'collection-read-playlist-',
       );
+      addTearDown(() async {
+        if (await directory.exists()) await directory.delete(recursive: true);
+      });
       final path = '${directory.path}/rows.ndjson';
       await File(path).writeAsString(
         List.generate(

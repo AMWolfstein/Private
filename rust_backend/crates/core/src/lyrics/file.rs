@@ -1,6 +1,6 @@
 //! Existing-file lyrics with caller-owned file access and cancellation.
 
-use super::text_from_bytes;
+use crate::text::utf8 as text_from_bytes;
 use std::io::{Read, Seek};
 
 const MAX_SIDECAR_BYTES: usize = 8 * 1024 * 1024;

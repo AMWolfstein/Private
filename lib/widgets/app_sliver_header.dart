@@ -3,7 +3,6 @@ import 'package:spotiflac_android/widgets/album_detail_header.dart'
     show HeaderCircleButton;
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/app_bar_layout.dart';
 
@@ -64,21 +63,13 @@ class AppSliverHeader extends StatelessWidget {
               padding: EdgeInsets.only(left: edgeInset),
               child:
                   leading ??
-                  (context.isMornye
-                      ? HeaderCircleButton(
-                          icon: CupertinoIcons.chevron_back,
-                          tooltip: MaterialLocalizations.of(
-                            context,
-                          ).backButtonTooltip,
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      : IconButton(
-                          tooltip: MaterialLocalizations.of(
-                            context,
-                          ).backButtonTooltip,
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                        )),
+                  (HeaderCircleButton(
+                    icon: CupertinoIcons.chevron_back,
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).backButtonTooltip,
+                    onPressed: () => Navigator.pop(context),
+                  )),
             )
           : null,
       actionsPadding: EdgeInsets.only(right: edgeInset),
@@ -128,7 +119,7 @@ class AppSliverHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                letterSpacing: context.isMornye ? -0.7 * expandRatio : null,
+                letterSpacing: -0.7 * expandRatio,
                 color: colorScheme.onSurface,
               ),
             ),

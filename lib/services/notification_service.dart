@@ -25,9 +25,6 @@ class NotificationService {
     _l10n = l10n;
   }
 
-  String get embeddingMetadataLabel =>
-      _l10n?.notifEmbeddingMetadata ?? 'Embedding metadata...';
-
   String get libraryScanInterruptedMessage =>
       _l10n?.notifLibraryScanInterruptedBody ??
       'The previous library scan was interrupted. Scan the folder again to continue. Your indexed tracks are still available.';
@@ -194,9 +191,7 @@ class NotificationService {
   /// Builds [NotificationDetails]. A non-null [progress] switches to the
   /// low-importance ongoing progress style; a negative value is indeterminate.
   /// Otherwise builds a dismissible alert.
-  NotificationDetails _details({
-    required int? progress,
-  }) {
+  NotificationDetails _details({required int? progress}) {
     final inProgress = progress != null;
     return NotificationDetails(
       android: AndroidNotificationDetails(

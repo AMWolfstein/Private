@@ -14,7 +14,6 @@ import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/queue_tab.dart';
-import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'support/material_test_theme.dart';
@@ -182,247 +181,161 @@ void main() {
     });
     addTearDown(() => messenger.setMockMethodCallHandler(sqliteChannel, null));
   });
-  test(
-    'production album/track/count queries filter full inventory and paginate consistently',
-    () async {
-      final db = LibraryDatabase.instance;
-      const query = QueueLibraryDbQuery(
-        filterMode: 'albums',
-        metadata: incompleteAlbumFilter,
-        sortMode: 'album-asc',
-      );
-      final albums = await db.getQueueAlbumPage(query);
-      expect(albums.map((row) => row['album_name']), [
-        'local-only',
-        'missing',
-        'one-track',
-      ]);
-      expect(albums.map((row) => row['album_present_tracks']), [2, 2, 1]);
-      expect(albums.map((row) => row['album_expected_tracks']), [3, 4, 12]);
-      final counts = await db.getQueueCounts(query);
-      expect(counts.albumCount, 3);
-      expect(counts.allTrackCount, 5);
-      final tracks = await db.getQueueTrackPage(
-        const QueueLibraryDbQuery(metadata: incompleteAlbumFilter),
-      );
-      expect(tracks, hasLength(5));
-      expect(tracks.any((row) => row['albumName'] == 'mixed'), isFalse);
-      final first = await db.getQueueAlbumPageResult(
-        const QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: incompleteAlbumFilter,
-          sortMode: 'album-asc',
-          limit: 1,
-        ),
-      );
-      final second = await db.getQueueAlbumPageResult(
-        QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: incompleteAlbumFilter,
-          sortMode: 'album-asc',
-          limit: 1,
-          cursor: first.nextCursor,
-        ),
-      );
-      expect(first.rows.single['album_name'], 'local-only');
-      expect(second.rows.single['album_name'], 'missing');
-      final unknown = await db.getQueueAlbumPage(
-        const QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: unknownAlbumCompletenessFilter,
-        ),
-      );
-      expect(unknown.single['album_name'], 'unknown');
-      expect(AlbumCompleteness.fromRow(unknown.single)!.badge, '?');
-      final hiRes = await db.getQueueAlbumPage(
-        const QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: incompleteAlbumFilter,
-          quality: 'hires',
-        ),
-      );
-      expect(hiRes.single['album_name'], 'missing');
-      expect(hiRes.single['album_present_tracks'], 2);
-      final searched = await db.getQueueAlbumPage(
-        const QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: incompleteAlbumFilter,
-          searchQuery: 'one-track',
-        ),
-      );
-      expect(searched.single['album_name'], 'one-track');
-      final local = await db.getQueueAlbumPage(
-        const QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: incompleteAlbumFilter,
-          source: 'local',
-        ),
-      );
-      expect(local.map((row) => row['album_name']), [
-        'local-only',
-        'missing',
-        'one-track',
-      ]);
-      final noLocal = await db.getQueueAlbumPage(
-        const QueueLibraryDbQuery(
-          filterMode: 'albums',
-          metadata: incompleteAlbumFilter,
-          source: 'local',
-          includeLocal: false,
-        ),
-      );
-      expect(noLocal, isEmpty);
-      final normal = await db.getQueueAlbumPage(
-        const QueueLibraryDbQuery(filterMode: 'albums'),
-      );
-      expect(normal.every((row) => row['album_completeness'] == null), isTrue);
-      expect(normal.any((row) => row['album_name'] == 'one-track'), isFalse);
-    },
-  );
 
-  testWidgets(
-    'Material filter switches to albums, supports search and can be reset',
-    (tester) async {
-      tester.view.physicalSize = const Size(800, 1400);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final tabActive = ValueNotifier(true);
-      addTearDown(tabActive.dispose);
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            localLibraryProvider.overrideWith(_Local.new),
-            libraryCollectionsProvider.overrideWith(_Collections.new),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.light(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: ValueListenableBuilder<bool>(
-              valueListenable: tabActive,
-              builder: (_, active, _) => Scaffold(
-                body: TickerMode(enabled: active, child: const QueueTab()),
+  testWidgets('Albums section filters metadata, supports search and can be reset', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final tabActive = ValueNotifier(true);
+    addTearDown(tabActive.dispose);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(_Local.new),
+          libraryCollectionsProvider.overrideWith(_Collections.new),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: ValueListenableBuilder<bool>(
+            valueListenable: tabActive,
+            builder: (_, active, _) => Scaffold(
+              body: TickerMode(
+                enabled: active,
+                child: const QueueTab(librarySection: 'albums'),
               ),
             ),
           ),
         ),
-      );
-      await _waitFor(tester, find.text('Filters').hitTestable());
-      await _waitFor(tester, find.text('Song 1').hitTestable());
-      await tester.tap(find.text('Filters').hitTestable());
-      await tester.pump(const Duration(milliseconds: 400));
-      // Every fixture file is FLAC. Other formats must still be selectable,
-      // rather than disappearing when they are absent from the loaded page.
-      for (final label in [
-        'M4A / MP4',
-        'AAC',
-        'ALAC',
-        'OPUS',
-        'OGG',
-        'WAV',
-        'AIFF',
-        'WavPack',
-        'DSF',
-        'DFF',
-      ]) {
-        expect(find.text(label), findsOneWidget);
-      }
-      expect(find.text('Has ReplayGain'), findsOneWidget);
-      await tester.ensureVisible(find.text('M4A / MP4'));
-      await _waitFor(tester, find.text('M4A / MP4').hitTestable());
-      await tester.tap(find.text('M4A / MP4'));
-      await tester.ensureVisible(find.text('Has ReplayGain'));
-      await _waitFor(tester, find.text('Has ReplayGain').hitTestable());
-      await tester.tap(find.text('Has ReplayGain'));
-      await tester.ensureVisible(find.text('Apply'));
-      await _waitFor(tester, find.text('Apply').hitTestable());
-      await tester.tap(find.text('Apply'));
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('No local tracks'));
-      expect(find.text('Song 1'), findsNothing);
-      await tester.tap(find.text('Filters').hitTestable());
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(find.text('M4A / MP4'), findsOneWidget);
-      expect(find.text('Has ReplayGain'), findsOneWidget);
-      await _waitFor(tester, find.text('Reset').hitTestable());
-      await tester.tap(find.text('Reset'));
-      await tester.ensureVisible(find.text('Incomplete albums'));
-      await _waitFor(tester, find.text('Incomplete albums').hitTestable());
-      await tester.tap(find.text('Incomplete albums'));
-      await tester.ensureVisible(find.text('Apply'));
-      await _waitFor(tester, find.text('Apply').hitTestable());
-      await tester.tap(find.text('Apply'));
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('1/12'));
-      expect(find.text('2/4'), findsOneWidget);
-      expect(find.text('2/3'), findsOneWidget);
-      expect(find.text('complete'), findsNothing);
-      expect(find.byTooltip('2/4 tracks · 2 missing'), findsOneWidget);
-      final container = ProviderScope.containerOf(
-        tester.element(find.byType(QueueTab)),
-      );
-      expect(container.read(settingsProvider).historyFilterMode, 'albums');
+      ),
+    );
+    await _waitFor(tester, find.text('Filters').hitTestable());
+    await _waitFor(tester, find.text('complete').hitTestable());
+    await tester.tap(find.text('Filters').hitTestable());
+    await tester.pump(const Duration(milliseconds: 400));
+    // Every fixture file is FLAC. Other formats must still be selectable,
+    // rather than disappearing when they are absent from the loaded page.
+    for (final label in [
+      'M4A / MP4',
+      'AAC',
+      'ALAC',
+      'OPUS',
+      'OGG',
+      'WAV',
+      'AIFF',
+      'WavPack',
+      'DSF',
+      'DFF',
+    ]) {
+      expect(find.text(label), findsOneWidget);
+    }
+    expect(find.text('Has ReplayGain'), findsOneWidget);
+    await tester.ensureVisible(find.text('M4A / MP4'));
+    await _waitFor(tester, find.text('M4A / MP4').hitTestable());
+    await tester.tap(find.text('M4A / MP4'));
+    await tester.ensureVisible(find.text('Has ReplayGain'));
+    await _waitFor(tester, find.text('Has ReplayGain').hitTestable());
+    await tester.tap(find.text('Has ReplayGain'));
+    await tester.ensureVisible(find.text('Apply'));
+    await _waitFor(tester, find.text('Apply').hitTestable());
+    await tester.tap(find.text('Apply'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('No local albums'));
+    expect(find.text('Song 1'), findsNothing);
+    await tester.tap(find.text('Filters').hitTestable());
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('M4A / MP4'), findsOneWidget);
+    expect(find.text('Has ReplayGain'), findsOneWidget);
+    await _waitFor(tester, find.text('Reset').hitTestable());
+    await tester.tap(find.text('Reset'));
+    await tester.ensureVisible(find.text('Incomplete albums'));
+    await _waitFor(tester, find.text('Incomplete albums').hitTestable());
+    await tester.tap(find.text('Incomplete albums'));
+    await tester.ensureVisible(find.text('Apply'));
+    await _waitFor(tester, find.text('Apply').hitTestable());
+    await tester.tap(find.text('Apply'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('1/12'));
+    expect(find.text('2/4'), findsOneWidget);
+    expect(find.text('2/3'), findsOneWidget);
+    expect(find.text('complete'), findsNothing);
+    expect(find.byTooltip('2/4 tracks · 2 missing'), findsOneWidget);
+    expect(
+      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      'albums',
+    );
 
-      // Pushing an album/detail route disables the underlying route's ticker.
-      // Popping it must retain the current Albums section.
-      final navigator = Navigator.of(tester.element(find.byType(QueueTab)));
-      unawaited(
-        navigator.push<void>(
-          MaterialPageRoute<void>(
-            builder: (_) => const Scaffold(body: Text('Album details')),
-          ),
+    // Pushing an album/detail route disables the underlying route's ticker.
+    // Popping it must retain the current Albums section.
+    final navigator = Navigator.of(tester.element(find.byType(QueueTab)));
+    unawaited(
+      navigator.push<void>(
+        MaterialPageRoute<void>(
+          builder: (_) => const Scaffold(body: Text('Album details')),
         ),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(find.text('Album details'), findsOneWidget);
-      navigator.pop();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(container.read(settingsProvider).historyFilterMode, 'albums');
-      await _waitFor(tester, find.text('1/12'));
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('Album details'), findsOneWidget);
+    navigator.pop();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(
+      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      'albums',
+    );
+    await _waitFor(tester, find.text('1/12'));
 
-      await tester.enterText(find.byType(TextField), 'one-track');
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('1 album'));
-      expect(find.text('1/12'), findsOneWidget);
-      expect(find.text('2/4'), findsNothing);
-      // Even an empty matching result must retain the filter controls.
-      await tester.enterText(find.byType(TextField), 'no-such-album');
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('No local albums'));
-      expect(find.text('Filters').hitTestable(), findsOneWidget);
-      await tester.enterText(find.byType(TextField), '');
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('1/12'));
-      await tester.tap(find.text('Filters').hitTestable());
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('Reset').hitTestable());
-      await tester.tap(find.text('Reset'));
-      await tester.ensureVisible(find.text('Apply'));
-      await _waitFor(tester, find.text('Apply').hitTestable());
-      await tester.tap(find.text('Apply'));
-      await tester.pump(const Duration(milliseconds: 400));
-      await _waitFor(tester, find.text('complete'));
-      expect(find.text('1/12'), findsNothing);
-      expect(container.read(settingsProvider).historyFilterMode, 'albums');
-      // Switching tabs also retains the current section; there is no default-view reset.
-      tabActive.value = false;
-      await tester.pump();
-      tabActive.value = true;
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(container.read(settingsProvider).historyFilterMode, 'albums');
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-      // Let any already-dispatched SQLite queries finish after provider disposal.
-      for (var attempt = 0; attempt < 10; attempt++) {
-        await tester.runAsync(
-          () => Future<void>.delayed(const Duration(milliseconds: 50)),
-        );
-        await tester.pump(const Duration(milliseconds: 50));
-      }
-    },
-  );
+    await tester.enterText(find.byType(TextField), 'one-track');
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('1 album'));
+    expect(find.text('1/12'), findsOneWidget);
+    expect(find.text('2/4'), findsNothing);
+    // Even an empty matching result must retain the filter controls.
+    await tester.enterText(find.byType(TextField), 'no-such-album');
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('No local albums'));
+    expect(find.text('Filters').hitTestable(), findsOneWidget);
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('1/12'));
+    await tester.tap(find.text('Filters').hitTestable());
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('Reset').hitTestable());
+    await tester.tap(find.text('Reset'));
+    await tester.ensureVisible(find.text('Apply'));
+    await _waitFor(tester, find.text('Apply').hitTestable());
+    await tester.tap(find.text('Apply'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await _waitFor(tester, find.text('complete'));
+    expect(find.text('1/12'), findsNothing);
+    expect(
+      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      'albums',
+    );
+    // Switching tabs also retains the current section; there is no default-view reset.
+    tabActive.value = false;
+    await tester.pump();
+    tabActive.value = true;
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(
+      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      'albums',
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    // Let any already-dispatched SQLite queries finish after provider disposal.
+    for (var attempt = 0; attempt < 10; attempt++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+  });
 }

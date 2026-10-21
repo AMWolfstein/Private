@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/widgets/player_queue_dismissible.dart';
 import 'package:spotiflac_android/widgets/player_track_swipe.dart';
@@ -276,6 +277,8 @@ void main() {
     final entries = [queue[0], queue[0].copyWith(), queue[1]];
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: StatefulBuilder(
           builder: (context, setState) => Scaffold(
             body: Column(
