@@ -15,7 +15,6 @@
   "53": "thread/prctl.rs",
   "54": "src/constants.rs",
   "60": "local_library_provider.dart",
-  "61": "queue_tab.dart",
   "64": "playback_automation.dart",
   "68": "settings.dart",
   "69": "CoreBackend",
