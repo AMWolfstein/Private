@@ -24,7 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `PERF-<NNN>`.
+**Finding area:** `PERF`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `PERF-<NNN>` IDs after deduplication.
 
 **Escalate:** If proof needs profiling, report NEEDS VERIFICATION with the measurement to take.
 

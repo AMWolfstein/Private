@@ -24,7 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `UI-<NNN>`.
+**Finding area:** `UI`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `UI-<NNN>` IDs after deduplication.
 
 **Escalate:** Jank only measurable with profiling → hand to code-optimization-auditor in Limitations; do not report it yourself.
 

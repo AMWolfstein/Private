@@ -15,14 +15,17 @@ orchestrator) with one validated batch of 1–3 related findings.
 | Mode | Entry | Unit | Reviewers |
 |---|---|---|---|
 | Incremental (default) | `/review [range]` | a commit or range | 1 by default, 2 when the diff crosses risk domains, 3 max |
-| Full audit (explicit) | `/audit <subsystem>` | one subsystem from `reviews/coverage.md` | 2–3 max |
+| Full audit (explicit) | `/audit <subsystem>` | one subsystem chunk | 2–3 max |
+| Project audit coordinator | `/audit-project` | next incomplete/stale unit in `AUDIT_PLAN.md` | 2–3 max per unit |
 
 Never launch every reviewer. Never review the whole repo for a small commit.
 
 ## Scope discovery (orchestrator, before spawning)
 
 1. `scripts/review_scope.sh [range]` — changed files, risk domains, suggested reviewers,
-   graph freshness. `--subsystem <id>` lists a full-audit unit. No model needed.
+   graph freshness (JSON, Python 3 standard library). `--subsystem <id>` lists current and
+   historical paths, deletions and changes; `--coverage-status` recomputes freshness for
+   all subsystems. Nonzero exit means BLOCKED, never PASS. No model needed.
 2. If the graph is fresh for the scope: `graphify query "<symbol or question>"`,
    `graphify explain "<Symbol>"`, `graphify path "<A>" "<B>"` to find direct dependents.
    Use `--budget` only when output is truncated and the missing nodes matter.
@@ -37,7 +40,9 @@ Never launch every reviewer. Never review the whole repo for a small commit.
 - Mode, commit range or subsystem id.
 - Files and symbols in scope (from step 1–2), plus graph freshness.
 - Risk concern to focus on, and open finding IDs touching the scope (from `FINDINGS.md`).
-- Nothing else: no transcripts, no previous reports.
+- Reviewed revision (and dirty paths), planned chunk ID, explicit exclusions, direct
+  dependents and contract endpoints; relevant rejected finding counter-evidence when
+  checking a recurrence. No unrelated transcripts or full previous reports.
 
 ## Reviewer rules
 
@@ -86,7 +91,9 @@ Read `AGENTS.md` for the full list. In short:
 - Guards checked: existing checks that do not stop the trigger, or "none found"
 ```
 
-- ID: `<AREA>-<NNN>` (areas: BUG, UI, UX, CONC, DATA, SEC, RUST, KT, DEP, API, PERF, TEST,
+- Reviewers return temporary IDs `<agent>/<local-number>`. Only the orchestrator assigns
+  durable IDs after deduplication; parallel reviewers must not reserve numbers.
+- Durable ID: `<AREA>-<NNN>` (areas: BUG, UI, UX, CONC, DATA, SEC, RUST, KT, DEP, API, PERF, TEST,
   DEAD, DOC). Take the next free number from `FINDINGS.md`; never reuse an ID.
 - P0 crash/data loss/security hole on a common path · P1 user-visible defect or leak ·
   P2 edge-case defect or measurable inefficiency · P3 minor, low-risk cleanup.
@@ -104,7 +111,8 @@ files/symbols actually reviewed
 ## Findings
 (entries above, or "None")
 ## Verification
-checks done / not done
+revision + exact command + PASS/FAIL/NOT RUN/BLOCKED + counts/skips + evidence log
+fixture/host/compiler/device execution distinguished; no zero-test PASS
 ## Limitations
 unreviewed areas, uncertainty, stale graph
 ## Result
@@ -118,7 +126,11 @@ reviewed scope.
 
 1. **Auto-reject** without analysis: iOS/macOS-only paths; removed features or documented UI
    decisions; memory-safety claims about safe Rust; test-only nits not from test-auditor;
-   DoS with no crafted-file path; anything matching a Rejected entry in `FINDINGS.md`.
+   DoS with no crafted-file path. Safe-Rust claims involving unsafe dependencies/FFI still
+   require tracing that boundary. A previously rejected finding is not an automatic reject:
+   compare trigger, implementation revision and guard fingerprint; re-read counter-evidence.
+   If code, platform or trigger changed, reopen investigation with a cross-reference to the
+   old ID. Cite current evidence when rejecting a genuine duplicate.
 2. **Skeptic check** every P0/P1 and NEEDS VERIFICATION item with one targeted read. Try to
    disprove it; a missed real bug costs more than keeping a doubtful one.
    - Verdict: REAL → VALIDATED; NOT A BUG → Rejected, citing the counter-evidence line;
@@ -130,10 +142,25 @@ reviewed scope.
 ## Fix batches
 
 `review-fixer` gets only: finding entries, source paths, expected behavior, acceptance
-criteria, required tests. 1–3 related findings per batch. Then follow `AGENTS.md`: `flutter
-analyze` clean, full `flutter test` (only the known flaky paging test may fail; the
-root-only `file_stat_boundary_test` permission case fails in root containers),
-`scripts/check_rust_backend.sh` for Rust, then the code → graphify → docs commits.
+criteria, required tests. 1–3 related findings per batch. Follow `AGENTS.md` and this matrix:
+
+| Changed surface | Required checks |
+|---|---|
+| Flutter/Dart | `flutter analyze`, targeted regression tests, full `flutter test` |
+| Rust | `bash scripts/check_rust_backend.sh`; relevant writer/FFI/cancellation tests |
+| Kotlin, JNI, C++ or SAF | `bash scripts/check_android.sh`; relevant host/native tests; instrumentation compilation when its sources/contracts change |
+| Channel/FFI/generated schema | Both endpoints, generation drift, null/error/cancel/type contracts and compatible persisted fixtures |
+| Review tooling only | `bash -n scripts/review_scope.sh`; `python3 -m unittest discover -s scripts -p test_review_scope.py -v`; scope/coverage smoke checks |
+| Agent/policy docs only | Links, policy consistency and coverage ledger validation; no application build required |
+
+No standing flaky-test exception: paging and root-permission failures were addressed in
+batch 16. Investigate any failure; do not skip or weaken tests. Record a baseline failure as
+FAIL with evidence and a finding, never as a pass or a completed fix. Preserve unrelated
+user changes when reverting only an unsuccessful patch.
+Run Flutter tests and APK builds serially (shared plugin registrants). Package an APK only
+when the user authorizes it. Compilation is not device execution; TalkBack/OEM/USB/runtime
+claims remain NOT RUN or BLOCKED until exercised. Then follow code → graphify → docs
+commits unless the user explicitly requests a single combined commit.
 Optionally re-review only the fix diff once with the finding's original reviewer
 (sonnet/haiku); a second failed round → escalate instead of looping.
 
@@ -148,8 +175,33 @@ Optionally re-review only the fix diff once with the finding's original reviewer
 | `CALIBRATION.md` | short validated/rejected examples, read only at low confidence |
 | `FIX_PLAN.md` | ordered fix batches awaiting approval, and open product decisions |
 
-Update only the files the unit changed. A completed subsystem is not re-reviewed unless
-`git diff <reviewed-sha>..HEAD -- <paths>` is non-empty.
+Update only the files the unit changed. `AUDIT_PLAN.md` owns the unit/path ledger; a
+subsystem is complete only when every planned chunk and risk check has evidence at its
+reviewed revision. `coverage.md` is a summary, not proof that every file was read.
+Recompute freshness with `scripts/review_scope.sh --coverage-status`; preserve partial gaps
+even when their reviewed paths are unchanged. Review deletions/renames from historical
+blobs and callers. Invalidate dependent units when a channel, persisted schema, shared
+primitive or lifecycle changes outside their directory. Dirty and untracked paths cannot
+be certified as an immutable reviewed commit. Record exclusions (including unchanged vendor
+bodies) and schedule a bounded unit if their risk warrants review.
+
+## Execution and safety
+
+Risk-triggered security/contract reviewers take priority over file-count suggestions. If
+more than three roles are needed, schedule pending roles as subsequent units; never lose a
+risk check to the agent cap. Each brief may include both endpoints of one contract even
+when directories belong to different subsystems. Keep one owner per finding.
+Reviewers use Read/Grep/Glob for inspection and Bash only for the documented read-only Git,
+scope and graph queries; the orchestrator runs tests and owns edits/checkpoints. Prompt
+restrictions are not a sandbox guarantee: use a read-only execution environment if the host
+supports one; otherwise record enforcement as prompt-only and inspect status before/after.
+Do not invent runtime permission modes or claim an allowlist denies other commands.
+Model escalation follows host policy: Claude may use its configured Opus model; Codex
+retains the owner's SOL-only policy. If unavailable, record the reason and NEEDS
+VERIFICATION/BLOCKED; never silently downgrade a critical proof or invent model switches.
+Measured performance claims need before/after evidence; static improvements must be labeled
+as such. Native sanitizers/Miri/fuzzing are targeted optional checks when supported, never
+claimed as executed without a run.
 
 ## Checkpoint
 

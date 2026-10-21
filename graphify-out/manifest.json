@@ -6138,9 +6138,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792582859.100041,
-    "seen": 1792583516.9171355,
-    "ast_hash": "d11d07fed04e999d2721dcd131b558fd",
+    "mtime": 1792585071.236482,
+    "seen": 1792585221.9531243,
+    "ast_hash": "4436b3c0121fa324eeef1efb9be6bc5e",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792582897.371905,
-    "seen": 1792583516.9171443,
-    "ast_hash": "69058defea2d18b5777a523af93ed7fc",
+    "mtime": 1792583835.4762144,
+    "seen": 1792585221.9531305,
+    "ast_hash": "ecb92b58fadda220a5acd69576be0c7a",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7044,15 +7044,15 @@
     "semantic_hash": ""
   },
   "scripts/review_scope.sh": {
-    "mtime": 1792486601.377556,
-    "seen": 1792494608.4838722,
-    "ast_hash": "b6bcd42c61be500bf1f8397251b1f619",
+    "mtime": 1792584983.916295,
+    "seen": 1792585221.9526868,
+    "ast_hash": "78bb0e39af6cfdf190e577313e013fce",
     "semantic_hash": ""
   },
   ".claude/agents/api-compat-auditor.md": {
-    "mtime": 1792486601.0987573,
-    "seen": 1792494608.4842012,
-    "ast_hash": "98f515690d2ff1b2838ecb6741a694c0",
+    "mtime": 1792585071.235779,
+    "seen": 1792585221.953099,
+    "ast_hash": "35f6aefec8c8c067caf39751bb310ba1",
     "semantic_hash": ""
   },
   ".claude/agents/bug-hunter.md": {
@@ -7068,27 +7068,27 @@
     "semantic_hash": ""
   },
   ".claude/agents/concurrency-auditor.md": {
-    "mtime": 1792486601.0990512,
-    "seen": 1792494608.4842057,
-    "ast_hash": "3a158edf5b422d877a306e7c0ece141d",
+    "mtime": 1792585071.2359815,
+    "seen": 1792585221.9531038,
+    "ast_hash": "3f755f355a24953c415983705725d5f4",
     "semantic_hash": ""
   },
   ".claude/agents/data-integrity-auditor.md": {
-    "mtime": 1792486601.0990512,
-    "seen": 1792494608.4842072,
-    "ast_hash": "9d2c62d5035cc32385f7da9f424c2e97",
+    "mtime": 1792585071.2359042,
+    "seen": 1792585221.9531052,
+    "ast_hash": "437e093c2449c397918196ebf2174eda",
     "semantic_hash": ""
   },
   ".claude/agents/dead-code-hunter.md": {
-    "mtime": 1792486601.0990512,
-    "seen": 1792494608.4842083,
-    "ast_hash": "a90cd0150d1301c6a6f87d635dc0830a",
+    "mtime": 1792585071.2354827,
+    "seen": 1792585221.9531064,
+    "ast_hash": "638e82488946c2a458c25f99b18e151c",
     "semantic_hash": ""
   },
   ".claude/agents/dependency-auditor.md": {
-    "mtime": 1792486601.0990512,
-    "seen": 1792494608.4842098,
-    "ast_hash": "db64206cea8a7fb82201e6b8f4a9f7ea",
+    "mtime": 1792585071.2351384,
+    "seen": 1792585221.9531076,
+    "ast_hash": "5da28f4b7aedfb441848450c760667ff",
     "semantic_hash": ""
   },
   ".claude/agents/docs-auditor.md": {
@@ -7110,9 +7110,9 @@
     "semantic_hash": ""
   },
   ".claude/agents/review-fixer.md": {
-    "mtime": 1792486601.0990512,
-    "seen": 1792494608.484215,
-    "ast_hash": "f286026545c48f5860d5c33e28a94d1a",
+    "mtime": 1792585071.2346313,
+    "seen": 1792585221.953113,
+    "ast_hash": "71e18a7844089cac859501267775bf44",
     "semantic_hash": ""
   },
   ".claude/agents/rust-safety-auditor.md": {
@@ -7134,21 +7134,21 @@
     "semantic_hash": ""
   },
   ".claude/agents/ux-auditor.md": {
-    "mtime": 1792486601.0990512,
-    "seen": 1792494608.484221,
-    "ast_hash": "4ecce8699d6d486b681d06ceb339dcf1",
+    "mtime": 1792585071.2361662,
+    "seen": 1792585221.9531193,
+    "ast_hash": "4a784bc8b644c97cd0bd613177f1773a",
     "semantic_hash": ""
   },
   ".claude/skills/audit/SKILL.md": {
-    "mtime": 1792486601.0998816,
-    "seen": 1792494608.4842222,
-    "ast_hash": "eeee3686e07fd13b1a872ddfc1a1963a",
+    "mtime": 1792585157.8651009,
+    "seen": 1792585221.9531214,
+    "ast_hash": "a894760081859679beed01a037364812",
     "semantic_hash": ""
   },
   ".claude/skills/review/SKILL.md": {
-    "mtime": 1792486601.0998816,
-    "seen": 1792494608.4842231,
-    "ast_hash": "a23de3ee57a63c1306cf950f89e8108d",
+    "mtime": 1792585157.8653738,
+    "seen": 1792585221.953123,
+    "ast_hash": "f9c398f362539af83338acb3b552c118",
     "semantic_hash": ""
   },
   "reviews/FINDINGS.md": {
@@ -7158,27 +7158,27 @@
     "semantic_hash": ""
   },
   "reviews/PROTOCOL.md": {
-    "mtime": 1792486601.377556,
-    "seen": 1792494608.4842749,
-    "ast_hash": "399da656e068e1f6fd3e541975943a65",
+    "mtime": 1792585071.234455,
+    "seen": 1792585221.9531665,
+    "ast_hash": "46197ab79f5679fff0c907b0844bff9e",
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792582897.3714175,
-    "seen": 1792583516.9171898,
-    "ast_hash": "5916b380aa6127f1f5cab6ee81a65310",
+    "mtime": 1792585157.8657753,
+    "seen": 1792585221.9531682,
+    "ast_hash": "1e17fac37529a373ff9820813c16447a",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792582858.8259218,
-    "seen": 1792583516.9171925,
-    "ast_hash": "d074c2e3d0e0f4c228385d3a791ab4e0",
+    "mtime": 1792583835.476613,
+    "seen": 1792585221.9531708,
+    "ast_hash": "2850b4b468fcf59bb93bc4e5d2e19c1b",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
-    "mtime": 1792486601.377556,
-    "seen": 1792494608.48428,
-    "ast_hash": "14314cc10eac338fbd21b08677bd06a3",
+    "mtime": 1792585157.865565,
+    "seen": 1792585221.953172,
+    "ast_hash": "ebf51aa0960f13c6dbe91fb0564659de",
     "semantic_hash": ""
   },
   "reviews/CALIBRATION.md": {
@@ -7284,9 +7284,9 @@
     "semantic_hash": ""
   },
   "reviews/HANDOFF.md": {
-    "mtime": 1792582897.3720875,
-    "seen": 1792583516.9171824,
-    "ast_hash": "4a813b23f8264cd487c6a3957d3186f3",
+    "mtime": 1792585157.8659644,
+    "seen": 1792585221.9531622,
+    "ast_hash": "6ebf547e255a2255d2ed80cfab672ebd",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/tests/id3_cover.rs": {
@@ -7605,6 +7605,30 @@
     "mtime": 1792582897.3721778,
     "seen": 1792583516.9171982,
     "ast_hash": "6e3f374539670a1e8bdaf7a2e8a96a80",
+    "semantic_hash": ""
+  },
+  "scripts/review_scope.py": {
+    "mtime": 1792585007.2362595,
+    "seen": 1792585221.9526846,
+    "ast_hash": "3a02557f59221c0c5c2eb33bf6774bde",
+    "semantic_hash": ""
+  },
+  "scripts/test_review_scope.py": {
+    "mtime": 1792585185.5868433,
+    "seen": 1792585221.9526913,
+    "ast_hash": "5f90d50feb3baa285acbffeeedcd5a3e",
+    "semantic_hash": ""
+  },
+  ".claude/skills/audit-project/SKILL.md": {
+    "mtime": 1792585157.8420618,
+    "seen": 1792585221.9531202,
+    "ast_hash": "cb1859c1c974988700ac5799478b1f91",
+    "semantic_hash": ""
+  },
+  "reviews/AUDIT_PLAN.md": {
+    "mtime": 1792585157.8702703,
+    "seen": 1792585221.9531546,
+    "ast_hash": "abd62e53372f002f3ae451a36b629870",
     "semantic_hash": ""
   }
 }

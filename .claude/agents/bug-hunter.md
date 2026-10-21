@@ -24,7 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `BUG-<NNN>`.
+**Finding area:** `BUG`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `BUG-<NNN>` IDs after deduplication.
 
 **Escalate:** Shared mutable state across async gaps or isolates → ESCALATE to concurrency review; data loss on disk → note for data-integrity-auditor.
 

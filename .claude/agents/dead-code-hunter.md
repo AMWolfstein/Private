@@ -16,14 +16,18 @@ output). You review only; never edit files. Bash is for read-only commands: `git
 **Required context (from the brief):** range or subsystem, files/symbols in scope, graph
 freshness, focus concern, open finding IDs for these files.
 
-**Focus:** Prove deadness from zero references in the graph AND `grep -rn` across `lib/ test/ android/ rust_backend/crates/ assets/` (include reflection-like uses: channel method strings, JSON keys, arb keys via generated getters, `pubspec` assets). Report removal size and risk.
+**Focus:** Use a fresh graph plus source references; if stale, disclose it and prove callers
+from source rather than treating absent graph edges as proof. Search across `lib/ test/ android/ rust_backend/crates/ assets/` (include reflection-like uses: channel method strings, JSON keys, arb keys via generated getters, `pubspec` assets). Report removal size and risk.
 
 **Max scope:** One subsystem or the files removed by the commit. Prefer listing candidates over reading bodies.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `DEAD-<NNN>`.
+**Finding area:** `DEAD`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `DEAD-<NNN>` IDs after deduplication.
 
-**Escalate:** Symbols referenced only by tests → report as P3 with the test files.
+**Escalate:** Test-only references are not automatically dead code: check injection seams,
+regression fixtures, generated entrypoints, reflection, exports and retained compatibility
+contracts. Report removal only with a concrete maintenance cost and proven safe deletion.
 
 **Output:** the PROTOCOL output block only.

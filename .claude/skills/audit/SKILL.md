@@ -5,11 +5,14 @@ description: "Explicit full-audit mode - review ONE bounded subsystem (ui, state
 
 Follow `reviews/PROTOCOL.md`. Argument: a subsystem id (`scripts/review_scope.sh
 --list-subsystems`). No argument → take `Next audit unit` from `reviews/STATE.md`, else the
-first `not reviewed` row in `reviews/coverage.md`.
+next ready `partial`, `stale` or `not reviewed` unit in `reviews/AUDIT_PLAN.md`.
+For a whole-project request, use the `audit-project` coordinator; this skill remains one chunk.
 
-1. **Scope.** `scripts/review_scope.sh --subsystem <id>`: files with line counts, reviewers,
-   graph status, last reviewed SHA. Reviewed before and 0 files changed since → mark
-   current, stop. Reviewed before with changes → audit only the changed files.
+1. **Scope.** `scripts/review_scope.sh --subsystem <id>`: current/historical paths, changed/deleted paths, reviewers,
+   graph status, last reviewed SHA (JSON output). Nonzero exit → BLOCKED, never PASS.
+   A zero diff does not close partial gaps. Include changed/deleted/renamed/untracked paths
+   and their direct dependents; contract changes invalidate both endpoints. Only skip a
+   completed chunk when its path ledger and risk checks are current.
 2. **Chunk.** Above ~25 files or ~6k lines, split into chunks by directory or feature (one
    chunk per invocation) and record the chunk in `coverage.md` as `partial`.
 3. **Map.** If the graph is fresh, `graphify query "<subsystem concern>"` and `graphify
@@ -21,4 +24,5 @@ first `not reviewed` row in `reviews/coverage.md`.
    contracts, dead-code-hunter for cleanup passes). Disjoint file sets when parallel.
 5. **Validate, record, checkpoint** as in the `review` skill, plus update the subsystem row
    in `reviews/coverage.md` (status, reviewed SHA, chunk, finding IDs) and `Next audit unit`.
-   Stop after one subsystem/chunk. Do not fix.
+   Record exact planned/read paths and excluded checks in AUDIT_PLAN; retain partial status
+   until all chunks and checks are complete. Stop after one subsystem/chunk. Do not fix.

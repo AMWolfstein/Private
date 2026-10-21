@@ -24,7 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `RUST-<NNN>`.
+**Finding area:** `RUST`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `RUST-<NNN>` IDs after deduplication.
 
 **Escalate:** Unsound `unsafe`, UB, or memory-safety doubt → ESCALATE (Opus).
 

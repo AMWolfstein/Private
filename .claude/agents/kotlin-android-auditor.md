@@ -24,7 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `KT-<NNN>`.
+**Finding area:** `KT`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `KT-<NNN>` IDs after deduplication.
 
 **Escalate:** Threading/lock defects in audio paths → note for concurrency-auditor; native memory doubts → ESCALATE (Opus).
 

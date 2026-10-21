@@ -24,7 +24,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `TEST-<NNN>`.
+**Finding area:** `TEST`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `TEST-<NNN>` IDs after deduplication.
 
 **Escalate:** None normally; flag untestable designs as P3.
 

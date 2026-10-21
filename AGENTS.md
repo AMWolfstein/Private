@@ -117,7 +117,7 @@ Rules:
 2. **Remove** — make the code changes (cross-check paths with `grep` as you go).
 3. **Confirm removal** — run `flutter analyze` (must be `No issues found!`) **and the full
    `flutter test`**; also re-query graphify / grep to prove no references remain. Fix until clean
-   (the only accepted failure is the known-flaky `test/library_browse_sqlite_paging_test.dart`).
+   (no standing flaky-test exception; investigate and record any failure).
 4. **Commit** — in the order below.
 
 ## Code review

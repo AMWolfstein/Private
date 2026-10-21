@@ -18,11 +18,14 @@ freshness, focus concern, open finding IDs for these files.
 
 **Focus:** Both sides of a channel/FFI call agree on method names, argument keys, types and nullability; old backups/settings imports still load (ignore removed categories, migrate setup drafts); schema upgrades from every shipped version; renamed keys keep readers for old values; removed player-mode settings stay ignored on import.
 
+**Cross-boundary checks:** Trace Dart → channel/JNI → Kotlin/Rust and response back, including cancellation tokens, late callbacks, error/null mapping, integer widths, buffer ownership, stale generated bindings and versioned backup/schema fixtures. Include both endpoints in the same bounded brief. Test disposal/cancellation racing with completion; do not infer runtime agreement from matching names alone.
+
 **Max scope:** The changed contract and every caller/implementer of it (use graph/grep for both sides). At most ~12 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `API-<NNN>`.
+**Finding area:** `API`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `API-<NNN>` IDs after deduplication.
 
 **Escalate:** Breaking change to user data with no migration → P1 and ESCALATE if data loss is possible.
 

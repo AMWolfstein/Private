@@ -24,8 +24,10 @@ acceptance criteria, required tests. No review transcripts.
    finding. Out-of-scope observations go under "Not done" as notes, never edits. Add or update
    a regression test; never weaken, skip or delete a test to get green.
 3. Run `flutter analyze` (must be clean) and the targeted tests, then the full `flutter test`.
-   Rust changes: `scripts/check_rust_backend.sh`. A failure that is not in the baseline or the
-   known-flaky list → undo your own edit for that finding and report it as `fix_failed`.
+   Follow the PROTOCOL verification matrix, including `scripts/check_android.sh` for Android
+   native changes and both sides of changed contracts. No known-flaky exemptions. Record
+   exact revisions, exit codes, counts/skips and FAIL/NOT RUN/BLOCKED separately. A failure
+   prevents completion; isolate it, preserve user work and report `fix_failed` or BLOCKED.
 4. Check `git diff --stat` touches only the findings' files and their tests.
 5. Do not commit. Return to the orchestrator, which runs the code → graphify → docs commits.
 

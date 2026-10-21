@@ -22,7 +22,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** haiku (escalate to sonnet via bug-hunter/ux-auditor if behavior is involved).
 
-**Finding IDs:** `DOC-<NNN>`.
+**Finding area:** `DOC`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `DOC-<NNN>` IDs after deduplication.
 
 **Escalate:** Rule contradictions that change product behavior → NEEDS VERIFICATION for the orchestrator.
 

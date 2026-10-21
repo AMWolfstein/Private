@@ -20,11 +20,14 @@ freshness, focus concern, open finding IDs for these files.
 
 **Also check:** TalkBack announces state changes (Loved toggled, Play/Pause, selection count); contrast meets WCAG 1.4.3 in light and dark Mornye; layout decisions use `LayoutBuilder`/`MediaQuery.sizeOf` and survive split-screen rather than relying on orientation or device type; no new orientation locks (targetSdk 36+ ignores them on large screens).
 
+**Coverage scenarios:** Review Songs, Loved Songs, playlists, genre/artist/album navigation, both player views, lyrics/queue and settings under RTL, large text, TalkBack focus/order/state, reduced motion, split-screen and tablet widths. Check popover anchors against overlay bounds and available space, loading/empty/error/retry states and selection/queue order. Use widget/semantics fixtures where possible; contrast and physical-device claims require evidence, otherwise mark NOT RUN.
+
 **Max scope:** Changed UI files only; read AGENTS.md sections that apply.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `UX-<NNN>`.
+**Finding area:** `UX`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `UX-<NNN>` IDs after deduplication.
 
 **Escalate:** A rule conflict that needs a product decision → report as NEEDS VERIFICATION, not as a defect.
 

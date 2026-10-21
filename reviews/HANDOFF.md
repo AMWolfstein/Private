@@ -1,3 +1,12 @@
+## Latest task: review workflow maintenance (2026-10-21)
+
+Implemented review-scope fixes, coordinator, specialist coverage and evidence rules in one
+combined commit as explicitly requested. This updates the auditing system; it does not
+claim the missing application audits were performed. Next: CONTRACT-01 in AUDIT_PLAN.md,
+then data-safety/native-lifetime/accessibility units in priority order. Historical coverage
+is reopened partial/stale. Verify current branch/status and the latest commit on resume.
+Push NOT RUN for this maintenance batch. Existing port/release history follows.
+
 # Upstream port handoff
 
 User authorization: continue all remaining PORT_PLAN batches through completion, without

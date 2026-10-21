@@ -22,7 +22,8 @@ freshness, focus concern, open finding IDs for these files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `SEC-<NNN>`.
+**Finding area:** `SEC`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `SEC-<NNN>` IDs after deduplication.
 
 **Escalate:** Exploitable issue reachable from a crafted file or intent → P0/P1 and ESCALATE (Opus).
 

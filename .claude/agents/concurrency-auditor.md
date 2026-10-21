@@ -20,11 +20,14 @@ freshness, focus concern, open finding IDs for these files.
 
 **Also check:** non-idempotent actions (delete, ReplayGain apply, CUE split, playlist writes) without double-tap/re-entry guards; latest-wins vs first-wins chosen deliberately, and slow in-flight work never overwriting newer or restored state; Riverpod `ref` used after dispose or after `await` without a mounted check; work launched outside a lifecycle-bound scope.
 
+**Native lifetime checks:** Trace callback registration → stop/flush → quiescence → disposal, including AAudio/JNI/Rust buffer ownership, in-flight callbacks, repeated seek/track changes, focus loss, USB disconnect/reconnect and service restart. Require an explicit happens-before/ownership argument for critical races. Distinguish host tests from OEM/device evidence; no engine migration or broad DSP rewrite.
+
 **Max scope:** Changed code plus the state it shares (follow writers/readers of that state). At most ~10 files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `CONC-<NNN>`.
+**Finding area:** `CONC`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `CONC-<NNN>` IDs after deduplication.
 
 **Escalate:** Any defect needing multi-thread interleaving proof or affecting audio buffers/FFI memory → ESCALATE (Opus).
 

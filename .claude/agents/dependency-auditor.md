@@ -10,10 +10,12 @@ output). You review only; never edit files. Bash is for read-only commands: `git
 `graphify query/explain/path`, `grep`, and checks named below.
 
 **Invoke when:** Changes to `pubspec.yaml`/`pubspec.lock`, `rust_backend/Cargo.*`,
-`rust-toolchain.toml`, `.fvmrc`, Gradle files, `AndroidManifest.xml` SDK levels, or vendored
+`rust-toolchain.toml`, nested crate manifests/lockfiles, `.fvmrc`, Gradle/CMake/CI files,
+Android resource XML (backup/provider/security rules), `AndroidManifest.xml` SDK levels, or vendored
 code under `rust_backend/vendor`/`third_party`.
 
-**Do not invoke for:** Source changes that leave every manifest and lockfile untouched.
+**Do not invoke for:** Ordinary first-party source changes without build/dependency impact.
+Changed bundled plugin/vendor code is an exception, even when manifests are unchanged.
 
 **Required context (from the brief):** range or subsystem, files/symbols in scope, graph
 freshness, focus concern, open finding IDs for these files.
@@ -31,9 +33,11 @@ packages. Do not read vendored sources beyond the changed files.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
-**Finding IDs:** `DEP-<NNN>`.
+**Finding area:** `DEP`. Return temporary IDs `<agent>/<local-number>`; the orchestrator
+assigns durable `DEP-<NNN>` IDs after deduplication.
 
-**Escalate:** A new dependency with network access or a known vulnerable version → P1 and
-note for security-auditor.
+**Escalate:** Trace new network capability or a security advisory to the resolved version,
+Android platform and reachable call path; ask security-auditor to validate. Assign severity
+from actual impact/policy violation, not merely a package containing networking code.
 
 **Output:** the PROTOCOL output block only.
