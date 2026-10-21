@@ -11,6 +11,7 @@ class MornyePlayerBackground extends StatelessWidget {
     this.squareArtwork = true,
     this.showArtwork = true,
     this.artworkAspectRatio,
+    this.fadeStart = .58,
   });
 
   final Uri? artUri;
@@ -18,6 +19,7 @@ class MornyePlayerBackground extends StatelessWidget {
   final bool squareArtwork;
   final bool showArtwork;
   final double? artworkAspectRatio;
+  final double fadeStart;
 
   @override
   Widget build(BuildContext context) {
@@ -107,11 +109,11 @@ class MornyePlayerBackground extends StatelessWidget {
                         duration: motion,
                         child: ShaderMask(
                           blendMode: BlendMode.dstIn,
-                          shaderCallback: (bounds) => const LinearGradient(
+                          shaderCallback: (bounds) => LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            stops: [0, 0.58, 1],
-                            colors: [
+                            stops: [0, fadeStart, 1],
+                            colors: const [
                               Colors.white,
                               Colors.white,
                               Colors.transparent,

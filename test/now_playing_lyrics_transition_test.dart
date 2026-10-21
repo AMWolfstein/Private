@@ -438,58 +438,61 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final page in ['player', 'lyrics', 'queue']) {
-    testWidgets('cover swipe changes the track in the Mornye $page', (
-      tester,
-    ) async {
-      final queue = [item('first'), item('second')];
-      final controller = _QueueController(
-        (index) => mediaItems.add(queue[index]),
-      );
-      await pumpNowPlaying(
+  for (final view in PlayerView.values) {
+    for (final page in ['player', 'lyrics', 'queue']) {
+      testWidgets('cover swipe changes the track in the Mornye $page ($view)', (
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
-        size: const Size(393, 852),
-        queue: queue,
-        controller: controller,
-        playback: PlaybackState(queueIndex: 0),
-      );
-      mediaItems.add(queue.first);
-      await settlePlayer(tester);
-      if (page != 'player') {
-        await tester.tap(
-          find.byIcon(
-            page == 'lyrics'
-                ? CupertinoIcons.quote_bubble
-                : CupertinoIcons.list_bullet,
-          ),
+      ) async {
+        final queue = [item('first'), item('second')];
+        final controller = _QueueController(
+          (index) => mediaItems.add(queue[index]),
         );
+        await pumpNowPlaying(
+          tester,
+          theme: MornyeTheme.build(Brightness.dark),
+          size: const Size(393, 852),
+          playerView: view,
+          queue: queue,
+          controller: controller,
+          playback: PlaybackState(queueIndex: 0),
+        );
+        mediaItems.add(queue.first);
         await settlePlayer(tester);
-      }
-      final cover = find
-          .byKey(
-            ValueKey(
-              page == 'player'
-                  ? 'full-player-artwork'
-                  : 'compact-player-artwork',
+        if (page != 'player') {
+          await tester.tap(
+            find.byIcon(
+              page == 'lyrics'
+                  ? CupertinoIcons.quote_bubble
+                  : CupertinoIcons.list_bullet,
             ),
-          )
-          .hitTestable();
-      final rect = tester.getRect(cover);
-      final gesture = await tester.startGesture(rect.center);
-      await gesture.moveBy(const Offset(-110, 0));
-      await tester.pump();
-      expect(tester.getRect(cover), rect);
-      await gesture.up();
-      await settlePlayer(tester);
-      expect(controller.selected, [1]);
-      expect(find.text('Second').hitTestable(), findsOneWidget);
-      await tester.drag(cover, const Offset(110, 0));
-      await settlePlayer(tester);
-      expect(controller.selected, [1, 0]);
-      expect(find.text('First').hitTestable(), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
+          );
+          await settlePlayer(tester);
+        }
+        final cover = find
+            .byKey(
+              ValueKey(
+                page == 'player'
+                    ? 'full-player-artwork'
+                    : 'compact-player-artwork',
+              ),
+            )
+            .hitTestable();
+        final rect = tester.getRect(cover);
+        final gesture = await tester.startGesture(rect.center);
+        await gesture.moveBy(const Offset(-110, 0));
+        await tester.pump();
+        expect(tester.getRect(cover), rect);
+        await gesture.up();
+        await settlePlayer(tester);
+        expect(controller.selected, [1]);
+        expect(find.text('Second').hitTestable(), findsOneWidget);
+        await tester.drag(cover, const Offset(110, 0));
+        await settlePlayer(tester);
+        expect(controller.selected, [1, 0]);
+        expect(find.text('First').hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 
   testWidgets('custom glass keeps live lyrics under the finger on reversal', (
@@ -2439,6 +2442,44 @@ void main() {
     },
   );
 
+  testWidgets('immersive rotation retains the background and artwork keys', (
+    tester,
+  ) async {
+    await pumpNowPlaying(
+      tester,
+      theme: MornyeTheme.build(Brightness.dark),
+      size: const Size(393, 852),
+      playerView: PlayerView.immersive,
+    );
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    final background = tester.element(find.byType(MornyePlayerBackground));
+    expect(
+      tester
+          .widget<MornyePlayerBackground>(find.byType(MornyePlayerBackground))
+          .fadeStart,
+      .72,
+    );
+    tester.view.physicalSize = const Size(852, 393);
+    await settlePlayer(tester);
+    expect(
+      tester.element(find.byType(MornyePlayerBackground)),
+      same(background),
+    );
+    expect(find.byKey(const ValueKey('full-player-artwork')), findsOneWidget);
+    tester.view.physicalSize = const Size(393, 852);
+    await settlePlayer(tester);
+    expect(
+      tester.element(find.byType(MornyePlayerBackground)),
+      same(background),
+    );
+    expect(
+      tester.getRect(find.byKey(const ValueKey('full-player-artwork'))).width,
+      393,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'player view switches live without duplicate artwork or lost controls',
     (tester) async {
@@ -2495,7 +2536,13 @@ void main() {
           expect(bounds.left, 0);
           expect(bounds.top, 0);
           expect(bounds.width, size.width);
-          expect(bounds.height, closeTo(size.height * .66, .01));
+          expect(
+            bounds.height,
+            closeTo(
+              size.width / (size.width / (size.height * .56)).clamp(.5, 1.0),
+              .01,
+            ),
+          );
           expect(
             find.descendant(
               of: find.byType(MornyePlayerBackground),

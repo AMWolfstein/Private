@@ -54,7 +54,7 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.error,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               Icons.delete_outline,
@@ -70,7 +70,7 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
   Widget _buildMornyeBackground(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
       color: CupertinoColors.systemRed.resolveFrom(context),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(16),
     ),
     child: LayoutBuilder(
       builder: (context, constraints) => ValueListenableBuilder<double>(

@@ -463,6 +463,7 @@ class MornyePlayerLayout extends ConsumerWidget {
         return content();
       },
     );
+    if (PlayerTrackSwipe.hasScope(context)) return body;
     return PlayerTrackSwipe(
       queue: queue,
       currentIndex: currentIndex,

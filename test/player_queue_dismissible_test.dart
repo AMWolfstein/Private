@@ -53,6 +53,7 @@ void main() {
             (decoration as BoxDecoration).color,
             CupertinoColors.systemRed.resolveFrom(tester.element(icon)),
           );
+          expect(decoration.borderRadius, BorderRadius.circular(16));
           final shifted = tester.getRect(song);
           final exposedCenter = direction == TextDirection.ltr
               ? (shifted.right + original.right) / 2

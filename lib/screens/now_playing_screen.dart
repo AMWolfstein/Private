@@ -27,6 +27,7 @@ import 'package:spotiflac_android/widgets/expressive_icon_button.dart';
 import 'package:spotiflac_android/widgets/audio_output_button.dart';
 import 'package:spotiflac_android/widgets/lyrics_screen_awake.dart';
 import 'package:spotiflac_android/widgets/player_artwork.dart';
+import 'package:spotiflac_android/widgets/player_track_swipe.dart';
 import 'package:spotiflac_android/widgets/player_gesture_regions.dart';
 import 'package:spotiflac_android/widgets/player_queue_sheet.dart';
 import 'package:spotiflac_android/widgets/player_details_sheet.dart';
@@ -189,6 +190,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       );
     }
 
+    final screen = MediaQuery.sizeOf(context);
+    final artworkRatio = immersive && screen.height > 0
+        ? (screen.width / (screen.height * .56)).clamp(.5, 1.0)
+        : null;
     final source = mediaItem.extras?['source']?.toString() ?? '';
     Widget artwork() => Align(
       alignment: Alignment.topCenter,
@@ -325,6 +330,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                           page: _currentPage,
                           motionArtwork: artwork(),
                           insetArtwork: !immersive,
+                          artworkAspectRatio: artworkRatio,
                           artworkTopInset:
                               MediaQuery.paddingOf(context).top + 36,
                           artworkKeys: (
@@ -455,70 +461,92 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       ),
     );
     if (!mornye) return player;
-    return HeroMode(
-      // A route Hero renders outside the panel's gradient and slide, briefly
-      // exposing a detached rectangle. Keep Mornye artwork inside its panel.
-      enabled: false,
-      child: Theme(
-        data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            MornyeArtworkContrast(
-              enabled: false,
-              targets: {
-                'header': _artworkHeaderKey,
-                'controls': _artworkControlsKey,
-                'volume': _artworkVolumeKey,
-              },
-              onChanged: (colors) {
-                if (!mounted) return;
-                _artworkForeground.value = colors;
-              },
-              child: MornyePlayerBackground(
-                key: ValueKey(immersive),
-                artUri: mediaItem.artUri,
-                squareArtwork: !immersive,
-                showArtwork: _currentPage == 0,
-                artwork: immersive
-                    ? PlayerArtworkDragRegion(
-                        child: PlayerTransitionArtwork(
-                          artworkKey: _expandedArtworkKey,
-                          child: Hero(
-                            tag: kNowPlayingArtworkHeroTag,
-                            child: PlayerArtwork(
-                              artUri: mediaItem.artUri?.toString(),
-                              colorScheme: colorScheme,
-                              cacheWidth: PlayerArtwork.transitionCacheWidth(
-                                context,
+    final swipeQueue =
+        ref.watch(playQueueProvider).value ?? const <MediaItem>[];
+    final reportedIndex = ref.watch(playbackStateProvider).value?.queueIndex;
+    final swipeIndex =
+        reportedIndex != null &&
+            reportedIndex >= 0 &&
+            reportedIndex < swipeQueue.length &&
+            swipeQueue[reportedIndex].id == mediaItem.id
+        ? reportedIndex
+        : swipeQueue.indexWhere((entry) => entry.id == mediaItem.id);
+    return PlayerTrackSwipe(
+      queue: swipeQueue,
+      currentIndex: swipeIndex,
+      onSelected: (item) async {
+        final latest = ref.read(playQueueProvider).value ?? const <MediaItem>[];
+        final index = latest.indexWhere((entry) => identical(entry, item));
+        if (index >= 0)
+          await ref.read(musicPlayerControllerProvider).jumpTo(index);
+      },
+      child: HeroMode(
+        // A route Hero renders outside the panel's gradient and slide, briefly
+        // exposing a detached rectangle. Keep Mornye artwork inside its panel.
+        enabled: false,
+        child: Theme(
+          data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              MornyeArtworkContrast(
+                enabled: false,
+                targets: {
+                  'header': _artworkHeaderKey,
+                  'controls': _artworkControlsKey,
+                  'volume': _artworkVolumeKey,
+                },
+                onChanged: (colors) {
+                  if (!mounted) return;
+                  _artworkForeground.value = colors;
+                },
+                child: MornyePlayerBackground(
+                  artUri: mediaItem.artUri,
+                  squareArtwork: !immersive,
+                  artworkAspectRatio: artworkRatio,
+                  fadeStart: immersive ? .72 : .58,
+                  showArtwork: _currentPage == 0,
+                  artwork: immersive
+                      ? PlayerArtworkDragRegion(
+                          child: PlayerTransitionArtwork(
+                            artworkKey: _expandedArtworkKey,
+                            child: Hero(
+                              tag: kNowPlayingArtworkHeroTag,
+                              child: PlayerArtwork(
+                                artUri: mediaItem.artUri?.toString(),
+                                colorScheme: colorScheme,
+                                cacheWidth: PlayerArtwork.transitionCacheWidth(
+                                  context,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    : null,
+                        )
+                      : null,
+                ),
               ),
-            ),
-            Listener(
-              behavior: HitTestBehavior.translucent,
-              onPointerDown: (event) {
-                if (!_canAutoHideLyricsControls) return;
-                if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
-                _lyricsPointers[event.pointer] = event.position;
-                _lyricsIdleTimer?.cancel();
-              },
-              onPointerMove: (event) {
-                final origin = _lyricsPointers[event.pointer];
-                if (origin != null && (event.position - origin).distance > 12) {
-                  _lyricsPointerMoved = true;
-                }
-              },
-              onPointerUp: (event) => _endLyricsInteraction(event.pointer),
-              onPointerCancel: (event) =>
-                  _endLyricsInteraction(event.pointer, cancelled: true),
-              child: player,
-            ),
-          ],
+              Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (event) {
+                  if (!_canAutoHideLyricsControls) return;
+                  if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
+                  _lyricsPointers[event.pointer] = event.position;
+                  _lyricsIdleTimer?.cancel();
+                },
+                onPointerMove: (event) {
+                  final origin = _lyricsPointers[event.pointer];
+                  if (origin != null &&
+                      (event.position - origin).distance > 12) {
+                    _lyricsPointerMoved = true;
+                  }
+                },
+                onPointerUp: (event) => _endLyricsInteraction(event.pointer),
+                onPointerCancel: (event) =>
+                    _endLyricsInteraction(event.pointer, cancelled: true),
+                child: player,
+              ),
+            ],
+          ),
         ),
       ),
     );

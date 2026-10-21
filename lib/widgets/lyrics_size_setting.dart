@@ -43,16 +43,19 @@ class LyricsSizeSetting extends ConsumerWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ),
-          Slider(
-            value: scale,
-            min: 0.8,
-            max: 1.4,
-            divisions: 12,
-            label: percent,
-            semanticFormatterCallback: (value) => '${(value * 100).round()}%',
-            onChanged: (value) =>
-                notifier.setLyricsTextScale(value, persist: false),
-            onChangeEnd: notifier.setLyricsTextScale,
+          Semantics(
+            label: context.l10n.lyricsTextSize,
+            child: Slider(
+              value: scale,
+              min: 0.8,
+              max: 1.4,
+              divisions: 12,
+              label: percent,
+              semanticFormatterCallback: (value) => '${(value * 100).round()}%',
+              onChanged: (value) =>
+                  notifier.setLyricsTextScale(value, persist: false),
+              onChangeEnd: notifier.setLyricsTextScale,
+            ),
           ),
         ],
       ),

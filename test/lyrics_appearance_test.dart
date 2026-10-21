@@ -40,6 +40,12 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    final semantics = tester.ensureSemantics();
+    addTearDown(semantics.dispose);
+    expect(
+      tester.getSemantics(find.byType(Slider)).label,
+      contains('Lyrics text size'),
+    );
     final slider = tester.widget<Slider>(find.byType(Slider));
     slider.onChanged!(1.3);
     await tester.pump();

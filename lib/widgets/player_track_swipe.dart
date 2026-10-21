@@ -14,6 +14,10 @@ class PlayerTrackSwipe extends StatefulWidget {
     required this.child,
   });
 
+  /// Lets composite player surfaces share one gesture scope across layers.
+  static bool hasScope(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_SwipeScope>() != null;
+
   final List<MediaItem> queue;
   final int currentIndex;
   final Future<void> Function(MediaItem) onSelected;
