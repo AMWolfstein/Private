@@ -43,7 +43,7 @@ class MornyeSegmentedControl extends ConsumerWidget {
             contrastBlocked: contrastBlocked,
             liquidInteraction:
                 ref.watch(mornyeLiquidGlassProvider) &&
-                MornyeTheme.glassClarityOf(context) > 0.2,
+                ref.watch(mornyeGlassClarityProvider) > 0.2,
             labels: labels,
             selectedIndex: selectedIndex,
             onChanged: onChanged,
@@ -207,7 +207,7 @@ class MornyeGlass extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
-    final clarity = MornyeTheme.glassClarityOf(context);
+    final clarity = ref.watch(mornyeGlassClarityProvider);
     final level = ref.watch(mornyeGlassLevelProvider);
     final reveal = glassProgress.clamp(0.0, 1.0);
     final translucent =
@@ -221,7 +221,7 @@ class MornyeGlass extends ConsumerWidget {
           ),
         );
     final dark = scheme.brightness == Brightness.dark;
-    final outlines = MornyeTheme.glassOutlinesOf(context);
+    final outlines = ref.watch(mornyeGlassOutlinesProvider);
     final shape = BorderRadius.vertical(
       top: firstInGroup ? Radius.circular(radius) : Radius.zero,
       bottom: lastInGroup ? Radius.circular(radius) : Radius.zero,
@@ -522,10 +522,11 @@ class MornyeTabBar extends ConsumerWidget {
     required bool blurEnabled,
     required bool liquidGlass,
     required bool contrastBlocked,
+    required double clarity,
   }) =>
       blurEnabled &&
       liquidGlass &&
-      MornyeTheme.glassClarityOf(context) > 0 &&
+      clarity > 0 &&
       !MediaQuery.disableAnimationsOf(context) &&
       !contrastBlocked;
 
@@ -535,11 +536,13 @@ class MornyeTabBar extends ConsumerWidget {
     final contrastBlocked = ref.watch(
       mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
+    final clarity = ref.watch(mornyeGlassClarityProvider);
     final floating = usesLiquidGlass(
       context,
       blurEnabled: blurEnabled,
       liquidGlass: liquidGlass,
       contrastBlocked: contrastBlocked,
+      clarity: clarity,
     );
     return Padding(
       padding: EdgeInsets.symmetric(vertical: floating ? 8 : 0),
@@ -547,8 +550,7 @@ class MornyeTabBar extends ConsumerWidget {
         contrastBlocked: contrastBlocked,
         selectionColor: scheme.primary,
         maskItemForeground: false,
-        liquidInteraction:
-            floating && MornyeTheme.glassClarityOf(context) > 0.2,
+        liquidInteraction: floating && clarity > 0.2,
         labels: [for (final destination in destinations) destination.label],
         selectedIndex: selectedIndex,
         onChanged: onSelected,

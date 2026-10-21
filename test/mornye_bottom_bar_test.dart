@@ -69,13 +69,10 @@ void main() {
           lowEndDeviceProvider.overrideWithValue(!blur),
           backdropBlurEnabledProvider.overrideWithValue(blur),
           mornyeLiquidGlassProvider.overrideWithValue(liquidGlass),
+          mornyeGlassClarityProvider.overrideWithValue(glassClarity),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(
-            brightness,
-            chromeSurface: chromeSurface,
-            glassClarity: glassClarity,
-          ),
+          theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
           builder: (_, child) => RepaintBoundary(key: capture, child: child),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

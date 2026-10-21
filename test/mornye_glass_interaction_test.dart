@@ -19,34 +19,36 @@ void _maskCullingTests() {
         Color color = Colors.red;
         late StateSetter update;
         await tester.pumpWidget(
-          MaterialApp(
-            home: Directionality(
-              textDirection: direction,
-              child: Center(
-                child: SizedBox(
-                  width: 300,
-                  height: 64,
-                  child: StatefulBuilder(
-                    builder: (_, setState) {
-                      update = setState;
-                      return MornyeSelectionPill(
-                        labels: const ['A', 'B', 'C', 'D', 'E'],
-                        selectedIndex: selected,
-                        selectionColor: color,
-                        maskItemForeground: false,
-                        padding: EdgeInsets.zero,
-                        onChanged: (_) {},
-                        itemBuilder: (_, _, _) => const Center(
-                          child: MornyeSelectionForeground(
-                            child: SizedBox(
-                              width: 16,
-                              height: 40,
-                              child: ColoredBox(color: Colors.white),
+          ProviderScope(
+            child: MaterialApp(
+              home: Directionality(
+                textDirection: direction,
+                child: Center(
+                  child: SizedBox(
+                    width: 300,
+                    height: 64,
+                    child: StatefulBuilder(
+                      builder: (_, setState) {
+                        update = setState;
+                        return MornyeSelectionPill(
+                          labels: const ['A', 'B', 'C', 'D', 'E'],
+                          selectedIndex: selected,
+                          selectionColor: color,
+                          maskItemForeground: false,
+                          padding: EdgeInsets.zero,
+                          onChanged: (_) {},
+                          itemBuilder: (_, _, _) => const Center(
+                            child: MornyeSelectionForeground(
+                              child: SizedBox(
+                                width: 16,
+                                height: 40,
+                                child: ColoredBox(color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -94,27 +96,29 @@ void _maskCullingTests() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Center(
-          child: SizedBox(
-            width: 300,
-            height: 64,
-            child: MornyeSelectionPill(
-              labels: const ['A', 'B', 'C', 'D', 'E'],
-              selectedIndex: 0,
-              selectionColor: Colors.red,
-              maskItemForeground: false,
-              padding: EdgeInsets.zero,
-              onChanged: (_) {},
-              itemBuilder: (_, index, _) => Center(
-                child: MornyeSelectionForeground(
-                  child: index == 4
-                      ? const _OverflowForeground()
-                      : const SizedBox(
-                          width: 16,
-                          height: 40,
-                          child: ColoredBox(color: Colors.white),
-                        ),
+      ProviderScope(
+        child: MaterialApp(
+          home: Center(
+            child: SizedBox(
+              width: 300,
+              height: 64,
+              child: MornyeSelectionPill(
+                labels: const ['A', 'B', 'C', 'D', 'E'],
+                selectedIndex: 0,
+                selectionColor: Colors.red,
+                maskItemForeground: false,
+                padding: EdgeInsets.zero,
+                onChanged: (_) {},
+                itemBuilder: (_, index, _) => Center(
+                  child: MornyeSelectionForeground(
+                    child: index == 4
+                        ? const _OverflowForeground()
+                        : const SizedBox(
+                            width: 16,
+                            height: 40,
+                            child: ColoredBox(color: Colors.white),
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -144,21 +148,23 @@ void main() {
   testWidgets('selection color follows rounded pill corners', (tester) async {
     final capture = GlobalKey();
     await tester.pumpWidget(
-      MaterialApp(
-        home: Center(
-          child: RepaintBoundary(
-            key: capture,
-            child: SizedBox(
-              width: 200,
-              child: MornyeSelectionPill(
-                labels: const ['A', 'B'],
-                selectedIndex: 0,
-                onChanged: (_) {},
-                padding: EdgeInsets.zero,
-                selectionColor: Colors.red,
-                itemBuilder: (_, _, _) => const SizedBox(
-                  height: 64,
-                  child: ColoredBox(color: Colors.white),
+      ProviderScope(
+        child: MaterialApp(
+          home: Center(
+            child: RepaintBoundary(
+              key: capture,
+              child: SizedBox(
+                width: 200,
+                child: MornyeSelectionPill(
+                  labels: const ['A', 'B'],
+                  selectedIndex: 0,
+                  onChanged: (_) {},
+                  padding: EdgeInsets.zero,
+                  selectionColor: Colors.red,
+                  itemBuilder: (_, _, _) => const SizedBox(
+                    height: 64,
+                    child: ColoredBox(color: Colors.white),
+                  ),
                 ),
               ),
             ),

@@ -18,7 +18,18 @@ class AppearanceSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeSettings = ref.watch(themeProvider);
+    // Glass clarity changes on every slider tick; keep it out of this page.
+    final themeSettings = ref.watch(
+      themeProvider.select(
+        (s) => (
+          mornyeAccent: s.mornyeAccent,
+          mornyeGlassOutlines: s.mornyeGlassOutlines,
+          themeMode: s.themeMode,
+          useSystemFont: s.useSystemFont,
+          playerView: s.playerView,
+        ),
+      ),
+    );
     final settings = ref.watch(settingsProvider);
 
     return PopScope(
@@ -195,47 +206,51 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
             ),
           ],
           const SizedBox(height: 16),
-          ExcludeSemantics(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      for (final color in [
-                        theme.colorScheme.primary,
-                        const Color(0xff277f94),
-                        const Color(0xffc69756),
-                      ])
-                        // Preview light glass over a light backdrop, as in the
-                        // app. Dense sample colors make white glass look gray.
-                        theme.brightness == Brightness.light
-                            ? Color.lerp(Colors.white, color, 0.4)!
-                            : color,
-                    ],
+          // Separate layers: the thumb animation must not repaint the glass
+          // preview, and preview blur must not repaint the slider.
+          RepaintBoundary(
+            child: ExcludeSemantics(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        for (final color in [
+                          theme.colorScheme.primary,
+                          const Color(0xff277f94),
+                          const Color(0xffc69756),
+                        ])
+                          // Preview light glass over a light backdrop, as in the
+                          // app. Dense sample colors make white glass look gray.
+                          theme.brightness == Brightness.light
+                              ? Color.lerp(Colors.white, color, 0.4)!
+                              : color,
+                      ],
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: MornyeGlassPanel(
-                    radius: 22,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 14,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.music_note_rounded),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'Mornye',
-                              style: theme.textTheme.titleMedium,
+                  child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: MornyeGlassPanel(
+                      radius: 22,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 14,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.music_note_rounded),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Mornye',
+                                style: theme.textTheme.titleMedium,
+                              ),
                             ),
-                          ),
-                          const Icon(Icons.play_arrow_rounded),
-                        ],
+                            const Icon(Icons.play_arrow_rounded),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -243,18 +258,20 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
               ),
             ),
           ),
-          Semantics(
-            label: l10n.appearanceGlassClarity,
-            child: Slider(
-              key: const ValueKey('mornye-glass-clarity'),
-              value: clarity,
-              divisions: 20,
-              label: '${(clarity * 100).round()}%',
-              onChanged: adjustable
-                  ? (value) =>
-                        notifier.setMornyeGlassClarity(value, persist: false)
-                  : null,
-              onChangeEnd: adjustable ? notifier.setMornyeGlassClarity : null,
+          RepaintBoundary(
+            child: Semantics(
+              label: l10n.appearanceGlassClarity,
+              child: Slider(
+                key: const ValueKey('mornye-glass-clarity'),
+                value: clarity,
+                divisions: 20,
+                label: '${(clarity * 100).round()}%',
+                onChanged: adjustable
+                    ? (value) =>
+                          notifier.setMornyeGlassClarity(value, persist: false)
+                    : null,
+                onChangeEnd: adjustable ? notifier.setMornyeGlassClarity : null,
+              ),
             ),
           ),
           Row(

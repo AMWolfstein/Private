@@ -44,13 +44,10 @@ void main() {
           overrides: [
             mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
             mornyeBlurEnabledProvider.overrideWithValue(true),
+            mornyeGlassClarityProvider.overrideWithValue(1),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(
-              brightness,
-              glassClarity: 1,
-              fontFamily: family,
-            ),
+            theme: MornyeTheme.build(brightness, fontFamily: family),
             builder: (_, child) => RepaintBoundary(
               key: capture,
               child: MornyeGlassPreparation(child: child!),

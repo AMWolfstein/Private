@@ -1,11 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 
 /// A bounded package lens without a captured-screen view or a touch ticker.
-class MornyeLiquidBackdrop extends StatelessWidget {
+class MornyeLiquidBackdrop extends ConsumerWidget {
   const MornyeLiquidBackdrop({
     super.key,
     required this.borderRadius,
@@ -32,10 +33,10 @@ class MornyeLiquidBackdrop extends StatelessWidget {
   final double highlightIntensity;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (interaction && progress <= 0) return child;
     final effect = interaction ? progress : 1.0;
-    final outlines = MornyeTheme.glassOutlinesOf(context);
+    final outlines = ref.watch(mornyeGlassOutlinesProvider);
     final dark = Theme.of(context).brightness == Brightness.dark;
     // Match the old optical lens's edge displacement. Version 5 fixes travel
     // at 70 logical pixels and controls bending through the index alone.

@@ -52,13 +52,10 @@ void main() {
           settingsProvider.overrideWith(() => _Settings(forceBlur)),
           lowEndDeviceProvider.overrideWithValue(lowEnd),
           backdropBlurEnabledProvider.overrideWithValue(false),
+          mornyeGlassClarityProvider.overrideWithValue(glassClarity),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(
-            brightness,
-            glassClarity: glassClarity,
-            chromeSurface: chromeSurface,
-          ),
+          theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
           builder: (context, child) => RepaintBoundary(
             key: capture,
             child: MediaQuery(

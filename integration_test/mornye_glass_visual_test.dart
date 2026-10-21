@@ -168,13 +168,11 @@ void main() {
               MusicPlayerController(runtime: runtime),
             ),
             mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
+            mornyeGlassClarityProvider.overrideWithValue(clarity),
+            mornyeGlassOutlinesProvider.overrideWithValue(outlines),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(
-              brightness,
-              glassClarity: clarity,
-              glassOutlines: outlines,
-            ),
+            theme: MornyeTheme.build(brightness),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:spotiflac_android/providers/theme_provider.dart';
 
 /// True on low-end hardware (arm32-only or low-RAM, resolved at startup in
 /// main.dart via a ProviderScope override). UI uses it to skip expensive
@@ -61,4 +63,18 @@ final mornyeBlurEnabledProvider = Provider<bool>(
 /// Higher-quality glass and continuously filtered artwork / lyric effects.
 final mornyeLiquidGlassProvider = Provider<bool>(
   (ref) => ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid,
+);
+
+/// Glass preferences stay out of ThemeData, so dragging the clarity slider
+/// repaints glass surfaces without rebuilding the app theme.
+final mornyeGlassClarityProvider = Provider<double>(
+  (ref) => ref.watch(
+    themeProvider.select(
+      (s) => normalizeMornyeGlassClarity(s.mornyeGlassClarity),
+    ),
+  ),
+);
+
+final mornyeGlassOutlinesProvider = Provider<bool>(
+  (ref) => ref.watch(themeProvider.select((s) => s.mornyeGlassOutlines)),
 );

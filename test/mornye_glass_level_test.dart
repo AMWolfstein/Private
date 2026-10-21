@@ -59,9 +59,10 @@ void main() {
                 settingsProvider.overrideWith(_Settings.new),
                 // A capable GPU must not implicitly override contrast.
                 deviceSupportsBackdropBlurProvider.overrideWithValue(true),
+                mornyeGlassClarityProvider.overrideWithValue(1),
               ],
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness, glassClarity: 1),
+                theme: MornyeTheme.build(brightness),
                 home: Scaffold(
                   body: Column(
                     children: [
@@ -125,6 +126,7 @@ void main() {
                 contrastBlocked: container.read(
                   mornyeGlassContrastBlockedProvider(true),
                 ),
+                clarity: container.read(mornyeGlassClarityProvider),
               ),
               forceBlur && !reduceMotion,
             );
@@ -239,9 +241,10 @@ void main() {
             mornyeGlassLevelProvider.overrideWithValue(
               liquid ? MornyeGlassLevel.liquid : MornyeGlassLevel.frosted,
             ),
+            mornyeGlassClarityProvider.overrideWithValue(clarity),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.light, glassClarity: clarity),
+            theme: MornyeTheme.build(Brightness.light),
             home: const MornyeGlass.navigation(
               blurEnabled: true,
               child: SizedBox(width: 200, height: 50),
@@ -283,8 +286,9 @@ void main() {
       late BuildContext context;
       await tester.pumpWidget(
         ProviderScope(
+          overrides: [mornyeGlassClarityProvider.overrideWithValue(clarity)],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark, glassClarity: clarity),
+            theme: MornyeTheme.build(Brightness.dark),
             home: Scaffold(
               body: Builder(
                 builder: (builderContext) {
@@ -329,6 +333,7 @@ void main() {
           blurEnabled: true,
           liquidGlass: true,
           contrastBlocked: false,
+          clarity: clarity,
         ),
         liquid,
       );

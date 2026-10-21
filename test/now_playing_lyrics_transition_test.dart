@@ -149,6 +149,7 @@ void main() {
     Stream<PlaybackState>? playbackEvents,
     Widget Function(Widget)? wrapPlayer,
     MusicPlayerController? controller,
+    double glassClarity = kDefaultMornyeGlassClarity,
     List<MediaItem> queue = const [],
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -162,7 +163,10 @@ void main() {
       ProviderScope(
         overrides: [
           initialThemeSettingsProvider.overrideWithValue(
-            ThemeSettings(playerView: playerView),
+            ThemeSettings(
+              playerView: playerView,
+              mornyeGlassClarity: glassClarity,
+            ),
           ),
           if (controller != null)
             musicPlayerControllerProvider.overrideWithValue(controller),
@@ -463,7 +467,8 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark, glassClarity: 0.5),
+      theme: MornyeTheme.build(Brightness.dark),
+      glassClarity: 0.5,
       size: const Size(393, 852),
       playbackEvents: playback.stream,
     );
@@ -969,8 +974,6 @@ void main() {
     testWidgets(
       'manual lyric scrolling keeps its viewport stable while controls animate (height: $height)',
       (tester) async {
-        final clarity = ValueNotifier(0.5);
-        addTearDown(clarity.dispose);
         metadataOverrides['lyrics'] = List.generate(
           20,
           (index) =>
@@ -981,14 +984,7 @@ void main() {
           theme: MornyeTheme.build(Brightness.dark),
           size: Size(393, height),
           playback: PlaybackState(updatePosition: const Duration(seconds: 30)),
-          wrapPlayer: (player) => ValueListenableBuilder<double>(
-            valueListenable: clarity,
-            builder: (context, value, child) => Theme(
-              data: MornyeTheme.build(Brightness.dark, glassClarity: value),
-              child: child!,
-            ),
-            child: player,
-          ),
+          glassClarity: 0.5,
         );
         mediaItems.add(item('many'));
         await settlePlayer(tester);
@@ -996,6 +992,11 @@ void main() {
         await settlePlayer(tester);
         final list = find.byType(ListView);
         final bounds = tester.getRect(list);
+        void setClarity(double value) => unawaited(
+          ProviderScope.containerOf(tester.element(list))
+              .read(themeProvider.notifier)
+              .setMornyeGlassClarity(value, persist: false),
+        );
         final scrollable = find.descendant(
           of: list,
           matching: find.byType(Scrollable),
@@ -1023,9 +1024,9 @@ void main() {
         final hiddenOffset = state.position.pixels;
         expect(hiddenOffset, greaterThan(initialOffset));
         expect(transport.hitTestable(), findsNothing);
-        // An inherited appearance update must not reset playback following
-        // while the user owns the scroll position.
-        clarity.value = 0.6;
+        // An appearance update must not reset playback following while the
+        // user owns the scroll position.
+        setClarity(0.6);
         await tester.pump();
         await tester.pump();
         expect(state.position.pixels, closeTo(hiddenOffset, 0.01));
@@ -1061,7 +1062,7 @@ void main() {
         await touch.up();
         await settlePlayer(tester);
         final releasedOffset = state.position.pixels;
-        clarity.value = 0.5;
+        setClarity(0.5);
         await tester.pump();
         await settlePlayer(tester);
         expect(state.position.pixels, closeTo(releasedOffset, 0.01));

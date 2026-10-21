@@ -20,24 +20,27 @@ void main() {
   testWidgets('held foreground reaches the curved glass edge', (tester) async {
     final capture = GlobalKey();
     await tester.pumpWidget(
-      MaterialApp(
-        // Measure the foreground mask independently of the rim's lighting.
-        theme: MornyeTheme.build(Brightness.dark, glassOutlines: false),
-        home: Center(
-          child: RepaintBoundary(
-            key: capture,
-            child: SizedBox(
-              width: 360,
-              child: MornyeSelectionPill(
-                labels: const ['Home', 'Library', 'Repo', 'Search'],
-                selectedIndex: 0,
-                onChanged: (_) {},
-                padding: EdgeInsets.zero,
-                liquidInteraction: true,
-                selectionColor: Colors.red,
-                itemBuilder: (_, _, _) => const SizedBox(
-                  height: 64,
-                  child: ColoredBox(color: Colors.white),
+      ProviderScope(
+        overrides: [mornyeGlassOutlinesProvider.overrideWithValue(false)],
+        child: MaterialApp(
+          // Measure the foreground mask independently of the rim's lighting.
+          theme: MornyeTheme.build(Brightness.dark),
+          home: Center(
+            child: RepaintBoundary(
+              key: capture,
+              child: SizedBox(
+                width: 360,
+                child: MornyeSelectionPill(
+                  labels: const ['Home', 'Library', 'Repo', 'Search'],
+                  selectedIndex: 0,
+                  onChanged: (_) {},
+                  padding: EdgeInsets.zero,
+                  liquidInteraction: true,
+                  selectionColor: Colors.red,
+                  itemBuilder: (_, _, _) => const SizedBox(
+                    height: 64,
+                    child: ColoredBox(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -122,56 +125,60 @@ void main() {
       final movement = ValueNotifier<double>(0);
       addTearDown(movement.dispose);
       await tester.pumpWidget(
-        MaterialApp(
-          home: RepaintBoundary(
-            key: key,
-            child: LiquidGlassBatch(
-              child: Stack(
-                children: [
-                  const Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.black, Colors.white],
+        ProviderScope(
+          overrides: [],
+          child: MaterialApp(
+            home: RepaintBoundary(
+              key: key,
+              child: LiquidGlassBatch(
+                child: Stack(
+                  children: [
+                    const Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.black, Colors.white],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  for (final top in [160.0, 320.0])
-                    Positioned(
-                      left: 40,
-                      top: top,
-                      width: 300,
-                      height: 80,
-                      child: ValueListenableBuilder<double>(
-                        valueListenable: movement,
-                        builder: (context, value, child) => Transform.translate(
-                          offset: Offset(value, 0),
-                          child: Transform.scale(
-                            scale: top == 320 ? 0.8 : 1,
-                            child: child,
-                          ),
-                        ),
-                        child: RepaintBoundary(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: MornyeLiquidBackdrop(
+                    for (final top in [160.0, 320.0])
+                      Positioned(
+                        left: 40,
+                        top: top,
+                        width: 300,
+                        height: 80,
+                        child: ValueListenableBuilder<double>(
+                          valueListenable: movement,
+                          builder: (context, value, child) =>
+                              Transform.translate(
+                                offset: Offset(value, 0),
+                                child: Transform.scale(
+                                  scale: top == 320 ? 0.8 : 1,
+                                  child: child,
+                                ),
+                              ),
+                          child: RepaintBoundary(
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(40),
-                              clarity: 1,
-                              blurSigma: 2,
-                              child: const Center(
-                                child: SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: ColoredBox(color: Color(0xff00ff00)),
+                              child: MornyeLiquidBackdrop(
+                                borderRadius: BorderRadius.circular(40),
+                                clarity: 1,
+                                blurSigma: 2,
+                                child: const Center(
+                                  child: SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: ColoredBox(color: Color(0xff00ff00)),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -229,13 +236,16 @@ void main() {
   ) async {
     var selected = 0;
     final changes = <int>[];
-    final theme = MornyeTheme.build(Brightness.dark, glassClarity: 1);
+    final theme = MornyeTheme.build(Brightness.dark);
     final lens = find.byWidgetPredicate(
       (widget) => widget is MornyeLiquidBackdrop && widget.interaction,
     );
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [deviceSupportsLiquidGlassProvider.overrideWithValue(true)],
+        overrides: [
+          deviceSupportsLiquidGlassProvider.overrideWithValue(true),
+          mornyeGlassClarityProvider.overrideWithValue(1),
+        ],
         child: MaterialApp(
           theme: theme,
           home: Scaffold(

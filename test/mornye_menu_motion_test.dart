@@ -24,9 +24,10 @@ void main() {
         overrides: [
           mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.frosted),
           mornyeBlurEnabledProvider.overrideWithValue(true),
+          mornyeGlassClarityProvider.overrideWithValue(1),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark, glassClarity: 1),
+          theme: MornyeTheme.build(Brightness.dark),
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context).copyWith(
               disableAnimations: reduced,

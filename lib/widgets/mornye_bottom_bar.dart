@@ -148,6 +148,7 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
       contrastBlocked: ref.watch(
         mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
       ),
+      clarity: ref.watch(mornyeGlassClarityProvider),
     );
     final tabGap = glassTabs ? 0.0 : 8.0;
     // These contents do not depend on animation progress. Retain their widget
@@ -171,7 +172,10 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
     final leadingIndex = searchSelected ? 0 : selectedIndex;
     final scheme = Theme.of(context).colorScheme;
     final inactiveIconColor = scheme.onSurface;
-    final player = MiniPlayer(compact: collapsed, bottomPadding: 0);
+    // Progress ticks repaint the player alone, not the tab glass beside it.
+    final player = RepaintBoundary(
+      child: MiniPlayer(compact: collapsed, bottomPadding: 0),
+    );
     Widget tabs({required bool hideMovingIcons}) => TickerMode(
       enabled: !collapsed,
       child: RepaintBoundary(

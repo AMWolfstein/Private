@@ -12,27 +12,29 @@ class MornyeThemeWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeSettings = ref.watch(themeProvider);
+    // Select only what ThemeData needs; glass preferences have their own
+    // providers so the clarity slider does not rebuild MaterialApp.
+    final accent = ref.watch(themeProvider.select((s) => s.mornyeAccent));
+    final useSystemFont = ref.watch(
+      themeProvider.select((s) => s.useSystemFont),
+    );
+    final themeMode = ref.watch(themeProvider.select((s) => s.themeMode));
     final fontFamily = ref.watch(customFontFamilyProvider).asData?.value;
 
     return builder(
       MornyeTheme.build(
         Brightness.light,
-        accent: themeSettings.mornyeAccent,
-        useSystemFont: themeSettings.useSystemFont,
+        accent: accent,
+        useSystemFont: useSystemFont,
         fontFamily: fontFamily,
-        glassClarity: themeSettings.mornyeGlassClarity,
-        glassOutlines: themeSettings.mornyeGlassOutlines,
       ),
       MornyeTheme.build(
         Brightness.dark,
-        accent: themeSettings.mornyeAccent,
-        useSystemFont: themeSettings.useSystemFont,
+        accent: accent,
+        useSystemFont: useSystemFont,
         fontFamily: fontFamily,
-        glassClarity: themeSettings.mornyeGlassClarity,
-        glassOutlines: themeSettings.mornyeGlassOutlines,
       ),
-      themeSettings.themeMode,
+      themeMode,
     );
   }
 }

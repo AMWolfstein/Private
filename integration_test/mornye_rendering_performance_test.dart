@@ -236,9 +236,10 @@ class _Fixture {
       lowEndDeviceProvider.overrideWithValue(false),
       backdropBlurEnabledProvider.overrideWithValue(true),
       mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
+      mornyeGlassClarityProvider.overrideWithValue(clarity),
     ],
     child: MaterialApp(
-      theme: MornyeTheme.build(Brightness.dark, glassClarity: clarity),
+      theme: MornyeTheme.build(Brightness.dark),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(

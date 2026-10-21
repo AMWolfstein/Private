@@ -44,7 +44,11 @@ class _CustomFontSettingState extends ConsumerState<CustomFontSetting> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeProvider);
+    final theme = ref.watch(
+      themeProvider.select(
+        (s) => (customFontId: s.customFontId, customFontName: s.customFontName),
+      ),
+    );
     return ListTile(
       leading: null,
       title: Text(context.l10n.appearanceCustomFont),

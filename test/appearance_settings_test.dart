@@ -169,19 +169,20 @@ void main() {
         await tester.pumpAndSettle();
         expect(prefs.getBool(kMornyeGlassOutlinesKey), isFalse);
         final context = tester.element(toggle);
-        expect(MornyeTheme.glassOutlinesOf(context), isFalse);
-        final local = MornyeTheme.fromContext(
-          context,
-          brightness: Brightness.dark,
-        );
-        expect(local.extension<MornyeTheme>()!.glassOutlines, isFalse);
+        final container = ProviderScope.containerOf(context);
+        expect(container.read(mornyeGlassOutlinesProvider), isFalse);
         expect(
-          local.extension<MornyeTheme>()!.glassClarity,
+          container.read(mornyeGlassClarityProvider),
           kDefaultMornyeGlassClarity,
         );
         await tester.pumpWidget(const SizedBox());
         await openSettings(tester, prefs);
-        expect(MornyeTheme.glassOutlinesOf(tester.element(toggle)), isFalse);
+        expect(
+          ProviderScope.containerOf(
+            tester.element(toggle),
+          ).read(mornyeGlassOutlinesProvider),
+          isFalse,
+        );
         await tester.ensureVisible(toggle);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
@@ -208,17 +209,13 @@ void main() {
       expect(tester.widget<Slider>(slider).value, 1);
       expect(prefs.getDouble(kMornyeGlassClarityKey), 1);
       final context = tester.element(slider);
-      expect(MornyeTheme.glassClarityOf(context), 1);
+      expect(
+        ProviderScope.containerOf(context).read(mornyeGlassClarityProvider),
+        1,
+      );
       expect(
         find.byKey(const ValueKey('mornye-glass-clear-performance')),
         findsOneWidget,
-      );
-      expect(
-        MornyeTheme.fromContext(
-          context,
-          brightness: Brightness.dark,
-        ).extension<MornyeTheme>()!.glassClarity,
-        1,
       );
       await tester.pumpWidget(const SizedBox());
       await openSettings(tester, prefs);

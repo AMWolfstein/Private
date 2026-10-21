@@ -4,8 +4,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/widgets/mornye_liquid_backdrop.dart';
 
 Future<ui.FragmentProgram>? _selectionMaskProgram;
@@ -16,7 +17,7 @@ const _pillRadius = 32.0;
 
 /// Selection with a transient lens over the fixed-size foreground while held.
 /// It refracts both the bar's backdrop and its icons, rendered only once.
-class MornyeSelectionPill extends StatefulWidget {
+class MornyeSelectionPill extends ConsumerStatefulWidget {
   const MornyeSelectionPill({
     super.key,
     required this.labels,
@@ -55,10 +56,11 @@ class MornyeSelectionPill extends StatefulWidget {
   interactionBuilder;
 
   @override
-  State<MornyeSelectionPill> createState() => _MornyeSelectionPillState();
+  ConsumerState<MornyeSelectionPill> createState() =>
+      _MornyeSelectionPillState();
 }
 
-class _MornyeSelectionPillState extends State<MornyeSelectionPill>
+class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
     with SingleTickerProviderStateMixin {
   int? _dragIndex;
   bool _dragCancelled = false;
@@ -160,6 +162,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
     if (count == 0) return const SizedBox.shrink();
     final selected = _dragIndex ?? _pressedIndex ?? widget.selectedIndex;
     final scheme = Theme.of(context).colorScheme;
+    final outlines = ref.watch(mornyeGlassOutlinesProvider);
     final lensEnabled =
         widget.liquidInteraction &&
         ui.ImageFilter.isShaderFilterSupported &&
@@ -274,7 +277,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
                                 borderRadius: BorderRadius.circular(
                                   _pillRadius,
                                 ),
-                                border: MornyeTheme.glassOutlinesOf(context)
+                                border: outlines
                                     ? Border.all(
                                         color: scheme.onSurface.withValues(
                                           alpha: 0.05 * restingOpacity,
@@ -307,7 +310,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
                 // The lens must sample the foreground as well as the page.
                 // Below the icons it would look like a rim on a flat backdrop.
                 if (lensEnabled && selected >= 0 && selected < count)
-                  _interactionLens(selected, count, pressProgress),
+                  _interactionLens(selected, count, pressProgress, outlines),
               ],
             ),
           ),
@@ -409,6 +412,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
     int selected,
     int count,
     double progress,
+    bool outlines,
   ) => Positioned.fill(
     child: IgnorePointer(
       child: AnimatedAlign(
@@ -449,7 +453,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
                                 ? 0.24
                                 : 0.08),
                       ),
-                      border: MornyeTheme.glassOutlinesOf(context)
+                      border: outlines
                           ? Border.all(
                               color: Colors.white.withValues(
                                 alpha: 0.6 * progress,
