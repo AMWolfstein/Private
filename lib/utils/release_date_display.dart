@@ -21,8 +21,9 @@ String? formatReleaseTag(String? value, String locale) {
   final month = int.tryParse(monthTag ?? '1')!;
   final day = int.tryParse(dayTag ?? '1')!;
   final date = DateTime(year, month, day);
-  if (year < 1 || date.year != year || date.month != month || date.day != day)
+  if (year < 1 || date.year != year || date.month != month || date.day != day) {
     return null;
+  }
   final precision = dayTag != null
       ? 3
       : monthTag != null

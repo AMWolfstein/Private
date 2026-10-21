@@ -353,7 +353,7 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _resetHomeToMain({bool scrollToTop = false}) {
-    if (scrollToTop)
+    if (scrollToTop) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted || !_homeFeedScrollController.hasClients) return;
         if (MediaQuery.disableAnimationsOf(context)) {
@@ -368,6 +368,7 @@ class _MainShellState extends ConsumerState<MainShell>
           );
         }
       });
+    }
     final homeNavigator = _navigatorForTab(0);
     homeNavigator?.popUntil((route) => route.isFirst);
     FocusManager.instance.primaryFocus?.unfocus();

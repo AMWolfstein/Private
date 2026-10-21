@@ -153,10 +153,10 @@ extension _LocalHomeFeedUI on _HomeTabState {
       for (final request in requests)
         ref
             .read(libraryBrowseProvider(request).future)
-            .then<void>((_) {}, onError: (Object _, StackTrace __) {}),
+            .then<void>((_) {}, onError: (Object _, StackTrace _) {}),
       ref
           .read(localHomeTracksProvider.future)
-          .then<void>((_) {}, onError: (Object _, StackTrace __) {}),
+          .then<void>((_) {}, onError: (Object _, StackTrace _) {}),
     ]);
   }
 
@@ -271,8 +271,9 @@ extension _LocalHomeFeedUI on _HomeTabState {
 
   double _feedCardWidth(bool featured) {
     final width = MediaQuery.sizeOf(context).width;
-    if (featured)
+    if (featured) {
       return (width - 48 - 2 * wideListInset(context)).clamp(160.0, 560.0);
+    }
     final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
     return 145 *
         (width / 400).clamp(.82, 1.32) *
