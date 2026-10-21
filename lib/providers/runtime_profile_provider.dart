@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -54,6 +56,12 @@ final mornyeGlassLevelProvider = Provider<MornyeGlassLevel>((ref) {
   if (ref.watch(backdropBlurEnabledProvider)) return MornyeGlassLevel.liquid;
   return lowEnd ? MornyeGlassLevel.flat : MornyeGlassLevel.frosted;
 });
+
+/// Whether the renderer supports backdrop shader filters (Impeller). Glass
+/// lenses need them; widget tests override this to exercise the glass path.
+final mornyeShaderFiltersSupportedProvider = Provider<bool>(
+  (ref) => ui.ImageFilter.isShaderFilterSupported,
+);
 
 /// Backdrop blur for Mornye surfaces (frosted or liquid).
 final mornyeBlurEnabledProvider = Provider<bool>(

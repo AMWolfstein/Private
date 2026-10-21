@@ -364,19 +364,21 @@ void main() {
       var value = false;
       final changes = <bool>[];
       await tester.pumpWidget(
-        MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
-          home: Directionality(
-            textDirection: direction,
-            child: Scaffold(
-              body: Center(
-                child: StatefulBuilder(
-                  builder: (context, setState) => AppSwitch(
-                    value: value,
-                    onChanged: (next) {
-                      changes.add(next);
-                      setState(() => value = next);
-                    },
+        ProviderScope(
+          child: MaterialApp(
+            theme: MornyeTheme.build(Brightness.dark),
+            home: Directionality(
+              textDirection: direction,
+              child: Scaffold(
+                body: Center(
+                  child: StatefulBuilder(
+                    builder: (context, setState) => AppSwitch(
+                      value: value,
+                      onChanged: (next) {
+                        changes.add(next);
+                        setState(() => value = next);
+                      },
+                    ),
                   ),
                 ),
               ),
