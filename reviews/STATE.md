@@ -10,7 +10,7 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
   Historical audit rows reopened as partial/stale after upstream ports. New workflow is
   implemented; missing application audit coverage is scheduled, not claimed reviewed.
 - Open findings: 139 (0 P0, 1 P1, 54 P2, 84 P3; see FINDINGS.md). Remaining findings are outside completed port/refinement batches.
-- Release checkpoint: Local ARM64 APK build 167, source `c76237c6`, graph `a08624d2`; certificate matches 166, audits/tests PASS. Artifact branch `apk-local-arm64-167`; device checks NOT RUN.
+- Release checkpoint: Local ARM64 APK build 168, source `2a2ab3be` including fetched `d4dff781`, graph `686a463f`; certificate matches 167, analysis/tests/artifact audits PASS. Artifact branch `apk-local-arm64-168` published and verified; device checks NOT RUN. See LOCAL_BUILD_168.md. Audit paused by owner; untracked new audit folder preserved.
 - Last checkpoint: upstream port batch 16; source ef8ba64d, graph 331ab3d0. See PORT_EXECUTION.md for per-port commits.
 - Review system: adopted checks from external agent/skill repos (gate questions, skeptic
   validation, auto-reject list, `CALIBRATION.md`, per-agent "Also check" lines, fixer

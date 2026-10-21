@@ -23,14 +23,16 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 _Last updated: 2026-10-21_
 
 **Status:** Phases 1-8 and the requested local-player refinements are implemented.
-Latest source validation passed. The signed ARM64-only side-by-side **build 167** includes
-source through `c76237c6`, all completed upstream port batches and Batch 16 cleanup.
+Latest source validation passed. The signed ARM64-only side-by-side **build 168** includes
+fetched `d4dff781` (glass slider fix), source `2a2ab3be`, all completed upstream ports and Batch 16 cleanup.
 It retains **SpotiFLAC Local** (`com.zarz.spotiflac.local`), the cream/green launcher icon
-and the certificate used by build 166. Physical-device validation remains pending.
+and the certificate used by build 167. Physical-device validation remains pending.
 `c29daef` removes the About page credits, translators, special thanks, links and social sections
 (with `url_launcher`) and the Search tab Recent list (app-state schema v5 drops its tables);
 `flutter analyze` and the full `flutter test` run now pass in batch 1b.
 Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIONS.md`.
+
+**Local ARM64 build 168 (2026-10-21):** Owner paused the new audit and requested the latest branch build. Fetched `d4dff781`; release metadata source `2a2ab3be`, graph `686a463f`. Analysis clean; full Flutter 1,514 passed / 3 skipped before the version-only bump; signed release compilation and artifact audits PASS. VersionCode2168, ARM64-only SpotiFLAC Local, cream/green icon and certificate matching167. APK 52,787,208 bytes, SHA256 `98c0ab17ef57b39870e24b654a1ad6be8883d7d09923a9a61c6ee5a2032cdecf`. Device NOT RUN. [Download](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-168/SpotiFLAC-Local-168-arm64-v8a.apk); details in reviews/LOCAL_BUILD_168.md. This supersedes the earlier source-session note that its environment could not package an APK.
 
 **Glass clarity slider jank (2026-10-21):** `a935e65` moves glass clarity and outlines out of the `MornyeTheme` ThemeExtension into `mornyeGlassClarityProvider`/`mornyeGlassOutlinesProvider`. `MornyeThemeWrapper` selects only accent, system font and theme mode, so a slider tick no longer rebuilds both ThemeData objects, runs MaterialApp's 300ms theme lerp or rebuilds every `Theme.of` dependent. The Appearance page and custom font tile select their fields. The clarity preview and slider, and the bottom-bar mini player, have their own repaint boundaries (the tab bar and side capsules already had them). No visual values changed; persist:false while dragging, saved on drag end.
 
