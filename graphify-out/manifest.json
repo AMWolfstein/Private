@@ -5796,9 +5796,9 @@
     "semantic_hash": "d5a74276a07d4bf8ea62464f80d0d9c9"
   },
   "test/lyrics_appearance_test.dart": {
-    "mtime": 1792562237.4694731,
-    "seen": 1792562274.8199093,
-    "ast_hash": "5bb20f9e90ece46e1f6794174455c8c4",
+    "mtime": 1792562383.6769536,
+    "seen": 1792562412.864202,
+    "ast_hash": "a0da4bd7acde8cbfc6f9896bc587011a",
     "semantic_hash": ""
   },
   "test/lyrics_metadata_helper_test.dart": {
@@ -6066,9 +6066,9 @@
     "semantic_hash": ""
   },
   "test/now_playing_lyrics_transition_test.dart": {
-    "mtime": 1792562237.4614732,
-    "seen": 1792562274.8199804,
-    "ast_hash": "736afbb52f9189fc47a47bff7483db2b",
+    "mtime": 1792562383.8851862,
+    "seen": 1792562412.8643003,
+    "ast_hash": "b24e5ac7663be3d95a475d451993d6cd",
     "semantic_hash": ""
   },
   "test/now_playing_route_test.dart": {
