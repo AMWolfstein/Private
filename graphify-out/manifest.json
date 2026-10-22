@@ -1002,9 +1002,9 @@
     "semantic_hash": ""
   },
   "lib/services/ffmpeg_metadata.dart": {
-    "mtime": 1792620523.4116256,
-    "seen": 1792623676.7848554,
-    "ast_hash": "8f1ea1f3004fe5f60f63c23afcd58859",
+    "mtime": 1792681793.8575425,
+    "seen": 1792681838.328614,
+    "ast_hash": "9f4d9f9225b8fb7b3236daa3587061c6",
     "semantic_hash": ""
   },
   "lib/services/ffmpeg_models.dart": {
