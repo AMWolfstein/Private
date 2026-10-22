@@ -1494,9 +1494,9 @@
     "semantic_hash": "21f80f6304df946a89a8f0046e85f9df"
   },
   "lib/widgets/album_detail_header.dart": {
-    "mtime": 1792685715.6015334,
-    "seen": 1792686186.2398684,
-    "ast_hash": "5742b567747d358fdaef998d2ca639d5",
+    "mtime": 1792697353.3060753,
+    "seen": 1792697444.8893588,
+    "ast_hash": "2a1265b9e0f860135bf8e47db6d6fa9e",
     "semantic_hash": ""
   },
   "lib/widgets/album_track_tile.dart": {
@@ -1752,9 +1752,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artist_header.dart": {
-    "mtime": 1792685731.278644,
-    "seen": 1792686186.2399762,
-    "ast_hash": "403e06f61d02f4c17749f11dea2e3925",
+    "mtime": 1792696968.0583994,
+    "seen": 1792697444.8895133,
+    "ast_hash": "6cb9ed6ec540fa2ca214e957fb47408a",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artwork_contrast.dart": {
@@ -5424,9 +5424,9 @@
     "semantic_hash": ""
   },
   "test/mornye_detail_headers_test.dart": {
-    "mtime": 1792620523.4996257,
-    "seen": 1792623676.7869356,
-    "ast_hash": "4763e8746daa73cb1d634cb6613b131a",
+    "mtime": 1792697353.185843,
+    "seen": 1792697444.8916564,
+    "ast_hash": "c9f23d9b10657c90f42504369d7646fc",
     "semantic_hash": ""
   },
   "test/mornye_glass_interaction_test.dart": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792686208.524723,
-    "seen": 1792692218.382505,
-    "ast_hash": "0eed2facca96fedaf07580a6f26354f2",
+    "mtime": 1792694088.8785274,
+    "seen": 1792697444.8921702,
+    "ast_hash": "ee4b12bc135af8ab8daeec8794395e1c",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792693286.5839357,
-    "seen": 1792694087.4376411,
-    "ast_hash": "2c9aa49db8dc2d150fabc79a2c7910d3",
+    "mtime": 1792694088.8779511,
+    "seen": 1792697444.8921835,
+    "ast_hash": "500d83f196ac0d6dd5edfa472ca75bbe",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7782,9 +7782,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artwork_glass.dart": {
-    "mtime": 1792662807.8857653,
-    "seen": 1792663396.3164747,
-    "ast_hash": "59b06c837f676929d6c03860a3d39d48",
+    "mtime": 1792696941.4829814,
+    "seen": 1792697444.8895187,
+    "ast_hash": "4a222d59ac6a1b23700d7610e698ed85",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_player_ground.dart": {
