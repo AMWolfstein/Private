@@ -228,7 +228,7 @@ class EqualizerScreen extends ConsumerWidget {
                       SettingsItem(
                         title: l10n.equalizerPresets,
                         onTap: () => _presets(context),
-                        trailing: const Icon(CupertinoIcons.chevron_forward),
+                        trailing: const Icon(CupertinoIcons.forward),
                       ),
                       SettingsItem(
                         title: l10n.equalizerSavePreset,

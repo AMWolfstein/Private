@@ -160,9 +160,9 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
                       ),
                     ),
                   if (_isPlaylistSelectionMode)
-                    Positioned(
+                    PositionedDirectional(
                       top: 4,
-                      right: 4,
+                      end: 4,
                       child: IgnorePointer(
                         child: AnimatedSelectionCheckbox(
                           visible: true,

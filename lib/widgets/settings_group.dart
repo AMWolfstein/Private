@@ -357,7 +357,7 @@ class SettingsItem extends StatelessWidget {
                   ] else if (onTap != null) ...[
                     const SizedBox(width: 8),
                     Icon(
-                      CupertinoIcons.chevron_forward,
+                      CupertinoIcons.forward,
                       size: context.tokens.rowChevronSize,
                       color: colorScheme.onSurfaceVariant,
                     ),

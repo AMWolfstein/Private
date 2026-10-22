@@ -48,136 +48,145 @@ class PlayerPlaybackControls extends ConsumerWidget {
     final timeStyle = Theme.of(
       context,
     ).textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant);
-    return Column(
-      children: [
-        ValueListenableBuilder<Duration?>(
-          valueListenable: seekPreview,
-          builder: (context, preview, _) => Consumer(
-            builder: (context, ref, quality) {
-              final position = ref.watch(playbackPositionProvider);
-              final elapsedSeconds = (preview ?? position).inSeconds;
-              return Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: mornye ? _mornyeTimelinePadding : 16,
-                ),
-                child: Column(
-                  children: [
-                    SliderTheme(
-                      data: SliderThemeData(
-                        trackHeight: 4,
-                        activeTrackColor: mornye
-                            ? colorScheme.onSurface
-                            : colorScheme.primary,
-                        inactiveTrackColor: colorScheme.onSurface.withValues(
-                          alpha: 0.18,
+    // Time runs left to right in every language: the timeline and the
+    // transport keep their order in right-to-left layouts, as Material and
+    // Apple's guidelines ask for media controls.
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
+        children: [
+          ValueListenableBuilder<Duration?>(
+            valueListenable: seekPreview,
+            builder: (context, preview, _) => Consumer(
+              builder: (context, ref, quality) {
+                final position = ref.watch(playbackPositionProvider);
+                final elapsedSeconds = (preview ?? position).inSeconds;
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: mornye ? _mornyeTimelinePadding : 16,
+                  ),
+                  child: Column(
+                    children: [
+                      SliderTheme(
+                        data: SliderThemeData(
+                          trackHeight: 4,
+                          activeTrackColor: mornye
+                              ? colorScheme.onSurface
+                              : colorScheme.primary,
+                          inactiveTrackColor: colorScheme.onSurface.withValues(
+                            alpha: 0.18,
+                          ),
+                          thumbColor: mornye
+                              ? colorScheme.onSurface
+                              : colorScheme.primary,
+                          // A 7dp thumb was hard to grab; 10dp with a 24dp overlay
+                          // gives the drag gesture a full-size target.
+                          thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 10,
+                          ),
+                          overlayShape: const RoundSliderOverlayShape(
+                            overlayRadius: 24,
+                          ),
                         ),
-                        thumbColor: mornye
-                            ? colorScheme.onSurface
-                            : colorScheme.primary,
-                        // A 7dp thumb was hard to grab; 10dp with a 24dp overlay
-                        // gives the drag gesture a full-size target.
-                        thumbShape: const RoundSliderThumbShape(
-                          enabledThumbRadius: 10,
-                        ),
-                        overlayShape: const RoundSliderOverlayShape(
-                          overlayRadius: 24,
+                        child: PlaybackSeekSlider(
+                          key: ValueKey(mediaId),
+                          position: position,
+                          duration: duration,
+                          onSeek: controller.seek,
+                          preview: seekPreview,
+                          playing: isPlaying && !isLoading,
                         ),
                       ),
-                      child: PlaybackSeekSlider(
-                        key: ValueKey(mediaId),
-                        position: position,
-                        duration: duration,
-                        onSeek: controller.seek,
-                        preview: seekPreview,
-                        playing: isPlaying && !isLoading,
+                      if (!mornye) const SizedBox(height: 8),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: mornye
+                              ? MornyePlayerSlider.horizontalInset
+                              : 12,
+                        ),
+                        child: Row(
+                          children: [
+                            if (mornye)
+                              MornyePlaybackTime(
+                                key: ValueKey('elapsed:$mediaId'),
+                                seconds: elapsedSeconds,
+                                style: timeStyle,
+                              )
+                            else
+                              Text(
+                                formatClock(elapsedSeconds),
+                                style: timeStyle,
+                              ),
+                            Expanded(child: Center(child: quality)),
+                            if (mornye)
+                              MornyePlaybackTime(
+                                key: ValueKey('remaining:$mediaId'),
+                                // Subtract whole seconds so both labels roll together,
+                                // even when the track duration includes milliseconds.
+                                seconds: (duration.inSeconds - elapsedSeconds)
+                                    .clamp(0, duration.inSeconds),
+                                remaining: true,
+                                style: timeStyle,
+                              )
+                            else
+                              Text(
+                                formatClock(duration.inSeconds),
+                                style: timeStyle,
+                              ),
+                          ],
+                        ),
                       ),
-                    ),
-                    if (!mornye) const SizedBox(height: 8),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: mornye
-                            ? MornyePlayerSlider.horizontalInset
-                            : 12,
-                      ),
-                      child: Row(
-                        children: [
-                          if (mornye)
-                            MornyePlaybackTime(
-                              key: ValueKey('elapsed:$mediaId'),
-                              seconds: elapsedSeconds,
-                              style: timeStyle,
-                            )
-                          else
-                            Text(formatClock(elapsedSeconds), style: timeStyle),
-                          Expanded(child: Center(child: quality)),
-                          if (mornye)
-                            MornyePlaybackTime(
-                              key: ValueKey('remaining:$mediaId'),
-                              // Subtract whole seconds so both labels roll together,
-                              // even when the track duration includes milliseconds.
-                              seconds: (duration.inSeconds - elapsedSeconds)
-                                  .clamp(0, duration.inSeconds),
-                              remaining: true,
-                              style: timeStyle,
-                            )
-                          else
-                            Text(
-                              formatClock(duration.inSeconds),
-                              style: timeStyle,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+                    ],
+                  ),
+                );
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _QualityBadge(metadata: metadata, colorScheme: colorScheme),
+                  const AutoMixStatusBadge(),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: compact ? 8 : transportTopPadding + (0)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: (compact ? 16 : 32)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _QualityBadge(metadata: metadata, colorScheme: colorScheme),
-                const AutoMixStatusBadge(),
+                ...[],
+                MornyePlaybackButton(
+                  icon: CupertinoIcons.backward_fill,
+                  color: colorScheme.onSurface,
+                  tooltip: context.l10n.nowPlayingPreviousTrack,
+                  onPressed: controller.previous,
+                ),
+                MornyePlaybackButton(
+                  icon: isPlaying
+                      ? CupertinoIcons.pause_fill
+                      : CupertinoIcons.play_fill,
+                  tooltip: isPlaying
+                      ? context.l10n.actionPause
+                      : context.l10n.tooltipPlay,
+                  color: colorScheme.onSurface,
+                  iconSize: playPauseSize,
+                  padding: EdgeInsets.all((68 - playPauseSize) / 2),
+                  loading: isLoading,
+                  onPressed: () => controller.togglePlayPause(isPlaying),
+                ),
+                MornyePlaybackButton(
+                  icon: CupertinoIcons.forward_fill,
+                  color: colorScheme.onSurface,
+                  tooltip: context.l10n.nowPlayingNextTrack,
+                  onPressed: controller.next,
+                ),
+                ...[],
               ],
             ),
           ),
-        ),
-        SizedBox(height: compact ? 8 : transportTopPadding + (0)),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: (compact ? 16 : 32)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ...[],
-              MornyePlaybackButton(
-                icon: CupertinoIcons.backward_fill,
-                color: colorScheme.onSurface,
-                tooltip: context.l10n.nowPlayingPreviousTrack,
-                onPressed: controller.previous,
-              ),
-              MornyePlaybackButton(
-                icon: isPlaying
-                    ? CupertinoIcons.pause_fill
-                    : CupertinoIcons.play_fill,
-                tooltip: isPlaying
-                    ? context.l10n.actionPause
-                    : context.l10n.tooltipPlay,
-                color: colorScheme.onSurface,
-                iconSize: playPauseSize,
-                padding: EdgeInsets.all((68 - playPauseSize) / 2),
-                loading: isLoading,
-                onPressed: () => controller.togglePlayPause(isPlaying),
-              ),
-              MornyePlaybackButton(
-                icon: CupertinoIcons.forward_fill,
-                color: colorScheme.onSurface,
-                tooltip: context.l10n.nowPlayingNextTrack,
-                onPressed: controller.next,
-              ),
-              ...[],
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

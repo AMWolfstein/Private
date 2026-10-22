@@ -179,7 +179,7 @@ class AlbumDetailHeader extends StatelessWidget {
                   child:
                       leading ??
                       HeaderCircleButton(
-                        icon: CupertinoIcons.chevron_back,
+                        icon: CupertinoIcons.back,
                         tooltip: MaterialLocalizations.of(
                           context,
                         ).backButtonTooltip,
@@ -504,7 +504,7 @@ class AlbumDetailHeader extends StatelessWidget {
       ),
       leadingWidth: kToolbarHeight + iosEdgeInset,
       leading: Padding(
-        padding: EdgeInsets.only(left: iosEdgeInset),
+        padding: EdgeInsetsDirectional.only(start: iosEdgeInset),
         child:
             leading ??
             IconButton.filledTonal(
@@ -520,7 +520,7 @@ class AlbumDetailHeader extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
       ),
-      actionsPadding: EdgeInsets.only(right: iosEdgeInset),
+      actionsPadding: EdgeInsetsDirectional.only(end: iosEdgeInset),
       actions: appBarActions,
     );
   }

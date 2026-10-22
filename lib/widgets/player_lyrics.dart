@@ -959,7 +959,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       height: 24,
                       child: Align(
                         alignment: mornye
-                            ? Alignment.centerLeft
+                            ? AlignmentDirectional.centerStart
                             : Alignment.center,
                         child:
                             isActive &&
@@ -1074,7 +1074,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 );
                 content = FittedBox(
                   fit: BoxFit.scaleDown,
-                  alignment: Alignment.topLeft,
+                  alignment: AlignmentDirectional.topStart,
                   child: SizedBox(width: layoutWidth, child: content),
                 );
               }
@@ -1105,9 +1105,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       scale: isActive ? 1.0 : 0.96,
                       alignment: !mornye
                           ? Alignment.center
-                          : textAlign == TextAlign.right
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
+                          : (textAlign == TextAlign.end
+                                    ? AlignmentDirectional.centerEnd
+                                    : AlignmentDirectional.centerStart)
+                                .resolve(Directionality.of(context)),
                       duration: motion,
                       curve: Curves.easeOutCubic,
                       child: AnimatedOpacity(
@@ -1135,11 +1136,11 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     TextAlign align,
     Widget child,
   ) {
-    final alignment = align == TextAlign.right
-        ? Alignment.topRight
+    final AlignmentGeometry alignment = align == TextAlign.end
+        ? AlignmentDirectional.topEnd
         : align == TextAlign.center
         ? Alignment.topCenter
-        : Alignment.topLeft;
+        : AlignmentDirectional.topStart;
     // A fixed-extent row is already shrinking. Measure its contents at full
     // height so fitting does not scale it twice.
     final fullHeight = OverflowBox(
@@ -1437,17 +1438,19 @@ TextAlign _lyricTextAlign(BuildContext context, LyricLine line) {
   if (voice == null) {
     return TextAlign.start;
   }
-  if (voice.isGroup) return TextAlign.left;
+  // The lead voice keeps the reading start, so duets mirror in right-to-left
+  // layouts.
+  if (voice.isGroup) return TextAlign.start;
   // Provider declarations can be missing or ordered by first appearance.
   // The standard V labels retain their meaning regardless of that order.
   switch (voice.id.toLowerCase()) {
     case 'v1':
     case 'v3':
-      return TextAlign.left;
+      return TextAlign.start;
     case 'v2':
-      return TextAlign.right;
+      return TextAlign.end;
   }
-  return voice.index.isEven ? TextAlign.left : TextAlign.right;
+  return voice.index.isEven ? TextAlign.start : TextAlign.end;
 }
 
 Widget _withLyricSupplements(
@@ -1462,10 +1465,10 @@ Widget _withLyricSupplements(
   Widget Function(String, List<LyricWord>, TextStyle)? timedSupplementText,
 }) {
   if (line.romanization == null && line.translation == null) return primary;
-  final alignment = switch (textAlign) {
-    TextAlign.right => Alignment.topRight,
+  final AlignmentGeometry alignment = switch (textAlign) {
+    TextAlign.end => AlignmentDirectional.topEnd,
     TextAlign.center => Alignment.topCenter,
-    _ => Alignment.topLeft,
+    _ => AlignmentDirectional.topStart,
   };
   final supplements = _lyricSupplements(context, line).toList();
   Widget withSupplements(Widget primary, {bool aligned = false}) => Column(

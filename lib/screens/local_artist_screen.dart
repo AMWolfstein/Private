@@ -525,7 +525,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     ),
                   ),
                   const Icon(
-                    CupertinoIcons.chevron_forward,
+                    CupertinoIcons.forward,
                     size: 14,
                     color: Colors.white70,
                   ),

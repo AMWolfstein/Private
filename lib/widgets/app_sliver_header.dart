@@ -78,7 +78,7 @@ class AppSliverHeader extends ConsumerWidget {
                       child:
                           leading ??
                           HeaderCircleButton(
-                            icon: CupertinoIcons.chevron_back,
+                            icon: CupertinoIcons.back,
                             tooltip: MaterialLocalizations.of(
                               context,
                             ).backButtonTooltip,

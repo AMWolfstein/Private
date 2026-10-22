@@ -301,7 +301,7 @@ class _CollectionHeaderSkeleton extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(
+                padding: EdgeInsetsDirectional.fromSTEB(
                   20,
                   (coverSize - 20).clamp(0.0, double.infinity),
                   20,
@@ -423,7 +423,10 @@ class _MornyeTrackSkeleton extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: numbered ? 64 : 80, right: 20),
+          padding: EdgeInsetsDirectional.only(
+            start: numbered ? 64 : 80,
+            end: 20,
+          ),
           child: const Divider(height: 1, thickness: 0.5),
         ),
       ],

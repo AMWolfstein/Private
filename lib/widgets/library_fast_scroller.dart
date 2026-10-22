@@ -245,10 +245,10 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
           children: [
             widget.child,
             if (_long)
-              Positioned(
+              PositionedDirectional(
                 top: topPadding,
                 bottom: widget.bottomPadding,
-                right: 0,
+                end: 0,
                 width: 240,
                 child: LayoutBuilder(
                   builder: (context, constraints) {
@@ -258,9 +258,9 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                     return Stack(
                       clipBehavior: Clip.hardEdge,
                       children: [
-                        Positioned(
+                        PositionedDirectional(
                           top: top,
-                          right: 0,
+                          end: 0,
                           width: _hitWidth,
                           height: _thumbHeight,
                           child: Semantics(
@@ -280,11 +280,13 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                   opacity: _visible || _dragging ? 1 : 0,
                                   duration: const Duration(milliseconds: 200),
                                   child: Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: AlignmentDirectional.centerEnd,
                                     child: AnimatedContainer(
                                       duration: motion.duration,
                                       curve: motion.curve,
-                                      margin: const EdgeInsets.only(right: 4),
+                                      margin: const EdgeInsetsDirectional.only(
+                                        end: 4,
+                                      ),
                                       width: _dragging ? 10 : 6,
                                       height: _thumbHeight,
                                       decoration: ShapeDecoration(
@@ -308,6 +310,9 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                 delegate: _BubbleLayout(
                                   center: top + _thumbHeight / 2,
                                   right: _hitWidth + 8,
+                                  rtl:
+                                      Directionality.of(context) ==
+                                      TextDirection.rtl,
                                 ),
                                 child: _Bubble(
                                   key: const ValueKey('library-scroll-bubble'),
@@ -329,11 +334,18 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
   }
 }
 
+/// Places the bubble [right] in from the thumb's edge, which is the left
+/// edge in right-to-left layouts.
 class _BubbleLayout extends SingleChildLayoutDelegate {
-  const _BubbleLayout({required this.center, required this.right});
+  const _BubbleLayout({
+    required this.center,
+    required this.right,
+    this.rtl = false,
+  });
 
   final double center;
   final double right;
+  final bool rtl;
   static const _inset = 8.0;
 
   @override
@@ -345,7 +357,9 @@ class _BubbleLayout extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) => Offset(
-    math.max(0, size.width - right - childSize.width),
+    rtl
+        ? math.min(right, math.max(0, size.width - childSize.width))
+        : math.max(0, size.width - right - childSize.width),
     (center - childSize.height / 2).clamp(
       _inset,
       math.max(_inset, size.height - childSize.height - _inset),
@@ -354,7 +368,9 @@ class _BubbleLayout extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_BubbleLayout oldDelegate) =>
-      center != oldDelegate.center || right != oldDelegate.right;
+      center != oldDelegate.center ||
+      right != oldDelegate.right ||
+      rtl != oldDelegate.rtl;
 }
 
 /// The section bubble beside the thumb. Material uses a container-colored
@@ -375,7 +391,7 @@ class _Bubble extends StatelessWidget {
       curve: motion.curve,
       builder: (context, scale, child) => Transform.scale(
         scale: scale,
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerEnd,
         child: child,
       ),
       child: ConstrainedBox(
