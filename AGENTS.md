@@ -74,7 +74,8 @@ on their own. Glass over known artwork (the player's menus and sheets; album and
 controls, which opt in through `MornyeHeaderControls`) reads nothing: it draws a pre-blurred
 ground image (`MornyePlayerGround`/`MornyePageGround`, 384 px wide, at most 6 MB in total, released
 with their screen) through our `mornye_artwork_glass.frag`; never a BackdropFilter, lens or view
-there. Lite and Level 1 draw the ground without the shader; an overlay picks its material once at
+there. Album, playlist and artist headers soften while scrolling by fading that ground over the
+artwork (`MornyeGroundVeil`), never a live blur. Lite and Level 1 draw the ground without the shader; an overlay picks its material once at
 open (opaque if its ground is not ready) and those menus have no staged glass reveal.
 Cover colours come from one analysis per cover version (`CoverPalette` -> `mornyeCoverColors`:
 bottom/top edge, dominant, harmonized accent; HCT, chroma never above the cover's, AA on-colours;
