@@ -53,6 +53,12 @@ Pinned headers float: transparent toolbars with a glass back circle, IconButton 
 glass capsule and a backing band only once content scrolls under (opaque on flat level or high
 contrast). Only the bottom bar samples its backdrop, through one shell LiquidGlassView held at
 rest; headers judge known backdrops (page, artwork top) and never sample themselves.
+Glass is configured by `glassQuality` (auto / lite / full / off; Auto follows the device class
+and alone honours high contrast) and `glassClarityLevel` 1-5 in app settings. Every clarity
+number lives in `kMornyeGlassLevels`; never store a percentage or add clarity formulas. Level 1
+is a plain blur, never a lens; off has no lenses, blur or sampling; lite has no shader except
+touch-only thumbs and segment pills. Do not restore "Always use blur effects". The performance
+HUD is a hidden developer option (seven taps on About's version) and is absent when off.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
