@@ -7,6 +7,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_selection_pill.dart';
 import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_liquid_backdrop.dart';
 import 'package:spotiflac_android/widgets/mornye_squircle_border.dart';
@@ -145,7 +146,11 @@ class MornyeGlassPanel extends ConsumerWidget {
     // One overlay gets its own key: the package composes blur and refraction
     // into one backdrop read, including while the route moves. Sharing that
     // key with the page or another overlapping menu would lose their glass.
-    return _composedBackdrop ? LiquidGlassBatch(child: glass) : glass;
+    // Over a known ground there is no read to share.
+    return _composedBackdrop &&
+            MornyeArtworkGroundScope.maybeOf(context) == null
+        ? LiquidGlassBatch(child: glass)
+        : glass;
   }
 }
 
@@ -303,16 +308,21 @@ class MornyeGlass extends ConsumerWidget {
     final sampleBackdrop = translucent && samplesBackdrop && !insideGlass;
     final single = firstInGroup && lastInGroup;
     // Level 1 is always a plain blur; lenses need full glass and Impeller.
-    final useLens =
-        sampleBackdrop &&
+    final lensAllowed =
         !clarity.plainBlur &&
         allowLens &&
-        single &&
         level == MornyeGlassLevel.liquid &&
         ref.watch(mornyeShaderFiltersSupportedProvider);
+    // Over known artwork (the player, album and artist headers) glass draws
+    // from that artwork's ground and reads no backdrop.
+    final ground = sampleBackdrop && single
+        ? MornyeArtworkGroundScope.maybeOf(context)
+        : null;
+    final useLens = ground == null && sampleBackdrop && single && lensAllowed;
     // Every other single surface is a blur plus LiquidGlassLite's painted
     // rim (Level 1, lite glass, or full glass without a lens).
-    final liteRim = sampleBackdrop && !useLens && single && outlines;
+    final liteRim =
+        ground == null && sampleBackdrop && !useLens && single && outlines;
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(
@@ -343,7 +353,20 @@ class MornyeGlass extends ConsumerWidget {
         : null;
     // Page glass under the shell's chrome batch keeps a read of its own.
     final ownRead = mornyeOutsideChromeBatch(context);
-    final backdrop = useLens
+    final backdrop = ground != null
+        ? MornyeArtworkGlassSurface(
+            controller: ground,
+            lens: lensAllowed,
+            fill: fill!,
+            opaqueFill: scheme.surfaceContainerHigh,
+            radius: radius,
+            squircle: squircle,
+            refractionDepth: refractionDepth,
+            refractionWidth: 20,
+            dispersion: clarity.dispersion,
+            child: _GlassBackdropScope(child: child),
+          )
+        : useLens
         ? _maybeExclude(
             ownRead,
             MornyeLiquidBackdrop(

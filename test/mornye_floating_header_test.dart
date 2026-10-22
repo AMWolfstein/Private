@@ -337,8 +337,10 @@ void main() {
       return data;
     }
 
-    final darkTop = coverTopLightness(band([0, 0, 0], [255, 255, 255]), 4, 4);
-    final lightTop = coverTopLightness(band([255, 255, 255], [0, 0, 0]), 4, 4);
+    double top(ByteData data) =>
+        analyzeCover(data.buffer.asUint8List(), 4, 4, const []).topLightness;
+    final darkTop = top(band([0, 0, 0], [255, 255, 255]));
+    final lightTop = top(band([255, 255, 255], [0, 0, 0]));
     expect(darkTop, closeTo(0, 0.001));
     expect(lightTop, closeTo(1, 0.001));
     expect(mornyeArtworkBrightness(darkTop), Brightness.dark);

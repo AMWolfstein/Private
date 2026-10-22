@@ -104,6 +104,7 @@ flutter:
 
   shaders:
     - assets/shaders/mornye_selection_mask.frag
+    - assets/shaders/mornye_artwork_glass.frag
 
   assets:
     - assets/images/

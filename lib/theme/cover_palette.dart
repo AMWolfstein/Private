@@ -1,15 +1,24 @@
 import 'dart:async';
+import 'dart:developer' show TimelineTask;
 import 'dart:io';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
-import 'package:material_color_utilities/score/score.dart';
+import 'package:spotiflac_android/services/cover_analysis_store.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:spotiflac_android/theme/cover_colors.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+
+export 'package:spotiflac_android/theme/cover_colors.dart'
+    show
+        CoverAnalysis,
+        CoverColors,
+        analyzeCover,
+        mornyeCoverColors,
+        paletteSeedFromColorCounts;
 
 Future<List<List<int>>> _quantizePaletteInIsolate(Uint8List bytes) async {
   final result = await QuantizerCelebi().quantize(
@@ -21,35 +30,49 @@ Future<List<List<int>>> _quantizePaletteInIsolate(Uint8List bytes) async {
   ];
 }
 
-/// Score remains pinned to Flutter's Material implementation. Quantization
-/// runs on the native worker; the byte-order conversion matches ColorScheme.
-int paletteSeedFromColorCounts(List<List<int>> colors) {
-  final populations = <int, int>{};
-  for (final pair in colors) {
-    final abgr = pair[0];
-    final argb =
-        (abgr & 0xff00ff00) | ((abgr & 255) << 16) | ((abgr >> 16) & 255);
-    populations[argb] = pair[1];
-  }
-  return Score.score(populations, desired: 1).first;
-}
+typedef _Sample = ({
+  Uint8List rgba,
+  int width,
+  int height,
+  List<List<int>> colors,
+});
 
-/// Colour scheme derived from cover art, used to theme detail-screen headers.
+Map<String, Object> _analyzeInIsolate(_Sample sample) => analyzeCover(
+  sample.rgba,
+  sample.width,
+  sample.height,
+  sample.colors,
+).toJson();
+
+/// Cover colours: one analysis per cover version, from one small decode.
 ///
-/// The generated scheme follows app brightness and supplies contrasting
-/// on-colours for the artwork-derived surface.
+/// Screens read colours only through [colors] (see [mornyeCoverColors]);
+/// [resolve] and [peek] keep supplying generated schemes for headers.
 class CoverPalette {
   const CoverPalette._();
 
-  /// Quantizing an image is not cheap, so results are memoized per
-  /// URL+brightness. Bounded because a long library-browsing session would
-  /// otherwise keep every visited album's scheme alive.
-  static final Map<String, ColorScheme> _cache = <String, ColorScheme>{};
-  static final Map<String, Color> _sourceColors = {};
-  static final Map<String, Future<ColorScheme?>> _pending = {};
+  /// Analyses survive the app in the library database; this bounded map
+  /// keeps the recent ones in memory.
+  static final Map<String, CoverAnalysis?> _analyses = {};
+  static final Map<String, ColorScheme> _schemes = {};
+  static final Map<String, Future<CoverAnalysis?>> _pending = {};
   static final Map<String, String> _sourceKeys = {};
-  static final List<String> _cacheOrder = <String>[];
   static const int _maxEntries = 32;
+  static const sampleSize = 112;
+
+  /// Where analyses persist; null keeps them in memory only.
+  @visibleForTesting
+  static CoverAnalysisStore? store = Platform.isAndroid
+      ? LibraryCoverAnalysisStore()
+      : null;
+
+  /// Forgets analyses held in memory, as a new app session would.
+  @visibleForTesting
+  static void debugClearMemory() {
+    _analyses.clear();
+    _schemes.clear();
+    _sourceKeys.clear();
+  }
 
   static bool _isNetworkSource(String source) =>
       source.startsWith('http://') || source.startsWith('https://');
@@ -59,157 +82,122 @@ class CoverPalette {
   static Future<String> cacheKeyFor(
     String source,
     Brightness brightness,
-  ) async {
-    var versionedSource = source;
-    if (!_isNetworkSource(source)) {
-      try {
-        final stat = await File(source).stat();
-        if (stat.type != FileSystemEntityType.notFound) {
-          versionedSource =
-              '$source|${stat.modified.microsecondsSinceEpoch}|${stat.size}';
-        }
-      } catch (_) {
-        // Resolution below will return null for inaccessible local files.
+  ) async => '${await _versionKey(source)}|${brightness.name}';
+
+  static Future<String> _versionKey(String source) async {
+    if (_isNetworkSource(source)) return source;
+    try {
+      final stat = await File(source).stat();
+      if (stat.type != FileSystemEntityType.notFound) {
+        return '$source|${stat.modified.microsecondsSinceEpoch}|${stat.size}';
       }
+    } catch (_) {
+      // Resolution below will return null for inaccessible local files.
     }
-    return '$versionedSource|${brightness.name}';
+    return source;
   }
 
-  /// Cached scheme for [source], or null when it has not been resolved yet.
-  static ColorScheme? peek(String source, Brightness brightness) =>
-      _cache[_sourceKeys['$source|${brightness.name}']];
+  /// The last analysis for [source], possibly of a previous file version;
+  /// null before the first resolution or when the cover is unreadable.
+  static CoverAnalysis? peekAnalysis(String source) =>
+      _analyses[_sourceKeys[source]];
 
-  /// Average cover colour before Material's accent selection or tonal mapping.
-  /// Near-monochrome covers stay neutral instead of acquiring a seed hue.
-  static Color? sourceColor(String source, Brightness brightness) =>
-      _sourceColors[_sourceKeys['$source|${brightness.name}']];
+  /// Mornye's colours for [source]; neutral gray while unknown or without a
+  /// cover.
+  static CoverColors colors(String? source) =>
+      mornyeCoverColors(source == null ? null : peekAnalysis(source));
+
+  /// Cached scheme for [source], or null when it has not been resolved yet.
+  static ColorScheme? peek(String source, Brightness brightness) {
+    final key = _sourceKeys[source];
+    final analysis = _analyses[key];
+    if (key == null || analysis == null) return null;
+    return _schemeFor(key, analysis, brightness);
+  }
+
+  static ColorScheme _schemeFor(
+    String key,
+    CoverAnalysis analysis,
+    Brightness brightness,
+  ) {
+    final schemeKey = '$key|${brightness.name}';
+    final scheme = _schemes[schemeKey] ??= mornyeCoverColors(
+      analysis,
+    ).scheme(brightness);
+    while (_schemes.length > _maxEntries * 2) {
+      _schemes.remove(_schemes.keys.first);
+    }
+    return scheme;
+  }
 
   /// Resolves the scheme for [source] (a network URL or a local file path).
   /// Returns null when the image cannot be decoded.
   static Future<ColorScheme?> resolve(
     String source,
-    Brightness brightness, {
-    String? cacheKey,
-  }) {
-    final sourceKey = '$source|${brightness.name}';
+    Brightness brightness,
+  ) async {
+    final analysis = await resolveAnalysis(source);
+    final key = _sourceKeys[source];
+    if (analysis == null || key == null) return null;
+    return _schemeFor(key, analysis, brightness);
+  }
+
+  /// Resolves [source]'s colours; neutral when it cannot be read.
+  static Future<CoverColors> resolveColors(String? source) async =>
+      mornyeCoverColors(source == null ? null : await resolveAnalysis(source));
+
+  /// Mean perceptual lightness (CIE L*, 0..1) of the artwork's top quarter:
+  /// what a transparent header floats over. Null when unreadable.
+  static Future<double?> topLightness(String source) async =>
+      (await resolveAnalysis(source))?.topLightness;
+
+  /// Last known [topLightness] for [source], possibly from a previous file
+  /// version; null before the first resolution.
+  static double? peekTopLightness(String source) =>
+      peekAnalysis(source)?.topLightness;
+
+  /// One analysis per cover version, shared by every caller.
+  static Future<CoverAnalysis?> resolveAnalysis(String source) {
     return _pending.putIfAbsent(
-      sourceKey,
+      source,
       () =>
           (() async {
-            final key = cacheKey ?? await cacheKeyFor(source, brightness);
-            final previous = _sourceKeys.remove(sourceKey);
-            // FileImage keys contain the path, not its modification time. A new
-            // palette key also needs a fresh decode after an in-place cover edit.
-            if ((!_cache.containsKey(key) ||
+            final key = await _versionKey(source);
+            final previous = _sourceKeys.remove(source);
+            // FileImage keys contain the path, not its modification time. A
+            // new version also needs a fresh decode after an in-place edit.
+            if ((!_analyses.containsKey(key) ||
                     (previous != null && previous != key)) &&
                 !_isNetworkSource(source)) {
               if (previous != null && previous != key) {
                 await _evictDecodedImage(FileImage(File(source)));
               }
-              await _evictDecodedImage(
-                ResizeImage(
-                  FileImage(File(source)),
-                  width: 112,
-                  height: 112,
-                  policy: ResizeImagePolicy.fit,
-                ),
-              );
+              await _evictDecodedImage(_sampleOf(FileImage(File(source))));
             }
-            _sourceKeys[sourceKey] = key;
+            _sourceKeys[source] = key;
             while (_sourceKeys.length > _maxEntries) {
               _sourceKeys.remove(_sourceKeys.keys.first);
             }
-            return _cache[key] ?? await _resolve(source, brightness, key);
-          })().whenComplete(() {
-            _pending.remove(sourceKey);
-          }),
-    );
-  }
-
-  static final Map<String, double?> _topLightness = {};
-  static final Map<String, String> _topSourceKeys = {};
-  static final Map<String, Future<double?>> _topPending = {};
-
-  /// Last known [topLightness] for [source], possibly from a previous file
-  /// version; null before the first resolution.
-  static double? peekTopLightness(String source) =>
-      _topLightness[_topSourceKeys[source]];
-
-  /// Mean perceptual lightness (CIE L*, 0..1) of the artwork's top quarter:
-  /// what a transparent header floats over. Decodes the same bounded sample
-  /// as the palette; null when the image cannot be read.
-  static Future<double?> topLightness(String source) {
-    return _topPending.putIfAbsent(
-      source,
-      () =>
-          (() async {
-            final key = await cacheKeyFor(source, Brightness.light);
-            _topSourceKeys[source] = key;
-            if (_topLightness.containsKey(key)) return _topLightness[key];
-            double? value;
-            try {
-              final ImageProvider provider = _isNetworkSource(source)
-                  ? cachedCoverImageProvider(source)
-                  : FileImage(File(source));
-              if (_isNetworkSource(source) || await File(source).exists()) {
-                value = await _sampleTopLightness(
-                  ResizeImage(
-                    provider,
-                    width: 112,
-                    height: 112,
-                    policy: ResizeImagePolicy.fit,
-                  ),
-                );
-              }
-            } catch (_) {
-              value = null;
+            if (_analyses.containsKey(key)) return _analyses[key];
+            final analysis = await _analyze(source, key);
+            _analyses[key] = analysis;
+            while (_analyses.length > _maxEntries) {
+              _analyses.remove(_analyses.keys.first);
             }
-            _topLightness[key] = value;
-            while (_topLightness.length > _maxEntries) {
-              _topLightness.remove(_topLightness.keys.first);
-            }
-            while (_topSourceKeys.length > _maxEntries) {
-              _topSourceKeys.remove(_topSourceKeys.keys.first);
-            }
-            return value;
+            return analysis;
           })().whenComplete(() {
             // A block body: returning the removed future would await itself.
-            _topPending.remove(source);
+            _pending.remove(source);
           }),
     );
   }
 
-  static Future<double?> _sampleTopLightness(ImageProvider provider) {
-    final result = Completer<double?>();
-    final stream = provider.resolve(ImageConfiguration.empty);
-    late final ImageStreamListener listener;
-    listener = ImageStreamListener(
-      (info, _) async {
-        stream.removeListener(listener);
-        try {
-          final image = info.image;
-          final data = await image.toByteData(
-            format: ui.ImageByteFormat.rawStraightRgba,
-          );
-          result.complete(
-            data == null
-                ? null
-                : coverTopLightness(data, image.width, image.height),
-          );
-        } catch (_) {
-          result.complete(null);
-        } finally {
-          info.dispose();
-        }
-      },
-      onError: (Object error, StackTrace? stack) {
-        stream.removeListener(listener);
-        result.complete(null);
-      },
-    );
-    stream.addListener(listener);
-    return result.future;
-  }
+  static ResizeImage _sampleOf(ImageProvider provider) => ResizeImage(
+    provider,
+    width: sampleSize,
+    height: sampleSize,
+    policy: ResizeImagePolicy.fit,
+  );
 
   static Future<void> _evictDecodedImage(ImageProvider provider) async {
     final key = await provider.obtainKey(ImageConfiguration.empty);
@@ -220,11 +208,24 @@ class CoverPalette {
     }
   }
 
-  static Future<ColorScheme?> _resolve(
+  static Future<CoverAnalysis?> _analyze(String source, String key) async {
+    final task = TimelineTask()..start('Mornye cover analysis');
+    try {
+      return await _analyzeUntimed(source, key);
+    } finally {
+      task.finish();
+    }
+  }
+
+  static Future<CoverAnalysis?> _analyzeUntimed(
     String source,
-    Brightness brightness,
     String key,
   ) async {
+    final store = CoverPalette.store;
+    if (store != null && !_isNetworkSource(source)) {
+      final stored = await store.read(key);
+      if (stored != null) return stored;
+    }
     final ImageProvider provider;
     if (_isNetworkSource(source)) {
       provider = cachedCoverImageProvider(source);
@@ -233,38 +234,44 @@ class CoverPalette {
       if (!await file.exists()) return null;
       provider = FileImage(file);
     }
-
     try {
-      // Both samplers share this bounded decode through Flutter's image cache.
-      final sample = ResizeImage(
-        provider,
-        width: 112,
-        height: 112,
-        policy: ResizeImagePolicy.fit,
-      );
-      final scheme = await _schemeFromSample(sample, brightness);
-      final sourceColor = await _sampleSourceColor(sample);
-      if (sourceColor != null) _sourceColors[key] = sourceColor;
-      _cache[key] = scheme;
-      _cacheOrder.add(key);
-      while (_cacheOrder.length > _maxEntries) {
-        final oldest = _cacheOrder.removeAt(0);
-        _cache.remove(oldest);
-        _sourceColors.remove(oldest);
+      final (bytes, width, height) = await _readSample(_sampleOf(provider));
+      late final List<List<int>> colors;
+      try {
+        final response = await PlatformBridge.runNativeDataJob({
+          'operation': 'palette',
+        }, bytes: bytes);
+        colors = [
+          for (final pair in response['colors'] as List)
+            [for (final value in pair as List) (value as num).toInt()],
+        ];
+      } on MissingPluginException {
+        // Desktop tests and unsupported hosts retain exact Material output,
+        // with the same expensive quantizer moved off the UI isolate.
+        colors = await compute(_quantizePaletteInIsolate, bytes);
       }
-      return scheme;
+      final analysis = CoverAnalysis.fromJson(
+        await compute(_analyzeInIsolate, (
+          rgba: bytes,
+          width: width,
+          height: height,
+          colors: colors,
+        )),
+      );
+      if (analysis != null && store != null && !_isNetworkSource(source)) {
+        unawaited(store.write(key, analysis));
+      }
+      return analysis;
     } catch (_) {
       // Unreachable URL, unsupported format, decode failure: callers fall back
-      // to the app scheme.
+      // to neutral colours.
       return null;
     }
   }
 
-  static Future<ColorScheme> _schemeFromSample(
-    ImageProvider provider,
-    Brightness brightness,
-  ) async {
-    final result = Completer<Uint8List>();
+  /// Premultiplied RGBA of the bounded sample, read back once.
+  static Future<(Uint8List, int, int)> _readSample(ImageProvider provider) {
+    final result = Completer<(Uint8List, int, int)>();
     final stream = provider.resolve(
       const ImageConfiguration(size: Size(112, 112)),
     );
@@ -296,9 +303,11 @@ class CoverPalette {
           image = await picture.toImage(source.width, source.height);
           final data = await image.toByteData();
           if (data == null) throw StateError('Palette readback failed');
-          result.complete(
+          result.complete((
             data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
-          );
+            source.width,
+            source.height,
+          ));
         } catch (error, stack) {
           result.completeError(error, stack);
         } finally {
@@ -318,175 +327,8 @@ class CoverPalette {
       result.completeError(TimeoutException('Palette image loading timed out'));
     });
     stream.addListener(listener);
-    final bytes = await result.future;
-    late final List<List<int>> colors;
-    try {
-      final response = await PlatformBridge.runNativeDataJob({
-        'operation': 'palette',
-      }, bytes: bytes);
-      colors = [
-        for (final pair in response['colors'] as List)
-          [for (final value in pair as List) (value as num).toInt()],
-      ];
-    } on MissingPluginException {
-      // Desktop tests and unsupported hosts retain exact Material output,
-      // with the same expensive quantizer moved off the UI isolate.
-      colors = await compute(_quantizePaletteInIsolate, bytes);
-    }
-    final seed = await compute(paletteSeedFromColorCounts, colors);
-    return ColorScheme.fromSeed(seedColor: Color(seed), brightness: brightness);
-  }
-
-  static Future<Color?> _sampleSourceColor(ImageProvider provider) {
-    final result = Completer<Color?>();
-    final stream = provider.resolve(ImageConfiguration.empty);
-    late final ImageStreamListener listener;
-    listener = ImageStreamListener(
-      (info, _) async {
-        stream.removeListener(listener);
-        try {
-          final data = await info.image.toByteData(
-            format: ui.ImageByteFormat.rawStraightRgba,
-          );
-          result.complete(data == null ? null : coverSourceColor(data));
-        } catch (_) {
-          result.complete(null);
-        } finally {
-          info.dispose();
-        }
-      },
-      onError: (Object error, StackTrace? stack) {
-        stream.removeListener(listener);
-        result.complete(null);
-      },
-    );
-    stream.addListener(listener);
     return result.future;
   }
-}
-
-/// The colour a cover reads as, from straight RGBA pixels.
-///
-/// A plain average turns a dark cover with one clear colour into gray: black
-/// pixels outweigh a pale avocado strip covering a third of the art. When at
-/// least [minimumCoverage] of the pixels share a visible hue, that hue's
-/// average wins, weighted by colourfulness. Otherwise the average is used,
-/// and near-monochrome art stays neutral instead of acquiring a seed hue.
-@visibleForTesting
-Color? coverSourceColor(ByteData data, {double minimumCoverage = 0.12}) {
-  const bins = 24;
-  final binWeight = List<double>.filled(bins, 0);
-  final binRed = List<double>.filled(bins, 0);
-  final binGreen = List<double>.filled(bins, 0);
-  final binBlue = List<double>.filled(bins, 0);
-  var red = 0.0;
-  var green = 0.0;
-  var blue = 0.0;
-  var weight = 0.0;
-  var chromatic = 0.0;
-  for (var index = 0; index + 3 < data.lengthInBytes; index += 4) {
-    final alpha = data.getUint8(index + 3) / 255;
-    if (alpha == 0) continue;
-    final r = data.getUint8(index);
-    final g = data.getUint8(index + 1);
-    final b = data.getUint8(index + 2);
-    red += r * alpha;
-    green += g * alpha;
-    blue += b * alpha;
-    weight += alpha;
-    final high = math.max(r, math.max(g, b));
-    final chroma = high - math.min(r, math.min(g, b));
-    // Dark pixels have unstable hues, as in the navy-black case below.
-    if (chroma < 20 || high < 48) continue;
-    chromatic += alpha;
-    final hue = HSVColor.fromColor(Color.fromARGB(255, r, g, b)).hue;
-    final bin = (hue / (360 / bins)).floor() % bins;
-    final w = alpha * chroma;
-    binWeight[bin] += w;
-    binRed[bin] += r * w;
-    binGreen[bin] += g * w;
-    binBlue[bin] += b * w;
-  }
-  if (weight == 0) return null;
-  if (chromatic / weight >= minimumCoverage) {
-    var best = 0;
-    var bestWeight = -1.0;
-    for (var bin = 0; bin < bins; bin++) {
-      final total =
-          binWeight[(bin + bins - 1) % bins] +
-          binWeight[bin] +
-          binWeight[(bin + 1) % bins];
-      if (total > bestWeight) {
-        best = bin;
-        bestWeight = total;
-      }
-    }
-    var r = 0.0, g = 0.0, b = 0.0, w = 0.0;
-    for (final bin in [(best + bins - 1) % bins, best, (best + 1) % bins]) {
-      r += binRed[bin];
-      g += binGreen[bin];
-      b += binBlue[bin];
-      w += binWeight[bin];
-    }
-    return Color.fromARGB(
-      255,
-      (r / w).round(),
-      (g / w).round(),
-      (b / w).round(),
-    );
-  }
-  red /= weight;
-  green /= weight;
-  blue /= weight;
-  // A very dark navy pixel can have high HSL saturation despite being
-  // visually black. Compare channel differences before using its hue.
-  final spread =
-      math.max(red, math.max(green, blue)) -
-      math.min(red, math.min(green, blue));
-  if (spread < 16) {
-    final gray = (red * 0.2126 + green * 0.7152 + blue * 0.0722).round();
-    return Color.fromARGB(255, gray, gray, gray);
-  }
-  return Color.fromARGB(255, red.round(), green.round(), blue.round());
-}
-
-/// Mean CIE L* lightness (0..1) of the top [fraction] of straight RGBA
-/// pixels, the band a transparent header floats over.
-@visibleForTesting
-double? coverTopLightness(
-  ByteData data,
-  int width,
-  int height, {
-  double fraction = 0.25,
-}) {
-  double channel(int value) {
-    final encoded = value / 255;
-    return encoded <= 0.04045
-        ? encoded / 12.92
-        : math.pow((encoded + 0.055) / 1.055, 2.4).toDouble();
-  }
-
-  final rows = (height * fraction).ceil().clamp(1, height);
-  var sum = 0.0;
-  var weight = 0.0;
-  for (var y = 0; y < rows; y++) {
-    for (var x = 0; x < width; x++) {
-      final index = (y * width + x) * 4;
-      if (index + 3 >= data.lengthInBytes) break;
-      final alpha = data.getUint8(index + 3) / 255;
-      if (alpha == 0) continue;
-      final luminance =
-          0.2126 * channel(data.getUint8(index)) +
-          0.7152 * channel(data.getUint8(index + 1)) +
-          0.0722 * channel(data.getUint8(index + 2));
-      final lStar = luminance <= 216 / 24389
-          ? luminance * 24389 / 27
-          : 116 * math.pow(luminance, 1 / 3) - 16;
-      sum += (lStar / 100).clamp(0.0, 1.0) * alpha;
-      weight += alpha;
-    }
-  }
-  return weight == 0 ? null : sum / weight;
 }
 
 /// Exposes the header's effective [ColorScheme] to descendants.
@@ -509,6 +351,7 @@ class HeaderPalette extends InheritedWidget {
 }
 
 /// Resolves [imageSource] into a [ColorScheme] and rebuilds when it arrives.
+/// The builder reads the same cover's [CoverPalette.colors] for surfaces.
 class CoverPaletteBuilder extends StatefulWidget {
   const CoverPaletteBuilder({
     super.key,

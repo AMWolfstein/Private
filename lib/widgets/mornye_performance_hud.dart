@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 
@@ -206,8 +207,15 @@ class _MornyePerformanceHudState extends ConsumerState<MornyePerformanceHud> {
         ? 'on'
         : 'n/a';
     final band = ref.read(mornyeHeaderBandBlurDisabledProvider) ? 'off' : 'on';
+    // How long the player's artwork ground took: decode + compose + blur.
+    final ground = MornyeGroundBuilder.lastPlayer.value;
+    final groundText = ground == null
+        ? 'n/a'
+        : '${ground.total.inMilliseconds}ms'
+              '(decode ${ground.decode.inMilliseconds})';
     return 'quality=${quality.name}($renderer) level=$clarity '
-        'reads=${_reads()} sampler=$sampler bandblur=$band';
+        'reads=${_reads()} sampler=$sampler bandblur=$band '
+        'ground=$groundText';
   }
 
   void _move(Offset delta) => setState(() {

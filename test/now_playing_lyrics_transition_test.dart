@@ -34,6 +34,7 @@ import 'package:spotiflac_android/widgets/mornye_player_actions_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_player_favorite_button.dart';
 import 'package:spotiflac_android/widgets/mornye_player_details_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_metadata_row.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_player_background.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
@@ -2914,12 +2915,21 @@ void main() {
         final glass = tester.widget<MornyeGlassPanel>(
           find.byType(MornyeGlassPanel).last,
         );
+        // Over the player the menu draws from its artwork: no backdrop read.
+        final panel = find.byType(MornyeGlassPanel).last;
         expect(
           find.descendant(
-            of: find.byType(MornyeGlassPanel).last,
-            matching: find.bySubtype<BackdropFilter>(),
+            of: panel,
+            matching: find.byType(MornyeArtworkGlassSurface),
           ),
           findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: panel,
+            matching: find.bySubtype<BackdropFilter>(),
+          ),
+          findsNothing,
         );
         expect(glass.tintOpacity, inExclusiveRange(0, 1));
         expect(

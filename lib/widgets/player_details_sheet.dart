@@ -4,6 +4,7 @@ import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/isrc_utils.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_player_details_sheet.dart';
 
 Future<void> showPlayerDetailsSheet(
@@ -15,14 +16,17 @@ Future<void> showPlayerDetailsSheet(
   final mornye = context.isMornye;
   final fallback = metadata.detailsSnapshot(mediaItem);
   final metadataFuture = metadata.readDetails(mediaItem);
+  // The sheet's glass draws from the player's artwork.
+  final ground = MornyeArtworkGroundScope.forOverlays(context);
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useRootNavigator: mornye,
     showDragHandle: !mornye,
     backgroundColor: Colors.transparent,
-    builder: (context) {
-      return DraggableScrollableSheet(
+    builder: (context) => MornyeArtworkGroundScope.wrapOverlay(
+      ground,
+      DraggableScrollableSheet(
         expand: false,
         initialChildSize: mornye ? 0.75 : 0.6,
         maxChildSize: 0.9,
@@ -39,8 +43,8 @@ Future<void> showPlayerDetailsSheet(
             ),
           );
         },
-      );
-    },
+      ),
+    ),
   );
 }
 

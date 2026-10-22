@@ -6,6 +6,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
@@ -133,7 +134,15 @@ class MornyeHeaderControls extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => MornyeChromeMember(child: child);
+  Widget build(BuildContext context) {
+    // On album and artist pages the controls draw from the header artwork.
+    final page = MornyeArtworkGroundScope.pageOf(context);
+    return MornyeChromeMember(
+      child: page == null
+          ? child
+          : MornyeArtworkGroundScope(controller: page, child: child),
+    );
+  }
 }
 
 /// A glass circle around a header [IconButton], matching HeaderCircleButton.

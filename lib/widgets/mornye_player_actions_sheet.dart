@@ -176,16 +176,7 @@ class _MornyePlayerMenuSurface extends StatelessWidget {
     return CoverPaletteBuilder(
       imageSource: source,
       builder: (context, _) {
-        final dominant = HSLColor.fromColor(
-          source == null
-              ? Colors.grey
-              : CoverPalette.sourceColor(source, Brightness.dark) ??
-                    Colors.grey,
-        );
-        final surface = dominant
-            .withSaturation(dominant.saturation.clamp(0.0, 0.34))
-            .withLightness(0.28)
-            .toColor();
+        final surface = CoverPalette.colors(source).menuSurface;
         return Theme(
           data: MornyeTheme.fromContext(
             context,

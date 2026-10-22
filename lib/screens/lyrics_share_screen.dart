@@ -243,12 +243,7 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
                                 artUri: widget.mediaItem.artUri?.toString(),
                                 lines: _quoted,
                                 background: _background,
-                                coverColor: source == null
-                                    ? null
-                                    : CoverPalette.sourceColor(
-                                        source,
-                                        Theme.of(context).brightness,
-                                      ),
+                                coverColors: CoverPalette.colors(source),
                                 placeholder: l10n.lyricsShareSelectHint(
                                   lyricsShareMaxLines,
                                 ),
@@ -603,7 +598,7 @@ class LyricsShareCard extends StatelessWidget {
     required this.artUri,
     required this.lines,
     required this.background,
-    this.coverColor,
+    this.coverColors,
     this.placeholder,
   });
 
@@ -614,7 +609,7 @@ class LyricsShareCard extends StatelessWidget {
   final LyricsCardBackground background;
 
   /// Average cover color for [LyricsCardBackground.color].
-  final Color? coverColor;
+  final CoverColors? coverColors;
 
   /// Shown faintly in the preview while no line is selected.
   final String? placeholder;
@@ -828,17 +823,13 @@ class LyricsShareCard extends StatelessWidget {
           ],
         );
       case LyricsCardBackground.color:
-        final hsl = HSLColor.fromColor(coverColor ?? scheme.primary);
-        final base = hsl.withSaturation(hsl.saturation.clamp(0.25, 0.6));
+        final colors = coverColors ?? CoverPalette.colors(null);
         return DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                base.withLightness(0.44).toColor(),
-                base.withLightness(0.2).toColor(),
-              ],
+              colors: [colors.tone(44), colors.tone(20)],
             ),
           ),
         );

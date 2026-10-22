@@ -8,6 +8,9 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
+import 'package:spotiflac_android/widgets/mornye_player_ground.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 
 /// Share the same artwork-derived dark surface while loading and after the
 /// artist metadata arrives, including when the app itself uses light mode.
@@ -50,31 +53,11 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
       ),
       child: CoverPaletteBuilder(
         imageSource: widget.imageSource,
-        builder: (context, palette) {
-          final source = widget.imageSource;
-          final dominant = HSLColor.fromColor(
-            source == null
-                ? Colors.grey
-                : CoverPalette.sourceColor(source, Brightness.dark) ??
-                      Colors.grey,
-          );
-          // Averaging a portrait mixes its highlights and foliage into gray.
-          // Artist pages use the extracted accent at a deeper tone instead;
-          // album surfaces and monochrome artwork keep their neutral shading.
-          final useAccent =
-              !widget.neutralActions && dominant.saturation >= 0.08;
-          final accent = HSLColor.fromColor(palette.primary);
-          final surface = useAccent
-              ? accent
-                    .withSaturation((accent.saturation * 0.9).clamp(0.0, 0.88))
-                    .withLightness(0.14 + dominant.lightness * 0.05)
-                    .toColor()
-              : dominant
-                    .withSaturation(
-                      (dominant.saturation * 0.45).clamp(0.0, 0.22),
-                    )
-                    .withLightness(0.24 + dominant.lightness * 0.20)
-                    .toColor();
+        builder: (context, _) {
+          // Album and artist pages share the cover's base colour; only the
+          // accent differs (white controls on albums and neutral covers).
+          final colors = CoverPalette.colors(widget.imageSource);
+          final surface = colors.surface;
           final route = ModalRoute.of(context);
           if (route != null) {
             ShellNavigationService.setChromeBrightness(
@@ -86,30 +69,14 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
           }
           return Builder(
             builder: (context) {
-              const Color? logoColor = null;
-              // Keep the artwork accent for colorful portraits. A neutral
-              // portrait can acquire a blue Material accent; use white there,
-              // while allowing an explicit logo color to take precedence.
-              final primary = widget.neutralActions
-                  ? Colors.white
-                  : logoColor ?? (useAccent ? palette.primary : Colors.white);
-              final primaryLuminance = primary.computeLuminance();
-              final surfaceContrast =
-                  (primaryLuminance + 0.05) /
-                  (surface.computeLuminance() + 0.05);
-              final onPrimary = widget.neutralActions
-                  ? Colors.black
-                  : logoColor == null && useAccent
-                  ? palette.onPrimary
-                  : surfaceContrast >= 4.5
-                  ? surface
-                  : primaryLuminance > 0.179
-                  ? Colors.black
-                  : Colors.white;
+              final accent = !widget.neutralActions && colors.hasAccent;
+              final primary = accent ? colors.accent : Colors.white;
+              final onPrimary = accent ? colors.onAccent : Colors.black;
               final scheme = darkTheme.colorScheme.copyWith(
                 primary: primary,
                 onPrimary: onPrimary,
-                onSurfaceVariant: widget.neutralActions ? Colors.white70 : null,
+                onSurface: colors.onTone(colors.surfaceTone),
+                onSurfaceVariant: colors.onToneVariant(colors.surfaceTone),
                 surface: surface,
                 surfaceContainer: Color.alphaBlend(
                   Colors.white.withValues(alpha: 0.08),
@@ -125,7 +92,32 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
                   scaffoldBackgroundColor: surface,
                   colorScheme: scheme,
                 ),
-                child: HeaderPalette(scheme: scheme, child: widget.child),
+                child: HeaderPalette(
+                  scheme: scheme,
+                  // The header controls draw from the page's artwork.
+                  // Surfaces shown without Riverpod (previews) have no glass
+                  // settings, and so no ground.
+                  child:
+                      context
+                              .findAncestorWidgetOfExactType<
+                                UncontrolledProviderScope
+                              >() ==
+                          null
+                      ? widget.child
+                      : Consumer(
+                          builder: (context, ref, child) => MornyePageGround(
+                            source: widget.imageSource,
+                            surface: surface,
+                            sigma: mornyeGlassClarity(
+                              ref.watch(mornyeGlassClarityLevelProvider),
+                            ).blurSigma,
+                            enabled: mornyeGroundNeeded(context, ref),
+                            cover: mornyeCoverProvider(widget.imageSource),
+                            child: child!,
+                          ),
+                          child: widget.child,
+                        ),
+                ),
               );
             },
           );
@@ -351,65 +343,80 @@ class _ArtistCollapsingArtwork extends ConsumerWidget {
         // The collapse blur and masked backdrop re-filter on every scroll frame.
         ref.watch(mornyeLiquidGlassProvider);
 
-    return ClipRect(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          TickerMode(
-            enabled: fade < 1,
-            child: ImageFiltered(
-              enabled: blurEnabled && blur > 0 && fade < 1,
-              imageFilter: ImageFilter.blur(
-                sigmaX: blur,
-                sigmaY: blur,
-                tileMode: TileMode.clamp,
-              ),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final height = settings?.maxExtent ?? constraints.maxHeight;
-                  final zoom = height > 0
-                      ? (constraints.maxHeight / height).clamp(
-                          1.0,
-                          double.infinity,
-                        )
-                      : 1.0;
-                  // Stretch the photograph uniformly around its top edge.
-                  // Identity and actions remain outside this transform, moving
-                  // down with the sliver without growing along with the image.
-                  return OverflowBox(
-                    alignment: Alignment.topCenter,
-                    minHeight: height,
-                    maxHeight: height,
-                    child: Transform.scale(
-                      scale: zoom,
-                      alignment: Alignment.topCenter,
-                      child: RepaintBoundary(child: child),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0, 0.48, 0.82, 1],
-                colors: [
-                  Colors.black.withValues(alpha: 0.15),
-                  surface.withValues(alpha: 0),
-                  surface.withValues(alpha: 0.55),
-                  surface,
-                ],
-              ),
-            ),
-          ),
-          ColoredBox(
-            key: const ValueKey('artist-artwork-fade'),
-            color: surface.withValues(alpha: fade),
-          ),
+    // The header controls' ground: this artwork under the same gradient,
+    // fading to the surface as the header collapses.
+    return MornyeGroundAnchor(
+      layout: MornyeGroundLayout(
+        alignment: Alignment.topCenter,
+        stops: const [0, 0.48, 0.82, 1],
+        colors: [
+          Colors.black.withValues(alpha: 0.15),
+          surface.withValues(alpha: 0),
+          surface.withValues(alpha: 0.55),
+          surface,
         ],
+      ),
+      fade: fade,
+      child: ClipRect(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            TickerMode(
+              enabled: fade < 1,
+              child: ImageFiltered(
+                enabled: blurEnabled && blur > 0 && fade < 1,
+                imageFilter: ImageFilter.blur(
+                  sigmaX: blur,
+                  sigmaY: blur,
+                  tileMode: TileMode.clamp,
+                ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final height = settings?.maxExtent ?? constraints.maxHeight;
+                    final zoom = height > 0
+                        ? (constraints.maxHeight / height).clamp(
+                            1.0,
+                            double.infinity,
+                          )
+                        : 1.0;
+                    // Stretch the photograph uniformly around its top edge.
+                    // Identity and actions remain outside this transform, moving
+                    // down with the sliver without growing along with the image.
+                    return OverflowBox(
+                      alignment: Alignment.topCenter,
+                      minHeight: height,
+                      maxHeight: height,
+                      child: Transform.scale(
+                        scale: zoom,
+                        alignment: Alignment.topCenter,
+                        child: RepaintBoundary(child: child),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0, 0.48, 0.82, 1],
+                  colors: [
+                    Colors.black.withValues(alpha: 0.15),
+                    surface.withValues(alpha: 0),
+                    surface.withValues(alpha: 0.55),
+                    surface,
+                  ],
+                ),
+              ),
+            ),
+            ColoredBox(
+              key: const ValueKey('artist-artwork-fade'),
+              color: surface.withValues(alpha: fade),
+            ),
+          ],
+        ),
       ),
     );
   }

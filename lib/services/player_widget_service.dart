@@ -4,8 +4,8 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 class PlayerWidgetArtwork {
@@ -269,36 +269,14 @@ class PlayerWidgetService {
     try {
       final frame = await codec.getNextFrame();
       try {
-        final rgba = await frame.image.toByteData(
-          format: ui.ImageByteFormat.rawStraightRgba,
-        );
         final png = await frame.image.toByteData(
           format: ui.ImageByteFormat.png,
         );
-        if (rgba == null || png == null) return null;
-        var red = 0.0;
-        var green = 0.0;
-        var blue = 0.0;
-        var weight = 0.0;
-        for (var i = 0; i < rgba.lengthInBytes; i += 64) {
-          final alpha = rgba.getUint8(i + 3) / 255;
-          red += rgba.getUint8(i) * alpha;
-          green += rgba.getUint8(i + 1) * alpha;
-          blue += rgba.getUint8(i + 2) * alpha;
-          weight += alpha;
-        }
-        final average = weight == 0
-            ? const Color(0xff292433)
-            : Color.fromARGB(
-                255,
-                (red / weight).round(),
-                (green / weight).round(),
-                (blue / weight).round(),
-              );
-        final hsl = HSLColor.fromColor(average);
-        final background = hsl
-            .withLightness(hsl.lightness.clamp(0.12, 0.26))
-            .toColor();
+        if (png == null) return null;
+        // The widget shares the player's and detail pages' cover colour.
+        final background = (await CoverPalette.resolveColors(
+          file.path,
+        )).surface;
         return PlayerWidgetArtwork(
           png.buffer.asUint8List(),
           background.toARGB32(),

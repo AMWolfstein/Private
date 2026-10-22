@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -7,42 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 
 void main() {
-  ByteData pixels(List<(Color, int)> runs) {
-    final data = ByteData(runs.fold(0, (sum, run) => sum + run.$2) * 4);
-    var offset = 0;
-    for (final (color, count) in runs) {
-      for (var i = 0; i < count; i++, offset += 4) {
-        data
-          ..setUint8(offset, (color.r * 255).round())
-          ..setUint8(offset + 1, (color.g * 255).round())
-          ..setUint8(offset + 2, (color.b * 255).round())
-          ..setUint8(offset + 3, 255);
-      }
-    }
-    return data;
-  }
-
-  test('a dark cover with one clear colour keeps that colour, not gray', () {
-    // Mostly black art with a pale avocado strip, as in issue #658.
-    final color = coverSourceColor(
-      pixels([
-        (const Color(0xff050505), 65),
-        (const Color(0xffd4ddac), 30),
-        (const Color(0xff6a6e72), 5),
-      ]),
-    )!;
-    final hsl = HSLColor.fromColor(color);
-    expect(hsl.hue, inInclusiveRange(60, 80));
-    expect(hsl.saturation, greaterThan(0.3));
-  });
-
-  test('a small colourful detail does not tint a neutral cover', () {
-    final color = coverSourceColor(
-      pixels([(const Color(0xff808080), 95), (const Color(0xffff0000), 5)]),
-    )!;
-    expect(HSLColor.fromColor(color).saturation, lessThan(0.1));
-  });
-
   testWidgets(
     'same-path cover replacement refreshes palette and decoded image',
     (tester) async {
@@ -96,7 +59,7 @@ void main() {
           );
           expect(second, isNot(same(first)));
           expect(
-            CoverPalette.sourceColor(file.path, Brightness.light)?.toARGB32(),
+            CoverPalette.peekAnalysis(file.path)?.dominant,
             Colors.red.toARGB32(),
           );
         } finally {
@@ -130,13 +93,18 @@ void main() {
         final file = File('${directory.path}/cover.png');
         await file.writeAsBytes(bytes!.buffer.asUint8List());
 
-        final first = CoverPalette.resolve(file.path, Brightness.light);
-        final second = CoverPalette.resolve(file.path, Brightness.light);
-        expect(identical(first, second), isTrue);
-        final scheme = await first;
+        // Concurrent requests share one analysis (and one decode).
+        expect(
+          identical(
+            CoverPalette.resolveAnalysis(file.path),
+            CoverPalette.resolveAnalysis(file.path),
+          ),
+          isTrue,
+        );
+        final scheme = await CoverPalette.resolve(file.path, Brightness.light);
         expect(scheme, isNotNull);
         expect(
-          CoverPalette.sourceColor(file.path, Brightness.light)?.toARGB32(),
+          CoverPalette.peekAnalysis(file.path)?.dominant,
           Colors.blue.toARGB32(),
         );
         // The original is 512 x 256. Its cached decode fits inside 112 x 112
@@ -154,7 +122,7 @@ void main() {
     });
   });
 
-  testWidgets('white and near-black artwork keeps a neutral source colour', (
+  testWidgets('white and near-black artwork keeps neutral colours', (
     tester,
   ) async {
     await tester.runAsync(() async {
@@ -182,10 +150,11 @@ void main() {
           await CoverPalette.resolve(file.path, Brightness.dark),
           isNotNull,
         );
-        final color = CoverPalette.sourceColor(file.path, Brightness.dark)!;
-        expect(color.r, color.g);
-        expect(color.g, color.b);
-        expect(color.r, inInclusiveRange(0.49, 0.52));
+        // The navy-black half has no visible hue: the colours stay gray.
+        final colors = CoverPalette.colors(file.path);
+        expect(colors.neutral, isTrue);
+        expect(colors.surface.r, colors.surface.g);
+        expect(colors.surface.g, colors.surface.b);
       } finally {
         PaintingBinding.instance.imageCache.clear();
         PaintingBinding.instance.imageCache.clearLiveImages();

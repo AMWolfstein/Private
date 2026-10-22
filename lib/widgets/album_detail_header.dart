@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
@@ -197,25 +198,30 @@ class AlbumDetailHeader extends StatelessWidget {
     );
     if (immersive) {
       final detailsTop = (artworkSize - 20).clamp(0.0, double.infinity);
-      final artwork = Stack(
-        fit: StackFit.expand,
-        children: [
-          background,
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0, 0.48, 1],
-                colors: [
-                  Colors.black.withValues(alpha: 0.12),
-                  scheme.surface.withValues(alpha: 0),
-                  scheme.surface,
-                ],
+      final gradient = [
+        Colors.black.withValues(alpha: 0.12),
+        scheme.surface.withValues(alpha: 0),
+        scheme.surface,
+      ];
+      // The header controls' ground: the cover under this gradient.
+      final artwork = MornyeGroundAnchor(
+        layout: MornyeGroundLayout(stops: const [0, 0.48, 1], colors: gradient),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            background,
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0, 0.48, 1],
+                  colors: gradient,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
       return [
         // The toolbar paints above the header without reserving a second
@@ -284,11 +290,15 @@ class AlbumDetailHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) =>
-                        coverBuilder!(context, constraints.maxWidth),
+                // The cover scrolls under the header controls' glass.
+                child: MornyeGroundAnchor(
+                  layout: const MornyeGroundLayout(radius: 14),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) =>
+                          coverBuilder!(context, constraints.maxWidth),
+                    ),
                   ),
                 ),
               ),

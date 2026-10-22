@@ -163,7 +163,7 @@ void main() {
       matches(
         RegExp(
           r'^mornye-hud quality=auto\(liquid, measuring\) level=3 reads=\d+ '
-          r'sampler=n/a bandblur=on hz=',
+          r'sampler=n/a bandblur=on ground=n/a hz=',
         ),
       ),
     );

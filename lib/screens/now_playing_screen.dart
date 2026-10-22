@@ -35,6 +35,7 @@ import 'package:spotiflac_android/widgets/player_lyrics_section.dart';
 import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/mornye_player_background.dart';
+import 'package:spotiflac_android/widgets/mornye_player_ground.dart';
 import 'package:spotiflac_android/widgets/mornye_artwork_contrast.dart';
 import 'package:spotiflac_android/widgets/mornye_player_actions_sheet.dart';
 import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
@@ -183,6 +184,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         body: Center(child: Text(context.l10n.nowPlayingNothingPlaying)),
       );
     }
+
+    // Kept alive while the track shows, so the ⋯ menu opens with its final
+    // Loved state instead of rebuilding mid-flight after a fresh lookup.
+    ref.listen(playerCollectionTrackProvider(mediaItem), (_, _) {});
 
     final screen = MediaQuery.sizeOf(context);
     final artworkRatio = immersive && screen.height > 0
@@ -414,70 +419,85 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         enabled: false,
         child: Theme(
           data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              MornyeArtworkContrast(
-                enabled: false,
-                targets: {
-                  'header': _artworkHeaderKey,
-                  'controls': _artworkControlsKey,
-                  'volume': _artworkVolumeKey,
-                },
-                onChanged: (colors) {
-                  if (!mounted) return;
-                  _artworkForeground.value = colors;
-                },
-                child: MornyePlayerBackground(
-                  artUri: mediaItem.artUri,
-                  squareArtwork: !immersive,
-                  artworkAspectRatio: artworkRatio,
-                  fadeStart: immersive ? .72 : .58,
-                  showArtwork: _currentPage == 0,
-                  artwork: immersive
-                      ? PlayerArtworkDragRegion(
-                          child: PlayerTransitionArtwork(
-                            artworkKey: _immersiveArtworkKey,
-                            child: Hero(
-                              tag: kNowPlayingArtworkHeroTag,
-                              child: PlayerArtwork(
-                                artUri: mediaItem.artUri?.toString(),
-                                colorScheme: colorScheme,
-                                cacheWidth: PlayerArtwork.transitionCacheWidth(
-                                  context,
+          // The player's menus and sheets draw their glass from this ground.
+          child: MornyePlayerGround(
+            source: _coverSource(mediaItem),
+            immersive: immersive,
+            showArtwork: _currentPage == 0,
+            artworkAspectRatio: artworkRatio,
+            fadeStart: immersive ? .72 : .58,
+            insetArtworkKey: _expandedArtworkKey,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                MornyeArtworkContrast(
+                  enabled: false,
+                  targets: {
+                    'header': _artworkHeaderKey,
+                    'controls': _artworkControlsKey,
+                    'volume': _artworkVolumeKey,
+                  },
+                  onChanged: (colors) {
+                    if (!mounted) return;
+                    _artworkForeground.value = colors;
+                  },
+                  child: MornyePlayerBackground(
+                    artUri: mediaItem.artUri,
+                    squareArtwork: !immersive,
+                    artworkAspectRatio: artworkRatio,
+                    fadeStart: immersive ? .72 : .58,
+                    showArtwork: _currentPage == 0,
+                    artwork: immersive
+                        ? PlayerArtworkDragRegion(
+                            child: PlayerTransitionArtwork(
+                              artworkKey: _immersiveArtworkKey,
+                              child: Hero(
+                                tag: kNowPlayingArtworkHeroTag,
+                                child: PlayerArtwork(
+                                  artUri: mediaItem.artUri?.toString(),
+                                  colorScheme: colorScheme,
+                                  cacheWidth:
+                                      PlayerArtwork.transitionCacheWidth(
+                                        context,
+                                      ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      : null,
+                          )
+                        : null,
+                  ),
                 ),
-              ),
-              Listener(
-                behavior: HitTestBehavior.translucent,
-                onPointerDown: (event) {
-                  if (!_canAutoHideLyricsControls) return;
-                  if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
-                  _lyricsPointers[event.pointer] = event.position;
-                  _lyricsIdleTimer?.cancel();
-                },
-                onPointerMove: (event) {
-                  final origin = _lyricsPointers[event.pointer];
-                  if (origin != null &&
-                      (event.position - origin).distance > 12) {
-                    _lyricsPointerMoved = true;
-                  }
-                },
-                onPointerUp: (event) => _endLyricsInteraction(event.pointer),
-                onPointerCancel: (event) =>
-                    _endLyricsInteraction(event.pointer, cancelled: true),
-                child: player,
-              ),
-            ],
+                Listener(
+                  behavior: HitTestBehavior.translucent,
+                  onPointerDown: (event) {
+                    if (!_canAutoHideLyricsControls) return;
+                    if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
+                    _lyricsPointers[event.pointer] = event.position;
+                    _lyricsIdleTimer?.cancel();
+                  },
+                  onPointerMove: (event) {
+                    final origin = _lyricsPointers[event.pointer];
+                    if (origin != null &&
+                        (event.position - origin).distance > 12) {
+                      _lyricsPointerMoved = true;
+                    }
+                  },
+                  onPointerUp: (event) => _endLyricsInteraction(event.pointer),
+                  onPointerCancel: (event) =>
+                      _endLyricsInteraction(event.pointer, cancelled: true),
+                  child: player,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  static String? _coverSource(MediaItem item) {
+    final art = item.artUri;
+    return art?.scheme == 'file' ? art!.toFilePath() : art?.toString();
   }
 
   void _toggleMornyeLyrics() {

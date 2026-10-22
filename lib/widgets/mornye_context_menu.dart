@@ -1,11 +1,14 @@
+import 'dart:developer' show TimelineTask;
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
 /// Bounds of the tapped control or row, in the root overlay's coordinates.
@@ -30,7 +33,12 @@ Future<T?> showMornyeContextMenu<T>({
 }) {
   final navigator = Navigator.of(context, rootNavigator: true);
   final themes = InheritedTheme.capture(from: context, to: navigator.context);
+  // Menus over the player draw from its artwork, not the screen.
+  final ground = MornyeArtworkGroundScope.forOverlays(context);
   final target = anchor ?? mornyeMenuAnchor(context);
+  // From the tap to the menu's first frame, for profile traces.
+  final opening = TimelineTask()..start('Mornye menu: open to first frame');
+  SchedulerBinding.instance.addPostFrameCallback((_) => opening.finish());
   return navigator.push<T>(
     RawDialogRoute<T>(
       barrierColor: Colors.black.withValues(alpha: 0.12),
@@ -49,7 +57,10 @@ Future<T?> showMornyeContextMenu<T>({
           explicitChildNodes: true,
           child: AnimatedBuilder(
             animation: animation,
-            child: themes.wrap(Builder(builder: builder)),
+            child: MornyeArtworkGroundScope.wrapOverlay(
+              ground,
+              themes.wrap(Builder(builder: builder)),
+            ),
             builder: (context, child) {
               // Finish geometry first: no backdrop read while the panel flies
               // out of its control. On close, glass fades before it moves.
@@ -83,7 +94,12 @@ Future<T?> showMornyeContextMenu<T>({
                     ignoring:
                         motion < 1 ||
                         animation.status == AnimationStatus.reverse,
-                    child: _MenuGlassReveal(progress: glass, child: child!),
+                    // Artwork glass reads nothing: one material from the
+                    // first frame to the last.
+                    child: _MenuGlassReveal(
+                      progress: ground == null ? glass : 1,
+                      child: child!,
+                    ),
                   ),
                 ),
               );
