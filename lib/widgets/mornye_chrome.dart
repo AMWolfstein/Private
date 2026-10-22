@@ -163,6 +163,7 @@ class MornyeGlass extends ConsumerWidget {
   }) : firstInGroup = true,
        lastInGroup = true,
        samplesBackdrop = true,
+       allowLens = true,
        clarity = null;
 
   const MornyeGlass.navigation({
@@ -182,6 +183,7 @@ class MornyeGlass extends ConsumerWidget {
     this.highlightIntensity = 1,
     this.glassProgress = 1,
     this.clarity,
+    this.allowLens = true,
   });
 
   // Quantized and shared across surfaces. Avoid composed color filters and
@@ -215,6 +217,10 @@ class MornyeGlass extends ConsumerWidget {
 
   /// Overrides the saved clarity preference for this surface only.
   final double? clarity;
+
+  /// False keeps a liquid-level surface on the frosted blur, e.g. header
+  /// chrome while animations are disabled.
+  final bool allowLens;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -291,10 +297,11 @@ class MornyeGlass extends ConsumerWidget {
         clarity > blurThreshold;
     final useLens =
         sampleBackdrop &&
+        allowLens &&
         firstInGroup &&
         lastInGroup &&
         level == MornyeGlassLevel.liquid &&
-        ImageFilter.isShaderFilterSupported;
+        ref.watch(mornyeShaderFiltersSupportedProvider);
     // Clear glass softens the backdrop less. Keep the mid-range fallback at
     // its small blur budget, and reuse these filters in the lens renderer too.
     final filterIndex = level == MornyeGlassLevel.frosted

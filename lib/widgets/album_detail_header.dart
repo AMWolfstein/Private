@@ -10,6 +10,7 @@ import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 
 /// Collapsing album-detail header shared by the album, local-album, and
@@ -127,37 +128,70 @@ class AlbumDetailHeader extends StatelessWidget {
       math.max(240.0, screenSize.height * 0.55),
     );
     final details = _buildMornyeDetails(context);
-    Widget toolbar({bool collapsed = true}) => SliverAppBar(
-      pinned: true,
-      backgroundColor: collapsed ? scheme.surface : Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      scrolledUnderElevation: 0,
-      title: AnimatedOpacity(
-        opacity:
-            showTitleInAppBar || appBarTitle != null || (immersive && collapsed)
-            ? 1
-            : 0,
-        duration: const Duration(milliseconds: 180),
-        child: Text(
-          appBarTitle ?? title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-        ),
-      ),
-      leadingWidth: kToolbarHeight + edgeInset,
-      leading: Padding(
-        padding: EdgeInsets.only(left: edgeInset),
-        child:
-            leading ??
-            HeaderCircleButton(
-              icon: CupertinoIcons.chevron_back,
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              onPressed: () => Navigator.pop(context),
+    Widget toolbar({bool collapsed = true}) => Consumer(
+      builder: (context, ref, _) {
+        final opaque =
+            mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque;
+        final titleVisible =
+            showTitleInAppBar ||
+            appBarTitle != null ||
+            (immersive && collapsed);
+        final overArtwork = immersive && !collapsed;
+        return _ArtworkBrightness(
+          source: overArtwork ? paletteSource : null,
+          builder: (context, artwork) => MornyeHeaderBrightness(
+            brightness: artwork,
+            child: SliverAppBar(
+              pinned: true,
+              backgroundColor: opaque && collapsed
+                  ? scheme.surface
+                  : Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              scrolledUnderElevation: 0,
+              // Without artwork data the transparent toolbar keeps the light
+              // status icons it always had over the cover.
+              systemOverlayStyle: mornyeHeaderOverlayStyle(
+                artwork ?? (overArtwork ? Brightness.dark : scheme.brightness),
+              ),
+              flexibleSpace: opaque
+                  ? null
+                  : MornyeHeaderBacking(
+                      visible: immersive ? titleVisible : null,
+                    ),
+              title: AnimatedOpacity(
+                opacity: titleVisible ? 1 : 0,
+                duration: const Duration(milliseconds: 180),
+                child: Text(
+                  appBarTitle ?? title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              leadingWidth: kToolbarHeight + edgeInset,
+              leading: Padding(
+                padding: EdgeInsetsDirectional.only(start: edgeInset),
+                child:
+                    leading ??
+                    HeaderCircleButton(
+                      icon: CupertinoIcons.chevron_back,
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).backButtonTooltip,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+              ),
+              actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),
+              actions: appBarActions == null
+                  ? null
+                  : [MornyeHeaderActions(actions: appBarActions!)],
             ),
-      ),
-      actionsPadding: EdgeInsets.only(right: edgeInset),
-      actions: appBarActions,
+          ),
+        );
+      },
     );
     if (immersive) {
       final detailsTop = (artworkSize - 20).clamp(0.0, double.infinity);
@@ -520,6 +554,40 @@ class _AlbumStretchArtwork extends StatelessWidget {
 
 /// Keeps the pinned toolbar above the artwork without shifting the artwork or
 /// metadata down by the toolbar's safe-area height.
+/// Resolves whether the artwork behind a transparent toolbar reads as dark or
+/// light; null for no [source] or while unknown.
+class _ArtworkBrightness extends StatefulWidget {
+  const _ArtworkBrightness({required this.source, required this.builder});
+
+  final String? source;
+  final Widget Function(BuildContext context, Brightness? brightness) builder;
+
+  @override
+  State<_ArtworkBrightness> createState() => _ArtworkBrightnessState();
+}
+
+class _ArtworkBrightnessState extends State<_ArtworkBrightness> {
+  // Resolved once per source: the toolbar rebuilds on every scroll frame.
+  String? _source;
+  Future<double?>? _lightness;
+
+  @override
+  Widget build(BuildContext context) {
+    final source = widget.source;
+    if (source == null) return widget.builder(context, null);
+    if (source != _source) {
+      _source = source;
+      _lightness = CoverPalette.topLightness(source);
+    }
+    return FutureBuilder<double?>(
+      future: _lightness,
+      initialData: CoverPalette.peekTopLightness(source),
+      builder: (context, snapshot) =>
+          widget.builder(context, mornyeArtworkBrightness(snapshot.data)),
+    );
+  }
+}
+
 class _AlbumOverlayToolbar extends SingleChildRenderObjectWidget {
   const _AlbumOverlayToolbar({required super.child});
 
@@ -716,6 +784,7 @@ class HeaderCircleButton extends ConsumerWidget {
               glassTintOpacity ??
               (scheme.brightness == Brightness.dark ? 0.45 : 0.55),
           blurEnabled: blurEnabled,
+          allowLens: mornyeLiquidChromeEnabled(context, ref),
           child: button,
         ),
       );

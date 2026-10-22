@@ -73,7 +73,8 @@ void main() {
   ) async {
     final changes = await pumpBar(tester);
     expect(pillScale(tester), (1.0, 1.0));
-    expect(find.byType(LiquidGlassLens), findsNothing);
+    // The bar's own capsule is a lens; the pill adds one only while held.
+    final rest = find.byType(LiquidGlassLens).evaluate().length;
 
     final pill = find.byType(MornyeSelectionPill);
     final start = tester.getTopLeft(pill) + const Offset(40, 30);
@@ -84,7 +85,7 @@ void main() {
     final (heldX, heldY) = pillScale(tester);
     expect(heldX, closeTo(1.28, 0.001));
     expect(heldY, closeTo(1.24, 0.001));
-    expect(find.byType(LiquidGlassLens), findsOneWidget);
+    expect(find.byType(LiquidGlassLens), findsNWidgets(rest + 1));
 
     // Accelerate towards the far tab; the held pill deforms on both axes.
     var deformed = false;
@@ -105,7 +106,7 @@ void main() {
     await gesture.up();
     await tester.pumpAndSettle();
     expect(pillScale(tester), (1.0, 1.0));
-    expect(find.byType(LiquidGlassLens), findsNothing);
+    expect(find.byType(LiquidGlassLens), findsNWidgets(rest));
     expect(changes, isNotEmpty);
     expect(tester.takeException(), isNull);
   });

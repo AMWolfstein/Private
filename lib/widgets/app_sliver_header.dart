@@ -2,15 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart'
     show HeaderCircleButton;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/theme/app_tokens.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/utils/app_bar_layout.dart';
+import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
 /// sub-page.
 ///
-/// Expanded titles use [AppTokens.headerExpandedTitleSize].
-class AppSliverHeader extends StatelessWidget {
+/// Expanded titles use [AppTokens.headerExpandedTitleSize]. Unless the glass
+/// level is flat (or contrast blocks glass) the toolbar is transparent: the
+/// back button and actions float as glass, and a backing band fades in once
+/// content scrolls under the collapsed title.
+class AppSliverHeader extends ConsumerWidget {
   /// Root of a navigation tab: no back button, and the title stays aligned with
   /// the content margin at every collapse ratio.
   const AppSliverHeader.tabRoot({super.key, required this.title, this.actions})
@@ -42,38 +47,47 @@ class AppSliverHeader extends StatelessWidget {
   static const double _contentMargin = 24;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tokens = context.tokens;
     final colorScheme = Theme.of(context).colorScheme;
     final topPadding = normalizedHeaderTopPadding(context);
     final maxHeight = tokens.headerExpandedHeight + topPadding;
     final edgeInset = detailHeaderEdgeInset(context);
 
+    final opaque =
+        mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque;
+    final leading = this.leading;
+
     return SliverAppBar(
       expandedHeight: maxHeight,
       collapsedHeight: kToolbarHeight,
       floating: false,
       pinned: true,
-      backgroundColor: colorScheme.surface,
+      backgroundColor: opaque ? colorScheme.surface : Colors.transparent,
       surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+      systemOverlayStyle: mornyeHeaderOverlayStyle(colorScheme.brightness),
       automaticallyImplyLeading: false,
       leadingWidth: _showLeading ? kToolbarHeight + edgeInset : null,
       leading: _showLeading
           ? Padding(
-              padding: EdgeInsets.only(left: edgeInset),
-              child:
-                  leading ??
-                  (HeaderCircleButton(
-                    icon: CupertinoIcons.chevron_back,
-                    tooltip: MaterialLocalizations.of(
-                      context,
-                    ).backButtonTooltip,
-                    onPressed: () => Navigator.pop(context),
-                  )),
+              padding: EdgeInsetsDirectional.only(start: edgeInset),
+              child: leading is IconButton
+                  ? MornyeHeaderCircle(child: leading)
+                  : leading ??
+                        HeaderCircleButton(
+                          icon: CupertinoIcons.chevron_back,
+                          tooltip: MaterialLocalizations.of(
+                            context,
+                          ).backButtonTooltip,
+                          onPressed: () => Navigator.pop(context),
+                        ),
             )
           : null,
-      actionsPadding: EdgeInsets.only(right: edgeInset),
-      actions: actions,
+      actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),
+      actions: actions == null
+          ? null
+          : [MornyeHeaderActions(actions: actions!)],
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
           // SliverAppBar adds the platform's actual top safe-area inset to its
@@ -102,12 +116,12 @@ class AppSliverHeader extends StatelessWidget {
                       tokens.headerCollapsedTitleSize) *
                   expandRatio;
 
-          return FlexibleSpaceBar(
+          final bar = FlexibleSpaceBar(
             centerTitle: false,
             expandedTitleScale: 1.0,
-            titlePadding: EdgeInsets.only(
-              left: leftPadding,
-              right: tokens.gapLg,
+            titlePadding: EdgeInsetsDirectional.only(
+              start: leftPadding,
+              end: tokens.gapLg,
               bottom: tokens.gapLg,
             ),
             title: Text(
@@ -123,6 +137,11 @@ class AppSliverHeader extends StatelessWidget {
                 color: colorScheme.onSurface,
               ),
             ),
+          );
+          if (opaque) return bar;
+          return Stack(
+            fit: StackFit.expand,
+            children: [const MornyeHeaderBacking(), bar],
           );
         },
       ),

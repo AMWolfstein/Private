@@ -126,6 +126,91 @@ class CoverPalette {
     );
   }
 
+  static final Map<String, double?> _topLightness = {};
+  static final Map<String, String> _topSourceKeys = {};
+  static final Map<String, Future<double?>> _topPending = {};
+
+  /// Last known [topLightness] for [source], possibly from a previous file
+  /// version; null before the first resolution.
+  static double? peekTopLightness(String source) =>
+      _topLightness[_topSourceKeys[source]];
+
+  /// Mean perceptual lightness (CIE L*, 0..1) of the artwork's top quarter:
+  /// what a transparent header floats over. Decodes the same bounded sample
+  /// as the palette; null when the image cannot be read.
+  static Future<double?> topLightness(String source) {
+    return _topPending.putIfAbsent(
+      source,
+      () =>
+          (() async {
+            final key = await cacheKeyFor(source, Brightness.light);
+            _topSourceKeys[source] = key;
+            if (_topLightness.containsKey(key)) return _topLightness[key];
+            double? value;
+            try {
+              final ImageProvider provider = _isNetworkSource(source)
+                  ? cachedCoverImageProvider(source)
+                  : FileImage(File(source));
+              if (_isNetworkSource(source) || await File(source).exists()) {
+                value = await _sampleTopLightness(
+                  ResizeImage(
+                    provider,
+                    width: 112,
+                    height: 112,
+                    policy: ResizeImagePolicy.fit,
+                  ),
+                );
+              }
+            } catch (_) {
+              value = null;
+            }
+            _topLightness[key] = value;
+            while (_topLightness.length > _maxEntries) {
+              _topLightness.remove(_topLightness.keys.first);
+            }
+            while (_topSourceKeys.length > _maxEntries) {
+              _topSourceKeys.remove(_topSourceKeys.keys.first);
+            }
+            return value;
+          })().whenComplete(() {
+            // A block body: returning the removed future would await itself.
+            _topPending.remove(source);
+          }),
+    );
+  }
+
+  static Future<double?> _sampleTopLightness(ImageProvider provider) {
+    final result = Completer<double?>();
+    final stream = provider.resolve(ImageConfiguration.empty);
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener(
+      (info, _) async {
+        stream.removeListener(listener);
+        try {
+          final image = info.image;
+          final data = await image.toByteData(
+            format: ui.ImageByteFormat.rawStraightRgba,
+          );
+          result.complete(
+            data == null
+                ? null
+                : coverTopLightness(data, image.width, image.height),
+          );
+        } catch (_) {
+          result.complete(null);
+        } finally {
+          info.dispose();
+        }
+      },
+      onError: (Object error, StackTrace? stack) {
+        stream.removeListener(listener);
+        result.complete(null);
+      },
+    );
+    stream.addListener(listener);
+    return result.future;
+  }
+
   static Future<void> _evictDecodedImage(ImageProvider provider) async {
     final key = await provider.obtainKey(ImageConfiguration.empty);
     // A first palette request can overlap the header's initial precache. Do
@@ -363,6 +448,45 @@ Color? coverSourceColor(ByteData data, {double minimumCoverage = 0.12}) {
     return Color.fromARGB(255, gray, gray, gray);
   }
   return Color.fromARGB(255, red.round(), green.round(), blue.round());
+}
+
+/// Mean CIE L* lightness (0..1) of the top [fraction] of straight RGBA
+/// pixels, the band a transparent header floats over.
+@visibleForTesting
+double? coverTopLightness(
+  ByteData data,
+  int width,
+  int height, {
+  double fraction = 0.25,
+}) {
+  double channel(int value) {
+    final encoded = value / 255;
+    return encoded <= 0.04045
+        ? encoded / 12.92
+        : math.pow((encoded + 0.055) / 1.055, 2.4).toDouble();
+  }
+
+  final rows = (height * fraction).ceil().clamp(1, height);
+  var sum = 0.0;
+  var weight = 0.0;
+  for (var y = 0; y < rows; y++) {
+    for (var x = 0; x < width; x++) {
+      final index = (y * width + x) * 4;
+      if (index + 3 >= data.lengthInBytes) break;
+      final alpha = data.getUint8(index + 3) / 255;
+      if (alpha == 0) continue;
+      final luminance =
+          0.2126 * channel(data.getUint8(index)) +
+          0.7152 * channel(data.getUint8(index + 1)) +
+          0.0722 * channel(data.getUint8(index + 2));
+      final lStar = luminance <= 216 / 24389
+          ? luminance * 24389 / 27
+          : 116 * math.pow(luminance, 1 / 3) - 16;
+      sum += (lStar / 100).clamp(0.0, 1.0) * alpha;
+      weight += alpha;
+    }
+  }
+  return weight == 0 ? null : sum / weight;
 }
 
 /// Exposes the header's effective [ColorScheme] to descendants.

@@ -7,6 +7,7 @@ import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 
 /// Share the same artwork-derived dark surface while loading and after the
 /// artist metadata arrives, including when the app itself uses light mode.
@@ -193,79 +194,114 @@ class MornyeArtistHeader extends StatelessWidget {
               listenersHeight +
               (actions.isEmpty ? 0 : 94) +
               32;
-          return SliverAppBar(
-            pinned: true,
-            stretch: !MediaQuery.disableAnimationsOf(context),
-            expandedHeight: expandedHeight - MediaQuery.paddingOf(context).top,
-            backgroundColor: surface,
-            surfaceTintColor: Colors.transparent,
-            leadingWidth: 64,
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: HeaderCircleButton(
-                icon: Icons.arrow_back,
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            title: AnimatedOpacity(
-              opacity: showTitle ? 1 : 0,
-              duration: const Duration(milliseconds: 180),
-              child: Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              stretchModes: const [StretchMode.zoomBackground],
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  _ArtistCollapsingArtwork(surface: surface, child: artwork),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
+          return Consumer(
+            builder: (context, ref, flexibleSpace) {
+              final opaque =
+                  mornyeHeaderMaterial(context, ref) ==
+                  MornyeHeaderMaterial.opaque;
+              return _toolbar(
+                context,
+                expandedHeight: expandedHeight,
+                backgroundColor: opaque ? surface : Colors.transparent,
+                flexibleSpace: opaque
+                    ? flexibleSpace!
+                    : Stack(
+                        fit: StackFit.expand,
                         children: [
-                          ...[],
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxHeight: identityHeight,
-                            ),
-                            child: _buildIdentity(context),
-                          ),
-                          ...[],
-                          if (actions.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            SizedBox(
-                              height: 74,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                spacing: 24,
-                                children: actions,
-                              ),
-                            ),
-                          ],
+                          flexibleSpace!,
+                          MornyeHeaderBacking(color: surface),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
+              );
+            },
+            child: _flexibleSpace(
+              surface: surface,
+              identityHeight: identityHeight,
+              context: context,
             ),
           );
         },
       ),
     ];
   }
+
+  Widget _toolbar(
+    BuildContext context, {
+    required double expandedHeight,
+    required Color backgroundColor,
+    required Widget flexibleSpace,
+  }) => SliverAppBar(
+    pinned: true,
+    stretch: !MediaQuery.disableAnimationsOf(context),
+    expandedHeight: expandedHeight - MediaQuery.paddingOf(context).top,
+    backgroundColor: backgroundColor,
+    surfaceTintColor: Colors.transparent,
+    scrolledUnderElevation: 0,
+    systemOverlayStyle: mornyeHeaderOverlayStyle(Theme.of(context).brightness),
+    leadingWidth: 64,
+    leading: Padding(
+      padding: const EdgeInsetsDirectional.only(start: 12),
+      child: HeaderCircleButton(
+        icon: Icons.arrow_back,
+        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+        onPressed: () => Navigator.pop(context),
+      ),
+    ),
+    title: AnimatedOpacity(
+      opacity: showTitle ? 1 : 0,
+      duration: const Duration(milliseconds: 180),
+      child: Text(
+        name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+      ),
+    ),
+    flexibleSpace: flexibleSpace,
+  );
+
+  Widget _flexibleSpace({
+    required BuildContext context,
+    required Color surface,
+    required double identityHeight,
+  }) => FlexibleSpaceBar(
+    collapseMode: CollapseMode.pin,
+    stretchModes: const [StretchMode.zoomBackground],
+    background: Stack(
+      fit: StackFit.expand,
+      children: [
+        _ArtistCollapsingArtwork(surface: surface, child: artwork),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...[],
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: identityHeight),
+                  child: _buildIdentity(context),
+                ),
+                ...[],
+                if (actions.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 74,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 24,
+                      children: actions,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildIdentity(BuildContext context) {
     final fallback = Text(
