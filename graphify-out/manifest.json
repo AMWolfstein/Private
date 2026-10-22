@@ -1590,15 +1590,15 @@
     "semantic_hash": "aad9aca40b6f46829ee7bf34cd9eaa6e"
   },
   "lib/widgets/audio_analysis_spectrogram.dart": {
-    "mtime": 1792620523.4396536,
-    "seen": 1792623676.785103,
-    "ast_hash": "7b9744458f00b2fdb346184daf42fbe4",
+    "mtime": 1792683157.6732304,
+    "seen": 1792683234.8487482,
+    "ast_hash": "1fd06808028c9b21dbea02ef438e3072",
     "semantic_hash": ""
   },
   "lib/widgets/audio_analysis_widget.dart": {
-    "mtime": 1792438624.2532575,
-    "seen": 1792623676.7851057,
-    "ast_hash": "a75163b1b24e5fd6a5bb5e09cc5fd92d",
+    "mtime": 1792683146.0682619,
+    "seen": 1792683234.8487515,
+    "ast_hash": "219b7ea93d19cc41e2a4abe3a6eb05d2",
     "semantic_hash": ""
   },
   "lib/widgets/audio_output_button.dart": {
@@ -6990,9 +6990,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/local_song_menu.dart": {
-    "mtime": 1792478890.1063395,
-    "seen": 1792623676.785165,
-    "ast_hash": "24ffe88ec8514c5bf7340801d18ee387",
+    "mtime": 1792683157.6760151,
+    "seen": 1792683234.8488002,
+    "ast_hash": "606dfa89ab352936409d06af13093b0f",
     "semantic_hash": ""
   },
   "lib/widgets/local_song_row.dart": {
