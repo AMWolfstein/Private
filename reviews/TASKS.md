@@ -5,6 +5,21 @@ the P1 and P2 findings into 8 tasks, ordered by risk. Do them in order. The P3 f
 and the performance findings that need measuring first, are listed at the end as optional:
 each can join the task that already touches its file.
 
+## What is already fixed (checked 2026-10-22 against `89bf53b`)
+
+The audit's fixed and removed findings are already under `## Resolved` in `FINDINGS.md` and
+are not in these tasks: the DEAD-* cleanup, all MORN-*, HOME-*, PLAY-*, RUST-201, TEST-201,
+TEST-202, TEST-204 and TEST-304.
+
+Every finding in T1-T8 was re-checked in the current code and is still present, with one
+exception. DATA-002 is half fixed: the Home recent-album tap it named was removed with
+`home_tab_recent.dart`, so only the `shuffleLibrary` whole-library `getAll()` remains. No
+commit since the audit names any other finding ID. Fixes since then (for example the dead-code
+batch) did not touch the code these findings point at. The `NEEDS VERIFICATION` items
+(DATA-001, DATA-004, BUG-203, BUG-204, UI-202, UI-401, CONC-001, API-002, DATA-303, RUST-204,
+RUST-403) still have the code they describe, but each still needs proof that it happens before
+it is fixed.
+
 ## Rules for every task
 
 - Read each finding in `FINDINGS.md` (search for its ID) before changing anything. The line
@@ -112,7 +127,8 @@ each can join the task that already touches its file.
     `lib/providers/local_library_provider.dart`, `lib/screens/queue_tab*.dart`,
     `lib/screens/settings/log_screen.dart`.
   - Goal:
-    - No unbounded whole-library loads.
+    - Shuffle no longer loads the whole library (DATA-002; only `shuffleLibrary` is
+      left).
     - Albums are found by key, not by name.
     - Singles and albums are counted correctly.
     - Search tokenization works beyond letters and numbers.
