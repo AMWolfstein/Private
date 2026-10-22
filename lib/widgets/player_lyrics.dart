@@ -449,7 +449,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final boundary = nextBoundary;
     _lineBoundaryTimer = Timer(boundary - position, () {
       if (!mounted || !_visible || !_playing || _loading) return;
-      _scheduleNextLine(boundary);
+      // A late callback catches up to the audio clock instead of treating
+      // its scheduled boundary as the current position.
+      final now = _displayPosition;
+      _scheduleNextLine(now > boundary ? now : boundary);
     });
   }
 
