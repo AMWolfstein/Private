@@ -13,6 +13,7 @@ import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/l10n/supported_locales.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_glass_auto_probe_host.dart';
 import 'package:spotiflac_android/widgets/mornye_performance_hud.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
@@ -205,7 +206,11 @@ class SpotiFLACApp extends ConsumerWidget {
             final appContent = _OrientationFade(
               child: AppScaffoldMessenger(
                 child: PlaybackFeedback(
-                  child: child ?? const SizedBox.shrink(),
+                  // Header controls on pages outside the tabs (Settings and
+                  // what it opens) share one backdrop read, like the shell's.
+                  child: MornyeChromeBatch(
+                    child: child ?? const SizedBox.shrink(),
+                  ),
                 ),
               ),
             );
