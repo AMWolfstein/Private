@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
@@ -230,12 +232,14 @@ class MornyeArtistHeader extends StatelessWidget {
     surfaceTintColor: Colors.transparent,
     scrolledUnderElevation: 0,
     systemOverlayStyle: mornyeHeaderOverlayStyle(Theme.of(context).brightness),
-    leadingWidth: 64,
+    leadingWidth: kToolbarHeight + detailHeaderEdgeInset(context),
     leading: Padding(
-      padding: const EdgeInsetsDirectional.only(start: 12),
+      padding: EdgeInsetsDirectional.only(
+        start: detailHeaderEdgeInset(context),
+      ),
       child: MornyeHeaderControls(
         child: HeaderCircleButton(
-          icon: Icons.arrow_back,
+          icon: CupertinoIcons.back,
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => Navigator.pop(context),
         ),
@@ -251,6 +255,10 @@ class MornyeArtistHeader extends StatelessWidget {
         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
       ),
     ),
+    actionsPadding: EdgeInsetsDirectional.only(
+      end: detailHeaderEdgeInset(context) + kMornyeHeaderEdgeGap,
+    ),
+    actions: const [MornyeHeaderActions()],
     flexibleSpace: flexibleSpace,
   );
 

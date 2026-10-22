@@ -17,7 +17,6 @@ import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:spotiflac_android/widgets/library_search_results.dart';
-import 'package:spotiflac_android/widgets/profile_avatar.dart';
 
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
@@ -165,7 +164,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
                 title: widget.mode == HomeTabMode.search
                     ? l10n.mornyeSearch
                     : l10n.homeTitle,
-                actions: _showsHome ? const [HomeProfileButton()] : null,
               ),
 
               if (_showsSearch)

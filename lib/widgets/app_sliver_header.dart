@@ -87,10 +87,10 @@ class AppSliverHeader extends ConsumerWidget {
                     ),
             )
           : null,
-      actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),
-      actions: actions == null
-          ? null
-          : [MornyeHeaderActions(actions: actions!)],
+      actionsPadding: EdgeInsetsDirectional.only(
+        end: edgeInset + kMornyeHeaderEdgeGap,
+      ),
+      actions: [MornyeHeaderActions(actions: actions ?? const [])],
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
           // SliverAppBar adds the platform's actual top safe-area inset to its

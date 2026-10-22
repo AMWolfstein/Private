@@ -9,6 +9,17 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:spotiflac_android/widgets/profile_avatar.dart';
+
+/// Every pinned header control (back circle, action capsule, profile photo)
+/// is this tall; the player keeps its own controls.
+const double kMornyeHeaderControlSize = 48;
+
+/// Space between a header control and the visible screen edge.
+const double kMornyeHeaderEdgeGap = 4;
+
+/// Glyph size of every header icon.
+const double kMornyeHeaderIconSize = 22;
 
 /// How a pinned header floats over its page.
 enum MornyeHeaderMaterial {
@@ -153,31 +164,50 @@ class MornyeHeaderCircle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final button = _HeaderIconTheme(child: child);
     if (mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque) {
-      return child;
+      return button;
     }
     return MornyeHeaderControls(
       child: Center(
         widthFactor: 1,
         child: _HeaderGlass(
-          child: SizedBox.square(dimension: 44, child: Center(child: child)),
+          child: SizedBox.square(
+            dimension: kMornyeHeaderControlSize,
+            child: Center(child: button),
+          ),
         ),
       ),
     );
   }
 }
 
-/// Trailing header actions: runs of [IconButton]s share one glass capsule.
-/// Other actions (the profile avatar, menus) keep their own shape.
+/// Trailing header actions: runs of [IconButton]s and menu buttons share one
+/// glass capsule, followed by the profile photo at the trailing end.
 class MornyeHeaderActions extends ConsumerWidget {
-  const MornyeHeaderActions({super.key, required this.actions});
+  const MornyeHeaderActions({
+    super.key,
+    this.actions = const [],
+    this.showProfile = true,
+  });
 
   final List<Widget> actions;
+
+  /// Appends [HeaderProfileButton], which hides itself inside Settings.
+  final bool showProfile;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque) {
-      return Row(mainAxisSize: MainAxisSize.min, children: actions);
+      return _HeaderIconTheme(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...actions,
+            if (showProfile) HeaderProfileButton(gap: actions.isEmpty ? 0 : 8),
+          ],
+        ),
+      );
     }
     final children = <Widget>[];
     var run = <Widget>[];
@@ -189,7 +219,7 @@ class MornyeHeaderActions extends ConsumerWidget {
     }
 
     for (final action in actions) {
-      if (action is IconButton) {
+      if (action is IconButton || action is PopupMenuButton) {
         run.add(action);
         continue;
       }
@@ -198,6 +228,9 @@ class MornyeHeaderActions extends ConsumerWidget {
       children.add(action);
     }
     flush();
+    if (showProfile) {
+      children.add(HeaderProfileButton(gap: children.isEmpty ? 0 : 8));
+    }
     return MornyeHeaderControls(
       child: Row(mainAxisSize: MainAxisSize.min, children: children),
     );
@@ -216,16 +249,11 @@ class _HeaderCapsule extends StatelessWidget {
       widthFactor: 1,
       child: _HeaderGlass(
         child: SizedBox(
-          height: 44,
+          height: kMornyeHeaderControlSize,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: IconButtonTheme(
-              data: IconButtonThemeData(
-                style: IconButton.styleFrom(
-                  minimumSize: const Size.square(44),
-                  foregroundColor: scheme.onSurface,
-                ),
-              ),
+            child: _HeaderIconTheme(
+              foregroundColor: scheme.onSurface,
               child: Row(mainAxisSize: MainAxisSize.min, children: children),
             ),
           ),
@@ -233,6 +261,29 @@ class _HeaderCapsule extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Header icon buttons and menus: 48dp targets with 22dp glyphs.
+class _HeaderIconTheme extends StatelessWidget {
+  const _HeaderIconTheme({required this.child, this.foregroundColor});
+
+  final Widget child;
+  final Color? foregroundColor;
+
+  @override
+  Widget build(BuildContext context) => IconButtonTheme(
+    data: IconButtonThemeData(
+      style: IconButton.styleFrom(
+        minimumSize: const Size.square(kMornyeHeaderControlSize),
+        iconSize: kMornyeHeaderIconSize,
+        foregroundColor: foregroundColor,
+      ),
+    ),
+    child: IconTheme.merge(
+      data: const IconThemeData(size: kMornyeHeaderIconSize),
+      child: child,
+    ),
+  );
 }
 
 /// The header controls' shared glass: HeaderCircleButton's tint, a capsule
@@ -247,7 +298,7 @@ class _HeaderGlass extends ConsumerWidget {
     final scheme = HeaderPalette.of(context);
     final dark = scheme.brightness == Brightness.dark;
     return MornyeGlass.navigation(
-      radius: 22,
+      radius: kMornyeHeaderControlSize / 2,
       tintColor: dark ? Colors.black : Colors.white,
       tintOpacity: dark ? 0.45 : 0.55,
       blurEnabled: ref.watch(mornyeBlurEnabledProvider),

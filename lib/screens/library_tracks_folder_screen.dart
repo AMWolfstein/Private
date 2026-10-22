@@ -602,16 +602,14 @@ class _LibraryTracksFolderScreenState
           : null,
       appBarActions: [
         if (!isSelectionMode && entries.isNotEmpty)
-          HeaderCircleButton(
-            icon: Icons.ios_share,
-            iconSize: 20,
+          IconButton(
+            icon: Icon(mornyeIconFor(Icons.ios_share)),
             tooltip: context.l10n.collectionExportM3u,
             onPressed: () => _exportAsM3u8(context, title, entries),
           ),
         if (isPlaylistMode && !isSelectionMode) ...[
-          HeaderCircleButton(
-            icon: Icons.edit_outlined,
-            iconSize: 20,
+          IconButton(
+            icon: Icon(mornyeIconFor(Icons.edit_outlined)),
             tooltip: context.l10n.collectionRenamePlaylist,
             onPressed: () {
               final id = widget.playlistId ?? playlist?.id;
@@ -619,9 +617,8 @@ class _LibraryTracksFolderScreenState
               _showRenamePlaylistDialog(context, id, playlist?.name ?? title);
             },
           ),
-          HeaderCircleButton(
-            icon: Icons.camera_alt_outlined,
-            iconSize: 20,
+          IconButton(
+            icon: Icon(mornyeIconFor(Icons.camera_alt_outlined)),
             tooltip: context.l10n.collectionPlaylistChangeCover,
             onPressed: () => _showCoverOptionsSheet(context, hasCustomCover),
           ),

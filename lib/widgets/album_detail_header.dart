@@ -187,10 +187,12 @@ class AlbumDetailHeader extends StatelessWidget {
                       ),
                 ),
               ),
-              actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),
-              actions: appBarActions == null
-                  ? null
-                  : [MornyeHeaderActions(actions: appBarActions!)],
+              actionsPadding: EdgeInsetsDirectional.only(
+                end: edgeInset + kMornyeHeaderEdgeGap,
+              ),
+              actions: [
+                MornyeHeaderActions(actions: appBarActions ?? const []),
+              ],
             ),
           ),
         );

@@ -374,6 +374,7 @@ class _MainShellState extends ConsumerState<MainShell>
   Future<void> _openProfileSettings() async {
     if (_settingsPageOpen) return;
     _settingsPageOpen = true;
+    ShellNavigationService.settingsOpen.value = true;
     FocusManager.instance.primaryFocus?.unfocus();
     try {
       await Navigator.of(context).push(
@@ -383,6 +384,7 @@ class _MainShellState extends ConsumerState<MainShell>
       );
     } finally {
       _settingsPageOpen = false;
+      ShellNavigationService.settingsOpen.value = false;
     }
   }
 

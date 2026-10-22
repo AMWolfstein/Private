@@ -7,6 +7,11 @@ class ShellNavigationService {
   static final chromeBrightness = ValueNotifier<Brightness?>(null);
   static final chromeSurface = ValueNotifier<Color?>(null);
 
+  /// True while the profile Settings page is open over the tabs. Pages on the
+  /// shell's navigator (Settings and what it opens) then hide the header
+  /// profile photo.
+  static final settingsOpen = ValueNotifier<bool>(false);
+
   /// Bumped after the visible page changes (tab switch, push or pop), once
   /// the new page has built.
   static final pageChanges = ValueNotifier<int>(0);
@@ -110,6 +115,16 @@ class ShellNavigationService {
     _tabSelectionOwner = null;
     _tabSelectionHandler = null;
   }
+
+  /// Whether a shell is listening for [requestTab].
+  static bool get hasTabSelectionHandler => _tabSelectionHandler != null;
+
+  /// Whether [navigator] is one of the tab navigators rather than the shell's.
+  static bool isTabNavigator(NavigatorState? navigator) =>
+      navigator != null &&
+      (identical(navigator, homeTabNavigatorKey.currentState) ||
+          identical(navigator, libraryTabNavigatorKey.currentState) ||
+          identical(navigator, searchTabNavigatorKey.currentState));
 
   static bool requestTab(ShellTab tab) {
     final handler = _tabSelectionHandler;

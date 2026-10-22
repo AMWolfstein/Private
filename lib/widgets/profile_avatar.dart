@@ -84,24 +84,108 @@ class ProfileAvatar extends StatelessWidget {
   }
 }
 
+/// The header profile photo that opens Settings. Sits at the trailing end of
+/// every pinned header, [gap] after the actions before it, and hides itself
+/// on Settings and the pages Settings opens (and outside the shell).
+class HeaderProfileButton extends StatelessWidget {
+  const HeaderProfileButton({super.key, this.gap = 0});
+
+  final double gap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: ShellNavigationService.settingsOpen,
+      builder: (context, settingsOpen, _) {
+        final hidden =
+            !ShellNavigationService.hasTabSelectionHandler ||
+            (settingsOpen &&
+                !ShellNavigationService.isTabNavigator(
+                  Navigator.maybeOf(context),
+                ));
+        if (hidden) return const SizedBox.shrink();
+        return Padding(
+          padding: EdgeInsetsDirectional.only(start: gap),
+          child: const HomeProfileButton(),
+        );
+      },
+    );
+  }
+}
+
+/// The profile photo, 48dp, outlined like the header glass rim.
 class HomeProfileButton extends ConsumerWidget {
   const HomeProfileButton({super.key});
+
+  static const double _size = 48;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(userProfileProvider).value;
+    final dark = Theme.of(context).brightness == Brightness.dark;
     return IconButton(
       tooltip: context.l10n.settingsTitle,
-      iconSize: 44,
-      padding: const EdgeInsets.all(6),
-      constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
-      visualDensity: VisualDensity.standard,
+      style: IconButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size.square(_size),
+        fixedSize: const Size.square(_size),
+        iconSize: _size,
+      ),
       onPressed: () => ShellNavigationService.requestTab(ShellTab.settings),
-      icon: ProfileAvatar(
-        name: profile?.name ?? '',
-        photoPath: profile?.photoPath,
-        size: 44,
+      icon: CustomPaint(
+        foregroundPainter: _ProfileRim(dark: dark),
+        child: ProfileAvatar(
+          name: profile?.name ?? '',
+          photoPath: profile?.photoPath,
+          size: _size,
+        ),
       ),
     );
   }
+}
+
+/// The glass rim's contact stroke and top/bottom highlight, on a circle.
+class _ProfileRim extends CustomPainter {
+  const _ProfileRim({required this.dark});
+
+  final bool dark;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (size.isEmpty) return;
+    final bounds = Offset.zero & size;
+    final center = bounds.center;
+    final radius = size.shortestSide / 2;
+    canvas.drawCircle(
+      center,
+      radius - 0.25,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5
+        ..color = Colors.black.withValues(alpha: dark ? 0.5 : 0.16),
+    );
+    canvas.drawCircle(
+      center,
+      radius - 0.8,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.6
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0, 0.14, 0.5, 0.86, 1],
+          colors: [
+            Color(0x40ffffff),
+            Color(0x0dffffff),
+            Color(0x0a000000),
+            Color(0x0dffffff),
+            Color(0x26ffffff),
+          ],
+        ).createShader(bounds),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _ProfileRim oldDelegate) =>
+      dark != oldDelegate.dark;
 }
