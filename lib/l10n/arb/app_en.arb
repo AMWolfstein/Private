@@ -285,6 +285,26 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
+  "aboutDeveloperOptions": "Developer options",
+  "@aboutDeveloperOptions": {
+    "description": "About page section revealed by tapping the version row seven times"
+  },
+  "aboutDeveloperOptionsEnabled": "Developer options enabled",
+  "@aboutDeveloperOptionsEnabled": {
+    "description": "Snackbar after the seventh tap on the version row"
+  },
+  "aboutPerformanceHud": "Performance HUD",
+  "@aboutPerformanceHud": {
+    "description": "Developer option: floating frame-timing overlay"
+  },
+  "aboutPerformanceHudSubtitle": "Show build and raster frame timings over every screen.",
+  "@aboutPerformanceHudSubtitle": {
+    "description": "Subtitle for the performance HUD toggle"
+  },
+  "aboutHideDeveloperOptions": "Hide developer options",
+  "@aboutHideDeveloperOptions": {
+    "description": "Developer option that hides the section again"
+  },
   "aboutAppDescription": "Play and organize your local music, with metadata and lyrics editing.",
   "@aboutAppDescription": {
     "description": "App description in header card"

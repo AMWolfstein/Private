@@ -82,6 +82,12 @@ class AppSettings {
   final bool enableLogging;
   final bool heroAnimationsEnabled;
 
+  /// Revealed by tapping the About version row seven times.
+  final bool developerOptionsUnlocked;
+
+  /// Floating frame-timing overlay (a developer option).
+  final bool performanceHudEnabled;
+
   /// Mornye glass renderer: `auto` (the device decides), `lite`, `full` or
   /// `off`. See [MornyeGlassQuality].
   final String glassQuality;
@@ -144,6 +150,8 @@ class AppSettings {
     this.historyFilterMode = 'all',
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
+    this.developerOptionsUnlocked = false,
+    this.performanceHudEnabled = false,
     this.glassQuality = 'auto',
     this.glassClarityLevel = kDefaultGlassClarityLevel,
     this.locale = 'system',
@@ -195,6 +203,8 @@ class AppSettings {
     String? historyFilterMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
+    bool? developerOptionsUnlocked,
+    bool? performanceHudEnabled,
     String? glassQuality,
     int? glassClarityLevel,
     String? locale,
@@ -253,6 +263,10 @@ class AppSettings {
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
+      developerOptionsUnlocked:
+          developerOptionsUnlocked ?? this.developerOptionsUnlocked,
+      performanceHudEnabled:
+          performanceHudEnabled ?? this.performanceHudEnabled,
       glassQuality: glassQuality ?? this.glassQuality,
       glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
       locale: locale ?? this.locale,

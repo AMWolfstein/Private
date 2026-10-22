@@ -500,6 +500,20 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
+  void setDeveloperOptionsUnlocked(bool unlocked) {
+    state = state.copyWith(
+      developerOptionsUnlocked: unlocked,
+      // Hiding the options also removes the overlay they control.
+      performanceHudEnabled: unlocked && state.performanceHudEnabled,
+    );
+    _saveSettings();
+  }
+
+  void setPerformanceHudEnabled(bool enabled) {
+    state = state.copyWith(performanceHudEnabled: enabled);
+    _saveSettings();
+  }
+
   void setGlassQuality(MornyeGlassQuality quality) {
     state = state.copyWith(glassQuality: quality.name);
     _saveSettings();

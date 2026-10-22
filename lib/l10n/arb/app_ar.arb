@@ -208,6 +208,11 @@
     "description": "Section for app info"
   },
   "aboutVersion": "الإصدار",
+  "aboutDeveloperOptions": "خيارات المطور",
+  "aboutDeveloperOptionsEnabled": "تم تفعيل خيارات المطور",
+  "aboutPerformanceHud": "مؤشر الأداء",
+  "aboutPerformanceHudSubtitle": "عرض توقيتات بناء الإطارات ورسمها فوق كل شاشة.",
+  "aboutHideDeveloperOptions": "إخفاء خيارات المطور",
   "@aboutVersion": {
     "description": "Version info label"
   },

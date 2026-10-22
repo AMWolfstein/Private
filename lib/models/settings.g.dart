@@ -66,6 +66,8 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
   enableLogging: json['enableLogging'] as bool? ?? false,
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
+  developerOptionsUnlocked: json['developerOptionsUnlocked'] as bool? ?? false,
+  performanceHudEnabled: json['performanceHudEnabled'] as bool? ?? false,
   glassQuality: json['glassQuality'] as String? ?? 'auto',
   glassClarityLevel: json['glassClarityLevel'] == null
       ? kDefaultGlassClarityLevel
@@ -120,6 +122,8 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'historyFilterMode': instance.historyFilterMode,
       'enableLogging': instance.enableLogging,
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,
+      'developerOptionsUnlocked': instance.developerOptionsUnlocked,
+      'performanceHudEnabled': instance.performanceHudEnabled,
       'glassQuality': instance.glassQuality,
       'glassClarityLevel': instance.glassClarityLevel,
       'locale': instance.locale,

@@ -1,17 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends ConsumerStatefulWidget {
   const AboutPage({super.key});
+
+  /// Taps on the version row that reveal the developer options.
+  static const developerTaps = 7;
+
+  @override
+  ConsumerState<AboutPage> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends ConsumerState<AboutPage> {
+  int _versionTaps = 0;
+
+  void _onVersionTap() {
+    if (ref.read(settingsProvider).developerOptionsUnlocked) return;
+    if (++_versionTaps < AboutPage.developerTaps) return;
+    _versionTaps = 0;
+    ref.read(settingsProvider.notifier).setDeveloperOptionsUnlocked(true);
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      SnackBar(content: Text(context.l10n.aboutDeveloperOptionsEnabled)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final developer = ref.watch(
+      settingsProvider.select(
+        (s) => (
+          unlocked: s.developerOptionsUnlocked,
+          hud: s.performanceHudEnabled,
+        ),
+      ),
+    );
 
     return PopScope(
       canPop: true,
@@ -39,15 +69,49 @@ class AboutPage extends StatelessWidget {
               child: SettingsGroup(
                 children: [
                   _AboutSettingsItem(
+                    key: const ValueKey('about-version'),
                     icon: Icons.info_outline,
                     title: context.l10n.aboutVersion,
                     subtitle:
                         'v${AppInfo.displayVersion} (build ${AppInfo.buildNumber})',
                     showDivider: false,
+                    onTap: _onVersionTap,
                   ),
                 ],
               ),
             ),
+
+            if (developer.unlocked) ...[
+              SliverToBoxAdapter(
+                child: SettingsSectionHeader(
+                  title: context.l10n.aboutDeveloperOptions,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SettingsGroup(
+                  children: [
+                    SettingsSwitchItem(
+                      key: const ValueKey('performance-hud'),
+                      icon: Icons.speed,
+                      title: context.l10n.aboutPerformanceHud,
+                      subtitle: context.l10n.aboutPerformanceHudSubtitle,
+                      value: developer.hud,
+                      onChanged: ref
+                          .read(settingsProvider.notifier)
+                          .setPerformanceHudEnabled,
+                    ),
+                    _AboutSettingsItem(
+                      icon: Icons.visibility_off_outlined,
+                      title: context.l10n.aboutHideDeveloperOptions,
+                      showDivider: false,
+                      onTap: () => ref
+                          .read(settingsProvider.notifier)
+                          .setDeveloperOptionsUnlocked(false),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             SliverToBoxAdapter(
               child: Padding(
@@ -175,12 +239,15 @@ class _AboutSettingsItem extends StatelessWidget {
   final String title;
   final String? subtitle;
   final bool showDivider;
+  final VoidCallback? onTap;
 
   const _AboutSettingsItem({
+    super.key,
     required this.icon,
     required this.title,
     this.subtitle,
     this.showDivider = true,
+    this.onTap,
   });
 
   @override
@@ -234,6 +301,9 @@ class _AboutSettingsItem extends StatelessWidget {
           ),
       ],
     );
-    return SettingsSearchTarget(label: title, child: content);
+    return SettingsSearchTarget(
+      label: title,
+      child: onTap == null ? content : InkWell(onTap: onTap, child: content),
+    );
   }
 }
