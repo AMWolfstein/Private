@@ -6,31 +6,108 @@ bugs (each also carries the P3 findings in the same code), T9-T10 are performanc
 T11-T12 are UI polish and build/test cleanup. Do them in order. Three findings are already
 gone and need no task (see the last section).
 
-## Rules for every task
+## Instructions for opencode (read first, follow exactly)
 
-- Read each finding in `FINDINGS.md` (search for its ID) before changing anything. The line
-  numbers there are older than the current code, so find the code by the function name.
-- First check the finding is still real on the current code. If it is already fixed or no
-  longer reproduces, change nothing for it and write that down.
-- For a finding marked `NEEDS VERIFICATION`, show it happens (a test or a traced path)
-  before you fix it. If it does not happen, mark it rejected and give the reason.
-- Make the smallest fix, and add a regression test for each fix. Do not refactor unrelated
-  code. Keep RTL, semantics and the Mornye-only rules in `AGENTS.md`.
-- Per task: run `flutter analyze` (must report `No issues found!`) and the full `flutter
-  test` **once**. If a test was already stale, fix that test and re-run only its file. Rust
-  changes also need `bash scripts/check_rust_backend.sh`; Kotlin changes also need
-  `bash scripts/check_android.sh`. Do not build an APK.
-- Make three commits per task, in this order: code, then `graphify update .` (commit only
-  `graphify-out/`), then docs. The docs commit moves the fixed findings to `## Resolved` in
-  `FINDINGS.md`, ticks the task here and adds a line to `LOCAL_OFFLINE_MIGRATION_PLAN.md`.
-  Stage paths explicitly and never use `git add -A`.
-- Push with `git push -u origin <branch>`. Never force-push.
-- Device testing belongs to the owner, so never report a device test as passed.
-- Performance tasks: measure before and after on the same data (a SQL `EXPLAIN QUERY PLAN`,
-  a timed host test, or the DevTools rebuild counter) and put both numbers in the docs
-  commit. A finding marked "only if measured" that shows no real cost is closed as rejected
-  with the measurement, not fixed.
-- "Also" findings are P3. Fix each one with its task when it is still real.
+You fix the tasks below one at a time, in order (T1 first). Each task goes through these
+steps. Do not skip, merge or reorder steps, and do not start the next task before the
+current one is pushed.
+
+### Hard rules
+
+- **Never build an APK.** Do not run `flutter build`, `gradlew assemble*` or `bundle*`, and
+  do not sign anything.
+- **Never force-push**, rebase, amend or rewrite commits. Never use `git add -A` or `git add .`.
+- **Do not run tests while you work.** No `flutter test`, `flutter analyze` or check scripts
+  until step 6. Write the tests you need, but run them only in step 6.
+- **No commit before review.** Nothing is committed until the reviewer agents in step 5 have
+  checked the code and every real finding from them is fixed.
+- **Use graphify to move around the project.** Before opening or editing any file, find it
+  with graphify. Use `grep` only to cross-check what graphify showed you, never as the first
+  search.
+- Read `AGENTS.md` once before T1 and keep to its product rules: Mornye only, RTL,
+  semantics, 0.5 disabled opacity, offline only, and no new glass package.
+- Only change what the task's findings need. Make no unrelated refactors and no renames.
+- Never report a device test as passed. Device testing belongs to the owner.
+
+### Steps for each task
+
+1. **Read.** Open `FINDINGS.md` and read every finding ID in the task, including the
+   "Also" ones. The line numbers there are old, so go by the function names.
+2. **Locate with graphify.** For each finding run
+   `graphify explain "<function or class name>"` and `graphify query "<what the finding is
+   about>"`. Use `graphify path "<A>" "<B>"` when you need to know how two parts connect, for
+   example a Dart caller and a Kotlin channel. This tells you the files, callers and
+   dependents. Read only those files.
+3. **Confirm.** Check that each finding is still real in the current code.
+   - If it is already fixed or gone, change nothing for it and note it for the docs commit.
+   - A finding marked `NEEDS VERIFICATION` must be shown to happen, by tracing the path or
+     writing the failing test, before you fix it. If it cannot happen, it is rejected; note
+     why.
+   - Performance findings: record the "before" number first, using `EXPLAIN QUERY PLAN`, a
+     timed host test or a rebuild count. A finding marked "only if measured" that shows no
+     real cost is rejected with that number.
+4. **Fix.** Make the smallest fix for each real finding, and add a regression test for each
+   one. Do not run anything yet.
+5. **Review with the agents.** Run the reviewer agents listed under the task in **Reviewers**.
+   - Each reviewer's instructions are in `.claude/agents/<name>.md`, and the shared rules
+     are in `reviews/PROTOCOL.md`.
+   - Start each reviewer as a subagent (the `task` tool). Give it that file's text as its
+     instructions, plus a brief: the uncommitted diff (`git diff`), the files and symbols
+     changed, the graphify dependents from step 2, and the finding IDs.
+   - Reviewers only read code and never edit it.
+   - If you cannot start subagents, do each review yourself as a separate pass. Read the
+     agent file and follow it strictly, one reviewer per pass.
+   - Fix every real P0, P1 or P2 they report, then run the same reviewer again on the new
+     diff. Repeat until it reports none.
+   - A P3 from them is fixed now if it is in code this task changed. Otherwise add it to
+     `FINDINGS.md` as a new open finding.
+6. **Test once.** Now run all of these:
+   - `flutter analyze`, which must report `No issues found!`.
+   - The full `flutter test`, once.
+   - `bash scripts/check_rust_backend.sh` if Rust changed.
+   - `bash scripts/check_android.sh` if Kotlin or Android changed.
+
+   If a test fails because it was already stale, or because the fix legitimately changed the
+   expected behaviour, fix that test and re-run only its file. If a failure is caused by your
+   fix, fix the code, repeat step 5 for that change, and re-run only the failing files. Never
+   skip, disable or delete a test to get green. For performance findings, record the "after"
+   number.
+7. **Commit**, as three separate commits in this order. Stage each path explicitly.
+   1. Code: `lib/`, `test/`, `android/`, `rust_backend/` and so on, with a message like
+      `fix(<area>): <what> (T<n>: <IDs>)`. Never include `graphify-out/`, `reviews/` or
+      `LOCAL_OFFLINE_MIGRATION_PLAN.md`.
+   2. Graph: run `graphify update .`, then commit only the tracked `graphify-out/` files as
+      `chore(graphify): refresh code graph after T<n>`.
+   3. Docs: `reviews/FINDINGS.md`, `reviews/TASKS.md` and `LOCAL_OFFLINE_MIGRATION_PLAN.md`,
+      as `docs: record T<n> fixes`.
+      - In `FINDINGS.md`, move each fixed finding to `## Resolved` with the code commit hash,
+        and each rejected one to `## Rejected` with the reason.
+      - Tick the task's box here.
+      - Record the test results exactly (passed, failed and skipped counts), and for
+        performance tasks the before and after numbers.
+8. **Push** with `git push -u origin <current branch>`. Then check that
+   `git rev-parse HEAD` equals `git rev-parse origin/<branch>`. Report the push only after
+   that check passes, and retry only on network errors.
+
+### Reviewers
+
+| Task | Reviewer agents |
+|---|---|
+| T1 | kotlin-android-auditor, data-integrity-auditor |
+| T2 | data-integrity-auditor, test-auditor |
+| T3 | data-integrity-auditor, rust-safety-auditor; add kotlin-android-auditor for DATA-306 |
+| T4 | rust-safety-auditor, api-compat-auditor (the library and cover ID change) |
+| T5 | api-compat-auditor, bug-hunter |
+| T6 | rust-safety-auditor, bug-hunter |
+| T7 | concurrency-auditor, flutter-dart-auditor |
+| T8 | bug-hunter, security-auditor |
+| T9 | code-optimization-auditor, data-integrity-auditor (the schema upgrade) |
+| T10 | code-optimization-auditor, rust-safety-auditor |
+| T11 | ux-auditor, flutter-dart-auditor |
+| T12 | dependency-auditor, test-auditor |
+
+Always add security-auditor when a change touches file deletion, SAF permissions, intents
+or exported components.
 
 ## Tasks
 
