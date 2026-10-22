@@ -76,11 +76,15 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
   bool _hasStarted = false;
   bool _userScrolling = false;
   bool _tickerEnabled = true;
+  // An inactive app is still on screen: under the notification shade, a
+  // system overlay or the other half of split screen.
   bool get _visible =>
       widget.isActive &&
       _tickerEnabled &&
-      (WidgetsBinding.instance.lifecycleState == null ||
-          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed);
+      switch (WidgetsBinding.instance.lifecycleState) {
+        null || AppLifecycleState.resumed || AppLifecycleState.inactive => true,
+        _ => false,
+      };
   static const double _estimatedLyricExtent = 64;
   _LyricExtentSnapshot? _lineExtents;
   List<(double, double, double)> _lineMeasurements = [];
@@ -190,7 +194,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    _syncPositionSubscription(resetUserScroll: false);
+    // A change that keeps the view on screen leaves the lyrics running.
+    if ((_positionSubscription != null) != _visible) {
+      _syncPositionSubscription(resetUserScroll: false);
+    }
     if (mounted) setState(() {});
   }
 
@@ -1559,11 +1566,15 @@ class _WordHighlightedLyricLineState
   bool _hasSubscribed = false;
   Duration _visualEnd = Duration.zero;
 
+  // An inactive app is still on screen, as in [SyncedLyricsView]: the sweep
+  // keeps pace with the lines.
   bool get _visible =>
       widget.animate &&
       _tickerEnabled &&
-      (WidgetsBinding.instance.lifecycleState == null ||
-          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed);
+      switch (WidgetsBinding.instance.lifecycleState) {
+        null || AppLifecycleState.resumed || AppLifecycleState.inactive => true,
+        _ => false,
+      };
 
   bool get _advancing =>
       _visible && _playing && !_loading && widget.seekPreview.value == null;
