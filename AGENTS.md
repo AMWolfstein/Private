@@ -58,7 +58,14 @@ and alone honours high contrast) and `glassClarityLevel` 1-5 in app settings. Ev
 number lives in `kMornyeGlassLevels`; never store a percentage or add clarity formulas. Level 1
 is a plain blur, never a lens; off has no lenses, blur or sampling; lite has no shader except
 touch-only thumbs and segment pills. Do not restore "Always use blur effects". The performance
-HUD is a hidden developer option (seven taps on About's version) and is absent when off.
+HUD is a hidden developer option (seven taps on About's version) and is absent when off; it starts
+top-left, drags, minimizes to a pill and its statistics never take touches. Blur never drops below
+sigma 6 (lighter tint makes Clear and Crystal). Auto measures p90 raster time per build (above 14 ms:
+full -> lite -> Level 1 lite), saved outside the settings backup; explicit qualities are never measured.
+In the shell, persistent chrome shares two backdrop reads (`MornyeBackdropGroup`): surface = band,
+tab capsule, mini player; controls = header leading circle and actions, bar side buttons. Never put
+overlapping glass, glass in page content or glass inside Opacity in one group; members of a moving
+or covered route read on their own.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
