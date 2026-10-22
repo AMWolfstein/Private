@@ -474,7 +474,7 @@ void main() {
       );
 
       expect(find.text('Library'), findsOneWidget);
-      expect(find.byIcon(CupertinoIcons.chevron_back), findsNothing);
+      expect(find.byIcon(CupertinoIcons.back), findsNothing);
     });
 
     testWidgets('page variant shows a back button that pops the route', (
@@ -508,7 +508,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Downloads'), findsOneWidget);
 
-      await tester.tap(find.byIcon(CupertinoIcons.chevron_back));
+      await tester.tap(find.byIcon(CupertinoIcons.back));
       await tester.pumpAndSettle();
       expect(find.text('Downloads'), findsNothing);
     });
@@ -557,7 +557,7 @@ void main() {
           await tester.pump();
 
           final title = find.text('Metadata');
-          final backIcon = find.byIcon(CupertinoIcons.chevron_back);
+          final backIcon = find.byIcon(CupertinoIcons.back);
           expect(
             tester.getRect(title).overlaps(tester.getRect(backIcon)),
             isFalse,
