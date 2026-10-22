@@ -65,7 +65,8 @@ top-left, drags, minimizes to a pill and its statistics never take touches. Blur
 sigma 6 (lighter tint makes Clear and Crystal). Auto measures p90 raster time per build (above 14 ms:
 full -> lite -> Level 1 lite), saved outside the settings backup; explicit qualities are never measured.
 In the shell, persistent chrome shares one backdrop read: one public `LiquidGlassBatch`
-(`MornyeChromeBatch`) above pages and bar, joined only through `MornyeChromeMember` (header leading
+(`MornyeChromeBatch`) above pages and bar (a second one above the root navigator serves Settings
+and other root routes), joined only through `MornyeChromeMember` (header leading
 circle and actions, tab capsule, mini player, bar side buttons at rest). Blurs push its key through
 our own layer, on Impeller only; never import `liquid_glass_easy/src` or allocate ids. The band,
 page content, sheets, glass inside Opacity, folding side buttons and moving or covered routes read
