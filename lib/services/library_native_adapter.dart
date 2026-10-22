@@ -213,6 +213,15 @@ class LibraryNativeAdapter {
       if (result['committed'] != true) {
         throw StateError('Native Library staging did not complete');
       }
+      // Rows the native staging could not encode are skipped, not fatal. Log
+      // them and keep previous entries, as for a platform read error.
+      final invalidRows = (result['invalid_rows'] as num?)?.toInt() ?? 0;
+      if (invalidRows > 0) {
+        _log.e(
+          'Skipped $invalidRows invalid scan row(s) for $sourceId: '
+          '${result['invalid_row_error']}',
+        );
+      }
       // Native committed:true only describes the private artifact. Cancellation
       // still prevents publication until the owner's transaction commits.
       _check(isCancelled);
@@ -222,7 +231,7 @@ class LibraryNativeAdapter {
         p.join(directory.path, 'local_library.db'),
         result,
         incremental: incremental,
-        preserveMissing: preserveMissing,
+        preserveMissing: preserveMissing || invalidRows > 0,
         isCancelled: isCancelled,
       );
     } on NativeSqliteSnapshotDetachException catch (error) {
