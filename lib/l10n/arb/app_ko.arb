@@ -41,19 +41,6 @@
   "appearanceGlassClaritySubtitle": "Mornye 메뉴와 하단바의 투명도를 조절할 수 있습니다. 텍스트 대비는 유지됩니다",
   "appearanceGlassTinted": "색조",
   "appearanceGlassClear": "투명",
-  "appearanceGlassClarityBlurOff": "이 기기에서 글래스 효과가 불투명하게 표시됩니다. 투명도를 조절하려면 '{setting}'을 켜세요",
-  "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
-    "placeholders": {
-      "setting": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityHighContrast": "시스템에서 대비 증가를 요청하여 글래스가 불투명하게 표시됩니다. 그래도 글래스 효과를 사용하려면 ‘{setting}’을 켜세요. 텍스트 대비는 유지됩니다.",
-  "@appearanceGlassClarityHighContrast": {
-    "description": "Explains the system contrast request and the explicit glass-only override."
-  },
   "appearanceUseSystemFont": "시스템 글꼴 사용",
   "appearanceUseSystemFontSubtitle": "앱 텍스트에 기기 기본 글꼴을 사용합니다",
   "@@locale": "ko",
@@ -687,14 +674,6 @@
   "appearanceHeroAnimationsSubtitle": "화면 간 이동 시 앨범 커버가 날아가는 애니메이션을 표시합니다 (예시: 플레이어를 실행할 경우)",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
-  },
-  "appearanceForceBlur": "항상 블러 효과 사용",
-  "@appearanceForceBlur": {
-    "description": "Toggle that forces backdrop blur on even when the device profile disabled it"
-  },
-  "appearanceForceBlurSubtitle": "기본적으로 비활성화된 기기에서도 하단바 블러 효과를 활성화합니다. 성능이 저하될 수 있습니다",
-  "@appearanceForceBlurSubtitle": {
-    "description": "Subtitle for the force-blur toggle"
   },
   "downloadedAlbumDeleteSelected": "선택 항목 삭제",
   "@downloadedAlbumDeleteSelected": {

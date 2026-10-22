@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
@@ -295,7 +296,9 @@ void main() {
                   (ref) => const Stream.empty(),
                 ),
                 lowEndDeviceProvider.overrideWithValue(true),
-                backdropBlurEnabledProvider.overrideWithValue(false),
+                mornyeGlassQualityProvider.overrideWithValue(
+                  MornyeGlassQuality.auto,
+                ),
               ],
               child: MaterialApp(
                 theme: mornye

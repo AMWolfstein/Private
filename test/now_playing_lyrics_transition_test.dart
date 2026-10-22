@@ -16,7 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
+import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
+import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
@@ -149,7 +151,7 @@ void main() {
     Stream<PlaybackState>? playbackEvents,
     Widget Function(Widget)? wrapPlayer,
     MusicPlayerController? controller,
-    double glassClarity = kDefaultMornyeGlassClarity,
+    int glassLevel = 3,
     List<MediaItem> queue = const [],
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -163,10 +165,10 @@ void main() {
       ProviderScope(
         overrides: [
           initialThemeSettingsProvider.overrideWithValue(
-            ThemeSettings(
-              playerView: playerView,
-              mornyeGlassClarity: glassClarity,
-            ),
+            ThemeSettings(playerView: playerView),
+          ),
+          initialSettingsProvider.overrideWithValue(
+            AppSettings(glassClarityLevel: glassLevel),
           ),
           if (controller != null)
             musicPlayerControllerProvider.overrideWithValue(controller),
@@ -468,7 +470,7 @@ void main() {
     await pumpNowPlaying(
       tester,
       theme: MornyeTheme.build(Brightness.dark),
-      glassClarity: 0.5,
+      glassLevel: 2,
       size: const Size(393, 852),
       playbackEvents: playback.stream,
     );
@@ -984,7 +986,7 @@ void main() {
           theme: MornyeTheme.build(Brightness.dark),
           size: Size(393, height),
           playback: PlaybackState(updatePosition: const Duration(seconds: 30)),
-          glassClarity: 0.5,
+          glassLevel: 2,
         );
         mediaItems.add(item('many'));
         await settlePlayer(tester);
@@ -992,10 +994,10 @@ void main() {
         await settlePlayer(tester);
         final list = find.byType(ListView);
         final bounds = tester.getRect(list);
-        void setClarity(double value) => unawaited(
+        void setClarity(int level) => unawaited(
           ProviderScope.containerOf(tester.element(list))
-              .read(themeProvider.notifier)
-              .setMornyeGlassClarity(value, persist: false),
+              .read(settingsProvider.notifier)
+              .setGlassClarityLevel(level, persist: false),
         );
         final scrollable = find.descendant(
           of: list,
@@ -1026,7 +1028,7 @@ void main() {
         expect(transport.hitTestable(), findsNothing);
         // An appearance update must not reset playback following while the
         // user owns the scroll position.
-        setClarity(0.6);
+        setClarity(3);
         await tester.pump();
         await tester.pump();
         expect(state.position.pixels, closeTo(hiddenOffset, 0.01));
@@ -1062,7 +1064,7 @@ void main() {
         await touch.up();
         await settlePlayer(tester);
         final releasedOffset = state.position.pixels;
-        setClarity(0.5);
+        setClarity(2);
         await tester.pump();
         await settlePlayer(tester);
         expect(state.position.pixels, closeTo(releasedOffset, 0.01));

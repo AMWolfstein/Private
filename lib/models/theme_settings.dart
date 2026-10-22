@@ -10,14 +10,7 @@ const String kLyricsTextScaleKey = 'lyrics_text_scale';
 
 double normalizeLyricsTextScale(num? value) =>
     value != null && value.isFinite ? value.toDouble().clamp(0.8, 1.4) : 1.0;
-const String kMornyeGlassClarityKey = 'mornye_glass_clarity';
 const String kMornyeGlassOutlinesKey = 'mornye_glass_outlines';
-const double kDefaultMornyeGlassClarity = 0.75;
-
-double normalizeMornyeGlassClarity(num? value) =>
-    value != null && value.isFinite
-    ? value.toDouble().clamp(0.0, 1.0)
-    : kDefaultMornyeGlassClarity;
 
 enum PlayerView { normal, immersive }
 
@@ -43,7 +36,6 @@ class ThemeSettings {
   final String customFontId;
   final String customFontName;
   final double lyricsTextScale;
-  final double mornyeGlassClarity;
   final bool mornyeGlassOutlines;
 
   const ThemeSettings({
@@ -55,7 +47,6 @@ class ThemeSettings {
     this.customFontId = '',
     this.customFontName = '',
     this.lyricsTextScale = 1,
-    this.mornyeGlassClarity = kDefaultMornyeGlassClarity,
     this.mornyeGlassOutlines = true,
   });
 
@@ -68,7 +59,6 @@ class ThemeSettings {
     String? customFontId,
     String? customFontName,
     double? lyricsTextScale,
-    double? mornyeGlassClarity,
     bool? mornyeGlassOutlines,
   }) {
     return ThemeSettings(
@@ -82,9 +72,6 @@ class ThemeSettings {
       lyricsTextScale: normalizeLyricsTextScale(
         lyricsTextScale ?? this.lyricsTextScale,
       ),
-      mornyeGlassClarity: normalizeMornyeGlassClarity(
-        mornyeGlassClarity ?? this.mornyeGlassClarity,
-      ),
       mornyeGlassOutlines: mornyeGlassOutlines ?? this.mornyeGlassOutlines,
     );
   }
@@ -97,7 +84,6 @@ class ThemeSettings {
     kCustomFontIdKey: customFontId,
     kCustomFontNameKey: customFontName,
     kLyricsTextScaleKey: lyricsTextScale,
-    kMornyeGlassClarityKey: mornyeGlassClarity,
     kMornyeGlassOutlinesKey: mornyeGlassOutlines,
   };
 
@@ -112,9 +98,6 @@ class ThemeSettings {
       customFontName: json[kCustomFontNameKey] as String? ?? '',
       lyricsTextScale: normalizeLyricsTextScale(
         json[kLyricsTextScaleKey] as num?,
-      ),
-      mornyeGlassClarity: normalizeMornyeGlassClarity(
-        json[kMornyeGlassClarityKey] as num?,
       ),
       mornyeGlassOutlines: json[kMornyeGlassOutlinesKey] as bool? ?? true,
     );
@@ -131,7 +114,6 @@ class ThemeSettings {
         other.customFontId == customFontId &&
         other.customFontName == customFontName &&
         other.lyricsTextScale == lyricsTextScale &&
-        other.mornyeGlassClarity == mornyeGlassClarity &&
         other.mornyeGlassOutlines == mornyeGlassOutlines;
   }
 
@@ -144,7 +126,6 @@ class ThemeSettings {
       customFontId.hashCode ^
       customFontName.hashCode ^
       lyricsTextScale.hashCode ^
-      mornyeGlassClarity.hashCode ^
       mornyeGlassOutlines.hashCode;
 }
 

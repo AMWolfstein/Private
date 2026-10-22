@@ -18,9 +18,6 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
     lyricsTextScale: normalizeLyricsTextScale(
       prefs.getDouble(kLyricsTextScaleKey),
     ),
-    mornyeGlassClarity: normalizeMornyeGlassClarity(
-      prefs.getDouble(kMornyeGlassClarityKey),
-    ),
     mornyeGlassOutlines: prefs.getBool(kMornyeGlassOutlinesKey) ?? true,
   );
 }
@@ -79,10 +76,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
-      await prefs.setDouble(
-        kMornyeGlassClarityKey,
-        snapshot.mornyeGlassClarity,
-      );
       await prefs.setBool(
         kMornyeGlassOutlinesKey,
         snapshot.mornyeGlassOutlines,
@@ -121,14 +114,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
 
   Future<void> setLyricsTextScale(double value, {bool persist = true}) async {
     _editState((current) => current.copyWith(lyricsTextScale: value));
-    if (persist) await _saveToStorage();
-  }
-
-  Future<void> setMornyeGlassClarity(
-    double value, {
-    bool persist = true,
-  }) async {
-    _editState((current) => current.copyWith(mornyeGlassClarity: value));
     if (persist) await _saveToStorage();
   }
 

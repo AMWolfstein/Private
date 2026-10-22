@@ -125,7 +125,7 @@ void main() {
     tester,
   ) async {
     for (final (level, reduceMotion, shaders) in [
-      (MornyeGlassLevel.frosted, false, true),
+      (MornyeGlassLevel.lite, false, true),
       (MornyeGlassLevel.liquid, true, true),
       (MornyeGlassLevel.liquid, false, false),
     ]) {

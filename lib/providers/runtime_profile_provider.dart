@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 
@@ -10,29 +10,25 @@ import 'package:spotiflac_android/providers/theme_provider.dart';
 /// effects like the shell's backdrop blur.
 final lowEndDeviceProvider = Provider<bool>((ref) => false);
 
-/// Raw device capability decided by the startup runtime profile (overridden
-/// in main.dart). Only the `high` tier enables blur by default.
-final deviceSupportsBackdropBlurProvider = Provider<bool>((ref) => false);
-
 /// Whether the GPU supports the higher blur budget and animated artwork /
-/// lyric defocus. Glass controls themselves use the same lightweight renderer
-/// on every tier. Overridden in main.dart.
+/// lyric defocus, and full liquid glass under `auto`. Overridden in main.dart.
 final deviceSupportsLiquidGlassProvider = Provider<bool>((ref) => true);
 
-/// Whether backdrop blur effects should render: the device default, or the
-/// user's manual override from appearance settings.
-final backdropBlurEnabledProvider = Provider<bool>((ref) {
-  return ref.watch(deviceSupportsBackdropBlurProvider) ||
-      ref.watch(settingsProvider.select((s) => s.forceBackdropBlur));
-});
+/// The Appearance glass quality choice.
+final mornyeGlassQualityProvider = Provider<MornyeGlassQuality>(
+  (ref) => mornyeGlassQualityFromString(
+    ref.watch(settingsProvider.select((s) => s.glassQuality)),
+  ),
+);
 
 /// Flutter also reports Android's medium contrast as high contrast. Respect
-/// that request unless the user explicitly forces glass; this only controls
-/// decorative surfaces, never the inherited text or reduced-motion settings.
+/// that request only while the device picks the glass quality; an explicit
+/// choice is used as is. This only controls decorative surfaces, never the
+/// inherited text or reduced-motion settings.
 final mornyeGlassContrastBlockedProvider = Provider.family<bool, bool>(
   (ref, highContrast) =>
       highContrast &&
-      !ref.watch(settingsProvider.select((s) => s.forceBackdropBlur)),
+      ref.watch(mornyeGlassQualityProvider) == MornyeGlassQuality.auto,
 );
 
 /// How much of Mornye's glass the device renders.
@@ -40,21 +36,33 @@ enum MornyeGlassLevel {
   /// Opaque surfaces; no backdrop sampling.
   flat,
 
-  /// Translucent surfaces over one backdrop blur; no shader passes.
-  frosted,
+  /// LiquidGlassLite: frost, tint and rim over one backdrop blur; no shader.
+  lite,
 
-  /// Impeller backdrop refraction, with a blur fallback on other renderers.
+  /// Impeller backdrop refraction, with a lite fallback on other renderers.
   liquid,
 }
 
+/// What `auto` picks for a device class.
+MornyeGlassLevel mornyeAutoGlassLevel({
+  required bool lowEnd,
+  required bool liquidCapable,
+}) => lowEnd
+    ? MornyeGlassLevel.flat
+    : liquidCapable
+    ? MornyeGlassLevel.liquid
+    : MornyeGlassLevel.lite;
+
 final mornyeGlassLevelProvider = Provider<MornyeGlassLevel>((ref) {
-  final lowEnd = ref.watch(lowEndDeviceProvider);
-  if (!lowEnd && ref.watch(deviceSupportsLiquidGlassProvider)) {
-    return MornyeGlassLevel.liquid;
-  }
-  // The user's "always use blur effects" override restores the full material.
-  if (ref.watch(backdropBlurEnabledProvider)) return MornyeGlassLevel.liquid;
-  return lowEnd ? MornyeGlassLevel.flat : MornyeGlassLevel.frosted;
+  return switch (ref.watch(mornyeGlassQualityProvider)) {
+    MornyeGlassQuality.auto => mornyeAutoGlassLevel(
+      lowEnd: ref.watch(lowEndDeviceProvider),
+      liquidCapable: ref.watch(deviceSupportsLiquidGlassProvider),
+    ),
+    MornyeGlassQuality.lite => MornyeGlassLevel.lite,
+    MornyeGlassQuality.full => MornyeGlassLevel.liquid,
+    MornyeGlassQuality.off => MornyeGlassLevel.flat,
+  };
 });
 
 /// Whether the renderer supports backdrop shader filters (Impeller). Glass
@@ -73,14 +81,25 @@ final mornyeLiquidGlassProvider = Provider<bool>(
   (ref) => ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid,
 );
 
-/// Glass preferences stay out of ThemeData, so dragging the clarity slider
-/// repaints glass surfaces without rebuilding the app theme.
+/// Glass preferences stay out of ThemeData, so changing them repaints glass
+/// surfaces without rebuilding the app theme.
+final mornyeGlassClarityLevelProvider = Provider<int>(
+  (ref) => ref.watch(settingsProvider.select((s) => s.glassClarityLevel)),
+);
+
+/// The clarity each level renders as until the renderer reads levels.
+double mornyeClarityForLevel(int level) => _clarityForLevel[level.clamp(1, 5)]!;
+
+const _clarityForLevel = <int, double>{
+  1: 0.3,
+  2: 0.45,
+  3: 0.625,
+  4: 0.8,
+  5: 1.0,
+};
+
 final mornyeGlassClarityProvider = Provider<double>(
-  (ref) => ref.watch(
-    themeProvider.select(
-      (s) => normalizeMornyeGlassClarity(s.mornyeGlassClarity),
-    ),
-  ),
+  (ref) => mornyeClarityForLevel(ref.watch(mornyeGlassClarityLevelProvider)),
 );
 
 final mornyeGlassOutlinesProvider = Provider<bool>(

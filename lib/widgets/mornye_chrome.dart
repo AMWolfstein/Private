@@ -300,7 +300,7 @@ class MornyeGlass extends ConsumerWidget {
         null;
     // At low clarity the tint obscures almost all detail. In particular, 10%
     // must not suddenly enable backdrop sampling on a mid-range GPU.
-    final blurThreshold = level == MornyeGlassLevel.frosted ? 0.5 : 0.2;
+    final blurThreshold = level == MornyeGlassLevel.lite ? 0.5 : 0.2;
     final sampleBackdrop =
         translucent &&
         samplesBackdrop &&
@@ -315,7 +315,7 @@ class MornyeGlass extends ConsumerWidget {
         ref.watch(mornyeShaderFiltersSupportedProvider);
     // Clear glass softens the backdrop less. Keep the mid-range fallback at
     // its small blur budget, and reuse these filters in the lens renderer too.
-    final filterIndex = level == MornyeGlassLevel.frosted
+    final filterIndex = level == MornyeGlassLevel.lite
         ? 1
         : clarity >= 0.9
         ? 0

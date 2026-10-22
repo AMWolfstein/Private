@@ -41,19 +41,6 @@
   "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
-  "appearanceGlassClarityBlurOff": "Glass is opaque on this device. Turn on “{setting}” to adjust clarity.",
-  "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
-    "placeholders": {
-      "setting": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityHighContrast": "Your system requests increased contrast, so glass stays opaque. Turn on “{setting}” to use glass anyway; text contrast is preserved.",
-  "@appearanceGlassClarityHighContrast": {
-    "description": "Explains the system contrast request and the explicit glass-only override."
-  },
   "appearanceUseSystemFont": "Sistem yazı tipini kullan",
   "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
   "@@locale": "tr",
@@ -687,14 +674,6 @@
   "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
-  },
-  "appearanceForceBlur": "Always use blur effects",
-  "@appearanceForceBlur": {
-    "description": "Toggle that forces backdrop blur on even when the device profile disabled it"
-  },
-  "appearanceForceBlurSubtitle": "Enable the navigation bar blur even on devices where it is off by default. May cost performance.",
-  "@appearanceForceBlurSubtitle": {
-    "description": "Subtitle for the force-blur toggle"
   },
   "downloadedAlbumDeleteSelected": "Seçilenleri Sil",
   "@downloadedAlbumDeleteSelected": {

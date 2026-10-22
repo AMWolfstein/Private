@@ -66,7 +66,10 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
   enableLogging: json['enableLogging'] as bool? ?? false,
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
-  forceBackdropBlur: json['forceBackdropBlur'] as bool? ?? false,
+  glassQuality: json['glassQuality'] as String? ?? 'auto',
+  glassClarityLevel: json['glassClarityLevel'] == null
+      ? kDefaultGlassClarityLevel
+      : glassClarityLevelFromJson(json['glassClarityLevel']),
   locale: json['locale'] as String? ?? 'system',
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
   listeningStatisticsEnabled:
@@ -117,7 +120,8 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'historyFilterMode': instance.historyFilterMode,
       'enableLogging': instance.enableLogging,
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,
-      'forceBackdropBlur': instance.forceBackdropBlur,
+      'glassQuality': instance.glassQuality,
+      'glassClarityLevel': instance.glassClarityLevel,
       'locale': instance.locale,
       'keepScreenOnLyrics': instance.keepScreenOnLyrics,
       'listeningStatisticsEnabled': instance.listeningStatisticsEnabled,

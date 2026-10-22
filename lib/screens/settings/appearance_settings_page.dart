@@ -6,6 +6,7 @@ import 'package:spotiflac_android/constants/language_choices.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
@@ -52,6 +53,14 @@ class AppearanceSettingsPage extends ConsumerWidget {
                       onChanged: ref
                           .read(themeProvider.notifier)
                           .setMornyeAccent,
+                    ),
+                    _GlassQualitySelector(
+                      current: mornyeGlassQualityFromString(
+                        settings.glassQuality,
+                      ),
+                      onChanged: ref
+                          .read(settingsProvider.notifier)
+                          .setGlassQuality,
                     ),
                     const _MornyeGlassClaritySlider(),
                     SettingsSwitchItem(
@@ -107,16 +116,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         .setHeroAnimationsEnabled(value),
                   ),
                   const CustomFontSetting(),
-                  SettingsSwitchItem(
-                    icon: Icons.blur_on,
-                    title: context.l10n.appearanceForceBlur,
-                    subtitle: context.l10n.appearanceForceBlurSubtitle,
-                    value: settings.forceBackdropBlur,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setForceBackdropBlur(value),
-                    showDivider: false,
-                  ),
                 ],
               ),
             ),
@@ -174,12 +173,13 @@ class _MornyeGlassClaritySlider extends ConsumerStatefulWidget {
 class _MornyeGlassClaritySliderState
     extends ConsumerState<_MornyeGlassClaritySlider> {
   /// Only the preview follows a drag; the rest of the app updates on release.
-  double? _dragValue;
+  int? _dragLevel;
 
   @override
   Widget build(BuildContext context) {
-    final double clarity = _dragValue ?? ref.watch(mornyeGlassClarityProvider);
-    final notifier = ref.read(themeProvider.notifier);
+    final int level = _dragLevel ?? ref.watch(mornyeGlassClarityLevelProvider);
+    final clarity = mornyeClarityForLevel(level);
+    final notifier = ref.read(settingsProvider.notifier);
     final theme = Theme.of(context);
     final l10n = context.l10n;
     // Match the renderer's policy without changing the stored clarity value.
@@ -187,6 +187,14 @@ class _MornyeGlassClaritySliderState
       mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
     final adjustable = !contrastBlocked && ref.watch(mornyeBlurEnabledProvider);
+    final quality = ref.watch(mornyeGlassQualityProvider);
+    final levelNames = [
+      l10n.appearanceGlassLevelFrosted,
+      l10n.appearanceGlassLevelSoft,
+      l10n.appearanceGlassLevelBalanced,
+      l10n.appearanceGlassLevelClear,
+      l10n.appearanceGlassLevelCrystal,
+    ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
@@ -202,12 +210,10 @@ class _MornyeGlassClaritySliderState
             const SizedBox(height: 8),
             Text(
               contrastBlocked
-                  ? l10n.appearanceGlassClarityHighContrast(
-                      l10n.appearanceForceBlur,
-                    )
-                  : l10n.appearanceGlassClarityBlurOff(
-                      l10n.appearanceForceBlur,
-                    ),
+                  ? l10n.appearanceGlassClarityContrast
+                  : quality == MornyeGlassQuality.off
+                  ? l10n.appearanceGlassClarityOff
+                  : l10n.appearanceGlassClarityDeviceOpaque,
               key: const ValueKey('mornye-glass-clarity-unavailable'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -273,17 +279,21 @@ class _MornyeGlassClaritySliderState
               label: l10n.appearanceGlassClarity,
               child: MornyeSlider(
                 key: const ValueKey('mornye-glass-clarity'),
-                value: clarity,
-                divisions: 20,
-                label: '${(clarity * 100).round()}%',
+                value: level.toDouble(),
+                min: 1,
+                max: 5,
+                divisions: 4,
+                label: levelNames[level - 1],
+                semanticFormatterCallback: (value) =>
+                    levelNames[value.round().clamp(1, 5) - 1],
                 onChanged: adjustable
-                    ? (value) => setState(() => _dragValue = value)
+                    ? (value) => setState(() => _dragLevel = value.round())
                     : null,
                 onChangeEnd: adjustable
                     ? (value) {
                         // Commit, persist and update the app in a single step.
-                        notifier.setMornyeGlassClarity(value);
-                        setState(() => _dragValue = null);
+                        notifier.setGlassClarityLevel(value.round());
+                        setState(() => _dragLevel = null);
                       }
                     : null,
               ),
@@ -299,7 +309,11 @@ class _MornyeGlassClaritySliderState
               Text(l10n.appearanceGlassClear, style: theme.textTheme.bodySmall),
             ],
           ),
-          if (adjustable && clarity >= 0.9) ...[
+          // Only full Crystal glass costs noticeably more to render.
+          if (adjustable &&
+              level == 5 &&
+              ref.watch(mornyeGlassLevelProvider) ==
+                  MornyeGlassLevel.liquid) ...[
             const SizedBox(height: 8),
             Text(
               l10n.appearanceGlassClearPerformance,
@@ -310,6 +324,52 @@ class _MornyeGlassClaritySliderState
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Auto / Lite / Full / Off, in the same control as System / Light / Dark.
+class _GlassQualitySelector extends StatelessWidget {
+  const _GlassQualitySelector({required this.current, required this.onChanged});
+
+  final MornyeGlassQuality current;
+  final ValueChanged<MornyeGlassQuality> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final labels = {
+      MornyeGlassQuality.auto: l10n.appearanceGlassQualityAuto,
+      MornyeGlassQuality.lite: l10n.appearanceGlassQualityLite,
+      MornyeGlassQuality.full: l10n.appearanceGlassQualityFull,
+      MornyeGlassQuality.off: l10n.appearanceGlassQualityOff,
+    };
+    return SettingsSearchTarget(
+      label: l10n.appearanceGlassQuality,
+      child: Padding(
+        key: const ValueKey('mornye-glass-quality'),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.appearanceGlassQuality,
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.appearanceGlassQualitySubtitle,
+              style: theme.textTheme.bodySmall,
+            ),
+            MornyeSegmentedControl(
+              labels: labels.values.toList(),
+              selectedIndex: labels.keys.toList().indexOf(current),
+              onChanged: (index) => onChanged(labels.keys.elementAt(index)),
+            ),
+          ],
+        ),
       ),
     );
   }

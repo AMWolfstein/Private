@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
+import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 
@@ -26,7 +29,7 @@ class _GlassDependent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _glassBuilds++;
-    final clarity = ref.watch(mornyeGlassClarityProvider);
+    final clarity = ref.watch(mornyeGlassClarityLevelProvider);
     final outlines = ref.watch(mornyeGlassOutlinesProvider);
     return Text('$clarity $outlines', textDirection: TextDirection.ltr);
   }
@@ -50,7 +53,9 @@ void main() {
             darkTheme: dark,
             themeMode: mode,
             themeAnimationDuration: const Duration(milliseconds: 300),
-            home: const Column(children: [_ThemeDependent(), _GlassDependent()]),
+            home: const Column(
+              children: [_ThemeDependent(), _GlassDependent()],
+            ),
           ),
         ),
       ),
@@ -60,24 +65,29 @@ void main() {
       tester.element(find.byType(_GlassDependent)),
     );
     final notifier = container.read(themeProvider.notifier);
+    final settings = container.read(settingsProvider.notifier);
     final themeBuilds = _themeBuilds;
     final glassBuilds = _glassBuilds;
 
-    // Simulate a slider drag: many unpersisted ticks, then the persisted end.
-    for (var step = 0; step <= 10; step++) {
-      await notifier.setMornyeGlassClarity(step / 10, persist: false);
+    // Simulate level changes: unpersisted steps, then the persisted end.
+    for (var level = 1; level <= 5; level++) {
+      await settings.setGlassClarityLevel(level, persist: false);
       await tester.pump(const Duration(milliseconds: 16));
     }
-    await notifier.setMornyeGlassClarity(1);
+    await settings.setGlassClarityLevel(5);
     await notifier.setMornyeGlassOutlines(false);
     await tester.pumpAndSettle();
 
     expect(_themeBuilds, themeBuilds);
     expect(_glassBuilds, greaterThan(glassBuilds));
-    expect(container.read(mornyeGlassClarityProvider), 1);
+    expect(container.read(mornyeGlassClarityLevelProvider), 5);
     expect(container.read(mornyeGlassOutlinesProvider), isFalse);
     final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getDouble(kMornyeGlassClarityKey), 1);
+    expect(
+      (jsonDecode(prefs.getString('app_settings')!)
+          as Map)['glassClarityLevel'],
+      5,
+    );
 
     // The counter does observe real theme changes.
     await notifier.setMornyeAccent(MornyeAccent.blue);

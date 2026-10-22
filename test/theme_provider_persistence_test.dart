@@ -22,7 +22,7 @@ void main() {
         kUseSystemFontKey: true,
         kMornyeAccentKey: 'blue',
         kPlayerViewKey: 'immersive',
-        kMornyeGlassClarityKey: 0.2,
+        kLyricsTextScaleKey: 0.9,
       });
       final prefs = await SharedPreferences.getInstance();
       final releaseLoad = Completer<SharedPreferences>();
@@ -38,12 +38,12 @@ void main() {
       // An explicit edit equal to the bootstrap default still owns this field.
       final savingMode = notifier.setThemeMode(ThemeMode.system);
       final savingAccent = notifier.setMornyeAccent(MornyeAccent.red);
-      await notifier.setMornyeGlassClarity(0.8, persist: false);
+      await notifier.setLyricsTextScale(1.2, persist: false);
       var saved = false;
       unawaited(savingAccent.then((_) => saved = true));
       await Future<void>.delayed(Duration.zero);
       expect(saved, isFalse);
-      expect(container.read(themeProvider).mornyeGlassClarity, 0.8);
+      expect(container.read(themeProvider).lyricsTextScale, 1.2);
       expect(prefs.getString(kThemeModeKey), 'dark');
 
       releaseLoad.complete(prefs);
@@ -51,7 +51,7 @@ void main() {
       final state = container.read(themeProvider);
       expect(state.themeMode, ThemeMode.system);
       expect(state.mornyeAccent, MornyeAccent.red);
-      expect(state.mornyeGlassClarity, 0.8);
+      expect(state.lyricsTextScale, 1.2);
       expect(state.playerView, PlayerView.immersive);
       expect(state.useSystemFont, isTrue);
       expect(loadBootstrapThemeSettings(prefs), state);
@@ -60,7 +60,7 @@ void main() {
 
   test('early preview remains immediate without writing preferences', () async {
     SharedPreferences.setMockInitialValues({
-      kMornyeGlassClarityKey: 0.2,
+      kLyricsTextScaleKey: 0.9,
       kMornyeAccentKey: 'blue',
     });
     final prefs = await SharedPreferences.getInstance();
@@ -79,12 +79,12 @@ void main() {
     });
     await container
         .read(themeProvider.notifier)
-        .setMornyeGlassClarity(0.8, persist: false);
-    expect(container.read(themeProvider).mornyeGlassClarity, 0.8);
+        .setLyricsTextScale(1.2, persist: false);
+    expect(container.read(themeProvider).lyricsTextScale, 1.2);
     releaseLoad.complete(prefs);
     await loaded.future;
-    expect(container.read(themeProvider).mornyeGlassClarity, 0.8);
-    expect(prefs.getDouble(kMornyeGlassClarityKey), 0.2);
+    expect(container.read(themeProvider).lyricsTextScale, 1.2);
+    expect(prefs.getDouble(kLyricsTextScaleKey), 0.9);
   });
 
   test(

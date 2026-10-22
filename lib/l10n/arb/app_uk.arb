@@ -41,19 +41,6 @@
   "appearanceGlassClaritySubtitle": "Налаштуйте прозорість меню та навігації Mornye. Контрастність тексту зберігається.",
   "appearanceGlassTinted": "Тонований",
   "appearanceGlassClear": "Очистити",
-  "appearanceGlassClarityBlurOff": "Скло на цьому пристрої непрозоре. Увімкніть «{setting}», щоб налаштувати прозорість.",
-  "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
-    "placeholders": {
-      "setting": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityHighContrast": "Система запитує підвищену контрастність, тому скло залишається непрозорим. Увімкніть «{setting}», щоб усе одно використовувати ефект скла; контрастність тексту зберігається.",
-  "@appearanceGlassClarityHighContrast": {
-    "description": "Explains the system contrast request and the explicit glass-only override."
-  },
   "appearanceUseSystemFont": "Використовувати системний шрифт",
   "appearanceUseSystemFontSubtitle": "Використовуйте стандартний шрифт вашого пристрою для тексту в додатку.",
   "@@locale": "uk",
@@ -663,14 +650,6 @@
   "appearanceHeroAnimationsSubtitle": "Анімація переходу між екранами, наприклад, під час відкриття плеєра",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
-  },
-  "appearanceForceBlur": "Завжди використовуйте ефекти розмиття",
-  "@appearanceForceBlur": {
-    "description": "Toggle that forces backdrop blur on even when the device profile disabled it"
-  },
-  "appearanceForceBlurSubtitle": "Увімкнути розмиття панелі навігації навіть на пристроях за замовчуванням. Це може вплинути на продуктивність.",
-  "@appearanceForceBlurSubtitle": {
-    "description": "Subtitle for the force-blur toggle"
   },
   "downloadedAlbumDeleteSelected": "Видалити вибране",
   "@downloadedAlbumDeleteSelected": {

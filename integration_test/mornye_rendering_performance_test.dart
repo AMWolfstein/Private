@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
@@ -234,7 +235,7 @@ class _Fixture {
       playbackStateProvider.overrideWith((ref) => const Stream.empty()),
       musicPlayerControllerProvider.overrideWithValue(MusicPlayerController()),
       lowEndDeviceProvider.overrideWithValue(false),
-      backdropBlurEnabledProvider.overrideWithValue(true),
+      mornyeGlassQualityProvider.overrideWithValue(MornyeGlassQuality.full),
       mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
       mornyeGlassClarityProvider.overrideWithValue(clarity),
     ],

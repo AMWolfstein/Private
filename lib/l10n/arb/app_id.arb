@@ -109,19 +109,6 @@
   "appearanceGlassClaritySubtitle": "Atur kebeningan kaca menu dan navigasi Mornye. Kontras teks tetap terjaga.",
   "appearanceGlassTinted": "Berwarna",
   "appearanceGlassClear": "Bening",
-  "appearanceGlassClarityBlurOff": "Efek kaca mati di perangkat ini. Hidupkan \"{setting}\" untuk atur kebeningan kaca.",
-  "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
-    "placeholders": {
-      "setting": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityHighContrast": "Sistem meminta peningkatan kontras, sehingga kaca menjadi buram penuh. Aktifkan “{setting}” untuk tetap menggunakan efek kaca; kontras teks tetap dipertahankan.",
-  "@appearanceGlassClarityHighContrast": {
-    "description": "Explains the system contrast request and the explicit glass-only override."
-  },
   "appearanceUseSystemFont": "Gunakan font sistem",
   "appearanceUseSystemFontSubtitle": "Menggunakan font default perangkat untuk aplikasi.",
   "@@locale": "id",
@@ -763,14 +750,6 @@
   "appearanceHeroAnimationsSubtitle": "Transisikan cover art antar layar, cont. membuka pemutar",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
-  },
-  "appearanceForceBlur": "Selalu gunakan efek blur",
-  "@appearanceForceBlur": {
-    "description": "Toggle that forces backdrop blur on even when the device profile disabled it"
-  },
-  "appearanceForceBlurSubtitle": "Aktifkan blur bar navigasi di perangkat yang dimatikan secara default. Dapat memengaruhi performa.",
-  "@appearanceForceBlurSubtitle": {
-    "description": "Subtitle for the force-blur toggle"
   },
   "downloadedAlbumDeleteSelected": "Hapus yang Dipilih",
   "@downloadedAlbumDeleteSelected": {

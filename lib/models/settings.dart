@@ -15,6 +15,13 @@ double playbackNormalizationPreampFromJson(Object? value) =>
 String playbackNormalizationModeFromJson(Object? value) =>
     value == 'album' ? 'album' : 'track';
 
+/// Default Mornye glass clarity level (Balanced).
+const int kDefaultGlassClarityLevel = 3;
+
+int glassClarityLevelFromJson(Object? value) => value is num && value.isFinite
+    ? value.round().clamp(1, 5)
+    : kDefaultGlassClarityLevel;
+
 double musicHapticsLevelFromJson(Object? value) =>
     value is num && value.isFinite ? value.toDouble().clamp(0, 1) : 0.5;
 
@@ -75,10 +82,13 @@ class AppSettings {
   final bool enableLogging;
   final bool heroAnimationsEnabled;
 
-  /// Forces the shell's backdrop blur on even when the startup runtime
-  /// profile disabled it for this device tier. Off means "follow the
-  /// device default".
-  final bool forceBackdropBlur;
+  /// Mornye glass renderer: `auto` (the device decides), `lite`, `full` or
+  /// `off`. See [MornyeGlassQuality].
+  final String glassQuality;
+
+  /// Mornye glass clarity level, 1 (Frosted) to 5 (Crystal).
+  @JsonKey(fromJson: glassClarityLevelFromJson)
+  final int glassClarityLevel;
   final String locale;
   final bool keepScreenOnLyrics;
   final bool listeningStatisticsEnabled;
@@ -134,7 +144,8 @@ class AppSettings {
     this.historyFilterMode = 'all',
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
-    this.forceBackdropBlur = false,
+    this.glassQuality = 'auto',
+    this.glassClarityLevel = kDefaultGlassClarityLevel,
     this.locale = 'system',
     this.keepScreenOnLyrics = true,
     this.listeningStatisticsEnabled = true,
@@ -184,7 +195,8 @@ class AppSettings {
     String? historyFilterMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
-    bool? forceBackdropBlur,
+    String? glassQuality,
+    int? glassClarityLevel,
     String? locale,
     bool? keepScreenOnLyrics,
     bool? listeningStatisticsEnabled,
@@ -241,7 +253,8 @@ class AppSettings {
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
-      forceBackdropBlur: forceBackdropBlur ?? this.forceBackdropBlur,
+      glassQuality: glassQuality ?? this.glassQuality,
+      glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
       locale: locale ?? this.locale,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       listeningStatisticsEnabled:

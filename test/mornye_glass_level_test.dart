@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -17,21 +17,20 @@ class _Settings extends SettingsNotifier {
   AppSettings build() => const AppSettings();
 
   @override
-  void setForceBackdropBlur(bool enabled) {
-    state = state.copyWith(forceBackdropBlur: enabled);
+  void setGlassQuality(MornyeGlassQuality quality) {
+    state = state.copyWith(glassQuality: quality.name);
   }
 }
 
 MornyeGlassLevel _levelFor({
   required bool lowEnd,
-  required bool blur,
+  required MornyeGlassQuality quality,
   required bool liquidCapable,
 }) {
   final container = ProviderContainer(
     overrides: [
       lowEndDeviceProvider.overrideWithValue(lowEnd),
-      // Device default or the user's "always use blur effects" override.
-      backdropBlurEnabledProvider.overrideWithValue(blur),
+      mornyeGlassQualityProvider.overrideWithValue(quality),
       deviceSupportsLiquidGlassProvider.overrideWithValue(liquidCapable),
     ],
   );
@@ -58,7 +57,7 @@ void main() {
               overrides: [
                 settingsProvider.overrideWith(_Settings.new),
                 // A capable GPU must not implicitly override contrast.
-                deviceSupportsBackdropBlurProvider.overrideWithValue(true),
+                deviceSupportsLiquidGlassProvider.overrideWithValue(true),
                 mornyeGlassClarityProvider.overrideWithValue(1),
               ],
               child: MaterialApp(
@@ -102,7 +101,9 @@ void main() {
           for (final forceBlur in [false, true, false]) {
             container
                 .read(settingsProvider.notifier)
-                .setForceBackdropBlur(forceBlur);
+                .setGlassQuality(
+                  forceBlur ? MornyeGlassQuality.full : MornyeGlassQuality.auto,
+                );
             await tester.pumpAndSettle();
             expect(
               find.byType(BackdropFilter),
@@ -142,33 +143,57 @@ void main() {
     }
   }
 
-  test('runtime tiers map to Mornye glass levels', () {
+  test('glass quality picks the level; auto follows the device class', () {
+    const auto = MornyeGlassQuality.auto;
     // Low tier: arm32-only or low-RAM Android.
-    expect(
-      _levelFor(lowEnd: true, blur: false, liquidCapable: false),
-      MornyeGlassLevel.flat,
-    );
-    // Standard Android: frosted blur without shader passes.
-    expect(
-      _levelFor(lowEnd: false, blur: false, liquidCapable: false),
-      MornyeGlassLevel.frosted,
-    );
-    // iOS runs the standard tier but keeps the full material.
-    expect(
-      _levelFor(lowEnd: false, blur: false, liquidCapable: true),
-      MornyeGlassLevel.liquid,
-    );
-    // High-tier Android.
-    expect(
-      _levelFor(lowEnd: false, blur: true, liquidCapable: true),
-      MornyeGlassLevel.liquid,
-    );
-    // "Always use blur effects" restores the full material on any tier.
-    for (final lowEnd in [true, false]) {
+    for (final liquidCapable in [false, true]) {
       expect(
-        _levelFor(lowEnd: lowEnd, blur: true, liquidCapable: false),
-        MornyeGlassLevel.liquid,
+        _levelFor(lowEnd: true, quality: auto, liquidCapable: liquidCapable),
+        MornyeGlassLevel.flat,
       );
+    }
+    // Standard Android: lite glass without shader passes.
+    expect(
+      _levelFor(lowEnd: false, quality: auto, liquidCapable: false),
+      MornyeGlassLevel.lite,
+    );
+    // High tier (and iOS): full liquid glass.
+    expect(
+      _levelFor(lowEnd: false, quality: auto, liquidCapable: true),
+      MornyeGlassLevel.liquid,
+    );
+    // An explicit choice applies on every tier.
+    for (final lowEnd in [true, false]) {
+      for (final liquidCapable in [true, false]) {
+        for (final (quality, level) in [
+          (MornyeGlassQuality.full, MornyeGlassLevel.liquid),
+          (MornyeGlassQuality.lite, MornyeGlassLevel.lite),
+          (MornyeGlassQuality.off, MornyeGlassLevel.flat),
+        ]) {
+          expect(
+            _levelFor(
+              lowEnd: lowEnd,
+              quality: quality,
+              liquidCapable: liquidCapable,
+            ),
+            level,
+          );
+        }
+      }
+    }
+  });
+
+  test('only auto honours the system contrast request', () {
+    for (final quality in MornyeGlassQuality.values) {
+      final container = ProviderContainer(
+        overrides: [mornyeGlassQualityProvider.overrideWithValue(quality)],
+      );
+      addTearDown(container.dispose);
+      expect(
+        container.read(mornyeGlassContrastBlockedProvider(true)),
+        quality == MornyeGlassQuality.auto,
+      );
+      expect(container.read(mornyeGlassContrastBlockedProvider(false)), false);
     }
   });
 
@@ -179,7 +204,7 @@ void main() {
       ProviderScope(
         overrides: [
           deviceSupportsLiquidGlassProvider.overrideWithValue(false),
-          backdropBlurEnabledProvider.overrideWithValue(false),
+          mornyeGlassQualityProvider.overrideWithValue(MornyeGlassQuality.auto),
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(Brightness.dark),
@@ -239,7 +264,7 @@ void main() {
           key: UniqueKey(),
           overrides: [
             mornyeGlassLevelProvider.overrideWithValue(
-              liquid ? MornyeGlassLevel.liquid : MornyeGlassLevel.frosted,
+              liquid ? MornyeGlassLevel.liquid : MornyeGlassLevel.lite,
             ),
             mornyeGlassClarityProvider.overrideWithValue(clarity),
           ],
@@ -269,7 +294,7 @@ void main() {
       ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
     );
     expect(
-      await filterFor(kDefaultMornyeGlassClarity, true),
+      await filterFor(0.75, true),
       ui.ImageFilter.blur(sigmaX: 6, sigmaY: 6),
     );
     expect(

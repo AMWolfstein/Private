@@ -154,7 +154,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.frosted),
+          mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.lite),
         ],
         child: MaterialApp(
           home: Column(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_selection_pill.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
@@ -67,7 +68,9 @@ void main() {
           ),
           playbackStateProvider.overrideWith((ref) => const Stream.empty()),
           lowEndDeviceProvider.overrideWithValue(!blur),
-          backdropBlurEnabledProvider.overrideWithValue(blur),
+          mornyeGlassQualityProvider.overrideWithValue(
+            blur ? MornyeGlassQuality.full : MornyeGlassQuality.auto,
+          ),
           mornyeLiquidGlassProvider.overrideWithValue(liquidGlass),
           mornyeGlassClarityProvider.overrideWithValue(glassClarity),
         ],

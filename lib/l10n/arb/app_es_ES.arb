@@ -41,19 +41,6 @@
   "appearanceGlassClaritySubtitle": "Ajusta la transparencia en los menús y la navegación de Mornye. Se conserva el contraste del texto.",
   "appearanceGlassTinted": "Tintado",
   "appearanceGlassClear": "Borrar",
-  "appearanceGlassClarityBlurOff": "El vidrio se ve opaco en este dispositivo. Activa “{setting}” para ajustar la claridad.",
-  "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
-    "placeholders": {
-      "setting": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityHighContrast": "El sistema solicita un mayor contraste, por lo que el vidrio permanece opaco. Activa «{setting}» para usar el efecto de vidrio de todos modos; se conserva el contraste del texto.",
-  "@appearanceGlassClarityHighContrast": {
-    "description": "Explains the system contrast request and the explicit glass-only override."
-  },
   "appearanceUseSystemFont": "Usar la fuente del sistema",
   "appearanceUseSystemFontSubtitle": "Utiliza la fuente predeterminada de tu dispositivo para el texto de la aplicación.",
   "@@locale": "es_ES",
@@ -687,14 +674,6 @@
   "appearanceHeroAnimationsSubtitle": "Covers voladores entre pantallas, ejemplo: cuando abre el reproductor",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
-  },
-  "appearanceForceBlur": "Siempre use efecto desenfoque",
-  "@appearanceForceBlur": {
-    "description": "Toggle that forces backdrop blur on even when the device profile disabled it"
-  },
-  "appearanceForceBlurSubtitle": "Habilite la barra de navegación desenfocada incluso en dispositivos donde está desactivada por defecto. Puede costar rendimiento.",
-  "@appearanceForceBlurSubtitle": {
-    "description": "Subtitle for the force-blur toggle"
   },
   "downloadedAlbumDeleteSelected": "Borrar seleccionados",
   "@downloadedAlbumDeleteSelected": {

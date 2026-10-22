@@ -22,7 +22,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.frosted),
+          mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.lite),
           mornyeBlurEnabledProvider.overrideWithValue(true),
           mornyeGlassClarityProvider.overrideWithValue(1),
         ],

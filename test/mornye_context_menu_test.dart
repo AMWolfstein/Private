@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
@@ -19,7 +18,8 @@ class _Settings extends SettingsNotifier {
   final bool _forceBlur;
 
   @override
-  AppSettings build() => AppSettings(forceBackdropBlur: _forceBlur);
+  AppSettings build() =>
+      AppSettings(glassQuality: _forceBlur ? 'full' : 'auto');
 }
 
 void main() {
@@ -39,7 +39,7 @@ void main() {
     bool lowEnd = false,
     Color? backgroundColor,
     GlobalKey? capture,
-    double glassClarity = kDefaultMornyeGlassClarity,
+    double glassClarity = 0.75,
     bool dense = false,
     Color? chromeSurface,
   }) async {
@@ -51,7 +51,6 @@ void main() {
         overrides: [
           settingsProvider.overrideWith(() => _Settings(forceBlur)),
           lowEndDeviceProvider.overrideWithValue(lowEnd),
-          backdropBlurEnabledProvider.overrideWithValue(false),
           mornyeGlassClarityProvider.overrideWithValue(glassClarity),
         ],
         child: MaterialApp(
@@ -157,7 +156,7 @@ void main() {
   }))!;
 
   for (final brightness in Brightness.values) {
-    for (final clarity in [0.0, kDefaultMornyeGlassClarity, 1.0]) {
+    for (final clarity in [0.0, 0.75, 1.0]) {
       for (final background in [
         Colors.white,
         Colors.black,

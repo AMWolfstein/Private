@@ -15,6 +15,7 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
+import 'package:spotiflac_android/services/mornye_glass_migration.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/app_state_database.dart';
@@ -87,6 +88,7 @@ void main() {
 
       final prefs = await SharedPreferences.getInstance();
       await _prepareAndroidInstallationState(prefs);
+      await migrateLegacyGlassPreferences(prefs);
       final bootstrapSettings = loadBootstrapSettings(prefs);
       musicPlayerRuntime.configure(bootstrapSettings);
       final bootstrapTheme = loadBootstrapThemeSettings(prefs);
@@ -101,9 +103,6 @@ void main() {
           overrides: [
             lowEndDeviceProvider.overrideWithValue(
               runtimeProfile.disableOverscrollEffects,
-            ),
-            deviceSupportsBackdropBlurProvider.overrideWithValue(
-              runtimeProfile.enableBackdropBlur,
             ),
             // The RAM tiers describe Android hardware. Other platforms keep
             // the existing full material by default.

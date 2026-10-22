@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
@@ -218,6 +219,18 @@ class SettingsNotifier extends Notifier<AppSettings> {
     } catch (e, stack) {
       _log.e('Failed to parse settings from backup: $e', e, stack);
       rethrow;
+    }
+    if (!json.containsKey('glassQuality')) {
+      // Backups made before glass quality carry the retired blur override
+      // (and possibly the clarity double); map them like local preferences.
+      final legacy = mapLegacyGlassPreferences(
+        clarity: json[kLegacyGlassClarityKey] as num?,
+        forceBackdropBlur: json[kLegacyForceBackdropBlurKey] as bool?,
+      );
+      restored = restored.copyWith(
+        glassQuality: legacy.quality.name,
+        glassClarityLevel: legacy.level,
+      );
     }
 
     state = restored.copyWith(
@@ -487,9 +500,15 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setForceBackdropBlur(bool enabled) {
-    state = state.copyWith(forceBackdropBlur: enabled);
+  void setGlassQuality(MornyeGlassQuality quality) {
+    state = state.copyWith(glassQuality: quality.name);
     _saveSettings();
+  }
+
+  /// [persist] false updates the app without writing preferences.
+  Future<void> setGlassClarityLevel(int level, {bool persist = true}) async {
+    state = state.copyWith(glassClarityLevel: level.clamp(1, 5));
+    if (persist) await _saveSettings();
   }
 
   void setLocale(String locale) {

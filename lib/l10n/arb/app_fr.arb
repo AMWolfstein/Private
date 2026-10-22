@@ -41,19 +41,6 @@
   "appearanceGlassClaritySubtitle": "Régler la transparence des menus et de la navigation dans Mornye. Le contraste du texte est conservé.",
   "appearanceGlassTinted": "Teinté",
   "appearanceGlassClear": "Effacer",
-  "appearanceGlassClarityBlurOff": "Le verre est opaque sur cet appareil. Activez « {setting} » pour régler la transparence.",
-  "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
-    "placeholders": {
-      "setting": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityHighContrast": "Le système demande un contraste accru, ce qui rend le verre opaque. Activez « {setting} » pour utiliser tout de même l’effet de verre ; le contraste du texte est préservé.",
-  "@appearanceGlassClarityHighContrast": {
-    "description": "Explains the system contrast request and the explicit glass-only override."
-  },
   "appearanceUseSystemFont": "Utiliser la police système",
   "appearanceUseSystemFontSubtitle": "Utilisez la police par défaut de votre appareil pour le texte de l'application.",
   "@@locale": "fr",
@@ -687,14 +674,6 @@
   "appearanceHeroAnimationsSubtitle": "Des fenêtres contextuelles apparaissent entre les écrans, par exemple lors de l'ouverture du lecteur",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
-  },
-  "appearanceForceBlur": "Utilisez toujours des effets de flou",
-  "@appearanceForceBlur": {
-    "description": "Toggle that forces backdrop blur on even when the device profile disabled it"
-  },
-  "appearanceForceBlurSubtitle": "Activer l'effet de flou de la barre de navigation même sur les appareils où cette option est désactivée par défaut. Cela peut nuire aux performances.",
-  "@appearanceForceBlurSubtitle": {
-    "description": "Subtitle for the force-blur toggle"
   },
   "downloadedAlbumDeleteSelected": "Supprimer la sélection",
   "@downloadedAlbumDeleteSelected": {

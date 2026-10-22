@@ -99,9 +99,14 @@ class SettingsSearchCatalog {
         ),
         SettingsSearchEntry(
           icon: Icons.blur_on,
-          title: l10n.appearanceForceBlur,
-          subtitle: l10n.appearanceForceBlurSubtitle,
-          keywords: const ['backdrop blur', 'performance'],
+          title: l10n.appearanceGlassQuality,
+          subtitle: l10n.appearanceGlassQualitySubtitle,
+          keywords: const [
+            'backdrop blur',
+            'performance',
+            'liquid glass',
+            'lite',
+          ],
         ),
         SettingsSearchEntry(
           icon: Icons.language,
