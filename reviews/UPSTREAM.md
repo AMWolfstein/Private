@@ -6,8 +6,8 @@ are not shared with this fork, so `git merge` is impossible; port commits by han
 with the `AGENTS.md` code → graphify → docs commits and one analyze + full `flutter test` per
 batch.
 
-- Last upstream commit checked: `e0563ffa` (2026-10-20, v5.2.1). Next check: only commits
-  after it (`git log e0563ffa..origin/main` in a Mornye clone).
+- Last upstream commit checked: `9bf4c000` (2026-10-22, v5.2.5). Next check: only commits
+  after it (`git log 9bf4c000..origin/main` in a Mornye clone).
 - **Skip all renaming/branding** (owner 2026-10-20): `37e21b57` (app + native backend rename,
   `package:mornye`), `51d34594`, `f72fe69e`, `ae728525`, `243fee8c`, the rebrand tour
   `8e4504e7`, release/AltStore bumps. Keep this fork's `spotiflac_android` package, names and
@@ -61,6 +61,33 @@ Skip from Mornye: branding (above), crash notices `00b7cf99`/`931b1091` (crash r
 U-306), Material-only `ba234d78`, `721a3fa7`, `5ecbb7ac`, Home listening/On Repeat `b946c373`,
 `1829363d`, downloads `a3b14a28`, network `b279733a`, `19056edf` and the network parts of
 `e58217c8`, iOS backup `27a45c04`.
+
+## New in Mornye 5.2.5 (`e0563ffa..9bf4c000`, checked 2026-10-22)
+
+About 190 commits; nearly all are desktop, Material, extension, download, NAS, online-lyrics or
+branding work. Owner approved both batches and the spectrogram export (2026-10-22).
+
+| ID | Upstream | What | Batch |
+|---|---|---|---|
+| U-401 | `876d4a47` | DONE `aa4232f`: Kotlin stamps `scannedAt` on the DSD/WavPack row; native staging stamps a missing scan time and skips and reports a row that cannot be encoded (`invalid_rows`, `invalid_row_error`, `invalid_row_paths`); the adapter logs it and preserves missing entries. Rust tests ported. | A |
+| U-402 | `c3cb950f`, `1d87a9fc` | DONE `c99d7cb`: synced lines and word sweeps keep running while the app is inactive (shade, overlay, split screen); same-visibility lifecycle changes no longer re-sync. | A |
+| U-403 | `5f4bb7cc` | DONE `c632a9f`: a late line-boundary timer catches up to the playback clock. Speed scaling omitted (no playback speed in the fork). | A |
+| U-404 | `82bda289` | DONE `f3b81e3`: M4A tag writes always mux mp4 (`-strict experimental`), retry mov only on "codec not currently supported". Test seam and 326-line test not ported. | A |
+| U-405 | `cc12080a` | DONE `e4cf1b7`: Samsung SM-S711B on Android 16 uses Skia; Kotlin unit test ported. | A |
+| U-406 | `a3767cfc` | DONE `4d41a3b`: artwork contrast readback follows TickerMode. | A |
+| U-407 | `060d71a4` | DONE `a44a568`: fast scroller rebuilds only on change for long lists; one hide timer per gesture (plus a fallback after a jump outside a gesture). | A |
+| U-408 | `a428b378` | DONE `75db2cb` + test fix `56f9e6d`: directional insets/positions/alignments in shared Mornye/local widgets, mirroring back/forward glyphs, duet voices start/end, timeline and transport kept LTR. Desktop/Material/extension parts and upstream `rtl_layout_test` not ported; our mini player has no progress bar. | B |
+| U-409 | `44a5cd71` | DONE `be8eb43`: `DetailPage` marks local album routes (name + artist); Go to Album skips a push when that album is on top. | B |
+| U-410 | `6af4e585` | DONE `0d04313`: `LyricsCoveredBottom` reports the controls' covered height; loading and no-lyrics states centre above it and scroll. | B |
+| U-411 | `2f0f0b81` | DONE `20e586e`: one Mornye lyric style merged over `DefaultTextStyle` for measured, plain and word-timed lines. | B |
+| U-412 | `0afdacae` | DONE `3880772`: Save Spectrogram renders a PNG with axes and legend and opens the system save dialog; three English strings. | B |
+
+Not ported: mini-player horizontal swipe skips tracks (`37356e43`, conflicts with the AGENTS.md
+dismissal rule; owner to decide). Not applicable: `ea854078` (playlist Shuffle exists),
+`78fd9ce5` (no SmoothedProgress), `cba77c1f` (query not present), `e43b8adc`/`d16efddf`
+(Material transport), `45339bf4`/`199024f5`/`d7d48ba2` (track details screen removed),
+`be50a4db` (no App settings page), `b532cb5d` (online lyrics picker), `c7d22b05` (desktop
+assert), `2cc27c9c` (perf test not present).
 
 ## Requested by the owner
 
