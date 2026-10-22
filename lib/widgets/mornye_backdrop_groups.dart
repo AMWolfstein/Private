@@ -2,88 +2,74 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-// The package's own host mechanism for one batch spread over subtrees that
-// no single widget can wrap (its scaffold uses it the same way). The package
-// version is pinned, so these internal names are stable.
-// ignore: implementation_imports
-import 'package:liquid_glass_easy/src/widgets/lens/liquid_glass_batch.dart'
-    show
-        LiquidGlassBatchBackdropLayer,
-        LiquidGlassBatchScope,
-        liquidGlassAllocateBackdropId;
+import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 
-/// The shell's persistent chrome, split by what may overlap.
+/// One [LiquidGlassBatch] over the shell's pages and bottom bar, so the
+/// persistent chrome shares a single backdrop read.
 ///
-/// The engine caches the backdrop at the first member of a group that it
-/// draws, and every later member filters that copy. A member therefore
-/// cannot see glass of its own group, nor anything painted after the first
-/// member. Two groups keep every overlap apart:
-enum MornyeBackdropGroup {
-  /// The header backing band, the tab bar capsule and the mini player.
-  surface,
-
-  /// The header back circle and action capsule, and the collapsed bar's side
-  /// buttons. They float over the band and, while folding, over the tabs.
-  controls,
-}
-
-/// Hands out one backdrop key per [MornyeBackdropGroup] for the chrome below
-/// it, so blur passes and lenses of a group share one read of the page.
-class MornyeBackdropGroups extends StatefulWidget {
-  const MornyeBackdropGroups({super.key, required this.child});
+/// The engine caches the backdrop at the first member it draws, and every
+/// later member filters that copy: a member cannot see glass of the batch,
+/// nor anything painted after the first member. So the batch is opt-in:
+/// only [MornyeChromeMember] subtrees join. Every other glass below it
+/// (page content, sheets, dialogs on a tab navigator) reads on its own, and
+/// glass that overlaps chrome (the header band under the controls) stays
+/// out explicitly.
+class MornyeChromeBatch extends StatelessWidget {
+  const MornyeChromeBatch({super.key, required this.child});
 
   final Widget child;
 
   @override
-  State<MornyeBackdropGroups> createState() => _MornyeBackdropGroupsState();
+  Widget build(BuildContext context) => LiquidGlassBatch(
+    child: Builder(
+      // The package allocates the key; it is only read here.
+      builder: (context) => _MornyeChromeBatchScope(
+        backdropId: LiquidGlassBatch.backdropIdOf(context),
+        child: child,
+      ),
+    ),
+  );
 }
 
-class _MornyeBackdropGroupsState extends State<MornyeBackdropGroups> {
-  // Allocated from the package's namespace, so they never collide with a
-  // LiquidGlassBatch or a framework BackdropGroup.
-  late final _ids = [
-    for (final _ in MornyeBackdropGroup.values) liquidGlassAllocateBackdropId(),
-  ];
-
-  @override
-  Widget build(BuildContext context) =>
-      _MornyeBackdropGroupsScope(ids: _ids, child: widget.child);
-}
-
-class _MornyeBackdropGroupsScope extends InheritedWidget {
-  const _MornyeBackdropGroupsScope({required this.ids, required super.child});
-
-  final List<int> ids;
-
-  @override
-  bool updateShouldNotify(_MornyeBackdropGroupsScope oldWidget) =>
-      !identical(ids, oldWidget.ids);
-}
-
-/// Puts the glass in [child] on [group]'s shared backdrop read.
-///
-/// Outside [MornyeBackdropGroups] it changes nothing. With [followRoute],
-/// the member reads on its own while its route is covered or moving: two
-/// pages of one navigator paint together then, and the incoming page must
-/// not filter the outgoing page's copy.
-class MornyeBackdropGroupMember extends StatefulWidget {
-  const MornyeBackdropGroupMember({
-    super.key,
-    required this.group,
-    required this.child,
-    this.followRoute = true,
+class _MornyeChromeBatchScope extends InheritedWidget {
+  const _MornyeChromeBatchScope({
+    required this.backdropId,
+    required super.child,
   });
 
-  final MornyeBackdropGroup group;
-  final Widget child;
-  final bool followRoute;
+  final int? backdropId;
 
   @override
-  State<MornyeBackdropGroupMember> createState() =>
-      _MornyeBackdropGroupMemberState();
+  bool updateShouldNotify(_MornyeChromeBatchScope oldWidget) =>
+      backdropId != oldWidget.backdropId;
 }
 
-class _MornyeBackdropGroupMemberState extends State<MornyeBackdropGroupMember> {
+/// Marks persistent chrome that joins [MornyeChromeBatch].
+///
+/// With [followRoute], the member reads on its own while its route is
+/// covered or moving: two pages paint together then, and the incoming page
+/// must not filter the outgoing page's copy. [join] false keeps it out for
+/// the moment, e.g. bar buttons crossing the tabs while they fold.
+class MornyeChromeMember extends StatefulWidget {
+  const MornyeChromeMember({
+    super.key,
+    required this.child,
+    this.followRoute = true,
+    this.join = true,
+  });
+
+  final Widget child;
+  final bool followRoute;
+  final bool join;
+
+  @override
+  State<MornyeChromeMember> createState() => _MornyeChromeMemberState();
+}
+
+class _MornyeChromeMemberState extends State<MornyeChromeMember> {
+  // Joining and leaving move the subtree under or out of an exclusion;
+  // the key carries its state across.
+  final _subtree = GlobalKey();
   ModalRoute<Object?>? _route;
   bool _settled = true;
 
@@ -128,14 +114,41 @@ class _MornyeBackdropGroupMemberState extends State<MornyeBackdropGroupMember> {
 
   @override
   Widget build(BuildContext context) {
-    final scope = context
-        .dependOnInheritedWidgetOfExactType<_MornyeBackdropGroupsScope>();
-    if (scope == null) return widget.child;
-    return LiquidGlassBatchScope(
-      backdropId: _settled ? scope.ids[widget.group.index] : null,
-      child: widget.child,
+    final child = _MornyeChromeMemberScope(
+      child: KeyedSubtree(key: _subtree, child: widget.child),
     );
+    return widget.join && _settled
+        ? child
+        : LiquidGlassBatch.exclude(child: child);
   }
+}
+
+class _MornyeChromeMemberScope extends InheritedWidget {
+  const _MornyeChromeMemberScope({required super.child});
+
+  @override
+  bool updateShouldNotify(_MornyeChromeMemberScope oldWidget) => false;
+}
+
+/// Whether glass at [context] sits in [MornyeChromeBatch] without being
+/// chrome. It must then read on its own: wrap its lens in
+/// [LiquidGlassBatch.exclude] and give its blur no key.
+bool mornyeOutsideChromeBatch(BuildContext context) {
+  final id = LiquidGlassBatch.backdropIdOf(context);
+  if (id == null) return false;
+  final chrome = context
+      .dependOnInheritedWidgetOfExactType<_MornyeChromeBatchScope>();
+  return chrome?.backdropId == id &&
+      context.dependOnInheritedWidgetOfExactType<_MornyeChromeMemberScope>() ==
+          null;
+}
+
+/// The key a plain blur at [context] pushes: the enclosing batch's, on
+/// Impeller only (the package keys its own passes the same way), and never
+/// for glass outside the chrome inside [MornyeChromeBatch].
+int? mornyeBlurBackdropId(BuildContext context, {required bool impeller}) {
+  if (!impeller || mornyeOutsideChromeBatch(context)) return null;
+  return LiquidGlassBatch.backdropIdOf(context);
 }
 
 /// A backdrop blur that carries an integer backdrop key, so it can share a
@@ -252,8 +265,9 @@ class MornyeBackdropLayer extends ContainerLayer {
   }
 }
 
-/// Marks a package lens's shader pass for [mornyeCountBackdropReads]; the
-/// lens layer itself is private. It adds no engine layer.
+/// Marks a package pass for [mornyeCountBackdropReads] (a lens's shader
+/// pass, the scroll edge's blur): their layers are private to the package.
+/// It adds no engine layer.
 class MornyeBackdropReadMarker extends SingleChildRenderObjectWidget {
   const MornyeBackdropReadMarker({
     super.key,
@@ -337,8 +351,6 @@ MornyeBackdropReads mornyeCountBackdropReads(Layer? root) {
       case MornyeBackdropLayer(filter: _?, :final backdropId):
         count(backdropId);
       case MornyeBackdropReadMarkerLayer(:final backdropId):
-        count(backdropId);
-      case LiquidGlassBatchBackdropLayer(filter: _?, :final backdropId):
         count(backdropId);
       case BackdropFilterLayer(:final backdropKey):
         count(backdropKey);

@@ -607,9 +607,9 @@ class _MainShellState extends ConsumerState<MainShell>
           await _handleBackPress();
           return true;
         },
-        // Headers in the tab pages and the bottom bar share two backdrop
-        // reads between them; see MornyeBackdropGroup.
-        child: MornyeBackdropGroups(
+        // Header controls in the tab pages and the bottom bar share one
+        // backdrop read; see MornyeChromeBatch.
+        child: MornyeChromeBatch(
           child: Scaffold(
             extendBody: true,
             // The tab view keeps one element across the rail<->bar structure

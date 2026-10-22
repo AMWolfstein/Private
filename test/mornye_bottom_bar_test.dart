@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/widgets/mornye_selection_pill.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -14,6 +15,7 @@ import 'package:spotiflac_android/screens/settings/settings_tab.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
@@ -49,6 +51,7 @@ void main() {
     int glassLevel = 4,
     ValueNotifier<int>? activeTab,
     bool groups = false,
+    bool impellerLite = false,
   }) async {
     tester.view.physicalSize = const Size(393, 760);
     tester.view.devicePixelRatio = 1;
@@ -75,12 +78,17 @@ void main() {
           ),
           mornyeLiquidGlassProvider.overrideWithValue(liquidGlass),
           mornyeGlassClarityLevelProvider.overrideWithValue(glassLevel),
+          // Lite glass on the Impeller path, where blur passes carry keys.
+          if (impellerLite) ...[
+            mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.lite),
+            mornyeShaderFiltersSupportedProvider.overrideWithValue(true),
+          ],
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
           builder: (_, child) => RepaintBoundary(
             key: capture,
-            child: groups ? MornyeBackdropGroups(child: child!) : child,
+            child: groups ? MornyeChromeBatch(child: child!) : child,
           ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -144,37 +152,29 @@ void main() {
 
   for (final groups in [false, true]) {
     testWidgets(
-      'player and navbar share a read; side capsules join the controls '
-      '(groups: $groups)',
+      'the bar shares the chrome read; folding buttons read on their own '
+      '(batch: $groups)',
       (tester) async {
-        await pumpShell(tester, blur: true, liquidGlass: false, groups: groups);
-        void expectReads({
-          required int movingSurfaces,
-          required int sharedSurfaces,
-          required int reads,
-        }) {
-          final ids = tester
-              .widgetList<MornyeBackdropBlur>(
-                find.descendant(
-                  of: find.byType(MornyeBottomBar),
-                  matching: find.byType(MornyeBackdropBlur),
-                ),
+        await pumpShell(tester, blur: true, groups: groups, impellerLite: true);
+        final batch = groups
+            ? LiquidGlassBatch.backdropIdOf(
+                tester.element(find.byType(MornyeBottomBar)),
               )
-              .map((blur) => blur.backdropId)
-              .toList();
-          // The player and the tabs come first and always share one key.
-          final surface = ids.take(sharedSurfaces).toSet();
-          expect(surface, hasLength(1));
-          expect(surface.single, isNotNull);
-          final moving = ids.skip(sharedSurfaces).toList();
-          expect(moving, hasLength(movingSurfaces));
-          if (movingSurfaces > 0) {
-            // Side capsules overlap the folding tabs: never the tabs' key.
-            // In the shell they share the header controls' key instead.
-            expect(moving.toSet(), hasLength(1));
-            expect(moving.first, groups ? isNotNull : isNull);
-            expect(moving.first, isNot(surface.single));
-          }
+            : null;
+        if (groups) expect(batch, isNotNull);
+        void expectReads(List<int?> ids, int reads) {
+          expect(
+            tester
+                .widgetList<MornyeBackdropBlur>(
+                  find.descendant(
+                    of: find.byType(MornyeBottomBar),
+                    matching: find.byType(MornyeBackdropBlur),
+                  ),
+                )
+                .map((blur) => blur.backdropId)
+                .toList(),
+            ids,
+          );
           expect(
             mornyeCountBackdropReads(
               // ignore: invalid_use_of_protected_member
@@ -184,26 +184,102 @@ void main() {
           );
         }
 
-        // Invisible side capsules must not paint additional backdrop passes.
-        expectReads(movingSurfaces: 0, sharedSurfaces: 2, reads: 1);
+        // Expanded: player and tabs; the hidden side buttons paint nothing.
+        expectReads([batch, batch], groups ? 1 : 2);
         chrome.value = true;
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 190));
-        expectReads(
-          movingSurfaces: 2,
-          sharedSurfaces: 2,
-          reads: groups ? 2 : 3,
-        );
+        // Folding, the side buttons cross the tabs: their own reads.
+        expectReads([batch, batch, null, null], groups ? 3 : 4);
         await tester.pumpAndSettle();
-        expectReads(
-          movingSurfaces: 2,
-          sharedSurfaces: 1,
-          reads: groups ? 2 : 3,
-        );
+        // At rest they sit beside the player and join it.
+        expectReads([batch, batch, batch], groups ? 1 : 3);
         expect(tester.takeException(), isNull);
       },
     );
   }
+
+  testWidgets('header and bar share one read over the whole page', (
+    tester,
+  ) async {
+    final pageScroll = ScrollController();
+    addTearDown(pageScroll.dispose);
+    await pumpShell(
+      tester,
+      blur: true,
+      groups: true,
+      impellerLite: true,
+      body: Navigator(
+        onGenerateInitialRoutes: (_, _) => [
+          MaterialPageRoute<void>(builder: (_) => const SizedBox()),
+          MaterialPageRoute<void>(
+            builder: (_) => Scaffold(
+              body: CustomScrollView(
+                controller: pageScroll,
+                slivers: [
+                  const AppSliverHeader.page(title: 'Songs'),
+                  SliverList.builder(
+                    itemCount: 40,
+                    itemBuilder: (_, index) =>
+                        SizedBox(height: 64, child: Text('Song $index')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    final batch = LiquidGlassBatch.backdropIdOf(
+      tester.element(find.byType(MornyeBottomBar)),
+    );
+    expect(batch, isNotNull);
+    expect(
+      tester
+          .widgetList<MornyeBackdropBlur>(find.byType(MornyeBackdropBlur))
+          .map((blur) => blur.backdropId),
+      everyElement(batch),
+    );
+    Layer root() =>
+        // ignore: invalid_use_of_protected_member
+        tester.binding.renderViews.first.layer!;
+    expect(mornyeCountBackdropReads(root()).total, 1);
+
+    pageScroll.jumpTo(400);
+    await tester.pumpAndSettle();
+    // Only the band adds a read of its own.
+    expect(mornyeCountBackdropReads(root()).total, 2);
+
+    // The engine caches the backdrop at the first member it draws. Every
+    // visible row must be composited before it, so the header and the bar
+    // both filter the page behind them.
+    final order = <Layer>[];
+    void visit(Layer layer) {
+      order.add(layer);
+      if (layer is ContainerLayer) {
+        for (var c = layer.firstChild; c != null; c = c.nextSibling) {
+          visit(c);
+        }
+      }
+    }
+
+    visit(root());
+    final firstMember = order.indexWhere(
+      (layer) => layer is MornyeBackdropLayer && layer.backdropId == batch,
+    );
+    expect(firstMember, greaterThan(0));
+    final rows = find.textContaining('Song ').evaluate().map((element) {
+      RenderObject? node = element.renderObject;
+      while (node != null && !node.isRepaintBoundary) {
+        node = node.parent;
+      }
+      return node!.debugLayer!;
+    }).toSet();
+    expect(rows, isNotEmpty);
+    for (final row in rows) {
+      expect(order.indexOf(row), lessThan(firstMember));
+    }
+  });
 
   for (final liquidGlass in [false, true]) {
     testWidgets(

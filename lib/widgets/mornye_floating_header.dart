@@ -77,7 +77,6 @@ class MornyeHeaderBacking extends ConsumerWidget {
   final Color? color;
 
   static const _duration = Duration(milliseconds: 180);
-  static const _sigmaNudge = 0.01;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,39 +103,37 @@ class MornyeHeaderBacking extends ConsumerWidget {
         if (amount == 0) return const SizedBox.shrink();
         // Hold the tint across the toolbar and feather only its last third.
         // Opacity would isolate the blur from the page, so fade by value.
-        // The band shares the bottom bar's read. Its sigma is nudged off the
-        // bar's: the engine draws identical filters of one key once, which
-        // would cost the band its feathering.
-        return MornyeBackdropGroupMember(
-          group: MornyeBackdropGroup.surface,
-          child: LiquidGlassScrollEdge(
-            key: const ValueKey('mornye-header-backing'),
-            edge: LiquidGlassEdge.top,
-            color: base.withValues(alpha: 0.72 * amount),
-            blur: sigma == 0 ? 0 : sigma * amount + _sigmaNudge,
-            curve: const Interval(0.68, 1, curve: Curves.easeIn),
-            blurCurve: const Interval(0.68, 1, curve: Curves.easeIn),
-          ),
+        final edge = LiquidGlassScrollEdge(
+          key: const ValueKey('mornye-header-backing'),
+          edge: LiquidGlassEdge.top,
+          color: base.withValues(alpha: 0.72 * amount),
+          blur: sigma * amount,
+          curve: const Interval(0.68, 1, curve: Curves.easeIn),
+          blurCurve: const Interval(0.68, 1, curve: Curves.easeIn),
+        );
+        // The header controls float over the band and must see it, so the
+        // band reads on its own, outside the chrome batch.
+        return LiquidGlassBatch.exclude(
+          child: sigma == 0
+              ? edge
+              : MornyeBackdropReadMarker(backdropId: null, child: edge),
         );
       },
     );
   }
 }
 
-/// Toolbar controls (the leading circle, the actions) share one backdrop read
-/// with the bottom bar's side buttons. They float over the backing band, so
-/// never the band's read. Glass inside page content must not join: it paints
-/// before the content below it, which the group could then no longer see.
+/// Toolbar controls (the leading circle, the actions) share the shell's
+/// chrome read with the bottom bar. Glass inside page content must not join:
+/// it paints before the content below it, which the batch could then no
+/// longer see.
 class MornyeHeaderControls extends StatelessWidget {
   const MornyeHeaderControls({super.key, required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => MornyeBackdropGroupMember(
-    group: MornyeBackdropGroup.controls,
-    child: child,
-  );
+  Widget build(BuildContext context) => MornyeChromeMember(child: child);
 }
 
 /// A glass circle around a header [IconButton], matching HeaderCircleButton.

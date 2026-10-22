@@ -150,8 +150,8 @@ class MornyeGlassPanel extends ConsumerWidget {
 }
 
 /// Bounded glass: Impeller lenses refract a blurred backdrop, while frosted
-/// surfaces are blur passes. Either joins the enclosing chrome group or
-/// batch, so its read is shared. Foreground content stays above glass.
+/// surfaces are blur passes. Either joins the enclosing batch (the shell's
+/// chrome batch only for MornyeChromeMember chrome), so its read is shared. Foreground content stays above glass.
 class MornyeGlass extends ConsumerWidget {
   const MornyeGlass({
     super.key,
@@ -341,21 +341,29 @@ class MornyeGlass extends ConsumerWidget {
             ),
           ]
         : null;
+    // Page glass under the shell's chrome batch keeps a read of its own.
+    final ownRead = mornyeOutsideChromeBatch(context);
     final backdrop = useLens
-        ? MornyeLiquidBackdrop(
-            borderRadius: shape,
-            dispersion: clarity.dispersion,
-            blurSigma: clarity.blurSigma,
-            refractionDepth: refractionDepth * reveal,
-            smoothCorners: squircle,
-            highlightIntensity: highlightIntensity * reveal,
-            child: surface,
+        ? _maybeExclude(
+            ownRead,
+            MornyeLiquidBackdrop(
+              borderRadius: shape,
+              dispersion: clarity.dispersion,
+              blurSigma: clarity.blurSigma,
+              refractionDepth: refractionDepth * reveal,
+              smoothCorners: squircle,
+              highlightIntensity: highlightIntensity * reveal,
+              child: surface,
+            ),
           )
         : sampleBackdrop
         ? MornyeBackdropBlur(
             filter: _blurs[clarity.level - 1],
-            // Shares the read of the enclosing chrome group or batch.
-            backdropId: LiquidGlassBatch.backdropIdOf(context),
+            // Shares the enclosing batch's read, as a lens would.
+            backdropId: mornyeBlurBackdropId(
+              context,
+              impeller: ref.watch(mornyeShaderFiltersSupportedProvider),
+            ),
             child: liteRim
                 ? LiquidGlassLite(
                     shape: mornyeGlassShape(
@@ -413,6 +421,9 @@ class MornyeGlass extends ConsumerWidget {
     );
   }
 }
+
+Widget _maybeExclude(bool exclude, Widget child) =>
+    exclude ? LiquidGlassBatch.exclude(child: child) : child;
 
 /// Marks chrome whose light/dark palette follows a sampled backdrop, so its
 /// light glass can drop the readability floor and look clear at rest.

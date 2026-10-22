@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
@@ -154,21 +153,15 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
     // These contents do not depend on animation progress. Retain their widget
     // instances so folding only updates geometry and foreground opacity. A
     // backdrop inside a fading layer loses access to the page behind the bar.
-    // The side buttons cross the tabs while folding, so they share the
-    // header controls' read rather than the tabs'.
-    Widget sideSurface() => MornyeBackdropGroupMember(
-      group: MornyeBackdropGroup.controls,
-      followRoute: false,
-      child: ScaleTransition(
-        scale: _collapse,
-        child: RepaintBoundary(
-          child: MornyeGlass.navigation(
-            blurEnabled: blurEnabled,
-            strongTint: true,
-            tintOpacity: MornyeTheme.navigationOpacity(context),
-            radius: 26,
-            child: const SizedBox.expand(),
-          ),
+    Widget sideSurface() => ScaleTransition(
+      scale: _collapse,
+      child: RepaintBoundary(
+        child: MornyeGlass.navigation(
+          blurEnabled: blurEnabled,
+          strongTint: true,
+          tintOpacity: MornyeTheme.navigationOpacity(context),
+          radius: 26,
+          child: const SizedBox.expand(),
         ),
       ),
     );
@@ -259,7 +252,13 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
                         Positioned.fill(
                           child: Offstage(
                             offstage: amount == 0,
-                            child: surface,
+                            // Folding, the button crosses the tab capsule:
+                            // it reads on its own until it comes to rest.
+                            child: MornyeChromeMember(
+                              followRoute: false,
+                              join: amount == 1,
+                              child: surface,
+                            ),
                           ),
                         ),
                         Material(
@@ -302,68 +301,60 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
             return Stack(
               clipBehavior: Clip.none,
               children: [
-                // Only the non-overlapping player and tab surfaces share a
-                // backdrop, with the header band (the shell's surface group;
-                // this batch stands in outside the shell). The moving side
-                // capsules cross the tab bar while folding and use the
-                // controls group instead.
-                LiquidGlassBatch(
-                  child: MornyeBackdropGroupMember(
-                    group: MornyeBackdropGroup.surface,
-                    followRoute: false,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (hasPlayer || amount > 0)
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            // With no track, introducing the row at full height would
-                            // make the bar jump taller on the first animation frame.
-                            heightFactor: hasPlayer ? 1 : amount,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: hasPlayer
-                                    ? tabGap + (8 - tabGap) * amount
-                                    : 8,
-                              ),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 60 * amount,
-                                    height: hasPlayer ? 48 + 4 * amount : 52,
-                                  ),
-                                  Expanded(child: player),
-                                  SizedBox(
-                                    width: 60 * amount,
-                                    height: hasPlayer ? 48 + 4 * amount : 52,
-                                  ),
-                                ],
-                              ),
+                // The player and tab surfaces share the shell's chrome
+                // read with the header controls.
+                MornyeChromeMember(
+                  followRoute: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (hasPlayer || amount > 0)
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          // With no track, introducing the row at full height would
+                          // make the bar jump taller on the first animation frame.
+                          heightFactor: hasPlayer ? 1 : amount,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: hasPlayer
+                                  ? tabGap + (8 - tabGap) * amount
+                                  : 8,
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 60 * amount,
+                                  height: hasPlayer ? 48 + 4 * amount : 52,
+                                ),
+                                Expanded(child: player),
+                                SizedBox(
+                                  width: 60 * amount,
+                                  height: hasPlayer ? 48 + 4 * amount : 52,
+                                ),
+                              ],
                             ),
                           ),
-                        Offstage(
-                          // Retain tab state, but drop its backdrop layers only
-                          // after the last visible frame of the fold.
-                          offstage: amount == 1,
-                          child: ClipRect(
-                            clipBehavior: amount == 0
-                                ? Clip.none
-                                : Clip.hardEdge,
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              heightFactor: 1 - amount,
-                              child: IgnorePointer(
-                                ignoring: amount > 0.5,
-                                child: ExcludeSemantics(
-                                  excluding: amount > 0.5,
-                                  child: amount == 0 ? fullTabs : foldingTabs,
-                                ),
+                        ),
+                      Offstage(
+                        // Retain tab state, but drop its backdrop layers only
+                        // after the last visible frame of the fold.
+                        offstage: amount == 1,
+                        child: ClipRect(
+                          clipBehavior: amount == 0 ? Clip.none : Clip.hardEdge,
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            heightFactor: 1 - amount,
+                            child: IgnorePointer(
+                              ignoring: amount > 0.5,
+                              child: ExcludeSemantics(
+                                excluding: amount > 0.5,
+                                child: amount == 0 ? fullTabs : foldingTabs,
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 movingIcon(leading: true, surface: leadingSurface),
