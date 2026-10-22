@@ -6,6 +6,11 @@ class ShellNavigationService {
   static final searchRequests = ValueNotifier<int>(0);
   static final chromeBrightness = ValueNotifier<Brightness?>(null);
   static final chromeSurface = ValueNotifier<Color?>(null);
+
+  /// Bumped after the visible page changes (tab switch, push or pop), once
+  /// the new page has built.
+  static final pageChanges = ValueNotifier<int>(0);
+  static Object? _lastActivePage;
   static final _visiblePages = <GlobalKey<NavigatorState>, Route<dynamic>?>{};
   static final _chromeScopes =
       <
@@ -38,6 +43,10 @@ class ShellNavigationService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _chromeUpdateScheduled = false;
       final activePage = _visiblePages[_activeTabNavigatorKey()];
+      if (!identical(activePage, _lastActivePage)) {
+        _lastActivePage = activePage;
+        pageChanges.value++;
+      }
       Brightness? brightness;
       Color? surface;
       for (final scope in _chromeScopes.values) {

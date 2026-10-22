@@ -265,8 +265,19 @@ class MornyeGlass extends ConsumerWidget {
     }
     // Light glass needs a white veil over saturated or dark artwork.
     // Keep this in the existing fill so whitening adds no backdrop pass.
+    // Chrome whose palette follows its sampled backdrop needs no such floor:
+    // over dark content it turns dark instead.
+    final clearChrome =
+        !dark &&
+        tintColor == null &&
+        artworkTint == null &&
+        MornyeAdaptiveChromeScope.isActive(context);
     var baseTint = tintSource.withValues(
-      alpha: dark ? opacity * 0.82 : (opacity * 0.88).clamp(0.50, 1.0),
+      alpha: dark
+          ? opacity * 0.82
+          : clearChrome
+          ? opacity * 0.58
+          : (opacity * 0.88).clamp(0.50, 1.0),
     );
     if (dark) {
       // Bound bright artwork with paint instead of filtering backdrop luma.
@@ -382,6 +393,28 @@ class MornyeGlass extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Marks chrome whose light/dark palette follows a sampled backdrop, so its
+/// light glass can drop the readability floor and look clear at rest.
+class MornyeAdaptiveChromeScope extends InheritedWidget {
+  const MornyeAdaptiveChromeScope({
+    super.key,
+    required this.active,
+    required super.child,
+  });
+
+  final bool active;
+
+  static bool isActive(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<MornyeAdaptiveChromeScope>()
+          ?.active ??
+      false;
+
+  @override
+  bool updateShouldNotify(MornyeAdaptiveChromeScope oldWidget) =>
+      active != oldWidget.active;
 }
 
 class _GlassBackdropScope extends InheritedWidget {

@@ -26,6 +26,8 @@ import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/lazy_tab_view.dart';
 import 'package:spotiflac_android/widgets/mornye_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:spotiflac_android/widgets/mornye_chrome_adaptivity.dart';
+import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
 import 'package:spotiflac_android/utils/logger.dart';
@@ -45,6 +47,7 @@ class _MainShellState extends ConsumerState<MainShell>
   int _currentIndex = 0;
   final _homeFeedScrollController = ScrollController();
   final _mornyeChrome = MornyeChromeController();
+  final _chromeAdaptivity = MornyeChromeAdaptivity();
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
@@ -325,6 +328,7 @@ class _MainShellState extends ConsumerState<MainShell>
     ShellNavigationService.unregisterTabSelectionHandler(this);
     _homeFeedScrollController.dispose();
     _mornyeChrome.dispose();
+    _chromeAdaptivity.dispose();
     super.dispose();
   }
 
@@ -587,6 +591,11 @@ class _MainShellState extends ConsumerState<MainShell>
       ),
     );
 
+    // The bar's palette follows the page behind it only where liquid chrome
+    // is allowed; elsewhere it keeps the theme and its readable strong tint.
+    final adaptiveChrome =
+        !useNavigationRail && mornyeLiquidChromeEnabled(context, ref);
+
     final shell = SelectionOverlayHost(
       child: BackButtonListener(
         onBackButtonPressed: () async {
@@ -640,7 +649,11 @@ class _MainShellState extends ConsumerState<MainShell>
                     Expanded(child: pageView),
                   ],
                 )
-              : pageView,
+              : MornyeChromeBackdrop(
+                  adaptivity: _chromeAdaptivity,
+                  enabled: adaptiveChrome,
+                  child: pageView,
+                ),
           bottomNavigationBar: Builder(
             builder: (context) {
               {
@@ -648,19 +661,40 @@ class _MainShellState extends ConsumerState<MainShell>
                   listenable: Listenable.merge([
                     ShellNavigationService.chromeBrightness,
                     ShellNavigationService.chromeSurface,
+                    _chromeAdaptivity.link,
                   ]),
-                  builder: (context, child) => Theme(
-                    data: ShellNavigationService.chromeBrightness.value == null
-                        ? Theme.of(context)
-                        : MornyeTheme.fromContext(
-                            context,
-                            brightness:
-                                ShellNavigationService.chromeBrightness.value!,
-                            chromeSurface:
-                                ShellNavigationService.chromeSurface.value,
-                          ),
-                    child: child!,
-                  ),
+                  builder: (context, child) {
+                    final pageOverride =
+                        ShellNavigationService.chromeBrightness.value;
+                    final brightness = mornyeChromeBrightness(
+                      pageOverride: pageOverride,
+                      sampled: adaptiveChrome
+                          ? _chromeAdaptivity.link.value
+                          : null,
+                    );
+                    final theme = Theme.of(context);
+                    return AnimatedTheme(
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 300),
+                      data:
+                          brightness == null ||
+                              (pageOverride == null &&
+                                  brightness == theme.brightness)
+                          ? theme
+                          : MornyeTheme.fromContext(
+                              context,
+                              brightness: brightness,
+                              chromeSurface: pageOverride == null
+                                  ? null
+                                  : ShellNavigationService.chromeSurface.value,
+                            ),
+                      child: MornyeAdaptiveChromeScope(
+                        active: adaptiveChrome,
+                        child: child!,
+                      ),
+                    );
+                  },
                   child: SafeArea(
                     top: false,
                     minimum: const EdgeInsets.fromLTRB(20, 0, 20, 8),
