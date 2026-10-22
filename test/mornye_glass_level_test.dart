@@ -108,9 +108,10 @@ void main() {
                   forceBlur ? MornyeGlassQuality.full : MornyeGlassQuality.auto,
                 );
             await tester.pumpAndSettle();
+            // The segmented track sits on the plain page and reads nothing.
             expect(
               find.bySubtype<BackdropFilter>(),
-              findsNWidgets(forceBlur ? 3 : 0),
+              findsNWidgets(forceBlur ? 2 : 0),
             );
             final pills = tester.widgetList<MornyeSelectionPill>(
               find.byType(MornyeSelectionPill),
@@ -138,7 +139,7 @@ void main() {
           tester.platformDispatcher.accessibilityFeaturesTestValue =
               FakeAccessibilityFeatures(disableAnimations: reduceMotion);
           await tester.pumpAndSettle();
-          expect(find.bySubtype<BackdropFilter>(), findsNWidgets(3));
+          expect(find.bySubtype<BackdropFilter>(), findsNWidgets(2));
           expect(tester.takeException(), isNull);
         },
       );
@@ -412,7 +413,8 @@ void main() {
       expect(pills, hasLength(2));
       // Held lenses need a level above the plain Level 1 blur.
       expect(pills.every((pill) => pill.liquidInteraction == level >= 2), true);
-      expect(find.bySubtype<BackdropFilter>(), findsNWidgets(2));
+      // Only the tab bar blurs; the segmented track is tint only.
+      expect(find.bySubtype<BackdropFilter>(), findsOneWidget);
       expect(find.text('Two'), findsOneWidget);
       expect(find.text('Library'), findsOneWidget);
       expect(tester.takeException(), isNull);

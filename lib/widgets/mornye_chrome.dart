@@ -42,6 +42,8 @@ class MornyeSegmentedControl extends ConsumerWidget {
         child: MornyeGlass.navigation(
           blurEnabled: ref.watch(mornyeBlurEnabledProvider),
           radius: height / 2,
+          // Sits on the plain settings page: tint, no backdrop at rest.
+          samplesBackdrop: false,
           child: MornyeSelectionPill(
             contrastBlocked: contrastBlocked,
             // Touch-only glass: a held lens also under lite, never Level 1.
