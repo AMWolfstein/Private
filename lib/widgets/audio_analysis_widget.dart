@@ -8,6 +8,8 @@ import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,9 +19,11 @@ import 'package:spotiflac_android/services/audio_analysis_cache.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_content_card.dart';
 import 'package:spotiflac_android/widgets/app_choice_chip.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 
 part 'audio_analysis_models.dart';
@@ -589,11 +593,22 @@ double _sortedSpectralPercentile(Float64List sorted, double percentile) {
   return sorted[index];
 }
 
+final _log = AppLogger('AudioAnalysis');
+
 class AudioAnalysisCard extends StatefulWidget {
   final String filePath;
   final String? codecHint;
 
-  const AudioAnalysisCard({super.key, required this.filePath, this.codecHint});
+  /// Names the saved spectrogram image, such as "Artist - Title". Without
+  /// it the name comes from [filePath].
+  final String? exportName;
+
+  const AudioAnalysisCard({
+    super.key,
+    required this.filePath,
+    this.codecHint,
+    this.exportName,
+  });
 
   @override
   State<AudioAnalysisCard> createState() => _AudioAnalysisCardState();
@@ -608,6 +623,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
   int _spectrogramChannel = -1;
   bool _spectrogramChannelLoading = false;
   int _spectrogramRequestId = 0;
+  bool _savingSpectrogram = false;
   String? _unsupportedCodec;
   final _analysisJobs = AudioAnalysisJobs<FFmpegSession>(
     start: (arguments) async {
@@ -1266,6 +1282,68 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     }
   }
 
+  /// Renders the spectrogram with its axes and legend, then asks where to
+  /// save it through the system file picker.
+  Future<void> _saveSpectrogram() async {
+    final data = _data;
+    final shown = _spectrogramImage;
+    if (data == null || shown == null || _savingSpectrogram) return;
+    final l10n = context.l10n;
+    final channel = _spectrogramChannel;
+    final baseName = audioSpectrogramExportBaseName(
+      widget.filePath,
+      exportName: widget.exportName,
+    );
+    final fileName = channel < 0
+        ? '${baseName}_spectrogram.png'
+        : '${baseName}_spectrogram_ch${channel + 1}.png';
+    // A channel switch disposes the shown image while this still renders.
+    final image = shown.clone();
+    setState(() => _savingSpectrogram = true);
+    try {
+      final bytes = await renderAudioSpectrogramPng(
+        image: image,
+        title: baseName,
+        sampleRate: data.sampleRate,
+        duration: data.duration,
+        details: [
+          '${l10n.audioAnalysisSampleRate}: ${data.sampleRate} Hz',
+          '${l10n.audioAnalysisNyquist}: '
+              '${(data.sampleRate / 2000).toStringAsFixed(1)} kHz',
+          if (channel >= 0) 'Ch ${channel + 1}',
+        ],
+      );
+      final saved = await FilePicker.saveFile(
+        fileName: fileName,
+        bytes: bytes,
+        mimeType: 'image/png',
+        dialogTitle: l10n.audioAnalysisSaveSpectrogram,
+      );
+      if (saved == null || !mounted) return;
+      final savedName = saved.scheme == 'file'
+          ? p.basename(saved.toFilePath())
+          : fileName;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(l10n.audioAnalysisSpectrogramSaved(savedName)),
+          ),
+        );
+    } catch (e) {
+      _log.e('Could not save the spectrogram: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(l10n.audioAnalysisSpectrogramSaveFailed)),
+        );
+    } finally {
+      image.dispose();
+      if (mounted) setState(() => _savingSpectrogram = false);
+    }
+  }
+
   Future<void> _changeSpectrogramChannel(int channel) async {
     final data = _data;
     if (data == null ||
@@ -1773,6 +1851,9 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
             selectedChannel: _spectrogramChannel,
             channelLoading: _spectrogramChannelLoading,
             onChannelChanged: _changeSpectrogramChannel,
+            onSave: _savingSpectrogram || _spectrogramChannelLoading
+                ? null
+                : _saveSpectrogram,
           ),
         ],
       ],

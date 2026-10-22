@@ -356,6 +356,10 @@ class AudioQualityAnalysisScreen extends StatelessWidget {
             child: AudioAnalysisCard(
               filePath: item.filePath,
               codecHint: item.format,
+              exportName: [
+                item.artistName.trim(),
+                item.trackName.trim(),
+              ].where((part) => part.isNotEmpty).join(' - '),
             ),
           ),
         ),

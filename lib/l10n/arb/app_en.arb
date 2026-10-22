@@ -2000,6 +2000,23 @@
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
+  "audioAnalysisSaveSpectrogram": "Save Spectrogram",
+  "@audioAnalysisSaveSpectrogram": {
+    "description": "Tooltip for the spectrogram button that saves the plot, with its axes and legend, as a PNG image the user places in storage"
+  },
+  "audioAnalysisSpectrogramSaved": "Spectrogram saved to {fileName}",
+  "@audioAnalysisSpectrogramSaved": {
+    "description": "Snackbar after the spectrogram image was saved",
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "audioAnalysisSpectrogramSaveFailed": "Could not save the spectrogram",
+  "@audioAnalysisSpectrogramSaveFailed": {
+    "description": "Snackbar when rendering or saving the spectrogram image failed"
+  },
   "audioAnalysisRescanning": "Re-analyzing audio...",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
