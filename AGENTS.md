@@ -49,9 +49,11 @@ Switch and slider thumbs (AppSwitch, MornyeSlider, horizontal MornyeLevelSlider)
 liquid glass only while touched and only when the glass thumb gate allows it; no lens or
 capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
 faders keep their painted controls.
-Pinned headers float: transparent toolbars with a glass back circle, IconButton actions in one
-glass capsule and a backing band only once content scrolls under (opaque on flat level or high
-contrast). Only the bottom bar samples its backdrop, through one shell LiquidGlassView held at
+Pinned headers float: transparent toolbars with a glass back circle, IconButton and menu actions in
+one glass capsule and a backing band only once content scrolls under (opaque on flat level or high
+contrast). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons; the
+profile photo (opens Settings, rim outline, no glass) ends every header 8dp after the capsule and
+is hidden on Settings and its subpages. Headers mirror in RTL. Only the bottom bar samples its backdrop, through one shell LiquidGlassView held at
 rest; headers judge known backdrops (page, artwork top) and never sample themselves.
 Glass is configured by `glassQuality` (auto / lite / full / off; Auto follows the device class
 and alone honours high contrast) and `glassClarityLevel` 1-5 in app settings. Every clarity
