@@ -162,7 +162,9 @@ Rules:
 Review rules, finding format and state live in `reviews/PROTOCOL.md`; resume from
 `reviews/STATE.md`. Claude Code: `/review [range]` (incremental, default 1 reviewer, max 3)
 and `/audit <subsystem>` (one bounded subsystem); reviewer agents are in `.claude/agents/`.
-Codex/OpenCode: act as one named reviewer from `.claude/agents/<name>.md` per pass.
+OpenCode loads the same reviewers as read-only subagents from `.opencode/agents/`; regenerate
+them with `python3 scripts/sync_opencode_agents.py` after editing `.claude/agents/` (`--check`
+reports drift). Codex: act as one named reviewer from `.claude/agents/<name>.md` per pass.
 `scripts/review_scope.sh` picks scope, reviewers and graph freshness without a model.
 Reviewers never edit code; fixes are separate 1–3 finding batches that follow the commit
 conventions below. Review checkpoints commit only `reviews/` (`docs(review): <unit>`).

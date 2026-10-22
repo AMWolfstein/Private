@@ -49,14 +49,14 @@ current one is pushed.
 4. **Fix.** Make the smallest fix for each real finding, and add a regression test for each
    one. Do not run anything yet.
 5. **Review with the agents.** Run the reviewer agents listed under the task in **Reviewers**.
-   - Each reviewer's instructions are in `.claude/agents/<name>.md`, and the shared rules
-     are in `reviews/PROTOCOL.md`.
-   - Start each reviewer as a subagent (the `task` tool). Give it that file's text as its
-     instructions, plus a brief: the uncommitted diff (`git diff`), the files and symbols
-     changed, the graphify dependents from step 2, and the finding IDs.
-   - Reviewers only read code and never edit it.
-   - If you cannot start subagents, do each review yourself as a separate pass. Read the
-     agent file and follow it strictly, one reviewer per pass.
+   - The reviewers are OpenCode subagents in `.opencode/agents/`, generated from
+     `.claude/agents/` by `scripts/sync_opencode_agents.py`. They follow
+     `reviews/PROTOCOL.md`, can only read code, and run only read-only git and graphify
+     commands.
+   - Call each one by name, for example `@kotlin-android-auditor`, or through the `task`
+     tool with that agent. Give it a brief: the uncommitted diff (`git diff`), the files and
+     symbols changed, the graphify dependents from step 2, and the finding IDs.
+   - Run the fixes from the `build` agent. The default `plan` agent cannot edit files.
    - Fix every real P0, P1 or P2 they report, then run the same reviewer again on the new
      diff. Repeat until it reports none.
    - A P3 from them is fixed now if it is in code this task changed. Otherwise add it to
