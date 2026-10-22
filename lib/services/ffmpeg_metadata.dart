@@ -321,19 +321,28 @@ abstract final class FFmpegMetadata {
           AudioMetadataMapper.convertToM4aTags(metadata),
         );
       }
-      // MOV accepts codecs MP4 rejects; cover writes force a proper covr atom.
+      // The default .m4a (ipod) muxer rejects FLAC. MP4 supports FLAC and
+      // writes artwork as covr atoms, including artwork copied from the input.
       if (forceMov) {
         arguments.addAll(['-f', 'mov']);
-      } else if (hasCover) {
-        arguments.addAll(['-f', 'mp4']);
+      } else {
+        // Older FFmpeg builds require experimental compliance for FLAC in MP4.
+        arguments.addAll(['-f', 'mp4', '-strict', 'experimental']);
       }
       return arguments..addAll([tempOutput, '-y']);
     }
 
     _log.d('Executing FFmpeg M4A embed command');
     var result = await FFmpegExecution.arguments(buildArgs(false));
-    if (!result.success) {
-      _log.w('M4A embed failed with default muxer, retrying with mov muxer');
+    // MOV supports some codecs MP4 rejects (for example AC-4). Other
+    // failures keep their original error instead of trying MOV, which
+    // cannot carry FLAC even with experimental compliance enabled.
+    if (!result.success &&
+        result.output.contains('codec not currently supported in container')) {
+      _log.w(
+        'M4A embed codec rejected by MP4, retrying with mov muxer: '
+        '${FFmpegExecution.preview(result.output)}',
+      );
       await FFmpegOutput.cleanup(tempOutput);
       result = await FFmpegExecution.arguments(buildArgs(true));
     }
