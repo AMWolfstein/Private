@@ -247,7 +247,6 @@
   "827": "settings.gradle",
   "1622": "libusb_interface_association_descriptor",
   "1623": "libusb_ss_usb_device_capability_descriptor",
-  "1639": "libusb_platform_descriptor",
   "1643": "libusb_ssplus_sublink_attribute",
   "1644": "libusb_ssplus_usb_device_capability_descriptor",
   "1645": "libusb_version"

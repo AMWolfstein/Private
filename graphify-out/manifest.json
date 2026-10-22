@@ -6138,9 +6138,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792697446.5377178,
-    "seen": 1792698178.5667398,
-    "ast_hash": "8dfcf6468d2dbdc36397b3f6c27826b9",
+    "mtime": 1792701861.8604584,
+    "seen": 1792701914.447492,
+    "ast_hash": "d88fdb9476b72c81d2c71e0fb96653b2",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792697446.5368748,
-    "seen": 1792698178.5667477,
-    "ast_hash": "04e52ffb55ae196eef41e35a45d04c1d",
+    "mtime": 1792698179.8704205,
+    "seen": 1792701914.4475057,
+    "ast_hash": "318e40317f8e1d1719328eb7f591e352",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7164,9 +7164,9 @@
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792623008.2634165,
-    "seen": 1792623676.7874897,
-    "ast_hash": "27d7e84028674d38fea310497ee42f47",
+    "mtime": 1792701861.861268,
+    "seen": 1792701914.4476426,
+    "ast_hash": "62bbea86e5848c311aa6c2d2f5a3da20",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
@@ -7839,6 +7839,102 @@
     "mtime": 1792661153.6750078,
     "seen": 1792663396.3178432,
     "ast_hash": "a371d33ffc461d0af233f90edd6c91a6",
+    "semantic_hash": ""
+  },
+  "scripts/sync_opencode_agents.py": {
+    "mtime": 1792701793.024503,
+    "seen": 1792701914.4463718,
+    "ast_hash": "36303d6fa5d908a749e9367fd8eac986",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/api-compat-auditor.md": {
+    "mtime": 1792701794.4812686,
+    "seen": 1792701914.4474502,
+    "ast_hash": "6d36f07ae57ab5fb710874d3334c5185",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/bug-hunter.md": {
+    "mtime": 1792701794.4813957,
+    "seen": 1792701914.447454,
+    "ast_hash": "90e11a99b11adbef5bf33963b694f722",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/code-optimization-auditor.md": {
+    "mtime": 1792701794.481469,
+    "seen": 1792701914.4474573,
+    "ast_hash": "c6c1b11153f705eccf60b74228542de2",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/concurrency-auditor.md": {
+    "mtime": 1792701794.4816751,
+    "seen": 1792701914.4474602,
+    "ast_hash": "c89846ba4934e4f0747127ff2787df66",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/data-integrity-auditor.md": {
+    "mtime": 1792701794.4817617,
+    "seen": 1792701914.4474626,
+    "ast_hash": "7e09fcbb21df936dca62387cfef986d0",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/dead-code-hunter.md": {
+    "mtime": 1792701794.481835,
+    "seen": 1792701914.4474654,
+    "ast_hash": "2c063e10eeb7117d3b265449fe0606a2",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/dependency-auditor.md": {
+    "mtime": 1792701794.4819005,
+    "seen": 1792701914.4474685,
+    "ast_hash": "90453ea90696990632852e8295f11821",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/docs-auditor.md": {
+    "mtime": 1792701794.4819722,
+    "seen": 1792701914.4474711,
+    "ast_hash": "21b353dfd969b42f7a47d2a28a858a42",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/flutter-dart-auditor.md": {
+    "mtime": 1792701794.4820392,
+    "seen": 1792701914.447474,
+    "ast_hash": "184d18aa32350394b9945d6562ad8db4",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/kotlin-android-auditor.md": {
+    "mtime": 1792701794.4820974,
+    "seen": 1792701914.4474766,
+    "ast_hash": "1943817ded811757705ad80e3d61db94",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/rust-safety-auditor.md": {
+    "mtime": 1792701794.4821584,
+    "seen": 1792701914.447479,
+    "ast_hash": "f7ef101219593dc2aa52ced566d58558",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/security-auditor.md": {
+    "mtime": 1792701794.4822176,
+    "seen": 1792701914.4474828,
+    "ast_hash": "6faa8b498d7cf04e687f61c4d4e6fe59",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/test-auditor.md": {
+    "mtime": 1792701794.4822943,
+    "seen": 1792701914.4474854,
+    "ast_hash": "9cc7a5da22d225a279e9ca4757a6b3b3",
+    "semantic_hash": ""
+  },
+  ".opencode/agents/ux-auditor.md": {
+    "mtime": 1792701794.4823527,
+    "seen": 1792701914.4474878,
+    "ast_hash": "c01951e6cd827193e7425ab951fa779f",
+    "semantic_hash": ""
+  },
+  "reviews/TASKS.md": {
+    "mtime": 1792701861.8599153,
+    "seen": 1792701914.447646,
+    "ast_hash": "23c412c1516c967343ee8f652da43f36",
     "semantic_hash": ""
   }
 }
