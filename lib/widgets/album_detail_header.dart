@@ -222,6 +222,7 @@ class AlbumDetailHeader extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned.fill(child: _AlbumScrollVeil(artworkBottom: detailsTop)),
           ],
         ),
       );
@@ -524,6 +525,35 @@ class AlbumDetailHeader extends StatelessWidget {
       ),
       actionsPadding: EdgeInsetsDirectional.only(end: iosEdgeInset),
       actions: appBarActions,
+    );
+  }
+}
+
+/// Softens the cover as it scrolls under the toolbar by dissolving into the
+/// page's pre-blurred ground (no live blur), fully soft once the cover's
+/// [artworkBottom] reaches the toolbar.
+class _AlbumScrollVeil extends ConsumerWidget {
+  const _AlbumScrollVeil({required this.artworkBottom});
+
+  final double artworkBottom;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (MediaQuery.disableAnimationsOf(context) ||
+        !ref.watch(mornyeLiquidGlassProvider)) {
+      return const SizedBox.shrink();
+    }
+    // Read here, not by the header: an inset change rebuilds only the veil.
+    final extent =
+        artworkBottom - kToolbarHeight - MediaQuery.paddingOf(context).top;
+    final position = Scrollable.of(context).position;
+    return AnimatedBuilder(
+      animation: position,
+      builder: (context, _) {
+        final scrolled = position.hasPixels ? position.pixels : 0.0;
+        final progress = extent > 0 ? (scrolled / extent).clamp(0.0, 1.0) : 0.0;
+        return MornyeGroundVeil(opacity: Curves.easeOut.transform(progress));
+      },
     );
   }
 }

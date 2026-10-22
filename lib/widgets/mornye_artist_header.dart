@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -345,10 +343,11 @@ class _ArtistCollapsingArtwork extends ConsumerWidget {
       0.88,
       curve: Curves.easeInOut,
     ).transform(collapse);
-    final blur = 18 * Curves.easeOut.transform(collapse);
-    final blurEnabled =
+    // The photo softens by dissolving into the page's pre-blurred ground,
+    // never by re-blurring it on every scroll frame.
+    final soften = Curves.easeOut.transform(collapse);
+    final softenEnabled =
         !MediaQuery.disableAnimationsOf(context) &&
-        // The collapse blur and masked backdrop re-filter on every scroll frame.
         ref.watch(mornyeLiquidGlassProvider);
 
     // The header controls' ground: this artwork under the same gradient,
@@ -371,37 +370,29 @@ class _ArtistCollapsingArtwork extends ConsumerWidget {
           children: [
             TickerMode(
               enabled: fade < 1,
-              child: ImageFiltered(
-                enabled: blurEnabled && blur > 0 && fade < 1,
-                imageFilter: ImageFilter.blur(
-                  sigmaX: blur,
-                  sigmaY: blur,
-                  tileMode: TileMode.clamp,
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final height = settings?.maxExtent ?? constraints.maxHeight;
-                    final zoom = height > 0
-                        ? (constraints.maxHeight / height).clamp(
-                            1.0,
-                            double.infinity,
-                          )
-                        : 1.0;
-                    // Stretch the photograph uniformly around its top edge.
-                    // Identity and actions remain outside this transform, moving
-                    // down with the sliver without growing along with the image.
-                    return OverflowBox(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final height = settings?.maxExtent ?? constraints.maxHeight;
+                  final zoom = height > 0
+                      ? (constraints.maxHeight / height).clamp(
+                          1.0,
+                          double.infinity,
+                        )
+                      : 1.0;
+                  // Stretch the photograph uniformly around its top edge.
+                  // Identity and actions remain outside this transform, moving
+                  // down with the sliver without growing along with the image.
+                  return OverflowBox(
+                    alignment: Alignment.topCenter,
+                    minHeight: height,
+                    maxHeight: height,
+                    child: Transform.scale(
+                      scale: zoom,
                       alignment: Alignment.topCenter,
-                      minHeight: height,
-                      maxHeight: height,
-                      child: Transform.scale(
-                        scale: zoom,
-                        alignment: Alignment.topCenter,
-                        child: RepaintBoundary(child: child),
-                      ),
-                    );
-                  },
-                ),
+                      child: RepaintBoundary(child: child),
+                    ),
+                  );
+                },
               ),
             ),
             DecoratedBox(
@@ -419,6 +410,8 @@ class _ArtistCollapsingArtwork extends ConsumerWidget {
                 ),
               ),
             ),
+            if (softenEnabled && fade < 1)
+              Positioned.fill(child: MornyeGroundVeil(opacity: soften)),
             ColoredBox(
               key: const ValueKey('artist-artwork-fade'),
               color: surface.withValues(alpha: fade),

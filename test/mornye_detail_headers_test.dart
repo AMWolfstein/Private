@@ -10,6 +10,7 @@ import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
 import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
+import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
 
 void main() {
   testWidgets(
@@ -106,7 +107,7 @@ void main() {
     },
   );
 
-  testWidgets('artist artwork blurs, disappears, and returns with scroll', (
+  testWidgets('artist artwork softens, disappears, and returns with scroll', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -142,33 +143,37 @@ void main() {
         .widget<ColoredBox>(find.byKey(const ValueKey('artist-artwork-fade')))
         .color
         .a;
-    ImageFiltered filter() => tester.widget<ImageFiltered>(
-      find.ancestor(
-        of: find.byKey(artworkKey),
-        matching: find.byType(ImageFiltered),
-      ),
-    );
+    // The artwork softens through the pre-blurred ground, never a live blur.
+    double? soften() {
+      final veil = find.byType(MornyeGroundVeil);
+      return veil.evaluate().isEmpty
+          ? null
+          : tester.widget<MornyeGroundVeil>(veil).opacity;
+    }
+
     final artwork = tester.element(find.byKey(artworkKey));
+    expect(find.byType(ImageFiltered), findsNothing);
     expect(fade(), 0);
-    expect(filter().enabled, isFalse);
+    expect(soften() ?? 0, 0);
 
     controller.jumpTo(120);
     await tester.pumpAndSettle();
-    expect(filter().enabled, isTrue);
+    expect(soften(), inExclusiveRange(0, 1));
     expect(fade(), inExclusiveRange(0, 1));
     expect(find.text('Artist action').hitTestable(), findsOneWidget);
 
     controller.jumpTo(340);
     await tester.pumpAndSettle();
     expect(fade(), 1);
-    expect(filter().enabled, isFalse);
+    expect(soften(), isNull);
     expect(TickerMode.valuesOf(artwork).enabled, isFalse);
     expect(find.byTooltip('Back').hitTestable(), findsOneWidget);
 
     controller.jumpTo(0);
     await tester.pumpAndSettle();
     expect(fade(), 0);
-    expect(filter().enabled, isFalse);
+    expect(soften() ?? 0, 0);
+    expect(find.byType(ImageFiltered), findsNothing);
     expect(TickerMode.valuesOf(artwork).enabled, isTrue);
     expect(find.text('Artist action').hitTestable(), findsOneWidget);
     expect(tester.element(find.byKey(artworkKey)), same(artwork));

@@ -1011,6 +1011,56 @@ class _RenderGroundAnchor extends RenderProxyBox {
   }
 }
 
+/// Lays the page's pre-blurred ground over its anchored artwork at
+/// [opacity], so a header softens as it scrolls without a live blur. Place it
+/// to fill the [MornyeGroundAnchor]'s box, above the artwork and its gradient
+/// (the ground already holds both). Paints nothing without a ground.
+class MornyeGroundVeil extends StatelessWidget {
+  const MornyeGroundVeil({super.key, required this.opacity});
+
+  final double opacity;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = MornyeArtworkGroundScope.pageOf(context);
+    if (controller == null || opacity <= 0) return const SizedBox.shrink();
+    return IgnorePointer(
+      child: CustomPaint(
+        size: Size.infinite,
+        painter: _GroundVeilPainter(controller, opacity.clamp(0.0, 1.0)),
+      ),
+    );
+  }
+}
+
+class _GroundVeilPainter extends CustomPainter {
+  _GroundVeilPainter(this.controller, this.opacity)
+    : super(repaint: controller);
+
+  final MornyeGroundController controller;
+  final double opacity;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    controller.markPainted();
+    final image = controller.to?.image;
+    if (image == null || size.isEmpty) return;
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      Offset.zero & size,
+      Paint()
+        ..color = Color.fromRGBO(0, 0, 0, opacity)
+        ..filterQuality = FilterQuality.medium,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_GroundVeilPainter oldDelegate) =>
+      !identical(controller, oldDelegate.controller) ||
+      opacity != oldDelegate.opacity;
+}
+
 /// Builds the ground for a detail page (album or artist) from [source] and
 /// the page's [MornyeGroundAnchor]; header controls draw from it.
 class MornyePageGround extends StatefulWidget {
