@@ -1028,22 +1028,24 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 content = Text(
                   line.text,
                   textAlign: textAlign,
-                  style:
-                      (mornye || isActive
-                              ? Theme.of(context).textTheme.headlineSmall
-                              : Theme.of(context).textTheme.titleLarge)
-                          ?.copyWith(
-                            height: context.tokens.lyricsLineHeight,
-                            fontSize: line.isBackground
-                                ? (mornye ? _mornyeLyricFontSize * 0.68 : 18)
-                                : mornye
-                                ? _mornyeLyricFontSize
-                                : null,
-                            fontWeight: mornye || isActive
-                                ? FontWeight.bold
-                                : FontWeight.w500,
-                            color: color,
-                          ),
+                  // Focus changes paint scale, never font metrics or wrapping
+                  // shared by the plain and word-timed line.
+                  style: mornye
+                      ? _mornyeLyricStyle(
+                          context,
+                          background: line.isBackground,
+                        ).copyWith(color: color)
+                      : (isActive
+                                ? Theme.of(context).textTheme.headlineSmall
+                                : Theme.of(context).textTheme.titleLarge)
+                            ?.copyWith(
+                              height: context.tokens.lyricsLineHeight,
+                              fontSize: line.isBackground ? 18 : null,
+                              fontWeight: isActive
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              color: color,
+                            ),
                 );
                 content = _withLyricSupplements(
                   context,
@@ -1450,11 +1452,15 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
   }
 }
 
+// Merged over the ambient text style, as a Text widget would, so measured,
+// plain and word-timed lines share the same metrics and wrapping.
 TextStyle _mornyeLyricStyle(BuildContext context, {bool background = false}) =>
-    (Theme.of(context).textTheme.headlineSmall ?? const TextStyle()).copyWith(
-      fontSize: _mornyeLyricFontSize * (background ? 0.68 : 1),
-      height: context.tokens.lyricsLineHeight,
-      fontWeight: FontWeight.bold,
+    DefaultTextStyle.of(context).style.merge(
+      (Theme.of(context).textTheme.headlineSmall ?? const TextStyle()).copyWith(
+        fontSize: _mornyeLyricFontSize * (background ? 0.68 : 1),
+        height: context.tokens.lyricsLineHeight,
+        fontWeight: FontWeight.bold,
+      ),
     );
 
 TextAlign _lyricTextAlign(BuildContext context, LyricLine line) {
