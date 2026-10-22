@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-22)
 
 ## Corpus Check
-- 1222 files · ~1,134,223 words
+- 1222 files · ~1,134,263 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 119 file(s) not represented in the graph (top: .xml 34, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0d043132`
+- Built from commit: `20e586e9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2832,7 +2832,7 @@ Nodes (7): libusb_version, describe, major, micro, minor, nano, rc
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `_` connect `_` to `music_playback_deck.dart`, `dart:io`, `two_finger_pinch_listener_test.dart`, `static final`, `package:spotiflac_android/utils/synced_lyrics_scroll.dart`, `UsbPcmPlayback`, `package:flutter/services.dart`, `logger.dart`, `lyrics_timeline.dart`, `mornye_player_ground.dart`, `AudioProcessingState`, `map`, `datetime`, `Widget`, `app_alert_dialog.dart`, `_AndroidVolumeDirectionMessageExtension`, `Set`, `_HandlerCallbacks`, `system_volume_service.dart`, `playback_automation.dart`, `fs/fcntl.rs`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `PlaybackStateCopyWith`, `_RatingMessageExtension`, `string`, `int get`, `local_album_playback_controls_test.dart`, `package:flutter/material.dart`, `MusicPlayerHandler`, `app_info.dart`, `playback_feedback.dart`, `List`, `Future`, `&String`, `ffmpeg_service.dart`, `library_collections_hydration.dart`?**
-  _High betweenness centrality (0.066) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **What connects `decoder`, `block`, `offset` to the rest of the system?**
   _9091 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**

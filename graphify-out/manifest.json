@@ -1914,9 +1914,9 @@
     "semantic_hash": "a956549a7a473ac70cae513e3a06725a"
   },
   "lib/widgets/player_lyrics.dart": {
-    "mtime": 1792682877.1971045,
-    "seen": 1792682954.1319232,
-    "ast_hash": "4adb88459edc2542992351bd9fafadd7",
+    "mtime": 1792682993.5987067,
+    "seen": 1792683064.115476,
+    "ast_hash": "a7ede0596d13fcb11b255383e772403c",
     "semantic_hash": ""
   },
   "lib/widgets/player_lyrics_controls.dart": {
