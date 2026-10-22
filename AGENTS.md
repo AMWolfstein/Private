@@ -49,6 +49,10 @@ Switch and slider thumbs (AppSwitch, MornyeSlider, horizontal MornyeLevelSlider)
 liquid glass only while touched and only when the glass thumb gate allows it; no lens or
 capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
 faders keep their painted controls.
+Pinned headers float: transparent toolbars with a glass back circle, IconButton actions in one
+glass capsule and a backing band only once content scrolls under (opaque on flat level or high
+contrast). Only the bottom bar samples its backdrop, through one shell LiquidGlassView held at
+rest; headers judge known backdrops (page, artwork top) and never sample themselves.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
