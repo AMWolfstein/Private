@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-22)
 
 ## Corpus Check
-- 1222 files · ~1,133,336 words
+- 1222 files · ~1,133,413 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 119 file(s) not represented in the graph (top: .xml 34, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `aa4232f7`
+- Built from commit: `c99d7cb0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2694,7 +2694,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.004629629629629629 - nodes in this community are weakly interconnected._
 - **Why does `c_int()` connect `process/prctl.rs` to `linux_raw/c.rs`, `ret`, `BorrowedFd`, `BorrowedFd`, `c`, `reg.rs`, `vdso_wrappers.rs`, `Timespec`, `procctl.rs`, `libc_auxv.rs`, `linux_raw/fs/types.rs`, `copyfile_state_t`, `linux_raw/param/auxv.rs`, `Errno`, `linux_raw/io/syscalls.rs`, `libusb1-sys-0.7.0/src/lib.rs`, `thread/prctl.rs`, `src/constants.rs`, `ArgReg`, `linux_raw/thread/syscalls.rs`, `to_ipv6mr`, `setns.rs`, `c`, `&CStr`, `Pid`, `OwnedFd`, `linux_raw/mm/syscalls.rs`, `linux_raw/process/wait.rs`, `RetReg`, `libc/c.rs`, `SendAncillaryMessage`?**
-  _High betweenness centrality (0.053) - this node is a cross-community bridge._
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Should `package:spotiflac_android/theme/mornye_theme.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.030303030303030304 - nodes in this community are weakly interconnected._
 - **Why does `ArgReg` connect `ArgReg` to `A1`, `aarch64.rs`, `vdso_wrappers.rs`, `reg.rs`, `linux_raw/io/syscalls.rs`, `mips.rs`, `RetReg`, `libusb1-sys-0.7.0/src/lib.rs`, `SyscallNumber`, `process/prctl.rs`, `linux_raw/net/sockopt.rs`, `OwnedFd`, `mips32r6.rs`?**
