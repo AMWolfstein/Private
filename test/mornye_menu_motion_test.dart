@@ -91,7 +91,7 @@ void main() {
     const Rect.fromLTWH(325, 100, 44, 44),
     const Rect.fromLTWH(16, 720, 44, 44),
   ]) {
-    testWidgets('menu flies from $anchor while opaque, then reveals glass', (
+    testWidgets('menu flies from $anchor with its glass from the first frame', (
       tester,
     ) async {
       await open(tester, anchor);
@@ -99,17 +99,19 @@ void main() {
       expect(first.center.dx, closeTo(anchor.center.dx, 0.01));
       expect(first.center.dy, closeTo(anchor.center.dy, 0.01));
       expect(first.width, closeTo(320 * 0.16, 0.01));
-      expect(find.bySubtype<BackdropFilter>(), findsNothing);
+      // One material for the whole animation: no staged blur-to-glass.
+      expect(panel(tester).glassProgress, 1);
+      expect(find.bySubtype<BackdropFilter>(), findsOneWidget);
       await tester.pump(const Duration(milliseconds: 100));
       final flying = visibleBounds(tester);
       expect(flying.width, greaterThan(first.width));
       expect(flying.width, lessThan(320));
-      expect(panel(tester).glassProgress, 0);
-      expect(find.bySubtype<BackdropFilter>(), findsNothing);
+      expect(panel(tester).glassProgress, 1);
+      expect(find.bySubtype<BackdropFilter>(), findsOneWidget);
       await tester.pump(const Duration(milliseconds: 140));
       final resting = visibleBounds(tester);
       expect(resting.width, closeTo(320, 0.01));
-      expect(panel(tester).glassProgress, inExclusiveRange(0, 1));
+      expect(panel(tester).glassProgress, 1);
       expect(find.bySubtype<BackdropFilter>(), findsOneWidget);
       await tester.pumpAndSettle();
       expect(visibleBounds(tester), resting);
@@ -129,8 +131,8 @@ void main() {
       await tester.tap(find.text('Play'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 160));
-      expect(panel(tester).glassProgress, 0);
-      expect(find.bySubtype<BackdropFilter>(), findsNothing);
+      expect(panel(tester).glassProgress, 1);
+      expect(find.bySubtype<BackdropFilter>(), findsOneWidget);
       await tester.pumpAndSettle();
       expect(find.byType(MornyeContextMenu), findsNothing);
       expect(tester.takeException(), isNull);

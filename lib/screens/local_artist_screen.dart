@@ -15,6 +15,7 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/widgets/local_song_menu.dart';
+import 'package:spotiflac_android/widgets/local_song_row.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
@@ -373,15 +374,8 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                                         ],
                                       ),
                                     ),
-                                    IconButton(
-                                      tooltip: current && isPlaying
-                                          ? context.l10n.actionPause
-                                          : context.l10n.tooltipPlay,
-                                      icon: Icon(
-                                        current && isPlaying
-                                            ? CupertinoIcons.pause_fill
-                                            : CupertinoIcons.play_fill,
-                                      ),
+                                    LocalSongPlayButton(
+                                      isPlaying: current && isPlaying,
                                       onPressed: play,
                                     ),
                                     Builder(

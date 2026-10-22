@@ -62,17 +62,10 @@ Future<T?> showMornyeContextMenu<T>({
               themes.wrap(Builder(builder: builder)),
             ),
             builder: (context, child) {
-              // Finish geometry first: no backdrop read while the panel flies
-              // out of its control. On close, glass fades before it moves.
               final motion = const Interval(
                 0,
                 0.62,
                 curve: Curves.easeOutCubic,
-              ).transform(animation.value);
-              final glass = const Interval(
-                0.62,
-                1,
-                curve: Curves.easeInOut,
               ).transform(animation.value);
               return CustomSingleChildLayout(
                 delegate: _MenuLayout(
@@ -94,12 +87,9 @@ Future<T?> showMornyeContextMenu<T>({
                     ignoring:
                         motion < 1 ||
                         animation.status == AnimationStatus.reverse,
-                    // Artwork glass reads nothing: one material from the
-                    // first frame to the last.
-                    child: _MenuGlassReveal(
-                      progress: ground == null ? glass : 1,
-                      child: child!,
-                    ),
+                    // One material from the first frame to the last: no
+                    // staged blur-to-glass reveal, over artwork or a page.
+                    child: child!,
                   ),
                 ),
               );
@@ -204,17 +194,7 @@ class _MenuLayout extends SingleChildLayoutDelegate {
       preferAbove != oldDelegate.preferAbove;
 }
 
-class _MenuGlassReveal extends InheritedWidget {
-  const _MenuGlassReveal({required this.progress, required super.child});
-
-  final double progress;
-
-  @override
-  bool updateShouldNotify(_MenuGlassReveal oldWidget) =>
-      progress != oldWidget.progress;
-}
-
-/// Only this surface rebuilds during the glass reveal; menu rows stay stable.
+/// The menu's glass panel.
 class _MenuSurface extends ConsumerWidget {
   const _MenuSurface({required this.child});
 
@@ -224,17 +204,11 @@ class _MenuSurface extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final dark = theme.brightness == Brightness.dark;
-    final progress =
-        context
-            .dependOnInheritedWidgetOfExactType<_MenuGlassReveal>()
-            ?.progress ??
-        1;
     return MornyeGlassPanel.overlay(
       radius: 28,
       smoothCorners: true,
       highlightBorder: true,
       highlightIntensity: 0.4,
-      glassProgress: progress,
       tintColor: theme.extension<MornyeTheme>()?.chromeSurface != null
           ? null
           : dark

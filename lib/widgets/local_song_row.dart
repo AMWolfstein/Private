@@ -99,28 +99,7 @@ class LocalSongRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         playControl ??
-            IconButton(
-              tooltip: isPlaying
-                  ? context.l10n.actionPause
-                  : context.l10n.tooltipPlay,
-              onPressed: onPlay,
-              icon: DecoratedBox(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    width: 1.5,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: Icon(
-                    isPlaying ? Icons.pause : Icons.play_arrow,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
+            LocalSongPlayButton(isPlaying: isPlaying, onPressed: onPlay),
         Builder(
           builder: (buttonContext) => IconButton(
             tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
@@ -129,6 +108,37 @@ class LocalSongRow extends StatelessWidget {
           ),
         ),
       ],
+    ),
+  );
+}
+
+/// The outlined circular Play/Pause control of song rows.
+class LocalSongPlayButton extends StatelessWidget {
+  const LocalSongPlayButton({
+    super.key,
+    required this.isPlaying,
+    required this.onPressed,
+  });
+
+  final bool isPlaying;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    tooltip: isPlaying ? context.l10n.actionPause : context.l10n.tooltipPlay,
+    onPressed: onPressed,
+    icon: DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: Icon(isPlaying ? Icons.pause : Icons.play_arrow, size: 20),
+      ),
     ),
   );
 }
