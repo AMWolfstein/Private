@@ -91,6 +91,17 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     _loadTracks();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Go to Album from this page's own songs keeps the page instead of
+    // stacking a copy.
+    DetailPage.mark(
+      context,
+      DetailPage.album(widget.albumName, artistName: widget.artistName),
+    );
+  }
+
   Future<void> _loadTracks() async {
     final loader = widget.loadTracks;
     if (loader == null) return;

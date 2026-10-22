@@ -56,14 +56,16 @@ Future<void> navigateToAlbum(
 
   final first = tracks.first;
   final albumArtist = (first.albumArtist ?? '').trim();
+  final pageArtist = albumArtist.isNotEmpty ? albumArtist : first.artistName;
   pushViaPreferredNavigator(
     context,
     (_) => LocalAlbumScreen(
       albumName: first.albumName,
-      artistName: albumArtist.isNotEmpty ? albumArtist : first.artistName,
+      artistName: pageArtist,
       coverPath: first.coverPath,
       tracks: tracks,
     ),
+    page: DetailPage.album(first.albumName, artistName: pageArtist),
   );
 }
 
@@ -85,10 +87,54 @@ String _preferredAlbumArtist(Track track) {
   return albumArtist.isNotEmpty ? albumArtist : track.artistName;
 }
 
+/// The detail page a route shows, so a link to the page already on top keeps
+/// it instead of stacking a copy.
+class DetailPage {
+  DetailPage.album(String name, {required String artistName})
+    : kind = 'album',
+      id =
+          '${name.trim().toLowerCase()}\u0000'
+          '${artistName.trim().toLowerCase()}';
+
+  final String kind;
+  final String id;
+
+  bool matches(DetailPage other) => kind == other.kind && id == other.id;
+
+  static final _routes = Expando<DetailPage>('detail page');
+
+  /// Records that the route around [context] shows [page].
+  static void mark(BuildContext context, DetailPage page) {
+    final route = ModalRoute.of(context);
+    if (route != null) _routes[route] = page;
+  }
+
+  static bool _isOnTop(NavigatorState navigator, DetailPage page) {
+    Route<dynamic>? top;
+    // Reads the top route without popping anything.
+    navigator.popUntil((route) {
+      top = route;
+      return true;
+    });
+    final shown = top == null ? null : _routes[top!];
+    return shown != null && shown.matches(page);
+  }
+}
+
 /// Pushes detail pages into the active tab navigator when invoked from a root
 /// modal such as Now Playing. The root modal is dismissed first so the album
-/// is immediately visible instead of being hidden behind it.
-void pushViaPreferredNavigator(BuildContext context, WidgetBuilder builder) {
+/// is immediately visible instead of being hidden behind it. A [page] that is
+/// already on top is not pushed again.
+void pushViaPreferredNavigator(
+  BuildContext context,
+  WidgetBuilder builder, {
+  DetailPage? page,
+}) {
+  void push(NavigatorState navigator) {
+    if (page != null && DetailPage._isOnTop(navigator, page)) return;
+    navigator.push(MaterialPageRoute<void>(builder: builder));
+  }
+
   final currentNavigator = Navigator.of(context);
   final rootNavigator = Navigator.of(context, rootNavigator: true);
   final activeTabNavigator = ShellNavigationService.activeTabNavigator();
@@ -97,7 +143,7 @@ void pushViaPreferredNavigator(BuildContext context, WidgetBuilder builder) {
       identical(currentNavigator, rootNavigator) && activeTabNavigator != null;
 
   if (!shouldRouteToTabNavigator) {
-    currentNavigator.push(MaterialPageRoute<void>(builder: builder));
+    push(currentNavigator);
     return;
   }
 
@@ -109,12 +155,12 @@ void pushViaPreferredNavigator(BuildContext context, WidgetBuilder builder) {
     currentNavigator.pop();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!activeTabNavigator.mounted) return;
-      activeTabNavigator.push(MaterialPageRoute<void>(builder: builder));
+      push(activeTabNavigator);
     });
     return;
   }
 
-  activeTabNavigator.push(MaterialPageRoute<void>(builder: builder));
+  push(activeTabNavigator);
 }
 
 void _showUnavailable(BuildContext context, String type) {
