@@ -2917,7 +2917,7 @@ void main() {
         expect(
           find.descendant(
             of: find.byType(MornyeGlassPanel).last,
-            matching: find.byType(BackdropFilter),
+            matching: find.bySubtype<BackdropFilter>(),
           ),
           findsOneWidget,
         );

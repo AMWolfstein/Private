@@ -23,7 +23,8 @@ class MornyeGlassClarity {
   /// Opacity of the surface-colour veil laid over the glass fill.
   final double tint;
 
-  /// Backdrop blur of glass surfaces and of the header backing band.
+  /// Backdrop blur of glass surfaces and of the header backing band; 6 at
+  /// least.
   final double blurSigma;
 
   /// Lens colour split in logical pixels; full glass only.
@@ -45,6 +46,10 @@ class MornyeGlassClarity {
 }
 
 // Level 1 Frosted · 2 Soft · 3 Balanced (default) · 4 Clear · 5 Crystal.
+//
+// Blur never drops below sigma 6: on Impeller a small sigma blurs at a
+// higher resolution and costs more. Clear and Crystal get their transparency
+// from lighter tint and fill instead.
 const kMornyeGlassLevels = <MornyeGlassClarity>[
   MornyeGlassClarity(
     level: 1,
@@ -75,21 +80,21 @@ const kMornyeGlassLevels = <MornyeGlassClarity>[
   ),
   MornyeGlassClarity(
     level: 4,
-    tint: 0.05,
-    blurSigma: 4,
+    tint: 0.04,
+    blurSigma: 6,
     dispersion: 1.0,
-    clearFill: 0.75,
-    menuOpacity: 0.64,
-    barFill: 0.58,
+    clearFill: 0.80,
+    menuOpacity: 0.62,
+    barFill: 0.54,
   ),
   MornyeGlassClarity(
     level: 5,
     tint: 0,
-    blurSigma: 2,
+    blurSigma: 6,
     dispersion: 1.32,
     clearFill: 1,
-    menuOpacity: 0.60,
-    barFill: 0.50,
+    menuOpacity: 0.56,
+    barFill: 0.44,
   ),
 ];
 

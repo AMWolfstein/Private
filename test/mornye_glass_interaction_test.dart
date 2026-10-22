@@ -395,7 +395,7 @@ void main() {
       await gesture.up();
       await tester.pumpAndSettle();
       expect(changes, [true]);
-      expect(find.byType(BackdropFilter), findsNothing);
+      expect(find.bySubtype<BackdropFilter>(), findsNothing);
       expect(find.byType(ImageFiltered), findsNothing);
       expect(tester.takeException(), isNull);
     });
@@ -442,7 +442,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byType(MornyeGlassPanel),
-        matching: find.byType(BackdropFilter),
+        matching: find.bySubtype<BackdropFilter>(),
       ),
       findsOneWidget,
     );

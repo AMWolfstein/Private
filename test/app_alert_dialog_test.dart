@@ -53,7 +53,7 @@ void main() {
             await tester.pump(Duration(milliseconds: elapsed));
             final blur = find.descendant(
               of: find.byType(AppAlertDialog),
-              matching: find.byType(BackdropFilter),
+              matching: find.bySubtype<BackdropFilter>(),
             );
             expect(blur, findsOneWidget);
             // An opacity layer isolates the filter from the underlying page

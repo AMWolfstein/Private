@@ -88,6 +88,13 @@ class AppSettings {
   /// Floating frame-timing overlay (a developer option).
   final bool performanceHudEnabled;
 
+  /// Developer A/B switch: no backdrop sampling for the bottom bar's palette.
+  final bool barSamplerDisabled;
+
+  /// Developer A/B switch: the header backing band keeps its tint but drops
+  /// its backdrop blur.
+  final bool headerBandBlurDisabled;
+
   /// Mornye glass renderer: `auto` (the device decides), `lite`, `full` or
   /// `off`. See [MornyeGlassQuality].
   final String glassQuality;
@@ -152,6 +159,8 @@ class AppSettings {
     this.heroAnimationsEnabled = true,
     this.developerOptionsUnlocked = false,
     this.performanceHudEnabled = false,
+    this.barSamplerDisabled = false,
+    this.headerBandBlurDisabled = false,
     this.glassQuality = 'auto',
     this.glassClarityLevel = kDefaultGlassClarityLevel,
     this.locale = 'system',
@@ -205,6 +214,8 @@ class AppSettings {
     bool? heroAnimationsEnabled,
     bool? developerOptionsUnlocked,
     bool? performanceHudEnabled,
+    bool? barSamplerDisabled,
+    bool? headerBandBlurDisabled,
     String? glassQuality,
     int? glassClarityLevel,
     String? locale,
@@ -267,6 +278,9 @@ class AppSettings {
           developerOptionsUnlocked ?? this.developerOptionsUnlocked,
       performanceHudEnabled:
           performanceHudEnabled ?? this.performanceHudEnabled,
+      barSamplerDisabled: barSamplerDisabled ?? this.barSamplerDisabled,
+      headerBandBlurDisabled:
+          headerBandBlurDisabled ?? this.headerBandBlurDisabled,
       glassQuality: glassQuality ?? this.glassQuality,
       glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
       locale: locale ?? this.locale,

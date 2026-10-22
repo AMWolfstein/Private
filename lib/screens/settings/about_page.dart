@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/constants/app_info.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
@@ -39,6 +40,8 @@ class _AboutPageState extends ConsumerState<AboutPage> {
         (s) => (
           unlocked: s.developerOptionsUnlocked,
           hud: s.performanceHudEnabled,
+          sampler: !s.barSamplerDisabled,
+          bandBlur: !s.headerBandBlurDisabled,
         ),
       ),
     );
@@ -99,6 +102,36 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                       onChanged: ref
                           .read(settingsProvider.notifier)
                           .setPerformanceHudEnabled,
+                    ),
+                    // A/B switches for measuring glass costs on their own.
+                    SettingsSwitchItem(
+                      key: const ValueKey('developer-bar-sampler'),
+                      icon: Icons.contrast,
+                      title: context.l10n.aboutBarSampler,
+                      subtitle: context.l10n.aboutBarSamplerSubtitle,
+                      value: developer.sampler,
+                      onChanged: (on) => ref
+                          .read(settingsProvider.notifier)
+                          .setBarSamplerDisabled(!on),
+                    ),
+                    SettingsSwitchItem(
+                      key: const ValueKey('developer-header-band-blur'),
+                      icon: Icons.blur_on,
+                      title: context.l10n.aboutHeaderBandBlur,
+                      subtitle: context.l10n.aboutHeaderBandBlurSubtitle,
+                      value: developer.bandBlur,
+                      onChanged: (on) => ref
+                          .read(settingsProvider.notifier)
+                          .setHeaderBandBlurDisabled(!on),
+                    ),
+                    _AboutSettingsItem(
+                      key: const ValueKey('developer-remeasure-glass'),
+                      icon: Icons.refresh,
+                      title: context.l10n.aboutRemeasureGlass,
+                      subtitle: context.l10n.aboutRemeasureGlassSubtitle,
+                      onTap: ref
+                          .read(mornyeGlassAutoResultProvider.notifier)
+                          .clear,
                     ),
                     _AboutSettingsItem(
                       icon: Icons.visibility_off_outlined,

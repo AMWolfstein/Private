@@ -359,7 +359,7 @@ void main() {
       final theme = MornyeTheme.build(Brightness.dark);
       expect(pixels.single, theme.colorScheme.surfaceContainerHigh);
       expect(
-        find.descendant(of: menu, matching: find.byType(BackdropFilter)),
+        find.descendant(of: menu, matching: find.bySubtype<BackdropFilter>()),
         findsNothing,
       );
       await tester.tap(find.text('Share'));
@@ -379,7 +379,7 @@ void main() {
       onResult: (_) {},
     );
     final menu = find.byType(MornyeContextMenu);
-    expect(find.byType(BackdropFilter), findsWidgets);
+    expect(find.bySubtype<BackdropFilter>(), findsWidgets);
     expect(MediaQuery.highContrastOf(tester.element(menu)), isTrue);
     await tester.tap(find.text('Share'));
     await tester.pumpAndSettle();

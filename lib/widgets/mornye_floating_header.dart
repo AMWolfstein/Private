@@ -6,6 +6,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
 import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
 /// How a pinned header floats over its page.
@@ -76,6 +77,7 @@ class MornyeHeaderBacking extends ConsumerWidget {
   final Color? color;
 
   static const _duration = Duration(milliseconds: 180);
+  static const _sigmaNudge = 0.01;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,9 +89,11 @@ class MornyeHeaderBacking extends ConsumerWidget {
             .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()
             ?.isScrolledUnder ??
         false;
-    final sigma = mornyeGlassClarity(
-      ref.watch(mornyeGlassClarityLevelProvider),
-    ).blurSigma;
+    final sigma = ref.watch(mornyeHeaderBandBlurDisabledProvider)
+        ? 0.0
+        : mornyeGlassClarity(
+            ref.watch(mornyeGlassClarityLevelProvider),
+          ).blurSigma;
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;
     return TweenAnimationBuilder<double>(
       tween: Tween(end: shown ? 1 : 0),
@@ -100,17 +104,39 @@ class MornyeHeaderBacking extends ConsumerWidget {
         if (amount == 0) return const SizedBox.shrink();
         // Hold the tint across the toolbar and feather only its last third.
         // Opacity would isolate the blur from the page, so fade by value.
-        return LiquidGlassScrollEdge(
-          key: const ValueKey('mornye-header-backing'),
-          edge: LiquidGlassEdge.top,
-          color: base.withValues(alpha: 0.72 * amount),
-          blur: sigma * amount,
-          curve: const Interval(0.68, 1, curve: Curves.easeIn),
-          blurCurve: const Interval(0.68, 1, curve: Curves.easeIn),
+        // The band shares the bottom bar's read. Its sigma is nudged off the
+        // bar's: the engine draws identical filters of one key once, which
+        // would cost the band its feathering.
+        return MornyeBackdropGroupMember(
+          group: MornyeBackdropGroup.surface,
+          child: LiquidGlassScrollEdge(
+            key: const ValueKey('mornye-header-backing'),
+            edge: LiquidGlassEdge.top,
+            color: base.withValues(alpha: 0.72 * amount),
+            blur: sigma == 0 ? 0 : sigma * amount + _sigmaNudge,
+            curve: const Interval(0.68, 1, curve: Curves.easeIn),
+            blurCurve: const Interval(0.68, 1, curve: Curves.easeIn),
+          ),
         );
       },
     );
   }
+}
+
+/// Toolbar controls (the leading circle, the actions) share one backdrop read
+/// with the bottom bar's side buttons. They float over the backing band, so
+/// never the band's read. Glass inside page content must not join: it paints
+/// before the content below it, which the group could then no longer see.
+class MornyeHeaderControls extends StatelessWidget {
+  const MornyeHeaderControls({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => MornyeBackdropGroupMember(
+    group: MornyeBackdropGroup.controls,
+    child: child,
+  );
 }
 
 /// A glass circle around a header [IconButton], matching HeaderCircleButton.
@@ -124,10 +150,12 @@ class MornyeHeaderCircle extends ConsumerWidget {
     if (mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque) {
       return child;
     }
-    return Center(
-      widthFactor: 1,
-      child: _HeaderGlass(
-        child: SizedBox.square(dimension: 44, child: Center(child: child)),
+    return MornyeHeaderControls(
+      child: Center(
+        widthFactor: 1,
+        child: _HeaderGlass(
+          child: SizedBox.square(dimension: 44, child: Center(child: child)),
+        ),
       ),
     );
   }
@@ -164,7 +192,9 @@ class MornyeHeaderActions extends ConsumerWidget {
       children.add(action);
     }
     flush();
-    return Row(mainAxisSize: MainAxisSize.min, children: children);
+    return MornyeHeaderControls(
+      child: Row(mainAxisSize: MainAxisSize.min, children: children),
+    );
   }
 }
 

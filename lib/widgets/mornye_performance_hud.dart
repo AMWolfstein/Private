@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
+import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 
 /// Build and raster statistics over a window of frames.
 @immutable
@@ -104,6 +109,10 @@ class MornyePerformanceHudHost extends ConsumerWidget {
 }
 
 /// A small floating overlay with rolling frame-timing statistics.
+///
+/// It starts at the top left, away from the Home avatar, and moves by its
+/// title row. The statistics pass touches through to the app; minimized it
+/// is a pill that keeps collecting.
 class MornyePerformanceHud extends ConsumerStatefulWidget {
   const MornyePerformanceHud({super.key});
 
@@ -113,6 +122,16 @@ class MornyePerformanceHud extends ConsumerStatefulWidget {
   /// Timings callbacks currently registered by HUDs; tests read it.
   @visibleForTesting
   static int debugRegisteredCallbacks = 0;
+
+  // Kept across toggles, so the HUD returns where it was left.
+  static Offset? _position;
+  static bool _minimized = false;
+
+  @visibleForTesting
+  static void debugResetPlacement() {
+    _position = null;
+    _minimized = false;
+  }
 
   @override
   ConsumerState<MornyePerformanceHud> createState() =>
@@ -164,11 +183,48 @@ class _MornyePerformanceHudState extends ConsumerState<MornyePerformanceHud> {
     _unshown = 0;
   });
 
-  String _glass() {
+  /// Backdrop reads in the last composited frame, over every view.
+  int _reads() {
+    var reads = 0;
+    for (final view in RendererBinding.instance.renderViews) {
+      // ignore: invalid_use_of_protected_member
+      reads += mornyeCountBackdropReads(view.layer).total;
+    }
+    return reads;
+  }
+
+  String _glass(BuildContext context) {
     final quality = ref.read(mornyeGlassQualityProvider);
     final level = ref.read(mornyeGlassLevelProvider);
     final clarity = ref.read(mornyeGlassClarityLevelProvider);
-    return 'quality=${quality.name}(${level.name}) level=$clarity';
+    final renderer = quality == MornyeGlassQuality.auto
+        ? '${level.name}, ${ref.read(mornyeGlassAutoStatusProvider(MediaQuery.highContrastOf(context))).name}'
+        : level.name;
+    final sampler = ref.read(mornyeBarSamplerDisabledProvider)
+        ? 'off'
+        : mornyeLiquidChromeEnabled(context, ref)
+        ? 'on'
+        : 'n/a';
+    final band = ref.read(mornyeHeaderBandBlurDisabledProvider) ? 'off' : 'on';
+    return 'quality=${quality.name}($renderer) level=$clarity '
+        'reads=${_reads()} sampler=$sampler bandblur=$band';
+  }
+
+  void _move(Offset delta) => setState(() {
+    MornyePerformanceHud._position =
+        (MornyePerformanceHud._position ?? _defaultPosition) + delta;
+  });
+
+  Offset get _defaultPosition =>
+      Offset(8, MediaQuery.paddingOf(context).top + 4);
+
+  /// Keeps at least the title row on screen.
+  Offset _clamped(Offset position) {
+    final screen = MediaQuery.sizeOf(context);
+    return Offset(
+      position.dx.clamp(0, math.max(0, screen.width - 48)),
+      position.dy.clamp(0, math.max(0, screen.height - 36)),
+    );
   }
 
   @override
@@ -177,13 +233,17 @@ class _MornyePerformanceHudState extends ConsumerState<MornyePerformanceHud> {
     ref.watch(mornyeGlassQualityProvider);
     ref.watch(mornyeGlassLevelProvider);
     ref.watch(mornyeGlassClarityLevelProvider);
+    ref.watch(mornyeGlassAutoResultProvider);
+    final samplerOff = ref.watch(mornyeBarSamplerDisabledProvider);
+    final bandBlurOff = ref.watch(mornyeHeaderBandBlurDisabledProvider);
     final refreshRate = View.of(context).display.refreshRate;
     final stats = MornyeFrameStats.from(
       buildMs: _build,
       rasterMs: _raster,
       refreshRate: refreshRate > 0 ? refreshRate : 60,
     );
-    final glass = _glass();
+    final glass = _glass(context);
+    final settings = ref.read(settingsProvider.notifier);
     const style = TextStyle(
       color: Colors.white,
       fontSize: 11,
@@ -191,59 +251,173 @@ class _MornyePerformanceHudState extends ConsumerState<MornyePerformanceHud> {
       fontFamily: 'monospace',
       fontFeatures: [FontFeature.tabularFigures()],
     );
-    return Positioned(
-      top: MediaQuery.paddingOf(context).top + 4,
-      right: 8,
-      child: RepaintBoundary(
-        child: Material(
-          type: MaterialType.transparency,
-          child: DecoratedBox(
-            key: const ValueKey('mornye-performance-hud'),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.72),
-              borderRadius: BorderRadius.circular(10),
+    final buttonStyle = TextButton.styleFrom(
+      foregroundColor: Colors.white,
+      minimumSize: const Size(48, 36),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      textStyle: const TextStyle(fontSize: 12),
+    );
+    final position = _clamped(
+      MornyePerformanceHud._position ?? _defaultPosition,
+    );
+    final minimized = MornyePerformanceHud._minimized;
+    final Widget body = minimized
+        ? Semantics(
+            button: true,
+            label: 'Expand performance HUD',
+            child: GestureDetector(
+              key: const ValueKey('mornye-performance-hud-pill'),
+              behavior: HitTestBehavior.opaque,
+              onTap: () =>
+                  setState(() => MornyePerformanceHud._minimized = false),
+              // The tap competes for the pointer; keep the slop in the move.
+              dragStartBehavior: DragStartBehavior.down,
+              onPanUpdate: (details) => _move(details.delta),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 36, minWidth: 48),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 9,
+                  ),
+                  child: Text(
+                    'R ${stats.raster.average.toStringAsFixed(1)} · '
+                    'J ${stats.jankPercent.toStringAsFixed(0)}%',
+                    style: style,
+                  ),
+                ),
+              ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 6, 4, 4),
-              child: DefaultTextStyle(
-                style: style,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(glass),
-                    Text(
-                      '${stats.frames} frames @ ${stats.refreshRate.round()} Hz',
-                    ),
-                    Text('build  ${stats.build.format()} ms'),
-                    Text('raster ${stats.raster.format()} ms'),
-                    Text('jank   ${stats.jankPercent.toStringAsFixed(1)}%'),
-                    Row(
+          )
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 4, 4),
+            child: DefaultTextStyle(
+              style: style,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // The handle: drag to move, the button minimizes.
+                  GestureDetector(
+                    key: const ValueKey('mornye-performance-hud-handle'),
+                    behavior: HitTestBehavior.opaque,
+                    onPanUpdate: (details) => _move(details.delta),
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextButton(
-                          onPressed: _reset,
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(48, 36),
-                          ),
-                          child: const Text('Reset'),
+                        const Icon(
+                          Icons.drag_indicator,
+                          size: 16,
+                          color: Colors.white70,
                         ),
-                        TextButton(
-                          onPressed: () => Clipboard.setData(
-                            ClipboardData(text: stats.summary(glass: glass)),
+                        const SizedBox(width: 4),
+                        const Text('HUD'),
+                        const SizedBox(width: 24),
+                        // Above the Navigator there is no Overlay for a
+                        // tooltip; the label carries the name instead.
+                        Semantics(
+                          label: 'Minimize performance HUD',
+                          child: IconButton(
+                            key: const ValueKey(
+                              'mornye-performance-hud-minimize',
+                            ),
+                            onPressed: () => setState(
+                              () => MornyePerformanceHud._minimized = true,
+                            ),
+                            color: Colors.white,
+                            iconSize: 18,
+                            constraints: const BoxConstraints.tightFor(
+                              width: 40,
+                              height: 36,
+                            ),
+                            icon: const Icon(Icons.remove),
                           ),
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(48, 36),
-                          ),
-                          child: const Text('Copy'),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  // Statistics never take touches from the app beneath.
+                  IgnorePointer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(glass),
+                        Text(
+                          '${stats.frames} frames @ '
+                          '${stats.refreshRate.round()} Hz',
+                        ),
+                        Text('build  ${stats.build.format()} ms'),
+                        Text('raster ${stats.raster.format()} ms'),
+                        Text('jank   ${stats.jankPercent.toStringAsFixed(1)}%'),
+                      ],
+                    ),
+                  ),
+                  Wrap(
+                    children: [
+                      TextButton(
+                        key: const ValueKey('mornye-performance-hud-sampler'),
+                        onPressed: () =>
+                            settings.setBarSamplerDisabled(!samplerOff),
+                        style: buttonStyle,
+                        child: Text(
+                          samplerOff ? 'Sampler: off' : 'Sampler: on',
+                        ),
+                      ),
+                      TextButton(
+                        key: const ValueKey('mornye-performance-hud-band'),
+                        onPressed: () =>
+                            settings.setHeaderBandBlurDisabled(!bandBlurOff),
+                        style: buttonStyle,
+                        child: Text(
+                          bandBlurOff ? 'Band blur: off' : 'Band blur: on',
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _reset,
+                        style: buttonStyle,
+                        child: const Text('Reset'),
+                      ),
+                      TextButton(
+                        onPressed: () => Clipboard.setData(
+                          ClipboardData(text: stats.summary(glass: glass)),
+                        ),
+                        style: buttonStyle,
+                        child: const Text('Copy'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
+          );
+    return Positioned(
+      left: position.dx,
+      top: position.dy,
+      child: RepaintBoundary(
+        child: Material(
+          type: MaterialType.transparency,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            // A decoration takes the hits inside its shape; behind the body
+            // it lets the statistics pass taps through to the app.
+            child: Stack(
+              key: const ValueKey('mornye-performance-hud'),
+              children: [
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.72),
+                        borderRadius: BorderRadius.circular(
+                          minimized ? 18 : 10,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                body,
+              ],
             ),
           ),
         ),

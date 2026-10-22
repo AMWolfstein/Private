@@ -7,6 +7,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_selection_pill.dart';
 import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_liquid_backdrop.dart';
 import 'package:spotiflac_android/widgets/mornye_squircle_border.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
@@ -149,7 +150,8 @@ class MornyeGlassPanel extends ConsumerWidget {
 }
 
 /// Bounded glass: Impeller lenses refract a blurred backdrop, while frosted
-/// surfaces share ordinary blur passes. Foreground content stays above glass.
+/// surfaces are blur passes. Either joins the enclosing chrome group or
+/// batch, so its read is shared. Foreground content stays above glass.
 class MornyeGlass extends ConsumerWidget {
   const MornyeGlass({
     super.key,
@@ -350,8 +352,10 @@ class MornyeGlass extends ConsumerWidget {
             child: surface,
           )
         : sampleBackdrop
-        ? BackdropFilter.grouped(
+        ? MornyeBackdropBlur(
             filter: _blurs[clarity.level - 1],
+            // Shares the read of the enclosing chrome group or batch.
+            backdropId: LiquidGlassBatch.backdropIdOf(context),
             child: liteRim
                 ? LiquidGlassLite(
                     shape: mornyeGlassShape(

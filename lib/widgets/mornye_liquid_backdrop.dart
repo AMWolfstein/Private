@@ -1,9 +1,11 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 
 /// A bounded package lens without a captured-screen view or a touch ticker.
 class MornyeLiquidBackdrop extends ConsumerWidget {
@@ -50,7 +52,7 @@ class MornyeLiquidBackdrop extends ConsumerWidget {
         5 /
         70;
     final index = 1 / math.sqrt(1 - math.pow(edgeBend.clamp(0, 0.95), 2));
-    return LiquidGlassLens(
+    final lens = LiquidGlassLens(
       style: LiquidGlassStyle(
         shape: mornyeGlassShape(
           radius: borderRadius.topLeft.x,
@@ -72,6 +74,14 @@ class MornyeLiquidBackdrop extends ConsumerWidget {
         dispersion: dispersion * effect,
       ),
       child: child,
+    );
+    // The lens's shader layer is private; the marker lets the performance
+    // HUD count its read. A batched lens takes the batch's key.
+    return MornyeBackdropReadMarker(
+      backdropId: ui.ImageFilter.isShaderFilterSupported
+          ? LiquidGlassBatch.backdropIdOf(context)
+          : null,
+      child: lens,
     );
   }
 }

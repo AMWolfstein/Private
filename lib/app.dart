@@ -13,6 +13,7 @@ import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/l10n/supported_locales.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:spotiflac_android/widgets/mornye_glass_auto_probe_host.dart';
 import 'package:spotiflac_android/widgets/mornye_performance_hud.dart';
 import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_glass_preparation.dart';
@@ -215,11 +216,13 @@ class SpotiFLACApp extends ConsumerWidget {
               // never encounters it while collecting heroes. Removing the
               // inherited controller disables flights on the root Navigator.
               child: MornyeGlassPreparation(
-                child: MornyePerformanceHudHost(
-                  child: AdaptiveUiScaler(
-                    child: heroAnimationsEnabled
-                        ? appContent
-                        : HeroControllerScope.none(child: appContent),
+                child: MornyeGlassAutoProbeHost(
+                  child: MornyePerformanceHudHost(
+                    child: AdaptiveUiScaler(
+                      child: heroAnimationsEnabled
+                          ? appContent
+                          : HeroControllerScope.none(child: appContent),
+                    ),
                   ),
                 ),
               ),

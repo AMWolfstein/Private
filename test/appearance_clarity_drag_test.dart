@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
+import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
@@ -48,8 +50,9 @@ void main() {
   });
 
   Future<(ProviderContainer, SharedPreferences)> open(
-    WidgetTester tester,
-  ) async {
+    WidgetTester tester, {
+    MornyeGlassAutoResult? autoResult,
+  }) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     tester.view.physicalSize = const Size(390, 1000);
@@ -62,6 +65,7 @@ void main() {
             loadBootstrapThemeSettings(prefs),
           ),
           settingsProvider.overrideWith(_CountingSettings.new),
+          initialGlassAutoResultProvider.overrideWithValue(autoResult),
         ],
         child: MornyeThemeWrapper(
           builder: (light, dark, mode) => MaterialApp(
@@ -160,5 +164,62 @@ void main() {
     expect(tester.widget<Slider>(slider).value, 1);
     expect(tester.widget<Slider>(slider).label, 'Frosted');
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a measured Auto step is explained; Level 1 locks the slider', (
+    tester,
+  ) async {
+    final (container, _) = await open(
+      tester,
+      autoResult: const MornyeGlassAutoResult(
+        build: 'b',
+        step: MornyeGlassAutoStep.liteFrosted,
+        done: true,
+      ),
+    );
+    expect(
+      find.text('Measured on this device: Auto uses Lite · Frosted.'),
+      findsOneWidget,
+    );
+    final widget = tester.widget<Slider>(slider);
+    // The saved level stays visible; glass renders at Level 1.
+    expect(widget.value, 3);
+    expect(widget.onChanged, isNull);
+    expect(container.read(mornyeGlassClarityLevelProvider), 1);
+    expect(
+      find.text(
+        'Auto measured this device and uses Frosted. Choose Lite or Full to '
+        'set clarity.',
+      ),
+      findsOneWidget,
+    );
+
+    // An explicit choice restores the slider and drops the note.
+    container
+        .read(settingsProvider.notifier)
+        .setGlassQuality(MornyeGlassQuality.lite);
+    await tester.pump();
+    expect(tester.widget<Slider>(slider).onChanged, isNotNull);
+    expect(container.read(mornyeGlassClarityLevelProvider), 3);
+    expect(
+      find.byKey(const ValueKey('mornye-glass-auto-measured')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('a measured lite step keeps the slider', (tester) async {
+    await open(
+      tester,
+      autoResult: const MornyeGlassAutoResult(
+        build: 'b',
+        step: MornyeGlassAutoStep.lite,
+        done: true,
+      ),
+    );
+    expect(
+      find.text('Measured on this device: Auto uses Lite.'),
+      findsOneWidget,
+    );
+    expect(tester.widget<Slider>(slider).onChanged, isNotNull);
   });
 }

@@ -174,15 +174,17 @@ class AlbumDetailHeader extends StatelessWidget {
               leadingWidth: kToolbarHeight + edgeInset,
               leading: Padding(
                 padding: EdgeInsetsDirectional.only(start: edgeInset),
-                child:
-                    leading ??
-                    HeaderCircleButton(
-                      icon: CupertinoIcons.chevron_back,
-                      tooltip: MaterialLocalizations.of(
-                        context,
-                      ).backButtonTooltip,
-                      onPressed: () => Navigator.pop(context),
-                    ),
+                child: MornyeHeaderControls(
+                  child:
+                      leading ??
+                      HeaderCircleButton(
+                        icon: CupertinoIcons.chevron_back,
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                ),
               ),
               actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),
               actions: appBarActions == null

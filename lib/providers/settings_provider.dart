@@ -503,14 +503,27 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void setDeveloperOptionsUnlocked(bool unlocked) {
     state = state.copyWith(
       developerOptionsUnlocked: unlocked,
-      // Hiding the options also removes the overlay they control.
+      // Hiding the options also removes the overlay and A/B switches they
+      // control.
       performanceHudEnabled: unlocked && state.performanceHudEnabled,
+      barSamplerDisabled: unlocked && state.barSamplerDisabled,
+      headerBandBlurDisabled: unlocked && state.headerBandBlurDisabled,
     );
     _saveSettings();
   }
 
   void setPerformanceHudEnabled(bool enabled) {
     state = state.copyWith(performanceHudEnabled: enabled);
+    _saveSettings();
+  }
+
+  void setBarSamplerDisabled(bool disabled) {
+    state = state.copyWith(barSamplerDisabled: disabled);
+    _saveSettings();
+  }
+
+  void setHeaderBandBlurDisabled(bool disabled) {
+    state = state.copyWith(headerBandBlurDisabled: disabled);
     _saveSettings();
   }
 

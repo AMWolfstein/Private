@@ -17,6 +17,7 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/music_player_runtime.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_liquid_backdrop.dart';
@@ -124,7 +125,8 @@ void main() {
 
       // Profile builds need the retained layer, since debugLayer is debug-only.
       // ignore: invalid_use_of_protected_member
-      visit(tester.binding.renderViews.first.layer!);
+      final root = tester.binding.renderViews.first.layer!;
+      visit(root);
       poses[name] = {
         ...details,
         'collapseProgress': fold().value,
@@ -132,6 +134,8 @@ void main() {
         'shaderBackdrops': histogram['_ImpellerShaderBackdropLayer'] ?? 0,
         'stockBlurLayers': histogram['BackdropFilterLayer'] ?? 0,
         'batchBlurLayers': histogram['LiquidGlassBatchBackdropLayer'] ?? 0,
+        'mornyeBlurLayers': histogram['MornyeBackdropLayer'] ?? 0,
+        'backdropReads': mornyeCountBackdropReads(root).total,
         'attachedLayerTypes': histogram,
       };
       await tester.runAsync(() => binding.takeScreenshot(name));

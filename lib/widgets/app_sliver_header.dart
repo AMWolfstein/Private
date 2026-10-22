@@ -74,14 +74,17 @@ class AppSliverHeader extends ConsumerWidget {
               padding: EdgeInsetsDirectional.only(start: edgeInset),
               child: leading is IconButton
                   ? MornyeHeaderCircle(child: leading)
-                  : leading ??
-                        HeaderCircleButton(
-                          icon: CupertinoIcons.chevron_back,
-                          tooltip: MaterialLocalizations.of(
-                            context,
-                          ).backButtonTooltip,
-                          onPressed: () => Navigator.pop(context),
-                        ),
+                  : MornyeHeaderControls(
+                      child:
+                          leading ??
+                          HeaderCircleButton(
+                            icon: CupertinoIcons.chevron_back,
+                            tooltip: MaterialLocalizations.of(
+                              context,
+                            ).backButtonTooltip,
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                    ),
             )
           : null,
       actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),

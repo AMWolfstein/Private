@@ -8,6 +8,7 @@ import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
 /// Deliberate vertical drags minimize the chrome until the page returns to its
@@ -153,15 +154,21 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
     // These contents do not depend on animation progress. Retain their widget
     // instances so folding only updates geometry and foreground opacity. A
     // backdrop inside a fading layer loses access to the page behind the bar.
-    Widget sideSurface() => ScaleTransition(
-      scale: _collapse,
-      child: RepaintBoundary(
-        child: MornyeGlass.navigation(
-          blurEnabled: blurEnabled,
-          strongTint: true,
-          tintOpacity: MornyeTheme.navigationOpacity(context),
-          radius: 26,
-          child: const SizedBox.expand(),
+    // The side buttons cross the tabs while folding, so they share the
+    // header controls' read rather than the tabs'.
+    Widget sideSurface() => MornyeBackdropGroupMember(
+      group: MornyeBackdropGroup.controls,
+      followRoute: false,
+      child: ScaleTransition(
+        scale: _collapse,
+        child: RepaintBoundary(
+          child: MornyeGlass.navigation(
+            blurEnabled: blurEnabled,
+            strongTint: true,
+            tintOpacity: MornyeTheme.navigationOpacity(context),
+            radius: 26,
+            child: const SizedBox.expand(),
+          ),
         ),
       ),
     );
@@ -296,10 +303,14 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
               clipBehavior: Clip.none,
               children: [
                 // Only the non-overlapping player and tab surfaces share a
-                // backdrop. Moving side capsules stay outside this group: they
-                // cross the tab bar while folding and need separate samples.
+                // backdrop, with the header band (the shell's surface group;
+                // this batch stands in outside the shell). The moving side
+                // capsules cross the tab bar while folding and use the
+                // controls group instead.
                 LiquidGlassBatch(
-                  child: BackdropGroup(
+                  child: MornyeBackdropGroupMember(
+                    group: MornyeBackdropGroup.surface,
+                    followRoute: false,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

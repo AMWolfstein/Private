@@ -7,6 +7,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
 import 'package:spotiflac_android/models/mornye_glass.dart';
+import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
@@ -177,7 +178,10 @@ class _MornyeGlassClaritySliderState
 
   @override
   Widget build(BuildContext context) {
-    final int level = _dragLevel ?? ref.watch(mornyeGlassClarityLevelProvider);
+    // The saved level; glass may render lower where Auto measured it.
+    final int level =
+        _dragLevel ??
+        ref.watch(settingsProvider.select((s) => s.glassClarityLevel));
     final notifier = ref.read(settingsProvider.notifier);
     final theme = Theme.of(context);
     final l10n = context.l10n;
@@ -185,8 +189,17 @@ class _MornyeGlassClaritySliderState
     final contrastBlocked = ref.watch(
       mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
-    final adjustable = !contrastBlocked && ref.watch(mornyeBlurEnabledProvider);
     final quality = ref.watch(mornyeGlassQualityProvider);
+    // Auto measured that this device needs Level 1.
+    final autoFrosted =
+        quality == MornyeGlassQuality.auto &&
+        ref.watch(mornyeGlassClarityLevelProvider) == 1 &&
+        ref.watch(mornyeGlassAutoStepProvider) ==
+            MornyeGlassAutoStep.liteFrosted;
+    final adjustable =
+        !contrastBlocked &&
+        ref.watch(mornyeBlurEnabledProvider) &&
+        !autoFrosted;
     final levelNames = [
       l10n.appearanceGlassLevelFrosted,
       l10n.appearanceGlassLevelSoft,
@@ -210,6 +223,8 @@ class _MornyeGlassClaritySliderState
             Text(
               contrastBlocked
                   ? l10n.appearanceGlassClarityContrast
+                  : autoFrosted
+                  ? l10n.appearanceGlassClarityAutoFrosted
                   : quality == MornyeGlassQuality.off
                   ? l10n.appearanceGlassClarityOff
                   : l10n.appearanceGlassClarityDeviceOpaque,
@@ -329,16 +344,31 @@ class _MornyeGlassClaritySliderState
 }
 
 /// Auto / Lite / Full / Off, in the same control as System / Light / Dark.
-class _GlassQualitySelector extends StatelessWidget {
+class _GlassQualitySelector extends ConsumerWidget {
   const _GlassQualitySelector({required this.current, required this.onChanged});
 
   final MornyeGlassQuality current;
   final ValueChanged<MornyeGlassQuality> onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final measured =
+        ref.watch(
+          mornyeGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
+        ) ==
+        MornyeGlassAutoStatus.measured;
+    final measuredQuality = switch (ref.watch(mornyeGlassAutoStepProvider)) {
+      MornyeGlassAutoStep.full =>
+        ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid
+            ? l10n.appearanceGlassQualityFull
+            : l10n.appearanceGlassQualityLite,
+      MornyeGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
+      MornyeGlassAutoStep.liteFrosted =>
+        '${l10n.appearanceGlassQualityLite} · '
+            '${l10n.appearanceGlassLevelFrosted}',
+    };
     final labels = {
       MornyeGlassQuality.auto: l10n.appearanceGlassQualityAuto,
       MornyeGlassQuality.lite: l10n.appearanceGlassQualityLite,
@@ -367,6 +397,14 @@ class _GlassQualitySelector extends StatelessWidget {
               selectedIndex: labels.keys.toList().indexOf(current),
               onChanged: (index) => onChanged(labels.keys.elementAt(index)),
             ),
+            if (measured)
+              Text(
+                l10n.appearanceGlassAutoMeasured(measuredQuality),
+                key: const ValueKey('mornye-glass-auto-measured'),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
           ],
         ),
       ),

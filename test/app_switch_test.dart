@@ -78,7 +78,7 @@ void main() {
     );
     final node = tester.getSemantics(find.bySemanticsLabel('Disabled setting'));
     expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isFalse);
-    expect(find.byType(BackdropFilter), findsNothing);
+    expect(find.bySubtype<BackdropFilter>(), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -114,7 +114,7 @@ void main() {
                 );
         },
       );
-      expect(find.byType(BackdropFilter), findsNothing);
+      expect(find.bySubtype<BackdropFilter>(), findsNothing);
       await tester.tap(find.text('Example setting'));
       await tester.pumpAndSettle();
       expect(changes, [true]);

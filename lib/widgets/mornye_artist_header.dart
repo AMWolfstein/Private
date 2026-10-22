@@ -241,10 +241,12 @@ class MornyeArtistHeader extends StatelessWidget {
     leadingWidth: 64,
     leading: Padding(
       padding: const EdgeInsetsDirectional.only(start: 12),
-      child: HeaderCircleButton(
-        icon: Icons.arrow_back,
-        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-        onPressed: () => Navigator.pop(context),
+      child: MornyeHeaderControls(
+        child: HeaderCircleButton(
+          icon: Icons.arrow_back,
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
     ),
     title: AnimatedOpacity(

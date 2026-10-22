@@ -55,6 +55,8 @@
   "appearanceGlassClarityOff": "الزجاج متوقف. اختر تلقائي أو خفيف أو كامل لضبط الصفاء.",
   "appearanceGlassClarityDeviceOpaque": "الزجاج معتم على هذا الجهاز. اختر خفيف أو كامل لضبط الصفاء.",
   "appearanceGlassClarityContrast": "يطلب نظامك تباينًا أعلى، لذا يبقى الزجاج معتمًا. اختر خفيف أو كامل لاستخدام الزجاج على أي حال؛ يبقى تباين النص محفوظًا.",
+  "appearanceGlassAutoMeasured": "بعد القياس على هذا الجهاز، يستخدم الوضع التلقائي {quality}.",
+  "appearanceGlassClarityAutoFrosted": "قاس الوضع التلقائي هذا الجهاز ويستخدم مُثلَّج. اختر خفيف أو كامل لضبط الصفاء.",
   "appearanceUseSystemFont": "Use system font",
   "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
   "@@locale": "ar",
@@ -213,6 +215,12 @@
   "aboutPerformanceHud": "مؤشر الأداء",
   "aboutPerformanceHudSubtitle": "عرض توقيتات بناء الإطارات ورسمها فوق كل شاشة.",
   "aboutHideDeveloperOptions": "إخفاء خيارات المطور",
+  "aboutBarSampler": "تتبُّع الشريط السفلي للخلفية",
+  "aboutBarSamplerSubtitle": "يجعل الشريط السفلي يتبع سطوع الصفحة خلفه. أوقفه لقياس تكلفته.",
+  "aboutHeaderBandBlur": "تمويه شريط الترويسة",
+  "aboutHeaderBandBlurSubtitle": "يموّه الشريط خلف الترويسات عند التمرير. أوقفه لقياس تكلفته؛ يبقى اللون.",
+  "aboutRemeasureGlass": "إعادة قياس الزجاج التلقائي",
+  "aboutRemeasureGlassSubtitle": "يقيس الوضع التلقائي توقيتات الإطارات من جديد ويختار كامل أو خفيف أو خفيف مُثلَّج.",
   "@aboutVersion": {
     "description": "Version info label"
   },

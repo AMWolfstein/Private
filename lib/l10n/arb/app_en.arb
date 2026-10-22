@@ -106,6 +106,17 @@
   "@appearanceGlassClarityContrast": {
     "description": "Explains the system contrast request (which can include medium contrast) and that an explicit glass quality overrides it"
   },
+  "appearanceGlassAutoMeasured": "Measured on this device: Auto uses {quality}.",
+  "@appearanceGlassAutoMeasured": {
+    "description": "Shown under the glass quality control once Auto has measured the device",
+    "placeholders": {
+      "quality": {"type": "String"}
+    }
+  },
+  "appearanceGlassClarityAutoFrosted": "Auto measured this device and uses Frosted. Choose Lite or Full to set clarity.",
+  "@appearanceGlassClarityAutoFrosted": {
+    "description": "Shown under the disabled clarity slider when Auto measured that the device needs Level 1"
+  },
   "appearanceUseSystemFont": "Use system font",
   "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
   "@@locale": "en",
@@ -304,6 +315,30 @@
   "aboutHideDeveloperOptions": "Hide developer options",
   "@aboutHideDeveloperOptions": {
     "description": "Developer option that hides the section again"
+  },
+  "aboutBarSampler": "Bottom bar sampling",
+  "@aboutBarSampler": {
+    "description": "Developer A/B switch for the bottom bar backdrop sampler"
+  },
+  "aboutBarSamplerSubtitle": "Let the bottom bar follow the brightness of the page behind it. Turn off to measure its cost.",
+  "@aboutBarSamplerSubtitle": {
+    "description": "Subtitle for the bottom bar sampling switch"
+  },
+  "aboutHeaderBandBlur": "Header band blur",
+  "@aboutHeaderBandBlur": {
+    "description": "Developer A/B switch for the blur of the scrolled header band"
+  },
+  "aboutHeaderBandBlurSubtitle": "Blur the band behind scrolled headers. Turn off to measure its cost; the tint stays.",
+  "@aboutHeaderBandBlurSubtitle": {
+    "description": "Subtitle for the header band blur switch"
+  },
+  "aboutRemeasureGlass": "Measure Auto glass again",
+  "@aboutRemeasureGlass": {
+    "description": "Developer action that clears the Auto glass measurement"
+  },
+  "aboutRemeasureGlassSubtitle": "Auto samples frame times again and picks Full, Lite or Lite Frosted.",
+  "@aboutRemeasureGlassSubtitle": {
+    "description": "Subtitle for measuring Auto glass again"
   },
   "aboutAppDescription": "Play and organize your local music, with metadata and lyrics editing.",
   "@aboutAppDescription": {

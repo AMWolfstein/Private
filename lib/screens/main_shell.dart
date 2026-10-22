@@ -24,6 +24,7 @@ import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/lazy_tab_view.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome_adaptivity.dart';
@@ -595,6 +596,10 @@ class _MainShellState extends ConsumerState<MainShell>
     // is allowed; elsewhere it keeps the theme and its readable strong tint.
     final adaptiveChrome =
         !useNavigationRail && mornyeLiquidChromeEnabled(context, ref);
+    // The developer A/B switch drops only the sampler; the bar keeps its
+    // clear adaptive fill and the theme's palette.
+    final sampleChrome =
+        adaptiveChrome && !ref.watch(mornyeBarSamplerDisabledProvider);
 
     final shell = SelectionOverlayHost(
       child: BackButtonListener(
@@ -602,120 +607,130 @@ class _MainShellState extends ConsumerState<MainShell>
           await _handleBackPress();
           return true;
         },
-        child: Scaffold(
-          extendBody: true,
-          // The tab view keeps one element across the rail<->bar structure
-          // swap via _pageViewKey so rotation doesn't remount tab navigators.
-          body: useNavigationRail
-              ? Row(
-                  children: [
-                    SafeArea(
-                      right: false,
-                      bottom: false,
-                      // The rail needs ~300dp of height for four labeled
-                      // destinations; on short viewports (landscape phone with
-                      // the mini player showing) it must scroll, not overflow.
-                      child: LayoutBuilder(
-                        builder: (context, constraints) =>
-                            SingleChildScrollView(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight: constraints.maxHeight,
-                                ),
-                                child: IntrinsicHeight(
-                                  child: NavigationRail(
-                                    selectedIndex: selectedDestination,
-                                    onDestinationSelected: _onNavTap,
-                                    labelType: NavigationRailLabelType.all,
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.surfaceContainer,
-                                    destinations: [
-                                      for (final destination in destinations)
-                                        NavigationRailDestination(
-                                          icon: destination.icon,
-                                          selectedIcon:
-                                              destination.selectedIcon,
-                                          label: Text(destination.label),
-                                        ),
-                                    ],
+        // Headers in the tab pages and the bottom bar share two backdrop
+        // reads between them; see MornyeBackdropGroup.
+        child: MornyeBackdropGroups(
+          child: Scaffold(
+            extendBody: true,
+            // The tab view keeps one element across the rail<->bar structure
+            // swap via _pageViewKey so rotation doesn't remount tab navigators.
+            body: useNavigationRail
+                ? Row(
+                    children: [
+                      SafeArea(
+                        right: false,
+                        bottom: false,
+                        // The rail needs ~300dp of height for four labeled
+                        // destinations; on short viewports (landscape phone with
+                        // the mini player showing) it must scroll, not overflow.
+                        child: LayoutBuilder(
+                          builder: (context, constraints) =>
+                              SingleChildScrollView(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minHeight: constraints.maxHeight,
+                                  ),
+                                  child: IntrinsicHeight(
+                                    child: NavigationRail(
+                                      selectedIndex: selectedDestination,
+                                      onDestinationSelected: _onNavTap,
+                                      labelType: NavigationRailLabelType.all,
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainer,
+                                      destinations: [
+                                        for (final destination in destinations)
+                                          NavigationRailDestination(
+                                            icon: destination.icon,
+                                            selectedIcon:
+                                                destination.selectedIcon,
+                                            label: Text(destination.label),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                        ),
                       ),
-                    ),
-                    const VerticalDivider(width: 1),
-                    Expanded(child: pageView),
-                  ],
-                )
-              : MornyeChromeBackdrop(
-                  adaptivity: _chromeAdaptivity,
-                  enabled: adaptiveChrome,
-                  child: pageView,
-                ),
-          bottomNavigationBar: Builder(
-            builder: (context) {
-              {
-                return ListenableBuilder(
-                  listenable: Listenable.merge([
-                    ShellNavigationService.chromeBrightness,
-                    ShellNavigationService.chromeSurface,
-                    _chromeAdaptivity.link,
-                  ]),
-                  builder: (context, child) {
-                    final pageOverride =
-                        ShellNavigationService.chromeBrightness.value;
-                    final brightness = mornyeChromeBrightness(
-                      pageOverride: pageOverride,
-                      sampled: adaptiveChrome
-                          ? _chromeAdaptivity.link.value
-                          : null,
-                    );
-                    final theme = Theme.of(context);
-                    return AnimatedTheme(
-                      duration: MediaQuery.disableAnimationsOf(context)
-                          ? Duration.zero
-                          : const Duration(milliseconds: 300),
-                      data:
-                          brightness == null ||
-                              (pageOverride == null &&
-                                  brightness == theme.brightness)
-                          ? theme
-                          : MornyeTheme.fromContext(
-                              context,
-                              brightness: brightness,
-                              chromeSurface: pageOverride == null
-                                  ? null
-                                  : ShellNavigationService.chromeSurface.value,
-                            ),
-                      child: MornyeAdaptiveChromeScope(
-                        active: adaptiveChrome,
-                        child: child!,
-                      ),
-                    );
-                  },
-                  child: SafeArea(
-                    top: false,
-                    minimum: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                    child: useNavigationRail
-                        ? const MiniPlayer()
-                        : ValueListenableBuilder<bool>(
-                            valueListenable: _mornyeChrome,
-                            builder: (context, collapsed, _) => MornyeBottomBar(
-                              collapsed: canMinimizeChrome && collapsed,
-                              destinations: destinations,
-                              selectedIndex: selectedDestination,
-                              onSelected: _onNavTap,
-                              onHome: () => _onNavTap(0),
-                              onSearch: ShellNavigationService.requestSearch,
-                              blurEnabled: ref.watch(mornyeBlurEnabledProvider),
-                            ),
-                          ),
+                      const VerticalDivider(width: 1),
+                      Expanded(child: pageView),
+                    ],
+                  )
+                : MornyeChromeBackdrop(
+                    adaptivity: _chromeAdaptivity,
+                    enabled: sampleChrome,
+                    child: pageView,
                   ),
-                );
-              }
-            },
+            bottomNavigationBar: Builder(
+              builder: (context) {
+                {
+                  return ListenableBuilder(
+                    listenable: Listenable.merge([
+                      ShellNavigationService.chromeBrightness,
+                      ShellNavigationService.chromeSurface,
+                      _chromeAdaptivity.link,
+                    ]),
+                    builder: (context, child) {
+                      final pageOverride =
+                          ShellNavigationService.chromeBrightness.value;
+                      final brightness = mornyeChromeBrightness(
+                        pageOverride: pageOverride,
+                        sampled: sampleChrome
+                            ? _chromeAdaptivity.link.value
+                            : null,
+                      );
+                      final theme = Theme.of(context);
+                      return AnimatedTheme(
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : const Duration(milliseconds: 300),
+                        data:
+                            brightness == null ||
+                                (pageOverride == null &&
+                                    brightness == theme.brightness)
+                            ? theme
+                            : MornyeTheme.fromContext(
+                                context,
+                                brightness: brightness,
+                                chromeSurface: pageOverride == null
+                                    ? null
+                                    : ShellNavigationService
+                                          .chromeSurface
+                                          .value,
+                              ),
+                        child: MornyeAdaptiveChromeScope(
+                          active: adaptiveChrome,
+                          child: child!,
+                        ),
+                      );
+                    },
+                    child: SafeArea(
+                      top: false,
+                      minimum: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                      child: useNavigationRail
+                          ? const MiniPlayer()
+                          : ValueListenableBuilder<bool>(
+                              valueListenable: _mornyeChrome,
+                              builder: (context, collapsed, _) =>
+                                  MornyeBottomBar(
+                                    collapsed: canMinimizeChrome && collapsed,
+                                    destinations: destinations,
+                                    selectedIndex: selectedDestination,
+                                    onSelected: _onNavTap,
+                                    onHome: () => _onNavTap(0),
+                                    onSearch:
+                                        ShellNavigationService.requestSearch,
+                                    blurEnabled: ref.watch(
+                                      mornyeBlurEnabledProvider,
+                                    ),
+                                  ),
+                            ),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),

@@ -15,6 +15,7 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
+import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
 import 'package:spotiflac_android/services/mornye_glass_migration.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -114,6 +115,9 @@ void main() {
               initialSafAccessLost,
             ),
             initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
+            initialGlassAutoResultProvider.overrideWithValue(
+              loadGlassAutoResult(prefs, build: mornyeGlassAutoBuild()),
+            ),
           ],
           child: EagerInitialization(
             child: SpotiFLACApp(

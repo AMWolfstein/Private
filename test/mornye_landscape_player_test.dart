@@ -123,7 +123,7 @@ void main() {
       // A longer opacity fade clears the footer on every GPU, without three
       // overlapping backdrop filters over the moving lyric content.
       expect(transitionContrast, lessThan(110));
-      expect(find.byType(BackdropFilter), findsNothing);
+      expect(find.bySubtype<BackdropFilter>(), findsNothing);
 
       await tester.pump(const Duration(seconds: 5));
       await tester.pumpAndSettle();

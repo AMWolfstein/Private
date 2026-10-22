@@ -16,6 +16,7 @@ import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
 import 'package:spotiflac_android/widgets/mornye_bottom_bar.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
@@ -47,6 +48,7 @@ void main() {
     Widget? body,
     int glassLevel = 4,
     ValueNotifier<int>? activeTab,
+    bool groups = false,
   }) async {
     tester.view.physicalSize = const Size(393, 760);
     tester.view.devicePixelRatio = 1;
@@ -76,7 +78,10 @@ void main() {
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
-          builder: (_, child) => RepaintBoundary(key: capture, child: child),
+          builder: (_, child) => RepaintBoundary(
+            key: capture,
+            child: groups ? MornyeBackdropGroups(child: child!) : child,
+          ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -137,49 +142,68 @@ void main() {
 
   const albumBlue = Color(0xff464566);
 
-  testWidgets(
-    'player and navbar share a backdrop while moving capsules remain isolated',
-    (tester) async {
-      await pumpShell(tester, blur: true, liquidGlass: false);
-      void expectSharedBackdrop({
-        int movingSurfaces = 2,
-        int sharedSurfaces = 2,
-      }) {
-        final filters = find.descendant(
-          of: find.byType(MornyeBottomBar),
-          matching: find.byType(BackdropFilter),
-        );
-        final renderers = filters
-            .evaluate()
-            .map(
-              (element) => element.findRenderObject()! as RenderBackdropFilter,
-            )
-            .toList();
-        final shared = renderers
-            .where((filter) => filter.backdropKey != null)
-            .toList();
-        expect(shared, hasLength(sharedSurfaces));
-        if (sharedSurfaces == 2) {
-          expect(shared[0].backdropKey, same(shared[1].backdropKey));
+  for (final groups in [false, true]) {
+    testWidgets(
+      'player and navbar share a read; side capsules join the controls '
+      '(groups: $groups)',
+      (tester) async {
+        await pumpShell(tester, blur: true, liquidGlass: false, groups: groups);
+        void expectReads({
+          required int movingSurfaces,
+          required int sharedSurfaces,
+          required int reads,
+        }) {
+          final ids = tester
+              .widgetList<MornyeBackdropBlur>(
+                find.descendant(
+                  of: find.byType(MornyeBottomBar),
+                  matching: find.byType(MornyeBackdropBlur),
+                ),
+              )
+              .map((blur) => blur.backdropId)
+              .toList();
+          // The player and the tabs come first and always share one key.
+          final surface = ids.take(sharedSurfaces).toSet();
+          expect(surface, hasLength(1));
+          expect(surface.single, isNotNull);
+          final moving = ids.skip(sharedSurfaces).toList();
+          expect(moving, hasLength(movingSurfaces));
+          if (movingSurfaces > 0) {
+            // Side capsules overlap the folding tabs: never the tabs' key.
+            // In the shell they share the header controls' key instead.
+            expect(moving.toSet(), hasLength(1));
+            expect(moving.first, groups ? isNotNull : isNull);
+            expect(moving.first, isNot(surface.single));
+          }
+          expect(
+            mornyeCountBackdropReads(
+              // ignore: invalid_use_of_protected_member
+              tester.binding.renderViews.first.layer,
+            ).total,
+            reads,
+          );
         }
-        // Side capsules overlap the folding tabs and must not join their group.
-        expect(
-          renderers.where((filter) => filter.backdropKey == null),
-          hasLength(movingSurfaces),
-        );
-      }
 
-      // Invisible side capsules must not paint additional backdrop passes.
-      expectSharedBackdrop(movingSurfaces: 0);
-      chrome.value = true;
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 190));
-      expectSharedBackdrop();
-      await tester.pumpAndSettle();
-      expectSharedBackdrop(sharedSurfaces: 1);
-      expect(tester.takeException(), isNull);
-    },
-  );
+        // Invisible side capsules must not paint additional backdrop passes.
+        expectReads(movingSurfaces: 0, sharedSurfaces: 2, reads: 1);
+        chrome.value = true;
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 190));
+        expectReads(
+          movingSurfaces: 2,
+          sharedSurfaces: 2,
+          reads: groups ? 2 : 3,
+        );
+        await tester.pumpAndSettle();
+        expectReads(
+          movingSurfaces: 2,
+          sharedSurfaces: 1,
+          reads: groups ? 2 : 3,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   for (final liquidGlass in [false, true]) {
     testWidgets(

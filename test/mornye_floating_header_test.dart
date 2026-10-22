@@ -13,7 +13,11 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/collection_scaffold.dart';
+import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
+
+Widget maybeGroups(bool groups, Widget child) =>
+    groups ? MornyeBackdropGroups(child: child) : child;
 
 void main() {
   final backing = find.byKey(const ValueKey('mornye-header-backing'));
@@ -28,6 +32,8 @@ void main() {
     TextDirection direction = TextDirection.ltr,
     List<Widget>? actions,
     int clarityLevel = 3,
+    bool groups = false,
+    bool bandBlurOff = false,
   }) async {
     final controller = ScrollController();
     addTearDown(controller.dispose);
@@ -41,6 +47,7 @@ void main() {
           mornyeGlassLevelProvider.overrideWithValue(level),
           mornyeShaderFiltersSupportedProvider.overrideWithValue(shaders),
           mornyeGlassClarityLevelProvider.overrideWithValue(clarityLevel),
+          mornyeHeaderBandBlurDisabledProvider.overrideWithValue(bandBlurOff),
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(brightness),
@@ -52,32 +59,35 @@ void main() {
               ),
               child: Directionality(
                 textDirection: direction,
-                child: Navigator(
-                  onGenerateInitialRoutes: (_, _) => [
-                    MaterialPageRoute<void>(
-                      builder: (_) => const Scaffold(body: Text('Root')),
-                    ),
-                    MaterialPageRoute<void>(
-                      builder: (_) => Scaffold(
-                        body: CustomScrollView(
-                          controller: controller,
-                          slivers: [
-                            AppSliverHeader.page(
-                              title: 'Songs',
-                              actions: actions,
-                            ),
-                            SliverList.builder(
-                              itemCount: 60,
-                              itemBuilder: (_, index) => SizedBox(
-                                height: 64,
-                                child: Text('Row $index'),
+                child: maybeGroups(
+                  groups,
+                  Navigator(
+                    onGenerateInitialRoutes: (_, _) => [
+                      MaterialPageRoute<void>(
+                        builder: (_) => const Scaffold(body: Text('Root')),
+                      ),
+                      MaterialPageRoute<void>(
+                        builder: (_) => Scaffold(
+                          body: CustomScrollView(
+                            controller: controller,
+                            slivers: [
+                              AppSliverHeader.page(
+                                title: 'Songs',
+                                actions: actions,
                               ),
-                            ),
-                          ],
+                              SliverList.builder(
+                                itemCount: 60,
+                                itemBuilder: (_, index) => SizedBox(
+                                  height: 64,
+                                  child: Text('Row $index'),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -116,8 +126,10 @@ void main() {
     await scrollUnder(tester, controller);
     expect(backing, findsOneWidget);
     final edge = tester.widget<LiquidGlassScrollEdge>(backing);
-    // Balanced (the default level) blurs the band with its table sigma.
-    expect(edge.blur, 6);
+    // Balanced (the default level) blurs the band with its table sigma,
+    // nudged off the bar's identical filter.
+    expect(edge.blur, closeTo(6, 0.02));
+    expect(edge.blur, isNot(6));
     expect(edge.color.a, closeTo(0.72, 0.001));
 
     controller.jumpTo(0);
@@ -147,7 +159,7 @@ void main() {
       final edge = tester.widget<LiquidGlassScrollEdge>(backing);
       expect(
         edge.blur,
-        mornyeGlassClarity(clarity).blurSigma,
+        closeTo(mornyeGlassClarity(clarity).blurSigma, 0.02),
         reason: '$level motion:$reduceMotion',
       );
       expect(edge.color.a, closeTo(0.72, 0.001));
@@ -332,5 +344,100 @@ void main() {
     expect(mornyeArtworkBrightness(darkTop), Brightness.dark);
     expect(mornyeArtworkBrightness(lightTop), Brightness.light);
     expect(mornyeArtworkBrightness(null), isNull);
+  });
+
+  List<int?> blurIds(WidgetTester tester) => [
+    for (final blur in tester.widgetList<MornyeBackdropBlur>(
+      find.byType(MornyeBackdropBlur),
+    ))
+      blur.backdropId,
+  ];
+
+  int reads(WidgetTester tester) => mornyeCountBackdropReads(
+    // ignore: invalid_use_of_protected_member
+    tester.binding.renderViews.first.layer,
+  ).total;
+
+  for (final groups in [false, true]) {
+    testWidgets('circle and capsule share one read in the shell groups '
+        '(groups: $groups)', (tester) async {
+      final controller = await pumpHeader(
+        tester,
+        level: MornyeGlassLevel.lite,
+        groups: groups,
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+        ],
+      );
+      final ids = blurIds(tester);
+      expect(ids, hasLength(2));
+      if (groups) {
+        expect(ids.toSet(), hasLength(1));
+        expect(ids.first, isNotNull);
+      } else {
+        expect(ids, everyElement(isNull));
+      }
+      expect(reads(tester), groups ? 1 : 2);
+
+      await scrollUnder(tester, controller);
+      // The band floats under the controls: the surface group, never theirs.
+      final bandId = LiquidGlassBatch.backdropIdOf(tester.element(backing));
+      if (groups) {
+        expect(bandId, isNotNull);
+        expect(bandId, isNot(ids.first));
+      } else {
+        expect(bandId, isNull);
+      }
+      // The band adds its own pass here: the test renderer has no shader
+      // filters, so the package does not key it.
+      expect(reads(tester), groups ? 2 : 3);
+    });
+  }
+
+  testWidgets('moving or covered pages read on their own', (tester) async {
+    await pumpHeader(tester, level: MornyeGlassLevel.lite, groups: true);
+    final settled = blurIds(tester).single;
+    expect(settled, isNotNull);
+
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator).last);
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => const Scaffold(
+          body: CustomScrollView(
+            slivers: [AppSliverHeader.page(title: 'Album')],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    // Both pages paint mid-transition; neither may filter the other's copy.
+    final moving = blurIds(tester);
+    expect(moving, hasLength(2));
+    expect(moving, everyElement(isNull));
+
+    await tester.pumpAndSettle();
+    expect(blurIds(tester), [settled]);
+
+    navigator.pop();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(blurIds(tester), everyElement(isNull));
+    await tester.pumpAndSettle();
+    expect(blurIds(tester), [settled]);
+  });
+
+  testWidgets('the band blur A/B switch keeps only the tint', (tester) async {
+    final controller = await pumpHeader(
+      tester,
+      level: MornyeGlassLevel.lite,
+      bandBlurOff: true,
+    );
+    await scrollUnder(tester, controller);
+    final edge = tester.widget<LiquidGlassScrollEdge>(backing);
+    expect(edge.blur, 0);
+    expect(edge.color.a, closeTo(0.72, 0.001));
+    expect(reads(tester), 1);
   });
 }

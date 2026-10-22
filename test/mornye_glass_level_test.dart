@@ -109,7 +109,7 @@ void main() {
                 );
             await tester.pumpAndSettle();
             expect(
-              find.byType(BackdropFilter),
+              find.bySubtype<BackdropFilter>(),
               findsNWidgets(forceBlur ? 3 : 0),
             );
             final pills = tester.widgetList<MornyeSelectionPill>(
@@ -138,7 +138,7 @@ void main() {
           tester.platformDispatcher.accessibilityFeaturesTestValue =
               FakeAccessibilityFeatures(disableAnimations: reduceMotion);
           await tester.pumpAndSettle();
-          expect(find.byType(BackdropFilter), findsNWidgets(3));
+          expect(find.bySubtype<BackdropFilter>(), findsNWidgets(3));
           expect(tester.takeException(), isNull);
         },
       );
@@ -252,7 +252,7 @@ void main() {
     expect(find.byType(MornyeSelectionPill), findsNWidgets(2));
     expect(find.byType(ImageFiltered), findsNothing);
     // The frosted material still samples the page behind it.
-    expect(find.byType(BackdropFilter), findsWidgets);
+    expect(find.bySubtype<BackdropFilter>(), findsWidgets);
     expect(find.text('Library'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
@@ -309,7 +309,9 @@ void main() {
         } else {
           // A plain grouped blur plus the painted lite rim, no shader.
           expect(
-            tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
+            tester
+                .widget<BackdropFilter>(find.bySubtype<BackdropFilter>())
+                .filter,
             ui.ImageFilter.blur(sigmaX: spec.blurSigma, sigmaY: spec.blurSigma),
             reason: reason,
           );
@@ -329,7 +331,23 @@ void main() {
     expect(mornyeGlassClarity(9).level, 5);
     expect([
       for (final spec in kMornyeGlassLevels) spec.menuOpacity,
-    ], orderedEquals([0.74, 0.71, 0.68, 0.64, 0.60]));
+    ], orderedEquals([0.74, 0.71, 0.68, 0.62, 0.56]));
+  });
+
+  test('blur never drops below sigma 6; clearer levels lighten the tint', () {
+    for (final spec in kMornyeGlassLevels) {
+      expect(spec.blurSigma, greaterThanOrEqualTo(6), reason: '${spec.level}');
+    }
+    for (var i = 1; i < kMornyeGlassLevels.length; i++) {
+      final (before, after) = (
+        kMornyeGlassLevels[i - 1],
+        kMornyeGlassLevels[i],
+      );
+      expect(after.blurSigma, lessThanOrEqualTo(before.blurSigma));
+      expect(after.tint, lessThanOrEqualTo(before.tint));
+      expect(after.clearFill, greaterThan(before.clearFill));
+      expect(after.barFill, lessThan(before.barFill));
+    }
   });
 
   for (final level in [1, 3]) {
@@ -394,7 +412,7 @@ void main() {
       expect(pills, hasLength(2));
       // Held lenses need a level above the plain Level 1 blur.
       expect(pills.every((pill) => pill.liquidInteraction == level >= 2), true);
-      expect(find.byType(BackdropFilter), findsNWidgets(2));
+      expect(find.bySubtype<BackdropFilter>(), findsNWidgets(2));
       expect(find.text('Two'), findsOneWidget);
       expect(find.text('Library'), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -444,11 +462,11 @@ void main() {
     final sampled = find.byKey(const ValueKey('sampled'));
     final plain = find.byKey(const ValueKey('plain-page'));
     expect(
-      find.descendant(of: sampled, matching: find.byType(BackdropFilter)),
+      find.descendant(of: sampled, matching: find.bySubtype<BackdropFilter>()),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: plain, matching: find.byType(BackdropFilter)),
+      find.descendant(of: plain, matching: find.bySubtype<BackdropFilter>()),
       findsNothing,
     );
     // Same translucent material, so the page looks identical behind it.
@@ -480,12 +498,12 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.byType(BackdropFilter), findsOneWidget);
+    expect(find.bySubtype<BackdropFilter>(), findsOneWidget);
     expect(find.byType(ImageFiltered), findsNothing);
     expect(
       find.descendant(
         of: find.byType(AppSwitch),
-        matching: find.byType(BackdropFilter),
+        matching: find.bySubtype<BackdropFilter>(),
       ),
       findsNothing,
     );

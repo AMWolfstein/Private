@@ -293,7 +293,7 @@ void main() {
             .data,
         'Glass is off. Choose Auto, Lite or Full to adjust clarity.',
       );
-      expect(find.byType(BackdropFilter), findsNothing);
+      expect(find.bySubtype<BackdropFilter>(), findsNothing);
 
       await tester.pumpWidget(const SizedBox());
       await openSettings(tester, prefs);
@@ -389,7 +389,7 @@ void main() {
         findsNothing,
       );
       expect(MediaQuery.highContrastOf(tester.element(slider)), isTrue);
-      expect(find.byType(BackdropFilter), findsWidgets);
+      expect(find.bySubtype<BackdropFilter>(), findsWidgets);
       await tester.drag(slider, const Offset(320, 0));
       await tester.pumpAndSettle();
       expect(savedGlass(prefs)['glassClarityLevel'], 5);
