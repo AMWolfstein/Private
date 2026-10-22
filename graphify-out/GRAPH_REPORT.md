@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-22)
 
 ## Corpus Check
-- 1222 files · ~1,136,297 words
+- 1222 files · ~1,136,501 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 119 file(s) not represented in the graph (top: .xml 34, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `be6d62cc`
+- Built from commit: `d9574c1c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2662,7 +2662,7 @@ Nodes (7): libusb_version, describe, major, micro, minor, nano, rc
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `_` connect `_` to `file`, `package:flutter/material.dart`, `Widget`, `List`, `music_playback_deck.dart`, `static const`, `history_maintenance_test.dart`, `Duration`, `two_finger_pinch_listener_test.dart`, `package:spotiflac_android/utils/logger.dart`, `package:spotiflac_android/utils/synced_lyrics_scroll.dart`, `log_screen.dart`, `dart:async`, `int get`, `sqlite_path_keys_migration_test.dart`, `AudioServicePlugin.java`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `playback_feedback.dart`, `playback_automation.dart`, `now_playing_screen.dart`, `package:path_provider/path_provider.dart`, `@Deprecated`, `library_cover_snapshot.dart`, `_MediaButtonMessageExtension`, `AudioService`, `_MediaItemMessageExtension`, `PlaybackStateCopyWith`, `_RatingMessageExtension`, `package:flutter/services.dart`, `Set`, `library_collections_benchmark.dart`, `AudioHandler`, `AudioService`, `package:flutter/material.dart`, `string`, `MusicPlayerHandler`, `native_audio_analysis.rs`, `shell_navigation_service.dart`, `&String`, `library_collections_hydration.dart`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+  _High betweenness centrality (0.064) - this node is a cross-community bridge._
 - **What connects `decoder`, `block`, `offset` to the rest of the system?**
   _9107 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
