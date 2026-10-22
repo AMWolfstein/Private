@@ -82,8 +82,8 @@ branding work. Owner approved both batches and the spectrogram export (2026-10-2
 | U-411 | `2f0f0b81` | DONE `20e586e`: one Mornye lyric style merged over `DefaultTextStyle` for measured, plain and word-timed lines. | B |
 | U-412 | `0afdacae` | DONE `3880772`: Save Spectrogram renders a PNG with axes and legend and opens the system save dialog; three English strings. | B |
 
-Not ported: mini-player horizontal swipe skips tracks (`37356e43`, conflicts with the AGENTS.md
-dismissal rule; owner to decide). Not applicable: `ea854078` (playlist Shuffle exists),
+Do not port: mini-player horizontal swipe skips tracks (`37356e43`; owner declined 2026-10-22,
+swipe keeps dismissing as AGENTS.md requires). Not applicable: `ea854078` (playlist Shuffle exists),
 `78fd9ce5` (no SmoothedProgress), `cba77c1f` (query not present), `e43b8adc`/`d16efddf`
 (Material transport), `45339bf4`/`199024f5`/`d7d48ba2` (track details screen removed),
 `be50a4db` (no App settings page), `b532cb5d` (online lyrics picker), `c7d22b05` (desktop
