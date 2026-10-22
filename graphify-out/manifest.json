@@ -672,9 +672,9 @@
     "semantic_hash": ""
   },
   "lib/screens/home_tab.dart": {
-    "mtime": 1792620523.3936558,
-    "seen": 1792623676.784685,
-    "ast_hash": "509a626adecd138212e1e8a1a8247cfe",
+    "mtime": 1792685750.079854,
+    "seen": 1792686186.239507,
+    "ast_hash": "fda6ff738055050d5de04a9f6720ae40",
     "semantic_hash": ""
   },
   "lib/screens/home_tab_widgets.dart": {
@@ -690,9 +690,9 @@
     "semantic_hash": ""
   },
   "lib/screens/library_tracks_folder_screen.dart": {
-    "mtime": 1792620523.3936558,
-    "seen": 1792623676.7846944,
-    "ast_hash": "ed7394965a3045612e4048e7d476c0aa",
+    "mtime": 1792685723.4853806,
+    "seen": 1792686186.2395182,
+    "ast_hash": "912638c02392b01f30925ffce894006a",
     "semantic_hash": ""
   },
   "lib/screens/listening_statistics_screen.dart": {
@@ -708,9 +708,9 @@
     "semantic_hash": ""
   },
   "lib/screens/main_shell.dart": {
-    "mtime": 1792658867.5479558,
-    "seen": 1792659361.162114,
-    "ast_hash": "5e81cb3cde9458715e92bd7b3b36721c",
+    "mtime": 1792685703.73509,
+    "seen": 1792686186.2395427,
+    "ast_hash": "5f2acff435ecfec8b6ffb6787f828527",
     "semantic_hash": ""
   },
   "lib/screens/mornye_library_screen.dart": {
@@ -1266,9 +1266,9 @@
     "semantic_hash": "d807b6005c50a8184ada936d896345a8"
   },
   "lib/services/shell_navigation_service.dart": {
-    "mtime": 1792631759.0639355,
-    "seen": 1792632239.5400038,
-    "ast_hash": "d635f1d6f042d0166d98c0fac315fa86",
+    "mtime": 1792685703.731351,
+    "seen": 1792686186.2397828,
+    "ast_hash": "51d54d79ace8a3ecf958f990b854d269",
     "semantic_hash": ""
   },
   "lib/services/source_deletion_events.dart": {
@@ -1494,9 +1494,9 @@
     "semantic_hash": "21f80f6304df946a89a8f0046e85f9df"
   },
   "lib/widgets/album_detail_header.dart": {
-    "mtime": 1792682558.6054065,
-    "seen": 1792682756.2849216,
-    "ast_hash": "69f7eb2f5f49e8be17a06f5b7b5ca664",
+    "mtime": 1792685715.6015334,
+    "seen": 1792686186.2398684,
+    "ast_hash": "5742b567747d358fdaef998d2ca639d5",
     "semantic_hash": ""
   },
   "lib/widgets/album_track_tile.dart": {
@@ -1560,9 +1560,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/app_sliver_header.dart": {
-    "mtime": 1792682586.6937816,
-    "seen": 1792682756.2849586,
-    "ast_hash": "f16b9169e055dc7712c2cc768e810776",
+    "mtime": 1792685715.600104,
+    "seen": 1792686186.2398899,
+    "ast_hash": "e1a15575bf182d4dc3f5ec3e794f4fca",
     "semantic_hash": ""
   },
   "lib/widgets/app_snack_bar.dart": {
@@ -1752,9 +1752,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artist_header.dart": {
-    "mtime": 1792682558.6075559,
-    "seen": 1792682756.2851079,
-    "ast_hash": "4d0c71833be023e8d7e8666c9dc770eb",
+    "mtime": 1792685731.278644,
+    "seen": 1792686186.2399762,
+    "ast_hash": "403e06f61d02f4c17749f11dea2e3925",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artwork_contrast.dart": {
@@ -1962,10 +1962,10 @@
     "semantic_hash": ""
   },
   "lib/widgets/profile_avatar.dart": {
-    "mtime": 1792438624.2590914,
-    "seen": 1792623676.7853117,
-    "ast_hash": "d843b1725bbffc5c1bf38f5897f2bf71",
-    "semantic_hash": "d843b1725bbffc5c1bf38f5897f2bf71"
+    "mtime": 1792685703.7362914,
+    "seen": 1792686186.2400892,
+    "ast_hash": "62072434f7a37516616e03a9165ed1a2",
+    "semantic_hash": ""
   },
   "lib/widgets/scroll_edge_fade.dart": {
     "mtime": 1792438624.2590914,
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792663358.2373428,
-    "seen": 1792663396.3177075,
-    "ast_hash": "8aeb48f9c700b7f8d135efd02850f117",
+    "mtime": 1792683682.7257228,
+    "seen": 1792686186.2417614,
+    "ast_hash": "74d3c39f6e63666949b32510fdf6900b",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7170,9 +7170,9 @@
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
-    "mtime": 1792623008.2634165,
-    "seen": 1792623676.787494,
-    "ast_hash": "8c45df4f3c825fd9298ce61efbe612ce",
+    "mtime": 1792683682.7245135,
+    "seen": 1792686186.2418828,
+    "ast_hash": "63ae3cbc5a40c6722eca66c6dd00d17c",
     "semantic_hash": ""
   },
   "reviews/coverage.md": {
@@ -7224,9 +7224,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1792620523.4636257,
-    "seen": 1792623676.7874916,
-    "ast_hash": "ff755cfec40b1e798f4f8d5e1d23b5f5",
+    "mtime": 1792683893.1828809,
+    "seen": 1792686186.2418811,
+    "ast_hash": "4f391f07aa8773b04d04e599c128346e",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -7692,9 +7692,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mornye_floating_header.dart": {
-    "mtime": 1792662461.9705455,
-    "seen": 1792663396.3164847,
-    "ast_hash": "7504639f9c0c6d367684a78163546f18",
+    "mtime": 1792685684.3276594,
+    "seen": 1792686186.2400014,
+    "ast_hash": "fa3c0c5b8d38f2a4a0f7549cba95b765",
     "semantic_hash": ""
   },
   "test/mornye_chrome_adaptivity_test.dart": {
