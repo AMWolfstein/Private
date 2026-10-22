@@ -163,7 +163,7 @@ void main() {
                               borderRadius: BorderRadius.circular(40),
                               child: MornyeLiquidBackdrop(
                                 borderRadius: BorderRadius.circular(40),
-                                clarity: 1,
+                                dispersion: 1.32,
                                 blurSigma: 2,
                                 child: const Center(
                                   child: SizedBox(
@@ -244,7 +244,7 @@ void main() {
       ProviderScope(
         overrides: [
           deviceSupportsLiquidGlassProvider.overrideWithValue(true),
-          mornyeGlassClarityProvider.overrideWithValue(1),
+          mornyeGlassClarityLevelProvider.overrideWithValue(5),
         ],
         child: MaterialApp(
           theme: theme,

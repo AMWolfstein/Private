@@ -178,7 +178,6 @@ class _MornyeGlassClaritySliderState
   @override
   Widget build(BuildContext context) {
     final int level = _dragLevel ?? ref.watch(mornyeGlassClarityLevelProvider);
-    final clarity = mornyeClarityForLevel(level);
     final notifier = ref.read(settingsProvider.notifier);
     final theme = Theme.of(context);
     final l10n = context.l10n;
@@ -248,7 +247,7 @@ class _MornyeGlassClaritySliderState
                     padding: const EdgeInsets.all(18),
                     child: MornyeGlassPanel(
                       radius: 22,
-                      clarity: clarity,
+                      clarityLevel: level,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 18,

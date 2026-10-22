@@ -10,7 +10,7 @@ class MornyeLiquidBackdrop extends ConsumerWidget {
   const MornyeLiquidBackdrop({
     super.key,
     required this.borderRadius,
-    required this.clarity,
+    required this.dispersion,
     required this.blurSigma,
     required this.child,
     this.interaction = false,
@@ -22,7 +22,9 @@ class MornyeLiquidBackdrop extends ConsumerWidget {
   });
 
   final BorderRadius borderRadius;
-  final double clarity;
+
+  /// Widest colour split in logical pixels (the clarity level's value).
+  final double dispersion;
   final double blurSigma;
   final Widget child;
   final bool interaction;
@@ -50,35 +52,62 @@ class MornyeLiquidBackdrop extends ConsumerWidget {
     final index = 1 / math.sqrt(1 - math.pow(edgeBend.clamp(0, 0.95), 2));
     return LiquidGlassLens(
       style: LiquidGlassStyle(
-        shape: LiquidGlassShape(
-          cornerStyle: smoothCorners
-              ? LiquidGlassCornerStyle.squircle
-              : LiquidGlassCornerStyle.roundedRectangle,
-          clipQuality: smoothCorners
-              ? LiquidGlassClipQuality.exact
-              : LiquidGlassClipQuality.roundedRectangle,
-          cornerRadius: borderRadius.topLeft.x,
+        shape: mornyeGlassShape(
+          radius: borderRadius.topLeft.x,
+          smoothCorners: smoothCorners,
         ),
-        specular: LiquidGlassLight.specular(
-          thickness: outlines ? 0.75 * 5.4 : 0,
-          angle: 0,
-          spread: 0.2,
-          intensity: outlines
-              ? (dark ? 0.25 : 0.12) * effect * highlightIntensity
-              : 0,
-          color: dark ? Colors.white : const Color(0x88ffffff),
+        specular: mornyeGlassSpecular(
+          outlines: outlines,
+          dark: dark,
+          intensity: effect * highlightIntensity,
         ),
-        glow: LiquidGlassLight.glow(
-          thickness: outlines ? 0.75 * 29.4 : 0,
-          intensity: outlines ? 0.05 * highlightIntensity : 0,
+        glow: mornyeGlassGlow(
+          outlines: outlines,
+          intensity: highlightIntensity,
         ),
         blur: blurSigma,
         refractionIndex: index,
         refractionWidth: refractionWidth,
         // Version 5 expresses the widest colour split in logical pixels.
-        dispersion: 1.32 * clarity * effect,
+        dispersion: dispersion * effect,
       ),
       child: child,
     );
   }
 }
+
+/// The outline Mornye lenses and lite rims share.
+LiquidGlassShape mornyeGlassShape({
+  required double radius,
+  required bool smoothCorners,
+}) => LiquidGlassShape(
+  cornerStyle: smoothCorners
+      ? LiquidGlassCornerStyle.squircle
+      : LiquidGlassCornerStyle.roundedRectangle,
+  clipQuality: smoothCorners
+      ? LiquidGlassClipQuality.exact
+      : LiquidGlassClipQuality.roundedRectangle,
+  cornerRadius: radius,
+);
+
+/// The rim highlight: on a lens it is the shader's specular, on lite glass
+/// LiquidGlassLite paints the same band. Outlines off draws none.
+LiquidGlassLight mornyeGlassSpecular({
+  required bool outlines,
+  required bool dark,
+  double intensity = 1,
+}) => LiquidGlassLight.specular(
+  thickness: outlines ? 0.75 * 5.4 : 0,
+  angle: 0,
+  spread: 0.2,
+  intensity: outlines ? (dark ? 0.25 : 0.12) * intensity : 0,
+  color: dark ? Colors.white : const Color(0x88ffffff),
+);
+
+LiquidGlassLight mornyeGlassGlow({
+  required bool outlines,
+  double intensity = 1,
+}) => LiquidGlassLight.glow(
+  thickness: outlines ? 0.75 * 29.4 : 0,
+  intensity: outlines ? 0.05 * intensity : 0,
+);

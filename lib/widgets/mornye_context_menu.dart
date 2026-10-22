@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
@@ -224,7 +225,9 @@ class _MenuSurface extends ConsumerWidget {
           ? const Color(0xff414141)
           : Colors.white,
       tintOpacity: dark
-          ? 0.80 - 0.20 * ref.watch(mornyeGlassClarityProvider)
+          ? mornyeGlassClarity(
+              ref.watch(mornyeGlassClarityLevelProvider),
+            ).menuOpacity
           : 0.80,
       child: child,
     );

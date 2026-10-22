@@ -148,7 +148,6 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
       contrastBlocked: ref.watch(
         mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
       ),
-      clarity: ref.watch(mornyeGlassClarityProvider),
     );
     final tabGap = glassTabs ? 0.0 : 8.0;
     // These contents do not depend on animation progress. Retain their widget

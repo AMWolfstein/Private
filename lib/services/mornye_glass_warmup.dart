@@ -72,6 +72,8 @@ Future<void> _rasterize(ui.FlutterView view) async {
       child: ProviderScope(
         overrides: [
           mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
+          // Any lens level compiles the same pipelines.
+          mornyeGlassClarityLevelProvider.overrideWithValue(3),
         ],
         child: Directionality(
           textDirection: TextDirection.ltr,

@@ -18,6 +18,8 @@ Future<void> pumpGlassControl(
   Widget Function(StateSetter setState) builder, {
   bool glass = true,
   bool liquid = true,
+  MornyeGlassLevel? level,
+  int? clarityLevel,
   bool reduceMotion = false,
   bool highContrast = false,
   TextDirection direction = TextDirection.ltr,
@@ -27,7 +29,11 @@ Future<void> pumpGlassControl(
       key: UniqueKey(),
       overrides: [
         if (glass) mornyeShaderFiltersSupportedProvider.overrideWithValue(true),
-        mornyeLiquidGlassProvider.overrideWithValue(liquid),
+        mornyeGlassLevelProvider.overrideWithValue(
+          level ?? (liquid ? MornyeGlassLevel.liquid : MornyeGlassLevel.flat),
+        ),
+        if (clarityLevel != null)
+          mornyeGlassClarityLevelProvider.overrideWithValue(clarityLevel),
       ],
       child: MaterialApp(
         theme: MornyeTheme.build(Brightness.light),

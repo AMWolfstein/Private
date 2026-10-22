@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 
 /// Whether touch-driven glass thumbs may render. Uses the selection pill's
@@ -9,8 +10,9 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 /// answer at touch-down, so glass never appears or vanishes mid-gesture.
 bool mornyeGlassThumbsEnabled(BuildContext context, WidgetRef ref) =>
     ref.watch(mornyeShaderFiltersSupportedProvider) &&
-    ref.watch(mornyeLiquidGlassProvider) &&
-    ref.watch(mornyeGlassClarityProvider) > 0.2 &&
+    // Touch-only lenses stay real under lite too; never on Level 1.
+    ref.watch(mornyeBlurEnabledProvider) &&
+    !mornyeGlassClarity(ref.watch(mornyeGlassClarityLevelProvider)).plainBlur &&
     !MediaQuery.disableAnimationsOf(context) &&
     !ref.watch(
       mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),

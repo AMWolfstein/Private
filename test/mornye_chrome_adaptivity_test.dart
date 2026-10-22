@@ -169,7 +169,8 @@ void main() {
     final light = fill(active: false);
     final clear = fill(active: true);
     expect(light.a, greaterThan(0.5));
-    expect(clear.a, lessThan(0.4));
+    // Balanced bar fill: 0.49 x 0.64 under the level's 15% veil.
+    expect(clear.a, closeTo(0.42, 0.01));
     // Dark glass already follows its backdrop; the scope leaves it alone.
     expect(
       fill(active: true, b: Brightness.dark),

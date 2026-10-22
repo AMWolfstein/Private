@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/widgets/app_switch.dart';
 import 'package:spotiflac_android/widgets/mornye_glass_thumb.dart';
 
@@ -51,9 +52,37 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    for (final (name, level, clarity, touchGlass) in [
+      ('lite keeps the touch-only lens', MornyeGlassLevel.lite, 3, true),
+      ('Level 1 on full glass has none', MornyeGlassLevel.liquid, 1, false),
+      ('Level 1 on lite glass has none', MornyeGlassLevel.lite, 1, false),
+    ]) {
+      testWidgets(name, (tester) async {
+        var value = false;
+        final changes = <bool>[];
+        await pumpGlassControl(
+          tester,
+          (setState) =>
+              switchFor(setState, () => value, (v) => value = v, changes),
+          level: level,
+          clarityLevel: clarity,
+        );
+        expect(glassLenses(), 0);
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byType(AppSwitch)),
+        );
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(glassPills(), touchGlass ? 1 : 0);
+        await gesture.up();
+        await tester.pumpAndSettle();
+        expect(changes, [true]);
+        expect(glassLenses(), 0);
+      });
+    }
+
     for (final (name, glass, liquid, reduceMotion, highContrast) in [
       ('no shader filters', false, true, false, false),
-      ('flat or frosted glass', true, false, false, false),
+      ('glass off', true, false, false, false),
       ('reduced motion', true, true, true, false),
       ('high contrast', true, true, false, true),
     ]) {

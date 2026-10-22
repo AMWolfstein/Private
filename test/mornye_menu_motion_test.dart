@@ -24,7 +24,7 @@ void main() {
         overrides: [
           mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.lite),
           mornyeBlurEnabledProvider.overrideWithValue(true),
-          mornyeGlassClarityProvider.overrideWithValue(1),
+          mornyeGlassClarityLevelProvider.overrideWithValue(5),
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(Brightness.dark),

@@ -146,12 +146,12 @@ void main() {
       await tester.pump();
     }
 
-    for (final (brightness, clarity, outlines) in [
-      (Brightness.dark, 0.6, true),
-      (Brightness.dark, 1.0, true),
-      (Brightness.light, 0.75, true),
-      (Brightness.light, 0.75, false),
-      (Brightness.dark, 0.75, false),
+    for (final (brightness, level, outlines) in [
+      (Brightness.dark, 3, true),
+      (Brightness.dark, 5, true),
+      (Brightness.light, 4, true),
+      (Brightness.light, 4, false),
+      (Brightness.dark, 4, false),
     ]) {
       chrome.expand();
       await tester.pumpWidget(
@@ -168,7 +168,7 @@ void main() {
               MusicPlayerController(runtime: runtime),
             ),
             mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
-            mornyeGlassClarityProvider.overrideWithValue(clarity),
+            mornyeGlassClarityLevelProvider.overrideWithValue(level),
             mornyeGlassOutlinesProvider.overrideWithValue(outlines),
           ],
           child: MaterialApp(
@@ -235,14 +235,13 @@ void main() {
         );
       });
       await wait(600);
-      if (Platform.isAndroid && clarity == 0.6) {
+      if (Platform.isAndroid && level == 3) {
         await binding.convertFlutterSurfaceToImage();
         await tester.pump();
       }
       expect(find.byType(MiniPlayer), findsOneWidget);
       final player = tester.state(find.byType(MiniPlayer));
-      final prefix =
-          '${brightness.name}_clarity_${(clarity * 100).round()}_outlines_$outlines';
+      final prefix = '${brightness.name}_level_${level}_outlines_$outlines';
       final lenses = tester.widgetList<LiquidGlassLens>(
         find.byType(LiquidGlassLens),
       );

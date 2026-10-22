@@ -39,7 +39,7 @@ class _OutsideGlass extends ConsumerWidget {
 void main() {
   final slider = find.byKey(const ValueKey('mornye-glass-clarity'));
   final preview = find.byWidgetPredicate(
-    (widget) => widget is MornyeGlassPanel && widget.clarity != null,
+    (widget) => widget is MornyeGlassPanel && widget.clarityLevel != null,
   );
 
   setUp(() {
@@ -125,6 +125,11 @@ void main() {
       // Every intermediate value is one of the five stops.
       expect(value, value.roundToDouble());
       seen.add(value);
+      // Only the preview follows the thumb.
+      expect(
+        tester.widget<MornyeGlassPanel>(preview).clarityLevel,
+        value.round(),
+      );
       expect(container.read(mornyeGlassClarityLevelProvider), 3);
     }
     expect(seen, containsAll([2.0, 4.0, 5.0]));
@@ -140,7 +145,7 @@ void main() {
     expect(_outsideBuilds, outsideBuilds + 1);
     expect(tester.widget<Slider>(slider).value, 5);
     expect(tester.widget<Slider>(slider).label, 'Crystal');
-    expect(tester.widget<MornyeGlassPanel>(preview).clarity, isNotNull);
+    expect(tester.widget<MornyeGlassPanel>(preview).clarityLevel, 5);
     expect(tester.takeException(), isNull);
   });
 

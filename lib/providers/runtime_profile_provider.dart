@@ -87,21 +87,6 @@ final mornyeGlassClarityLevelProvider = Provider<int>(
   (ref) => ref.watch(settingsProvider.select((s) => s.glassClarityLevel)),
 );
 
-/// The clarity each level renders as until the renderer reads levels.
-double mornyeClarityForLevel(int level) => _clarityForLevel[level.clamp(1, 5)]!;
-
-const _clarityForLevel = <int, double>{
-  1: 0.3,
-  2: 0.45,
-  3: 0.625,
-  4: 0.8,
-  5: 1.0,
-};
-
-final mornyeGlassClarityProvider = Provider<double>(
-  (ref) => mornyeClarityForLevel(ref.watch(mornyeGlassClarityLevelProvider)),
-);
-
 final mornyeGlassOutlinesProvider = Provider<bool>(
   (ref) => ref.watch(themeProvider.select((s) => s.mornyeGlassOutlines)),
 );

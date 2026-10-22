@@ -7,7 +7,10 @@ import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:liquid_glass_easy/liquid_glass_easy.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/widgets/mornye_liquid_backdrop.dart';
 import 'package:spotiflac_android/widgets/app_switch.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/mornye_selection_pill.dart';
@@ -58,7 +61,7 @@ void main() {
                 settingsProvider.overrideWith(_Settings.new),
                 // A capable GPU must not implicitly override contrast.
                 deviceSupportsLiquidGlassProvider.overrideWithValue(true),
-                mornyeGlassClarityProvider.overrideWithValue(1),
+                mornyeGlassClarityLevelProvider.overrideWithValue(5),
               ],
               child: MaterialApp(
                 theme: MornyeTheme.build(brightness),
@@ -127,7 +130,6 @@ void main() {
                 contrastBlocked: container.read(
                   mornyeGlassContrastBlockedProvider(true),
                 ),
-                clarity: container.read(mornyeGlassClarityProvider),
               ),
               forceBlur && !reduceMotion,
             );
@@ -255,63 +257,89 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('clear glass reduces blur and mid-range glass caps its radius', (
+  testWidgets('each level renders from the table; Level 1 never has a lens', (
     tester,
   ) async {
-    Future<ui.ImageFilter?> filterFor(double clarity, bool liquid) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          key: UniqueKey(),
-          overrides: [
-            mornyeGlassLevelProvider.overrideWithValue(
-              liquid ? MornyeGlassLevel.liquid : MornyeGlassLevel.lite,
-            ),
-            mornyeGlassClarityProvider.overrideWithValue(clarity),
-          ],
-          child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.light),
-            home: const MornyeGlass.navigation(
-              blurEnabled: true,
-              child: SizedBox(width: 200, height: 50),
+    Future<void> pumpGlass(int level, MornyeGlassLevel renderer) =>
+        tester.pumpWidget(
+          ProviderScope(
+            key: UniqueKey(),
+            overrides: [
+              mornyeGlassLevelProvider.overrideWithValue(renderer),
+              mornyeShaderFiltersSupportedProvider.overrideWithValue(true),
+              mornyeGlassClarityLevelProvider.overrideWithValue(level),
+            ],
+            child: MaterialApp(
+              theme: MornyeTheme.build(Brightness.light),
+              home: const Center(
+                child: MornyeGlass.navigation(
+                  blurEnabled: true,
+                  child: SizedBox(width: 200, height: 50),
+                ),
+              ),
             ),
           ),
-        ),
-      );
-      final filters = tester.widgetList<BackdropFilter>(
-        find.byType(BackdropFilter),
-      );
-      return filters.isEmpty ? null : filters.single.filter;
-    }
+        );
 
-    expect(await filterFor(0, false), isNull);
-    expect(await filterFor(0.1, false), isNull);
-    expect(await filterFor(0.25, false), isNull);
-    expect(await filterFor(0.5, false), isNull);
-    expect(await filterFor(0.1, true), isNull);
-    expect(await filterFor(0.2, true), isNull);
-    expect(
-      await filterFor(0.25, true),
-      ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-    );
-    expect(
-      await filterFor(0.75, true),
-      ui.ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-    );
-    expect(
-      await filterFor(1, false),
-      ui.ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-    );
-    expect(await filterFor(1, true), ui.ImageFilter.blur(sigmaX: 2, sigmaY: 2));
+    Color fill() => tester
+        .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+        .map((box) => box.decoration)
+        .whereType<BoxDecoration>()
+        .map((decoration) => decoration.color)
+        .whereType<Color>()
+        .first;
+
+    for (final renderer in [MornyeGlassLevel.lite, MornyeGlassLevel.liquid]) {
+      double? lastAlpha;
+      for (final spec in kMornyeGlassLevels) {
+        await pumpGlass(spec.level, renderer);
+        final lens = renderer == MornyeGlassLevel.liquid && !spec.plainBlur;
+        final reason = '$renderer level ${spec.level}';
+        expect(
+          find.byType(LiquidGlassLens),
+          lens ? findsOneWidget : findsNothing,
+          reason: reason,
+        );
+        if (lens) {
+          final backdrop = tester.widget<MornyeLiquidBackdrop>(
+            find.byType(MornyeLiquidBackdrop),
+          );
+          expect(backdrop.blurSigma, spec.blurSigma, reason: reason);
+          expect(backdrop.dispersion, spec.dispersion, reason: reason);
+        } else {
+          // A plain grouped blur plus the painted lite rim, no shader.
+          expect(
+            tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
+            ui.ImageFilter.blur(sigmaX: spec.blurSigma, sigmaY: spec.blurSigma),
+            reason: reason,
+          );
+          expect(find.byType(LiquidGlassLite), findsOneWidget, reason: reason);
+          expect(find.byType(MornyeLiquidBackdrop), findsNothing);
+        }
+        // Clearer levels show more of the page in light mode.
+        final alpha = fill().a;
+        if (lastAlpha != null) {
+          expect(alpha, lessThan(lastAlpha), reason: reason);
+        }
+        lastAlpha = alpha;
+      }
+    }
+    // The context menu and bar fill read the same table.
+    expect(mornyeGlassClarity(0).level, 1);
+    expect(mornyeGlassClarity(9).level, 5);
+    expect([
+      for (final spec in kMornyeGlassLevels) spec.menuOpacity,
+    ], orderedEquals([0.74, 0.71, 0.68, 0.64, 0.60]));
   });
 
-  for (final clarity in [0.0, 0.5]) {
-    testWidgets('liquid tab and segment pills follow clarity ($clarity)', (
+  for (final level in [1, 3]) {
+    testWidgets('liquid tab and segment pills follow level $level', (
       tester,
     ) async {
       late BuildContext context;
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [mornyeGlassClarityProvider.overrideWithValue(clarity)],
+          overrides: [mornyeGlassClarityLevelProvider.overrideWithValue(level)],
           child: MaterialApp(
             theme: MornyeTheme.build(Brightness.dark),
             home: Scaffold(
@@ -350,21 +378,23 @@ void main() {
       );
       await tester.pump();
 
-      final liquid = clarity > 0;
-      // Overlays aligned with the bar share this decision.
+      // The floating layout does not depend on the level.
       expect(
         MornyeTabBar.usesLiquidGlass(
           context,
           blurEnabled: true,
           liquidGlass: true,
           contrastBlocked: false,
-          clarity: clarity,
         ),
-        liquid,
+        isTrue,
       );
-      // Every tier draws just one copy of each label and a painted pill.
-      expect(find.byType(MornyeSelectionPill), findsNWidgets(2));
-      expect(find.byType(BackdropFilter), findsNWidgets(liquid ? 2 : 0));
+      final pills = tester.widgetList<MornyeSelectionPill>(
+        find.byType(MornyeSelectionPill),
+      );
+      expect(pills, hasLength(2));
+      // Held lenses need a level above the plain Level 1 blur.
+      expect(pills.every((pill) => pill.liquidInteraction == level >= 2), true);
+      expect(find.byType(BackdropFilter), findsNWidgets(2));
       expect(find.text('Two'), findsOneWidget);
       expect(find.text('Library'), findsOneWidget);
       expect(tester.takeException(), isNull);

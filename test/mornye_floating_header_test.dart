@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/album_detail_header.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
@@ -26,6 +27,7 @@ void main() {
     Brightness brightness = Brightness.light,
     TextDirection direction = TextDirection.ltr,
     List<Widget>? actions,
+    int clarityLevel = 3,
   }) async {
     final controller = ScrollController();
     addTearDown(controller.dispose);
@@ -38,6 +40,7 @@ void main() {
         overrides: [
           mornyeGlassLevelProvider.overrideWithValue(level),
           mornyeShaderFiltersSupportedProvider.overrideWithValue(shaders),
+          mornyeGlassClarityLevelProvider.overrideWithValue(clarityLevel),
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(brightness),
@@ -113,7 +116,8 @@ void main() {
     await scrollUnder(tester, controller);
     expect(backing, findsOneWidget);
     final edge = tester.widget<LiquidGlassScrollEdge>(backing);
-    expect(edge.blur, 5);
+    // Balanced (the default level) blurs the band with its table sigma.
+    expect(edge.blur, 6);
     expect(edge.color.a, closeTo(0.72, 0.001));
 
     controller.jumpTo(0);
@@ -121,26 +125,32 @@ void main() {
     expect(backing, findsNothing);
   });
 
-  testWidgets('frosted level and reduced motion keep blur but no lens', (
+  testWidgets('lite, Level 1 and reduced motion keep blur but no lens', (
     tester,
   ) async {
-    for (final (level, reduceMotion, shaders) in [
-      (MornyeGlassLevel.lite, false, true),
-      (MornyeGlassLevel.liquid, true, true),
-      (MornyeGlassLevel.liquid, false, false),
+    for (final (level, reduceMotion, shaders, clarity) in [
+      (MornyeGlassLevel.lite, false, true, 3),
+      (MornyeGlassLevel.liquid, true, true, 3),
+      (MornyeGlassLevel.liquid, false, false, 3),
+      (MornyeGlassLevel.liquid, false, true, 1),
     ]) {
       final controller = await pumpHeader(
         tester,
         level: level,
         reduceMotion: reduceMotion,
         shaders: shaders,
+        clarityLevel: clarity,
       );
       expect(appBar(tester).backgroundColor, Colors.transparent);
       expect(find.byType(LiquidGlassLens), findsNothing);
       await scrollUnder(tester, controller);
       final edge = tester.widget<LiquidGlassScrollEdge>(backing);
-      expect(edge.blur, 0, reason: '$level motion:$reduceMotion');
-      expect(edge.color.a, closeTo(0.94, 0.001));
+      expect(
+        edge.blur,
+        mornyeGlassClarity(clarity).blurSigma,
+        reason: '$level motion:$reduceMotion',
+      );
+      expect(edge.color.a, closeTo(0.72, 0.001));
     }
   });
 

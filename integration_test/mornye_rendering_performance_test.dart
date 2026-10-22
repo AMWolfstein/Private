@@ -27,12 +27,14 @@ import 'performance_probe.dart';
 void main() {
   final binding = PerformanceTestBinding.ensureInitialized();
   const focused = bool.fromEnvironment('MORNYE_GLASS_FOCUS');
-  for (final clarity in focused ? [0.6, 1.0] : [0.0, 0.1, 0.6, 1.0]) {
-    testWidgets('Mornye real rendering at clarity $clarity', (tester) async {
+  for (final level in focused ? [3, 5] : [1, 3, 5]) {
+    testWidgets('Mornye real rendering at clarity level $level', (
+      tester,
+    ) async {
       final probe = PerformanceProbe(
         binding,
         tester,
-        suite: 'mornye_chrome_${(clarity * 100).round()}',
+        suite: 'mornye_chrome_level_$level',
       );
       final fixture = (await tester.runAsync(_Fixture.create))!;
       addTearDown(() async {
@@ -40,7 +42,7 @@ void main() {
         await tester.runAsync(() => binding.endOfFrame);
         await fixture.dispose();
       });
-      await tester.pumpWidget(fixture.app(clarity));
+      await tester.pumpWidget(fixture.app(level));
       await tester.runAsync(() async {
         await LiquidGlassShaders.ensureLoaded();
         await ui.FragmentProgram.fromAsset(
@@ -92,7 +94,8 @@ void main() {
       }
       expect(fixture.activeTab.value, 0);
 
-      if (clarity > 0.2) {
+      // Level 1 is a plain blur: no lens to hold.
+      if (level >= 2) {
         await probe.measure('held_lens_drag', () async {
           final tabs = find.byType(MornyeTabBar);
           final home = tester.getCenter(
@@ -144,7 +147,7 @@ void main() {
       expect(tester.takeException(), isNull);
       await probe.finish(
         metadata: {
-          'glass_clarity': clarity,
+          'glass_clarity_level': level,
           'glass_level': 'liquid',
           'focused': focused,
           'tracks': 2000,
@@ -225,7 +228,7 @@ class _Fixture {
 
   void setLongTitle(bool value) => media.add(_item(value));
 
-  Widget app(double clarity) => ProviderScope(
+  Widget app(int level) => ProviderScope(
     overrides: [
       settingsProvider.overrideWith(_BenchmarkSettings.new),
       currentMediaItemProvider.overrideWithBuild((ref, notifier) async* {
@@ -237,7 +240,7 @@ class _Fixture {
       lowEndDeviceProvider.overrideWithValue(false),
       mornyeGlassQualityProvider.overrideWithValue(MornyeGlassQuality.full),
       mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
-      mornyeGlassClarityProvider.overrideWithValue(clarity),
+      mornyeGlassClarityLevelProvider.overrideWithValue(level),
     ],
     child: MaterialApp(
       theme: MornyeTheme.build(Brightness.dark),

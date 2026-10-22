@@ -4,27 +4,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/theme/cover_palette.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 
 /// How a pinned header floats over its page.
 enum MornyeHeaderMaterial {
-  /// Flat level, high contrast or zero clarity: the old opaque toolbar.
+  /// Glass off (or Auto under high contrast): the old opaque toolbar.
   opaque,
 
-  /// Transparent toolbar; blurred glass controls and a gradient backing.
+  /// Transparent toolbar; blurred lite controls (lite glass, Level 1,
+  /// reduced motion or no shader filters).
   frosted,
 
-  /// Transparent toolbar; liquid-glass controls and a blurred backing.
+  /// Transparent toolbar; liquid-glass lens controls.
   glass,
 }
 
-/// Liquid header and bar chrome needs the shader renderer, the liquid level,
-/// a clarity that shows glass, motion and no contrast request.
+/// Liquid header and bar chrome (lenses, the bar's adaptive sampler) needs
+/// the shader renderer, full glass above Level 1, motion and no contrast
+/// request.
 bool mornyeLiquidChromeEnabled(BuildContext context, WidgetRef ref) =>
     ref.watch(mornyeShaderFiltersSupportedProvider) &&
     ref.watch(mornyeLiquidGlassProvider) &&
-    ref.watch(mornyeGlassClarityProvider) > 0.2 &&
+    !mornyeGlassClarity(ref.watch(mornyeGlassClarityLevelProvider)).plainBlur &&
     !MediaQuery.disableAnimationsOf(context) &&
     !ref.watch(
       mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
@@ -33,7 +36,6 @@ bool mornyeLiquidChromeEnabled(BuildContext context, WidgetRef ref) =>
 MornyeHeaderMaterial mornyeHeaderMaterial(BuildContext context, WidgetRef ref) {
   final translucent =
       ref.watch(mornyeGlassLevelProvider) != MornyeGlassLevel.flat &&
-      ref.watch(mornyeGlassClarityProvider) > 0 &&
       !ref.watch(
         mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
       );
@@ -85,7 +87,9 @@ class MornyeHeaderBacking extends ConsumerWidget {
             .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()
             ?.isScrolledUnder ??
         false;
-    final glass = material == MornyeHeaderMaterial.glass;
+    final sigma = mornyeGlassClarity(
+      ref.watch(mornyeGlassClarityLevelProvider),
+    ).blurSigma;
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;
     return TweenAnimationBuilder<double>(
       tween: Tween(end: shown ? 1 : 0),
@@ -99,8 +103,8 @@ class MornyeHeaderBacking extends ConsumerWidget {
         return LiquidGlassScrollEdge(
           key: const ValueKey('mornye-header-backing'),
           edge: LiquidGlassEdge.top,
-          color: base.withValues(alpha: (glass ? 0.72 : 0.94) * amount),
-          blur: glass ? 5 * amount : 0,
+          color: base.withValues(alpha: 0.72 * amount),
+          blur: sigma * amount,
           curve: const Interval(0.68, 1, curve: Curves.easeIn),
           blurCurve: const Interval(0.68, 1, curve: Curves.easeIn),
         );

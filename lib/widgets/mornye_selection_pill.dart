@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
+import 'package:spotiflac_android/theme/mornye_glass_levels.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/widgets/mornye_liquid_backdrop.dart';
 
@@ -499,7 +500,14 @@ class _MornyeSelectionPillState extends ConsumerState<MornyeSelectionPill>
               child: LiquidGlassBatch.exclude(
                 child: MornyeLiquidBackdrop(
                   borderRadius: BorderRadius.circular(_pillRadius),
-                  clarity: 1,
+                  // Colour split is a full-glass effect; a lite pill has none.
+                  dispersion:
+                      ref.watch(mornyeGlassLevelProvider) ==
+                          MornyeGlassLevel.liquid
+                      ? mornyeGlassClarity(
+                          ref.watch(mornyeGlassClarityLevelProvider),
+                        ).dispersion
+                      : 0,
                   interaction: true,
                   progress: progress,
                   blurSigma: 0,

@@ -39,7 +39,7 @@ void main() {
     bool lowEnd = false,
     Color? backgroundColor,
     GlobalKey? capture,
-    double glassClarity = 0.75,
+    int glassLevel = 4,
     bool dense = false,
     Color? chromeSurface,
   }) async {
@@ -51,7 +51,7 @@ void main() {
         overrides: [
           settingsProvider.overrideWith(() => _Settings(forceBlur)),
           lowEndDeviceProvider.overrideWithValue(lowEnd),
-          mornyeGlassClarityProvider.overrideWithValue(glassClarity),
+          mornyeGlassClarityLevelProvider.overrideWithValue(glassLevel),
         ],
         child: MaterialApp(
           theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
@@ -156,14 +156,14 @@ void main() {
   }))!;
 
   for (final brightness in Brightness.values) {
-    for (final clarity in [0.0, 0.75, 1.0]) {
+    for (final level in [1, 4, 5]) {
       for (final background in [
         Colors.white,
         Colors.black,
         const Color(0xff6c3a22),
       ]) {
         testWidgets(
-          'menu labels stay readable over $background ($brightness, clarity: $clarity)',
+          'menu labels stay readable over $background ($brightness, level: $level)',
           (tester) async {
             final originalDisableShadows = debugDisableShadows;
             debugDisableShadows = false;
@@ -173,7 +173,7 @@ void main() {
                 tester,
                 anchor: const Rect.fromLTWH(330, 144, 44, 44),
                 brightness: brightness,
-                glassClarity: clarity,
+                glassLevel: level,
                 backgroundColor: background,
                 capture: capture,
                 onResult: (_) {},
@@ -312,7 +312,7 @@ void main() {
         tester,
         anchor: const Rect.fromLTWH(330, 144, 44, 44),
         brightness: Brightness.dark,
-        glassClarity: 1,
+        glassLevel: 5,
         backgroundColor: Colors.white,
         chromeSurface: cover,
         capture: capture,
