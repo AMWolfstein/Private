@@ -1776,9 +1776,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mornye_context_menu.dart": {
-    "mtime": 1792663038.934281,
-    "seen": 1792663396.3164833,
-    "ast_hash": "a41c5df5598074bde58f5d3a1ee31109",
+    "mtime": 1792697773.2334175,
+    "seen": 1792698178.565291,
+    "ast_hash": "ace9d56f8e30ab43f5fbe6248108fd7a",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_glass_preparation.dart": {
@@ -5472,9 +5472,9 @@
     "semantic_hash": ""
   },
   "test/mornye_menu_motion_test.dart": {
-    "mtime": 1792657595.311196,
-    "seen": 1792658615.6855183,
-    "ast_hash": "c9f873b53bc279209b416afea0edd1e8",
+    "mtime": 1792698116.5536256,
+    "seen": 1792698178.5665016,
+    "ast_hash": "dd7be7752ca3eb84de820bdaf83c824f",
     "semantic_hash": ""
   },
   "test/mornye_playback_button_test.dart": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792694088.8785274,
-    "seen": 1792697444.8921702,
-    "ast_hash": "ee4b12bc135af8ab8daeec8794395e1c",
+    "mtime": 1792697446.5377178,
+    "seen": 1792698178.5667398,
+    "ast_hash": "8dfcf6468d2dbdc36397b3f6c27826b9",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792694088.8779511,
-    "seen": 1792697444.8921835,
-    "ast_hash": "500d83f196ac0d6dd5edfa472ca75bbe",
+    "mtime": 1792697446.5368748,
+    "seen": 1792698178.5667477,
+    "ast_hash": "04e52ffb55ae196eef41e35a45d04c1d",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -6888,9 +6888,9 @@
     "semantic_hash": ""
   },
   "lib/screens/local_artist_screen.dart": {
-    "mtime": 1792682586.6947682,
-    "seen": 1792682756.2843385,
-    "ast_hash": "1d10d88fd97198fa466818422fe53ae1",
+    "mtime": 1792697773.232896,
+    "seen": 1792698178.5648818,
+    "ast_hash": "5670a0426f9341fb421b273217b014be",
     "semantic_hash": ""
   },
   "lib/widgets/local_collection_actions.dart": {
@@ -6996,9 +6996,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/local_song_row.dart": {
-    "mtime": 1792438624.2532575,
-    "seen": 1792623676.7851677,
-    "ast_hash": "33cdc1c4a20dce8c3063662aa7bc863a",
+    "mtime": 1792697773.2320154,
+    "seen": 1792698178.5652578,
+    "ast_hash": "033963810d93a8e8191b27e51e7123c9",
     "semantic_hash": ""
   },
   "test/library_edited_metadata_test.dart": {
