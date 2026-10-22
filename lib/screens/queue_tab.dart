@@ -1081,6 +1081,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         onTap: () {},
                         child: AppSearchField(
                           controller: _searchController,
+                          // Scrolls over the plain page: tint, no backdrop.
+                          samplesBackdrop: false,
                           focusNode: _searchFocusNode,
                           hintText: context.l10n.librarySearchHint,
                           clearTooltip: context.l10n.dialogClear,
