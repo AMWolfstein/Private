@@ -76,7 +76,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
   }
 
   void _onOuterPositionChanged() {
-    if (mounted) setState(() {});
+    if (mounted && _long && widget.topPadding > 0) setState(() {});
   }
 
   @override
@@ -104,15 +104,29 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
     final position = _position;
     if (!mounted || position == null || !position.hasContentDimensions) return;
     _readMetrics(position, show: true);
+    // A jump outside a scroll gesture sends no end notification.
+    if (!position.isScrollingNotifier.value) _scheduleHide();
   }
 
   void _readMetrics(ScrollMetrics metrics, {bool show = false}) {
-    setState(() {
-      _pixels = metrics.pixels;
-      _maxExtent = metrics.maxScrollExtent;
-      _viewport = metrics.viewportDimension;
-      if (show) _show();
-    });
+    final wasLong = _long;
+    final changed =
+        _pixels != metrics.pixels ||
+        _maxExtent != metrics.maxScrollExtent ||
+        _viewport != metrics.viewportDimension;
+    final wasVisible = _visible;
+    _pixels = metrics.pixels;
+    _maxExtent = metrics.maxScrollExtent;
+    _viewport = metrics.viewportDimension;
+    if (show && _long) _show();
+    if (!_long) {
+      _visible = false;
+      _hideTimer?.cancel();
+    }
+    // Short lists never show the scroller; skip their per-frame rebuilds.
+    if ((changed && (wasLong || _long)) || wasVisible != _visible) {
+      setState(() {});
+    }
   }
 
   bool _onMetricsNotification(ScrollMetricsNotification notification) {
@@ -130,17 +144,24 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
     if (metrics.axis != Axis.vertical) return false;
     _attachPosition(notification.context);
     _readMetrics(metrics, show: notification is ScrollUpdateNotification);
+    if (notification is ScrollStartNotification) _hideTimer?.cancel();
+    if (notification is ScrollEndNotification) _scheduleHide();
     return false;
   }
 
   void _show() {
     _visible = true;
     _hideTimer?.cancel();
-    if (!_dragging) {
-      _hideTimer = Timer(const Duration(milliseconds: 1500), () {
-        if (mounted && !_dragging) setState(() => _visible = false);
-      });
-    }
+  }
+
+  // One hide timer per gesture, started when scrolling ends, instead of a
+  // new timer on every frame.
+  void _scheduleHide() {
+    if (!_long || !_visible || _dragging) return;
+    _hideTimer?.cancel();
+    _hideTimer = Timer(const Duration(milliseconds: 1500), () {
+      if (mounted && !_dragging) setState(() => _visible = false);
+    });
   }
 
   void _startDrag(DragStartDetails details) {
@@ -195,6 +216,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
       _dragging = false;
       _show();
     });
+    _scheduleHide();
     widget.onDragEnd?.call();
   }
 
