@@ -702,9 +702,9 @@
     "semantic_hash": ""
   },
   "lib/screens/local_album_screen.dart": {
-    "mtime": 1792620523.396944,
-    "seen": 1792623676.7847035,
-    "ast_hash": "948a82b3dd4f24ab209dc6234f8ca24f",
+    "mtime": 1792682780.7276397,
+    "seen": 1792682856.733909,
+    "ast_hash": "38afa2270d0ca867987f3ffd1f3e12de",
     "semantic_hash": ""
   },
   "lib/screens/main_shell.dart": {
@@ -1356,9 +1356,9 @@
     "semantic_hash": ""
   },
   "lib/utils/clickable_metadata.dart": {
-    "mtime": 1792438624.2515736,
-    "seen": 1792623676.7850146,
-    "ast_hash": "cac4d0ad8dea7e79fa242ee6bc0f4963",
+    "mtime": 1792682780.8307116,
+    "seen": 1792682856.734191,
+    "ast_hash": "759523c6687a5552af6c68d48f43e4f7",
     "semantic_hash": ""
   },
   "lib/utils/confirm_and_delete_tracks.dart": {
