@@ -7308,9 +7308,9 @@
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/ImpellerCompatibility.kt": {
-    "mtime": 1792620521.9405465,
-    "seen": 1792623676.7843945,
-    "ast_hash": "e714acd9e1d712673b5a95baa9fe0eee",
+    "mtime": 1792681857.6123037,
+    "seen": 1792681898.5525103,
+    "ast_hash": "0da825654fde1bdac8ed089437b35da0",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/SpotiFlacApplication.kt": {
@@ -7320,9 +7320,9 @@
     "semantic_hash": ""
   },
   "android/app/src/test/kotlin/com/zarz/spotiflac/ImpellerCompatibilityTest.kt": {
-    "mtime": 1792620521.9459777,
-    "seen": 1792623676.7844808,
-    "ast_hash": "7802dcb97781588236a7ef438b24d415",
+    "mtime": 1792681850.1177561,
+    "seen": 1792681898.552574,
+    "ast_hash": "40095b2448223857346fd56999104ec9",
     "semantic_hash": ""
   },
   "lib/widgets/playback_normalization_settings.dart": {
