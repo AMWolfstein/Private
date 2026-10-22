@@ -450,6 +450,8 @@ class _LogScreenState extends ConsumerState<LogScreen> {
                     ),
                     child: AppSearchField(
                       controller: _searchController,
+                      // Scrolls over the plain page: tint, no backdrop.
+                      samplesBackdrop: false,
                       hintText: context.l10n.logSearchHint,
                       clearTooltip: context.l10n.logClearSearch,
                       onClear: () => setState(() => _searchQuery = ''),
