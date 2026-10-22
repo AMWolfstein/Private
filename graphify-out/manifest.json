@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "lib/app.dart": {
-    "mtime": 1792657332.7028265,
-    "seen": 1792658615.6837647,
-    "ast_hash": "9388fb89bfd09890e56fa43cd966246c",
+    "mtime": 1792693634.2538,
+    "seen": 1792694087.4354103,
+    "ast_hash": "a0a71f9c2a2aedad330a0c9b552d1172",
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
@@ -6744,9 +6744,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792692230.0512748,
-    "seen": 1792693284.6967735,
-    "ast_hash": "60b34b3bd54cead48949e365843dd80b",
+    "mtime": 1792693286.5839357,
+    "seen": 1792694087.4376411,
+    "ast_hash": "2c9aa49db8dc2d150fabc79a2c7910d3",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
