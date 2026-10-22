@@ -27,6 +27,30 @@ import 'package:spotiflac_android/widgets/lyrics_text_scale.dart';
 const _mornyeLyricFontSize = 34.0;
 const mornyeLyricsContentInset = 28.0 + MornyePlayerSlider.horizontalInset;
 
+/// How much of the lyrics area's bottom the player's controls cover. The
+/// Mornye phone player lays lyrics out under its controls so they can grow
+/// when the controls hide; content that is not a scrolling lyric list keeps
+/// clear of this part.
+class LyricsCoveredBottom extends InheritedWidget {
+  const LyricsCoveredBottom({
+    super.key,
+    required this.height,
+    required super.child,
+  });
+
+  final double height;
+
+  static double of(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<LyricsCoveredBottom>()
+          ?.height ??
+      0;
+
+  @override
+  bool updateShouldNotify(LyricsCoveredBottom oldWidget) =>
+      height != oldWidget.height;
+}
+
 class SyncedLyricsView extends ConsumerStatefulWidget {
   final ParsedLyrics lyrics;
   final ValueListenable<Duration?> seekPreview;
