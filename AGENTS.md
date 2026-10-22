@@ -67,7 +67,16 @@ In the shell, persistent chrome shares one backdrop read: one public `LiquidGlas
 circle and actions, tab capsule, mini player, bar side buttons at rest). Blurs push its key through
 our own layer, on Impeller only; never import `liquid_glass_easy/src` or allocate ids. The band,
 page content, sheets, glass inside Opacity, folding side buttons and moving or covered routes read
-on their own.
+on their own. Glass over known artwork (the player's menus and sheets; album and artist header
+controls, which opt in through `MornyeHeaderControls`) reads nothing: it draws a pre-blurred
+ground image (`MornyePlayerGround`/`MornyePageGround`, 384 px wide, at most 6 MB in total, released
+with their screen) through our `mornye_artwork_glass.frag`; never a BackdropFilter, lens or view
+there. Lite and Level 1 draw the ground without the shader; an overlay picks its material once at
+open (opaque if its ground is not ready) and those menus have no staged glass reveal.
+Cover colours come from one analysis per cover version (`CoverPalette` -> `mornyeCoverColors`:
+bottom/top edge, dominant, harmonized accent; HCT, chroma never above the cover's, AA on-colours;
+stored in the library DB's derived `cover_analysis` table). Screens and grounds take every cover
+colour from it; never add HSL or second copies of the colour maths.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
