@@ -4,7 +4,7 @@ Baseline968fbe57, applicationd5d5a02 unchanged. Review-only repository-wide hot-
 
 PERF-001..008 P2 NEEDS VERIFICATION (U1a repeated accumulated-page copies,N1 scan repair); no measured gains. N1 report02 complete,D1 report03 complete (host SQLite fixture measured; Android unrun),,U1b report04 complete,A1 report08 complete artwork caches; D2 report07 complete collection/backup,U2 report05 complete shared glass,N2 report06 complete. Inventory reconciliation follows. Pending reviewers/reports are not complete coverage.
 
-Last verified push9e9ce5fc(D3). Current publication recorded next chunk.
+Last verified push8b5f6672(U4). Current publication recorded next chunk.
 
 U3 report09 complete; no new finding,PERF-001 grouping-cache evidence added. U4 player/shared hot paths complete reviewer report pending publication.
 
@@ -13,3 +13,5 @@ N3 report10 complete native job/cache and native inventory triage; no new candid
 D3 report11 complete; CUE seek/decoder-work hypothesis PERF-008 requires accuracy-preserving benchmark.
 
 U4 report12 complete player/shared rendering; no new candidate. All reviewer chunks returned; inventory reconciliation pending.
+
+R1 report13 complete startup budgets/shader/build/tooling triage; no new candidate. Final inventory/measurement task reconciliation follows.
