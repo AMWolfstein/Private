@@ -1053,12 +1053,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: RTL → hero count and decor stay on physical sides.
 - Fix: directional alignment, `PositionedDirectional`, `EdgeInsetsDirectional`; ~4 lines.
 
-### UX-227 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/constants/language_choices.dart` (`('pt_PT', 'Português (Brasil)')`), `lib/l10n/supported_locales.dart` (`Locale('pt', 'PT')`, `'pt_PT'`), `lib/l10n/arb/app_pt_PT.arb`
-- Scenario: the label says Brazil, but the locale code is Portugal. The translation itself is Brazilian Portuguese (it uses "arquivo", "você", "tela" and "configurações").
-- Owner decision (2026-10-23): the translation is Brazilian, so keep the label "Português (Brasil)".
-- Fix: change the locale code to `pt_BR`: rename the arb file, update `supported_locales.dart` and `language_choices.dart`, and migrate a saved language of `pt_PT` to `pt_BR` so existing users and old backups keep their choice. Regenerate the l10n files with the repo tooling.
-
 ### UX-229 [P2] [confidence: medium] [VALIDATED]
 - Location: `lib/screens/listening_rewind_screen.dart` (`_RewindStoryState` auto-advance)
 - Scenario: TalkBack on → slides auto-advance every 6 s while the reader is still speaking (only `disableAnimationsOf` is checked).
@@ -1105,10 +1099,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: `Ch n`, `P`, `R`, `DR`, `Clip` and `N/A` are hard-coded English.
 - Fix: arb keys; ~6 strings.
 
-### UX-238 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/app_snack_bar.dart` (3 s cap)
-- Scenario: every snackbar is capped at 3 s, overriding the 6 s restore hint and the 8 s USB volume warning. Product decision: honour longer durations or keep the cap.
-
 ### UX-239 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/widgets/mornye_player_queue.dart` (queue rows), `lib/widgets/player_queue_dismissible.dart`
 - Scenario: TalkBack or switch access in Up Next → removing a queued song is swipe-only; `Dismissible` exposes no semantic action and the row has no remove control.
@@ -1140,6 +1130,20 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### UX-238 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/app_snack_bar.dart` (3 s cap)
+- Scenario: every snackbar is capped at 3 s, overriding the 6 s restore hint and the 8 s USB volume warning. Product decision: honour longer durations or keep the cap.
+
+- Resolution: FIXED in 23b1b46: longer-than-default snackbars keep their time up to 8 s; others still close within 3 s (owner decision 2026-10-23).
+
+### UX-227 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/constants/language_choices.dart` (`('pt_PT', 'Português (Brasil)')`), `lib/l10n/supported_locales.dart` (`Locale('pt', 'PT')`, `'pt_PT'`), `lib/l10n/arb/app_pt_PT.arb`
+- Scenario: the label says Brazil, but the locale code is Portugal. The translation itself is Brazilian Portuguese (it uses "arquivo", "você", "tela" and "configurações").
+- Owner decision (2026-10-23): the translation is Brazilian, so keep the label "Português (Brasil)".
+- Fix: change the locale code to `pt_BR`: rename the arb file, update `supported_locales.dart` and `language_choices.dart`, and migrate a saved language of `pt_PT` to `pt_BR` so existing users and old backups keep their choice. Regenerate the l10n files with the repo tooling.
+
+- Resolution: FIXED in 23b1b46: locale code renamed to pt_BR with pt_PT migration (owner decision 2026-10-23).
 
 ### UX-105 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/screens/local_album_screen.dart:402`, `lib/widgets/track_detail_actions.dart:54`
