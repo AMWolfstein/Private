@@ -12,3 +12,8 @@
 - Remaining: shared UI primitives (headers/glass/player layout/gestures/overlays and other widgets), unreviewed services/native non-engine bodies/generated endpoints, full BUILD-01 lock/constraint/license checks, test/docs chunks and exact inventory reconciliation. No final TASKS.md or whole-audit completion claim yet.
 - Verification: Python helper suite28 passed previously. New filtered host native_lyrics unit suite6 passed,0 failures/ignored,90 filtered, source d5d5a02. Flutter absent; analyzer/full Flutter and devices NOT RUN. No APK. Earlier Rust passes/reproductions tied to prior records.
 - Last previously recorded verified push: `e0de1864`. Local checkpoints `d3a25128` and `294ff66b` committed; following checkpoint contains reports10/11. Push attempt failed: GitHub HTTPS username unavailable; no successful publication claimed.
+
+## Publication checkpoint
+
+- Verified push: `4def1a1f` to `origin/ccr-2fb644cd-nmesyt`, successful using existing GitHub CLI credential helper for this command. Remote advanced from5dcf7241 to4def1a1f; prior failed attempts superseded.
+- Owner steering: skip further security checks. Existing completed security report retained; no additional security execution performed after instruction.
