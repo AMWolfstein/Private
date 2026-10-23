@@ -61,14 +61,14 @@ class MetadataPersistenceService {
   final Future<Map<String, dynamic>> Function(String, Map<String, String>) edit;
   final Future<Map<String, dynamic>> Function(String) read;
   final MetadataEmbed embed;
-  final Future<bool> Function(String, String) writeBack;
+  final Future<SafWriteBackResult> Function(String, String) writeBack;
 
   const MetadataPersistenceService({
     required this.covers,
     this.edit = PlatformBridge.editFileMetadata,
     this.read = PlatformBridge.readFileMetadata,
     this.embed = _embed,
-    this.writeBack = PlatformBridge.writeTempToSaf,
+    this.writeBack = PlatformBridge.writeTempToSafDetailed,
   });
 
   Future<MetadataSaveResult> save(MetadataSaveRequest request) async {
@@ -145,10 +145,14 @@ class MetadataPersistenceService {
         return const MetadataSaveResult.failed(MetadataSaveFailure.ffmpeg);
       }
       final safUri = result['saf_uri'] as String?;
-      if (stagedPath != null &&
-          safUri != null &&
-          !await writeBack(output, safUri)) {
-        return const MetadataSaveResult.failed(MetadataSaveFailure.storage);
+      if (stagedPath != null && safUri != null) {
+        final written = await writeBack(output, safUri);
+        if (!written.success) {
+          return MetadataSaveResult.failed(
+            MetadataSaveFailure.storage,
+            written.error ?? written.recoveryPath,
+          );
+        }
       }
       return const MetadataSaveResult.saved();
     } catch (error) {
@@ -186,8 +190,9 @@ class MetadataPersistenceService {
       return total.isEmpty || total == '0' ? number : '$number/$total';
     }
 
-    // Emit empty values too: preserve custom tags while clearing edited fields.
-    final tags = {
+    // Include only fields present in this request. Omitted fields are left
+    // untouched by the fallback writers instead of being cleared with ''.
+    final tags = <String, String>{
       for (final entry in const {
         'TITLE': 'title',
         'ARTIST': 'artist',
@@ -207,10 +212,15 @@ class MetadataPersistenceService {
         'BARCODE': 'upc',
         'COMPILATION': 'compilation',
       }.entries)
-        entry.key: metadata[entry.value] ?? '',
-      'TRACKNUMBER': index('track'),
-      'DISCNUMBER': index('disc'),
+        if (metadata.containsKey(entry.value))
+          entry.key: metadata[entry.value] ?? '',
     };
+    if (metadata.containsKey('track_number')) {
+      tags['TRACKNUMBER'] = index('track');
+    }
+    if (metadata.containsKey('disc_number')) {
+      tags['DISCNUMBER'] = index('disc');
+    }
     // Per-field separators: format list values here, then pass the keys on so
     // the Vorbis mapper writes a joined artist tag instead of splitting it.
     final separators = MetadataSeparators.fromJson({
@@ -225,8 +235,9 @@ class MetadataPersistenceService {
       'COMPOSER': 'composer',
       'GENRE': 'genre',
     }.entries) {
+      if (!tags.containsKey(entry.key)) continue;
       tags[entry.key] = formatMetadataTagValue(
-        tags[entry.key] ?? '',
+        tags[entry.key]!,
         selected[entry.value] ?? '',
       );
     }

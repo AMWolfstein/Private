@@ -106,9 +106,8 @@ pub(super) fn rewrite(
     if opus {
         opus_gain(&mut comments, fields)?;
     }
-    if let Some(cover) = cover
-        && let Some(picture) = picture(cover, check)?
-    {
+    if let Some(cover) = cover {
+        let picture = picture(cover, check)?;
         set_comment(
             &mut comments,
             "METADATA_BLOCK_PICTURE",

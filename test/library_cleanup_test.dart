@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
+import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -131,6 +132,7 @@ void main() {
             'operation': 'cache_prune_library',
             'directory': directory.absolute.path,
             'library_path': snapshotPath,
+            'schema_version': LibrarySchema.version,
             'minimum_age_us': 60000000,
           });
           return {

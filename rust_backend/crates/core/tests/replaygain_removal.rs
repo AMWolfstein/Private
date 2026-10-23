@@ -296,3 +296,87 @@ fn riff_removal_preserves_unrecognized_id3_frames() {
         );
     }
 }
+
+#[test]
+fn ape_clearing_date_removes_both_aliases_and_preserves_legacy_tail() {
+    let mut body = Vec::new();
+    for (key, value) in [("DATE", "2026"), ("Year", "2025"), ("Title", "keep me")] {
+        body.extend((value.len() as u32).to_le_bytes());
+        body.extend([0; 4]);
+        body.extend(key.as_bytes());
+        body.push(0);
+        body.extend(value.as_bytes());
+    }
+    let mut footer = b"APETAGEX".to_vec();
+    footer.extend(2000_u32.to_le_bytes());
+    footer.extend(((body.len() + 32) as u32).to_le_bytes());
+    footer.extend(3_u32.to_le_bytes());
+    footer.extend([0; 12]);
+    let mut legacy = b"TAG".to_vec();
+    legacy.resize(128, 0);
+    let input = [PAYLOAD, &body, &footer, &legacy].concat();
+    let mut output = Vec::new();
+    rewrite_audio_tags(
+        &mut Cursor::new(&input),
+        &mut output,
+        "ape",
+        &[("date".into(), String::new())].into(),
+        None,
+        &|| Ok(()),
+    )
+    .unwrap();
+    let tags = read_audio_tags(&mut Cursor::new(&output), "ape", &|| Ok(())).unwrap();
+    assert!(tags.date.is_empty());
+    assert_eq!(tags.title, "keep me");
+    assert!(output.starts_with(PAYLOAD));
+    assert!(output.ends_with(&legacy));
+}
+
+#[test]
+fn mp4_large_indices_saturate_and_invalid_cover_never_publishes() {
+    let input = source("m4a");
+    let mut output = Vec::new();
+    rewrite_audio_tags(
+        &mut Cursor::new(&input),
+        &mut output,
+        "m4a",
+        &[
+            ("track_number".into(), "65536".into()),
+            ("track_total".into(), i64::MAX.to_string()),
+            ("disc_number".into(), "65536".into()),
+            ("disc_total".into(), i64::MAX.to_string()),
+        ]
+        .into(),
+        Some(COVER),
+        &|| Ok(()),
+    )
+    .unwrap();
+    let tags = read_audio_tags(&mut Cursor::new(&output), "m4a", &|| Ok(())).unwrap();
+    assert_eq!((tags.track_number, tags.total_tracks), (65535, 65535));
+    assert_eq!((tags.disc_number, tags.total_discs), (65535, 65535));
+    assert_eq!(
+        extract_cover(&mut Cursor::new(&output), "m4a", &|| Ok(()))
+            .unwrap()
+            .data,
+        COVER
+    );
+    assert!(
+        output
+            .windows(16)
+            .any(|v| v == b"data\0\0\0\x0d\0\0\0\0\xff\xd8\xff\xd9")
+    );
+    let mut rejected = Vec::new();
+    assert!(
+        rewrite_audio_tags(
+            &mut Cursor::new(&output),
+            &mut rejected,
+            "m4a",
+            &BTreeMap::new(),
+            Some(b"GIF89a bad replacement"),
+            &|| Ok(())
+        )
+        .is_err()
+    );
+    assert!(rejected.is_empty());
+    assert!(output.windows(PAYLOAD.len()).any(|v| v == PAYLOAD));
+}

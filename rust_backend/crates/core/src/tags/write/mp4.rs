@@ -129,8 +129,14 @@ pub(super) fn edit(
         (edit_disc, disc, "disc_number", "disc_total", b"disk"),
     ] {
         if edited {
-            let number = fields.get(field).map_or(current.0, |v| positive(v));
-            let total = fields.get(total).map_or(current.1, |v| positive(v));
+            let number = fields
+                .get(field)
+                .map_or(current.0, |v| positive(v))
+                .min(u16::MAX as i64);
+            let total = fields
+                .get(total)
+                .map_or(current.1, |v| positive(v))
+                .min(u16::MAX as i64);
             if number > 0 {
                 let mut pair = vec![0; if kind == b"disk" { 6 } else { 8 }];
                 pair[2..4].copy_from_slice(&(number as u16).to_be_bytes());
@@ -140,15 +146,17 @@ pub(super) fn edit(
         }
     }
     if let Some(cover) = cover {
-        appended.extend(value_atom(
-            b"covr",
-            if cover.starts_with(b"\x89PNG") {
-                14
-            } else {
-                13
-            },
-            cover,
-        ));
+        // Apple only defines JPEG (13) and PNG (14) cover data types. Labeling
+        // any other image as JPEG makes players hand undecodable bytes to a
+        // JPEG decoder, so refuse rather than mislabel it.
+        let data_type = if cover.starts_with(b"\x89PNG") {
+            14
+        } else if cover.starts_with(b"\xff\xd8\xff") {
+            13
+        } else {
+            return Err("MP4 cover art must be JPEG or PNG".into());
+        };
+        appended.extend(value_atom(b"covr", data_type, cover));
     }
     if body.len() + appended.len() > MAX_TAG_BYTES {
         return Err("MP4 metadata exceeds 64 MiB".into());

@@ -288,7 +288,7 @@ pub(super) fn ogg_cover(reader: &mut impl Read) -> Result<CoverArt, String> {
         } else {
             continue;
         };
-        for (key, value) in comments::parse(comments, 10_000_000) {
+        for (key, value) in comments::parse(comments, 24 * 1024 * 1024) {
             if !key.eq_ignore_ascii_case("METADATA_BLOCK_PICTURE") {
                 continue;
             }

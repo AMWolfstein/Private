@@ -16,10 +16,20 @@ pub(super) fn edit(
     cover: Option<&[u8]>,
     check: &dyn Fn() -> Result<(), String>,
 ) -> Result<Section, String> {
-    let mut end = seek(source, SeekFrom::End(0))?;
+    let file_end = seek(source, SeekFrom::End(0))?;
+    // Preserve a legacy ID3v1 tag that follows the APE tag. The APE footer is
+    // then 32 bytes before the ID3v1 start, not at the physical end.
+    let has_v1 = if file_end >= 128 {
+        seek(source, SeekFrom::Start(file_end - 128))?;
+        bytes(source, 128)?.starts_with(b"TAG")
+    } else {
+        false
+    };
+    let end = if has_v1 { file_end - 128 } else { file_end };
     let mut start = end;
+    let mut found = false;
     let mut existing = None;
-    for offset in [end.checked_sub(32), end.checked_sub(161).map(|_| end - 160)]
+    for offset in [end.checked_sub(32), end.checked_sub(160).map(|_| end - 160)]
         .into_iter()
         .flatten()
     {
@@ -27,16 +37,12 @@ pub(super) fn edit(
         let Some(footer) = ApeFooter::read(source, offset)? else {
             continue;
         };
-        if start == end {
+        if !found {
+            found = true;
             let size = u64::from(footer.size) + if footer.flags & (1 << 31) != 0 { 32 } else { 0 };
             start = (offset + 32)
                 .checked_sub(size)
                 .ok_or("invalid APE tag size")?;
-            if fields.len() == 4 && super::clears_replay_gain(fields) {
-                // A legacy ID3v1 tag can follow the APE footer. Removing gain
-                // must leave that unrelated metadata in place too.
-                end = offset + 32;
-            }
         }
         if existing.is_none()
             && let Ok(begin) = footer.items_start(offset)
@@ -76,13 +82,15 @@ pub(super) fn edit(
         ("replaygain_album_peak", "REPLAYGAIN_ALBUM_PEAK"),
     ] {
         if fields.contains_key(field) {
-            // Go's clear-date override names DATE; a newly emitted Year also
-            // replaces YEAR, but clearing DATE alone leaves the old YEAR item.
-            remove.insert(if field == "date" {
-                "DATE".into()
+            // APE date has no single canonical key. Remove both so clearing
+            // the date cannot leave an old Year item behind (and changing it
+            // cannot duplicate the value under two keys).
+            if field == "date" {
+                remove.insert("DATE".into());
+                remove.insert("YEAR".into());
             } else {
-                uppercase(key)
-            });
+                remove.insert(uppercase(key));
+            }
         }
         let value = &metadata[field];
         if !value.is_empty() {

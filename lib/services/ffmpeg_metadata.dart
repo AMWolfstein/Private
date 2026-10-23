@@ -101,24 +101,30 @@ abstract final class FFmpegMetadata {
     FFmpegResult result,
     String tempOutput,
     String path,
-    String format,
-  ) async {
-    if (result.success) {
-      final promoted = await FFmpegOutput.promote(
-        tempOutput,
-        path,
-        onMissing: () =>
-            _log.e('Temp $format output file not found: $tempOutput'),
-        onError: (e) =>
-            _log.e('Failed to replace $format file after metadata embed: $e'),
-      );
-      if (!promoted) return null;
-      _log.d('$format metadata embedded successfully');
-      return path;
+    String format, {
+    Future<bool> Function(String tempOutput)? beforePromote,
+  }) async {
+    if (!result.success) {
+      await FFmpegOutput.cleanup(tempOutput);
+      _log.e('$format Metadata/Cover embed failed: ${result.output}');
+      return null;
     }
-    await FFmpegOutput.cleanup(tempOutput);
-    _log.e('$format Metadata/Cover embed failed: ${result.output}');
-    return null;
+    if (beforePromote != null && !await beforePromote(tempOutput)) {
+      await FFmpegOutput.cleanup(tempOutput);
+      _log.e('$format metadata post-processing failed; keeping the original');
+      return null;
+    }
+    final promoted = await FFmpegOutput.promote(
+      tempOutput,
+      path,
+      onMissing: () =>
+          _log.e('Temp $format output file not found: $tempOutput'),
+      onError: (e) =>
+          _log.e('Failed to replace $format file after metadata embed: $e'),
+    );
+    if (!promoted) return null;
+    _log.d('$format metadata embedded successfully');
+    return path;
   }
 
   static Future<String?> embedMetadataToMp3({
@@ -129,35 +135,24 @@ abstract final class FFmpegMetadata {
     bool preserveMetadata = false,
   }) async {
     // ID3 keeps one artist frame: only primary mode changes its value.
+    if (preserveMetadata) {
+      // A remux cannot round-trip unknown ID3 frames after the native writer
+      // refuses them. Keep the source rather than bypassing that safety check.
+      _log.e('MP3 metadata preservation requires the native tag writer');
+      return null;
+    }
     if (metadata != null) {
       metadata = applyArtistTagModeToMetadata(metadata, artistTagMode);
     }
-    var tempOutput = await FFmpegOutput.tempPath('.mp3');
+    final tempOutput = await FFmpegOutput.tempPath('.mp3');
     final lyrics = AudioMetadataMapper.extractLyricsForId3(metadata);
-    var result = await _runMp3Embed(
+    final result = await _runMp3Embed(
       mp3Path: mp3Path,
       tempOutput: tempOutput,
       coverPath: coverPath,
       metadata: metadata,
       preserveMetadata: preserveMetadata,
-      audioCodec: 'copy',
     );
-    if (!result.success &&
-        (result.output.contains('Invalid audio stream') ||
-            result.output.contains('incorrect codec parameters'))) {
-      _log.w('MP3 copy failed (codec mismatch), re-encoding with libmp3lame');
-      await FFmpegOutput.cleanup(tempOutput);
-      tempOutput = await FFmpegOutput.tempPath('.mp3');
-      result = await _runMp3Embed(
-        mp3Path: mp3Path,
-        tempOutput: tempOutput,
-        coverPath: coverPath,
-        metadata: metadata,
-        preserveMetadata: preserveMetadata,
-        audioCodec: 'libmp3lame',
-        audioBitrate: '192k',
-      );
-    }
     final embeddedPath = await _finish(result, tempOutput, mp3Path, 'MP3');
     if (embeddedPath != null && lyrics != null) {
       await _ensureMp3UnsyncedLyricsFrame(embeddedPath, lyrics);
@@ -171,9 +166,27 @@ abstract final class FFmpegMetadata {
     String? coverPath,
     Map<String, String>? metadata,
     required bool preserveMetadata,
-    required String audioCodec,
-    String? audioBitrate,
   }) async {
+    final arguments = buildMp3EmbedArguments(
+      mp3Path: mp3Path,
+      tempOutput: tempOutput,
+      coverPath: coverPath,
+      metadata: metadata,
+      preserveMetadata: preserveMetadata,
+    );
+    _log.d('Executing FFmpeg MP3 embed command');
+    return FFmpegExecution.arguments(arguments);
+  }
+
+  /// MP3 edits always stream-copy the audio. Re-encoding a tag-only edit
+  /// silently replaced the user's file with a lossy 192 kbps copy.
+  static List<String> buildMp3EmbedArguments({
+    required String mp3Path,
+    required String tempOutput,
+    String? coverPath,
+    Map<String, String>? metadata,
+    required bool preserveMetadata,
+  }) {
     final arguments = <String>['-v', 'error', '-hide_banner', '-i', mp3Path];
     if (coverPath != null) arguments.addAll(['-i', coverPath]);
     arguments.addAll([
@@ -196,8 +209,7 @@ abstract final class FFmpegMetadata {
         'comment=Cover (front)',
       ]);
     }
-    arguments.addAll(['-c:a', audioCodec]);
-    if (audioBitrate != null) arguments.addAll(['-b:a', audioBitrate]);
+    arguments.addAll(['-c:a', 'copy']);
     if (metadata != null) {
       AudioMetadataMapper.appendMappedMetadataArguments(
         arguments,
@@ -205,8 +217,7 @@ abstract final class FFmpegMetadata {
       );
     }
     arguments.addAll(['-id3v2_version', '3', tempOutput, '-y']);
-    _log.d('Executing FFmpeg MP3 embed command (codec: $audioCodec)');
-    return FFmpegExecution.arguments(arguments);
+    return arguments;
   }
 
   static Future<void> _ensureMp3UnsyncedLyricsFrame(
@@ -294,6 +305,12 @@ abstract final class FFmpegMetadata {
     String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = true,
   }) async {
+    if (preserveMetadata) {
+      // FFmpeg drops unknown freeform atoms even with metadata copying. Local
+      // edits must keep the original if the atom-preserving native edit fails.
+      _log.e('M4A metadata preservation requires the native tag writer');
+      return null;
+    }
     if (metadata != null) {
       metadata = applyArtistTagModeToMetadata(metadata, artistTagMode);
     }
@@ -346,11 +363,19 @@ abstract final class FFmpegMetadata {
       await FFmpegOutput.cleanup(tempOutput);
       result = await FFmpegExecution.arguments(buildArgs(true));
     }
-    final embedded = await _finish(result, tempOutput, m4aPath, 'M4A');
-    if (embedded != null && metadata != null) {
-      await writeM4AFreeformTags(m4aPath, metadata);
-      await writeM4AReleaseIdentityTags(m4aPath, metadata);
-    }
+    final metadataTags = metadata;
+    final embedded = await _finish(
+      result,
+      tempOutput,
+      m4aPath,
+      'M4A',
+      beforePromote: metadataTags == null
+          ? null
+          : (temp) async {
+              if (!await writeM4AFreeformTags(temp, metadataTags)) return false;
+              return writeM4AReleaseIdentityTags(temp, metadataTags);
+            },
+    );
     return embedded;
   }
 
@@ -412,7 +437,7 @@ abstract final class FFmpegMetadata {
     }
   }
 
-  static Future<void> writeM4AFreeformTags(
+  static Future<bool> writeM4AFreeformTags(
     String path,
     Map<String, String> metadata,
   ) async {
@@ -429,11 +454,17 @@ abstract final class FFmpegMetadata {
           break;
       }
     }
-    if (fields.isEmpty) return;
+    if (fields.isEmpty) return true;
     try {
-      await PlatformBridge.writeM4AFreeformTags(path, fields);
+      final result = await PlatformBridge.writeM4AFreeformTags(path, fields);
+      if (result['error'] != null) {
+        _log.w('writeM4AFreeformTags was not completed for $path');
+        return false;
+      }
+      return true;
     } catch (e) {
       _log.w('writeM4AFreeformTags failed for $path: $e');
+      return false;
     }
   }
 

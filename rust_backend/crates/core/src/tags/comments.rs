@@ -15,11 +15,6 @@ pub(super) fn parse(data: &[u8], max_comment: usize) -> Vec<(String, String)> {
     let count = u32::from_le_bytes(count.try_into().unwrap());
     let mut offset = end;
     let mut items = Vec::new();
-    let count = if max_comment == usize::MAX {
-        count
-    } else {
-        count.min(100)
-    };
     for _ in 0..count {
         let Some(length) = data.get(offset..offset.saturating_add(4)) else {
             break;
@@ -307,5 +302,27 @@ mod tests {
             assert_eq!(metadata.total_tracks, 12);
             assert_eq!(metadata.total_discs, 2);
         }
+    }
+}
+
+#[cfg(test)]
+mod limit_tests {
+    use super::*;
+
+    #[test]
+    fn later_comments_and_large_picture_values_are_not_silently_dropped() {
+        let mut entries = vec!["PADDING=x".to_owned(); 101];
+        entries.push("TITLE=after padding".into());
+        entries.push(format!("METADATA_BLOCK_PICTURE={}", "a".repeat(10_000_001)));
+        let mut packet = vec![0; 4];
+        packet.extend((entries.len() as u32).to_le_bytes());
+        for entry in entries {
+            packet.extend((entry.len() as u32).to_le_bytes());
+            packet.extend(entry.as_bytes());
+        }
+        let comments = parse(&packet, 32 * 1024 * 1024);
+        assert_eq!(comments.len(), 103);
+        assert_eq!(comments[101], ("TITLE".into(), "after padding".into()));
+        assert_eq!(comments[102].1.len(), 10_000_001);
     }
 }

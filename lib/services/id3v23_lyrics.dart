@@ -116,6 +116,7 @@ class Id3v23Lyrics {
 
     final tagPayload = bytes.sublist(10, tagEnd);
     final preservedFrames = _removeFrames(tagPayload, {'USLT'});
+    if (preservedFrames == null) return null;
     final newPayload = BytesBuilder(copy: false)
       ..add(preservedFrames)
       ..add(lyricsFrame);
@@ -134,7 +135,10 @@ class Id3v23Lyrics {
         bytes[2] == 0x33;
   }
 
-  static Uint8List _removeFrames(Uint8List tagPayload, Set<String> frameIds) {
+  /// Returns null when the tag contains bytes this parser cannot safely
+  /// re-emit. Callers must then leave the file untouched rather than dropping
+  /// every frame after the malformed one.
+  static Uint8List? _removeFrames(Uint8List tagPayload, Set<String> frameIds) {
     final builder = BytesBuilder(copy: false);
     var offset = 0;
 
@@ -143,11 +147,13 @@ class Id3v23Lyrics {
       if (idBytes.every((byte) => byte == 0)) break;
 
       final frameId = ascii.decode(idBytes, allowInvalid: true);
-      if (!RegExp(r'^[A-Z0-9]{4}$').hasMatch(frameId)) break;
+      if (!RegExp(r'^[A-Z0-9]{4}$').hasMatch(frameId)) {
+        return _hasNonZero(tagPayload, offset) ? null : builder.toBytes();
+      }
 
       final frameSize = _readUint32(tagPayload, offset + 4);
       if (frameSize <= 0 || offset + 10 + frameSize > tagPayload.length) {
-        break;
+        return _hasNonZero(tagPayload, offset) ? null : builder.toBytes();
       }
 
       if (!frameIds.contains(frameId)) {
@@ -157,7 +163,19 @@ class Id3v23Lyrics {
       offset += 10 + frameSize;
     }
 
+    // A short non-zero tail cannot be a frame; preserve it by refusing the
+    // write, because appending USLT before it would make it unreachable.
+    if (offset < tagPayload.length && _hasNonZero(tagPayload, offset)) {
+      return null;
+    }
     return builder.toBytes();
+  }
+
+  static bool _hasNonZero(Uint8List bytes, int start) {
+    for (var index = start; index < bytes.length; index++) {
+      if (bytes[index] != 0) return true;
+    }
+    return false;
   }
 
   static Uint8List _buildTag(Uint8List payload) {

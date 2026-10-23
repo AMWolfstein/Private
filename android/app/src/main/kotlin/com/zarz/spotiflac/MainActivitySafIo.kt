@@ -15,6 +15,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.time.Instant
 import java.util.Locale
+import java.util.UUID
 
 // SAF/MediaStore URI IO helpers: temp copies, writes, sidecars, and the
 // SAF post-processing pipeline.
@@ -371,16 +372,119 @@ internal fun MainActivity.extractCoverFromUri(uri: Uri, outputPath: String) {
     } finally { File(tempPath).delete() }
 }
 
-internal fun MainActivity.writeUriFromPath(uri: Uri, srcPath: String): Boolean {
-        val srcFile = File(srcPath)
-        if (!srcFile.exists()) return false
+internal data class SafWriteResult(
+    val success: Boolean,
+    val error: String? = null,
+    val recoveryPath: String? = null,
+)
+
+internal fun MainActivity.writeUriFromPath(uri: Uri, srcPath: String): Boolean =
+    writeUriFromPathRecoverable(uri, srcPath).success
+
+/**
+ * Replaces a SAF document without leaving a truncated only-copy.
+ *
+ * SAF providers do not offer an atomic replace, so the previous document is
+ * copied to app cache first. Opening the destination with `wt` truncates it
+ * immediately; if the copy or verification fails the backup is written back.
+ * When even that restore fails, the backup is retained and reported so the
+ * user still has a complete copy.
+ */
+internal fun MainActivity.writeUriFromPathRecoverable(
+    uri: Uri,
+    srcPath: String,
+): SafWriteResult {
+    val srcFile = File(srcPath)
+    if (!srcFile.isFile) {
+        return SafWriteResult(false, "Temporary audio file is missing")
+    }
+    val expected = srcFile.length()
+    if (expected <= 0) {
+        return SafWriteResult(false, "Temporary audio file is empty")
+    }
+    val displayName = runCatching { buildUriDisplayName(uri) }.getOrNull()
+        ?: uri.lastPathSegment
+        ?: "audio"
+    val recoveryDirectory = File(cacheDir, "saf-write-recovery")
+    if (!recoveryDirectory.isDirectory && !recoveryDirectory.mkdirs()) {
+        return SafWriteResult(false, "Could not create a safe-write recovery directory")
+    }
+    // The backup must hold the previous document, which can be larger than the
+    // staged replacement (for example after an artwork shrink).
+    val originalBytes = runCatching {
+        val stat = querySafDocumentStat(contentResolver, uri)
+        if (stat.isNull("size")) null else stat.optLong("size").takeIf { it >= 0 }
+    }.getOrNull()
+    if (!SafWriteBackupPolicy.canBackUp(
+            maxOf(expected, originalBytes ?: expected),
+            recoveryDirectory.usableSpace,
+        )
+    ) {
+        return SafWriteResult(
+            false,
+            "Not enough free space to update this file safely",
+        )
+    }
+    val backup = File(
+        recoveryDirectory,
+        "${SafWriteBackupPolicy.recoveryName(System.currentTimeMillis(), displayName)}-" +
+            UUID.randomUUID().toString().take(8),
+    )
+    try {
+        contentResolver.openInputStream(uri)?.use { input ->
+            backup.outputStream().use { output ->
+                input.copyTo(output, bufferSize = 256 * 1024)
+            }
+        } ?: return SafWriteResult(false, "Could not read the original file")
+    } catch (e: Exception) {
+        backup.delete()
+        return SafWriteResult(false, "Could not back up the original file: ${e.message}")
+    }
+
+    if (!SafWriteBackupPolicy.sizeMatches(backup.length(), originalBytes)) {
+        backup.delete()
+        return SafWriteResult(false, "Could not back up the complete original file")
+    }
+
+    return try {
         contentResolver.openOutputStream(uri, "wt")?.use { output ->
             FileInputStream(srcFile).use { input ->
                 input.copyTo(output, bufferSize = 256 * 1024)
             }
-        } ?: return false
-        return true
+        } ?: throw IOException("Could not open the document for writing")
+        val actual = runCatching {
+            val stat = querySafDocumentStat(contentResolver, uri)
+            if (stat.isNull("size")) null else stat.optLong("size")
+        }.getOrNull()
+        if (!SafWriteBackupPolicy.sizeMatches(expected, actual)) {
+            throw IOException("The provider stored an incomplete file")
+        }
+        backup.delete()
+        SafWriteResult(true)
+    } catch (e: Exception) {
+        val restored = SafWriteBackupPolicy.restoreVerified(backup.length(), restore = {
+            contentResolver.openOutputStream(uri, "wt")?.use { output ->
+                backup.inputStream().use { input ->
+                    input.copyTo(output, bufferSize = 256 * 1024)
+                }
+            } ?: throw IOException("Could not reopen the document")
+        }, storedSize = {
+            val stat = querySafDocumentStat(contentResolver, uri)
+            if (stat.isNull("size")) null else stat.optLong("size")
+        })
+        if (restored) {
+            backup.delete()
+            SafWriteResult(false, e.message ?: "Failed to write the document")
+        } else {
+            SafWriteResult(
+                false,
+                "${e.message ?: "Failed to write the document"}; " +
+                    "the original was kept at ${backup.absolutePath}",
+                backup.absolutePath,
+            )
+        }
     }
+}
 
     /**
      * Get the parent DocumentFile directory for a SAF document URI.

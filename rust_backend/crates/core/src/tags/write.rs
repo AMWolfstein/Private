@@ -377,10 +377,9 @@ fn flac_header(
         blocks.push((4, data));
     }
     if let Some(cover) = cover {
+        let replacement = picture(cover, check)?;
         blocks.retain(|(kind, _)| *kind != 6);
-        if let Some(picture) = picture(cover, check)? {
-            blocks.push((6, picture));
-        }
+        blocks.push((6, replacement));
     }
     let mut head = b"fLaC".to_vec();
     let count = blocks.len();
@@ -727,18 +726,28 @@ fn cover_mime(data: &[u8]) -> &'static str {
     }
 }
 
-fn picture(
-    original: &[u8],
-    check: &dyn Fn() -> Result<(), String>,
-) -> Result<Option<Vec<u8>>, String> {
+fn picture(original: &[u8], check: &dyn Fn() -> Result<(), String>) -> Result<Vec<u8>, String> {
+    if original.len() > 64_000_000 {
+        return Err("cover art exceeds 64 MiB".into());
+    }
     let mut resized = None;
     if original.len() > 16_000_000 {
+        // Read only the header first so a decompression bomb cannot allocate
+        // an unbounded pixel buffer before the dimension check.
+        let (width, height) = image::ImageReader::new(Cursor::new(original))
+            .with_guessed_format()
+            .map_err(|e| e.to_string())?
+            .into_dimensions()
+            .map_err(|e| format!("cover art could not be decoded: {e}"))?;
+        if width > 8192 || height > 8192 || u64::from(width) * u64::from(height) > 64_000_000 {
+            return Err("cover art dimensions exceed the safe limit".into());
+        }
         let Ok(image) = image::ImageReader::new(Cursor::new(original))
             .with_guessed_format()
             .map_err(|e| e.to_string())?
             .decode()
         else {
-            return Ok(None);
+            return Err("cover art could not be decoded".into());
         };
         for quality in [90, 80, 70, 60] {
             check()?;
@@ -770,7 +779,7 @@ fn picture(
             }
         }
         if resized.is_none() {
-            return Ok(None);
+            return Err("cover art could not be resized below the size limit".into());
         }
     }
     check()?;
@@ -801,7 +810,7 @@ fn picture(
         result.extend(value.to_be_bytes());
     }
     result.extend(data);
-    Ok(Some(result))
+    Ok(result)
 }
 
 #[cfg(test)]
@@ -885,7 +894,7 @@ mod tests {
             (0, vec![0; 34]),
             (1, vec![0; 16]),
             (4, comments),
-            (6, picture(b"original cover", &|| Ok(())).unwrap().unwrap()),
+            (6, picture(b"original cover", &|| Ok(())).unwrap()),
         ];
         let mut input = b"fLaC".to_vec();
         for (index, (kind, data)) in blocks.iter().enumerate() {
@@ -1068,6 +1077,27 @@ mod tests {
     }
 
     #[test]
+    fn rejected_flac_replacement_does_not_publish_or_remove_existing_artwork() {
+        let (input, _) = flac_with_pictures(&[4096]);
+        let original = input.clone();
+        let mut output = Vec::new();
+        let invalid = vec![0; 16_000_001];
+        assert!(
+            rewrite_audio_tags(
+                &mut Cursor::new(&input),
+                &mut output,
+                "flac",
+                &Fields::new(),
+                Some(&invalid),
+                &|| Ok(())
+            )
+            .is_err()
+        );
+        assert!(output.is_empty());
+        assert_eq!(input, original);
+    }
+
+    #[test]
     fn discarded_flac_picture_preserves_eof_and_cancellation() {
         let (input, audio_start) = flac_with_pictures(&[131_073]);
         let picture_start = audio_start - 131_073;
@@ -1160,7 +1190,7 @@ mod tests {
         // Valid PNG with trailing data forces the same size fallback as a
         // large artwork file without an expensive image-generation fixture.
         cover.resize(16_000_001, 0);
-        let block = picture(&cover, &|| Ok(())).unwrap().unwrap();
+        let block = picture(&cover, &|| Ok(())).unwrap();
         let mut reader = Cursor::new(block);
         let mut number = || {
             let mut value = [0; 4];
@@ -1188,7 +1218,7 @@ mod tests {
             (3, 2)
         );
         cover.fill(0);
-        assert!(picture(&cover, &|| Ok(())).unwrap().is_none());
+        assert!(picture(&cover, &|| Ok(())).is_err());
         assert_eq!(
             picture(b"small cover", &|| Err("cancelled".into())).unwrap_err(),
             "cancelled"

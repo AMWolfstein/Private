@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
+import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 var _snapshotSequence = 0;
@@ -42,7 +43,9 @@ Future<int> withLibraryCoverSnapshot(
       await txn.execute(
         'INSERT INTO $alias.library SELECT cover_path FROM temp.$references',
       );
-      await txn.execute('PRAGMA $alias.user_version = 17');
+      await txn.execute(
+        'PRAGMA $alias.user_version = ${LibrarySchema.version}',
+      );
     }, exclusive: true);
     await db.execute('DETACH DATABASE $alias');
     attached = false;

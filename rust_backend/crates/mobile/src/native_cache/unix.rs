@@ -352,9 +352,10 @@ fn prune(request: &Value, check: Check<'_>) -> Result<Value, String> {
         let version: i64 = db
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .map_err(|e| e.to_string())?;
-        if version != 17 {
+        let expected = request["schema_version"].as_i64().unwrap_or(17);
+        if version != expected {
             return Err(format!(
-                "Cover reference schema v{version} is incompatible with native v17"
+                "Cover reference schema v{version} is incompatible with expected v{expected}"
             ));
         }
         Some(db)

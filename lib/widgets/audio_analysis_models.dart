@@ -3,10 +3,11 @@ part of 'audio_analysis_widget.dart';
 // Analysis result models and per-run parameter records.
 
 class AudioAnalysisData {
-  static const cacheVersion = 13;
+  static const cacheVersion = 14;
 
   final String filePath;
   final int fileSize;
+  final int fileModified;
   final String codec;
   final String container;
   final String decodedSampleFormat;
@@ -30,6 +31,7 @@ class AudioAnalysisData {
   const AudioAnalysisData({
     required this.filePath,
     required this.fileSize,
+    this.fileModified = 0,
     this.codec = '',
     this.container = '',
     this.decodedSampleFormat = '',
@@ -55,6 +57,7 @@ class AudioAnalysisData {
     'filePath': filePath,
     'cacheVersion': cacheVersion,
     'fileSize': fileSize,
+    'fileModified': fileModified,
     'codec': codec,
     'container': container,
     'decodedSampleFormat': decodedSampleFormat,
@@ -80,6 +83,7 @@ class AudioAnalysisData {
     return AudioAnalysisData(
       filePath: json['filePath'] as String,
       fileSize: json['fileSize'] as int,
+      fileModified: (json['fileModified'] as num?)?.toInt() ?? 0,
       codec: json['codec']?.toString() ?? '',
       container: json['container']?.toString() ?? '',
       decodedSampleFormat: json['decodedSampleFormat']?.toString() ?? '',

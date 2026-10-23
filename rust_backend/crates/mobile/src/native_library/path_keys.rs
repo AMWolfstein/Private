@@ -100,13 +100,18 @@ fn document_key(uri: &Url) -> Option<String> {
         return None;
     }
     Some(format!(
-        "saf-document:{}:{id}",
-        URL_SAFE.encode(dart_lower(authority))
+        "saf-document:{}:{id}{}",
+        URL_SAFE.encode(dart_lower(authority)),
+        uri.fragment()
+            .filter(|value| !value.is_empty())
+            .map(|value| format!("#{value}"))
+            .unwrap_or_default()
     ))
 }
 
 fn storage_documents(uri: &Url) -> Vec<String> {
-    if uri.scheme() != "content"
+    if uri.fragment().is_some()
+        || uri.scheme() != "content"
         || !uri
             .host_str()
             .is_some_and(|host| host.eq_ignore_ascii_case("com.android.externalstorage.documents"))
@@ -126,8 +131,7 @@ fn storage_documents(uri: &Url) -> Vec<String> {
     if index + 1 >= parts.len() {
         return Vec::new();
     }
-    let joined = parts[index + 1..].join("/");
-    let id = decode(&joined).unwrap_or(joined);
+    let id = parts[index + 1..].join("/");
     let Some((volume, relative)) = id.split_once(':') else {
         return Vec::new();
     };
@@ -198,6 +202,14 @@ fn uri_text(uri: &Url) -> String {
     output
 }
 
+fn windows_drive_path(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    bytes.len() >= 3
+        && bytes[0].is_ascii_alphabetic()
+        && bytes[1] == b':'
+        && matches!(bytes[2], b'/' | b'\\')
+}
+
 pub(crate) fn build(path: &str, android: bool) -> Result<BTreeSet<String>, String> {
     let path = dart_trim(path);
     let cleaned = path.strip_prefix("EXISTS:").map(dart_trim).unwrap_or(path);
@@ -223,7 +235,9 @@ pub(crate) fn build(path: &str, android: bool) -> Result<BTreeSet<String>, Strin
             return Err("Too many Library path aliases".into());
         }
         keys.insert(trimmed.to_string());
-        keys.insert(dart_lower(trimmed));
+        if windows_drive_path(trimmed) {
+            keys.insert(dart_lower(trimmed));
+        }
         if trimmed.contains('\\') {
             pending.push_back(trimmed.replace('\\', "/"));
         }
@@ -257,7 +271,9 @@ pub(crate) fn build(path: &str, android: bool) -> Result<BTreeSet<String>, Strin
                 uri_text(&uri)
             };
             keys.insert(text.clone());
-            keys.insert(dart_lower(&text));
+            if windows_drive_path(&text) {
+                keys.insert(dart_lower(&text));
+            }
             if uri.scheme() == "file"
                 && !localhost
                 && uri.query().is_none()
@@ -272,7 +288,9 @@ pub(crate) fn build(path: &str, android: bool) -> Result<BTreeSet<String>, Strin
         {
             let text = uri_text(&uri);
             keys.insert(text.clone());
-            keys.insert(dart_lower(&text));
+            if windows_drive_path(&text) {
+                keys.insert(dart_lower(&text));
+            }
         }
         if android {
             pending.extend(android_aliases(trimmed));
@@ -312,6 +330,23 @@ mod tests {
         assert!(tree.contains(&expected));
         assert!(!direct.contains(&expected.replace("Ab%2FC", "ab%2fc")));
     }
+    #[test]
+    fn case_sensitive_paths_and_virtual_cue_fragments_remain_distinct() {
+        let upper = build("/Music/A.flac", false).unwrap();
+        let lower = build("/Music/a.flac", false).unwrap();
+        assert!(upper.is_disjoint(&lower));
+        let windows = build("C:/Music/A.flac", false).unwrap();
+        assert!(windows.contains("c:/music/a.flac"));
+        let first = build("content://provider/document/ID#track1", false).unwrap();
+        let second = build("content://provider/document/ID#track2", false).unwrap();
+        assert!(first.is_disjoint(&second));
+        let empty = build("content://provider/document/ID#", false).unwrap();
+        assert!(empty.contains(&format!("saf-document:{}:ID", URL_SAFE.encode("provider"))));
+        assert!(!empty.contains(&format!("saf-document:{}:ID#", URL_SAFE.encode("provider"))));
+        let external = build("content://com.android.externalstorage.documents/document/primary%3AMusic%2FA.cue#track1", true).unwrap();
+        assert!(!external.iter().any(|key| key.starts_with("/storage/")));
+    }
+
     #[test]
     fn android_storage_and_converted_paths_share_keys() {
         let direct = build("/sdcard/Music/Café.flac", true).unwrap();

@@ -1001,9 +1001,12 @@ class MainActivity: FlutterFragmentActivity() {
                                                 // Note: temp file NOT deleted here - Dart will clean up after FFmpeg + writeTempToSaf
                                             }
                             // FLAC: the backend wrote to temp, copy back now
-                            if (!writeUriFromPath(uri, tempPath)) {
+                            val write = writeUriFromPathRecoverable(uri, tempPath)
+                            if (!write.success) {
                                 try { File(tempPath).delete() } catch (_: Exception) {}
-                                return@withContext """{"error":"Failed to write metadata back to SAF file"}"""
+                                return@withContext errorJson(
+                                    write.error ?: "Failed to write metadata back to SAF file"
+                                )
                             }
                             try { File(tempPath).delete() } catch (_: Exception) {}
                             raw
@@ -1041,12 +1044,19 @@ class MainActivity: FlutterFragmentActivity() {
                             val safUri = call.argument<String>("saf_uri") ?: ""
                             val response = withContext(Dispatchers.IO) {
                                 try {
-                                    val uri = Uri.parse(safUri)
-                                    if (writeUriFromPath(uri, tempPath)) {
-                                        """{"success":true}"""
-                                    } else {
-                                        """{"success":false,"error":"Failed to write back to SAF"}"""
-                                    }
+                                    val outcome = writeUriFromPathRecoverable(
+                                        Uri.parse(safUri),
+                                        tempPath,
+                                    )
+                                    JSONObject()
+                                        .put("success", outcome.success)
+                                        .apply {
+                                            if (!outcome.success) {
+                                                put("error", outcome.error ?: "Failed to write back to SAF")
+                                            }
+                                            outcome.recoveryPath?.let { put("recovery_path", it) }
+                                        }
+                                        .toString()
                                 } finally {
                                     try { File(tempPath).delete() } catch (_: Exception) {}
                                 }

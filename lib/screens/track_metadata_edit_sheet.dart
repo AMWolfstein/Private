@@ -322,6 +322,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
           metadata: _form.saveMetadata(
             artistTagMode: widget.artistTagMode,
             separators: widget.metadataSeparators,
+            onlyChanged: true,
           ),
           artistTagMode: widget.artistTagMode,
           selectedCoverPath: _selectedCoverPath,
@@ -341,7 +342,10 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
           fallback: l10n.metadataSaveFailedFfmpeg,
         ),
         MetadataSaveFailure.ffmpeg => l10n.metadataSaveFailedFfmpeg,
-        MetadataSaveFailure.storage => l10n.metadataSaveFailedStorage,
+        MetadataSaveFailure.storage => context.friendlyError(
+          result.error,
+          fallback: l10n.metadataSaveFailedStorage,
+        ),
         MetadataSaveFailure.noCover => l10n.snackbarError(
           l10n.trackCoverNoEmbeddedArt,
         ),

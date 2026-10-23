@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
 import 'package:spotiflac_android/services/ffmpeg_service.dart';
 import 'package:spotiflac_android/services/music_player_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
@@ -157,10 +158,10 @@ class ReplayGainService {
 
     if (!written) {
       // Remuxing all streams rejects attached Opus artwork; mapping only audio
-      // would discard it. Keep the original if its native editor cannot handle
-      // the file, rather than silently losing artwork or reporting a no-op.
-      final lower = path.toLowerCase();
-      if (lower.endsWith('.opus') || lower.endsWith('.ogg')) return false;
+      // would discard it. M4A freeform tags do not survive this copy muxer
+      // either. Keep the original if its native editor cannot handle the file,
+      // rather than silently losing artwork or reporting a no-op.
+      if (FFmpegReplayGain.requiresNativeWriter(path)) return false;
       written = album
           ? await FFmpegService.writeAlbumReplayGainTags(path, gain, peak)
           : await FFmpegService.writeTrackReplayGainTags(path, gain, peak);

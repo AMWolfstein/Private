@@ -165,19 +165,22 @@ pub(super) fn embedded(data: &[u8]) -> Result<AudioMetadata, String> {
     if flags & 0x10 != 0 && body.len() >= 10 && body[body.len() - 10..].starts_with(b"3DI") {
         body = &body[..body.len() - 10];
     }
-    if flags & 0x40 != 0 && body.len() >= 4 {
-        let size = match version {
-            3 => u32::from_be_bytes(body[..4].try_into().unwrap()) as u64,
-            4 => syncsafe(&body[..4]),
-            _ => 0,
+    if flags & 0x40 != 0 && matches!(version, 3..=4) && body.len() >= 4 {
+        let declared = match version {
+            3 => u32::from_be_bytes(body[..4].try_into().unwrap()) as usize,
+            _ => syncsafe(&body[..4]) as usize,
         };
-        let skip = if size + 4 <= body.len() as u64 {
-            size + 4
+        let candidates = if version == 4 {
+            [declared, declared + 4]
         } else {
-            size
+            [declared + 4, declared]
         };
-        if size > 0 && skip < body.len() as u64 {
-            body = &body[skip as usize..];
+        if let Some(skip) = candidates
+            .into_iter()
+            .find(|skip| *skip >= 4 && *skip <= body.len() && frame_boundary(body, *skip, version))
+            && skip < body.len()
+        {
+            body = &body[skip..];
         }
     }
     let size = body.len() as u64;
@@ -406,6 +409,9 @@ fn apply(metadata: &mut AudioMetadata, version: u8, id: &[u8], data: &[u8]) {
 }
 
 pub(crate) fn decode(encoding: u8, mut data: &[u8]) -> String {
+    if encoding == 0 {
+        return latin1(data).trim_end_matches('\0').into();
+    }
     if !matches!(encoding, 1 | 2) {
         return utf8(data).trim_end_matches('\0').into();
     }
@@ -418,23 +424,35 @@ pub(crate) fn decode(encoding: u8, mut data: &[u8]) -> String {
             data = &data[2..];
         }
     }
-    // Preserve the legacy decoder's individual UTF-16 code-unit conversion.
-    data.as_chunks::<2>()
-        .0
-        .iter()
-        .map(|pair| {
-            if little {
-                u16::from_le_bytes(*pair)
-            } else {
-                u16::from_be_bytes(*pair)
-            }
-        })
-        .take_while(|value| *value != 0)
-        .map(|value| char::from_u32(u32::from(value)).unwrap_or(char::REPLACEMENT_CHARACTER))
-        .collect()
+    let units = data.as_chunks::<2>().0.iter().map(|pair| {
+        if little {
+            u16::from_le_bytes([pair[0], pair[1]])
+        } else {
+            u16::from_be_bytes([pair[0], pair[1]])
+        }
+    });
+    let mut text = String::new();
+    for value in char::decode_utf16(units) {
+        match value {
+            Ok('\0') => break,
+            Ok(value) => text.push(value),
+            Err(_) => text.push(char::REPLACEMENT_CHARACTER),
+        }
+    }
+    text
 }
 
-fn separator(data: &[u8], encoding: u8) -> Option<(usize, usize)> {
+/// ID3 encoding 0 is ISO-8859-1, but many taggers write UTF-8 without
+/// changing the encoding byte. Accept valid UTF-8, otherwise map every byte
+/// to its Latin-1 code point instead of producing replacement characters.
+fn latin1(data: &[u8]) -> String {
+    match std::str::from_utf8(data) {
+        Ok(value) => value.into(),
+        Err(_) => data.iter().map(|value| char::from(*value)).collect(),
+    }
+}
+
+pub(super) fn separator(data: &[u8], encoding: u8) -> Option<(usize, usize)> {
     if matches!(encoding, 1 | 2) {
         data.as_chunks::<2>()
             .0
@@ -446,6 +464,21 @@ fn separator(data: &[u8], encoding: u8) -> Option<(usize, usize)> {
             .position(|value| *value == 0)
             .map(|index| (index, 1))
     }
+}
+
+/// Whether `offset` starts an ID3 frame id (or padding) for this version.
+pub(super) fn frame_boundary(data: &[u8], offset: usize, version: u8) -> bool {
+    if offset == data.len() {
+        return true;
+    }
+    let id_length = if version == 2 { 3 } else { 4 };
+    let Some(id) = data.get(offset..offset + id_length) else {
+        return false;
+    };
+    id[0] == 0
+        || id
+            .iter()
+            .all(|value| value.is_ascii_uppercase() || value.is_ascii_digit())
 }
 
 fn language(data: &[u8]) -> String {
@@ -491,7 +524,7 @@ fn v1(reader: &mut (impl Read + Seek)) -> Result<AudioMetadata, String> {
         return Err("no ID3v1 tag".into());
     }
     let text = |start, end| {
-        utf8(&data[start..end])
+        latin1(&data[start..end])
             .trim_end_matches([' ', '\0'])
             .to_owned()
     };
@@ -677,3 +710,23 @@ const GENRES: &[&str] = &[
     "J-Pop",
     "Synthpop",
 ];
+
+#[cfg(test)]
+mod decoding_tests {
+    use super::*;
+
+    #[test]
+    fn latin1_and_utf16_surrogates_decode_without_replacement() {
+        assert_eq!(decode(0, b"Beyonc\xe9"), "Beyoncé");
+        assert_eq!(decode(0, "Beyoncé".as_bytes()), "Beyoncé");
+        assert_eq!(decode(1, &[0xff, 0xfe, 0x3d, 0xd8, 0x00, 0xde]), "😀");
+        assert_eq!(decode(2, &[0xd8, 0x3d, 0xde, 0x00]), "😀");
+    }
+
+    #[test]
+    fn utf16_picture_description_terminator_is_aligned() {
+        let payload = b"\x01image/jpeg\0\x03\xff\xfeA\0\0\0\xff\xd8\xff\xd9";
+        let picture = picture_frame(payload, 4).unwrap();
+        assert_eq!(picture.data, b"\xff\xd8\xff\xd9");
+    }
+}

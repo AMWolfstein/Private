@@ -141,39 +141,45 @@ fn continued_opus_comments_survive_page_and_old_packet_limits() {
 fn artwork_across_many_pages_is_read_without_consuming_audio() {
     use base64::Engine;
     use spotiflac_core::tags::extract_cover;
-    let artwork = vec![0x5a; 512 * 1024];
-    let mut picture = 3_u32.to_be_bytes().to_vec();
-    picture.extend(10_u32.to_be_bytes());
-    picture.extend(b"image/jpeg");
-    picture.extend(0_u32.to_be_bytes());
-    for value in [1000_u32, 1000, 24, 0, artwork.len() as u32] {
-        picture.extend(value.to_be_bytes());
+    for length in [512 * 1024, 8 * 1024 * 1024] {
+        let artwork = vec![0x5a; length];
+        let mut picture = 3_u32.to_be_bytes().to_vec();
+        picture.extend(10_u32.to_be_bytes());
+        picture.extend(b"image/jpeg");
+        picture.extend(0_u32.to_be_bytes());
+        for value in [1000_u32, 1000, 24, 0, artwork.len() as u32] {
+            picture.extend(value.to_be_bytes());
+        }
+        picture.extend(&artwork);
+        let comment = format!(
+            "METADATA_BLOCK_PICTURE={}",
+            base64::engine::general_purpose::STANDARD.encode(picture)
+        );
+        let mut tags = b"OpusTags".to_vec();
+        tags.extend(0_u32.to_le_bytes());
+        tags.extend(1_u32.to_le_bytes());
+        tags.extend((comment.len() as u32).to_le_bytes());
+        tags.extend(comment.as_bytes());
+        let mut sequence = 0;
+        let mut data = paged_packet(
+            b"OpusHead\x01\x02\0\0\x80\xbb\0\0\0\0\0",
+            &mut sequence,
+            255,
+        );
+        data.extend(paged_packet(
+            &tags,
+            &mut sequence,
+            if length > 1024 * 1024 { 255 } else { 1 },
+        ));
+        let header_end = data.len() as u64;
+        // Junk after the headers must not be parsed while extracting tags/artwork.
+        data.resize(data.len() + 2 * 1024 * 1024, 0x55);
+        let mut source = Cursor::new(data);
+        let cover = extract_cover(&mut source, "opus", &|| Ok(())).unwrap();
+        assert_eq!(cover.data, artwork);
+        // Buffered I/O may read ahead once; it must not scan the audio payload.
+        assert!(source.position() <= header_end + 8192);
     }
-    picture.extend(&artwork);
-    let comment = format!(
-        "METADATA_BLOCK_PICTURE={}",
-        base64::engine::general_purpose::STANDARD.encode(picture)
-    );
-    let mut tags = b"OpusTags".to_vec();
-    tags.extend(0_u32.to_le_bytes());
-    tags.extend(1_u32.to_le_bytes());
-    tags.extend((comment.len() as u32).to_le_bytes());
-    tags.extend(comment.as_bytes());
-    let mut sequence = 0;
-    let mut data = paged_packet(
-        b"OpusHead\x01\x02\0\0\x80\xbb\0\0\0\0\0",
-        &mut sequence,
-        255,
-    );
-    data.extend(paged_packet(&tags, &mut sequence, 1));
-    let header_end = data.len() as u64;
-    // Junk after the headers must not be parsed while extracting tags/artwork.
-    data.resize(data.len() + 2 * 1024 * 1024, 0x55);
-    let mut source = Cursor::new(data);
-    let cover = extract_cover(&mut source, "opus", &|| Ok(())).unwrap();
-    assert_eq!(cover.data, artwork);
-    // Buffered I/O may read ahead once; it must not scan the audio payload.
-    assert!(source.position() <= header_end + 8192);
 }
 
 #[test]

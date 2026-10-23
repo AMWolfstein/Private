@@ -968,14 +968,25 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
         return null;
       }
       final cachedSize = json['fileSize'] as int;
+      final cachedModified = (json['fileModified'] as num?)?.toInt() ?? 0;
 
       if (!filePath.startsWith('content://')) {
-        final currentSize = await File(filePath).length();
-        if (currentSize != cachedSize) return null;
+        final stat = await File(filePath).stat();
+        if (stat.size != cachedSize) return null;
+        if (cachedModified > 0 &&
+            stat.modified.millisecondsSinceEpoch != cachedModified) {
+          return null;
+        }
       } else {
         final stat = await PlatformBridge.safStat(filePath);
         final currentSize = (stat['size'] as num?)?.toInt() ?? 0;
         if (currentSize > 0 && currentSize != cachedSize) return null;
+        final currentModified = (stat['modified'] as num?)?.toInt() ?? 0;
+        if (cachedModified > 0 &&
+            currentModified > 0 &&
+            currentModified != cachedModified) {
+          return null;
+        }
       }
 
       final data = AudioAnalysisData.fromJson(json);
@@ -994,8 +1005,22 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       final dir = await _cacheDir();
       final key = _cacheKey(filePath);
       final file = File('${dir.path}/$key.json');
-      await file.writeAsString(jsonEncode(data.toJson()));
+      final json = data.toJson();
+      json['fileModified'] = await _sourceModified(filePath);
+      await file.writeAsString(jsonEncode(json));
     } catch (_) {}
+  }
+
+  static Future<int> _sourceModified(String filePath) async {
+    try {
+      if (filePath.startsWith('content://')) {
+        final stat = await PlatformBridge.safStat(filePath);
+        return (stat['modified'] as num?)?.toInt() ?? 0;
+      }
+      return (await File(filePath).stat()).modified.millisecondsSinceEpoch;
+    } catch (_) {
+      return 0;
+    }
   }
 
   static Future<void> _saveSpectrogramToCache(

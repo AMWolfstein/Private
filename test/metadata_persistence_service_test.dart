@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/services/metadata_cover_resources.dart';
 import 'package:spotiflac_android/services/metadata_persistence_service.dart';
+import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
 
 class _Covers extends MetadataCoverResources {
@@ -121,8 +122,8 @@ void main() {
             expect(metadata['ARTIST'], 'Artist One; Artist Two');
             expect(metadata['LYRICS'], 'Existing lyrics');
             expect(metadata['UNSYNCEDLYRICS'], 'Existing lyrics');
-            expect(metadata['TITLE'], '');
-            expect(metadata['ALBUMARTIST'], '');
+            expect(metadata.containsKey('TITLE'), isFalse);
+            expect(metadata.containsKey('ALBUMARTIST'), isFalse);
             expect(metadata['TRACKNUMBER'], '3/12');
             expect(metadata['DISCNUMBER'], '');
             expect(metadata['REPLAYGAIN_TRACK_GAIN'], '-6.20 dB');
@@ -131,8 +132,7 @@ void main() {
             expect(metadata['REPLAYGAIN_ALBUM_PEAK'], '1.234567');
             return path;
           },
-          writeBack: (_, _) async =>
-              throw StateError('Local edit needs no SAF write'),
+          writeBack: (_, _) async => const SafWriteBackResult(success: true),
         );
         expect(
           (await service.save(
@@ -182,6 +182,7 @@ void main() {
           (await service.save(
             request(
               tags: {
+                'lyrics': '',
                 'track_number': pair.$1,
                 'track_total': pair.$2,
                 'disc_number': pair.$1,
@@ -318,13 +319,21 @@ void main() {
             expect(path, staged.path);
             expect(uri, 'content://library/song.mp3');
             expect(await staged.exists(), isTrue);
-            return failure != MetadataSaveFailure.storage;
+            return SafWriteBackResult(
+              success: failure != MetadataSaveFailure.storage,
+              error: failure == MetadataSaveFailure.storage
+                  ? 'Provider write failed'
+                  : null,
+            );
           },
         );
         final result = await service.save(
           request(path: 'content://library/song.mp3'),
         );
         expect(result.failure, failure);
+        if (failure == MetadataSaveFailure.storage) {
+          expect(result.error, 'Provider write failed');
+        }
         expect(
           writes,
           failure == null || failure == MetadataSaveFailure.storage ? 1 : 0,

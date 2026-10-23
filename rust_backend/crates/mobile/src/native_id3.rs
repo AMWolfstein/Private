@@ -74,9 +74,12 @@ fn write_lyrics(
         let mut payload = vec![0; tag_size];
         input.read_exact(&mut payload).map_err(|e| e.to_string())?;
         audio_offset = tag_size as u64 + 10;
-        make_tag(&payload, lyrics)
+        match make_tag(&payload, lyrics) {
+            Some(tag) => tag,
+            None => return Ok(false),
+        }
     } else {
-        make_tag(&[], lyrics)
+        make_tag(&[], lyrics).ok_or("Lyrics tag is too large")?
     };
     let parent = path.parent().ok_or("Missing audio parent directory")?;
     let nonce = SystemTime::now()
@@ -124,38 +127,64 @@ fn synchsafe(bytes: &[u8]) -> Option<usize> {
     )
 }
 
-fn make_tag(payload: &[u8], lyrics: &str) -> Vec<u8> {
+fn make_tag(payload: &[u8], lyrics: &str) -> Option<Vec<u8>> {
     let mut preserved = Vec::with_capacity(payload.len());
     let mut offset = 0;
     while offset + 10 <= payload.len() {
         let id = &payload[offset..offset + 4];
+        if id[0] == 0 {
+            // Padding is zero-filled; anything else cannot be parsed safely.
+            if payload[offset..].iter().any(|byte| *byte != 0) {
+                return None;
+            }
+            break;
+        }
         if !id
             .iter()
             .all(|byte| byte.is_ascii_uppercase() || byte.is_ascii_digit())
         {
-            break;
+            return None;
         }
-        let size = u32::from_be_bytes(
-            payload[offset + 4..offset + 8]
-                .try_into()
-                .expect("frame size"),
-        ) as usize;
-        if size == 0 || size > payload.len() - offset - 10 {
-            break;
+        let size = u32::from_be_bytes(payload[offset + 4..offset + 8].try_into().ok()?) as usize;
+        if size == 0 {
+            // Skip a malformed empty frame only when the next position is
+            // still a frame (or padding). Never discard the frames after it.
+            offset += 10;
+            if offset < payload.len() {
+                let next = &payload[offset..];
+                let valid = next[0] == 0
+                    || (next.len() >= 4
+                        && next[..4]
+                            .iter()
+                            .all(|byte| byte.is_ascii_uppercase() || byte.is_ascii_digit()));
+                if !valid {
+                    return None;
+                }
+            }
+            continue;
+        }
+        if size > payload.len() - offset - 10 {
+            return None;
         }
         if id != b"USLT" {
             preserved.extend_from_slice(&payload[offset..offset + 10 + size]);
         }
         offset += 10 + size;
     }
+    if offset < payload.len() && payload[offset..].iter().any(|byte| *byte != 0) {
+        return None;
+    }
     let mut lyrics_payload = vec![1, b'e', b'n', b'g', 0xff, 0xfe, 0, 0, 0xff, 0xfe];
     for unit in lyrics.encode_utf16() {
         lyrics_payload.extend_from_slice(&unit.to_le_bytes());
     }
     preserved.extend_from_slice(b"USLT");
-    preserved.extend_from_slice(&(lyrics_payload.len() as u32).to_be_bytes());
+    preserved.extend_from_slice(&u32::try_from(lyrics_payload.len()).ok()?.to_be_bytes());
     preserved.extend_from_slice(&[0, 0]);
     preserved.extend_from_slice(&lyrics_payload);
+    if preserved.len() >= 1 << 28 {
+        return None;
+    }
     let mut tag = vec![b'I', b'D', b'3', 3, 0, 0];
     tag.extend(
         (0..4)
@@ -163,7 +192,7 @@ fn make_tag(payload: &[u8], lyrics: &str) -> Vec<u8> {
             .map(|index| ((preserved.len() >> (index * 7)) & 0x7f) as u8),
     );
     tag.extend(preserved);
-    tag
+    Some(tag)
 }
 
 #[cfg(test)]
@@ -171,8 +200,44 @@ mod tests {
     use super::*;
 
     #[test]
+    fn malformed_frames_are_never_silently_dropped() {
+        // A zero-size frame is malformed, but the valid frame after it must
+        // survive instead of being discarded with the rest of the tag.
+        let mut payload = vec![b'T', b'I', b'T', b'2', 0, 0, 0, 0, 0, 0];
+        let frame = [b'T', b'P', b'E', b'1', 0, 0, 0, 1, 0, 0, b'X'];
+        payload.extend_from_slice(&frame);
+        let tag = make_tag(&payload, "Lyrics").unwrap();
+        assert!(tag.windows(frame.len()).any(|window| window == frame));
+
+        let mut truncated = frame.to_vec();
+        truncated.extend_from_slice(&[b'T', b'A', b'L', b'B', 0, 0, 0, 9, 0, 0, 1]);
+        assert!(make_tag(&truncated, "Lyrics").is_none());
+    }
+
+    #[test]
+    fn unparseable_tag_leaves_the_file_untouched() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("track.mp3");
+        let frame = [b'T', b'I', b'T', b'2', 0, 0, 0, 2, 0, 0, b'A'];
+        let mut payload = frame.to_vec();
+        // This frame claims nine bytes but only one remains in the tag.
+        payload.extend_from_slice(&[b'T', b'P', b'E', b'1', 0, 0, 0, 9, 0, 0, b'X']);
+        let mut original = vec![b'I', b'D', b'3', 3, 0, 0];
+        original.extend(
+            (0..4)
+                .rev()
+                .map(|index| ((payload.len() >> (index * 7)) & 0x7f) as u8),
+        );
+        original.extend(payload);
+        original.extend_from_slice(&[0xff, 0xfb, 0x90, 0x64]);
+        fs::write(&path, &original).unwrap();
+        assert!(!write_lyrics(&path, "New", &|| Ok(())).unwrap());
+        assert_eq!(fs::read(&path).unwrap(), original);
+    }
+
+    #[test]
     fn uslt_bytes_preserve_utf16_bom_language_and_surrogate_pairs() {
-        let result = make_tag(&[], "A😀");
+        let result = make_tag(&[], "A😀").unwrap();
         assert_eq!(&result[..6], &[b'I', b'D', b'3', 3, 0, 0]);
         assert_eq!(&result[10..14], b"USLT");
         assert_eq!(
@@ -190,7 +255,7 @@ mod tests {
         fs::create_dir_all(&directory).unwrap();
         let path = directory.join("track.mp3");
         let frame = [b'T', b'I', b'T', b'2', 0, 0, 0, 2, 0, 0, 0, b'A'];
-        let initial = make_tag(&frame, "Old");
+        let initial = make_tag(&frame, "Old").unwrap();
         let mut original = initial.clone();
         original.extend([0xff, 0xfb, 1, 2, 3]);
         fs::write(&path, original).unwrap();

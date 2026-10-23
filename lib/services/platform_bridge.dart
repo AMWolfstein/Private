@@ -8,6 +8,20 @@ import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('PlatformBridge');
 
+/// Outcome of replacing a SAF document, including a retained recovery copy
+/// when the provider could not be restored after a failed write.
+class SafWriteBackResult {
+  final bool success;
+  final String? error;
+  final String? recoveryPath;
+
+  const SafWriteBackResult({
+    required this.success,
+    this.error,
+    this.recoveryPath,
+  });
+}
+
 Object? _decodeJsonInBackground(String json) => jsonDecode(json);
 String _encodeJsonInBackground(Object? value) => jsonEncode(value);
 
@@ -499,11 +513,24 @@ class PlatformBridge {
   }
 
   static Future<bool> writeTempToSaf(String tempPath, String safUri) async {
+    return (await writeTempToSafDetailed(tempPath, safUri)).success;
+  }
+
+  /// Writes a completed temporary file back to its SAF document and reports
+  /// any retained recovery copy. The caller keeps ownership of [tempPath].
+  static Future<SafWriteBackResult> writeTempToSafDetailed(
+    String tempPath,
+    String safUri,
+  ) async {
     final map = await _invokeMap('writeTempToSaf', {
       'temp_path': tempPath,
       'saf_uri': safUri,
     });
-    return map['success'] == true;
+    return SafWriteBackResult(
+      success: map['success'] == true,
+      error: map['error']?.toString(),
+      recoveryPath: map['recovery_path']?.toString(),
+    );
   }
 
   /// Keeps user-started work of [kind] alive with the screen off: an Android

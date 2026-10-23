@@ -317,6 +317,8 @@ Future<bool> editLocalSongMetadata(
             await file.exists() &&
             await file.length() > 0) {
           json['coverPath'] = path;
+          // Reference-aware cover pruning reclaims the old image only after
+          // the database stops referring to it, including failed refreshes.
         } else if (await file.exists()) {
           await file.delete();
         }

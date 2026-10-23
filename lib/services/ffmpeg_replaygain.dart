@@ -124,19 +124,29 @@ abstract final class FFmpegReplayGain {
     String peak,
   ) => _writeTags(filePath, 'Track', gain, peak);
 
+  /// These containers cannot round-trip their freeform tags through this
+  /// stream-copy muxer. Keep the original when the native writer fails instead
+  /// of publishing a file that lost ReplayGain or artwork metadata.
+  static bool requiresNativeWriter(String filePath) {
+    final lower = filePath.toLowerCase();
+    return const ['.opus', '.ogg', '.m4a', '.mp4', '.m4b'].any(lower.endsWith);
+  }
+
   static Future<bool> _writeTags(
     String filePath,
     String scope,
     String gain,
     String peak,
   ) async {
-    final ext = filePath.contains('.')
-        ? '.${filePath.split('.').last}'
-        : '.tmp';
-    if (ext.toLowerCase() == '.opus' || ext.toLowerCase() == '.ogg') {
-      _log.e('Ogg/Opus ReplayGain requires the native tag writer');
+    if (requiresNativeWriter(filePath)) {
+      _log.e(
+        '${filePath.split('.').last} ReplayGain requires the native tag writer',
+      );
       return false;
     }
+    final ext = filePath.contains('.')
+        ? '.${filePath.split('.').last.toLowerCase()}'
+        : '.tmp';
     final tempOutput = await FFmpegOutput.tempPath(ext);
     final tag = scope.toUpperCase();
     _log.d('Writing ${scope.toLowerCase()} ReplayGain tags via FFmpeg');

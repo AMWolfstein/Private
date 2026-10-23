@@ -84,4 +84,45 @@ void main() {
       }
     },
   );
+
+  test(
+    'a malformed frame after a valid frame leaves the file intact',
+    () async {
+      final title = [
+        0x54, 0x49, 0x54, 0x32, // TIT2
+        0, 0, 0, 2, // size
+        0, 0, // flags
+        0, 0x41, // UTF-8 "A"
+      ];
+      final malformed = [
+        0x21, 0x21, 0x21, 0x21, // invalid frame id
+        0, 0, 0, 1,
+        0, 0,
+        0x42,
+      ];
+      final payload = [...title, ...malformed];
+      final size = payload.length;
+      final bytes = Uint8List.fromList([
+        0x49,
+        0x44,
+        0x33,
+        3,
+        0,
+        0,
+        (size >> 21) & 0x7f,
+        (size >> 14) & 0x7f,
+        (size >> 7) & 0x7f,
+        size & 0x7f,
+        ...payload,
+      ]);
+      final file = await File('${root.path}/malformed.mp3').writeAsBytes(bytes);
+
+      expect(
+        await Id3v23Lyrics.writeUnsyncedLyricsToFile(file, 'new'),
+        isFalse,
+      );
+      expect(await file.readAsBytes(), bytes);
+      expect(await root.list().length, 1);
+    },
+  );
 }

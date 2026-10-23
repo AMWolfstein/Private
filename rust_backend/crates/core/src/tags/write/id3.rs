@@ -1,6 +1,6 @@
 use super::{Fields, MAX_TAG_BYTES, bytes, cover_mime, edit_index, pair, seek};
 use crate::matching::uppercase;
-use crate::tags::id3::{decode, user_text};
+use crate::tags::id3::{decode, frame_boundary, separator, user_text};
 use std::collections::BTreeSet;
 use std::io::{Cursor, Read, Seek, SeekFrom};
 
@@ -20,14 +20,14 @@ pub(super) fn header(
 
 pub(super) fn fresh(
     fields: &Fields,
-    cover: Option<(&[u8], &str)>,
+    cover: Option<&[u8]>,
     check: &dyn Fn() -> Result<(), String>,
 ) -> Result<Vec<u8>, String> {
     edit_header(
         &mut Cursor::new(Vec::<u8>::new()),
         fields,
-        cover.map(|p| p.0),
-        cover.map(|p| p.1),
+        cover,
+        None,
         0,
         check,
     )
@@ -70,7 +70,9 @@ fn edit_header(
     }
     for (field, id) in [("comment", "COMM"), ("lyrics", "USLT")] {
         if let Some(value) = fields.get(field) {
-            drop.insert(id.as_bytes().to_vec());
+            // Only the editor-owned language/description is replaced below;
+            // iTunes gapless (iTunSMPB), normalization (iTunNORM) and
+            // other-language lyrics live in separate COMM/USLT frames.
             if !value.trim().is_empty() {
                 let mut data = b"\x03eng\0".to_vec();
                 data.extend(value.as_bytes());
@@ -146,10 +148,14 @@ fn edit_header(
         data.extend(cover);
         added.push(frame("APIC", data));
     }
+    let edit_comment = fields.contains_key("comment");
+    let edit_lyrics = fields.contains_key("lyrics");
     let kept = frames.into_iter().filter(|frame| {
         !drop.contains(&frame.id)
             && !(frame.id == b"TXXX"
                 && drop_descriptions.contains(&uppercase(user_text(&frame.data).0.trim())))
+            && !((frame.id == b"COMM" && edit_comment || frame.id == b"USLT" && edit_lyrics)
+                && editor_owned_text_frame(&frame.data))
     });
     let mut body = Vec::new();
     for frame in kept.chain(added) {
@@ -229,9 +235,17 @@ fn read_frames(
     }
     let version = header[3];
     let flags = header[5];
+    if !matches!(version, 2..=4) {
+        return Err("unsupported ID3 version".into());
+    }
+    if version == 2 && flags & 0x40 != 0 {
+        return Err("compressed ID3v2.2 tag is unsupported".into());
+    }
     let length = size(&header[6..], true);
     if length == 0 {
-        return Err("invalid ID3v2 tag size".into());
+        // A zero-size tag is unusual but harmless; treat it as no frames so
+        // editing can continue instead of falling back to a remux.
+        return Ok((Vec::new(), 10));
     }
     if length > MAX_TAG_BYTES {
         return Err("ID3 metadata exceeds 64 MiB".into());
@@ -246,33 +260,45 @@ fn read_frames(
     if flags & 0x10 != 0 && data.len() >= 10 && &data[data.len() - 10..data.len() - 7] == b"3DI" {
         data.truncate(data.len() - 10);
     }
-    let mut offset = 0;
-    if flags & 0x40 != 0 && data.len() >= 4 && matches!(version, 3 | 4) {
-        let length = size(&data[..4], version == 4);
-        if length > 0 {
-            let skip = if length + 4 <= data.len() {
-                length + 4
-            } else if length <= data.len() {
-                length
+    // Before v2.4 unsynchronization covers the entire tag body. v2.4
+    // sizes describe encoded frame payloads, so decode after slicing instead.
+    if version < 4 && flags & 0x80 != 0 {
+        let mut decoded = Vec::with_capacity(data.len());
+        let mut index = 0;
+        while index < data.len() {
+            decoded.push(data[index]);
+            index += if data[index] == 0xff && data.get(index + 1) == Some(&0) {
+                2
             } else {
-                0
+                1
             };
-            if skip < data.len() {
-                offset = skip;
-            }
         }
+        data = decoded;
+    }
+    let mut offset = 0;
+    if flags & 0x40 != 0 && matches!(version, 3..=4) {
+        offset = extended_header_skip(&data, version)?;
     }
     let mut frames = Vec::new();
     let header_length = if version == 2 { 6 } else { 10 };
-    while offset + header_length < data.len() {
+    let id_length = if version == 2 { 3 } else { 4 };
+    while offset + header_length <= data.len() {
         check()?;
         if frames.len() >= 65536 {
             return Err("ID3 frame count exceeds 65536".into());
         }
-        let id_length = if version == 2 { 3 } else { 4 };
         let id = &data[offset..offset + id_length];
         if id[0] == 0 {
+            if data[offset..].iter().any(|value| *value != 0) {
+                return Err("invalid ID3 padding".into());
+            }
             break;
+        }
+        if !id
+            .iter()
+            .all(|value| value.is_ascii_uppercase() || value.is_ascii_digit())
+        {
+            return Err("invalid ID3 frame id".into());
         }
         let length = if version == 2 {
             ((data[offset + 3] as usize) << 16)
@@ -281,49 +307,57 @@ fn read_frames(
         } else {
             size(&data[offset + 4..offset + 8], version == 4)
         };
-        if length == 0 || length > data.len() - offset - header_length {
-            break;
+        if length == 0 {
+            // Skip a malformed empty frame only when the next position is
+            // still a frame or padding. Otherwise refuse the rewrite.
+            offset += header_length;
+            if offset < data.len() && !frame_boundary(&data, offset, version) {
+                return Err("invalid zero-length ID3 frame".into());
+            }
+            continue;
+        }
+        if length > data.len() - offset - header_length {
+            return Err("truncated ID3 frame".into());
         }
         let frame_flags = if version == 2 { 0 } else { data[offset + 9] };
         let mut payload = &data[offset + header_length..offset + header_length + length];
         offset += header_length + length;
         if version == 3 {
             if frame_flags & 0xc0 != 0 {
-                continue;
+                return Err("compressed or encrypted ID3 frame is unsupported".into());
             }
             if frame_flags & 0x20 != 0 {
-                payload = &payload[1..];
+                payload = payload.get(1..).ok_or("invalid ID3 grouping byte")?;
             }
         } else if version != 2 {
             if frame_flags & 0x0c != 0 {
-                continue;
+                return Err("compressed or encrypted ID3 frame is unsupported".into());
             }
             if frame_flags & 0x40 != 0 {
-                payload = &payload[1..];
+                payload = payload.get(1..).ok_or("invalid ID3 grouping byte")?;
             }
             if frame_flags & 1 != 0 {
                 if payload.len() < 4 {
-                    continue;
+                    return Err("invalid ID3 data length indicator".into());
                 }
                 payload = &payload[4..];
             }
         }
-        let mut payload =
-            if flags & 0x80 != 0 || (version != 2 && version != 3 && frame_flags & 2 != 0) {
-                let mut result = Vec::new();
-                let mut offset = 0;
-                while offset < payload.len() {
-                    result.push(payload[offset]);
-                    offset += if payload[offset] == 0xff && payload.get(offset + 1) == Some(&0) {
-                        2
-                    } else {
-                        1
-                    };
-                }
-                result
-            } else {
-                payload.to_vec()
-            };
+        let mut payload = if version == 4 && (frame_flags & 2 != 0 || flags & 0x80 != 0) {
+            let mut result = Vec::new();
+            let mut offset = 0;
+            while offset < payload.len() {
+                result.push(payload[offset]);
+                offset += if payload[offset] == 0xff && payload.get(offset + 1) == Some(&0) {
+                    2
+                } else {
+                    1
+                };
+            }
+            result
+        } else {
+            payload.to_vec()
+        };
         let id = if version == 2 {
             match id {
                 b"TT2" => b"TIT2".as_slice(),
@@ -342,7 +376,7 @@ fn read_frames(
                 b"COM" => b"COMM",
                 b"PIC" => {
                     if payload.len() < 5 {
-                        continue;
+                        return Err("invalid ID3v2.2 picture frame".into());
                     }
                     let mime = if payload[1..4].eq_ignore_ascii_case(b"PNG") {
                         "image/png"
@@ -356,7 +390,7 @@ fn read_frames(
                     payload = converted;
                     b"APIC"
                 }
-                _ => continue,
+                _ => return Err("unsupported ID3v2.2 frame".into()),
             }
         } else {
             id
@@ -366,5 +400,150 @@ fn read_frames(
             data: payload,
         });
     }
+    if offset < data.len() && data[offset..].iter().any(|value| *value != 0) {
+        return Err("trailing ID3 data is not a frame".into());
+    }
     Ok((frames, audio_start))
+}
+
+/// Returns the number of bytes occupied by an ID3v2.3/v2.4 extended header.
+/// ID3v2.4 includes its own four-byte size in the value; some writers still
+/// store the ID3v2.3 form, so accept either when it lands on a frame boundary.
+fn extended_header_skip(data: &[u8], version: u8) -> Result<usize, String> {
+    if data.len() < 4 {
+        return Err("invalid ID3 extended header".into());
+    }
+    let declared = size(&data[..4], version == 4);
+    let candidates = if version == 4 {
+        [declared, declared + 4]
+    } else {
+        [declared + 4, declared]
+    };
+    candidates
+        .into_iter()
+        .find(|skip| *skip >= 4 && *skip <= data.len() && frame_boundary(data, *skip, version))
+        .ok_or_else(|| "invalid ID3 extended header".into())
+}
+
+/// True for the COMM/USLT frame shape this editor writes (English, empty
+/// description). Other descriptions and languages must survive an edit.
+fn editor_owned_text_frame(data: &[u8]) -> bool {
+    let Some((&encoding, body)) = data.split_first() else {
+        return false;
+    };
+    if body.len() < 3 || !body[..3].eq_ignore_ascii_case(b"eng") {
+        return false;
+    }
+    let Some((end, _)) = separator(body.get(3..).unwrap_or_default(), encoding) else {
+        return false;
+    };
+    decode(encoding, &body[3..3 + end]).is_empty()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn encoded_frame(id: &str, data: Vec<u8>) -> Vec<u8> {
+        [id.as_bytes(), &syncsafe(data.len()), &[0, 0], &data].concat()
+    }
+
+    fn tag(version: u8, flags: u8, body: &[u8]) -> Vec<u8> {
+        let mut result = vec![b'I', b'D', b'3', version, 0, flags];
+        result.extend(syncsafe(body.len()));
+        result.extend(body);
+        result.extend(b"audio bytes");
+        result
+    }
+
+    #[test]
+    fn v24_unsync_is_decoded_once_after_frame_slicing() {
+        for frame_flags in [0, 2] {
+            // The original private payload includes FF 00. Escaping adds one
+            // zero; decoding twice would incorrectly remove the original zero.
+            let mut body = b"PRIV".to_vec();
+            body.extend(syncsafe(4));
+            body.extend([0, frame_flags, 0xff, 0, 0, 0xe0]);
+            body.extend(encoded_frame("TIT2", b"\x03title".to_vec()));
+            let input = tag(4, 0x80, &body);
+            let (frames, end) = read_frames(&mut Cursor::new(&input), &|| Ok(())).unwrap();
+            assert_eq!(frames[0].data, [0xff, 0, 0xe0]);
+            assert_eq!(frames[1].data, b"\x03title");
+            assert_eq!(&input[end as usize..], b"audio bytes");
+        }
+    }
+
+    #[test]
+    fn utf16_bom_empty_description_is_replaced_or_cleared() {
+        for id in ["USLT", "COMM"] {
+            for value in ["", "replacement"] {
+                let body = encoded_frame(id, b"\x01eng\xff\xfe\0\0\xff\xfeo\0l\0d\0".to_vec());
+                let fields = [(
+                    if id == "USLT" { "lyrics" } else { "comment" }.into(),
+                    value.into(),
+                )]
+                .into();
+                let (output, _) = header(
+                    &mut Cursor::new(tag(4, 0, &body)),
+                    &fields,
+                    None,
+                    &|| Ok(()),
+                )
+                .unwrap();
+                let (frames, _) = read_frames(&mut Cursor::new(output), &|| Ok(())).unwrap();
+                let owned: Vec<_> = frames.iter().filter(|f| f.id == id.as_bytes()).collect();
+                assert_eq!(owned.len(), usize::from(!value.is_empty()));
+                if let Some(frame) = owned.first() {
+                    assert_eq!(&frame.data[5..], value.as_bytes());
+                }
+            }
+        }
+        assert!(!editor_owned_text_frame(
+            b"\x01eng\xff\xfeD\0e\0s\0c\0\0\0text"
+        ));
+    }
+
+    #[test]
+    fn malformed_frame_refuses_rewrite_instead_of_dropping_tail() {
+        for body in [
+            b"TIT2\0\0\0\x7f\0\0short".as_slice(),
+            b"TIT2\0\0\0\0\0\0bad tail",
+        ] {
+            assert!(
+                header(
+                    &mut Cursor::new(tag(4, 0, body)),
+                    &Fields::new(),
+                    None,
+                    &|| Ok(())
+                )
+                .is_err()
+            );
+        }
+    }
+
+    #[test]
+    fn v24_extended_header_preserves_private_frames() {
+        let mut body = vec![0, 0, 0, 6, 1, 0];
+        body.extend(encoded_frame("PRIV", b"owner\0untouched".to_vec()));
+        let (output, _) = header(
+            &mut Cursor::new(tag(4, 0x40, &body)),
+            &Fields::new(),
+            None,
+            &|| Ok(()),
+        )
+        .unwrap();
+        let (frames, _) = read_frames(&mut Cursor::new(output), &|| Ok(())).unwrap();
+        assert_eq!(frames.len(), 1);
+        assert_eq!(frames[0].data, b"owner\0untouched");
+    }
+
+    #[test]
+    fn empty_tag_can_be_edited_without_remuxing() {
+        let fields = [("title".into(), "new".into())].into();
+        let (output, end) =
+            header(&mut Cursor::new(tag(4, 0, &[])), &fields, None, &|| Ok(())).unwrap();
+        assert_eq!(end, 10);
+        let (frames, _) = read_frames(&mut Cursor::new(output), &|| Ok(())).unwrap();
+        assert_eq!(frames[0].data, b"\x03new");
+    }
 }

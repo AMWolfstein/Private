@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/library_cover_snapshot.dart';
+import 'package:spotiflac_android/services/library_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 
@@ -104,7 +105,7 @@ void main() {
         final snapshot = await SqliteProcessDatabase.open(path: path);
         try {
           expect(await snapshot.rawQuery('PRAGMA user_version'), [
-            {'user_version': 17},
+            {'user_version': LibrarySchema.version},
           ]);
           expect(await readLibraryCoverReferences(snapshot), {
             '/covers/visible.jpg',

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/library_cover_snapshot.dart';
+import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/services/native_cache_maintenance.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
@@ -116,6 +117,7 @@ Future<int> _pruneUnreferencedLibraryCovers(
       'operation': 'cache_prune_library',
       'directory': directory.absolute.path,
       'library_path': ?privateSnapshotPath,
+      'schema_version': LibrarySchema.version,
       if (privateSnapshotPath == null)
         'referenced_paths': referencedPaths.toList(growable: false),
       'minimum_age_us': minimumAge.inMicroseconds,

@@ -24,7 +24,30 @@ void main() {
 
   group('audio analysis cache', () {
     test('invalidates results from the previous cutoff estimator', () {
-      expect(AudioAnalysisData.cacheVersion, 13);
+      expect(AudioAnalysisData.cacheVersion, 14);
+    });
+
+    test('round-trips the source modification time used for invalidation', () {
+      final data = AudioAnalysisData(
+        filePath: '/music/song.flac',
+        fileSize: 1024,
+        fileModified: 1770000000123,
+        sampleRate: 44100,
+        channels: 2,
+        bitsPerSample: 16,
+        duration: 1.5,
+        bitrate: 900000,
+        bitDepth: '16-bit',
+        dynamicRange: 12.5,
+        peakAmplitude: 0.98,
+        rmsLevel: 0.2,
+        totalSamples: 66150,
+      );
+
+      final restored = AudioAnalysisData.fromJson(data.toJson());
+
+      expect(restored.fileModified, 1770000000123);
+      expect(restored.fileSize, 1024);
     });
   });
 
