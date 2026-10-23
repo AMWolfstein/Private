@@ -26,3 +26,12 @@ Planned paths: `lib/services/platform_bridge.dart`, `lib/services/library_native
 Concerns are distinct: API names/types/error mapping versus cancellation/disposal/late completion. Split direct endpoint additions into further <=6k-line chunks; record actual reads. Exclude audio-specific methods in shared files.
 Graph navigation: `graphify query 'platform bridge data jobs cancellation library native' --budget 1800` (truncated; narrow queries required); `graphify explain PlatformBridge` identified source at L110.
 Status: in progress. No readiness claim.
+
+## DATA-01 planned scope
+
+Baseline remains current application source `d5d5a02`; intervening commits contain reports only. Owner data-integrity-auditor; secondary rust-safety-auditor. Two disjoint chunks, each below 12 principal files/~6k lines:
+
+- Dart chunk: `lib/services/ffmpeg_{cue,metadata,models,probe,replaygain,service,support}.dart`, `metadata_cover_resources.dart`, `metadata_persistence_service.dart`, `id3v23_lyrics.dart`, `replaygain_service.dart`, `lib/controllers/metadata_editor_controller.dart`. Direct caller additions require separate named supplemental chunks.
+- Rust/SAF writer chunk: `rust_backend/crates/core/src/tags/write.rs`, `tags/write/{ape,id3,mp4,ogg,riff}.rs`, `rust_backend/crates/local/src/backend/tags.rs`, `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt`, nonaudio `writeTempToSaf` handler in `MainActivity.kt`, `NativeMediaWorkspace.kt`. Concern: replacement/rollback, unrelated-data preservation and malformed input; SAF destination opened with truncation must be checked against actual caller recovery.
+
+Round-trip/failure injection not executed yet. Audio playback engine excluded; retained metadata/ReplayGain file editing is included.
