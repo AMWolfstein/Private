@@ -5,4 +5,5 @@
 - Current unit: CONTRACT-01 cancellation and trust-boundary reviewers; then file/data integrity units.
 - Fresh finding namespace lives only in this folder. No old finding reconciliation/import.
 - Python helper tests: 28 passed. Flutter execution blocked by absent toolchain and download-host policy. No APK or device tests requested/executed.
-- Last push: pending first checkpoint. Subsequent checkpoint records prior commit/push without amending history.
+- Last verified push: `0efa84d`, API transport report, to `origin/ccr-2fb644cd-nmesyt`.
+- Non-engine native-job lifecycle chunk complete: no validated finding; producer/state lifecycles remain later units.
