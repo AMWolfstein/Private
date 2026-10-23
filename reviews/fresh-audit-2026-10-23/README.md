@@ -35,3 +35,12 @@ Baseline remains current application source `d5d5a02`; intervening commits conta
 - Rust/SAF writer chunk: `rust_backend/crates/core/src/tags/write.rs`, `tags/write/{ape,id3,mp4,ogg,riff}.rs`, `rust_backend/crates/local/src/backend/tags.rs`, `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt`, nonaudio `writeTempToSaf` handler in `MainActivity.kt`, `NativeMediaWorkspace.kt`. Concern: replacement/rollback, unrelated-data preservation and malformed input; SAF destination opened with truncation must be checked against actual caller recovery.
 
 Round-trip/failure injection not executed yet. Audio playback engine excluded; retained metadata/ReplayGain file editing is included.
+
+## DATA-02 planned scope
+
+Current-source baseline unchanged. Backup/persistence unit, separate disjoint bounded chunks:
+
+- data-integrity-auditor: `lib/services/{backup_service,collection_restore_codec,collection_track_batch,library_collections_database,library_collections_hydration,m3u_playlist_service,history_database,history_maintenance,app_state_database,user_profile_store}.dart` (10 files/~4.2k lines). Trace restore partial failures, ordering/duplicates, keys, schema and transaction ownership; supplemental direct-caller chunks explicitly logged.
+- api-compat-auditor: `rust_backend/crates/mobile/src/native_backup.rs`, `native_backup/{archive,collections,legacy}.rs`, `native_collections.rs`, `native_playlist_write.rs`, `native_playlists.rs`, corresponding fixtures and Dart endpoint ranges (split supplemental chunk if >12 files). Check native/persisted schemas against Dart and legacy compatibility from current readers, not prior audit reports.
+
+Tests/provider/device evidence remain separate; no audio engine.
