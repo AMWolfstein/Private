@@ -21,3 +21,5 @@ code-optimization-auditor; baseline968fbe57/appd5d5a02 unchanged, graph46c4ea6a 
 ## Verification / limits
 
 Static source only; no benchmarks/builds/Flutter tests/devices. Existing lazy rows,cached album ordering,bounded lyric measurement,hidden/background suspension and reduced-motion/glass gates checked and retained. Other4 principal files yielded no additional actionable performance candidate. Query/image internals outside chunk. Result FINDINGS, measurement required.
+
+U3 follow-up: library_section_list.dart52–73 regroups on items identity changes,so combined list recreation can also invalidate grouping/label-formatting cache. Same PERF-001; include this cost in profiling, no new finding.
