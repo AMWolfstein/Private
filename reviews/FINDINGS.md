@@ -663,11 +663,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: search keywords `layout`/`grid`/`amoled`/`provider` point at removed options; catalog misses glass clarity, custom font, lyrics text size and USB sub-options.
 - Fix: drop stale keywords, add catalog entries; ~25 lines.
 
-### UX-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/setup_screen.dart:657-709` (`_buildLanguageList`)
-- Scenario: language rows expose selection only by a check icon; no `Semantics(selected:)` → TalkBack does not announce the active language.
-- Fix: `Semantics(selected: isSelected, button: true)`; ~3 lines.
-
 ### SEC-302 [P3] [confidence: high] [VALIDATED]
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
 - Scenario: no `key.properties` → release silently signs with the debug key; the "CI re-signs" comment has no workflow in the repo.
@@ -1023,11 +1018,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: TalkBack does not announce the selected Player view or separator.
 - Fix: `Semantics(selected:, button: true, inMutuallyExclusiveGroup: true)`; ~6 lines.
 
-### UX-221 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/constants/language_choices.dart`, `lib/screens/settings/appearance_settings_page.dart` (Language)
-- Scenario: "System Default" is hard-coded English in Appearance (setup localizes it).
-- Fix: map `system` to `l10n.setupLanguageSystemDefault`; ~4 lines.
-
 ### UX-222 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/widgets/music_haptics_settings.dart`, `lib/widgets/playback_normalization_settings.dart`
 - Scenario: Sensitivity, Strength and Pre-amp sliders are announced with only a value.
@@ -1130,6 +1120,20 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### UX-221 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/constants/language_choices.dart`, `lib/screens/settings/appearance_settings_page.dart` (Language)
+- Scenario: "System Default" is hard-coded English in Appearance (setup localizes it).
+- Fix: map `system` to `l10n.setupLanguageSystemDefault`; ~4 lines.
+
+- Resolution: REMOVED with the Appearance Language option (owner: English only, 2026-10-23).
+
+### UX-204 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/screens/setup_screen.dart:657-709` (`_buildLanguageList`)
+- Scenario: language rows expose selection only by a check icon; no `Semantics(selected:)` → TalkBack does not announce the active language.
+- Fix: `Semantics(selected: isSelected, button: true)`; ~3 lines.
+
+- Resolution: REMOVED with the setup language step (owner: English only, 2026-10-23).
 
 ### UX-238 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/widgets/app_snack_bar.dart` (3 s cap)

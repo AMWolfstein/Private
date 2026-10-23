@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 190 open findings in `FINDINGS.md` (1 P1, 66 P2, 123 P3), including the 57 added
+The audits left 176 open findings in `FINDINGS.md` (0 P1, 62 P2, 114 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -177,7 +177,7 @@ or exported components.
     download-era settings, the SAF repair dialog and the migration prompt are removed or
     corrected, and startup no longer waits up to 2 s for them. Keep old backup files
     importable.
-  - Also: API-003, API-204, API-205, UX-204, DATA-101, DEAD-702, DEAD-806, TEST-303.
+  - Also: API-003, API-204, API-205, DATA-101, DEAD-702, DEAD-806, TEST-303.
   - Codex: FA-SEC-001 (P1: a crafted backup's playlist ID can overwrite any picture through
     path traversal; do it first), FA-DATA-006 (a playlist cover is replaced before the
     database commit), FA-DATA-007 (exports over 8 MiB cannot be restored), FA-BUG-001 (a
@@ -325,7 +325,7 @@ or exported components.
     present.
   - Findings (P2): UX-209, UX-210, UX-229, UX-239.
   - Also (P3): UX-102, UX-106, UX-107, UX-207, UX-211, UX-212, UX-213, UX-214, UX-216, UX-220,
-    UX-221, UX-222, UX-223, UX-224, UX-225, UX-226, UX-230, UX-231,
+    UX-222, UX-223, UX-224, UX-225, UX-226, UX-230, UX-231,
     UX-232, UX-233, UX-234, UX-235, UX-236, UX-237, UX-240, UX-241, UX-242,
     UX-243, UX-244, UI-405, UI-418, UI-419, UI-420.
   - Files: the screens and widgets each finding names. Shared widgets first
@@ -347,13 +347,17 @@ or exported components.
     - UX-234: the EQ gain slider mirrors in RTL.
     - UX-227 and UX-238 are already fixed in `23b1b46` (the pt_BR rename; longer snackbars
       keep their time up to 8 s).
+  - English is now the only language (owner, 2026-10-23), so right-to-left layout and
+    untranslated text cannot reach users. Skip these unless the owner adds a language back:
+    the RTL items UX-226, UX-232, UX-234, UI-405, UI-418, UI-419, FA-UX-001 and FA-UX-008,
+    and the hard-coded-English items UX-223 and UX-237. UX-204, UX-221 and FA-UI-001 are
+    closed because the language picker is gone.
   - UX-207 (landscape on tablets) and the contrast item UX-236 need an emulator, a device
     or a measurement. Report them as unverified rather than claiming them fixed.
   - Codex: FA-UX-002 (lyric crossfades ignore reduced motion), FA-UX-005 (the Auto scan
-    picker overflows at large text), FA-UI-001 (the setup language step overflows; drop it if
-    the owner removes the other languages), FA-UX-001 (same as UI-418, now P2), FA-UX-006
-    (same as UX-202), FA-UX-007 (same as UX-229), FA-UX-008 (same as UX-232), FA-UX-009 (same
-    as UX-225).
+    picker overflows at large text), FA-UI-001 (closed: the setup language step was
+    removed), FA-UX-001 (same as UI-418, now P2), FA-UX-006 (same as UX-202), FA-UX-007
+    (same as UX-229), FA-UX-008 (same as UX-232), FA-UX-009 (same as UX-225).
 
 - [ ] **T13: Clean up build, dependencies and tests**
   - Findings (all P3): SEC-302, DEP-001, DEP-002, TEST-101, TEST-203, TEST-205.
