@@ -1,0 +1,65 @@
+{
+  "sqlite_version": "3.54.0",
+  "fixture": "host in-memory100000 memberships,1000 playlists,20000 distinct track keys; warm cache;5 repetitions; not Android",
+  "before": {
+    "1": {
+      "query_plan": [
+        "SCAN playlist_tracks USING COVERING INDEX sqlite_autoindex_playlist_tracks_1"
+      ],
+      "milliseconds": [
+        4.955545000029815,
+        4.693595999924582,
+        4.597611000008328,
+        4.47170699999333,
+        4.576305999762553
+      ],
+      "median_ms": 4.597611000008328,
+      "returned_groups": 5
+    },
+    "500": {
+      "query_plan": [
+        "SCAN playlist_tracks USING COVERING INDEX sqlite_autoindex_playlist_tracks_1"
+      ],
+      "milliseconds": [
+        15.490139000121417,
+        15.855516000101488,
+        15.616713000326854,
+        15.89342499983104,
+        15.962344000399753
+      ],
+      "median_ms": 15.855516000101488,
+      "returned_groups": 25
+    }
+  },
+  "after": {
+    "1": {
+      "query_plan": [
+        "SEARCH playlist_tracks USING COVERING INDEX benchmark_track_key_playlist (track_key=?)"
+      ],
+      "milliseconds": [
+        0.010071999895444605,
+        0.006082000254536979,
+        0.005781000254501123,
+        0.005612000222754432,
+        0.005461000000650529
+      ],
+      "median_ms": 0.005781000254501123,
+      "returned_groups": 5
+    },
+    "500": {
+      "query_plan": [
+        "SEARCH playlist_tracks USING COVERING INDEX benchmark_track_key_playlist (track_key=?)",
+        "USE TEMP B-TREE FOR GROUP BY"
+      ],
+      "milliseconds": [
+        1.0079559997393517,
+        1.0105960000146297,
+        1.011617000131082,
+        1.0269899999002519,
+        0.9930320002240478
+      ],
+      "median_ms": 1.0105960000146297,
+      "returned_groups": 25
+    }
+  }
+}
