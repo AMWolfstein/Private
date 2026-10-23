@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 145 open findings in `FINDINGS.md` (0 P1, 50 P2, 95 P3), including the 57 added
+The audits left 134 open findings in `FINDINGS.md` (0 P1, 44 P2, 90 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -157,7 +157,7 @@ or exported components.
   - Reviews: data-integrity, Rust safety and Kotlin auditors re-reviewed fixes to PASS; separate SAF security pass PASS. Review enforcement was prompt-only.
   - Analysis: `flutter analyze --no-pub` — No issues found. Full `flutter test --reporter expanded`: 1,646 passed, 2 failed, 3 skipped; corrected schema request expectation and reran both failing files against final sources (`library_cleanup_test.dart`, `metadata_write_safety_test.dart`): 12 passed, 0 failed/skipped, no unresolved failures. The full run overlapped the final preservation-guard edits; the isolated final-source rerun confirms the pre-FFmpeg guard. Final `check_rust_backend.sh`: fmt/Clippy PASS, 182 passed, 0 failed, 1 ignored; native/Dart path parity failures found during verification were fixed (case-sensitive paths and SAF fragments) and re-reviewed. `check_android.sh`: BUILD SUCCESSFUL, 72 passed, 0 failures/errors, 1 skipped. No APK, instrumentation or device execution.
 
-- [ ] **T4: Fix Rust CUE parsing, library IDs and the cover cache**
+- [x] **T4: Fix Rust CUE parsing, library IDs and the cover cache**
   - Findings: RUST-202, RUST-203, RUST-204, DATA-502, CONC-101, CONC-102.
   - Files: `rust_backend/crates/core/src/cue.rs`, `core/src/tags/library.rs`
     (`library_id`), `core/src/cover/library.rs`, `crates/local/src/backend/library.rs`
@@ -170,6 +170,12 @@ or exported components.
   - Codex: FA-DATA-009 (a real `#track` file name is marked deleted; fix with SEC-003),
     FA-DATA-010 (CUE rows stay stale when only the backing audio changes), FA-DATA-013
     (same as DATA-502).
+
+  - Completed 2026-10-23: code `8232af13`, graph `d0ca1528`. All T4 findings, including FA-DATA-009/010/013, resolved; see FINDINGS.md.
+  - ID compatibility design: new paths use full SHA-256 IDs; rescans retain each live ID by exact source/path and remap staged path keys transactionally, preserving collection/history/backup references without a schema migration. Existing cover filenames age out through normal pruning.
+  - Local CUE refresh conservatively re-reads backing metadata because the snapshot stores only the sheet timestamp. Multi-file sheets now fail explicitly. Logs retain diagnostic paths with an export/share privacy notice.
+  - Reviews: rust-safety-auditor, api-compat-auditor and required security-auditor PASS; fix-only re-reviews PASS. A separate test-auditor pass cleared the artwork timing correction. Enforcement was prompt-only.
+  - `flutter analyze --no-pub`: No issues found. Full `flutter test --no-pub --reporter expanded`: 1,650 passed, 1 failed, 3 skipped; the failure exposed the artwork overlap-readback test's fixed 30 ms native-completion assumption. Replaced that wait with bounded completion/timer polling while retaining exact readback and idle assertions; test-auditor PASS, corrected file rerun 7 passed, 0 failed/skipped. Final `check_rust_backend.sh`: formatting and Clippy PASS; 191 passed, 0 failed, 1 ignored. Verification also caught a pre-paused scan registration deadlock, fixed and re-reviewed; the new CUE fixture was corrected to FLAC metadata probing rather than unsupported WAV duration probing. Android host script NOT RUN (no Kotlin/Android source changes). No APK, instrumentation/device execution, Miri or sanitizer run.
 
 - [ ] **T5: Fix backup restore, settings restore and startup**
   - Findings: API-001, API-002, API-201, API-202, API-203, UX-003.

@@ -181,66 +181,10 @@
 - Impact: low today (MediaSession allows the same); risk for future handlers.
 - Fix: same allow-list in `handleIntent`; 3 lines.
 
-### RUST-202 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/cue.rs:117-122` (`parse`, FILE), `CueTrack` :25-35; consumers `rust_backend/crates/local/src/backend/library.rs:232,284`, `scan.rs:446`
-- Scenario: multi-FILE cue (one file per track: `FILE "01.flac"`/TRACK 01/INDEX 01 00:00:00, `FILE "02.flac"`...) → `sheet.file_name` overwritten per FILE; all tracks attributed to the last file with their own start times.
-- Root cause: no per-track file field.
-- Impact: wrong/zero durations and playback offsets; Split into Tracks cuts the wrong audio; no error shown.
-- Fix: record file per track and resolve per track, or reject sheets with a second distinct FILE (~5 lines) + test.
-- Evidence: assignment at :119; no multi-FILE test.
-
-### RUST-203 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/cue.rs:291-300` (`timestamp`), `rust_backend/crates/local/src/backend/library.rs:431-433` (`cue_library_rows`)
-- Scenario: malformed INDEX ("xx:yy:zz") becomes 0.0; ff >= 75, negative values and out-of-order starts accepted → negative durations emitted to the library.
-- Root cause: no validation; `unwrap_or(0)`.
-- Impact: overlapping/zero-start tracks and negative durations without a parse error.
-- Fix: `timestamp` returns Option, rejects ff >= 75 / ss >= 60 / negatives; clamp durations with `.max(0)`; ~10 lines + tests.
-
-### RUST-204 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/core/src/cover/library.rs:53-60`, :71 (`library_thumbnail`)
-- Scenario: cache mutex held across `resize` of untrusted embedded art; a decoder panic poisons it → every later call fails "thumbnail cache unavailable" until restart.
-- Impact: all library covers disappear after one bad image.
-- Fix: recover with `into_inner()` on `Poisoned`, or resize outside the lock; ~3 lines.
-
-### RUST-001 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/mobile/src/usb_audio/transport.rs:235, 268, 274, 278, 286, 294` (`completed`, `Slot::submit`, `success`, `actual`)
-- Scenario: `submit` passes `self as *mut Slot` as libusb `user_data`, then writes `self.pending` through `&mut self`; later reborrows invalidate the raw pointer's provenance, so the callback's write is UB under Stacked/Tree Borrows. `iso_packet_desc.as_ptr()` on `[T; 0]` has zero-byte provenance.
-- Root cause: shared completion flag stored inside a `&mut`-used struct.
-- Impact: latent UB only; Opus review: no realistic miscompile today (pointer escapes to libusb, flag reloaded each loop).
-- Fix: heap `AtomicBool` passed as `user_data` with `pending()` accessor; `addr_of_mut!(...).cast()` for iso descriptors; ~15 lines.
-- Evidence: Opus escalation verdict (Sonnet → Opus).
-
-### RUST-002 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/mobile/src/usb_audio/transport.rs:626-631` (`run`), :433-436 (`configure`), `descriptors.rs:247-264`
-- Scenario: integer-nominal rates (48 kHz @125 µs = 6 frames) with feedback slightly above nominal occasionally need 7 frames; if `wMaxPacketSize` is exactly 6×frame, `run` fails "USB feedback exceeded endpoint capacity".
-- Impact: USB bit-perfect playback aborts mid-track on DACs without packet headroom.
-- Fix: clamp to endpoint capacity and carry the remainder; ~5 lines.
-
 ### RUST-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `rust_backend/crates/core/src/media/hires/mod.rs:525-532`, `WavSource::open` (:690)
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
-
-### DATA-502 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/tags/library.rs:19-24` (`library_id`), used at :44 and `rust_backend/crates/local/src/backend/library.rs:421`; `lib/services/library_schema.dart:25` (`id TEXT PRIMARY KEY`)
-- Scenario: track id = `lib_` + 32-bit DJB2 hash of the path; two distinct files with colliding hashes → `INSERT OR REPLACE` keeps only one row → the other track silently disappears from the library (birthday odds ≈1% at 10k tracks, ≈10% at 30k).
-- Root cause: 32-bit hash used as a unique primary key.
-- Impact: missing tracks with no error; collections/history entries keyed by that id can point at the wrong song.
-- Fix: 64-bit+ hash (or path-based key with collision check) plus an id migration for library, collections and history references; medium, needs a design note.
-- Evidence: hash body above; primary key in schema; `INSERT OR REPLACE` noted by storage/native reviewers.
-
-### CONC-102 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/local/src/backend/cover.rs:124-136` (`cache_cover`)
-- Scenario: cover cache file `cover_<32-bit hash of path|size|mtime>`; on collision the cache-hit path returns the other track's cover without checking the key.
-- Impact: wrong artwork for a track, persistent until the cache is cleared (≈10% chance of some collision at 30k tracks).
-- Fix: 64-bit or SHA-256-prefix filename (one-time cache invalidation); ~5 lines. Pair with DATA-502.
-
-### CONC-101 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/local/src/backend/library.rs:172-177` (`resolve_cue_audio`), `rust_backend/crates/core/src/tags/library.rs:14` (`library_extension` lowercases)
-- Scenario: CUE `FILE` name whose extension changes byte length when lowercased (e.g. `İ` → 3 bytes) → `&name[..name.len() - suffix.len() - 1]` slices inside a UTF-8 character → panic during library scan.
-- Root cause: slicing the original string with the lowercased suffix's length.
-- Impact: scan aborts on an odd/crafted CUE (panic across FFI; mapping unverified).
-- Fix: derive the stem with `rfind('.')` on the original name; ~3 lines + test.
 
 ### RUST-401 [P2] [confidence: high] [VALIDATED]
 - Location: `rust_backend/crates/mobile/src/native_lyrics.rs:111-139` (`execute`), :688-700, :790-826 (`parse_ttml`)
@@ -252,21 +196,6 @@
 - Location: `rust_backend/crates/mobile/src/native_lyrics.rs:~455-490` (`parse_lrc`)
 - Scenario: one LRC line with K leading timestamps and W word tags clones the word list K times (K×W); a crafted ~700 KB line can exhaust memory → native abort when lyrics open. Dart parser has the same amplification.
 - Fix: cap timestamps per line (e.g. 64) and total words; ~10 lines.
-
-### CONC-103 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/local/src/backend/library/scan.rs:363-371`, :392-399
-- Scenario: a second scan swaps the shared progress slot before acquiring the owner lock → progress jumps to zero while the first unwinds.
-- Fix: swap after acquiring `_owner`; ~6 lines.
-
-### CONC-104 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/local/src/redact.rs`, `rust_backend/crates/local/src/logging.rs` (`add_message`)
-- Scenario: redaction covers credentials/tokens only; absolute paths, `content://` URIs and folder names stay in shareable logs.
-- Fix: product decision: redact on share or document it.
-
-### RUST-301 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/mobile/src/native_library.rs:617-619` (`snapshot`)
-- Scenario: a library row whose path contains `\n`/`\r` makes every `library_snapshot` fail → incremental scans of that source never succeed (Dart fallback not traced).
-- Fix: skip/flag such rows or reject them at import; ~3 lines.
 
 ### API-201 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/providers/settings_provider.dart:224-249` (`restoreFromBackup`), `lib/models/settings.g.dart:47,65`, `lib/app.dart:24`
@@ -896,6 +825,100 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### RUST-202 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/cue.rs:117-122` (`parse`, FILE), `CueTrack` :25-35; consumers `rust_backend/crates/local/src/backend/library.rs:232,284`, `scan.rs:446`
+- Scenario: multi-FILE cue (one file per track: `FILE "01.flac"`/TRACK 01/INDEX 01 00:00:00, `FILE "02.flac"`...) → `sheet.file_name` overwritten per FILE; all tracks attributed to the last file with their own start times.
+- Root cause: no per-track file field.
+- Impact: wrong/zero durations and playback offsets; Split into Tracks cuts the wrong audio; no error shown.
+- Fix: record file per track and resolve per track, or reject sheets with a second distinct FILE (~5 lines) + test.
+- Evidence: assignment at :119; no multi-FILE test.
+- Resolution: `8232af13` (T4). Reject a second distinct FILE explicitly: the current CUE DTO/playback contract has one backing file. No tracks can silently inherit the last FILE. Regression covers a two-file sheet.
+
+### RUST-203 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/cue.rs:291-300` (`timestamp`), `rust_backend/crates/local/src/backend/library.rs:431-433` (`cue_library_rows`)
+- Scenario: malformed INDEX ("xx:yy:zz") becomes 0.0; ff >= 75, negative values and out-of-order starts accepted → negative durations emitted to the library.
+- Root cause: no validation; `unwrap_or(0)`.
+- Impact: overlapping/zero-start tracks and negative durations without a parse error.
+- Fix: `timestamp` returns Option, rejects ff >= 75 / ss >= 60 / negatives; clamp durations with `.max(0)`; ~10 lines + tests.
+- Resolution: `8232af13` (T4). Parse timestamps with checked numeric components, reject invalid seconds/frames/negative values and out-of-order INDEX 01 starts, and clamp derived durations nonnegative. Malformed-index and valid-boundary regressions added.
+
+### RUST-204 [P2] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/core/src/cover/library.rs:53-60`, :71 (`library_thumbnail`)
+- Scenario: cache mutex held across `resize` of untrusted embedded art; a decoder panic poisons it → every later call fails "thumbnail cache unavailable" until restart.
+- Impact: all library covers disappear after one bad image.
+- Fix: recover with `into_inner()` on `Poisoned`, or resize outside the lock; ~3 lines.
+- Resolution: `8232af13` (T4). Injected poison-state regression confirms recovery without disabling later calls. Discard interrupted cache state, clear poison and retain cancellation polling. The test uses a private mutex so it cannot invalidate concurrent global-cache reuse tests; no claim that a particular malformed image panics.
+
+### RUST-001 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/mobile/src/usb_audio/transport.rs:235, 268, 274, 278, 286, 294` (`completed`, `Slot::submit`, `success`, `actual`)
+- Scenario: `submit` passes `self as *mut Slot` as libusb `user_data`, then writes `self.pending` through `&mut self`; later reborrows invalidate the raw pointer's provenance, so the callback's write is UB under Stacked/Tree Borrows. `iso_packet_desc.as_ptr()` on `[T; 0]` has zero-byte provenance.
+- Root cause: shared completion flag stored inside a `&mut`-used struct.
+- Impact: latent UB only; Opus review: no realistic miscompile today (pointer escapes to libusb, flag reloaded each loop).
+- Fix: heap `AtomicBool` passed as `user_data` with `pending()` accessor; `addr_of_mut!(...).cast()` for iso descriptors; ~15 lines.
+- Evidence: Opus escalation verdict (Sonnet → Opus).
+- Resolution: `8232af13` (T4). libusb user_data now points to a separate heap AtomicBool retained until completion; Slot mutation no longer aliases callback state. Access flexible descriptors via raw field addresses, avoiding references to the zero-length array. Host callback regression covers completion after moving the slot. Miri/sanitizers/device USB execution NOT RUN.
+
+### RUST-002 [P3] [confidence: low] [RESOLVED]
+- Location: `rust_backend/crates/mobile/src/usb_audio/transport.rs:626-631` (`run`), :433-436 (`configure`), `descriptors.rs:247-264`
+- Scenario: integer-nominal rates (48 kHz @125 µs = 6 frames) with feedback slightly above nominal occasionally need 7 frames; if `wMaxPacketSize` is exactly 6×frame, `run` fails "USB feedback exceeded endpoint capacity".
+- Impact: USB bit-perfect playback aborts mid-track on DACs without packet headroom.
+- Fix: clamp to endpoint capacity and carry the remainder; ~5 lines.
+- Resolution: `8232af13` (T4). Validated the clock/capacity path with accepted 6.01-frame feedback against a six-frame endpoint. Bound each packet to endpoint capacity and carry unsent fractional/integer debt; the regression checks capacity and frame accounting without abort or discarded debt. Physical USB behavior NOT RUN.
+
+### DATA-502 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/library.rs:19-24` (`library_id`), used at :44 and `rust_backend/crates/local/src/backend/library.rs:421`; `lib/services/library_schema.dart:25` (`id TEXT PRIMARY KEY`)
+- Scenario: track id = `lib_` + 32-bit DJB2 hash of the path; two distinct files with colliding hashes → `INSERT OR REPLACE` keeps only one row → the other track silently disappears from the library (birthday odds ≈1% at 10k tracks, ≈10% at 30k).
+- Root cause: 32-bit hash used as a unique primary key.
+- Impact: missing tracks with no error; collections/history entries keyed by that id can point at the wrong song.
+- Fix: 64-bit+ hash (or path-based key with collision check) plus an id migration for library, collections and history references; medium, needs a design note.
+- Evidence: hash body above; primary key in schema; `INSERT OR REPLACE` noted by storage/native reviewers.
+- Resolution: `8232af13` (T4). New IDs are lib_v2_ plus the full SHA-256 of the UTF-8 path. Before publication, native import and Dart streamed/attached publication match exact source_id/file_path and retain the live ID, remapping staged path keys in the same transaction; single/batch upserts do likewise. Existing collection/history/backup keys therefore remain valid without eager ID rewriting or a schema change. Previously missing collision victims receive new IDs on rescan. Tests use two paths with an equal legacy DJB2 hash and verify retained IDs/path keys, including attached staging. Historical associations already corrupted by an old collision cannot be inferred from the hash alone.
+
+### CONC-102 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/local/src/backend/cover.rs:124-136` (`cache_cover`)
+- Scenario: cover cache file `cover_<32-bit hash of path|size|mtime>`; on collision the cache-hit path returns the other track's cover without checking the key.
+- Impact: wrong artwork for a track, persistent until the cache is cleared (≈10% chance of some collision at 30k tracks).
+- Fix: 64-bit or SHA-256-prefix filename (one-time cache invalidation); ~5 lines. Pair with DATA-502.
+- Resolution: `8232af13` (T4). Versioned cover filenames now use a full SHA-256 key, invalidating collision-prone legacy cache hits. Existing capability locks plus staged publication already serialize same-key writers. Regression verifies old-hash-colliding keys return distinct covers and concurrent publication returns complete matching bytes.
+
+### CONC-101 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/local/src/backend/library.rs:172-177` (`resolve_cue_audio`), `rust_backend/crates/core/src/tags/library.rs:14` (`library_extension` lowercases)
+- Scenario: CUE `FILE` name whose extension changes byte length when lowercased (e.g. `İ` → 3 bytes) → `&name[..name.len() - suffix.len() - 1]` slices inside a UTF-8 character → panic during library scan.
+- Root cause: slicing the original string with the lowercased suffix's length.
+- Impact: scan aborts on an odd/crafted CUE (panic across FFI; mapping unverified).
+- Fix: derive the stem with `rfind('.')` on the original name; ~3 lines + test.
+- Resolution: `8232af13` (T4). Derive the CUE fallback stem from an original UTF-8 dot boundary, never the byte length of a lowercased extension. Resolve an exact case-insensitive filename before fallback, keeping capability checks and rejecting ambiguous case matches. CUE scan regression covers mixed-case FILE and Unicode İ suffixes.
+
+### CONC-103 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/local/src/backend/library/scan.rs:363-371`, :392-399
+- Scenario: a second scan swaps the shared progress slot before acquiring the owner lock → progress jumps to zero while the first unwinds.
+- Fix: swap after acquiring `_owner`; ~6 lines.
+- Resolution: `8232af13` (T4). A queued scan cancels the preceding run without replacing its progress slot until owner acquisition. Owner acquisition checks shutdown/request cancellation before waiting on pause, so a pre-paused first run remains visible to cancel/resume. Existing pause/cancel tests and a queued-owner progress regression pass.
+
+### CONC-104 [P3] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/local/src/redact.rs`, `rust_backend/crates/local/src/logging.rs` (`add_message`)
+- Scenario: redaction covers credentials/tokens only; absolute paths, `content://` URIs and folder names stay in shareable logs.
+- Fix: product decision: redact on share or document it.
+- Resolution: `8232af13` (T4). Confirmed paths/content URIs remain useful diagnostic data. Chose the documented-export option: both log export headers and selected-log sharing disclose local file paths, folder names and content URIs and ask the user to review before sharing. Credential redaction remains unchanged. Export notice regression added.
+
+### RUST-301 [P3] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/mobile/src/native_library.rs:617-619` (`snapshot`)
+- Scenario: a library row whose path contains `\n`/`\r` makes every `library_snapshot` fail → incremental scans of that source never succeed (Dart fallback not traced).
+- Fix: skip/flag such rows or reject them at import; ~3 lines.
+- Resolution: `8232af13` (T4). Confirmed an unrepresentable TSV row aborted snapshot creation. Skip CR/LF paths in the snapshot while retaining their database rows, so other paths can scan and omitted files are eligible for refresh. Regression verifies a normal row exports while a newline row remains stored.
+
+### FA-DATA-009 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/07-scanner-database.md` DATA-009; mapped in TASKS.md T4.
+- Resolution: `8232af13`. Require a .cue base and an exact trailing numeric #track suffix. Real song#track2.wav paths remain physical; incremental scan regression confirms no false deletedPaths. Completes the Rust counterpart of T2 SEC-003.
+
+### FA-DATA-010 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/07-scanner-database.md` DATA-010; mapped in TASKS.md T4.
+- Resolution: `8232af13`. Local incremental scans conservatively re-read CUE dependencies even when the sheet timestamp matches: the existing snapshot has no persisted backing-audio version. A same-size FLAC replacement with changed sample count refreshes duration while the sheet stays untouched. This trades some repeated CUE work for correctness.
+
+### FA-DATA-013 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/21-tag-library-identity.md` DATA-013; mapped in TASKS.md T4.
+- Resolution: `8232af13`. Duplicate of DATA-502. Collision-resistant new IDs and same-source/path retention keep existing references stable; legacy-hash collision regression passes.
 
 ### DATA-301 [P2] [confidence: medium] [RESOLVED]
 - Location: `lib/widgets/local_song_menu.dart:256-282` (`editLocalSongMetadata`), `lib/controllers/metadata_editor_controller.dart:54`
