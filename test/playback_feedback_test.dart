@@ -74,14 +74,13 @@ void main() {
       addTearDown(runtime.dispose);
       // Notices emitted before the shell mounts must not be replayed.
       runtime.notifyMutedPlayback();
-      final message = mornye
-          ? 'Volume media nol. Lagu dijeda. Tekan play lagi untuk tetap memutar.'
-          : 'Media volume is zero. Playback paused. Press play again to continue.';
+      const message =
+          'Media volume is zero. Playback paused. Press play again to continue.';
       await tester.pumpWidget(
         ProviderScope(
           overrides: [musicPlayerRuntimeProvider.overrideWithValue(runtime)],
           child: MaterialApp(
-            locale: Locale(mornye ? 'id' : 'en'),
+            locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),

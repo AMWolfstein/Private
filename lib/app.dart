@@ -11,7 +11,6 @@ import 'package:spotiflac_android/services/app_navigation_service.dart';
 import 'package:spotiflac_android/services/app_orientation.dart';
 import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/l10n/supported_locales.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
 import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
 import 'package:spotiflac_android/widgets/mornye_glass_auto_probe_host.dart';
@@ -56,39 +55,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => const MainShell(),
   );
 });
-
-Locale _fallbackLocale(Iterable<Locale> supportedLocales) {
-  for (final supportedLocale in supportedLocales) {
-    if (supportedLocale.languageCode == 'en') {
-      return supportedLocale;
-    }
-  }
-  return supportedLocales.first;
-}
-
-Locale _resolveSupportedLocale(
-  Locale? requestedLocale,
-  Iterable<Locale> supportedLocales,
-) {
-  if (requestedLocale == null) {
-    return _fallbackLocale(supportedLocales);
-  }
-
-  for (final supportedLocale in supportedLocales) {
-    if (supportedLocale.languageCode == requestedLocale.languageCode &&
-        supportedLocale.countryCode == requestedLocale.countryCode) {
-      return supportedLocale;
-    }
-  }
-
-  for (final supportedLocale in supportedLocales) {
-    if (supportedLocale.languageCode == requestedLocale.languageCode) {
-      return supportedLocale;
-    }
-  }
-
-  return _fallbackLocale(supportedLocales);
-}
 
 /// iOS-style fluid scroll everywhere: momentum glide + bounce instead of the
 /// Android clamping stop. Widgets that set explicit physics (queue filter
@@ -166,27 +132,12 @@ class SpotiFLACApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(equalizerProvider);
     final router = ref.watch(_routerProvider);
-    final localeString = ref.watch(settingsProvider.select((s) => s.locale));
     final heroAnimationsEnabled = ref.watch(
       settingsProvider.select((s) => s.heroAnimationsEnabled),
     );
     final scrollBehavior = disableOverscrollEffects
         ? const MaterialScrollBehavior().copyWith(overscroll: false)
         : const _FluidScrollBehavior();
-
-    Locale? locale;
-    if (localeString != 'system' && localeString.isNotEmpty) {
-      if (localeString.contains('_')) {
-        final parts = localeString.split('_');
-        if (parts.length == 2) {
-          locale = Locale(parts[0], parts[1]);
-        } else {
-          locale = Locale(parts[0]);
-        }
-      } else {
-        locale = Locale(localeString);
-      }
-    }
 
     return MornyeThemeWrapper(
       builder: (lightTheme, darkTheme, themeMode) {
@@ -234,23 +185,15 @@ class SpotiFLACApp extends ConsumerWidget {
             );
           },
           routerConfig: router,
-          locale: locale,
-          localeResolutionCallback: (deviceLocale, supportedLocales) {
-            return _resolveSupportedLocale(
-              locale ?? deviceLocale,
-              supportedLocales,
-            );
-          },
+          // English is the only language.
+          locale: const Locale('en'),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          // ARB files below the translation threshold remain bundled so
-          // translators can test them, but production users should only be
-          // offered locales selected by the completion checker.
-          supportedLocales: filteredSupportedLocales,
+          supportedLocales: AppLocalizations.supportedLocales,
         );
       },
     );

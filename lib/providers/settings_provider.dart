@@ -538,11 +538,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     if (persist) await _saveSettings();
   }
 
-  void setLocale(String locale) {
-    state = state.copyWith(locale: locale);
-    _saveSettings();
-  }
-
   void setLocalLibraryEnabled(bool enabled) {
     state = state.copyWith(localLibraryEnabled: enabled);
     _saveSettings();

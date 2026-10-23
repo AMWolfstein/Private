@@ -117,8 +117,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
               'light',
               'amoled',
               'color',
-              'language',
-              'locale',
               'layout',
               'grid',
             ],

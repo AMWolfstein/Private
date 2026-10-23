@@ -109,11 +109,6 @@ class SettingsSearchCatalog {
           ],
         ),
         SettingsSearchEntry(
-          icon: Icons.language,
-          title: l10n.appearanceLanguage,
-          keywords: const ['locale', 'translation'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.grid_view_outlined,
           title: l10n.appearancePlayerView,
           subtitle:

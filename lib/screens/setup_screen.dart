@@ -11,9 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/screens/local_guide_pages.dart';
-import 'package:spotiflac_android/constants/language_choices.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/widgets/scroll_edge_fade.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('SetupScreen');
@@ -35,19 +32,17 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   final _prefs = SharedPreferences.getInstance();
   final _platform = defaultTargetPlatform;
   PageController? _pageController;
-  final ScrollController _languageScrollController = ScrollController();
   late final Future<void> _initialization;
   bool _initializing = true;
   int _currentStep = 0;
 
-  String _selectedLocale = 'system';
   bool _storagePermissionGranted = false;
   bool _notificationPermissionGranted = false;
   bool _notificationPermissionSkipped = false;
   bool _isLoading = false;
   int _androidSdkVersion = 0;
 
-  int get _storageStep => 2 + localGuidePageCount;
+  int get _storageStep => 1 + localGuidePageCount;
   int get _totalSteps => _storageStep + (_androidSdkVersion >= 33 ? 2 : 1);
 
   @override
@@ -61,7 +56,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _pageController?.dispose();
-    _languageScrollController.dispose();
     super.dispose();
   }
 
@@ -74,15 +68,18 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       }
       final prefs = await _prefs;
       if (!mounted) return;
-      _selectedLocale = ref.read(settingsProvider).locale;
       final saved = prefs.getString(_progressKey);
       if (saved != null) {
         final draft = jsonDecode(saved) as Map<String, dynamic>;
         var savedStep = (draft['step'] as int?) ?? 0;
-        // Old drafts used 2/3 for permissions and ended in a download-folder step.
-        if (draft['version'] != 2 && savedStep >= 2) {
+        final version = draft['version'];
+        // Version 1 drafts used 2/3 for permissions and ended in a
+        // download-folder step.
+        if (version != 2 && version != 3 && savedStep >= 2) {
           savedStep += localGuidePageCount;
         }
+        // Before version 3, step 1 chose a language; later steps move back one.
+        if (version != 3 && savedStep >= 2) savedStep -= 1;
         _currentStep = savedStep.clamp(0, _totalSteps - 1);
         _notificationPermissionSkipped = draft['skipNotifications'] == true;
       }
@@ -117,7 +114,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   Future<void> _saveProgress({int? step}) async {
     final draft = jsonEncode({
       'step': step ?? _currentStep,
-      'version': 2,
+      'version': 3,
       'skipNotifications': _notificationPermissionSkipped,
     });
     if (!await (await _prefs).setString(_progressKey, draft)) {
@@ -445,10 +442,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
                   _buildWelcomeStep(colorScheme),
-                  _buildLanguageStep(colorScheme),
                   ...buildLocalGuidePages(
                     context,
-                    firstIndex: 2,
+                    firstIndex: 1,
                     currentIndex: _currentStep,
                   ),
                   _buildStorageStep(colorScheme),
@@ -550,159 +546,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _onLanguageSelected(String locale) {
-    setState(() => _selectedLocale = locale);
-    ref.read(settingsProvider.notifier).setLocale(locale);
-  }
-
-  Widget _buildLanguageStep(ColorScheme colorScheme) {
-    final languages = supportedLanguageChoices;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final shortestSide = MediaQuery.sizeOf(context).shortestSide;
-        final iconPadding = (shortestSide * 0.06).clamp(16.0, 24.0);
-        final iconSize = (shortestSide * 0.12).clamp(32.0, 48.0);
-        final titleGap = (shortestSide * 0.06).clamp(16.0, 32.0);
-        final descriptionGap = (shortestSide * 0.04).clamp(8.0, 16.0);
-        final actionGap = (shortestSide * 0.09).clamp(20.0, 48.0);
-
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                24 + wideListInset(context, contentMaxWidth: 560),
-                24,
-                24 + wideListInset(context, contentMaxWidth: 560),
-                0,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(iconPadding),
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerHighest,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.translate,
-                      size: iconSize,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                  SizedBox(height: titleGap),
-                  Text(
-                    context.l10n.setupLanguageTitle,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: descriptionGap),
-                  Text(
-                    context.l10n.setupLanguageDescription,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: actionGap),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ScrollEdgeFade(
-                child: Scrollbar(
-                  controller: _languageScrollController,
-                  thumbVisibility: true,
-                  child: _buildLanguageList(languages, colorScheme),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildLanguageList(
-    List<(String, String, IconData)> languages,
-    ColorScheme colorScheme,
-  ) {
-    return ListView.builder(
-      controller: _languageScrollController,
-      padding: EdgeInsets.fromLTRB(
-        24 + wideListInset(context, contentMaxWidth: 560),
-        0,
-        24 + wideListInset(context, contentMaxWidth: 560),
-        80,
-      ),
-      itemCount: languages.length,
-      itemBuilder: (context, index) {
-        final lang = languages[index];
-        final code = lang.$1;
-        final name = lang.$2;
-        final isSelected = _selectedLocale == code;
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Material(
-            color: isSelected
-                ? colorScheme.primaryContainer
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(16),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(16),
-              onTap: () => _onLanguageSelected(code),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      lang.$3,
-                      color: isSelected
-                          ? colorScheme.onPrimaryContainer
-                          : colorScheme.onSurfaceVariant,
-                      size: 22,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        code == 'system'
-                            ? context.l10n.setupLanguageSystemDefault
-                            : name,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
-                          color: isSelected
-                              ? colorScheme.onPrimaryContainer
-                              : colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    if (isSelected)
-                      Icon(
-                        Icons.check_circle,
-                        color: colorScheme.onPrimaryContainer,
-                        size: 22,
-                      ),
-                  ],
-                ),
               ),
             ),
           ),

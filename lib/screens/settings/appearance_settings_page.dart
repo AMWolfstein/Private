@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/constants/language_choices.dart';
 import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/theme_provider.dart';
@@ -117,21 +115,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         .setHeroAnimationsEnabled(value),
                   ),
                   const CustomFontSetting(),
-                ],
-              ),
-            ),
-
-            SliverToBoxAdapter(
-              child: SettingsSectionHeader(title: context.l10n.sectionLanguage),
-            ),
-            SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  _LanguageSelector(
-                    currentLocale: settings.locale,
-                    onChanged: (locale) =>
-                        ref.read(settingsProvider.notifier).setLocale(locale),
-                  ),
                 ],
               ),
             ),
@@ -533,99 +516,4 @@ class _PlayerViewSelector extends StatelessWidget {
       ),
     ),
   );
-}
-
-class _LanguageSelector extends StatelessWidget {
-  final String currentLocale;
-  final ValueChanged<String> onChanged;
-  const _LanguageSelector({
-    required this.currentLocale,
-    required this.onChanged,
-  });
-
-  String _getLanguageName(String code) {
-    for (final lang in appLanguageChoices) {
-      if (lang.$1 == code) return lang.$2;
-    }
-    return code;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final content = ListTile(
-      leading: null,
-      title: Text(context.l10n.appearanceLanguage),
-      subtitle: Text(_getLanguageName(currentLocale)),
-      trailing: Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
-      onTap: () => _showLanguagePicker(context),
-    );
-    return SettingsSearchTarget(
-      label: context.l10n.appearanceLanguage,
-      child: content,
-    );
-  }
-
-  void _showLanguagePicker(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    showAppModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: colorScheme.surface,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                context.l10n.appearanceLanguage,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Divider(height: 1),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: supportedLanguageChoices.length,
-                itemBuilder: (context, index) {
-                  final lang = supportedLanguageChoices[index];
-                  final isSelected = currentLocale == lang.$1;
-                  return AppSheetOption(
-                    leading: Icon(
-                      lang.$3,
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.onSurfaceVariant,
-                    ),
-                    title: Text(
-                      lang.$2,
-                      style: TextStyle(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSurface,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                      ),
-                    ),
-                    trailing: isSelected
-                        ? Icon(Icons.check, color: colorScheme.primary)
-                        : null,
-                    onTap: () {
-                      onChanged(lang.$1);
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
 }
