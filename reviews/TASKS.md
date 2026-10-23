@@ -2,10 +2,10 @@
 
 The audits left 190 open findings in `FINDINGS.md` (1 P1, 66 P2, 123 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
-is assigned to one of the 13 tasks below, so finishing them all closes the audit. T1-T8 fix
+is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
-T11-T12 come from the 2026-10-23 UI re-audit (UI bugs, then accessibility and text), and T13 is
-build/test cleanup. Do them in order. Three findings are already
+T11-T12 come from the 2026-10-23 UI re-audit (UI bugs, then accessibility and text), T13 is
+build/test cleanup, and T14 removes the dead code Codex found. Do them in order. Three findings are already
 gone and need no task (see the last section).
 
 ## Instructions for opencode (read first, follow exactly)
@@ -108,6 +108,7 @@ current one is pushed.
 | T11 | flutter-dart-auditor, ux-auditor |
 | T12 | ux-auditor, flutter-dart-auditor |
 | T13 | dependency-auditor, test-auditor |
+| T14 | dead-code-hunter, flutter-dart-auditor; add kotlin-android-auditor for DC-DEAD-001 |
 
 Always add security-auditor when a change touches file deletion, SAF permissions, intents
 or exported components.
@@ -147,6 +148,10 @@ or exported components.
     writing is fixed in both places.
   - Also: BUG-104, RUST-103, RUST-104, RUST-105, RUST-106, DATA-304, DATA-307, DATA-401,
     DATA-402.
+  - Codex: FA-DATA-001 (P1, the same bug as DATA-306: do it first), FA-DATA-002 (ID3v2.4
+    extended header drops frames), FA-DATA-003 (FLAC cover lost on a rejected replacement),
+    FA-DATA-004 (same as RUST-105, now P2), FA-DATA-005 (APE YEAR comes back after clearing
+    the date).
 
 - [ ] **T4: Fix Rust CUE parsing, library IDs and the cover cache**
   - Findings: RUST-202, RUST-203, RUST-204, DATA-502, CONC-101, CONC-102.
@@ -158,6 +163,9 @@ or exported components.
     collide (if the stored ID format changes, keep old databases working). CUE audio lookup
     ignores case. Concurrent cover caching is safe.
   - Also: CONC-103, CONC-104, RUST-001, RUST-002, RUST-301.
+  - Codex: FA-DATA-009 (a real `#track` file name is marked deleted; fix with SEC-003),
+    FA-DATA-010 (CUE rows stay stale when only the backing audio changes), FA-DATA-013
+    (same as DATA-502).
 
 - [ ] **T5: Fix backup restore, settings restore and startup**
   - Findings: API-001, API-002, API-201, API-202, API-203, UX-003.
@@ -170,6 +178,12 @@ or exported components.
     corrected, and startup no longer waits up to 2 s for them. Keep old backup files
     importable.
   - Also: API-003, API-204, API-205, UX-204, DATA-101, DEAD-702, DEAD-806, TEST-303.
+  - Codex: FA-SEC-001 (P1: a crafted backup's playlist ID can overwrite any picture through
+    path traversal; do it first), FA-DATA-006 (a playlist cover is replaced before the
+    database commit), FA-DATA-007 (exports over 8 MiB cannot be restored), FA-BUG-001 (a
+    failed settings save during restore is reported as success), FA-BUG-002 (same as
+    API-201), OPT-PERF-007 (export without loading every playlist into the UI; measure
+    first).
 
 - [ ] **T6: Fix lyrics parsing**
   - Findings: BUG-101, RUST-401, RUST-403.
@@ -178,6 +192,9 @@ or exported components.
   - Goal: untimed TTML shows as plain lyrics instead of being dropped, in both the Dart and
     Rust parsers, and the LRC edge cases parse correctly.
   - Also: BUG-102, BUG-103. UI-102 is already fixed and resolved.
+  - Codex: FA-RUST-001 (confirms RUST-403 with a reproduction: about 390 GiB of
+    allocations from one crafted LRC), OPT-PERF-004 (TTML parsed twice for credits; measure
+    first).
 
 - [ ] **T7: Fix playback and visible UI bugs**
   - Findings: CONC-001, CONC-002, UI-101, UI-201, UX-201, BUG-201, BUG-202.
@@ -196,6 +213,7 @@ or exported components.
     - Search honours the Local Library setting.
   - Do not rewrite the playback engine.
   - Also: CONC-003, CONC-004, KT-001, KT-002, SEC-101, SEC-303, BUG-302, DEAD-604.
+  - Codex: FA-CONC-001 (same as UI-201).
 
 - [ ] **T8: Fix library queries, search, duplicates and file-access scope**
   - Findings: DATA-002, DATA-003, DATA-004, DATA-201, DATA-203, SEC-001, SEC-002, BUG-203,
@@ -217,6 +235,13 @@ or exported components.
     - The scan-prefs read is safe.
     - Selection counts, the log list and library reloads stay correct.
   - Also: DATA-202, BUG-205, UX-203.
+  - Codex: FA-BUG-003 (same as BUG-202), FA-BUG-004 (artist releases sorted by raw date
+    text), FA-BUG-005 (the embedded-cover failure cache never retries local files),
+    FA-DATA-008 (Clear Library during a scan brings the tracks back; fix with BUG-205),
+    FA-DATA-012 (queue rows drop `source_id`, so an edit moves a song to the legacy source),
+    FA-BUG-006 (queue rows drop `explicit`, so the E badge is missing).
+  - DATA-002 and DC-DEAD-008: `shuffleLibrary` has no caller, so delete it in T14 instead of
+    optimizing it here.
 
 - [ ] **T9: Make library queries and screen rebuilds cheaper**
   - Findings: PERF-401, PERF-402, PERF-404, PERF-605 (P2); also PERF-201, PERF-202, PERF-301,
@@ -239,6 +264,11 @@ or exported components.
     - The artist header builds its pre-blurred ground once, not on every collapse frame
       (PERF-605). Measure the artist page raster p90 with the HUD before and after.
   - Do PERF-301, PERF-405, PERF-603 and PERF-604 only if the measurement shows a cost.
+  - Codex (measure first): OPT-PERF-001 (Songs pages copied and regrouped up to three times
+    per build; do it with PERF-201 and PERF-602), OPT-PERF-003 (a
+    `(track_key, playlist_id)` index for the playlist picker; Codex's host timings are in
+    `reviews/optimization-2026-10-23/playlist-picker-host.json`), OPT-PERF-006 (the playlist
+    cover lookup stops at the first usable cover).
 
 - [ ] **T10: Make scanning and cover caching cheaper**
   - Findings: PERF-501, PERF-502 (P2); also PERF-503, PERF-504.
@@ -254,6 +284,10 @@ or exported components.
     - Ogg/Opus covers are assembled once.
     - Incremental scans stop re-copying unchanged CUE sheets.
   - Do this after T4, which changes the same cover cache.
+  - Codex: FA-DATA-011 (bug: a full SAF scan drops the audio when its CUE has no usable
+    tracks; T1 did not cover it). Measure first: OPT-PERF-002 (block-based repair of an
+    interrupted scan output), OPT-PERF-005 (same as PERF-503), OPT-PERF-008 (faster seeking
+    in a CUE split).
 
 - [ ] **T11: Fix the UI bugs from the UI re-audit**
   - Source: the 2026-10-23 UI re-audit at `8e11147`, which replaced the old T11.
@@ -281,6 +315,10 @@ or exported components.
     - Setup tips are never hidden under the Next button, and system Back steps back
       through setup.
     - Every async action in these screens shows an error instead of failing silently.
+  - Codex: FA-UX-003 (P2: Library -> Playlists is a grid, but `AGENTS.md` says Library
+    sections use rows), FA-UX-004 (no Create action when there are no playlists),
+    FA-CONC-002 (stale Select all results come back after the query changes; fix with
+    UI-411), FA-UI-002 (same as UI-203), FA-UI-003 (same as UI-206).
 
 - [ ] **T12: Fix UI accessibility, RTL, large text and translations**
   - Source: the 2026-10-23 UI re-audit at `8e11147`, plus the old T11 items that are still
@@ -311,6 +349,11 @@ or exported components.
       keep their time up to 8 s).
   - UX-207 (landscape on tablets) and the contrast item UX-236 need an emulator, a device
     or a measurement. Report them as unverified rather than claiming them fixed.
+  - Codex: FA-UX-002 (lyric crossfades ignore reduced motion), FA-UX-005 (the Auto scan
+    picker overflows at large text), FA-UI-001 (the setup language step overflows; drop it if
+    the owner removes the other languages), FA-UX-001 (same as UI-418, now P2), FA-UX-006
+    (same as UX-202), FA-UX-007 (same as UX-229), FA-UX-008 (same as UX-232), FA-UX-009 (same
+    as UX-225).
 
 - [ ] **T13: Clean up build, dependencies and tests**
   - Findings (all P3): SEC-302, DEP-001, DEP-002, TEST-101, TEST-203, TEST-205.
@@ -325,6 +368,44 @@ or exported components.
     - Bare `length` and `isEmpty` asserts become matchers that print what went wrong.
     - TEST-101 is closed if the dead-code sweep it served is finished.
   - Do not build or sign an APK.
+  - Codex: DC-DEAD-002 (ProGuard rules for removed classes), DC-DEAD-004 (unused
+    `open_filex`), DC-DEAD-005 (direct `timezone`, `html` and `synchronized`; do it with
+    DEP-001), DC-DEAD-006 (two orphan test-support files).
+
+- [ ] **T14: Remove the dead code Codex found**
+  - Source: `reviews/dead-code-2026-10-23/` (all P3, statically validated).
+  - Findings: DC-DEAD-001 (unused SAF staged-writer island in `SafFileOps.kt`), DC-DEAD-003
+    (six unused README images and `logo.svg`, 1.1 MB), DC-DEAD-007
+    (`HistoryMaintenanceUpdate`), DC-DEAD-008 (`shuffleLibrary`, which also closes DATA-002),
+    DC-DEAD-009 (`navigateToTrackAlbum`), DC-DEAD-010 (`displayFormatForCodec`),
+    DC-DEAD-011 (`LocalLibraryState.existsInLibrary`), DC-DEAD-012 (about 415 lines of
+    download-completion policy in `queue_library_refresh_policy.dart`; keep the live count
+    and page helpers), DC-DEAD-013 (`library_playlist_drag_source.dart`,
+    `two_finger_pinch_listener.dart` and their tests), DC-DEAD-014 (`PlayerPlaybackMode`),
+    DC-DEAD-015 (two private wrappers in the vendored `AudioService.java`).
+  - Also: UI-417 (`_KeepAliveTabPage`).
+  - Follow the `AGENTS.md` feature-removal workflow: graphify first, then remove, then prove
+    with graphify and grep that no references remain. Delete only tests that exist solely for
+    the removed code.
+  - Keep `NativeReplayGainPolicy`, public plugin APIs and the FFI, JNI and test seams that
+    Codex lists as retained.
+
+## Codex reviews (2026-10-23)
+
+Codex reviewed application source `d5d5a02` (after T1) in three folders, each with its own
+ID numbers:
+- Fresh audit: `reviews/fresh-audit-2026-10-23/`, 35 findings. Here they are `FA-<ID>`, for
+  example `FA-DATA-001` is `DATA-001` in that folder.
+- Dead code: `reviews/dead-code-2026-10-23/`, 15 findings, here `DC-DEAD-<n>`.
+- Optimization: `reviews/optimization-2026-10-23/`, 8 candidates, all "measure first", here
+  `OPT-PERF-<n>`.
+
+Every one is assigned to a task above, in that task's "Codex:" line. 21 of them duplicate a
+finding in `FINDINGS.md`: the task says "same as <ID>", and one fix closes both. Where Codex
+raised the severity or added a reproduction, use Codex's version: FA-DATA-001 is P1, and
+FA-RUST-001 reproduces RUST-403. Read the finding in Codex's report before fixing it. When
+it is fixed, add a line under `## Resolved` in `FINDINGS.md` with its prefixed ID, its report
+file and the code commit. Do not edit Codex's report folders.
 
 ## What is already fixed (checked 2026-10-22 against `89bf53b`)
 
