@@ -1,0 +1,46 @@
+{
+  "baseline": "968fbe57",
+  "application_source": "d5d5a02",
+  "tracked_path_count": 1510,
+  "roots": {
+    "lib/": 328,
+    "android/": 131,
+    "rust_backend/crates/": 87,
+    "third_party/": 86,
+    "rust_backend/vendor/": 430,
+    "scripts/": 12,
+    "test/": 254,
+    "integration_test/": 26,
+    "assets/": 18,
+    ".claude/": 19,
+    ".opencode/": 26
+  },
+  "dart_ui": {
+    "screened": 162,
+    "bounded_principal_body_paths": 40,
+    "screen_only_before_root_supplement": 122
+  },
+  "dart_logic": {
+    "screened": 144,
+    "D1_D2_principal": 17,
+    "A1_domain": 4,
+    "D3_focused": 10,
+    "playback_analysis_deferred": 29,
+    "compat_test": 2,
+    "model_config_utility_screen_only": 45,
+    "other_service_screen_only": 37
+  },
+  "native": {
+    "tracked_inventory": 304,
+    "rg_visible": 303,
+    "source_marker_screen": 173,
+    "vendor_body_profiling": false
+  },
+  "measurement": "One synthetic host SQLite membership query experiment; all Android/runtime impact unverified",
+  "limitations": [
+    "Candidate screen is not full-body performance certification",
+    "Legacy playback pure optimization deferred per reviewer policy",
+    "Vendor internals,device profiling,power/GPU/build benchmarks not executed",
+    "No source code changed; no security checks"
+  ]
+}
