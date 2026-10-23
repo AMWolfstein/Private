@@ -125,7 +125,7 @@ or exported components.
     keeps the correct state.
   - Also: KT-103, KT-104, KT-105, KT-204, KT-205, DATA-204.
 
-- [ ] **T2: Make CUE delete and split safe**
+- [x] **T2: Make CUE delete and split safe**
   - Findings: DATA-001, BUG-301, TEST-301, BUG-001, BUG-002.
   - Files: `lib/widgets/local_song_file_actions.dart` (`isCueSong`, `deleteLocalSong`,
     `splitLocalCue`), `lib/services/local_track_batch_actions.dart`

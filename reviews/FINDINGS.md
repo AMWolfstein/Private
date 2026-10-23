@@ -1,90 +1,4 @@
-# Findings
-
-Format and severity: `reviews/PROTOCOL.md`. IDs are never reused. Move entries between
-sections instead of deleting them; resolved entries keep the fixing commit SHA.
-
 ## Open
-
-### BUG-001 [P2] [confidence: high] [VALIDATED]
-- Location: lib/widgets/local_song_file_actions.dart:191 (`splitLocalCue`)
-- Scenario: CUE album split where cover embed throws on one FLAC (native error) → loop aborts; earlier tracks already exported, rest never exported, snackbar says "CUE split failed".
-- Root cause: `PlatformBridge.editFileMetadata` call has no per-file try/catch (old `_performCueSplit` caught and logged it).
-- Impact: partial split reported as failure; user retries and gets duplicates.
-- Fix: wrap the embed in try/catch and continue; ~5 lines + test.
-- Evidence: old flow at `26f8e71^` wrapped the same call; current loop 189–201 is unguarded inside the outer catch at 209.
-
-### BUG-002 [P2] [confidence: high] [VALIDATED]
-- Location: lib/widgets/local_song_file_actions.dart:100 (`splitLocalCue`)
-- Scenario: user reopens the menu during a long split and taps Split again → two FFmpeg jobs, two temp audio copies, duplicate files in the destination.
-- Root cause: the `_isSplittingCue` re-entrancy guard from the old flow was dropped when moving to a top-level function.
-- Impact: doubled CPU/storage, duplicate output files.
-- Fix: module-level in-flight set keyed by the backing CUE path; ~6 lines + test.
-- Evidence: old `_performCueSplit` returned early on `_isSplittingCue` (`26f8e71^`); no guard in the new function.
-
-### DATA-001 [P2] [confidence: low] [NEEDS VERIFICATION]
-- Location: lib/widgets/local_song_file_actions.dart:18 (`isCueSong`) vs :81 (`deleteLocalSong`)
-- Scenario: a row with filePath `*.cue` or format `cue+*` but no `#trackNN` suffix would show CUE actions, and Remove from device would call `deleteFile` on the backing sheet/audio.
-- Root cause: `isCueSong` is wider than `isCueVirtualPath`, but only the latter protects delete.
-- Impact: would break the "deleting a virtual row preserves the backing CUE/audio" rule; deletes a file other tracks depend on.
-- Fix: make delete use the same predicate as `isCueSong`, or narrow `isCueSong` to `isCueVirtualPath`; ~2 lines + test.
-- Evidence: Rust scanner (`rust_backend/crates/local/src/backend/library.rs:422-427`) always emits `cue+*` rows with a `#trackNN` path, so no producing path was found; verify edited/imported rows and older DB rows.
-
-### UX-001 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/l10n/arb/app_en.arb:3108` (`cueSplitConfirmMessage`), all locales
-- Scenario: confirm dialog says "Files will be saved to the same directory", then a SAF folder picker opens.
-- Root cause: copy not updated when the split moved to a picked destination.
-- Impact: misleading prompt; files land outside the expected folder.
-- Fix: reword to "You'll choose a destination folder next" in all arb files.
-- Evidence: lib/widgets/local_song_file_actions.dart:146 always calls `PlatformBridge.pickSafTree()` after confirm.
-
-### UX-002 [P3] [confidence: medium] [VALIDATED]
-- Location: lib/widgets/local_song_file_actions.dart:186-207 (`splitLocalCue`)
-- Scenario: split succeeds into a folder outside the scanned library → success snackbar, but no new songs appear.
-- Root cause: no library rescan/add after export. Not a regression: the old SAF-source flow also wrote outside the library without rescanning.
-- Impact: user must add the folder and rescan manually.
-- Fix: after export, trigger an incremental scan when the tree is a library folder, else say where files went; small.
-- Evidence: no scan call in the function; old flow (`26f8e71^`) had none either.
-
-### UI-001 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/local_song_menu.dart:127-128`
-- Scenario: virtual CUE row → menu shows Edit Metadata (always rejected at :246 with a snackbar) and Copy file path (copies `album.cue#track03`).
-- Root cause: both options sit outside the `if (!cue)` block.
-- Impact: dead option; clipboard gets a non-file path.
-- Fix: hide Edit for `isCueVirtualPath`; copy `stripCueTrackSuffix(path)` or hide copy; ~3 lines + test update.
-- Evidence: gating at :129 covers only gain/removeGain/analysis.
-
-### BUG-003 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/local_song_menu.dart:183-190`
-- Scenario: Rescan ReplayGain → Cancel → returns true; `LocalAlbumScreen._showTrackMenu` (`local_album_screen.dart:188`) refetches and rebuilds for nothing.
-- Root cause: `runBatchReplayGain` returns void, branch returns true unconditionally.
-- Impact: wasted refresh only; callers cannot tell cancel from change.
-- Fix: return a bool from `runBatchReplayGain`; small.
-- Evidence: branch body at :184-190.
-
-
-### TEST-001 [P3] [confidence: high] [VALIDATED]
-- Location: test/local_song_menu_actions_test.dart:124-152 (popover placement loop)
-- Scenario: removing the `MornyeContextMenu` height constraint would still pass: 390x844 viewport with anchors at y=100/650 leaves room for the whole menu.
-- Root cause: no short-viewport or mid-screen anchor case.
-- Impact: popover scroll/clamp behavior (LTR/RTL, above/below) is unprotected.
-- Fix: add a 390x420 case with a mid anchor; assert panel height <= free space and last item reachable only by scrolling.
-- Evidence: viewport fixed at :75; only two anchor positions.
-
-### TEST-002 [P3] [confidence: high] [VALIDATED]
-- Location: test/local_song_menu_actions_test.dart (whole file)
-- Scenario: Share, ReplayGain apply/remove, Edit Metadata, Go to album/artist and the CUE split confirm path have no tap tests.
-- Root cause: tests cover only Play next, Add to queue, Copy path, Delete and split Cancel.
-- Impact: regressions there (incl. BUG-001/BUG-002/BUG-003) pass CI.
-- Fix: add tests alongside the fixes for those findings (mocked channel + share stub).
-- Evidence: tapped labels at :161, :189, :198, :256, :268.
-
-### TEST-003 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: test/local_song_menu_actions_test.dart:199, :257, :269
-- Scenario: a single zero-delay `runAsync` then `pumpAndSettle` waits for async lookups before tapping dialog buttons; a longer await chain could make the tap miss.
-- Root cause: timing-based waits instead of a condition.
-- Impact: possible flakiness (fails loudly, not silently).
-- Fix: pump until `find.text(...)` matches, with a bounded loop.
-- Evidence: test-auditor reading; not reproduced.
 
 ### CONC-001 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: lib/services/music_player_service.dart:1832 (`seek`), :1928 (`skipToPrevious` restart), :1760 (`_playInternal`)
@@ -230,14 +144,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: normalized genre key at scan time or a `library_genres` side table; ~40 lines.
 - Evidence: CTE at :11-18; `local_genres_screen.dart` pages by 40.
 
-### SEC-003 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/utils/file_access.dart:272` (`_cueTrackSuffix`)
-- Scenario: a real file named `Song #track1` matches `#track\d+$` → cannot be deleted/opened; existence checks test the stripped path and report it missing.
-- Root cause: suffix regex not anchored to a `.cue` base.
-- Impact: rare; such files become undeletable or are cleaned up as missing.
-- Fix: require `\.cue#track\d+$` (case-insensitive); ~3 lines + test.
-- Evidence: helpers applied to every path in file_access.dart.
-
 ### DATA-301 [P2] [confidence: medium] [VALIDATED]
 - Location: `lib/widgets/local_song_menu.dart:256-282` (`editLocalSongMetadata`), `lib/controllers/metadata_editor_controller.dart:54`
 - Scenario: `PlatformBridge.readFileMetadata` returns `{error: ...}` (no throw) on a transient SAF/IO failure → form prefilled from the DB, `comment`/`album_type`/`upc`/`lyrics` become `''` → user edits only the title → save sends empty values, which clear those tags.
@@ -285,14 +191,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Impact: failed apply leaves a modified file with lost custom tags.
 - Fix: skip the FFmpeg fallback for .m4a/.mp4/.m4b (like Opus) or verify the temp before promoting; ~3 lines.
 - Evidence: reviewer trace.
-
-### DATA-305 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/services/ffmpeg_cue.dart:72-77` (`splitCueToTracks`)
-- Scenario: one track fails → partial output not deleted, skipped with `continue`; shorter list returned with no signal; caller reports "n tracks".
-- Root cause: no cleanup or partial-failure signal.
-- Impact: silently incomplete split; truncated file left in staging.
-- Fix: `FFmpegOutput.cleanup(outputPath)` on failure and return the failed count; ~4 lines. Pair with BUG-001/002.
-- Evidence: caller `local_song_file_actions.dart:171` iterates `paths` only.
 
 ### DATA-307 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/widgets/local_song_menu.dart:297-312`
@@ -459,11 +357,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: one LRC line with K leading timestamps and W word tags clones the word list K times (K×W); a crafted ~700 KB line can exhaust memory → native abort when lyrics open. Dart parser has the same amplification.
 - Fix: cap timestamps per line (e.g. 64) and total words; ~10 lines.
 
-### SEC-201 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/local/src/backend/library.rs:161-170` (`resolve_cue_audio`, `exists`)
-- Scenario: `FILE "../../x.flac"` outside granted roots → access-denied error propagates via `?`, so the same-stem/extension fallbacks (e.g. `album.flac` beside the CUE) are never tried; CUE dropped. Not a sandbox escape (`resolve` enforces granted roots).
-- Fix: treat resolve/`native_display` errors in `exists` as `Ok(None)`; ~4 lines.
-
 ### CONC-103 [P3] [confidence: high] [VALIDATED]
 - Location: `rust_backend/crates/local/src/backend/library/scan.rs:363-371`, :392-399
 - Scenario: a second scan swaps the shared progress slot before acquiring the owner lock → progress jumps to zero while the first unwinds.
@@ -524,13 +417,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: a DB write (tag edit, duplicates, batch edit) followed by `reloadFromStorage()` while a load is in flight → awaits the stale load and returns; `loadedIndexVersion` not bumped.
 - Impact: UI shows pre-edit tags/artwork until the next reload; dependent providers stay stale.
 - Fix: `_reloadRequested` flag → extra pass after the in-flight load; ~8 lines.
-
-### BUG-301 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/services/local_track_batch_actions.dart:51-58` (`deleteLibraryTracks`); callers `lib/screens/queue_tab_selection.dart:285`, `lib/widgets/library_search_results.dart:169`
-- Scenario: batch-deleting CUE virtual rows from Songs/Search → `deleteFile` refuses virtual paths → counted as failed, rows stay, "delete failed" snackbar.
-- Root cause: CUE branch present only in `local_album_screen._deleteSelected` (:145-163).
-- Impact: CUE rows can never be removed outside the album screen.
-- Fix: mirror the album-screen handling (skip file delete, `removeItems(ids)`); ~10 lines + test. Pair with DATA-001.
 
 ### API-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/main.dart:81`, `lib/app.dart:24`, `lib/providers/settings_provider.dart:177-179`
@@ -687,12 +573,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Location: `rust_backend/NOTICE:17` (`crates/network/src/url.rs`), `pubspec.yaml:31` ("# HTTP & Network" over `crypto`)
 - Scenario: NOTICE attributes Go-licensed code to a crate that no longer exists; pubspec comment names a removed section.
 - Fix: repoint or drop the NOTICE sentence; retitle the comment. Docs only.
-
-### TEST-301 [P2] [confidence: medium] [VALIDATED]
-- Location: test/ (no file); `lib/widgets/local_song_file_actions.dart:81` (`deleteLocalSong`)
-- Scenario: the AGENTS.md rule "deleting one virtual CUE row preserves the backing CUE/audio" has no test (`grep deleteLocalSong test` is empty); a regression would delete the album file under every sibling track.
-- Fix: temp dir with album.cue + album.flac and two virtual rows; delete one row; assert both files remain and only that row is removed (~40 lines). Write it with the DATA-001 fix.
-- Guards checked: none found.
 
 ### TEST-203 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `test/library_collections_hydration_test.dart:335-348,455-464` (`expect(ticks, greaterThan(1))`), `test/support/library_collections_benchmark.dart:71`, integration_test native heartbeats
@@ -1855,6 +1735,135 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: return the segment directly; 1 line.
 - Evidence: contradicts `resolveSafDocumentLocation` doc comment.
 - Resolution: `46c4ea6a`. The cited `lib/utils/saf_display_path.dart` no longer exists; the live double decodes were `_displayNameForPath` and `_looksLikeRemovablePath` in `lib/providers/local_library_provider.dart` and `_getDisplayPath` in `lib/screens/settings/library_settings_page.dart`. All now use the already-decoded `pathSegments`, and no `Uri.decodeComponent` call remains under `lib/`.
+
+### BUG-001 [P2] [confidence: high] [RESOLVED]
+- Location: lib/widgets/local_song_file_actions.dart:191 (`splitLocalCue`)
+- Scenario: CUE album split where cover embed throws on one FLAC (native error) → loop aborts; earlier tracks already exported, rest never exported, snackbar says "CUE split failed".
+- Root cause: `PlatformBridge.editFileMetadata` call has no per-file try/catch (old `_performCueSplit` caught and logged it).
+- Impact: partial split reported as failure; user retries and gets duplicates.
+- Fix: wrap the embed in try/catch and continue; ~5 lines + test.
+- Evidence: old flow at `26f8e71^` wrapped the same call; current loop 189–201 is unguarded inside the outer catch at 209.
+- Resolution: `76f2fb10`. `exportCueSplitOutputs` wraps each cover embed and each SAF create in its own try/catch, so one failure no longer aborts the remaining exports; partial results report `cueSplitPartialSuccess`. `test/cue_split_test.dart` covers a throwing embed and a rejected copy: PASS.
+
+### BUG-002 [P2] [confidence: high] [RESOLVED]
+- Location: lib/widgets/local_song_file_actions.dart:100 (`splitLocalCue`)
+- Scenario: user reopens the menu during a long split and taps Split again → two FFmpeg jobs, two temp audio copies, duplicate files in the destination.
+- Root cause: the `_isSplittingCue` re-entrancy guard from the old flow was dropped when moving to a top-level function.
+- Impact: doubled CPU/storage, duplicate output files.
+- Fix: module-level in-flight set keyed by the backing CUE path; ~6 lines + test.
+- Evidence: old `_performCueSplit` returned early on `_isSplittingCue` (`26f8e71^`); no guard in the new function.
+- Resolution: `76f2fb10`. `_cueSplitsInFlight` (module scope, keyed by `stripCueTrackSuffix(path)`) rejects a second split of the same sheet and is cleared in `finally`; a sibling row and a later retry are tested in `test/local_song_menu_actions_test.dart`: PASS.
+
+### DATA-001 [P2] [confidence: low] [RESOLVED]
+- Location: lib/widgets/local_song_file_actions.dart:18 (`isCueSong`) vs :81 (`deleteLocalSong`)
+- Scenario: a row with filePath `*.cue` or format `cue+*` but no `#trackNN` suffix would show CUE actions, and Remove from device would call `deleteFile` on the backing sheet/audio.
+- Root cause: `isCueSong` is wider than `isCueVirtualPath`, but only the latter protects delete.
+- Impact: would break the "deleting a virtual row preserves the backing CUE/audio" rule; deletes a file other tracks depend on.
+- Fix: make delete use the same predicate as `isCueSong`, or narrow `isCueSong` to `isCueVirtualPath`; ~2 lines + test.
+- Evidence: Rust scanner (`rust_backend/crates/local/src/backend/library.rs:422-427`) always emits `cue+*` rows with a `#trackNN` path, so no producing path was found; verify edited/imported rows and older DB rows.
+- Resolution: `76f2fb10`. `isCueBackedRow(path, format)` (virtual path, `.cue` path or `cue+*` format) is now the delete predicate in the song menu, batch delete and album multi-select; CUE rows only call `removeItem(s)`, never `deleteFile`. Covered by the CUE tests in `test/local_song_menu_actions_test.dart`, `test/local_album_cue_delete_test.dart` and `test/local_track_batch_delete_test.dart`: PASS.
+
+### UX-001 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/l10n/arb/app_en.arb:3108` (`cueSplitConfirmMessage`), all locales
+- Scenario: confirm dialog says "Files will be saved to the same directory", then a SAF folder picker opens.
+- Root cause: copy not updated when the split moved to a picked destination.
+- Impact: misleading prompt; files land outside the expected folder.
+- Fix: reword to "You'll choose a destination folder next" in all arb files.
+- Evidence: lib/widgets/local_song_file_actions.dart:146 always calls `PlatformBridge.pickSafTree()` after confirm.
+- Resolution: `76f2fb10`. `cueSplitConfirmMessage` now says the destination folder is chosen next; the menu test asserts the full localized message: PASS.
+
+### UX-002 [P3] [confidence: medium] [RESOLVED]
+- Location: lib/widgets/local_song_file_actions.dart:186-207 (`splitLocalCue`)
+- Scenario: split succeeds into a folder outside the scanned library → success snackbar, but no new songs appear.
+- Root cause: no library rescan/add after export. Not a regression: the old SAF-source flow also wrote outside the library without rescanning.
+- Impact: user must add the folder and rescan manually.
+- Fix: after export, trigger an incremental scan when the tree is a library folder, else say where files went; small.
+- Evidence: no scan call in the function; old flow (`26f8e71^`) had none either.
+- Resolution: `76f2fb10`. After export, `cueSplitDestinationSource` matches the picked tree against library sources through physical-path keys and a removable-volume `<volume>:<relative>` key; a matching enabled source is rescanned via `startSourceScan`, otherwise the snackbar says the tracks were saved outside the library. Covered in `test/cue_split_test.dart` and `test/models_and_utils_test.dart`: PASS.
+
+### UI-001 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/local_song_menu.dart:127-128`
+- Scenario: virtual CUE row → menu shows Edit Metadata (always rejected at :246 with a snackbar) and Copy file path (copies `album.cue#track03`).
+- Root cause: both options sit outside the `if (!cue)` block.
+- Impact: dead option; clipboard gets a non-file path.
+- Fix: hide Edit for `isCueVirtualPath`; copy `stripCueTrackSuffix(path)` or hide copy; ~3 lines + test update.
+- Evidence: gating at :129 covers only gain/removeGain/analysis.
+- Resolution: `76f2fb10`. Virtual CUE rows hide both Copy file path and Edit Metadata; the menu test asserts both labels are absent: PASS.
+
+### BUG-003 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/local_song_menu.dart:183-190`
+- Scenario: Rescan ReplayGain → Cancel → returns true; `LocalAlbumScreen._showTrackMenu` (`local_album_screen.dart:188`) refetches and rebuilds for nothing.
+- Root cause: `runBatchReplayGain` returns void, branch returns true unconditionally.
+- Impact: wasted refresh only; callers cannot tell cancel from change.
+- Fix: return a bool from `runBatchReplayGain`; small.
+- Evidence: branch body at :184-190.
+- Resolution: `76f2fb10`. `runBatchReplayGain` returns `Future<bool>` (false on cancel) and the menu propagates it, so album refresh only runs after a change. `ReplayGain cancel reports no change` in `test/local_song_menu_actions_test.dart`: PASS.
+
+### TEST-001 [P3] [confidence: high] [RESOLVED]
+- Location: test/local_song_menu_actions_test.dart:124-152 (popover placement loop)
+- Scenario: removing the `MornyeContextMenu` height constraint would still pass: 390x844 viewport with anchors at y=100/650 leaves room for the whole menu.
+- Root cause: no short-viewport or mid-screen anchor case.
+- Impact: popover scroll/clamp behavior (LTR/RTL, above/below) is unprotected.
+- Fix: add a 390x420 case with a mid anchor; assert panel height <= free space and last item reachable only by scrolling.
+- Evidence: viewport fixed at :75; only two anchor positions.
+- Resolution: `76f2fb10`. Added a 390x420 viewport case with a mid-screen anchor: the panel is clamped above the button and the last item is only hit-testable after scrolling: PASS.
+
+### TEST-002 [P3] [confidence: high] [RESOLVED]
+- Location: test/local_song_menu_actions_test.dart (whole file)
+- Scenario: Share, ReplayGain apply/remove, Edit Metadata, Go to album/artist and the CUE split confirm path have no tap tests.
+- Root cause: tests cover only Play next, Add to queue, Copy path, Delete and split Cancel.
+- Impact: regressions there (incl. BUG-001/BUG-002/BUG-003) pass CI.
+- Fix: add tests alongside the fixes for those findings (mocked channel + share stub).
+- Evidence: tapped labels at :161, :189, :198, :256, :268.
+- Resolution: `76f2fb10`. `test/local_song_menu_actions_test.dart` now taps Share, ReplayGain apply/remove, Edit Metadata, Go to album/artist, Split confirm and both CUE delete paths (14 tests): PASS.
+
+### TEST-003 [P3] [confidence: medium] [RESOLVED]
+- Location: test/local_song_menu_actions_test.dart:199, :257, :269
+- Scenario: a single zero-delay `runAsync` then `pumpAndSettle` waits for async lookups before tapping dialog buttons; a longer await chain could make the tap miss.
+- Root cause: timing-based waits instead of a condition.
+- Impact: possible flakiness (fails loudly, not silently).
+- Fix: pump until `find.text(...)` matches, with a bounded loop.
+- Evidence: test-auditor reading; not reproduced.
+- Resolution: `76f2fb10`. Replaced fixed delays with `pumpUntilCondition`/`runAction`, which alternate short real delays with frame pumps until a condition holds under a 5 s deadline (loud failure on timeout): PASS.
+
+### SEC-003 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/utils/file_access.dart:272` (`_cueTrackSuffix`)
+- Scenario: a real file named `Song #track1` matches `#track\d+$` → cannot be deleted/opened; existence checks test the stripped path and report it missing.
+- Root cause: suffix regex not anchored to a `.cue` base.
+- Impact: rare; such files become undeletable or are cleaned up as missing.
+- Fix: require `\.cue#track\d+$` (case-insensitive); ~3 lines + test.
+- Evidence: helpers applied to every path in file_access.dart.
+- Resolution: `76f2fb10`. Local paths are virtual only when they match `\.cue#track\d+$` (case-insensitive); `content://` URIs keep any trailing suffix, and `stripCueTrackSuffix` leaves other paths untouched. `test/models_and_utils_test.dart`: PASS.
+
+### DATA-305 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/services/ffmpeg_cue.dart:72-77` (`splitCueToTracks`)
+- Scenario: one track fails → partial output not deleted, skipped with `continue`; shorter list returned with no signal; caller reports "n tracks".
+- Root cause: no cleanup or partial-failure signal.
+- Impact: silently incomplete split; truncated file left in staging.
+- Fix: `FFmpegOutput.cleanup(outputPath)` on failure and return the failed count; ~4 lines. Pair with BUG-001/002.
+- Evidence: caller `local_song_file_actions.dart:171` iterates `paths` only.
+- Resolution: `76f2fb10`. `splitCueToTracks` returns `CueSplitResult(paths, failed)`, deletes a failed output before continuing and dedupes repeated output names with ` (2)`, so cleanup cannot remove another track; the caller merges the count into the partial-failure snackbar. `test/cue_split_test.dart`: PASS.
+
+### SEC-201 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/local/src/backend/library.rs:161-170` (`resolve_cue_audio`, `exists`)
+- Scenario: `FILE "../../x.flac"` outside granted roots → access-denied error propagates via `?`, so the same-stem/extension fallbacks (e.g. `album.flac` beside the CUE) are never tried; CUE dropped. Not a sandbox escape (`resolve` enforces granted roots).
+- Fix: treat resolve/`native_display` errors in `exists` as `Ok(None)`; ~4 lines.
+- Resolution: `76f2fb10`. `exists` maps a failed `resolve_legacy`/`native_display` to `Ok(None)`, so the same-stem fallbacks run; `cue_audio_outside_granted_roots_falls_back_to_the_sheet_stem` in `library.rs`: PASS. `check_rust_backend.sh` overall: 93 passed, 2 failed, 1 ignored; both failures (`actual_complete_dart_history_codec_and_path_identity_parity`, `production_dart_row_and_path_codec_parity`) are unchanged `crates/mobile` fixture drift reproduced at `d015e7d9` in a clean worktree (Rust emits lowercase path-key aliases the fixtures omit), outside T2.
+
+### BUG-301 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/services/local_track_batch_actions.dart:51-58` (`deleteLibraryTracks`); callers `lib/screens/queue_tab_selection.dart:285`, `lib/widgets/library_search_results.dart:169`
+- Scenario: batch-deleting CUE virtual rows from Songs/Search → `deleteFile` refuses virtual paths → counted as failed, rows stay, "delete failed" snackbar.
+- Root cause: CUE branch present only in `local_album_screen._deleteSelected` (:145-163).
+- Impact: CUE rows can never be removed outside the album screen.
+- Fix: mirror the album-screen handling (skip file delete, `removeItems(ids)`); ~10 lines + test. Pair with DATA-001.
+- Resolution: `76f2fb10`. `deleteLibraryTracks` skips `deleteFile` for `isCueBackedRow` rows and removes them with `removeItems`, matching the album screen. `test/local_track_batch_delete_test.dart`: PASS.
+
+### TEST-301 [P2] [confidence: medium] [RESOLVED]
+- Location: test/ (no file); `lib/widgets/local_song_file_actions.dart:81` (`deleteLocalSong`)
+- Scenario: the AGENTS.md rule "deleting one virtual CUE row preserves the backing CUE/audio" has no test (`grep deleteLocalSong test` is empty); a regression would delete the album file under every sibling track.
+- Fix: temp dir with album.cue + album.flac and two virtual rows; delete one row; assert both files remain and only that row is removed (~40 lines). Write it with the DATA-001 fix.
+- Guards checked: none found.
+- Resolution: `76f2fb10`. Added `test/local_track_batch_delete_test.dart` (cue+flac row, plain `.cue` row and a real song in one batch: both CUE files remain and only the song is deleted) plus the menu CUE delete tests: PASS.
 
 ## Rejected
 
