@@ -17,7 +17,7 @@ const appLanguageChoices = [
   ('ko', '한국어', Icons.language),
   ('nl', 'Nederlands', Icons.language),
   ('pt', 'Português', Icons.language),
-  ('pt_PT', 'Português (Brasil)', Icons.language),
+  ('pt_BR', 'Português (Brasil)', Icons.language),
   ('ru', 'Русский', Icons.language),
   ('tr', 'Türkçe', Icons.language),
   ('uk', 'Українська', Icons.language),

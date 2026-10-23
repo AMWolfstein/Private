@@ -19,7 +19,7 @@ const List<Locale> filteredSupportedLocales = <Locale>[
   Locale('ru'),
   Locale('tr'),
   Locale('id'),
-  Locale('pt', 'PT'),
+  Locale('pt', 'BR'),
   Locale('ja'),
 ];
 
@@ -34,6 +34,6 @@ const Set<String> filteredLocaleCodes = <String>{
   'ru',
   'tr',
   'id',
-  'pt_PT',
+  'pt_BR',
   'ja',
 };

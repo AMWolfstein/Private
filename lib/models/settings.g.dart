@@ -74,7 +74,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   glassClarityLevel: json['glassClarityLevel'] == null
       ? kDefaultGlassClarityLevel
       : glassClarityLevelFromJson(json['glassClarityLevel']),
-  locale: json['locale'] as String? ?? 'system',
+  locale: json['locale'] == null ? 'system' : appLocaleFromJson(json['locale']),
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
   listeningStatisticsEnabled:
       json['listeningStatisticsEnabled'] as bool? ?? true,

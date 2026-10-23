@@ -25,13 +25,27 @@ class _AppScaffoldMessengerState extends ScaffoldMessengerState {
   }
 }
 
+/// Ordinary messages close within this time.
+const kAppSnackBarDuration = Duration(seconds: 3);
+
+/// A message that asks for longer than the Material default (4 s), such as a
+/// restart hint or a USB volume warning, keeps its time up to this cap.
+const kAppSnackBarLongestDuration = Duration(seconds: 8);
+
+Duration appSnackBarDuration(Duration requested) {
+  if (requested > const Duration(seconds: 4)) {
+    return requested > kAppSnackBarLongestDuration
+        ? kAppSnackBarLongestDuration
+        : requested;
+  }
+  return requested > kAppSnackBarDuration ? kAppSnackBarDuration : requested;
+}
+
 class _TransientSnackBar extends SnackBar {
   _TransientSnackBar(this.original)
     : super(
         content: original.content,
-        duration: original.duration > const Duration(seconds: 3)
-            ? const Duration(seconds: 3)
-            : original.duration,
+        duration: appSnackBarDuration(original.duration),
         persist: false,
       );
 

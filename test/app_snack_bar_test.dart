@@ -178,10 +178,57 @@ void main() {
     for (final controller in controllers.take(9)) {
       expect(await controller.closed, SnackBarClosedReason.remove);
     }
-    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(kAppSnackBarLongestDuration);
     await tester.pumpAndSettle();
     expect(await controllers.last.closed, SnackBarClosedReason.timeout);
     expect(find.byType(SnackBar), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  test('ordinary messages close in 3 s; longer requests keep up to 8 s', () {
+    expect(
+      appSnackBarDuration(const Duration(seconds: 4)),
+      kAppSnackBarDuration,
+    );
+    expect(
+      appSnackBarDuration(const Duration(seconds: 2)),
+      const Duration(seconds: 2),
+    );
+    expect(
+      appSnackBarDuration(const Duration(seconds: 6)),
+      const Duration(seconds: 6),
+    );
+    expect(
+      appSnackBarDuration(const Duration(seconds: 8)),
+      kAppSnackBarLongestDuration,
+    );
+    expect(
+      appSnackBarDuration(const Duration(minutes: 1)),
+      kAppSnackBarLongestDuration,
+    );
+  });
+
+  testWidgets('a 6 s restart hint stays past 3 s', (tester) async {
+    late BuildContext messageContext;
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (_, child) => AppScaffoldMessenger(child: child!),
+        home: Builder(
+          builder: (context) {
+            messageContext = context;
+            return const Scaffold(body: SizedBox.expand());
+          },
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(messageContext).showSnackBar(
+      const SnackBar(content: Text('Restart'), duration: Duration(seconds: 6)),
+    );
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('Restart'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+    expect(find.text('Restart'), findsNothing);
   });
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotiflac_android/constants/language_choices.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/models/settings.dart';
@@ -15,6 +16,18 @@ import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 
 void main() {
+  test('the Brazilian translation keeps its users after the code rename', () {
+    expect(AppSettings.fromJson({'locale': 'pt_PT'}).locale, 'pt_BR');
+    expect(AppSettings.fromJson({'locale': 'pt_BR'}).locale, 'pt_BR');
+    expect(AppSettings.fromJson({'locale': 'de'}).locale, 'de');
+    expect(AppSettings.fromJson({}).locale, 'system');
+    expect(AppSettings.fromJson({'locale': 5}).locale, 'system');
+    expect(
+      supportedLanguageChoices.where((choice) => choice.$1.startsWith('pt_')),
+      [('pt_BR', 'Português (Brasil)', Icons.language)],
+    );
+  });
+
   test('player view defaults safely and survives theme serialization', () {
     for (final saved in [null, '', 'unknown', 5]) {
       expect(
