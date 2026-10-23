@@ -61,6 +61,7 @@ pub fn parse(
         tracks: Vec::new(),
     };
     let mut current_track: Option<CueTrack> = None;
+    let mut last_start = None;
 
     while lines.next(&mut raw_line)? {
         let mut line = crate::text::utf8(&raw_line);
@@ -116,6 +117,9 @@ pub fn parse(
 
         if let Some(rest) = command_rest(&line, "FILE ") {
             let (file_name, file_type) = parse_file_line(rest);
+            if !sheet.file_name.is_empty() && sheet.file_name != file_name {
+                return Err("multi-file CUE sheets are unsupported".into());
+            }
             sheet.file_name = file_name;
             sheet.file_type = file_type;
             continue;
@@ -145,8 +149,14 @@ pub fn parse(
         if command_rest(&line, "INDEX ").is_some() && current_track.is_some() {
             let parts: Vec<_> = line.split_whitespace().collect();
             if parts.len() >= 3 {
-                let index = parts[1].parse::<i64>().unwrap_or(0);
-                let seconds = timestamp(parts[2]);
+                let index = parts[1].parse::<i64>().map_err(|_| "invalid CUE index")?;
+                let seconds = timestamp(parts[2]).ok_or("invalid CUE timestamp")?;
+                if index == 1 {
+                    if last_start.is_some_and(|previous| seconds < previous) {
+                        return Err("CUE track starts are out of order".into());
+                    }
+                    last_start = Some(seconds);
+                }
                 if let Some(track) = current_track.as_mut() {
                     match index {
                         0 => track.pre_gap = seconds,
@@ -154,6 +164,8 @@ pub fn parse(
                         _ => {}
                     }
                 }
+            } else {
+                return Err("invalid CUE index".into());
             }
             continue;
         }
@@ -288,15 +300,22 @@ fn rem_space(byte: u8) -> bool {
     matches!(byte, b' ' | b'\t' | b'\r' | b'\n' | b'\x0c')
 }
 
-fn timestamp(value: &str) -> f64 {
+fn timestamp(value: &str) -> Option<f64> {
     let parts: Vec<_> = value.split(':').collect();
-    if parts.len() != 3 {
-        return 0.0;
+    if parts.len() != 3
+        || parts
+            .iter()
+            .any(|part| part.is_empty() || !part.bytes().all(|b| b.is_ascii_digit()))
+    {
+        return None;
     }
-    let minutes = parts[0].parse::<i64>().unwrap_or(0);
-    let seconds = parts[1].parse::<i64>().unwrap_or(0);
-    let frames = parts[2].parse::<i64>().unwrap_or(0);
-    minutes as f64 * 60.0 + seconds as f64 + frames as f64 / 75.0
+    let minutes = parts[0].parse::<u64>().ok()?;
+    let seconds = parts[1].parse::<u64>().ok()?;
+    let frames = parts[2].parse::<u64>().ok()?;
+    if seconds >= 60 || frames >= 75 {
+        return None;
+    }
+    Some(minutes.checked_mul(60)?.checked_add(seconds)? as f64 + frames as f64 / 75.0)
 }
 
 fn unquote(value: &str) -> String {
@@ -376,5 +395,35 @@ mod tests {
         })
         .unwrap_err();
         assert_eq!(error, "cancelled");
+    }
+}
+
+#[cfg(test)]
+mod t4_tests {
+    use super::*;
+    use std::io::Cursor;
+    #[test]
+    fn distinct_file_commands_and_invalid_indices_are_errors() {
+        for input in [
+            "FILE \"one.flac\" WAVE\nTRACK 01 AUDIO\nINDEX 01 00:00:00\nFILE \"two.flac\" WAVE\nTRACK 02 AUDIO\nINDEX 01 00:00:00",
+            "TRACK 01 AUDIO\nINDEX 01 xx:yy:zz",
+            "TRACK 01 AUDIO\nINDEX 01 00:60:00",
+            "TRACK 01 AUDIO\nINDEX 01 00:00:75",
+            "TRACK 01 AUDIO\nINDEX 01 -1:00:00",
+            "TRACK 01 AUDIO\nINDEX 01 00:10:00\nTRACK 02 AUDIO\nINDEX 01 00:09:00",
+            "TRACK 01 AUDIO\nINDEX 01",
+        ] {
+            assert!(
+                parse(&mut Cursor::new(input), &|| Ok(())).is_err(),
+                "{input}"
+            );
+        }
+        let sheet = parse(
+            &mut Cursor::new("FILE \"音楽.flac\" WAVE\nTRACK 01 AUDIO\nINDEX 01 12:59:74"),
+            &|| Ok(()),
+        )
+        .unwrap();
+        assert_eq!(sheet.file_name, "音楽.flac");
+        assert!((sheet.tracks[0].start_time - (779.0 + 74.0 / 75.0)).abs() < 1e-9);
     }
 }

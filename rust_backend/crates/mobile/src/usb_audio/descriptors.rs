@@ -263,6 +263,12 @@ impl PacketClock {
         self.remainder -= frames as f64;
         frames
     }
+    pub fn next_bounded(&mut self, capacity: usize) -> usize {
+        let requested = self.next();
+        let sent = requested.min(capacity);
+        self.remainder += (requested - sent) as f64;
+        sent
+    }
 }
 
 #[cfg(test)]
@@ -376,5 +382,21 @@ mod tests {
         );
         d.revision = 0x100;
         assert!(formats(&d, 2822400, 2, 1, true, false).is_empty());
+    }
+}
+
+#[cfg(test)]
+mod capacity_tests {
+    use super::*;
+    #[test]
+    fn tight_endpoint_capacity_carries_feedback_excess_without_abort_or_loss() {
+        let mut clock = PacketClock::new(48_000, 125);
+        let feedback = ((6.01 * 65536.0) as u32).to_le_bytes();
+        assert!(clock.feedback(&feedback, true, 125));
+        let sent: usize = (0..1000).map(|_| clock.next_bounded(6)).sum();
+        assert_eq!(sent, 6000);
+        let expected = u32::from_le_bytes(feedback) as f64 / 65536.0 * 1000.0;
+        assert!((sent as f64 + clock.remainder - expected).abs() < 1e-8);
+        assert!(clock.remainder > 9.0);
     }
 }

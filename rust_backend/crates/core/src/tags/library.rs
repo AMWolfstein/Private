@@ -17,10 +17,15 @@ pub fn library_extension(path: &str, hint: &str) -> String {
 }
 
 pub fn library_id(path: &str) -> String {
-    let hash = path.chars().fold(5381_u32, |hash, value| {
-        hash.wrapping_mul(33).wrapping_add(value as u32)
-    });
-    format!("lib_{hash:x}")
+    use sha2::{Digest, Sha256};
+    let digest = Sha256::digest(path.as_bytes());
+    let mut id = String::with_capacity(71);
+    id.push_str("lib_v2_");
+    for byte in digest {
+        use std::fmt::Write;
+        write!(id, "{byte:02x}").expect("formatting into a String cannot fail");
+    }
+    id
 }
 
 fn filename(path: &str) -> String {
@@ -404,5 +409,23 @@ mod tests {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod identity_tests {
+    use super::*;
+    #[test]
+    fn distinct_paths_with_the_same_legacy_hash_have_distinct_ids() {
+        let old = |path: &str| {
+            path.chars()
+                .fold(5381u32, |h, c| h.wrapping_mul(33).wrapping_add(c as u32))
+        };
+        let first = "/music/Aa.flac";
+        let second = "/music/B@.flac";
+        assert_eq!(old(first), old(second));
+        assert_ne!(library_id(first), library_id(second));
+        assert_eq!(library_id(first), library_id(first));
+        assert_eq!(library_id(first).len(), 7 + 64);
     }
 }

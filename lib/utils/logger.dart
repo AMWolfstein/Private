@@ -115,6 +115,9 @@ String formatLogEntries(Iterable<LogEntry> entries) {
   return entries.map((entry) => entry.toString()).join('\n');
 }
 
+const logExportPrivacyNotice =
+    'Logs may include local file paths, folder names and content URIs. Review before sharing.';
+
 class LogBuffer extends ChangeNotifier {
   static final LogBuffer _instance = LogBuffer._internal();
   factory LogBuffer() => _instance;
@@ -291,6 +294,7 @@ class LogBuffer extends ChangeNotifier {
   String export() {
     final buffer = StringBuffer();
     buffer.writeln('SpotiFLAC Log Export');
+    buffer.writeln(logExportPrivacyNotice);
     buffer.writeln('Generated: ${DateTime.now().toIso8601String()}');
     buffer.writeln('Entries: ${_entries.length}');
     buffer.writeln('=' * 60);
@@ -306,6 +310,7 @@ class LogBuffer extends ChangeNotifier {
 
     buffer.writeln('=' * 60);
     buffer.writeln('SPOTIFLAC LOG EXPORT');
+    buffer.writeln(logExportPrivacyNotice);
     buffer.writeln('=' * 60);
     buffer.writeln();
 

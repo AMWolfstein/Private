@@ -2,7 +2,7 @@
 
 use std::collections::{VecDeque, hash_map::DefaultHasher};
 use std::hash::{Hash, Hasher};
-use std::sync::{Arc, Mutex, OnceLock, TryLockError};
+use std::sync::{Arc, Mutex, MutexGuard, OnceLock, TryLockError};
 use std::time::Duration;
 
 const MAX_BYTES: usize = 8 << 20;
@@ -39,6 +39,27 @@ impl Cache {
     }
 }
 
+fn cache_guard<'a>(
+    mutex: &'a Mutex<Cache>,
+    check: &dyn Fn() -> Result<(), String>,
+) -> Result<MutexGuard<'a, Cache>, String> {
+    loop {
+        check()?;
+        match mutex.try_lock() {
+            Ok(cache) => return Ok(cache),
+            Err(TryLockError::WouldBlock) => std::thread::sleep(Duration::from_millis(10)),
+            Err(TryLockError::Poisoned(poisoned)) => {
+                // Entries are published only after a complete decode. Recover
+                // the cache after an unwinding decoder/check callback.
+                let mut cache = poisoned.into_inner();
+                *cache = Cache::default();
+                mutex.clear_poison();
+                return Ok(cache);
+            }
+        }
+    }
+}
+
 /// Serialize large image decodes while keeping tag reads parallel. Reuse resized
 /// artwork by content, not filename or album name; never confuse alternate covers.
 pub fn library_thumbnail(
@@ -50,14 +71,7 @@ pub fn library_thumbnail(
     data.hash(&mut hasher);
     let hash = hasher.finish();
     let mutex = CACHE.get_or_init(Mutex::default);
-    let mut cache = loop {
-        check()?;
-        match mutex.try_lock() {
-            Ok(cache) => break cache,
-            Err(TryLockError::WouldBlock) => std::thread::sleep(Duration::from_millis(10)),
-            Err(TryLockError::Poisoned(_)) => return Err("thumbnail cache unavailable".into()),
-        }
-    };
+    let mut cache = cache_guard(mutex, check)?;
     if let Some(index) = cache
         .entries
         .iter()
@@ -155,5 +169,23 @@ mod tests {
         }
         assert_eq!(cache.bytes, MAX_BYTES);
         assert_eq!(cache.entries.front().unwrap().hash, 92);
+    }
+}
+
+#[cfg(test)]
+mod recovery_tests {
+    use super::*;
+    #[test]
+    fn a_poisoned_thumbnail_cache_does_not_disable_later_covers() {
+        let mutex = Mutex::new(Cache::default());
+        let result = std::panic::catch_unwind(|| {
+            let _guard = mutex.lock().unwrap_or_else(|e| e.into_inner());
+            panic!("injected decoder unwind");
+        });
+        assert!(result.is_err());
+        let cache = cache_guard(&mutex, &|| Ok(())).unwrap();
+        assert!(cache.entries.is_empty());
+        assert_eq!(cache.bytes, 0);
+        assert!(!mutex.is_poisoned());
     }
 }

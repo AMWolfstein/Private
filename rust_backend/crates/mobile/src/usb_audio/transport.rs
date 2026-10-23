@@ -9,7 +9,11 @@ use libusb1_sys as usb;
 use std::{
     collections::VecDeque,
     ptr,
-    sync::{Arc, Condvar, Mutex, mpsc},
+    sync::{
+        Arc, Condvar, Mutex,
+        atomic::{AtomicBool, Ordering},
+        mpsc,
+    },
     thread::{self, JoinHandle},
     time::{Duration, Instant},
 };
@@ -224,15 +228,15 @@ fn check(code: i32) -> Result<(), String> {
 struct Slot {
     transfer: *mut usb::libusb_transfer,
     bytes: Vec<u8>,
-    pending: bool,
+    pending: Box<AtomicBool>,
     music_frames: u64,
     submitted: bool,
 }
 extern "system" fn completed(transfer: *mut usb::libusb_transfer) {
-    // SAFETY: user_data points to its stable Box<Slot>; libusb callbacks are
-    // invoked only while this worker is handling events, before drop/free.
+    // SAFETY: user_data points to a separate stable Box<AtomicBool>, retained
+    // until every callback completes. Mutable Slot borrows do not alias it.
     unsafe {
-        (*((*transfer).user_data as *mut Slot)).pending = false;
+        (*((*transfer).user_data as *const AtomicBool)).store(false, Ordering::Release);
     }
 }
 impl Slot {
@@ -245,7 +249,7 @@ impl Slot {
         Ok(Box::new(Self {
             transfer,
             bytes: vec![0; packets * max_bytes],
-            pending: false,
+            pending: Box::new(AtomicBool::new(false)),
             music_frames: 0,
             submitted: false,
         }))
@@ -267,23 +271,31 @@ impl Slot {
                 lengths.iter().sum::<usize>() as i32,
                 lengths.len() as i32,
                 completed,
-                self as *mut Self as *mut _,
+                (&*self.pending as *const AtomicBool).cast_mut().cast(),
                 500,
             );
             for (i, n) in lengths.iter().enumerate() {
-                (*(*self.transfer).iso_packet_desc.as_mut_ptr().add(i)).length = *n as u32;
+                (*ptr::addr_of_mut!((*self.transfer).iso_packet_desc)
+                    .cast::<usb::libusb_iso_packet_descriptor>()
+                    .add(i))
+                .length = *n as u32;
             }
             check(usb::libusb_submit_transfer(self.transfer))?;
         }
-        self.pending = true;
+        self.pending.store(true, Ordering::Release);
         self.submitted = true;
         Ok(())
+    }
+    fn pending(&self) -> bool {
+        self.pending.load(Ordering::Acquire)
     }
     fn success(&self) -> bool {
         unsafe {
             (*self.transfer).status == 0
                 && (0..(*self.transfer).num_iso_packets as usize).all(|i| {
-                    let packet = &*(*self.transfer).iso_packet_desc.as_ptr().add(i);
+                    let packet = &*ptr::addr_of!((*self.transfer).iso_packet_desc)
+                        .cast::<usb::libusb_iso_packet_descriptor>()
+                        .add(i);
                     packet.status == 0
                         && ((*self.transfer).endpoint & 0x80 != 0
                             || packet.actual_length == packet.length)
@@ -291,13 +303,17 @@ impl Slot {
         }
     }
     fn actual(&self) -> usize {
-        unsafe { (*(*self.transfer).iso_packet_desc.as_ptr()).actual_length as usize }
+        unsafe {
+            (*ptr::addr_of!((*self.transfer).iso_packet_desc)
+                .cast::<usb::libusb_iso_packet_descriptor>())
+            .actual_length as usize
+        }
     }
 }
 impl Drop for Slot {
     fn drop(&mut self) {
         assert!(
-            !self.pending,
+            !self.pending(),
             "USB transfer freed before cancellation completed"
         );
         unsafe {
@@ -516,7 +532,7 @@ impl Session {
     }
     fn drain(&mut self) {
         for slot in self.slots.iter_mut().chain(self.feedback_slot.iter_mut()) {
-            if slot.pending {
+            if slot.pending() {
                 unsafe {
                     usb::libusb_cancel_transfer(slot.transfer);
                 }
@@ -528,7 +544,7 @@ impl Session {
             .slots
             .iter()
             .chain(self.feedback_slot.iter())
-            .any(|s| s.pending)
+            .any(|s| s.pending())
         {
             let _ = self.events();
         }
@@ -593,7 +609,7 @@ impl Session {
                 started = true;
             }
             if let (Some(ep), Some(slot)) = (&self.feedback, &mut self.feedback_slot) {
-                if !slot.pending {
+                if !slot.pending() {
                     if slot.actual() > 0
                         && slot.success()
                         && clock.feedback(
@@ -611,7 +627,7 @@ impl Session {
                 }
             }
             for slot in &mut self.slots {
-                if slot.pending {
+                if slot.pending() {
                     continue;
                 }
                 if slot.submitted {
@@ -624,7 +640,7 @@ impl Session {
                 let mut packet_lengths = [0usize; 32];
                 let lengths = &mut packet_lengths[..packets];
                 for length in lengths.iter_mut() {
-                    *length = clock.next() * frame;
+                    *length = clock.next_bounded(self.endpoint.max_packet / frame) * frame;
                 }
                 if lengths.iter().any(|n| *n > self.endpoint.max_packet) {
                     return Err("USB feedback exceeded endpoint capacity".into());
@@ -685,5 +701,26 @@ impl Drop for Session {
                 usb::libusb_exit(self.context);
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod callback_tests {
+    use super::*;
+    #[test]
+    fn completion_uses_a_separate_stable_flag_after_slot_moves() {
+        let mut slot = Slot::new(1, 8).unwrap();
+        let flag = (&*slot.pending as *const AtomicBool).cast_mut().cast();
+        // SAFETY: this transfer is allocated with one packet and not submitted.
+        unsafe {
+            (*slot.transfer).user_data = flag;
+        }
+        slot.pending.store(true, Ordering::Release);
+        slot.music_frames = 123;
+        let mut slots = vec![slot];
+        let slot = &mut slots[0];
+        completed(slot.transfer);
+        assert!(!slot.pending());
+        assert_eq!(slot.music_frames, 123);
     }
 }

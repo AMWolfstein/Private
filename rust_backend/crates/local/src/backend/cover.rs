@@ -121,16 +121,18 @@ impl Backend {
         } else {
             audio_path.into()
         };
-        let hash = key.chars().fold(5381_u32, |hash, value| {
-            hash.wrapping_mul(33).wrapping_add(value as u32)
-        });
+        // Versioned SHA-256 keys invalidate legacy collision-prone cache files.
+        let key_id = spotiflac_core::tags::library_id(&key);
         let path =
-            |extension| Path::new(cache_directory).join(format!("cover_{hash:x}.{extension}"));
+            |extension| Path::new(cache_directory).join(format!("cover_{key_id}.{extension}"));
         let jpg = files.resolve_legacy(&path("jpg").to_string_lossy())?;
         let png = files.resolve_legacy(&path("png").to_string_lossy())?;
         for cached in [&jpg, &png] {
             cached.native_display()?;
-            if cached.metadata().is_ok_and(|metadata| metadata.is_file()) {
+            if cached
+                .metadata()
+                .is_ok_and(|metadata| metadata.is_file() && metadata.len() > 0)
+            {
                 return Ok(cached.display());
             }
         }
@@ -171,7 +173,10 @@ impl Backend {
         check()?;
         let output = if cover.mime.contains("png") { png } else { jpg };
         let _lock = files.lock(&output, &check)?;
-        if output.metadata().is_ok_and(|metadata| metadata.is_file()) {
+        if output
+            .metadata()
+            .is_ok_and(|metadata| metadata.is_file() && metadata.len() > 0)
+        {
             return Ok(output.display());
         }
         output
@@ -245,4 +250,55 @@ fn publish_cover(
             .map_err(|error| error.to_string())?;
     }
     stage.publish(check)
+}
+
+#[cfg(all(test, unix))]
+mod safety_tests {
+    use super::*;
+    #[test]
+    fn colliding_legacy_keys_and_concurrent_publication_keep_the_right_cover() {
+        let root = tempfile::tempdir().unwrap();
+        let backend = Backend::new(&root.path().join("data")).unwrap();
+        backend
+            .set_allowed_directories(&[root.path().to_path_buf()])
+            .unwrap();
+        let audio = root.path().join("song.flac");
+        std::fs::write(&audio, b"placeholder").unwrap();
+        let cache = root.path().join("cache");
+        let audio = audio.to_str().unwrap();
+        let cache = cache.to_str().unwrap();
+        let save = |key: &str, bytes: &[u8]| {
+            backend
+                .save_cover_to_cache_for_scan(
+                    audio,
+                    "",
+                    cache,
+                    key,
+                    |_, _, _| {
+                        Ok(CoverArt {
+                            data: bytes.to_vec(),
+                            mime: "image/jpeg".into(),
+                        })
+                    },
+                    &|| Ok(()),
+                )
+                .unwrap()
+        };
+        let first = save("Aa", b"first cover");
+        let second = save("B@", b"second cover");
+        assert_ne!(first, second);
+        assert_eq!(std::fs::read(first).unwrap(), b"first cover");
+        assert_eq!(std::fs::read(second).unwrap(), b"second cover");
+        std::thread::scope(|scope| {
+            let handles: Vec<_> = (0..4)
+                .map(|_| scope.spawn(|| save("shared", b"shared complete cover")))
+                .collect();
+            let paths: Vec<_> = handles
+                .into_iter()
+                .map(|handle| handle.join().unwrap())
+                .collect();
+            assert!(paths.iter().all(|path| path == &paths[0]));
+            assert_eq!(std::fs::read(&paths[0]).unwrap(), b"shared complete cover");
+        });
+    }
 }

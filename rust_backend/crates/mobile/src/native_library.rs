@@ -504,6 +504,16 @@ fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Va
         .transaction_with_behavior(TransactionBehavior::Immediate)
         .map_err(|e| error("begin Library swap", e))?;
     source_current(&transaction, request)?;
+    // Rescans adopt v2 IDs only for new paths. Existing IDs remain stable for
+    // collections/history, including databases created by the 32-bit writer.
+    transaction.execute_batch("CREATE TEMP TABLE native_library_id_remap(original_id TEXT PRIMARY KEY,retained_id TEXT);")
+        .map_err(|e| error("stage retained Library IDs", e))?;
+    transaction.execute("INSERT INTO native_library_id_remap SELECT s.id,l.id FROM native_library_stage s JOIN library l ON l.file_path=s.file_path AND l.source_id=? WHERE substr(s.id,1,7)='lib_v2_' AND s.id!=l.id", [source])
+        .map_err(|e| error("match retained Library IDs", e))?;
+    transaction.execute_batch("UPDATE native_library_keys SET item_id=(SELECT retained_id FROM native_library_id_remap WHERE original_id=item_id) WHERE item_id IN(SELECT original_id FROM native_library_id_remap);
+        UPDATE native_library_stage SET id=(SELECT retained_id FROM native_library_id_remap WHERE original_id=id) WHERE id IN(SELECT original_id FROM native_library_id_remap);
+        DROP TABLE native_library_id_remap;")
+        .map_err(|e| error("retain Library IDs", e))?;
     let staged: i64 = transaction
         .query_row("SELECT COUNT(*) FROM native_library_stage", [], |row| {
             row.get(0)
@@ -652,7 +662,9 @@ fn snapshot(request: &Value, check: Check<'_>) -> Result<Value, String> {
                 continue;
             }
             if file_path.contains(['\n', '\r']) {
-                return Err("Snapshot file path contains a line break".into());
+                // TSV cannot represent this row. Leave it out so the next
+                // scan refreshes it instead of aborting the entire source.
+                continue;
             }
             writeln!(output, "{timestamp}\t{file_path}").map_err(|e| error("write snapshot", e))?;
             count += 1;

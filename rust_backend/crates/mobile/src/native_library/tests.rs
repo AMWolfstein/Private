@@ -582,3 +582,45 @@ fn mapper_preserves_null_artist_flags_and_replaygain_contract() {
     assert_eq!(mapped["album_artist_norm"], "");
     assert_eq!(mapped["search_text"], "track full artist album artist");
 }
+
+#[test]
+fn rescan_preserves_legacy_ids_while_adding_a_legacy_hash_collision() {
+    let fixture = Fixture::new();
+    fixture.add("lib_legacy", "/music/Aa.flac", "source");
+    let first = spotiflac_core::tags::library_id("/music/Aa.flac");
+    let second = spotiflac_core::tags::library_id("/music/B@.flac");
+    fixture
+        .scan(
+            &[
+                track(&first, "/music/Aa.flac"),
+                track(&second, "/music/B@.flac"),
+            ],
+            2,
+            0,
+            &|| Ok(()),
+        )
+        .unwrap();
+    let ids = fixture.ids();
+    assert!(ids.contains(&"lib_legacy".to_owned()));
+    assert!(ids.contains(&second));
+    assert!(!ids.contains(&first));
+    let orphaned: i64 = fixture.db.query_row("SELECT COUNT(*) FROM library_path_keys k LEFT JOIN library l ON l.id=k.item_id WHERE l.id IS NULL", [], |r| r.get(0)).unwrap();
+    assert_eq!(orphaned, 0);
+}
+
+#[test]
+fn snapshot_skips_unrepresentable_paths_without_aborting_other_rows() {
+    let fixture = Fixture::new();
+    fixture.add("normal", "/music/normal.flac", "source");
+    fixture.add("newline", "/music/new\nline.flac", "source");
+    let path = fixture.directory.path().join("incremental.tsv");
+    let mut request = fixture.request.clone();
+    request["operation"] = "library_snapshot".into();
+    request["snapshot_path"] = path.to_str().unwrap().into();
+    let result = execute(&request, &|| Ok(())).unwrap();
+    assert_eq!(result["count"], 1);
+    let snapshot = std::fs::read_to_string(path).unwrap();
+    assert!(snapshot.contains("/music/normal.flac"));
+    assert!(!snapshot.contains("new\nline"));
+    assert_eq!(fixture.ids().len(), 2);
+}

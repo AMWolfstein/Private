@@ -456,3 +456,53 @@ void putPathKeysInBatch(
     }, conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 }
+
+/// Keep IDs already referenced by playlists/history when a rescan starts using
+/// collision-resistant v2 IDs. New paths keep their new IDs. No eager rewrite
+/// of user databases or collection keys is needed.
+Future<void> preserveLibraryScanIds(
+  DatabaseExecutor db, {
+  required String sourceId,
+  required String stageTable,
+  required String keysTable,
+}) async {
+  await db.execute(
+    '''
+    CREATE TEMP TABLE library_scan_id_remap AS
+    SELECT s.id AS original_id, l.id AS retained_id
+    FROM $stageTable s JOIN main.library l
+      ON l.file_path = s.file_path AND l.source_id = ?
+    WHERE substr(s.id, 1, 7) = 'lib_v2_' AND s.id != l.id
+  ''',
+    [sourceId],
+  );
+  try {
+    await db.execute('''
+      UPDATE $keysTable SET item_id = (
+        SELECT retained_id FROM library_scan_id_remap WHERE original_id = item_id
+      ) WHERE item_id IN (SELECT original_id FROM library_scan_id_remap)
+    ''');
+    await db.execute('''
+      UPDATE $stageTable SET id = (
+        SELECT retained_id FROM library_scan_id_remap WHERE original_id = id
+      ) WHERE id IN (SELECT original_id FROM library_scan_id_remap)
+    ''');
+  } finally {
+    await db.execute('DROP TABLE library_scan_id_remap');
+  }
+}
+
+Future<Map<String, Object?>> preserveLibraryRowId(
+  DatabaseExecutor db,
+  Map<String, Object?> row,
+) async {
+  if ((row['id'] as String?)?.startsWith('lib_v2_') != true) return row;
+  final previous = await db.query(
+    'library',
+    columns: ['id'],
+    where: 'source_id = ? AND file_path = ?',
+    whereArgs: [row['source_id'], row['file_path']],
+    limit: 1,
+  );
+  return previous.isEmpty ? row : {...row, 'id': previous.first['id']};
+}

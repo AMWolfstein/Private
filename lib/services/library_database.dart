@@ -184,15 +184,19 @@ class LibraryDatabase {
   Future<void> upsert(Map<String, dynamic> json, {String? sourceId}) async {
     final db = await database;
     await sqlite.transactionWithBusyRetry(db, (txn) async {
+      final row = await sqlite.preserveLibraryRowId(
+        txn,
+        LibraryRowMapper.encode(json, sourceId: sourceId),
+      );
       await txn.insert(
         'library',
-        LibraryRowMapper.encode(json, sourceId: sourceId),
+        row,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       final batch = txn.batch();
       _putPathKeysInBatch(
         batch,
-        json['id'] as String,
+        row['id'] as String,
         json['filePath'] as String?,
       );
       await batch.commit(noResult: true);
@@ -208,14 +212,18 @@ class LibraryDatabase {
     await sqlite.transactionWithBusyRetry(db, (txn) async {
       final batch = txn.batch();
       for (final json in items) {
+        final row = await sqlite.preserveLibraryRowId(
+          txn,
+          LibraryRowMapper.encode(json, sourceId: sourceId),
+        );
         batch.insert(
           'library',
-          LibraryRowMapper.encode(json, sourceId: sourceId),
+          row,
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
         _putPathKeysInBatch(
           batch,
-          json['id'] as String,
+          row['id'] as String,
           json['filePath'] as String?,
         );
       }
@@ -362,6 +370,12 @@ class LibraryDatabase {
       final selectedColumns = columns.map((column) => 's.$column').join(', ');
 
       await sqlite.transactionWithBusyRetry(db, (txn) async {
+        await sqlite.preserveLibraryScanIds(
+          txn,
+          sourceId: sourceId,
+          stageTable: _scanStageTable,
+          keysTable: _scanStagePathKeysTable,
+        );
         await deleteReplacedLibraryScanRows(
           txn,
           sourceId,

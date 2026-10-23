@@ -189,7 +189,8 @@ class _LogScreenState extends ConsumerState<LogScreen> {
     if (selectedInUserOrder.isEmpty) return;
     SharePlus.instance.share(
       ShareParams(
-        text: formatLogEntries(selectedInUserOrder),
+        text:
+            '$logExportPrivacyNotice\n\n${formatLogEntries(selectedInUserOrder)}',
         subject: 'SpotiFLAC Mobile Logs',
       ),
     );

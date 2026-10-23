@@ -173,12 +173,28 @@ impl Backend {
         if let Some(path) = exists(name)? {
             return Ok(path);
         }
-        let suffix = library_extension(name, "");
-        let stem = if suffix.is_empty() {
-            name
-        } else {
-            &name[..name.len() - suffix.len() - 1]
-        };
+        let requested = Path::new(name);
+        if let Some(filename) = requested.file_name().and_then(|v| v.to_str()) {
+            let parent = directory.join(requested.parent().unwrap_or(Path::new("")));
+            if let Ok(parent) = files.resolve_legacy(&parent.to_string_lossy())
+                && parent.native_display().is_ok()
+                && let Ok(entries) = parent.entries()
+            {
+                let matches: Vec<_> = entries
+                    .into_iter()
+                    .filter(|(candidate, is_dir)| {
+                        !is_dir && candidate.to_lowercase() == filename.to_lowercase()
+                    })
+                    .collect();
+                if matches.len() == 1 {
+                    let candidate = requested.with_file_name(&matches[0].0);
+                    if let Some(path) = exists(&candidate.to_string_lossy())? {
+                        return Ok(path);
+                    }
+                }
+            }
+        }
+        let stem = name.rfind('.').map_or(name, |index| &name[..index]);
         let extensions = [
             "flac", "wav", "aiff", "aif", "ape", "mp3", "ogg", "wv", "m4a",
         ];
@@ -435,7 +451,7 @@ fn cue_library_rows(
             ("trackNumber", track.number),
             (
                 "duration",
-                end.map_or(0, |end| (end - track.start_time) as i64),
+                end.map_or(0, |end| (end - track.start_time).max(0.0) as i64),
             ),
             ("bitDepth", depth),
             ("sampleRate", rate),

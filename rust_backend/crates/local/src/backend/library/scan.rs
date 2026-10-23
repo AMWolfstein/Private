@@ -365,10 +365,11 @@ impl Backend {
             .current
             .lock()
             .expect("library scan lock")
-            .replace(run.clone())
+            .as_ref()
         {
             previous.cancelled.store(true, Ordering::Release);
         }
+        let request_check = check;
         let check = || {
             // Wait before taking the failure lock so paused workers do not
             // serialize on it.
@@ -390,13 +391,25 @@ impl Backend {
             result
         };
         let _owner = loop {
-            check()?;
+            // Acquire ownership and publish the run before honoring pause;
+            // otherwise a pre-paused first scan has no visible cancel target.
+            self.check().and_then(|()| request_check())?;
+            if run.cancelled.load(Ordering::Acquire) {
+                return Err("scan cancelled".into());
+            }
             match self.library_scan.owner.try_lock() {
                 Ok(owner) => break owner,
                 Err(TryLockError::WouldBlock) => thread::sleep(Duration::from_millis(5)),
                 Err(TryLockError::Poisoned(_)) => return Err("library scan owner poisoned".into()),
             }
         };
+        // Publish progress only once this run owns traversal. A queued run
+        // must not reset the active run's progress or cancellation target.
+        self.library_scan
+            .current
+            .lock()
+            .expect("library scan lock")
+            .replace(run.clone());
         let current = self.collect_library_files(folder, &check)?;
         let total = current.len();
         run.progress.lock().expect("scan progress lock").total_files = total;
@@ -426,7 +439,9 @@ impl Backend {
                             .then(|| cue_times.get(file.path.as_str()).copied())
                             .flatten()
                     });
-                if old == Some(file.modified) {
+                // Snapshots contain only sheet timestamps, not audio versions.
+                // Re-read CUE dependencies rather than trust a stale sheet.
+                if old == Some(file.modified) && library_extension(&file.path, "") != "cue" {
                     skipped += 1;
                     false
                 } else {
@@ -587,9 +602,11 @@ impl Backend {
 }
 
 fn cue_base(path: &str) -> Option<&str> {
-    path.rfind("#track")
-        .filter(|index| *index > 0)
-        .map(|index| &path[..index])
+    let (base, number) = path.rsplit_once("#track")?;
+    (!number.is_empty()
+        && number.bytes().all(|b| b.is_ascii_digit())
+        && library_extension(base, "") == "cue")
+        .then_some(base)
 }
 
 fn supported(path: &str) -> bool {
@@ -802,5 +819,135 @@ mod tests {
                 .scan_library_folder_incremental(&folder, "{}", &|| Ok(()))
                 .is_err()
         );
+    }
+}
+
+#[cfg(all(test, unix))]
+mod t4_tests {
+    use super::*;
+    use std::fs;
+    fn wav(seconds: u32) -> Vec<u8> {
+        let size = 44_100 * 2 * seconds;
+        let mut output = b"RIFF".to_vec();
+        output.extend((36 + size).to_le_bytes());
+        output.extend(b"WAVEfmt ");
+        output.extend(16u32.to_le_bytes());
+        output.extend(1u16.to_le_bytes());
+        output.extend(1u16.to_le_bytes());
+        output.extend(44_100u32.to_le_bytes());
+        output.extend(88_200u32.to_le_bytes());
+        output.extend(2u16.to_le_bytes());
+        output.extend(16u16.to_le_bytes());
+        output.extend(b"data");
+        output.extend(size.to_le_bytes());
+        output.resize(44 + size as usize, 0);
+        output
+    }
+    fn flac(seconds: u64) -> Vec<u8> {
+        let mut output = b"fLaC\x80\0\0\x22".to_vec();
+        let mut info = [0u8; 34];
+        info[0..2].copy_from_slice(&4096u16.to_be_bytes());
+        info[2..4].copy_from_slice(&4096u16.to_be_bytes());
+        let packed = (44_100u64 << 44) | (15u64 << 36) | (44_100 * seconds);
+        info[10..18].copy_from_slice(&packed.to_be_bytes());
+        output.extend(info);
+        output.extend([0xff, 0xf8]);
+        output
+    }
+
+    #[test]
+    fn incremental_cue_refreshes_changed_audio_and_keeps_real_hash_track_files() {
+        for declared in ["ALBUM.FLAC", "album.İ"] {
+            let root = tempfile::tempdir().unwrap();
+            let library = root.path().join("library");
+            fs::create_dir(&library).unwrap();
+            let audio = library.join("album.flac");
+            fs::write(&audio, flac(1)).unwrap();
+            let physical = library.join("song#track2.wav");
+            fs::write(&physical, wav(1)).unwrap();
+            fs::write(library.join("album.cue"), format!("FILE \"{declared}\" WAVE\nTRACK 01 AUDIO\nTITLE \"Virtual\"\nINDEX 01 00:00:00\n")).unwrap();
+            let backend = Backend::new(&root.path().join("data")).unwrap();
+            backend
+                .set_allowed_directories(std::slice::from_ref(&library))
+                .unwrap();
+            let first = backend
+                .scan_library_folder_incremental(library.to_str().unwrap(), "{}", &|| Ok(()))
+                .unwrap();
+            let rows = first["scanned"].as_array().unwrap();
+            let virtual_row = rows
+                .iter()
+                .find(|row| row["trackName"] == "Virtual")
+                .unwrap();
+            assert_eq!(virtual_row["duration"], 1);
+            let existing: serde_json::Map<String, Value> = rows
+                .iter()
+                .map(|row| {
+                    (
+                        row["filePath"].as_str().unwrap().into(),
+                        row["fileModTime"].clone(),
+                    )
+                })
+                .collect();
+            fs::write(&audio, flac(2)).unwrap();
+            let second = backend
+                .scan_library_folder_incremental(
+                    library.to_str().unwrap(),
+                    &Value::Object(existing).to_string(),
+                    &|| Ok(()),
+                )
+                .unwrap();
+            assert!(second["deletedPaths"].is_null());
+            let rows = second["scanned"].as_array().unwrap();
+            assert_eq!(
+                rows.iter()
+                    .find(|row| row["trackName"] == "Virtual")
+                    .unwrap()["duration"],
+                2
+            );
+            assert!(physical.exists());
+        }
+        assert_eq!(
+            cue_base("/music/album.cue#track02"),
+            Some("/music/album.cue")
+        );
+        for path in [
+            "/music/song#track2.wav",
+            "/music/song#track2",
+            "/music/a.cue#trackno",
+            "/music/a.cue#track2.wav",
+        ] {
+            assert_eq!(cue_base(path), None);
+        }
+    }
+
+    #[test]
+    fn waiting_scan_keeps_active_progress_until_owner_is_released() {
+        let root = tempfile::tempdir().unwrap();
+        let library = root.path().join("library");
+        fs::create_dir(&library).unwrap();
+        let backend = Backend::new(&root.path().join("data")).unwrap();
+        backend
+            .set_allowed_directories(std::slice::from_ref(&library))
+            .unwrap();
+        let active = Arc::new(Run::default());
+        active.progress.lock().unwrap().scanned_files = 7;
+        *backend.library_scan.current.lock().unwrap() = Some(active.clone());
+        let owner = backend.library_scan.owner.lock().unwrap();
+        thread::scope(|scope| {
+            let waiting = scope.spawn(|| {
+                backend.scan_library_folder_incremental(library.to_str().unwrap(), "{}", &|| Ok(()))
+            });
+            let deadline = std::time::Instant::now() + Duration::from_secs(5);
+            while !active.cancelled.load(Ordering::Acquire) {
+                assert!(std::time::Instant::now() < deadline);
+                thread::yield_now();
+            }
+            assert_eq!(
+                backend.get_library_scan_progress().unwrap()["scanned_files"],
+                7
+            );
+            drop(owner);
+            waiting.join().unwrap().unwrap();
+        });
     }
 }

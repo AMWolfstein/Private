@@ -260,6 +260,12 @@ class LibraryNativeAdapter {
       Future<int> count(String sql, [List<Object?>? args]) async =>
           ((await txn.rawQuery(sql, args)).single.values.single as num).toInt();
       final staged = await count('SELECT COUNT(*) FROM $alias.library');
+      await sqlite.preserveLibraryScanIds(
+        txn,
+        sourceId: sourceId,
+        stageTable: '$alias.library',
+        keysTable: '$alias.library_path_keys',
+      );
       var deleted = 0;
       final selectedIds = '${alias}_selected';
       await txn.execute('CREATE TEMP TABLE $selectedIds(id TEXT PRIMARY KEY)');

@@ -54,6 +54,18 @@ void main() {
         Future<void> finishReadback() => tester.runAsync(
           () => Future<void>.delayed(const Duration(milliseconds: 30)),
         );
+        Future<void> waitForLatestPixels() async {
+          final deadline = DateTime.now().add(const Duration(seconds: 3));
+          // Native toByteData completion is real asynchronous work. Advance
+          // coalescing timers without submitting a new scene until it settles.
+          while (colors['header'] != Colors.black &&
+              DateTime.now().isBefore(deadline)) {
+            await finishReadback();
+            await tester.pump(const Duration(milliseconds: 334));
+          }
+          expect(colors['header'], Colors.black);
+        }
+
         await tester.pumpWidget(app(Colors.black));
         await tester.runAsync(() => captured.future);
         await tester.pumpWidget(app(Colors.white));
@@ -74,6 +86,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 334));
         await finishReadback();
         if (interruption == 'none') {
+          await waitForLatestPixels();
           expect(MornyeArtworkContrast.debugReadbackCount(capture), 2);
           expect(colors['header'], Colors.black);
         } else {
@@ -87,7 +100,7 @@ void main() {
           }
           await tester.pump();
           await tester.pump(const Duration(milliseconds: 334));
-          await finishReadback();
+          await waitForLatestPixels();
           expect(colors['header'], Colors.black);
         }
         final settled = MornyeArtworkContrast.debugReadbackCount(capture);
