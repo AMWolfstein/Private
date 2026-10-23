@@ -46,3 +46,7 @@ Build-script tests: `python3 -m unittest discover -s scripts -p 'test_build_andr
 ## UI and native-contract continuation
 
 Reports09–11: six additional P2 findings validated statically; native backup contract gap closed with no new finding (DATA-007 duplicate confirmed). Source/fixture ledgers in each report. No additional runtime tests, builds or device execution. Application-source diff from d5d5a02 remains empty. Push of d3a25128 failed because GitHub HTTPS credentials were unavailable; local reports/commits retained.
+
+## Overall continuation through reports12–21
+
+`cargo test --manifest-path rust_backend/Cargo.toml --offline --locked -p spotiflac-mobile native_lyrics -- --nocapture`: PASS6 host unit tests,0 failures/ignored,90 filtered. No engine tests/device execution; no enormous crafted payload executed. Static findings and exact read ledgers in reports12–21. Application source unchanged from d5d5a02; only reviews files queued. Flutter unavailable; no analyzer/full Flutter gate or APK. Security path proof static only.
