@@ -15,7 +15,7 @@ Role dead-code-hunter, source d5d5a02 unchanged. All254 tracked Flutter/integrat
 - Fix: delete both orphan libraries or reconnect them to a deliberately retained test; low runtime risk. Do not claim removing them improves test results.
 - Evidence: filename/path search yields no consumers. InstrumentedScanOutput appears only at declaration/constructor. legacyCleanLyricsForDisplay appears only declaration and fullDisplayLyricsUsability in same orphan file; fullDisplayLyricsUsability/measureLyricsUsability have no external refs. Public visibility alone creates no runner entrypoint.
 - Cross-refs: entire tracked Dart test/import corpus and source/config/doc references.
-- Guards checked: test-only code is not automatically dead; these have zero actual test consumer or injection use. performance_driver.dart has no importer too, but defines a manual flutter drive main and is explicitly retained. Remaining11 helper paths have importing test consumers (driver retained as separate root); standalone test roots retained.
+- Guards checked: test-only code is not automatically dead; these have zero actual test consumer or injection use. performance_driver.dart has no importer too, but defines a manual flutter drive main and is explicitly retained. The other nine helper paths have importing test consumers (driver retained as separate root); standalone test roots retained.
 
 ## Verification / limits
 
