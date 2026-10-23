@@ -1,14 +1,13 @@
 # Fresh audit state
 
-- Baseline: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`, `ccr-2fb644cd-nmesyt`.
-- API transport chunk complete; endpoint/body and generated-binding checks remain partial.
-- Current unit: CONTRACT-01 cancellation and trust-boundary reviewers; then file/data integrity units.
-- Fresh finding namespace lives only in this folder. No old finding reconciliation/import.
-- Python helper tests: 28 passed. Flutter execution blocked by absent toolchain and download-host policy. No APK or device tests requested/executed.
-- Last verified push: `e0de186`, metadata test review (preceded by backup report88d0ab0), to `origin/ccr-2fb644cd-nmesyt`.
-- Non-engine native-job lifecycle chunk complete: no validated finding; producer/state lifecycles remain later units.
-- Trust-boundary chunk complete: no validated security finding; write-back recovery lead assigned to DATA-01.
-- Current reviewers: metadata Dart data integrity, Rust/SAF writer safety, metadata regression-test coverage.
-- Metadata unit completed with DATA-001..DATA-005: one P1 and four P2. Two core API reproductions confirmed; 14 tag unit tests passed. Provider-level failure injection remains NOT RUN. Backup/collection unit in progress.
-- Backup/collection findings DATA-006/007 validated statically. Native review turn failed; missing native read coverage explicitly retained. Scanner Dart/native and build/dependency reviewers now active.
-- Scanner findings DATA-008..011: four P2; physical filename case reproduced through actual Backend.20 local Rust tests pass. Build review finishing; Flutter-page and player-UX reviewers active.
+- Application baseline: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`, branch `ccr-2fb644cd-nmesyt`; later commits contain audit reports only.
+- Resume reconciled through `5dcf7241` (scanner checkpoint). Earlier “reviewers active” entries were interrupted-work notes, not saved coverage.
+- Fresh finding namespace lives only here. No old finding reconciliation/import. Review-only; audio engine excluded.
+- Completed report chunks: API transport (endpoint/generated checks partial); native-job cancellation/lifecycle; trust boundaries; metadata writers; metadata tests; backup Dart; scanner Dart/native. See numbered reports for exact coverage.
+- Validated findings: DATA-001..DATA-011 (one P1, ten P2). No fixes performed.
+- Backup native endpoint/read coverage remains incomplete after the earlier failed reviewer turn.
+- BUILD-01 first static pass saved in `08-build-dependencies.md`: no new validated finding; full dependency/license/artifact coverage still incomplete.
+- Current next unit: UI-01 Flutter lifecycle/navigation and player/lyrics UX, two separately bounded chunks from README. Pending reports are not completed coverage.
+- Then: native backup gap, complete remaining BUILD-01 checks, broader state/settings/widget/performance/test/docs chunks and inventory reconciliation. No final TASKS.md or whole-audit completion claim yet.
+- Local verification on resume: Python fixture/helper suite 28 passed, zero failures/skips; Flutter absent from PATH. Real app/native builds and device execution NOT RUN this pass. Earlier Rust passes/reproductions remain tied to prior verification records.
+- Last previously recorded verified push: `e0de1864`. Local `5dcf7241` exists; its remote publication has not been reverified in this resume.

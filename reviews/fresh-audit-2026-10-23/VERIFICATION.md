@@ -38,3 +38,7 @@ FLAC invalid large cover rewrite=Ok(()); original_cover_preserved=false
 ```
 
 The normal tag unit suite passing does not invalidate the concrete missing edge cases.
+
+## Local resume at 5dcf7241
+
+Build-script tests: `python3 -m unittest discover -s scripts -p 'test_build_android.py' -v`, PASS 5, zero failures/skips. Full Python helpers: `python3 -m unittest discover -s scripts -p 'test_*.py' -v`, PASS 28, zero failures/skips. These use fixture tools/archives and do not build the application. Scope build and coverage-status commands exit 0; historical build coverage stale, graph fresh from46c4ea6a. Flutter absent from PATH here; no new analyzer, Flutter, native, APK or device result. See08-build-dependencies.md for limits.
