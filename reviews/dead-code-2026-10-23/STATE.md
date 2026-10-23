@@ -1,9 +1,9 @@
 # Dead-code review state
 
-Baseline47039b90 (application source d5d5a02); independent review-only dead-code audit. User requests every divided check have its own commit and immediate push. No removals or graph changes. Further security checks excluded at owner's request. All code is screened for dead-code candidates, including audio engine reachability; public vendor/FFI/generated/test compatibility seams are retained unless proven obsolete.
-
-Chunks: N1 Android complete (01-android.md); D1 Dart logic complete (06-dart-logic.md), D2 Dart UI complete (07-dart-ui.md), N2 Rust complete (05-rust-entrypoints.md), N3 third-party plugin complete (08-vendored-plugins.md), R1 assets/localization complete (02-localization-assets.md); R2 dependencies/scripts complete (03-dependencies-scripts.md). Screening is distinct from exhaustive body review. Each report records limitations; compiler/tree-shaker results NOT RUN unless recorded.
-
-Findings: DEAD-001..015 (P3). Last verified pushde3accf2 (D2), successful to origin/ccr-2fb644cd-nmesyt. Current checkpoint publication recorded in next chunk.
-
-R3 test-support chunk complete (04-test-support.md):254 Dart runner roots retained,12 support paths screened.
+- Baseline47039b90, unchanged application source d5d5a02. Review-only; no removals or graph updates.
+- Repository-wide static candidate-screen complete across assigned roots. Exact inventory/limitations in09-reconciliation.md and inventory.json; no compiler/AST exhaustive proof claimed.
+- Reports01–08 contain15 P3 findings DEAD-001..015. Summary/commit/push ledger in README.md. All findings IDs verified against report entries.
+- Each divided check has its own commit and immediate successful push, per user instruction. Last verified before reconciliation:b41a72df to origin/ccr-2fb644cd-nmesyt. Reconciliation checkpoint publication follows.
+- No analyzer/build/tests/device execution in this review; no correctness/security claim. Further security checks skipped as requested.
+- Retained public upstream APIs,platform/FFI/trait/test/compatibility entrypoints and owner-protected NativeReplayGainPolicy. Vendor internals/test-local branches not exhaustively proven reachable.
+- Next action: separate prioritized cleanup batches if requested; no pending reviewer turn for this static dead-code pass.

@@ -1,0 +1,67 @@
+{
+  "baseline": "47039b90",
+  "application_source": "d5d5a02",
+  "tracked_paths_at_baseline": 1497,
+  "areas": [
+    {
+      "root": "lib/",
+      "tracked_paths": 328,
+      "coverage": "306 logic/UI paths candidate-screened,20 ARB +2 l10n support paths separately screened"
+    },
+    {
+      "root": "android/",
+      "tracked_paths": 131,
+      "coverage": "candidate/reference screen; manifests/CMake/JNI entrypoints checked"
+    },
+    {
+      "root": "rust_backend/crates/",
+      "tracked_paths": 87,
+      "coverage": "Rust module/export/test/trait entrypoint screen"
+    },
+    {
+      "root": "third_party/",
+      "tracked_paths": 86,
+      "coverage": "plugin/private-method/export screen; public platform APIs retained"
+    },
+    {
+      "root": "rust_backend/vendor/",
+      "tracked_paths": 430,
+      "coverage": "package/module/build interfaces retained; no exhaustive private-body audit"
+    },
+    {
+      "root": "scripts/",
+      "tracked_paths": 12,
+      "coverage": "manual/build/test entrypoints retained; private Python bodies not exhaustively analyzed"
+    },
+    {
+      "root": "test/",
+      "tracked_paths": 254,
+      "coverage": "runner/helper/fixture reference screen; no exhaustive test-local symbol proof"
+    },
+    {
+      "root": "integration_test/",
+      "tracked_paths": 26,
+      "coverage": "runner/driver/helper roots retained"
+    },
+    {
+      "root": "assets/",
+      "tracked_paths": 18,
+      "coverage": "bundle/path reference screen"
+    },
+    {
+      "root": ".claude/",
+      "tracked_paths": 19,
+      "coverage": "tool-loaded agent/config/skill roots retained"
+    },
+    {
+      "root": ".opencode/",
+      "tracked_paths": 26,
+      "coverage": "tool-loaded agent/config/plugin/skill roots retained"
+    }
+  ],
+  "limitations": [
+    "Conservative lexical/reference screening, not compiler/AST exhaustive dead-member proof",
+    "Vendored upstream internals/public platform API retained",
+    "No application changes, removals or test/build execution"
+  ]
+}
