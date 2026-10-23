@@ -1,9 +1,11 @@
 # Fix tasks from the audit
 
-The audit left 139 open findings in `FINDINGS.md` (1 P1, 54 P2, 84 P3). Every one of them
-is assigned to one of the 12 tasks below, so finishing them all closes the audit. T1-T8 fix
+The audits left 193 open findings in `FINDINGS.md` (1 P1, 66 P2, 126 P3), including the 57 added
+by the 2026-10-23 UI re-audit. Every one of them
+is assigned to one of the 13 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
-T11-T12 are UI polish and build/test cleanup. Do them in order. Three findings are already
+T11-T12 come from the 2026-10-23 UI re-audit (UI bugs, then accessibility and text), and T13 is
+build/test cleanup. Do them in order. Three findings are already
 gone and need no task (see the last section).
 
 ## Instructions for opencode (read first, follow exactly)
@@ -103,8 +105,9 @@ current one is pushed.
 | T8 | bug-hunter, security-auditor |
 | T9 | code-optimization-auditor, data-integrity-auditor (the schema upgrade) |
 | T10 | code-optimization-auditor, rust-safety-auditor |
-| T11 | ux-auditor, flutter-dart-auditor |
-| T12 | dependency-auditor, test-auditor |
+| T11 | flutter-dart-auditor, ux-auditor |
+| T12 | ux-auditor, flutter-dart-auditor |
+| T13 | dependency-auditor, test-auditor |
 
 Always add security-auditor when a change touches file deletion, SAF permissions, intents
 or exported components.
@@ -174,7 +177,7 @@ or exported components.
     `rust_backend/crates/mobile/src/native_lyrics.rs` (`parse_ttml`, `parse_lrc`).
   - Goal: untimed TTML shows as plain lyrics instead of being dropped, in both the Dart and
     Rust parsers, and the LRC edge cases parse correctly.
-  - Also: BUG-102, BUG-103, UI-102.
+  - Also: BUG-102, BUG-103. UI-102 is already fixed and resolved.
 
 - [ ] **T7: Fix playback and visible UI bugs**
   - Findings: CONC-001, CONC-002, UI-101, UI-201, UX-201, BUG-201, BUG-202.
@@ -216,7 +219,7 @@ or exported components.
   - Also: DATA-202, BUG-205, UX-203.
 
 - [ ] **T9: Make library queries and screen rebuilds cheaper**
-  - Findings: PERF-401, PERF-402, PERF-404 (P2); also PERF-201, PERF-202, PERF-301,
+  - Findings: PERF-401, PERF-402, PERF-404, PERF-605 (P2); also PERF-201, PERF-202, PERF-301,
     PERF-405, PERF-601, PERF-602, PERF-603, PERF-604.
   - Files: `lib/services/library_schema.dart` (`_createNormalizedIndexes`),
     `library_queue_store.dart`, `library_genres.dart`, `library_database.dart`
@@ -233,6 +236,8 @@ or exported components.
     - Songs, Home and playlist screens stop rebuilding or recomputing lists they do not
       use.
     - At startup, the orientation call runs in parallel with the other startup steps.
+    - The artist header builds its pre-blurred ground once, not on every collapse frame
+      (PERF-605). Measure the artist page raster p90 with the HUD before and after.
   - Do PERF-301, PERF-405, PERF-603 and PERF-604 only if the measurement shows a cost.
 
 - [ ] **T10: Make scanning and cover caching cheaper**
@@ -250,20 +255,64 @@ or exported components.
     - Incremental scans stop re-copying unchanged CUE sheets.
   - Do this after T4, which changes the same cover cache.
 
-- [ ] **T11: Polish the UI and accessibility**
-  - Findings (all P3): UX-102, UX-103, UX-105, UX-106, UX-107, UX-202, UX-207, UI-203,
-    UI-204, UI-205, UI-206, BUG-303, BUG-304.
-  - Files: `lib/screens/local_artist_screen.dart` (Popular dots, row height),
-    `local_album_screen.dart`, `lib/widgets/album_detail_header.dart`,
-    `listening_statistics_screen.dart`, `settings/cache_management_page.dart`,
-    `library_tracks_folder_screen.dart`, `queue_tab_navigation.dart`,
-    `playlist_picker_sheet.dart`, `duplicate_review_sheet.dart`,
-    `lib/utils/clickable_metadata.dart`, `lib/services/app_orientation.dart`.
-  - Goal: each finding's fix as written. Keep the current header sizes (48 dp controls,
-    22 dp icons), RTL and the AGENTS.md Popular rules (five songs per page, at most four
-    dots).
+- [ ] **T11: Fix the UI bugs from the UI re-audit**
+  - Source: the 2026-10-23 UI re-audit at `8e11147`, which replaced the old T11.
+  - Findings (P2): UI-402, UI-403, UI-404, UI-406, UI-407, UI-413, UX-218.
+  - Also (P3): UI-203, UI-204, UI-205, UI-206, UI-408, UI-409, UI-410, UI-411, UI-412,
+    UI-414, UI-415, UI-416, UI-417, UX-202, UX-208, UX-215, UX-217, UX-219, BUG-303,
+    BUG-304.
+  - Files: `lib/screens/local_album_screen.dart`, `track_metadata_edit_sheet.dart`,
+    `home_tab.dart`, `queue_tab.dart`, `mornye_library_screen.dart`,
+    `library_tracks_folder_screen.dart`, `setup_screen.dart`, `local_guide_pages.dart`,
+    `main_shell.dart`, `settings/backup_restore_page.dart`,
+    `settings/library_settings_page.dart`, `settings/cache_management_page.dart`,
+    `lib/widgets/audio_analysis_widget.dart`, `playlist_picker_sheet.dart`,
+    `duplicate_review_sheet.dart`, `library_search_results.dart`,
+    `library_selection_playback_actions.dart`, `mornye_performance_hud.dart`,
+    `lib/utils/clickable_metadata.dart`.
+  - Goal:
+    - After a partial delete, the album page drops the deleted rows.
+    - The metadata sheet cannot be dismissed mid-save, and a finished save always refreshes
+      the library.
+    - Home search never applies a stale debounced query.
+    - A damaged cached spectrogram regenerates instead of spinning forever.
+    - The Playlists page shows renames, covers and track changes after you return to it.
+    - Backup Import cannot run twice at once.
+    - Setup tips are never hidden under the Next button, and system Back steps back
+      through setup.
+    - Every async action in these screens shows an error instead of failing silently.
 
-- [ ] **T12: Clean up build, dependencies and tests**
+- [ ] **T12: Fix UI accessibility, RTL, large text and translations**
+  - Source: the 2026-10-23 UI re-audit at `8e11147`, plus the old T11 items that are still
+    present.
+  - Findings (P2): UX-209, UX-210, UX-229, UX-239.
+  - Also (P3): UX-102, UX-106, UX-107, UX-207, UX-211, UX-212, UX-213, UX-214, UX-216, UX-220,
+    UX-221, UX-222, UX-223, UX-224, UX-225, UX-226, UX-227, UX-228, UX-230, UX-231,
+    UX-232, UX-233, UX-234, UX-235, UX-236, UX-237, UX-238, UX-240, UX-241, UX-242,
+    UX-243, UX-244, UI-405, UI-418, UI-419, UI-420.
+  - Files: the screens and widgets each finding names. Shared widgets first
+    (`app_choice_chip.dart`, `app_action_button.dart`, `app_switch.dart`,
+    `local_song_row.dart`, `settings_group.dart`, `album_detail_header.dart`
+    `HeaderCircleButton`), because their fixes reach many screens.
+  - Goal:
+    - Every control is at least 48 dp and has a spoken name and state.
+    - Swipe-only actions (queue remove, mini-player dismiss) get a screen-reader action.
+    - Rewind stories stop auto-advancing under TalkBack.
+    - Layouts mirror in RTL and do not clip at 2x text.
+    - No hard-coded English remains.
+    - Reduced motion is honoured in setup, the guide, settings search and the edit sheet.
+  - Keep the AGENTS.md rules: header controls 48 dp with 22 dp icons, the album action row
+    order, Popular at five per page with at most four dots, and the forced-LTR transport
+    and timeline.
+  - Product decisions to ask the owner about first, not fix on your own:
+    - UX-228: is the storage permission required at setup?
+    - UX-234: should EQ gain mirror in RTL?
+    - UX-238: should the 3 s snackbar cap stay?
+    - UX-227: is the pt_PT label right?
+  - UX-207 (landscape on tablets) and the contrast item UX-236 need an emulator, a device
+    or a measurement. Report them as unverified rather than claiming them fixed.
+
+- [ ] **T13: Clean up build, dependencies and tests**
   - Findings (all P3): SEC-302, DEP-001, DEP-002, TEST-101, TEST-203, TEST-205.
   - Files: `android/app/build.gradle.kts` (release signing), `pubspec.yaml`,
     `rust_backend/NOTICE`, `test/library_collections_hydration_test.dart`,
@@ -292,7 +341,7 @@ batch) did not touch the code these findings point at. The `NEEDS VERIFICATION` 
 RUST-403) still have the code they describe, but each still needs proof that it happens before
 it is fixed.
 
-Re-checked on 2026-10-22 for T9-T12 and the P3 findings: the code for three of them was
+Re-checked on 2026-10-22 for T9-T10, T13 and the P3 findings: the code for three of them was
 removed by the dead-code batch, so close them as resolved with that note instead of fixing
 them:
 - RUST-205: the Hi-Res WAV analyser (`core/src/media/hires`) no longer exists.
@@ -301,5 +350,9 @@ them:
   double-decode pattern may exist at `local_library_provider.dart` (`Uri.decodeComponent` on
   `pathSegments`); check it in T1.
 
-Everything else in T9-T12 still has the code it describes. PERF-401's index is still
+Everything else in T9-T10 and T13 still has the code it describes. PERF-401's index is still
 missing: `album_artist_norm` is a column, but `_createNormalizedIndexes` does not index it.
+
+UI re-audit (2026-10-23, `8e11147`): UI-102, UX-103 and UX-105 were found fixed and moved to
+`## Resolved`. The old T11 was replaced by the new T11 and T12. Its open items carried over:
+UX-102, UX-106, UX-107, UX-202, UX-207, UI-203 to UI-206, BUG-303 and BUG-304.
