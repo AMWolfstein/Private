@@ -143,7 +143,14 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    final destination = await PlatformBridge.pickSafTree();
+    final messenger = ScaffoldMessenger.of(context);
+    final destination = await PlatformBridge.pickSafTree(
+      onFailure: (message) {
+        if (context.mounted) {
+          messenger.showSnackBar(SnackBar(content: Text(message)));
+        }
+      },
+    );
     final tree = destination?['tree_uri'] as String? ?? '';
     if (tree.isEmpty || !context.mounted) return;
     staging = await (await getTemporaryDirectory()).createTemp('cue_split_');

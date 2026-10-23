@@ -412,9 +412,51 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   }
 
   Future<void> removeSource(String sourceId) async {
+    LocalLibrarySource? removed;
+    for (final source in state.sources) {
+      if (source.id == sourceId) {
+        removed = source;
+        break;
+      }
+    }
+    // Removal can run while the initial index is still loading, so it must not
+    // wait for that load. The removed folder's path is only needed afterwards
+    // to release its grant, so read it from storage when it is not in state.
+    if (removed == null && !_hasLoadedFromDatabase) {
+      try {
+        removed = (await _db.getSources())
+            .where((source) => source.id == sourceId)
+            .firstOrNull;
+      } catch (_) {
+        removed = null;
+      }
+    }
+    final releaseUri = removed?.path;
+    final stillUsed =
+        releaseUri != null &&
+        state.sources.any(
+          (source) => source.id != sourceId && source.path == releaseUri,
+        );
     _sourceVersion++;
     await _db.removeSource(sourceId);
     await _refreshSummaryFromStorage();
+    // Folder grants are a bounded platform resource; release the tree once no
+    // remaining source refers to it.
+    if (releaseUri != null &&
+        releaseUri.startsWith('content://') &&
+        !stillUsed) {
+      // The obsolete download tree is still probed at startup; releasing its
+      // grant would trigger a false "access lost" prompt. T5 removes that flow.
+      final legacyDownloadTree = ref.read(settingsProvider).downloadTreeUri;
+      if (releaseUri != legacyDownloadTree) {
+        try {
+          await PlatformBridge.releaseSafTree(releaseUri);
+        } catch (_) {
+          // Avoid logging the URI: the Logs screen can export it.
+          _log.w('Failed to release the SAF tree grant for a removed source');
+        }
+      }
+    }
   }
 
   Future<void> refreshSourceAvailability({bool scanReconnected = false}) {
@@ -596,7 +638,9 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   String _displayNameForPath(String path) {
     if (path.startsWith('content://')) {
       try {
-        final decoded = Uri.decodeComponent(Uri.parse(path).pathSegments.last);
+        // `pathSegments` already percent-decodes each segment; decoding again
+        // would turn a literal `%XX` in a folder name into a different name.
+        final decoded = Uri.parse(path).pathSegments.last;
         final relative = decoded.contains(':')
             ? decoded.substring(decoded.indexOf(':') + 1)
             : decoded;
@@ -616,7 +660,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   bool _looksLikeRemovablePath(String path) {
     if (path.startsWith('content://')) {
       try {
-        final decoded = Uri.decodeComponent(Uri.parse(path).pathSegments.last);
+        // `pathSegments` is already decoded; see `_displayNameForPath`.
+        final decoded = Uri.parse(path).pathSegments.last;
         return !decoded.startsWith('primary:');
       } catch (_) {
         return false;
@@ -773,10 +818,15 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     required bool forceFullScan,
   }) async {
     if (_scanCancelRequested) return null;
+    // A forced scan deletes the resume files, so the native scan cannot tell
+    // from them whether this source still has rows. Tell it explicitly: an
+    // empty provider listing must never wipe an indexed source.
+    final hasIndexedRows = isSaf && (await _db.getSourceCount(sourceId) > 0);
     final scanFile = isSaf
         ? await PlatformBridge.scanSafTreeToNDJSONFile(
             folderPath,
             forceFullScan: forceFullScan,
+            hasIndexedRows: hasIndexedRows,
             isCancelled: () => _scanCancelRequested,
           )
         : await PlatformBridge.scanLibraryFolderToNDJSONFile(

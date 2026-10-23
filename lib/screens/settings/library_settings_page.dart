@@ -37,8 +37,9 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     if (!path.startsWith('content://')) return path;
     try {
       final uri = Uri.parse(path);
-      final treePath = uri.pathSegments.last;
-      final decoded = Uri.decodeComponent(treePath);
+      // `pathSegments` already percent-decodes; a second pass would rewrite a
+      // literal `%XX` in the folder name.
+      final decoded = uri.pathSegments.last;
       if (decoded.startsWith('primary:')) {
         return '/storage/emulated/0/${decoded.substring('primary:'.length)}';
       }
@@ -118,7 +119,14 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
   Future<void> _pickLibraryFolder() async {
     if (Platform.isAndroid && _androidSdkVersion >= 29) {
       // Use SAF tree picker - no MANAGE_EXTERNAL_STORAGE needed
-      final result = await PlatformBridge.pickSafTree();
+      final messenger = ScaffoldMessenger.of(context);
+      final result = await PlatformBridge.pickSafTree(
+        onFailure: (message) {
+          if (mounted) {
+            messenger.showSnackBar(SnackBar(content: Text(message)));
+          }
+        },
+      );
       if (result != null) {
         final treeUri = result['tree_uri'] as String? ?? '';
         if (treeUri.isNotEmpty) {

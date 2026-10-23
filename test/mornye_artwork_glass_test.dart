@@ -40,8 +40,13 @@ Widget _app({
 );
 
 /// Lets real decoding and rasterizing finish, then pumps.
+///
+/// The budget is real time, not frames: a decoded cover under the parallel load
+/// of the full suite regularly needs more than the 800 ms covered by 40 rounds,
+/// which made these tests fail with "ground never became ready" while passing
+/// alone. Keep the wait generous so the tests assert the material, not timing.
 Future<void> _settle(WidgetTester tester, bool Function() done) async {
-  for (var i = 0; i < 40 && !done(); i++) {
+  for (var i = 0; i < 150 && !done(); i++) {
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 20)),
     );

@@ -717,10 +717,11 @@ void main() {
       final keys = buildPathMatchKeys('EXISTS: /Music/A%20Song.FLAC ');
 
       expect(keys, contains('/Music/A%20Song.FLAC'));
-      expect(keys, contains('/music/a%20song.flac'));
       expect(keys, contains('/Music/A Song.FLAC'));
-      expect(keys, contains('/music/a song.flac'));
       expect(keys, contains('file:///Music/A%2520Song.FLAC'));
+      // POSIX paths are case-sensitive: lowercasing would collide A.flac/a.flac.
+      expect(keys, isNot(contains('/music/a%20song.flac')));
+      expect(keys, isNot(contains('/music/a song.flac')));
       expect(keys, contains('/Music/A%20Song'));
       expect(
         identical(buildPathMatchKeys('/Music/A%20Song.FLAC'), keys),
@@ -736,6 +737,42 @@ void main() {
       expect(keys, contains('C:/Music/Song.mp3'));
       expect(keys, contains('c:/music/song.mp3'));
       expect(keys, contains('C:/Music/Song'));
+    });
+
+    test('only windows drive paths fold case', () {
+      expect(
+        physicalFilePathsMatch(r'C:\Music\A.flac', r'c:\music\a.flac'),
+        isTrue,
+      );
+      expect(physicalFilePathsMatch('/Music/A.flac', '/Music/a.flac'), isFalse);
+      expect(
+        physicalFilePathsMatch(
+          'content://p/tree/T/document/T%2FA.flac',
+          'content://p/tree/T/document/T%2Fa.flac',
+        ),
+        isFalse,
+      );
+    });
+
+    test('virtual SAF CUE tracks keep their #trackNN identity', () {
+      const cue =
+          'content://com.android.externalstorage.documents/'
+          'tree/primary%3AMusic/document/primary%3AMusic%2FAlbum.cue';
+
+      expect(physicalFilePathsMatch('$cue#track1', '$cue#track2'), isFalse);
+      expect(physicalFilePathsMatch('$cue#track1', '$cue#track1'), isTrue);
+      // A fragmented SAF URI is a virtual track, not the backing document.
+      final trackKeys = buildPhysicalPathMatchKeys('$cue#track1');
+      expect(
+        trackKeys.any((key) => key.endsWith('Album.cue#track1')),
+        isTrue,
+      );
+      expect(trackKeys, isNot(contains('/storage/emulated/0/Music/Album.cue')));
+      // The same document without a fragment still maps to its raw path.
+      expect(
+        buildPhysicalPathMatchKeys(cue),
+        contains('/storage/emulated/0/Music/Album.cue'),
+      );
     });
 
     test('matches a primary-storage SAF URI to its raw Android path', () {

@@ -76,7 +76,7 @@ internal fun MainActivity.runNativeDataJobPlatform(arguments: Any?, lease: Reque
                 request.put("backfilled_mod_times", backfilled)
             }
             if (request.optString("operation") == "library_scan_incremental" && !request.has("tree_uri")) {
-                safScanActive = false
+                MainActivity.safScanActive = false
             }
             if (request.optString("operation") == "library_scan_incremental" && request.has("tree_uri")) {
                 checkActive()

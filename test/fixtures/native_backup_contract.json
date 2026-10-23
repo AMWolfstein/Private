@@ -133,12 +133,6 @@
       "content://nas.provider/tree/root/document/Ab%2FC.flac",
       "content://nas.provider/tree/root/document/Ab/C",
       "content://nas.provider/tree/root/document/Ab/C.flac",
-      "content://nas.provider/tree/root/document/ab%252fc",
-      "content://nas.provider/tree/root/document/ab%252fc.flac",
-      "content://nas.provider/tree/root/document/ab%2fc",
-      "content://nas.provider/tree/root/document/ab%2fc.flac",
-      "content://nas.provider/tree/root/document/ab/c",
-      "content://nas.provider/tree/root/document/ab/c.flac",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC.flac"
     ]
@@ -277,12 +271,6 @@
       "content://nas.provider/tree/root/document/Ab%2FC.flac",
       "content://nas.provider/tree/root/document/Ab/C",
       "content://nas.provider/tree/root/document/Ab/C.flac",
-      "content://nas.provider/tree/root/document/ab%252fc",
-      "content://nas.provider/tree/root/document/ab%252fc.flac",
-      "content://nas.provider/tree/root/document/ab%2fc",
-      "content://nas.provider/tree/root/document/ab%2fc.flac",
-      "content://nas.provider/tree/root/document/ab/c",
-      "content://nas.provider/tree/root/document/ab/c.flac",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC.flac"
     ]
@@ -422,12 +410,6 @@
       "content://nas.provider/tree/root/document/Ab%2FC.flac",
       "content://nas.provider/tree/root/document/Ab/C",
       "content://nas.provider/tree/root/document/Ab/C.flac",
-      "content://nas.provider/tree/root/document/ab%252fc",
-      "content://nas.provider/tree/root/document/ab%252fc.flac",
-      "content://nas.provider/tree/root/document/ab%2fc",
-      "content://nas.provider/tree/root/document/ab%2fc.flac",
-      "content://nas.provider/tree/root/document/ab/c",
-      "content://nas.provider/tree/root/document/ab/c.flac",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC.flac"
     ]
@@ -566,12 +548,6 @@
       "content://nas.provider/tree/root/document/Ab%2FC.flac",
       "content://nas.provider/tree/root/document/Ab/C",
       "content://nas.provider/tree/root/document/Ab/C.flac",
-      "content://nas.provider/tree/root/document/ab%252fc",
-      "content://nas.provider/tree/root/document/ab%252fc.flac",
-      "content://nas.provider/tree/root/document/ab%2fc",
-      "content://nas.provider/tree/root/document/ab%2fc.flac",
-      "content://nas.provider/tree/root/document/ab/c",
-      "content://nas.provider/tree/root/document/ab/c.flac",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC.flac"
     ]
@@ -710,12 +686,6 @@
       "content://nas.provider/tree/root/document/Ab%2FC.flac",
       "content://nas.provider/tree/root/document/Ab/C",
       "content://nas.provider/tree/root/document/Ab/C.flac",
-      "content://nas.provider/tree/root/document/ab%252fc",
-      "content://nas.provider/tree/root/document/ab%252fc.flac",
-      "content://nas.provider/tree/root/document/ab%2fc",
-      "content://nas.provider/tree/root/document/ab%2fc.flac",
-      "content://nas.provider/tree/root/document/ab/c",
-      "content://nas.provider/tree/root/document/ab/c.flac",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC.flac"
     ]
@@ -854,12 +824,6 @@
       "content://nas.provider/tree/root/document/Ab%2FC.flac",
       "content://nas.provider/tree/root/document/Ab/C",
       "content://nas.provider/tree/root/document/Ab/C.flac",
-      "content://nas.provider/tree/root/document/ab%252fc",
-      "content://nas.provider/tree/root/document/ab%252fc.flac",
-      "content://nas.provider/tree/root/document/ab%2fc",
-      "content://nas.provider/tree/root/document/ab%2fc.flac",
-      "content://nas.provider/tree/root/document/ab/c",
-      "content://nas.provider/tree/root/document/ab/c.flac",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC",
       "saf-document:bmFzLnByb3ZpZGVy:Ab%2FC.flac"
     ]
@@ -995,12 +959,8 @@
     "path_keys": [
       "/Music/a%zz",
       "/Music/a%zz.flac",
-      "/music/a%zz",
-      "/music/a%zz.flac",
       "file:///Music/a%25zz",
-      "file:///Music/a%25zz.flac",
-      "file:///music/a%25zz",
-      "file:///music/a%25zz.flac"
+      "file:///Music/a%25zz.flac"
     ]
   }
 ]

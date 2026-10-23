@@ -26,19 +26,12 @@ import io.flutter.plugin.common.MethodChannel
 import com.ryanheise.audioservice.AudioServicePlugin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import org.json.JSONObject
-import org.json.JSONTokener
 import java.io.File
-import java.security.MessageDigest
-import java.security.SecureRandom
 import java.util.LinkedHashMap
 import java.util.UUID
 
@@ -65,9 +58,6 @@ class MainActivity: FlutterFragmentActivity() {
 
     private val LIBRARY_SCAN_PROGRESS_STREAM_CHANNEL =
         "com.zarz.spotiflac/library_scan_progress_stream"
-    // A progress bar can't show sub-second granularity; 400ms halves the
-    // disk-read wakeups during a scan vs the previous 200ms.
-    private val LIBRARY_SCAN_PROGRESS_STREAM_POLLING_INTERVAL_MS = 400L
     private val LARGE_JSON_RESULT_FILE_KEY = "__json_file"
     private val LARGE_JSON_RESULT_FILE_THRESHOLD_BYTES = 256 * 1024
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -98,6 +88,7 @@ class MainActivity: FlutterFragmentActivity() {
         "resumeLibraryScan",
         "parseCueSheet",
         "pickSafTree",
+        "safReleaseTree",
 
         "safExists",
         "safExistsBatch",
@@ -128,18 +119,10 @@ class MainActivity: FlutterFragmentActivity() {
     private var libraryStorageReceiver: BroadcastReceiver? = null
 
 
-    internal val safScanLock = Any()
-    internal var safScanProgress = SafScanProgress()
-
-    private var libraryScanProgressStreamJob: Job? = null
-    private var libraryScanProgressEventSink: EventChannel.EventSink? = null
-    private var lastLibraryScanProgressPayload: String? = null
+    private var libraryScanProgressChannel: EventChannel? = null
     private var flutterBackCallback: OnBackPressedCallback? = null
     private val playbackLeaseLock = Any()
     private val playbackLeases = LinkedHashMap<String, ParcelFileDescriptor>()
-    @Volatile internal var safScanCancel = false
-    @Volatile internal var safScanPaused = false
-    @Volatile internal var safScanActive = false
     private val safTreeLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { activityResult ->
@@ -163,10 +146,31 @@ class MainActivity: FlutterFragmentActivity() {
         }
 
         val takeFlags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        try {
-            contentResolver.takePersistableUriPermission(uri, takeFlags)
-        } catch (e: Exception) {
-            android.util.Log.w("SpotiFLAC", "Failed to persist SAF permission: ${e.message}")
+        var persistError: Exception? = null
+        var persisted = false
+        for (flags in safTreePersistFlags(
+            takeFlags,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION,
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+        )) {
+            try {
+                contentResolver.takePersistableUriPermission(uri, flags)
+                persisted = true
+                break
+            } catch (e: Exception) {
+                persistError = e
+            }
+        }
+        if (!persisted) {
+            // A tree whose grant is not persisted loses access after restart;
+            // never hand it to Dart as a usable library source. Log only the
+            // error class: provider messages can embed the user's folder URI.
+            android.util.Log.w(
+                "SpotiFLAC",
+                "Failed to persist SAF permission: ${persistError?.javaClass?.simpleName ?: "no-grant"}",
+            )
+            deliver(errorJson("Could not keep access to the selected folder; pick it again"))
+            return@registerForActivityResult
         }
 
         val payload = JSONObject()
@@ -252,6 +256,15 @@ class MainActivity: FlutterFragmentActivity() {
         // audio_service keeps the engine across Activity recreation. Retain
         // its outstanding picker reply for the same lifetime, not the Activity.
         private var pendingSafTreeResult: MethodChannel.Result? = null
+
+        // The Flutter engine outlives a recreated Activity. SAF scan state and
+        // its progress stream must survive with it, or a recreated Activity
+        // reports an idle backend while the scan is still running.
+        internal val safScanLock = Any()
+        internal var safScanProgress = SafScanProgress()
+        @Volatile internal var safScanCancel = false
+        @Volatile internal var safScanPaused = false
+        @Volatile internal var safScanActive = false
     }
 
     class ImpellerAwareFlutterFragment : FlutterFragment() {
@@ -316,38 +329,6 @@ class MainActivity: FlutterFragmentActivity() {
             .build()
     }
 
-    private fun parseJsonValue(value: Any?): Any? {
-        return when (value) {
-            null, JSONObject.NULL -> null
-            is JSONObject -> {
-                val map = LinkedHashMap<String, Any?>()
-                val keys = value.keys()
-                while (keys.hasNext()) {
-                    val key = keys.next()
-                    map[key] = parseJsonValue(value.opt(key))
-                }
-                map
-            }
-            is JSONArray -> {
-                val list = ArrayList<Any?>()
-                for (i in 0 until value.length()) {
-                    list.add(parseJsonValue(value.opt(i)))
-                }
-                list
-            }
-            is Number, is Boolean, is String -> value
-            else -> value.toString()
-        }
-    }
-
-    internal fun parseJsonPayload(payload: String): Any {
-        return try {
-            parseJsonValue(JSONTokener(payload).nextValue()) ?: payload
-        } catch (_: Exception) {
-            payload
-        }
-    }
-
     internal fun bridgeJsonResult(payload: String): Any {
         // Decide on char count where possible: UTF-8 size is >= length and
         // <= 3*length, so only the ambiguous band needs the full encode —
@@ -403,49 +384,12 @@ class MainActivity: FlutterFragmentActivity() {
     }
 
     private fun startLibraryScanProgressStream(sink: EventChannel.EventSink) {
-        stopLibraryScanProgressStream()
-        libraryScanProgressEventSink = sink
-        lastLibraryScanProgressPayload = null
-        libraryScanProgressStreamJob = scope.launch {
-            try {
-                val initialPayload = withContext(Dispatchers.IO) {
-                    readLibraryScanProgressJsonForStream()
-                }
-                if (!isActive || libraryScanProgressEventSink !== sink) return@launch
-                lastLibraryScanProgressPayload = initialPayload
-                sink.success(parseJsonPayload(initialPayload))
-            } catch (e: Exception) {
-                android.util.Log.w(
-                    "SpotiFLAC",
-                    "Library scan progress initial poll failed: ${e.message}",
-                )
-            }
-            while (isActive && libraryScanProgressEventSink === sink) {
-                try {
-                    val payload = withContext(Dispatchers.IO) {
-                        readLibraryScanProgressJsonForStream()
-                    }
-                    if (!isActive || libraryScanProgressEventSink !== sink) break
-                    if (payload != lastLibraryScanProgressPayload) {
-                        lastLibraryScanProgressPayload = payload
-                        sink.success(parseJsonPayload(payload))
-                    }
-                } catch (e: Exception) {
-                    android.util.Log.w(
-                        "SpotiFLAC",
-                        "Library scan progress stream poll failed: ${e.message}",
-                    )
-                }
-                delay(LIBRARY_SCAN_PROGRESS_STREAM_POLLING_INTERVAL_MS)
-            }
-        }
+        val backend = coreBackend
+        SafScanProgressStream.start(sink) { readLibraryScanProgressJson(backend) }
     }
 
     private fun stopLibraryScanProgressStream() {
-        libraryScanProgressStreamJob?.cancel()
-        libraryScanProgressStreamJob = null
-        libraryScanProgressEventSink = null
-        lastLibraryScanProgressPayload = null
+        SafScanProgressStream.stop()
     }
 
     // Disable Flutter's built-in deep linking so that incoming ACTION_VIEW URLs
@@ -621,6 +565,13 @@ class MainActivity: FlutterFragmentActivity() {
         concertCalendarChannel = null
         audioOutputChannel?.setMethodCallHandler(null)
         audioOutputChannel = null
+        // The engine outlives this Activity. Clear its handlers so it does not
+        // keep the destroyed Activity reachable; the next Activity installs
+        // fresh ones in configureFlutterEngine.
+        backendChannel?.setMethodCallHandler(null)
+        backendChannel = null
+        libraryScanProgressChannel?.setStreamHandler(null)
+        libraryScanProgressChannel = null
         libraryStorageReceiver?.let {
             try {
                 unregisterReceiver(it)
@@ -629,8 +580,10 @@ class MainActivity: FlutterFragmentActivity() {
         libraryStorageReceiver = null
         // The backend belongs to the process/shared Flutter engine. Activity
         // recreation must not shut it down or wait for active scans on the UI thread.
-
-        stopLibraryScanProgressStream()
+        if (isFinishing) {
+            stopLibraryScanProgressStream()
+            scope.cancel()
+        }
         closeAllSafPlaybackLeases()
         super.onDestroy()
     }
@@ -710,22 +663,24 @@ class MainActivity: FlutterFragmentActivity() {
             }
         }
 
-        EventChannel(
+        libraryScanProgressChannel = EventChannel(
             messenger,
             LIBRARY_SCAN_PROGRESS_STREAM_CHANNEL,
-        ).setStreamHandler(
-            object : EventChannel.StreamHandler {
-                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                    if (events != null) {
-                        startLibraryScanProgressStream(events)
+        ).also { channel ->
+            channel.setStreamHandler(
+                object : EventChannel.StreamHandler {
+                    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                        if (events != null) {
+                            startLibraryScanProgressStream(events)
+                        }
                     }
-                }
 
-                override fun onCancel(arguments: Any?) {
-                    stopLibraryScanProgressStream()
-                }
-            },
-        )
+                    override fun onCancel(arguments: Any?) {
+                        stopLibraryScanProgressStream()
+                    }
+                },
+            )
+        }
 
         val channel = MethodChannel(messenger, CHANNEL)
         backendChannel = channel
@@ -817,6 +772,13 @@ class MainActivity: FlutterFragmentActivity() {
                                 DocumentFile.fromSingleUri(this@MainActivity, uri)?.exists() == true
                             }
                             result.success(exists)
+                        }
+                        "safReleaseTree" -> {
+                            val uriStr = call.argument<String>("tree_uri") ?: ""
+                            withContext(Dispatchers.IO) {
+                                releaseSafTreeGrant(uriStr)
+                            }
+                            result.success(null)
                         }
                         "safExistsBatch" -> {
                             val urisJson = call.argument<String>("uris_json") ?: "[]"
@@ -1106,7 +1068,7 @@ class MainActivity: FlutterFragmentActivity() {
                                         """{"success":true}"""
                                     }
                                 } catch (e: Exception) {
-                                    """{"success":false,"error":"${e.message?.replace("\"", "'")}"}"""
+                                    errorJson(e.message ?: "Failed to extract cover")
                                 }
                             }
                             result.success(response)
@@ -1203,8 +1165,9 @@ class MainActivity: FlutterFragmentActivity() {
                         "scanSafTreeToNDJSONFile" -> {
                             val treeUri = call.argument<String>("tree_uri") ?: ""
                             val outputPath = call.argument<String>("output_path") ?: ""
+                            val sourceHasRows = call.argument<Boolean>("has_indexed_rows") ?: false
                             val response = withContext(Dispatchers.IO) {
-                                scanSafTree(treeUri, outputPath)
+                                scanSafTree(treeUri, outputPath, sourceHasRows)
                             }
                             result.success(response)
                         }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,15 +11,20 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 
 class _Settings extends SettingsNotifier {
-  _Settings({Future<void>? ready, String path = ''})
-    : _ready = ready,
-      _path = path;
+  _Settings({
+    Future<void>? ready,
+    String path = '',
+    String downloadTreeUri = '',
+  }) : _ready = ready,
+       _path = path,
+       _downloadTreeUri = downloadTreeUri;
 
   final Future<void>? _ready;
   final String _path;
+  final String _downloadTreeUri;
 
   @override
-  AppSettings build() => const AppSettings();
+  AppSettings build() => AppSettings(downloadTreeUri: _downloadTreeUri);
 
   @override
   Future<void> ensureLoaded() async {
@@ -275,6 +281,116 @@ void main() {
       }
     });
   }
+
+  const backendChannel = MethodChannel('com.zarz.spotiflac/backend');
+
+  /// Records native calls made while [body] runs; other channel traffic is
+  /// irrelevant here and answered with null.
+  Future<List<MethodCall>> recordBackendCalls(
+    Future<void> Function() body,
+  ) async {
+    final calls = <MethodCall>[];
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(backendChannel, (call) async {
+      calls.add(call);
+      return null;
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(backendChannel, null));
+    await body();
+    return calls;
+  }
+
+  test('removing the last source on a tree releases its grant', () async {
+    const tree =
+        'content://com.android.externalstorage.documents/tree/primary%3AMusic';
+    database.sources = [
+      LocalLibrarySource(
+        id: 'saf',
+        path: tree,
+        displayName: 'Music',
+        trackCount: 2,
+      ),
+    ];
+    container.read(localLibraryProvider);
+    await _waitFor(() => !container.read(localLibraryProvider).isLoading);
+    final calls = await recordBackendCalls(
+      () => library.removeSource('saf'),
+    );
+    final releases = calls.where((call) => call.method == 'safReleaseTree');
+    expect(releases.map((call) => call.arguments), [
+      {'tree_uri': tree},
+    ]);
+    expect(container.read(localLibraryProvider).sources, isEmpty);
+  });
+
+  test('a shared tree keeps its grant until its last source is gone', () async {
+    const tree =
+        'content://com.android.externalstorage.documents/tree/primary%3AMusic';
+    database.sources = [
+      LocalLibrarySource(
+        id: 'saf-a',
+        path: tree,
+        displayName: 'Music',
+        trackCount: 1,
+      ),
+      LocalLibrarySource(
+        id: 'saf-b',
+        path: tree,
+        displayName: 'Music',
+        trackCount: 1,
+      ),
+    ];
+    container.read(localLibraryProvider);
+    await _waitFor(() => !container.read(localLibraryProvider).isLoading);
+    final first = await recordBackendCalls(
+      () => library.removeSource('saf-a'),
+    );
+    expect(first.where((call) => call.method == 'safReleaseTree'), isEmpty);
+    final second = await recordBackendCalls(
+      () => library.removeSource('saf-b'),
+    );
+    expect(
+      second
+          .where((call) => call.method == 'safReleaseTree')
+          .map((call) => call.arguments),
+      [
+        {'tree_uri': tree},
+      ],
+    );
+  });
+
+  test('the legacy download tree keeps its grant when its source goes', () async {
+    const tree =
+        'content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSpotiFLAC';
+    database.sources = [
+      LocalLibrarySource(
+        id: 'legacy-download',
+        path: tree,
+        displayName: 'Download',
+        trackCount: 1,
+      ),
+    ];
+    container.dispose();
+    container = ProviderContainer(
+      overrides: [
+        settingsProvider.overrideWith(() => _Settings(downloadTreeUri: tree)),
+        localLibraryProvider.overrideWith(
+          () => library = _Library(
+            database,
+            (path, {bookmark}) => probe(path, bookmark: bookmark),
+          ),
+        ),
+      ],
+    );
+    container.read(localLibraryProvider);
+    await _waitFor(() => !container.read(localLibraryProvider).isLoading);
+    final calls = await recordBackendCalls(
+      () => library.removeSource('legacy-download'),
+    );
+    expect(calls.where((call) => call.method == 'safReleaseTree'), isEmpty);
+    expect(container.read(localLibraryProvider).sources, isEmpty);
+  });
 
   test(
     'failed reload keeps the previously loaded folders and song count',

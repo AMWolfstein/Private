@@ -32,37 +32,39 @@ internal fun MainActivity.buildStableLibraryId(filePath: String): String {
         return "lib_$hex"
     }
 
-internal fun MainActivity.resetSafScanProgress() {
-        synchronized(safScanLock) {
-            safScanProgress = MainActivity.SafScanProgress()
-        }
+internal fun resetSafScanProgress() {
+    synchronized(MainActivity.safScanLock) {
+        MainActivity.safScanProgress = MainActivity.SafScanProgress()
     }
+}
 
-internal fun MainActivity.updateSafScanProgress(block: (MainActivity.SafScanProgress) -> Unit) {
-        synchronized(safScanLock) {
-            block(safScanProgress)
-        }
+internal fun updateSafScanProgress(block: (MainActivity.SafScanProgress) -> Unit) {
+    synchronized(MainActivity.safScanLock) {
+        block(MainActivity.safScanProgress)
     }
+}
 
-internal fun MainActivity.safProgressToJson(): String {
-        val snapshot = synchronized(safScanLock) { safScanProgress.copy() }
-        val obj = JSONObject()
-        obj.put("total_files", snapshot.totalFiles)
-        obj.put("scanned_files", snapshot.scannedFiles)
-        obj.put("current_file", snapshot.currentFile)
-        obj.put("error_count", snapshot.errorCount)
-        obj.put("progress_pct", snapshot.progressPct)
-        obj.put("is_complete", snapshot.isComplete)
-        return obj.toString()
+internal fun safProgressToJson(): String {
+    val snapshot = synchronized(MainActivity.safScanLock) {
+        MainActivity.safScanProgress.copy()
     }
+    val obj = JSONObject()
+    obj.put("total_files", snapshot.totalFiles)
+    obj.put("scanned_files", snapshot.scannedFiles)
+    obj.put("current_file", snapshot.currentFile)
+    obj.put("error_count", snapshot.errorCount)
+    obj.put("progress_pct", snapshot.progressPct)
+    obj.put("is_complete", snapshot.isComplete)
+    return obj.toString()
+}
 
-internal fun MainActivity.readLibraryScanProgressJsonForStream(): String {
-        return if (safScanActive) {
-            safProgressToJson()
-        } else {
-            coreBackend.getLibraryScanProgress()
-        }
+internal fun readLibraryScanProgressJson(coreBackend: CoreBackend): String {
+    return if (MainActivity.safScanActive) {
+        safProgressToJson()
+    } else {
+        coreBackend.getLibraryScanProgress()
     }
+}
 
 
 internal fun MainActivity.loadExistingFilesFromSnapshot(snapshotPath: String): MutableMap<String, Long> {
@@ -144,8 +146,7 @@ private fun reconcileSafScanCheckpoint(
                 val filePath = obj.optString("filePath", "").trim()
                 if (filePath.isNotBlank()) {
                     val modified = obj.optLong("fileModTime", 0L)
-                    val cueMarker = filePath.indexOf("#track")
-                    val key = if (cueMarker > 0) filePath.substring(0, cueMarker) else filePath
+                    val key = safCueBasePath(filePath) ?: filePath
                     outputEntries[key] = modified
                 }
             } catch (_: Exception) {}
@@ -190,6 +191,70 @@ private fun repairSafScanOutput(path: String) {
         }
     } catch (e: Exception) {
         android.util.Log.w("SpotiFLAC", "SAF scan: failed repairing output: ${e.message}")
+    }
+}
+
+/**
+ * Drops resumed rows whose file (or backing CUE document) is no longer in the
+ * current traversal. Without this, a scan interrupted before a deletion is
+ * resumed would import the deleted file's row from the surviving NDJSON output.
+ */
+private fun pruneSafScanResume(outputPath: String, currentUris: Set<String>) {
+    val output = File(outputPath)
+    if (!output.exists()) return
+    try {
+        val survivors = mutableListOf<String>()
+        var droppedOutput = false
+        output.forEachLine(Charsets.UTF_8) { line ->
+            if (line.isBlank()) return@forEachLine
+            val filePath = try {
+                JSONObject(line).optString("filePath", "")
+            } catch (_: Exception) {
+                droppedOutput = true
+                return@forEachLine
+            }
+            if (safScanRowIsStale(filePath, currentUris)) {
+                droppedOutput = true
+            } else {
+                survivors.add(line)
+            }
+        }
+        if (droppedOutput) {
+            output.bufferedWriter(Charsets.UTF_8).use { writer ->
+                for (line in survivors) {
+                    writer.write(line)
+                    writer.newLine()
+                }
+            }
+        }
+
+        val checkpoint = File(safScanCheckpointPath(outputPath))
+        if (!checkpoint.exists()) return
+        val kept = mutableListOf<String>()
+        var droppedCheckpoint = false
+        checkpoint.forEachLine(Charsets.UTF_8) { line ->
+            val separator = line.indexOf('\t')
+            if (separator <= 0) {
+                droppedCheckpoint = true
+                return@forEachLine
+            }
+            val uri = line.substring(0, separator)
+            if (safScanRowIsStale(uri, currentUris)) {
+                droppedCheckpoint = true
+            } else {
+                kept.add(line)
+            }
+        }
+        if (droppedCheckpoint) {
+            checkpoint.bufferedWriter(Charsets.UTF_8).use { writer ->
+                for (line in kept) {
+                    writer.write(line)
+                    writer.newLine()
+                }
+            }
+        }
+    } catch (e: Exception) {
+        android.util.Log.w("SpotiFLAC", "SAF scan: failed pruning resumed output: ${e.message}")
     }
 }
 
@@ -274,11 +339,11 @@ private const val SAF_SCAN_PAUSE_POLL_MS = 100L
  * Holds a SAF scan at its checkpoint while paused, keeping its position in
  * memory. Returns true when the scan should stop because it was cancelled.
  */
-internal fun MainActivity.safScanStopRequested(cancelled: () -> Boolean = { false }): Boolean {
-    while (safScanPaused && !safScanCancel && !cancelled()) {
+internal fun safScanStopRequested(cancelled: () -> Boolean = { false }): Boolean {
+    while (MainActivity.safScanPaused && !MainActivity.safScanCancel && !cancelled()) {
         Thread.sleep(SAF_SCAN_PAUSE_POLL_MS)
     }
-    return safScanCancel || cancelled()
+    return MainActivity.safScanCancel || cancelled()
 }
 
 /**
@@ -454,10 +519,17 @@ private fun Context.querySafChildrenOrThrow(
             )
         } ?: throw IOException("SAF provider returned no cursor for ${dir.uri}")
         return cursor.use {
-            // Network DocumentsProviders may return cached/partial rows while
-            // fetching a directory. Never commit that as an empty/full scan.
-            if (it.extras.getBoolean(DocumentsContract.EXTRA_LOADING, false)) {
-                throw SafProviderLoadingException(dir.uri)
+            // Network DocumentsProviders may return cached/partial rows, or an
+            // empty cursor with EXTRA_ERROR, while fetching a directory. Never
+            // commit either as an empty/full scan.
+            val loading = it.extras.getBoolean(DocumentsContract.EXTRA_LOADING, false)
+            val providerError = it.extras.getString(DocumentsContract.EXTRA_ERROR)
+            when (safListingFailureReason(loading, providerError)) {
+                null -> Unit
+                "provider-loading" -> throw SafProviderLoadingException(dir.uri)
+                else -> throw IOException(
+                    "SAF provider error for ${dir.uri}: $providerError",
+                )
             }
             val documentIdIndex = it.getColumnIndexOrThrow(
                 DocumentsContract.Document.COLUMN_DOCUMENT_ID,
@@ -553,24 +625,8 @@ internal fun Context.resolveReadableSafTreeOrThrow(
 internal fun MainActivity.scanSafTree(
         treeUriStr: String,
         ndjsonOutputPath: String? = null,
+        sourceHasRows: Boolean = false,
     ): Any {
-        val earlyCheckpoint = ndjsonOutputPath
-            ?.takeIf {
-                File(it).exists() && File(safScanCheckpointPath(it)).exists()
-            }
-            ?.let { loadSafScanCheckpoint(safScanCheckpointPath(it)) }
-            ?: mutableMapOf()
-
-        fun emptyResult(): Any {
-            if (ndjsonOutputPath == null) return "[]"
-            if (earlyCheckpoint.isNotEmpty() && File(ndjsonOutputPath).exists()) {
-                throw IOException("SAF scan returned no files while a resumable scan exists")
-            }
-            File(ndjsonOutputPath).writeText("", Charsets.UTF_8)
-            try { File(safScanCheckpointPath(ndjsonOutputPath)).delete() } catch (_: Exception) {}
-            return mapOf("path" to ndjsonOutputPath, "count" to 0, "error_count" to 0)
-        }
-
         fun cancelledResult(): Any {
             updateSafScanProgress { it.isComplete = true }
             if (ndjsonOutputPath == null) return "[]"
@@ -581,15 +637,10 @@ internal fun MainActivity.scanSafTree(
         val (_, root, rootChildren) = resolveReadableSafTreeOrThrow(treeUriStr)
 
         resetSafScanProgress()
-        safScanCancel = false
-        safScanActive = true
+        MainActivity.safScanCancel = false
+        MainActivity.safScanActive = true
         updateSafScanProgress {
-            it.scannedFiles = earlyCheckpoint.size
-            it.currentFile = if (earlyCheckpoint.isEmpty()) {
-                "Scanning folders..."
-            } else {
-                "Resuming scan..."
-            }
+            it.currentFile = "Scanning folders..."
         }
 
         val supportedAudioExt = libraryScanAudioExtensions
@@ -606,6 +657,8 @@ internal fun MainActivity.scanSafTree(
         )
         val audioFiles = mutableListOf<SafAudioEntry>()
         val cueFiles = mutableListOf<SafCueEntry>()
+        // Every file seen by this traversal; used to prune a resumed output.
+        val listedUris = mutableSetOf<String>()
         val visitedDirUris = mutableSetOf<String>()
         val safChildLookupCache = mutableMapOf<String, Map<String, DocumentFile>>()
         var traversalErrors = 0
@@ -654,6 +707,10 @@ internal fun MainActivity.scanSafTree(
                         }
                         queue.add(child.doc to childPath)
                     } else {
+                        // Keep the row even when the name is unavailable: a
+                        // resumed scan must not treat incomplete metadata as
+                        // deletion.
+                        listedUris.add(child.doc.uri.toString())
                         val name = child.name ?: continue
                         val lastModified = child.lastModified
                         val ext = name.substringAfterLast('.', "").lowercase(Locale.ROOT)
@@ -675,12 +732,56 @@ internal fun MainActivity.scanSafTree(
             throw IOException("SAF traversal failed for $traversalErrors entries")
         }
 
+        // Resume state survives an interrupted scan, but a completed or forced
+        // scan deletes it, so the caller also reports whether the source holds
+        // rows. Either one makes an empty listing untrustworthy.
+        val hadIndexedRows = ndjsonOutputPath?.let {
+            val output = File(it)
+            val checkpoint = File(safScanCheckpointPath(it))
+            (output.exists() && output.length() > 0L) ||
+                (checkpoint.exists() && checkpoint.length() > 0L)
+        } == true
+
+        // A resumed output may still hold rows for files deleted or renamed
+        // since the checkpoint was written. The listing just completed is
+        // authoritative, so drop those rows before importing them again. An
+        // empty listing is not authoritative, so it must not prune the state
+        // that resume depends on.
+        if (ndjsonOutputPath != null && listedUris.isNotEmpty()) {
+            pruneSafScanResume(ndjsonOutputPath, listedUris)
+        }
+        val earlyCheckpoint = ndjsonOutputPath
+            ?.takeIf {
+                File(it).exists() && File(safScanCheckpointPath(it)).exists()
+            }
+            ?.let { loadSafScanCheckpoint(safScanCheckpointPath(it)) }
+            ?: mutableMapOf()
+
+        fun emptyResult(): Any {
+            if (ndjsonOutputPath == null) return "[]"
+            // A listing with no files at all is never evidence that every
+            // indexed file was deleted: a provider can fail silently and still
+            // answer the root probe. Rows are cleared by the explicit
+            // missing-file cleanup instead.
+            if (safEmptyListingIsUntrusted(listedUris.size, hadIndexedRows, sourceHasRows)) {
+                throw IOException("SAF scan listed no files; reconnect the folder and retry")
+            }
+            File(ndjsonOutputPath).writeText("", Charsets.UTF_8)
+            try { File(safScanCheckpointPath(ndjsonOutputPath)).delete() } catch (_: Exception) {}
+            return mapOf("path" to ndjsonOutputPath, "count" to 0, "error_count" to 0)
+        }
+
         val totalItems = audioFiles.size + cueFiles.size
         updateSafScanProgress {
             it.totalFiles = totalItems
-            if (totalItems > 0 && earlyCheckpoint.isNotEmpty()) {
-                it.scannedFiles = earlyCheckpoint.size.coerceAtMost(totalItems)
-                it.progressPct = it.scannedFiles.toDouble() / totalItems.toDouble() * 100.0
+            if (earlyCheckpoint.isEmpty()) {
+                it.currentFile = "Scanning folders..."
+            } else {
+                it.currentFile = "Resuming scan..."
+                if (totalItems > 0) {
+                    it.scannedFiles = earlyCheckpoint.size.coerceAtMost(totalItems)
+                    it.progressPct = it.scannedFiles.toDouble() / totalItems.toDouble() * 100.0
+                }
             }
         }
 
@@ -723,8 +824,11 @@ internal fun MainActivity.scanSafTree(
             FileOutputStream(File(it), true).bufferedWriter(Charsets.UTF_8)
         }
         var resultCount = outputPath?.let(::countSafScanRows) ?: 0
-        fun checkpointed(uri: String, lastModified: Long): Boolean =
-            checkpoint[uri] == lastModified
+        // A checkpoint entry means the row was already appended. Comparing
+        // timestamps here would rescan everything on providers that report 0
+        // and append a duplicate row for each file, so presence is the resume
+        // contract; the next incremental scan still picks up real changes.
+        fun checkpointed(uri: String): Boolean = checkpoint.containsKey(uri)
 
         fun recordCheckpoint(uri: String, lastModified: Long) {
             if (checkpointWriter == null || uri.isBlank()) return
@@ -750,13 +854,26 @@ internal fun MainActivity.scanSafTree(
         var scanned = checkpoint.size.coerceAtMost(totalItems)
         var errors = traversalErrors
 
+        fun reportProgress() {
+            val pct = if (totalItems > 0) {
+                scanned.toDouble() / totalItems.toDouble() * 100.0
+            } else {
+                100.0
+            }
+            updateSafScanProgress {
+                it.scannedFiles = scanned
+                it.errorCount = errors
+                it.progressPct = pct
+            }
+        }
+
         val cueReferencedAudioUris = mutableSetOf<String>()
 
         for (cue in cueFiles) {
             val cueDoc = cue.doc
             val parentDir = cue.parentDir
             val cueUri = cueDoc.uri.toString()
-            val cueAlreadyIndexed = checkpointed(cueUri, cue.lastModified)
+            val cueAlreadyIndexed = checkpointed(cueUri)
             if (safScanStopRequested()) {
                 ndjsonWriter?.close()
                 spill?.abandon()
@@ -772,7 +889,10 @@ internal fun MainActivity.scanSafTree(
                 if (tempCuePath == null) {
                     errors++
                     reportLibraryScanError(cueUri, "Read CUE", "Failed to copy CUE file")
-                    scanned++
+                    if (!cueAlreadyIndexed) {
+                        scanned++
+                        reportProgress()
+                    }
                     continue
                 }
 
@@ -788,13 +908,18 @@ internal fun MainActivity.scanSafTree(
                 if (audioDoc == null) {
                     reportLibraryScanError(cueUri, "Resolve CUE audio", "No audio file found for $cueName")
                     errors++
-                    scanned++
+                    if (!cueAlreadyIndexed) {
+                        scanned++
+                        reportProgress()
+                    }
                     continue
                 }
 
                 cueReferencedAudioUris.add(audioDoc.uri.toString())
 
                 if (cueAlreadyIndexed) {
+                    // This entry is already part of `scanned` (checkpoint size);
+                    // counting it again would double the percentage.
                     continue
                 }
 
@@ -830,12 +955,9 @@ internal fun MainActivity.scanSafTree(
                 try { tempCuePath?.let { File(it).delete() } } catch (_: Exception) {}
             }
 
-            scanned++
-            val pct = scanned.toDouble() / totalItems.toDouble() * 100.0
-            updateSafScanProgress {
-                it.scannedFiles = scanned
-                it.errorCount = errors
-                it.progressPct = pct
+            if (!cueAlreadyIndexed) {
+                scanned++
+                reportProgress()
             }
         }
 
@@ -859,17 +981,13 @@ internal fun MainActivity.scanSafTree(
 
             val stableUri = doc.uri.toString()
             val lastModified = audio.lastModified
-            if (checkpointed(stableUri, lastModified)) {
+            if (checkpointed(stableUri)) {
                 continue
             }
             if (cueReferencedAudioUris.contains(stableUri)) {
                 recordCheckpoint(stableUri, lastModified)
                 scanned++
-                val pct = scanned.toDouble() / totalItems.toDouble() * 100.0
-                updateSafScanProgress {
-                    it.scannedFiles = scanned
-                    it.progressPct = pct
-                }
+                reportProgress()
                 continue
             }
             pendingAudio.add(audio)
@@ -932,12 +1050,7 @@ internal fun MainActivity.scanSafTree(
             }
 
             scanned++
-            val pct = scanned.toDouble() / totalItems.toDouble() * 100.0
-            updateSafScanProgress {
-                it.scannedFiles = scanned
-                it.errorCount = errors
-                it.progressPct = pct
-            }
+            reportProgress()
         }
         if (!completed) {
             ndjsonWriter?.close()
@@ -995,8 +1108,8 @@ internal fun MainActivity.scanSafTreeIncremental(
         val (_, root, rootChildren) = resolveReadableSafTreeOrThrow(treeUriStr)
 
         resetSafScanProgress()
-        safScanCancel = false
-        safScanActive = true
+        MainActivity.safScanCancel = false
+        MainActivity.safScanActive = true
         updateSafScanProgress {
             it.currentFile = "Scanning folders..."
         }
@@ -1004,7 +1117,12 @@ internal fun MainActivity.scanSafTreeIncremental(
         val supportedAudioExt = libraryScanAudioExtensions
         // Names and timestamps come from the directory listing; querying each
         // document again costs a provider round trip per changed file.
-        data class ChangedAudio(val doc: DocumentFile, val name: String, val lastModified: Long)
+        data class ChangedAudio(
+            val doc: DocumentFile,
+            val name: String,
+            val lastModified: Long,
+            val parentDir: DocumentFile,
+        )
         data class CueEntry(
             val doc: DocumentFile,
             val parentDir: DocumentFile,
@@ -1019,14 +1137,7 @@ internal fun MainActivity.scanSafTreeIncremental(
         val safChildLookupCache = mutableMapOf<String, Map<String, DocumentFile>>()
         var traversalErrors = 0
 
-        val existingCueVirtualPaths = mutableMapOf<String, MutableList<String>>()
-        for (key in existingFiles.keys) {
-            val hashIdx = key.indexOf("#track")
-            if (hashIdx > 0) {
-                val baseCueUri = key.substring(0, hashIdx)
-                existingCueVirtualPaths.getOrPut(baseCueUri) { mutableListOf() }.add(key)
-            }
-        }
+        val existingCueVirtualPaths = cueVirtualPathsByCue(existingFiles.keys)
 
         val queue: ArrayDeque<Pair<DocumentFile, String>> = ArrayDeque()
         queue.add(root to "")
@@ -1040,6 +1151,7 @@ internal fun MainActivity.scanSafTreeIncremental(
                 result.put("removedUris", JSONArray())
                 result.put("skippedCount", 0)
                 result.put("totalFiles", 0)
+                result.put("error_count", traversalErrors)
                 result.put("cancelled", true)
                 return result.toString()
             }
@@ -1072,6 +1184,7 @@ internal fun MainActivity.scanSafTreeIncremental(
                     result.put("removedUris", JSONArray())
                     result.put("skippedCount", 0)
                     result.put("totalFiles", 0)
+                    result.put("error_count", traversalErrors)
                     result.put("cancelled", true)
                     return result.toString()
                 }
@@ -1095,14 +1208,13 @@ internal fun MainActivity.scanSafTreeIncremental(
                         if (ext == "cue") {
                             val lastModified = child.lastModified
 
-                            val virtualPaths = existingCueVirtualPaths[uriStr]
-                            val existingModified = virtualPaths?.firstOrNull()?.let { existingFiles[it] }
+                            val virtualPaths =
+                                existingCueVirtualPaths[uriStr].orEmpty()
+                            val existingModified = virtualPaths.firstOrNull()?.let { existingFiles[it] }
 
-                            if (existingModified != null && existingModified == lastModified) {
+                            if (!safFileChanged(existingModified, lastModified)) {
                                 unchangedCueFiles.add(CueEntry(child.doc, dir, name, lastModified))
-                                for (vp in virtualPaths) {
-                                    currentUris.add(vp)
-                                }
+                                currentUris.addAll(virtualPaths)
                             } else {
                                 cueFilesToScan.add(CueEntry(child.doc, dir, name, lastModified))
                             }
@@ -1110,8 +1222,8 @@ internal fun MainActivity.scanSafTreeIncremental(
                             val existingModified = existingFiles[uriStr]
                             val lastModified = child.lastModified
 
-                            if (existingModified == null || existingModified != lastModified) {
-                                audioFiles.add(ChangedAudio(child.doc, name, lastModified))
+                            if (safFileChanged(existingModified, lastModified)) {
+                                audioFiles.add(ChangedAudio(child.doc, name, lastModified, dir))
                             }
                         }
                     }
@@ -1127,26 +1239,116 @@ internal fun MainActivity.scanSafTreeIncremental(
             throw IOException("SAF traversal failed for $traversalErrors entries")
         }
 
-        val removedUris = existingFiles.keys.filter { !currentUris.contains(it) }
+        // A provider that answers the root probe but lists no files must not be
+        // read as "every file was deleted": that would wipe the source's rows.
+        if (currentUris.isEmpty() && existingFiles.isNotEmpty()) {
+            throw IOException("SAF scan found no files while the library index is not empty")
+        }
+
+        var errors = traversalErrors
+        val cueReferencedAudioUris = mutableSetOf<String>()
+        // CUE sheets whose backing audio could not be resolved. Only the named
+        // audio of a sheet with retained rows is skipped; unrelated songs in
+        // the same folder must still be indexed.
+        val unresolvedCueAudioKeys = mutableSetOf<String>()
+        val cuesToRescan = mutableListOf<CueEntry>()
+
+        fun unresolvedCueAudioKey(dir: DocumentFile, name: String): String =
+            dir.uri.toString() + "\u0000" + name.lowercase(Locale.ROOT)
+
+        // Unchanged CUEs are not re-parsed, but their audio still has to be
+        // claimed so the standalone audio row is not indexed twice. A changed
+        // audio file also invalidates the CUE's cached timestamps.
+        for (cue in unchangedCueFiles) {
+            if (safScanStopRequested(cancelled)) {
+                updateSafScanProgress { it.isComplete = true }
+                val result = JSONObject()
+                result.put("files", JSONArray())
+                result.put("removedUris", JSONArray())
+                result.put("skippedCount", 0)
+                result.put("totalFiles", 0)
+                result.put("error_count", errors)
+                result.put("cancelled", true)
+                return result.toString()
+            }
+            var tempCue: String? = null
+            var audioFileName: String? = null
+            try {
+                tempCue = copyUriToTemp(cue.doc.uri, ".cue", cue.name)
+                audioFileName = tempCue?.let { extractCueAudioFileName(it) }
+                // The CUE/audio basename fallback works without a temp copy, so
+                // a read failure does not orphan the backing audio.
+                val audioDoc = resolveCueAudioSibling(
+                    parentDir = cue.parentDir,
+                    cueName = cue.name,
+                    audioFileName = audioFileName,
+                    childLookupCache = safChildLookupCache,
+                )
+                if (audioDoc == null) {
+                    errors++
+                    // Report the display name: the Logs screen can export paths.
+                    reportLibraryScanError(cue.name, "Resolve CUE audio", "No audio file found for ${cue.name}")
+                    // This sheet's rows are still indexed; keep its named audio
+                    // from being added as a duplicate standalone row.
+                    audioFileName?.let {
+                        unresolvedCueAudioKeys.add(unresolvedCueAudioKey(cue.parentDir, it))
+                    }
+                    continue
+                }
+                val audioUri = audioDoc.uri.toString()
+                cueReferencedAudioUris.add(audioUri)
+                val audioLastModified = try {
+                    audioDoc.lastModified()
+                } catch (_: Exception) {
+                    0L
+                }
+                if (safFileChanged(existingFiles[audioUri], audioLastModified)) {
+                    cuesToRescan.add(cue)
+                }
+            } catch (e: Exception) {
+                errors++
+                // Keep provider text (which can embed the folder URI) out of the
+                // shareable log; CONC-104 tracks the remaining call sites.
+                reportLibraryScanError(cue.name, "Resolve CUE audio", e.javaClass.simpleName)
+                audioFileName?.let {
+                    unresolvedCueAudioKeys.add(unresolvedCueAudioKey(cue.parentDir, it))
+                }
+            } finally {
+                try { tempCue?.let { File(it).delete() } } catch (_: Exception) {}
+            }
+        }
+        cueFilesToScan.addAll(cuesToRescan)
+
+        fun removalUris(): List<String> = (
+            existingFiles.keys.filter { it !in currentUris } +
+                safReferencedStandaloneUris(existingFiles.keys, cueReferencedAudioUris)
+            ).distinct()
+
         val totalFiles = currentUris.size
         val filesToProcess = audioFiles.size + cueFilesToScan.size
         val skippedCount = (totalFiles - filesToProcess).coerceAtLeast(0)
+        val hasPendingAudio = audioFiles.any { audio ->
+            audio.doc.uri.toString() !in cueReferencedAudioUris &&
+                unresolvedCueAudioKey(audio.parentDir, audio.name) !in unresolvedCueAudioKeys
+        }
 
         updateSafScanProgress {
             it.totalFiles = totalFiles
         }
 
-        if (audioFiles.isEmpty() && cueFilesToScan.isEmpty()) {
+        if (!hasPendingAudio && cueFilesToScan.isEmpty()) {
             updateSafScanProgress {
                 it.isComplete = true
                 it.scannedFiles = totalFiles
+                it.errorCount = errors
                 it.progressPct = 100.0
             }
             val result = JSONObject()
             result.put("files", JSONArray())
-            result.put("removedUris", JSONArray(removedUris))
+            result.put("removedUris", JSONArray(removalUris()))
             result.put("skippedCount", skippedCount)
             result.put("totalFiles", totalFiles)
+            result.put("error_count", errors)
             return result.toString()
         }
 
@@ -1161,36 +1363,68 @@ internal fun MainActivity.scanSafTreeIncremental(
             fileCount++
         }
         var scanned = 0
-        var errors = traversalErrors
 
-        val cueReferencedAudioUris = mutableSetOf<String>()
-
-        for ((cueDoc, parentDir, cueName, cueLastModified) in cueFilesToScan) {
-            if (safScanStopRequested(cancelled)) {
-                updateSafScanProgress { it.isComplete = true }
-                spill.abandon()
-                val result = JSONObject()
-                result.put("files", JSONArray())
-                result.put("removedUris", JSONArray())
-                result.put("skippedCount", skippedCount)
-                result.put("totalFiles", totalFiles)
-                result.put("cancelled", true)
-                return result.toString()
+        fun reportProcessed() {
+            val processed = skippedCount + scanned
+            val pct = if (totalFiles > 0) {
+                processed.toDouble() / totalFiles.toDouble() * 100.0
+            } else {
+                100.0
             }
+            updateSafScanProgress {
+                it.scannedFiles = processed
+                it.errorCount = errors
+                it.progressPct = pct
+            }
+        }
 
+        fun cancelledIncrementalResult(): String {
+            updateSafScanProgress { it.isComplete = true }
+            spill.abandon()
+            val result = JSONObject()
+            result.put("files", JSONArray())
+            result.put("removedUris", JSONArray())
+            result.put("skippedCount", skippedCount)
+            result.put("totalFiles", totalFiles)
+            result.put("error_count", errors)
+            result.put("cancelled", true)
+            return result.toString()
+        }
+
+        for (cue in cueFilesToScan) {
+            if (safScanStopRequested(cancelled)) return cancelledIncrementalResult()
+
+            val cueDoc = cue.doc
+            val parentDir = cue.parentDir
+            val cueName = cue.name
+            val cueLastModified = cue.lastModified
+            val cueUri = cueDoc.uri.toString()
             updateSafScanProgress { it.currentFile = cueName }
 
+            // A transient CUE failure must not look like a deletion: keep the
+            // virtual rows that already exist for this sheet. Returns whether
+            // any rows survived, so their backing audio stays claimed.
+            fun retainExistingCueRows(): Boolean {
+                val retained = existingCueVirtualPaths[cueUri] ?: return false
+                currentUris.addAll(retained)
+                return retained.isNotEmpty()
+            }
+
             var tempCuePath: String? = null
+            var audioFileName: String? = null
+            var audioUri: String? = null
             try {
                 tempCuePath = copyUriToTemp(cueDoc.uri, ".cue", cueName)
                 if (tempCuePath == null) {
                     errors++
-                    reportLibraryScanError(cueDoc.uri.toString(), "Read CUE", "Failed to copy CUE file")
+                    reportLibraryScanError(cueUri, "Read CUE", "Failed to copy CUE file")
+                    retainExistingCueRows()
                     scanned++
+                    reportProcessed()
                     continue
                 }
 
-                val audioFileName = extractCueAudioFileName(tempCuePath)
+                audioFileName = extractCueAudioFileName(tempCuePath)
 
                 val audioDoc = resolveCueAudioSibling(
                     parentDir = parentDir,
@@ -1200,13 +1434,19 @@ internal fun MainActivity.scanSafTreeIncremental(
                 )
 
                 if (audioDoc == null) {
-                    reportLibraryScanError(cueDoc.uri.toString(), "Resolve CUE audio", "No audio file found for $cueName")
+                    reportLibraryScanError(cueUri, "Resolve CUE audio", "No audio file found for $cueName")
                     errors++
+                    if (retainExistingCueRows()) {
+                        audioFileName?.let {
+                            unresolvedCueAudioKeys.add(unresolvedCueAudioKey(parentDir, it))
+                        }
+                    }
                     scanned++
+                    reportProcessed()
                     continue
                 }
 
-                cueReferencedAudioUris.add(audioDoc.uri.toString())
+                audioUri = audioDoc.uri.toString()
 
                 val audioName = try { audioDoc.name ?: "audio.flac" } catch (_: Exception) { "audio.flac" }
                 val audioLastModified = try { audioDoc.lastModified() } catch (_: Exception) { cueLastModified }
@@ -1233,81 +1473,36 @@ internal fun MainActivity.scanSafTreeIncremental(
                         currentUris.add(virtualPath)
                     }
                 }
+                // Only a sheet that produced rows owns its audio: a failed or
+                // empty parse must keep the standalone row instead of deleting
+                // it in removedUris.
+                if (cueArray.length() > 0) {
+                    cueReferencedAudioUris.add(audioUri)
+                }
 
             } catch (e: Exception) {
                 errors++
-                reportLibraryScanError(cueDoc.uri.toString(), "Scan CUE", e.message ?: e.javaClass.simpleName)
+                reportLibraryScanError(cueUri, "Scan CUE", e.message ?: e.javaClass.simpleName)
+                if (retainExistingCueRows()) {
+                    audioUri?.let { cueReferencedAudioUris.add(it) }
+                    audioFileName?.let {
+                        unresolvedCueAudioKeys.add(unresolvedCueAudioKey(parentDir, it))
+                    }
+                }
             } finally {
                 try { tempCuePath?.let { File(it).delete() } } catch (_: Exception) {}
             }
 
             scanned++
-            val processed = skippedCount + scanned
-            val pct = if (totalFiles > 0) {
-                processed.toDouble() / totalFiles.toDouble() * 100.0
-            } else {
-                100.0
-            }
-            updateSafScanProgress {
-                it.scannedFiles = processed
-                it.errorCount = errors
-                it.progressPct = pct
-            }
-        }
-
-        for ((cueDoc, parentDir, cueName) in unchangedCueFiles) {
-            var tempCue: String? = null
-            try {
-                tempCue = copyUriToTemp(cueDoc.uri, ".cue", cueName)
-                if (tempCue != null) {
-                    val audioFileName = extractCueAudioFileName(tempCue)
-                    val audioDoc = resolveCueAudioSibling(
-                        parentDir = parentDir,
-                        cueName = cueName,
-                        audioFileName = audioFileName,
-                        childLookupCache = safChildLookupCache,
-                    )
-                    if (audioDoc != null) {
-                        cueReferencedAudioUris.add(audioDoc.uri.toString())
-                    }
-                }
-            } catch (e: Exception) {
-                android.util.Log.w("SpotiFLAC", "SAF incremental scan: failed to resolve audio for unchanged CUE: ${e.message}")
-            } finally {
-                try { tempCue?.let { File(it).delete() } } catch (_: Exception) {}
-            }
-        }
-
-        fun cancelledIncrementalResult(): String {
-            updateSafScanProgress { it.isComplete = true }
-            spill.abandon()
-            val result = JSONObject()
-            result.put("files", JSONArray())
-            result.put("removedUris", JSONArray())
-            result.put("skippedCount", skippedCount)
-            result.put("totalFiles", totalFiles)
-            result.put("cancelled", true)
-            return result.toString()
-        }
-
-        fun reportProcessed() {
-            val processed = skippedCount + scanned
-            val pct = if (totalFiles > 0) {
-                processed.toDouble() / totalFiles.toDouble() * 100.0
-            } else {
-                100.0
-            }
-            updateSafScanProgress {
-                it.scannedFiles = processed
-                it.errorCount = errors
-                it.progressPct = pct
-            }
+            reportProcessed()
         }
 
         val pendingAudio = mutableListOf<ChangedAudio>()
         for (audio in audioFiles) {
             if (safScanStopRequested(cancelled)) return cancelledIncrementalResult()
-            if (cueReferencedAudioUris.contains(audio.doc.uri.toString())) {
+            if (cueReferencedAudioUris.contains(audio.doc.uri.toString()) ||
+                unresolvedCueAudioKey(audio.parentDir, audio.name) in unresolvedCueAudioKeys
+            ) {
                 scanned++
                 reportProcessed()
             } else {
@@ -1338,6 +1533,8 @@ internal fun MainActivity.scanSafTreeIncremental(
                 result.getOrThrow()
             } catch (error: Exception) {
                 reportLibraryScanError(audio.doc.uri.toString(), "Read metadata", error.message ?: error.javaClass.simpleName)
+                // The rethrow aborts the scan; release the spill file with it.
+                spill.abandon()
                 throw error
             }
             if (metadataObj == null) {
@@ -1360,16 +1557,19 @@ internal fun MainActivity.scanSafTreeIncremental(
         }
         if (!completed) return cancelledIncrementalResult()
 
-        val finalRemovedUris = existingFiles.keys.filter { !currentUris.contains(it) }
+        // Also drop standalone audio rows that a CUE sheet now owns.
+        val finalRemovedUris = removalUris()
 
         updateSafScanProgress {
             it.isComplete = true
+            it.errorCount = errors
             it.progressPct = 100.0
         }
 
         spill.raw("],\"removedUris\":")
         spill.raw(JSONArray(finalRemovedUris).toString())
-        spill.raw(",\"skippedCount\":$skippedCount,\"totalFiles\":$totalFiles}")
+        spill.raw(",\"skippedCount\":$skippedCount,\"totalFiles\":$totalFiles")
+        spill.raw(",\"error_count\":$errors}")
         return spill.result()
     }
 
@@ -1401,10 +1601,13 @@ internal fun MainActivity.safExistsBatch(urisJson: String): String {
                 }
             } else false
             contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+                // An error cursor with no rows is a failed query, not deletion.
+                val failure = safListingFailureReason(
+                    cursor.extras.getBoolean(DocumentsContract.EXTRA_LOADING, false),
+                    cursor.extras.getString(DocumentsContract.EXTRA_ERROR),
+                )
                 status = if (cursor.moveToFirst()) "found"
-                    else if (treeAccessible &&
-                        !cursor.extras.getBoolean(DocumentsContract.EXTRA_LOADING, false))
-                        "missing" else "unknown"
+                    else if (failure == null && treeAccessible) "missing" else "unknown"
             }
         } catch (_: Exception) {
             // Revoked permission, offline storage and provider errors: retain row.

@@ -1,6 +1,7 @@
 package com.zarz.spotiflac
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
@@ -18,12 +19,39 @@ import java.util.Locale
 // SAF/MediaStore URI IO helpers: temp copies, writes, sidecars, and the
 // SAF post-processing pipeline.
 
-internal fun MainActivity.errorJson(message: String): String {
+internal fun errorJson(message: String): String {
         val obj = JSONObject()
         obj.put("success", false)
         obj.put("error", message)
         obj.put("message", message)
         return obj.toString()
+    }
+
+/**
+ * Best-effort release of a persisted tree grant. Called when the library
+ * source that used the tree is removed, so grants do not accumulate up to the
+ * platform's per-app cap.
+ */
+internal fun MainActivity.releaseSafTreeGrant(treeUri: String) {
+        if (treeUri.isBlank()) return
+        val uri = try {
+            Uri.parse(treeUri)
+        } catch (_: Exception) {
+            return
+        }
+        val read = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        val write = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        val attempts = listOf(read or write, read, write).distinct()
+        for (flags in attempts) {
+            try {
+                contentResolver.releasePersistableUriPermission(uri, flags)
+                return
+            } catch (_: Exception) {
+                // Try a narrower flag set before giving up.
+            }
+        }
+        // The tree URI is user data and the Logs screen can export it.
+        android.util.Log.d("SpotiFLAC", "No persisted SAF grant to release")
     }
 
     /**

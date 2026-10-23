@@ -257,12 +257,29 @@ class PlatformBridge {
 
   static Future<Map<String, dynamic>?> pickSafTree({
     bool forSetup = false,
+    void Function(String message)? onFailure,
   }) async {
     final result = await _channel.invokeMethod(
       'pickSafTree',
       forSetup ? {'for_setup': true} : null,
     );
-    return _decodeNullableMapResult(result, 'pickSafTree');
+    final decoded = _decodeNullableMapResult(result, 'pickSafTree');
+    if (decoded != null && decoded['success'] == false) {
+      // The native side could not persist the grant; treat it like a cancel so
+      // no caller stores a folder that loses access after the next restart.
+      final message = decoded['error']?.toString() ?? '';
+      _log.w('SAF tree pick failed');
+      if (message.isNotEmpty) onFailure?.call(message);
+      return null;
+    }
+    return decoded;
+  }
+
+  /// Releases a persisted SAF tree grant after its library source is removed.
+  /// Best effort: a missing or already-released grant is not an error.
+  static Future<void> releaseSafTree(String treeUri) async {
+    if (treeUri.isEmpty) return;
+    await _channel.invokeMethod('safReleaseTree', {'tree_uri': treeUri});
   }
 
   static Future<bool> safExists(String uri) async {
@@ -583,12 +600,14 @@ class PlatformBridge {
   static Future<LibraryScanNDJSONFile> scanSafTreeToNDJSONFile(
     String treeUri, {
     bool forceFullScan = false,
+    bool hasIndexedRows = false,
     bool Function()? isCancelled,
   }) {
     return _scanToNDJSONFile(
       method: 'scanSafTreeToNDJSONFile',
       arguments: {'tree_uri': treeUri},
       forceFullScan: forceFullScan,
+      hasIndexedRows: hasIndexedRows,
       isCancelled: isCancelled,
     );
   }
@@ -597,6 +616,7 @@ class PlatformBridge {
     required String method,
     required Map<String, dynamic> arguments,
     required bool forceFullScan,
+    bool hasIndexedRows = false,
     bool Function()? isCancelled,
   }) async {
     // Stable support-directory path lets native SAF scans resume after process death.
@@ -637,6 +657,9 @@ class PlatformBridge {
       }
       final result = await _channel.invokeMethod(method, {
         ...arguments,
+        // Not part of the resume identity: the output path must not change
+        // when a source's row count crosses zero.
+        'has_indexed_rows': hasIndexedRows,
         'output_path': output.path,
       });
       if (result is! Map) {

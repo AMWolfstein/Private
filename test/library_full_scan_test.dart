@@ -207,6 +207,27 @@ void main() {
     }
   }
 
+  test('SAF full scan forwards whether the source already has rows', () async {
+    final forwarded = <bool?>[];
+    messenger.setMockMethodCallHandler(backend, (call) async {
+      if (call.method != 'scanSafTreeToNDJSONFile') return null;
+      final args = call.arguments as Map;
+      forwarded.add(args['has_indexed_rows'] as bool?);
+      final output = File(args['output_path'] as String);
+      await output.writeAsString('');
+      return {'path': output.path, 'count': 0, 'error_count': 0};
+    });
+
+    await PlatformBridge.scanSafTreeToNDJSONFile(
+      'content://library/tree/music',
+      hasIndexedRows: true,
+    );
+    await PlatformBridge.scanSafTreeToNDJSONFile(
+      'content://library/tree/music',
+    );
+    expect(forwarded, [true, false]);
+  });
+
   test('cache setup failure stops forced scan before native reads', () async {
     final calls = <String>[];
     messenger.setMockMethodCallHandler(backend, (call) async {

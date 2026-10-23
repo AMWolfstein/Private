@@ -28,6 +28,14 @@ const _audioExtensions = <String>[
 const _maxPathMatchKeyCacheSize = 6000;
 final Map<String, Set<String>> _pathMatchKeyCache = <String, Set<String>>{};
 
+/// Windows drive paths are the only supported case-insensitive filesystem
+/// spelling. Android/POSIX paths, `content://`, `file://` and other URIs are
+/// case-sensitive: lowercasing them made `A.flac` and `a.flac` collide and
+/// dropped the `#trackNN` fragment of SAF CUE rows.
+final _windowsDrivePath = RegExp(r'^[A-Za-z]:[\\/]');
+
+bool _isCaseInsensitivePath(String value) => _windowsDrivePath.hasMatch(value);
+
 String? _stripAudioExtension(String path) {
   final lower = path.toLowerCase();
   for (final ext in _audioExtensions) {
@@ -98,7 +106,9 @@ Set<String> _buildPathMatchKeys(
     if (!visited.add(trimmed)) return;
 
     keys.add(trimmed);
-    keys.add(trimmed.toLowerCase());
+    if (_isCaseInsensitivePath(trimmed)) {
+      keys.add(trimmed.toLowerCase());
+    }
 
     if (trimmed.contains('\\')) {
       final slash = trimmed.replaceAll('\\', '/');
@@ -122,13 +132,14 @@ Set<String> _buildPathMatchKeys(
     } catch (_) {}
 
     if (parsed != null && parsed.hasScheme) {
-      final withoutQueryOrFragment = parsed.replace(
-        query: null,
-        fragment: null,
-      );
-      final uriString = withoutQueryOrFragment.toString();
+      // Keep the query and fragment: SAF CUE virtual tracks carry `#trackNN`
+      // in the fragment, and dropping it makes every track of a sheet share a
+      // key. `parsed.toString()` also normalizes the authority to lower case.
+      final uriString = parsed.toString();
       keys.add(uriString);
-      keys.add(uriString.toLowerCase());
+      if (_isCaseInsensitivePath(uriString)) {
+        keys.add(uriString.toLowerCase());
+      }
 
       if (parsed.scheme == 'file') {
         try {
@@ -141,9 +152,7 @@ Set<String> _buildPathMatchKeys(
       }
     } else if (trimmed.startsWith('/')) {
       try {
-        final asFileUri = Uri.file(trimmed).toString();
-        keys.add(asFileUri);
-        keys.add(asFileUri.toLowerCase());
+        keys.add(Uri.file(trimmed).toString());
       } catch (_) {}
     }
 
@@ -192,7 +201,9 @@ String? _androidDocumentMatchKey(Uri? uri) {
   // Encode only the authority so the separator cannot be ambiguous. The ID
   // stays verbatim and keeps its extension for track/conversion match keys.
   final authority = base64Url.encode(utf8.encode(uri.authority.toLowerCase()));
-  return 'saf-document:$authority:${segments.last}';
+  final fragment = uri.fragment;
+  final suffix = fragment.isEmpty ? '' : '#$fragment';
+  return 'saf-document:$authority:${segments.last}$suffix';
 }
 
 Iterable<String> _androidExternalStorageDocumentPaths(Uri uri) {
@@ -200,6 +211,10 @@ Iterable<String> _androidExternalStorageDocumentPaths(Uri uri) {
       uri.host.toLowerCase() != 'com.android.externalstorage.documents') {
     return const [];
   }
+  // A fragment marks a virtual SAF CUE track (`#trackNN`). It is not part of
+  // the backing document's filesystem path: a raw alias would make every track
+  // of the sheet collide with the CUE file, so do not derive one.
+  if (uri.hasFragment) return const [];
 
   final segments = uri.pathSegments;
   final documentIndex = segments.lastIndexOf('document');
@@ -207,10 +222,7 @@ Iterable<String> _androidExternalStorageDocumentPaths(Uri uri) {
   final idIndex = documentIndex >= 0 ? documentIndex + 1 : treeIndex + 1;
   if (idIndex <= 0 || idIndex >= segments.length) return const [];
 
-  var documentId = segments.sublist(idIndex).join('/');
-  try {
-    documentId = Uri.decodeComponent(documentId);
-  } catch (_) {}
+  final documentId = segments.sublist(idIndex).join('/');
   final separator = documentId.indexOf(':');
   if (separator < 0 ||
       documentId.substring(0, separator).toLowerCase() != 'primary') {
