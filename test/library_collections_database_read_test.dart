@@ -107,6 +107,44 @@ void main() {
   tearDown(() => root.delete(recursive: true));
 
   test(
+    'backup snapshot preserves full playlist order without UI hydration',
+    () async {
+      final db = await _fixture('${root.path}/library_collections.db', 600);
+      final state = decodeLibraryCollectionsSnapshot(await _legacy(db));
+      final playlists = [
+        for (final playlist in state.playlists)
+          playlist.copyWith(
+            tracks: (await hydratePlaylistTracks(
+              await db.rawQuery(
+                'SELECT * FROM playlist_tracks WHERE playlist_id=? ORDER BY added_at ASC,rowid ASC',
+                [playlist.id],
+              ),
+              knownKeys: playlist.trackKeys,
+            )).tracks,
+          ),
+      ];
+      final expected = state.copyWith(playlists: playlists).toJson();
+      db.pageSizes.clear();
+      final snapshot =
+          await LibraryCollectionsDatabase.writeDatabaseBackupSnapshot(
+            db,
+            temporaryDirectory: root,
+          );
+      expect(snapshot.playlistRows, isEmpty);
+      expect(db.pageSizes.every((size) => size <= 256), isTrue);
+      final result = jsonDecode(
+        await exportCollectionsBackupSnapshot(snapshot),
+      );
+      expect(result, expected);
+      expect(await File(snapshot.nativeRowsPath!).exists(), isFalse);
+      expect(
+        state.playlists.every((playlist) => !playlist.tracksLoaded),
+        isTrue,
+      );
+    },
+  );
+
+  test(
     'keyset pages preserve all original query rows and tied-date ordering',
     () async {
       final db = await _fixture('${root.path}/library_collections.db', 1200);

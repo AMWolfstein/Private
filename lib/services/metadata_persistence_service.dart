@@ -29,7 +29,6 @@ class MetadataSaveResult {
 class MetadataSaveRequest {
   final String filePath;
   final Map<String, String> metadata;
-  final String artistTagMode;
   final String? selectedCoverPath;
   final String? currentCoverPath;
   final int? coverMaxDimension;
@@ -37,7 +36,6 @@ class MetadataSaveRequest {
   MetadataSaveRequest({
     required this.filePath,
     required Map<String, String> metadata,
-    required this.artistTagMode,
     this.selectedCoverPath,
     this.currentCoverPath,
     this.coverMaxDimension,
@@ -52,7 +50,6 @@ typedef MetadataEmbed =
       String path,
       String? coverPath,
       Map<String, String> metadata,
-      String artistTagMode,
     );
 
 /// Writes tags without widget state, and owns resources until every writer ends.
@@ -94,7 +91,7 @@ class MetadataPersistenceService {
 
       final metadata = {
         ...request.metadata,
-        'artist_tag_mode': request.artistTagMode,
+        'artist_tag_mode': artistTagModeJoined,
         'cover_path': coverPath ?? '',
       };
       final result = await edit(request.filePath, metadata);
@@ -132,15 +129,7 @@ class MetadataPersistenceService {
       final codec = _codec(request.filePath);
       final output = codec == null
           ? null
-          : await embed(
-              codec,
-              target,
-              existingCover,
-              tags,
-              codec == MetadataSaveCodec.opus
-                  ? request.artistTagMode
-                  : artistTagModeJoined,
-            );
+          : await embed(codec, target, existingCover, tags);
       if (output == null) {
         return const MetadataSaveResult.failed(MetadataSaveFailure.ffmpeg);
       }
@@ -249,7 +238,6 @@ class MetadataPersistenceService {
     String path,
     String? coverPath,
     Map<String, String> metadata,
-    String artistTagMode,
   ) => switch (codec) {
     MetadataSaveCodec.mp3 => FFmpegService.embedMetadataToMp3(
       mp3Path: path,
@@ -267,7 +255,6 @@ class MetadataPersistenceService {
       opusPath: path,
       coverPath: coverPath,
       metadata: metadata,
-      artistTagMode: artistTagMode,
       preserveMetadata: true,
     ),
   };

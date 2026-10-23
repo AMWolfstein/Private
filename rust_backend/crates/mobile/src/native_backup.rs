@@ -19,6 +19,8 @@ use std::{
 
 type Check<'a> = &'a dyn Fn() -> Result<(), String>;
 const MAX_HISTORY_BYTES: u64 = 512 << 20;
+// Restore decodes metadata.json in memory; keep in sync with BackupService.
+const MAX_METADATA_BYTES: u64 = 32 << 20;
 const MAX_ROW_BYTES: u64 = 16 << 20;
 const BATCH_SIZE: usize = 500;
 const COLUMNS: &[(&str, &str)] = &[

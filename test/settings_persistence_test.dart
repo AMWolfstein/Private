@@ -45,7 +45,53 @@ class _Settings extends SettingsNotifier {
   Future<void> ensureLoaded() async {}
 }
 
+class _ConfiguredSettings extends _Settings {
+  _ConfiguredSettings(super.preferences);
+  @override
+  AppSettings build() => const AppSettings(
+    isFirstLaunch: false,
+    hasCompletedTutorial: true,
+    localLibraryEnabled: true,
+    localLibraryPath: '/current',
+    localLibraryBookmark: 'current-bookmark',
+    localLibraryAutoScan: 'weekly',
+  );
+}
+
 void main() {
+  test(
+    'restore retains installation state and reports failed persistence',
+    () async {
+      final prefs = _Preferences();
+      final container = ProviderContainer(
+        overrides: [
+          settingsProvider.overrideWith(() => _ConfiguredSettings(prefs)),
+        ],
+      );
+      addTearDown(container.dispose);
+      final notifier = container.read(settingsProvider.notifier);
+      final restore = notifier.restoreFromBackup({
+        'isFirstLaunch': true,
+        'hasCompletedTutorial': false,
+        'localLibraryPath': '/foreign',
+        'localLibraryEnabled': false,
+        'localLibraryBookmark': 'foreign',
+        'localLibraryAutoScan': 'daily',
+        'glassQuality': 'off',
+      });
+      final failed = expectLater(restore, throwsStateError);
+      await prefs.whenStarted(0);
+      expect(prefs.writes.single['isFirstLaunch'], isFalse);
+      expect(prefs.writes.single['hasCompletedTutorial'], isTrue);
+      expect(prefs.writes.single['localLibraryPath'], '/current');
+      expect(prefs.writes.single['localLibraryAutoScan'], 'weekly');
+      prefs.release(0).complete(false);
+      await failed;
+      expect(container.read(settingsProvider).glassQuality, 'auto');
+      expect(container.read(settingsProvider).localLibraryPath, '/current');
+    },
+  );
+
   test(
     'setup completes only after settings and both completion flags are durable',
     () async {
@@ -57,12 +103,9 @@ void main() {
       );
       addTearDown(container.dispose);
       final notifier = container.read(settingsProvider.notifier);
-      notifier.setStorageMode('saf');
+      notifier.setLocalLibraryEnabled(true);
       await preferences.whenStarted(0);
-      notifier.setDownloadTreeUri(
-        'content://test/tree/music',
-        displayName: 'Music',
-      );
+      notifier.setLocalLibraryPathAndBookmark('content://test/tree/music', '');
       final finish = notifier.setFirstLaunchComplete();
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       preferences.release(0).complete(true);
@@ -72,7 +115,7 @@ void main() {
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
       expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
       expect(
-        preferences.writes.last['downloadTreeUri'],
+        preferences.writes.last['localLibraryPath'],
         'content://test/tree/music',
       );
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
@@ -111,17 +154,14 @@ void main() {
       final notifier = container.read(settingsProvider.notifier);
       final finish = notifier.setFirstLaunchComplete();
       await preferences.whenStarted(0);
-      notifier.setDownloadTreeUri(
-        'content://test/tree/latest',
-        displayName: 'Latest',
-      );
+      notifier.setLocalLibraryPathAndBookmark('content://test/tree/latest', '');
       preferences.release(0).complete(true);
       await preferences.whenStarted(1);
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
       expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
       expect(
-        preferences.writes.last['downloadTreeUri'],
+        preferences.writes.last['localLibraryPath'],
         'content://test/tree/latest',
       );
       preferences.release(1).complete(true);
@@ -129,7 +169,7 @@ void main() {
       expect(container.read(settingsProvider).isFirstLaunch, isFalse);
       expect(container.read(settingsProvider).hasCompletedTutorial, isTrue);
       expect(
-        container.read(settingsProvider).downloadTreeUri,
+        container.read(settingsProvider).localLibraryPath,
         'content://test/tree/latest',
       );
     },
@@ -142,10 +182,10 @@ void main() {
     );
     addTearDown(container.dispose);
     final notifier = container.read(settingsProvider.notifier);
-    final first = notifier.useAppFolderStorage('/output/first');
+    final first = notifier.setGlassClarityLevel(1);
     await preferences.whenStarted(0);
-    final second = notifier.useAppFolderStorage('/output/second');
-    final third = notifier.useAppFolderStorage('/output/latest');
+    final second = notifier.setGlassClarityLevel(2);
+    final third = notifier.setGlassClarityLevel(5);
     var firstCompleted = false;
     var secondCompleted = false;
     var thirdCompleted = false;
@@ -161,7 +201,7 @@ void main() {
     preferences.release(0).complete(true);
     await preferences.whenStarted(1);
     expect(preferences.writes.length, 2);
-    expect(preferences.writes.last['downloadDirectory'], '/output/latest');
+    expect(preferences.writes.last['glassClarityLevel'], 5);
     expect(
       [firstCompleted, secondCompleted, thirdCompleted],
       [false, false, false],
@@ -186,9 +226,9 @@ void main() {
       );
       addTearDown(container.dispose);
       final notifier = container.read(settingsProvider.notifier);
-      final first = notifier.useAppFolderStorage('/output/first');
+      final first = notifier.setGlassClarityLevel(1);
       await preferences.whenStarted(0);
-      final queued = notifier.useAppFolderStorage('/output/queued');
+      final queued = notifier.setGlassClarityLevel(3);
       preferences.release(0).completeError(StateError('settings_save_failed'));
       await Future.wait([first, queued]);
       expect(
@@ -200,9 +240,9 @@ void main() {
         isTrue,
       );
 
-      final retry = notifier.useAppFolderStorage('/output/retry');
+      final retry = notifier.setGlassClarityLevel(4);
       await preferences.whenStarted(1);
-      expect(preferences.writes.last['downloadDirectory'], '/output/retry');
+      expect(preferences.writes.last['glassClarityLevel'], 4);
       preferences.release(1).complete(true);
       await retry;
     },
@@ -225,13 +265,13 @@ void main() {
       );
       addTearDown(container.dispose);
       final notifier = container.read(settingsProvider.notifier);
-      await notifier.useAppFolderStorage('/output/first');
+      await notifier.setGlassClarityLevel(1);
       expect(preferences.writes, isEmpty);
 
-      final retry = notifier.useAppFolderStorage('/output/retry');
+      final retry = notifier.setGlassClarityLevel(4);
       await preferences.whenStarted(0);
       expect(loads, 2);
-      expect(preferences.writes.single['downloadDirectory'], '/output/retry');
+      expect(preferences.writes.single['glassClarityLevel'], 4);
       preferences.release(0).complete(true);
       await retry;
     },

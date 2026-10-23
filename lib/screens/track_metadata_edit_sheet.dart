@@ -25,7 +25,6 @@ class EditMetadataSheet extends StatefulWidget {
   final String filePath;
 
   final int durationMs;
-  final String artistTagMode;
   final MetadataSeparators metadataSeparators;
 
   const EditMetadataSheet({
@@ -35,7 +34,6 @@ class EditMetadataSheet extends StatefulWidget {
     required this.filePath,
 
     required this.durationMs,
-    required this.artistTagMode,
     this.metadataSeparators = const MetadataSeparators(),
   });
 
@@ -320,11 +318,9 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
         MetadataSaveRequest(
           filePath: widget.filePath,
           metadata: _form.saveMetadata(
-            artistTagMode: widget.artistTagMode,
             separators: widget.metadataSeparators,
             onlyChanged: true,
           ),
-          artistTagMode: widget.artistTagMode,
           selectedCoverPath: _selectedCoverPath,
           currentCoverPath: _currentCoverPath,
           coverMaxDimension: _coverMaxDimension,

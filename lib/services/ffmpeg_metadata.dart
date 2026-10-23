@@ -9,7 +9,6 @@ import 'package:spotiflac_android/services/ffmpeg_models.dart';
 import 'package:spotiflac_android/services/ffmpeg_support.dart';
 import 'package:spotiflac_android/services/id3v23_lyrics.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
@@ -131,7 +130,6 @@ abstract final class FFmpegMetadata {
     required String mp3Path,
     String? coverPath,
     Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = false,
   }) async {
     // ID3 keeps one artist frame: only primary mode changes its value.
@@ -140,9 +138,6 @@ abstract final class FFmpegMetadata {
       // refuses them. Keep the source rather than bypassing that safety check.
       _log.e('MP3 metadata preservation requires the native tag writer');
       return null;
-    }
-    if (metadata != null) {
-      metadata = applyArtistTagModeToMetadata(metadata, artistTagMode);
     }
     final tempOutput = await FFmpegOutput.tempPath('.mp3');
     final lyrics = AudioMetadataMapper.extractLyricsForId3(metadata);
@@ -241,7 +236,6 @@ abstract final class FFmpegMetadata {
     required String opusPath,
     String? coverPath,
     Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = false,
     Future<FFmpegResult> Function(List<String>)? execute,
   }) async {
@@ -264,11 +258,7 @@ abstract final class FFmpegMetadata {
       'copy',
     ];
     if (metadata != null) {
-      AudioMetadataMapper.appendVorbisMetadataArguments(
-        arguments,
-        metadata,
-        artistTagMode: artistTagMode,
-      );
+      AudioMetadataMapper.appendVorbisMetadataArguments(arguments, metadata);
     }
     if (coverPath != null) {
       try {
@@ -302,7 +292,6 @@ abstract final class FFmpegMetadata {
     required String m4aPath,
     String? coverPath,
     Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = true,
   }) async {
     if (preserveMetadata) {
@@ -310,9 +299,6 @@ abstract final class FFmpegMetadata {
       // edits must keep the original if the atom-preserving native edit fails.
       _log.e('M4A metadata preservation requires the native tag writer');
       return null;
-    }
-    if (metadata != null) {
-      metadata = applyArtistTagModeToMetadata(metadata, artistTagMode);
     }
     final tempOutput = await FFmpegOutput.tempPath('.m4a');
     final normalizedCoverPath = coverPath?.trim();

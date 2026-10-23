@@ -1,6 +1,6 @@
 //! The v2/v3 Flutter archive contract, with bounded streaming payloads. Only
 //! generated filenames are written, and incomplete staging is always removed.
-use super::{Check, MAX_HISTORY_BYTES, err, output_path, required};
+use super::{Check, MAX_HISTORY_BYTES, MAX_METADATA_BYTES, err, output_path, required};
 use serde::{Deserialize, de::MapAccess};
 use serde_json::{Map, Value, json, value::RawValue};
 use std::{
@@ -11,7 +11,6 @@ use std::{
 };
 use zip::{CompressionMethod, ZipArchive, ZipWriter, write::SimpleFileOptions};
 
-const MAX_METADATA_BYTES: u64 = 8 << 20;
 const MAX_COVER_BYTES: u64 = 20 << 20;
 const MAX_ALL_COVERS_BYTES: u64 = 256 << 20;
 const MAX_PHOTO_BYTES: u64 = 2 << 20;
@@ -67,6 +66,7 @@ pub(super) fn write(request: &Value, check: Check<'_>) -> Result<Value, String> 
     let result = (|| {
         let mut archive = ZipWriter::new(BufWriter::new(file));
         let mut names = HashSet::new();
+        let mut covers_size = 0_u64;
         for entry in files {
             check()?;
             let name = required(entry, "name")?;
@@ -91,7 +91,19 @@ pub(super) fn write(request: &Value, check: Check<'_>) -> Result<Value, String> 
             archive
                 .start_file(name, options)
                 .map_err(|e| err("start backup entry", e))?;
-            copy_checked(&mut input, &mut archive, u64::MAX, check)?;
+            let limit = match name {
+                "metadata.json" => MAX_METADATA_BYTES,
+                "history.ndjson" => MAX_HISTORY_BYTES,
+                PHOTO_ENTRY => MAX_PHOTO_BYTES,
+                _ => MAX_COVER_BYTES,
+            };
+            let size = copy_checked(&mut input, &mut archive, limit, check)?;
+            if name != "metadata.json" && name != "history.ndjson" && name != PHOTO_ENTRY {
+                covers_size += size;
+                if covers_size > MAX_ALL_COVERS_BYTES {
+                    return Err("Backup covers exceed size limit".into());
+                }
+            }
         }
         let mut writer = archive
             .finish()

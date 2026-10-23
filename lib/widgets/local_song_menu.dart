@@ -20,7 +20,6 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/track_metadata_edit_sheet.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/audio_analysis_widget.dart';
@@ -249,9 +248,6 @@ Future<bool> editLocalSongMetadata(
     return false;
   }
   final library = ref.read(localLibraryProvider.notifier);
-  final artistTagMode = artistTagModeForExistingTags(
-    ref.read(settingsProvider).artistTagMode,
-  );
   final metadataSeparators = ref.read(settingsProvider).metadataSeparators;
   Map<String, dynamic> tags = {};
   try {
@@ -292,7 +288,6 @@ Future<bool> editLocalSongMetadata(
       initialValues: values,
       filePath: item.filePath,
       durationMs: (item.duration ?? 0) * 1000,
-      artistTagMode: artistTagMode,
       metadataSeparators: metadataSeparators,
     ),
   );

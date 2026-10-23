@@ -3,8 +3,7 @@
 use crate::cancellation::RequestLease;
 use crate::local::LocalBackend;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
-use std::{fs::File, io::Read, sync::Arc};
+use std::sync::Arc;
 
 #[derive(Debug, thiserror::Error, uniffi::Error)]
 #[uniffi(flat_error)]
@@ -59,10 +58,7 @@ fn execute(
 ) -> Result<Value, String> {
     let operation = string(request, "operation")?;
     match operation {
-        "hash_file" => Ok(json!({"sha256": hash_file(string(request, "path")?, check)?})),
-        "parse_playlist" | "build_m3u" => {
-            crate::native_playlists::execute(request, Some(bytes), check)
-        }
+        "build_m3u" => crate::native_playlists::execute(request, Some(bytes), check),
         "write_id3v23_lyrics" | "build_metadata_picture" => {
             crate::native_id3::execute(request, Some(bytes), check)
         }
@@ -127,58 +123,4 @@ pub(crate) fn string<'a>(request: &'a Value, name: &str) -> Result<&'a str, Stri
         .get(name)
         .and_then(Value::as_str)
         .ok_or_else(|| format!("Missing native data field: {name}"))
-}
-
-pub(crate) fn hash_file(
-    path: &str,
-    check: &dyn Fn() -> Result<(), String>,
-) -> Result<String, String> {
-    check()?;
-    if !std::fs::metadata(path)
-        .map_err(|error| error.to_string())?
-        .is_file()
-    {
-        return Err("Hash input must be a regular file".into());
-    }
-    let mut file = File::open(path).map_err(|error| error.to_string())?;
-    if !file
-        .metadata()
-        .map_err(|error| error.to_string())?
-        .is_file()
-    {
-        return Err("Hash input must be a regular file".into());
-    }
-    let mut hash = Sha256::new();
-    let mut buffer = [0; 64 * 1024];
-    loop {
-        check()?;
-        let count = file.read(&mut buffer).map_err(|error| error.to_string())?;
-        if count == 0 {
-            break;
-        }
-        hash.update(&buffer[..count]);
-    }
-    check()?;
-    Ok(hash
-        .finalize()
-        .iter()
-        .map(|byte| format!("{byte:02x}"))
-        .collect())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::io::Write;
-
-    #[test]
-    fn hashes_streamed_files_and_obeys_cancellation() {
-        let mut file = tempfile::NamedTempFile::new().unwrap();
-        file.write_all(b"abc").unwrap();
-        assert_eq!(
-            hash_file(file.path().to_str().unwrap(), &|| Ok(())).unwrap(),
-            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
-        );
-        assert!(hash_file(file.path().to_str().unwrap(), &|| Err("cancelled".into())).is_err());
-    }
 }

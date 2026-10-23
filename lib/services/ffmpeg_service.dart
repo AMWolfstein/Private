@@ -4,7 +4,6 @@ import 'package:spotiflac_android/services/ffmpeg_metadata.dart';
 import 'package:spotiflac_android/services/ffmpeg_models.dart';
 import 'package:spotiflac_android/services/ffmpeg_probe.dart';
 import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
 
 export 'package:spotiflac_android/services/ffmpeg_models.dart';
 
@@ -68,13 +67,11 @@ class FFmpegService {
     required String mp3Path,
     String? coverPath,
     Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = false,
   }) => FFmpegMetadata.embedMetadataToMp3(
     mp3Path: mp3Path,
     coverPath: coverPath,
     metadata: metadata,
-    artistTagMode: artistTagMode,
     preserveMetadata: preserveMetadata,
   );
 
@@ -82,14 +79,12 @@ class FFmpegService {
     required String opusPath,
     String? coverPath,
     Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = false,
     @visibleForTesting Future<FFmpegResult> Function(List<String>)? execute,
   }) => FFmpegMetadata.embedMetadataToOpus(
     opusPath: opusPath,
     coverPath: coverPath,
     metadata: metadata,
-    artistTagMode: artistTagMode,
     preserveMetadata: preserveMetadata,
     execute: execute,
   );
@@ -98,13 +93,11 @@ class FFmpegService {
     required String m4aPath,
     String? coverPath,
     Map<String, String>? metadata,
-    String artistTagMode = artistTagModeJoined,
     bool preserveMetadata = true,
   }) => FFmpegMetadata.embedMetadataToM4a(
     m4aPath: m4aPath,
     coverPath: coverPath,
     metadata: metadata,
-    artistTagMode: artistTagMode,
     preserveMetadata: preserveMetadata,
   );
 

@@ -93,9 +93,6 @@ void main() {
       final bootstrapSettings = loadBootstrapSettings(prefs);
       musicPlayerRuntime.configure(bootstrapSettings);
       final bootstrapTheme = loadBootstrapThemeSettings(prefs);
-      final initialSafAccessLost = await _detectInitialSafAccessLoss(
-        bootstrapSettings,
-      );
       final runtimeProfile = await _resolveRuntimeProfile(prefs);
       _configureImageCache(runtimeProfile);
 
@@ -111,9 +108,6 @@ void main() {
               !Platform.isAndroid || runtimeProfile.enableBackdropBlur,
             ),
             initialSettingsProvider.overrideWithValue(bootstrapSettings),
-            initialSafAccessLostProvider.overrideWithValue(
-              initialSafAccessLost,
-            ),
             initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
             initialGlassAutoResultProvider.overrideWithValue(
               loadGlassAutoResult(prefs, build: mornyeGlassAutoBuild()),
@@ -243,29 +237,9 @@ Future<void> _prepareAndroidInstallationState(SharedPreferences prefs) async {
     await prefs.remove(localLibraryLastScannedAtKey);
     await AppStateDatabase.instance.clearRestoredPlaybackState();
   } catch (e) {
-    // Startup SAF validation remains the second line of defense if an OEM or
-    // bridge implementation prevents install-marker inspection.
+    // Failed marker inspection must not prevent startup. Local sources still
+    // validate their own grants before access.
     _log.w('Failed to inspect restored installation state: $e');
-  }
-}
-
-Future<bool> _detectInitialSafAccessLoss(AppSettings settings) async {
-  if (!Platform.isAndroid ||
-      settings.isFirstLaunch ||
-      settings.storageMode != 'saf' ||
-      settings.downloadTreeUri.isEmpty) {
-    return false;
-  }
-
-  try {
-    return !await PlatformBridge.validateSafTreeAccess(
-      settings.downloadTreeUri,
-    ).timeout(const Duration(seconds: 2));
-  } catch (e) {
-    // A transient bridge failure must not trap the user at launch. Storage
-    // operations validate SAF access again before writing.
-    _log.w('Failed to validate SAF access during startup: $e');
-    return false;
   }
 }
 

@@ -7,11 +7,6 @@ part of 'settings.dart';
 // **************************************************************************
 
 AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
-  downloadDirectory: json['downloadDirectory'] as String? ?? '',
-  downloadDirectoryBookmark: json['downloadDirectoryBookmark'] as String? ?? '',
-  storageMode: json['storageMode'] as String? ?? 'app',
-  downloadTreeUri: json['downloadTreeUri'] as String? ?? '',
-  artistTagMode: json['artistTagMode'] as String? ?? artistTagModeJoined,
   metadataSeparators: json['metadataSeparators'] == null
       ? const MetadataSeparators()
       : MetadataSeparators.fromJson(
@@ -84,18 +79,12 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
       json['localLibraryShowDuplicates'] as bool? ?? true,
   localLibraryAutoScan: json['localLibraryAutoScan'] as String? ?? 'off',
   hasCompletedTutorial: json['hasCompletedTutorial'] as bool? ?? false,
-  lastSeenVersion: json['lastSeenVersion'] as String? ?? '',
   playerShowPronunciation: json['playerShowPronunciation'] as bool? ?? true,
   playerShowTranslation: json['playerShowTranslation'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
     <String, dynamic>{
-      'downloadDirectory': instance.downloadDirectory,
-      'downloadDirectoryBookmark': instance.downloadDirectoryBookmark,
-      'storageMode': instance.storageMode,
-      'downloadTreeUri': instance.downloadTreeUri,
-      'artistTagMode': instance.artistTagMode,
       'metadataSeparators': instance.metadataSeparators.toJson(),
       'musicHaptics': instance.musicHaptics,
       'musicHapticsSensitivity': instance.musicHapticsSensitivity,
@@ -137,7 +126,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'localLibraryShowDuplicates': instance.localLibraryShowDuplicates,
       'localLibraryAutoScan': instance.localLibraryAutoScan,
       'hasCompletedTutorial': instance.hasCompletedTutorial,
-      'lastSeenVersion': instance.lastSeenVersion,
       'playerShowPronunciation': instance.playerShowPronunciation,
       'playerShowTranslation': instance.playerShowTranslation,
     };

@@ -243,6 +243,70 @@ class LibraryCollectionsDatabase {
     }
   }
 
+  /// A stable paged row file for backup; it never loads playlist UI models.
+  Future<LibraryCollectionsSnapshot> exportBackupSnapshot() async =>
+      writeDatabaseBackupSnapshot(await database);
+
+  static Future<LibraryCollectionsSnapshot> writeDatabaseBackupSnapshot(
+    Database db, {
+    Directory? temporaryDirectory,
+  }) async {
+    final directory =
+        await (temporaryDirectory ?? await getTemporaryDirectory()).createTemp(
+          'collection-backup-',
+        );
+    final path = '${directory.path}/rows.ndjson';
+    final output = File(path).openWrite();
+    var count = 0;
+    try {
+      await db.transaction((txn) async {
+        for (final (table, kind, date, ascending) in [
+          (_tableLoved, 'loved', 'added_at', false),
+          (_tablePlaylists, 'playlist', 'created_at', false),
+          (_tableFavoriteArtists, 'artist', 'added_at', false),
+          (_tablePlaylistTracks, 'backup_track', 'added_at', true),
+        ]) {
+          Object? lastDate;
+          int? lastRow;
+          final direction = ascending ? 'ASC' : 'DESC';
+          final compare = ascending ? '>' : '<';
+          while (true) {
+            final rows = await txn.rawQuery(
+              'SELECT rowid AS __row, * FROM $table '
+              '${lastRow == null ? '' : 'WHERE $date$compare? OR ($date=? AND rowid$compare?)'} '
+              'ORDER BY $date $direction,rowid $direction LIMIT 256',
+              lastRow == null ? const [] : [lastDate, lastDate, lastRow],
+            );
+            if (rows.isEmpty) break;
+            for (final row in rows) {
+              final values = Map<String, dynamic>.from(row)..remove('__row');
+              output.writeln(jsonEncode({'kind': kind, 'row': values}));
+              count++;
+            }
+            await output.flush();
+            lastDate = rows.last[date];
+            lastRow = rows.last['__row'] as int;
+            if (rows.length < 256) break;
+          }
+        }
+      });
+      await output.close();
+      return LibraryCollectionsSnapshot(
+        lovedRows: const [],
+        playlistRows: const [],
+        playlistTrackRows: const [],
+        favoriteArtistRows: const [],
+        nativeRowsPath: path,
+        nativeRowsDirectory: directory.path,
+        nativeRowCount: count,
+      );
+    } catch (_) {
+      await output.close();
+      await directory.delete(recursive: true);
+      rethrow;
+    }
+  }
+
   Future<LibraryCollectionsSnapshot> loadSnapshot() async =>
       readDatabaseSnapshot(await database);
 

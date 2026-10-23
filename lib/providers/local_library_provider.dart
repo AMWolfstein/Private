@@ -445,16 +445,10 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     if (releaseUri != null &&
         releaseUri.startsWith('content://') &&
         !stillUsed) {
-      // The obsolete download tree is still probed at startup; releasing its
-      // grant would trigger a false "access lost" prompt. T5 removes that flow.
-      final legacyDownloadTree = ref.read(settingsProvider).downloadTreeUri;
-      if (releaseUri != legacyDownloadTree) {
-        try {
-          await PlatformBridge.releaseSafTree(releaseUri);
-        } catch (_) {
-          // Avoid logging the URI: the Logs screen can export it.
-          _log.w('Failed to release the SAF tree grant for a removed source');
-        }
+      try {
+        await PlatformBridge.releaseSafTree(releaseUri);
+      } catch (_) {
+        _log.w('Failed to release the SAF tree grant for a removed source');
       }
     }
   }

@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/models/metadata_separators.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 const _settingsKey = 'app_settings';
@@ -24,11 +21,6 @@ final initialSettingsProvider = Provider<AppSettings>(
   (ref) => const AppSettings(),
 );
 
-/// Set during bootstrap when the saved Android SAF tree no longer has a valid
-/// persisted grant. MainShell consumes this once to block downloads until the
-/// user explicitly repairs or changes the destination.
-final initialSafAccessLostProvider = Provider<bool>((ref) => false);
-
 bool hasPersistedAppSettings(SharedPreferences prefs) {
   final rawSettings = prefs.getString(_settingsKey);
   return rawSettings != null && rawSettings.isNotEmpty;
@@ -40,7 +32,10 @@ AppSettings loadBootstrapSettings(SharedPreferences prefs) {
   try {
     final decoded = jsonDecode(rawSettings);
     if (decoded is! Map) return const AppSettings();
-    return AppSettings.fromJson(Map<String, dynamic>.from(decoded));
+    final settings = AppSettings.fromJson(Map<String, dynamic>.from(decoded));
+    return !settings.isFirstLaunch && !settings.hasCompletedTutorial
+        ? settings.copyWith(hasCompletedTutorial: true)
+        : settings;
   } catch (_) {
     return const AppSettings();
   }
@@ -52,10 +47,6 @@ AppSettings loadBootstrapSettings(SharedPreferences prefs) {
 /// device-to-device transfer).
 AppSettings resetInstallationBoundSettings(AppSettings settings) {
   return settings.copyWith(
-    downloadDirectory: '',
-    downloadDirectoryBookmark: '',
-    storageMode: 'app',
-    downloadTreeUri: '',
     isFirstLaunch: true,
     localLibraryEnabled: false,
     localLibraryPath: '',
@@ -138,10 +129,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
       }
 
       if (loaded != null) {
-        state = loaded.copyWith();
+        state = !loaded.isFirstLaunch && !loaded.hasCompletedTutorial
+            ? loaded.copyWith(hasCompletedTutorial: true)
+            : loaded;
 
         await _runMigrations(prefs);
-        await _normalizeIosDownloadDirectoryIfNeeded();
       }
     }
 
@@ -160,32 +152,30 @@ class SettingsNotifier extends Notifier<AppSettings> {
         await prefs.remove(key);
       }
 
-      if (state.downloadTreeUri.isNotEmpty && state.storageMode != 'saf') {
-        state = state.copyWith(storageMode: 'saf');
-      }
       // Migration 2: existing users who already completed setup should skip tutorial
       if (!state.isFirstLaunch && !state.hasCompletedTutorial) {
         state = state.copyWith(hasCompletedTutorial: true);
       }
-      state = state.copyWith(lastSeenVersion: AppInfo.version);
       await prefs.setInt(_migrationVersionKey, _currentMigrationVersion);
       await _saveSettings();
     }
   }
 
-  Future<void> _saveSettings() {
+  Future<void> _saveSettings({bool throwOnFailure = false}) {
     _pendingSettingsJson = jsonEncode(state.toJson());
 
     final activeSave = _saveSettingsFuture;
     if (activeSave != null) {
       _saveQueued = true;
-      return activeSave;
+      return throwOnFailure ? activeSave : activeSave.catchError((Object _) {});
     }
 
     final saved = Completer<void>();
     _saveSettingsFuture = saved.future;
     unawaited(_drainSettingsSave(saved));
-    return saved.future;
+    return throwOnFailure
+        ? saved.future
+        : saved.future.catchError((Object _) {});
   }
 
   Future<void> _drainSettingsSave(Completer<void> saved) async {
@@ -195,23 +185,24 @@ class SettingsNotifier extends Notifier<AppSettings> {
         final jsonToWrite = _pendingSettingsJson;
         _saveQueued = false;
         if (jsonToWrite != null) {
-          await prefs.setString(_settingsKey, jsonToWrite);
+          if (!await prefs.setString(_settingsKey, jsonToWrite)) {
+            throw StateError('Could not save settings');
+          }
         }
       } while (_saveQueued);
-    } catch (e) {
+    } catch (e, stack) {
       _log.e('Failed to save settings: $e');
+      saved.completeError(e, stack);
     } finally {
       _saveSettingsFuture = null;
-      saved.complete();
+      if (!saved.isCompleted) saved.complete();
     }
   }
 
-  /// Restores settings from a backup payload (the map produced by
-  /// [AppSettings.toJson]). Device-specific storage location fields
-  /// (download directory and SAF tree URI) are intentionally preserved from the
-  /// current device, because a SAF tree URI from another phone is not valid
-  /// here and would break downloads.
+  /// Restores portable preferences while retaining this installation's setup
+  /// completion and selected local-library source.
   Future<void> restoreFromBackup(Map<String, dynamic> json) async {
+    await ensureLoaded();
     final current = state;
     AppSettings restored;
     try {
@@ -233,84 +224,23 @@ class SettingsNotifier extends Notifier<AppSettings> {
       );
     }
 
-    state = restored.copyWith(
-      // Preserve this device's storage location; the backup's values point at
-      // the original device and would not resolve here.
-      downloadDirectory: current.downloadDirectory,
-      downloadDirectoryBookmark: current.downloadDirectoryBookmark,
-      storageMode: current.storageMode,
-      downloadTreeUri: current.downloadTreeUri,
+    final candidate = restored.copyWith(
+      isFirstLaunch: current.isFirstLaunch,
+      hasCompletedTutorial: current.hasCompletedTutorial,
+      localLibraryEnabled: current.localLibraryEnabled,
+      localLibraryPath: current.localLibraryPath,
+      localLibraryBookmark: current.localLibraryBookmark,
+      localLibraryAutoScan: current.localLibraryAutoScan,
     );
-
-    await _saveSettings();
+    state = candidate;
+    try {
+      await _saveSettings(throwOnFailure: true);
+    } catch (_) {
+      if (identical(state, candidate)) state = current;
+      rethrow;
+    }
 
     LogBuffer.loggingEnabled = state.enableLogging;
-  }
-
-  Future<void> _normalizeIosDownloadDirectoryIfNeeded() async {
-    if (!Platform.isIOS) return;
-
-    // A security-scoped bookmark is the source of truth for folders picked
-    // from Files: its stored path may legitimately point outside the app
-    // container, and the download flow re-resolves the real path from the
-    // bookmark. "Fixing" the path here would also drop the bookmark and
-    // silently revert the user's chosen folder.
-    if (state.downloadDirectoryBookmark.isNotEmpty) return;
-
-    final currentDir = state.downloadDirectory.trim();
-    if (currentDir.isEmpty) return;
-
-    final normalizedDir = await validateOrFixIosPath(currentDir);
-    if (normalizedDir == currentDir) return;
-
-    _log.i('Normalized iOS download directory: $currentDir -> $normalizedDir');
-    state = state.copyWith(
-      downloadDirectory: normalizedDir,
-      downloadDirectoryBookmark: '',
-    );
-    await _saveSettings();
-  }
-
-  void setDownloadDirectory(String directory, {String? iosBookmark}) {
-    state = state.copyWith(
-      downloadDirectory: directory,
-      downloadDirectoryBookmark: iosBookmark ?? '',
-    );
-    _saveSettings();
-  }
-
-  void setStorageMode(String mode) {
-    final normalized = mode == 'saf' ? 'saf' : 'app';
-    state = state.copyWith(storageMode: normalized);
-    _saveSettings();
-  }
-
-  /// Atomically leaves SAF and persists a writable app-managed destination.
-  ///
-  /// Keeping these fields in one update avoids an intermediate saved state
-  /// where app-folder mode still points at the SAF display name, or where an
-  /// invalid tree URI can switch the mode back to SAF.
-  Future<void> useAppFolderStorage(String directory) async {
-    state = state.copyWith(
-      storageMode: 'app',
-      downloadDirectory: directory,
-      downloadDirectoryBookmark: '',
-      downloadTreeUri: '',
-    );
-    await _saveSettings();
-  }
-
-  void setDownloadTreeUri(String uri, {String? displayName}) {
-    final nextDisplay = displayName ?? state.downloadDirectory;
-    state = state.copyWith(
-      downloadTreeUri: uri,
-      storageMode: uri.isNotEmpty ? 'saf' : state.storageMode,
-      downloadDirectory: nextDisplay,
-      downloadDirectoryBookmark: uri.isNotEmpty
-          ? ''
-          : state.downloadDirectoryBookmark,
-    );
-    _saveSettings();
   }
 
   void setPlaybackNormalization(bool enabled) {

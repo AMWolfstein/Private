@@ -70,18 +70,23 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       if (!mounted) return;
       final saved = prefs.getString(_progressKey);
       if (saved != null) {
-        final draft = jsonDecode(saved) as Map<String, dynamic>;
-        var savedStep = (draft['step'] as int?) ?? 0;
-        final version = draft['version'];
-        // Version 1 drafts used 2/3 for permissions and ended in a
-        // download-folder step.
-        if (version != 2 && version != 3 && savedStep >= 2) {
-          savedStep += localGuidePageCount;
+        try {
+          final draft = jsonDecode(saved) as Map<String, dynamic>;
+          var savedStep = (draft['step'] as int?) ?? 0;
+          final version = draft['version'];
+          // Version 1 drafts used 2/3 for permissions and ended in a
+          // download-folder step.
+          if (version != 2 && version != 3 && savedStep >= 2) {
+            savedStep += localGuidePageCount;
+          }
+          // Before version 3, step 1 chose a language; later steps move back one.
+          if (version != 3 && savedStep >= 2) savedStep -= 1;
+          _currentStep = savedStep.clamp(0, _totalSteps - 1);
+          _notificationPermissionSkipped = draft['skipNotifications'] == true;
+        } catch (error) {
+          await prefs.remove(_progressKey);
+          _log.w('Discarding malformed setup progress: $error');
         }
-        // Before version 3, step 1 chose a language; later steps move back one.
-        if (version != 3 && savedStep >= 2) savedStep -= 1;
-        _currentStep = savedStep.clamp(0, _totalSteps - 1);
-        _notificationPermissionSkipped = draft['skipNotifications'] == true;
       }
       await _checkInitialPermissions();
     } catch (e, stack) {

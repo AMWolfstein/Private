@@ -3,7 +3,6 @@ package com.zarz.spotiflac
 import com.spotiflac.backend.NativeDataJobException
 import com.spotiflac.backend.RequestLease
 import java.io.File
-import java.nio.file.Files
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
@@ -133,18 +132,12 @@ class NativeDataJobsTest {
         }
     }
 
-    @Test fun streamedHashJobUsesTheGeneratedByteArrayAndLeaseABI() {
-        val path = Files.createTempFile("native-job-hash-", ".bin")
-        try {
-            Files.write(path, "abc".toByteArray())
-            withLease(UUID.randomUUID().toString()) { lease ->
-                val request = JSONObject().put("operation", "hash_file").put("path", path.toString())
-                val result = JSONObject(RustCoreBackend.runDataJob(request, byteArrayOf(), lease))
-                assertEquals("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-                    result.getString("sha256"))
-            }
-        } finally {
-            Files.deleteIfExists(path)
+    @Test fun paletteJobUsesTheGeneratedByteArrayAndLeaseABI() {
+        withLease(UUID.randomUUID().toString()) { lease ->
+            val request = JSONObject().put("operation", "palette")
+            val result = JSONObject(RustCoreBackend.runDataJob(request,
+                byteArrayOf(255.toByte(), 0, 0, 255.toByte()), lease))
+            assertTrue(result.getJSONArray("colors").length() > 0)
         }
     }
 }

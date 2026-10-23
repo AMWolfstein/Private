@@ -3,37 +3,6 @@ import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/services/m3u_playlist_service.dart';
 
 void main() {
-  group('parseM3u', () {
-    test('reads EXTINF duration, artist, and title', () {
-      final tracks = M3uPlaylistService.parseM3u('''
-#EXTM3U
-#EXTINF:245,Daft Punk - Harder Better Faster Stronger
-Daft Punk/Discovery/04 Harder Better Faster Stronger.flac
-#EXTINF:-1,Solo Title Only
-music/solo.flac
-''');
-
-      expect(tracks, hasLength(2));
-      expect(tracks[0].name, 'Harder Better Faster Stronger');
-      expect(tracks[0].artistName, 'Daft Punk');
-      expect(tracks[0].duration, 245);
-      expect(tracks[1].name, 'Solo Title Only');
-      expect(tracks[1].artistName, 'Unknown Artist');
-      expect(tracks[1].duration, 0);
-    });
-
-    test('falls back to the file name stem without EXTINF', () {
-      final tracks = M3uPlaylistService.parseM3u('''
-# a comment
-Some Artist - Some Song.mp3
-''');
-
-      expect(tracks, hasLength(1));
-      expect(tracks[0].artistName, 'Some Artist');
-      expect(tracks[0].name, 'Some Song');
-    });
-  });
-
   group('buildM3u8Content', () {
     test('writes EXTM3U header and EXTINF entries', () {
       final content = M3uPlaylistService.buildM3u8Content([

@@ -128,6 +128,20 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets(
+    'malformed draft is discarded and permission setup still initializes',
+    (tester) async {
+      await prefs.setString('setup_progress_v1', 'not json');
+      await tester.pumpWidget(_setup());
+      await tester.pumpAndSettle();
+      expect(prefs.containsKey('setup_progress_v1'), isFalse);
+      // The first page renders, so initialization (and its permission check)
+      // completed instead of stopping at the malformed draft.
+      expect(find.text('1/8'), findsOneWidget);
+      expect(pickerCalls, 0);
+    },
+  );
+
   for (final sdk in [32, 33]) {
     testWidgets(
       'one guide finishes on permissions without choosing an output folder (SDK $sdk)',

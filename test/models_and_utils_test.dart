@@ -43,7 +43,10 @@ void main() {
     test('only a .cue base marks a virtual row', () {
       expect(isCueVirtualPath('/music/album.cue#track01'), isTrue);
       expect(isCueVirtualPath('/music/ALBUM.CUE#track12'), isTrue);
-      expect(isCueVirtualPath('content://tree/album/song#track2.flac'), isFalse);
+      expect(
+        isCueVirtualPath('content://tree/album/song#track2.flac'),
+        isFalse,
+      );
       expect(isCueVirtualPath('content://tree/album/album.cue#track2'), isTrue);
       expect(isCueVirtualPath('/music/Song #track1'), isFalse);
       expect(isCueVirtualPath('/music/Song #track1.flac'), isFalse);
@@ -72,9 +75,7 @@ void main() {
           await tempDir.delete(recursive: true);
         }
       });
-      final file = File(
-        '${tempDir.path}${Platform.pathSeparator}Song #track1',
-      );
+      final file = File('${tempDir.path}${Platform.pathSeparator}Song #track1');
       await file.writeAsBytes([1, 2, 3]);
 
       expect(isCueVirtualPath(file.path), isFalse);
@@ -438,57 +439,31 @@ void main() {
     test('provides stable defaults', () {
       const settings = AppSettings();
 
-      expect(settings.downloadDirectory, '');
-      expect(settings.storageMode, 'app');
-      expect(settings.downloadTreeUri, '');
-      expect(settings.artistTagMode, artistTagModeJoined);
       expect(settings.toJson().containsKey('playerMode'), false);
       expect(settings.localLibraryEnabled, isFalse);
     });
 
     test('copyWith updates values and retains untouched settings', () {
-      const settings = AppSettings(
-        downloadDirectory: '/old',
-        storageMode: 'app',
-      );
+      const settings = AppSettings();
 
-      final updated = settings.copyWith(
-        downloadDirectory: '/new',
-        downloadDirectoryBookmark: 'bookmark',
-        storageMode: 'saf',
-        downloadTreeUri: 'content://tree/music',
-      );
-
-      expect(updated.downloadDirectory, '/new');
-      expect(updated.downloadDirectoryBookmark, 'bookmark');
-      expect(updated.storageMode, 'saf');
-      expect(updated.downloadTreeUri, 'content://tree/music');
-      expect(updated.artistTagMode, settings.artistTagMode);
+      final updated = settings.copyWith(localLibraryEnabled: true);
+      expect(updated.localLibraryEnabled, isTrue);
+      expect(updated.glassQuality, settings.glassQuality);
+      expect(settings.localLibraryEnabled, isFalse);
     });
 
     test('round-trips json including local library settings', () {
       const settings = AppSettings(
-        downloadDirectory: '/music',
-        downloadDirectoryBookmark: 'bookmark',
-        storageMode: 'saf',
-        downloadTreeUri: 'content://tree/music',
         localLibraryEnabled: true,
         localLibraryPath: '/music',
         hasCompletedTutorial: true,
-
-        lastSeenVersion: '4.5.0',
       );
 
       final decoded = AppSettings.fromJson(settings.toJson());
 
-      expect(decoded.downloadDirectory, '/music');
-      expect(decoded.downloadDirectoryBookmark, 'bookmark');
-      expect(decoded.storageMode, 'saf');
-      expect(decoded.downloadTreeUri, 'content://tree/music');
       expect(decoded.localLibraryEnabled, isTrue);
       expect(decoded.localLibraryPath, '/music');
       expect(decoded.hasCompletedTutorial, isTrue);
-      expect(decoded.lastSeenVersion, '4.5.0');
     });
   });
 
@@ -806,10 +781,7 @@ void main() {
       expect(physicalFilePathsMatch('$cue#track1', '$cue#track1'), isTrue);
       // A fragmented SAF URI is a virtual track, not the backing document.
       final trackKeys = buildPhysicalPathMatchKeys('$cue#track1');
-      expect(
-        trackKeys.any((key) => key.endsWith('Album.cue#track1')),
-        isTrue,
-      );
+      expect(trackKeys.any((key) => key.endsWith('Album.cue#track1')), isTrue);
       expect(trackKeys, isNot(contains('/storage/emulated/0/Music/Album.cue')));
       // The same document without a fragment still maps to its raw path.
       expect(

@@ -238,10 +238,18 @@ bool _hasLargeJson(List<Map<String, dynamic>> rows) {
   return false;
 }
 
-enum _CollectionRows { playlistTracks, loved, artists, membership, playlists }
+enum _CollectionRows {
+  playlistTracks,
+  loved,
+  artists,
+  membership,
+  playlists,
+  backupTracks,
+}
 
 class _CollectionHydrationAccumulator {
   final playlistTracks = <CollectionTrackEntry>[];
+  final backupTracks = <String, List<CollectionTrackEntry>>{};
   final loved = <CollectionTrackEntry>[];
   final artists = <CollectionArtistEntry>[];
   final playlistRows = <Map<String, dynamic>>[];
@@ -249,6 +257,14 @@ class _CollectionHydrationAccumulator {
 
   void add(_CollectionRows kind, List<Map<String, dynamic>> rows) {
     switch (kind) {
+      case _CollectionRows.backupTracks:
+        for (final row in rows) {
+          final id = row['playlist_id'] as String?;
+          final track = _parseTrackRow(row);
+          if (id != null && track != null) {
+            backupTracks.putIfAbsent(id, () => []).add(track);
+          }
+        }
       case _CollectionRows.playlistTracks:
         playlistTracks.addAll(_decodeTrackRows(rows));
       case _CollectionRows.loved:
@@ -270,15 +286,33 @@ class _CollectionHydrationAccumulator {
     }
   }
 
-  LibraryCollectionsState finish() => LibraryCollectionsState(
-    loved: loved,
-    favoriteArtists: artists,
-    playlists: _decodePlaylistRows(playlistRows, trackKeysByPlaylist),
-    isLoaded: true,
-  );
+  LibraryCollectionsState finish({bool completePlaylists = false}) =>
+      LibraryCollectionsState(
+        loved: loved,
+        favoriteArtists: artists,
+        playlists: [
+          for (final playlist in _decodePlaylistRows(
+            playlistRows,
+            trackKeysByPlaylist,
+          ))
+            completePlaylists
+                ? playlist.copyWith(
+                    tracks: backupTracks[playlist.id] ?? const [],
+                    tracksLoaded: true,
+                  )
+                : playlist,
+        ],
+        isLoaded: true,
+      );
 }
 
-enum _CollectionWorkerMode { snapshot, playlist, export, exportJson }
+enum _CollectionWorkerMode {
+  snapshot,
+  playlist,
+  export,
+  exportJson,
+  backupJson,
+}
 
 typedef _CollectionWorkerRequest = ({
   SendPort result,
@@ -420,6 +454,11 @@ void _collectionHydrationWorker(_CollectionWorkerRequest request) async {
               : exported,
         ]);
       }
+      if (request.mode == _CollectionWorkerMode.backupJson) {
+        Isolate.exit(request.result, [
+          jsonEncode(accumulator.finish(completePlaylists: true).toJson()),
+        ]);
+      }
       if (request.mode == _CollectionWorkerMode.snapshot) {
         Isolate.exit(request.result, [accumulator.finish()]);
       }
@@ -448,6 +487,7 @@ Future<void> _readNativeCollectionRows(
     _CollectionLineSink((line) {
       final decoded = jsonDecode(line) as Map<String, dynamic>;
       final kind = switch (decoded['kind']) {
+        'backup_track' => _CollectionRows.backupTracks,
         'playlist_track' => _CollectionRows.playlistTracks,
         'loved' => _CollectionRows.loved,
         'artist' => _CollectionRows.artists,
@@ -531,6 +571,27 @@ Future<Map<String, dynamic>> exportLibraryCollectionsState(
 
 /// Backup writers can embed this trusted JSON fragment directly, avoiding a
 /// second transfer of the large exported map from the UI to another worker.
+Future<String> exportCollectionsBackupSnapshot(
+  LibraryCollectionsSnapshot snapshot,
+) async {
+  try {
+    return await _runCollectionWorker<String>(
+      mode: _CollectionWorkerMode.backupJson,
+      feed: (send) async {
+        await send((
+          path: snapshot.nativeRowsPath!,
+          count: snapshot.nativeRowCount,
+        ));
+      },
+    );
+  } finally {
+    await cleanupCollectionRows(
+      nativeRowsDirectory: snapshot.nativeRowsDirectory,
+      nativeRowsPath: snapshot.nativeRowsPath,
+    );
+  }
+}
+
 Future<String> exportLibraryCollectionsJson(LibraryCollectionsState state) =>
     _exportLibraryCollectionsInWorker(state, _CollectionWorkerMode.exportJson);
 

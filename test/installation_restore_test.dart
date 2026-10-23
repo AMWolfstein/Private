@@ -18,6 +18,25 @@ void main() {
         .setMockMethodCallHandler(backendChannel, null);
   });
 
+  test(
+    'bootstrap completes legacy onboarding before the first route',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        'app_settings': '{"isFirstLaunch":false}',
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final settings = loadBootstrapSettings(prefs);
+      expect(settings.hasCompletedTutorial, isTrue);
+      expect(
+        initialLocationForAppState(
+          isFirstLaunch: settings.isFirstLaunch,
+          hasCompletedTutorial: settings.hasCompletedTutorial,
+        ),
+        '/',
+      );
+    },
+  );
+
   group('restored installation detection', () {
     test('fresh package plus persisted settings requires a reset', () {
       const installState = InstallationState(
@@ -94,10 +113,7 @@ void main() {
   group('restored settings sanitization', () {
     const restored = AppSettings(
       keepScreenOnLyrics: false,
-      downloadDirectory: '/storage/emulated/0/Music/Old',
-      downloadDirectoryBookmark: 'old-bookmark',
-      storageMode: 'saf',
-      downloadTreeUri: 'content://tree/old',
+
       isFirstLaunch: false,
       localLibraryEnabled: true,
       localLibraryPath: 'content://tree/library',
@@ -111,10 +127,7 @@ void main() {
 
       expect(sanitized.isFirstLaunch, isTrue);
       expect(sanitized.hasCompletedTutorial, isFalse);
-      expect(sanitized.storageMode, 'app');
-      expect(sanitized.downloadTreeUri, isEmpty);
-      expect(sanitized.downloadDirectory, isEmpty);
-      expect(sanitized.downloadDirectoryBookmark, isEmpty);
+
       expect(sanitized.localLibraryEnabled, isFalse);
       expect(sanitized.localLibraryPath, isEmpty);
       expect(sanitized.localLibraryBookmark, isEmpty);
@@ -133,20 +146,13 @@ void main() {
       final bootstrap = loadBootstrapSettings(prefs);
 
       expect(bootstrap.isFirstLaunch, isTrue);
-      expect(bootstrap.storageMode, 'app');
-      expect(bootstrap.downloadTreeUri, isEmpty);
     });
   });
 
   group('bootstrap routing', () {
     test('restored-install reset routes through the unified guide', () {
       final sanitized = resetInstallationBoundSettings(
-        const AppSettings(
-          isFirstLaunch: false,
-          hasCompletedTutorial: true,
-          storageMode: 'saf',
-          downloadTreeUri: 'content://tree/old',
-        ),
+        const AppSettings(isFirstLaunch: false, hasCompletedTutorial: true),
       );
 
       expect(

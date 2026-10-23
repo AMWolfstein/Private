@@ -3,15 +3,6 @@ import 'dart:io';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/source_deletion_events.dart';
 
-/// Validates and potentially corrects an iOS path.
-/// Returns a valid Documents subdirectory path if the input is invalid.
-Future<String> validateOrFixIosPath(
-  String path, {
-  String subfolder = 'SpotiFLAC',
-}) async {
-  return path;
-}
-
 class FileAccessStat {
   final int? size;
   final DateTime? modified;
@@ -55,9 +46,7 @@ bool isCueBackedRow(String? path, String? format) =>
 /// Returns the path unchanged if it's not a CUE virtual path, so a real file
 /// whose name merely ends in `#trackNN` keeps its own path.
 String stripCueTrackSuffix(String path) {
-  return isCueVirtualPath(path)
-      ? path.replaceFirst(_cueTrackSuffix, '')
-      : path;
+  return isCueVirtualPath(path) ? path.replaceFirst(_cueTrackSuffix, '') : path;
 }
 
 Future<bool> fileExists(String? path) async {

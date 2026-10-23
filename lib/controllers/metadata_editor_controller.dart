@@ -95,7 +95,6 @@ class MetadataEditorController {
   }
 
   Map<String, String> saveMetadata({
-    required String artistTagMode,
     MetadataSeparators separators = const MetadataSeparators(),
     bool onlyChanged = false,
   }) {
@@ -104,7 +103,7 @@ class MetadataEditorController {
     tags['disc_total'] = tags.remove('total_discs')!;
     tags['compilation'] =
         tags['album_type']!.trim().toLowerCase() == 'compilation' ? '1' : '0';
-    tags['artist_tag_mode'] = artistTagMode;
+    tags['artist_tag_mode'] = 'joined';
     tags.addAll(separators.writerFields);
     if (!onlyChanged) return tags;
     final changedKeys = {..._changed};

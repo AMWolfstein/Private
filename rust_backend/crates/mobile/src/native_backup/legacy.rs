@@ -162,7 +162,7 @@ pub(super) fn split(request: &Value, check: Check<'_>) -> Result<Value, String> 
     if fs::metadata(input)
         .map_err(|e| err("legacy backup metadata", e))?
         .len()
-        > MAX_HISTORY_BYTES + (8 << 20)
+        > MAX_HISTORY_BYTES + MAX_METADATA_BYTES
     {
         return Err("Legacy backup exceeds size limit".into());
     }
@@ -202,7 +202,7 @@ pub(super) fn split(request: &Value, check: Check<'_>) -> Result<Value, String> 
             .and_then(|_| writer.get_ref().sync_all())
             .map_err(|e| err("publish legacy history", e))?;
         let encoded = serde_json::to_vec(&root).map_err(|e| err("encode legacy metadata", e))?;
-        if encoded.len() > 8 << 20 {
+        if encoded.len() as u64 > MAX_METADATA_BYTES {
             return Err("Legacy backup metadata exceeds size limit".into());
         }
         check()?;

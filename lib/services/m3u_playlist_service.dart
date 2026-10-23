@@ -6,9 +6,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-
-final _log = AppLogger('M3uPlaylist');
 
 String _buildM3uInBackground(List<Map<String, dynamic>> entries) =>
     M3uPlaylistService.buildM3u8Content(
@@ -36,67 +33,6 @@ class M3uExportEntry {
 }
 
 class M3uPlaylistService {
-  /// Parses M3U/M3U8 content into tracks for the import pipeline. EXTINF
-  /// display text is split on the first " - " into artist and title; path
-  /// lines without EXTINF fall back to the file name stem.
-  static List<Track> parseM3u(String content, {int? idSeed}) {
-    final tracks = <Track>[];
-    final lines = content.split(RegExp(r'\r\n|\r|\n'));
-    final baseId = idSeed ?? DateTime.now().millisecondsSinceEpoch;
-
-    int? pendingDuration;
-    String? pendingDisplay;
-
-    for (final rawLine in lines) {
-      final line = rawLine.trim();
-      if (line.isEmpty) continue;
-
-      if (line.startsWith('#EXTINF:')) {
-        final body = line.substring('#EXTINF:'.length);
-        final commaIdx = body.indexOf(',');
-        if (commaIdx >= 0) {
-          final durationRaw = body.substring(0, commaIdx).split(' ').first;
-          pendingDuration = double.tryParse(durationRaw)?.round();
-          pendingDisplay = body.substring(commaIdx + 1).trim();
-        }
-        continue;
-      }
-      if (line.startsWith('#')) continue;
-
-      var display = pendingDisplay;
-      if (display == null || display.isEmpty) {
-        display = p.basenameWithoutExtension(line).trim();
-      }
-
-      String artist = '';
-      String title = display;
-      final splitIdx = display.indexOf(' - ');
-      if (splitIdx > 0) {
-        artist = display.substring(0, splitIdx).trim();
-        title = display.substring(splitIdx + 3).trim();
-      }
-
-      if (title.isNotEmpty) {
-        final duration = pendingDuration ?? 0;
-        tracks.add(
-          Track(
-            id: 'm3u_${baseId}_${tracks.length}',
-            name: title,
-            artistName: artist.isEmpty ? 'Unknown Artist' : artist,
-            albumName: 'Unknown Album',
-            duration: duration > 0 ? duration : 0,
-            coverUrl: null,
-          ),
-        );
-      }
-      pendingDuration = null;
-      pendingDisplay = null;
-    }
-
-    _log.i('Parsed ${tracks.length} tracks from M3U');
-    return tracks;
-  }
-
   /// Builds `#EXTM3U` content with one EXTINF line per entry.
   static String buildM3u8Content(List<M3uExportEntry> entries) {
     final buffer = StringBuffer('#EXTM3U\n');

@@ -158,6 +158,17 @@ class BackupBundle {
       extensionCount == 0;
 }
 
+/// The export would exceed a limit the importer enforces, so it is refused
+/// instead of publishing a backup that cannot be restored.
+class BackupTooLargeException implements Exception {
+  const BackupTooLargeException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'BackupTooLargeException: $message';
+}
+
 class BackupService {
   static final _log = AppLogger('BackupService');
 
@@ -167,7 +178,9 @@ class BackupService {
   static const int formatVersion = 3;
   static const String fileExtension = 'sflb';
   static const int _historyPageSize = 500;
-  static const int _maxMetadataBytes = 8 << 20;
+  // Restore decodes metadata.json in memory; keep in sync with the native
+  // archive reader.
+  static const int _maxMetadataBytes = 32 << 20;
   static const int _maxHistoryBytes = 512 << 20;
   static const int _maxCoverBytes = 20 << 20;
   static const int _maxAllCoversBytes = 256 << 20;
@@ -272,6 +285,26 @@ class BackupService {
         collectionsJson: collectionsJson,
       );
 
+      if (await metadataFile.length() > _maxMetadataBytes) {
+        throw const BackupTooLargeException(
+          'Backup collections exceed the supported metadata limit',
+        );
+      }
+      if (includeHistory && await historyFile.length() > _maxHistoryBytes) {
+        throw const BackupTooLargeException(
+          'Backup history exceeds the supported limit',
+        );
+      }
+      var coverBytes = 0;
+      for (final entry in coverManifest.keys) {
+        final size = await File(playlistCoverFiles[entry]!['path']!).length();
+        coverBytes += size;
+        if (size > _maxCoverBytes || coverBytes > _maxAllCoversBytes) {
+          throw const BackupTooLargeException(
+            'Backup artwork exceeds the supported limit',
+          );
+        }
+      }
       if (await partFile.exists()) await partFile.delete();
       final archiveFiles = <({String path, String name, bool store})>[
         (path: metadataFile.path, name: 'metadata.json', store: false),
@@ -376,24 +409,18 @@ class BackupService {
 
   /// Called inside the history notifier's write queue. Native work uses a
   /// private database; the live SQLite owner publishes the complete result.
-  static Future<void> restoreHistory(BackupBundle bundle) async {
+  static Future<void> restoreHistory(
+    BackupBundle bundle, {
+    HistoryDatabase? historyDatabase,
+  }) async {
     if (!bundle.hasHistory) return;
-    final database = await HistoryDatabase.instance.database;
+    final history = historyDatabase ?? HistoryDatabase.instance;
     if (PlatformBridge.supportsCoreBackend &&
         bundle._historyNdjsonPath != null) {
-      await restoreNativeHistory(database, bundle);
+      await restoreNativeHistory(await history.database, bundle);
       return;
     }
-    // Desktop and legacy in-memory callers retain the established codec.
-    await HistoryDatabase.instance.clearAll();
-    var batch = <Map<String, dynamic>>[];
-    await for (final item in bundle.streamHistory()) {
-      batch.add(item);
-      if (batch.length < _historyPageSize) continue;
-      await HistoryDatabase.instance.upsertBatch(batch);
-      batch = <Map<String, dynamic>>[];
-    }
-    if (batch.isNotEmpty) await HistoryDatabase.instance.upsertBatch(batch);
+    await history.replaceAll(bundle.streamHistory());
   }
 
   @visibleForTesting
@@ -796,7 +823,12 @@ class BackupService {
       history: history,
       hasHistory: data['history'] is List,
       collections: _mapOrEmpty(data['collections']),
-      playlistCovers: _mapOrEmpty(data['playlist_covers']),
+      playlistCovers: {
+        for (final entry in _mapOrEmpty(data['playlist_covers']).entries)
+          if (entry.value is Map)
+            entry.key: (Map<String, dynamic>.from(entry.value as Map)
+              ..remove('path')),
+      },
       extensions: _mapOrEmpty(data['extensions']),
     );
   }

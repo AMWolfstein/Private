@@ -72,7 +72,15 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
       );
     } catch (e, stack) {
       _log.e('Failed to create backup: $e', e, stack);
-      messenger.showSnackBar(SnackBar(content: Text(l10n.backupCreateFailed)));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            e is BackupTooLargeException
+                ? l10n.backupTooLarge
+                : l10n.backupCreateFailed,
+          ),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isExporting = false);
     }
@@ -116,19 +124,23 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
     }
 
     setState(() => _isImporting = true);
+    final applied = <String>[];
     try {
       if (bundle.profile != null) {
         await ref
             .read(userProfileProvider.notifier)
             .restoreFromBackup(bundle.profile!);
+        applied.add(l10n.profileTitle);
       }
       if (bundle.hasSettings) {
         await ref
             .read(settingsProvider.notifier)
             .restoreFromBackup(bundle.settings!);
+        applied.add(l10n.backupContentsSettings);
       }
       if (bundle.hasHistory) {
         await BackupService.restoreHistory(bundle);
+        applied.add(l10n.backupContentsHistory(bundle.historyCount));
       }
       if (bundle.hasCollections) {
         await ref
@@ -137,6 +149,7 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
               bundle.collections,
               coverImages: bundle.playlistCovers,
             );
+        applied.add(l10n.backupSelectCollections);
       }
 
       final message = StringBuffer(l10n.backupRestored)
@@ -151,7 +164,15 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
       );
     } catch (e, stack) {
       _log.e('Failed to restore backup: $e', e, stack);
-      messenger.showSnackBar(SnackBar(content: Text(l10n.backupRestoreFailed)));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            applied.isEmpty
+                ? l10n.backupRestoreFailed
+                : l10n.backupRestorePartiallyFailed(applied.join(', ')),
+          ),
+        ),
+      );
     } finally {
       await bundle.cleanup();
       if (mounted) setState(() => _isImporting = false);
@@ -171,6 +192,8 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(l10n.backupSelectedRestoreMessage),
+              const SizedBox(height: 8),
+              Text(l10n.backupListeningStatisticsExcluded),
               const SizedBox(height: 16),
               Text(
                 l10n.backupContentsTitle,
@@ -266,6 +289,7 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                 SettingsSwitchItem(
                   icon: Icons.history,
                   title: l10n.backupSelectHistory,
+                  subtitle: l10n.backupListeningStatisticsExcluded,
                   value: _includeHistory,
                   onChanged: _isBusy
                       ? null

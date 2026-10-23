@@ -18,9 +18,26 @@ const _playlistCoverMaxDimension = 1024;
 const _playlistCoverMaxStoredBytes = 2 * 1024 * 1024;
 final _log = AppLogger('LibraryCollections');
 
+typedef PlaylistCoverResize =
+    Future<bool> Function({
+      required String inputPath,
+      required String outputPath,
+      required int maxDimension,
+    });
+typedef PlaylistCoverProbe =
+    Future<({int width, int height})?> Function(String path);
+
 class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
-  LibraryCollectionsNotifier({LibraryCollectionsDatabase? database})
-    : _db = database ?? LibraryCollectionsDatabase.instance;
+  LibraryCollectionsNotifier({
+    LibraryCollectionsDatabase? database,
+    PlaylistCoverResize? resizeCover,
+    PlaylistCoverProbe? probeCover,
+  }) : _db = database ?? LibraryCollectionsDatabase.instance,
+       _resizeCover = resizeCover ?? FFmpegService.resizeCoverArt,
+       _probeCover = probeCover ?? FFmpegService.probeImageDimensions;
+
+  final PlaylistCoverResize _resizeCover;
+  final PlaylistCoverProbe _probeCover;
 
   final LibraryCollectionsDatabase _db;
   Future<void>? _loadFuture;
@@ -593,53 +610,68 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     return dir;
   }
 
-  Future<void> setPlaylistCover(String playlistId, String sourceFilePath) =>
-      _mutate(() async {
-        final playlist = state.playlistById(playlistId);
-        if (playlist == null) return;
-
-        final previousCoverPath = playlist.coverImagePath;
-        final destPath = await _normalizePlaylistCoverFile(
-          playlistId,
-          sourceFilePath,
-        );
-
-        final now = DateTime.now();
-        await _db.updatePlaylistCover(
-          playlistId: playlistId,
-          coverImagePath: destPath,
-          updatedAt: now.toIso8601String(),
-        );
-        _replacePlaylistById(playlistId, (playlist) {
-          if (playlist.coverImagePath == destPath) return playlist;
-          return playlist.copyWith(
-            coverImagePath: () => destPath,
-            updatedAt: now,
-          );
-        });
-        _invalidatePlaylistPickerSummaries();
-        if (previousCoverPath != null && previousCoverPath != destPath) {
-          try {
-            final previous = File(previousCoverPath);
-            if (await previous.exists()) await previous.delete();
-          } catch (_) {}
-        }
-      });
-
-  Future<String> _normalizePlaylistCoverFile(
+  Future<void> setPlaylistCover(
     String playlistId,
     String sourceFilePath,
-  ) async {
-    final coversDir = await _playlistCoversDir();
-    final destPath = p.join(coversDir.path, '$playlistId.jpg');
-    final tempPath = p.join(
-      coversDir.path,
-      '.$playlistId.${DateTime.now().microsecondsSinceEpoch}.jpg',
-    );
+  ) => _mutate(() async {
+    final playlist = state.playlistById(playlistId);
+    if (playlist == null) return;
+
+    final previousCoverPath = playlist.coverImagePath;
+    final destPath = await _normalizePlaylistCoverFile(sourceFilePath);
+
+    final now = DateTime.now();
     try {
-      final dimensions = await FFmpegService.probeImageDimensions(
-        sourceFilePath,
+      await _db.updatePlaylistCover(
+        playlistId: playlistId,
+        coverImagePath: destPath,
+        updatedAt: now.toIso8601String(),
       );
+    } catch (_) {
+      await _deletePrivatePlaylistCover(destPath);
+      rethrow;
+    }
+    _replacePlaylistById(playlistId, (playlist) {
+      if (playlist.coverImagePath == destPath) return playlist;
+      return playlist.copyWith(coverImagePath: () => destPath, updatedAt: now);
+    });
+    _invalidatePlaylistPickerSummaries();
+    if (previousCoverPath != null && previousCoverPath != destPath) {
+      if (!state.playlists.any((p) => p.coverImagePath == previousCoverPath)) {
+        await _deletePrivatePlaylistCover(previousCoverPath);
+      }
+    }
+  });
+
+  Future<void> _deletePrivatePlaylistCover(String path) async {
+    try {
+      final root = await (await _playlistCoversDir()).resolveSymbolicLinks();
+      final file = File(path);
+      final resolved = await file.resolveSymbolicLinks();
+      if (p.isWithin(root, resolved)) {
+        await file.delete();
+        final parent = Directory(p.dirname(resolved));
+        if (p.dirname(parent.path) == root &&
+            p.basename(parent.path).startsWith('cover-') &&
+            await parent.list().isEmpty) {
+          await parent.delete();
+        }
+      }
+    } on FileSystemException catch (_) {
+      /* Unreferenced files can be reclaimed later. */
+    }
+  }
+
+  Future<String> _normalizePlaylistCoverFile(String sourceFilePath) async {
+    final coversDir = await _playlistCoversDir();
+    // Playlist IDs are opaque backup data, never filesystem path components.
+    // Versioned destinations leave the live cover intact until the DB commits.
+    final version = await coversDir.createTemp('cover-');
+    final destPath = p.join(version.path, 'image.jpg');
+    final tempPath = p.join(version.path, 'working.jpg');
+    var published = false;
+    try {
+      final dimensions = await _probeCover(sourceFilePath);
       final longestEdge = dimensions == null
           ? _playlistCoverMaxDimension
           : (dimensions.width > dimensions.height
@@ -649,7 +681,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
           .clamp(64, _playlistCoverMaxDimension)
           .toInt();
       while (true) {
-        final resized = await FFmpegService.resizeCoverArt(
+        final resized = await _resizeCover(
           inputPath: sourceFilePath,
           outputPath: tempPath,
           maxDimension: targetDimension,
@@ -667,14 +699,14 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
             .clamp(64, targetDimension)
             .toInt();
       }
-      final destination = File(destPath);
-      if (await destination.exists()) await destination.delete();
       await File(tempPath).rename(destPath);
+      published = true;
       return destPath;
     } finally {
       try {
         final temp = File(tempPath);
         if (await temp.exists()) await temp.delete();
+        if (!published) await version.delete(recursive: true);
       } catch (_) {}
     }
   }
@@ -686,7 +718,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
         await file.length() > _playlistCoverMaxStoredBytes) {
       return true;
     }
-    final dimensions = await FFmpegService.probeImageDimensions(path);
+    final dimensions = await _probeCover(path);
     return dimensions == null ||
         dimensions.width > _playlistCoverMaxDimension ||
         dimensions.height > _playlistCoverMaxDimension;
@@ -717,11 +749,10 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     _invalidatePlaylistPickerSummaries();
   });
 
-  Future<String> exportCollectionsJson() async {
-    await _ensureLoaded();
-    await ensurePlaylistsLoaded(state.playlists.map((playlist) => playlist.id));
-    return exportLibraryCollectionsJson(state);
-  }
+  Future<String> exportCollectionsJson() => _mutate(() async {
+    final snapshot = await _db.exportBackupSnapshot();
+    return exportCollectionsBackupSnapshot(snapshot);
+  });
 
   /// Returns cover file references for the streaming ZIP backup format. The
   /// backup writer reads each file directly instead of materializing every
@@ -762,64 +793,82 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
   }) => _mutate(() async {
     final normalized = Map<String, dynamic>.from(collectionsJson);
     final coversDir = await _playlistCoversDir();
-
-    final playlistsRaw = normalized['playlists'];
-    if (playlistsRaw is List) {
-      final rewritten = <Map<String, dynamic>>[];
-      for (final entry in playlistsRaw.whereType<Map<Object?, Object?>>()) {
-        final playlist = Map<String, dynamic>.from(entry);
-        final id = playlist['id'] as String?;
-        String? newCoverPath;
-        final coverEntry = (id != null && coverImages != null)
-            ? coverImages[id]
-            : null;
-        if (id != null && coverEntry is Map) {
-          final data = coverEntry['data'] as String?;
-          final restoredPath = coverEntry['path'] as String?;
-          final ext = (coverEntry['ext'] as String?) ?? '.jpg';
-          if ((data != null && data.isNotEmpty) ||
-              (restoredPath != null && restoredPath.isNotEmpty)) {
-            try {
-              final sourcePath = p.join(
-                coversDir.path,
-                '.$id.restore${ext.startsWith('.') ? ext : '.$ext'}',
-              );
-              final source = File(sourcePath);
-              if (restoredPath != null && restoredPath.isNotEmpty) {
-                await File(restoredPath).copy(source.path);
-              } else {
-                await source.writeAsBytes(base64Decode(data!), flush: true);
-              }
+    final prepared = <String>[];
+    final previous = state.playlists
+        .map((p) => p.coverImagePath)
+        .whereType<String>()
+        .toSet();
+    var committed = false;
+    try {
+      final playlistsRaw = normalized['playlists'];
+      if (playlistsRaw is List) {
+        final rewritten = <Map<String, dynamic>>[];
+        for (final entry in playlistsRaw.whereType<Map<Object?, Object?>>()) {
+          final playlist = Map<String, dynamic>.from(entry);
+          final id = playlist['id'] as String?;
+          String? newCoverPath;
+          final coverEntry = (id != null && coverImages != null)
+              ? coverImages[id]
+              : null;
+          if (id != null && coverEntry is Map) {
+            final data = coverEntry['data'] as String?;
+            final restoredPath = coverEntry['path'] as String?;
+            final ext = (coverEntry['ext'] as String?) ?? '.jpg';
+            if ((data != null && data.isNotEmpty) ||
+                (restoredPath != null && restoredPath.isNotEmpty)) {
               try {
-                newCoverPath = await _normalizePlaylistCoverFile(
-                  id,
-                  sourcePath,
-                );
-              } finally {
+                final staging = await coversDir.createTemp('restore-');
+                final safeExt = RegExp(r'^\.[a-zA-Z0-9]{1,8}$').hasMatch(ext)
+                    ? ext
+                    : '.jpg';
+                final sourcePath = p.join(staging.path, 'source$safeExt');
+                final source = File(sourcePath);
                 try {
-                  if (await source.exists()) await source.delete();
-                } catch (_) {}
+                  if (restoredPath != null && restoredPath.isNotEmpty) {
+                    await File(restoredPath).copy(source.path);
+                  } else {
+                    await source.writeAsBytes(base64Decode(data!), flush: true);
+                  }
+                  newCoverPath = await _normalizePlaylistCoverFile(sourcePath);
+                  prepared.add(newCoverPath);
+                } finally {
+                  try {
+                    if (await staging.exists()) {
+                      await staging.delete(recursive: true);
+                    }
+                  } catch (_) {}
+                }
+              } catch (_) {
+                newCoverPath = null;
               }
-            } catch (_) {
-              newCoverPath = null;
             }
           }
+          // Always replace the backup's device-specific path: either with the
+          // freshly written local cover, or drop it so a stale path is not kept.
+          if (newCoverPath != null) {
+            playlist['coverImagePath'] = newCoverPath;
+          } else {
+            playlist.remove('coverImagePath');
+          }
+          rewritten.add(playlist);
         }
-        // Always replace the backup's device-specific path: either with the
-        // freshly written local cover, or drop it so a stale path is not kept.
-        if (newCoverPath != null) {
-          playlist['coverImagePath'] = newCoverPath;
-        } else {
-          playlist.remove('coverImagePath');
-        }
-        rewritten.add(playlist);
+        normalized['playlists'] = rewritten;
       }
-      normalized['playlists'] = rewritten;
-    }
 
-    await _db.replaceAllFromBackup(normalized);
-    await _load();
-    _invalidatePlaylistPickerSummaries();
+      await _db.replaceAllFromBackup(normalized);
+      committed = true;
+      for (final path in previous.difference(prepared.toSet())) {
+        await _deletePrivatePlaylistCover(path);
+      }
+      await _load();
+      _invalidatePlaylistPickerSummaries();
+    } finally {
+      if (!committed) {
+        for (final path in prepared) {
+          await _deletePrivatePlaylistCover(path);
+        }
+      }
+    }
   });
 }
 

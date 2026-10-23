@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
+import 'package:spotiflac_android/services/history_maintenance.dart';
 import 'package:spotiflac_android/utils/isrc_utils.dart' as isrc;
 import 'package:spotiflac_android/utils/ios_container_paths.dart';
 import 'package:spotiflac_android/utils/logger.dart';
@@ -545,6 +546,10 @@ class HistoryDatabase {
       'replayGainMetadataScanVersion':
           row['replaygain_metadata_scan_version'] ?? 0,
     };
+  }
+
+  Future<void> replaceAll(Stream<Map<String, dynamic>> items) async {
+    await replaceHistoryRows(await database, items.map(_jsonToDbRow));
   }
 
   Future<void> upsertBatch(List<Map<String, dynamic>> items) async {

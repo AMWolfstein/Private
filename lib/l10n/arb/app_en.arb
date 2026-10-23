@@ -110,7 +110,9 @@
   "@appearanceGlassAutoMeasured": {
     "description": "Shown under the glass quality control once Auto has measured the device",
     "placeholders": {
-      "quality": {"type": "String"}
+      "quality": {
+        "type": "String"
+      }
     }
   },
   "appearanceGlassClarityAutoFrosted": "Auto measured this device and uses Frosted. Choose Lite or Full to set clarity.",
@@ -676,10 +678,6 @@
   "@tooltipPlay": {
     "description": "Tooltip - play button"
   },
-  "updateLater": "Later",
-  "@updateLater": {
-    "description": "Update button - dismiss"
-  },
   "logTitle": "Logs",
   "@logTitle": {
     "description": "Logs screen title"
@@ -813,10 +811,6 @@
         "type": "int"
       }
     }
-  },
-  "downloadDirectory": "Music folder",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
   },
   "appearanceHeroAnimations": "Hero animations",
   "@appearanceHeroAnimations": {
@@ -1570,22 +1564,6 @@
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "safMigrationTitle": "Storage Update Required",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "safMigrationMessage1": "Android folder access is needed to read and edit music on removable or restricted storage.",
-  "@safMigrationMessage1": {
-    "description": "First paragraph of SAF migration dialog"
-  },
-  "safMigrationMessage2": "Select your music folder again to restore access.",
-  "@safMigrationMessage2": {
-    "description": "Second paragraph of SAF migration dialog"
-  },
-  "safMigrationSuccess": "Music folder access restored",
-  "@safMigrationSuccess": {
-    "description": "Snackbar after successfully migrating to SAF"
-  },
   "settingsBackup": "Backup & Restore",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
@@ -1629,6 +1607,21 @@
   "backupCreateFailed": "Failed to create backup",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
+  },
+  "backupTooLarge": "This backup would be too large to restore. Include fewer categories and try again.",
+  "@backupTooLarge": {
+    "description": "Snackbar when a backup exceeds the size the importer accepts"
+  },
+  "backupRestorePartiallyFailed": "Failed to restore backup. Already restored: {categories}",
+  "@backupRestorePartiallyFailed": {
+    "description": "Snackbar when a restore fails after some categories were applied",
+    "placeholders": {
+      "categories": {"type": "String"}
+    }
+  },
+  "backupListeningStatisticsExcluded": "Listening statistics and play counts are not included.",
+  "@backupListeningStatisticsExcluded": {
+    "description": "Note that backups omit listening statistics"
   },
   "backupRestoreConfirmTitle": "Restore this backup?",
   "@backupRestoreConfirmTitle": {
@@ -1743,19 +1736,6 @@
   "noTracksFoundForAlbum": "No tracks found for this album",
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
-  },
-  "storageAutomaticFolder": "Automatic folder",
-  "downloadFolderAccessLostTitle": "Music folder access lost",
-  "@downloadFolderAccessLostTitle": {
-    "description": "Title of the warning banner shown in Files settings when the saved SAF folder grant is no longer valid"
-  },
-  "downloadFolderAccessLostSubtitle": "Select the folder again to restore local file access",
-  "@downloadFolderAccessLostSubtitle": {
-    "description": "Subtitle of the warning banner shown when the saved SAF folder grant is no longer valid"
-  },
-  "downloadFolderReselect": "Re-select folder",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "snackbarUnsupportedAudioFormat": "Unsupported audio format",
   "@snackbarUnsupportedAudioFormat": {

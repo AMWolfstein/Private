@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
 import 'package:spotiflac_android/models/metadata_separators.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
 
 part 'settings.g.dart';
 
@@ -34,13 +33,6 @@ double musicHapticsLevelFromJson(Object? value) =>
 
 @JsonSerializable(explicitToJson: true)
 class AppSettings {
-  final String downloadDirectory;
-  final String downloadDirectoryBookmark;
-  final String storageMode; // 'app' or 'saf'
-  final String downloadTreeUri; // SAF persistable tree URI
-
-  final String
-  artistTagMode; // 'joined', 'split_vorbis' (Vorbis formats), or 'primary'
   final MetadataSeparators metadataSeparators;
   // Optional pulses follow local playback.
   final bool musicHaptics;
@@ -122,19 +114,10 @@ class AppSettings {
 
   final bool hasCompletedTutorial;
 
-  final String
-  lastSeenVersion; // Last app version the user has acknowledged (e.g. '3.7.0')
-
   final bool playerShowPronunciation;
   final bool playerShowTranslation;
 
   const AppSettings({
-    this.downloadDirectory = '',
-    this.downloadDirectoryBookmark = '',
-    this.storageMode = 'app',
-    this.downloadTreeUri = '',
-
-    this.artistTagMode = artistTagModeJoined,
     this.metadataSeparators = const MetadataSeparators(),
     this.musicHaptics = false,
     this.musicHapticsSensitivity = 0.5,
@@ -177,18 +160,11 @@ class AppSettings {
     this.localLibraryShowDuplicates = true,
     this.localLibraryAutoScan = 'off',
     this.hasCompletedTutorial = false,
-    this.lastSeenVersion = '',
     this.playerShowPronunciation = true,
     this.playerShowTranslation = true,
   });
 
   AppSettings copyWith({
-    String? downloadDirectory,
-    String? downloadDirectoryBookmark,
-    String? storageMode,
-    String? downloadTreeUri,
-
-    String? artistTagMode,
     MetadataSeparators? metadataSeparators,
     bool? musicHaptics,
     double? musicHapticsSensitivity,
@@ -231,18 +207,10 @@ class AppSettings {
     bool? localLibraryShowDuplicates,
     String? localLibraryAutoScan,
     bool? hasCompletedTutorial,
-    String? lastSeenVersion,
     bool? playerShowPronunciation,
     bool? playerShowTranslation,
   }) {
     return AppSettings(
-      downloadDirectory: downloadDirectory ?? this.downloadDirectory,
-      downloadDirectoryBookmark:
-          downloadDirectoryBookmark ?? this.downloadDirectoryBookmark,
-      storageMode: storageMode ?? this.storageMode,
-      downloadTreeUri: downloadTreeUri ?? this.downloadTreeUri,
-
-      artistTagMode: artistTagMode ?? this.artistTagMode,
       metadataSeparators: metadataSeparators ?? this.metadataSeparators,
       musicHaptics: musicHaptics ?? this.musicHaptics,
       musicHapticsSensitivity:
@@ -297,7 +265,6 @@ class AppSettings {
           localLibraryShowDuplicates ?? this.localLibraryShowDuplicates,
       localLibraryAutoScan: localLibraryAutoScan ?? this.localLibraryAutoScan,
       hasCompletedTutorial: hasCompletedTutorial ?? this.hasCompletedTutorial,
-      lastSeenVersion: lastSeenVersion ?? this.lastSeenVersion,
       playerShowPronunciation:
           playerShowPronunciation ?? this.playerShowPronunciation,
       playerShowTranslation:

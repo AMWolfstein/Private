@@ -44,7 +44,6 @@ void main() {
   }) => MetadataSaveRequest(
     filePath: path,
     metadata: tags,
-    artistTagMode: artistTagModeSplitVorbis,
     selectedCoverPath: selectedCover,
     currentCoverPath: currentCover,
     coverMaxDimension: dimension,
@@ -66,7 +65,7 @@ void main() {
           expect(metadata, {
             'title': 'Song',
             'lyrics': '',
-            'artist_tag_mode': artistTagModeSplitVorbis,
+            'artist_tag_mode': artistTagModeJoined,
             'cover_path': cover.path,
           });
           entered.complete();
@@ -105,7 +104,7 @@ void main() {
               'replaygain_album_peak': '1.234567',
             };
           },
-          embed: (codec, path, coverPath, metadata, mode) async {
+          embed: (codec, path, coverPath, metadata) async {
             expect(
               codec,
               isOpus
@@ -113,10 +112,6 @@ void main() {
                   : extension == 'mp3'
                   ? MetadataSaveCodec.mp3
                   : MetadataSaveCodec.m4a,
-            );
-            expect(
-              mode,
-              isOpus ? artistTagModeSplitVorbis : artistTagModeJoined,
             );
             expect(coverPath, cover.path);
             expect(metadata['ARTIST'], 'Artist One; Artist Two');
@@ -169,7 +164,7 @@ void main() {
           covers: covers,
           edit: (_, _) async => {'method': 'ffmpeg'},
           read: (_) async => throw StateError('Reader unavailable'),
-          embed: (_, path, _, metadata, _) async {
+          embed: (_, path, _, metadata) async {
             expect(metadata['LYRICS'], '');
             expect(metadata['UNSYNCEDLYRICS'], '');
             expect(metadata['TRACKNUMBER'], pair.$3);
@@ -217,7 +212,7 @@ void main() {
           return {'method': 'ffmpeg'};
         },
         read: (_) async => throw StateError('Reader unavailable'),
-        embed: (_, path, _, metadata, _) async {
+        embed: (_, path, _, metadata) async {
           expect(metadata['ARTIST'], 'A / B');
           expect(metadata['ALBUMARTIST'], 'C; D');
           expect(metadata['COMPOSER'], 'E | F');
@@ -306,7 +301,7 @@ void main() {
               'error': 'Backend failed',
           },
           read: (_) async => {},
-          embed: (_, path, coverPath, _, _) async {
+          embed: (_, path, coverPath, _) async {
             expect(path, staged.path);
             expect(coverPath, covers.extracted!.path);
             if (failure == MetadataSaveFailure.unexpected) {

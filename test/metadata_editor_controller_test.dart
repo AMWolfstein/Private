@@ -12,7 +12,7 @@ void main() {
       'album_type': ' Compilation ',
       'explicit': 'true',
     });
-    final tags = editor.saveMetadata(artistTagMode: 'all');
+    final tags = editor.saveMetadata();
     editor['title']!.text = 'Changed';
     editor.dispose();
 
@@ -23,7 +23,7 @@ void main() {
     expect(tags['disc_total'], '2');
     expect(tags['compilation'], '1');
     expect(tags['explicit'], '1');
-    expect(tags['artist_tag_mode'], 'all');
+    expect(tags['artist_tag_mode'], 'joined');
     expect(tags.containsKey('total_tracks'), isFalse);
     expect(tags.containsKey('total_discs'), isFalse);
   });
@@ -31,7 +31,6 @@ void main() {
   test('save snapshots carry only the configured separators', () {
     final editor = MetadataEditorController({'artist': 'A, B'});
     final tags = editor.saveMetadata(
-      artistTagMode: 'joined',
       separators: const MetadataSeparators(artist: ' / ', genre: '; '),
     );
     expect(tags['artist_separator'], ' / ');
@@ -50,7 +49,7 @@ void main() {
       'upc': '',
     });
     editor['title']!.text = 'Changed';
-    final tags = editor.saveMetadata(artistTagMode: 'all', onlyChanged: true);
+    final tags = editor.saveMetadata(onlyChanged: true);
 
     expect(tags['title'], 'Changed');
     expect(tags.containsKey('lyrics'), isFalse);
@@ -58,7 +57,7 @@ void main() {
     expect(tags.containsKey('album_type'), isFalse);
     expect(tags.containsKey('upc'), isFalse);
     expect(tags.containsKey('artist'), isFalse);
-    expect(tags['artist_tag_mode'], 'all');
+    expect(tags['artist_tag_mode'], 'joined');
     editor.dispose();
   });
 
@@ -68,7 +67,7 @@ void main() {
       'lyrics': 'Old lyrics',
     });
     editor['lyrics']!.text = '';
-    final tags = editor.saveMetadata(artistTagMode: 'all', onlyChanged: true);
+    final tags = editor.saveMetadata(onlyChanged: true);
 
     expect(tags['lyrics'], '');
     expect(tags.containsKey('title'), isFalse);
@@ -84,7 +83,7 @@ void main() {
     editor['album_type']!.text = 'Compilation';
     editor['total_tracks']!.text = '12';
     editor.explicit = true;
-    final tags = editor.saveMetadata(artistTagMode: 'all', onlyChanged: true);
+    final tags = editor.saveMetadata(onlyChanged: true);
 
     expect(tags['album_type'], 'Compilation');
     expect(tags['compilation'], '1');
@@ -103,7 +102,7 @@ void main() {
     });
     editor['total_tracks']!.text = '13';
     editor['total_discs']!.text = '3';
-    final tags = editor.saveMetadata(artistTagMode: 'all', onlyChanged: true);
+    final tags = editor.saveMetadata(onlyChanged: true);
 
     expect(tags['track_number'], '3');
     expect(tags['track_total'], '13');

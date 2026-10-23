@@ -4,6 +4,22 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiflac_android/services/backup_service.dart';
+import 'package:spotiflac_android/services/history_database.dart';
+
+class _AtomicHistory implements HistoryDatabase {
+  List<Map<String, dynamic>> rows = [
+    {'id': 'old'},
+  ];
+  @override
+  Future<void> replaceAll(Stream<Map<String, dynamic>> items) async {
+    final prepared = await items.toList();
+    rows = prepared;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw StateError('non-atomic method called: ${invocation.memberName}');
+}
 
 void main() {
   late Directory directory;
@@ -13,6 +29,69 @@ void main() {
     );
   });
   tearDown(() => directory.delete(recursive: true));
+
+  test('fallback history restore delegates one atomic replacement', () async {
+    final history = _AtomicHistory();
+    final bundle = BackupBundle(
+      formatVersion: 1,
+      appVersion: 'old',
+      createdAt: null,
+      settings: null,
+      history: [
+        {'id': 'new'},
+      ],
+      collections: const {},
+      playlistCovers: const {},
+      extensions: const {},
+    );
+    await BackupService.restoreHistory(bundle, historyDatabase: history);
+    expect(history.rows, [
+      {'id': 'new'},
+    ]);
+    final corrupt = File('${directory.path}/history.ndjson');
+    await corrupt.writeAsString('{"id":"partial"}\ninvalid JSON');
+    final broken = BackupBundle(
+      formatVersion: 2,
+      appVersion: 'old',
+      createdAt: null,
+      settings: null,
+      history: const [],
+      collections: const {},
+      playlistCovers: const {},
+      extensions: const {},
+      historyNdjsonPath: corrupt.path,
+    );
+    await expectLater(
+      BackupService.restoreHistory(broken, historyDatabase: history),
+      throwsFormatException,
+    );
+    expect(history.rows, [
+      {'id': 'new'},
+    ]);
+  });
+
+  test('legacy JSON cannot select a local cover source path', () {
+    final bundle = BackupService.parse(
+      jsonEncode({
+        'magic': BackupService.magic,
+        'data': {
+          'playlist_covers': {
+            'unsafe': {'path': '/dev/zero', 'ext': '.jpg'},
+            'embedded': {
+              'data': 'Y292ZXI=',
+              'path': '/private/avatar.png',
+              'ext': '.jpg',
+            },
+          },
+        },
+      }),
+    );
+    expect(bundle!.playlistCovers['unsafe'], {'ext': '.jpg'});
+    expect(bundle.playlistCovers['embedded'], {
+      'data': 'Y292ZXI=',
+      'ext': '.jpg',
+    });
+  });
 
   test(
     'direct collections JSON keeps exact metadata bytes for v2 and v3',
@@ -129,6 +208,46 @@ void main() {
       }
     },
   );
+
+  test('oversized metadata cannot publish an unrestorable archive', () async {
+    await expectLater(
+      BackupService.writeBackupArchive(
+        settings: null,
+        collections: const {},
+        collectionsJson: jsonEncode({'padding': 'x' * (32 << 20)}),
+        playlistCoverFiles: const {},
+        extensions: const {},
+        loadHistoryPage: (_, _) async => [],
+        includeHistory: false,
+        outputDirectory: directory,
+        temporaryDirectory: directory,
+      ),
+      throwsA(isA<BackupTooLargeException>()),
+    );
+    expect(await directory.list().toList(), isEmpty);
+  });
+
+  test('collections above the former 8 MiB cap still round trip', () async {
+    final collections = {'padding': 'x' * ((8 << 20) + 1024)};
+    final archiveFile = await BackupService.writeBackupArchive(
+      settings: null,
+      collections: const {},
+      collectionsJson: jsonEncode(collections),
+      playlistCoverFiles: const {},
+      extensions: const {},
+      loadHistoryPage: (_, _) async => [],
+      includeHistory: false,
+      outputDirectory: directory,
+      temporaryDirectory: directory,
+    );
+    final bundle = await BackupService.parseFile(
+      archiveFile.path,
+      temporaryDirectory: directory,
+    );
+    expect(bundle, isNotNull);
+    expect(bundle!.collections, collections);
+    await bundle.cleanup();
+  });
 
   test('map and encoded collections are mutually exclusive', () async {
     await expectLater(

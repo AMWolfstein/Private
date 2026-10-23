@@ -11,20 +11,15 @@ import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 
 class _Settings extends SettingsNotifier {
-  _Settings({
-    Future<void>? ready,
-    String path = '',
-    String downloadTreeUri = '',
-  }) : _ready = ready,
-       _path = path,
-       _downloadTreeUri = downloadTreeUri;
+  _Settings({Future<void>? ready, String path = ''})
+    : _ready = ready,
+      _path = path;
 
   final Future<void>? _ready;
   final String _path;
-  final String _downloadTreeUri;
 
   @override
-  AppSettings build() => AppSettings(downloadTreeUri: _downloadTreeUri);
+  AppSettings build() => const AppSettings();
 
   @override
   Future<void> ensureLoaded() async {
@@ -314,9 +309,7 @@ void main() {
     ];
     container.read(localLibraryProvider);
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
-    final calls = await recordBackendCalls(
-      () => library.removeSource('saf'),
-    );
+    final calls = await recordBackendCalls(() => library.removeSource('saf'));
     final releases = calls.where((call) => call.method == 'safReleaseTree');
     expect(releases.map((call) => call.arguments), [
       {'tree_uri': tree},
@@ -343,9 +336,7 @@ void main() {
     ];
     container.read(localLibraryProvider);
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
-    final first = await recordBackendCalls(
-      () => library.removeSource('saf-a'),
-    );
+    final first = await recordBackendCalls(() => library.removeSource('saf-a'));
     expect(first.where((call) => call.method == 'safReleaseTree'), isEmpty);
     final second = await recordBackendCalls(
       () => library.removeSource('saf-b'),
@@ -358,38 +349,6 @@ void main() {
         {'tree_uri': tree},
       ],
     );
-  });
-
-  test('the legacy download tree keeps its grant when its source goes', () async {
-    const tree =
-        'content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSpotiFLAC';
-    database.sources = [
-      LocalLibrarySource(
-        id: 'legacy-download',
-        path: tree,
-        displayName: 'Download',
-        trackCount: 1,
-      ),
-    ];
-    container.dispose();
-    container = ProviderContainer(
-      overrides: [
-        settingsProvider.overrideWith(() => _Settings(downloadTreeUri: tree)),
-        localLibraryProvider.overrideWith(
-          () => library = _Library(
-            database,
-            (path, {bookmark}) => probe(path, bookmark: bookmark),
-          ),
-        ),
-      ],
-    );
-    container.read(localLibraryProvider);
-    await _waitFor(() => !container.read(localLibraryProvider).isLoading);
-    final calls = await recordBackendCalls(
-      () => library.removeSource('legacy-download'),
-    );
-    expect(calls.where((call) => call.method == 'safReleaseTree'), isEmpty);
-    expect(container.read(localLibraryProvider).sources, isEmpty);
   });
 
   test(

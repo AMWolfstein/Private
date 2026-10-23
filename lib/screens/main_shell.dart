@@ -1,12 +1,8 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
@@ -20,7 +16,6 @@ import 'package:spotiflac_android/services/shell_navigation_service.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/listening_statistics.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 import 'package:spotiflac_android/widgets/lazy_tab_view.dart';
@@ -31,10 +26,7 @@ import 'package:spotiflac_android/widgets/mornye_chrome_adaptivity.dart';
 import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
-
-final _log = AppLogger('MainShell');
 
 class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key});
@@ -52,8 +44,6 @@ class _MainShellState extends ConsumerState<MainShell>
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
-  bool _initialSafRepairComplete = false;
-  bool _safRepairDialogVisible = false;
   bool _usbVolumeWarningShown = false;
   DateTime? _lastBackPress;
   final GlobalKey<NavigatorState> _homeTabNavigatorKey =
@@ -89,13 +79,8 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     ShellNavigationService.syncState(currentTabIndex: _currentIndex);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _repairSafAccessIfNeeded(
-        knownLost: ref.read(initialSafAccessLostProvider),
-      );
-      _initialSafRepairComplete = true;
       if (!mounted) return;
       unawaited(ref.read(musicPlayerRuntimeProvider).restoreSession());
-      await _checkSafMigration();
     });
   }
 
@@ -123,203 +108,11 @@ class _MainShellState extends ConsumerState<MainShell>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && _initialSafRepairComplete) {
-      unawaited(_repairSafAccessIfNeeded());
-    } else if (state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.paused) {
       unawaited(
         ref.read(musicPlayerRuntimeProvider).handler?.persistCurrentSession(),
       );
     }
-  }
-
-  Future<void> _repairSafAccessIfNeeded({bool knownLost = false}) async {
-    if (!Platform.isAndroid || _safRepairDialogVisible) return;
-
-    var accessLost = knownLost;
-    if (!accessLost) {
-      final settings = ref.read(settingsProvider);
-      if (settings.storageMode != 'saf' || settings.downloadTreeUri.isEmpty) {
-        return;
-      }
-      accessLost = !await PlatformBridge.isSafTreeAccessible(
-        settings.downloadTreeUri,
-      );
-    }
-    if (!accessLost || !mounted) return;
-
-    _safRepairDialogVisible = true;
-    try {
-      await showAppDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) {
-          var isPickingFolder = false;
-          return StatefulBuilder(
-            builder: (context, setDialogState) {
-              return PopScope(
-                canPop: false,
-                child: AppAlertDialog(
-                  icon: Icon(
-                    Icons.folder_off_outlined,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  title: Text(context.l10n.downloadFolderAccessLostTitle),
-                  content: Text(context.l10n.downloadFolderAccessLostSubtitle),
-                  actions: [
-                    AppDialogAction(
-                      onPressed: isPickingFolder
-                          ? null
-                          : () {
-                              final notifier = ref.read(
-                                settingsProvider.notifier,
-                              );
-                              notifier.setStorageMode('app');
-                              notifier.setDownloadTreeUri('');
-                              notifier.setDownloadDirectory('');
-                              Navigator.of(dialogContext).pop();
-                            },
-                      child: Text(context.l10n.storageAutomaticFolder),
-                    ),
-                    AppDialogAction(
-                      filled: true,
-                      onPressed: isPickingFolder
-                          ? null
-                          : () async {
-                              setDialogState(() => isPickingFolder = true);
-                              try {
-                                final result =
-                                    await PlatformBridge.pickSafTree();
-                                if (result == null) return;
-                                final treeUri =
-                                    result['tree_uri'] as String? ?? '';
-                                final displayName =
-                                    result['display_name'] as String? ?? '';
-                                if (treeUri.isEmpty) return;
-
-                                final notifier = ref.read(
-                                  settingsProvider.notifier,
-                                );
-                                notifier.setStorageMode('saf');
-                                notifier.setDownloadTreeUri(
-                                  treeUri,
-                                  displayName: displayName.isNotEmpty
-                                      ? displayName
-                                      : treeUri,
-                                );
-                                if (dialogContext.mounted) {
-                                  Navigator.of(dialogContext).pop();
-                                }
-                              } catch (e) {
-                                _log.w(
-                                  'Failed to repair SAF access from startup: $e',
-                                );
-                                if (context.mounted) {
-                                  showCannotOpenFileSnackBar(context, e);
-                                }
-                              } finally {
-                                if (dialogContext.mounted) {
-                                  setDialogState(() => isPickingFolder = false);
-                                }
-                              }
-                            },
-                      child: isPickingFolder
-                          ? const SizedBox.square(
-                              dimension: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(context.l10n.downloadFolderReselect),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      );
-    } finally {
-      _safRepairDialogVisible = false;
-    }
-  }
-
-  static const _safMigrationShownKey = 'saf_migration_prompt_shown';
-
-  Future<void> _checkSafMigration() async {
-    if (!Platform.isAndroid) return;
-
-    final settings = ref.read(settingsProvider);
-    if (settings.storageMode == 'saf') return;
-    if (settings.downloadDirectory.isEmpty) return;
-
-    final deviceInfo = DeviceInfoPlugin();
-    final androidInfo = await deviceInfo.androidInfo;
-    if (androidInfo.version.sdkInt < 29) return;
-
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_safMigrationShownKey) == true) return;
-    await prefs.setBool(_safMigrationShownKey, true);
-
-    if (!mounted) return;
-
-    final colorScheme = Theme.of(context).colorScheme;
-
-    showAppDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AppAlertDialog(
-        icon: Icon(
-          Icons.folder_special_outlined,
-          size: 32,
-          color: colorScheme.primary,
-        ),
-        title: Text(context.l10n.safMigrationTitle),
-        content: ConstrainedBox(
-          // Keeps the text column readable on tablets/landscape.
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(context.l10n.safMigrationMessage1),
-              const SizedBox(height: 12),
-              Text(context.l10n.safMigrationMessage2),
-            ],
-          ),
-        ),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(context.l10n.updateLater),
-          ),
-          AppDialogAction(
-            filled: true,
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final result = await PlatformBridge.pickSafTree();
-              if (result != null) {
-                final treeUri = result['tree_uri'] as String? ?? '';
-                final displayName = result['display_name'] as String? ?? '';
-                if (treeUri.isNotEmpty) {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setDownloadTreeUri(
-                        treeUri,
-                        displayName: displayName.isNotEmpty
-                            ? displayName
-                            : treeUri,
-                      );
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.safMigrationSuccess)),
-                    );
-                  }
-                }
-              }
-            },
-            child: Text(context.l10n.setupSelectFolder),
-          ),
-        ],
-      ),
-    );
   }
 
   @override

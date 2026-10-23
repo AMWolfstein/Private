@@ -38,6 +38,30 @@ void main() {
     },
   );
 
+  test(
+    'legacy Wishlist is ignored while supported collections survive',
+    () async {
+      final fixture =
+          jsonDecode(
+                File(
+                  'test/fixtures/collection_restore_contract.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
+      final input = Map<String, dynamic>.from(fixture['input'] as Map);
+      input['wishlist'] = [
+        {
+          'key': 'old-online-item',
+          'track': {'name': 'Obsolete'},
+        },
+      ];
+      expect(
+        await prepareCollectionRestoreCommands(input, fixture['now'] as String),
+        fixture['commands'],
+      );
+    },
+  );
+
   test('empty or omitted categories produce an empty replacement', () async {
     expect(await prepareCollectionRestoreCommands({}, 'now'), isEmpty);
     expect(
