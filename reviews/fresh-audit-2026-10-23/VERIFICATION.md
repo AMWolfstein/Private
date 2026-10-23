@@ -10,6 +10,10 @@ Application baseline: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`; later review c
 | Direct oversized invalid FLAC-cover replacement | DEFECT REPRODUCED | `rewrite_audio_tags` returned `Ok(())`, original cover absent after replacement |
 | Flutter analyzer/test execution | BLOCKED | Flutter absent; official download host CONNECT denied 403. No Flutter test passes claimed |
 | Android/SAF provider failure injection | NOT RUN | Static caller/writer traces only; device/provider required for end-to-end recoverability |
+| Rust local library tests | PASS,20 tests | `cargo test --manifest-path rust_backend/Cargo.toml -p spotiflac-local --locked`, exit0; doc tests0; `/tmp/fresh-audit-rust-local.log` |
+| Physical #track filename incremental scan | DEFECT REPRODUCED | actual Backend API: existing_song=true, deletedPaths contains physical song, scanned=[], skipped=1; reproductions/local_scan.rs |
+
+After a configuration/runtime reattachment, Flutter download was retried once following that state change and still returned403. Runtime tests remain blocked; no readiness inferred from the desired domain setting.
 
 ## Reproduction commands
 

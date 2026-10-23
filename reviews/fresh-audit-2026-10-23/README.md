@@ -55,3 +55,9 @@ Current-source baseline unchanged. Split into bounded current-source chunks:
 ## BUILD-01 planned scope
 
 dependency-auditor processes manifest/toolchain, Gradle/Android policy, and script/license chunks separately (<=25 paths/~6k lines each), using exact `build` category paths in inventory.json plus current scripts and vendored patch notices. Review version/lock agreement, platform/ABI/16KiB policy, offline permissions, license coverage and repeatable commands. Audio-engine implementation bodies remain excluded; no engine replacement recommendations. Dependency advisories require actual resolved/reachable evidence; do not infer a defect from package presence alone.
+
+## UI-01 planned scope
+
+Flutter implementation chunk: `lib/app.dart`, `lib/routes/now_playing_route.dart`, `lib/screens/{main_shell,mornye_library_screen,local_artist_screen,local_album_screen,library_tracks_folder_screen,setup_screen}.dart` (~5.2k lines, 8files). Concern: widget lifecycle/navigation/list identity/layout/async context.
+
+UX player/lyrics chunk: `lib/screens/{now_playing_screen,queue_tab,lyrics_share_screen}.dart`, `lib/widgets/player_lyrics.dart` (~5.4k lines, 4files). Concern: retained UI accessibility/RTL/large text/reduced motion/loading/error states. Audio playback implementation is excluded; UI controls/navigation remain in scope. Shared primitives/direct callers require separately named bounded supplemental chunks before reads. Later chunks cover remaining widgets/settings, state and performance.
