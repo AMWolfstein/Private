@@ -16,7 +16,10 @@ final _batchActionsLog = AppLogger('BatchActions');
 /// [onConfirmOpen] / [onConfirmClosed] let the caller hide and restore any
 /// selection UI around the confirmation dialog; [onConfirmClosed] receives
 /// whether the user confirmed.
-Future<void> runBatchReplayGain(
+///
+/// Returns whether at least one file changed, so callers can skip refreshes
+/// after a cancelled or failed batch.
+Future<bool> runBatchReplayGain(
   BuildContext sourceContext,
   List<UnifiedLibraryItem> selectedItems, {
   required VoidCallback onExitSelectionMode,
@@ -24,7 +27,7 @@ Future<void> runBatchReplayGain(
   VoidCallback? onConfirmOpen,
   Future<void> Function(bool confirmed)? onConfirmClosed,
 }) async {
-  if (selectedItems.isEmpty) return;
+  if (selectedItems.isEmpty) return false;
 
   final container = ProviderScope.containerOf(sourceContext, listen: false);
   // The selection overlay can disappear when opening the confirmation dialog.
@@ -66,7 +69,7 @@ Future<void> runBatchReplayGain(
 
   await onConfirmClosed?.call(confirmed == true);
 
-  if (confirmed != true || !context.mounted) return;
+  if (confirmed != true || !context.mounted) return false;
 
   var cancelled = false;
   int successCount = 0;
@@ -119,7 +122,7 @@ Future<void> runBatchReplayGain(
     await container.read(localLibraryProvider.notifier).reloadFromStorage();
   }
 
-  if (!context.mounted) return;
+  if (!context.mounted) return successCount > 0;
   if (!cancelled) {
     BatchProgressDialog.dismiss(context);
   }
@@ -136,4 +139,5 @@ Future<void> runBatchReplayGain(
       ),
     ),
   );
+  return successCount > 0;
 }

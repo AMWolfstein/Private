@@ -2779,7 +2779,7 @@
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"
   },
-  "cueSplitConfirmMessage": "Split \"{album}\" into {count} individual FLAC files?\n\nFiles will be saved to the same directory.",
+  "cueSplitConfirmMessage": "Split \"{album}\" into {count} individual FLAC files?\n\nYou'll choose a destination folder next.",
   "@cueSplitConfirmMessage": {
     "description": "CUE split confirmation dialog message",
     "placeholders": {
@@ -2819,6 +2819,22 @@
         "type": "int"
       }
     }
+  },
+  "cueSplitPartialSuccess": "Split into {count} tracks; {failed} could not be created",
+  "@cueSplitPartialSuccess": {
+    "description": "Snackbar when some CUE tracks could not be created",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitSavedOutsideLibrary": "Tracks were saved outside your music library. Add that folder under Local Library to see them.",
+  "@cueSplitSavedOutsideLibrary": {
+    "description": "Snackbar when a CUE split destination is not a scanned library folder"
   },
   "cueSplitTitle": "Split CUE Sheet",
   "@cueSplitTitle": {

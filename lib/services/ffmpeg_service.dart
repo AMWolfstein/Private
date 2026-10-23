@@ -108,7 +108,7 @@ class FFmpegService {
     preserveMetadata: preserveMetadata,
   );
 
-  static Future<List<String>?> splitCueToTracks({
+  static Future<CueSplitResult?> splitCueToTracks({
     required String audioPath,
     required String outputDir,
     required List<CueSplitTrackInfo> tracks,

@@ -124,9 +124,9 @@ Future<bool> showLocalSongMenu(
               option('artist', Icons.person_outline, l10n.mornyeGoToArtist),
           ],
           [
-            option('copy', Icons.copy_outlined, l10n.trackCopyFilePath),
-            option('edit', Icons.edit_outlined, l10n.trackEditMetadata),
             if (!cue) ...[
+              option('copy', Icons.copy_outlined, l10n.trackCopyFilePath),
+              option('edit', Icons.edit_outlined, l10n.trackEditMetadata),
               option('gain', Icons.graphic_eq, l10n.trackReplayGain),
               option(
                 'removeGain',
@@ -181,13 +181,12 @@ Future<bool> showLocalSongMenu(
         return await editLocalSongMetadata(context, ref, item);
       case 'gain':
       case 'removeGain':
-        await runBatchReplayGain(
+        return await runBatchReplayGain(
           context,
           [UnifiedLibraryItem.fromLocalLibrary(item)],
           onExitSelectionMode: () {},
           remove: action == 'removeGain',
         );
-        return true;
       default:
         if (isCueVirtualPath(item.filePath)) {
           ScaffoldMessenger.of(context).showSnackBar(

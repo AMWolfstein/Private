@@ -39,6 +39,49 @@ void main() {
     test('refuses to delete a virtual CUE track path', () async {
       expect(await deleteFile('/music/album.cue#track01'), isFalse);
     });
+
+    test('only a .cue base marks a virtual row', () {
+      expect(isCueVirtualPath('/music/album.cue#track01'), isTrue);
+      expect(isCueVirtualPath('/music/ALBUM.CUE#track12'), isTrue);
+      expect(isCueVirtualPath('content://tree/album/song#track2.flac'), isFalse);
+      expect(isCueVirtualPath('content://tree/album/album.cue#track2'), isTrue);
+      expect(isCueVirtualPath('/music/Song #track1'), isFalse);
+      expect(isCueVirtualPath('/music/Song #track1.flac'), isFalse);
+      expect(isCueBackedPath('/music/Song #track1.flac'), isFalse);
+      expect(isCueBackedPath('/music/album.cue'), isTrue);
+      expect(isCueBackedRow('/music/album.cue#track01', 'cue+flac'), isTrue);
+      expect(isCueBackedRow('/music/album.cue', 'flac'), isTrue);
+      expect(isCueBackedRow('/music/backing.flac', 'cue+flac'), isTrue);
+      expect(isCueBackedRow('/music/song.flac', 'flac'), isFalse);
+      expect(
+        stripCueTrackSuffix('/music/album.cue#track01'),
+        '/music/album.cue',
+      );
+      expect(
+        stripCueTrackSuffix('/music/Song #track1.flac'),
+        '/music/Song #track1.flac',
+      );
+    });
+
+    test('a real file named with a #track suffix is not a CUE row', () async {
+      final tempDir = await Directory.systemTemp.createTemp(
+        'spotiflac-cue-suffix-',
+      );
+      addTearDown(() async {
+        if (await tempDir.exists()) {
+          await tempDir.delete(recursive: true);
+        }
+      });
+      final file = File(
+        '${tempDir.path}${Platform.pathSeparator}Song #track1',
+      );
+      await file.writeAsBytes([1, 2, 3]);
+
+      expect(isCueVirtualPath(file.path), isFalse);
+      expect(await fileExistenceByPath([file.path]), {file.path: true});
+      expect(await deleteFile(file.path), isTrue);
+      expect(await file.exists(), isFalse);
+    });
   });
 
   group('local library incremental scan', () {

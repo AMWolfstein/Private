@@ -26,18 +26,38 @@ bool isContentUri(String? path) {
 /// Pattern matching CUE virtual path suffixes like #track01, #track12, etc.
 final _cueTrackSuffix = RegExp(r'#track\d+$');
 
+/// Local CUE rows are always backed by a `.cue` sheet. A real audio file may
+/// legitimately contain `#trackNN` in its name, so only paths on a `.cue` base
+/// are virtual there. SAF document URIs encode `#` in real names, so a trailing
+/// suffix is unambiguous for them.
+final _cueSheetTrackSuffix = RegExp(r'\.cue#track\d+$', caseSensitive: false);
+
 const cueVirtualTrackRequiresSplitMessage =
     'This CUE track is virtual. Use Split into Tracks first.';
 
 /// Whether the path is a CUE virtual path (contains #trackNN suffix).
 bool isCueVirtualPath(String? path) {
-  return path != null && _cueTrackSuffix.hasMatch(path);
+  if (path == null || !_cueTrackSuffix.hasMatch(path)) return false;
+  return isContentUri(path) || _cueSheetTrackSuffix.hasMatch(path);
 }
 
+/// Whether [path] names a CUE sheet or one of its virtual rows, so deleting it
+/// directly would remove a file shared by every sibling track.
+bool isCueBackedPath(String? path) =>
+    isCueVirtualPath(path) || (path?.toLowerCase().endsWith('.cue') ?? false);
+
+/// Whether a library row is backed by a CUE sheet, by its path or by the
+/// scanner format (`cue+flac`), so deleting the row must never delete a file.
+bool isCueBackedRow(String? path, String? format) =>
+    isCueBackedPath(path) || (format?.startsWith('cue+') ?? false);
+
 /// Strip the #trackNN suffix from a CUE virtual path to get the base .cue path.
-/// Returns the path unchanged if it's not a CUE virtual path.
+/// Returns the path unchanged if it's not a CUE virtual path, so a real file
+/// whose name merely ends in `#trackNN` keeps its own path.
 String stripCueTrackSuffix(String path) {
-  return path.replaceFirst(_cueTrackSuffix, '');
+  return isCueVirtualPath(path)
+      ? path.replaceFirst(_cueTrackSuffix, '')
+      : path;
 }
 
 Future<bool> fileExists(String? path) async {

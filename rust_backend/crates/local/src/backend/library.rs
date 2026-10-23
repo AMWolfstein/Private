@@ -162,8 +162,12 @@ impl Backend {
             check()?;
             let candidate = crate::files::clean(&directory.join(name.trim_start_matches('/')));
             let candidate = candidate.to_string_lossy();
-            let input = files.resolve_legacy(&candidate)?;
-            input.native_display()?;
+            let Ok(input) = files.resolve_legacy(&candidate) else {
+                return Ok(None);
+            };
+            if input.native_display().is_err() {
+                return Ok(None);
+            }
             Ok(input.metadata().is_ok().then(|| candidate.into_owned()))
         };
         if let Some(path) = exists(name)? {
@@ -578,6 +582,32 @@ mod tests {
                 .parse_cue_file_json_with_resolved_audio(path, resolved, &|| Ok(()))
                 .unwrap_err()
                 .contains("no tracks found")
+        );
+    }
+
+    #[test]
+    fn cue_audio_outside_granted_roots_falls_back_to_the_sheet_stem() {
+        let directory = tempfile::tempdir().unwrap();
+        let data = directory.path().join("data");
+        std::fs::create_dir_all(&data).unwrap();
+        let backend = Backend::new(&data).unwrap();
+        let path = data.join("album.cue");
+        std::fs::write(
+            &path,
+            "FILE \"../../outside.flac\" WAVE\nTRACK 01 AUDIO\nTITLE \"First\"\nINDEX 01 00:00:00\n",
+        )
+        .unwrap();
+        let audio = data.join("album.flac");
+        std::fs::write(&audio, []).unwrap();
+
+        let result = backend
+            .parse_cue_file_json(path.to_str().unwrap(), "", &|| Ok(()))
+            .unwrap();
+        assert!(
+            result["audio_path"]
+                .as_str()
+                .unwrap()
+                .ends_with("album.flac")
         );
     }
 

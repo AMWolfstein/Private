@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/music_player_provider.dart';
+import 'package:spotiflac_android/screens/local_artist_screen.dart';
+import 'package:spotiflac_android/screens/track_metadata_edit_sheet.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/local_song_menu.dart';
@@ -22,14 +25,15 @@ class _Settings extends SettingsNotifier {
 }
 
 class _Local extends LocalLibraryNotifier {
-  final removed = <String>[];
+  final removedItemIds = <String>[];
+  final removedPaths = <String>[];
   @override
   LocalLibraryState build() => LocalLibraryState();
   @override
   Future<void> removePhysicalFiles(Iterable<String> paths) async =>
-      removed.addAll(paths);
+      removedPaths.addAll(paths);
   @override
-  Future<void> removeItem(String id) async => removed.add(id);
+  Future<void> removeItem(String id) async => removedItemIds.add(id);
 }
 
 class _Player extends MusicPlayerController {
@@ -69,10 +73,12 @@ void main() {
   Future<void> mount(
     WidgetTester tester, {
     double top = 160,
+    double height = 844,
     TextDirection direction = TextDirection.ltr,
     LocalLibraryItem? item,
+    List<Future<bool>>? actions,
   }) async {
-    tester.view.physicalSize = const Size(390, 844);
+    tester.view.physicalSize = Size(390, height);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -107,6 +113,7 @@ void main() {
                             item ?? song,
                             anchor: anchor,
                           );
+                          actions?.add(pendingAction!);
                         },
                       ),
                     ),
@@ -117,6 +124,65 @@ void main() {
           ),
         ),
       ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  /// Runs short real delays and frame pumps until [condition] holds.
+  ///
+  /// Menu actions await platform channels and real file system calls, whose
+  /// continuations only run on the real event loop, so a plain pump loop never
+  /// observes them.
+  Future<void> pumpUntilCondition(
+    WidgetTester tester,
+    bool Function() condition, {
+    String description = 'condition',
+  }) async {
+    final deadline = DateTime.now().add(const Duration(seconds: 5));
+    while (DateTime.now().isBefore(deadline)) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 5)),
+      );
+      await tester.pump(const Duration(milliseconds: 10));
+      if (condition()) return;
+    }
+    fail('Timed out waiting for $description');
+  }
+
+  /// Pumps until [finder] matches instead of guessing a fixed delay.
+  Future<void> pumpUntil(WidgetTester tester, Finder finder) =>
+      pumpUntilCondition(
+        tester,
+        () => finder.evaluate().isNotEmpty,
+        description: '$finder',
+      );
+
+  /// Waits for a menu action that may need real async work and frames.
+  Future<void> runAction(WidgetTester tester, Future<void> action) async {
+    var done = false;
+    Object? error;
+    unawaited(
+      action.then<void>(
+        (_) {},
+        onError: (Object e) {
+          error = e;
+        },
+      ).whenComplete(() => done = true),
+    );
+    await pumpUntilCondition(
+      tester,
+      () => done,
+      description: 'menu action to finish',
+    );
+    if (error != null) throw error!;
+    await tester.pumpAndSettle();
+  }
+
+  /// Opens the song menu and lets its route settle.
+  Future<void> openMenu(WidgetTester tester) async {
+    await tester.tap(find.byIcon(Icons.more_horiz));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 5)),
     );
     await tester.pumpAndSettle();
   }
@@ -133,8 +199,7 @@ void main() {
             matching: find.byType(IconButton),
           ),
         );
-        await tester.runAsync(() => tester.tap(find.byIcon(Icons.more_horiz)));
-        await tester.pumpAndSettle();
+        await openMenu(tester);
         final panel = tester.getRect(find.byType(MornyeContextMenu));
         expect(panel.left, greaterThanOrEqualTo(16));
         expect(panel.right, lessThanOrEqualTo(374));
@@ -151,15 +216,34 @@ void main() {
     }
   }
 
+  testWidgets('short viewport scrolls the menu instead of overflowing', (
+    tester,
+  ) async {
+    await mount(tester, top: 210, height: 420);
+    final button = tester.getRect(
+      find.ancestor(
+        of: find.byIcon(Icons.more_horiz),
+        matching: find.byType(IconButton),
+      ),
+    );
+    await openMenu(tester);
+    final panel = tester.getRect(find.byType(MornyeContextMenu));
+    expect(panel.height, lessThanOrEqualTo(button.top - 24 + 0.5));
+    expect(find.text('Remove from device').hitTestable(), findsNothing);
+    await tester.ensureVisible(find.text('Remove from device'));
+    await tester.pumpAndSettle();
+    expect(find.text('Remove from device').hitTestable(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('restored queue actions use the selected local song', (
     tester,
   ) async {
     await mount(tester);
     for (final label in ['Play next', 'Add to queue']) {
-      await tester.runAsync(() => tester.tap(find.byIcon(Icons.more_horiz)));
-      await tester.pumpAndSettle();
+      await openMenu(tester);
       await tester.tap(find.text(label));
-      await tester.runAsync(() => pendingAction!);
+      await runAction(tester, pendingAction!);
       await tester.pumpAndSettle();
     }
     expect(player.nextIds, ['song']);
@@ -184,26 +268,25 @@ void main() {
       ),
     );
     await mount(tester);
-    await tester.runAsync(() => tester.tap(find.byIcon(Icons.more_horiz)));
-    await tester.pumpAndSettle();
+    await openMenu(tester);
     await tester.tap(find.text('Copy file path'));
-    await tester.runAsync(() => pendingAction!);
+    await runAction(tester, pendingAction!);
     await tester.pumpAndSettle();
     expect(copied, song.filePath);
     for (final confirm in [false, true]) {
-      await tester.runAsync(() => tester.tap(find.byIcon(Icons.more_horiz)));
-      await tester.pumpAndSettle();
+      await openMenu(tester);
       await tester.ensureVisible(find.text('Remove from device'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Remove from device'));
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await pumpUntil(tester, find.text(confirm ? 'Delete' : 'Cancel'));
       await tester.pumpAndSettle();
       await tester.tap(find.text(confirm ? 'Delete' : 'Cancel'));
-      await tester.runAsync(() => pendingAction!);
+      await runAction(tester, pendingAction!);
       await tester.pumpAndSettle();
       expect(File(song.filePath).existsSync(), !confirm);
     }
-    expect(library.removed, [song.filePath]);
+    expect(library.removedPaths, [song.filePath]);
+    expect(library.removedItemIds, isEmpty);
   });
   testWidgets(
     'CUE split can be cancelled and deleting its row preserves the backing sheet',
@@ -234,6 +317,8 @@ void main() {
       );
       final file = File('${directory.path}/album.cue')
         ..writeAsStringSync('FILE "album.flac" WAVE');
+      final audio = File('${directory.path}/album.flac')
+        ..writeAsBytesSync([102, 76, 97, 67]);
       final cue = LocalLibraryItem(
         id: 'cue-row',
         trackName: 'Part one',
@@ -244,35 +329,315 @@ void main() {
         scannedAt: DateTime(2026),
       );
       await mount(tester, item: cue);
-      await tester.runAsync(() => tester.tap(find.byIcon(Icons.more_horiz)));
-      await tester.pumpAndSettle();
+      await openMenu(tester);
       final l10n = AppLocalizations.of(
         tester.element(find.byType(LocalSongRow)),
       );
       expect(find.text(l10n.trackReplayGain), findsNothing);
       expect(find.text(l10n.audioAnalysisTitle), findsNothing);
+      expect(find.text(l10n.trackEditMetadata), findsNothing);
+      expect(find.text(l10n.trackCopyFilePath), findsNothing);
       await tester.ensureVisible(find.text(l10n.cueSplitTitle));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.cueSplitTitle));
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await pumpUntil(tester, find.text(l10n.cueSplitConfirmTitle));
       await tester.pumpAndSettle();
-      expect(find.text(l10n.cueSplitConfirmTitle), findsOneWidget);
       await tester.tap(find.text(l10n.dialogCancel));
-      await tester.runAsync(() => pendingAction!);
+      await runAction(tester, pendingAction!);
       await tester.pumpAndSettle();
       expect(calls, ['parseCueSheet']);
-      await tester.runAsync(() => tester.tap(find.byIcon(Icons.more_horiz)));
-      await tester.pumpAndSettle();
+      await openMenu(tester);
       await tester.ensureVisible(find.text(l10n.trackRemoveFromDevice));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.trackRemoveFromDevice));
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await pumpUntil(tester, find.text(l10n.dialogDelete));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.dialogDelete));
-      await tester.runAsync(() => pendingAction!);
+      await runAction(tester, pendingAction!);
       await tester.pumpAndSettle();
-      expect(library.removed, ['cue-row']);
+      expect(library.removedItemIds, ['cue-row']);
+      expect(library.removedPaths, isEmpty);
       expect(file.existsSync(), isTrue);
+      expect(audio.existsSync(), isTrue);
     },
   );
+
+  testWidgets('a CUE sheet row is removed without deleting the sheet', (
+    tester,
+  ) async {
+    final file = File('${directory.path}/album.cue')
+      ..writeAsStringSync('FILE "album.flac" WAVE');
+    final audio = File('${directory.path}/album.flac')
+      ..writeAsBytesSync([102, 76, 97, 67]);
+    final cue = LocalLibraryItem(
+      id: 'cue-sheet-row',
+      trackName: 'Album',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: file.path,
+      format: 'cue+flac',
+      scannedAt: DateTime(2026),
+    );
+    await mount(tester, item: cue);
+    await openMenu(tester);
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalSongRow)),
+    );
+    await tester.ensureVisible(find.text(l10n.trackRemoveFromDevice));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.trackRemoveFromDevice));
+    await pumpUntil(tester, find.text(l10n.dialogDelete));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.dialogDelete));
+    await runAction(tester, pendingAction!);
+    await tester.pumpAndSettle();
+    expect(library.removedItemIds, ['cue-sheet-row']);
+    expect(library.removedPaths, isEmpty);
+    expect(file.existsSync(), isTrue);
+    expect(audio.existsSync(), isTrue);
+  });
+
+  testWidgets('a second Split tap does not start another job', (tester) async {
+    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    final parseCalls = <String>[];
+    final gate = Completer<Map<String, dynamic>>();
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      if (call.method == 'parseCueSheet') {
+        parseCalls.add((call.arguments as Map)['cue_path'] as String);
+        return gate.future;
+      }
+      return null;
+    });
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+    final file = File('${directory.path}/album.cue')
+      ..writeAsStringSync('FILE "album.flac" WAVE');
+    final cue = LocalLibraryItem(
+      id: 'cue-row',
+      trackName: 'Part one',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: '${file.path}#track01',
+      format: 'cue+flac',
+      scannedAt: DateTime(2026),
+    );
+    final second = LocalLibraryItem(
+      id: 'cue-row-2',
+      trackName: 'Part two',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: '${file.path}#track02',
+      format: 'cue+flac',
+      scannedAt: DateTime(2026),
+    );
+    final actions = <Future<bool>>[];
+    await mount(tester, item: cue, actions: actions);
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalSongRow)),
+    );
+
+    Future<void> tapSplit(LocalLibraryItem item) async {
+      await mount(tester, item: item, actions: actions);
+      await openMenu(tester);
+      await tester.ensureVisible(find.text(l10n.cueSplitTitle));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.cueSplitTitle));
+      // The menu action reaches the platform channel on the real event loop.
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 20)),
+      );
+      await tester.pump();
+    }
+
+    await tapSplit(cue);
+    expect(parseCalls, [file.path]);
+
+    // A sibling row of the same sheet joins the in-flight job instead of
+    // starting a second split of the same backing file.
+    await tapSplit(second);
+    expect(parseCalls, [file.path]);
+    expect(actions, hasLength(2));
+
+    gate.complete({'error': 'unreadable'});
+    await runAction(tester, Future.wait(actions));
+    await tester.pumpAndSettle();
+
+    // The finished job releases the gate, so a later tap starts a new split.
+    await tapSplit(cue);
+    await pumpUntilCondition(
+      tester,
+      () => parseCalls.length == 2,
+      description: 'second parseCueSheet call',
+    );
+    expect(parseCalls, hasLength(2));
+    await runAction(tester, Future.wait(actions));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.cueSplitFailed), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('share and metadata actions run from the song menu', (
+    tester,
+  ) async {
+    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    final calls = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      calls.add(call.method);
+      switch (call.method) {
+        case 'safExists':
+          return true;
+        case 'shareContentUri':
+          return true;
+        case 'readFileMetadata':
+          return {'title': 'Remote Song', 'artist': 'Artist'};
+      }
+      return null;
+    });
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+    final remote = LocalLibraryItem(
+      id: 'remote',
+      trackName: 'Song',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: 'content://library/song.flac',
+      scannedAt: DateTime(2026),
+    );
+    await mount(tester, item: remote);
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalSongRow)),
+    );
+
+    await openMenu(tester);
+    await tester.tap(find.text(l10n.trackMetadataShare));
+    await runAction(tester, pendingAction!);
+    await tester.pumpAndSettle();
+    expect(calls, contains('shareContentUri'));
+
+    await openMenu(tester);
+    await tester.ensureVisible(find.text(l10n.trackEditMetadata));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.trackEditMetadata));
+    await pumpUntil(tester, find.byType(EditMetadataSheet));
+    // The sheet focuses a text field, whose blinking cursor never settles.
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('Remote Song'), findsOneWidget);
+    Navigator.of(tester.element(find.byType(EditMetadataSheet))).pop();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await runAction(tester, pendingAction!);
+    expect(calls, contains('readFileMetadata'));
+  });
+
+  testWidgets('ReplayGain cancel reports no change', (tester) async {
+    await mount(tester);
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalSongRow)),
+    );
+    for (final label in [l10n.trackReplayGain, l10n.trackRemoveReplayGain]) {
+      await openMenu(tester);
+      await tester.ensureVisible(find.text(label));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label));
+      await pumpUntil(tester, find.text(l10n.dialogCancel));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.dialogCancel));
+      await runAction(tester, pendingAction!);
+      await tester.pumpAndSettle();
+      expect(await pendingAction!, isFalse);
+    }
+  });
+
+  testWidgets('album and artist actions navigate from the song menu', (
+    tester,
+  ) async {
+    await mount(tester);
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalSongRow)),
+    );
+    await openMenu(tester);
+    await tester.tap(find.text(l10n.homeGoToAlbum));
+    await runAction(tester, pendingAction!);
+    await tester.pumpAndSettle();
+    expect(
+      find.text(l10n.clickableInformationUnavailable(l10n.trackAlbum)),
+      findsOneWidget,
+    );
+
+    await openMenu(tester);
+    await tester.tap(find.text(l10n.mornyeGoToArtist));
+    await pumpUntil(tester, find.byType(LocalArtistScreen));
+    expect(find.byType(LocalArtistScreen), findsOneWidget);
+  });
+
+  testWidgets('CUE split confirm explains the destination picker', (
+    tester,
+  ) async {
+    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    final calls = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      calls.add(call.method);
+      if (call.method == 'parseCueSheet') {
+        return {
+          'audio_path': '/audio.flac',
+          'album': 'Album',
+          'artist': 'Artist',
+          'tracks': [
+            {'number': 1, 'title': 'Part one', 'start_sec': 0, 'end_sec': 30},
+          ],
+        };
+      }
+      return null;
+    });
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+    final file = File('${directory.path}/album.cue')
+      ..writeAsStringSync('FILE "album.flac" WAVE');
+    final cue = LocalLibraryItem(
+      id: 'cue-row',
+      trackName: 'Part one',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: '${file.path}#track01',
+      format: 'cue+flac',
+      scannedAt: DateTime(2026),
+    );
+    await mount(tester, item: cue);
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalSongRow)),
+    );
+    await openMenu(tester);
+    await tester.ensureVisible(find.text(l10n.cueSplitTitle));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.cueSplitTitle));
+    await pumpUntil(tester, find.text(l10n.cueSplitConfirmTitle));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(l10n.cueSplitConfirmMessage('Album', 1)),
+      findsOneWidget,
+    );
+    await tester.tap(find.text(l10n.cueSplitButton));
+    await runAction(tester, pendingAction!);
+    await tester.pumpAndSettle();
+    expect(calls, contains('pickSafTree'));
+    expect(calls, isNot(contains('safCreateFromPath')));
+  });
 }

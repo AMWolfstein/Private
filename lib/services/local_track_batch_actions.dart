@@ -3,6 +3,7 @@ import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/unified_library_item.dart';
+import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/services/deleted_library_files.dart';
 import 'package:spotiflac_android/utils/confirm_and_delete_tracks.dart';
@@ -47,8 +48,18 @@ Future<void> deleteLibraryTracks(
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   final deletedPaths = <String>{};
+  final cueIds = <String>[];
   var deletedCount = 0;
   for (final item in selected) {
+    if (isCueBackedRow(item.filePath, item.localItem?.format)) {
+      // A CUE row shares its backing sheet/audio with sibling tracks; removing
+      // the row must never delete those files.
+      final localId = item.localItem?.id;
+      if (localId == null) continue;
+      cueIds.add(localId);
+      deletedCount++;
+      continue;
+    }
     final cleanPath = DownloadedEmbeddedCoverResolver.cleanFilePath(
       item.filePath,
     );
@@ -57,6 +68,9 @@ Future<void> deleteLibraryTracks(
     deletedCount++;
   }
   await removeDeletedLibraryFileEntries(container, deletedPaths);
+  if (cueIds.isNotEmpty) {
+    await container.read(localLibraryProvider.notifier).removeItems(cueIds);
+  }
   if (!isActive() || !context.mounted) return;
   onComplete();
   messenger.showSnackBar(

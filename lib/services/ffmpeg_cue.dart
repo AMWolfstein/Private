@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
 import 'package:spotiflac_android/services/ffmpeg_models.dart';
 import 'package:spotiflac_android/services/ffmpeg_support.dart';
@@ -7,21 +8,33 @@ import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 
+/// Successfully extracted tracks and how many could not be produced.
+class CueSplitResult {
+  final List<String> paths;
+  final int failed;
+
+  const CueSplitResult(this.paths, this.failed);
+}
+
 /// Extracts individual tracks from a CUE-referenced audio file.
 abstract final class FFmpegCue {
-  static Future<List<String>?> splitCueToTracks({
+  static Future<CueSplitResult?> splitCueToTracks({
     required String audioPath,
     required String outputDir,
     required List<CueSplitTrackInfo> tracks,
     required Map<String, String> albumMetadata,
     String? coverPath,
     void Function(int current, int total)? onProgress,
+    @visibleForTesting Future<FFmpegResult> Function(List<String>)? execute,
   }) async {
     if (tracks.isEmpty) {
       _log.e('No tracks to split');
       return null;
     }
+    final run = execute ?? FFmpegExecution.arguments;
     final outputPaths = <String>[];
+    final usedOutputNames = <String>{};
+    var failed = 0;
     final inputExt = audioPath.toLowerCase().split('.').last;
     final outputExt = const {'flac', 'wav', 'ape', 'wv'}.contains(inputExt)
         ? 'flac'
@@ -33,8 +46,13 @@ abstract final class FFmpegCue {
           .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')
           .replaceAll(RegExp(r'\s+'), ' ')
           .trim();
-      final outputName =
-          '${track.number.toString().padLeft(2, '0')} - $title.$outputExt';
+      final stem = '${track.number.toString().padLeft(2, '0')} - $title';
+      var outputName = '$stem.$outputExt';
+      // Duplicate numbers/titles must not reuse an earlier track's output:
+      // cleaning up a failed run would delete the other track's file.
+      for (var copy = 2; !usedOutputNames.add(outputName); copy++) {
+        outputName = '$stem ($copy).$outputExt';
+      }
       final outputPath = '$outputDir${Platform.pathSeparator}$outputName';
       final arguments = <String>[
         '-v',
@@ -69,9 +87,11 @@ abstract final class FFmpegCue {
       AudioMetadataMapper.appendMappedMetadataArguments(arguments, metadata);
       arguments.addAll([outputPath, '-y']);
       _log.d('CUE split track ${track.number}');
-      final result = await FFmpegExecution.arguments(arguments);
+      final result = await run(arguments);
       if (!result.success) {
         _log.e('CUE split failed for track ${track.number}: ${result.output}');
+        await FFmpegOutput.cleanup(outputPath);
+        failed++;
         continue;
       }
       outputPaths.add(outputPath);
@@ -79,10 +99,10 @@ abstract final class FFmpegCue {
     }
     if (outputPaths.isEmpty) {
       _log.e('CUE split: no tracks were successfully extracted');
-      return null;
+      return failed > 0 ? CueSplitResult(const [], failed) : null;
     }
     _log.i('CUE split complete: ${outputPaths.length}/${tracks.length} tracks');
-    return outputPaths;
+    return CueSplitResult(outputPaths, failed);
   }
 
   static String _formatSeconds(double seconds) {

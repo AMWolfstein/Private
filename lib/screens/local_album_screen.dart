@@ -156,7 +156,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       deleteItem: (id) async {
         final item = tracksById[id];
         if (item == null) return false;
-        if (!isCueVirtualPath(item.filePath)) {
+        if (!isCueBackedRow(item.filePath, item.format)) {
           final deleted = await deleteFile(item.filePath);
           if (!deleted) return false;
         }
@@ -167,12 +167,12 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         await removeDeletedLibraryFileEntries(
           container,
           items
-              .where((item) => !isCueVirtualPath(item.filePath))
+              .where((item) => !isCueBackedRow(item.filePath, item.format))
               .map((item) => item.filePath),
         );
         await libraryNotifier.removeItems(
           items
-              .where((item) => isCueVirtualPath(item.filePath))
+              .where((item) => isCueBackedRow(item.filePath, item.format))
               .map((item) => item.id),
         );
       },
