@@ -72,38 +72,6 @@
 - Fix: per `album_key`, single = `MAX(total_tracks) = 1`, rest are Albums; ~30 lines SQL. Needs product confirmation that the rule covers the Library filter.
 - Evidence: SQL lines above.
 
-### DATA-101 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/csv_import_service.dart:28`, `lib/services/m3u_playlist_service.dart:42` (import half)
-- Scenario: `pickAndParseCsv`, `parsePlaylistInBackground`, `parseM3u` have no non-test callers; the CSV parser is Spotify-oriented (`spotify:track:`, ISRC).
-- Root cause: download-era import code left behind; only M3U export is used.
-- Impact: ~150 lines of dead code (+ tests) with latent parsing bugs; also Rust `parse_playlist` (`native_playlists.rs:17`, `data_jobs.rs:63`) and `hash_file` (`data_jobs.rs:62`) have only test callers.
-- Fix: delete the import half, `csv_import_service.dart`, the Rust ops and their tests; keep `build_m3u` and export.
-- Evidence: `grep -rn` over lib/ finds callers only inside the two files.
-
-### API-001 [P2] [confidence: high] [VALIDATED]
-- Location: lib/services/backup_service.dart:413-422 (`restoreHistory`, non-native branch)
-- Scenario: restore from a picked file without a path (`backup_restore_page.dart:94-96` → `BackupService.parse`) runs `clearAll()` then batched upserts; one malformed/old row (NOT NULL column) fails a batch after the clear.
-- Root cause: clear and inserts in separate transactions, no validation; atomic `HistoryDatabase.replaceAll` exists but is unused here.
-- Impact: existing history wiped, only a prefix restored; settings/profile already replaced.
-- Fix: `await HistoryDatabase.instance.replaceAll(bundle.streamHistory())`; ~5 lines + test.
-- Evidence: `history_database.dart:813` → `history_maintenance.dart:51` (single transaction).
-
-### API-002 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: lib/services/backup_service.dart:206-294 (`writeBackupArchive`) vs `lib/services/listening_statistics.dart:253`
-- Scenario: backup/restore or device migration drops `listening_statistics.db` → all play counts reset.
-- Root cause: listening data is not part of the backup format.
-- Impact: Artist Popular ranking and listening stats lost on restore without notice.
-- Fix: optional `listening` category in v3 metadata (older readers ignore unknown keys), merge per (day, track_key); medium. Product decision: include or document exclusion.
-- Evidence: no listening references in backup_service.dart; restore flow `backup_restore_page.dart:120-140`.
-
-### API-003 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/settings/backup_restore_page.dart:120-140`
-- Scenario: profile, settings, history, collections restored sequentially; a later failure leaves earlier categories replaced with a generic error.
-- Root cause: no validation pass before the first destructive write.
-- Impact: partial restore (each category atomic on Android).
-- Fix: validate all categories first, or report which were applied.
-- Evidence: sequential awaits in one try/catch.
-
 ### DATA-203 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/services/library_duplicates.dart:11-30` (`readIsrcDuplicateGroups`), `lib/utils/duplicate_cleanup_policy.dart:47` (`buildKeepBestAllDuplicatePlan`)
 - Scenario: files sharing a placeholder or reused ISRC (whole album tagged with one ISRC, "000000000000") form one group; Keep best (all) keeps `entries.first` and deletes every other physical file. Ranking `bit_depth, sample_rate, bitrate` lets a 128 kbps/48 kHz MP3 beat a 320 kbps/44.1 kHz MP3.
@@ -167,14 +135,6 @@
 - Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
 - Fix: split on `\r\n|\r|\n`; ~3 lines. Note: these helpers currently have no production callers (see DEAD-002), so fix only if kept.
 
-### UX-003 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/main_shell.dart:151-200` (`_repairSafAccessIfNeeded` dialog), `lib/providers/settings_provider.dart:173`, :279 (`setDownloadDirectory`), `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1042-1061` (`isSafTreeAccessible`)
-- Scenario: a user upgrading or importing settings with `storageMode == 'saf'` and a legacy `downloadTreeUri` gets a non-dismissible "Download folder access lost" dialog on start/resume whenever the tree is not writable or the provider is slow (`isSafTreeAccessible` returns false on any exception or missing write grant); its action resets the legacy fields.
-- Root cause: download/output-folder repair flow and settings survived the offline migration; the probe is binary.
-- Impact: obsolete download-era modal in an offline player (AGENTS.md: output-folder feature removed); can appear repeatedly.
-- Fix: remove the repair dialog and the legacy `downloadTreeUri`/`downloadDirectory`/`storageMode` handling (ignore them on import); ~60 lines. Merges reviewer KT-101.
-- Evidence: dialog strings `downloadFolderAccessLostTitle`; trigger condition at `main_shell.dart:157-160`.
-
 ### SEC-101 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `android/app/src/main/AndroidManifest.xml:42-45`, `android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt:274-278` (`PlayerWidgetBridge.handleIntent`)
 - Scenario: any app can start the exported launcher Activity with `player_widget_command=<any>`; forwarded to Dart unvalidated (receiver path allow-lists toggle/next/previous).
@@ -196,27 +156,6 @@
 - Location: `rust_backend/crates/mobile/src/native_lyrics.rs:~455-490` (`parse_lrc`)
 - Scenario: one LRC line with K leading timestamps and W word tags clones the word list K times (K×W); a crafted ~700 KB line can exhaust memory → native abort when lyrics open. Dart parser has the same amplification.
 - Fix: cap timestamps per line (e.g. 64) and total words; ~10 lines.
-
-### API-201 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/providers/settings_provider.dart:224-249` (`restoreFromBackup`), `lib/models/settings.g.dart:47,65`, `lib/app.dart:24`
-- Scenario: restoring a backup with `isFirstLaunch:false` and no `hasCompletedTutorial` (older version or mid-setup device) → flag falls back to false → router rebuilds to `/setup`; a backup with `isFirstLaunch:true` forces setup on a configured device. Foreign `localLibraryPath`/bookmark is restored and fed to `_migrateLegacySource`.
-- Root cause: only download-era storage fields are preserved; install-bound fields (`isFirstLaunch`, `hasCompletedTutorial`, `lastSeenVersion`, `localLibraryEnabled/Path/Bookmark/AutoScan`) come from the backup.
-- Impact: restore sends the user back to first-run setup; a non-existent library source can be created.
-- Fix: keep the current values of those fields on restore (same set as `resetInstallationBoundSettings`); ~8 lines + test.
-- Evidence: `copyWith` at :234-244; route rule `app.dart:24`.
-
-### API-202 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/main.dart:84-86`, :213-258 (`_prepareAndroidInstallationState`, `_detectInitialSafAccessLoss`)
-- Scenario: before `runApp`, legacy `storageMode=='saf'` users wait up to 2 s on `validateSafTreeAccess` (download-era) plus an install-marker round-trip and app-state DB open.
-- Impact: up to 2 s longer cold start for a removed feature.
-- Fix: delete `_detectInitialSafAccessLoss`/`initialSafAccessLostProvider` with UX-003; move install-marker work after first frame; ~25 lines.
-
-### API-203 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/models/settings.dart:9-12`, `lib/providers/settings_provider.dart:51-64, 173-175, 219-319`, `lib/screens/main_shell.dart:157-220, 262-325`
-- Scenario: `downloadDirectory`, `downloadDirectoryBookmark`, `storageMode`, `downloadTreeUri` still persisted/restored; migration 1 forces `storageMode='saf'`; `_checkSafMigration` shows a second one-time "SAF migration" prompt for legacy `downloadDirectory`.
-- Root cause: output-folder settings not removed with the feature (extends UX-003).
-- Impact: obsolete prompts for upgraded users; dead persistence code.
-- Fix: one batch with UX-003 and API-202: drop the four fields (old JSON ignored), setters, `useAppFolderStorage`, migration 1, iOS normalizer, both main_shell dialogs.
 
 ### BUG-201 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/providers/local_artist_provider.dart:147-201` (`localArtistPopularProvider`), tie at :184
@@ -242,16 +181,6 @@
 - Scenario: a DB write (tag edit, duplicates, batch edit) followed by `reloadFromStorage()` while a load is in flight → awaits the stale load and returns; `loadedIndexVersion` not bumped.
 - Impact: UI shows pre-edit tags/artwork until the next reload; dependent providers stay stale.
 - Fix: `_reloadRequested` flag → extra pass after the in-flight load; ~8 lines.
-
-### API-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/main.dart:81`, `lib/app.dart:24`, `lib/providers/settings_provider.dart:177-179`
-- Scenario: upgraded user with `isFirstLaunch=false` and no `hasCompletedTutorial` → first frame routes to `/setup` before migration 2 runs → one-time setup flash.
-- Fix: apply the migration rule in `loadBootstrapSettings`; ~3 lines.
-
-### API-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/setup_screen.dart:80`, :95
-- Scenario: malformed `setup_progress_v1` throws in parse; catch logs and skips `_checkInitialPermissions()`; the draft is never cleared → fails every launch.
-- Fix: remove the key in the catch; 2 lines.
 
 ### BUG-205 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/providers/local_library_provider.dart:1616-1631` (`clearLibrary`)
@@ -409,11 +338,6 @@
 - Scenario: weak matchers give poor failure messages; no false passes found.
 - Fix: use `hasLength`/`isEmpty`/`everyElement` only in files already being touched.
 
-### TEST-303 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/mobile/src/native_backup/**/tests.rs`, `test/backup_collections_json_test.dart`
-- Scenario: "old JSON imports ignore Wishlist" has no fixture in Rust or Dart (only the DB schema v3 upgrade is tested in `collections_upgrade_test.dart`).
-- Fix: a legacy backup with a `wishlist` section restores and keeps Loved/playlists/favorite artists; ~40 lines.
-
 ### TEST-101 [P3] [confidence: high] [VALIDATED]
 - Location: test trim map for the dead-code sweep (one entry instead of per-DEAD edits)
 - Scenario: these tests keep dead code alive and must be deleted or trimmed together with the matching entry:
@@ -442,14 +366,6 @@
   - DEAD-631: trim `detail_route_loading_test.dart` and `mornye_loading_and_chrome_test.dart`.
   - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
 - Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
-
-### DEAD-702 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/models/settings.dart:15-16,82` (`artistTagMode`), :76,121 (`lastSeenVersion`), `lib/providers/settings_provider.dart:180`
-- Scenario:
-  - `artistTagMode` has no setter and no UI, so it is always `joined` unless an import sets it. It is still threaded through 44 call sites: the FFmpeg, metadata-mapper, persistence and editor code.
-  - `lastSeenVersion` is written by migration 12 and never read.
-  - The download-folder fields, setters, SAF repair dialog and migration prompt found in the same sweep are already covered by API-203 and UX-003. They were not re-filed here.
-- Fix: keep the JSON parse so old imports still load. Stop writing `lastSeenVersion`. Pin the `artistTagMode` callers to joined and drop the plumbing (~40 lines).
 
 ### PERF-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/services/library_schema.dart:231-244` (`_createNormalizedIndexes`), `lib/services/library_queue_store.dart:242,503-506` (`artistPage`, `_appendQueueLocalFilters`)
@@ -535,11 +451,6 @@
   - Every incremental scan copies each unchanged `.cue` to temp, one at a time, just to re-resolve its audio sibling.
   - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
 - Fix: persist the cue→audio URI mapping, or resolve it from the cached listing; ~20 lines.
-
-### DEAD-806 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/models/settings.dart:10,83,128,172` (`downloadDirectoryBookmark`), `lib/utils/file_access.dart:22-31` (`shouldValidateIosOutputDir`, `validateIosPath`), `lib/utils/ios_container_paths.dart` (used by `library_database.dart:59` onOpen, `library_schema.dart:408`, `music_player_service.dart:39`)
-- Scenario: these are iOS-only. The bookmark field is read only by the iOS validator. The container-path rebase still runs on every library DB open, but its `/var/mobile/Containers` pattern can never match on Android.
-- Fix: fold the field into the API-203 removal. Decide separately whether to drop the onOpen rebase hook (it is cheap, but it does run on every open).
 
 <!-- Mornye parity pass (2026-10-20): upstream v5.1.1/latest Mornye path of the online
 artist/album/playlist screens compared with the local screens. Upstream refs are

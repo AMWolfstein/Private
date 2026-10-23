@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 134 open findings in `FINDINGS.md` (0 P1, 44 P2, 90 P3), including the 57 added
+The audits left 121 open findings in `FINDINGS.md` (0 P1, 38 P2, 83 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -177,7 +177,7 @@ or exported components.
   - Reviews: rust-safety-auditor, api-compat-auditor and required security-auditor PASS; fix-only re-reviews PASS. A separate test-auditor pass cleared the artwork timing correction. Enforcement was prompt-only.
   - `flutter analyze --no-pub`: No issues found. Full `flutter test --no-pub --reporter expanded`: 1,650 passed, 1 failed, 3 skipped; the failure exposed the artwork overlap-readback test's fixed 30 ms native-completion assumption. Replaced that wait with bounded completion/timer polling while retaining exact readback and idle assertions; test-auditor PASS, corrected file rerun 7 passed, 0 failed/skipped. Final `check_rust_backend.sh`: formatting and Clippy PASS; 191 passed, 0 failed, 1 ignored. Verification also caught a pre-paused scan registration deadlock, fixed and re-reviewed; the new CUE fixture was corrected to FLAC metadata probing rather than unsupported WAV duration probing. Android host script NOT RUN (no Kotlin/Android source changes). No APK, instrumentation/device execution, Miri or sanitizer run.
 
-- [ ] **T5: Fix backup restore, settings restore and startup**
+- [x] **T5: Fix backup restore, settings restore and startup**
   - Findings: API-001, API-002, API-201, API-202, API-203, UX-003.
   - Files: `lib/services/backup_service.dart`, `lib/providers/settings_provider.dart`
     (`restoreFromBackup`), `lib/main.dart` (`_prepareAndroidInstallationState`),
@@ -194,6 +194,13 @@ or exported components.
     failed settings save during restore is reported as success), FA-BUG-002 (same as
     API-201), OPT-PERF-007 (export without loading every playlist into the UI; measure
     first).
+
+  - Completed 2026-10-23: code `ecbfd6df`, graph `06d6aada`. All T5 findings, including FA-SEC-001, FA-DATA-006/007, FA-BUG-001/002 and OPT-PERF-007, resolved; see FINDINGS.md. Started by Codex and finished by Claude Code from the same working tree.
+  - Covers: playlist IDs never become path components; covers publish to versioned `cover-*` directories inside the private covers folder and commit with the collection rows, rolling back prepared files on failure; deletes are containment-checked. Legacy JSON covers accept embedded data only (a review found a legacy `path` could trigger an unrestricted copy).
+  - Backup limits (owner decision): metadata cap raised from 8 MiB to 32 MiB in Dart and Rust (one constant per side, legacy JSON included); export refuses anything the importer would reject with `BackupTooLargeException` and a specific message. Older app versions still reject backups over 8 MiB. Listening statistics stay excluded, now stated in Backup (API-002 documented exclusion). Export streams a DB snapshot (Codex measured ~62 MB -> ~146 KB retained for 1,000 playlists/100,000 memberships; slower).
+  - Settings restore keeps setup completion and the local library source; save failures roll back and are reported, and partial restores name the categories already applied. Download-era settings, SAF repair dialog, migration prompt and the startup SAF probe are removed; the install-marker check stays before `runApp` because it resets restored install-bound state.
+  - Reviews: api-compat-auditor (API-T5/1 cap, API-T5/2 orphan fixture), bug-hunter (P3 cover-dir cleanup through symlinked roots) and security-auditor fix review; all fixed, fix-only re-review PASS. Enforcement was prompt-only.
+  - `flutter analyze --no-pub`: No issues found. Full `flutter test --no-pub`: first run 1,654 passed, 2 failed, 3 skipped — both failures were the new malformed-draft setup test, which ran twice inside the SDK loop and mistook the determinate page-counter ring for a loading spinner; it now runs once and asserts the first page renders (file rerun 8/8). Final full run after all fixes: 1,656 passed, 0 failed, 3 skipped. `check_rust_backend.sh`: formatting and Clippy PASS; 187 passed, 0 failed, 1 ignored (191 before: the dead `parse_playlist`/`hash_file` tests were removed with DATA-101). `check_android.sh` (JDK 25): BUILD SUCCESSFUL. No APK, instrumentation or device execution.
 
 - [ ] **T6: Fix lyrics parsing**
   - Findings: BUG-101, RUST-401, RUST-403.
