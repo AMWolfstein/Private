@@ -42,3 +42,7 @@ The normal tag unit suite passing does not invalidate the concrete missing edge 
 ## Local resume at 5dcf7241
 
 Build-script tests: `python3 -m unittest discover -s scripts -p 'test_build_android.py' -v`, PASS 5, zero failures/skips. Full Python helpers: `python3 -m unittest discover -s scripts -p 'test_*.py' -v`, PASS 28, zero failures/skips. These use fixture tools/archives and do not build the application. Scope build and coverage-status commands exit 0; historical build coverage stale, graph fresh from46c4ea6a. Flutter absent from PATH here; no new analyzer, Flutter, native, APK or device result. See08-build-dependencies.md for limits.
+
+## UI and native-contract continuation
+
+Reports09–11: six additional P2 findings validated statically; native backup contract gap closed with no new finding (DATA-007 duplicate confirmed). Source/fixture ledgers in each report. No additional runtime tests, builds or device execution. Application-source diff from d5d5a02 remains empty. Push of d3a25128 failed because GitHub HTTPS credentials were unavailable; local reports/commits retained.
