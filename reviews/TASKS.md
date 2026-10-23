@@ -111,7 +111,7 @@ or exported components.
 
 ## Tasks
 
-- [ ] **T1: SAF scans must not wipe or miss library rows** (Kotlin)
+- [x] **T1: SAF scans must not wipe or miss library rows** (Kotlin)
   - Findings: DATA-501 (P1), KT-201, KT-202, KT-203, KT-102.
   - Files: `android/.../MainActivitySafScan.kt` (`querySafChildrenOrThrow`,
     `scanSafTreeIncremental`, `scanSafTree` resume), `MainActivity.kt`

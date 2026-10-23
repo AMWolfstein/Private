@@ -238,22 +238,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Fix: require `\.cue#track\d+$` (case-insensitive); ~3 lines + test.
 - Evidence: helpers applied to every path in file_access.dart.
 
-### SEC-004 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/utils/saf_display_path.dart:127-139` (`_safDocumentId`)
-- Scenario: `Uri.pathSegments` already decodes; `Uri.decodeComponent` decodes again → names with a literal `%XX` display wrongly.
-- Root cause: double decoding.
-- Impact: display-only.
-- Fix: return the segment directly; 1 line.
-- Evidence: contradicts `resolveSafDocumentLocation` doc comment.
-
-### DATA-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/utils/path_match_keys.dart:99-148` (`addNormalized`), :180 (`_androidDocumentMatchKey`)
-- Scenario: (A) lowercased keys make `A.flac`/`a.flac` in one folder collide → deleting one drops the other's row until rescan and hides it from duplicates. (B) virtual SAF CUE paths lose `#trackNN` in keys → all tracks of a CUE share a key (latent: current callers guard virtual paths).
-- Root cause: case folding on case-sensitive storage; fragment dropped for SAF keys.
-- Impact: rare row loss; trap for future callers.
-- Fix: keep `#trackNN` in SAF/URI keys; skip lowercase key for non-SAF paths; ~10 lines.
-- Evidence: :100-101, :125-131.
-
 ### DATA-301 [P2] [confidence: medium] [VALIDATED]
 - Location: `lib/widgets/local_song_menu.dart:256-282` (`editLocalSongMetadata`), `lib/controllers/metadata_editor_controller.dart:54`
 - Scenario: `PlatformBridge.readFileMetadata` returns `{error: ...}` (no throw) on a transient SAF/IO failure → form prefilled from the DB, `comment`/`album_type`/`upc`/`lyrics` become `''` → user edits only the title → save sends empty values, which clear those tags.
@@ -347,46 +331,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Scenario: schema version 17 is hard-coded in three places; bumping `LibrarySchema.version` breaks cover pruning (orphan covers accumulate).
 - Fix: use `LibrarySchema.version` and pass it to Rust, or a test asserting all three agree; ~5 lines.
 
-### DATA-501 [P1] [confidence: medium] [VALIDATED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:741-757 (`querySafChildrenOrThrow`), consumed at :930, :1355; Dart `library_database.dart:373`, `library_cleanup.dart:18-27`
-- Scenario: a cloud/network DocumentsProvider returns an empty children cursor with `DocumentsContract.EXTRA_ERROR` → treated as an empty folder, `traversalErrors` stays 0 → full scan: `error_count` 0 → `preserveMissing = false` → `deleteReplacedLibraryScanRows` deletes the subtree (or whole source if the root listing is empty); incremental: missing URIs go to `removedUris` → `deleteByPaths`.
-- Root cause: only `EXTRA_LOADING` is checked; a 0-row result with no errors is trusted as authoritative.
-- Impact: library rows for a folder or the whole source disappear after a transient provider failure (files untouched; restored by a later successful scan).
-- Fix: throw `IOException` when `cursor.extras.getString(EXTRA_ERROR) != null` (~3 lines); optionally refuse a full replace yielding 0 rows when the source had rows.
-- Evidence: check at :756 only reads `EXTRA_LOADING`; trigger depends on provider behavior (documented DocumentsProvider error contract).
-
-### KT-201 [P2] [confidence: high] [VALIDATED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1465-1539 (changed-CUE loop in `scanSafTreeIncremental`), :1427, :1660
-- Scenario: a CUE whose mtime changed fails to re-scan (temp copy null, audio missing, parse throws) → catch only does `errors++`; old `cue#trackN` paths never added to `currentUris` → returned as removed → Dart deletes the CUE's tracks. `errors` not returned.
-- Root cause: failed re-index treated like deletion.
-- Impact: transient read error deletes all tracks of a CUE album from the library.
-- Fix: on failure add the existing virtual paths to `currentUris`; return the error count; ~5 lines.
-- Evidence: catch block at :1534-1536; `currentUris` extended only at :1401 and :1530.
-
-### KT-202 [P2] [confidence: high] [VALIDATED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1604-1613, :1427-1430 (incremental scan)
-- Scenario: a `.cue` is added beside an already-indexed, unchanged audio file → CUE tracks indexed, standalone row kept → duplicates until a full rescan.
-- Root cause: `cueReferencedAudioUris` only skips changed audio; never removes existing standalone rows.
-- Fix: add `existingFiles.keys ∩ cueReferencedAudioUris` to `finalRemovedUris`; ~3 lines.
-- Evidence: full scan avoids it via full swap (:1162).
-- Batch 2 upstream check (2026-10-20): U-201 `e8cff13` does **not** fix this. U-201b `e58217c8` is network-only; neither changes incremental SAF CUE reconciliation. Still OPEN.
-
-### KT-203 [P2] [confidence: medium] [VALIDATED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1003-1012, :1047-1160 (`scanSafTree` resume)
-- Scenario: full scan interrupted and resumed; checkpoint rebuilt from surviving NDJSON rows; files deleted/renamed in between stay in the output and are imported.
-- Root cause: resumed output not pruned against the current listing.
-- Impact: ghost tracks for deleted files.
-- Fix: filter stale lines after traversal or discard the resume when the checkpoint has URIs not in the listing; ~15 lines.
-- Evidence: reconcile step never consults the current listing.
-
-### KT-102 [P2] [confidence: high] [VALIDATED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:191-196` (`safTreeLauncher` callback), :219
-- Scenario: picker returns OK but `data.flags` has no grant bits (`takeFlags == 0`) or `takePersistableUriPermission` throws (e.g. grant cap reached, see KT-105) → only logged; payload delivered as success.
-- Root cause: persist failure not propagated; no READ|WRITE fallback.
-- Impact: Dart stores a tree whose grant is lost after restart; the library silently loses access.
-- Fix: fall back to READ|WRITE flags when 0; on failure return an error; ~6 lines.
-- Evidence: lines 191-196; unconditional `deliver(payload)` at :219.
-
 ### UX-003 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/screens/main_shell.dart:151-200` (`_repairSafAccessIfNeeded` dialog), `lib/providers/settings_provider.dart:173`, :279 (`setDownloadDirectory`), `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1042-1061` (`isSafTreeAccessible`)
 - Scenario: a user upgrading or importing settings with `storageMode == 'saf'` and a legacy `downloadTreeUri` gets a non-dismissible "Download folder access lost" dialog on start/resume whenever the tree is not writable or the provider is slow (`isSafTreeAccessible` returns false on any exception or missing write grant); its action resets the legacy fields.
@@ -394,31 +338,6 @@ sections instead of deleting them; resolved entries keep the fixing commit SHA.
 - Impact: obsolete download-era modal in an offline player (AGENTS.md: output-folder feature removed); can appear repeatedly.
 - Fix: remove the repair dialog and the legacy `downloadTreeUri`/`downloadDirectory`/`storageMode` handling (ignore them on import); ~60 lines. Merges reviewer KT-101.
 - Evidence: dialog strings `downloadFolderAccessLostTitle`; trigger condition at `main_shell.dart:157-160`.
-
-### KT-103 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:756-778` (`onDestroy`), :857-866, :74
-- Scenario: engine outlives the Activity; after Activity re-creation during a background scan, a new progress StreamHandler is installed without a Dart re-subscribe → progress stalls; `scope` never cancelled and backend channel handler not cleared → short Activity leak.
-- Fix: cancel `scope` in `onDestroy`; confirm `ProgressStreamPoller` re-subscribes.
-
-### KT-104 [P3] [confidence: high] [VALIDATED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1459`, :1478
-- Scenario: error JSON hand-built with only quote replacement → backslash/newline in a message yields invalid JSON → Dart `jsonDecode` throws.
-- Fix: use `errorJson(e.message ?: "unknown")`; 2 lines.
-
-### KT-105 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:193`
-- Scenario: `releasePersistableUriPermission` is never called; replaced/removed folders keep grants until the platform cap (128/512) → later picks fail (silently, KT-102).
-- Fix: release grants when a library source is removed; ~15 lines.
-
-### KT-204 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1396-1398, :1410
-- Scenario: providers without `COLUMN_LAST_MODIFIED` give 0 → edits never detected incrementally; replacing audio under an unchanged CUE keeps stale CUE data.
-- Fix: treat 0 as changed; ~2 lines.
-
-### KT-205 [P3] [confidence: high] [VALIDATED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1094-1096, :1558-1575
-- Scenario: resumed scan skips indexed CUEs without `scanned++` (progress under-reports); unchanged-CUE copy failure only logged → audio indexed standalone, duplicating CUE rows.
-- Fix: count/progress before `continue`; treat unresolved unchanged CUE as an error.
 
 ### SEC-101 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `android/app/src/main/AndroidManifest.xml:42-45`, `android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt:274-278` (`PlayerWidgetBridge.handleIntent`)
@@ -1546,6 +1465,98 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.
 - UX-206 (`c29daef`): `_launchUrl` and the `url_launcher` dependency removed with the links.
 - DEAD-705 (`c29daef`): Search tab Recent list, `recent_access_provider.dart`, its app-state methods and tables removed (app-state schema v5 drops them). UX-101 (whole-library load when opening a recent album) is resolved with it.
+
+### DATA-501 [P1] [confidence: medium] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:741-757 (`querySafChildrenOrThrow`), consumed at :930, :1355; Dart `library_database.dart:373`, `library_cleanup.dart:18-27`
+- Scenario: a cloud/network DocumentsProvider returns an empty children cursor with `DocumentsContract.EXTRA_ERROR` → treated as an empty folder, `traversalErrors` stays 0 → full scan: `error_count` 0 → `preserveMissing = false` → `deleteReplacedLibraryScanRows` deletes the subtree (or whole source if the root listing is empty); incremental: missing URIs go to `removedUris` → `deleteByPaths`.
+- Root cause: only `EXTRA_LOADING` is checked; a 0-row result with no errors is trusted as authoritative.
+- Impact: library rows for a folder or the whole source disappear after a transient provider failure (files untouched; restored by a later successful scan).
+- Fix: throw `IOException` when `cursor.extras.getString(EXTRA_ERROR) != null` (~3 lines); optionally refuse a full replace yielding 0 rows when the source had rows.
+- Evidence: check at :756 only reads `EXTRA_LOADING`; trigger depends on provider behavior (documented DocumentsProvider error contract).
+- Resolution: `46c4ea6a`. `querySafChildrenOrThrow` throws on `EXTRA_ERROR`; an empty listing cannot replace rows that a source already has (`safEmptyListingIsUntrusted`, `has_indexed_rows` passed for forced scans because they delete the resume files); incremental scans throw when the listing is empty and rows exist, and pruning only runs for a non-empty listing. `SafScanPolicyTest`, the `has_indexed_rows` forwarding test in `test/library_full_scan_test.dart`: PASS.
+
+### KT-201 [P2] [confidence: high] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1465-1539 (changed-CUE loop in `scanSafTreeIncremental`), :1427, :1660
+- Scenario: a CUE whose mtime changed fails to re-scan (temp copy null, audio missing, parse throws) → catch only does `errors++`; old `cue#trackN` paths never added to `currentUris` → returned as removed → Dart deletes the CUE's tracks. `errors` not returned.
+- Root cause: failed re-index treated like deletion.
+- Impact: transient read error deletes all tracks of a CUE album from the library.
+- Fix: on failure add the existing virtual paths to `currentUris`; return the error count; ~5 lines.
+- Evidence: catch block at :1534-1536; `currentUris` extended only at :1401 and :1530.
+- Resolution: `46c4ea6a`. A failed changed-CUE re-scan keeps the existing `#trackN` rows in `currentUris` (retaining them only when the CUE previously owned them) and counts the error; a sheet that produced rows claims its audio. `SafScanPolicyTest` covers the suffix/base rules: PASS.
+
+### KT-202 [P2] [confidence: high] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1604-1613, :1427-1430 (incremental scan)
+- Scenario: a `.cue` is added beside an already-indexed, unchanged audio file → CUE tracks indexed, standalone row kept → duplicates until a full rescan.
+- Root cause: `cueReferencedAudioUris` only skips changed audio; never removes existing standalone rows.
+- Fix: add `existingFiles.keys ∩ cueReferencedAudioUris` to `finalRemovedUris`; ~3 lines.
+- Evidence: full scan avoids it via full swap (:1162).
+- Resolution: `46c4ea6a`. A CUE that produced or retained rows claims its backing audio, and incremental removal deletes the standalone row through `safReferencedStandaloneUris`. `SafScanPolicyTest` standalone-removal cases: PASS.
+
+### KT-203 [P2] [confidence: medium] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1003-1012, :1047-1160 (`scanSafTree` resume)
+- Scenario: full scan interrupted and resumed; checkpoint rebuilt from surviving NDJSON rows; files deleted/renamed in between stay in the output and are imported.
+- Root cause: resumed output not pruned against the current listing.
+- Impact: ghost tracks for deleted files.
+- Fix: filter stale lines after traversal or discard the resume when the checkpoint has URIs not in the listing; ~15 lines.
+- Evidence: reconcile step never consults the current listing.
+- Resolution: `46c4ea6a`. The rebuilt checkpoint is pruned against the current listing before its rows are emitted, and resumed rows for unlisted URIs are dropped. `SafScanPolicyTest` checkpoint cases: PASS.
+
+### KT-102 [P2] [confidence: high] [RESOLVED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:191-196` (`safTreeLauncher` callback), :219
+- Scenario: picker returns OK but `data.flags` has no grant bits (`takeFlags == 0`) or `takePersistableUriPermission` throws (e.g. grant cap reached, see KT-105) → only logged; payload delivered as success.
+- Root cause: persist failure not propagated; no READ|WRITE fallback.
+- Impact: Dart stores a tree whose grant is lost after restart; the library silently loses access.
+- Fix: fall back to READ|WRITE flags when 0; on failure return an error; ~6 lines.
+- Evidence: lines 191-196; unconditional `deliver(payload)` at :219.
+- Resolution: `46c4ea6a`. `safTreePersistFlags` retries READ|WRITE then READ; a grant without READ counts as no grant; a failed persist delivers `errorJson(...)`, Dart returns null and the picker surfaces a SnackBar. `ErrorJsonTest` and `SafScanPolicyTest` persist-flag cases: PASS.
+
+### KT-103 [P3] [confidence: low] [RESOLVED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:756-778` (`onDestroy`), :857-866, :74
+- Scenario: engine outlives the Activity; after Activity re-creation during a background scan, a new progress StreamHandler is installed without a Dart re-subscribe → progress stalls; `scope` never cancelled and backend channel handler not cleared → short Activity leak.
+- Fix: cancel `scope` in `onDestroy`; confirm `ProgressStreamPoller` re-subscribes.
+- Resolution: `46c4ea6a`. Scan state lives in the `MainActivity` companion (`safScanLock`, `safScanProgress`, `safScanCancel`, `safScanPaused`, `safScanActive`); progress runs through the process-scoped `SafScanProgressStream`; `onDestroy` always clears the channel handlers and only stops the stream/cancels the scope when `isFinishing`. Verified by tracing the recreated-Activity path: PASS.
+
+### KT-104 [P3] [confidence: high] [RESOLVED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1459`, :1478
+- Scenario: error JSON hand-built with only quote replacement → backslash/newline in a message yields invalid JSON → Dart `jsonDecode` throws.
+- Fix: use `errorJson(e.message ?: "unknown")`; 2 lines.
+- Resolution: `46c4ea6a`. Native error payloads use `errorJson(...)` (JSONObject escaping). `ErrorJsonTest` covers quotes, backslashes and newlines: PASS.
+
+### KT-105 [P3] [confidence: medium] [RESOLVED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:193`
+- Scenario: `releasePersistableUriPermission` is never called; replaced/removed folders keep grants until the platform cap (128/512) → later picks fail (silently, KT-102).
+- Fix: release grants when a library source is removed; ~15 lines.
+- Resolution: `46c4ea6a`. `safReleaseTree`/`releaseSafTreeGrant` drop the persisted grant when a `content://` source is removed, only after the row delete, only when no sibling source uses the tree, and never for the legacy `downloadTreeUri` (T5 removes that flow). New `test/library_loading_test.dart` cases cover release, a shared tree and the legacy tree: PASS.
+
+### KT-204 [P3] [confidence: medium] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1396-1398, :1410
+- Scenario: providers without `COLUMN_LAST_MODIFIED` give 0 → edits never detected incrementally; replacing audio under an unchanged CUE keeps stale CUE data.
+- Fix: treat 0 as changed; ~2 lines.
+- Resolution: `46c4ea6a`. `safFileChanged` treats a zero timestamp on either side as changed, so providers without `COLUMN_LAST_MODIFIED` still pick up edits. `SafScanPolicyTest` zero-timestamp cases: PASS.
+
+### KT-205 [P3] [confidence: high] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1094-1096, :1558-1575
+- Scenario: resumed scan skips indexed CUEs without `scanned++` (progress under-reports); unchanged-CUE copy failure only logged → audio indexed standalone, duplicating CUE rows.
+- Fix: count/progress before `continue`; treat unresolved unchanged CUE as an error.
+- Resolution: `46c4ea6a`. An unchanged resumed CUE is resolved before counting totals, its tracks are skipped per audio key (`unresolvedCueAudioKeys`) instead of per directory, and a failed resolution counts as an error rather than indexing the audio standalone. `SafScanPolicyTest` covers the resolution helpers: PASS.
+
+### DATA-204 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/utils/path_match_keys.dart:99-148` (`addNormalized`), :180 (`_androidDocumentMatchKey`)
+- Scenario: (A) lowercased keys make `A.flac`/`a.flac` in one folder collide → deleting one drops the other's row until rescan and hides it from duplicates. (B) virtual SAF CUE paths lose `#trackNN` in keys → all tracks of a CUE share a key (latent: current callers guard virtual paths).
+- Root cause: case folding on case-sensitive storage; fragment dropped for SAF keys.
+- Impact: rare row loss; trap for future callers.
+- Fix: keep `#trackNN` in SAF/URI keys; skip lowercase key for non-SAF paths; ~10 lines.
+- Evidence: :100-101, :125-131.
+- Resolution: `46c4ea6a`. Only Windows drive paths fold case; SAF/URI keys keep the anchored `#track\d+$` fragment; a raw externalstorage alias is skipped when a fragment key exists. Regression tests in `test/models_and_utils_test.dart`: PASS.
+
+### SEC-004 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/utils/saf_display_path.dart:127-139` (`_safDocumentId`)
+- Scenario: `Uri.pathSegments` already decodes; `Uri.decodeComponent` decodes again → names with a literal `%XX` display wrongly.
+- Root cause: double decoding.
+- Impact: display-only.
+- Fix: return the segment directly; 1 line.
+- Evidence: contradicts `resolveSafDocumentLocation` doc comment.
+- Resolution: `46c4ea6a`. The cited `lib/utils/saf_display_path.dart` no longer exists; the live double decodes were `_displayNameForPath` and `_looksLikeRemovablePath` in `lib/providers/local_library_provider.dart` and `_getDisplayPath` in `lib/screens/settings/library_settings_page.dart`. All now use the already-decoded `pathSegments`, and no `Uri.decodeComponent` call remains under `lib/`.
 
 ## Rejected
 
