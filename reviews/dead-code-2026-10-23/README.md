@@ -32,3 +32,5 @@ Application baseline d5d5a02, review baseline47039b90. Review-only; all15 findin
 |DEAD-015|Two private vendored AudioService wrappers|
 
 Compiler-level analysis/build/tests NOT RUN (Flutter unavailable; review-only). Source references were independently validated, including test-only exceptions, runtime registration,traits,FFI and assets. Test-only primitives/compatibility/injection seams retained unless actual obsolete consumers proved. Owner-requested security checks skipped. Each implementation batch will require its own applicable verification; this report does not authorize automatic removal of retained APIs.
+
+N4 [C++/JNI and registered Java entrypoint supplement](10-cpp-jni-entrypoints.md): no new findings; all18 JNI methods have Kotlin/Java callers. Reconciliation checkpoint427cd455 successfully pushed.
