@@ -144,38 +144,6 @@
 - Fix: normalized genre key at scan time or a `library_genres` side table; ~40 lines.
 - Evidence: CTE at :11-18; `local_genres_screen.dart` pages by 40.
 
-### DATA-301 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/local_song_menu.dart:256-282` (`editLocalSongMetadata`), `lib/controllers/metadata_editor_controller.dart:54`
-- Scenario: `PlatformBridge.readFileMetadata` returns `{error: ...}` (no throw) on a transient SAF/IO failure → form prefilled from the DB, `comment`/`album_type`/`upc`/`lyrics` become `''` → user edits only the title → save sends empty values, which clear those tags.
-- Root cause: prefill ignores `tags['error']`; fields the DB does not hold are submitted as clears.
-- Impact: silent loss of embedded lyrics, comment, release type and UPC.
-- Fix: abort with a snackbar when `tags['error'] != null`, or send only dirty fields; ~5 lines + test.
-- Evidence: only thrown errors are caught (:258-261); `val()` falls back to DB or `''`.
-
-### DATA-302 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/services/ffmpeg_metadata.dart:180-195` (`embedMetadataToMp3`)
-- Scenario: tag-only edit on an MP3 whose stream copy reports "Invalid audio stream"/"incorrect codec parameters" (native MP3 editor already failed) → audio silently re-encoded with `libmp3lame -b:a 192k` and the original replaced.
-- Root cause: conversion-era retry kept in the tag-write path.
-- Impact: lossy, quality-reducing rewrite of the user's file (320k/VBR downgraded) without consent.
-- Fix: fail with `MetadataSaveFailure.ffmpeg` instead of re-encoding; ~10 lines removed + test.
-- Evidence: code above; reached via `save()` → `_embed` when tags.rs returns `method: "ffmpeg"`.
-
-### DATA-306 [P2] [confidence: medium] [VALIDATED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:347`, :414 (`writeUriFromPath`); Dart callers `MetadataPersistenceService.writeBack`, `ReplayGainService._updateFile`
-- Scenario: SAF write-back opens the original with mode `"wt"` (truncates immediately) then streams the temp copy; IO error, full storage or process death mid-copy leaves the only copy truncated; temp is deleted in `finally`.
-- Root cause: non-atomic write-back and unconditional temp deletion.
-- Impact: rare but total loss of a music file during SAF tag edit or ReplayGain.
-- Fix: check free space/size first; keep the temp on failure and surface a retry; ~15 lines Kotlin.
-- Evidence: `openOutputStream(uri, "wt")` at :347 and :414.
-
-### DATA-303 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/services/ffmpeg_metadata.dart:375-379` (`embedMetadataToM4a`)
-- Scenario: M4A edit on the FFmpeg fallback: explicit/`album_type`/`upc`/compilation are written only by `writeM4AReleaseIdentityTags`, whose bool result is ignored; `writeM4AFreeformTags` swallows errors → "saved" while the file is unchanged; UI reverts after re-read. FFmpeg mov muxer also drops unknown freeform atoms (ISRC, ReplayGain) without `-movflags use_metadata_tags`.
-- Root cause: post-FFmpeg native write failures not propagated; freeform atoms not preserved.
-- Impact: false success; untouched freeform tags lost on the fallback path.
-- Fix: return failure when the identity write returns false; add `-movflags use_metadata_tags`; ~4 lines.
-- Evidence: unused return value at :378.
-
 ### BUG-101 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/utils/lyrics_parser.dart:213-220` (`parse`), :758-765 (`_parseTtml`)
 - Scenario: TTML with `<p>` but no usable `begin`, or no `<p>` → `_parseTtml` returns an untimed result (or null); `parse()` requires `lines.isNotEmpty`, falls through to `_parseLrcOrPlain(text)` on raw XML → plain text view shows XML markup.
@@ -183,20 +151,6 @@
 - Impact: unsynced TTML lyrics (embedded or sidecar) render as raw XML.
 - Fix: return `_withCredits(text, ttml)` when `ttml != null` and `plainText` is non-empty; ~3 lines + test.
 - Evidence: guard at :215; untimed return at :758.
-
-### DATA-304 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/services/replaygain_service.dart:158-170`, `lib/services/ffmpeg_replaygain.dart:188`
-- Scenario: native ReplayGain writer fails → FFmpeg `-map 0 -c copy` fallback promotes over the original, then verification runs; for M4A the muxer dropped the atoms → reports failure, but the local file is already rewritten minus freeform tags.
-- Root cause: verify after publish.
-- Impact: failed apply leaves a modified file with lost custom tags.
-- Fix: skip the FFmpeg fallback for .m4a/.mp4/.m4b (like Opus) or verify the temp before promoting; ~3 lines.
-- Evidence: reviewer trace.
-
-### DATA-307 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/widgets/local_song_menu.dart:297-312`
-- Scenario: each metadata edit writes a new `library_covers/edited_<ts>.jpg` and never deletes the previous one.
-- Impact: one orphaned image per edit (may be swept by cover snapshot pruning; not verified).
-- Fix: delete the old cover if it is under `library_covers` and differs.
 
 ### BUG-102 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/utils/lyrics_parser.dart:280-288` (`_withCredits`)
@@ -208,26 +162,10 @@
 - Scenario: enhanced LRC `[00:10][01:30]<00:10>a<00:11>b` → repeated line shares word times of the first occurrence; word highlight wrong on repeats.
 - Fix: shift word times per extra timestamp; ~10 lines.
 
-### BUG-104 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/services/id3v23_lyrics.dart:137-161` (`_removeFrames`)
-- Scenario: existing ID3v2.3 tag has a zero-size/invalid/overrunning frame → `break` drops every later frame (e.g. APIC) when lyrics are written.
-- Impact: cover/tag loss with non-conforming taggers (low exposure: FFmpeg rewrites the tag just before).
-- Fix: preserve the remaining payload verbatim or return null to leave the file unchanged; ~5 lines.
-
 ### BUG-105 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/utils/lyrics_metadata_helper.dart:56`, :71-79
 - Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
 - Fix: split on `\r\n|\r|\n`; ~3 lines. Note: these helpers currently have no production callers (see DEAD-002), so fix only if kept.
-
-### DATA-401 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/audio_analysis_widget.dart:913`, :941-963; `lib/services/audio_analysis_cache.dart`
-- Scenario: cache key = path hash, validated by `fileSize` only (SAF size 0 skips check) → same-size replacement serves stale analysis.
-- Fix: store and compare modified time; ~8 lines.
-
-### DATA-402 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/library_cover_snapshot.dart:34-45`, `rust_backend/crates/mobile/src/native_cache/unix.rs:353-359`, `lib/services/library_schema.dart:15`
-- Scenario: schema version 17 is hard-coded in three places; bumping `LibrarySchema.version` breaks cover pruning (orphan covers accumulate).
-- Fix: use `LibrarySchema.version` and pass it to Rust, or a test asserting all three agree; ~5 lines.
 
 ### UX-003 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/screens/main_shell.dart:151-200` (`_repairSafAccessIfNeeded` dialog), `lib/providers/settings_provider.dart:173`, :279 (`setDownloadDirectory`), `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1042-1061` (`isSafTreeAccessible`)
@@ -242,22 +180,6 @@
 - Scenario: any app can start the exported launcher Activity with `player_widget_command=<any>`; forwarded to Dart unvalidated (receiver path allow-lists toggle/next/previous).
 - Impact: low today (MediaSession allows the same); risk for future handlers.
 - Fix: same allow-list in `handleIntent`; 3 lines.
-
-### RUST-101 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/tags/id3.rs:404-407` (`decode`), :489 (`v1`), :296 (`picture_frame`); `rust_backend/crates/core/src/text.rs:3` (`utf8`)
-- Scenario: ID3v1/v2.2/v2.3 text in ISO-8859-1 (encoding 0, e.g. "Beyoncé" with 0xE9) → decoded as lossy UTF-8 → "Beyonc\u{FFFD}"; UTF-16 surrogate pairs (emoji) become two U+FFFD.
-- Root cause: encoding 0 routed through UTF-8 (Go-parity decoder); no `decode_utf16`.
-- Impact: corrupted titles/artists/albums for older/Windows-tagged MP3s; saving writes the replacement characters back permanently.
-- Fix: Latin-1 for encoding 0 when not valid UTF-8; `char::decode_utf16`; ~15 lines; update Go-parity tests.
-- Evidence: `decode` and `utf8` bodies; reached from `read_tags` "mp3" branch (tags.rs:208).
-
-### RUST-102 [P2] [confidence: medium] [VALIDATED]
-- Location: `rust_backend/crates/core/src/tags/write/id3.rs:278-300` (`read_frames`), :71-80 (`edit_header`)
-- Scenario: (1) a zero-length or bad-size frame → `break`, Ok with frames so far → rewritten tag drops every later frame (APIC, TXXX, POPM); reader errors on the same input. (2) compressed/encrypted v2.3/v2.4 frames and unknown v2.2 IDs dropped. (3) every save replaces all COMM and USLT frames (editor always sends comment/lyrics), including iTunSMPB/iTunNORM and other-language lyrics. (4) zero-length tag header returns Err, pushing Dart to the FFmpeg fallback (DATA-302).
-- Root cause: lossy rewrite that fails silently on frames it cannot re-emit.
-- Impact: loss of untouched artwork/metadata and gapless info in MP3s with slightly malformed tags.
-- Fix: copy remaining raw bytes or return Err instead of truncating; drop only COMM with empty descriptor and same language; pass through encrypted frames raw; ~30 lines + tests. Related: BUG-104 (Dart USLT writer has the same `break` pattern).
-- Evidence: `break` at :298-300.
 
 ### RUST-202 [P2] [confidence: high] [VALIDATED]
 - Location: `rust_backend/crates/core/src/cue.rs:117-122` (`parse`, FILE), `CueTrack` :25-35; consumers `rust_backend/crates/local/src/backend/library.rs:232,284`, `scan.rs:446`
@@ -294,26 +216,6 @@
 - Impact: USB bit-perfect playback aborts mid-track on DACs without packet headroom.
 - Fix: clamp to endpoint capacity and carry the remainder; ~5 lines.
 
-### RUST-103 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/tags/id3.rs:302` (`picture_frame`), `rust_backend/crates/core/src/tags/write/id3.rs:182-186` (`cover`)
-- Scenario: UTF-16 APIC description terminator found with unaligned `windows(2)` → image offset wrong by one → corrupt cover (re-embedded for RIFF/AIFF).
-- Fix: aligned search like `separator()`; ~5 lines.
-
-### RUST-104 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/core/src/tags/comments.rs:18-22`, `containers.rs:291`, `write/ogg.rs:109-117`, `write.rs:737`
-- Scenario: writer accepts Ogg covers up to 16 MB (≈21 MB base64) but reader caps 10 MB → covers above ~7.4 MB written then read back as missing; reader processes only the first 100 Ogg comments (ReplayGain/R128/picture beyond that ignored).
-- Fix: align limits; bound by bytes, not count.
-
-### RUST-105 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/core/src/tags/write/riff.rs:46, 94-96, 152`, `write/ape.rs:19-40`, `write/mp4.rs:138`, `tags/mp4.rs:45`
-- Scenario: WAV/AIFF ID3 chunk rebuilt only from parsed fields (TXXX/unknown/extra APIC lost; odd final chunk without pad fails save); APE edit deletes trailing ID3v1; MP4 `number as u16` wraps; `covr` type 13 for non-JPEG; legacy rtng 4 not read as explicit.
-- Fix: individually small; batch with RUST-102.
-
-### RUST-106 [P3] [confidence: medium] [VALIDATED]
-- Location: `rust_backend/crates/core/src/tags/write.rs:403-407`, :737-776 (`picture`)
-- Scenario: replacement cover >16 MB that cannot be shrunk → `picture()` Ok(None) after old pictures were removed → save succeeds, artwork gone; oversize decode uses image crate default 512 MB limit.
-- Fix: return Err or keep old pictures; set `image::Limits`.
-
 ### RUST-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `rust_backend/crates/core/src/media/hires/mod.rs:525-532`, `WavSource::open` (:690)
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
@@ -345,12 +247,6 @@
 - Scenario: native (production) lyrics path has the same untimed-TTML discard as BUG-101 → raw XML shown as plain lyrics.
 - Fix: accept TTML when lines or plain text are non-empty; ~3 lines; fix together with BUG-101 and update `test/fixtures/native_lyrics_parsers.json`.
 - Evidence: `parseAsyncNative` is the live path (`lyrics_parser.dart:231`).
-
-### RUST-402 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/mobile/src/native_id3.rs:155-170` (`make_tag`, from `write_lyrics`)
-- Scenario: zero-size, oversize or invalid-ID frame → `break`, later frames (APIC, TXXX) dropped, `committed: true`.
-- Impact: silent cover/tag loss when USLT is written to an MP3. Same pattern as BUG-104 (Dart) and RUST-102 (tag writer).
-- Fix: if non-zero bytes remain after `break`, return `Ok(false)` (file untouched); skip size-0 frames; ~10 lines + test. Batch with RUST-102/BUG-104.
 
 ### RUST-403 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `rust_backend/crates/mobile/src/native_lyrics.rs:~455-490` (`parse_lrc`)
@@ -1000,6 +896,139 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### DATA-301 [P2] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/local_song_menu.dart:256-282` (`editLocalSongMetadata`), `lib/controllers/metadata_editor_controller.dart:54`
+- Scenario: `PlatformBridge.readFileMetadata` returns `{error: ...}` (no throw) on a transient SAF/IO failure → form prefilled from the DB, `comment`/`album_type`/`upc`/`lyrics` become `''` → user edits only the title → save sends empty values, which clear those tags.
+- Root cause: prefill ignores `tags['error']`; fields the DB does not hold are submitted as clears.
+- Impact: silent loss of embedded lyrics, comment, release type and UPC.
+- Fix: abort with a snackbar when `tags['error'] != null`, or send only dirty fields; ~5 lines + test.
+- Evidence: only thrown errors are caught (:258-261); `val()` falls back to DB or `''`.
+- Resolution: `4dcb1f9b` (T3). The editor submits only dirty fields, so failed prefill cannot clear unseen tags; paired track/disc totals remain coherent. Controller and persistence regressions cover partial requests.
+
+### DATA-302 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/services/ffmpeg_metadata.dart:180-195` (`embedMetadataToMp3`)
+- Scenario: tag-only edit on an MP3 whose stream copy reports "Invalid audio stream"/"incorrect codec parameters" (native MP3 editor already failed) → audio silently re-encoded with `libmp3lame -b:a 192k` and the original replaced.
+- Root cause: conversion-era retry kept in the tag-write path.
+- Impact: lossy, quality-reducing rewrite of the user's file (320k/VBR downgraded) without consent.
+- Fix: fail with `MetadataSaveFailure.ffmpeg` instead of re-encoding; ~10 lines removed + test.
+- Evidence: code above; reached via `save()` → `_embed` when tags.rs returns `method: "ffmpeg"`.
+- Resolution: `4dcb1f9b` (T3). MP3 edits never re-encode audio. Preservation requests refuse FFmpeg fallback after native refusal, retaining unsupported frames and the original audio.
+
+### DATA-306 [P2] [confidence: medium] [RESOLVED]
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:347`, :414 (`writeUriFromPath`); Dart callers `MetadataPersistenceService.writeBack`, `ReplayGainService._updateFile`
+- Scenario: SAF write-back opens the original with mode `"wt"` (truncates immediately) then streams the temp copy; IO error, full storage or process death mid-copy leaves the only copy truncated; temp is deleted in `finally`.
+- Root cause: non-atomic write-back and unconditional temp deletion.
+- Impact: rare but total loss of a music file during SAF tag edit or ReplayGain.
+- Fix: check free space/size first; keep the temp on failure and surface a retry; ~15 lines Kotlin.
+- Evidence: `openOutputStream(uri, "wt")` at :347 and :414.
+- Resolution: `4dcb1f9b` (T3). Back up before truncation; compare backup length with known original size, verify replacement length and verify rollback before deleting recovery. Failed or unverifiable rollback retains the original backup and reports its path. Host policy tests inject short writes and errors; actual provider/device failure injection NOT RUN.
+
+### DATA-303 [P2] [confidence: medium] [RESOLVED]
+- Location: `lib/services/ffmpeg_metadata.dart:375-379` (`embedMetadataToM4a`)
+- Scenario: M4A edit on the FFmpeg fallback: explicit/`album_type`/`upc`/compilation are written only by `writeM4AReleaseIdentityTags`, whose bool result is ignored; `writeM4AFreeformTags` swallows errors → "saved" while the file is unchanged; UI reverts after re-read. FFmpeg mov muxer also drops unknown freeform atoms (ISRC, ReplayGain) without `-movflags use_metadata_tags`.
+- Root cause: post-FFmpeg native write failures not propagated; freeform atoms not preserved.
+- Impact: false success; untouched freeform tags lost on the fallback path.
+- Fix: return failure when the identity write returns false; add `-movflags use_metadata_tags`; ~4 lines.
+- Evidence: unused return value at :378.
+- Resolution: `4dcb1f9b` (T3). Confirmed the fallback publication path could lose freeform atoms. Preservation requests now require the native atom editor and fail without modifying the original; explicit non-preserving operations check native post-processing before promotion.
+
+### DATA-304 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/services/replaygain_service.dart:158-170`, `lib/services/ffmpeg_replaygain.dart:188`
+- Scenario: native ReplayGain writer fails → FFmpeg `-map 0 -c copy` fallback promotes over the original, then verification runs; for M4A the muxer dropped the atoms → reports failure, but the local file is already rewritten minus freeform tags.
+- Root cause: verify after publish.
+- Impact: failed apply leaves a modified file with lost custom tags.
+- Fix: skip the FFmpeg fallback for .m4a/.mp4/.m4b (like Opus) or verify the temp before promoting; ~3 lines.
+- Evidence: reviewer trace.
+- Resolution: `4dcb1f9b` (T3). Confirmed the M4A stream-copy fallback could replace the file before verification. M4A/MP4/M4B ReplayGain now requires native writing, as Ogg/Opus already did.
+
+### BUG-104 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/services/id3v23_lyrics.dart:137-161` (`_removeFrames`)
+- Scenario: existing ID3v2.3 tag has a zero-size/invalid/overrunning frame → `break` drops every later frame (e.g. APIC) when lyrics are written.
+- Impact: cover/tag loss with non-conforming taggers (low exposure: FFmpeg rewrites the tag just before).
+- Fix: preserve the remaining payload verbatim or return null to leave the file unchanged; ~5 lines.
+- Resolution: `4dcb1f9b` (T3). The Dart USLT writer refuses malformed/nonzero trailing frames and leaves the file untouched. Regression fixtures retain later artwork instead of truncating it.
+
+### DATA-401 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/audio_analysis_widget.dart:913`, :941-963; `lib/services/audio_analysis_cache.dart`
+- Scenario: cache key = path hash, validated by `fileSize` only (SAF size 0 skips check) → same-size replacement serves stale analysis.
+- Fix: store and compare modified time; ~8 lines.
+- Resolution: `4dcb1f9b` (T3). Confirmed that size-only cache validation missed equal-size replacements. Cache v14 records and compares modification time for local/SAF files when available; older caches invalidate. Timestamp serialization regression added. Providers without usable size/time remain a limitation.
+
+### DATA-402 [P3] [confidence: high] [RESOLVED]
+- Location: `lib/services/library_cover_snapshot.dart:34-45`, `rust_backend/crates/mobile/src/native_cache/unix.rs:353-359`, `lib/services/library_schema.dart:15`
+- Scenario: schema version 17 is hard-coded in three places; bumping `LibrarySchema.version` breaks cover pruning (orphan covers accumulate).
+- Fix: use `LibrarySchema.version` and pass it to Rust, or a test asserting all three agree; ~5 lines.
+- Resolution: `4dcb1f9b` (T3). Use LibrarySchema.version for snapshots and pass schema_version in the native pruning request, with a legacy native default. Snapshot/channel tests assert the shared version.
+
+### RUST-101 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/id3.rs:404-407` (`decode`), :489 (`v1`), :296 (`picture_frame`); `rust_backend/crates/core/src/text.rs:3` (`utf8`)
+- Scenario: ID3v1/v2.2/v2.3 text in ISO-8859-1 (encoding 0, e.g. "Beyoncé" with 0xE9) → decoded as lossy UTF-8 → "Beyonc\u{FFFD}"; UTF-16 surrogate pairs (emoji) become two U+FFFD.
+- Root cause: encoding 0 routed through UTF-8 (Go-parity decoder); no `decode_utf16`.
+- Impact: corrupted titles/artists/albums for older/Windows-tagged MP3s; saving writes the replacement characters back permanently.
+- Fix: Latin-1 for encoding 0 when not valid UTF-8; `char::decode_utf16`; ~15 lines; update Go-parity tests.
+- Evidence: `decode` and `utf8` bodies; reached from `read_tags` "mp3" branch (tags.rs:208).
+- Resolution: `4dcb1f9b` (T3). Decode Latin-1 text and UTF-16 surrogate pairs correctly; retain compatibility with valid UTF-8 tagged as encoding zero. Reader regressions cover accents and emoji.
+
+### RUST-102 [P2] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/write/id3.rs:278-300` (`read_frames`), :71-80 (`edit_header`)
+- Scenario: (1) a zero-length or bad-size frame → `break`, Ok with frames so far → rewritten tag drops every later frame (APIC, TXXX, POPM); reader errors on the same input. (2) compressed/encrypted v2.3/v2.4 frames and unknown v2.2 IDs dropped. (3) every save replaces all COMM and USLT frames (editor always sends comment/lyrics), including iTunSMPB/iTunNORM and other-language lyrics. (4) zero-length tag header returns Err, pushing Dart to the FFmpeg fallback (DATA-302).
+- Root cause: lossy rewrite that fails silently on frames it cannot re-emit.
+- Impact: loss of untouched artwork/metadata and gapless info in MP3s with slightly malformed tags.
+- Fix: copy remaining raw bytes or return Err instead of truncating; drop only COMM with empty descriptor and same language; pass through encrypted frames raw; ~30 lines + tests. Related: BUG-104 (Dart USLT writer has the same `break` pattern).
+- Evidence: `break` at :298-300.
+- Resolution: `4dcb1f9b` (T3). Refuse unsupported/truncated frames; handle empty tags and version-specific extended headers; preserve unrelated COMM/USLT descriptions and languages. UTF-16 BOM descriptions and v2.4 unsynchronization have regressions. MP3 fallback cannot bypass refusal.
+
+### RUST-103 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/id3.rs:302` (`picture_frame`), `rust_backend/crates/core/src/tags/write/id3.rs:182-186` (`cover`)
+- Scenario: UTF-16 APIC description terminator found with unaligned `windows(2)` → image offset wrong by one → corrupt cover (re-embedded for RIFF/AIFF).
+- Fix: aligned search like `separator()`; ~5 lines.
+- Resolution: `4dcb1f9b` (T3). Find UTF-16 APIC description terminators on code-unit boundaries; cover extraction regression checks exact image bytes.
+
+### RUST-104 [P3] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/comments.rs:18-22`, `containers.rs:291`, `write/ogg.rs:109-117`, `write.rs:737`
+- Scenario: writer accepts Ogg covers up to 16 MB (≈21 MB base64) but reader caps 10 MB → covers above ~7.4 MB written then read back as missing; reader processes only the first 100 Ogg comments (ReplayGain/R128/picture beyond that ignored).
+- Fix: align limits; bound by bytes, not count.
+- Resolution: `4dcb1f9b` (T3). Remove the 100-comment cap and allow picture comments large enough for the writer limit. Regressions cover later comments and an 8 MiB cover with a base64 comment above 10 MB.
+
+### RUST-105 [P3] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/write/riff.rs:46, 94-96, 152`, `write/ape.rs:19-40`, `write/mp4.rs:138`, `tags/mp4.rs:45`
+- Scenario: WAV/AIFF ID3 chunk rebuilt only from parsed fields (TXXX/unknown/extra APIC lost; odd final chunk without pad fails save); APE edit deletes trailing ID3v1; MP4 `number as u16` wraps; `covr` type 13 for non-JPEG; legacy rtng 4 not read as explicit.
+- Fix: individually small; batch with RUST-102.
+- Resolution: `4dcb1f9b` (T3). Confirmed container-specific loss paths. Reuse retained ID3 frames for WAV/AIFF, accept an unpadded final odd chunk, preserve trailing APE ID3v1, clamp MP4 indices, reject unsupported MP4 cover types and recognize legacy explicit rating 4. Container regressions cover preservation, index bounds and rejected artwork.
+
+### RUST-106 [P3] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/core/src/tags/write.rs:403-407`, :737-776 (`picture`)
+- Scenario: replacement cover >16 MB that cannot be shrunk → `picture()` Ok(None) after old pictures were removed → save succeeds, artwork gone; oversize decode uses image crate default 512 MB limit.
+- Fix: return Err or keep old pictures; set `image::Limits`.
+- Resolution: `4dcb1f9b` (T3). Rejected/oversized replacement artwork now returns an error before publishing output. Bound decoded dimensions; full FLAC regression preserves the existing source and emits no replacement on rejection.
+
+### RUST-402 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/mobile/src/native_id3.rs:155-170` (`make_tag`, from `write_lyrics`)
+- Scenario: zero-size, oversize or invalid-ID frame → `break`, later frames (APIC, TXXX) dropped, `committed: true`.
+- Impact: silent cover/tag loss when USLT is written to an MP3. Same pattern as BUG-104 (Dart) and RUST-102 (tag writer).
+- Fix: if non-zero bytes remain after `break`, return `Ok(false)` (file untouched); skip size-0 frames; ~10 lines + test. Batch with RUST-102/BUG-104.
+- Resolution: `4dcb1f9b` (T3). Native USLT writing refuses malformed/truncated frame tails and preserves untouched metadata; native regression fixtures cover malformed frames and UTF-16 lyrics.
+
+### FA-DATA-001 [P1] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/04-metadata-integrity.md`, DATA-001; mapped in TASKS.md T3.
+- Resolution: `4dcb1f9b`. Same destructive SAF publication as DATA-306; verified backup/rollback and retained recovery now protect both native and fallback callers.
+
+### FA-DATA-002 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/04-metadata-integrity.md`, DATA-002; mapped in TASKS.md T3.
+- Resolution: `4dcb1f9b`. Version-specific ID3v2.4 extended-header sizing preserves private frames; dedicated regression added.
+
+### FA-DATA-003 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/04-metadata-integrity.md`, DATA-003; mapped in TASKS.md T3.
+- Resolution: `4dcb1f9b`. Invalid oversized FLAC replacement fails before publication; full rewrite regression leaves existing source/artwork intact.
+
+### FA-DATA-004 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/04-metadata-integrity.md`, DATA-004; mapped in TASKS.md T3.
+- Resolution: `4dcb1f9b`. Same WAV/AIFF frame-loss path as RUST-105; edit retained raw ID3 frames instead of rebuilding from parsed fields.
+
+### FA-DATA-005 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/04-metadata-integrity.md`, DATA-005; mapped in TASKS.md T3.
+- Resolution: `4dcb1f9b`. Clearing APE date removes DATE and YEAR case-insensitively; regression preserves title/audio/trailing ID3v1.
 
 ### UX-221 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/constants/language_choices.dart`, `lib/screens/settings/appearance_settings_page.dart` (Language)
@@ -1866,6 +1895,13 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `76f2fb10`. Added `test/local_track_batch_delete_test.dart` (cue+flac row, plain `.cue` row and a real song in one batch: both CUE files remain and only the song is deleted) plus the menu CUE delete tests: PASS.
 
 ## Rejected
+
+### DATA-307 [P3] [confidence: low] [REJECTED]
+- Location: `lib/widgets/local_song_menu.dart:297-312`
+- Scenario: each metadata edit writes a new `library_covers/edited_<ts>.jpg` and never deletes the previous one.
+- Impact: one orphaned image per edit (may be swept by cover snapshot pruning; not verified).
+- Fix: delete the old cover if it is under `library_covers` and differs.
+- Rejection (T3): existing successful-scan cleanup calls `_pruneLibraryCoverCache` in `local_library_provider.dart`, targeting `library_covers` with reference-aware native/Dart pruning and a one-minute age threshold. Regular-file pruning includes `edited_*`; DB references protect current covers. Cleanup is eventual after a successful scan. Direct deletion before DB upsert was rejected in review and removed.
 
 _False positives and intentional behavior, with one-line reason._
 

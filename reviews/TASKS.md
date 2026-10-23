@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 176 open findings in `FINDINGS.md` (0 P1, 62 P2, 114 P3), including the 57 added
+The audits left 145 open findings in `FINDINGS.md` (0 P1, 50 P2, 95 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -136,7 +136,7 @@ or exported components.
   - Also: UX-001, UX-002, UI-001, BUG-003, DATA-305, SEC-003, SEC-201, TEST-001, TEST-002,
     TEST-003.
 
-- [ ] **T3: Make tag writing and the metadata editor correct**
+- [x] **T3: Make tag writing and the metadata editor correct**
   - Findings: DATA-301, DATA-302, DATA-303, DATA-306, RUST-101, RUST-102, RUST-402.
   - Files: `lib/services/ffmpeg_metadata.dart` (MP3/M4A embed),
     `lib/widgets/local_song_menu.dart` (`editLocalSongMetadata`),
@@ -152,6 +152,10 @@ or exported components.
     extended header drops frames), FA-DATA-003 (FLAC cover lost on a rejected replacement),
     FA-DATA-004 (same as RUST-105, now P2), FA-DATA-005 (APE YEAR comes back after clearing
     the date).
+
+  - Completed 2026-10-23: code `4dcb1f9b`, graph `46d34cf3`. DATA-307 rejected: existing reference-aware scan pruning already reclaims old edited covers. Other T3 findings, including FA-DATA-001..005, resolved; see FINDINGS.md.
+  - Reviews: data-integrity, Rust safety and Kotlin auditors re-reviewed fixes to PASS; separate SAF security pass PASS. Review enforcement was prompt-only.
+  - Analysis: `flutter analyze --no-pub` — No issues found. Full `flutter test --reporter expanded`: 1,646 passed, 2 failed, 3 skipped; corrected schema request expectation and reran both failing files against final sources (`library_cleanup_test.dart`, `metadata_write_safety_test.dart`): 12 passed, 0 failed/skipped, no unresolved failures. The full run overlapped the final preservation-guard edits; the isolated final-source rerun confirms the pre-FFmpeg guard. Final `check_rust_backend.sh`: fmt/Clippy PASS, 182 passed, 0 failed, 1 ignored; native/Dart path parity failures found during verification were fixed (case-sensitive paths and SAF fragments) and re-reviewed. `check_android.sh`: BUILD SUCCESSFUL, 72 passed, 0 failures/errors, 1 skipped. No APK, instrumentation or device execution.
 
 - [ ] **T4: Fix Rust CUE parsing, library IDs and the cover cache**
   - Findings: RUST-202, RUST-203, RUST-204, DATA-502, CONC-101, CONC-102.
