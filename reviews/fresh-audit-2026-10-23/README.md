@@ -44,3 +44,14 @@ Current-source baseline unchanged. Backup/persistence unit, separate disjoint bo
 - api-compat-auditor: `rust_backend/crates/mobile/src/native_backup.rs`, `native_backup/{archive,collections,legacy}.rs`, `native_collections.rs`, `native_playlist_write.rs`, `native_playlists.rs`, corresponding fixtures and Dart endpoint ranges (split supplemental chunk if >12 files). Check native/persisted schemas against Dart and legacy compatibility from current readers, not prior audit reports.
 
 Tests/provider/device evidence remain separate; no audio engine.
+
+## SCAN-01 planned scope
+
+Current-source baseline unchanged. Split into bounded current-source chunks:
+
+- Dart scan/DB data integrity: `lib/providers/local_library_provider.dart`, `lib/services/{library_database,library_schema,library_native_adapter,sqlite_native_snapshot}.dart` (~4.1k lines), supplemental cleanup/deletion callers as needed.
+- Native scanner/platform chunk: `android/app/src/main/kotlin/com/zarz/spotiflac/{MainActivitySafScan,SafScanPolicy,SafScanProgressStream,LibraryScanExitInfo}.kt`, `rust_backend/crates/local/src/backend/library.rs`, `backend/library/scan.rs`, `rust_backend/crates/mobile/src/native_library.rs`, `native_library/{dart_date,path_keys}.rs` (~4.5k lines). Primary kotlin-android-auditor; verify cancellation/partial scans/permission loss and trace producer-consumer guards. Explicit separate supplemental chunks for tests or other endpoints.
+
+## BUILD-01 planned scope
+
+dependency-auditor processes manifest/toolchain, Gradle/Android policy, and script/license chunks separately (<=25 paths/~6k lines each), using exact `build` category paths in inventory.json plus current scripts and vendored patch notices. Review version/lock agreement, platform/ABI/16KiB policy, offline permissions, license coverage and repeatable commands. Audio-engine implementation bodies remain excluded; no engine replacement recommendations. Dependency advisories require actual resolved/reachable evidence; do not infer a defect from package presence alone.
