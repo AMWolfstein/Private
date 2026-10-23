@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 193 open findings in `FINDINGS.md` (1 P1, 66 P2, 126 P3), including the 57 added
+The audits left 192 open findings in `FINDINGS.md` (1 P1, 66 P2, 125 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 13 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -287,7 +287,7 @@ or exported components.
     present.
   - Findings (P2): UX-209, UX-210, UX-229, UX-239.
   - Also (P3): UX-102, UX-106, UX-107, UX-207, UX-211, UX-212, UX-213, UX-214, UX-216, UX-220,
-    UX-221, UX-222, UX-223, UX-224, UX-225, UX-226, UX-227, UX-228, UX-230, UX-231,
+    UX-221, UX-222, UX-223, UX-224, UX-225, UX-226, UX-227, UX-230, UX-231,
     UX-232, UX-233, UX-234, UX-235, UX-236, UX-237, UX-238, UX-240, UX-241, UX-242,
     UX-243, UX-244, UI-405, UI-418, UI-419, UI-420.
   - Files: the screens and widgets each finding names. Shared widgets first
@@ -304,11 +304,12 @@ or exported components.
   - Keep the AGENTS.md rules: header controls 48 dp with 22 dp icons, the album action row
     order, Popular at five per page with at most four dots, and the forced-LTR transport
     and timeline.
-  - Product decisions to ask the owner about first, not fix on your own:
-    - UX-228: is the storage permission required at setup?
-    - UX-234: should EQ gain mirror in RTL?
-    - UX-238: should the 3 s snackbar cap stay?
-    - UX-227: is the pt_PT label right?
+  - Owner decisions (2026-10-23):
+    - UX-228 rejected: the storage permission stays required to finish setup.
+    - UX-234: the EQ gain slider mirrors in RTL.
+    - UX-227: the translation is Brazilian, so keep the label and change the locale code
+      to `pt_BR`, migrating saved `pt_PT` choices.
+    - UX-238 (the 3 s snackbar cap) is still open; ask the owner before changing it.
   - UX-207 (landscape on tablets) and the contrast item UX-236 need an emulator, a device
     or a measurement. Report them as unverified rather than claiming them fixed.
 

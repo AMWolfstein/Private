@@ -1053,14 +1053,11 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: RTL → hero count and decor stay on physical sides.
 - Fix: directional alignment, `PositionedDirectional`, `EdgeInsetsDirectional`; ~4 lines.
 
-### UX-227 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/constants/language_choices.dart` (`('pt_PT', 'Português (Brasil)')`)
-- Scenario: code is Portugal, label says Brazil.
-- Fix: relabel or recode after the translation owner confirms; 1 line.
-
-### UX-228 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/screens/setup_screen.dart` (storage permission step)
-- Scenario: denying READ_MEDIA_AUDIO blocks finishing setup, while Local Library uses the SAF picker. Product decision: confirm whether playback needs the permission before changing anything.
+### UX-227 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/constants/language_choices.dart` (`('pt_PT', 'Português (Brasil)')`), `lib/l10n/supported_locales.dart` (`Locale('pt', 'PT')`, `'pt_PT'`), `lib/l10n/arb/app_pt_PT.arb`
+- Scenario: the label says Brazil, but the locale code is Portugal. The translation itself is Brazilian Portuguese (it uses "arquivo", "você", "tela" and "configurações").
+- Owner decision (2026-10-23): the translation is Brazilian, so keep the label "Português (Brasil)".
+- Fix: change the locale code to `pt_BR`: rename the arb file, update `supported_locales.dart` and `language_choices.dart`, and migrate a saved language of `pt_PT` to `pt_BR` so existing users and old backups keep their choice. Regenerate the l10n files with the repo tooling.
 
 ### UX-229 [P2] [confidence: medium] [VALIDATED]
 - Location: `lib/screens/listening_rewind_screen.dart` (`_RewindStoryState` auto-advance)
@@ -1090,7 +1087,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 ### UX-234 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/widgets/mornye_level_slider.dart` (`_update`, `_LevelPainter`, thumb centre)
 - Scenario: RTL → the horizontal EQ gain slider does not mirror, unlike `MornyeSlider` and `AppSwitch`.
-- Fix: use `1 - fraction` when horizontal and RTL; ~8 lines (or record that EQ gain stays LTR like a fader).
+- Owner decision (2026-10-23): the gain slider mirrors in RTL like every other slider.
+- Fix: use `1 - fraction` when horizontal and RTL, in `_update`, the painter and the thumb centre; ~8 lines. The vertical EQ faders are unchanged.
 
 ### UX-235 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/widgets/app_choice_chip.dart`, `lib/widgets/app_action_button.dart`, `lib/widgets/app_switch.dart`
@@ -1863,6 +1861,7 @@ _False positives and intentional behavior, with one-line reason._
 - R-008 (kotlin DEAD-204/DEAD-205): duplicates of DEAD-002 and DATA-101; native parts added there.
 - R-003 (`/code-review` #10, graphify commit title `81577e5` missing "code"): historical pushed commit; fixing needs history rewrite. Future commits follow the AGENTS.md wording.
 - R-009 (build DEP-003, debug-key release signing): duplicate of SEC-302 from the parallel security pass.
+- R-014 (ux-auditor UX-228, storage permission step cannot be skipped in setup): owner decision 2026-10-23, the storage permission stays required to finish setup.
 - R-010 (tests TEST-302, settings migration/setup flags untested): covered — `settings_persistence_test.dart:72-73` asserts both flags in one write; `installation_restore_test.dart:97-117` sanitizes legacy download-folder fields.
 - R-011 (perf PERF-403, `shuffleLibrary` full load): its only caller is the dead `player_queue_sheet.dart` (DEAD-601); the live `getAll()` caller is UX-101. DATA-002's `shuffleLibrary` part is likewise on that dead path.
 - R-012 (SEC-301, `MANAGE_EXTERNAL_STORAGE` on API 30–32): owner keeps the permission.
