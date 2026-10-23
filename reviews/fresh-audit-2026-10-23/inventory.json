@@ -1,0 +1,7355 @@
+{
+  "source": "d5d5a02ecdad86dca50a4448cf7810b7eec43ad9",
+  "files": [
+    {
+      "path": ".claude/agents/api-compat-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/bug-hunter.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/code-optimization-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/concurrency-auditor.md",
+      "category": "docs",
+      "lines": 34
+    },
+    {
+      "path": ".claude/agents/data-integrity-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/dead-code-hunter.md",
+      "category": "docs",
+      "lines": 33
+    },
+    {
+      "path": ".claude/agents/dependency-auditor.md",
+      "category": "docs",
+      "lines": 43
+    },
+    {
+      "path": ".claude/agents/docs-auditor.md",
+      "category": "docs",
+      "lines": 30
+    },
+    {
+      "path": ".claude/agents/flutter-dart-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/kotlin-android-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/review-fixer.md",
+      "category": "docs",
+      "lines": 51
+    },
+    {
+      "path": ".claude/agents/rust-safety-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/security-auditor.md",
+      "category": "docs",
+      "lines": 30
+    },
+    {
+      "path": ".claude/agents/test-auditor.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": ".claude/agents/ux-auditor.md",
+      "category": "docs",
+      "lines": 34
+    },
+    {
+      "path": ".claude/settings.json",
+      "category": "docs",
+      "lines": 13
+    },
+    {
+      "path": ".claude/skills/audit-project/SKILL.md",
+      "category": "docs",
+      "lines": 35
+    },
+    {
+      "path": ".claude/skills/audit/SKILL.md",
+      "category": "docs",
+      "lines": 28
+    },
+    {
+      "path": ".claude/skills/review/SKILL.md",
+      "category": "docs",
+      "lines": 37
+    },
+    {
+      "path": ".editorconfig",
+      "category": "build",
+      "lines": 25
+    },
+    {
+      "path": ".fvmrc",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": ".gitattributes",
+      "category": "build",
+      "lines": 42
+    },
+    {
+      "path": ".gitignore",
+      "category": "build",
+      "lines": 37
+    },
+    {
+      "path": ".opencode/agents/api-compat-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/bug-hunter.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/code-optimization-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/concurrency-auditor.md",
+      "category": "docs",
+      "lines": 59
+    },
+    {
+      "path": ".opencode/agents/data-integrity-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/dead-code-hunter.md",
+      "category": "docs",
+      "lines": 58
+    },
+    {
+      "path": ".opencode/agents/dependency-auditor.md",
+      "category": "docs",
+      "lines": 68
+    },
+    {
+      "path": ".opencode/agents/docs-auditor.md",
+      "category": "docs",
+      "lines": 55
+    },
+    {
+      "path": ".opencode/agents/flutter-dart-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/kotlin-android-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/rust-safety-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/security-auditor.md",
+      "category": "docs",
+      "lines": 55
+    },
+    {
+      "path": ".opencode/agents/test-auditor.md",
+      "category": "docs",
+      "lines": 57
+    },
+    {
+      "path": ".opencode/agents/ux-auditor.md",
+      "category": "docs",
+      "lines": 59
+    },
+    {
+      "path": ".opencode/opencode.json",
+      "category": "docs",
+      "lines": 10
+    },
+    {
+      "path": ".opencode/plugins/graphify.js",
+      "category": "docs",
+      "lines": 30
+    },
+    {
+      "path": ".opencode/skills/graphify/.graphify_version",
+      "category": "docs",
+      "lines": 1
+    },
+    {
+      "path": ".opencode/skills/graphify/SKILL.md",
+      "category": "docs",
+      "lines": 711
+    },
+    {
+      "path": ".opencode/skills/graphify/references/add-watch.md",
+      "category": "docs",
+      "lines": 56
+    },
+    {
+      "path": ".opencode/skills/graphify/references/exports.md",
+      "category": "docs",
+      "lines": 87
+    },
+    {
+      "path": ".opencode/skills/graphify/references/extraction-spec.md",
+      "category": "docs",
+      "lines": 70
+    },
+    {
+      "path": ".opencode/skills/graphify/references/github-and-merge.md",
+      "category": "docs",
+      "lines": 46
+    },
+    {
+      "path": ".opencode/skills/graphify/references/hooks.md",
+      "category": "docs",
+      "lines": 33
+    },
+    {
+      "path": ".opencode/skills/graphify/references/query.md",
+      "category": "docs",
+      "lines": 311
+    },
+    {
+      "path": ".opencode/skills/graphify/references/transcribe.md",
+      "category": "docs",
+      "lines": 52
+    },
+    {
+      "path": ".opencode/skills/graphify/references/update.md",
+      "category": "docs",
+      "lines": 210
+    },
+    {
+      "path": "AGENTS.md",
+      "category": "docs",
+      "lines": 205
+    },
+    {
+      "path": "CHANGELOG.md",
+      "category": "docs",
+      "lines": 15
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "category": "docs",
+      "lines": 133
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "category": "docs",
+      "lines": 32
+    },
+    {
+      "path": "LICENSE",
+      "category": "asset-or-other",
+      "lines": 21
+    },
+    {
+      "path": "LOCAL_OFFLINE_MIGRATION_PLAN.md",
+      "category": "docs",
+      "lines": 1189
+    },
+    {
+      "path": "PHASE6_DECISIONS.md",
+      "category": "docs",
+      "lines": 156
+    },
+    {
+      "path": "README.md",
+      "category": "docs",
+      "lines": 54
+    },
+    {
+      "path": "analysis_options.yaml",
+      "category": "build",
+      "lines": 31
+    },
+    {
+      "path": "android/.gitignore",
+      "category": "build",
+      "lines": 14
+    },
+    {
+      "path": "android/app/build.gradle.kts",
+      "category": "build",
+      "lines": 217
+    },
+    {
+      "path": "android/app/proguard-rules.pro",
+      "category": "asset-or-other",
+      "lines": 70
+    },
+    {
+      "path": "android/app/src/androidTest/AndroidManifest.xml",
+      "category": "tests",
+      "lines": 19
+    },
+    {
+      "path": "android/app/src/androidTest/assets/README.md",
+      "category": "tests",
+      "lines": 40
+    },
+    {
+      "path": "android/app/src/androidTest/assets/dsd-pattern.wv",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/androidTest/assets/motion-probe-h264.mp4",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/androidTest/assets/motion-probe-hevc.mp4",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/androidTest/assets/pcm24-pattern.flac",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/androidTest/java/com/zarz/spotiflac/LookupTestControlProvider.java",
+      "category": "tests",
+      "lines": 54
+    },
+    {
+      "path": "android/app/src/androidTest/java/com/zarz/spotiflac/LookupTestDocumentsProvider.java",
+      "category": "tests",
+      "lines": 273
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/FFmpegCapabilitiesTest.kt",
+      "category": "tests",
+      "lines": 75
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/HiResPlaybackTest.kt",
+      "category": "tests",
+      "lines": 144
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/LibraryScanStressTest.kt",
+      "category": "tests",
+      "lines": 93
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/LocalAudioFixtures.kt",
+      "category": "tests",
+      "lines": 12
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/PlayerWidgetTest.kt",
+      "category": "tests",
+      "lines": 97
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/RemoteSafPlaybackTest.kt",
+      "category": "tests",
+      "lines": 158
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/ResolvedCueAudioTest.kt",
+      "category": "tests",
+      "lines": 91
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/SafDocumentLookupTest.kt",
+      "category": "tests",
+      "lines": 139
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/SafScanChildrenTest.kt",
+      "category": "tests",
+      "lines": 147
+    },
+    {
+      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/UsbBitPerfectPluginTest.kt",
+      "category": "tests",
+      "lines": 157
+    },
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "category": "build",
+      "lines": 7
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "category": "build",
+      "lines": 138
+    },
+    {
+      "path": "android/app/src/main/cpp/CMakeLists.txt",
+      "category": "excluded-engine",
+      "lines": 75
+    },
+    {
+      "path": "android/app/src/main/cpp/flac_pcm_source.cpp",
+      "category": "excluded-engine",
+      "lines": 114
+    },
+    {
+      "path": "android/app/src/main/cpp/flac_pcm_source.h",
+      "category": "excluded-engine",
+      "lines": 36
+    },
+    {
+      "path": "android/app/src/main/cpp/native_audio.cpp",
+      "category": "excluded-engine",
+      "lines": 334
+    },
+    {
+      "path": "android/app/src/main/cpp/native_audio.map",
+      "category": "excluded-engine",
+      "lines": 22
+    },
+    {
+      "path": "android/app/src/main/cpp/tests/flac_pcm_source_test.cpp",
+      "category": "excluded-engine",
+      "lines": 132
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/AudioOutputActivity.kt",
+      "category": "android",
+      "lines": 39
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/AudioRouteInfo.kt",
+      "category": "android",
+      "lines": 157
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/BackgroundWorkService.kt",
+      "category": "android",
+      "lines": 218
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/BitPerfectPcm.kt",
+      "category": "android",
+      "lines": 64
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/CoreBackend.kt",
+      "category": "android",
+      "lines": 40
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/DsdFile.kt",
+      "category": "android",
+      "lines": 185
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/DsdSource.kt",
+      "category": "android",
+      "lines": 89
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/ForegroundServiceStartPolicy.kt",
+      "category": "android",
+      "lines": 18
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt",
+      "category": "excluded-engine",
+      "lines": 193
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/ImpellerCompatibility.kt",
+      "category": "android",
+      "lines": 137
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt",
+      "category": "android",
+      "lines": 46
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt",
+      "category": "android",
+      "lines": 1345
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt",
+      "category": "android",
+      "lines": 436
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt",
+      "category": "android",
+      "lines": 1645
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MusicHapticsPlugin.kt",
+      "category": "excluded-engine",
+      "lines": 104
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/NativeAudio.kt",
+      "category": "excluded-engine",
+      "lines": 26
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/NativeMediaWorkspace.kt",
+      "category": "android",
+      "lines": 48
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt",
+      "category": "android",
+      "lines": 53
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetConfigurationActivity.kt",
+      "category": "android",
+      "lines": 54
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetLayoutPolicy.kt",
+      "category": "android",
+      "lines": 12
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt",
+      "category": "android",
+      "lines": 297
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafCueLookup.kt",
+      "category": "android",
+      "lines": 31
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafDocumentLookup.kt",
+      "category": "android",
+      "lines": 70
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafDocumentStat.kt",
+      "category": "android",
+      "lines": 34
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafDocumentStatPolicy.kt",
+      "category": "android",
+      "lines": 20
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt",
+      "category": "android",
+      "lines": 368
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafMetadataReadPolicy.kt",
+      "category": "android",
+      "lines": 45
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafScanPolicy.kt",
+      "category": "android",
+      "lines": 85
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafScanProgressStream.kt",
+      "category": "android",
+      "lines": 115
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafTreeReadAccessPolicy.kt",
+      "category": "android",
+      "lines": 14
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SpotiFlacApplication.kt",
+      "category": "android",
+      "lines": 11
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/UsbBitPerfectPlugin.kt",
+      "category": "excluded-engine",
+      "lines": 388
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/UsbDirectPlayback.kt",
+      "category": "excluded-engine",
+      "lines": 333
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/UsbPcmSource.kt",
+      "category": "excluded-engine",
+      "lines": 125
+    },
+    {
+      "path": "android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-hdpi/ic_launcher_monochrome.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/ic_launcher_monochrome.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-v21/launch_background.xml",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/ic_launcher_monochrome.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/ic_launcher_monochrome.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/ic_launcher_monochrome.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_notification_shuffle.xml",
+      "category": "build",
+      "lines": 8
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_notification_shuffle_on.xml",
+      "category": "build",
+      "lines": 10
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_notification_star.xml",
+      "category": "build",
+      "lines": 7
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_notification_star_filled.xml",
+      "category": "build",
+      "lines": 6
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_music.xml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_next.xml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_pause.xml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_play.xml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_widget_previous.xml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "android/app/src/main/res/drawable/launch_background.xml",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "android/app/src/main/res/drawable/widget_player_background.xml",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "android/app/src/main/res/layout/widget_player.xml",
+      "category": "build",
+      "lines": 15
+    },
+    {
+      "path": "android/app/src/main/res/layout/widget_player_compact.xml",
+      "category": "build",
+      "lines": 19
+    },
+    {
+      "path": "android/app/src/main/res/layout/widget_player_wide.xml",
+      "category": "build",
+      "lines": 17
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "category": "build",
+      "lines": 14
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/raw/notification_keep.xml",
+      "category": "build",
+      "lines": 2
+    },
+    {
+      "path": "android/app/src/main/res/values-in/player_widget_strings.xml",
+      "category": "build",
+      "lines": 14
+    },
+    {
+      "path": "android/app/src/main/res/values-night/styles.xml",
+      "category": "build",
+      "lines": 9
+    },
+    {
+      "path": "android/app/src/main/res/values/colors.xml",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "android/app/src/main/res/values/player_widget_strings.xml",
+      "category": "build",
+      "lines": 14
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "category": "build",
+      "lines": 9
+    },
+    {
+      "path": "android/app/src/main/res/xml/automotive_app_desc.xml",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "android/app/src/main/res/xml/backup_rules.xml",
+      "category": "build",
+      "lines": 30
+    },
+    {
+      "path": "android/app/src/main/res/xml/backup_rules_legacy.xml",
+      "category": "build",
+      "lines": 13
+    },
+    {
+      "path": "android/app/src/main/res/xml/locale_config.xml",
+      "category": "build",
+      "lines": 16
+    },
+    {
+      "path": "android/app/src/main/res/xml/widget_player_info.xml",
+      "category": "build",
+      "lines": 12
+    },
+    {
+      "path": "android/app/src/profile/AndroidManifest.xml",
+      "category": "build",
+      "lines": 7
+    },
+    {
+      "path": "android/app/src/release/AndroidManifest.xml",
+      "category": "build",
+      "lines": 6
+    },
+    {
+      "path": "android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt",
+      "category": "asset-or-other",
+      "lines": 108
+    },
+    {
+      "path": "android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt",
+      "category": "asset-or-other",
+      "lines": 365
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/BitPerfectPcmTest.kt",
+      "category": "tests",
+      "lines": 111
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/DsdFileTest.kt",
+      "category": "tests",
+      "lines": 88
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/ErrorJsonTest.kt",
+      "category": "tests",
+      "lines": 18
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/ForegroundServiceStartPolicyTest.kt",
+      "category": "tests",
+      "lines": 29
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/ImpellerCompatibilityTest.kt",
+      "category": "tests",
+      "lines": 37
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/LibraryScanExitInfoTest.kt",
+      "category": "tests",
+      "lines": 26
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeDataJobsTest.kt",
+      "category": "tests",
+      "lines": 150
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeMediaWorkspaceTest.kt",
+      "category": "tests",
+      "lines": 77
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeReplayGainPolicyTest.kt",
+      "category": "tests",
+      "lines": 91
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeTemporaryMediaFileTest.kt",
+      "category": "tests",
+      "lines": 86
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/PlayerWidgetLayoutPolicyTest.kt",
+      "category": "tests",
+      "lines": 14
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafDocumentStatPolicyTest.kt",
+      "category": "tests",
+      "lines": 41
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafMetadataReadPolicyTest.kt",
+      "category": "tests",
+      "lines": 172
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafScanPolicyTest.kt",
+      "category": "tests",
+      "lines": 151
+    },
+    {
+      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafTreeReadAccessPolicyTest.kt",
+      "category": "tests",
+      "lines": 47
+    },
+    {
+      "path": "android/app/src/test/resources/finalization_container_cases.tsv",
+      "category": "tests",
+      "lines": 17
+    },
+    {
+      "path": "android/app/src/test/resources/finalization_quality_cases.tsv",
+      "category": "tests",
+      "lines": 6
+    },
+    {
+      "path": "android/app/src/test/resources/lyrics_usability_cases.tsv",
+      "category": "tests",
+      "lines": 27
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "category": "build",
+      "lines": 50
+    },
+    {
+      "path": "android/gradle.properties",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "category": "build",
+      "lines": 9
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "category": "build",
+      "lines": 26
+    },
+    {
+      "path": "assets/fonts/Inter-LICENSE.txt",
+      "category": "asset-or-other",
+      "lines": 92
+    },
+    {
+      "path": "assets/fonts/InterVariable.ttf",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/images/logo-transparent.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/images/logo.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/licenses/flac.txt",
+      "category": "asset-or-other",
+      "lines": 29
+    },
+    {
+      "path": "assets/licenses/native_data_jobs.txt",
+      "category": "asset-or-other",
+      "lines": 51
+    },
+    {
+      "path": "assets/licenses/native_palette.txt",
+      "category": "asset-or-other",
+      "lines": 244
+    },
+    {
+      "path": "assets/licenses/oboe.txt",
+      "category": "asset-or-other",
+      "lines": 202
+    },
+    {
+      "path": "assets/licenses/usb.txt",
+      "category": "asset-or-other",
+      "lines": 544
+    },
+    {
+      "path": "assets/licenses/wavpack.txt",
+      "category": "asset-or-other",
+      "lines": 25
+    },
+    {
+      "path": "assets/readme/1.jpg",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/readme/2.jpg",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/readme/3.jpg",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/readme/4.jpg",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/readme/banner-readme-dark.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/readme/banner-readme-light.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "assets/shaders/mornye_artwork_glass.frag",
+      "category": "asset-or-other",
+      "lines": 63
+    },
+    {
+      "path": "assets/shaders/mornye_selection_mask.frag",
+      "category": "asset-or-other",
+      "lines": 19
+    },
+    {
+      "path": "devtools_options.yaml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "docs/player_widgets.md",
+      "category": "docs",
+      "lines": 19
+    },
+    {
+      "path": "graphify-out/.graphify_labels.json",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 1521
+    },
+    {
+      "path": "graphify-out/.graphify_python",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 1
+    },
+    {
+      "path": "graphify-out/.graphify_root",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 1
+    },
+    {
+      "path": "graphify-out/GRAPH_REPORT.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 2521
+    },
+    {
+      "path": "graphify-out/cost.json",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 12
+    },
+    {
+      "path": "graphify-out/graph.html",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 360
+    },
+    {
+      "path": "graphify-out/graph.json",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 762949
+    },
+    {
+      "path": "graphify-out/manifest.json",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 8024
+    },
+    {
+      "path": "icon.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "icon_android.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "icon_foreground_android.png",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "integration_test/automix_analysis_test.dart",
+      "category": "tests",
+      "lines": 200
+    },
+    {
+      "path": "integration_test/automix_effects_test.dart",
+      "category": "tests",
+      "lines": 79
+    },
+    {
+      "path": "integration_test/collection_batch_write_test.dart",
+      "category": "tests",
+      "lines": 12
+    },
+    {
+      "path": "integration_test/collection_remove_batch_test.dart",
+      "category": "tests",
+      "lines": 322
+    },
+    {
+      "path": "integration_test/library_collections_workers_test.dart",
+      "category": "tests",
+      "lines": 284
+    },
+    {
+      "path": "integration_test/library_paging_performance_test.dart",
+      "category": "tests",
+      "lines": 342
+    },
+    {
+      "path": "integration_test/loved_batch_write_test.dart",
+      "category": "tests",
+      "lines": 217
+    },
+    {
+      "path": "integration_test/lyrics_timing_test.dart",
+      "category": "tests",
+      "lines": 81
+    },
+    {
+      "path": "integration_test/mornye_artwork_performance_test.dart",
+      "category": "tests",
+      "lines": 191
+    },
+    {
+      "path": "integration_test/mornye_glass_visual_test.dart",
+      "category": "tests",
+      "lines": 418
+    },
+    {
+      "path": "integration_test/mornye_liquid_glass_test.dart",
+      "category": "tests",
+      "lines": 417
+    },
+    {
+      "path": "integration_test/mornye_lyrics_performance_test.dart",
+      "category": "tests",
+      "lines": 183
+    },
+    {
+      "path": "integration_test/mornye_menu_presentation_test.dart",
+      "category": "tests",
+      "lines": 189
+    },
+    {
+      "path": "integration_test/mornye_performance_test.dart",
+      "category": "tests",
+      "lines": 11
+    },
+    {
+      "path": "integration_test/mornye_rendering_performance_test.dart",
+      "category": "tests",
+      "lines": 356
+    },
+    {
+      "path": "integration_test/native_backup_archive_test.dart",
+      "category": "tests",
+      "lines": 354
+    },
+    {
+      "path": "integration_test/native_cache_maintenance_test.dart",
+      "category": "tests",
+      "lines": 337
+    },
+    {
+      "path": "integration_test/native_collection_restore_test.dart",
+      "category": "tests",
+      "lines": 283
+    },
+    {
+      "path": "integration_test/native_data_jobs_test.dart",
+      "category": "tests",
+      "lines": 748
+    },
+    {
+      "path": "integration_test/native_history_snapshot_test.dart",
+      "category": "tests",
+      "lines": 163
+    },
+    {
+      "path": "integration_test/native_library_staging_test.dart",
+      "category": "tests",
+      "lines": 560
+    },
+    {
+      "path": "integration_test/performance_driver.dart",
+      "category": "tests",
+      "lines": 39
+    },
+    {
+      "path": "integration_test/performance_probe.dart",
+      "category": "tests",
+      "lines": 230
+    },
+    {
+      "path": "integration_test/playlist_batch_write_test.dart",
+      "category": "tests",
+      "lines": 254
+    },
+    {
+      "path": "integration_test/playlist_deletion_batch_test.dart",
+      "category": "tests",
+      "lines": 155
+    },
+    {
+      "path": "integration_test/remaining_optimization_test.dart",
+      "category": "tests",
+      "lines": 19
+    },
+    {
+      "path": "l10n.yaml",
+      "category": "build",
+      "lines": 6
+    },
+    {
+      "path": "lib/app.dart",
+      "category": "flutter",
+      "lines": 258
+    },
+    {
+      "path": "lib/constants/app_info.dart",
+      "category": "dart-logic",
+      "lines": 15
+    },
+    {
+      "path": "lib/constants/language_choices.dart",
+      "category": "dart-logic",
+      "lines": 33
+    },
+    {
+      "path": "lib/controllers/metadata_editor_controller.dart",
+      "category": "dart-logic",
+      "lines": 102
+    },
+    {
+      "path": "lib/controllers/player_metadata_controller.dart",
+      "category": "dart-logic",
+      "lines": 246
+    },
+    {
+      "path": "lib/l10n/arb/app_ar.arb",
+      "category": "docs",
+      "lines": 2442
+    },
+    {
+      "path": "lib/l10n/arb/app_de.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_en.arb",
+      "category": "docs",
+      "lines": 3310
+    },
+    {
+      "path": "lib/l10n/arb/app_es.arb",
+      "category": "docs",
+      "lines": 1396
+    },
+    {
+      "path": "lib/l10n/arb/app_es_ES.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_fr.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_hi.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_id.arb",
+      "category": "docs",
+      "lines": 2508
+    },
+    {
+      "path": "lib/l10n/arb/app_it.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_ja.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_ko.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_nl.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_pt.arb",
+      "category": "docs",
+      "lines": 1396
+    },
+    {
+      "path": "lib/l10n/arb/app_pt_PT.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_ru.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_tr.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_uk.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_zh.arb",
+      "category": "docs",
+      "lines": 2195
+    },
+    {
+      "path": "lib/l10n/arb/app_zh_CN.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/arb/app_zh_TW.arb",
+      "category": "docs",
+      "lines": 2414
+    },
+    {
+      "path": "lib/l10n/l10n.dart",
+      "category": "docs",
+      "lines": 14
+    },
+    {
+      "path": "lib/l10n/supported_locales.dart",
+      "category": "docs",
+      "lines": 39
+    },
+    {
+      "path": "lib/main.dart",
+      "category": "dart-logic",
+      "lines": 525
+    },
+    {
+      "path": "lib/models/album_track_order.dart",
+      "category": "dart-logic",
+      "lines": 38
+    },
+    {
+      "path": "lib/models/automix_options.dart",
+      "category": "dart-logic",
+      "lines": 77
+    },
+    {
+      "path": "lib/models/download_history.dart",
+      "category": "dart-logic",
+      "lines": 241
+    },
+    {
+      "path": "lib/models/equalizer_settings.dart",
+      "category": "dart-logic",
+      "lines": 257
+    },
+    {
+      "path": "lib/models/library_collections.dart",
+      "category": "dart-logic",
+      "lines": 457
+    },
+    {
+      "path": "lib/models/metadata_separators.dart",
+      "category": "dart-logic",
+      "lines": 73
+    },
+    {
+      "path": "lib/models/mornye_glass.dart",
+      "category": "dart-logic",
+      "lines": 59
+    },
+    {
+      "path": "lib/models/settings.dart",
+      "category": "dart-logic",
+      "lines": 308
+    },
+    {
+      "path": "lib/models/settings.g.dart",
+      "category": "generated-contract",
+      "lines": 154
+    },
+    {
+      "path": "lib/models/theme_settings.dart",
+      "category": "dart-logic",
+      "lines": 138
+    },
+    {
+      "path": "lib/models/track.dart",
+      "category": "dart-logic",
+      "lines": 224
+    },
+    {
+      "path": "lib/models/track.g.dart",
+      "category": "generated-contract",
+      "lines": 69
+    },
+    {
+      "path": "lib/models/unified_library_item.dart",
+      "category": "dart-logic",
+      "lines": 149
+    },
+    {
+      "path": "lib/providers/custom_font_provider.dart",
+      "category": "dart-logic",
+      "lines": 8
+    },
+    {
+      "path": "lib/providers/equalizer_provider.dart",
+      "category": "excluded-engine",
+      "lines": 189
+    },
+    {
+      "path": "lib/providers/library_browse_provider.dart",
+      "category": "dart-logic",
+      "lines": 234
+    },
+    {
+      "path": "lib/providers/library_collections_provider.dart",
+      "category": "dart-logic",
+      "lines": 839
+    },
+    {
+      "path": "lib/providers/library_search_provider.dart",
+      "category": "dart-logic",
+      "lines": 55
+    },
+    {
+      "path": "lib/providers/local_artist_provider.dart",
+      "category": "dart-logic",
+      "lines": 201
+    },
+    {
+      "path": "lib/providers/local_home_feed_provider.dart",
+      "category": "dart-logic",
+      "lines": 50
+    },
+    {
+      "path": "lib/providers/local_library_provider.dart",
+      "category": "dart-logic",
+      "lines": 1949
+    },
+    {
+      "path": "lib/providers/music_player_provider.dart",
+      "category": "excluded-engine",
+      "lines": 293
+    },
+    {
+      "path": "lib/providers/playback_notification_provider.dart",
+      "category": "excluded-engine",
+      "lines": 57
+    },
+    {
+      "path": "lib/providers/playback_provider.dart",
+      "category": "excluded-engine",
+      "lines": 202
+    },
+    {
+      "path": "lib/providers/runtime_profile_provider.dart",
+      "category": "dart-logic",
+      "lines": 192
+    },
+    {
+      "path": "lib/providers/settings_provider.dart",
+      "category": "dart-logic",
+      "lines": 593
+    },
+    {
+      "path": "lib/providers/theme_provider.dart",
+      "category": "dart-logic",
+      "lines": 124
+    },
+    {
+      "path": "lib/providers/user_profile_provider.dart",
+      "category": "dart-logic",
+      "lines": 39
+    },
+    {
+      "path": "lib/routes/now_playing_route.dart",
+      "category": "flutter",
+      "lines": 270
+    },
+    {
+      "path": "lib/screens/collapsing_header_scroll_mixin.dart",
+      "category": "flutter",
+      "lines": 36
+    },
+    {
+      "path": "lib/screens/equalizer_screen.dart",
+      "category": "flutter",
+      "lines": 468
+    },
+    {
+      "path": "lib/screens/favorite_artists_screen.dart",
+      "category": "flutter",
+      "lines": 152
+    },
+    {
+      "path": "lib/screens/home_tab.dart",
+      "category": "flutter",
+      "lines": 259
+    },
+    {
+      "path": "lib/screens/home_tab_feed.dart",
+      "category": "flutter",
+      "lines": 423
+    },
+    {
+      "path": "lib/screens/home_tab_widgets.dart",
+      "category": "flutter",
+      "lines": 49
+    },
+    {
+      "path": "lib/screens/library_tracks_folder_data.dart",
+      "category": "flutter",
+      "lines": 17
+    },
+    {
+      "path": "lib/screens/library_tracks_folder_screen.dart",
+      "category": "flutter",
+      "lines": 923
+    },
+    {
+      "path": "lib/screens/listening_rewind_screen.dart",
+      "category": "flutter",
+      "lines": 1840
+    },
+    {
+      "path": "lib/screens/listening_statistics_screen.dart",
+      "category": "flutter",
+      "lines": 359
+    },
+    {
+      "path": "lib/screens/local_album_screen.dart",
+      "category": "flutter",
+      "lines": 662
+    },
+    {
+      "path": "lib/screens/local_artist_screen.dart",
+      "category": "flutter",
+      "lines": 752
+    },
+    {
+      "path": "lib/screens/local_genres_screen.dart",
+      "category": "flutter",
+      "lines": 158
+    },
+    {
+      "path": "lib/screens/local_guide_pages.dart",
+      "category": "flutter",
+      "lines": 411
+    },
+    {
+      "path": "lib/screens/lyrics_share_screen.dart",
+      "category": "flutter",
+      "lines": 863
+    },
+    {
+      "path": "lib/screens/main_shell.dart",
+      "category": "flutter",
+      "lines": 819
+    },
+    {
+      "path": "lib/screens/mornye_library_screen.dart",
+      "category": "flutter",
+      "lines": 586
+    },
+    {
+      "path": "lib/screens/now_playing_screen.dart",
+      "category": "flutter",
+      "lines": 1000
+    },
+    {
+      "path": "lib/screens/queue_library_refresh_policy.dart",
+      "category": "flutter",
+      "lines": 449
+    },
+    {
+      "path": "lib/screens/queue_tab.dart",
+      "category": "flutter",
+      "lines": 1247
+    },
+    {
+      "path": "lib/screens/queue_tab_batch_actions.dart",
+      "category": "flutter",
+      "lines": 40
+    },
+    {
+      "path": "lib/screens/queue_tab_collection_items.dart",
+      "category": "flutter",
+      "lines": 185
+    },
+    {
+      "path": "lib/screens/queue_tab_filter_widgets.dart",
+      "category": "flutter",
+      "lines": 614
+    },
+    {
+      "path": "lib/screens/queue_tab_helpers.dart",
+      "category": "flutter",
+      "lines": 316
+    },
+    {
+      "path": "lib/screens/queue_tab_item_widgets.dart",
+      "category": "flutter",
+      "lines": 136
+    },
+    {
+      "path": "lib/screens/queue_tab_navigation.dart",
+      "category": "flutter",
+      "lines": 323
+    },
+    {
+      "path": "lib/screens/queue_tab_selection.dart",
+      "category": "flutter",
+      "lines": 267
+    },
+    {
+      "path": "lib/screens/queue_tab_widgets.dart",
+      "category": "flutter",
+      "lines": 13
+    },
+    {
+      "path": "lib/screens/selection_mode_mixin.dart",
+      "category": "flutter",
+      "lines": 56
+    },
+    {
+      "path": "lib/screens/settings/about_page.dart",
+      "category": "flutter",
+      "lines": 342
+    },
+    {
+      "path": "lib/screens/settings/appearance_settings_page.dart",
+      "category": "flutter",
+      "lines": 631
+    },
+    {
+      "path": "lib/screens/settings/backup_restore_page.dart",
+      "category": "flutter",
+      "lines": 352
+    },
+    {
+      "path": "lib/screens/settings/cache_management_page.dart",
+      "category": "flutter",
+      "lines": 636
+    },
+    {
+      "path": "lib/screens/settings/library_settings_page.dart",
+      "category": "flutter",
+      "lines": 1372
+    },
+    {
+      "path": "lib/screens/settings/log_screen.dart",
+      "category": "flutter",
+      "lines": 731
+    },
+    {
+      "path": "lib/screens/settings/lyrics_settings_page.dart",
+      "category": "flutter",
+      "lines": 50
+    },
+    {
+      "path": "lib/screens/settings/metadata_separator_settings_page.dart",
+      "category": "flutter",
+      "lines": 198
+    },
+    {
+      "path": "lib/screens/settings/playback_settings_page.dart",
+      "category": "flutter",
+      "lines": 398
+    },
+    {
+      "path": "lib/screens/settings/profile_settings_page.dart",
+      "category": "flutter",
+      "lines": 185
+    },
+    {
+      "path": "lib/screens/settings/settings_search_catalog.dart",
+      "category": "flutter",
+      "lines": 396
+    },
+    {
+      "path": "lib/screens/settings/settings_tab.dart",
+      "category": "flutter",
+      "lines": 423
+    },
+    {
+      "path": "lib/screens/setup_screen.dart",
+      "category": "flutter",
+      "lines": 892
+    },
+    {
+      "path": "lib/screens/track_metadata_edit_sheet.dart",
+      "category": "flutter",
+      "lines": 981
+    },
+    {
+      "path": "lib/services/activity_attachment.dart",
+      "category": "dart-logic",
+      "lines": 32
+    },
+    {
+      "path": "lib/services/album_completeness.dart",
+      "category": "dart-logic",
+      "lines": 97
+    },
+    {
+      "path": "lib/services/app_navigation_service.dart",
+      "category": "dart-logic",
+      "lines": 8
+    },
+    {
+      "path": "lib/services/app_orientation.dart",
+      "category": "dart-logic",
+      "lines": 71
+    },
+    {
+      "path": "lib/services/app_state_database.dart",
+      "category": "dart-logic",
+      "lines": 226
+    },
+    {
+      "path": "lib/services/audio_analysis_cache.dart",
+      "category": "dart-logic",
+      "lines": 79
+    },
+    {
+      "path": "lib/services/audio_analysis_jobs.dart",
+      "category": "dart-logic",
+      "lines": 64
+    },
+    {
+      "path": "lib/services/audio_metadata_mapper.dart",
+      "category": "dart-logic",
+      "lines": 434
+    },
+    {
+      "path": "lib/services/audio_route_info.dart",
+      "category": "dart-logic",
+      "lines": 197
+    },
+    {
+      "path": "lib/services/automix_analysis.dart",
+      "category": "excluded-engine",
+      "lines": 285
+    },
+    {
+      "path": "lib/services/automix_analyzer.dart",
+      "category": "excluded-engine",
+      "lines": 178
+    },
+    {
+      "path": "lib/services/automix_effect_renderer.dart",
+      "category": "excluded-engine",
+      "lines": 176
+    },
+    {
+      "path": "lib/services/automix_status.dart",
+      "category": "excluded-engine",
+      "lines": 5
+    },
+    {
+      "path": "lib/services/autoplay_personalization.dart",
+      "category": "dart-logic",
+      "lines": 430
+    },
+    {
+      "path": "lib/services/backup_service.dart",
+      "category": "dart-logic",
+      "lines": 809
+    },
+    {
+      "path": "lib/services/batch_track_actions.dart",
+      "category": "dart-logic",
+      "lines": 139
+    },
+    {
+      "path": "lib/services/collection_restore_codec.dart",
+      "category": "dart-logic",
+      "lines": 105
+    },
+    {
+      "path": "lib/services/collection_track_batch.dart",
+      "category": "dart-logic",
+      "lines": 267
+    },
+    {
+      "path": "lib/services/content_uri_playback_cache.dart",
+      "category": "excluded-engine",
+      "lines": 135
+    },
+    {
+      "path": "lib/services/cover_analysis_store.dart",
+      "category": "dart-logic",
+      "lines": 91
+    },
+    {
+      "path": "lib/services/cover_cache_manager.dart",
+      "category": "dart-logic",
+      "lines": 40
+    },
+    {
+      "path": "lib/services/csv_import_service.dart",
+      "category": "dart-logic",
+      "lines": 177
+    },
+    {
+      "path": "lib/services/custom_font_service.dart",
+      "category": "dart-logic",
+      "lines": 96
+    },
+    {
+      "path": "lib/services/deleted_library_files.dart",
+      "category": "dart-logic",
+      "lines": 16
+    },
+    {
+      "path": "lib/services/downloaded_embedded_cover_resolver.dart",
+      "category": "dart-logic",
+      "lines": 1017
+    },
+    {
+      "path": "lib/services/equalizer_preset_io.dart",
+      "category": "dart-logic",
+      "lines": 21
+    },
+    {
+      "path": "lib/services/ffmpeg_cue.dart",
+      "category": "dart-logic",
+      "lines": 95
+    },
+    {
+      "path": "lib/services/ffmpeg_metadata.dart",
+      "category": "dart-logic",
+      "lines": 458
+    },
+    {
+      "path": "lib/services/ffmpeg_models.dart",
+      "category": "dart-logic",
+      "lines": 69
+    },
+    {
+      "path": "lib/services/ffmpeg_probe.dart",
+      "category": "dart-logic",
+      "lines": 36
+    },
+    {
+      "path": "lib/services/ffmpeg_replaygain.dart",
+      "category": "dart-logic",
+      "lines": 179
+    },
+    {
+      "path": "lib/services/ffmpeg_service.dart",
+      "category": "dart-logic",
+      "lines": 126
+    },
+    {
+      "path": "lib/services/ffmpeg_support.dart",
+      "category": "dart-logic",
+      "lines": 187
+    },
+    {
+      "path": "lib/services/history_database.dart",
+      "category": "dart-logic",
+      "lines": 595
+    },
+    {
+      "path": "lib/services/history_maintenance.dart",
+      "category": "dart-logic",
+      "lines": 69
+    },
+    {
+      "path": "lib/services/id3v23_lyrics.dart",
+      "category": "dart-logic",
+      "lines": 244
+    },
+    {
+      "path": "lib/services/library_cleanup.dart",
+      "category": "dart-logic",
+      "lines": 280
+    },
+    {
+      "path": "lib/services/library_collections_database.dart",
+      "category": "dart-logic",
+      "lines": 1125
+    },
+    {
+      "path": "lib/services/library_collections_hydration.dart",
+      "category": "dart-logic",
+      "lines": 617
+    },
+    {
+      "path": "lib/services/library_cover_snapshot.dart",
+      "category": "dart-logic",
+      "lines": 125
+    },
+    {
+      "path": "lib/services/library_database.dart",
+      "category": "dart-logic",
+      "lines": 1119
+    },
+    {
+      "path": "lib/services/library_database_models.dart",
+      "category": "dart-logic",
+      "lines": 346
+    },
+    {
+      "path": "lib/services/library_duplicates.dart",
+      "category": "dart-logic",
+      "lines": 65
+    },
+    {
+      "path": "lib/services/library_edited_metadata.dart",
+      "category": "dart-logic",
+      "lines": 43
+    },
+    {
+      "path": "lib/services/library_genres.dart",
+      "category": "dart-logic",
+      "lines": 49
+    },
+    {
+      "path": "lib/services/library_native_adapter.dart",
+      "category": "dart-logic",
+      "lines": 414
+    },
+    {
+      "path": "lib/services/library_playlist_search.dart",
+      "category": "dart-logic",
+      "lines": 114
+    },
+    {
+      "path": "lib/services/library_queue_store.dart",
+      "category": "dart-logic",
+      "lines": 965
+    },
+    {
+      "path": "lib/services/library_row_mapper.dart",
+      "category": "dart-logic",
+      "lines": 126
+    },
+    {
+      "path": "lib/services/library_schema.dart",
+      "category": "dart-logic",
+      "lines": 463
+    },
+    {
+      "path": "lib/services/library_search.dart",
+      "category": "dart-logic",
+      "lines": 191
+    },
+    {
+      "path": "lib/services/listening_rewind.dart",
+      "category": "dart-logic",
+      "lines": 436
+    },
+    {
+      "path": "lib/services/listening_statistics.dart",
+      "category": "dart-logic",
+      "lines": 429
+    },
+    {
+      "path": "lib/services/local_track_batch_actions.dart",
+      "category": "dart-logic",
+      "lines": 73
+    },
+    {
+      "path": "lib/services/m3u_playlist_service.dart",
+      "category": "dart-logic",
+      "lines": 195
+    },
+    {
+      "path": "lib/services/metadata_cover_resources.dart",
+      "category": "dart-logic",
+      "lines": 157
+    },
+    {
+      "path": "lib/services/metadata_persistence_service.dart",
+      "category": "dart-logic",
+      "lines": 263
+    },
+    {
+      "path": "lib/services/mornye_glass_auto_probe.dart",
+      "category": "dart-logic",
+      "lines": 151
+    },
+    {
+      "path": "lib/services/mornye_glass_migration.dart",
+      "category": "dart-logic",
+      "lines": 41
+    },
+    {
+      "path": "lib/services/mornye_glass_warmup.dart",
+      "category": "dart-logic",
+      "lines": 132
+    },
+    {
+      "path": "lib/services/music_haptics.dart",
+      "category": "excluded-engine",
+      "lines": 490
+    },
+    {
+      "path": "lib/services/music_playback_deck.dart",
+      "category": "excluded-engine",
+      "lines": 481
+    },
+    {
+      "path": "lib/services/music_player_automix.dart",
+      "category": "excluded-engine",
+      "lines": 518
+    },
+    {
+      "path": "lib/services/music_player_autoplay.dart",
+      "category": "excluded-engine",
+      "lines": 364
+    },
+    {
+      "path": "lib/services/music_player_runtime.dart",
+      "category": "excluded-engine",
+      "lines": 318
+    },
+    {
+      "path": "lib/services/music_player_service.dart",
+      "category": "excluded-engine",
+      "lines": 2263
+    },
+    {
+      "path": "lib/services/native_cache_maintenance.dart",
+      "category": "dart-logic",
+      "lines": 29
+    },
+    {
+      "path": "lib/services/native_log_source.dart",
+      "category": "dart-logic",
+      "lines": 30
+    },
+    {
+      "path": "lib/services/notification_service.dart",
+      "category": "dart-logic",
+      "lines": 335
+    },
+    {
+      "path": "lib/services/platform_bridge.dart",
+      "category": "dart-logic",
+      "lines": 874
+    },
+    {
+      "path": "lib/services/playback_automation.dart",
+      "category": "excluded-engine",
+      "lines": 157
+    },
+    {
+      "path": "lib/services/playback_equalizer.dart",
+      "category": "excluded-engine",
+      "lines": 21
+    },
+    {
+      "path": "lib/services/playback_metadata.dart",
+      "category": "excluded-engine",
+      "lines": 91
+    },
+    {
+      "path": "lib/services/playback_normalization.dart",
+      "category": "excluded-engine",
+      "lines": 78
+    },
+    {
+      "path": "lib/services/playback_notification.dart",
+      "category": "excluded-engine",
+      "lines": 81
+    },
+    {
+      "path": "lib/services/playback_session_prepare.dart",
+      "category": "excluded-engine",
+      "lines": 79
+    },
+    {
+      "path": "lib/services/playback_session_writer.dart",
+      "category": "excluded-engine",
+      "lines": 97
+    },
+    {
+      "path": "lib/services/player_widget_service.dart",
+      "category": "dart-logic",
+      "lines": 291
+    },
+    {
+      "path": "lib/services/replaygain_service.dart",
+      "category": "dart-logic",
+      "lines": 242
+    },
+    {
+      "path": "lib/services/shell_navigation_service.dart",
+      "category": "dart-logic",
+      "lines": 218
+    },
+    {
+      "path": "lib/services/source_deletion_events.dart",
+      "category": "dart-logic",
+      "lines": 30
+    },
+    {
+      "path": "lib/services/sqlite_helpers.dart",
+      "category": "dart-logic",
+      "lines": 458
+    },
+    {
+      "path": "lib/services/sqlite_native_snapshot.dart",
+      "category": "dart-logic",
+      "lines": 138
+    },
+    {
+      "path": "lib/services/system_volume_service.dart",
+      "category": "dart-logic",
+      "lines": 50
+    },
+    {
+      "path": "lib/services/user_profile_store.dart",
+      "category": "dart-logic",
+      "lines": 127
+    },
+    {
+      "path": "lib/theme/app_tokens.dart",
+      "category": "flutter",
+      "lines": 347
+    },
+    {
+      "path": "lib/theme/cover_colors.dart",
+      "category": "flutter",
+      "lines": 474
+    },
+    {
+      "path": "lib/theme/cover_palette.dart",
+      "category": "flutter",
+      "lines": 425
+    },
+    {
+      "path": "lib/theme/mornye_glass_levels.dart",
+      "category": "flutter",
+      "lines": 102
+    },
+    {
+      "path": "lib/theme/mornye_icons.dart",
+      "category": "flutter",
+      "lines": 216
+    },
+    {
+      "path": "lib/theme/mornye_theme.dart",
+      "category": "flutter",
+      "lines": 440
+    },
+    {
+      "path": "lib/theme/mornye_theme_wrapper.dart",
+      "category": "flutter",
+      "lines": 40
+    },
+    {
+      "path": "lib/utils/adaptive_layout.dart",
+      "category": "dart-logic",
+      "lines": 102
+    },
+    {
+      "path": "lib/utils/app_bar_layout.dart",
+      "category": "dart-logic",
+      "lines": 17
+    },
+    {
+      "path": "lib/utils/artist_utils.dart",
+      "category": "dart-logic",
+      "lines": 114
+    },
+    {
+      "path": "lib/utils/audio_format_utils.dart",
+      "category": "dart-logic",
+      "lines": 210
+    },
+    {
+      "path": "lib/utils/audio_quality_badge_policy.dart",
+      "category": "dart-logic",
+      "lines": 124
+    },
+    {
+      "path": "lib/utils/clickable_metadata.dart",
+      "category": "dart-logic",
+      "lines": 254
+    },
+    {
+      "path": "lib/utils/confirm_and_delete_tracks.dart",
+      "category": "dart-logic",
+      "lines": 83
+    },
+    {
+      "path": "lib/utils/duplicate_cleanup_policy.dart",
+      "category": "dart-logic",
+      "lines": 66
+    },
+    {
+      "path": "lib/utils/file_access.dart",
+      "category": "dart-logic",
+      "lines": 169
+    },
+    {
+      "path": "lib/utils/image_cache_utils.dart",
+      "category": "dart-logic",
+      "lines": 12
+    },
+    {
+      "path": "lib/utils/int_utils.dart",
+      "category": "dart-logic",
+      "lines": 39
+    },
+    {
+      "path": "lib/utils/ios_container_paths.dart",
+      "category": "dart-logic",
+      "lines": 32
+    },
+    {
+      "path": "lib/utils/isrc_utils.dart",
+      "category": "dart-logic",
+      "lines": 27
+    },
+    {
+      "path": "lib/utils/library_format_filters.dart",
+      "category": "dart-logic",
+      "lines": 21
+    },
+    {
+      "path": "lib/utils/local_library_scan_prefs.dart",
+      "category": "dart-logic",
+      "lines": 33
+    },
+    {
+      "path": "lib/utils/logger.dart",
+      "category": "dart-logic",
+      "lines": 558
+    },
+    {
+      "path": "lib/utils/lyrics_parser.dart",
+      "category": "dart-logic",
+      "lines": 878
+    },
+    {
+      "path": "lib/utils/lyrics_timeline.dart",
+      "category": "dart-logic",
+      "lines": 307
+    },
+    {
+      "path": "lib/utils/mime_utils.dart",
+      "category": "dart-logic",
+      "lines": 28
+    },
+    {
+      "path": "lib/utils/nav_bar_inset.dart",
+      "category": "dart-logic",
+      "lines": 26
+    },
+    {
+      "path": "lib/utils/ordered_range_selection.dart",
+      "category": "dart-logic",
+      "lines": 32
+    },
+    {
+      "path": "lib/utils/path_match_keys.dart",
+      "category": "dart-logic",
+      "lines": 259
+    },
+    {
+      "path": "lib/utils/playback_artwork.dart",
+      "category": "dart-logic",
+      "lines": 57
+    },
+    {
+      "path": "lib/utils/playback_seek_preview.dart",
+      "category": "dart-logic",
+      "lines": 46
+    },
+    {
+      "path": "lib/utils/progress_stream_poller.dart",
+      "category": "dart-logic",
+      "lines": 187
+    },
+    {
+      "path": "lib/utils/release_date_display.dart",
+      "category": "dart-logic",
+      "lines": 47
+    },
+    {
+      "path": "lib/utils/string_utils.dart",
+      "category": "dart-logic",
+      "lines": 118
+    },
+    {
+      "path": "lib/utils/synced_lyrics_scroll.dart",
+      "category": "dart-logic",
+      "lines": 133
+    },
+    {
+      "path": "lib/utils/user_facing_error.dart",
+      "category": "dart-logic",
+      "lines": 188
+    },
+    {
+      "path": "lib/widgets/album_detail_header.dart",
+      "category": "flutter",
+      "lines": 961
+    },
+    {
+      "path": "lib/widgets/album_track_tile.dart",
+      "category": "flutter",
+      "lines": 56
+    },
+    {
+      "path": "lib/widgets/aligned_lyric_pronunciation.dart",
+      "category": "flutter",
+      "lines": 261
+    },
+    {
+      "path": "lib/widgets/animation_utils.dart",
+      "category": "flutter",
+      "lines": 547
+    },
+    {
+      "path": "lib/widgets/app_action_button.dart",
+      "category": "flutter",
+      "lines": 83
+    },
+    {
+      "path": "lib/widgets/app_alert_dialog.dart",
+      "category": "flutter",
+      "lines": 231
+    },
+    {
+      "path": "lib/widgets/app_bottom_sheet.dart",
+      "category": "flutter",
+      "lines": 284
+    },
+    {
+      "path": "lib/widgets/app_choice_chip.dart",
+      "category": "flutter",
+      "lines": 65
+    },
+    {
+      "path": "lib/widgets/app_content_card.dart",
+      "category": "flutter",
+      "lines": 37
+    },
+    {
+      "path": "lib/widgets/app_loading_indicator.dart",
+      "category": "flutter",
+      "lines": 33
+    },
+    {
+      "path": "lib/widgets/app_search_field.dart",
+      "category": "flutter",
+      "lines": 118
+    },
+    {
+      "path": "lib/widgets/app_sliver_header.dart",
+      "category": "flutter",
+      "lines": 153
+    },
+    {
+      "path": "lib/widgets/app_snack_bar.dart",
+      "category": "flutter",
+      "lines": 205
+    },
+    {
+      "path": "lib/widgets/app_switch.dart",
+      "category": "flutter",
+      "lines": 253
+    },
+    {
+      "path": "lib/widgets/audio_analysis_info_card.dart",
+      "category": "flutter",
+      "lines": 309
+    },
+    {
+      "path": "lib/widgets/audio_analysis_models.dart",
+      "category": "flutter",
+      "lines": 243
+    },
+    {
+      "path": "lib/widgets/audio_analysis_spectrogram.dart",
+      "category": "flutter",
+      "lines": 494
+    },
+    {
+      "path": "lib/widgets/audio_analysis_widget.dart",
+      "category": "flutter",
+      "lines": 1862
+    },
+    {
+      "path": "lib/widgets/audio_info_sheet.dart",
+      "category": "flutter",
+      "lines": 652
+    },
+    {
+      "path": "lib/widgets/audio_output_button.dart",
+      "category": "flutter",
+      "lines": 115
+    },
+    {
+      "path": "lib/widgets/audio_quality_badges.dart",
+      "category": "flutter",
+      "lines": 158
+    },
+    {
+      "path": "lib/widgets/automix_settings.dart",
+      "category": "flutter",
+      "lines": 195
+    },
+    {
+      "path": "lib/widgets/automix_status_badge.dart",
+      "category": "flutter",
+      "lines": 31
+    },
+    {
+      "path": "lib/widgets/batch_progress_dialog.dart",
+      "category": "flutter",
+      "lines": 185
+    },
+    {
+      "path": "lib/widgets/cached_cover_image.dart",
+      "category": "flutter",
+      "lines": 297
+    },
+    {
+      "path": "lib/widgets/collection_scaffold.dart",
+      "category": "flutter",
+      "lines": 120
+    },
+    {
+      "path": "lib/widgets/custom_font_setting.dart",
+      "category": "flutter",
+      "lines": 76
+    },
+    {
+      "path": "lib/widgets/destructive_selection_button.dart",
+      "category": "flutter",
+      "lines": 48
+    },
+    {
+      "path": "lib/widgets/disc_separator_chip.dart",
+      "category": "flutter",
+      "lines": 27
+    },
+    {
+      "path": "lib/widgets/duplicate_review_sheet.dart",
+      "category": "flutter",
+      "lines": 371
+    },
+    {
+      "path": "lib/widgets/error_card.dart",
+      "category": "flutter",
+      "lines": 150
+    },
+    {
+      "path": "lib/widgets/lazy_tab_view.dart",
+      "category": "flutter",
+      "lines": 94
+    },
+    {
+      "path": "lib/widgets/library_fast_scroller.dart",
+      "category": "flutter",
+      "lines": 432
+    },
+    {
+      "path": "lib/widgets/library_playlist_drag_source.dart",
+      "category": "flutter",
+      "lines": 41
+    },
+    {
+      "path": "lib/widgets/library_search_results.dart",
+      "category": "flutter",
+      "lines": 430
+    },
+    {
+      "path": "lib/widgets/library_section_list.dart",
+      "category": "flutter",
+      "lines": 118
+    },
+    {
+      "path": "lib/widgets/library_selection_playback_actions.dart",
+      "category": "flutter",
+      "lines": 70
+    },
+    {
+      "path": "lib/widgets/library_track_selection_bar.dart",
+      "category": "flutter",
+      "lines": 107
+    },
+    {
+      "path": "lib/widgets/local_collection_actions.dart",
+      "category": "flutter",
+      "lines": 89
+    },
+    {
+      "path": "lib/widgets/local_library_artwork_builder.dart",
+      "category": "flutter",
+      "lines": 81
+    },
+    {
+      "path": "lib/widgets/local_song_file_actions.dart",
+      "category": "flutter",
+      "lines": 230
+    },
+    {
+      "path": "lib/widgets/local_song_menu.dart",
+      "category": "flutter",
+      "lines": 369
+    },
+    {
+      "path": "lib/widgets/local_song_row.dart",
+      "category": "flutter",
+      "lines": 144
+    },
+    {
+      "path": "lib/widgets/lyric_gap_indicator.dart",
+      "category": "flutter",
+      "lines": 106
+    },
+    {
+      "path": "lib/widgets/lyric_scroll_motion.dart",
+      "category": "flutter",
+      "lines": 90
+    },
+    {
+      "path": "lib/widgets/lyric_supplement_transition.dart",
+      "category": "flutter",
+      "lines": 65
+    },
+    {
+      "path": "lib/widgets/lyrics_screen_awake.dart",
+      "category": "flutter",
+      "lines": 78
+    },
+    {
+      "path": "lib/widgets/lyrics_size_setting.dart",
+      "category": "flutter",
+      "lines": 65
+    },
+    {
+      "path": "lib/widgets/lyrics_text_scale.dart",
+      "category": "flutter",
+      "lines": 44
+    },
+    {
+      "path": "lib/widgets/metadata_text_field.dart",
+      "category": "flutter",
+      "lines": 67
+    },
+    {
+      "path": "lib/widgets/mini_player.dart",
+      "category": "flutter",
+      "lines": 242
+    },
+    {
+      "path": "lib/widgets/mornye_artist_header.dart",
+      "category": "flutter",
+      "lines": 424
+    },
+    {
+      "path": "lib/widgets/mornye_artwork_contrast.dart",
+      "category": "flutter",
+      "lines": 326
+    },
+    {
+      "path": "lib/widgets/mornye_artwork_glass.dart",
+      "category": "flutter",
+      "lines": 1220
+    },
+    {
+      "path": "lib/widgets/mornye_backdrop_groups.dart",
+      "category": "flutter",
+      "lines": 371
+    },
+    {
+      "path": "lib/widgets/mornye_bottom_bar.dart",
+      "category": "flutter",
+      "lines": 369
+    },
+    {
+      "path": "lib/widgets/mornye_chrome.dart",
+      "category": "flutter",
+      "lines": 732
+    },
+    {
+      "path": "lib/widgets/mornye_chrome_adaptivity.dart",
+      "category": "flutter",
+      "lines": 144
+    },
+    {
+      "path": "lib/widgets/mornye_context_menu.dart",
+      "category": "flutter",
+      "lines": 408
+    },
+    {
+      "path": "lib/widgets/mornye_floating_header.dart",
+      "category": "flutter",
+      "lines": 359
+    },
+    {
+      "path": "lib/widgets/mornye_glass_auto_probe_host.dart",
+      "category": "flutter",
+      "lines": 106
+    },
+    {
+      "path": "lib/widgets/mornye_glass_preparation.dart",
+      "category": "flutter",
+      "lines": 41
+    },
+    {
+      "path": "lib/widgets/mornye_glass_thumb.dart",
+      "category": "flutter",
+      "lines": 180
+    },
+    {
+      "path": "lib/widgets/mornye_landscape_player.dart",
+      "category": "flutter",
+      "lines": 353
+    },
+    {
+      "path": "lib/widgets/mornye_level_slider.dart",
+      "category": "flutter",
+      "lines": 252
+    },
+    {
+      "path": "lib/widgets/mornye_liquid_backdrop.dart",
+      "category": "flutter",
+      "lines": 123
+    },
+    {
+      "path": "lib/widgets/mornye_metadata_row.dart",
+      "category": "flutter",
+      "lines": 61
+    },
+    {
+      "path": "lib/widgets/mornye_performance_hud.dart",
+      "category": "flutter",
+      "lines": 435
+    },
+    {
+      "path": "lib/widgets/mornye_playback_button.dart",
+      "category": "flutter",
+      "lines": 186
+    },
+    {
+      "path": "lib/widgets/mornye_playback_time.dart",
+      "category": "flutter",
+      "lines": 87
+    },
+    {
+      "path": "lib/widgets/mornye_player_actions_sheet.dart",
+      "category": "flutter",
+      "lines": 191
+    },
+    {
+      "path": "lib/widgets/mornye_player_background.dart",
+      "category": "flutter",
+      "lines": 134
+    },
+    {
+      "path": "lib/widgets/mornye_player_details_sheet.dart",
+      "category": "flutter",
+      "lines": 148
+    },
+    {
+      "path": "lib/widgets/mornye_player_favorite_button.dart",
+      "category": "flutter",
+      "lines": 79
+    },
+    {
+      "path": "lib/widgets/mornye_player_ground.dart",
+      "category": "flutter",
+      "lines": 237
+    },
+    {
+      "path": "lib/widgets/mornye_player_layout.dart",
+      "category": "flutter",
+      "lines": 700
+    },
+    {
+      "path": "lib/widgets/mornye_player_queue.dart",
+      "category": "flutter",
+      "lines": 238
+    },
+    {
+      "path": "lib/widgets/mornye_player_slider.dart",
+      "category": "flutter",
+      "lines": 50
+    },
+    {
+      "path": "lib/widgets/mornye_selection_pill.dart",
+      "category": "flutter",
+      "lines": 721
+    },
+    {
+      "path": "lib/widgets/mornye_slider.dart",
+      "category": "flutter",
+      "lines": 213
+    },
+    {
+      "path": "lib/widgets/mornye_squircle_border.dart",
+      "category": "flutter",
+      "lines": 34
+    },
+    {
+      "path": "lib/widgets/mornye_volume_control.dart",
+      "category": "flutter",
+      "lines": 162
+    },
+    {
+      "path": "lib/widgets/music_haptics_settings.dart",
+      "category": "flutter",
+      "lines": 76
+    },
+    {
+      "path": "lib/widgets/overflow_marquee.dart",
+      "category": "flutter",
+      "lines": 174
+    },
+    {
+      "path": "lib/widgets/pinned_section_sliver_list.dart",
+      "category": "flutter",
+      "lines": 320
+    },
+    {
+      "path": "lib/widgets/playback_feedback.dart",
+      "category": "flutter",
+      "lines": 71
+    },
+    {
+      "path": "lib/widgets/playback_normalization_settings.dart",
+      "category": "flutter",
+      "lines": 97
+    },
+    {
+      "path": "lib/widgets/playback_seek_slider.dart",
+      "category": "flutter",
+      "lines": 123
+    },
+    {
+      "path": "lib/widgets/player_artwork.dart",
+      "category": "flutter",
+      "lines": 69
+    },
+    {
+      "path": "lib/widgets/player_details_sheet.dart",
+      "category": "flutter",
+      "lines": 103
+    },
+    {
+      "path": "lib/widgets/player_gesture_regions.dart",
+      "category": "flutter",
+      "lines": 109
+    },
+    {
+      "path": "lib/widgets/player_lyrics.dart",
+      "category": "flutter",
+      "lines": 2249
+    },
+    {
+      "path": "lib/widgets/player_lyrics_controls.dart",
+      "category": "flutter",
+      "lines": 29
+    },
+    {
+      "path": "lib/widgets/player_lyrics_section.dart",
+      "category": "flutter",
+      "lines": 153
+    },
+    {
+      "path": "lib/widgets/player_metadata_title.dart",
+      "category": "flutter",
+      "lines": 45
+    },
+    {
+      "path": "lib/widgets/player_playback_controls.dart",
+      "category": "flutter",
+      "lines": 252
+    },
+    {
+      "path": "lib/widgets/player_queue_dismissible.dart",
+      "category": "flutter",
+      "lines": 86
+    },
+    {
+      "path": "lib/widgets/player_track_swipe.dart",
+      "category": "flutter",
+      "lines": 220
+    },
+    {
+      "path": "lib/widgets/playlist_picker_sheet.dart",
+      "category": "flutter",
+      "lines": 577
+    },
+    {
+      "path": "lib/widgets/profile_avatar.dart",
+      "category": "flutter",
+      "lines": 191
+    },
+    {
+      "path": "lib/widgets/scroll_edge_fade.dart",
+      "category": "flutter",
+      "lines": 77
+    },
+    {
+      "path": "lib/widgets/selection_action_button.dart",
+      "category": "flutter",
+      "lines": 43
+    },
+    {
+      "path": "lib/widgets/selection_bottom_bar.dart",
+      "category": "flutter",
+      "lines": 603
+    },
+    {
+      "path": "lib/widgets/settings_group.dart",
+      "category": "flutter",
+      "lines": 722
+    },
+    {
+      "path": "lib/widgets/track_card.dart",
+      "category": "flutter",
+      "lines": 359
+    },
+    {
+      "path": "lib/widgets/track_detail_actions.dart",
+      "category": "flutter",
+      "lines": 104
+    },
+    {
+      "path": "lib/widgets/two_finger_pinch_listener.dart",
+      "category": "flutter",
+      "lines": 101
+    },
+    {
+      "path": "logo.svg",
+      "category": "asset-or-other",
+      "lines": 1
+    },
+    {
+      "path": "pubspec.lock",
+      "category": "build",
+      "lines": 1436
+    },
+    {
+      "path": "pubspec.yaml",
+      "category": "build",
+      "lines": 122
+    },
+    {
+      "path": "reviews/AUDIT_PLAN.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 57
+    },
+    {
+      "path": "reviews/BACKLOG.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 5
+    },
+    {
+      "path": "reviews/CALIBRATION.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 37
+    },
+    {
+      "path": "reviews/FINDINGS.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 1577
+    },
+    {
+      "path": "reviews/FIX_PLAN.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 98
+    },
+    {
+      "path": "reviews/HANDOFF.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 46
+    },
+    {
+      "path": "reviews/LOCAL_BUILD_168.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 36
+    },
+    {
+      "path": "reviews/PORT_EXECUTION.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 123
+    },
+    {
+      "path": "reviews/PORT_PLAN.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 316
+    },
+    {
+      "path": "reviews/PROTOCOL.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 211
+    },
+    {
+      "path": "reviews/STATE.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 45
+    },
+    {
+      "path": "reviews/TASKS.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 305
+    },
+    {
+      "path": "reviews/UPSTREAM.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 226
+    },
+    {
+      "path": "reviews/VERIFICATION.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 70
+    },
+    {
+      "path": "reviews/coverage.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 25
+    },
+    {
+      "path": "reviews/upstream-v5.2.0-audit.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 49
+    },
+    {
+      "path": "reviews/upstream-v5.2.0-backlog.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 15
+    },
+    {
+      "path": "reviews/upstream-v5.2.0-dependencies.json",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 141
+    },
+    {
+      "path": "reviews/upstream-v5.2.0-final-report.md",
+      "category": "excluded-prior-record-or-generated-graph",
+      "lines": 48
+    },
+    {
+      "path": "rust_backend/Cargo.lock",
+      "category": "build",
+      "lines": 2016
+    },
+    {
+      "path": "rust_backend/Cargo.toml",
+      "category": "build",
+      "lines": 44
+    },
+    {
+      "path": "rust_backend/NOTICE",
+      "category": "asset-or-other",
+      "lines": 49
+    },
+    {
+      "path": "rust_backend/crates/bindgen/Cargo.toml",
+      "category": "build",
+      "lines": 13
+    },
+    {
+      "path": "rust_backend/crates/bindgen/src/main.rs",
+      "category": "rust",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/crates/core/Cargo.toml",
+      "category": "build",
+      "lines": 19
+    },
+    {
+      "path": "rust_backend/crates/core/src/cancellation.rs",
+      "category": "rust",
+      "lines": 430
+    },
+    {
+      "path": "rust_backend/crates/core/src/cover.rs",
+      "category": "rust",
+      "lines": 243
+    },
+    {
+      "path": "rust_backend/crates/core/src/cover/library.rs",
+      "category": "rust",
+      "lines": 159
+    },
+    {
+      "path": "rust_backend/crates/core/src/cue.rs",
+      "category": "rust",
+      "lines": 380
+    },
+    {
+      "path": "rust_backend/crates/core/src/lib.rs",
+      "category": "rust",
+      "lines": 12
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics.rs",
+      "category": "rust",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics/file.rs",
+      "category": "rust",
+      "lines": 81
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics/lrc.rs",
+      "category": "rust",
+      "lines": 46
+    },
+    {
+      "path": "rust_backend/crates/core/src/matching.rs",
+      "category": "rust",
+      "lines": 55
+    },
+    {
+      "path": "rust_backend/crates/core/src/media/audio.rs",
+      "category": "rust",
+      "lines": 294
+    },
+    {
+      "path": "rust_backend/crates/core/src/media/mod.rs",
+      "category": "rust",
+      "lines": 95
+    },
+    {
+      "path": "rust_backend/crates/core/src/media/mp4.rs",
+      "category": "rust",
+      "lines": 271
+    },
+    {
+      "path": "rust_backend/crates/core/src/native_audio_analysis.rs",
+      "category": "rust",
+      "lines": 479
+    },
+    {
+      "path": "rust_backend/crates/core/src/native_palette.rs",
+      "category": "rust",
+      "lines": 521
+    },
+    {
+      "path": "rust_backend/crates/core/src/native_palette/README.md",
+      "category": "docs",
+      "lines": 10
+    },
+    {
+      "path": "rust_backend/crates/core/src/native_palette/fixtures.json",
+      "category": "asset-or-other",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags.rs",
+      "category": "rust",
+      "lines": 383
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/comments.rs",
+      "category": "rust",
+      "lines": 311
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/containers.rs",
+      "category": "rust",
+      "lines": 552
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/file.rs",
+      "category": "rust",
+      "lines": 215
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/id3.rs",
+      "category": "rust",
+      "lines": 679
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/library.rs",
+      "category": "rust",
+      "lines": 408
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/mp4.rs",
+      "category": "rust",
+      "lines": 252
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/separators.rs",
+      "category": "rust",
+      "lines": 21
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/write.rs",
+      "category": "rust",
+      "lines": 1197
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/write/ape.rs",
+      "category": "rust",
+      "lines": 210
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/write/id3.rs",
+      "category": "rust",
+      "lines": 370
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/write/mp4.rs",
+      "category": "rust",
+      "lines": 612
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/write/ogg.rs",
+      "category": "rust",
+      "lines": 225
+    },
+    {
+      "path": "rust_backend/crates/core/src/tags/write/riff.rs",
+      "category": "rust",
+      "lines": 187
+    },
+    {
+      "path": "rust_backend/crates/core/src/text.rs",
+      "category": "rust",
+      "lines": 20
+    },
+    {
+      "path": "rust_backend/crates/core/tests/artist_tag_mode.rs",
+      "category": "rust",
+      "lines": 217
+    },
+    {
+      "path": "rust_backend/crates/core/tests/fixtures/encoder-only.opus",
+      "category": "asset-or-other",
+      "lines": null
+    },
+    {
+      "path": "rust_backend/crates/core/tests/id3_cover.rs",
+      "category": "rust",
+      "lines": 106
+    },
+    {
+      "path": "rust_backend/crates/core/tests/optimization_tags.rs",
+      "category": "rust",
+      "lines": 343
+    },
+    {
+      "path": "rust_backend/crates/core/tests/opus_scan.rs",
+      "category": "rust",
+      "lines": 263
+    },
+    {
+      "path": "rust_backend/crates/core/tests/replaygain_removal.rs",
+      "category": "rust",
+      "lines": 298
+    },
+    {
+      "path": "rust_backend/crates/local/Cargo.toml",
+      "category": "build",
+      "lines": 25
+    },
+    {
+      "path": "rust_backend/crates/local/examples/android_statx_smoke.rs",
+      "category": "rust",
+      "lines": 127
+    },
+    {
+      "path": "rust_backend/crates/local/src/backend.rs",
+      "category": "rust",
+      "lines": 197
+    },
+    {
+      "path": "rust_backend/crates/local/src/backend/cover.rs",
+      "category": "rust",
+      "lines": 248
+    },
+    {
+      "path": "rust_backend/crates/local/src/backend/library.rs",
+      "category": "rust",
+      "lines": 692
+    },
+    {
+      "path": "rust_backend/crates/local/src/backend/library/scan.rs",
+      "category": "rust",
+      "lines": 806
+    },
+    {
+      "path": "rust_backend/crates/local/src/backend/tags.rs",
+      "category": "rust",
+      "lines": 270
+    },
+    {
+      "path": "rust_backend/crates/local/src/files.rs",
+      "category": "rust",
+      "lines": 888
+    },
+    {
+      "path": "rust_backend/crates/local/src/lib.rs",
+      "category": "rust",
+      "lines": 5
+    },
+    {
+      "path": "rust_backend/crates/local/src/logging.rs",
+      "category": "rust",
+      "lines": 301
+    },
+    {
+      "path": "rust_backend/crates/local/src/redact.rs",
+      "category": "rust",
+      "lines": 97
+    },
+    {
+      "path": "rust_backend/crates/mobile/Cargo.toml",
+      "category": "build",
+      "lines": 35
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/cancellation.rs",
+      "category": "rust",
+      "lines": 79
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/data_jobs.rs",
+      "category": "rust",
+      "lines": 184
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/lib.rs",
+      "category": "rust",
+      "lines": 20
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/library_metadata.rs",
+      "category": "rust",
+      "lines": 267
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/local.rs",
+      "category": "rust",
+      "lines": 68
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/logging.rs",
+      "category": "rust",
+      "lines": 64
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup.rs",
+      "category": "rust",
+      "lines": 556
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup/archive.rs",
+      "category": "rust",
+      "lines": 308
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup/archive/tests.rs",
+      "category": "rust",
+      "lines": 297
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup/collections.rs",
+      "category": "rust",
+      "lines": 214
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup/collections/tests.rs",
+      "category": "rust",
+      "lines": 217
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup/legacy.rs",
+      "category": "rust",
+      "lines": 232
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_backup/tests.rs",
+      "category": "rust",
+      "lines": 294
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_cache.rs",
+      "category": "rust",
+      "lines": 19
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_cache/unix.rs",
+      "category": "rust",
+      "lines": 397
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_cache/unix/tests.rs",
+      "category": "rust",
+      "lines": 277
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_collections.rs",
+      "category": "rust",
+      "lines": 171
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_collections/tests.rs",
+      "category": "rust",
+      "lines": 218
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_id3.rs",
+      "category": "rust",
+      "lines": 261
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_library.rs",
+      "category": "rust",
+      "lines": 692
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_library/dart_date.rs",
+      "category": "rust",
+      "lines": 99
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_library/path_keys.rs",
+      "category": "rust",
+      "lines": 331
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_library/tests.rs",
+      "category": "rust",
+      "lines": 584
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_lyrics.rs",
+      "category": "rust",
+      "lines": 1072
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_playlist_write.rs",
+      "category": "rust",
+      "lines": 210
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_playlists.rs",
+      "category": "rust",
+      "lines": 382
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/native_xml.rs",
+      "category": "rust",
+      "lines": 109
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/tags.rs",
+      "category": "rust",
+      "lines": 313
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/usb_audio/README.md",
+      "category": "excluded-engine",
+      "lines": 142
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/usb_audio/descriptors.rs",
+      "category": "excluded-engine",
+      "lines": 380
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/usb_audio/framing.rs",
+      "category": "excluded-engine",
+      "lines": 77
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/usb_audio/mod.rs",
+      "category": "excluded-engine",
+      "lines": 159
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/usb_audio/transport.rs",
+      "category": "excluded-engine",
+      "lines": 689
+    },
+    {
+      "path": "rust_backend/crates/mobile/src/usb_audio/volume.rs",
+      "category": "excluded-engine",
+      "lines": 460
+    },
+    {
+      "path": "rust_backend/crates/mobile/uniffi.toml",
+      "category": "build",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/rust-toolchain.toml",
+      "category": "build",
+      "lines": 4
+    },
+    {
+      "path": "rust_backend/vendor/README.md",
+      "category": "vendor-inventory",
+      "lines": 46
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/.cargo-checksum.json",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/.cargo_vcs_info.json",
+      "category": "vendor-inventory",
+      "lines": 6
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/CHANGELOG.md",
+      "category": "vendor-inventory",
+      "lines": 54
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/Cargo.lock",
+      "category": "vendor-inventory",
+      "lines": 37
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/Cargo.toml",
+      "category": "vendor-inventory",
+      "lines": 64
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/Cargo.toml.orig",
+      "category": "vendor-inventory",
+      "lines": 47
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/LICENSE",
+      "category": "vendor-inventory",
+      "lines": 21
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/README.md",
+      "category": "vendor-inventory",
+      "lines": 92
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/build.rs",
+      "category": "vendor-inventory",
+      "lines": 224
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/AUTHORS",
+      "category": "vendor-inventory",
+      "lines": 245
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/COPYING",
+      "category": "vendor-inventory",
+      "lines": 513
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/README",
+      "category": "vendor-inventory",
+      "lines": 32
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/README.md",
+      "category": "vendor-inventory",
+      "lines": 33
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/Makefile.am",
+      "category": "vendor-inventory",
+      "lines": 102
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/Makefile.am.extra",
+      "category": "vendor-inventory",
+      "lines": 26
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/Makefile.in",
+      "category": "vendor-inventory",
+      "lines": 1030
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/core.c",
+      "category": "vendor-inventory",
+      "lines": 3086
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/descriptor.c",
+      "category": "vendor-inventory",
+      "lines": 1707
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/hotplug.c",
+      "category": "vendor-inventory",
+      "lines": 489
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/io.c",
+      "category": "vendor-inventory",
+      "lines": 2869
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/libusb-1.0.def",
+      "category": "vendor-inventory",
+      "lines": 209
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/libusb-1.0.rc",
+      "category": "vendor-inventory",
+      "lines": 53
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/libusb.h",
+      "category": "vendor-inventory",
+      "lines": 2471
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/libusbi.h",
+      "category": "vendor-inventory",
+      "lines": 1599
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/darwin_usb.c",
+      "category": "vendor-inventory",
+      "lines": 3057
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/darwin_usb.h",
+      "category": "vendor-inventory",
+      "lines": 158
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/emscripten_webusb.cpp",
+      "category": "vendor-inventory",
+      "lines": 896
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/events_posix.c",
+      "category": "vendor-inventory",
+      "lines": 340
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/events_posix.h",
+      "category": "vendor-inventory",
+      "lines": 62
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/events_windows.c",
+      "category": "vendor-inventory",
+      "lines": 214
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/events_windows.h",
+      "category": "vendor-inventory",
+      "lines": 46
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/haiku_pollfs.cpp",
+      "category": "vendor-inventory",
+      "lines": 372
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/haiku_usb.h",
+      "category": "vendor-inventory",
+      "lines": 113
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/haiku_usb_backend.cpp",
+      "category": "vendor-inventory",
+      "lines": 532
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/haiku_usb_raw.cpp",
+      "category": "vendor-inventory",
+      "lines": 235
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/haiku_usb_raw.h",
+      "category": "vendor-inventory",
+      "lines": 188
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/linux_netlink.c",
+      "category": "vendor-inventory",
+      "lines": 401
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/linux_udev.c",
+      "category": "vendor-inventory",
+      "lines": 321
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/linux_usbfs.c",
+      "category": "vendor-inventory",
+      "lines": 2877
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/linux_usbfs.h",
+      "category": "vendor-inventory",
+      "lines": 221
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/netbsd_usb.c",
+      "category": "vendor-inventory",
+      "lines": 619
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/null_usb.c",
+      "category": "vendor-inventory",
+      "lines": 111
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/openbsd_usb.c",
+      "category": "vendor-inventory",
+      "lines": 702
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/sunos_usb.c",
+      "category": "vendor-inventory",
+      "lines": 1621
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/sunos_usb.h",
+      "category": "vendor-inventory",
+      "lines": 79
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/threads_posix.c",
+      "category": "vendor-inventory",
+      "lines": 126
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/threads_posix.h",
+      "category": "vendor-inventory",
+      "lines": 104
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/threads_windows.c",
+      "category": "vendor-inventory",
+      "lines": 40
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/threads_windows.h",
+      "category": "vendor-inventory",
+      "lines": 114
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_common.c",
+      "category": "vendor-inventory",
+      "lines": 1008
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_common.h",
+      "category": "vendor-inventory",
+      "lines": 443
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_hotplug.c",
+      "category": "vendor-inventory",
+      "lines": 321
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_hotplug.h",
+      "category": "vendor-inventory",
+      "lines": 28
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_usbdk.c",
+      "category": "vendor-inventory",
+      "lines": 732
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_usbdk.h",
+      "category": "vendor-inventory",
+      "lines": 106
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_winusb.c",
+      "category": "vendor-inventory",
+      "lines": 5478
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/os/windows_winusb.h",
+      "category": "vendor-inventory",
+      "lines": 792
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/strerror.c",
+      "category": "vendor-inventory",
+      "lines": 223
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/sync.c",
+      "category": "vendor-inventory",
+      "lines": 342
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/version.h",
+      "category": "vendor-inventory",
+      "lines": 18
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/libusb/version_nano.h",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/Base.props",
+      "category": "vendor-inventory",
+      "lines": 60
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/Configuration.Application.props",
+      "category": "vendor-inventory",
+      "lines": 7
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/Configuration.Base.props",
+      "category": "vendor-inventory",
+      "lines": 48
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/Configuration.DynamicLibrary.props",
+      "category": "vendor-inventory",
+      "lines": 33
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/Configuration.StaticLibrary.props",
+      "category": "vendor-inventory",
+      "lines": 7
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/ProjectConfigurations.Base.props",
+      "category": "vendor-inventory",
+      "lines": 122
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/build_all.ps1",
+      "category": "vendor-inventory",
+      "lines": 17
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/config.h",
+      "category": "vendor-inventory",
+      "lines": 62
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/dpfp.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 33
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/dpfp_threaded.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 38
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/fxload.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 46
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 40
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/bits/getopt_core.h",
+      "category": "vendor-inventory",
+      "lines": 96
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/bits/getopt_ext.h",
+      "category": "vendor-inventory",
+      "lines": 77
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/features.h",
+      "category": "vendor-inventory",
+      "lines": 21
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/getopt.c",
+      "category": "vendor-inventory",
+      "lines": 811
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/getopt.h",
+      "category": "vendor-inventory",
+      "lines": 38
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/getopt1.c",
+      "category": "vendor-inventory",
+      "lines": 159
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/getopt_int.h",
+      "category": "vendor-inventory",
+      "lines": 118
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/gettext.h",
+      "category": "vendor-inventory",
+      "lines": 7
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/getopt/unistd.h",
+      "category": "vendor-inventory",
+      "lines": 5
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/hotplugtest.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 32
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/init_context.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 35
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/libusb.sln",
+      "category": "vendor-inventory",
+      "lines": 789
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/libusb_dll.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 63
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/libusb_static.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 51
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/listdevs.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 32
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/sam3u_benchmark.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 33
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/set_option.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 35
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/stress.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 35
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/stress_mt.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 33
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/testlibusb.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 32
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/libusb/msvc/xusb.vcxproj",
+      "category": "vendor-inventory",
+      "lines": 38
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/src/constants.rs",
+      "category": "vendor-inventory",
+      "lines": 160
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/src/lib.rs",
+      "category": "vendor-inventory",
+      "lines": 696
+    },
+    {
+      "path": "rust_backend/vendor/libusb1-sys-0.7.0/tests/test.rs",
+      "category": "vendor-inventory",
+      "lines": 160
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/.cargo-checksum.json",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/.cargo_vcs_info.json",
+      "category": "vendor-inventory",
+      "lines": 6
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/CHANGES.md",
+      "category": "vendor-inventory",
+      "lines": 391
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/CODE_OF_CONDUCT.md",
+      "category": "vendor-inventory",
+      "lines": 49
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/CONTRIBUTING.md",
+      "category": "vendor-inventory",
+      "lines": 27
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/COPYRIGHT",
+      "category": "vendor-inventory",
+      "lines": 29
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/Cargo.lock",
+      "category": "vendor-inventory",
+      "lines": 1206
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/Cargo.toml",
+      "category": "vendor-inventory",
+      "lines": 290
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/Cargo.toml.orig",
+      "category": "vendor-inventory",
+      "lines": 276
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/LICENSE-APACHE",
+      "category": "vendor-inventory",
+      "lines": 201
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/LICENSE-Apache-2.0_WITH_LLVM-exception",
+      "category": "vendor-inventory",
+      "lines": 220
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/LICENSE-MIT",
+      "category": "vendor-inventory",
+      "lines": 23
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/ORG_CODE_OF_CONDUCT.md",
+      "category": "vendor-inventory",
+      "lines": 143
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/README.md",
+      "category": "vendor-inventory",
+      "lines": 206
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/SECURITY.md",
+      "category": "vendor-inventory",
+      "lines": 29
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/benches/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 217
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/build.rs",
+      "category": "vendor-inventory",
+      "lines": 281
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/c.rs",
+      "category": "vendor-inventory",
+      "lines": 584
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/conv.rs",
+      "category": "vendor-inventory",
+      "lines": 196
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/event/epoll.rs",
+      "category": "vendor-inventory",
+      "lines": 74
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/event/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 9
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/event/poll_fd.rs",
+      "category": "vendor-inventory",
+      "lines": 148
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/event/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 623
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/event/types.rs",
+      "category": "vendor-inventory",
+      "lines": 37
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/event/windows_syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 72
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/fs/dir.rs",
+      "category": "vendor-inventory",
+      "lines": 510
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/fs/inotify.rs",
+      "category": "vendor-inventory",
+      "lines": 124
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/fs/makedev.rs",
+      "category": "vendor-inventory",
+      "lines": 144
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/fs/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 29
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/fs/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 2764
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/fs/types.rs",
+      "category": "vendor-inventory",
+      "lines": 1179
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io/errno.rs",
+      "category": "vendor-inventory",
+      "lines": 1114
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 6
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 304
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io/types.rs",
+      "category": "vendor-inventory",
+      "lines": 65
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io/windows_syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 58
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io_uring/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/io_uring/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 94
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mm/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mm/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 244
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mm/types.rs",
+      "category": "vendor-inventory",
+      "lines": 506
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 220
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mount/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mount/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 268
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/mount/types.rs",
+      "category": "vendor-inventory",
+      "lines": 348
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/addr.rs",
+      "category": "vendor-inventory",
+      "lines": 393
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/ext.rs",
+      "category": "vendor-inventory",
+      "lines": 137
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 16
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/msghdr.rs",
+      "category": "vendor-inventory",
+      "lines": 183
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/netdevice.rs",
+      "category": "vendor-inventory",
+      "lines": 50
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/read_sockaddr.rs",
+      "category": "vendor-inventory",
+      "lines": 264
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/send_recv.rs",
+      "category": "vendor-inventory",
+      "lines": 153
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/sockopt.rs",
+      "category": "vendor-inventory",
+      "lines": 1405
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 434
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/net/write_sockaddr.rs",
+      "category": "vendor-inventory",
+      "lines": 72
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/param/auxv.rs",
+      "category": "vendor-inventory",
+      "lines": 67
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/param/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pid/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pid/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 14
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pipe/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pipe/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 127
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pipe/types.rs",
+      "category": "vendor-inventory",
+      "lines": 117
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/prctl/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/prctl/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 14
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/process/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 5
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/process/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 706
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/process/types.rs",
+      "category": "vendor-inventory",
+      "lines": 140
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/process/wait.rs",
+      "category": "vendor-inventory",
+      "lines": 17
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pty/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/pty/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 118
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/rand/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/rand/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 14
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/rand/types.rs",
+      "category": "vendor-inventory",
+      "lines": 24
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/shm/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/shm/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 24
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/shm/types.rs",
+      "category": "vendor-inventory",
+      "lines": 30
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/system/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/system/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 163
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/system/types.rs",
+      "category": "vendor-inventory",
+      "lines": 8
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/termios/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/termios/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 531
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/termios/types.rs",
+      "category": "vendor-inventory",
+      "lines": 17
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/thread/cpu_set.rs",
+      "category": "vendor-inventory",
+      "lines": 68
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/thread/futex.rs",
+      "category": "vendor-inventory",
+      "lines": 91
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/thread/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 7
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/thread/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 793
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/thread/types.rs",
+      "category": "vendor-inventory",
+      "lines": 60
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/time/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/time/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 526
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/time/types.rs",
+      "category": "vendor-inventory",
+      "lines": 266
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/ugid/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/ugid/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 42
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/libc/winsock_c.rs",
+      "category": "vendor-inventory",
+      "lines": 67
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/aarch64.rs",
+      "category": "vendor-inventory",
+      "lines": 269
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/arm.rs",
+      "category": "vendor-inventory",
+      "lines": 266
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/mips.rs",
+      "category": "vendor-inventory",
+      "lines": 544
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/mips32r6.rs",
+      "category": "vendor-inventory",
+      "lines": 544
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/mips64.rs",
+      "category": "vendor-inventory",
+      "lines": 467
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/mips64r6.rs",
+      "category": "vendor-inventory",
+      "lines": 471
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 321
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/powerpc.rs",
+      "category": "vendor-inventory",
+      "lines": 440
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/powerpc64.rs",
+      "category": "vendor-inventory",
+      "lines": 440
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/riscv64.rs",
+      "category": "vendor-inventory",
+      "lines": 685
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/s390x.rs",
+      "category": "vendor-inventory",
+      "lines": 288
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/thumb.rs",
+      "category": "vendor-inventory",
+      "lines": 323
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/x86.rs",
+      "category": "vendor-inventory",
+      "lines": 492
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/arch/x86_64.rs",
+      "category": "vendor-inventory",
+      "lines": 294
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/c.rs",
+      "category": "vendor-inventory",
+      "lines": 401
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/conv.rs",
+      "category": "vendor-inventory",
+      "lines": 1037
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/event/epoll.rs",
+      "category": "vendor-inventory",
+      "lines": 74
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/event/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 4
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/event/poll_fd.rs",
+      "category": "vendor-inventory",
+      "lines": 98
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/event/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 358
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/event/types.rs",
+      "category": "vendor-inventory",
+      "lines": 21
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/fs/dir.rs",
+      "category": "vendor-inventory",
+      "lines": 389
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/fs/inotify.rs",
+      "category": "vendor-inventory",
+      "lines": 124
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/fs/makedev.rs",
+      "category": "vendor-inventory",
+      "lines": 19
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/fs/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 13
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/fs/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 1736
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/fs/types.rs",
+      "category": "vendor-inventory",
+      "lines": 851
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/io/errno.rs",
+      "category": "vendor-inventory",
+      "lines": 552
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/io/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/io/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 376
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/io/types.rs",
+      "category": "vendor-inventory",
+      "lines": 57
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/io_uring/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/io_uring/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 83
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mm/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mm/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 239
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mm/types.rs",
+      "category": "vendor-inventory",
+      "lines": 297
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 112
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mount/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mount/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 237
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/mount/types.rs",
+      "category": "vendor-inventory",
+      "lines": 335
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/addr.rs",
+      "category": "vendor-inventory",
+      "lines": 303
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 8
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/msghdr.rs",
+      "category": "vendor-inventory",
+      "lines": 125
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/netdevice.rs",
+      "category": "vendor-inventory",
+      "lines": 66
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/read_sockaddr.rs",
+      "category": "vendor-inventory",
+      "lines": 155
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/send_recv.rs",
+      "category": "vendor-inventory",
+      "lines": 87
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/sockopt.rs",
+      "category": "vendor-inventory",
+      "lines": 1173
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 731
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/net/write_sockaddr.rs",
+      "category": "vendor-inventory",
+      "lines": 31
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/param/auxv.rs",
+      "category": "vendor-inventory",
+      "lines": 580
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/param/init.rs",
+      "category": "vendor-inventory",
+      "lines": 175
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/param/libc_auxv.rs",
+      "category": "vendor-inventory",
+      "lines": 198
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/param/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 15
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pid/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pid/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 18
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pipe/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pipe/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 135
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pipe/types.rs",
+      "category": "vendor-inventory",
+      "lines": 85
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/prctl/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/prctl/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 21
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/process/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 3
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/process/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 560
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/process/types.rs",
+      "category": "vendor-inventory",
+      "lines": 43
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/process/wait.rs",
+      "category": "vendor-inventory",
+      "lines": 123
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pty/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/pty/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 43
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/rand/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/rand/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 22
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/rand/types.rs",
+      "category": "vendor-inventory",
+      "lines": 20
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/reg.rs",
+      "category": "vendor-inventory",
+      "lines": 259
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/runtime/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/runtime/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 346
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/runtime/tls.rs",
+      "category": "vendor-inventory",
+      "lines": 7
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/shm/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/shm/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 46
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/shm/types.rs",
+      "category": "vendor-inventory",
+      "lines": 30
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/system/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/system/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 91
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/system/types.rs",
+      "category": "vendor-inventory",
+      "lines": 39
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/termios/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/termios/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 425
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/termios/types.rs",
+      "category": "vendor-inventory",
+      "lines": 13
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/thread/cpu_set.rs",
+      "category": "vendor-inventory",
+      "lines": 51
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/thread/futex.rs",
+      "category": "vendor-inventory",
+      "lines": 89
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/thread/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 4
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/thread/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 549
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/thread/types.rs",
+      "category": "vendor-inventory",
+      "lines": 62
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/time/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/time/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 238
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/time/types.rs",
+      "category": "vendor-inventory",
+      "lines": 93
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/ugid/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/ugid/syscalls.rs",
+      "category": "vendor-inventory",
+      "lines": 70
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/vdso.rs",
+      "category": "vendor-inventory",
+      "lines": 545
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/backend/linux_raw/vdso_wrappers.rs",
+      "category": "vendor-inventory",
+      "lines": 623
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/bitcast.rs",
+      "category": "vendor-inventory",
+      "lines": 39
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/buffer.rs",
+      "category": "vendor-inventory",
+      "lines": 457
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/check_types.rs",
+      "category": "vendor-inventory",
+      "lines": 135
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/clockid.rs",
+      "category": "vendor-inventory",
+      "lines": 232
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/cstr.rs",
+      "category": "vendor-inventory",
+      "lines": 109
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/epoll.rs",
+      "category": "vendor-inventory",
+      "lines": 347
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/eventfd.rs",
+      "category": "vendor-inventory",
+      "lines": 20
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/kqueue.rs",
+      "category": "vendor-inventory",
+      "lines": 466
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 34
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/pause.rs",
+      "category": "vendor-inventory",
+      "lines": 31
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/poll.rs",
+      "category": "vendor-inventory",
+      "lines": 47
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/port.rs",
+      "category": "vendor-inventory",
+      "lines": 197
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/event/select.rs",
+      "category": "vendor-inventory",
+      "lines": 391
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/ffi.rs",
+      "category": "vendor-inventory",
+      "lines": 16
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/abs.rs",
+      "category": "vendor-inventory",
+      "lines": 304
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/at.rs",
+      "category": "vendor-inventory",
+      "lines": 534
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/constants.rs",
+      "category": "vendor-inventory",
+      "lines": 359
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/copy_file_range.rs",
+      "category": "vendor-inventory",
+      "lines": 20
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/dir.rs",
+      "category": "vendor-inventory",
+      "lines": 5
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/fadvise.rs",
+      "category": "vendor-inventory",
+      "lines": 28
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/fcntl.rs",
+      "category": "vendor-inventory",
+      "lines": 107
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/fcntl_apple.rs",
+      "category": "vendor-inventory",
+      "lines": 66
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/fcopyfile.rs",
+      "category": "vendor-inventory",
+      "lines": 88
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/fd.rs",
+      "category": "vendor-inventory",
+      "lines": 331
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/getpath.rs",
+      "category": "vendor-inventory",
+      "lines": 14
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/id.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/inotify.rs",
+      "category": "vendor-inventory",
+      "lines": 219
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/ioctl.rs",
+      "category": "vendor-inventory",
+      "lines": 169
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/makedev.rs",
+      "category": "vendor-inventory",
+      "lines": 35
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/memfd_create.rs",
+      "category": "vendor-inventory",
+      "lines": 22
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 143
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/openat2.rs",
+      "category": "vendor-inventory",
+      "lines": 24
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/raw_dir.rs",
+      "category": "vendor-inventory",
+      "lines": 254
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/seek_from.rs",
+      "category": "vendor-inventory",
+      "lines": 53
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/sendfile.rs",
+      "category": "vendor-inventory",
+      "lines": 20
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/special.rs",
+      "category": "vendor-inventory",
+      "lines": 80
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/statx.rs",
+      "category": "vendor-inventory",
+      "lines": 277
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/sync.rs",
+      "category": "vendor-inventory",
+      "lines": 14
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/fs/xattr.rs",
+      "category": "vendor-inventory",
+      "lines": 256
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/close.rs",
+      "category": "vendor-inventory",
+      "lines": 71
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/dup.rs",
+      "category": "vendor-inventory",
+      "lines": 125
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/errno.rs",
+      "category": "vendor-inventory",
+      "lines": 74
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/fcntl.rs",
+      "category": "vendor-inventory",
+      "lines": 143
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/ioctl.rs",
+      "category": "vendor-inventory",
+      "lines": 98
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 24
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io/read_write.rs",
+      "category": "vendor-inventory",
+      "lines": 310
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io_uring/bindgen_types.rs",
+      "category": "vendor-inventory",
+      "lines": 101
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/io_uring/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2213
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/ioctl/bsd.rs",
+      "category": "vendor-inventory",
+      "lines": 27
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/ioctl/linux.rs",
+      "category": "vendor-inventory",
+      "lines": 124
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/ioctl/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 376
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/ioctl/patterns.rs",
+      "category": "vendor-inventory",
+      "lines": 268
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/kernel_sigset.rs",
+      "category": "vendor-inventory",
+      "lines": 326
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/lib.rs",
+      "category": "vendor-inventory",
+      "lines": 433
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/io/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 107
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 16
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/net/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 2
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/fd/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 25
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/fd/owned.rs",
+      "category": "vendor-inventory",
+      "lines": 301
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/fd/raw.rs",
+      "category": "vendor-inventory",
+      "lines": 164
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 4
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/windows/io/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 5
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/windows/io/raw.rs",
+      "category": "vendor-inventory",
+      "lines": 72
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/windows/io/socket.rs",
+      "category": "vendor-inventory",
+      "lines": 198
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/no_std/os/windows/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 19
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/maybe_polyfill/std/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 41
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mm/madvise.rs",
+      "category": "vendor-inventory",
+      "lines": 49
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mm/mmap.rs",
+      "category": "vendor-inventory",
+      "lines": 443
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mm/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 15
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mm/msync.rs",
+      "category": "vendor-inventory",
+      "lines": 46
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mm/userfaultfd.rs",
+      "category": "vendor-inventory",
+      "lines": 30
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mount/fsopen.rs",
+      "category": "vendor-inventory",
+      "lines": 246
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mount/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 9
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mount/mount_unmount.rs",
+      "category": "vendor-inventory",
+      "lines": 183
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/mount/types.rs",
+      "category": "vendor-inventory",
+      "lines": 1
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/msan.rs",
+      "category": "vendor-inventory",
+      "lines": 12
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/addr.rs",
+      "category": "vendor-inventory",
+      "lines": 182
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 35
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/netdevice.rs",
+      "category": "vendor-inventory",
+      "lines": 206
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/send_recv/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 190
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/send_recv/msg.rs",
+      "category": "vendor-inventory",
+      "lines": 1026
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/socket.rs",
+      "category": "vendor-inventory",
+      "lines": 461
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/socket_addr_any.rs",
+      "category": "vendor-inventory",
+      "lines": 344
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/socketpair.rs",
+      "category": "vendor-inventory",
+      "lines": 36
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/sockopt.rs",
+      "category": "vendor-inventory",
+      "lines": 1820
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/types.rs",
+      "category": "vendor-inventory",
+      "lines": 2146
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/net/wsa.rs",
+      "category": "vendor-inventory",
+      "lines": 49
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/not_implemented.rs",
+      "category": "vendor-inventory",
+      "lines": 347
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/param/auxv.rs",
+      "category": "vendor-inventory",
+      "lines": 110
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/param/init.rs",
+      "category": "vendor-inventory",
+      "lines": 23
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/param/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 14
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/path/arg.rs",
+      "category": "vendor-inventory",
+      "lines": 1050
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/path/dec_int.rs",
+      "category": "vendor-inventory",
+      "lines": 261
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/path/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 9
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/pid.rs",
+      "category": "vendor-inventory",
+      "lines": 182
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/pipe.rs",
+      "category": "vendor-inventory",
+      "lines": 223
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/prctl.rs",
+      "category": "vendor-inventory",
+      "lines": 72
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/chdir.rs",
+      "category": "vendor-inventory",
+      "lines": 98
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/chroot.rs",
+      "category": "vendor-inventory",
+      "lines": 16
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/exit.rs",
+      "category": "vendor-inventory",
+      "lines": 36
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/fcntl_getlk.rs",
+      "category": "vendor-inventory",
+      "lines": 23
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/id.rs",
+      "category": "vendor-inventory",
+      "lines": 260
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/ioctl.rs",
+      "category": "vendor-inventory",
+      "lines": 55
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/kill.rs",
+      "category": "vendor-inventory",
+      "lines": 98
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 125
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/pidfd.rs",
+      "category": "vendor-inventory",
+      "lines": 43
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/pidfd_getfd.rs",
+      "category": "vendor-inventory",
+      "lines": 56
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/pivot_root.rs",
+      "category": "vendor-inventory",
+      "lines": 18
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/prctl.rs",
+      "category": "vendor-inventory",
+      "lines": 1167
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/priority.rs",
+      "category": "vendor-inventory",
+      "lines": 132
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/procctl.rs",
+      "category": "vendor-inventory",
+      "lines": 547
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/rlimit.rs",
+      "category": "vendor-inventory",
+      "lines": 53
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/types.rs",
+      "category": "vendor-inventory",
+      "lines": 112
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/umask.rs",
+      "category": "vendor-inventory",
+      "lines": 21
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/process/wait.rs",
+      "category": "vendor-inventory",
+      "lines": 493
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/pty.rs",
+      "category": "vendor-inventory",
+      "lines": 223
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/rand/getrandom.rs",
+      "category": "vendor-inventory",
+      "lines": 33
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/rand/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 7
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/runtime_448b8ad740e2a26f.rs",
+      "category": "vendor-inventory",
+      "lines": 925
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/shm.rs",
+      "category": "vendor-inventory",
+      "lines": 96
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/signal.rs",
+      "category": "vendor-inventory",
+      "lines": 539
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/stdio.rs",
+      "category": "vendor-inventory",
+      "lines": 523
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/system.rs",
+      "category": "vendor-inventory",
+      "lines": 322
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/termios/ioctl.rs",
+      "category": "vendor-inventory",
+      "lines": 66
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/termios/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 38
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/termios/tc.rs",
+      "category": "vendor-inventory",
+      "lines": 225
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/termios/tty.rs",
+      "category": "vendor-inventory",
+      "lines": 90
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/termios/types.rs",
+      "category": "vendor-inventory",
+      "lines": 1656
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/clock.rs",
+      "category": "vendor-inventory",
+      "lines": 117
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/futex.rs",
+      "category": "vendor-inventory",
+      "lines": 600
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/id.rs",
+      "category": "vendor-inventory",
+      "lines": 194
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/libcap.rs",
+      "category": "vendor-inventory",
+      "lines": 189
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/membarrier.rs",
+      "category": "vendor-inventory",
+      "lines": 92
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 37
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/prctl.rs",
+      "category": "vendor-inventory",
+      "lines": 1130
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/sched.rs",
+      "category": "vendor-inventory",
+      "lines": 161
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/sched_yield.rs",
+      "category": "vendor-inventory",
+      "lines": 16
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/thread/setns.rs",
+      "category": "vendor-inventory",
+      "lines": 162
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/time/clock.rs",
+      "category": "vendor-inventory",
+      "lines": 108
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/time/mod.rs",
+      "category": "vendor-inventory",
+      "lines": 23
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/time/timerfd.rs",
+      "category": "vendor-inventory",
+      "lines": 77
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/timespec.rs",
+      "category": "vendor-inventory",
+      "lines": 485
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/ugid.rs",
+      "category": "vendor-inventory",
+      "lines": 193
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/utils.rs",
+      "category": "vendor-inventory",
+      "lines": 76
+    },
+    {
+      "path": "rust_backend/vendor/rustix-1.1.5/src/weak.rs",
+      "category": "vendor-inventory",
+      "lines": 288
+    },
+    {
+      "path": "scripts/build_android.sh",
+      "category": "tooling",
+      "lines": 81
+    },
+    {
+      "path": "scripts/build_rust_backend.sh",
+      "category": "tooling",
+      "lines": 117
+    },
+    {
+      "path": "scripts/check_android.sh",
+      "category": "tooling",
+      "lines": 6
+    },
+    {
+      "path": "scripts/check_android_statx.sh",
+      "category": "tooling",
+      "lines": 44
+    },
+    {
+      "path": "scripts/check_backend_apk.py",
+      "category": "tooling",
+      "lines": 177
+    },
+    {
+      "path": "scripts/check_rust_backend.sh",
+      "category": "tooling",
+      "lines": 41
+    },
+    {
+      "path": "scripts/review_scope.py",
+      "category": "tooling",
+      "lines": 235
+    },
+    {
+      "path": "scripts/review_scope.sh",
+      "category": "tooling",
+      "lines": 5
+    },
+    {
+      "path": "scripts/sync_opencode_agents.py",
+      "category": "tooling",
+      "lines": 94
+    },
+    {
+      "path": "scripts/test_build_android.py",
+      "category": "tooling",
+      "lines": 129
+    },
+    {
+      "path": "scripts/test_check_backend_apk.py",
+      "category": "tooling",
+      "lines": 102
+    },
+    {
+      "path": "scripts/test_review_scope.py",
+      "category": "tooling",
+      "lines": 177
+    },
+    {
+      "path": "test/activity_attachment_test.dart",
+      "category": "tests",
+      "lines": 31
+    },
+    {
+      "path": "test/adaptive_layout_test.dart",
+      "category": "tests",
+      "lines": 83
+    },
+    {
+      "path": "test/adaptive_overlay_test.dart",
+      "category": "tests",
+      "lines": 161
+    },
+    {
+      "path": "test/album_completeness_query_test.dart",
+      "category": "tests",
+      "lines": 341
+    },
+    {
+      "path": "test/album_completeness_test.dart",
+      "category": "tests",
+      "lines": 105
+    },
+    {
+      "path": "test/album_play_actions_test.dart",
+      "category": "tests",
+      "lines": 107
+    },
+    {
+      "path": "test/album_track_order_test.dart",
+      "category": "tests",
+      "lines": 60
+    },
+    {
+      "path": "test/aligned_lyric_pronunciation_test.dart",
+      "category": "tests",
+      "lines": 172
+    },
+    {
+      "path": "test/app_alert_dialog_test.dart",
+      "category": "tests",
+      "lines": 221
+    },
+    {
+      "path": "test/app_orientation_test.dart",
+      "category": "tests",
+      "lines": 158
+    },
+    {
+      "path": "test/app_snack_bar_test.dart",
+      "category": "tests",
+      "lines": 187
+    },
+    {
+      "path": "test/app_switch_glass_test.dart",
+      "category": "tests",
+      "lines": 200
+    },
+    {
+      "path": "test/app_switch_test.dart",
+      "category": "tests",
+      "lines": 127
+    },
+    {
+      "path": "test/appearance_clarity_drag_test.dart",
+      "category": "tests",
+      "lines": 225
+    },
+    {
+      "path": "test/appearance_settings_test.dart",
+      "category": "tests",
+      "lines": 526
+    },
+    {
+      "path": "test/artist_tag_mode_settings_test.dart",
+      "category": "tests",
+      "lines": 15
+    },
+    {
+      "path": "test/artist_utils_test.dart",
+      "category": "tests",
+      "lines": 22
+    },
+    {
+      "path": "test/audio_analysis_cache_test.dart",
+      "category": "tests",
+      "lines": 62
+    },
+    {
+      "path": "test/audio_analysis_info_card_test.dart",
+      "category": "tests",
+      "lines": 26
+    },
+    {
+      "path": "test/audio_analysis_jobs_test.dart",
+      "category": "tests",
+      "lines": 74
+    },
+    {
+      "path": "test/audio_analysis_spectrogram_test.dart",
+      "category": "tests",
+      "lines": 755
+    },
+    {
+      "path": "test/audio_info_sheet_test.dart",
+      "category": "tests",
+      "lines": 174
+    },
+    {
+      "path": "test/audio_output_button_test.dart",
+      "category": "tests",
+      "lines": 117
+    },
+    {
+      "path": "test/audio_quality_badge_policy_test.dart",
+      "category": "tests",
+      "lines": 120
+    },
+    {
+      "path": "test/automix_analysis_test.dart",
+      "category": "tests",
+      "lines": 189
+    },
+    {
+      "path": "test/automix_effect_renderer_test.dart",
+      "category": "tests",
+      "lines": 181
+    },
+    {
+      "path": "test/automix_options_test.dart",
+      "category": "tests",
+      "lines": 74
+    },
+    {
+      "path": "test/automix_settings_test.dart",
+      "category": "tests",
+      "lines": 134
+    },
+    {
+      "path": "test/automix_status_badge_test.dart",
+      "category": "tests",
+      "lines": 31
+    },
+    {
+      "path": "test/autoplay_personalization_test.dart",
+      "category": "tests",
+      "lines": 426
+    },
+    {
+      "path": "test/autoplay_settings_test.dart",
+      "category": "tests",
+      "lines": 94
+    },
+    {
+      "path": "test/backup_collections_json_test.dart",
+      "category": "tests",
+      "lines": 150
+    },
+    {
+      "path": "test/backup_restore_picker_test.dart",
+      "category": "tests",
+      "lines": 92
+    },
+    {
+      "path": "test/backup_service_v2_test.dart",
+      "category": "tests",
+      "lines": 136
+    },
+    {
+      "path": "test/cached_cover_decode_test.dart",
+      "category": "tests",
+      "lines": 402
+    },
+    {
+      "path": "test/collection_header_state_test.dart",
+      "category": "tests",
+      "lines": 185
+    },
+    {
+      "path": "test/collection_removal_transaction_test.dart",
+      "category": "tests",
+      "lines": 121
+    },
+    {
+      "path": "test/collection_restore_codec_test.dart",
+      "category": "tests",
+      "lines": 85
+    },
+    {
+      "path": "test/collection_track_rebuild_test.dart",
+      "category": "tests",
+      "lines": 96
+    },
+    {
+      "path": "test/collection_visual_contract_test.dart",
+      "category": "tests",
+      "lines": 185
+    },
+    {
+      "path": "test/collections_upgrade_test.dart",
+      "category": "tests",
+      "lines": 109
+    },
+    {
+      "path": "test/content_uri_playback_cache_test.dart",
+      "category": "tests",
+      "lines": 201
+    },
+    {
+      "path": "test/cover_cache_maintenance_test.dart",
+      "category": "tests",
+      "lines": 5
+    },
+    {
+      "path": "test/cover_colors_test.dart",
+      "category": "tests",
+      "lines": 220
+    },
+    {
+      "path": "test/cover_palette_test.dart",
+      "category": "tests",
+      "lines": 165
+    },
+    {
+      "path": "test/custom_font_test.dart",
+      "category": "tests",
+      "lines": 114
+    },
+    {
+      "path": "test/design_system_test.dart",
+      "category": "tests",
+      "lines": 1032
+    },
+    {
+      "path": "test/detail_route_loading_test.dart",
+      "category": "tests",
+      "lines": 135
+    },
+    {
+      "path": "test/downloaded_embedded_cover_resolver_test.dart",
+      "category": "tests",
+      "lines": 556
+    },
+    {
+      "path": "test/duplicate_cleanup_policy_test.dart",
+      "category": "tests",
+      "lines": 105
+    },
+    {
+      "path": "test/equalizer_preset_io_test.dart",
+      "category": "tests",
+      "lines": 50
+    },
+    {
+      "path": "test/equalizer_screen_test.dart",
+      "category": "tests",
+      "lines": 79
+    },
+    {
+      "path": "test/equalizer_test.dart",
+      "category": "tests",
+      "lines": 169
+    },
+    {
+      "path": "test/explicit_track_title_alignment_test.dart",
+      "category": "tests",
+      "lines": 45
+    },
+    {
+      "path": "test/ffmpeg_cover_resize_test.dart",
+      "category": "tests",
+      "lines": 52
+    },
+    {
+      "path": "test/ffmpeg_opus_metadata_test.dart",
+      "category": "tests",
+      "lines": 295
+    },
+    {
+      "path": "test/ffmpeg_output_promotion_test.dart",
+      "category": "tests",
+      "lines": 145
+    },
+    {
+      "path": "test/ffmpeg_replaygain_scan_test.dart",
+      "category": "tests",
+      "lines": 52
+    },
+    {
+      "path": "test/file_deletion_events_test.dart",
+      "category": "tests",
+      "lines": 122
+    },
+    {
+      "path": "test/file_stat_boundary_test.dart",
+      "category": "tests",
+      "lines": 107
+    },
+    {
+      "path": "test/fixtures/collection_restore_contract.json",
+      "category": "tests",
+      "lines": 32
+    },
+    {
+      "path": "test/fixtures/covers/black_white.png",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "test/fixtures/covers/dark_strip.png",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "test/fixtures/covers/light_portrait.png",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "test/fixtures/covers/neutral_logo.png",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "test/fixtures/covers/qamar.png",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "test/fixtures/covers/saturated.png",
+      "category": "tests",
+      "lines": null
+    },
+    {
+      "path": "test/fixtures/native_backup_contract.json",
+      "category": "tests",
+      "lines": 966
+    },
+    {
+      "path": "test/fixtures/native_library_contract.json",
+      "category": "tests",
+      "lines": 868
+    },
+    {
+      "path": "test/fixtures/native_lyrics_parsers.json",
+      "category": "tests",
+      "lines": 1411
+    },
+    {
+      "path": "test/fixtures/native_metadata_parsers.json",
+      "category": "tests",
+      "lines": 107
+    },
+    {
+      "path": "test/fixtures/network_tls/README.md",
+      "category": "tests",
+      "lines": 8
+    },
+    {
+      "path": "test/fixtures/network_tls/cert.pem",
+      "category": "tests",
+      "lines": 19
+    },
+    {
+      "path": "test/fixtures/network_tls/key.pem",
+      "category": "tests",
+      "lines": 28
+    },
+    {
+      "path": "test/hero_animation_controller_test.dart",
+      "category": "tests",
+      "lines": 62
+    },
+    {
+      "path": "test/history_maintenance_test.dart",
+      "category": "tests",
+      "lines": 174
+    },
+    {
+      "path": "test/id3v23_lyrics_file_test.dart",
+      "category": "tests",
+      "lines": 87
+    },
+    {
+      "path": "test/installation_restore_test.dart",
+      "category": "tests",
+      "lines": 245
+    },
+    {
+      "path": "test/ios_container_paths_test.dart",
+      "category": "tests",
+      "lines": 103
+    },
+    {
+      "path": "test/issue_542_utils_test.dart",
+      "category": "tests",
+      "lines": 55
+    },
+    {
+      "path": "test/lazy_tab_view_test.dart",
+      "category": "tests",
+      "lines": 213
+    },
+    {
+      "path": "test/library_batch_delete_test.dart",
+      "category": "tests",
+      "lines": 199
+    },
+    {
+      "path": "test/library_browse_paging_test.dart",
+      "category": "tests",
+      "lines": 285
+    },
+    {
+      "path": "test/library_browse_sqlite_paging_test.dart",
+      "category": "tests",
+      "lines": 165
+    },
+    {
+      "path": "test/library_cleanup_test.dart",
+      "category": "tests",
+      "lines": 332
+    },
+    {
+      "path": "test/library_collections_benchmark_test.dart",
+      "category": "tests",
+      "lines": 34
+    },
+    {
+      "path": "test/library_collections_database_read_test.dart",
+      "category": "tests",
+      "lines": 354
+    },
+    {
+      "path": "test/library_collections_hydration_test.dart",
+      "category": "tests",
+      "lines": 507
+    },
+    {
+      "path": "test/library_collections_models_test.dart",
+      "category": "tests",
+      "lines": 123
+    },
+    {
+      "path": "test/library_collections_mutation_test.dart",
+      "category": "tests",
+      "lines": 851
+    },
+    {
+      "path": "test/library_collections_rows_parser_benchmark_test.dart",
+      "category": "tests",
+      "lines": 130
+    },
+    {
+      "path": "test/library_cover_snapshot_test.dart",
+      "category": "tests",
+      "lines": 282
+    },
+    {
+      "path": "test/library_duplicates_test.dart",
+      "category": "tests",
+      "lines": 77
+    },
+    {
+      "path": "test/library_edited_metadata_test.dart",
+      "category": "tests",
+      "lines": 50
+    },
+    {
+      "path": "test/library_fast_scroller_test.dart",
+      "category": "tests",
+      "lines": 237
+    },
+    {
+      "path": "test/library_full_scan_test.dart",
+      "category": "tests",
+      "lines": 246
+    },
+    {
+      "path": "test/library_genres_test.dart",
+      "category": "tests",
+      "lines": 72
+    },
+    {
+      "path": "test/library_loading_test.dart",
+      "category": "tests",
+      "lines": 586
+    },
+    {
+      "path": "test/library_native_adapter_test.dart",
+      "category": "tests",
+      "lines": 682
+    },
+    {
+      "path": "test/library_partial_scan_test.dart",
+      "category": "tests",
+      "lines": 77
+    },
+    {
+      "path": "test/library_playlist_drag_test.dart",
+      "category": "tests",
+      "lines": 118
+    },
+    {
+      "path": "test/library_playlist_search_test.dart",
+      "category": "tests",
+      "lines": 136
+    },
+    {
+      "path": "test/library_queue_store_test.dart",
+      "category": "tests",
+      "lines": 552
+    },
+    {
+      "path": "test/library_scan_pause_test.dart",
+      "category": "tests",
+      "lines": 110
+    },
+    {
+      "path": "test/library_scan_scheduling_test.dart",
+      "category": "tests",
+      "lines": 606
+    },
+    {
+      "path": "test/library_scan_snapshot_test.dart",
+      "category": "tests",
+      "lines": 39
+    },
+    {
+      "path": "test/library_schema_test.dart",
+      "category": "tests",
+      "lines": 190
+    },
+    {
+      "path": "test/library_search_results_test.dart",
+      "category": "tests",
+      "lines": 334
+    },
+    {
+      "path": "test/library_search_test.dart",
+      "category": "tests",
+      "lines": 224
+    },
+    {
+      "path": "test/library_section_list_test.dart",
+      "category": "tests",
+      "lines": 59
+    },
+    {
+      "path": "test/library_selection_playback_actions_test.dart",
+      "category": "tests",
+      "lines": 93
+    },
+    {
+      "path": "test/library_settings_cleanup_test.dart",
+      "category": "tests",
+      "lines": 255
+    },
+    {
+      "path": "test/library_source_migration_test.dart",
+      "category": "tests",
+      "lines": 98
+    },
+    {
+      "path": "test/library_source_read_access_test.dart",
+      "category": "tests",
+      "lines": 67
+    },
+    {
+      "path": "test/library_tracks_folder_data_test.dart",
+      "category": "tests",
+      "lines": 60
+    },
+    {
+      "path": "test/listening_rewind_test.dart",
+      "category": "tests",
+      "lines": 538
+    },
+    {
+      "path": "test/listening_statistics_test.dart",
+      "category": "tests",
+      "lines": 229
+    },
+    {
+      "path": "test/loading_motion_preferences_test.dart",
+      "category": "tests",
+      "lines": 73
+    },
+    {
+      "path": "test/local_album_metadata_navigation_test.dart",
+      "category": "tests",
+      "lines": 80
+    },
+    {
+      "path": "test/local_album_playback_controls_test.dart",
+      "category": "tests",
+      "lines": 282
+    },
+    {
+      "path": "test/local_artist_paging_test.dart",
+      "category": "tests",
+      "lines": 124
+    },
+    {
+      "path": "test/local_artist_popular_test.dart",
+      "category": "tests",
+      "lines": 147
+    },
+    {
+      "path": "test/local_artist_releases_test.dart",
+      "category": "tests",
+      "lines": 112
+    },
+    {
+      "path": "test/local_detail_design_test.dart",
+      "category": "tests",
+      "lines": 296
+    },
+    {
+      "path": "test/local_genres_screen_test.dart",
+      "category": "tests",
+      "lines": 85
+    },
+    {
+      "path": "test/local_home_feed_test.dart",
+      "category": "tests",
+      "lines": 252
+    },
+    {
+      "path": "test/local_home_release_dates_test.dart",
+      "category": "tests",
+      "lines": 136
+    },
+    {
+      "path": "test/local_library_artwork_test.dart",
+      "category": "tests",
+      "lines": 328
+    },
+    {
+      "path": "test/local_library_lazy_loading_test.dart",
+      "category": "tests",
+      "lines": 396
+    },
+    {
+      "path": "test/local_song_controls_test.dart",
+      "category": "tests",
+      "lines": 98
+    },
+    {
+      "path": "test/local_song_menu_actions_test.dart",
+      "category": "tests",
+      "lines": 278
+    },
+    {
+      "path": "test/log_selection_test.dart",
+      "category": "tests",
+      "lines": 158
+    },
+    {
+      "path": "test/lyric_scroll_motion_test.dart",
+      "category": "tests",
+      "lines": 75
+    },
+    {
+      "path": "test/lyrics_appearance_test.dart",
+      "category": "tests",
+      "lines": 140
+    },
+    {
+      "path": "test/lyrics_parser_test.dart",
+      "category": "tests",
+      "lines": 397
+    },
+    {
+      "path": "test/lyrics_screen_awake_test.dart",
+      "category": "tests",
+      "lines": 132
+    },
+    {
+      "path": "test/lyrics_share_screen_test.dart",
+      "category": "tests",
+      "lines": 102
+    },
+    {
+      "path": "test/lyrics_timeline_test.dart",
+      "category": "tests",
+      "lines": 354
+    },
+    {
+      "path": "test/m3u_playlist_service_test.dart",
+      "category": "tests",
+      "lines": 96
+    },
+    {
+      "path": "test/maintainability_contracts_test.dart",
+      "category": "tests",
+      "lines": 155
+    },
+    {
+      "path": "test/metadata_cover_resources_test.dart",
+      "category": "tests",
+      "lines": 77
+    },
+    {
+      "path": "test/metadata_editor_controller_test.dart",
+      "category": "tests",
+      "lines": 42
+    },
+    {
+      "path": "test/metadata_persistence_service_test.dart",
+      "category": "tests",
+      "lines": 339
+    },
+    {
+      "path": "test/metadata_separator_settings_test.dart",
+      "category": "tests",
+      "lines": 112
+    },
+    {
+      "path": "test/metadata_separators_test.dart",
+      "category": "tests",
+      "lines": 98
+    },
+    {
+      "path": "test/models_and_utils_test.dart",
+      "category": "tests",
+      "lines": 812
+    },
+    {
+      "path": "test/mornye_artwork_contrast_test.dart",
+      "category": "tests",
+      "lines": 377
+    },
+    {
+      "path": "test/mornye_artwork_glass_test.dart",
+      "category": "tests",
+      "lines": 534
+    },
+    {
+      "path": "test/mornye_bottom_bar_test.dart",
+      "category": "tests",
+      "lines": 972
+    },
+    {
+      "path": "test/mornye_chrome_adaptivity_test.dart",
+      "category": "tests",
+      "lines": 180
+    },
+    {
+      "path": "test/mornye_collection_sheets_test.dart",
+      "category": "tests",
+      "lines": 260
+    },
+    {
+      "path": "test/mornye_context_menu_test.dart",
+      "category": "tests",
+      "lines": 436
+    },
+    {
+      "path": "test/mornye_detail_headers_test.dart",
+      "category": "tests",
+      "lines": 555
+    },
+    {
+      "path": "test/mornye_floating_header_test.dart",
+      "category": "tests",
+      "lines": 495
+    },
+    {
+      "path": "test/mornye_glass_auto_probe_test.dart",
+      "category": "tests",
+      "lines": 313
+    },
+    {
+      "path": "test/mornye_glass_interaction_test.dart",
+      "category": "tests",
+      "lines": 510
+    },
+    {
+      "path": "test/mornye_glass_layout_test.dart",
+      "category": "tests",
+      "lines": 101
+    },
+    {
+      "path": "test/mornye_glass_level_test.dart",
+      "category": "tests",
+      "lines": 514
+    },
+    {
+      "path": "test/mornye_glass_migration_test.dart",
+      "category": "tests",
+      "lines": 172
+    },
+    {
+      "path": "test/mornye_glass_theme_isolation_test.dart",
+      "category": "tests",
+      "lines": 98
+    },
+    {
+      "path": "test/mornye_landscape_player_test.dart",
+      "category": "tests",
+      "lines": 151
+    },
+    {
+      "path": "test/mornye_library_actions_test.dart",
+      "category": "tests",
+      "lines": 222
+    },
+    {
+      "path": "test/mornye_library_browse_test.dart",
+      "category": "tests",
+      "lines": 286
+    },
+    {
+      "path": "test/mornye_loading_and_chrome_test.dart",
+      "category": "tests",
+      "lines": 114
+    },
+    {
+      "path": "test/mornye_menu_motion_test.dart",
+      "category": "tests",
+      "lines": 153
+    },
+    {
+      "path": "test/mornye_performance_hud_test.dart",
+      "category": "tests",
+      "lines": 337
+    },
+    {
+      "path": "test/mornye_playback_button_test.dart",
+      "category": "tests",
+      "lines": 152
+    },
+    {
+      "path": "test/mornye_playback_time_test.dart",
+      "category": "tests",
+      "lines": 90
+    },
+    {
+      "path": "test/mornye_player_queue_test.dart",
+      "category": "tests",
+      "lines": 116
+    },
+    {
+      "path": "test/mornye_search_glass_test.dart",
+      "category": "tests",
+      "lines": 75
+    },
+    {
+      "path": "test/mornye_slider_glass_test.dart",
+      "category": "tests",
+      "lines": 193
+    },
+    {
+      "path": "test/mornye_tab_pill_motion_test.dart",
+      "category": "tests",
+      "lines": 130
+    },
+    {
+      "path": "test/mornye_volume_control_test.dart",
+      "category": "tests",
+      "lines": 96
+    },
+    {
+      "path": "test/music_haptics_test.dart",
+      "category": "tests",
+      "lines": 311
+    },
+    {
+      "path": "test/music_player_automix_test.dart",
+      "category": "tests",
+      "lines": 2006
+    },
+    {
+      "path": "test/music_player_autoplay_test.dart",
+      "category": "tests",
+      "lines": 131
+    },
+    {
+      "path": "test/music_player_media_metadata_test.dart",
+      "category": "tests",
+      "lines": 213
+    },
+    {
+      "path": "test/music_player_provider_test.dart",
+      "category": "tests",
+      "lines": 158
+    },
+    {
+      "path": "test/music_player_runtime_test.dart",
+      "category": "tests",
+      "lines": 1204
+    },
+    {
+      "path": "test/native_backup_contract_test.dart",
+      "category": "tests",
+      "lines": 195
+    },
+    {
+      "path": "test/native_data_job_bridge_test.dart",
+      "category": "tests",
+      "lines": 92
+    },
+    {
+      "path": "test/native_library_contract_test.dart",
+      "category": "tests",
+      "lines": 39
+    },
+    {
+      "path": "test/native_log_polling_test.dart",
+      "category": "tests",
+      "lines": 107
+    },
+    {
+      "path": "test/native_log_source_test.dart",
+      "category": "tests",
+      "lines": 62
+    },
+    {
+      "path": "test/native_lyrics_parser_test.dart",
+      "category": "tests",
+      "lines": 126
+    },
+    {
+      "path": "test/native_metadata_parsers_test.dart",
+      "category": "tests",
+      "lines": 78
+    },
+    {
+      "path": "test/native_palette_worker_test.dart",
+      "category": "tests",
+      "lines": 29
+    },
+    {
+      "path": "test/nav_bar_inset_test.dart",
+      "category": "tests",
+      "lines": 107
+    },
+    {
+      "path": "test/notification_service_test.dart",
+      "category": "tests",
+      "lines": 118
+    },
+    {
+      "path": "test/now_playing_lyrics_transition_test.dart",
+      "category": "tests",
+      "lines": 4031
+    },
+    {
+      "path": "test/now_playing_route_test.dart",
+      "category": "tests",
+      "lines": 278
+    },
+    {
+      "path": "test/offline_artwork_test.dart",
+      "category": "tests",
+      "lines": 34
+    },
+    {
+      "path": "test/overflow_marquee_test.dart",
+      "category": "tests",
+      "lines": 352
+    },
+    {
+      "path": "test/physical_file_index_lookup_test.dart",
+      "category": "tests",
+      "lines": 116
+    },
+    {
+      "path": "test/pinned_section_sliver_list_test.dart",
+      "category": "tests",
+      "lines": 351
+    },
+    {
+      "path": "test/platform_bridge_metadata_test.dart",
+      "category": "tests",
+      "lines": 32
+    },
+    {
+      "path": "test/playback_artwork_test.dart",
+      "category": "tests",
+      "lines": 170
+    },
+    {
+      "path": "test/playback_automation_settings_test.dart",
+      "category": "tests",
+      "lines": 105
+    },
+    {
+      "path": "test/playback_automation_test.dart",
+      "category": "tests",
+      "lines": 342
+    },
+    {
+      "path": "test/playback_equalizer_test.dart",
+      "category": "tests",
+      "lines": 209
+    },
+    {
+      "path": "test/playback_feedback_test.dart",
+      "category": "tests",
+      "lines": 121
+    },
+    {
+      "path": "test/playback_normalization_settings_test.dart",
+      "category": "tests",
+      "lines": 68
+    },
+    {
+      "path": "test/playback_normalization_test.dart",
+      "category": "tests",
+      "lines": 185
+    },
+    {
+      "path": "test/playback_path_resolution_test.dart",
+      "category": "tests",
+      "lines": 72
+    },
+    {
+      "path": "test/playback_seek_slider_test.dart",
+      "category": "tests",
+      "lines": 206
+    },
+    {
+      "path": "test/playback_session_prepare_test.dart",
+      "category": "tests",
+      "lines": 177
+    },
+    {
+      "path": "test/playback_session_writer_test.dart",
+      "category": "tests",
+      "lines": 230
+    },
+    {
+      "path": "test/player_artwork_test.dart",
+      "category": "tests",
+      "lines": 66
+    },
+    {
+      "path": "test/player_lyrics_repaint_test.dart",
+      "category": "tests",
+      "lines": 538
+    },
+    {
+      "path": "test/player_metadata_controller_test.dart",
+      "category": "tests",
+      "lines": 322
+    },
+    {
+      "path": "test/player_queue_dismissible_test.dart",
+      "category": "tests",
+      "lines": 92
+    },
+    {
+      "path": "test/player_track_swipe_test.dart",
+      "category": "tests",
+      "lines": 325
+    },
+    {
+      "path": "test/player_widget_ownership_test.dart",
+      "category": "tests",
+      "lines": 232
+    },
+    {
+      "path": "test/player_widget_service_test.dart",
+      "category": "tests",
+      "lines": 350
+    },
+    {
+      "path": "test/playlist_batch_benchmark_test.dart",
+      "category": "tests",
+      "lines": 59
+    },
+    {
+      "path": "test/playlist_batch_publication_test.dart",
+      "category": "tests",
+      "lines": 291
+    },
+    {
+      "path": "test/playlist_batch_writer_test.dart",
+      "category": "tests",
+      "lines": 132
+    },
+    {
+      "path": "test/playlist_deletion_transaction_test.dart",
+      "category": "tests",
+      "lines": 60
+    },
+    {
+      "path": "test/playlist_picker_database_test.dart",
+      "category": "tests",
+      "lines": 118
+    },
+    {
+      "path": "test/playlist_playback_test.dart",
+      "category": "tests",
+      "lines": 530
+    },
+    {
+      "path": "test/queue_library_refresh_policy_test.dart",
+      "category": "tests",
+      "lines": 381
+    },
+    {
+      "path": "test/release_date_display_test.dart",
+      "category": "tests",
+      "lines": 17
+    },
+    {
+      "path": "test/replaygain_library_filter_test.dart",
+      "category": "tests",
+      "lines": 75
+    },
+    {
+      "path": "test/replaygain_service_test.dart",
+      "category": "tests",
+      "lines": 271
+    },
+    {
+      "path": "test/saf_path_identity_test.dart",
+      "category": "tests",
+      "lines": 91
+    },
+    {
+      "path": "test/selection_bottom_bar_drag_test.dart",
+      "category": "tests",
+      "lines": 334
+    },
+    {
+      "path": "test/selection_overlay_lifecycle_test.dart",
+      "category": "tests",
+      "lines": 179
+    },
+    {
+      "path": "test/settings_persistence_test.dart",
+      "category": "tests",
+      "lines": 239
+    },
+    {
+      "path": "test/settings_search_test.dart",
+      "category": "tests",
+      "lines": 163
+    },
+    {
+      "path": "test/setup_screen_recovery_test.dart",
+      "category": "tests",
+      "lines": 267
+    },
+    {
+      "path": "test/shell_navigation_service_test.dart",
+      "category": "tests",
+      "lines": 243
+    },
+    {
+      "path": "test/sqlite_helpers_test.dart",
+      "category": "tests",
+      "lines": 137
+    },
+    {
+      "path": "test/sqlite_native_snapshot_test.dart",
+      "category": "tests",
+      "lines": 261
+    },
+    {
+      "path": "test/sqlite_path_keys_batch_test.dart",
+      "category": "tests",
+      "lines": 56
+    },
+    {
+      "path": "test/sqlite_path_keys_migration_test.dart",
+      "category": "tests",
+      "lines": 251
+    },
+    {
+      "path": "test/sqlite_transaction_retry_test.dart",
+      "category": "tests",
+      "lines": 127
+    },
+    {
+      "path": "test/support/glass_controls.dart",
+      "category": "tests",
+      "lines": 63
+    },
+    {
+      "path": "test/support/library_collections_benchmark.dart",
+      "category": "tests",
+      "lines": 332
+    },
+    {
+      "path": "test/support/library_native_fixture.dart",
+      "category": "tests",
+      "lines": 103
+    },
+    {
+      "path": "test/support/library_paging_fixture.dart",
+      "category": "tests",
+      "lines": 144
+    },
+    {
+      "path": "test/support/lyrics_usability_benchmark.dart",
+      "category": "tests",
+      "lines": 53
+    },
+    {
+      "path": "test/support/material_test_theme.dart",
+      "category": "tests",
+      "lines": 305
+    },
+    {
+      "path": "test/support/network_scan_output.dart",
+      "category": "tests",
+      "lines": 84
+    },
+    {
+      "path": "test/support/playlist_batch_benchmark.dart",
+      "category": "tests",
+      "lines": 61
+    },
+    {
+      "path": "test/support/playlist_deletion_fixture.dart",
+      "category": "tests",
+      "lines": 147
+    },
+    {
+      "path": "test/support/sqlite_process_database.dart",
+      "category": "tests",
+      "lines": 239
+    },
+    {
+      "path": "test/synced_lyrics_scroll_test.dart",
+      "category": "tests",
+      "lines": 183
+    },
+    {
+      "path": "test/system_volume_service_test.dart",
+      "category": "tests",
+      "lines": 55
+    },
+    {
+      "path": "test/theme_provider_persistence_test.dart",
+      "category": "tests",
+      "lines": 133
+    },
+    {
+      "path": "test/track_metadata_badges_line_test.dart",
+      "category": "tests",
+      "lines": 52
+    },
+    {
+      "path": "test/tutorial_copy_test.dart",
+      "category": "tests",
+      "lines": 41
+    },
+    {
+      "path": "test/two_finger_pinch_listener_test.dart",
+      "category": "tests",
+      "lines": 92
+    },
+    {
+      "path": "test/user_facing_error_test.dart",
+      "category": "tests",
+      "lines": 79
+    },
+    {
+      "path": "test/user_profile_test.dart",
+      "category": "tests",
+      "lines": 293
+    },
+    {
+      "path": "third_party/audio_service/CHANGELOG.md",
+      "category": "excluded-engine",
+      "lines": 447
+    },
+    {
+      "path": "third_party/audio_service/LICENSE",
+      "category": "excluded-engine",
+      "lines": 21
+    },
+    {
+      "path": "third_party/audio_service/README.md",
+      "category": "excluded-engine",
+      "lines": 425
+    },
+    {
+      "path": "third_party/audio_service/SPOTIFLAC_PATCHES.md",
+      "category": "excluded-engine",
+      "lines": 34
+    },
+    {
+      "path": "third_party/audio_service/android/build.gradle.kts",
+      "category": "excluded-engine",
+      "lines": 77
+    },
+    {
+      "path": "third_party/audio_service/android/gradle.properties",
+      "category": "excluded-engine",
+      "lines": 4
+    },
+    {
+      "path": "third_party/audio_service/android/gradle/wrapper/gradle-wrapper.properties",
+      "category": "excluded-engine",
+      "lines": 5
+    },
+    {
+      "path": "third_party/audio_service/android/settings.gradle.kts",
+      "category": "excluded-engine",
+      "lines": 1
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/AndroidManifest.xml",
+      "category": "excluded-engine",
+      "lines": 2
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioProcessingState.java",
+      "category": "excluded-engine",
+      "lines": 10
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioService.java",
+      "category": "excluded-engine",
+      "lines": 1208
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServiceActivity.java",
+      "category": "excluded-engine",
+      "lines": 15
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServiceConfig.java",
+      "category": "excluded-engine",
+      "lines": 120
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServiceFragmentActivity.java",
+      "category": "excluded-engine",
+      "lines": 48
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServicePlugin.java",
+      "category": "excluded-engine",
+      "lines": 1328
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/CustomMediaAction.java",
+      "category": "excluded-engine",
+      "lines": 27
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/MediaButton.java",
+      "category": "excluded-engine",
+      "lines": 7
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/MediaButtonReceiver.java",
+      "category": "excluded-engine",
+      "lines": 25
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/MediaControl.java",
+      "category": "excluded-engine",
+      "lines": 27
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/PinnedMetadataCache.java",
+      "category": "excluded-engine",
+      "lines": 52
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_fast_forward.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_fast_rewind.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_pause.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_play_arrow.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_skip_next.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_skip_previous.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-hdpi/audio_service_stop.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_fast_forward.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_fast_rewind.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_pause.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_play_arrow.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_skip_next.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_skip_previous.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-mdpi/audio_service_stop.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_fast_forward.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_fast_rewind.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_pause.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_play_arrow.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_skip_next.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_skip_previous.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xhdpi/audio_service_stop.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_fast_forward.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_fast_rewind.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_pause.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_play_arrow.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_skip_next.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_skip_previous.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxhdpi/audio_service_stop.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_fast_forward.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_fast_rewind.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_pause.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_play_arrow.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_skip_next.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_skip_previous.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/main/res/drawable-xxxhdpi/audio_service_stop.png",
+      "category": "excluded-engine",
+      "lines": null
+    },
+    {
+      "path": "third_party/audio_service/android/src/test/java/com/ryanheise/audioservice/PinnedMetadataCacheTest.java",
+      "category": "excluded-engine",
+      "lines": 68
+    },
+    {
+      "path": "third_party/audio_service/darwin/audio_service.podspec",
+      "category": "excluded-engine",
+      "lines": 23
+    },
+    {
+      "path": "third_party/audio_service/darwin/audio_service/Package.swift",
+      "category": "excluded-engine",
+      "lines": 25
+    },
+    {
+      "path": "third_party/audio_service/darwin/audio_service/Sources/audio_service/AudioServicePlugin.m",
+      "category": "excluded-engine",
+      "lines": 595
+    },
+    {
+      "path": "third_party/audio_service/darwin/audio_service/Sources/audio_service/include/audio_service/AudioServicePlugin.h",
+      "category": "excluded-engine",
+      "lines": 50
+    },
+    {
+      "path": "third_party/audio_service/lib/audio_service.dart",
+      "category": "excluded-engine",
+      "lines": 4067
+    },
+    {
+      "path": "third_party/audio_service/pubspec.yaml",
+      "category": "excluded-engine",
+      "lines": 67
+    },
+    {
+      "path": "third_party/audioplayers_android/CHANGELOG.md",
+      "category": "excluded-engine",
+      "lines": 426
+    },
+    {
+      "path": "third_party/audioplayers_android/LICENSE",
+      "category": "excluded-engine",
+      "lines": 21
+    },
+    {
+      "path": "third_party/audioplayers_android/README.md",
+      "category": "excluded-engine",
+      "lines": 25
+    },
+    {
+      "path": "third_party/audioplayers_android/SPOTIFLAC_PATCHES.md",
+      "category": "excluded-engine",
+      "lines": 19
+    },
+    {
+      "path": "third_party/audioplayers_android/analysis_options.yaml",
+      "category": "excluded-engine",
+      "lines": 1
+    },
+    {
+      "path": "third_party/audioplayers_android/android/build.gradle",
+      "category": "excluded-engine",
+      "lines": 81
+    },
+    {
+      "path": "third_party/audioplayers_android/android/gradle.properties",
+      "category": "excluded-engine",
+      "lines": 2
+    },
+    {
+      "path": "third_party/audioplayers_android/android/settings.gradle",
+      "category": "excluded-engine",
+      "lines": 1
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/AndroidManifest.xml",
+      "category": "excluded-engine",
+      "lines": 1
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/AudioContextAndroid.kt",
+      "category": "excluded-engine",
+      "lines": 69
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/AudioplayersPlugin.kt",
+      "category": "excluded-engine",
+      "lines": 311
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/PlayerMode.kt",
+      "category": "excluded-engine",
+      "lines": 5
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/ReleaseMode.kt",
+      "category": "excluded-engine",
+      "lines": 5
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/player/FocusManager.kt",
+      "category": "excluded-engine",
+      "lines": 155
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/player/MediaPlayerWrapper.kt",
+      "category": "excluded-engine",
+      "lines": 126
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/player/PlaybackEqualizer.kt",
+      "category": "excluded-engine",
+      "lines": 80
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/player/PlayerWrapper.kt",
+      "category": "excluded-engine",
+      "lines": 25
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/player/SoundPoolPlayer.kt",
+      "category": "excluded-engine",
+      "lines": 307
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/player/WrappedPlayer.kt",
+      "category": "excluded-engine",
+      "lines": 402
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/source/ByteDataSource.kt",
+      "category": "excluded-engine",
+      "lines": 35
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/source/BytesSource.kt",
+      "category": "excluded-engine",
+      "lines": 21
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/source/Source.kt",
+      "category": "excluded-engine",
+      "lines": 10
+    },
+    {
+      "path": "third_party/audioplayers_android/android/src/main/kotlin/xyz/luan/audioplayers/source/UrlSource.kt",
+      "category": "excluded-engine",
+      "lines": 65
+    },
+    {
+      "path": "third_party/audioplayers_android/pubspec.yaml",
+      "category": "excluded-engine",
+      "lines": 28
+    }
+  ]
+}
