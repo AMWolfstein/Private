@@ -138,6 +138,19 @@ class ParsedLyrics {
 class LyricsParser {
   LyricsParser._();
 
+  // Hostile LRC lines repeat timestamps or word tags to amplify per-line
+  // clones (RUST-403: one crafted line can request hundreds of GiB of
+  // allocations). The caps bound the expanded output on both this parser and
+  // the native one so their fixtures stay equal. A legit chorus repeats a few
+  // times and word-timed lines stay under a few dozen words, far below these
+  // caps.
+  static const int _maxLineTimestamps = 64;
+  static const int _maxWordsPerLine = 256;
+
+  /// Weighted expanded-output budget per parse (word counts plus the UTF-16
+  /// text length of every duplicated line) in code-unit units.
+  static const int _maxExpandedUnits = 16 * 1024 * 1024;
+
   // [mm:ss.xx] or [mm:ss.xxx] or [mm:ss]
   static final RegExp _lineTimeTag = RegExp(
     r'\[(\d{1,3}):(\d{1,2})(?:[.:](\d{1,3}))?\]',
@@ -212,7 +225,10 @@ class LyricsParser {
 
     if (_looksLikeTtml(text)) {
       final ttml = _parseTtml(text);
-      if (ttml != null && ttml.lines.isNotEmpty) {
+      // Untimed TTML keeps its plain lyric text instead of being re-parsed as
+      // LRC, which would show the raw XML markup (BUG-101, RUST-401).
+      if (ttml != null &&
+          (ttml.lines.isNotEmpty || ttml.plainText.trim().isNotEmpty)) {
         return _withCredits(text, ttml);
       }
     }
@@ -283,8 +299,23 @@ class LyricsParser {
       final trailer = _writerCredit.firstMatch(lines.last.text.trim());
       if (trailer != null) {
         writers ??= trailer.group(1)?.trim();
+        // Drop the popped credit from the retained plain text instead of
+        // rebuilding it from lines, which duplicates chorus lines shared by
+        // timestamps (BUG-102). Match the popped credit's text first so
+        // multi-credit files keep the rows their lines retained.
+        final creditText = lines.last.text.trim();
         lines = lines.sublist(0, lines.length - 1);
-        plainText = lines.map((line) => line.text).join('\n');
+        final plainLines = plainText.split('\n');
+        var index = plainLines.lastIndexWhere(
+          (plain) => plain.trim() == creditText,
+        );
+        if (index < 0) {
+          index = plainLines.lastIndexWhere(
+            (plain) => _writerCredit.hasMatch(plain.trim()),
+          );
+        }
+        if (index >= 0) plainLines.removeAt(index);
+        plainText = plainLines.join('\n');
       }
     } else {
       // Untimed provider results also keep the optional writer footer.
@@ -336,6 +367,9 @@ class LyricsParser {
     var sawTimestamp = false;
     var sawWordTiming = false;
     var offsetMs = 0;
+    var expandedUnits = 0;
+    List<RegExpMatch> times;
+    List<LyricWord> words;
 
     for (final rawLine in rawLines) {
       var line = rawLine.trimRight();
@@ -412,21 +446,45 @@ class LyricsParser {
       final (content, voice) = _vocalText(line.substring(lastTag.end).trim());
 
       // Enhanced LRC word timestamps inside the content.
-      final words = _parseWords(content);
-      if (words.isNotEmpty) sawWordTiming = true;
+      final parsedWords = _parseWords(content);
+      if (parsedWords.length > _maxWordsPerLine) {
+        words = parsedWords.sublist(0, _maxWordsPerLine);
+      } else {
+        words = parsedWords;
+      }
+      sawWordTiming |= words.isNotEmpty;
       final cleanContent = content.replaceAll(_wordTimeTag, '').trim();
       plainBuffer.add(cleanContent);
 
-      // A line can have multiple timestamps (repeated chorus).
-      for (final tm in timeMatches) {
+      // A line can have multiple timestamps (repeated chorus). The word
+      // timing belongs to the occurrence nearest the first word; repeated
+      // occurrences replay the same relative timing (BUG-103).
+      times = timeMatches.length > _maxLineTimestamps
+          ? timeMatches.sublist(0, _maxLineTimestamps)
+          : timeMatches;
+      final anchorMs = words.isEmpty
+          ? null
+          : _nearestOccurrence(times, words.first.time.inMilliseconds);
+      // Every occurrence of the line duplicates the same content, so the
+      // expansion cost is computed once and charged per pushed occurrence.
+      final cost = _expandedCost(cleanContent, words);
+      var occurrences = 0;
+      for (final RegExpMatch tm in times) {
         final d = _toDuration(tm.group(1), tm.group(2), tm.group(3));
         if (d == null) continue;
+        final deltaMs = anchorMs == null ? 0 : d.inMilliseconds - anchorMs;
+        final occurrenceWords = deltaMs == 0 || words.isEmpty
+            ? words
+            : _shiftWordTimes(words, deltaMs);
+        occurrences++;
+        if (occurrences > 1 && expandedUnits + cost > _maxExpandedUnits) break;
+        expandedUnits += cost;
         parsed.add(
           LyricLine(
             time: d,
-            end: words.lastOrNull?.end,
+            end: occurrenceWords.lastOrNull?.end,
             text: cleanContent,
-            words: words,
+            words: occurrenceWords,
             voice:
                 voice ?? (background != null ? parsed.lastOrNull?.voice : null),
             isBackground: background != null,
@@ -613,6 +671,52 @@ class LyricsParser {
       words.add(LyricWord(time: d, text: word));
     }
     return words;
+  }
+
+  // The word timing belongs to the occurrence nearest the first word;
+  // repeated occurrences replay the same relative timing (BUG-103).
+  static int? _nearestOccurrence(List<RegExpMatch> matches, int target) {
+    int? nearest;
+    var distance = -1;
+    for (final RegExpMatch match in matches.take(_maxLineTimestamps)) {
+      final d = _toDuration(match.group(1), match.group(2), match.group(3));
+      if (d == null) continue;
+      final delta = (d.inMilliseconds - target).abs();
+      if (distance < 0 || delta < distance) {
+        nearest = d.inMilliseconds;
+        distance = delta;
+      }
+    }
+    return nearest;
+  }
+
+  static List<LyricWord> _shiftWordTimes(List<LyricWord> words, int deltaMs) {
+    int move(int ms) {
+      final moved = ms + deltaMs;
+      return moved < 0 ? 0 : moved;
+    }
+
+    return words
+        .map(
+          (word) => LyricWord(
+            time: Duration(milliseconds: move(word.time.inMilliseconds)),
+            end: word.end == null
+                ? null
+                : Duration(milliseconds: move(word.end!.inMilliseconds)),
+            text: word.text,
+          ),
+        )
+        .toList(growable: false);
+  }
+
+  static int _expandedCost(String text, List<LyricWord> words) {
+    // Weighted expanded-output cost in UTF-16 code units (Dart's String
+    // length) so both parsers cap identically on any Unicode input.
+    var cost = text.length + words.length * 64;
+    for (final word in words) {
+      cost += word.text.length;
+    }
+    return cost;
   }
 
   static ParsedLyrics? _parseTtml(String text) {

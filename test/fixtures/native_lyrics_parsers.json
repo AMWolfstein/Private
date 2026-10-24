@@ -365,17 +365,17 @@
         },
         {
           "timeMs": 8100,
-          "endMs": 2000,
+          "endMs": 8200,
           "text": "First second",
           "words": [
             {
-              "timeMs": 1000,
-              "endMs": 1300,
+              "timeMs": 7200,
+              "endMs": 7500,
               "text": "First "
             },
             {
-              "timeMs": 2000,
-              "endMs": 2000,
+              "timeMs": 8200,
+              "endMs": 8200,
               "text": "second"
             }
           ],
@@ -1126,7 +1126,7 @@
     "expected": {
       "synced": false,
       "wordSynced": false,
-      "plainText": "<tt><body><p>No time</p></body></tt>",
+      "plainText": "No time",
       "writers": null,
       "provider": null,
       "lines": []
@@ -1400,6 +1400,2244 @@
             "index": 0,
             "isGroup": false
           }
+        }
+      ]
+    }
+  },
+  {
+    "name": "untimed TTML keeps plain lyrics",
+    "request": {
+      "operation": "parse_lyrics",
+      "raw": "<tt xmlns=\"http://www.w3.org/ns/ttml\"><body><p>Just words</p><p>More words</p></body></tt>"
+    },
+    "expected": {
+      "synced": false,
+      "wordSynced": false,
+      "plainText": "Just words\nMore words",
+      "writers": null,
+      "provider": null,
+      "lines": []
+    }
+  },
+  {
+    "name": "credit trailer keeps chorus once in plain text",
+    "request": {
+      "operation": "parse_lyrics",
+      "raw": "[00:10.000][00:40.000]Chorus line\n[01:00.000]Written by: Someone"
+    },
+    "expected": {
+      "synced": true,
+      "wordSynced": false,
+      "plainText": "Chorus line",
+      "writers": "Someone",
+      "provider": null,
+      "lines": [
+        {
+          "timeMs": 10000,
+          "endMs": null,
+          "text": "Chorus line",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 0
+        },
+        {
+          "timeMs": 40000,
+          "endMs": null,
+          "text": "Chorus line",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "repeated chorus shifts word timing per occurrence",
+    "request": {
+      "operation": "parse_lyrics",
+      "raw": "[00:10.000][01:10.000]<00:10.000>a <00:10.500>b"
+    },
+    "expected": {
+      "synced": true,
+      "wordSynced": true,
+      "plainText": "a b",
+      "writers": null,
+      "provider": null,
+      "lines": [
+        {
+          "timeMs": 10000,
+          "endMs": null,
+          "text": "a b",
+          "words": [
+            {
+              "timeMs": 10000,
+              "endMs": null,
+              "text": "a "
+            },
+            {
+              "timeMs": 10500,
+              "endMs": null,
+              "text": "b"
+            }
+          ],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 0
+        },
+        {
+          "timeMs": 70000,
+          "endMs": null,
+          "text": "a b",
+          "words": [
+            {
+              "timeMs": 70000,
+              "endMs": null,
+              "text": "a "
+            },
+            {
+              "timeMs": 70500,
+              "endMs": null,
+              "text": "b"
+            }
+          ],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "line timestamps cap at 64 occurrences",
+    "request": {
+      "operation": "parse_lyrics",
+      "raw": "[0:00.000][1:00.000][2:00.000][3:00.000][4:00.000][5:00.000][6:00.000][7:00.000][8:00.000][9:00.000][10:00.000][11:00.000][12:00.000][13:00.000][14:00.000][15:00.000][16:00.000][17:00.000][18:00.000][19:00.000][20:00.000][21:00.000][22:00.000][23:00.000][24:00.000][25:00.000][26:00.000][27:00.000][28:00.000][29:00.000][30:00.000][31:00.000][32:00.000][33:00.000][34:00.000][35:00.000][36:00.000][37:00.000][38:00.000][39:00.000][40:00.000][41:00.000][42:00.000][43:00.000][44:00.000][45:00.000][46:00.000][47:00.000][48:00.000][49:00.000][50:00.000][51:00.000][52:00.000][53:00.000][54:00.000][55:00.000][56:00.000][57:00.000][58:00.000][59:00.000][60:00.000][61:00.000][62:00.000][63:00.000][64:00.000][65:00.000][66:00.000][67:00.000][68:00.000][69:00.000]Chorus"
+    },
+    "expected": {
+      "synced": true,
+      "wordSynced": false,
+      "plainText": "Chorus",
+      "writers": null,
+      "provider": null,
+      "lines": [
+        {
+          "timeMs": 0,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 0
+        },
+        {
+          "timeMs": 60000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 1
+        },
+        {
+          "timeMs": 120000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 2
+        },
+        {
+          "timeMs": 180000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 3
+        },
+        {
+          "timeMs": 240000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 4
+        },
+        {
+          "timeMs": 300000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 5
+        },
+        {
+          "timeMs": 360000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 6
+        },
+        {
+          "timeMs": 420000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 7
+        },
+        {
+          "timeMs": 480000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 8
+        },
+        {
+          "timeMs": 540000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 9
+        },
+        {
+          "timeMs": 600000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 10
+        },
+        {
+          "timeMs": 660000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 11
+        },
+        {
+          "timeMs": 720000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 12
+        },
+        {
+          "timeMs": 780000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 13
+        },
+        {
+          "timeMs": 840000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 14
+        },
+        {
+          "timeMs": 900000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 15
+        },
+        {
+          "timeMs": 960000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 16
+        },
+        {
+          "timeMs": 1020000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 17
+        },
+        {
+          "timeMs": 1080000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 18
+        },
+        {
+          "timeMs": 1140000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 19
+        },
+        {
+          "timeMs": 1200000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 20
+        },
+        {
+          "timeMs": 1260000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 21
+        },
+        {
+          "timeMs": 1320000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 22
+        },
+        {
+          "timeMs": 1380000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 23
+        },
+        {
+          "timeMs": 1440000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 24
+        },
+        {
+          "timeMs": 1500000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 25
+        },
+        {
+          "timeMs": 1560000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 26
+        },
+        {
+          "timeMs": 1620000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 27
+        },
+        {
+          "timeMs": 1680000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 28
+        },
+        {
+          "timeMs": 1740000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 29
+        },
+        {
+          "timeMs": 1800000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 30
+        },
+        {
+          "timeMs": 1860000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 31
+        },
+        {
+          "timeMs": 1920000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 32
+        },
+        {
+          "timeMs": 1980000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 33
+        },
+        {
+          "timeMs": 2040000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 34
+        },
+        {
+          "timeMs": 2100000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 35
+        },
+        {
+          "timeMs": 2160000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 36
+        },
+        {
+          "timeMs": 2220000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 37
+        },
+        {
+          "timeMs": 2280000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 38
+        },
+        {
+          "timeMs": 2340000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 39
+        },
+        {
+          "timeMs": 2400000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 40
+        },
+        {
+          "timeMs": 2460000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 41
+        },
+        {
+          "timeMs": 2520000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 42
+        },
+        {
+          "timeMs": 2580000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 43
+        },
+        {
+          "timeMs": 2640000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 44
+        },
+        {
+          "timeMs": 2700000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 45
+        },
+        {
+          "timeMs": 2760000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 46
+        },
+        {
+          "timeMs": 2820000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 47
+        },
+        {
+          "timeMs": 2880000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 48
+        },
+        {
+          "timeMs": 2940000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 49
+        },
+        {
+          "timeMs": 3000000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 50
+        },
+        {
+          "timeMs": 3060000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 51
+        },
+        {
+          "timeMs": 3120000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 52
+        },
+        {
+          "timeMs": 3180000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 53
+        },
+        {
+          "timeMs": 3240000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 54
+        },
+        {
+          "timeMs": 3300000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 55
+        },
+        {
+          "timeMs": 3360000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 56
+        },
+        {
+          "timeMs": 3420000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 57
+        },
+        {
+          "timeMs": 3480000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 58
+        },
+        {
+          "timeMs": 3540000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 59
+        },
+        {
+          "timeMs": 3600000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 60
+        },
+        {
+          "timeMs": 3660000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 61
+        },
+        {
+          "timeMs": 3720000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 62
+        },
+        {
+          "timeMs": 3780000,
+          "endMs": null,
+          "text": "Chorus",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 63
+        }
+      ]
+    }
+  },
+  {
+    "name": "word tags cap at 256 per line",
+    "request": {
+      "operation": "parse_lyrics",
+      "raw": "[00:00]<00:00.500>w0<00:00.500>w1<00:00.500>w2<00:00.500>w3<00:00.500>w4<00:00.500>w5<00:00.500>w6<00:00.500>w7<00:00.500>w8<00:00.500>w9<00:00.500>w10<00:00.500>w11<00:00.500>w12<00:00.500>w13<00:00.500>w14<00:00.500>w15<00:00.500>w16<00:00.500>w17<00:00.500>w18<00:00.500>w19<00:00.500>w20<00:00.500>w21<00:00.500>w22<00:00.500>w23<00:00.500>w24<00:00.500>w25<00:00.500>w26<00:00.500>w27<00:00.500>w28<00:00.500>w29<00:00.500>w30<00:00.500>w31<00:00.500>w32<00:00.500>w33<00:00.500>w34<00:00.500>w35<00:00.500>w36<00:00.500>w37<00:00.500>w38<00:00.500>w39<00:00.500>w40<00:00.500>w41<00:00.500>w42<00:00.500>w43<00:00.500>w44<00:00.500>w45<00:00.500>w46<00:00.500>w47<00:00.500>w48<00:00.500>w49<00:00.500>w50<00:00.500>w51<00:00.500>w52<00:00.500>w53<00:00.500>w54<00:00.500>w55<00:00.500>w56<00:00.500>w57<00:00.500>w58<00:00.500>w59<00:00.500>w60<00:00.500>w61<00:00.500>w62<00:00.500>w63<00:00.500>w64<00:00.500>w65<00:00.500>w66<00:00.500>w67<00:00.500>w68<00:00.500>w69<00:00.500>w70<00:00.500>w71<00:00.500>w72<00:00.500>w73<00:00.500>w74<00:00.500>w75<00:00.500>w76<00:00.500>w77<00:00.500>w78<00:00.500>w79<00:00.500>w80<00:00.500>w81<00:00.500>w82<00:00.500>w83<00:00.500>w84<00:00.500>w85<00:00.500>w86<00:00.500>w87<00:00.500>w88<00:00.500>w89<00:00.500>w90<00:00.500>w91<00:00.500>w92<00:00.500>w93<00:00.500>w94<00:00.500>w95<00:00.500>w96<00:00.500>w97<00:00.500>w98<00:00.500>w99<00:00.500>w100<00:00.500>w101<00:00.500>w102<00:00.500>w103<00:00.500>w104<00:00.500>w105<00:00.500>w106<00:00.500>w107<00:00.500>w108<00:00.500>w109<00:00.500>w110<00:00.500>w111<00:00.500>w112<00:00.500>w113<00:00.500>w114<00:00.500>w115<00:00.500>w116<00:00.500>w117<00:00.500>w118<00:00.500>w119<00:00.500>w120<00:00.500>w121<00:00.500>w122<00:00.500>w123<00:00.500>w124<00:00.500>w125<00:00.500>w126<00:00.500>w127<00:00.500>w128<00:00.500>w129<00:00.500>w130<00:00.500>w131<00:00.500>w132<00:00.500>w133<00:00.500>w134<00:00.500>w135<00:00.500>w136<00:00.500>w137<00:00.500>w138<00:00.500>w139<00:00.500>w140<00:00.500>w141<00:00.500>w142<00:00.500>w143<00:00.500>w144<00:00.500>w145<00:00.500>w146<00:00.500>w147<00:00.500>w148<00:00.500>w149<00:00.500>w150<00:00.500>w151<00:00.500>w152<00:00.500>w153<00:00.500>w154<00:00.500>w155<00:00.500>w156<00:00.500>w157<00:00.500>w158<00:00.500>w159<00:00.500>w160<00:00.500>w161<00:00.500>w162<00:00.500>w163<00:00.500>w164<00:00.500>w165<00:00.500>w166<00:00.500>w167<00:00.500>w168<00:00.500>w169<00:00.500>w170<00:00.500>w171<00:00.500>w172<00:00.500>w173<00:00.500>w174<00:00.500>w175<00:00.500>w176<00:00.500>w177<00:00.500>w178<00:00.500>w179<00:00.500>w180<00:00.500>w181<00:00.500>w182<00:00.500>w183<00:00.500>w184<00:00.500>w185<00:00.500>w186<00:00.500>w187<00:00.500>w188<00:00.500>w189<00:00.500>w190<00:00.500>w191<00:00.500>w192<00:00.500>w193<00:00.500>w194<00:00.500>w195<00:00.500>w196<00:00.500>w197<00:00.500>w198<00:00.500>w199<00:00.500>w200<00:00.500>w201<00:00.500>w202<00:00.500>w203<00:00.500>w204<00:00.500>w205<00:00.500>w206<00:00.500>w207<00:00.500>w208<00:00.500>w209<00:00.500>w210<00:00.500>w211<00:00.500>w212<00:00.500>w213<00:00.500>w214<00:00.500>w215<00:00.500>w216<00:00.500>w217<00:00.500>w218<00:00.500>w219<00:00.500>w220<00:00.500>w221<00:00.500>w222<00:00.500>w223<00:00.500>w224<00:00.500>w225<00:00.500>w226<00:00.500>w227<00:00.500>w228<00:00.500>w229<00:00.500>w230<00:00.500>w231<00:00.500>w232<00:00.500>w233<00:00.500>w234<00:00.500>w235<00:00.500>w236<00:00.500>w237<00:00.500>w238<00:00.500>w239<00:00.500>w240<00:00.500>w241<00:00.500>w242<00:00.500>w243<00:00.500>w244<00:00.500>w245<00:00.500>w246<00:00.500>w247<00:00.500>w248<00:00.500>w249<00:00.500>w250<00:00.500>w251<00:00.500>w252<00:00.500>w253<00:00.500>w254<00:00.500>w255<00:00.500>w256<00:00.500>w257<00:00.500>w258<00:00.500>w259<00:00.500>w260<00:00.500>w261<00:00.500>w262<00:00.500>w263<00:00.500>w264<00:00.500>w265<00:00.500>w266<00:00.500>w267<00:00.500>w268<00:00.500>w269<00:00.500>w270<00:00.500>w271<00:00.500>w272<00:00.500>w273<00:00.500>w274<00:00.500>w275<00:00.500>w276<00:00.500>w277<00:00.500>w278<00:00.500>w279<00:00.500>w280<00:00.500>w281<00:00.500>w282<00:00.500>w283<00:00.500>w284<00:00.500>w285<00:00.500>w286<00:00.500>w287<00:00.500>w288<00:00.500>w289<00:00.500>w290<00:00.500>w291<00:00.500>w292<00:00.500>w293<00:00.500>w294<00:00.500>w295<00:00.500>w296<00:00.500>w297<00:00.500>w298<00:00.500>w299"
+    },
+    "expected": {
+      "synced": true,
+      "wordSynced": true,
+      "plainText": "w0w1w2w3w4w5w6w7w8w9w10w11w12w13w14w15w16w17w18w19w20w21w22w23w24w25w26w27w28w29w30w31w32w33w34w35w36w37w38w39w40w41w42w43w44w45w46w47w48w49w50w51w52w53w54w55w56w57w58w59w60w61w62w63w64w65w66w67w68w69w70w71w72w73w74w75w76w77w78w79w80w81w82w83w84w85w86w87w88w89w90w91w92w93w94w95w96w97w98w99w100w101w102w103w104w105w106w107w108w109w110w111w112w113w114w115w116w117w118w119w120w121w122w123w124w125w126w127w128w129w130w131w132w133w134w135w136w137w138w139w140w141w142w143w144w145w146w147w148w149w150w151w152w153w154w155w156w157w158w159w160w161w162w163w164w165w166w167w168w169w170w171w172w173w174w175w176w177w178w179w180w181w182w183w184w185w186w187w188w189w190w191w192w193w194w195w196w197w198w199w200w201w202w203w204w205w206w207w208w209w210w211w212w213w214w215w216w217w218w219w220w221w222w223w224w225w226w227w228w229w230w231w232w233w234w235w236w237w238w239w240w241w242w243w244w245w246w247w248w249w250w251w252w253w254w255w256w257w258w259w260w261w262w263w264w265w266w267w268w269w270w271w272w273w274w275w276w277w278w279w280w281w282w283w284w285w286w287w288w289w290w291w292w293w294w295w296w297w298w299",
+      "writers": null,
+      "provider": null,
+      "lines": [
+        {
+          "timeMs": 0,
+          "endMs": null,
+          "text": "w0w1w2w3w4w5w6w7w8w9w10w11w12w13w14w15w16w17w18w19w20w21w22w23w24w25w26w27w28w29w30w31w32w33w34w35w36w37w38w39w40w41w42w43w44w45w46w47w48w49w50w51w52w53w54w55w56w57w58w59w60w61w62w63w64w65w66w67w68w69w70w71w72w73w74w75w76w77w78w79w80w81w82w83w84w85w86w87w88w89w90w91w92w93w94w95w96w97w98w99w100w101w102w103w104w105w106w107w108w109w110w111w112w113w114w115w116w117w118w119w120w121w122w123w124w125w126w127w128w129w130w131w132w133w134w135w136w137w138w139w140w141w142w143w144w145w146w147w148w149w150w151w152w153w154w155w156w157w158w159w160w161w162w163w164w165w166w167w168w169w170w171w172w173w174w175w176w177w178w179w180w181w182w183w184w185w186w187w188w189w190w191w192w193w194w195w196w197w198w199w200w201w202w203w204w205w206w207w208w209w210w211w212w213w214w215w216w217w218w219w220w221w222w223w224w225w226w227w228w229w230w231w232w233w234w235w236w237w238w239w240w241w242w243w244w245w246w247w248w249w250w251w252w253w254w255w256w257w258w259w260w261w262w263w264w265w266w267w268w269w270w271w272w273w274w275w276w277w278w279w280w281w282w283w284w285w286w287w288w289w290w291w292w293w294w295w296w297w298w299",
+          "words": [
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w0"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w1"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w2"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w3"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w4"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w5"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w6"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w7"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w8"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w9"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w10"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w11"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w12"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w13"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w14"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w15"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w16"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w17"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w18"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w19"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w20"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w21"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w22"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w23"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w24"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w25"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w26"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w27"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w28"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w29"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w30"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w31"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w32"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w33"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w34"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w35"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w36"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w37"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w38"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w39"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w40"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w41"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w42"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w43"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w44"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w45"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w46"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w47"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w48"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w49"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w50"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w51"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w52"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w53"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w54"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w55"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w56"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w57"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w58"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w59"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w60"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w61"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w62"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w63"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w64"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w65"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w66"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w67"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w68"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w69"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w70"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w71"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w72"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w73"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w74"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w75"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w76"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w77"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w78"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w79"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w80"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w81"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w82"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w83"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w84"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w85"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w86"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w87"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w88"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w89"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w90"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w91"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w92"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w93"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w94"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w95"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w96"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w97"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w98"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w99"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w100"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w101"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w102"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w103"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w104"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w105"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w106"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w107"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w108"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w109"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w110"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w111"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w112"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w113"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w114"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w115"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w116"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w117"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w118"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w119"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w120"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w121"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w122"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w123"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w124"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w125"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w126"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w127"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w128"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w129"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w130"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w131"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w132"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w133"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w134"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w135"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w136"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w137"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w138"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w139"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w140"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w141"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w142"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w143"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w144"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w145"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w146"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w147"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w148"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w149"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w150"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w151"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w152"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w153"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w154"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w155"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w156"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w157"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w158"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w159"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w160"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w161"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w162"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w163"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w164"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w165"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w166"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w167"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w168"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w169"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w170"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w171"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w172"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w173"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w174"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w175"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w176"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w177"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w178"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w179"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w180"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w181"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w182"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w183"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w184"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w185"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w186"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w187"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w188"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w189"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w190"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w191"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w192"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w193"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w194"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w195"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w196"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w197"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w198"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w199"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w200"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w201"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w202"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w203"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w204"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w205"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w206"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w207"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w208"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w209"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w210"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w211"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w212"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w213"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w214"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w215"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w216"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w217"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w218"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w219"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w220"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w221"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w222"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w223"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w224"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w225"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w226"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w227"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w228"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w229"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w230"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w231"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w232"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w233"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w234"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w235"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w236"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w237"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w238"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w239"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w240"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w241"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w242"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w243"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w244"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w245"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w246"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w247"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w248"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w249"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w250"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w251"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w252"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w253"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w254"
+            },
+            {
+              "timeMs": 500,
+              "endMs": null,
+              "text": "w255"
+            }
+          ],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 0
+        }
+      ]
+    }
+  },
+  {
+    "name": "multi-credit trailer keeps the retained credit in plain text",
+    "request": {
+      "operation": "parse_lyrics",
+      "raw": "[00:10.00]Verse\n[00:20.00]Written by: Real Credit\nWritten by: Footnote"
+    },
+    "expected": {
+      "synced": true,
+      "wordSynced": false,
+      "plainText": "Verse\nWritten by: Footnote",
+      "writers": "Real Credit",
+      "provider": null,
+      "lines": [
+        {
+          "timeMs": 10000,
+          "endMs": null,
+          "text": "Verse",
+          "words": [],
+          "romanization": null,
+          "romanizationWords": [],
+          "translation": null,
+          "voice": null,
+          "isBackground": false,
+          "vocalGroup": 0
         }
       ]
     }

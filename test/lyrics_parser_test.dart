@@ -394,4 +394,63 @@ ${_tag('romaji', 1009, 'Romanized')}
     expect(line.end?.inMilliseconds, 5000);
     expect(line.words.map((word) => word.end?.inMilliseconds), [1307, 2497]);
   });
+
+  test('untimed TTML keeps plain lyric text instead of XML markup', () {
+    final parsed = LyricsParser.parse(
+      '<tt xmlns="http://www.w3.org/ns/ttml"><body><p>Just words</p>'
+      '<p>More words</p></body></tt>',
+    );
+    expect(parsed.synced, isFalse);
+    expect(parsed.plainText, 'Just words\nMore words');
+    expect(parsed.lines, isEmpty);
+  });
+
+  test('a writer trailer does not duplicate chorus lines in plain text', () {
+    final parsed = LyricsParser.parse(
+      '[00:10.000][00:40.000]Chorus line\n[01:00.000]Written by: Someone',
+    );
+    expect(parsed.writers, 'Someone');
+    expect(parsed.plainText, 'Chorus line');
+    expect(parsed.lines.map((line) => line.time.inMilliseconds), [10000, 40000]);
+  });
+
+  test('repeated timestamps shift word timing per occurrence', () {
+    final parsed = LyricsParser.parse(
+      '[00:10.000][01:10.000]<00:10.000>a <00:10.500>b',
+    );
+    expect(parsed.lines.map((line) => line.time.inMilliseconds), [10000, 70000]);
+    expect(
+      parsed.lines.map((line) => line.words.map((word) => word.time.inMilliseconds)),
+      [
+        [10000, 10500],
+        [70000, 70500],
+      ],
+    );
+  });
+
+  test('line timestamps cap at 64 occurrences', () {
+    final raw =
+        '${List.generate(70, (i) => '[$i:00.000]').join()}Chorus';
+    final parsed = LyricsParser.parse(raw);
+    expect(parsed.lines, hasLength(64));
+  });
+
+  test('word tags cap at 256 per line', () {
+    final raw =
+        '[00:00]${List.generate(300, (i) => '<00:00.500>w$i').join()}';
+    final parsed = LyricsParser.parse(raw);
+    final line = parsed.lines.single;
+    expect(line.words, hasLength(256));
+    expect(line.words.last.text, 'w255');
+    expect(line.words.last.time.inMilliseconds, 500);
+  });
+
+  test('expanded repeated lines stop at the cumulative budget', () {
+    final raw =
+        '${List.generate(70, (i) => '[$i:00.000]').join()}${'x' * 1000000}';
+    final parsed = LyricsParser.parse(raw);
+    // Same arithmetic as the native parser (see its
+    // crafted_lrc_expansion_stays_bounded test).
+    expect(parsed.lines, hasLength(16));
+  });
 }

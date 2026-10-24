@@ -47,6 +47,17 @@ static SOURCE_CREDIT: LazyLock<Regex> =
 static EXTENSION_PREFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)^extension:").unwrap());
 
+// Hostile LRC lines repeat timestamps or word tags to amplify per-line clones
+// (RUST-403: one ~700 KB line can request hundreds of GiB of allocations).
+// The caps bound the expanded output on both the native and Dart parsers so
+// their fixtures stay equal. A legit chorus repeats a few times and word-timed
+// lines stay under a few dozen words, far below these caps.
+const MAX_LINE_TIMESTAMPS: usize = 64;
+const MAX_WORDS_PER_LINE: usize = 256;
+// Weighted expanded-output budget per parse (word counts plus the UTF-16
+// text length of every duplicated line) in code-unit units.
+const MAX_EXPANDED_UNITS: u64 = 16_777_216;
+
 #[derive(Clone, Debug, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 struct Word {
@@ -142,7 +153,12 @@ pub(crate) fn execute(
         } else {
             None
         } {
-            Some(parsed) if !parsed.lines.is_empty() => parsed,
+            // Untimed TTML keeps its plain lyric text instead of being
+            // re-parsed as LRC, which would show the raw XML markup (BUG-101,
+            // RUST-401).
+            Some(parsed) if !parsed.lines.is_empty() || !trim(&parsed.plain_text).is_empty() => {
+                parsed
+            }
             _ => parse_lrc(text, check)?,
         }
     };
@@ -379,12 +395,36 @@ fn shift_words(words: &mut [Word], offset: i64) {
         word.end_ms = word.end_ms.map(|time| shift(time, offset));
     }
 }
+fn expanded_cost(text: &str, words: &[Word]) -> u64 {
+    // Weighted expanded-output cost in UTF-16 code units (Dart's String
+    // length) so both parsers cap identically on any Unicode input.
+    let word_units: u64 = words
+        .iter()
+        .map(|word| word.text.encode_utf16().count() as u64)
+        .sum();
+    text.encode_utf16().count() as u64 + word_units + words.len() as u64 * 64
+}
+
+// The word timing belongs to the occurrence nearest the first word; repeated
+// occurrences replay the same relative timing (BUG-103).
+fn nearest_occurrence(times: &[Captures<'_>], target: i64) -> Option<i64> {
+    times
+        .iter()
+        .map(duration)
+        .fold(None, |nearest: Option<i64>, ms| match nearest {
+            None => Some(ms),
+            Some(best) if ms.abs_diff(target) < best.abs_diff(target) => Some(ms),
+            Some(best) => Some(best),
+        })
+}
+
 fn parse_lrc(text: &str, check: &dyn Fn() -> Result<(), String>) -> Result<Parsed, String> {
     let mut parsed: Vec<Line> = Vec::new();
     let mut plain = Vec::new();
     let (mut romaji, mut romaji_words, mut translation) =
         (Supplements::new(), Supplements::new(), Supplements::new());
     let (mut saw_timestamp, mut saw_words, mut offset) = (false, false, 0);
+    let mut expanded: u64 = 0;
     for raw in NEW_LINE.split(text) {
         check()?;
         let mut line = trim_end(raw);
@@ -419,7 +459,7 @@ fn parse_lrc(text: &str, check: &dyn Fn() -> Result<(), String>) -> Result<Parse
             }
             continue;
         }
-        let times: Vec<_> = LINE_TIME.captures_iter(line).collect();
+        let mut times: Vec<_> = LINE_TIME.captures_iter(line).collect();
         if times.is_empty() {
             let (content, voice) = vocal_text(trim(line));
             let clean = trim(&WORD_TIME.replace_all(&content, "")).to_string();
@@ -446,11 +486,45 @@ fn parse_lrc(text: &str, check: &dyn Fn() -> Result<(), String>) -> Result<Parse
         saw_timestamp = true;
         let (content, voice) =
             vocal_text(trim(&line[times.last().unwrap().get(0).unwrap().end()..]));
-        let words = parse_words(&content);
+        let words = {
+            let mut words = parse_words(&content);
+            if words.len() > MAX_WORDS_PER_LINE {
+                words.truncate(MAX_WORDS_PER_LINE);
+            }
+            words
+        };
         saw_words |= !words.is_empty();
         let clean = trim(&WORD_TIME.replace_all(&content, "")).to_string();
         plain.push(clean.clone());
-        for time in times {
+        // Every occurrence of the line duplicates the same content, so the
+        // expansion cost is computed once and charged per pushed occurrence.
+        // Content comes from the full tag list; the cap only limits how many
+        // occurrences of that content are pushed. Anchor selection runs on the
+        // same truncated set as the occurrence loop.
+        times.truncate(MAX_LINE_TIMESTAMPS);
+        let cost = expanded_cost(&clean, &words);
+        let anchor_ms = words
+            .first()
+            .and_then(|first| nearest_occurrence(&times, first.time_ms));
+        let mut occurrences = 0usize;
+        for time in &times {
+            let ms = duration(time);
+            let shifted = match anchor_ms {
+                Some(anchor) if ms != anchor && !words.is_empty() => words
+                    .iter()
+                    .map(|word| Word {
+                        time_ms: shift(word.time_ms, anchor - ms),
+                        end_ms: word.end_ms.map(|end| shift(end, anchor - ms)),
+                        text: word.text.clone(),
+                    })
+                    .collect::<Vec<_>>(),
+                _ => words.clone(),
+            };
+            occurrences += 1;
+            if occurrences > 1 && expanded + cost > MAX_EXPANDED_UNITS {
+                break;
+            }
+            expanded += cost;
             let background = background.is_some();
             let previous = parsed.last();
             let line_voice = voice.clone().or_else(|| {
@@ -466,10 +540,10 @@ fn parse_lrc(text: &str, check: &dyn Fn() -> Result<(), String>) -> Result<Parse
                 Some(parsed.len() as i64)
             };
             parsed.push(Line::new(
-                duration(&time),
-                words.last().and_then(|w| w.end_ms),
+                ms,
+                shifted.last().and_then(|w| w.end_ms),
                 clean.clone(),
-                words.clone(),
+                shifted,
                 line_voice,
                 background,
                 group,
@@ -971,13 +1045,30 @@ fn with_credits(raw: &str, lyrics: &mut Parsed) -> Result<(), String> {
         if writers.is_none() {
             writers = Some(trim(&c[1]).into());
         }
+        let credit_text = trim(&line.text).to_string();
         lyrics.lines.pop();
-        lyrics.plain_text = lyrics
-            .lines
-            .iter()
-            .map(|line| line.text.as_str())
-            .collect::<Vec<_>>()
-            .join("\n");
+        // Drop the popped credit from the retained plain text instead of
+        // rebuilding plain text from lines, which duplicates chorus lines
+        // shared by timestamps (BUG-102). Match the popped credit's text
+        // first so multi-credit files keep the rows their lines retained.
+        let dropped = {
+            let mut plain_lines: Vec<&str> = lyrics.plain_text.split('\n').collect();
+            let index = plain_lines
+                .iter()
+                .rposition(|plain| trim(plain) == credit_text.as_str())
+                .or_else(|| {
+                    plain_lines
+                        .iter()
+                        .rposition(|plain| WRITER_CREDIT.is_match(trim(plain)))
+                });
+            index.map(|index| {
+                plain_lines.remove(index);
+                plain_lines.join("\n")
+            })
+        };
+        if let Some(text) = dropped {
+            lyrics.plain_text = text;
+        }
     } else if lyrics.lines.is_empty() {
         let (text, footer) = lyrics
             .plain_text
@@ -1001,6 +1092,23 @@ fn with_credits(raw: &str, lyrics: &mut Parsed) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn crafted_lrc_expansion_stays_bounded() {
+        // RUST-403: 70 timestamps on a 1 MB line once cloned the content per
+        // timestamp. The expansion budget keeps the first occurrence plus the
+        // clones it still allows; the exact count pins the cap arithmetic so
+        // the Dart parser (test/lyrics_parser_test.dart) stays equal.
+        let raw = format!(
+            "{}{}",
+            (0..70).map(|i| format!("[{i}:00.000]")).collect::<String>(),
+            "x".repeat(1_000_000),
+        );
+        let t0 = std::time::Instant::now();
+        let parsed = execute(&serde_json::json!({ "raw": raw }), None, &|| Ok(())).unwrap();
+        let lines = parsed["lines"].as_array().unwrap().len();
+        assert_eq!(lines, 16);
+        assert!(t0.elapsed().as_secs() < 5);
+    }
     #[test]
     fn shared_dart_parser_goldens() {
         let fixtures: Value = serde_json::from_str(include_str!(
