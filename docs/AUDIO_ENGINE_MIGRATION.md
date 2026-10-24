@@ -25,7 +25,7 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 |---|---|---|---|
 | D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | **Decided (owner, 2026-10-24): accept GPL-3.0.** Change `LICENSE` to GPL-3.0-or-later in the same commit that first adds Sistrum code; keep the MIT notice for the original SpotiFLAC code and add `THIRD-PARTY-NOTICES` for each module. |
 | D2 | **Minimum SDK.** Sistrum requires API 31. This app uses `flutter.minSdkVersion` = 24. | Sistrum code assumes API 31 or newer. It uses `DynamicsProcessing` (API 28) and the newer `AudioTrack` and `MediaCodec` encodings without version checks. | **Decided (owner, 2026-10-24): raise minSdk to 31 (Android 12)** in the first engine-port code commit; record it in `LOCAL_OFFLINE_MIGRATION_PLAN.md`. |
-| D3 | **Direct USB (libusb in Rust).** Media3 cannot do this. The Java USB API (`UsbRequest`) has no isochronous transfers. | The libusb direct USB driver must stay native, so the NDK stays. | Keep the Rust USB worker as a separate output path. Feed it from the Kotlin decoders (section 4.3). |
+| D3 | **Direct USB (libusb in Rust).** Media3 cannot do this. The Java USB API (`UsbRequest`) has no isochronous transfers. | The libusb direct USB driver must stay native, so the NDK stays. | **Decided (owner, 2026-10-24): drop Direct USB.** Remove it with the feature-removal workflow during the USB step (section 7, step 11). The Android 14+ bit-perfect path (`UsbBitPerfectPlugin.kt`, including DoP) stays. |
 | D4 | **AAudio exact-rate output (`HiResPlayback.kt`, Oboe).** AAudio has no Java API. | Removing it removes the last C++ code in `cpp/`. | Drop it. On Android 14 and newer, the bit-perfect mixer route (`setPreferredMixerAttributes`, already in `UsbBitPerfectPlugin.kt`) covers USB DACs. Android below 14 falls back to normal mixed output. |
 | D5 | **CUE "Split into Tracks".** FFmpeg cuts the file today: it stream-copies, or re-encodes to FLAC. Android has no FLAC muxer, and Sistrum has no splitter. | Media3 can **play** CUE tracks directly with `MediaItem.ClippingConfiguration`. Today CUE tracks **must** be split before they play (`cueVirtualTrackRequiresSplitMessage`, `lib/utils/file_access.dart:26`). | Play CUE tracks directly first, as in Sistrum's planned task T037. Then decide whether Split stays (section 5.6) or is removed under `AGENTS.md`'s feature-removal workflow. |
 | D6 | **The bridge between Flutter and Media3** (section 6). | This decides how much Dart playback code changes. | Phase 1: keep `audio_service` for the session, notification and Android Auto. Replace only `audioplayers` and the native decks with one Kotlin engine plugin. A Media3 `MediaSessionService` comes later as its own step, as Sistrum also decided (ADR-006). |
@@ -105,7 +105,7 @@ Sistrum paths are relative to `androidApp/src/main/kotlin/com/amwolfstein/sistru
 | DSF and DFF over DoP or native USB (`usbDsdOverPcm`) | `DsdFile.kt`, `DsdSource.kt`, Rust USB | Keep `DsdFile.kt` or use `codecs/.../container/dsf`, `container/dff`, plus `codec/dsd/DopPacker.kt` | `KotlinDsdProvider.kt` | — |
 | DSD on ordinary output | **not supported** (`dsd_unsupported`) | DSD→PCM decimation | `codecs/.../codec/dsd/DsdDecimationPipeline.kt`, `DsdRateConverter.kt` | **New feature:** DSD plays on any output. |
 | AAudio exact-rate output | `HiResPlayback.kt` and Oboe | none (decision D4) | — | — |
-| Direct USB driver (libusb, isochronous) | Rust `usb_audio/*`, `UsbDirectPlayback.kt` | **Stays native** (decision D3) | — | Feed its PCM from the Kotlin decoders or claxon instead of libFLAC and WavPack C. |
+| Direct USB driver (libusb, isochronous) | Rust `usb_audio/*`, `UsbDirectPlayback.kt` | **Dropped** (decision D3) | — | **Dropped (decision D3).** Remove `UsbDirectPlayback.kt`, Rust `usb_audio/*`, `libusb1-sys`, the `usbDirect` setting, its strings, search entries and backup key (old imports ignore it). |
 | Output picker | `audio_output` channel (`MediaRouter2`) | unchanged | — | — |
 
 ### 3.6 Formats (playback)
@@ -263,7 +263,7 @@ Each step: tests first where the step is risky, one analyze and full test run pe
 8. **DSP chain:** EQ (N-band), balance, compressor, limiter, normalization gain.
 9. **AutoMix on two ExoPlayers** with live effects (F13). Delete the renderer.
 10. **CUE playback** with `ClippingConfiguration` (decision D5). Then the Split decision (F6).
-11. **USB paths:** feed them from the Kotlin decoders or claxon. Remove libFLAC and WavPack C. Remove Oboe and `HiResPlayback` (decision D4).
+11. **USB paths:** remove Direct USB (D3). Feed the Android 14+ bit-perfect path from the Kotlin decoders or claxon. Remove libFLAC and WavPack C. Remove Oboe and `HiResPlayback` (decision D4).
 12. **Remove:**
     - `audioplayers` and `third_party/audioplayers_android`;
     - `ffmpeg_kit_flutter_new_audio` and `lib/services/ffmpeg_*.dart`;
@@ -309,7 +309,7 @@ The new code is pure Kotlin and JVM: Media3, Sistrum's `codecs`, `dsp` and `anal
 | Still there | Why it needs the NDK |
 |---|---|
 | **Rust backend** (`rust_backend`, `libspotiflac_mobile.so`) | `scripts/build_rust_backend.sh` links with the NDK's `aarch64-linux-android24-clang` and `armv7a-…-clang` and uses NDK `llvm-ar` and its sysroot. Its C dependencies (`rusqlite` with bundled SQLite through `libsqlite3-sys`, and `libusb1-sys` vendored) are compiled by the NDK's clang. The `buildRustBackend` Gradle task reads `ANDROID_NDK_HOME` (`android/app/build.gradle.kts:169-173`). |
-| **Direct USB** (decision D3) | Isochronous USB transfers are impossible from Java or Kotlin, so this driver must stay native (in Rust). |
+| **Direct USB** (decision D3) | No longer: Direct USB is dropped (D3). Only the Rust backend keeps the NDK until section 10. |
 | AGP release packaging | With `ndk { debugSymbolLevel = "FULL" }`, AGP uses the NDK's tools to strip packaged `.so` files and extract symbols: `libflutter.so`, `libapp.so`, the Rust library and JNA's `libjnidispatch.so`. Without an NDK it only warns and ships unstripped libraries. |
 
 So keep `ndkVersion = "30.0.16248370"`, `ndk.abiFilters` and the ABI splits. Remove only `externalNativeBuild { cmake { … } }` (both blocks) and the CMake install from setup docs and CI.
@@ -382,7 +382,7 @@ the channel API stay unchanged.
 
 ### 10.3 Direct USB: the one blocker
 
-Choose one before Rust is removed:
+**Decided (owner, 2026-10-24): drop Direct USB (D3).** The first row below applies, so this project ends with no NDK.
 
 | Choice | Result |
 |---|---|
