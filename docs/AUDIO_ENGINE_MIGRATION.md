@@ -99,7 +99,7 @@ Sistrum paths are relative to `androidApp/src/main/kotlin/com/amwolfstein/sistru
 | Feature | Current code | Replacement | Sistrum source | Gap / note |
 |---|---|---|---|---|
 | Android 14+ bit-perfect mixer to USB DAC (`usbBitPerfect`, `usbAllowFixedVolume`, `dapExclusive`) | `UsbBitPerfectPlugin.kt` (own AudioTrack) | Keep the plugin. Change its **source** to the Kotlin decoders. | `player/decoders/kotlin/CodecStream.kt`, `codecs/*` | Media3 bypasses no processors on this path, so keep it separate from the Media3 chain. ReplayGain, AutoMix and EQ stay bypassed here, as today. |
-| Exact FLAC PCM (`AGENTS.md`: "never trust vendor raw FLAC decoding") | `flac_pcm_source.cpp` (libFLAC) | A Kotlin FLAC decoder, or Rust `claxon` (already a `spotiflac-core` dependency) | **Sistrum has no Kotlin FLAC decoder.** It uses the platform decoder. WaxFlow has `codec/flac` that could be ported. | **Gap.** Choose claxon in Rust (no JNI hop for the USB worker) or port WaxFlow's FLAC. The platform decoder's float output is lossless only up to 24-bit. |
+| Exact FLAC PCM (`AGENTS.md`: "never trust vendor raw FLAC decoding") | `flac_pcm_source.cpp` (libFLAC) | A Kotlin FLAC decoder, or Rust `claxon` (listed in `spotiflac-core`'s `Cargo.toml` but unused since `ef8ba64` removed the Hi-Res module; RUST-201: it needs a frame channel-count guard). If Rust moves to Kotlin (section 10), choose the Kotlin decoder. | **Sistrum has no Kotlin FLAC decoder.** It uses the platform decoder. WaxFlow has `codec/flac` that could be ported. | **Gap.** Choose claxon in Rust (no JNI hop for the USB worker) or port WaxFlow's FLAC. The platform decoder's float output is lossless only up to 24-bit. |
 | WavPack PCM for the USB path | WavPack C (`openWavPack`…) | `codecs/.../codec/wavpack/*`, `container/wv/*` | `KotlinWavPackProvider.kt` | Oracle-tested against WaxFlow in Sistrum. Sistrum's notes say WaxFlow refuses hybrid, float and >2-channel WavPack, so check the Kotlin port's own refusals. |
 | WavPack DSD | `WavPackDsdSource` (C) | `codecs/.../container/wv/WavPackDsd.kt`, `codec/wavpack/Dsd.kt` | — | — |
 | DSF and DFF over DoP or native USB (`usbDsdOverPcm`) | `DsdFile.kt`, `DsdSource.kt`, Rust USB | Keep `DsdFile.kt` or use `codecs/.../container/dsf`, `container/dff`, plus `codec/dsd/DopPacker.kt` | `KotlinDsdProvider.kt` | — |
@@ -314,7 +314,7 @@ The new code is pure Kotlin and JVM: Media3, Sistrum's `codecs`, `dsp` and `anal
 
 So keep `ndkVersion = "30.0.16248370"`, `ndk.abiFilters` and the ABI splits. Remove only `externalNativeBuild { cmake { … } }` (both blocks) and the CMake install from setup docs and CI.
 
-**What it would take to need no NDK at all** (Sistrum's 003 step 2): rewrite or remove all of the Rust backend. That covers tags, scan, CUE, covers, palette, backup, the collections DB, lyrics, data jobs and the USB driver, and it drops Direct USB, because Java has no isochronous USB. That is not part of this migration and is not recommended. The Rust backend is tested, fast, and replaces much Dart and Kotlin code.
+**What it would take to need no NDK at all** (Sistrum's 003 step 2): move the whole Rust backend to Kotlin and drop Direct USB, because Java has no isochronous USB. That is a separate project to run **after** this migration (section 10).
 
 **Comparison:**
 
@@ -342,3 +342,116 @@ Unzip the release APK and list `lib/` before and after to confirm, as Sistrum 00
 | Analysis results change (FFmpeg ebur128 → Kotlin meter). | Sistrum's meter is validated against an FFmpeg oracle. Keep a tolerance test: ±0.1 LU integrated, ±0.1 dB true peak. |
 | CUE Split has no clean replacement. | Play CUE directly (D5). Decide Split separately. |
 | Background playback breaks when the plugin moves engines. | Keep `audio_service` in phase 1. Device test: screen off for 1 hour, Bluetooth, headset buttons. |
+
+---
+
+## 10. Later project: move the Rust backend to Kotlin (no NDK)
+
+Run this **after** the Media3 migration (sections 1–9) is finished and tested on a device, not at the same time.
+Two engine rewrites at once make failures hard to trace.
+
+### 10.1 Why
+
+- **No NDK, no Rust toolchain, no cargo build, no per-ABI Rust builds, no UniFFI and no JNA.** The Android side
+  becomes ordinary Gradle and Kotlin.
+- **One native language on Android (Kotlin)**, the same as Sistrum, so code moves between the projects easily.
+- **One SQLite engine.** Rust opens the app's databases with its own bundled SQLite (`rusqlite` `bundled`), while
+  Dart (`sqflite`) uses Android's. Their features can differ: Dart already probes for trigram FTS5
+  (`lib/services/sqlite_helpers.dart`). Kotlin would use the same Android SQLite as Dart.
+- Faster, simpler builds and CI.
+
+### 10.2 What moves (Rust at `05cbce5`: about 22,400 lines, 189 `#[test]`s)
+
+| Rust part | Lines | Kotlin replacement | Difficulty |
+|---|---|---|---|
+| Tag reading and writing (`core/src/tags`, `mobile/src/tags.rs`, `native_id3.rs`) | about 6,100 | Port our own Rust readers and writers (our code, MIT). Optional source for reading: Sistrum `:metadata` (WaxLabel read port, GPL) or WaxLabel itself (Go, MIT, reads and writes). | **High**: the largest part, and a bug damages user files |
+| File access and scan backend (`local/src/backend`, `files.rs`, capability checks with `cap-std`) | about 3,150 | `java.io` / `java.nio` plus the existing SAF code (`MainActivitySafIo.kt`, `SafFileOps.kt`). Keep the same path and grant checks. | Medium |
+| **Direct USB driver** (`mobile/src/usb_audio`, libusb) | about 1,820 | **None.** Android's Java USB API (`UsbRequest`) has no isochronous transfers. | **Blocker** (10.3) |
+| Backup (`native_backup`, `zip`) | about 2,130 | `java.util.zip` plus Android SQLite | Medium: the archive format must stay identical |
+| Library DB, collections, playlists, cache (`native_library`, `native_collections`, `native_playlist*`, `native_cache`) | about 3,000 | Android SQLite (`SQLiteDatabase`) | Medium: same schema, transactions and WAL rules |
+| Lyrics, XML, helpers (`native_lyrics.rs`, `native_xml.rs`, `core/src/lyrics`) | about 1,300 | Plain Kotlin | Easy |
+| CUE parser (`core/src/cue.rs`) | 430 | Sistrum `codecs/cue/Cue.kt` (GPL) or a direct translation | Easy |
+| Cover cache and palette (`core/src/cover*`, `native_palette.rs`, `image` crate) | about 960 | `ImageDecoder` / `BitmapFactory` plus `material-color-utilities` (Java). Keep the HCT rules in `AGENTS.md` (one analysis per cover version, `mornyeCoverColors`). | Easy to medium |
+| Audio analysis maths (`native_audio_analysis.rs`) | 480 | Sistrum `:analysis` / `:dsp` | Easy |
+| Data jobs and cancellation (`data_jobs.rs`, `cancellation.rs`) | about 560 | Kotlin coroutines with `Job` cancellation | Easy |
+| UniFFI bindings, JNA, `SelectedCoreBackend.kt`, `NativeDataJobs.kt` | — | Removed | — |
+
+**The seam already exists.** `CoreBackend.kt` (23 functions) is the interface, and `SelectedCoreBackend.kt` picks
+the Rust implementation. Add a Kotlin implementation of the same interface and switch one part at a time. Dart and
+the channel API stay unchanged.
+
+### 10.3 Direct USB: the one blocker
+
+Choose one before Rust is removed:
+
+| Choice | Result |
+|---|---|
+| **Drop Direct USB** | Bit-perfect USB stays on Android 14+ through `UsbBitPerfectPlugin.kt` (Kotlin, preferred mixer). Phones below Android 14 lose bit-perfect USB output. Native DSD to DACs is lost; DSD still plays through DoP on the Android 14+ path, or converted to PCM. **No NDK at all.** |
+| **Keep a small native libusb piece** | Only the USB worker stays native (Rust or C). The NDK stays, but only for that one library. |
+
+### 10.4 What must stay byte-compatible
+
+Each needs a test that runs the Rust and the Kotlin implementation on the same input and compares the outputs,
+before the Rust part is removed:
+
+- **library song IDs** (the T4 identity rules; a change breaks play counts, Loved and playlists);
+- **database schemas** and migrations;
+- **the backup archive format** (old backups must restore, new backups must open in older versions where that is
+  promised today);
+- **cover cache keys** and `cover_analysis` rows;
+- **tag write output** (the same files, frames and padding policy; no lost pictures, lyrics or ReplayGain);
+- **CUE parsing results** (track numbers, start and end times, the data-track skip).
+
+Carry over the fixes from TASKS T1–T5 and the audit findings recorded for these files, with their tests. Do not
+lose them in the rewrite.
+
+### 10.5 Order (one part per batch, behind `CoreBackend`)
+
+1. Lyrics, XML and playlist writing, the CUE parser, the palette.
+2. Audio analysis (from Sistrum).
+3. Cover cache, library DB and collections.
+4. Backup.
+5. Tag reading, then tag writing (highest risk, last).
+6. The Direct USB decision (10.3).
+7. Remove Rust, UniFFI, JNA, `buildRustBackend`, `scripts/build_rust_backend.sh`, `ndkVersion`, `ndk.abiFilters`,
+   the Rust ABI checks and the related `AGENTS.md` and review rules, using the feature-removal workflow
+   (graphify first, then prove no references remain).
+
+Each batch follows the usual rules: tests first for risky parts, one analyze and full test run per batch, three
+commits (code, graphify, docs).
+
+### 10.6 Exact FLAC after this project
+
+`claxon` goes away with Rust, so the bit-perfect FLAC decoder (section 3.5) must be Kotlin: port WaxFlow's
+`codec/flac` (MIT; bit-exact on the IETF FLAC test suite). Compare it byte for byte with libFLAC before libFLAC is
+removed.
+
+### 10.7 End state
+
+| Item | Today | After Media3 (sections 1–9) | After this project |
+|---|---|---|---|
+| Languages | Dart, Kotlin, Rust, C++ | Dart, Kotlin, Rust | **Dart, Kotlin** |
+| SDK | required | required | required |
+| NDK | required | required (Rust) | **not needed** (if Direct USB is dropped) |
+| CMake, cargo, Rust toolchain | required | cargo and Rust toolchain only | **none** |
+| Native libraries from our own sources | `libspotiflac_audio.so`, `libspotiflac_mobile.so` | `libspotiflac_mobile.so` | **none** |
+| Third-party prebuilt `.so` | FFmpeg Kit, JNA, Flutter | JNA, Flutter | Flutter only |
+
+Size: about as big as the Media3 migration itself, roughly 20,000 lines of Kotlin plus tests.
+
+### 10.8 Other option considered: WaxFlow and WaxLabel in Go
+
+Mornye used a Go backend (gomobile) until `aa997264` (2026-09-14). That backend was the download app's code
+(providers, extensions, downloads, online lyrics, scan, basic tag editing) and had **no audio decoding**, so
+restoring it does not help.
+
+Using WaxFlow and WaxLabel directly from Go through gomobile, without porting, would give:
+- exact FLAC decoding;
+- CUE split with a FLAC encoder;
+- R128 loudness with ReplayGain tagging;
+- the decoders;
+- tag writing, all MIT.
+
+But it adds the Go runtime library (estimated +10–30 MB per ABI, not measured), gomobile's experimental status
+(a Go crash kills the app with no Java stack) and keeps the NDK (cgo). Not chosen for the Kotlin end state. A size
+and speed spike would be needed before reconsidering it.
