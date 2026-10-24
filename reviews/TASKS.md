@@ -432,21 +432,19 @@ or exported components.
 - [ ] **T15: Rename the app to `com.amwolfstein.sistrum` and replace the logo**
   - Not from the audit: owner request 2026-10-24. **Blocked until the owner uploads `logo/logo.png`
     and `logo/logo2.png`** (a new top-level `logo/` folder). Do not invent or redraw a logo.
-  - **Before starting, stop and ask the owner** (do not decide these yourself):
-    1. Sistrum's own Compose app already ships as `com.amwolfstein.sistrum` (release) and
-       `com.amwolfstein.sistrum.dev` (debug flavor) in `AMWolfstein/Sistrum`. Two apps with one ID cannot
-       both be installed, and one replaces the other only if both are signed with the same key. Confirm this app
-       takes the ID and the Compose app is retired, or choose another ID.
-    2. A new `applicationId` is a **new app** to Android: existing installs do not update, and the
-       library DB, settings, SAF folder grants and history stay in the old app. Confirm the plan for
-       users: make a backup in the old app, install the new one, restore. Then verify restore on a
-       real backup.
-    3. The display name: "Sistrum" (assumed) and the side-by-side variant name.
+  - **Owner decisions (2026-10-24), already answered; do not ask again:**
+    1. This app takes `com.amwolfstein.sistrum`. Sistrum's Compose app (`AMWolfstein/Sistrum`,
+       `com.amwolfstein.sistrum` and `.dev`) is **retired**. Uninstall it from the phone before
+       installing this app, or the install fails on a signature or ID conflict.
+    2. Only the owner uses the app, so no user migration is needed. The new ID is a new app: the owner
+       moves their own data with backup (old app) and restore (new app). Still check that restore of an
+       old backup works.
+    3. The display name is **Sistrum**. The side-by-side variant is **Sistrum Local**.
   - **Identity (one commit for the rename; no behaviour change):**
     - `android/app/build.gradle.kts`:
       - `namespace` and `applicationId` become `com.amwolfstein.sistrum`;
       - the side-by-side ID becomes `com.amwolfstein.sistrum.local`;
-      - `appLabel` becomes the new display name;
+      - `appLabel` becomes "Sistrum" (side-by-side: "Sistrum Local");
       - rename the `SPOTIFLAC_*` environment variables only if the build scripts are updated too.
     - Move the Kotlin sources from `com/zarz/spotiflac` to `com/amwolfstein/sistrum` in `main`, `test`,
       `androidTest` (kotlin and java) and `rust/kotlin`, and update every `package` line.
