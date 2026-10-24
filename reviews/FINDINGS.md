@@ -112,24 +112,6 @@
 - Fix: normalized genre key at scan time or a `library_genres` side table; ~40 lines.
 - Evidence: CTE at :11-18; `local_genres_screen.dart` pages by 40.
 
-### BUG-101 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/utils/lyrics_parser.dart:213-220` (`parse`), :758-765 (`_parseTtml`)
-- Scenario: TTML with `<p>` but no usable `begin`, or no `<p>` → `_parseTtml` returns an untimed result (or null); `parse()` requires `lines.isNotEmpty`, falls through to `_parseLrcOrPlain(text)` on raw XML → plain text view shows XML markup.
-- Root cause: untimed TTML result discarded.
-- Impact: unsynced TTML lyrics (embedded or sidecar) render as raw XML.
-- Fix: return `_withCredits(text, ttml)` when `ttml != null` and `plainText` is non-empty; ~3 lines + test.
-- Evidence: guard at :215; untimed return at :758.
-
-### BUG-102 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/utils/lyrics_parser.dart:280-288` (`_withCredits`)
-- Scenario: LRC with a trailing "Written by:" credit and multi-timestamp chorus lines → plainText rebuilt from expanded timed lines → chorus duplicated.
-- Fix: remove the trailer from the existing plainText instead of rebuilding; ~3 lines.
-
-### BUG-103 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/utils/lyrics_parser.dart:415-436`
-- Scenario: enhanced LRC `[00:10][01:30]<00:10>a<00:11>b` → repeated line shares word times of the first occurrence; word highlight wrong on repeats.
-- Fix: shift word times per extra timestamp; ~10 lines.
-
 ### BUG-105 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/utils/lyrics_metadata_helper.dart:56`, :71-79
 - Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
@@ -145,17 +127,6 @@
 - Location: `rust_backend/crates/core/src/media/hires/mod.rs:525-532`, `WavSource::open` (:690)
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
-
-### RUST-401 [P2] [confidence: high] [VALIDATED]
-- Location: `rust_backend/crates/mobile/src/native_lyrics.rs:111-139` (`execute`), :688-700, :790-826 (`parse_ttml`)
-- Scenario: native (production) lyrics path has the same untimed-TTML discard as BUG-101 → raw XML shown as plain lyrics.
-- Fix: accept TTML when lines or plain text are non-empty; ~3 lines; fix together with BUG-101 and update `test/fixtures/native_lyrics_parsers.json`.
-- Evidence: `parseAsyncNative` is the live path (`lyrics_parser.dart:231`).
-
-### RUST-403 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/mobile/src/native_lyrics.rs:~455-490` (`parse_lrc`)
-- Scenario: one LRC line with K leading timestamps and W word tags clones the word list K times (K×W); a crafted ~700 KB line can exhaust memory → native abort when lyrics open. Dart parser has the same amplification.
-- Fix: cap timestamps per line (e.g. 64) and total words; ~10 lines.
 
 ### BUG-201 [P2] [confidence: high] [VALIDATED]
 - Location: `lib/providers/local_artist_provider.dart:147-201` (`localArtistPopularProvider`), tie at :184
@@ -736,6 +707,40 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### BUG-101 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/utils/lyrics_parser.dart:213-220` (`parse`), :758-765 (`_parseTtml`)
+- Scenario: TTML with `<p>` but no usable `begin`, or no `<p>` → `_parseTtml` returns an untimed result (or null); `parse()` requires `lines.isNotEmpty`, falls through to `_parseLrcOrPlain(text)` on raw XML → plain text view shows XML markup.
+- Root cause: untimed TTML result discarded.
+- Impact: unsynced TTML lyrics (embedded or sidecar) render as raw XML.
+- Fix: return `_withCredits(text, ttml)` when `ttml != null` and `plainText` is non-empty; ~3 lines + test.
+- Evidence: guard at :215; untimed return at :758.
+- Resolution: `e6276a6` (T6). Both parsers accept an untimed TTML result (lines empty, plain lyric text non-blank) instead of re-parsing the raw XML as LRC, which showed markup. Shared goldens `untimed TTML keeps plain lyrics` and `TTML invalid missing paragraph timing falls to plain` (expected updated from the raw XML) pin the behaviour in both suites.
+
+### BUG-102 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/utils/lyrics_parser.dart:280-288` (`_withCredits`)
+- Scenario: LRC with a trailing "Written by:" credit and multi-timestamp chorus lines → plainText rebuilt from expanded timed lines → chorus duplicated.
+- Fix: remove the trailer from the existing plainText instead of rebuilding; ~3 lines.
+- Resolution: `e6276a6` (T6). The trailer is dropped from the retained plain text (exact match of the popped credit's text first, credit-regex scan from the end only as fallback) instead of being rebuilt from lines, which duplicated chorus lines shared by timestamps. The Rust `with_credits` path had the same rebuild and was fixed for parity. Goldens `credit trailer keeps chorus once in plain text` and `multi-credit trailer keeps the retained credit in plain text`.
+
+### BUG-103 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/utils/lyrics_parser.dart:415-436`
+- Scenario: enhanced LRC `[00:10][01:30]<00:10>a<00:11>b` → repeated line shares word times of the first occurrence; word highlight wrong on repeats.
+- Fix: shift word times per extra timestamp; ~10 lines.
+- Resolution: `e6276a6` (T6). Verified by trace: repeated occurrences shared unshifted absolute word times on both parsers. Word timing is now anchored at the occurrence nearest the first word and each repeat replays the same relative timing (shifts clamp at zero). The existing golden `repeated line and empty end tags` was updated for the shifted repeat and a new golden pins the canonical case.
+
+### RUST-401 [P2] [confidence: high] [RESOLVED]
+- Location: `rust_backend/crates/mobile/src/native_lyrics.rs:111-139` (`execute`), :688-700, :790-826 (`parse_ttml`)
+- Scenario: native (production) lyrics path has the same untimed-TTML discard as BUG-101 → raw XML shown as plain lyrics.
+- Fix: accept TTML when lines or plain text are non-empty; ~3 lines; fix together with BUG-101 and update `test/fixtures/native_lyrics_parsers.json`.
+- Evidence: `parseAsyncNative` is the live path (`lyrics_parser.dart:231`).
+- Resolution: `e6276a6` (T6). Same fix as BUG-101 in `execute`; the shared fixture goldens cover both parsers (`shared_dart_parser_goldens`, `test/native_lyrics_parser_test.dart`).
+
+### RUST-403 [P2] [confidence: medium] [RESOLVED]
+- Location: `rust_backend/crates/mobile/src/native_lyrics.rs:~455-490` (`parse_lrc`)
+- Scenario: one LRC line with K leading timestamps and W word tags clones the word list K times (K×W); a crafted ~700 KB line can exhaust memory → native abort when lyrics open. Dart parser has the same amplification.
+- Fix: cap timestamps per line (e.g. 64) and total words; ~10 lines.
+- Resolution: `e6276a6` (T6). Verified with a bounded release-build reproduction before the fix: a ~47 KB line with 2,000 timestamps and 2,000 word tags expanded to 2,001 lines in 7.0 s and 2.6 GB RSS (FA-RUST-001's craft would abort the app). Both parsers now cap timestamps per line at 64, words per line at 256, and charge a cumulative expanded-output budget of 16,777,216 units (word counts plus UTF-16 text lengths, charged once per duplicated line) beyond the first occurrence. Pinning tests assert identical arithmetic on both sides (exactly 16 lines for a 1 MB line with 70 timestamps).
 
 ### RUST-202 [P2] [confidence: high] [RESOLVED]
 - Location: `rust_backend/crates/core/src/cue.rs:117-122` (`parse`, FILE), `CueTrack` :25-35; consumers `rust_backend/crates/local/src/backend/library.rs:232,284`, `scan.rs:446`
@@ -1830,6 +1835,11 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ## Rejected
 
+### FA-RUST-001 [P2] [confidence: high] [RESOLVED]
+- Report: `reviews/fresh-audit-2026-10-23/19-native-lyrics-parser.md` (RUST-001; Codex)
+- Scenario: 100,000 leading `[00:01]` timestamps plus 4 MiB trailing text (~390 GiB of allocations from one crafted LRC).
+- Resolution: `e6276a6` (T6). Reproduces RUST-403; the timestamp cap, word cap and expanded-output budget bound the expansion on both parsers (see RUST-403).
+
 ### DATA-307 [P3] [confidence: low] [REJECTED]
 - Location: `lib/widgets/local_song_menu.dart:297-312`
 - Scenario: each metadata edit writes a new `library_covers/edited_<ts>.jpg` and never deletes the previous one.
@@ -1853,3 +1863,7 @@ _False positives and intentional behavior, with one-line reason._
 - R-011 (perf PERF-403, `shuffleLibrary` full load): its only caller is the dead `player_queue_sheet.dart` (DEAD-601); the live `getAll()` caller is UX-101. DATA-002's `shuffleLibrary` part is likewise on that dead path.
 - R-012 (SEC-301, `MANAGE_EXTERNAL_STORAGE` on API 30–32): owner keeps the permission.
 - R-013 (DEAD-909 `NativeReplayGainPolicy` part): owner keeps it for the planned Media3/ExoPlayer port; the other DEAD-909 symbols stay open.
+### OPT-PERF-004 [P2] [confidence: high] [REJECTED]
+- Report: `reviews/optimization-2026-10-23/06-native-metadata-parsers.md` (code-optimization-auditor)
+- Location: `rust_backend/crates/mobile/src/native_lyrics.rs` (`with_credits`, re-parsing the normalized TTML document after `parse_ttml`)
+- Rejected 2026-10-24 (T6): measured before any change on the host (release build, wall time): 100-line TTML execute 3.9 ms with the credits re-parse at 0.6 ms; 500-line 9.8 ms / 1.7 ms; 2,000-line 33.5 ms / 5.2 ms (with songwriters: 24.8 ms / 7.0 ms). The second pass is 0.6–7 ms on pathological 2,000-line documents and sub-millisecond for realistic lyric files, on the bounded worker away from rendering; the audit itself flags the merge as parity-unsafe (the two passes intentionally differ in CDATA treatment). No user-visible cost; rejected with these numbers.

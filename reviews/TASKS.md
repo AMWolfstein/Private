@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 121 open findings in `FINDINGS.md` (0 P1, 38 P2, 83 P3), including the 57 added
+The audits left 116 open findings in `FINDINGS.md` (0 P1, 35 P2, 81 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -202,7 +202,7 @@ or exported components.
   - Reviews: api-compat-auditor (API-T5/1 cap, API-T5/2 orphan fixture), bug-hunter (P3 cover-dir cleanup through symlinked roots) and security-auditor fix review; all fixed, fix-only re-review PASS. Enforcement was prompt-only.
   - `flutter analyze --no-pub`: No issues found. Full `flutter test --no-pub`: first run 1,654 passed, 2 failed, 3 skipped — both failures were the new malformed-draft setup test, which ran twice inside the SDK loop and mistook the determinate page-counter ring for a loading spinner; it now runs once and asserts the first page renders (file rerun 8/8). Final full run after all fixes: 1,656 passed, 0 failed, 3 skipped. `check_rust_backend.sh`: formatting and Clippy PASS; 187 passed, 0 failed, 1 ignored (191 before: the dead `parse_playlist`/`hash_file` tests were removed with DATA-101). `check_android.sh` (JDK 25): BUILD SUCCESSFUL. No APK, instrumentation or device execution.
 
-- [ ] **T6: Fix lyrics parsing**
+- [x] **T6: Fix lyrics parsing**
   - Findings: BUG-101, RUST-401, RUST-403.
   - Files: `lib/utils/lyrics_parser.dart` (`parse`, `_parseTtml`),
     `rust_backend/crates/mobile/src/native_lyrics.rs` (`parse_ttml`, `parse_lrc`).
@@ -212,6 +212,14 @@ or exported components.
   - Codex: FA-RUST-001 (confirms RUST-403 with a reproduction: about 390 GiB of
     allocations from one crafted LRC), OPT-PERF-004 (TTML parsed twice for credits; measure
     first).
+
+  - Completed 2026-10-24: code `e6276a6`, graph `081b011`. All T6 findings resolved; FA-RUST-001 resolved with RUST-403; OPT-PERF-004 rejected with a measurement (see FINDINGS.md). Both reviewers found one P3 in the new plain-text trailer scan (the removal target differing from the popped credit on multi-credit files); fixed and both re-reviews PASS. Enforcement was prompt-only.
+  - Untimed TTML keeps its plain lyric text on both parsers (`parse`/`execute` accept an untimed result instead of re-parsing raw XML as LRC). The stale golden "TTML invalid missing paragraph timing falls to plain" was updated to the new expected plain text.
+  - The plain-text trailer is dropped by exact match of the popped credit's text (credit-regex scan only as fallback) instead of rebuilding plainText from lines, which duplicated chorus lines shared by timestamps; the Rust path had the same rebuild and was fixed for parity.
+  - Repeated timestamps now shift word timing per occurrence, anchored at the occurrence nearest the first word (shifts clamp at zero); the existing "repeated line and empty end tags" golden was updated and a canonical-shift golden added.
+  - RUST-403 measured before the fix (release build, host): a ~47 KB line with 2,000 timestamps and 2,000 word tags expanded to 2,001 lines in 7.0 s and 2.6 GB RSS. Both parsers now cap timestamps per line at 64, words per line at 256, and charge a cumulative expanded-output budget of 16,777,216 units beyond the first occurrence; pinning tests assert identical arithmetic (exactly 16 lines for a 1 MB line with 70 timestamps) on both sides.
+  - `flutter analyze`: No issues found. Full `flutter test`: 1,668 passed, 0 failed, 3 skipped. `check_rust_backend.sh`: formatting and Clippy PASS; full workspace tests PASS (first run stopped at `cargo fmt --check` on two formatting diffs in the new Rust code; the only test failure across runs was the stale untimed-TTML golden, updated as a legitimate expectation change). `check_android.sh` NOT RUN (no Kotlin/Android source changes). No APK, instrumentation or device execution.
+  - OPT-PERF-004 measured (release build): the `with_credits` re-parse costs 0.6/1.7/5.2 ms at 100/500/2,000-line TTML (execute 3.9/9.8/33.5 ms; with songwriters 24.8 ms total, 7.0 ms credits) — sub-millisecond for realistic files on the bounded worker, and the passes intentionally differ in CDATA treatment, so the merge was rejected with these numbers.
 
 - [ ] **T7: Fix playback and visible UI bugs**
   - Findings: CONC-001, CONC-002, UI-101, UI-201, UX-201, BUG-201, BUG-202.
