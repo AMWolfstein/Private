@@ -1,6 +1,6 @@
 # Fix tasks from the audit
 
-The audits left 116 open findings in `FINDINGS.md` (0 P1, 35 P2, 81 P3), including the 57 added
+The audits left 101 open findings in `FINDINGS.md` (0 P1, 28 P2, 73 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
@@ -221,7 +221,7 @@ or exported components.
   - `flutter analyze`: No issues found. Full `flutter test`: 1,668 passed, 0 failed, 3 skipped. `check_rust_backend.sh`: formatting and Clippy PASS; full workspace tests PASS (first run stopped at `cargo fmt --check` on two formatting diffs in the new Rust code; the only test failure across runs was the stale untimed-TTML golden, updated as a legitimate expectation change). `check_android.sh` NOT RUN (no Kotlin/Android source changes). No APK, instrumentation or device execution.
   - OPT-PERF-004 measured (release build): the `with_credits` re-parse costs 0.6/1.7/5.2 ms at 100/500/2,000-line TTML (execute 3.9/9.8/33.5 ms; with songwriters 24.8 ms total, 7.0 ms credits) — sub-millisecond for realistic files on the bounded worker, and the passes intentionally differ in CDATA treatment, so the merge was rejected with these numbers.
 
-- [ ] **T7: Fix playback and visible UI bugs**
+- [x] **T7: Fix playback and visible UI bugs**
   - Findings: CONC-001, CONC-002, UI-101, UI-201, UX-201, BUG-201, BUG-202.
   - Files: `lib/services/music_player_service.dart` (`seek`, `skipToPrevious`,
     `onSourceDeleted`), `lib/widgets/mini_player.dart` (`_dismissedItemId`),
@@ -239,6 +239,14 @@ or exported components.
   - Do not rewrite the playback engine.
   - Also: CONC-003, CONC-004, KT-001, KT-002, SEC-101, SEC-303, BUG-302, DEAD-604.
   - Codex: FA-CONC-001 (same as UI-201).
+  - Completed 2026-10-25: code `10f9b23`, graph `c1db077`. KT-001 rejected (owner keeps `NativeReplayGainPolicy` for the Media3 port, see FINDINGS.md); the rest are resolved.
+  - Playback: `seek` publishes the position, stores it as the pending start while no source is ready, and runs the transport seek inside the source-change serializer under the play generation; the loader now consumes the pending position, so a seek that lands before or during preparation wins. `skipToPrevious`'s restart reuses `seek`. Fire-and-forget transport callbacks report failures through the existing playback-error path (`_runPlaybackCallback`, plus `_playIndex` owning post-bump failures), the active-Play join compares generations, an accepted Play bumps the generation before starting, and deleting a queued source no longer revives an explicitly stopped session (`_index < 0`).
+  - UI: the mini-player dismissal latch clears on null/different ID or an observed pause→play, and survives frames where an asynchronous stop still reports playing. The batch progress dialog returns its own dismissal callback (`removeRoute`, never the top route), captures Back through `PopScope` into the existing once-only cancel, cancels on external removal and ignores stale completions. The Cache page renders an `ErrorCard` with Retry instead of an endless spinner.
+  - Data: artist Popular keeps per-ID random priorities for the page lifetime (stable on `loadedIndexVersion` refreshes, fresh on reopen, 20 cap and counts unchanged); search forwards `localLibraryEnabled` and returns no local hits with the index untouched when disabled. Batch ReplayGain drops CUE virtual rows before totals and logs false writes and exceptions. `PlayerArtwork` no longer has an http branch (it never fetched: `CachedCoverImage` rejects non-file schemes) and `playableFromLocal` keeps a legacy http cover out of playback state.
+  - Native: `NativePlaybackFailure.kt` converts `LinkageError` only (cause preserved, ordinary exceptions and VM errors untouched), contained at the existing prepare/command/pump boundaries in `HiResPlayback`, `UsbDirectPlayback` and `UsbBitPerfectPlugin`; `UsbPcmSource` releases partially initialised JNI state and WavPack DSD construction closes its decoder handle on a construction failure. Widget commands share one allow-list between the activity bridge and the receiver. `AudioService.onGetRoot` validates the callback package against `PackageManager.getPackagesForUid` and permits only this app's UID or Android-trusted controllers (owner accepted the untrusted car/controller compatibility loss); the service stays exported.
+  - Reviews: concurrency-auditor (two P2s found in the uncommitted diff — Play/Pause generation, seek persistence extending the transport lock — both fixed, fix-only PASS), flutter-dart-auditor (one P2 on the stale-playing dismissal latch, fixed, fix-only PASS), kotlin-android-auditor (one P3 on WavPack DSD handle cleanup, fixed, fix-only PASS), security-auditor (no findings; AndroidX `media:1.8.0` `onGetRoot`/`getCurrentBrowserInfo` contract and API 24/Android 16 framework binder guards verified from the exact sources jar, SHA256 `8f016498…1e41`). Enforcement prompt-only.
+  - `flutter analyze`: No issues found. Full `flutter test`: 1,700 passed, 0 failed, 3 skipped (the first full run had 10 failures: six were test-harness defects fixed in the new batch/search tests, and four exposed the two real concurrency bugs above plus a wall-clock assertion; all are fixed and the affected files were re-run green before the final full run).
+  - `check_android.sh` with `:audio_service:testDebugUnitTest :app:compileDebugAndroidTestJavaWithJavac`: BUILD SUCCESSFUL. Host tests 79 app (1 skipped) + 7 audio_service, 0 failed, including the new `NativePlaybackFailureTest` (4), `PlayerWidgetCommandPolicyTest` (2) and `BrowserClientPolicyTest` (4). Instrumentation sources compiled only; no device execution. `check_rust_backend.sh` NOT RUN (no Rust source changes). Environment: the SDK had no platform/build-tools/NDK, so the approved SDK 37.0, build-tools 37, NDK 30, CMake 4.1.2 and the Gradle wrapper were installed to run these checks; no APK, signing or packaging.
 
 - [ ] **T8: Fix library queries, search, duplicates and file-access scope**
   - Findings: DATA-002, DATA-003, DATA-004, DATA-201, DATA-203, SEC-001, SEC-002, BUG-203,

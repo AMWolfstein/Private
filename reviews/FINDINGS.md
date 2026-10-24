@@ -1,53 +1,5 @@
 ## Open
 
-### CONC-001 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: lib/services/music_player_service.dart:1832 (`seek`), :1928 (`skipToPrevious` restart), :1760 (`_playInternal`)
-- Scenario: app restarts with a restored paused session (`_pendingRestorePosition = X`, `_sourceReady = false`); user seeks to Y (lyrics tap, notification seek) → `seek` hits a deck with no source, UI shows Y; on Play `_playInternal` starts at X.
-- Root cause: `seek` and the restart branch ignore the pending-restore/loading state and are not serialized with `_sourceChangeTail`.
-- Impact: seek after restore or during a load is lost; scrubber jumps back.
-- Fix: when `!_sourceReady`, store the position in `_pendingRestorePosition` and only broadcast; ~6 lines + test.
-- Evidence: `_pendingRestorePosition` read only at :1760; seek callers `player_lyrics.dart:901`, notification `MediaAction.seek` (:833). Unverified: whether the deck accepts a seek before a source is set.
-
-### CONC-002 [P2] [confidence: high] [VALIDATED]
-- Location: lib/services/music_player_service.dart:2031 (`onSourceDeleted`), :1892 (`_stopSession`)
-- Scenario: user stops playback (`_index = -1`, session cleared, queue kept) then deletes a file that was in that queue → else-branch clamps `_index` to 0, broadcasts and persists the session.
-- Root cause: clamp does not preserve `-1`; `_stopSession` keeps `_media`/`_queueItems`.
-- Impact: an explicitly stopped session comes back on next launch; Play from stopped starts item 0.
-- Fix: in the else branch skip index update, broadcast and persist when `_index < 0`; ~3 lines + test.
-- Evidence: `_persistSession` (:1135) only clears when `_index < 0`; `wasCurrent` is false for `_index = -1`.
-
-### CONC-003 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: lib/services/music_player_service.dart:667, :611, :770 (`unawaited(play())`, `unawaited(_handlePlayerComplete())`, `unawaited(pause())`)
-- Scenario: `UsbOutputUnavailable` or a channel `PlatformException` from `stop`/`resume` inside these futures.
-- Root cause: no `catchError` on fire-and-forget calls.
-- Impact: uncaught async error; state may stay stale after a completion failure.
-- Fix: small helper that logs and broadcasts paused/stopped on error; <10 lines.
-- Evidence: reviewer trace; global zone handler not checked.
-
-### CONC-004 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: lib/services/music_player_service.dart:1720-1727 (`play`)
-- Scenario: `play()` while an older operation is active joins it even after `pause()`/`stop()` bumped `_playRequestGeneration`; the old op aborts and the newer Play is dropped.
-- Root cause: join does not compare generations.
-- Impact: final state paused although the last request was Play (headset click, automation, interruption end).
-- Fix: join only when the active op's generation equals `_playRequestGeneration`; ~5 lines.
-- Evidence: reviewer trace.
-
-### KT-001 [P3] [confidence: high] [VALIDATED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt (+ `android/app/src/test/.../NativeReplayGainPolicyTest.kt`)
-- Scenario: download-era album ReplayGain policy ("used by DownloadService"); DownloadService no longer exists.
-- Root cause: leftover after download removal.
-- Impact: ~140 lines of dead code and a test guarding nothing shipped.
-- Fix: delete both files.
-- Evidence: only the file and its test reference the symbol (`grep -rln` over android/app/src, lib, rust_backend/crates).
-
-### KT-002 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt:63, :98, :163; UsbDirectPlayback.kt:131, :178; NativeAudio.kt:7
-- Scenario: `libspotiflac_audio` fails to load → `UnsatisfiedLinkError`/`ExceptionInInitializerError` (an `Error`, not `Exception`) escapes the worker-thread catch and crashes the process instead of falling back.
-- Root cause: catch blocks catch `Exception` only.
-- Impact: crash instead of fallback to normal playback, only if the native library is missing.
-- Fix: catch `LinkageError` around `NativeAudio` calls and map to `unsupported`; ~3 lines.
-- Evidence: CMake library and Rust share `abiFilters` (`build.gradle.kts:113-116`), so the trigger is unlikely in normal builds.
-
 ### DATA-002 [P2] [confidence: medium] [VALIDATED]
 - Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
 - Scenario: tapping a recent album calls unbounded `getAll()`, decodes every library row, then filters by album in Dart; shuffle does the same for all rows.
@@ -117,29 +69,10 @@
 - Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
 - Fix: split on `\r\n|\r|\n`; ~3 lines. Note: these helpers currently have no production callers (see DEAD-002), so fix only if kept.
 
-### SEC-101 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `android/app/src/main/AndroidManifest.xml:42-45`, `android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt:274-278` (`PlayerWidgetBridge.handleIntent`)
-- Scenario: any app can start the exported launcher Activity with `player_widget_command=<any>`; forwarded to Dart unvalidated (receiver path allow-lists toggle/next/previous).
-- Impact: low today (MediaSession allows the same); risk for future handlers.
-- Fix: same allow-list in `handleIntent`; 3 lines.
-
 ### RUST-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `rust_backend/crates/core/src/media/hires/mod.rs:525-532`, `WavSource::open` (:690)
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
-
-### BUG-201 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/providers/local_artist_provider.dart:147-201` (`localArtistPopularProvider`), tie at :184
-- Scenario: artist with <20 played songs; any scan/delete/edit bumps `loadedIndexVersion` (watched at :149) → provider rebuilds → `random.nextDouble()` ties redrawn → unplayed Popular picks reshuffle while the page is open.
-- Root cause: random priorities regenerated per build.
-- Impact: violates AGENTS.md "random selection … stable while the page stays open".
-- Fix: per-page seed (e.g. stored in the page state) hashed with `item.id` for ties; ~15 lines + test.
-
-### BUG-202 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/providers/library_search_provider.dart:46-53`
-- Scenario: Local Library disabled → search still returns local songs/albums/artists (`includeLocal: true` hard-coded; watched setting discarded).
-- Impact: search diverges from Home/Browse/Artist, which honour the setting.
-- Fix: pass the watched `localLibraryEnabled`; ~3 lines + test.
 
 ### BUG-203 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/providers/local_library_provider.dart:1666-1678` (`removePhysicalFiles`/`removeItems`), `lib/services/deleted_library_files.dart:7-16`, `lib/providers/library_collections_provider.dart`
@@ -158,11 +91,6 @@
 - Scenario: provider disposed during the awaited refresh → `state =` without `ref.mounted` → StateError; no guard against a running scan.
 - Fix: `if (!ref.mounted) return;`; optionally refuse during `_scanInProgress`.
 
-### BUG-302 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/services/batch_track_actions.dart:89-113` (`runBatchReplayGain`)
-- Scenario: batch ReplayGain over a selection containing CUE virtual rows (single-track menu hides it) → virtual paths sent to the writer → inflated failure count; `catch (_) {}` hides reasons.
-- Fix: filter `isCueVirtualPath` before computing totals; log failures; ~3 lines.
-
 ### BUG-303 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/utils/clickable_metadata.dart:14` (`navigateToArtistCredits`), caller `lib/widgets/local_song_menu.dart:162`
 - Scenario: splits artist names on commas only → "A feat. B" opens as one artist; "Tyler, The Creator" becomes "Tyler".
@@ -172,21 +100,6 @@
 - Location: `lib/utils/clickable_metadata.dart:44-48` (`navigateToAlbum`)
 - Scenario: DB error swallowed by `catch (_) {}` → "album information unavailable", nothing logged.
 - Fix: log via `AppLogger`; ~3 lines.
-
-### UI-101 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/mini_player.dart:47,56-58,74-77` (`_MiniPlayerState._dismissedItemId`)
-- Scenario: swipe-dismiss the mini player on track A → play A again → pause → `mediaItem.id == _dismissedItemId && !isPlaying` → bar disappears while A is current.
-- Root cause: `_dismissedItemId` is never cleared (meant only for the frames before the service clears the item).
-- Impact: after one dismissal, pausing/buffering that track hides the mini player and its resume control (both player views).
-- Fix: reset the field when `mediaItem == null`, the id differs, or `isPlaying` is true (plain field reset in build); ~4 lines + widget test.
-- Evidence: state stays mounted (`main_shell.dart:741,760`, `mornye_bottom_bar.dart:174`); null-item branch returns early without reset.
-
-### UI-201 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/batch_progress_dialog.dart:84` (`BatchProgressDialog.dismiss`); caller `lib/services/batch_track_actions.dart:122-125`
-- Scenario: batch ReplayGain running → Android back pops the progress dialog (no `PopScope`; `barrierDismissible: false` does not block back) → loop continues with `cancelled == false` → `dismiss` pops the root navigator's top route, i.e. the Songs/album page.
-- Root cause: `dismiss` pops unconditionally and the dialog neither guards back nor calls `onCancel` when popped.
-- Impact: user is thrown out of the screen when the batch ends; remaining work runs with no progress UI.
-- Fix: `PopScope(canPop: false, onPopInvokedWithResult: → onCancel)` and pop in `dismiss` only while the dialog route is still active; ~10 lines + widget test.
 
 ### UI-202 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/screens/queue_tab.dart:97` (`_selectedIds`), `queue_tab_item_widgets.dart:10`, `queue_tab_filter_widgets.dart:673` (`_selectedItemsFromAll`)
@@ -241,22 +154,11 @@
 - Scenario: `ref.watch(libraryCollectionsProvider)` (no `==`) rebuilds the whole screen on any collection change; only the cover inputs are needed.
 - Fix: `select` the cover inputs.
 
-### DEAD-604 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/player_artwork.dart:42-54` (`http` branch), `lib/providers/music_player_provider.dart:258` (`playableFromLocal`)
-- Scenario: `http*` covers still render via `CachedCoverImage`, and `playableFromLocal` passes them through → legacy rows could fetch remote artwork (contradicts "no remote artwork loading").
-- Fix: treat `http` as placeholder in both places; ~4 lines.
-
 ### PERF-301 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/theme/cover_palette.dart:366-398` (`didUpdateWidget`/`_maybeResolve`), :60-76 (`cacheKeyFor`)
 - Scenario: every parent rebuild of a `CoverPaletteBuilder` awaits `File(source).stat()` before the cache lookup, even for an unchanged source.
 - Fix: if a host rebuilds >1/s (measure in DevTools on album/now-playing), rate-limit the stat per source or invalidate from the edit path; ~10 lines.
 - Cross-refs: callers by grep only. Guards checked: `_pending` dedups in-flight only.
-
-### UX-201 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/settings/cache_management_page.dart:40-60` (`_refreshOverview`), :379 (`build`)
-- Scenario: `_buildOverview()` throws on first load → catch sets `_isLoading=false` and shows a snackbar, `_overview` stays null → `_isLoading || overview == null` keeps an endless spinner.
-- Fix: track a failed flag and render an error card with Retry (or an empty overview); ~15 lines.
-- Cross-refs: `lib/services/cover_cache_manager.dart` (`getStats`). Guards checked: only the small header refresh icon recovers.
 
 ### UI-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/screens/settings/log_screen.dart:515-535` (entries mapped into one `SettingsGroup` in a `SliverToBoxAdapter`), :49-76 (`_onLogUpdate`)
@@ -278,11 +180,6 @@
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
 - Scenario: no `key.properties` → release silently signs with the debug key; the "CI re-signs" comment has no workflow in the repo.
 - Fix: warn or fail release tasks without a keystore unless an opt-in property is set; ~5 lines. (Also reported by dependency-auditor as DEP-003; merged.)
-
-### SEC-303 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `AndroidManifest.xml:93-101` (exported `AudioService`), `third_party/audio_service/.../AudioService.java:870-879` (`onGetRoot`), `lib/services/music_player_service.dart:1953-1983`
-- Scenario: `onGetRoot` accepts any caller → any installed app can browse the current queue (ids, titles, art URIs; ids may be file paths/URIs) and `playFromMediaId`.
-- Fix: if ids are raw paths/URIs, expose opaque ids, or restrict the root to system/known callers; ~20 lines. Service must stay exported for Auto/Bluetooth.
 
 ### UX-207 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `AndroidManifest.xml:46` (`screenOrientation="portrait"`), `lib/services/app_orientation.dart:12-19`
@@ -707,6 +604,76 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### CONC-001 [P2] [confidence: medium] [RESOLVED]
+- Location: lib/services/music_player_service.dart (`seek`), `skipToPrevious` restart, `_playInternal`
+- Scenario: app restarts with a restored paused session (`_pendingRestorePosition = X`, `_sourceReady = false`); user seeks to Y (lyrics tap, notification seek) → `seek` hits a deck with no source, UI shows Y; on Play `_playInternal` starts at X.
+- Resolution: T7. `seek` now publishes the position immediately, stores it in `_pendingRestorePosition` while `!_sourceReady`, and runs the transport seek inside `_serializeSourceChange` guarded by the play generation; `_loadIndex` consumes `_pendingRestorePosition` when it builds the effective start position, so a seek that lands before the source finishes loading (including during `cancelPreparation`) still wins. `skipToPrevious`'s restart branch reuses `seek(Duration.zero)`. Regressions: "seek before restored source load replaces the saved position", "seek while preparation cancellation waits becomes the load position", "seek during source preparation waits for the new source", "previous restart before restored load is retained on play".
+
+### CONC-002 [P2] [confidence: high] [RESOLVED]
+- Location: lib/services/music_player_service.dart (`onSourceDeleted`), `_stopSession`
+- Scenario: user stops playback (`_index = -1`, session cleared, queue kept) then deletes a file that was in that queue → else-branch clamps `_index` to 0, broadcasts and persists the session.
+- Resolution: T7. The clamp/broadcast/persist branch is skipped when `_index < 0`, so an explicitly stopped session is not revived by a later deletion; the queue entry is still removed. Regression: "deleting a queued source cannot revive an explicitly stopped session".
+
+### CONC-003 [P3] [confidence: low] [RESOLVED]
+- Location: lib/services/music_player_service.dart (`unawaited(play())`, `unawaited(_handlePlayerComplete())`, `unawaited(pause())`)
+- Scenario: `UsbOutputUnavailable` or a channel `PlatformException` from `stop`/`resume` inside these futures.
+- Resolution: T7. Fire-and-forget transport callbacks now run through `_runPlaybackCallback`, which reports a failure through the existing playback-error path (keeping the selected track retryable) unless a newer play request superseded it; `_playIndex` owns failures raised after its own generation bump (last-track completion awaiting autoplay, preparation cancellation). Regressions: "sleep timer pause failure is caught and keeps a retryable track", "completion transport failure is caught and published as a playback error", "last-track completion reports stop failure after pending autoplay appends".
+
+### CONC-004 [P3] [confidence: low] [RESOLVED]
+- Location: lib/services/music_player_service.dart (`play`)
+- Scenario: `play()` while an older operation is active joins it even after `pause()`/`stop()` bumped `_playRequestGeneration`; the old op aborts and the newer Play is dropped.
+- Resolution: T7. The join compares the active operation's generation and only shares work with an operation started for the current generation; an accepted new Play bumps the generation before starting, so a Pause delayed on AutoMix cleanup cannot enqueue after it and win. Regression: "Play after Pause does not join an invalidated resume".
+
+### KT-002 [P3] [confidence: low] [RESOLVED]
+- Location: android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt, UsbDirectPlayback.kt, UsbPcmSource.kt, NativeAudio.kt
+- Scenario: `libspotiflac_audio` fails to load → `UnsatisfiedLinkError`/`ExceptionInInitializerError` (an `Error`, not `Exception`) escapes the worker-thread catch and crashes the process instead of falling back.
+- Resolution: T7. Verified by trace: the static `System.loadLibrary` failure (and a missing JNI symbol) reached only `Exception` handlers. New `NativePlaybackFailure.kt` converts `LinkageError` alone into an `IllegalStateException` that preserves the cause, leaving ordinary exceptions and fatal VM errors untouched; the existing prepare/command/pump boundaries in `HiResPlayback`, `UsbDirectPlayback` and `UsbBitPerfectPlugin` now contain it, `UsbPcmSource` releases partially initialised JNI state, and WavPack DSD construction cleans up its decoder handle before propagating. No external-player fallback was added. Regressions: `NativePlaybackFailureTest` (4 host tests).
+
+### SEC-101 [P3] [confidence: medium] [RESOLVED]
+- Location: `PlayerWidgetProvider.kt` (`PlayerWidgetBridge.handleIntent`), AndroidManifest exported launcher Activity
+- Scenario: any app can start the exported launcher Activity with `player_widget_command=<any>`; forwarded to Dart unvalidated (receiver path allow-lists toggle/next/previous).
+- Resolution: T7. Verified by trace: `handleIntent` forwarded any command string. The extra is now removed and validated against one shared `PlayerWidgetCommandPolicy` used by both the activity bridge and the widget receiver; unknown commands are consumed without dispatching or replacing a pending transport. Regressions: `PlayerWidgetCommandPolicyTest` (2 host tests) and a `PlayerWidgetTest` instrumentation case (compiled, not executed).
+
+### SEC-303 [P3] [confidence: low] [RESOLVED]
+- Location: exported `AudioService` (`onGetRoot`), `music_player_service.dart` queue publications
+- Scenario: `onGetRoot` accepts any caller → any installed app can browse the current queue (ids, titles, art URIs; ids may be file paths/URIs) and `playFromMediaId`.
+- Resolution: T7. Verified by trace: the Dart queue publishes raw `source`/`resolvedSource` extras and a local artwork URI, and `onGetRoot` returned a root to every caller. `onGetRoot` now resolves the real `RemoteUserInfo`, cross-checks the callback package against `PackageManager.getPackagesForUid(uid)` (adding the binding identity AndroidX does not check) and permits only this app's UID or Android-trusted controllers, failing closed to `null`. The service stays exported so trusted Bluetooth/system integrations still work. The owner explicitly accepted the compatibility loss for untrusted car/controller apps. Regression: `BrowserClientPolicyTest` (4 host tests). Device/OEM integration not executed.
+
+### BUG-201 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/providers/local_artist_provider.dart` (`localArtistPopularProvider` tie-break)
+- Scenario: artist with <20 played songs; any scan/delete/edit bumps `loadedIndexVersion` → provider rebuilds → `random.nextDouble()` ties redrawn → unplayed Popular picks reshuffle while the page is open.
+- Resolution: T7. Per-ID random priorities are kept in an autoDispose family cache that lives as long as the Popular page listens, so an index refresh reuses the original draws, deleted rows drop out and a newly indexed ID draws once. Ranking (play counts first, 20 cap), paging and the full-artist queue are unchanged; reopening the page draws afresh. Regression: `local_artist_popular_test.dart` (draw-counting refresh, delete, promote and dispose cases).
+
+### BUG-202 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/providers/library_search_provider.dart`
+- Scenario: Local Library disabled → search still returns local songs/albums/artists (`includeLocal: true` hard-coded; watched setting discarded).
+- Resolution: T7. The watched setting is forwarded to `includeLocal`, and a disabled library returns no local hits without touching the index or database; user playlists remain searchable. Regression: `library_search_provider_test.dart` (songs/albums/artists empty with an index that throws on access, playlists still searched).
+
+### BUG-302 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/services/batch_track_actions.dart` (`runBatchReplayGain`)
+- Scenario: batch ReplayGain over a selection containing CUE virtual rows (single-track menu hides it) → virtual paths sent to the writer → inflated failure count; `catch (_) {}` hides reasons.
+- Resolution: T7. Verified by trace. CUE virtual rows are filtered out before the confirmation totals and the loop (a CUE-only selection returns early with no dialog), and failures now log: a false write warns with the path, an exception logs with its stack. Regressions: `batch_track_actions_test.dart` (CUE-only, mixed local/SAF filtering, false-write logging, Back during a pending write).
+
+### DEAD-604 [P3] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/player_artwork.dart` (`http` branch), `lib/providers/music_player_provider.dart` (`playableFromLocal`)
+- Scenario: `http*` covers still render via `CachedCoverImage`, and `playableFromLocal` passes them through → legacy rows could fetch remote artwork (contradicts "no remote artwork loading").
+- Resolution: T7. `CachedCoverImage` already rejected every non-file scheme, so no fetch was possible; the dead network branch is gone and a legacy `http` cover now renders the placeholder and is not published into playback state. Regression: `player_artwork_test.dart` (remote URL placeholder, `playableFromLocal` drops `http` and keeps a local path).
+
+### UI-101 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/widgets/mini_player.dart` (`_MiniPlayerState._dismissedItemId`)
+- Scenario: swipe-dismiss the mini player on track A → play A again → pause → `mediaItem.id == _dismissedItemId && !isPlaying` → bar disappears while A is current.
+- Resolution: T7. The dismissal latch is cleared when the item is null, the id differs, or playback resumed after the bar was seen paused, so replaying the same track shows the bar again and pausing it later keeps it. It is also retained across the frames where an asynchronous stop still reports `playing`, which would otherwise rebuild the dismissed `Dismissible`. Regression: `mini_player_dismissal_test.dart` (six paused/playing × reset cases, including a delayed stop and a forced stale-playing rebuild).
+
+### UI-201 [P2] [confidence: medium] [RESOLVED]
+- Location: `lib/widgets/batch_progress_dialog.dart` (`BatchProgressDialog.dismiss`); caller `lib/services/batch_track_actions.dart`
+- Scenario: batch ReplayGain running → Android back pops the progress dialog (no `PopScope`; `barrierDismissible: false` does not block back) → loop continues with `cancelled == false` → `dismiss` pops the root navigator's top route, i.e. the Songs/album page.
+- Resolution: T7 (also Codex FA-CONC-001). `show` now returns a dismissal callback that removes only its own captured route, Back is captured by `PopScope` and routed through the existing once-only cancel, an externally removed dialog cancels the batch, and a stale completion can no longer dismiss a newer dialog. Regressions: `batch_progress_dialog_test.dart` (Back, Settings covering the dialog, completion before the first frame, external removal, old callback versus new dialog).
+
+### UX-201 [P2] [confidence: high] [RESOLVED]
+- Location: `lib/screens/settings/cache_management_page.dart` (`_refreshOverview`, `build`)
+- Scenario: `_buildOverview()` throws on first load → catch sets `_isLoading=false` and shows a snackbar, `_overview` stays null → `_isLoading || overview == null` keeps an endless spinner.
+- Resolution: T7. A failed load is tracked and renders an `ErrorCard` with Retry instead of the spinner; Retry clears the error and shows progress again. Regression: `cache_management_error_test.dart` (failure on the cache path only, error card without spinner, Retry to a rendered overview).
 
 ### BUG-101 [P2] [confidence: high] [RESOLVED]
 - Location: `lib/utils/lyrics_parser.dart:213-220` (`parse`), :758-765 (`_parseTtml`)
@@ -1834,6 +1801,11 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `76f2fb10`. Added `test/local_track_batch_delete_test.dart` (cue+flac row, plain `.cue` row and a real song in one batch: both CUE files remain and only the song is deleted) plus the menu CUE delete tests: PASS.
 
 ## Rejected
+
+### KT-001 [P3] [confidence: high] [REJECTED]
+- Report: `reviews/fresh-audit-2026-10-23/` (kotlin; download-era ReplayGain policy)
+- Scenario: `NativeReplayGainPolicy.kt` and its test are unused by the shipped player and were reported as deletion candidates.
+- Rejection (T7): the owner keeps `NativeReplayGainPolicy` for the planned Media3/ExoPlayer port (STATE.md owner decision 2026-10-20; same decision recorded as R-013 for DEAD-909). The files stay unchanged.
 
 ### FA-RUST-001 [P2] [confidence: high] [RESOLVED]
 - Report: `reviews/fresh-audit-2026-10-23/19-native-lyrics-parser.md` (RUST-001; Codex)
