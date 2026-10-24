@@ -42,10 +42,10 @@
     "semantic_hash": ""
   },
   "android/app/src/androidTest/kotlin/com/zarz/spotiflac/PlayerWidgetTest.kt": {
-    "mtime": 1792861068.782934,
-    "seen": 1792871206.0267324,
-    "ast_hash": "31e66c0feaff0ce96065ecf912a5a322",
-    "semantic_hash": "31e66c0feaff0ce96065ecf912a5a322"
+    "mtime": 1792873247.3039172,
+    "seen": 1792878650.0827954,
+    "ast_hash": "1ef36b2474e9e7bd725332f2a8b93310",
+    "semantic_hash": ""
   },
   "android/app/src/androidTest/kotlin/com/zarz/spotiflac/RemoteSafPlaybackTest.kt": {
     "mtime": 1792861068.782934,
@@ -114,10 +114,10 @@
     "semantic_hash": "aecb52e2b307b455f9f666c7e02151a6"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/DsdSource.kt": {
-    "mtime": 1792861068.7878485,
-    "seen": 1792871206.0268068,
-    "ast_hash": "54424aeb3fb89c0f3e025ad65fc92f72",
-    "semantic_hash": "54424aeb3fb89c0f3e025ad65fc92f72"
+    "mtime": 1792873647.501477,
+    "seen": 1792878650.0829,
+    "ast_hash": "ac712c1f4951128caddd1692a0f5f1ad",
+    "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/ForegroundServiceStartPolicy.kt": {
     "mtime": 1792861068.7888484,
@@ -126,9 +126,9 @@
     "semantic_hash": "2e1b671b76980bb247dd56f08ff33fbf"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt": {
-    "mtime": 1792861270.061466,
-    "seen": 1792871206.0268157,
-    "ast_hash": "56493633e6fa0595026cdd86b6f62da2",
+    "mtime": 1792873221.6444643,
+    "seen": 1792878650.0829108,
+    "ast_hash": "70feec1a2c0032ca9576b04a6d9f2235",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt": {
@@ -174,9 +174,9 @@
     "semantic_hash": "b43e27e587af89058eeb038f1426ee77"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt": {
-    "mtime": 1792861270.064466,
-    "seen": 1792871206.026872,
-    "ast_hash": "6a1d3bb918a5ef7f3660392ee443719a",
+    "mtime": 1792873205.8191864,
+    "seen": 1792878650.0829923,
+    "ast_hash": "5c3e8f93e3f476025d800ed344409d50",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/SafCueLookup.kt": {
@@ -216,21 +216,21 @@
     "semantic_hash": "f00f1b9735b6ebdb92eb42eedf5127f6"
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbBitPerfectPlugin.kt": {
-    "mtime": 1792861270.0654662,
-    "seen": 1792871206.0269284,
-    "ast_hash": "ab20e2dca6063b33dbc39fcf9414cbc7",
+    "mtime": 1792873217.522392,
+    "seen": 1792878650.083064,
+    "ast_hash": "82110b30d560e1fa5324c51d4ef6712c",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbDirectPlayback.kt": {
-    "mtime": 1792861270.0654662,
-    "seen": 1792871206.0269327,
-    "ast_hash": "691756d1f7e12f2b6e069556e4650a4a",
+    "mtime": 1792873191.1294878,
+    "seen": 1792878650.08307,
+    "ast_hash": "b112f3024e2bd098f9402150a9c6dd6c",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/UsbPcmSource.kt": {
-    "mtime": 1792861270.0654662,
-    "seen": 1792871206.0269375,
-    "ast_hash": "d92d8e640ceac552d2e37d7fc1bd2f5b",
+    "mtime": 1792873205.7791858,
+    "seen": 1792878650.083076,
+    "ast_hash": "b9be90c2ffc2a44b73c1b872411a6e7b",
     "semantic_hash": ""
   },
   "android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt": {
@@ -588,9 +588,9 @@
     "semantic_hash": ""
   },
   "lib/providers/library_search_provider.dart": {
-    "mtime": 1792861069.140853,
-    "seen": 1792871206.0272582,
-    "ast_hash": "0c86a505483eef153fe098514841326a",
+    "mtime": 1792873100.979346,
+    "seen": 1792878650.083623,
+    "ast_hash": "e35e5ea148cbfbf55a9ba034a1352a2a",
     "semantic_hash": ""
   },
   "lib/providers/local_library_provider.dart": {
@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "lib/providers/music_player_provider.dart": {
-    "mtime": 1792861270.3184695,
-    "seen": 1792871206.0272756,
-    "ast_hash": "eefc2153caa7bd36fc8bfe0d77ee10ba",
+    "mtime": 1792878554.6956754,
+    "seen": 1792878650.0836608,
+    "ast_hash": "72d45da317f5622fadc36a469bf35373",
     "semantic_hash": ""
   },
   "lib/providers/playback_notification_provider.dart": {
@@ -798,9 +798,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/cache_management_page.dart": {
-    "mtime": 1792861270.3294697,
-    "seen": 1792871206.0274532,
-    "ast_hash": "8af5a0bf7359e0f695f0433ed08a783d",
+    "mtime": 1792873144.379108,
+    "seen": 1792878650.0839348,
+    "ast_hash": "2dcbfb9d4f8e03c1633f3cfb6b610767",
     "semantic_hash": ""
   },
   "lib/screens/settings/library_settings_page.dart": {
@@ -936,9 +936,9 @@
     "semantic_hash": ""
   },
   "lib/services/batch_track_actions.dart": {
-    "mtime": 1792861270.3344696,
-    "seen": 1792871206.0275667,
-    "ast_hash": "2110dd6fc54dccd2d2f3dff4e36843e9",
+    "mtime": 1792873104.5284085,
+    "seen": 1792878650.0841467,
+    "ast_hash": "43cd10699a9db4935f2de88e544d61ea",
     "semantic_hash": ""
   },
   "lib/services/collection_restore_codec.dart": {
@@ -1176,9 +1176,9 @@
     "semantic_hash": ""
   },
   "lib/services/music_player_service.dart": {
-    "mtime": 1792861270.3424697,
-    "seen": 1792871206.0277898,
-    "ast_hash": "003d020c44abce35062920d7be168650",
+    "mtime": 1792874466.4882061,
+    "seen": 1792878650.0844815,
+    "ast_hash": "6a5918214f560806477569b4341481a8",
     "semantic_hash": ""
   },
   "lib/services/native_cache_maintenance.dart": {
@@ -1608,9 +1608,9 @@
     "semantic_hash": "e583a66262f65b6543606c3addb2d389"
   },
   "lib/widgets/batch_progress_dialog.dart": {
-    "mtime": 1792861069.1808534,
-    "seen": 1792871206.0281568,
-    "ast_hash": "c002002fa031f8a326ffaa845aed562e",
+    "mtime": 1792873256.1930776,
+    "seen": 1792878650.0849097,
+    "ast_hash": "c5d048213c70cc38b59f86fb54c68fea",
     "semantic_hash": ""
   },
   "lib/widgets/cached_cover_image.dart": {
@@ -1728,9 +1728,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/mini_player.dart": {
-    "mtime": 1792861270.35747,
-    "seen": 1792871206.0283036,
-    "ast_hash": "e1122886f46c51ee259e8578a58b5913",
+    "mtime": 1792873696.3564699,
+    "seen": 1792878650.0850494,
+    "ast_hash": "215222e8e52b01e425d57fc34a3036c5",
     "semantic_hash": ""
   },
   "lib/widgets/mornye_artist_header.dart": {
@@ -1878,9 +1878,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/player_artwork.dart": {
-    "mtime": 1792861069.1908536,
-    "seen": 1792871206.0285828,
-    "ast_hash": "b0a915912ea229fa15dcfde3a573fde2",
+    "mtime": 1792878554.6686747,
+    "seen": 1792878650.0852683,
+    "ast_hash": "11794e9da222785295f724ff54c53ffd",
     "semantic_hash": ""
   },
   "lib/widgets/player_details_sheet.dart": {
@@ -5508,9 +5508,9 @@
     "semantic_hash": ""
   },
   "test/music_player_runtime_test.dart": {
-    "mtime": 1792861270.4224708,
-    "seen": 1792871206.0331426,
-    "ast_hash": "18ea63cc5c4bf49ec6aecdfbee769f01",
+    "mtime": 1792874489.1826212,
+    "seen": 1792878650.089137,
+    "ast_hash": "a9a26e59a502dc19a3c2179850398f97",
     "semantic_hash": ""
   },
   "test/native_backup_contract_test.dart": {
@@ -5646,10 +5646,10 @@
     "semantic_hash": "036379d5a358fe50be8dfc136dfe4d2a"
   },
   "test/player_artwork_test.dart": {
-    "mtime": 1792861069.3228552,
-    "seen": 1792871206.033333,
-    "ast_hash": "e86578d92b122233d9fd6aecd291644e",
-    "semantic_hash": "e86578d92b122233d9fd6aecd291644e"
+    "mtime": 1792875723.8307135,
+    "seen": 1792878650.0892882,
+    "ast_hash": "2cfa669f74cb22f670f86fc7d082f8e2",
+    "semantic_hash": ""
   },
   "test/player_lyrics_repaint_test.dart": {
     "mtime": 1792861270.427471,
@@ -5928,10 +5928,10 @@
     "semantic_hash": "bd95c8d1d8797de5d8f93c1e1f633545"
   },
   "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioService.java": {
-    "mtime": 1792861069.3369827,
-    "seen": 1792871206.0338383,
-    "ast_hash": "cdcfa163253b0ba83068be28d383369f",
-    "semantic_hash": "cdcfa163253b0ba83068be28d383369f"
+    "mtime": 1792873286.5496254,
+    "seen": 1792878650.0895593,
+    "ast_hash": "73e44bef8c3fccd0728cf0b8503fc33c",
+    "semantic_hash": ""
   },
   "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServiceActivity.java": {
     "mtime": 1792861069.3369827,
@@ -6714,9 +6714,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1792861270.055466,
-    "seen": 1792871206.0343282,
-    "ast_hash": "71a4466f31ad7fb0bf0806c244a1fecf",
+    "mtime": 1792878515.215905,
+    "seen": 1792878650.0899465,
+    "ast_hash": "59cda5edfefcb1179c07c7a3c6bf5e1b",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -6852,9 +6852,9 @@
     "semantic_hash": ""
   },
   "lib/providers/local_artist_provider.dart": {
-    "mtime": 1792861069.140853,
-    "seen": 1792871206.0272627,
-    "ast_hash": "bf556a578f0dae04ec251e0804f0e844",
+    "mtime": 1792873393.0865483,
+    "seen": 1792878650.0836313,
+    "ast_hash": "671d5c85a973bc09b83879cba81545f4",
     "semantic_hash": ""
   },
   "lib/screens/local_artist_screen.dart": {
@@ -6906,9 +6906,9 @@
     "semantic_hash": ""
   },
   "test/local_artist_popular_test.dart": {
-    "mtime": 1792861069.3068552,
-    "seen": 1792871206.0327659,
-    "ast_hash": "2b99b8c9f1a523f7fb394c5294479f8a",
+    "mtime": 1792873393.18155,
+    "seen": 1792878650.0888014,
+    "ast_hash": "a6a1bdc255dec139011995efcef78ab6",
     "semantic_hash": ""
   },
   "lib/services/ffmpeg_cue.dart": {
@@ -7122,9 +7122,9 @@
     "semantic_hash": ""
   },
   "reviews/FINDINGS.md": {
-    "mtime": 1792861270.37047,
-    "seen": 1792871206.0344265,
-    "ast_hash": "c041cf0d10e9381f77308c9e9bb34aa6",
+    "mtime": 1792876911.3098981,
+    "seen": 1792878650.0900376,
+    "ast_hash": "2b60479fba02552253dc9c40c03cc90d",
     "semantic_hash": ""
   },
   "reviews/PROTOCOL.md": {
@@ -7134,9 +7134,9 @@
     "semantic_hash": ""
   },
   "reviews/STATE.md": {
-    "mtime": 1792861270.3724701,
-    "seen": 1792871206.0344672,
-    "ast_hash": "210ae18997766501caff177d1a1b2969",
+    "mtime": 1792878447.1685836,
+    "seen": 1792878650.0900729,
+    "ast_hash": "c9bc1542046b4d09c80a51e7bd107c6c",
     "semantic_hash": ""
   },
   "reviews/VERIFICATION.md": {
@@ -7902,9 +7902,9 @@
     "semantic_hash": ""
   },
   "reviews/TASKS.md": {
-    "mtime": 1792861270.37347,
-    "seen": 1792871206.0344725,
-    "ast_hash": "b745ea6f3744dc716d43bacd158c5326",
+    "mtime": 1792878399.9838073,
+    "seen": 1792878650.090077,
+    "ast_hash": "f92430910d08a28a5a935e9c53528a29",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/SafScanPolicy.kt": {
@@ -8331,6 +8331,72 @@
     "mtime": 1792861270.0684662,
     "seen": 1792871206.0343978,
     "ast_hash": "326bccf30f08a7fce8fb085f60b6e2f8",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/NativePlaybackFailure.kt": {
+    "mtime": 1792873161.6054103,
+    "seen": 1792878650.0829637,
+    "ast_hash": "e9041128929550403abb86f17d98b54d",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetCommandPolicy.kt": {
+    "mtime": 1792873211.0562785,
+    "seen": 1792878650.0829742,
+    "ast_hash": "0c24442954e3dacd51762d36a5307b97",
+    "semantic_hash": ""
+  },
+  "android/app/src/test/kotlin/com/zarz/spotiflac/NativePlaybackFailureTest.kt": {
+    "mtime": 1792873247.2519162,
+    "seen": 1792878650.0831907,
+    "ast_hash": "f6272af6759d3ddb4f5d7228c07edad9",
+    "semantic_hash": ""
+  },
+  "android/app/src/test/kotlin/com/zarz/spotiflac/PlayerWidgetCommandPolicyTest.kt": {
+    "mtime": 1792873247.2799168,
+    "seen": 1792878650.0832074,
+    "ast_hash": "a51bf2469b956aaed6bd20d829318731",
+    "semantic_hash": ""
+  },
+  "test/batch_progress_dialog_test.dart": {
+    "mtime": 1792874382.6986735,
+    "seen": 1792878650.0883505,
+    "ast_hash": "d98141a0a9626b28e41878bdc96a1ed8",
+    "semantic_hash": ""
+  },
+  "test/batch_track_actions_test.dart": {
+    "mtime": 1792874387.049753,
+    "seen": 1792878650.0883563,
+    "ast_hash": "41bb278128078d1ec1bbc07a87875e56",
+    "semantic_hash": ""
+  },
+  "test/cache_management_error_test.dart": {
+    "mtime": 1792873696.3844705,
+    "seen": 1792878650.0883615,
+    "ast_hash": "09702d99531e1021db0afce42c7f870b",
+    "semantic_hash": ""
+  },
+  "test/library_search_provider_test.dart": {
+    "mtime": 1792874411.0101914,
+    "seen": 1792878650.0887146,
+    "ast_hash": "ad50ec2759805be4d588b89b5e086624",
+    "semantic_hash": ""
+  },
+  "test/mini_player_dismissal_test.dart": {
+    "mtime": 1792873648.9995077,
+    "seen": 1792878650.088942,
+    "ast_hash": "7b59a6dc291f88e732f84dfd5c67f1dc",
+    "semantic_hash": ""
+  },
+  "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/BrowserClientPolicy.java": {
+    "mtime": 1792873305.310964,
+    "seen": 1792878650.089586,
+    "ast_hash": "c193a781f70734f9dcf9cde8c4af507d",
+    "semantic_hash": ""
+  },
+  "third_party/audio_service/android/src/test/java/com/ryanheise/audioservice/BrowserClientPolicyTest.java": {
+    "mtime": 1792873314.5451307,
+    "seen": 1792878650.0896182,
+    "ast_hash": "2447dbf108c9832c28c3986e0cf1723d",
     "semantic_hash": ""
   }
 }
