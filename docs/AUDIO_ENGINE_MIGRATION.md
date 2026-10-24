@@ -24,7 +24,7 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 | # | Decision | Why it matters | Recommendation |
 |---|---|---|---|
 | D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | **Decided (owner, 2026-10-24): accept GPL-3.0.** Change `LICENSE` to GPL-3.0-or-later in the same commit that first adds Sistrum code; keep the MIT notice for the original SpotiFLAC code and add `THIRD-PARTY-NOTICES` for each module. |
-| D2 | **Minimum SDK.** Sistrum requires API 31. This app uses `flutter.minSdkVersion` = 24. | Sistrum code assumes API 31 or newer. It uses `DynamicsProcessing` (API 28) and the newer `AudioTrack` and `MediaCodec` encodings without version checks. | Raise minSdk to 31, or audit every ported file for API levels with `lint` `NewApi` and add version checks. |
+| D2 | **Minimum SDK.** Sistrum requires API 31. This app uses `flutter.minSdkVersion` = 24. | Sistrum code assumes API 31 or newer. It uses `DynamicsProcessing` (API 28) and the newer `AudioTrack` and `MediaCodec` encodings without version checks. | **Decided (owner, 2026-10-24): raise minSdk to 31 (Android 12)** in the first engine-port code commit; record it in `LOCAL_OFFLINE_MIGRATION_PLAN.md`. |
 | D3 | **Direct USB (libusb in Rust).** Media3 cannot do this. The Java USB API (`UsbRequest`) has no isochronous transfers. | The libusb direct USB driver must stay native, so the NDK stays. | Keep the Rust USB worker as a separate output path. Feed it from the Kotlin decoders (section 4.3). |
 | D4 | **AAudio exact-rate output (`HiResPlayback.kt`, Oboe).** AAudio has no Java API. | Removing it removes the last C++ code in `cpp/`. | Drop it. On Android 14 and newer, the bit-perfect mixer route (`setPreferredMixerAttributes`, already in `UsbBitPerfectPlugin.kt`) covers USB DACs. Android below 14 falls back to normal mixed output. |
 | D5 | **CUE "Split into Tracks".** FFmpeg cuts the file today: it stream-copies, or re-encodes to FLAC. Android has no FLAC muxer, and Sistrum has no splitter. | Media3 can **play** CUE tracks directly with `MediaItem.ClippingConfiguration`. Today CUE tracks **must** be split before they play (`cueVirtualTrackRequiresSplitMessage`, `lib/utils/file_access.dart:26`). | Play CUE tracks directly first, as in Sistrum's planned task T037. Then decide whether Split stays (section 5.6) or is removed under `AGENTS.md`'s feature-removal workflow. |
@@ -253,7 +253,7 @@ Phase 2 (optional): a Media3 `MediaSessionService` and `MediaLibraryService` for
 
 Each step: tests first where the step is risky, one analyze and full test run per batch, and three commits.
 
-1. **Licence and minSdk decisions** (D1 decided: GPL-3.0; D2 open).
+1. **Licence and minSdk decisions** (D1 decided: GPL-3.0; D2 decided: minSdk 31).
 2. **Modules:** add `dsp`, `codecs`, `analysis` with their host tests. No behaviour change.
 3. **Offline decode service** (4.1). Move F12, F11 and F9 to it, then F7, F8 and F10, then F1. FFmpeg is still present for comparison: run both and compare the results on a corpus, then remove the FFmpeg path per feature.
 4. **Cover resize and probe in Rust** (F4, F5).
