@@ -23,7 +23,7 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 
 | # | Decision | Why it matters | Recommendation |
 |---|---|---|---|
-| D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | Either relicense this app to GPL-3.0-or-later (simplest, and allowed for MIT code), or copy only files whose every line you wrote from MIT sources such as WaxFlow and relicense those. Decide before the first copy. This is not legal advice. |
+| D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | **Decided (owner, 2026-10-24): accept GPL-3.0.** Change `LICENSE` to GPL-3.0-or-later in the same commit that first adds Sistrum code; keep the MIT notice for the original SpotiFLAC code and add `THIRD-PARTY-NOTICES` for each module. |
 | D2 | **Minimum SDK.** Sistrum requires API 31. This app uses `flutter.minSdkVersion` = 24. | Sistrum code assumes API 31 or newer. It uses `DynamicsProcessing` (API 28) and the newer `AudioTrack` and `MediaCodec` encodings without version checks. | Raise minSdk to 31, or audit every ported file for API levels with `lint` `NewApi` and add version checks. |
 | D3 | **Direct USB (libusb in Rust).** Media3 cannot do this. The Java USB API (`UsbRequest`) has no isochronous transfers. | The libusb direct USB driver must stay native, so the NDK stays. | Keep the Rust USB worker as a separate output path. Feed it from the Kotlin decoders (section 4.3). |
 | D4 | **AAudio exact-rate output (`HiResPlayback.kt`, Oboe).** AAudio has no Java API. | Removing it removes the last C++ code in `cpp/`. | Drop it. On Android 14 and newer, the bit-perfect mixer route (`setPreferredMixerAttributes`, already in `UsbBitPerfectPlugin.kt`) covers USB DACs. Android below 14 falls back to normal mixed output. |
@@ -253,7 +253,7 @@ Phase 2 (optional): a Media3 `MediaSessionService` and `MediaLibraryService` for
 
 Each step: tests first where the step is risky, one analyze and full test run per batch, and three commits.
 
-1. **Licence and minSdk decisions** (D1, D2).
+1. **Licence and minSdk decisions** (D1 decided: GPL-3.0; D2 open).
 2. **Modules:** add `dsp`, `codecs`, `analysis` with their host tests. No behaviour change.
 3. **Offline decode service** (4.1). Move F12, F11 and F9 to it, then F7, F8 and F10, then F1. FFmpeg is still present for comparison: run both and compare the results on a corpus, then remove the FFmpeg path per feature.
 4. **Cover resize and probe in Rust** (F4, F5).
