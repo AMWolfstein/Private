@@ -17,6 +17,27 @@ class _Settings extends SettingsNotifier {
 class _Library extends LocalLibraryNotifier {
   @override
   LocalLibraryState build() => LocalLibraryState();
+
+  void refreshIndex() {
+    state = state.copyWith(loadedIndexVersion: state.loadedIndexVersion + 1);
+  }
+}
+
+class _CountingRandom implements Random {
+  final _random = Random(17);
+  int draws = 0;
+
+  @override
+  double nextDouble() {
+    draws++;
+    return _random.nextDouble();
+  }
+
+  @override
+  bool nextBool() => _random.nextBool();
+
+  @override
+  int nextInt(int max) => _random.nextInt(max);
 }
 
 LocalLibraryItem item(int i) => LocalLibraryItem(
@@ -92,6 +113,95 @@ void main() {
             same(result.items),
           );
         }
+      },
+    );
+  }
+  for (final history in [false, true]) {
+    test(
+      'popular priorities survive index refreshes (history=$history)',
+      () async {
+        var tracks = List.generate(81, item);
+        var plays = history ? {'/music/0.opus': 8, '1': 3} : <String, int>{};
+        final random = _CountingRandom();
+        final container = ProviderContainer(
+          overrides: [
+            settingsProvider.overrideWith(_Settings.new),
+            localLibraryProvider.overrideWith(_Library.new),
+            localArtistPopularRandomProvider.overrideWithValue(random),
+            localArtistTrackLoaderProvider.overrideWithValue((request) async {
+              return QueueLibraryDbPage(
+                rows: tracks
+                    .skip(request.offset)
+                    .take(40)
+                    .map((track) => {'source': 'local', 'item': track.toJson()})
+                    .toList(),
+                nextCursor: QueueLibraryDbCursor([request.offset + 40]),
+              );
+            }),
+            localArtistPlayCountsLoaderProvider.overrideWithValue(
+              (keys) async => plays,
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
+        final provider = localArtistPopularProvider('Artist');
+        final subscription = container.listen(provider, (_, _) {});
+        final initial = (await container.read(provider.future)).items;
+        final ids = initial.map((track) => track.id).toList();
+        expect(random.draws, 81);
+        if (history) expect(ids.take(2), ['0', '1']);
+
+        // A scan changes only the version; an edit may also reorder SQL pages.
+        final library =
+            container.read(localLibraryProvider.notifier) as _Library;
+        library.refreshIndex();
+        expect(
+          (await container.read(
+            provider.future,
+          )).items.map((track) => track.id),
+          ids,
+        );
+        tracks = tracks.reversed.toList();
+        library.refreshIndex();
+        expect(
+          (await container.read(
+            provider.future,
+          )).items.map((track) => track.id),
+          ids,
+        );
+
+        // Deleting one pick fills the gap without rerolling surviving priorities.
+        tracks = tracks.where((track) => track.id != ids.last).toList();
+        library.refreshIndex();
+        final afterDelete = (await container.read(provider.future)).items;
+        expect(afterDelete, hasLength(20));
+        expect(afterDelete.map((track) => track.id).take(19), ids.take(19));
+        expect(afterDelete.any((track) => track.id == ids.last), isFalse);
+
+        // Newly recorded plays still outrank the stable unplayed selection.
+        final promoted = tracks.firstWhere(
+          (track) => !afterDelete.any((picked) => picked.id == track.id),
+        );
+        plays = {...plays, promoted.filePath: 100};
+        library.refreshIndex();
+        final afterPromotion = (await container.read(provider.future)).items;
+        expect(afterPromotion.first.id, promoted.id);
+        expect(random.draws, 81);
+
+        // A new track gets one independent draw; existing IDs keep their draws.
+        tracks.add(item(81));
+        library.refreshIndex();
+        expect((await container.read(provider.future)).items, hasLength(20));
+        expect(random.draws, 82);
+
+        // Leaving the page releases the priorities; reopening gets fresh draws.
+        subscription.close();
+        await container.pump();
+        container.listen(provider, (_, _) {});
+        final reopened = (await container.read(provider.future)).items;
+        expect(reopened, hasLength(20));
+        expect(reopened.first.id, promoted.id);
+        expect(random.draws, 82 + tracks.length);
       },
     );
   }

@@ -4,9 +4,50 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spotiflac_android/services/library_database_models.dart';
+import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/widgets/player_artwork.dart';
 
 void main() {
+  testWidgets('a legacy remote artwork URL falls back to the placeholder', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayerArtwork(
+          artUri: 'https://example.com/legacy-cover.jpg',
+          colorScheme: ColorScheme.dark(),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.music_note), findsOneWidget);
+    expect(find.byType(Image), findsNothing);
+  });
+
+  test('playable media keeps a legacy remote cover out of playback state', () {
+    final item = LocalLibraryItem(
+      id: 'one',
+      filePath: '/one.flac',
+      trackName: 'One',
+      artistName: 'Artist',
+      albumName: 'Album',
+      coverPath: 'https://example.com/legacy-cover.jpg',
+      scannedAt: DateTime.utc(2026),
+    );
+    expect(playableFromLocal(item).artUri, isNull);
+
+    final local = LocalLibraryItem(
+      id: 'two',
+      filePath: '/two.flac',
+      trackName: 'Two',
+      artistName: 'Artist',
+      albumName: 'Album',
+      coverPath: '/covers/two.jpg',
+      scannedAt: DateTime.utc(2026),
+    );
+    expect(playableFromLocal(local).artUri, 'file:///covers/two.jpg');
+  });
+
   testWidgets(
     'track changes retain the decoded cover while the next image loads',
     (tester) async {

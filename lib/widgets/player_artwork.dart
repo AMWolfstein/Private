@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 class PlayerArtwork extends StatelessWidget {
-  /// An HTTP(S) URL, file URI, or absolute local artwork path.
+  /// A local artwork path or file URI.
   final String? artUri;
   final ColorScheme colorScheme;
   final int? cacheWidth;
@@ -37,21 +36,10 @@ class PlayerArtwork extends StatelessWidget {
     );
 
     final uri = artUri;
-    if (uri == null || uri.isEmpty) return placeholder;
+    // Remote artwork is never loaded: legacy rows may still carry an http URL.
+    if (uri == null || uri.isEmpty || uri.startsWith('http'))
+      return placeholder;
 
-    if (uri.startsWith('http')) {
-      return CachedCoverImage(
-        imageUrl: uri,
-        fit: BoxFit.cover,
-
-        memCacheWidth: cacheWidth,
-        fadeInDuration: Duration.zero,
-        fadeOutDuration: const Duration(milliseconds: 0),
-
-        placeholder: (_, _) => placeholder,
-        errorWidget: (_, _, _) => placeholder,
-      );
-    }
     if (uri.startsWith('file://') || p.isAbsolute(uri)) {
       final path = uri.startsWith('file://')
           ? Uri.parse(uri).toFilePath()

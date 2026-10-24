@@ -72,15 +72,23 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
   // service clearing the media item (a dismissed Dismissible must leave the
   // tree immediately). Playing the same track again shows the bar normally.
   String? _dismissedItemId;
+  bool _dismissalSawPause = false;
 
   @override
   Widget build(BuildContext context) {
     final mediaItem = ref.watch(currentMediaItemProvider).value;
-    if (mediaItem == null) return const SizedBox.shrink();
+    if (mediaItem == null) {
+      _dismissedItemId = null;
+      return const SizedBox.shrink();
+    }
 
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
-    if (mediaItem.id == _dismissedItemId && !isPlaying) {
+    if (mediaItem.id != _dismissedItemId || (_dismissalSawPause && isPlaying)) {
+      _dismissedItemId = null;
+    }
+    if (mediaItem.id == _dismissedItemId) {
+      if (!isPlaying) _dismissalSawPause = true;
       return const SizedBox.shrink();
     }
 
@@ -99,7 +107,10 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
       key: ValueKey('mini-player-${mediaItem.id}'),
       direction: DismissDirection.horizontal,
       onDismissed: (_) {
-        setState(() => _dismissedItemId = mediaItem.id);
+        setState(() {
+          _dismissedItemId = mediaItem.id;
+          _dismissalSawPause = !isPlaying;
+        });
         controller.stop();
       },
       child: DecoratedBox(

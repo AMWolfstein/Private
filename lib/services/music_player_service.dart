@@ -313,6 +313,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   bool _sourceReady = false;
   Object? _playbackError;
   Future<void>? _activePlayOperation;
+  int? _activePlayGeneration;
   Future<void> _sourceChangeTail = Future<void>.value();
   Timer? _sleepTimer;
   Timer? _listeningTimer;
@@ -651,9 +652,23 @@ class MusicPlayerHandler extends BaseAudioHandler
         }
       }),
       player.onPlayerComplete.listen((_) {
-        if (identical(player, _player)) unawaited(_handlePlayerComplete());
+        if (identical(player, _player)) {
+          _runPlaybackCallback(_handlePlayerComplete);
+        }
       }),
     ];
+  }
+
+  void _runPlaybackCallback(Future<void> Function() action) {
+    final player = _player;
+    final operation = Future<void>.sync(action);
+    final generation = _playRequestGeneration;
+    unawaited(
+      operation.catchError((Object error, StackTrace stack) {
+        if (_disposed || generation != _playRequestGeneration) return;
+        _reportPlaybackError(player, error, stack);
+      }),
+    );
   }
 
   void _reportPlaybackError(
@@ -735,7 +750,7 @@ class MusicPlayerHandler extends BaseAudioHandler
                 event.type == AudioInterruptionType.pause &&
                 !_playbackAutomation.blocksPlayback) {
               _pausedByInterruption = false;
-              unawaited(play());
+              _runPlaybackCallback(play);
             } else {
               _pausedByInterruption = false;
             }
@@ -841,7 +856,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       _sleepTimerEndsAt = null;
       if (_disposed) return;
       _log.i('Sleep timer elapsed; pausing playback');
-      unawaited(pause());
+      _runPlaybackCallback(pause);
     });
   }
 
@@ -1478,9 +1493,9 @@ class MusicPlayerHandler extends BaseAudioHandler
     unawaited(_autoplay.fill());
     final media = _media[index];
     _switchingGeneration = generation;
-    await _player.cancelPreparation();
-    await _serializeSourceChange(() async {
-      try {
+    try {
+      await _player.cancelPreparation();
+      await _serializeSourceChange(() async {
         if (!_isCurrentPlayRequest(generation, media)) return;
         await _autoMix.cancel();
         if (!_isCurrentPlayRequest(generation, media)) return;
@@ -1493,10 +1508,14 @@ class MusicPlayerHandler extends BaseAudioHandler
           recordHistory: recordHistory,
           startPosition: startPosition,
         );
-      } finally {
-        if (_switchingGeneration == generation) _switchingGeneration = 0;
+      });
+    } catch (error, stackTrace) {
+      if (_isCurrentPlayRequest(generation, media)) {
+        _reportPlaybackError(_player, error, stackTrace);
       }
-    });
+    } finally {
+      if (_switchingGeneration == generation) _switchingGeneration = 0;
+    }
   }
 
   Future<void> _serializeSourceChange(Future<void> Function() action) {
@@ -1550,7 +1569,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     if (recordHistory) _recordPlayHistory(_index);
 
     final effectiveStartPosition = normalizedPlaybackResumePosition(
-      startPosition,
+      _pendingRestorePosition ?? startPosition,
       duration: media.duration,
     );
     _runtime.personalization.begin(_learningTrack(media));
@@ -1809,13 +1828,16 @@ class MusicPlayerHandler extends BaseAudioHandler
   Future<void> play() async {
     _playbackAutomation.manualPlaybackRequested();
     final activeOperation = _activePlayOperation;
-    if (activeOperation != null) {
+    if (activeOperation != null &&
+        _activePlayGeneration == _playRequestGeneration) {
       await activeOperation;
       return;
     }
 
+    ++_playRequestGeneration;
     final operation = _playInternal();
     _activePlayOperation = operation;
+    _activePlayGeneration = _playRequestGeneration;
     try {
       await operation;
     } finally {
@@ -1923,9 +1945,24 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   @override
   Future<void> seek(Duration position) async {
+    final generation = _playRequestGeneration;
+    if (_disposed || _index < 0 || _index >= _media.length) return;
+    if (!_sourceReady) {
+      _pendingRestorePosition = position;
+      _broadcastPosition(position, force: true);
+    }
     await _autoMix.cancel();
-    await _player.seek(position);
-    _broadcastPosition(position, force: true);
+    await _serializeSourceChange(() async {
+      if (_disposed || generation != _playRequestGeneration) return;
+      if (_sourceReady) {
+        await _player.seek(position);
+        if (_disposed || generation != _playRequestGeneration) return;
+      } else {
+        _pendingRestorePosition = position;
+      }
+      _broadcastPosition(position, force: true);
+      unawaited(_persistSession(position: position));
+    });
   }
 
   @override
@@ -2022,8 +2059,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   Future<void> skipToPrevious() async {
     await _autoMix.cancel();
     if (playbackState.value.position > const Duration(seconds: 3)) {
-      await _player.seek(Duration.zero);
-      _broadcastPosition(Duration.zero, force: true);
+      await seek(Duration.zero);
       return;
     }
     if (_shuffle) {
@@ -2032,8 +2068,7 @@ class MusicPlayerHandler extends BaseAudioHandler
         final prev = _playHistory.last;
         await _playIndex(prev, recordHistory: false, userSkip: true);
       } else {
-        await _player.seek(Duration.zero);
-        _broadcastPosition(Duration.zero, force: true);
+        await seek(Duration.zero);
       }
       return;
     }
@@ -2121,7 +2156,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     } else if (wasCurrent) {
       final nextIndex = _index.clamp(0, _media.length - 1);
       reaction = _playIndex(nextIndex);
-    } else {
+    } else if (_index >= 0) {
       _index = (_index - removedBeforeCurrent).clamp(0, _media.length - 1);
       _broadcastState();
       unawaited(_persistSession(position: playbackState.value.position));

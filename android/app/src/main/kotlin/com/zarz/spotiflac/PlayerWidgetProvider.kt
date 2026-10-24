@@ -61,7 +61,7 @@ class PlayerWidgetProvider : AppWidgetProvider() {
         super.onReceive(context, intent)
         if (intent.action != ACTION) return
         val command = intent.getStringExtra(COMMAND) ?: return
-        if (command !in setOf("toggle", "next", "previous")) return
+        if (!PlayerWidgetCommandPolicy.isAllowed(command)) return
         val pending = goAsync()
         if (!PlayerWidgetBridge.command(command) { pending.finish() }) {
             // A killed process has no audio engine. A widget click may launch
@@ -278,6 +278,7 @@ object PlayerWidgetBridge : FlutterEngine.EngineLifecycleListener {
     fun handleIntent(intent: Intent?) {
         val action = intent?.getStringExtra(PlayerWidgetProvider.COMMAND) ?: return
         intent.removeExtra(PlayerWidgetProvider.COMMAND)
+        if (!PlayerWidgetCommandPolicy.isAllowed(action)) return
         if (!command(action) {}) pendingCommand = action
     }
 

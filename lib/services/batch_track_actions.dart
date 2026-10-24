@@ -5,6 +5,7 @@ import 'package:spotiflac_android/models/unified_library_item.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/replaygain_service.dart';
+import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'package:spotiflac_android/widgets/batch_progress_dialog.dart';
@@ -27,7 +28,10 @@ Future<bool> runBatchReplayGain(
   VoidCallback? onConfirmOpen,
   Future<void> Function(bool confirmed)? onConfirmClosed,
 }) async {
-  if (selectedItems.isEmpty) return false;
+  final items = selectedItems
+      .where((item) => !isCueVirtualPath(item.filePath))
+      .toList(growable: false);
+  if (items.isEmpty) return false;
 
   final container = ProviderScope.containerOf(sourceContext, listen: false);
   // The selection overlay can disappear when opening the confirmation dialog.
@@ -45,8 +49,8 @@ Future<bool> runBatchReplayGain(
       ),
       content: Text(
         remove
-            ? ctx.l10n.replayGainRemoveConfirmMessage(selectedItems.length)
-            : ctx.l10n.replayGainBatchConfirmMessage(selectedItems.length),
+            ? ctx.l10n.replayGainRemoveConfirmMessage(items.length)
+            : ctx.l10n.replayGainBatchConfirmMessage(items.length),
       ),
       actions: [
         AppDialogAction(
@@ -74,9 +78,10 @@ Future<bool> runBatchReplayGain(
   var cancelled = false;
   int successCount = 0;
   var unsupportedDecoder = false;
-  final total = selectedItems.length;
+  final total = items.length;
 
-  BatchProgressDialog.show(
+  late final VoidCallback dismissProgress;
+  dismissProgress = BatchProgressDialog.show(
     context: context,
     title: remove
         ? context.l10n.replayGainRemoving
@@ -85,13 +90,13 @@ Future<bool> runBatchReplayGain(
     icon: Icons.graphic_eq,
     onCancel: () {
       cancelled = true;
-      BatchProgressDialog.dismiss(context);
+      dismissProgress();
     },
   );
 
   for (int i = 0; i < total; i++) {
     if (!context.mounted || cancelled) break;
-    final item = selectedItems[i];
+    final item = items[i];
     BatchProgressDialog.update(current: i + 1, detail: item.trackName);
     try {
       final ok = remove
@@ -112,8 +117,16 @@ Future<bool> runBatchReplayGain(
         } catch (e) {
           _batchActionsLog.w('Could not refresh ReplayGain availability: $e');
         }
+      } else {
+        _batchActionsLog.w('ReplayGain did not change ${item.filePath}');
       }
-    } catch (_) {}
+    } catch (error, stackTrace) {
+      _batchActionsLog.e(
+        'ReplayGain failed for ${item.filePath}',
+        error,
+        stackTrace,
+      );
+    }
   }
 
   onExitSelectionMode();
@@ -124,7 +137,7 @@ Future<bool> runBatchReplayGain(
 
   if (!context.mounted) return successCount > 0;
   if (!cancelled) {
-    BatchProgressDialog.dismiss(context);
+    dismissProgress();
   }
   ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(

@@ -169,17 +169,18 @@ private class UsbPcmPlayback(context: Context, private val emit: (Map<String, An
     fun command(call: MethodCall, done: (Any?, String?) -> Unit) {
         val commandRevision = if (call.method == "prepare" || call.method == "stop") ++revision else revision
         worker.post {
-            try {
+            try { nativePlaybackCall {
                 val value: Any? = when (call.method) {
                     "prepare" -> {
                         closeSource()
                         token = call.argument<Int>("token") ?: 0
-                        try {
+                        try { nativePlaybackCall {
                             prepare(requireNotNull(call.argument<String>("path")), commandRevision)
-                        } catch (error: Exception) {
+                        } } catch (error: Exception) {
                             closeSource()
                             android.util.Log.i("UsbPcm", "Using normal output: ${error.message}")
-                            mapOf("reason" to (error as? Unavailable)?.reason.orEmpty().ifEmpty { "format" })
+                            mapOf("reason" to if (error.cause is LinkageError) "unsupported"
+                                else (error as? Unavailable)?.reason.orEmpty().ifEmpty { "format" })
                         }
                     }
                     "resume" -> { resume(); null }
@@ -190,7 +191,7 @@ private class UsbPcmPlayback(context: Context, private val emit: (Map<String, An
                     else -> error("Unknown USB PCM command")
                 }
                 done(value, null)
-            } catch (error: Exception) { done(null, error.message ?: "USB playback failed") }
+            } } catch (error: Exception) { done(null, error.message ?: "USB playback failed") }
         }
     }
 
@@ -285,7 +286,7 @@ private class UsbPcmPlayback(context: Context, private val emit: (Map<String, An
     private val pump = object : Runnable {
         override fun run() {
             if (!playing) return
-            try {
+            try { nativePlaybackCall {
                 val now = android.os.SystemClock.elapsedRealtime()
                 if (now >= nextRouteCheck) {
                     if (!verifiedRoute()) { suspendRoute(); return }
@@ -306,7 +307,7 @@ private class UsbPcmPlayback(context: Context, private val emit: (Map<String, An
                     pause()
                     emit(mapOf("token" to token, "event" to "complete"))
                 } else worker.postDelayed(this, 5)
-            } catch (error: Exception) {
+            } } catch (error: Exception) {
                 android.util.Log.w("UsbPcm", "PCM playback stopped", error)
                 suspendRoute()
             }

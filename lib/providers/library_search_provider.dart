@@ -43,12 +43,15 @@ final librarySearchProvider = FutureProvider.autoDispose
           offset: request.offset,
         );
       }
-      ref.watch(settingsProvider.select((s) => s.localLibraryEnabled));
+      final includeLocal = ref.watch(
+        settingsProvider.select((s) => s.localLibraryEnabled),
+      );
+      if (!includeLocal) return const [];
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
       return LibraryDatabase.instance.searchLibrary(
         query: request.query,
         kind: request.kind,
-        includeLocal: true,
+        includeLocal: includeLocal,
         limit: request.limit,
         offset: request.offset,
       );

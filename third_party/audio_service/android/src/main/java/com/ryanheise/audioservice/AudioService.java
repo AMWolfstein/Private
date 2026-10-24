@@ -33,6 +33,7 @@ import androidx.core.app.ServiceCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.media.MediaBrowserServiceCompat;
+import androidx.media.MediaSessionManager;
 import androidx.media.VolumeProviderCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
 import androidx.media.utils.MediaConstants;
@@ -868,6 +869,22 @@ public class AudioService extends MediaBrowserServiceCompat {
 
     @Override
     public BrowserRoot onGetRoot(String clientPackageName, int clientUid, Bundle rootHints) {
+        // Keep the browser exported for trusted Auto/Bluetooth controllers, but
+        // do not disclose the local queue and source/artwork URIs to arbitrary apps.
+        try {
+            final MediaSessionManager.RemoteUserInfo remote = getCurrentBrowserInfo();
+            final String[] packages = getPackageManager().getPackagesForUid(clientUid);
+            final boolean packageBelongsToUid = packages != null
+                    && Arrays.asList(packages).contains(clientPackageName);
+            if (!BrowserClientPolicy.isAllowed(android.os.Process.myUid(), clientPackageName,
+                    clientUid, remote.getPackageName(), remote.getUid(), packageBelongsToUid,
+                    () -> MediaSessionManager.getSessionManager(this)
+                            .isTrustedForMediaControl(remote))) {
+                return null;
+            }
+        } catch (IllegalStateException | SecurityException error) {
+            return null;
+        }
         Boolean isRecentRequest = rootHints == null ? null : (Boolean)rootHints.getBoolean(BrowserRoot.EXTRA_RECENT);
         if (isRecentRequest == null) isRecentRequest = false;
         Bundle extras = config.getBrowsableRootExtras();

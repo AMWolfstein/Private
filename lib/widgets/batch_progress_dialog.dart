@@ -17,14 +17,15 @@ class _BatchProgress {
 /// Usage:
 /// ```dart
 /// var cancelled = false;
-/// BatchProgressDialog.show(
+/// late final VoidCallback dismissProgress;
+/// dismissProgress = BatchProgressDialog.show(
 ///   context: context,
 ///   title: 'Applying ReplayGain...',
 ///   total: items.length,
 ///   icon: Icons.graphic_eq,
 ///   onCancel: () {
 ///     cancelled = true;
-///     BatchProgressDialog.dismiss(context);
+///     dismissProgress();
 ///   },
 /// );
 ///
@@ -34,7 +35,7 @@ class _BatchProgress {
 ///   await doWork(items[i]);
 /// }
 ///
-/// BatchProgressDialog.dismiss(context);
+/// dismissProgress();
 /// ```
 class BatchProgressDialog extends StatefulWidget {
   final String title;
@@ -53,8 +54,10 @@ class BatchProgressDialog extends StatefulWidget {
   }) : _progressNotifier = progressNotifier;
 
   static ValueNotifier<_BatchProgress>? _activeNotifier;
+  static VoidCallback? _activeDismiss;
 
-  static void show({
+  /// Returns a dismissal callback owned by this dialog, not the top route.
+  static VoidCallback show({
     required BuildContext context,
     required String title,
     required int total,
@@ -64,17 +67,66 @@ class BatchProgressDialog extends StatefulWidget {
     _activeNotifier = ValueNotifier(const _BatchProgress());
     final notifier = _activeNotifier!;
 
+    ModalRoute<void>? route;
+    var dismissed = false;
+    var cancelled = false;
+
+    void dismissDialog() {
+      if (dismissed) return;
+      dismissed = true;
+      if (identical(_activeNotifier, notifier)) {
+        _activeNotifier = null;
+        _activeDismiss = null;
+      }
+      final ownedRoute = route;
+      if (ownedRoute != null && ownedRoute.isActive) {
+        // A different route may now cover the dialog. Never pop that route.
+        ownedRoute.navigator?.removeRoute(ownedRoute);
+      }
+    }
+
+    void cancel() {
+      if (dismissed || cancelled) return;
+      cancelled = true;
+      onCancel();
+    }
+
+    _activeDismiss = dismissDialog;
     showAppDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => BatchProgressDialog._(
-        title: title,
-        total: total,
-        icon: icon,
-        onCancel: onCancel,
-        progressNotifier: notifier,
-      ),
-    );
+      builder: (dialogContext) {
+        route = ModalRoute.of<void>(dialogContext);
+        // Work can finish before the dialog's first frame is built.
+        if (dismissed) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final ownedRoute = route;
+            if (ownedRoute != null && ownedRoute.isActive) {
+              ownedRoute.navigator?.removeRoute(ownedRoute);
+            }
+          });
+        }
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) cancel();
+          },
+          child: BatchProgressDialog._(
+            title: title,
+            total: total,
+            icon: icon,
+            onCancel: cancel,
+            progressNotifier: notifier,
+          ),
+        );
+      },
+    ).whenComplete(() {
+      // External route removal is cancellation too, unless we completed it.
+      cancel();
+      dismissDialog();
+      notifier.dispose();
+    });
+    return dismissDialog;
   }
 
   static void update({required int current, String? detail}) {
@@ -82,8 +134,7 @@ class BatchProgressDialog extends StatefulWidget {
   }
 
   static void dismiss(BuildContext context) {
-    _activeNotifier = null;
-    Navigator.of(context, rootNavigator: true).pop();
+    _activeDismiss?.call();
   }
 
   @override

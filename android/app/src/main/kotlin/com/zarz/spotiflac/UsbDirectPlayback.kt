@@ -110,7 +110,7 @@ internal class UsbDirectPlayback(private val context: Context, private val emit:
             return
         }
         worker.post {
-            try {
+            try { nativePlaybackCall {
                 val value: Any? = when (call.method) {
                     "resume" -> { resume(); null }
                     "pause" -> { pause(); null }
@@ -128,14 +128,14 @@ internal class UsbDirectPlayback(private val context: Context, private val emit:
                     else -> error("Unknown USB command")
                 }
                 done(value, null)
-            } catch (error: Exception) { done(null, error.message ?: "USB output failed") }
+            } } catch (error: Exception) { done(null, error.message ?: "USB output failed") }
         }
     }
 
     private fun prepare(request: Permission) {
         worker.post {
             var isDsd = false
-            try {
+            try { nativePlaybackCall {
                 if (request.revision != revision) { request.done(mapOf("reason" to "cancelled"), null); return@post }
                 closeSource()
                 token = request.call.argument<Int>("token") ?: 0
@@ -176,7 +176,7 @@ internal class UsbDirectPlayback(private val context: Context, private val emit:
                     "transport" to f.encoding, "carrierRate" to f.sampleRate.toLong(), "driver" to "usb_direct",
                     "volume" to volumeMap(audio.volume()),
                     "volumeBlocked" to (!audio.volume().available && !allowFixedVolume)), null)
-            } catch (error: Exception) {
+            } } catch (error: Exception) {
                 android.util.Log.i("UsbDirect", "Direct output unavailable: ${error.message}")
                 closeSource()
                 request.done(mapOf("reason" to if (isDsd) "dsd_unsupported" else "unsupported", "fatal" to isDsd), null)
@@ -242,14 +242,14 @@ internal class UsbDirectPlayback(private val context: Context, private val emit:
     private val pump = object : Runnable {
         override fun run() {
             if (!playing) return
-            try {
+            try { nativePlaybackCall {
                 fill()
                 val frames = requireNotNull(output).frames().toLong()
                 if (ended && pending == null && frames >= writtenFrames) {
                     pause()
                     emit(mapOf("token" to token, "event" to "complete"))
                 } else worker.postDelayed(this, 5)
-            } catch (error: Exception) { fail(error.message ?: "USB transfer failed") }
+            } } catch (error: Exception) { fail(error.message ?: "USB transfer failed") }
         }
     }
 

@@ -268,10 +268,9 @@ final musicPlayerControllerProvider = Provider<MusicPlayerController>(
 PlayableMedia playableFromLocal(LocalLibraryItem item) {
   String? art;
   final cover = item.coverPath;
-  if (cover != null && cover.trim().isNotEmpty) {
-    art = cover.startsWith('http') || cover.startsWith('content://')
-        ? cover
-        : Uri.file(cover).toString();
+  // A legacy remote URL is not artwork here: keep it out of playback state.
+  if (cover != null && cover.trim().isNotEmpty && !cover.startsWith('http')) {
+    art = cover.startsWith('content://') ? cover : Uri.file(cover).toString();
   }
   return PlayableMedia(
     id: item.id,

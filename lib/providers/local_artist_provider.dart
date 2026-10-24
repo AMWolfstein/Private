@@ -141,11 +141,19 @@ final localArtistPlayCountsLoaderProvider =
 
 final localArtistPopularRandomProvider = Provider<Random>((ref) => Random());
 
+// Keep independent random draws by ID across index refreshes, releasing them
+// when the artist page's last listener leaves.
+final _localArtistPopularPrioritiesProvider = Provider.autoDispose
+    .family<Map<String, double>, String>((ref, artist) => {});
+
 /// Select at most 20 from the entire artist, rather than only the first page.
 /// Random priorities give an unbiased, stable selection while this page is open
 /// when there is no history; played tracks always outrank unplayed tracks.
 final localArtistPopularProvider = FutureProvider.autoDispose
     .family<LocalArtistTracks, String>((ref, artist) async {
+      final priorities = ref.watch(
+        _localArtistPopularPrioritiesProvider(artist),
+      );
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
       if (!ref.watch(settingsProvider.select((s) => s.localLibraryEnabled))) {
         return const LocalArtistTracks([], hasMore: false);
@@ -181,7 +189,7 @@ final localArtistPopularProvider = FutureProvider.autoDispose
               plays:
                   (plays[item.filePath] ?? 0) +
                   (item.id == item.filePath ? 0 : plays[item.id] ?? 0),
-              tie: random.nextDouble(),
+              tie: priorities.putIfAbsent(item.id, random.nextDouble),
             ),
           ),
         );

@@ -42,7 +42,7 @@ internal class HiResPlayback(context: Context, private val emit: (Map<String, An
         if (call.method == "prepare" || call.method == "stop") revision++
         val expected = revision
         worker.post {
-            try {
+            try { nativePlaybackCall {
                 val result: Any? = when (call.method) {
                     "prepare" -> prepare(call, expected)
                     "resume" -> { resume(); null }
@@ -60,7 +60,7 @@ internal class HiResPlayback(context: Context, private val emit: (Map<String, An
                     else -> error("Unknown hi-res command")
                 }
                 done(result, null)
-            } catch (error: Exception) { done(null, error.message ?: "AAudio output failed") }
+            } } catch (error: Exception) { done(null, error.message ?: "AAudio output failed") }
         }
     }
 
@@ -71,7 +71,7 @@ internal class HiResPlayback(context: Context, private val emit: (Map<String, An
         token = call.argument<Int>("token") ?: 0
         var isDsd = call.argument<Boolean>("requiresDsd") == true
         var failureReason = "format"
-        try {
+        try { nativePlaybackCall {
             val path = requireNotNull(call.argument<String>("path"))
             isDsd = isDsd || DsdSource.isDsd(path)
             if (!isDsd) DsdSource.open(path)?.use { isDsd = true }
@@ -96,10 +96,10 @@ internal class HiResPlayback(context: Context, private val emit: (Map<String, An
                 "sampleRate" to pcm.rate, "bitDepth" to bits, "sourceBitDepth" to pcm.bits,
                 "duration" to pcm.durationUs / 1000,
                 "device" to (devices.firstOrNull { it.id == device }?.productName?.toString() ?: "AAudio"))
-        } catch (error: Exception) {
+        } } catch (error: Exception) {
             close()
             if (expected != revision) return mapOf("reason" to "cancelled")
-            val reason = if (isDsd) "dsd_unsupported" else failureReason
+            val reason = if (isDsd) "dsd_unsupported" else if (error.cause is LinkageError) "unsupported" else failureReason
             val detail = error.message.orEmpty().take(3000)
             android.util.Log.i("HiResPlayback", "$reason: $detail")
             return mapOf("reason" to reason, "fatal" to isDsd, "detail" to detail)
@@ -154,27 +154,27 @@ internal class HiResPlayback(context: Context, private val emit: (Map<String, An
     private val pump = object : Runnable {
         override fun run() {
             if (!playing) return
-            try {
+            try { nativePlaybackCall {
                 fill()
                 val pcm = requireNotNull(source)
                 if (pcm.ended && pending == null && NativeAudio.framesOboe(output) >= writtenFrames) {
                     pause()
                     emit(mapOf("token" to token, "event" to "complete"))
                 } else worker.postDelayed(this, 5)
-            } catch (error: Exception) { fail(error.message ?: "AAudio error") }
+            } } catch (error: Exception) { fail(error.message ?: "AAudio error") }
         }
     }
     private fun fail(reason: String) {
         android.util.Log.w("HiResPlayback", reason)
         runCatching { pause() }
         failed = true
-        if (output != 0L) NativeAudio.closeOboe(output)
+        if (output != 0L) runCatching { NativeAudio.closeOboe(output) }
         output = 0
         emit(mapOf("token" to token, "event" to "paused", "reason" to "route_changed"))
     }
     private fun close() {
         runCatching { pause() }
-        if (output != 0L) NativeAudio.closeOboe(output)
+        if (output != 0L) runCatching { NativeAudio.closeOboe(output) }
         output = 0
         source?.close()
         source = null

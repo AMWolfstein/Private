@@ -42,8 +42,13 @@ internal class WavPackDsdSource private constructor(private var handle: Long) : 
         fun open(path: String): WavPackDsdSource? {
             val handle = NativeAudio.openWavPack(path)
             if (handle == 0L) return null
-            try { return WavPackDsdSource(handle) }
-            catch (error: Exception) { NativeAudio.closeWavPack(handle); throw error }
+            try { return nativePlaybackCall { WavPackDsdSource(handle) } }
+            catch (error: Exception) {
+                runCatching { NativeAudio.closeWavPack(handle) }.exceptionOrNull()?.let {
+                    error.addSuppressed(it)
+                }
+                throw error
+            }
         }
     }
 

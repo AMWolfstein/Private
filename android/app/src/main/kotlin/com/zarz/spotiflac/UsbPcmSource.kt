@@ -63,6 +63,9 @@ internal class UsbPcmSource(path: String) : Closeable {
                 inputBits = bits
             }
             require(channels in 1..2 && bits in listOf(16, 24, 32))
+        } catch (error: LinkageError) {
+            close()
+            throw IllegalStateException("Native audio unavailable", error)
         } catch (error: Exception) { close(); throw error }
     }
 

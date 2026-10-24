@@ -23,6 +23,29 @@ import java.io.File
 @RunWith(AndroidJUnit4::class)
 class PlayerWidgetTest {
     @Test
+    fun unknownActivityCommandIsConsumedWithoutReplacingPendingTransport() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        instrumentation.runOnMainSync {
+            val pending = PlayerWidgetBridge::class.java.getDeclaredField("pendingCommand").apply {
+                isAccessible = true
+            }
+            val previous = pending.get(PlayerWidgetBridge)
+            try {
+                pending.set(PlayerWidgetBridge, "next")
+                val intent = android.content.Intent().putExtra(PlayerWidgetProvider.COMMAND, "delete")
+                PlayerWidgetBridge.handleIntent(intent)
+                assertEquals("next", pending.get(PlayerWidgetBridge))
+                assertTrue(!intent.hasExtra(PlayerWidgetProvider.COMMAND))
+                PlayerWidgetBridge.handleIntent(intent)
+                PlayerWidgetBridge.handleIntent(null)
+                assertEquals("next", pending.get(PlayerWidgetBridge))
+            } finally {
+                pending.set(PlayerWidgetBridge, previous)
+            }
+        }
+    }
+
+    @Test
     fun launcherRendersEverySizeAndAppearance() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext

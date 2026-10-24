@@ -14,6 +14,7 @@ import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.da
 import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
+import 'package:spotiflac_android/widgets/error_card.dart';
 
 class CacheManagementPage extends ConsumerStatefulWidget {
   const CacheManagementPage({super.key});
@@ -26,6 +27,7 @@ class CacheManagementPage extends ConsumerStatefulWidget {
 class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
   _CacheOverview? _overview;
   bool _isLoading = true;
+  Object? _loadError;
   String? _busyAction;
 
   @override
@@ -38,7 +40,10 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
 
   Future<void> _refreshOverview() async {
     if (!mounted) return;
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
 
     try {
       final overview = await _buildOverview();
@@ -49,7 +54,10 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+        _loadError = e;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(context.l10n.snackbarError(context.friendlyError(e))),
@@ -373,7 +381,18 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
             ],
           ),
 
-          if (_isLoading || overview == null)
+          if (!_isLoading && _loadError != null)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: ErrorCard(
+                  error: context.friendlyError(_loadError!),
+                  colorScheme: colorScheme,
+                  onRetry: _refreshOverview,
+                ),
+              ),
+            )
+          else if (_isLoading || overview == null)
             const SliverFillRemaining(
               child: Center(child: CircularProgressIndicator()),
             )
