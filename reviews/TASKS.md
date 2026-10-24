@@ -5,7 +5,8 @@ by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
 bugs (each also carries the P3 findings in the same code), T9-T10 are performance, and
 T11-T12 come from the 2026-10-23 UI re-audit (UI bugs, then accessibility and text), T13 is
-build/test cleanup, and T14 removes the dead code Codex found. Do them in order. Three findings are already
+build/test cleanup, and T14 removes the dead code Codex found. T15 (not from the audit) renames
+the app to its new identity and replaces the logo. Do them in order. Three findings are already
 gone and need no task (see the last section).
 
 ## Instructions for opencode (read first, follow exactly)
@@ -109,6 +110,7 @@ current one is pushed.
 | T12 | ux-auditor, flutter-dart-auditor |
 | T13 | dependency-auditor, test-auditor |
 | T14 | dead-code-hunter, flutter-dart-auditor; add kotlin-android-auditor for DC-DEAD-001 |
+| T15 | api-compat-auditor, kotlin-android-auditor, ux-auditor; add rust-safety-auditor for the UniFFI package change |
 
 Always add security-auditor when a change touches file deletion, SAF permissions, intents
 or exported components.
@@ -426,6 +428,110 @@ or exported components.
     the removed code.
   - Keep `NativeReplayGainPolicy`, public plugin APIs and the FFI, JNI and test seams that
     Codex lists as retained.
+
+- [ ] **T15: Rename the app to `com.amwolfstein.sistrum` and replace the logo**
+  - Not from the audit: owner request 2026-10-24. **Blocked until the owner uploads `logo/logo.png`
+    and `logo/logo2.png`** (a new top-level `logo/` folder). Do not invent or redraw a logo.
+  - **Before starting, stop and ask the owner** (do not decide these yourself):
+    1. Sistrum's own Compose app already ships as `com.amwolfstein.sistrum` (release) and
+       `com.amwolfstein.sistrum.dev` (debug flavor) in `AMWolfstein/Sistrum`. Two apps with one ID cannot
+       both be installed, and one replaces the other only if both are signed with the same key. Confirm this app
+       takes the ID and the Compose app is retired, or choose another ID.
+    2. A new `applicationId` is a **new app** to Android: existing installs do not update, and the
+       library DB, settings, SAF folder grants and history stay in the old app. Confirm the plan for
+       users: make a backup in the old app, install the new one, restore. Then verify restore on a
+       real backup.
+    3. The display name: "Sistrum" (assumed) and the side-by-side variant name.
+  - **Identity (one commit for the rename; no behaviour change):**
+    - `android/app/build.gradle.kts`:
+      - `namespace` and `applicationId` become `com.amwolfstein.sistrum`;
+      - the side-by-side ID becomes `com.amwolfstein.sistrum.local`;
+      - `appLabel` becomes the new display name;
+      - rename the `SPOTIFLAC_*` environment variables only if the build scripts are updated too.
+    - Move the Kotlin sources from `com/zarz/spotiflac` to `com/amwolfstein/sistrum` in `main`, `test`,
+      `androidTest` (kotlin and java) and `rust/kotlin`, and update every `package` line.
+    - `AndroidManifest.xml`, `res/xml/*` and the androidTest assets that name the old package.
+    - **JNI:** `android/app/src/main/cpp/native_audio.map` and `native_audio.cpp` export
+      `Java_com_zarz_spotiflac_NativeAudio_*`. Rename them with the Kotlin package, or every native
+      audio call fails at runtime. This is not needed if the Media3 port has already removed `cpp/`.
+    - **UniFFI:** `rust_backend/crates/mobile/uniffi.toml` `package_name = "com.spotiflac.backend"`.
+      Rename it only together with the Kotlin imports and `proguard-rules.pro`, or leave it as is. It is
+      internal and invisible to users.
+    - `android/app/proguard-rules.pro`:
+      - update the `com.zarz.spotiflac` keep rules;
+      - drop the rules for classes that no longer exist (`DownloadService`, `DownloadQueueWidgetProvider`).
+    - Method and event channel names (`com.zarz.spotiflac/...`): Dart (`platform_bridge.dart`,
+      `music_playback_deck.dart`, `audio_route_info.dart`, `music_player_runtime.dart` and the others)
+      and Kotlin must change in the same commit.
+    - Notification channel ID `com.zarz.spotiflac.playback` (`music_player_runtime.dart`): a new
+      ID creates a new channel. Delete the old channel once at startup so users do not see two
+      "Playback" channels.
+    - Visible names:
+      - `lib/constants/app_info.dart` `appName`;
+      - `res/values/player_widget_strings.xml` ("SpotiFLAC Player");
+      - the backup `app` field (`backup_service.dart:265`);
+      - the About page;
+      - `README.md` (keep the "Based on SpotiFLAC Mobile" credit).
+    - **Keep persisted values unchanged** so old data still loads:
+      - the backup `magic` `spotiflac-backup` and the backup file names that restore looks for;
+      - the equalizer preset format `spotiflac-equalizer`;
+      - `SharedPreferences` keys, DB file and table names, `spotiflac_trigram_fts5_probe`;
+      - the notification action IDs (`spotiflac.favorite`, `spotiflac.shuffle`).
+
+      New backups may say the new app name, but restore must accept both.
+    - Optional, separate mechanical commit: the Dart package name `spotiflac_android`
+      (`pubspec.yaml`, 2268 imports). The commit must contain only the rename. Skip it if the owner prefers.
+    - Prove nothing is left: `graphify query` for the old identity, then
+      `grep -rI 'com.zarz.spotiflac\|com/zarz/spotiflac\|Java_com_zarz'` must match only intentionally kept
+      persisted values and history docs.
+  - **Logo:** `logo/logo.png` is the source image. Every output must look **exactly** like
+    `logo/logo2.png`: same crop, padding, background colour and shape. Compare each generated image with
+    `logo2.png` side by side and report any difference. Never stretch, recolour or redraw.
+    - Launcher icon inputs used by `flutter_launcher_icons` (`pubspec.yaml`): `icon.png`,
+      `icon_android.png`, `icon_foreground_android.png`, `adaptive_icon_background` (`#FFF4DF` today:
+      take the new background from `logo2.png`), `adaptive_icon_foreground_inset: 16`. Regenerate with
+      `dart run flutter_launcher_icons`. Do not hand-edit the outputs.
+    - Generated outputs to check:
+      - `mipmap-{m,h,xh,xxh,xxxh}dpi/ic_launcher.png`;
+      - `drawable-*/ic_launcher_foreground.png`;
+      - `drawable-*/ic_launcher_monochrome.png`;
+      - `mipmap-anydpi-v26/ic_launcher.xml`;
+      - the `ic_launcher_background` colour.
+    - The monochrome (themed) icon: a one-colour silhouette of the new mark, checked with Android 13+
+      themed icons on.
+    - In-app images:
+      - `assets/images/logo.png` and `assets/images/logo-transparent.png`;
+      - they are used by `about_page.dart:214,220`, `setup_screen.dart:525` and `lyrics_share_screen.dart:776`.
+
+      Keep the same file names, or update all four references.
+    - `logo.svg` and the README images: T14 (DC-DEAD-003) deletes them as unused. Do T14 first. Do not
+      recreate them unless README needs one image.
+  - **Missing logo placements found (2026-10-24), add them:**
+    - **Notification small icon:** the playback notification uses `audio_service`'s default
+      `mipmap/ic_launcher` (`AudioServiceConfig` in `music_player_runtime.dart` sets no
+      `androidNotificationIcon`). Android draws the small icon as a white mask, so a full-colour launcher icon
+      shows as a blob. Add a white-on-transparent vector `res/drawable/ic_stat_sistrum.xml` made from the logo
+      silhouette and set `androidNotificationIcon: 'drawable/ic_stat_sistrum'`.
+    - **Library scan notification:** `BackgroundWorkService.kt:201` uses the system
+      `stat_sys_download` arrow, left over from the download era. Use `ic_stat_sistrum`.
+    - **Splash screen:** `launch_background.xml` is a plain colour and there is no
+      `values-v31` / `values-night-v31` theme. Android 12+ shows its own splash with the launcher icon.
+      Add `windowSplashScreenBackground` (the colour from `logo2.png`) and `windowSplashScreenAnimatedIcon`
+      (the adaptive foreground) for light and dark, so the splash matches the new logo.
+    - **Widget:** check that `res/xml/widget_player_info.xml`'s preview and the empty state (nothing playing)
+      show the new identity rather than an old name.
+  - **Checks:**
+    - analyze and the full test suite once (tests that assert the old package or channel names
+      change with it);
+    - `bash scripts/check_android.sh` for the Kotlin moves;
+    - `bash scripts/check_rust_backend.sh` if `uniffi.toml` changed.
+
+    No APK build (owner rule); the owner installs and checks:
+    - the launcher icon, themed icon and splash, in light and dark;
+    - the notification icon;
+    - the widget;
+    - the About page;
+    - a restore of an old backup.
 
 ## Codex reviews (2026-10-23)
 
