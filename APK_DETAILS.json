@@ -1,0 +1,11 @@
+{
+  "source_commit": "dbcc00335aa83462c28fa17dc52db58a0471fed6",
+  "build_mode": "release",
+  "signing": "Android development key",
+  "certificate_sha256": "7b3b4eb30cad0c65f62b1c688d542adaf3ae63921f6e55e1fb24127362f1646f",
+  "abi": "arm64-v8a",
+  "bytes": 52825720,
+  "sha256": "cd11acf3995a7462d68f3b2ee2415e4df19001ef18c49112ec110dcc207340a6",
+  "signature_verified": true,
+  "backend_audit": "passed"
+}
