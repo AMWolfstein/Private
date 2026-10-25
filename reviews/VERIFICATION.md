@@ -69,3 +69,25 @@ Newest first. One line per run: date, commit, command, result.
 | 2026-10-20 | `05c5895` | Home parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator checked HOME-001/002/007 and the visual items in source (Riverpod 3.4.3 `skipLoadingOnReload` default false) | 8 open (HOME-001..008); no tests run |
 | 2026-10-20 | `c51713b` | Now Playing parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator traced PLAY-001 and checked PLAY-003/004 in source (reviewer claim that `audio_info_sheet.dart` exists here was wrong) | 4 open (PLAY-001..004); no tests run |
 | 2026-10-23 | `8e11147` | `/audit ui` re-audit: 5 chunks × (flutter-dart-auditor + ux-auditor), orchestrator source checks of UI-402 (demoted P1→P2), UI-404, UI-407, UI-413, UX-230 and the artist ground rebuild (PERF-605) | 57 new open, 3 resolved (UI-102, UX-103, UX-105); `dart fix --dry-run lib/widgets` (reviewer) nothing to fix; no analyze/tests/device (review only) |
+
+## T8 — 2026-10-25 — source `3602d2c`, graph `95f2ef3`
+
+Commands ran in `/workspace/Private` after `source /workspace/toolchains/activate.sh`. Review preceded test execution; no APK was built. Existing task workflow requires one full Flutter run and affected-file reruns for test-harness/fixture fixes.
+
+| Check | Outcome and evidence |
+|---|---|
+| `flutter analyze` | Initial 7 lint/warning findings corrected (including a pre-existing brace-only PlayerArtwork lint); final **No issues found**, `/tmp/t8-analyze-rerun.log`. |
+| `flutter test --no-pub --concurrency=4 --reporter expanded` | **1744 passed, 1 failed, 3 skipped**, `/tmp/t8-flutter-full.log`. The one new preference test expected UTC DateTime equality from legacy local epoch conversion; same instant, different representation. |
+| `flutter test --no-pub test/local_library_scan_prefs_test.dart --reporter expanded` | Corrected assertion converts result to UTC; **6 passed, 0 failed**, `/tmp/t8-scan-prefs-rerun.log`. Full suite not repeated. |
+| UI-401 baseline | Original eager list **1 passed**, 500 mounted rows at 800x1200, host initial build 2352268 us, `/tmp/t8-log-baseline.log`. |
+| UI-401 autoscroll reproduction | Initial alternating-height distribution passed; refined first100-short/later400-tall fixture **1 failed**, position32907 vs max90543, newest not visible, `/tmp/t8-log-autoscroll-before.log`. This tests a diagnosis, not unchanged retries. |
+| Log corrections | Initial combined log targets **6 passed, 1 failed**: coordinate tap missed moving toolbar, `/tmp/t8-log-after.log`. Corrected test invokes the actual wired IconButton callback during animation; measurement file rerun **3 passed**, `/tmp/t8-log-after-rerun.log`. New list mounts **10** rows; mixed-height autoscroll reaches90398/90398 and disabling stops corrections. No device-frame claim; host timings are cold/warm observations. |
+| `bash scripts/check_rust_backend.sh` | Initial metadata failure: missing workspace dependency declaration; corrected explicit pin and lock. Retry fmt and Clippy **PASS**; workspace tests **189 passed, 1 failed, 1 ignored**, `/tmp/t8-rust-check-retry.log`. Shared production fixture lacked three new derived fields, not an ingestion defect. |
+| `cargo test --locked --manifest-path rust_backend/Cargo.toml -p spotiflac-mobile native_library::tests` | Updated common Dart/Rust fixture while preserving identity/path goldens; **19 passed, 0 failed**, `/tmp/t8-rust-parity-rerun.log`. Covers the one failed case and18 already-passing cases; 190 distinct substantive tests covered across runs, not208. |
+| `cargo test --locked --manifest-path rust_backend/Cargo.toml --workspace --doc` | Completed doc targets; **0 tests**, `/tmp/t8-rust-doc-check.log`; no substantive coverage claimed. |
+| `bash scripts/check_android.sh` | First attempt caught the missing required overlay argument. Caller fixed and reviewed to rebuild current snapshot on dialog cancel. Retry **BUILD SUCCESSFUL**; XML79 total = **78 passed, 1 skipped, 0 failures/errors**, `/tmp/t8-android-check-retry.log`. |
+| Graph | AST-only `graphify update .`: 24117 nodes; source built at `3602d2c`. Eight existing vendor-C parser warnings/partial extractions; no LLM or complete-vendor-graph claim. |
+
+Bug-hunter, security, data-integrity, Rust-safety, concurrency and narrow Flutter UI reviews/fix rereviews PASS (prompt-only enforcement). Root reviewed selection/search widget changes. Resolved review discoveries are recorded with their parent DATA-203, DATA-202, UI-401 and UI-202 findings. Instrumentation, physical device, SAF/USB/playback runtime and performance on hardware: **NOT RUN**. No source code or tests were disabled to obtain passing reruns.
+
+Ledger validation: finding headings remain unique and the Open section counts88 (18 P2,70 P3). STATE references UX-228 and coverage references API-001/API-201/DATA-101/SEC-301/TEST-303/UX-003 without ledger headings; verified these same gaps already exist at `5e2eb86`. They are recorded as pre-existing documentation inconsistencies, not invented findings or a complete-coverage claim; unrelated coverage rows were unchanged.

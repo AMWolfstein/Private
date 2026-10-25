@@ -20,6 +20,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Library correctness and file-access safety, audit T8 (2026-10-25):** code `3602d2c`, graph `95f2ef3`. Keyed album queries and explicit total-track Singles; NFC search-only schema 18 in Dart/Rust without changing identity keys; exact normalized genres; conservative duplicate identity/quality and tri-state deletion; source/explicit queue metadata and artist release chronology; local cover retries; serialized collection cleanup, fresh reloads and cancel/join clear semantics; resolved selection counts, current settings search, and lazy log rows. Reviews and fix re-reviews PASS. Analysis clean. Full Flutter run 1,744 passed / 1 failed / 3 skipped; the new UTC/local representation assertion was corrected and its file rerun 6/6. Rust fmt/Clippy passed; workspace run 189 passed / 1 failed / 1 ignored due to the stale shared row fixture, corrected native-library file rerun 19/19 (190 distinct substantive tests covered). Android host 78 passed / 1 skipped. Log initial mounted rows 500 -> 10 at 800x1200; mixed-height autoscroll regression and cancellation covered. DATA-002's unused shuffle remains T14; T9 performance work separate. No APK, instrumentation or device execution. Exact evidence and known first-run test-harness/fixture corrections: `reviews/VERIFICATION.md`.
+
 _Last updated: 2026-10-25_
 
 **Status:** Phases 1-8 and the requested local-player refinements are implemented.

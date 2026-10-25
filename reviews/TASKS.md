@@ -250,7 +250,7 @@ or exported components.
   - `flutter analyze`: No issues found. Full `flutter test`: 1,700 passed, 0 failed, 3 skipped (the first full run had 10 failures: six were test-harness defects fixed in the new batch/search tests, and four exposed the two real concurrency bugs above plus a wall-clock assertion; all are fixed and the affected files were re-run green before the final full run).
   - `check_android.sh` with `:audio_service:testDebugUnitTest :app:compileDebugAndroidTestJavaWithJavac`: BUILD SUCCESSFUL. Host tests 79 app (1 skipped) + 7 audio_service, 0 failed, including the new `NativePlaybackFailureTest` (4), `PlayerWidgetCommandPolicyTest` (2) and `BrowserClientPolicyTest` (4). Instrumentation sources compiled only; no device execution. `check_rust_backend.sh` NOT RUN (no Rust source changes). Environment: the SDK had no platform/build-tools/NDK, so the approved SDK 37.0, build-tools 37, NDK 30, CMake 4.1.2 and the Gradle wrapper were installed to run these checks; no APK, signing or packaging.
 
-- [ ] **T8: Fix library queries, search, duplicates and file-access scope**
+- [x] **T8: Fix library queries, search, duplicates and file-access scope**
   - Findings: DATA-002, DATA-003, DATA-004, DATA-201, DATA-203, SEC-001, SEC-002, BUG-203,
     BUG-204, UI-202, UI-401.
   - Files: `lib/services/library_database.dart` (`getAll`, `getQueueLocalAlbumTracks`),
@@ -277,6 +277,12 @@ or exported components.
     FA-BUG-006 (queue rows drop `explicit`, so the E badge is missing).
   - DATA-002 and DC-DEAD-008: `shuffleLibrary` has no caller, so delete it in T14 instead of
     optimizing it here.
+  - Completed 2026-10-25: code `3602d2c`, graph `95f2ef3`. Album keys/tag-based Singles, canonical Unicode search/genres with schema 18, duplicate/delete safety, source/explicit queue metadata, artist chronology, local artwork retries, reload/clear/collection cleanup and selection/search/log fixes are implemented with regressions.
+  - DATA-002 is intentionally still open for T14's unused shuffleLibrary deletion; the recent-album caller is gone and localAlbumFor is already keyed. FA-BUG-003 was already fixed by T7/BUG-202. No unrelated T9 performance work or APK packaging.
+  - Reviews: bug-hunter, security-auditor, data-integrity-auditor, rust-safety-auditor, concurrency-auditor and narrow flutter-dart-auditor fix re-reviews PASS; root reviewed selection/search widgets. Review found and fixed nullable-codec destructive ranking, leading-CRLF genre-key alignment, lazy-list autoscroll and dialog-cancel selection restoration. Enforcement prompt-only.
+  - `flutter analyze`: No issues found. Full Flutter run: 1,744 passed, 1 failed, 3 skipped; the sole failure was the new last-scan test comparing UTC/local representations of the same instant. Corrected to compare UTC; only its file rerun: 6 passed, 0 failed. No unresolved failures; the full suite was not rerun. Targeted log tests pass after correcting a moving-toolbar coordinate-tap harness defect (measurement file: 3 passed).
+  - Rust formatting and Clippy PASS. Workspace tests initially 189 passed, 1 failed, 1 ignored (shared row fixture lacked schema-18 search fields); updated the same shared Dart/Rust fixture, then native-library file rerun: 19 passed, 0 failed. All 190 distinct substantive cases are now covered without unresolved failures; doc targets completed with 0 tests. The initial manifest metadata failure was corrected to an explicit checksummed unicode-normalization pin.
+  - Android host check: BUILD SUCCESSFUL, 79 total app cases = 78 passed / 0 failed / 1 skipped. No instrumentation or device execution. Log construction baseline: 500 mounted rows -> 10 at the same 800x1200 viewport; initial host-build observations 2,352,268 us before and 57,904 us after are cold/warm observations, not a device-speedup claim. Mixed-height autoscroll and disabling during animation are covered.
 
 - [ ] **T9: Make library queries and screen rebuilds cheaper**
   - Findings: PERF-401, PERF-402, PERF-404, PERF-605 (P2); also PERF-201, PERF-202, PERF-301,

@@ -1,68 +1,13 @@
 ## Open
 
 ### DATA-002 [P2] [confidence: medium] [VALIDATED]
+- T8 disposition: recent-album whole-library reads are already gone; localAlbumFor is keyed. The only remaining getAll() caller is unused shuffleLibrary, explicitly assigned to T14 with DC-DEAD-008. This item remains open for that deletion; no unmeasured shuffle optimization is claimed.
 - Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
 - Scenario: tapping a recent album calls unbounded `getAll()`, decodes every library row, then filters by album in Dart; shuffle does the same for all rows.
 - Root cause: `getAll()` has no bound and its ORDER BY matches no index (temp B-tree sort of the whole view).
 - Impact: jank and memory spikes on large libraries for a single album tap.
 - Fix: album tap → `getQueueLocalAlbumTracksByKey` (indexed); shuffle → select only id/file_path; ~20 lines.
 - Evidence: the only two non-test `getAll()` callers.
-
-### DATA-003 [P2] [confidence: medium] [VALIDATED]
-- Location: lib/services/library_database.dart:643 (`getQueueLocalAlbumTracks`); callers `lib/utils/clickable_metadata.dart:44`, `lib/screens/queue_tab_navigation.dart:72,77`
-- Scenario: album navigation queries `LOWER(album_name) = ? AND LOWER(COALESCE(...)) = ?`.
-- Root cause: functions on columns defeat `idx_library_album`/`_norm` indexes (full scan); SQLite `LOWER` is ASCII-only while args use Dart `toLowerCase`.
-- Impact: album open latency grows with library size; non-ASCII albums ("Été") can open empty or incomplete.
-- Fix: use `album_key = ?` (`getQueueLocalAlbumTracksByKey`) or the `*_norm` columns; ~10 lines + test with a non-ASCII album.
-- Evidence: query body at :650-652; keyed variant directly below.
-
-### DATA-004 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/services/library_queue_store.dart:278` (singles `HAVING COUNT(*) = 1`), :460 (albums `> minimumTracks`)
-- Scenario: a 10-track album with one file on disk shows as a Single in the Library singles filter/count; a single with a bonus file shows as an Album.
-- Root cause: classification by stored file count.
-- Impact: contradicts the AGENTS.md rule "classify Singles from explicit total-track tags (1), never from the number of files stored"; Library filter (`queue_tab.dart:116,1106`) disagrees with Home/Artist.
-- Fix: per `album_key`, single = `MAX(total_tracks) = 1`, rest are Albums; ~30 lines SQL. Needs product confirmation that the rule covers the Library filter.
-- Evidence: SQL lines above.
-
-### DATA-203 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/services/library_duplicates.dart:11-30` (`readIsrcDuplicateGroups`), `lib/utils/duplicate_cleanup_policy.dart:47` (`buildKeepBestAllDuplicatePlan`)
-- Scenario: files sharing a placeholder or reused ISRC (whole album tagged with one ISRC, "000000000000") form one group; Keep best (all) keeps `entries.first` and deletes every other physical file. Ranking `bit_depth, sample_rate, bitrate` lets a 128 kbps/48 kHz MP3 beat a 320 kbps/44.1 kHz MP3.
-- Root cause: identity = non-empty ISRC only; no ISRC format, title or duration check; lossy ranking ignores bitrate first.
-- Impact: destructive bulk action can delete distinct tracks or the better copy.
-- Fix: require `^[A-Z]{2}[A-Z0-9]{3}\d{7}$` and duration within ~2 s; rank lossy by bitrate; ~15 lines + tests.
-- Evidence: SQL grouping/order at :17-29; policy relies on that order (:42-46).
-
-### SEC-001 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/utils/file_access.dart:354-386` (`deleteFile`)
-- Scenario: SAF grant revoked/provider unavailable → `safDelete` false → `!safExists(path)` is true because `DocumentFile.exists()` returns false on permission errors → reported as deleted, deletion event published, callers drop the library row; file remains on storage. Local branch: `File.exists()` false on parent EACCES.
-- Root cause: binary existence check after a failed delete; tri-state `fileExistenceByPath` exists but is unused here.
-- Impact: failed delete reported as success; row hidden for a file that still exists.
-- Fix: after a failed delete confirm absence with the tri-state helper (`== false` only); ~15 lines + test.
-- Evidence: callers removing rows on `true`: `local_song_file_actions.dart:86`, `local_track_batch_actions.dart:55`, `duplicate_cleanup_policy.dart:22`, `local_album_screen.dart:146`; native `safExists` at `MainActivity.kt:972`.
-
-### SEC-002 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/utils/local_library_scan_prefs.dart:7-16` (`readLocalLibraryLastScannedAt`)
-- Scenario: an older build stored epoch millis (int) under `local_library_last_scanned_at` → `prefs.getString` casts to `String?` and throws `TypeError` before the `getInt` fallback.
-- Root cause: typed getter before the legacy-type fallback.
-- Impact: last-scan read throws for users upgrading from the int format (settings/scan startup).
-- Fix: `final raw = prefs.get(key)` and switch on String/int; ~5 lines + test.
-- Evidence: file body; the fallback comment states the int format existed.
-
-### DATA-201 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/services/library_search.dart:10` (`[\p{L}\p{N}]+`), `lib/services/sqlite_helpers.dart:102` (`normalizeLookupText`)
-- Scenario: Arabic with diacritics, Devanagari, Thai queries split into fragments at combining marks (`\p{M}`) and match unrelated rows; NFD-stored tags (`e`+U+0301) never match NFC queries.
-- Root cause: tokenizer excludes marks; no Unicode normalization on query or stored `search_text`.
-- Impact: wrong or missing search results for non-Latin scripts (app ships ar/hi locales).
-- Fix: include `\p{M}`; NFC-normalize query and stored text (re-normalize migration); ~10 lines + migration.
-- Evidence: regex at :10; `search_text` built by `LibraryRowMapper.queue`.
-
-### DATA-202 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/services/library_genres.dart:7-19`, :31-47 (`page`)
-- Scenario: `LOWER(genre)` folds ASCII only → "Électro"/"électro" are two genres; each page re-runs the recursive CTE over the whole visible library.
-- Root cause: genre key computed in SQL at query time.
-- Impact: duplicate genre rows for non-ASCII tags; O(library) per page on large libraries.
-- Fix: normalized genre key at scan time or a `library_genres` side table; ~40 lines.
-- Evidence: CTE at :11-18; `local_genres_screen.dart` pages by 40.
 
 ### BUG-105 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/utils/lyrics_metadata_helper.dart:56`, :71-79
@@ -74,23 +19,6 @@
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
 
-### BUG-203 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/providers/local_library_provider.dart:1666-1678` (`removePhysicalFiles`/`removeItems`), `lib/services/deleted_library_files.dart:7-16`, `lib/providers/library_collections_provider.dart`
-- Scenario: deleting a song (menu, album, duplicates, batch) clears only the library index; Loved/playlist entries keyed `local:<id>`/`isrc:` remain and render verbatim (`library_tracks_folder_screen.dart:236-259`).
-- Impact: ghost rows in Loved/playlists that fail on play; inflated counts.
-- Fix: remove matching collection keys on delete, or hide missing local entries at render; ~25 lines. Unverified: exact play failure symptom.
-
-### BUG-204 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/providers/local_library_provider.dart:324-335` (`reloadFromStorage`)
-- Scenario: a DB write (tag edit, duplicates, batch edit) followed by `reloadFromStorage()` while a load is in flight → awaits the stale load and returns; `loadedIndexVersion` not bumped.
-- Impact: UI shows pre-edit tags/artwork until the next reload; dependent providers stay stale.
-- Fix: `_reloadRequested` flag → extra pass after the in-flight load; ~8 lines.
-
-### BUG-205 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/providers/local_library_provider.dart:1616-1631` (`clearLibrary`)
-- Scenario: provider disposed during the awaited refresh → `state =` without `ref.mounted` → StateError; no guard against a running scan.
-- Fix: `if (!ref.mounted) return;`; optionally refuse during `_scanInProgress`.
-
 ### BUG-303 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/utils/clickable_metadata.dart:14` (`navigateToArtistCredits`), caller `lib/widgets/local_song_menu.dart:162`
 - Scenario: splits artist names on commas only → "A feat. B" opens as one artist; "Tyler, The Creator" becomes "Tyler".
@@ -100,14 +28,6 @@
 - Location: `lib/utils/clickable_metadata.dart:44-48` (`navigateToAlbum`)
 - Scenario: DB error swallowed by `catch (_) {}` → "album information unavailable", nothing logged.
 - Fix: log via `AppLogger`; ~3 lines.
-
-### UI-202 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/queue_tab.dart:97` (`_selectedIds`), `queue_tab_item_widgets.dart:10`, `queue_tab_filter_widgets.dart:673` (`_selectedItemsFromAll`)
-- Scenario: select tracks in Songs, then type in search / a rescan bumps `loadedIndexVersion` → `_selectedIds` keeps ids no longer visible; header and "Delete N tracks" show the stale count while actions apply only to loaded items; select-all never reaches "all selected".
-- Root cause: QueueTab keeps its own selection and never prunes (only folder/album screens call `pruneSelection`).
-- Impact: wrong counts in labels and confirmations; actions touch fewer tracks than shown.
-- Fix: intersect with visible ids when computing `selectionItems` (or exit selection on query change); derive the count from resolved items; ~10 lines + test.
-- Evidence: `_selectedIds` mutated only in `queue_tab_selection.dart`; verify the search field is reachable in selection mode on device.
 
 ### UX-102 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/local_artist_screen.dart:583-607` (Popular page dots)
@@ -160,21 +80,10 @@
 - Fix: if a host rebuilds >1/s (measure in DevTools on album/now-playing), rate-limit the stat per source or invalidate from the edit path; ~10 lines.
 - Cross-refs: callers by grep only. Guards checked: `_pending` dedups in-flight only.
 
-### UI-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/settings/log_screen.dart:515-535` (entries mapped into one `SettingsGroup` in a `SliverToBoxAdapter`), :49-76 (`_onLogUpdate`)
-- Scenario: detailed logging on → native poll every 800 ms (`logger.dart:125`) or app logs notify → `setState` rebuilds up to 500 (`maxEntries`) non-lazy tiles plus the page, then auto-scrolls.
-- Fix: `SliverList.builder` with group decoration, or throttle updates; ~30 lines. Measure frame times first.
-- Guards checked: `mounted` only; no throttling.
-
 ### UX-202 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/settings/cache_management_page.dart:631-636` (`totalKnownDiskCacheBytes`)
 - Scenario: audio-analysis cache is listed and cleared but left out of "Estimated total".
 - Fix: add `audioAnalysisStats.totalSizeBytes`; 1 line.
-
-### UX-203 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/settings/settings_tab.dart:114-124,146`, `lib/screens/settings/settings_search_catalog.dart`
-- Scenario: search keywords `layout`/`grid`/`amoled`/`provider` point at removed options; catalog misses glass clarity, custom font, lyrics text size and USB sub-options.
-- Fix: drop stale keywords, add catalog entries; ~25 lines.
 
 ### SEC-302 [P3] [confidence: high] [VALIDATED]
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
@@ -604,6 +513,136 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### DATA-003 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Album-name compatibility reads construct the existing normalized album key and use the indexed keyed query; Unicode album/artist and distinct-artist regressions cover the route.
+- Location: lib/services/library_database.dart:643 (`getQueueLocalAlbumTracks`); callers `lib/utils/clickable_metadata.dart:44`, `lib/screens/queue_tab_navigation.dart:72,77`
+- Scenario: album navigation queries `LOWER(album_name) = ? AND LOWER(COALESCE(...)) = ?`.
+- Root cause: functions on columns defeat `idx_library_album`/`_norm` indexes (full scan); SQLite `LOWER` is ASCII-only while args use Dart `toLowerCase`.
+- Impact: album open latency grows with library size; non-ASCII albums ("Été") can open empty or incomplete.
+- Fix: use `album_key = ?` (`getQueueLocalAlbumTracksByKey`) or the `*_norm` columns; ~10 lines + test with a non-ASCII album.
+- Evidence: query body at :650-652; keyed variant directly below.
+
+### DATA-004 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Library Singles use the explicit MAX(total_tracks)=1 rule. Partial/unknown releases remain Albums; filtered/unfiltered pages and counts agree, including multiple physical copies of a single.
+- Location: `lib/services/library_queue_store.dart:278` (singles `HAVING COUNT(*) = 1`), :460 (albums `> minimumTracks`)
+- Scenario: a 10-track album with one file on disk shows as a Single in the Library singles filter/count; a single with a bonus file shows as an Album.
+- Root cause: classification by stored file count.
+- Impact: contradicts the AGENTS.md rule "classify Singles from explicit total-track tags (1), never from the number of files stored"; Library filter (`queue_tab.dart:116,1106`) disagrees with Home/Artist.
+- Fix: per `album_key`, single = `MAX(total_tracks) = 1`, rest are Albums; ~30 lines SQL. Needs product confirmation that the rule covers the Library filter.
+- Evidence: SQL lines above.
+
+### DATA-201 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Search tokens retain combining marks. Schema 18 adds NFC search-only columns and backfills search/genre fields in bounded 300-row pages; existing IDs, album/match keys and artist identity columns remain unchanged. Rust ingestion and Dart staging agree, and FTS updates through the existing triggers.
+- Location: `lib/services/library_search.dart:10` (`[\p{L}\p{N}]+`), `lib/services/sqlite_helpers.dart:102` (`normalizeLookupText`)
+- Scenario: Arabic with diacritics, Devanagari, Thai queries split into fragments at combining marks (`\p{M}`) and match unrelated rows; NFD-stored tags (`e`+U+0301) never match NFC queries.
+- Root cause: tokenizer excludes marks; no Unicode normalization on query or stored `search_text`.
+- Impact: wrong or missing search results for non-Latin scripts (app ships ar/hi locales).
+- Fix: include `\p{M}`; NFC-normalize query and stored text (re-normalize migration); ~10 lines + migration.
+- Evidence: regex at :10; `search_text` built by `LibraryRowMapper.queue`.
+
+### DATA-202 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3602d2c` (T8). Genre display tags and normalized keys split in parallel; per-segment Unicode normalization preserves empty semicolon/CR/LF segments. Unicode case/canonical equivalents merge without substring matching. Leading CRLF alignment was found in review and corrected in Dart, Rust and migration regressions. T9 caching work remains separate.
+- Location: `lib/services/library_genres.dart:7-19`, :31-47 (`page`)
+- Scenario: `LOWER(genre)` folds ASCII only → "Électro"/"électro" are two genres; each page re-runs the recursive CTE over the whole visible library.
+- Root cause: genre key computed in SQL at query time.
+- Impact: duplicate genre rows for non-ASCII tags; O(library) per page on large libraries.
+- Fix: normalized genre key at scan time or a `library_genres` side table; ~40 lines.
+- Evidence: CTE at :11-18; `local_genres_screen.dart` pages by 40.
+
+### DATA-203 [P2] [confidence: high] [RESOLVED]
+- Resolution: `3602d2c` (T8). Duplicate groups require valid ISRC, matching nonempty title/artist, known positive durations within two seconds, distinct physical files and non-CUE rows. Lossy quality ranks bitrate first; lossless quality retains depth/rate priority. Missing codec uses an unambiguous extension, while unknown/ambiguous codec or quality excludes destructive keep-best. Both the query and batch planner enforce the guard.
+- Location: `lib/services/library_duplicates.dart:11-30` (`readIsrcDuplicateGroups`), `lib/utils/duplicate_cleanup_policy.dart:47` (`buildKeepBestAllDuplicatePlan`)
+- Scenario: files sharing a placeholder or reused ISRC (whole album tagged with one ISRC, "000000000000") form one group; Keep best (all) keeps `entries.first` and deletes every other physical file. Ranking `bit_depth, sample_rate, bitrate` lets a 128 kbps/48 kHz MP3 beat a 320 kbps/44.1 kHz MP3.
+- Root cause: identity = non-empty ISRC only; no ISRC format, title or duration check; lossy ranking ignores bitrate first.
+- Impact: destructive bulk action can delete distinct tracks or the better copy.
+- Fix: require `^[A-Z]{2}[A-Z0-9]{3}\d{7}$` and duration within ~2 s; rank lossy by bitrate; ~15 lines + tests.
+- Evidence: SQL grouping/order at :17-29; policy relies on that order (:42-46).
+
+### SEC-001 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). After a rejected SAF delete or failed local delete, only explicit absence from the tri-state probe authorizes index cleanup/deletion publication. Permission/provider failures remain unknown; local deletion no longer relies on exists() hiding EACCES.
+- Location: `lib/utils/file_access.dart:354-386` (`deleteFile`)
+- Scenario: SAF grant revoked/provider unavailable → `safDelete` false → `!safExists(path)` is true because `DocumentFile.exists()` returns false on permission errors → reported as deleted, deletion event published, callers drop the library row; file remains on storage. Local branch: `File.exists()` false on parent EACCES.
+- Root cause: binary existence check after a failed delete; tri-state `fileExistenceByPath` exists but is unused here.
+- Impact: failed delete reported as success; row hidden for a file that still exists.
+- Fix: after a failed delete confirm absence with the tri-state helper (`== false` only); ~15 lines + test.
+- Evidence: callers removing rows on `true`: `local_song_file_actions.dart:86`, `local_track_batch_actions.dart:55`, `duplicate_cleanup_policy.dart:22`, `local_album_screen.dart:146`; native `safExists` at `MainActivity.kt:972`.
+
+### SEC-002 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Last-scan preferences use untyped get() before checking String/int. Legacy epoch milliseconds and ISO values load; invalid types, dates and out-of-range integers are ignored.
+- Location: `lib/utils/local_library_scan_prefs.dart:7-16` (`readLocalLibraryLastScannedAt`)
+- Scenario: an older build stored epoch millis (int) under `local_library_last_scanned_at` → `prefs.getString` casts to `String?` and throws `TypeError` before the `getInt` fallback.
+- Root cause: typed getter before the legacy-type fallback.
+- Impact: last-scan read throws for users upgrading from the int format (settings/scan startup).
+- Fix: `final raw = prefs.get(key)` and switch on String/int; ~5 lines + test.
+- Evidence: file body; the fallback comment states the int format existed.
+
+### BUG-203 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Confirmed local-row removal first serializes Loved/playlist cleanup by actual local IDs, including lazy playlists and imported occurrences. Distinct copies sharing ISRC remain. Read/write/disposal failures abort index removal so identity is available for retry.
+- Location: `lib/providers/local_library_provider.dart:1666-1678` (`removePhysicalFiles`/`removeItems`), `lib/services/deleted_library_files.dart:7-16`, `lib/providers/library_collections_provider.dart`
+- Scenario: deleting a song (menu, album, duplicates, batch) clears only the library index; Loved/playlist entries keyed `local:<id>`/`isrc:` remain and render verbatim (`library_tracks_folder_screen.dart:236-259`).
+- Impact: ghost rows in Loved/playlists that fail on play; inflated counts.
+- Fix: remove matching collection keys on delete, or hide missing local entries at render; ~25 lines. Unverified: exact play failure symptom.
+
+### BUG-204 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Reload invalidates the active snapshot before joining its owner. The loader rereads after invalidation, and concurrent retries after a failed load remain single-flight.
+- Location: `lib/providers/local_library_provider.dart:324-335` (`reloadFromStorage`)
+- Scenario: a DB write (tag edit, duplicates, batch edit) followed by `reloadFromStorage()` while a load is in flight → awaits the stale load and returns; `loadedIndexVersion` not bumped.
+- Impact: UI shows pre-edit tags/artwork until the next reload; dependent providers stay stale.
+- Fix: `_reloadRequested` flag → extra pass after the in-flight load; ~8 lines.
+
+### BUG-205 [P3] [confidence: low] [RESOLVED]
+- Resolution: `3602d2c` (T8). Clear closes scan admission synchronously, advances the scan epoch, discards pending reconnects, cancels and joins the native scan owner before clearing persisted rows, and guards state publication after disposal. This also resolves FA-DATA-008.
+- Location: `lib/providers/local_library_provider.dart:1616-1631` (`clearLibrary`)
+- Scenario: provider disposed during the awaited refresh → `state =` without `ref.mounted` → StateError; no guard against a running scan.
+- Fix: `if (!ref.mounted) return;`; optionally refuse during `_scanInProgress`.
+
+### UI-202 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). Selection labels and actions use the same resolved visible items. Settled refreshes prune stale IDs/anchors; query/filter changes exit selection. Cancelling a ReplayGain dialog rebuilds from the current query instead of restoring captured rows; a refresh-while-dialog regression covers the edge.
+- Location: `lib/screens/queue_tab.dart:97` (`_selectedIds`), `queue_tab_item_widgets.dart:10`, `queue_tab_filter_widgets.dart:673` (`_selectedItemsFromAll`)
+- Scenario: select tracks in Songs, then type in search / a rescan bumps `loadedIndexVersion` → `_selectedIds` keeps ids no longer visible; header and "Delete N tracks" show the stale count while actions apply only to loaded items; select-all never reaches "all selected".
+- Root cause: QueueTab keeps its own selection and never prunes (only folder/album screens call `pruneSelection`).
+- Impact: wrong counts in labels and confirmations; actions touch fewer tracks than shown.
+- Fix: intersect with visible ids when computing `selectionItems` (or exit selection on query change); derive the count from resolved items; ~10 lines + test.
+- Evidence: `_selectedIds` mutated only in `queue_tab_selection.dart`; verify the search field is reachable in selection mode on device.
+
+### UI-401 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `3602d2c` (T8). The log list reuses SliverSettingsGroup for lazy rows with the original grouped margins and clipping. Baseline at 800x1200 mounted 500 rows; after the fix it mounts 10. A reproduced variable-height autoscroll regression (32907 versus 90543 extent) is fixed with bounded, generation/lifetime-aware corrections and cancellation. Host construction observations are not device frame timings.
+- Location: `lib/screens/settings/log_screen.dart:515-535` (entries mapped into one `SettingsGroup` in a `SliverToBoxAdapter`), :49-76 (`_onLogUpdate`)
+- Scenario: detailed logging on → native poll every 800 ms (`logger.dart:125`) or app logs notify → `setState` rebuilds up to 500 (`maxEntries`) non-lazy tiles plus the page, then auto-scrolls.
+- Fix: `SliverList.builder` with group decoration, or throttle updates; ~30 lines. Measure frame times first.
+- Guards checked: `mounted` only; no throttling.
+
+### UX-203 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3602d2c` (T8). Removed stale appearance/lyrics search keywords and indexed existing glass clarity, custom font, lyrics text size and Android USB sub-options with working highlight targets. No new product settings were added.
+- Location: `lib/screens/settings/settings_tab.dart:114-124,146`, `lib/screens/settings/settings_search_catalog.dart`
+- Scenario: search keywords `layout`/`grid`/`amoled`/`provider` point at removed options; catalog misses glass clarity, custom font, lyrics text size and USB sub-options.
+- Fix: drop stale keywords, add catalog entries; ~25 lines.
+
+### FA-BUG-004 [P2] [confidence: high] [RESOLVED]
+- Source: `reviews/fresh-audit-2026-10-23/`; T8 mapping in TASKS.md.
+- Resolution: `3602d2c`. Artist release ordering uses metadataReleaseDateSql for chronological ordering across compact, ISO and year tags, including cursor paging.
+
+### FA-BUG-005 [P2] [confidence: high] [RESOLVED]
+- Source: `reviews/fresh-audit-2026-10-23/`; T8 mapping in TASKS.md.
+- Resolution: `3602d2c`. Embedded-cover extraction failures for local files retry on demand after the same bounded cooldown as document sources, retaining concurrency limits.
+
+### FA-DATA-008 [P2] [confidence: high] [RESOLVED]
+- Source: `reviews/fresh-audit-2026-10-23/`; T8 mapping in TASKS.md.
+- Resolution: `3602d2c`. Clear Library joins cancellation/publication and invalidates pre-clear reconnect starts; see BUG-205.
+
+### FA-DATA-012 [P2] [confidence: high] [RESOLVED]
+- Source: `reviews/fresh-audit-2026-10-23/`; T8 mapping in TASKS.md.
+- Resolution: `3602d2c`. Queue projections and JSON preserve source_id/sourceId so metadata edits retain source ownership.
+
+### FA-BUG-006 [P2] [confidence: high] [RESOLVED]
+- Source: `reviews/fresh-audit-2026-10-23/`; T8 mapping in TASKS.md.
+- Resolution: `3602d2c`. Queue projections and JSON preserve explicit so Songs/artist rows retain the E badge.
+
+### FA-BUG-003 [P2] [confidence: high] [RESOLVED]
+- Source: `fresh-audit-2026-10-23/12-settings-browse-state.md`; duplicate of BUG-202.
+- Resolution: already fixed in T7 (`10f9b23`): library search forwards the enabled setting. Confirmed during T8; no additional code change.
+
 
 ### CONC-001 [P2] [confidence: medium] [RESOLVED]
 - Location: lib/services/music_player_service.dart (`seek`), `skipToPrevious` restart, `_playInternal`
