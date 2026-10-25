@@ -64,22 +64,6 @@
 - Scenario: `findIsrcDuplicateGroups()` throws → `snapshot.data ?? const []` shows "no duplicates".
 - Fix: handle `snapshot.hasError` with `friendlyError` + retry; ~8 lines.
 
-### PERF-201 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/queue_tab.dart:1135` (`selectionItems`)
-- Scenario: every QueueTab build recomputes the active filter's page data even outside selection mode.
-- Fix: compute inside the selection branch or reuse the built `filterData`.
-
-### PERF-202 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart:213`
-- Scenario: `ref.watch(libraryCollectionsProvider)` (no `==`) rebuilds the whole screen on any collection change; only the cover inputs are needed.
-- Fix: `select` the cover inputs.
-
-### PERF-301 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/theme/cover_palette.dart:366-398` (`didUpdateWidget`/`_maybeResolve`), :60-76 (`cacheKeyFor`)
-- Scenario: every parent rebuild of a `CoverPaletteBuilder` awaits `File(source).stat()` before the cache lookup, even for an unchanged source.
-- Fix: if a host rebuilds >1/s (measure in DevTools on album/now-playing), rate-limit the stat per source or invalidate from the edit path; ~10 lines.
-- Cross-refs: callers by grep only. Guards checked: `_pending` dedups in-flight only.
-
 ### UX-202 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/settings/cache_management_page.dart:631-636` (`totalKnownDiskCacheBytes`)
 - Scenario: audio-analysis cache is listed and cleared but left out of "Estimated total".
@@ -143,59 +127,6 @@
   - DEAD-631: trim `detail_route_loading_test.dart` and `mornye_loading_and_chrome_test.dart`.
   - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
 - Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
-
-### PERF-401 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/services/library_schema.dart:231-244` (`_createNormalizedIndexes`), `lib/services/library_queue_store.dart:242,503-506` (`artistPage`, `_appendQueueLocalFilters`)
-- Scenario: these queries filter, group or order by `l.album_artist_norm`, and every one of them is a full scan on a library of 10k–50k tracks:
-  - artist-screen tracks, Popular and discography
-  - the Home Artists shelf
-  - `artistPage` (`GROUP BY album_artist_norm ORDER BY artist_key LIMIT/OFFSET`)
-  - Artists with fewer than 40 tracks cannot stop at the LIMIT, so each page scans the whole table.
-- Root cause: no index covers `album_artist_norm`. A source check confirms that only `match_key`, `album_key`, `*_name_norm` for track/artist/album, `scanned_at` and the queue orders are indexed.
-- Fix: add `album_artist_norm`, or a composite `(album_artist_norm, album_key)`, to `_createNormalizedIndexes` with `IF NOT EXISTS` in an upgrade; ~5 lines.
-- Measure: `EXPLAIN QUERY PLAN` and a Stopwatch around `getQueueTrackPageResult(albumArtist:)` on a 20k fixture, before and after.
-
-### PERF-402 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/services/library_genres.dart:8-48` (`libraryGenreTagsSql`, `LibraryGenres.page`); caller `lib/screens/local_genres_screen.dart:76,142`
-- Scenario: a recursive CTE splits `genre` on `;` across every visible row, then runs DISTINCT/GROUP BY again for each 40-row page of the Genres list and of each genre's tracks. `genre` has no index.
-- Impact: estimated 50–200 ms of SQLite time per page at 20k tracks. Pages load slowly; the UI isolate does not stall.
-- Fix: cache the exploded tags per `loadedIndexVersion` (a table or an in-memory list); ~40 lines.
-- Measure: a Stopwatch around `LibraryGenres(db).page()`, list and detail, on 20k tracks with multi-valued genres.
-
-### PERF-404 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/services/library_database.dart:793-815` (`getLookupIndex`), `lib/providers/local_library_provider.dart:65-76,266-300,538-562`
-- Scenario: about 15 refresh paths (after a scan, edit, delete, clear or source change) load up to 2×N `match_key`/`isrc` strings into two Dart `Set`s.
-  - The only consumer, `existsInLibrary`, is called only from `track_list_tile.dart:52`.
-  - `TrackListTile` is dead code (UX-104).
-- Impact: an estimated 40k–100k strings are decoded and held in memory on every refresh, purely for dead code.
-- Fix: drop `getLookupIndex` and the sets from `LocalLibraryState` together with the UX-104 removal; ~30 lines removed.
-
-### PERF-405 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/screens/home_tab_feed.dart:7-12`, `lib/services/library_queue_store.dart:430-470` (`_queueAlbumUnionSql`), `lib/providers/library_browse_provider.dart:150-170`
-- Scenario: every `loadedIndexVersion` bump re-runs about four full-library aggregates for the Home shelves. The browse notifier also re-reads every loaded page.
-- Fix: only if the measurement is bad, cache shelf results per version or use an album summary table.
-- Measure: a Stopwatch around the shelf queries at Home mount, at 20k and 50k tracks.
-
-### PERF-601 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/providers/local_artist_provider.dart:136-139,147-201` (`localArtistPopularProvider`, play-count loader)
-- Scenario: to pick the top 20, the provider pages the artist's whole catalogue 40 rows at a time. Each page runs a DB query, `fromJson` on the UI isolate, `listeningRecorder.flush()` and `playsForTracks`. A `loadedIndexVersion` bump starts the whole thing again.
-- Fix: as a minimum, flush once before the loop (~5 lines). Better: a SQL top-20 joined with play counts.
-- Measure: a Stopwatch around the provider for an artist with ~2000 tracks.
-
-### PERF-602 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/queue_tab_filter_widgets.dart:53-62,283-300` (`localNavigationItems`, `localNavigationIndexByUnifiedId`)
-- Scenario: every QueueTab build makes an O(N) list and a Map over all loaded rows. `_buildUnifiedLibraryItem`/`_buildUnifiedGridItem` accept them but never read them. This adds to PERF-201 (`selectionItems`), and they would be fixed together.
-- Fix: delete the parameters and the loop (~20 lines removed).
-
-### PERF-603 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/home_tab_feed.dart:14-15` (`_buildLocalFeed`)
-- Scenario: the root `HomeTab.build` watches the whole `libraryCollectionsProvider` (which has no `==`) and sorts playlists. A Loved toggle or playlist edit rebuilds all of Home, including while it is kept alive off-screen.
-- Fix: a `Consumer` or `select` on playlists, with the sort memoised; ~10 lines. Measure with the DevTools rebuild counter while toggling Loved.
-
-### PERF-604 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/main.dart:41,79-87` (`main`)
-- Scenario: the `setAppOrientation()` channel call is awaited before, and in sequence with, the prefs and install-marker steps that it does not depend on.
-- Fix: start it in parallel and await it before `runApp`; ~3 lines. Estimated saving 5–20 ms; check with `--trace-startup`.
 
 ### PERF-501 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `rust_backend/crates/local/src/backend/cover.rs:109-183` (`cache_cover`), `rust_backend/crates/local/src/files.rs:586-600` (`StagedFile::publish`)
@@ -339,12 +270,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Location: `lib/screens/lyrics_share_screen.dart` (6:4 `Expanded` split)
 - Scenario: landscape phone or large text → the line list shows about one row.
 - Fix: side-by-side layout below a height threshold; ~15 lines.
-
-### PERF-605 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/mornye_artist_header.dart` (`MornyeGroundAnchor` around the collapsing artwork), `lib/widgets/mornye_artwork_glass.dart` (`_RenderGroundAnchor.performLayout` → `_changed` → `_schedule`; `_MornyePageGroundState._build` key includes `size`)
-- Scenario: scroll the artist page so the header collapses → the anchor's box shrinks each frame, every size change schedules a post-frame ground build, and the exact size is in the build key, so the page ground (cover decode, blur at the clarity sigma, `toImage`) is rebuilt roughly once per collapse frame; stale results are discarded by the generation check.
-- Impact: GPU/CPU work on every scroll frame of the artist header; a likely contributor to the artist-page raster p90 the owner measured (21-43 ms). Album and playlist anchors scroll with the content at a fixed size and are not affected.
-- Fix: build the ground once for the expanded size (e.g. anchor a fixed `maxExtent` box, or exclude height from the key and let the veil/controls sample it scaled); measure raster p90 before and after with the HUD.
 
 ### UX-208 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/library_tracks_folder_screen.dart` (`_removeSelected`)
@@ -514,6 +439,91 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ## Resolved
 
+### PERF-201 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). Selection data is computed only in the selection branch, and the playlist-excluded list is memoised per collections instance (`_QueueLibraryPageData.toFilterContentData`). Combined with PERF-602/OPT-PERF-001, queue builds no longer regroup loaded pages on every frame.
+- Location: `lib/screens/queue_tab.dart:1135` (`selectionItems`)
+- Scenario: every QueueTab build recomputes the active filter's page data even outside selection mode.
+- Fix: compute inside the selection branch or reuse the built `filterData`.
+
+### PERF-202 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). `library_tracks_folder_screen` selects only the cover inputs instead of watching the whole collections provider, so unrelated collection changes stop rebuilding the screen.
+- Location: `lib/screens/library_tracks_folder_screen.dart:213`
+- Scenario: `ref.watch(libraryCollectionsProvider)` (no `==`) rebuilds the whole screen on any collection change; only the cover inputs are needed.
+- Fix: `select` the cover inputs.
+
+### PERF-401 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). Schema 19 adds `idx_library_album_artist_norm` in `_createNormalizedIndexes` (fresh create and `oldVersion < 19` upgrade, `IF NOT EXISTS`); the Rust `SCHEMA_VERSION` pin follows. 20k-row host fixture: 50 `trackPage(albumArtist:)` queries took 488 ms with a full `SCAN` before, 6.3x faster after; `EXPLAIN QUERY PLAN` now names the index and the v18->v19 upgrade branch is covered by a test.
+- Location: `lib/services/library_schema.dart:231-244` (`_createNormalizedIndexes`), `lib/services/library_queue_store.dart:242,503-506` (`artistPage`, `_appendQueueLocalFilters`)
+- Scenario: these queries filter, group or order by `l.album_artist_norm`, and every one of them is a full scan on a library of 10k–50k tracks:
+  - artist-screen tracks, Popular and discography
+  - the Home Artists shelf
+  - `artistPage` (`GROUP BY album_artist_norm ORDER BY artist_key LIMIT/OFFSET`)
+  - Artists with fewer than 40 tracks cannot stop at the LIMIT, so each page scans the whole table.
+- Root cause: no index covers `album_artist_norm`. A source check confirms that only `match_key`, `album_key`, `*_name_norm` for track/artist/album, `scanned_at` and the queue orders are indexed.
+- Fix: add `album_artist_norm`, or a composite `(album_artist_norm, album_key)`, to `_createNormalizedIndexes` with `IF NOT EXISTS` in an upgrade; ~5 lines.
+- Measure: `EXPLAIN QUERY PLAN` and a Stopwatch around `getQueueTrackPageResult(albumArtist:)` on a 20k fixture, before and after.
+
+### PERF-402 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). `LibraryGenreTagCache` explodes the tags into a per-connection TEMP table once per `loadedIndexVersion`, rebuilding inside one transaction; callers without a cache/version keep the recursive CTE. 20k-row host fixture: genre detail pages 10x and the genre list 3x faster (1.8 s and 3.3 s before).
+- Location: `lib/services/library_genres.dart:8-48` (`libraryGenreTagsSql`, `LibraryGenres.page`); caller `lib/screens/local_genres_screen.dart:76,142`
+- Scenario: a recursive CTE splits `genre` on `;` across every visible row, then runs DISTINCT/GROUP BY again for each 40-row page of the Genres list and of each genre's tracks. `genre` has no index.
+- Impact: estimated 50–200 ms of SQLite time per page at 20k tracks. Pages load slowly; the UI isolate does not stall.
+- Fix: cache the exploded tags per `loadedIndexVersion` (a table or an in-memory list); ~40 lines.
+- Measure: a Stopwatch around `LibraryGenres(db).page()`, list and detail, on 20k tracks with multi-valued genres.
+
+### PERF-404 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). `getLookupIndex`, `LocalLibraryLookupIndex` and the `LocalLibraryState` lookup sets are removed with their last reader. The now write-only `library_lookup_summary` triggers are measured scan-path work deferred to T10 and a dead-table removal candidate for T14; no production reader remains.
+- Location: `lib/services/library_database.dart:793-815` (`getLookupIndex`), `lib/providers/local_library_provider.dart:65-76,266-300,538-562`
+- Scenario: about 15 refresh paths (after a scan, edit, delete, clear or source change) load up to 2×N `match_key`/`isrc` strings into two Dart `Set`s.
+  - The only consumer, `existsInLibrary`, is called only from `track_list_tile.dart:52`.
+  - `TrackListTile` is dead code (UX-104).
+- Impact: an estimated 40k–100k strings are decoded and held in memory on every refresh, purely for dead code.
+- Fix: drop `getLookupIndex` and the sets from `LocalLibraryState` together with the UX-104 removal; ~30 lines removed.
+
+### PERF-601 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). Listening stats flush once per Popular selection through `listeningFlushProvider` before the paging loop; per-page play-count reads no longer flush. The regression asserts exactly one flush and that it precedes the first counts read.
+- Location: `lib/providers/local_artist_provider.dart:136-139,147-201` (`localArtistPopularProvider`, play-count loader)
+- Scenario: to pick the top 20, the provider pages the artist's whole catalogue 40 rows at a time. Each page runs a DB query, `fromJson` on the UI isolate, `listeningRecorder.flush()` and `playsForTracks`. A `loadedIndexVersion` bump starts the whole thing again.
+- Fix: as a minimum, flush once before the loop (~5 lines). Better: a SQL top-20 joined with play counts.
+- Measure: a Stopwatch around the provider for an artist with ~2000 tracks.
+
+### PERF-602 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). The unused `localNavigationItems`/`localNavigationIndexByUnifiedId` parameters and their O(N) loops are deleted; merged with PERF-201/OPT-PERF-001.
+- Location: `lib/screens/queue_tab_filter_widgets.dart:53-62,283-300` (`localNavigationItems`, `localNavigationIndexByUnifiedId`)
+- Scenario: every QueueTab build makes an O(N) list and a Map over all loaded rows. `_buildUnifiedLibraryItem`/`_buildUnifiedGridItem` accept them but never read them. This adds to PERF-201 (`selectionItems`), and they would be fixed together.
+- Fix: delete the parameters and the loop (~20 lines removed).
+
+### PERF-603 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). Home watches `select`ed playlist inputs and memoises the sorted feed; a Loved toggle no longer rebuilds `HomeTab` (widget test with the dirty-rebuild log).
+- Location: `lib/screens/home_tab_feed.dart:14-15` (`_buildLocalFeed`)
+- Scenario: the root `HomeTab.build` watches the whole `libraryCollectionsProvider` (which has no `==`) and sorts playlists. A Loved toggle or playlist edit rebuilds all of Home, including while it is kept alive off-screen.
+- Fix: a `Consumer` or `select` on playlists, with the sort memoised; ~10 lines. Measure with the DevTools rebuild counter while toggling Loved.
+
+### PERF-604 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). The `setAppOrientation` channel call starts in parallel with the prefs and install-marker work and is still awaited before `runApp`.
+- Location: `lib/main.dart:41,79-87` (`main`)
+- Scenario: the `setAppOrientation()` channel call is awaited before, and in sequence with, the prefs and install-marker steps that it does not depend on.
+- Fix: start it in parallel and await it before `runApp`; ~3 lines. Estimated saving 5–20 ms; check with `--trace-startup`.
+
+### PERF-605 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). The page ground is keyed by width and built at a monotonic height, so artist-header collapse frames reuse it; a failed build is remembered per input instead of re-decoding every frame. `MornyeGroundBuilder.debugBuildCount` regression covers collapse, widening and failure retry.
+- Location: `lib/widgets/mornye_artist_header.dart` (`MornyeGroundAnchor` around the collapsing artwork), `lib/widgets/mornye_artwork_glass.dart` (`_RenderGroundAnchor.performLayout` → `_changed` → `_schedule`; `_MornyePageGroundState._build` key includes `size`)
+- Scenario: scroll the artist page so the header collapses → the anchor's box shrinks each frame, every size change schedules a post-frame ground build, and the exact size is in the build key, so the page ground (cover decode, blur at the clarity sigma, `toImage`) is rebuilt roughly once per collapse frame; stale results are discarded by the generation check.
+- Impact: GPU/CPU work on every scroll frame of the artist header; a likely contributor to the artist-page raster p90 the owner measured (21-43 ms). Album and playlist anchors scroll with the content at a fixed size and are not affected.
+- Fix: build the ground once for the expanded size (e.g. anchor a fixed `maxExtent` box, or exclude height from the key and let the veil/controls sample it scaled); measure raster p90 before and after with the HUD.
+
+### OPT-PERF-001 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). Songs/queue pages regroup once per page instance, and the playlist-excluded list is memoised by collections identity instead of being recomputed up to three times per build.
+- Report: `reviews/optimization-2026-10-23/` (Codex); assigned to T9 in TASKS.md.
+
+### OPT-PERF-003 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). Collections schema 4 adds the `(track_key, playlist_id)` index on `playlist_tracks` in create and upgrade; the Rust `native_collections` and `native_backup` version pins follow. It backs the playlist picker queries.
+- Report: `reviews/optimization-2026-10-23/` (Codex); assigned to T9 in TASKS.md.
+
+### OPT-PERF-006 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `fcacc49` (T9). The first-cover lookup resolves ordered 450-key chunks and stops at the first chunk that yields a usable cover; per-request precedence (id > isrc > title/artist) is unchanged.
+- Report: `reviews/optimization-2026-10-23/` (Codex); assigned to T9 in TASKS.md.
+
 ### DATA-003 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `3602d2c` (T8). Album-name compatibility reads construct the existing normalized album key and use the indexed keyed query; Unicode album/artist and distinct-artist regressions cover the route.
 - Location: lib/services/library_database.dart:643 (`getQueueLocalAlbumTracks`); callers `lib/utils/clickable_metadata.dart:44`, `lib/screens/queue_tab_navigation.dart:72,77`
@@ -642,7 +652,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 ### FA-BUG-003 [P2] [confidence: high] [RESOLVED]
 - Source: `fresh-audit-2026-10-23/12-settings-browse-state.md`; duplicate of BUG-202.
 - Resolution: already fixed in T7 (`10f9b23`): library search forwards the enabled setting. Confirmed during T8; no additional code change.
-
 
 ### CONC-001 [P2] [confidence: medium] [RESOLVED]
 - Location: lib/services/music_player_service.dart (`seek`), `skipToPrevious` restart, `_playInternal`
@@ -1434,7 +1443,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: return Err when `block.channels()` differs; ~3 lines + test.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. The finding belonged to the unreachable Hi-Res module removed with DEAD-902; active native_audio_analysis remains.
 
-
 ### PLAY-001 [P2] [confidence: medium-high] [RESOLVED]
 - Location: `lib/screens/now_playing_screen.dart:474-495` (Immersive artwork inside `MornyePlayerBackground`), `lib/widgets/mornye_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`
 - Scenario: Player view = Immersive, swipe left/right on the cover → nothing happens. The background is a sibling of the layout in the `Stack`, so `PlayerTrackSwipeRegion` finds no `_SwipeScope` and returns its child unwrapped; Normal view works. AGENTS.md requires track changes in both views. Upstream has the same structure but only hits it with motion artwork.
@@ -1458,7 +1466,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: swipe-to-remove background radius 12 vs queue rows 16, so the red reveal shows mismatched corners. Upstream latest uses 16.
 - Fix: one line.
 - Resolution: `3dfa8b73`; verified in PORT_PLAN batch 14. Physical-device checks remain NOT RUN where applicable.
-
 
 ### HOME-001 [P2] [confidence: medium-high] [RESOLVED]
 - Location: `lib/screens/home_tab_widgets.dart:92-101` (`Image.file` with `cacheWidth` and `cacheHeight`), called with `height: width / 1.5` from `home_tab_feed.dart:215`
@@ -1508,7 +1515,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: scroll to top on reselect; `ValueKey` per card; optional long-press with the local song/album menu.
 - Resolution: `0d9dbf9c`; verified in PORT_PLAN batch 13. Physical-device checks remain NOT RUN where applicable.
 
-
 ### MORN-013 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/widgets/local_collection_actions.dart:42-77`
 - Scenario: Loved and Add-to-playlist circles use non-tonal glass, so they differ from the Play/Shuffle pills; no red tint when all loved; toggle is silent (upstream `loveAllTracks` snackbars) and its error path reuses `showCannotOpenFileSnackBar`. Affects album and playlist headers.
@@ -1532,7 +1538,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: segmented pill height `scale(15)+36` can drop below 48dp per segment; dark accent `rgb(224,61,60)` and the red-accent `onPrimary` special case have contrast issues. Upstream latest: height clamped to ≥56, accent `rgb(255,69,58)`, luminance-only `onPrimary`.
 - Fix: port the three upstream changes; check contrast.
 - Resolution: `ce2538bf`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable.
-
 
 ### MORN-006 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
@@ -1576,7 +1581,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: port the upstream Mornye row/card styling. Verify on device.
 - Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable. Adapted to retained local inventory: explicit one-track releases get Single badges; EP type is absent from the local browse model, so EP badges are omitted and never guessed from stored file counts.
 
-
 ### MORN-001 [P2] [confidence: high] [RESOLVED]
 - Location: `lib/screens/local_album_screen.dart:309-385` (no `leading`/`appBarTitle`/actions swap)
 - Scenario: long-press a track on an album → selection mode, but Play/Shuffle row stays, Back pops the route instead of leaving selection, no "N selected" title. Upstream `album_screen.dart:611-671` handles all three.
@@ -1612,7 +1616,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Mornye back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
 - Fix: skeleton + `ErrorCard` + Mornye empty page; hide empty Popular.
 - Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
-
 
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.
 - UX-206 (`c29daef`): `_launchUrl` and the `url_launcher` dependency removed with the links.
@@ -1840,6 +1843,20 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `76f2fb10`. Added `test/local_track_batch_delete_test.dart` (cue+flac row, plain `.cue` row and a real song in one batch: both CUE files remain and only the song is deleted) plus the menu CUE delete tests: PASS.
 
 ## Rejected
+
+### PERF-301 [P3] [confidence: low] [REJECTED]
+- Rejection (T9): Measured on the 20k-row host fixture: the `File(source).stat()` plus cache lookup costs ~140 us per `CoverPaletteBuilder` rebuild. Below the threshold that would justify per-source invalidation state.
+- Location: `lib/theme/cover_palette.dart:366-398` (`didUpdateWidget`/`_maybeResolve`), :60-76 (`cacheKeyFor`)
+- Scenario: every parent rebuild of a `CoverPaletteBuilder` awaits `File(source).stat()` before the cache lookup, even for an unchanged source.
+- Fix: if a host rebuilds >1/s (measure in DevTools on album/now-playing), rate-limit the stat per source or invalidate from the edit path; ~10 lines.
+- Cross-refs: callers by grep only. Guards checked: `_pending` dedups in-flight only.
+
+### PERF-405 [P3] [confidence: low] [REJECTED]
+- Rejection (T9): Measured on the 20k-row host fixture: the Home shelf queries cost ~30 ms per `loadedIndexVersion` bump. Rejected as not worth a shelf cache or summary table.
+- Location: `lib/screens/home_tab_feed.dart:7-12`, `lib/services/library_queue_store.dart:430-470` (`_queueAlbumUnionSql`), `lib/providers/library_browse_provider.dart:150-170`
+- Scenario: every `loadedIndexVersion` bump re-runs about four full-library aggregates for the Home shelves. The browse notifier also re-reads every loaded page.
+- Fix: only if the measurement is bad, cache shelf results per version or use an album summary table.
+- Measure: a Stopwatch around the shelf queries at Home mount, at 20k and 50k tracks.
 
 ### KT-001 [P3] [confidence: high] [REJECTED]
 - Report: `reviews/fresh-audit-2026-10-23/` (kotlin; download-era ReplayGain policy)

@@ -70,6 +70,25 @@ Newest first. One line per run: date, commit, command, result.
 | 2026-10-20 | `c51713b` | Now Playing parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator traced PLAY-001 and checked PLAY-003/004 in source (reviewer claim that `audio_info_sheet.dart` exists here was wrong) | 4 open (PLAY-001..004); no tests run |
 | 2026-10-23 | `8e11147` | `/audit ui` re-audit: 5 chunks × (flutter-dart-auditor + ux-auditor), orchestrator source checks of UI-402 (demoted P1→P2), UI-404, UI-407, UI-413, UX-230 and the artist ground rebuild (PERF-605) | 57 new open, 3 resolved (UI-102, UX-103, UX-105); `dart fix --dry-run lib/widgets` (reviewer) nothing to fix; no analyze/tests/device (review only) |
 
+## T9 — 2026-10-25 — source `fcacc49`, graph `3604db1`
+
+Commands ran in this checkout with `$HOME/development/flutter/bin` (Flutter 3.47.7, Dart 3.13.5). Review preceded test execution; no APK was built and no device or instrumentation run happened. Two full-suite runs were needed: the first exposed harness/fixture failures, all corrected, and the final run is the reported one.
+
+| Check | Outcome and evidence |
+|---|---|
+| `flutter analyze` | First run found 4 test-only issues (3 unused imports, 1 dead capture in the new ground test); corrected. Final **No issues found!**, re-run after every test edit. |
+| `flutter test --no-pub --concurrency=4` (first full run) | **1,749 passed, 6 failed, 3 skipped**, `/tmp/t9-flutter-full.log`. Failures: the v14 path-key fixture predates the v7 normalized columns so the new v19 index pass failed its retry; two reworked stale-summary tests in `library_loading_test.dart` no longer modelled a stale read; and the light artist/home-feed widget tests never settled because the new PERF-601 flush ran the real recorder (order-dependent: the dark variant passed first). |
+| Corrections | v14 fixture gains the real v7 columns; `library_loading_test.dart` completes the in-flight count with the pre-edit value and points fresh reads at the current sources; `local_detail_design_test.dart`/`local_home_feed_test.dart` override `listeningFlushProvider` (the seam added for this); `library_collections_database_read_test.dart` expects projection `user_version` 4; Rust collections rejection case writes version 3. |
+| `flutter test --no-pub --concurrency=4` (final full run) | **1,754 passed, 3 skipped, 0 failed** in 5:41, `/tmp/t9-flutter-full3.log`. |
+| Targeted reruns | `library_loading_test.dart` 21 passed; `local_detail_design_test.dart` + `local_home_feed_test.dart` 8 passed; `library_loading_test.dart` + `local_artist_popular_test.dart` + `home_tab_rebuild_test.dart` 29 passed. Not a substitute for the full run above. |
+| Perf before/after (20k-row host fixture) | Artist `trackPage(albumArtist:)` 488 ms per 50 queries with a full `SCAN` -> **6.3x faster** with `idx_library_album_artist_norm`; genre detail pages **10x** and genre lists **3x** faster (1.8 s / 3.3 s before); Home shelves ~30 ms per `loadedIndexVersion` bump and `CoverPaletteBuilder` stat ~140 us per rebuild, both measured and therefore **rejected** (PERF-405/301). Host timings are not device raster claims; no HUD p90 was recorded. |
+| `cargo fmt --all -- --check` | PASS, `/tmp/t9-rust-fmt-clippy.log`. |
+| `cargo clippy --workspace --all-targets --locked -- -D warnings` | PASS, same log. |
+| `cargo test --workspace --locked` | **NOT RUN: environment blocked.** `scripts/check_rust_backend.sh` reached linking and failed with `linker cc not found`; this host has no `cc`/`gcc`/`clang` and no sudo, so no Rust test binary can link, `/tmp/t9-rust-check.log`. The Rust diff is version pins (18->19, 3->4) plus one rejection-test literal reviewed by data-integrity-auditor; this is recorded as a gap, not a pass. |
+| `bash scripts/check_android.sh` | NOT RUN: no Kotlin/Android source changed. |
+| Graph | AST-only `graphify update .`: 24,141 nodes, 45,820 edges, 799 communities; eight existing vendor-C parser warnings unchanged. No LLM labeling, no complete-vendor-graph claim. |
+| Reviews | code-optimization-auditor and data-integrity-auditor first pass, then fix-only re-reviews PASS (two compile errors caught on the second pass were fixed); test-auditor PASS on the post-PASS harness fixes. APK, instrumentation and device execution: none. |
+
 ## T8 — 2026-10-25 — source `3602d2c`, graph `95f2ef3`
 
 Commands ran in `/workspace/Private` after `source /workspace/toolchains/activate.sh`. Review preceded test execution; no APK was built. Existing task workflow requires one full Flutter run and affected-file reruns for test-harness/fixture fixes.

@@ -284,7 +284,7 @@ or exported components.
   - Rust formatting and Clippy PASS. Workspace tests initially 189 passed, 1 failed, 1 ignored (shared row fixture lacked schema-18 search fields); updated the same shared Dart/Rust fixture, then native-library file rerun: 19 passed, 0 failed. All 190 distinct substantive cases are now covered without unresolved failures; doc targets completed with 0 tests. The initial manifest metadata failure was corrected to an explicit checksummed unicode-normalization pin.
   - Android host check: BUILD SUCCESSFUL, 79 total app cases = 78 passed / 0 failed / 1 skipped. No instrumentation or device execution. Log construction baseline: 500 mounted rows -> 10 at the same 800x1200 viewport; initial host-build observations 2,352,268 us before and 57,904 us after are cold/warm observations, not a device-speedup claim. Mixed-height autoscroll and disabling during animation are covered.
 
-- [ ] **T9: Make library queries and screen rebuilds cheaper**
+- [x] **T9: Make library queries and screen rebuilds cheaper**
   - Findings: PERF-401, PERF-402, PERF-404, PERF-605 (P2); also PERF-201, PERF-202, PERF-301,
     PERF-405, PERF-601, PERF-602, PERF-603, PERF-604.
   - Files: `lib/services/library_schema.dart` (`_createNormalizedIndexes`),
@@ -310,6 +310,29 @@ or exported components.
     `(track_key, playlist_id)` index for the playlist picker; Codex's host timings are in
     `reviews/optimization-2026-10-23/playlist-picker-host.json`), OPT-PERF-006 (the playlist
     cover lookup stops at the first usable cover).
+  - Completed 2026-10-25: code `fcacc49`, graph `3604db1`. Schema 19 indexes
+    `album_artist_norm` (PERF-401); a per-connection genre tag cache replaces the per-page
+    recursive CTE (PERF-402); the lookup index read path is gone (PERF-404); queue regrouping
+    and selection lists are memoised once per page (PERF-201/602, OPT-PERF-001); folder screens
+    select cover inputs (PERF-202); Home selects and memoises the playlist feed (PERF-603);
+    startup orientation runs in parallel (PERF-604); the page ground rebuilds once per width
+    with a per-input failure memo (PERF-605); Popular flushes listening stats once (PERF-601);
+    collections schema 4 adds the `(track_key, playlist_id)` index (OPT-PERF-003); first-cover
+    lookup chunks and stops early (OPT-PERF-006). Rust native pins follow both schema bumps.
+  - Rejected with host measurements on a 20k-row fixture: PERF-301 (~140 us per
+    `CoverPaletteBuilder` rebuild) and PERF-405 (~30 ms per Home shelf bump). After the fixes
+    the same fixture measured 6.3x faster artist `trackPage(albumArtist:)` (488 ms/50 before),
+    10x faster genre detail pages and 3x faster genre lists (1.8 s/3.3 s before).
+  - Reviews: code-optimization-auditor and data-integrity-auditor first pass (1xP0, 1xP1,
+    3xP2, 2xP3) were all fixed, including two compile errors the re-review caught in the
+    memo/`Database` signature; both re-reviews PASS. A test-only test-auditor pass PASSed the
+    post-PASS harness fixes. The write-only `library_lookup_summary` triggers are deferred to
+    T10 (measured scan cost) and T14 (dead-table removal); `library_lookup_summary` has no
+    production reader left.
+  - `flutter analyze`: No issues found. Full Flutter run: 1,754 passed, 3 skipped, 0 failed.
+    Rust `cargo fmt --check` and `cargo clippy --workspace --all-targets -- -D warnings` PASS;
+    Rust unit tests could NOT link in this environment (no host C compiler/`cc`), so they are
+    reported as not run, not passed. No APK, instrumentation or device execution.
 
 - [ ] **T10: Make scanning and cover caching cheaper**
   - Findings: PERF-501, PERF-502 (P2); also PERF-503, PERF-504.
