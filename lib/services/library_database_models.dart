@@ -210,16 +210,6 @@ class LocalLibrarySource {
 
 enum LocalLibrarySortMode { album, title, artist, latest, quality }
 
-class LocalLibraryLookupIndex {
-  final Set<String> isrcs;
-  final Set<String> matchKeys;
-
-  const LocalLibraryLookupIndex({
-    this.isrcs = const <String>{},
-    this.matchKeys = const <String>{},
-  });
-}
-
 class LocalLibraryBatchLookupRequest {
   final String? id;
   final String? isrc;

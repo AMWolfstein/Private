@@ -142,4 +142,58 @@ void main() {
       expect((electro['name'] as String).trim(), 'E\u0301LECTRO');
     },
   );
+
+  test('cached tags match the CTE and refresh per library version (PERF-402)', () async {
+    final cache = LibraryGenreTagCache();
+    Future<List<Map<String, dynamic>>> cachedPage({
+      String? genre,
+      int offset = 0,
+      int? version,
+    }) => LibraryGenres(db, tagCache: cache).page(
+      genre: genre,
+      offset: offset,
+      libraryVersion: version,
+    );
+
+    final list = await cachedPage(version: 1);
+    expect(list.map((row) => row['genre_key']), [
+      'hip-hop/rap',
+      'rap',
+      'rock',
+      'trap',
+    ]);
+    expect(
+      (await cachedPage(genre: normalizeGenreTags('rock'), version: 1)).map(
+        (row) => row['id'],
+      ),
+      ['a', 'b'],
+    );
+
+    // A same-version reread serves the cache and does not see new rows...
+    await db.insert('library_visible', {
+      'id': 'new',
+      'track_name': 'New',
+      'genre': 'Ska',
+      'sort_genre': 'ska',
+      'track_name_norm': 'new',
+      'artist_name_norm': 'artist',
+    });
+    expect(
+      (await cachedPage(version: 1)).map((row) => row['genre_key']),
+      list.map((row) => row['genre_key']),
+    );
+
+    // ...while a version bump rebuilds the cached tags.
+    final refreshed = await cachedPage(version: 2);
+    expect(
+      refreshed.map((row) => row['genre_key']),
+      contains('ska'),
+    );
+    expect(
+      (await cachedPage(genre: normalizeGenreTags('ska'), version: 2)).map(
+        (row) => row['id'],
+      ),
+      ['new'],
+    );
+  });
 }

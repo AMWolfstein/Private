@@ -62,17 +62,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       _ => null,
     };
 
-    final localNavigationItems = <LocalLibraryItem>[];
-    final localNavigationIndexByUnifiedId = <String, int>{};
-
-    for (final item in allFilteredUnifiedItems) {
-      final localItem = item.localItem;
-      if (localItem != null) {
-        localNavigationIndexByUnifiedId[item.id] = localNavigationItems.length;
-        localNavigationItems.add(localItem);
-      }
-    }
-
     // Indexes into collectionState.playlists, name-filtered by the search
     // query, for the 'playlists' view.
     final playlistIndexes = <int>[];
@@ -289,9 +278,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                       context,
                       item,
                       colorScheme,
-                      localNavigationItems: localNavigationItems,
-                      localNavigationIndex:
-                          localNavigationIndexByUnifiedId[item.id],
                       libraryItems: filteredUnifiedItems,
                     ),
                   );
@@ -334,9 +320,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                     context,
                     item,
                     colorScheme,
-                    localNavigationItems: localNavigationItems,
-                    localNavigationIndex:
-                        localNavigationIndexByUnifiedId[item.id],
                     libraryItems: filteredUnifiedItems,
                   ),
                 );

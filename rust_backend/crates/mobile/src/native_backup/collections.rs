@@ -112,9 +112,9 @@ pub(super) fn import(request: &Value, check: Check<'_>) -> Result<Value, String>
     let version: i64 = db
         .pragma_query_value(None, "user_version", |row| row.get(0))
         .map_err(|e| err("collection restore schema", e))?;
-    if version != 3 {
+    if version != 4 {
         return Err(format!(
-            "Collection schema v{version} is incompatible with native v3"
+            "Collection schema v{version} is incompatible with native v4"
         ));
     }
     db.execute_batch(

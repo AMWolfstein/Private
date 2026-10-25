@@ -61,6 +61,10 @@ class _HomeTabState extends ConsumerState<HomeTab>
   String _query = '';
   Timer? _searchDebounce;
 
+  // PERF-603: playlist sort memoised per playlists-list identity.
+  List<UserPlaylistCollection>? _sortedPlaylistsSource;
+  List<UserPlaylistCollection>? _sortedPlaylists;
+
   static const Duration _searchDebounceDelay = Duration(milliseconds: 300);
 
   @override

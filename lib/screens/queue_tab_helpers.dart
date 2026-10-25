@@ -179,7 +179,11 @@ class _QueueLibraryPageData {
   final List<_GroupedLocalAlbum> groupedLocalAlbums;
   final QueueLibraryDbCursor? nextCursor;
 
-  const _QueueLibraryPageData({
+  // Memo of the playlist-excluded list for the newest collections state.
+  LibraryCollectionsState? _filteredFrom;
+  List<UnifiedLibraryItem>? _filteredItems;
+
+  _QueueLibraryPageData({
     this.items = const [],
     this.localItems = const [],
     this.groupedLocalAlbums = const [],
@@ -190,7 +194,7 @@ class _QueueLibraryPageData {
       items.isEmpty && localItems.isEmpty && groupedLocalAlbums.isEmpty;
 
   factory _QueueLibraryPageData.combine(List<_QueueLibraryPageData> pages) {
-    if (pages.isEmpty) return const _QueueLibraryPageData();
+    if (pages.isEmpty) return _QueueLibraryPageData();
     if (pages.length == 1) return pages.first;
 
     final items = <UnifiedLibraryItem>[];
@@ -217,15 +221,23 @@ class _QueueLibraryPageData {
     int? totalAlbumCount,
     bool includePlaylistTracks = false,
   }) {
-    final filteredItems =
-        includePlaylistTracks || !collectionState.hasPlaylistTracks
-        ? items
-        : items
-              .where(
-                (item) =>
-                    !collectionState.isTrackInAnyPlaylist(item.collectionKey),
-              )
-              .toList(growable: false);
+    // OPT-PERF-001: reuse the filtered list while the collection state is the
+    // same instance, so section grouping does not rerun on every build.
+    List<UnifiedLibraryItem> filteredItems;
+    if (includePlaylistTracks || !collectionState.hasPlaylistTracks) {
+      filteredItems = items;
+    } else if (identical(collectionState, _filteredFrom)) {
+      filteredItems = _filteredItems!;
+    } else {
+      filteredItems = items
+          .where(
+            (item) =>
+                !collectionState.isTrackInAnyPlaylist(item.collectionKey),
+          )
+          .toList(growable: false);
+      _filteredFrom = collectionState;
+      _filteredItems = filteredItems;
+    }
     return _FilterContentData(
       unifiedItems: items,
       filteredUnifiedItems: filteredItems,
@@ -249,7 +261,7 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
       }
       // Playlists render from libraryCollectionsProvider, not the DB.
       if (request.filterMode == 'playlists') {
-        return const _QueueLibraryPageData();
+        return _QueueLibraryPageData();
       }
       final dbQuery = request.toDbQuery();
       if (request.filterMode == 'albums') {

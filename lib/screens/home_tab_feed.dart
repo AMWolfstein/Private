@@ -11,8 +11,17 @@ extension _LocalHomeFeedUI on _HomeTabState {
     final artists = libraryBrowseProvider(
       localHomeBrowseRequest(artists: true, sort: 'a-z'),
     );
-    final playlists = ref.watch(libraryCollectionsProvider).playlists.toList()
-      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final playlistsList = ref.watch(
+      libraryCollectionsProvider.select((state) => state.playlists),
+    );
+    // PERF-603: select the playlists list and reuse its sorted copy, so a
+    // Loved toggle or unrelated collection edit does not rebuild all of Home.
+    if (!identical(playlistsList, _sortedPlaylistsSource)) {
+      _sortedPlaylistsSource = playlistsList;
+      _sortedPlaylists = playlistsList.toList()
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    }
+    final playlists = _sortedPlaylists!;
 
     final albumData = ref.watch(albums);
     final artistData = ref.watch(artists);

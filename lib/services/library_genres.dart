@@ -25,28 +25,82 @@ WITH RECURSIVE tags(id, remaining, remaining_keys, genre, genre_key) AS (
 )
 ''';
 
+/// Holds the genre tags of one library version in a per-connection temp table,
+/// so paging no longer reruns the recursive CTE for every page (PERF-402).
+class LibraryGenreTagCache {
+  static const _tempTable = 'library_genre_tags';
+  int? _version;
+  Future<void>? _pending;
+
+  /// Serialises (re)builds so concurrent page loads cannot race the swap.
+  Future<void> ensure(Database db, int? version) {
+    final run = (_pending ?? Future<void>.value()).then(
+      (_) => _ensure(db, version),
+    );
+    _pending = run.then<void>((_) {}, onError: (_) {});
+    return run;
+  }
+
+  Future<void> _ensure(Database db, int? version) async {
+    if (_version == version) return;
+    await db.execute('''
+      CREATE TEMP TABLE IF NOT EXISTS $_tempTable (
+        id TEXT NOT NULL,
+        genre_key TEXT NOT NULL,
+        genre TEXT NOT NULL
+      )
+    ''');
+    // One transaction keeps an in-flight page from reading the table between
+    // the DELETE and the INSERT.
+    await db.transaction((txn) async {
+      await txn.execute('DELETE FROM $_tempTable');
+      await txn.execute(
+        '''
+        INSERT INTO $_tempTable (id, genre_key, genre)
+        $libraryGenreTagsSql SELECT id, genre_key, genre FROM genres
+      ''',
+      );
+      await txn.execute(
+        'CREATE INDEX IF NOT EXISTS $_tempTable'
+        '_key ON $_tempTable(genre_key)',
+      );
+    });
+    _version = version;
+  }
+}
+
 class LibraryGenres {
-  const LibraryGenres(this.db);
+  const LibraryGenres(this.db, {this.tagCache});
   final Database db;
+
+  /// Null keeps the per-query recursive CTE (tests and uncached callers).
+  final LibraryGenreTagCache? tagCache;
+
   Future<List<Map<String, dynamic>>> page({
     String? genre,
     int offset = 0,
     int limit = 40,
+    int? libraryVersion,
   }) async {
     final size = limit.clamp(1, 100);
+    final cache = tagCache;
+    final useCache = cache != null && libraryVersion != null;
+    if (useCache) await cache.ensure(db, libraryVersion);
+    final tagsSql = useCache ? '' : libraryGenreTagsSql;
+    final tagsTable = useCache ? LibraryGenreTagCache._tempTable : 'genres';
     if (genre == null) {
       return db.rawQuery(
-        '''$libraryGenreTagsSql
+        '''$tagsSql
         SELECT genre_key, MIN(genre) AS name, COUNT(DISTINCT id) AS track_count
-        FROM genres GROUP BY genre_key ORDER BY genre_key LIMIT ? OFFSET ?
+        FROM $tagsTable GROUP BY genre_key ORDER BY genre_key LIMIT ? OFFSET ?
       ''',
         [size, offset],
       );
     }
     final rows = await db.rawQuery(
-      '''$libraryGenreTagsSql
+      '''$tagsSql
       SELECT l.* FROM ${LibrarySchema.visibleView} l
-      WHERE l.id IN (SELECT id FROM genres WHERE genre_key = ?)
+      WHERE l.id IN (SELECT id FROM $tagsTable WHERE genre_key = ?)
       ORDER BY l.track_name_norm, l.artist_name_norm, l.id LIMIT ? OFFSET ?
     ''',
       [sqlite.normalizeSearchText(genre), size, offset],

@@ -14,7 +14,7 @@ impl Fixture {
         let path = directory.path().join("library_collections.db");
         let db = Connection::open(&path).unwrap();
         db.execute_batch(
-            "PRAGMA user_version=3; PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;
+            "PRAGMA user_version=4; PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;
              CREATE TABLE loved_tracks(track_key TEXT PRIMARY KEY,track_json TEXT NOT NULL,added_at TEXT NOT NULL);
              CREATE TABLE favorite_artists(artist_key TEXT PRIMARY KEY,artist_json TEXT NOT NULL,added_at TEXT NOT NULL);
              CREATE TABLE playlists(id TEXT PRIMARY KEY,name TEXT NOT NULL,cover_image_path TEXT,created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
@@ -173,10 +173,10 @@ fn truncated_malformed_unknown_and_orphaned_commands_never_wipe_live_rows() {
 #[test]
 fn empty_restore_clears_categories_and_wrong_schema_is_rejected() {
     let mut fixture = Fixture::new();
-    fixture.db.execute_batch("PRAGMA user_version=4").unwrap();
+    fixture.db.execute_batch("PRAGMA user_version=3").unwrap();
     assert!(import(&fixture.request, &|| Ok(())).is_err());
     assert_eq!(fixture.keys(), ["kept"]);
-    fixture.db.execute_batch("PRAGMA user_version=3").unwrap();
+    fixture.db.execute_batch("PRAGMA user_version=4").unwrap();
     std::fs::write(fixture.request["ndjson_path"].as_str().unwrap(), "").unwrap();
     fixture.request["expected_count"] = json!(0);
     assert_eq!(

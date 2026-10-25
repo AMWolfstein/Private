@@ -295,7 +295,7 @@ void main() {
                   {'id': '1'},
                 ]);
                 expect(await projected.rawQuery('PRAGMA user_version'), [
-                  {'user_version': 3},
+                  {'user_version': 4},
                 ]);
                 final rows = await projected.rawQuery(
                   'SELECT * FROM playlist_tracks ORDER BY added_at ASC,rowid ASC',

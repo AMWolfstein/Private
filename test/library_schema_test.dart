@@ -187,4 +187,42 @@ void main() {
     expect(tagged['audio_metadata_scan_version'], 3);
     expect(LibraryRowMapper.decode(tagged)['explicit'], true);
   });
+
+  test('schema v19 indexes album_artist_norm for artist pages (PERF-401)', () async {
+    await LibrarySchema.create(db, LibrarySchema.version);
+    final indexes = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='index' "
+      "AND name='idx_library_album_artist_norm'",
+    );
+    expect(indexes, hasLength(1));
+    final plan = await db.rawQuery(
+      'EXPLAIN QUERY PLAN SELECT l.* FROM library_visible l '
+      "WHERE l.album_artist_norm = 'artist' LIMIT 40",
+    );
+    final detail = plan.map((row) => row.values.join(' ')).join(' | ');
+    expect(detail, contains('idx_library_album_artist_norm'));
+  });
+
+  test('v18 to v19 upgrade adds the missing album_artist_norm index', () async {
+    await LibrarySchema.create(db, 18);
+    // A real v18 database never created this index.
+    await db.execute('DROP INDEX IF EXISTS idx_library_album_artist_norm');
+    expect(
+      await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='index' "
+        "AND name='idx_library_album_artist_norm'",
+      ),
+      isEmpty,
+    );
+
+    await LibrarySchema.upgrade(db, 18, LibrarySchema.version);
+
+    expect(
+      await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='index' "
+        "AND name='idx_library_album_artist_norm'",
+      ),
+      hasLength(1),
+    );
+  });
 }

@@ -64,6 +64,22 @@ void main() {
     });
   }
 
+  test('schema v4 adds the track_key membership index (OPT-PERF-003)', () async {
+    final db = await SqliteProcessDatabase.open();
+    addTearDown(db.close);
+    await db.execute(
+      'CREATE TABLE playlist_tracks(playlist_id TEXT NOT NULL,track_key TEXT NOT NULL,added_at TEXT NOT NULL,PRIMARY KEY(playlist_id,track_key))',
+    );
+    await LibraryCollectionsDatabase.upgradeDatabaseSchema(db, 3, 4);
+    final plan = await db.rawQuery(
+      'EXPLAIN QUERY PLAN SELECT playlist_id, COUNT(*) AS matched_count '
+      'FROM playlist_tracks WHERE track_key IN (?, ?) GROUP BY playlist_id',
+      ['a', 'b'],
+    );
+    final detail = plan.map((row) => row.values.join(' ')).join(' | ');
+    expect(detail, contains('idx_playlist_tracks_track_key'));
+  });
+
   test(
     'legacy JSON ignores removed data and exports retained collections only',
     () async {

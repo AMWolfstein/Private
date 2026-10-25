@@ -34,12 +34,9 @@ class _LibraryDatabase implements LibraryDatabase {
 
   List<LocalLibrarySource> sources;
   Future<int> Function() count = () async => 2;
-  Future<LocalLibraryLookupIndex> Function() index = () async =>
-      const LocalLibraryLookupIndex(matchKeys: {'song|artist'});
   bool failSources = false;
   int sourceReads = 0;
   int countReads = 0;
-  int indexReads = 0;
   int availabilityWrites = 0;
   final removedIds = <String>[];
 
@@ -62,12 +59,6 @@ class _LibraryDatabase implements LibraryDatabase {
   Future<int> getCount() {
     countReads++;
     return count();
-  }
-
-  @override
-  Future<LocalLibraryLookupIndex> getLookupIndex() {
-    indexReads++;
-    return index();
   }
 
   @override
@@ -234,10 +225,10 @@ void main() {
   );
 
   test(
-    'saved folders appear while a large track index is still loading',
+    'saved folders appear while a large track count is still loading',
     () async {
-      final pending = Completer<LocalLibraryLookupIndex>();
-      database.index = () => pending.future;
+      final pending = Completer<int>();
+      database.count = () => pending.future;
       container.read(localLibraryProvider);
       await _waitFor(
         () => container.read(localLibraryProvider).sources.isNotEmpty,
@@ -245,22 +236,22 @@ void main() {
       final loading = container.read(localLibraryProvider);
       expect(loading.sources.single.path, music.path);
       expect(loading.isLoading, isTrue);
-      pending.complete(const LocalLibraryLookupIndex());
+      pending.complete(2);
       await _waitFor(() => !container.read(localLibraryProvider).isLoading);
       expect(container.read(localLibraryProvider).totalCount, 2);
     },
   );
 
   test(
-    'index failure retains folders and retry recovers without reattaching',
+    'summary failure retains folders and retry recovers without reattaching',
     () async {
-      database.index = () async => throw StateError('index read failed');
+      database.count = () async => throw StateError('count read failed');
       container.read(localLibraryProvider);
       await _waitFor(() => !container.read(localLibraryProvider).isLoading);
       final failed = container.read(localLibraryProvider);
       expect(failed.loadFailed, isTrue);
       expect(failed.sources.single.path, music.path);
-      database.index = () async => const LocalLibraryLookupIndex();
+      database.count = () async => 2;
       await container.read(localLibraryProvider.notifier).reloadFromStorage();
       expect(container.read(localLibraryProvider).loadFailed, isFalse);
       expect(container.read(localLibraryProvider).totalCount, 2);
@@ -273,28 +264,28 @@ void main() {
       if (edit == 'enable') {
         database.sources = [database.sources.single.copyWith(enabled: false)];
       }
-      database.count = () async => database.sources
+      int currentCount() => database.sources
           .where((source) => source.enabled && source.available)
           .fold<int>(0, (total, source) => total + source.trackCount);
-      final pending = Completer<LocalLibraryLookupIndex>();
-      database.index = () => pending.future;
+      final pending = Completer<int>();
+      database.count = () => pending.future;
       container.read(localLibraryProvider);
-      await _waitFor(() => database.indexReads > 0);
-      database.index = () async => const LocalLibraryLookupIndex();
+      await _waitFor(() => database.countReads > 0);
+      // The in-flight read holds the pre-edit count; a retry must read the
+      // post-edit state instead of what this stale read returns.
+      final staleCount = currentCount();
+      database.count = () async => currentCount();
       if (edit == 'remove') {
         await library.removeSource('music');
       } else {
         await library.setSourceEnabled('music', edit == 'enable');
       }
       final version = container.read(localLibraryProvider).loadedIndexVersion;
-      pending.complete(
-        const LocalLibraryLookupIndex(matchKeys: {'stale|song'}),
-      );
+      pending.complete(staleCount);
       await _waitFor(() => !container.read(localLibraryProvider).isLoading);
       final loaded = container.read(localLibraryProvider);
       expect(loaded.loadFailed, false);
       expect(loaded.loadedIndexVersion, version);
-      expect(loaded.hasTrack('stale', 'song'), false);
       expect(loaded.totalCount, edit == 'enable' ? 2 : 0);
       if (edit == 'remove') {
         expect(loaded.sources, isEmpty);
@@ -402,7 +393,6 @@ void main() {
       await _waitFor(() => !container.read(localLibraryProvider).isLoading);
       final sourceReads = database.sourceReads;
       final countReads = database.countReads;
-      final indexReads = database.indexReads;
       final version = container.read(localLibraryProvider).loadedIndexVersion;
       final refresh = library.refreshSourceAvailability();
       final overlapping = library.refreshSourceAvailability();
@@ -410,7 +400,6 @@ void main() {
       await Future.wait([refresh, overlapping]);
       expect(database.sourceReads, sourceReads + 1);
       expect(database.countReads, countReads);
-      expect(database.indexReads, indexReads);
       expect(container.read(localLibraryProvider).loadedIndexVersion, version);
     },
   );
@@ -420,7 +409,7 @@ void main() {
     container.read(localLibraryProvider);
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
     final version = container.read(localLibraryProvider).loadedIndexVersion;
-    final indexReads = database.indexReads;
+    final countReads = database.countReads;
     probe = (path, {bookmark}) async => false;
     await library.refreshSourceAvailability();
     expect(
@@ -444,7 +433,7 @@ void main() {
       container.read(localLibraryProvider).loadedIndexVersion,
       version + 2,
     );
-    expect(database.indexReads, indexReads + 2);
+    expect(database.countReads, countReads + 2);
     await _waitFor(() => library.scannedSources.isNotEmpty);
     expect(library.scannedSources, ['music']);
   });
@@ -454,7 +443,7 @@ void main() {
     () async {
       container.read(localLibraryProvider);
       await _waitFor(() => !container.read(localLibraryProvider).isLoading);
-      final indexReads = database.indexReads;
+      final countReads = database.countReads;
       final version = container.read(localLibraryProvider).loadedIndexVersion;
       probe = (path, {bookmark}) async => null;
       await library.refreshSourceAvailability();
@@ -462,7 +451,7 @@ void main() {
         container.read(localLibraryProvider).sources.single.available,
         true,
       );
-      expect(database.indexReads, indexReads);
+      expect(database.countReads, countReads);
       expect(container.read(localLibraryProvider).loadedIndexVersion, version);
     },
   );
@@ -474,7 +463,7 @@ void main() {
     var probes = 0;
     probe = (path, {bookmark}) =>
         ++probes == 1 ? pending.future : Future<bool?>.value(true);
-    final indexReads = database.indexReads;
+    final countReads = database.countReads;
     final refresh = library.refreshSourceAvailability();
     await _waitFor(() => probes == 1);
     final reconnect = library.refreshSourceAvailability(scanReconnected: true);
@@ -482,7 +471,7 @@ void main() {
     await Future.wait([refresh, reconnect]);
     expect(probes, 2);
     expect(database.availabilityWrites, 0);
-    expect(database.indexReads, indexReads);
+    expect(database.countReads, countReads);
     expect(container.read(localLibraryProvider).sources.single.available, true);
   });
 
@@ -503,12 +492,12 @@ void main() {
         } else {
           await library.setSourceEnabled('music', false);
         }
-        final indexReads = database.indexReads;
+        final countReads = database.countReads;
         final version = container.read(localLibraryProvider).loadedIndexVersion;
         pending.complete(false);
         await refresh;
         expect(database.availabilityWrites, 0);
-        expect(database.indexReads, indexReads);
+        expect(database.countReads, countReads);
         expect(
           container.read(localLibraryProvider).loadedIndexVersion,
           version,
@@ -524,28 +513,23 @@ void main() {
     );
   }
 
-  test('a superseded summary cannot restore stale lookup sets', () async {
+  test('a superseded summary cannot restore stale counts', () async {
     container.read(localLibraryProvider);
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
-    final pending = Completer<LocalLibraryLookupIndex>();
-    database.index = () => pending.future;
+    final pending = Completer<int>();
+    database.count = () => pending.future;
     probe = (path, {bookmark}) async => false;
-    final indexReads = database.indexReads;
+    final countReads = database.countReads;
     final refresh = library.refreshSourceAvailability();
-    await _waitFor(() => database.indexReads > indexReads);
-    database.index = () async => const LocalLibraryLookupIndex();
+    await _waitFor(() => database.countReads > countReads);
+    // The superseded read still returns the old count; every fresh read after
+    // the source is disabled must see 0.
+    database.count = () async => 0;
     await library.setSourceEnabled('music', false);
-    pending.complete(const LocalLibraryLookupIndex(matchKeys: {'stale|song'}));
+    pending.complete(2);
     await refresh;
     expect(container.read(localLibraryProvider).sources.single.enabled, false);
-    expect(
-      container.read(localLibraryProvider).hasTrack('stale', 'song'),
-      false,
-    );
-    expect(
-      container.read(localLibraryProvider).hasTrack('song', 'artist'),
-      false,
-    );
+    expect(container.read(localLibraryProvider).totalCount, 0);
   });
 
   test('an unavailable folder remains attached instead of vanishing', () async {
@@ -571,46 +555,37 @@ void main() {
   });
 
   test('reload invalidates a summary already being read', () async {
-    final first = Completer<LocalLibraryLookupIndex>();
-    database.index = () => first.future;
+    final first = Completer<int>();
+    database.count = () => first.future;
     container.read(localLibraryProvider);
-    await _waitFor(() => database.indexReads == 1);
+    await _waitFor(() => database.countReads == 1);
     database.count = () async => 7;
-    database.index = () async =>
-        const LocalLibraryLookupIndex(matchKeys: {'fresh|artist'});
     final reloaded = library.reloadFromStorage();
-    first.complete(const LocalLibraryLookupIndex(matchKeys: {'stale|artist'}));
+    first.complete(2);
     await reloaded;
     final current = container.read(localLibraryProvider);
-    expect(database.indexReads, 2);
+    expect(database.countReads, 2);
     expect(current.totalCount, 7);
-    expect(current.hasTrack('fresh', 'artist'), isTrue);
-    expect(current.hasTrack('stale', 'artist'), isFalse);
     expect(current.isLoading, isFalse);
   });
 
   test(
     'concurrent reloads share the retry after an earlier read fails',
     () async {
-      final old = Completer<LocalLibraryLookupIndex>();
-      final retry = Completer<LocalLibraryLookupIndex>();
-      database.index = () => old.future;
+      final old = Completer<int>();
+      final retry = Completer<int>();
+      database.count = () => old.future;
       container.read(localLibraryProvider);
-      await _waitFor(() => database.indexReads == 1);
-      database.index = () => retry.future;
+      await _waitFor(() => database.countReads == 1);
+      database.count = () => retry.future;
       final firstReload = library.reloadFromStorage();
       final secondReload = library.reloadFromStorage();
       old.completeError(StateError('stale read failed'));
-      await _waitFor(() => database.indexReads == 2);
-      retry.complete(
-        const LocalLibraryLookupIndex(matchKeys: {'fresh|artist'}),
-      );
+      await _waitFor(() => database.countReads == 2);
+      retry.complete(2);
       await Future.wait([firstReload, secondReload]);
-      expect(database.indexReads, 2);
-      expect(
-        container.read(localLibraryProvider).hasTrack('fresh', 'artist'),
-        isTrue,
-      );
+      expect(database.countReads, 2);
+      expect(container.read(localLibraryProvider).totalCount, 2);
     },
   );
 

@@ -116,6 +116,12 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   final Map<_QueueLibraryPageRequest, _QueueLibraryPageData>
   _queueLibraryPageDataCache = {};
 
+  // OPT-PERF-001: combined multi-page data is rebuilt per build otherwise,
+  // which would defeat the page data's filtered-list memo. Reuse the combined
+  // instance while its pages are the identical cached instances.
+  List<_QueueLibraryPageData>? _combinedQueueLibraryPages;
+  _QueueLibraryPageData? _combinedQueueLibraryData;
+
   double get _libraryAlbumGridExtent =>
       (_libraryGridExtent * 1.45).clamp(150.0, 300.0);
 
@@ -267,10 +273,32 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       if (page != null) pages.add(page);
     }
 
-    final combined = _QueueLibraryPageData.combine(pages);
+    final combined = _combinedQueueLibraryDataFor(pages);
     if (combined.isEmpty && nonEmptyFallback != null) {
       return nonEmptyFallback();
     }
+    return combined;
+  }
+
+  /// Reuses the combined instance while its pages are the identical cached
+  /// instances, keeping the filtered-list memo stable across builds.
+  _QueueLibraryPageData _combinedQueueLibraryDataFor(
+    List<_QueueLibraryPageData> pages,
+  ) {
+    final cachedKey = _combinedQueueLibraryPages;
+    var identicalPages = cachedKey != null && cachedKey.length == pages.length;
+    if (identicalPages) {
+      for (var i = 0; i < pages.length; i++) {
+        if (!identical(cachedKey[i], pages[i])) {
+          identicalPages = false;
+          break;
+        }
+      }
+    }
+    if (identicalPages) return _combinedQueueLibraryData!;
+    final combined = _QueueLibraryPageData.combine(pages);
+    _combinedQueueLibraryPages = List.of(pages);
+    _combinedQueueLibraryData = combined;
     return combined;
   }
 
@@ -982,7 +1010,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
     final activePageRequest = pageRequest(historyFilterMode);
     final activePageValue = searchingLibrary
-        ? const AsyncData(_QueueLibraryPageData())
+        ? AsyncData(_QueueLibraryPageData())
         : ref.watch(_queueLibraryPageProvider(activePageRequest));
 
     _QueueLibraryPageData pageData(String filterMode) {
@@ -1029,10 +1057,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     final shouldShowLibraryControls =
         hasLibraryContent || hasAnyLibraryItems || hasActiveSearch;
 
-    final selectionItems = getFilterData(
-      historyFilterMode,
-    ).filteredUnifiedItems;
+    // PERF-201: the active filter's page data is only needed in selection
+    // mode; other builds must not copy and regroup it.
     if (_isSelectionMode || _isPlaylistSelectionMode) {
+      final selectionItems = getFilterData(historyFilterMode)
+          .filteredUnifiedItems;
       final bottomPadding = MediaQuery.paddingOf(context).bottom;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_isSelectionMode) {

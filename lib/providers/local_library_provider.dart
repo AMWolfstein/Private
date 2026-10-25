@@ -37,9 +37,6 @@ class LocalLibraryState {
   final List<LocalLibrarySource> sources;
   final String? scanningSourceId;
   final int excludedDownloadedCount;
-  final Set<String> _trackKeySet;
-  final Set<String> _isrcSet;
-
   LocalLibraryState({
     this.isLoading = false,
     this.loadFailed = false,
@@ -58,27 +55,7 @@ class LocalLibraryState {
     this.sources = const <LocalLibrarySource>[],
     this.scanningSourceId,
     this.excludedDownloadedCount = 0,
-    Set<String>? trackKeySet,
-    Set<String>? isrcSet,
-  }) : _trackKeySet = trackKeySet ?? const <String>{},
-       _isrcSet = isrcSet ?? const <String>{};
-
-  bool hasIsrc(String isrc) => _isrcSet.contains(isrc);
-
-  bool hasTrack(String trackName, String artistName) {
-    final key = LibraryDatabase.matchKeyFor(trackName, artistName);
-    return _trackKeySet.contains(key);
-  }
-
-  bool existsInLibrary({String? isrc, String? trackName, String? artistName}) {
-    if (isrc != null && isrc.isNotEmpty && hasIsrc(isrc)) {
-      return true;
-    }
-    if (trackName != null && artistName != null) {
-      return hasTrack(trackName, artistName);
-    }
-    return false;
-  }
+  });
 
   LocalLibraryState copyWith({
     bool? isLoading,
@@ -100,8 +77,6 @@ class LocalLibraryState {
     String? scanningSourceId,
     bool clearScanningSourceId = false,
     int? excludedDownloadedCount,
-    Set<String>? trackKeySet,
-    Set<String>? isrcSet,
   }) {
     return LocalLibraryState(
       isLoading: isLoading ?? this.isLoading,
@@ -126,8 +101,6 @@ class LocalLibraryState {
           : scanningSourceId ?? this.scanningSourceId,
       excludedDownloadedCount:
           excludedDownloadedCount ?? this.excludedDownloadedCount,
-      trackKeySet: trackKeySet ?? _trackKeySet,
-      isrcSet: isrcSet ?? _isrcSet,
     );
   }
 }
@@ -273,18 +246,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         if (!ref.mounted) return;
         if (sourceVersion != _sourceVersion) continue;
         state = state.copyWith(sources: sources);
-        final summary = await Future.wait<Object>([
-          _db.getCount(),
-          _db.getLookupIndex(),
-        ]);
-        final prefsFuture = _prefs;
-        final count = summary[0] as int;
-        final lookupIndex = summary[1] as LocalLibraryLookupIndex;
+        final count = await _db.getCount();
 
         DateTime? lastScannedAt;
         var excludedDownloadedCount = 0;
         try {
-          final prefs = await prefsFuture;
+          final prefs = await _prefs;
           lastScannedAt = readLocalLibraryLastScannedAt(prefs);
           excludedDownloadedCount =
               prefs.getInt(_excludedDownloadedCountKey) ?? 0;
@@ -303,8 +270,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           lastScannedAt: lastScannedAt,
           excludedDownloadedCount: excludedDownloadedCount,
           sources: sources,
-          trackKeySet: lookupIndex.matchKeys,
-          isrcSet: lookupIndex.isrcs,
         );
         _log.i(
           'Loaded local library summary: $count items, lastScannedAt: '
@@ -603,12 +568,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     final sources = await _db.getSources();
     if (!ref.mounted || sourceVersion != _sourceVersion) return;
     state = state.copyWith(sources: sources);
-    final summary = await Future.wait<Object>([
-      _db.getCount(),
-      _db.getLookupIndex(),
-    ]);
-    final count = summary[0] as int;
-    final index = summary[1] as LocalLibraryLookupIndex;
+    final count = await _db.getCount();
     if (!ref.mounted || sourceVersion != _sourceVersion) return;
     final latestSourceScan = sources
         .map((source) => source.lastScannedAt)
@@ -625,8 +585,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       lastScannedAt: lastScannedAt ?? latestSourceScan,
       excludedDownloadedCount: excludedDownloadedCount,
       sources: sources,
-      trackKeySet: index.matchKeys,
-      isrcSet: index.isrcs,
     );
     _hasLoadedFromDatabase = true;
     _isLoaded = true;
@@ -1982,22 +1940,47 @@ final localLibraryCoverProvider = FutureProvider.autoDispose
           .then(_nonEmptyCoverPath);
     });
 
+/// Batch lookup hook so tests can observe the chunked first-cover search.
+final libraryExistingBatchLoaderProvider =
+    Provider<
+      Future<List<Map<String, dynamic>?>> Function(
+        List<LocalLibraryBatchLookupRequest>,
+      )
+    >(
+      (ref) => (requests) =>
+          LibraryDatabase.instance.findExistingBatch(requests),
+    );
+
 final localLibraryFirstCoverProvider = FutureProvider.autoDispose
     .family<String?, LocalLibraryCoverBatchRequest>((ref, request) async {
       ref.watch(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
       );
-      final rows = await LibraryDatabase.instance.findExistingBatch([
+      // OPT-PERF-006: resolve the batch in ordered chunks and stop at the
+      // first usable cover, so a large playlist with an early cover does not
+      // wait for every member lookup. Chunking preserves the exact matching
+      // precedence of a single full-batch lookup.
+      final load = ref.watch(libraryExistingBatchLoaderProvider);
+      const chunkSize = 450;
+      final lookups = [
         for (final track in request.tracks)
           LocalLibraryBatchLookupRequest(
             isrc: track.isrc,
             trackName: track.trackName,
             artistName: track.artistName,
           ),
-      ]);
-      for (final row in rows) {
-        final cover = _nonEmptyCoverPath(row);
-        if (cover != null) return cover;
+      ];
+      for (
+        var start = 0;
+        start < lookups.length;
+        start += chunkSize
+      ) {
+        final end = (start + chunkSize).clamp(0, lookups.length);
+        final rows = await load(lookups.sublist(start, end));
+        for (final row in rows) {
+          final cover = _nonEmptyCoverPath(row);
+          if (cover != null) return cover;
+        }
       }
       return null;
     });

@@ -154,6 +154,10 @@ abstract final class MornyeGroundBuilder {
   /// The last player ground's timing.
   static final lastPlayer = ValueNotifier<MornyeGroundTiming?>(null);
 
+  /// Count of started ground builds; tests assert rebuild frequency
+  /// (PERF-605) and nothing else reads it.
+  static int debugBuildCount = 0;
+
   static Future<ui.Image?> build({
     required String label,
     required Size size,
@@ -162,6 +166,7 @@ abstract final class MornyeGroundBuilder {
     required double sigma,
     ValueNotifier<MornyeGroundTiming?>? timing,
   }) async {
+    debugBuildCount++;
     if (size.isEmpty) return null;
     final watch = Stopwatch()..start();
     final task = TimelineTask()..start('Mornye ground: $label');
@@ -1098,6 +1103,12 @@ class _MornyePageGroundState extends State<MornyePageGround>
   )..onNeeded = _rebuildReleased;
   _RenderGroundAnchor? _anchor;
   Object? _built;
+  double? _builtWidth;
+  double? _builtHeight;
+  // Inputs whose ground build already failed. A page that cannot compose its
+  // ground must not re-decode on every collapse frame; the fallback material
+  // renders until the width, source or layout changes.
+  Object? _failedInput;
   int _generation = 0;
   bool _scheduled = false;
 
@@ -1106,6 +1117,7 @@ class _MornyePageGroundState extends State<MornyePageGround>
 
   void _rebuildReleased() {
     _built = null;
+    _failedInput = null;
     _schedule();
   }
 
@@ -1146,17 +1158,35 @@ class _MornyePageGroundState extends State<MornyePageGround>
     final anchor = _anchor;
     if (!widget.enabled || anchor == null || !anchor.hasSize) {
       if (!widget.enabled && _controller.hasGround) _controller.release();
-      if (!widget.enabled) _built = null;
+      if (!widget.enabled) {
+        _built = null;
+        _builtWidth = null;
+        _builtHeight = null;
+        _failedInput = null;
+      }
       return;
     }
-    final size = anchor.size;
+    // PERF-605: the artist header's anchor shrinks on every collapse frame.
+    // The height of the built ground grows monotonically per width, so a
+    // collapse never rebuilds it; the veil and header controls sample the
+    // ground scaled into the anchor's current rect.
+    final width = anchor.size.width;
+    final height =
+        (_builtWidth == width && _builtHeight != null && _builtHeight! >= anchor.size.height)
+        ? _builtHeight!
+        : anchor.size.height;
     final layout = anchor.groundLayout;
-    final key = (widget.source, size, layout, widget.sigma, widget.surface);
+    final key = (widget.source, width, height, layout, widget.sigma, widget.surface);
+    final input = (widget.source, width, layout, widget.sigma, widget.surface);
+    if (input == _failedInput) return;
     // Built, or being built: a ground is made once per input.
     if (key == _built) return;
     _built = key;
+    _builtWidth = width;
+    _builtHeight = height;
     final generation = ++_generation;
     final surface = widget.surface;
+    final size = Size(width, height);
     final image = await MornyeGroundBuilder.build(
       label: 'page',
       size: size,
@@ -1196,7 +1226,19 @@ class _MornyePageGroundState extends State<MornyePageGround>
         }
       },
     );
-    if (image == null) return;
+    if (image == null) {
+      // A failed build must not pin the key, or the monotonic height would
+      // block every retry until the width changes. It is remembered per input
+      // so a failing page falls back instead of decoding on every frame.
+      if (generation == _generation) {
+        _built = null;
+        _builtWidth = null;
+        _builtHeight = null;
+        _failedInput = input;
+      }
+      return;
+    }
+    _failedInput = null;
     if (!mounted || generation != _generation) {
       image.dispose();
       return;
@@ -1207,6 +1249,8 @@ class _MornyePageGroundState extends State<MornyePageGround>
   @override
   void dispose() {
     _generation++;
+    _builtWidth = null;
+    _builtHeight = null;
     _controller.dispose();
     super.dispose();
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
 import 'package:spotiflac_android/services/sqlite_native_snapshot.dart';
@@ -135,7 +136,7 @@ class LibraryNativeAdapter {
       database,
       p.join(directory.path, 'local_library.db'),
       tables: ['library', 'library_path_keys', 'library_sources'],
-      version: 18,
+      version: LibrarySchema.version,
       copyRows: false,
     );
     _check(isCancelled);
@@ -375,7 +376,7 @@ class LibraryNativeAdapter {
             'CREATE INDEX $alias.native_library_snapshot_id '
             'ON library(source_id, id)',
           );
-          await txn.execute('PRAGMA $alias.user_version = 18');
+          await txn.execute('PRAGMA $alias.user_version = ${LibrarySchema.version}');
         });
       });
       _check(isCancelled);

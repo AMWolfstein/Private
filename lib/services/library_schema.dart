@@ -12,7 +12,7 @@ final _log = AppLogger('LibraryDatabase');
 
 /// Schema lifecycle is independent of collection reads and scan transactions.
 abstract final class LibrarySchema {
-  static const version = 18;
+  static const version = 19;
   static const visibleView = 'library_visible';
   static const searchFtsTable = 'library_search_fts';
   static const lookupSummaryTable = 'library_lookup_summary';
@@ -201,6 +201,11 @@ abstract final class LibrarySchema {
       // source ownership and collection references remain byte-for-byte stable.
       await _backfillQueueColumns(db);
     }
+    if (oldVersion < 19) {
+      // PERF-401: artist pages and the Artists shelf filter, group and order
+      // by album_artist_norm; without the index every page scans the library.
+      await _createNormalizedIndexes(db);
+    }
   }
 
   static Future<bool> createSearchFts(DatabaseExecutor db) =>
@@ -253,6 +258,7 @@ abstract final class LibrarySchema {
       'track_norm': 'track_name_norm',
       'artist_norm': 'artist_name_norm',
       'album_norm': 'album_name_norm',
+      'album_artist_norm': 'album_artist_norm',
       'scanned_at': 'scanned_at',
     }.entries) {
       await db.execute(

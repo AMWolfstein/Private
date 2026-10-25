@@ -16,7 +16,7 @@ import 'package:spotiflac_android/utils/logger.dart';
 final _log = AppLogger('LibraryCollectionsDb');
 
 const _dbFileName = 'library_collections.db';
-const _dbVersion = 3;
+const _dbVersion = 4;
 
 const _tableLoved = 'loved_tracks';
 const _tablePlaylists = 'playlists';
@@ -131,6 +131,10 @@ class LibraryCollectionsDatabase {
     await db.execute(
       'CREATE INDEX idx_${_tablePlaylistTracks}_added_at ON $_tablePlaylistTracks(added_at DESC)',
     );
+    // OPT-PERF-003: the playlist picker filters memberships by track_key.
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_${_tablePlaylistTracks}_track_key ON $_tablePlaylistTracks(track_key, playlist_id)',
+    );
   }
 
   /// Upgrades the app-owned schema without rewriting retained collections.
@@ -145,6 +149,13 @@ class LibraryCollectionsDatabase {
     }
     if (oldVersion < 3) {
       await db.execute('DROP TABLE IF EXISTS wishlist_tracks');
+    }
+    if (oldVersion < 4) {
+      // OPT-PERF-003: the picker's per-500-key membership counts filtered by
+      // track_key scanned the whole membership table without this index.
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_${_tablePlaylistTracks}_track_key ON $_tablePlaylistTracks(track_key, playlist_id)',
+      );
     }
   }
 

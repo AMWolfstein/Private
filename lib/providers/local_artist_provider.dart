@@ -133,11 +133,15 @@ LocalLibraryItem _decodeArtistTrack(Map<String, dynamic> row) =>
 
 final localArtistPlayCountsLoaderProvider =
     Provider<Future<Map<String, int>> Function(List<String>)>(
-      (ref) => (keys) async {
-        await listeningRecorder.flush();
-        return ListeningStatisticsStore.instance.playsForTracks(keys);
-      },
+      // Flushing happens once per Popular selection, before the paging loop
+      // starts (PERF-601), not on every page's play-count read.
+      (ref) => ListeningStatisticsStore.instance.playsForTracks,
     );
+
+/// Flush hook so tests can observe the single pre-loop flush (PERF-601).
+final listeningFlushProvider = Provider<Future<void> Function()>(
+  (ref) => listeningRecorder.flush,
+);
 
 final localArtistPopularRandomProvider = Provider<Random>((ref) => Random());
 
@@ -161,6 +165,9 @@ final localArtistPopularProvider = FutureProvider.autoDispose
       final load = ref.watch(localArtistTrackLoaderProvider);
       final counts = ref.watch(localArtistPlayCountsLoaderProvider);
       final random = ref.watch(localArtistPopularRandomProvider);
+      // Persisted plays must be visible to every page, not only the first;
+      // flushing once before the loop is free when nothing is buffered.
+      await ref.watch(listeningFlushProvider)();
       var selected = <({LocalLibraryItem item, int plays, double tie})>[];
       final seen = <String>{};
       QueueLibraryDbCursor? cursor;

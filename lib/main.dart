@@ -46,7 +46,9 @@ void main() {
         // registers the local backend and platform channels.
         await waitForActivityAttachment(binding);
       }
-      await setAppOrientation();
+      // PERF-604: the orientation lock is independent of the prefs and
+      // installation steps; run it in parallel and await it before runApp.
+      final orientation = setAppOrientation();
       LicenseRegistry.addLicense(() async* {
         yield LicenseEntryWithLineBreaks(const [
           'Inter',
@@ -95,6 +97,7 @@ void main() {
       final bootstrapTheme = loadBootstrapThemeSettings(prefs);
       final runtimeProfile = await _resolveRuntimeProfile(prefs);
       _configureImageCache(runtimeProfile);
+      await orientation;
 
       runApp(
         ProviderScope(

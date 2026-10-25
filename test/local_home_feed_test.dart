@@ -198,6 +198,7 @@ void main() {
               localArtistPlayCountsLoaderProvider.overrideWithValue(
                 (keys) async => {},
               ),
+              listeningFlushProvider.overrideWithValue(() async {}),
               localArtistTrackLoaderProvider.overrideWithValue(
                 (request) async =>
                     const QueueLibraryDbPage(rows: [], nextCursor: null),

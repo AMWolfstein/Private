@@ -210,18 +210,26 @@ class _LibraryTracksFolderScreenState
 
   @override
   Widget build(BuildContext context) {
-    final collections = ref.watch(libraryCollectionsProvider);
-    final collection = widget.mode == LibraryTracksFolderMode.playlist
-        ? collections.playlistById(widget.playlistId ?? '')
-        : null;
+    // PERF-202: only the cover inputs are read here; the collection state is
+    // selected in slices so an unrelated collection edit does not rebuild
+    // this screen.
+    final loved = widget.mode == LibraryTracksFolderMode.loved;
+    final playlist = loved
+        ? null
+        : ref.watch(
+            libraryCollectionsProvider.select(
+              (state) => state.playlistById(widget.playlistId ?? ''),
+            ),
+          );
+    final lovedEntries = loved
+        ? ref.watch(libraryCollectionsProvider.select((state) => state.loved))
+        : const <CollectionTrackEntry>[];
+    final collection = playlist;
     final entries =
-        (widget.mode == LibraryTracksFolderMode.playlist
-            ? collection?.tracks
-            : collections.loved) ??
+        (loved ? lovedEntries : playlist?.tracks) ??
         const <CollectionTrackEntry>[];
     String? nonempty(String? value) =>
         value?.trim().isNotEmpty == true ? value : null;
-    final loved = widget.mode == LibraryTracksFolderMode.loved;
     final preferred =
         nonempty(collection?.coverImagePath) ??
         nonempty(collection?.previewCover) ??

@@ -14,10 +14,22 @@ import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 typedef GenrePageRequest = ({String? genre, int offset});
 final genrePageLoaderProvider =
     Provider<Future<List<Map<String, dynamic>>> Function(GenrePageRequest)>(
-      (ref) =>
-          (request) async => LibraryGenres(
-            await LibraryDatabase.instance.database,
-          ).page(genre: request.genre, offset: request.offset),
+      (ref) {
+        // One tag cache per library version; the provider rebuilds with the
+        // version, so a scan drops the cached tags with it (PERF-402).
+        final tagCache = LibraryGenreTagCache();
+        final version = ref.watch(
+          localLibraryProvider.select((state) => state.loadedIndexVersion),
+        );
+        return (request) async => LibraryGenres(
+          await LibraryDatabase.instance.database,
+          tagCache: tagCache,
+        ).page(
+          genre: request.genre,
+          offset: request.offset,
+          libraryVersion: version,
+        );
+      },
     );
 final genrePageProvider = FutureProvider.autoDispose
     .family<List<Map<String, dynamic>>, GenrePageRequest>((ref, request) {

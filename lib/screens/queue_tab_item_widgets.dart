@@ -54,8 +54,6 @@ extension _QueueTabItemWidgets on _QueueTabState {
     BuildContext context,
     UnifiedLibraryItem item,
     ColorScheme colorScheme, {
-    required List<LocalLibraryItem> localNavigationItems,
-    required int? localNavigationIndex,
     required List<UnifiedLibraryItem> libraryItems,
     bool playlistDragEnabled = false,
   }) {

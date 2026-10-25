@@ -31,7 +31,6 @@ class LibraryDatabase {
   static const String legacySourceId = LocalLibraryItem.legacySourceId;
   static const String visibleLibraryView = LibrarySchema.visibleView;
   static const String searchFtsTable = LibrarySchema.searchFtsTable;
-  static const String lookupSummaryTable = LibrarySchema.lookupSummaryTable;
   static const String _scanStageTable = 'library_scan_stage';
   static const String _scanStagePathKeysTable = 'library_scan_path_keys_stage';
   // v4 records ReplayGain availability; older rows rescan once.
@@ -767,32 +766,6 @@ class LibraryDatabase {
           return byMatchKey[matchKeyFor(request.trackName, request.artistName)];
         })
         .toList(growable: false);
-  }
-
-  Future<LocalLibraryLookupIndex> getLookupIndex() async {
-    final db = await database;
-    final rows = await db.rawQuery('''
-      SELECT summary.kind, summary.value
-      FROM $lookupSummaryTable summary
-      JOIN library_sources source ON source.id = summary.source_id
-      WHERE source.enabled = 1 AND source.available = 1
-      GROUP BY summary.kind, summary.value
-    ''');
-    final isrcs = <String>{};
-    final matchKeys = <String>{};
-    for (final row in rows) {
-      final value = row['value'] as String?;
-      if (value == null || value.isEmpty) continue;
-      if (row['kind'] == 'isrc') {
-        isrcs.add(value);
-      } else if (row['kind'] == 'match') {
-        matchKeys.add(value);
-      }
-    }
-    return LocalLibraryLookupIndex(
-      isrcs: Set<String>.unmodifiable(isrcs),
-      matchKeys: Set<String>.unmodifiable(matchKeys),
-    );
   }
 
   /// Physical copies sharing one ISRC, excluding inactive NAS sources and

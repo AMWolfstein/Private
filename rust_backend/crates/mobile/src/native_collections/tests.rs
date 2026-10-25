@@ -12,7 +12,7 @@ impl Fixture {
         let directory = tempfile::tempdir().unwrap();
         let path = directory.path().join("library_collections.db");
         let db = Connection::open(&path).unwrap();
-        db.execute_batch(r#"PRAGMA user_version=3; PRAGMA journal_mode=WAL;
+        db.execute_batch(r#"PRAGMA user_version=4; PRAGMA journal_mode=WAL;
           CREATE TABLE loved_tracks(track_key TEXT PRIMARY KEY,track_json TEXT NOT NULL,added_at TEXT NOT NULL);
           CREATE TABLE favorite_artists(artist_key TEXT PRIMARY KEY,artist_json TEXT NOT NULL,added_at TEXT NOT NULL);
           CREATE TABLE playlists(id TEXT PRIMARY KEY,name TEXT NOT NULL,cover_image_path TEXT,created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
@@ -158,7 +158,7 @@ fn schema_missing_database_and_existing_output_never_publish_or_overwrite() {
     for kind in 0..3 {
         let mut fixture = Fixture::new();
         match kind {
-            0 => fixture.db.execute_batch("PRAGMA user_version=4").unwrap(),
+            0 => fixture.db.execute_batch("PRAGMA user_version=3").unwrap(),
             1 => {
                 fixture.request["collections_path"] = Value::from(
                     fixture

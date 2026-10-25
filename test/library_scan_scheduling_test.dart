@@ -65,10 +65,6 @@ class _Database implements LibraryDatabase {
   }) => fullReplacement!();
 
   @override
-  Future<LocalLibraryLookupIndex> getLookupIndex() async =>
-      const LocalLibraryLookupIndex();
-
-  @override
   Future<int> getSourceCount(String sourceId) async => 1;
 
   @override

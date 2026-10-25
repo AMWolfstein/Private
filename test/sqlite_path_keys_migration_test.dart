@@ -196,7 +196,9 @@ void main() {
         match_key TEXT DEFAULT 'song|artist',
         track_name TEXT, artist_name TEXT, album_name TEXT, album_artist TEXT,
         genre TEXT, release_date TEXT, file_mod_time INTEGER, scanned_at TEXT,
-        search_text TEXT, sort_genre TEXT, sort_release TEXT, sort_added INTEGER
+        search_text TEXT, sort_genre TEXT, sort_release TEXT, sort_added INTEGER,
+        track_name_norm TEXT, artist_name_norm TEXT, album_name_norm TEXT,
+        album_artist_norm TEXT, album_key TEXT
       )
     ''');
     await createPathKeyTable(db, 'library_path_keys');
