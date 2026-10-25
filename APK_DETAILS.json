@@ -1,0 +1,16 @@
+{
+  "source_commit": "dbcc00335aa83462c28fa17dc52db58a0471fed6",
+  "version": "5.1.1-debug",
+  "version_code": 168,
+  "package": "com.zarz.spotiflac.debug",
+  "build_mode": "debug",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "native_library_count": 17,
+  "signature_verified": true,
+  "apk_sha256": "8f27542d5bf14a0c2c0c6a42e2d404b07c7515776ce4f619939c4ed77ce53b3d",
+  "zip_sha256": "51faef205ff357881375171e8f755ececb6c2df568a315d015754a8ac38102b3",
+  "apk_bytes": 139219197,
+  "zip_bytes": 87651960
+}
