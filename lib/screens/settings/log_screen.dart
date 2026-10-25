@@ -10,6 +10,7 @@ import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/widgets/app_search_field.dart';
 import 'package:spotiflac_android/utils/ordered_range_selection.dart';
+import 'package:spotiflac_android/utils/adaptive_layout.dart';
 
 class LogScreen extends ConsumerStatefulWidget {
   const LogScreen({super.key});
@@ -24,6 +25,7 @@ class _LogScreenState extends ConsumerState<LogScreen> {
   String _selectedLevel = 'ALL';
   String _searchQuery = '';
   bool _autoScroll = true;
+  int _autoScrollGeneration = 0;
   bool _selectionMode = false;
   final Set<LogEntry> _selectedEntries = <LogEntry>{};
   LogEntry? _selectionAnchor;
@@ -39,6 +41,7 @@ class _LogScreenState extends ConsumerState<LogScreen> {
 
   @override
   void dispose() {
+    _autoScrollGeneration++;
     LogBuffer().removeListener(_onLogUpdate);
     LogBuffer().stopGoLogPolling();
     _scrollController.dispose();
@@ -62,16 +65,42 @@ class _LogScreenState extends ConsumerState<LogScreen> {
       }
       setState(() {});
       if (_autoScroll && _scrollController.hasClients) {
+        final generation = ++_autoScrollGeneration;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_scrollController.hasClients) {
-            _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeOut,
-            );
-          }
+          _scrollToLatestLog(generation);
         });
       }
+    }
+  }
+
+  bool _canAutoScroll(int generation) =>
+      mounted &&
+      _autoScroll &&
+      generation == _autoScrollGeneration &&
+      _scrollController.hasClients;
+
+  Future<void> _scrollToLatestLog(int generation) async {
+    // A lazy, variable-height list estimates its unseen rows. Recheck the
+    // extent after layout rather than stopping at the first estimated end.
+    for (var correction = 0; correction < 8; correction++) {
+      if (!_canAutoScroll(generation)) return;
+      final position = _scrollController.position;
+      if (position.pixels >= position.maxScrollExtent - 0.5) return;
+      await _scrollController.animateTo(
+        position.maxScrollExtent,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+      );
+      await WidgetsBinding.instance.endOfFrame;
+    }
+  }
+
+  void _toggleAutoScroll() {
+    setState(() => _autoScroll = !_autoScroll);
+    _autoScrollGeneration++;
+    if (!_autoScroll && _scrollController.hasClients) {
+      // Cancel the current animation as well as any queued extent correction.
+      _scrollController.jumpTo(_scrollController.position.pixels);
     }
   }
 
@@ -103,9 +132,13 @@ class _LogScreenState extends ConsumerState<LogScreen> {
     setState(() {
       _selectionMode = true;
       _autoScroll = false;
+      _autoScrollGeneration++;
       _selectedEntries.add(entry);
       _selectionAnchor = entry;
     });
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.pixels);
+    }
   }
 
   void _toggleEntrySelection(LogEntry entry) {
@@ -309,8 +342,7 @@ class _LogScreenState extends ConsumerState<LogScreen> {
                         tooltip: _autoScroll
                             ? context.l10n.logAutoScrollOn
                             : context.l10n.logAutoScrollOff,
-                        onPressed: () =>
-                            setState(() => _autoScroll = !_autoScroll),
+                        onPressed: _toggleAutoScroll,
                       ),
                       IconButton(
                         icon: const Icon(Icons.copy),
@@ -515,25 +547,28 @@ class _LogScreenState extends ConsumerState<LogScreen> {
                       ],
                     ),
                   )
-                : SliverToBoxAdapter(
-                    child: SettingsGroup(
-                      children: [
-                        ...logs.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final log = entry.value;
-                          return _LogEntryTile(
-                            entry: log,
-                            levelColor: _getLevelColor(log.level, colorScheme),
-                            showDivider: index < logs.length - 1,
-                            selectionMode: _selectionMode,
-                            selected: _selectedEntries.contains(log),
-                            onTap: () => _toggleEntrySelection(log),
-                            onLongPress: () => _selectionMode
-                                ? _selectRangeTo(log)
-                                : _enterSelectionMode(log),
-                          );
-                        }),
-                      ],
+                : SliverLayoutBuilder(
+                    builder: (context, constraints) => SliverSettingsGroup(
+                      margin: EdgeInsets.symmetric(
+                        horizontal:
+                            16 + wideInsetForWidth(constraints.crossAxisExtent),
+                        vertical: 4,
+                      ),
+                      itemCount: logs.length,
+                      itemBuilder: (context, index) {
+                        final log = logs[index];
+                        return _LogEntryTile(
+                          entry: log,
+                          levelColor: _getLevelColor(log.level, colorScheme),
+                          showDivider: index < logs.length - 1,
+                          selectionMode: _selectionMode,
+                          selected: _selectedEntries.contains(log),
+                          onTap: () => _toggleEntrySelection(log),
+                          onLongPress: () => _selectionMode
+                              ? _selectRangeTo(log)
+                              : _enterSelectionMode(log),
+                        );
+                      },
                     ),
                   ),
 

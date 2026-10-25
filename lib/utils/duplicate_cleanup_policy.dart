@@ -1,6 +1,7 @@
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
 import 'package:spotiflac_android/utils/path_match_keys.dart';
+import 'package:spotiflac_android/utils/duplicate_quality_policy.dart';
 
 /// Clear every index of a deleted file, but never delete a retained alias.
 Future<int> deleteReviewedDuplicateCopies({
@@ -39,11 +40,11 @@ class DuplicateCleanupPlan {
   });
 }
 
-/// Keeps the first (highest-quality) entry from every duplicate group and
+/// Keeps the highest-quality entry from every verified duplicate group and
 /// schedules every remaining copy for deletion.
 ///
-/// [LibraryDatabase.findIsrcDuplicateGroups] returns entries best-quality
-/// first, so this policy deliberately preserves that ordering contract.
+/// Sort defensively so a stale/manual review ordering cannot select a worse
+/// lossy copy just because it has a higher sample rate.
 DuplicateCleanupPlan buildKeepBestAllDuplicatePlan(
   List<IsrcDuplicateGroup> groups,
 ) {
@@ -52,10 +53,15 @@ DuplicateCleanupPlan buildKeepBestAllDuplicatePlan(
   var groupCount = 0;
 
   for (final group in groups) {
-    if (group.entries.length < 2) continue;
+    if (group.entries.length < 2 ||
+        !group.entries.every(hasComparableDuplicateQuality)) {
+      continue;
+    }
+    final entries = List<IsrcDuplicateEntry>.of(group.entries)
+      ..sort(compareDuplicateQuality);
     groupCount++;
-    retainedEntries.add(group.entries.first);
-    entriesToDelete.addAll(group.entries.skip(1));
+    retainedEntries.add(entries.first);
+    entriesToDelete.addAll(entries.skip(1));
   }
 
   return DuplicateCleanupPlan(

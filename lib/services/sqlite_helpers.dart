@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:unorm_dart/unorm_dart.dart' as unicode;
 
 final _log = AppLogger('AppSqlite');
 
@@ -102,6 +103,16 @@ Future<Database> openAppDatabase(
 String normalizeLookupText(String? value) {
   return (value ?? '').trim().toLowerCase();
 }
+
+/// Canonical search text is independent of persisted Library identity keys.
+/// Normalize after lowercasing as case conversion can introduce combining marks.
+String normalizeSearchText(String? value) =>
+    unicode.nfc(normalizeLookupText(value));
+
+/// Keep empty segments so these keys remain aligned with the display tags in
+/// LibraryGenres' parallel split, including leading newlines and CRLF pairs.
+String normalizeGenreTags(String? value) =>
+    (value ?? '').split(RegExp(r'[;\r\n]')).map(normalizeSearchText).join(';');
 
 /// Retry only lock contention while acquiring BEGIN, before the callback runs.
 /// History download writers can also lock transactions on an attached Library

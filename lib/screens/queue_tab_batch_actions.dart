@@ -26,14 +26,10 @@ extension _QueueTabBatchActions on _QueueTabState {
         }
         // Restore after the dialog's exit animation.
         await Future<void>.delayed(const Duration(milliseconds: 220));
-        _suppressSelectionOverlay = false;
         if (!mounted) return;
-        if (_isSelectionMode) {
-          _syncSelectionOverlay(
-            items: allItems,
-            bottomPadding: MediaQuery.paddingOf(context).bottom,
-          );
-        }
+        // A library refresh may have settled while the dialog hid the bar.
+        // Rebuild from the current query rather than restore captured rows.
+        _setState(() => _suppressSelectionOverlay = false);
       },
     );
   }

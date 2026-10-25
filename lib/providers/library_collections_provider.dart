@@ -41,6 +41,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
 
   final LibraryCollectionsDatabase _db;
   Future<void>? _loadFuture;
+  Object? _loadFailure;
   final Map<String, Future<void>> _playlistLoadFutures = {};
   Future<void> _mutationTail = Future<void>.value();
 
@@ -73,6 +74,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
   }
 
   Future<void> _load() async {
+    _loadFailure = null;
     try {
       await _db.migrateFromSharedPreferences();
       if (!ref.mounted) return;
@@ -88,6 +90,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
         );
       }
     } catch (error, stack) {
+      _loadFailure = error;
       _log.e('Failed to load library collections', error, stack);
       if (ref.mounted) state = state.copyWith(isLoaded: true);
     }
@@ -385,6 +388,87 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
         withList: (list) => state.copyWith(loved: list),
         dbDelete: _db.deleteLovedTracks,
       );
+
+  /// Remove references to deleted local rows, including imported playlist
+  /// occurrences. ISRC is a recording key, not a file identity: another local
+  /// copy with the same ISRC must remain in its collections.
+  Future<void> removeLocalLibraryTracks(Iterable<String> localIds) {
+    final selected = localIds.toSet();
+    if (selected.isEmpty) return Future<void>.value();
+    final localKeys = {for (final id in selected) 'local:$id'};
+    final occurrencePrefix = RegExp(r'^occurrence:\d+:');
+    bool matches(CollectionTrackEntry entry) =>
+        (entry.track.source == 'local' && selected.contains(entry.track.id)) ||
+        localKeys.contains(entry.key.replaceFirst(occurrencePrefix, ''));
+
+    return _mutate(() async {
+      if (_loadFailure != null) {
+        await _load();
+        if (_loadFailure != null) {
+          throw StateError(
+            'Cannot remove deleted tracks from unreadable collections',
+          );
+        }
+      }
+      if (!ref.mounted) {
+        throw StateError('Library collections provider was disposed');
+      }
+      final lovedKeys = state.loved
+          .where(matches)
+          .map((entry) => entry.key)
+          .toList();
+      if (lovedKeys.isNotEmpty) {
+        await _db.deleteLovedTracks(lovedKeys);
+        if (!ref.mounted) {
+          throw StateError('Library collections provider was disposed');
+        }
+        final removed = lovedKeys.toSet();
+        state = state.copyWith(
+          loved: state.loved
+              .where((entry) => !removed.contains(entry.key))
+              .toList(),
+        );
+      }
+
+      // Lazy playlist summaries contain membership keys but not the local row
+      // IDs inside ISRC/occurrence entries. Resolve those before matching.
+      final playlistIds = state.playlists
+          .map((playlist) => playlist.id)
+          .toList();
+      for (final playlistId in playlistIds) {
+        await ensurePlaylistLoaded(playlistId);
+        if (!ref.mounted) {
+          throw StateError('Library collections provider was disposed');
+        }
+        final playlist = state.playlistById(playlistId);
+        if (playlist == null) continue;
+        final keys = playlist.tracks
+            .where(matches)
+            .map((entry) => entry.key)
+            .toSet();
+        if (keys.isEmpty) continue;
+        final now = DateTime.now();
+        await _db.deletePlaylistTracks(
+          playlistId: playlistId,
+          trackKeys: keys.toList(),
+          playlistUpdatedAt: now.toIso8601String(),
+        );
+        if (!ref.mounted) {
+          throw StateError('Library collections provider was disposed');
+        }
+        _replacePlaylistById(
+          playlistId,
+          (current) => current.copyWith(
+            tracks: current.tracks
+                .where((entry) => !keys.contains(entry.key))
+                .toList(),
+            updatedAt: now,
+          ),
+        );
+        _invalidatePlaylistPickerSummaries();
+      }
+    });
+  }
 
   Future<String> createPlaylist(String name) => _mutate(() async {
     final now = DateTime.now();

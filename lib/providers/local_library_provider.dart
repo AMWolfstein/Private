@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/notification_service.dart';
@@ -171,6 +172,9 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   bool _scanPauseRequested = false;
   bool _scanInProgress = false;
   Future<void>? _scanCompletion;
+  Future<void>? _clearFuture;
+  bool _clearingLibrary = false;
+  int _scanEpoch = 0;
   String? _nativeLibraryRequestId;
   final Set<String> _pendingReconnectScans = {};
   bool _drainingReconnectScans = false;
@@ -249,6 +253,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       return _loadFuture ?? Future<void>.value();
     }
     _isLoaded = true;
+    final scanEpoch = _scanEpoch;
     state = state.copyWith(isLoading: true, loadFailed: false);
 
     try {
@@ -308,7 +313,10 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         _hasLoadedFromDatabase = true;
         break;
       }
-      if (ref.mounted && reconnectedSources.reconnected.isNotEmpty) {
+      if (ref.mounted &&
+          !_clearingLibrary &&
+          scanEpoch == _scanEpoch &&
+          reconnectedSources.reconnected.isNotEmpty) {
         unawaited(
           Future<void>.microtask(
             () => _scanSourcesSequentially(reconnectedSources.reconnected),
@@ -326,15 +334,19 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   }
 
   Future<void> reloadFromStorage() async {
+    if (!ref.mounted) return;
+    // Invalidate snapshots already being read, not just the next load. The
+    // active loader retries its summary when this generation changes.
+    _sourceVersion++;
+    _hasLoadedFromDatabase = false;
     final loading = _loadFuture;
     if (loading != null) {
       await loading;
-      return;
+      if (!ref.mounted || _hasLoadedFromDatabase) return;
     }
-    _isLoaded = false;
-    _hasLoadedFromDatabase = false;
-    _sourceVersion++;
-    _loadFuture = null;
+    // Another reload may already have started a retry after a failed load.
+    // Join that owner rather than clearing its single-flight future.
+    if (_loadFuture == null) _isLoaded = false;
     await _ensureLoadedFromDatabase();
   }
 
@@ -464,6 +476,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   }
 
   Future<void> _refreshSourceAvailability() async {
+    final scanEpoch = _scanEpoch;
     await _ensureLoadedFromDatabase();
     final reconnected = <String>{};
     while (ref.mounted) {
@@ -477,7 +490,11 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     // Existing rows become visible as soon as availability flips. The
     // incremental pass then verifies changes made while storage was detached
     // without re-reading metadata for unchanged files.
-    if (ref.mounted && _scanReconnectedOnRefresh && reconnected.isNotEmpty) {
+    if (ref.mounted &&
+        !_clearingLibrary &&
+        scanEpoch == _scanEpoch &&
+        _scanReconnectedOnRefresh &&
+        reconnected.isNotEmpty) {
       _pendingReconnectScans.addAll(reconnected);
       unawaited(_drainReconnectScans());
     }
@@ -487,15 +504,19 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     Iterable<String> sourceIds, {
     bool forceFullScan = false,
   }) async {
+    final epoch = _scanEpoch;
     for (final sourceId in sourceIds) {
-      if (!ref.mounted) break;
+      if (!ref.mounted || _clearingLibrary || epoch != _scanEpoch) break;
       await startSourceScan(sourceId, forceFullScan: forceFullScan);
       if (_scanCancelRequested) break;
     }
   }
 
   Future<void> scanAllSources({bool forceFullScan = false}) async {
+    final epoch = _scanEpoch;
+    if (_clearingLibrary || !ref.mounted) return;
     await _ensureLoadedFromDatabase();
+    if (!ref.mounted || _clearingLibrary || epoch != _scanEpoch) return;
     final sourceIds = state.sources
         .where((source) => source.enabled && source.available)
         .map((source) => source.id)
@@ -507,10 +528,15 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     String sourceId, {
     bool forceFullScan = false,
   }) async {
+    final epoch = _scanEpoch;
+    if (_clearingLibrary) return;
     final reconnect = _pendingReconnectScans.contains(sourceId);
-    while (ref.mounted) {
+    while (ref.mounted && !_clearingLibrary && epoch == _scanEpoch) {
       final source = await _sourceForScan(sourceId);
-      if (source == null ||
+      if (!ref.mounted ||
+          _clearingLibrary ||
+          epoch != _scanEpoch ||
+          source == null ||
           (reconnect && !_pendingReconnectScans.contains(sourceId))) {
         return;
       }
@@ -549,10 +575,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   }
 
   Future<void> _drainReconnectScans() async {
-    if (_drainingReconnectScans || !ref.mounted) return;
+    if (_drainingReconnectScans || !ref.mounted || _clearingLibrary) return;
     _drainingReconnectScans = true;
     try {
-      while (ref.mounted && _pendingReconnectScans.isNotEmpty) {
+      while (ref.mounted &&
+          !_clearingLibrary &&
+          _pendingReconnectScans.isNotEmpty) {
         final active = _scanCompletion;
         if (active != null) await active;
         if (!ref.mounted || _pendingReconnectScans.isEmpty) break;
@@ -864,9 +892,10 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     String? iosBookmark,
     String? sourceId,
   }) async {
-    if (!ref.mounted) return;
+    final epoch = _scanEpoch;
+    if (!ref.mounted || _clearingLibrary) return;
     await _recoverInterruptedScan();
-    if (!ref.mounted) return;
+    if (!ref.mounted || _clearingLibrary || epoch != _scanEpoch) return;
     if (_scanInProgress || state.isScanning) {
       _log.w('Scan already in progress');
       return;
@@ -1711,21 +1740,46 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     return removed;
   }
 
-  Future<void> clearLibrary() async {
+  Future<void> clearLibrary() {
+    return _clearFuture ??= _clearLibrary().whenComplete(() {
+      _clearFuture = null;
+    });
+  }
+
+  Future<void> _clearLibrary() async {
+    if (!ref.mounted) return;
+    _clearingLibrary = true;
+    _scanEpoch++;
     _sourceVersion++;
-    await _db.clearAll();
-
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await clearLocalLibraryLastScannedAt(prefs);
-      await prefs.remove(_excludedDownloadedCountKey);
-    } catch (e) {
-      _log.w('Failed to clear lastScannedAt: $e');
-    }
+      _pendingReconnectScans.clear();
+      _availabilityRequestVersion++;
+      _scanReconnectedOnRefresh = false;
+      final activeScan = _scanCompletion;
+      await cancelScan();
+      // Cancellation can arrive after the native publication transaction has
+      // started. Join its owner before clearing so it cannot repopulate rows.
+      await activeScan;
+      await _db.clearAll();
 
-    await _refreshSummaryFromStorage();
-    state = state.copyWith(clearLastScannedAt: true);
-    _log.i('Library cleared');
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await clearLocalLibraryLastScannedAt(prefs);
+        await prefs.remove(_excludedDownloadedCountKey);
+      } catch (e) {
+        _log.w('Failed to clear lastScannedAt: $e');
+      }
+
+      if (!ref.mounted) return;
+      await _refreshSummaryFromStorage();
+      if (!ref.mounted) return;
+      state = state.copyWith(clearLastScannedAt: true);
+      _log.i('Library cleared');
+    } finally {
+      _pendingReconnectScans.clear();
+      _scanReconnectedOnRefresh = false;
+      _clearingLibrary = false;
+    }
   }
 
   Future<void> _pruneLibraryCoverCache() async {
@@ -1770,8 +1824,14 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   }
 
   Future<void> removeItems(Iterable<String> ids) async {
-    if (ids.isEmpty) return;
-    await _db.deleteByIds(ids);
+    final selected = ids.toSet();
+    if (selected.isEmpty) return;
+    final collections = ref.read(libraryCollectionsProvider.notifier);
+    // Purge persisted membership first. If that fails, retaining the library
+    // rows allows the deletion cleanup to be retried without losing identity.
+    await collections.removeLocalLibraryTracks(selected);
+    await _db.deleteByIds(selected);
+    if (!ref.mounted) return;
     await _refreshSummaryFromStorage();
   }
 

@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/models/settings.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
+import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 
@@ -40,6 +41,15 @@ class _LibraryDatabase implements LibraryDatabase {
   int countReads = 0;
   int indexReads = 0;
   int availabilityWrites = 0;
+  final removedIds = <String>[];
+
+  @override
+  Future<List<String>> getPhysicalFileIds(Iterable<String> filePaths) async =>
+      filePaths.contains('/music/deleted.flac') ? ['deleted', 'alias'] : [];
+
+  @override
+  Future<void> deleteByIds(Iterable<String> ids) async =>
+      removedIds.addAll(ids);
 
   @override
   Future<List<LocalLibrarySource>> getSources() async {
@@ -128,6 +138,20 @@ class _Library extends LocalLibraryNotifier {
   }
 }
 
+class _Collections extends LibraryCollectionsNotifier {
+  final removedIds = <String>[];
+  bool failRemoval = false;
+
+  @override
+  LibraryCollectionsState build() => LibraryCollectionsState(isLoaded: true);
+
+  @override
+  Future<void> removeLocalLibraryTracks(Iterable<String> ids) async {
+    if (failRemoval) throw StateError('collection deletion failed');
+    removedIds.addAll(ids);
+  }
+}
+
 Future<void> _waitFor(bool Function() condition) async {
   for (var i = 0; i < 50 && !condition(); i++) {
     await Future<void>.delayed(Duration.zero);
@@ -142,6 +166,7 @@ void main() {
   late ProviderContainer container;
   late LocalLibraryAvailabilityProbe probe;
   late _Library library;
+  late _Collections collections;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
@@ -155,8 +180,10 @@ void main() {
       ),
     ]);
     probe = (path, {bookmark}) => Directory(path).exists();
+    collections = _Collections();
     container = ProviderContainer(
       overrides: [
+        libraryCollectionsProvider.overrideWith(() => collections),
         settingsProvider.overrideWith(_Settings.new),
         localLibraryProvider.overrideWith(
           () => library = _Library(
@@ -542,4 +569,73 @@ void main() {
     // Keep teardown simple after deliberately removing the storage above.
     await music.create();
   });
+
+  test('reload invalidates a summary already being read', () async {
+    final first = Completer<LocalLibraryLookupIndex>();
+    database.index = () => first.future;
+    container.read(localLibraryProvider);
+    await _waitFor(() => database.indexReads == 1);
+    database.count = () async => 7;
+    database.index = () async =>
+        const LocalLibraryLookupIndex(matchKeys: {'fresh|artist'});
+    final reloaded = library.reloadFromStorage();
+    first.complete(const LocalLibraryLookupIndex(matchKeys: {'stale|artist'}));
+    await reloaded;
+    final current = container.read(localLibraryProvider);
+    expect(database.indexReads, 2);
+    expect(current.totalCount, 7);
+    expect(current.hasTrack('fresh', 'artist'), isTrue);
+    expect(current.hasTrack('stale', 'artist'), isFalse);
+    expect(current.isLoading, isFalse);
+  });
+
+  test(
+    'concurrent reloads share the retry after an earlier read fails',
+    () async {
+      final old = Completer<LocalLibraryLookupIndex>();
+      final retry = Completer<LocalLibraryLookupIndex>();
+      database.index = () => old.future;
+      container.read(localLibraryProvider);
+      await _waitFor(() => database.indexReads == 1);
+      database.index = () => retry.future;
+      final firstReload = library.reloadFromStorage();
+      final secondReload = library.reloadFromStorage();
+      old.completeError(StateError('stale read failed'));
+      await _waitFor(() => database.indexReads == 2);
+      retry.complete(
+        const LocalLibraryLookupIndex(matchKeys: {'fresh|artist'}),
+      );
+      await Future.wait([firstReload, secondReload]);
+      expect(database.indexReads, 2);
+      expect(
+        container.read(localLibraryProvider).hasTrack('fresh', 'artist'),
+        isTrue,
+      );
+    },
+  );
+
+  test(
+    'physical deletion removes collection references for every indexed alias',
+    () async {
+      container.read(localLibraryProvider);
+      await _waitFor(() => !container.read(localLibraryProvider).isLoading);
+      await library.removePhysicalFiles(['/music/deleted.flac']);
+      expect(collections.removedIds, ['deleted', 'alias']);
+      expect(database.removedIds, ['deleted', 'alias']);
+    },
+  );
+
+  test(
+    'collection cleanup failure retains row identity for deletion retry',
+    () async {
+      container.read(localLibraryProvider);
+      await _waitFor(() => !container.read(localLibraryProvider).isLoading);
+      collections.failRemoval = true;
+      await expectLater(library.removeItems(['deleted']), throwsStateError);
+      expect(database.removedIds, isEmpty);
+      collections.failRemoval = false;
+      await library.removeItems(['deleted']);
+      expect(database.removedIds, ['deleted']);
+    },
+  );
 }

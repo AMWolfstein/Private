@@ -449,13 +449,12 @@ class DownloadedEmbeddedCoverResolver {
       return Future<String?>.value(cached.previewPath);
     }
     if (!forceRefresh && _failedExtract.containsKey(cleanPath)) {
-      // A SAF provider may temporarily be offline or still opening its remote
-      // file. Do not turn that failure into "no artwork" for the whole session.
-      // Retry on demand, with a cooldown so scrolling cannot flood the NAS.
+      // Both a document provider and a local/removable file can be temporarily
+      // unavailable. Retry on demand after a cooldown, through the same bounded
+      // extraction queue, instead of suppressing local failures for the session.
       final failedAt = _failedExtract[cleanPath]!;
-      if (!isContentUri(cleanPath) ||
-          _validationClock().difference(failedAt) <
-              _documentFailureRetryDelay) {
+      if (_validationClock().difference(failedAt) <
+          _documentFailureRetryDelay) {
         return Future<String?>.value();
       }
       _failedExtract.remove(cleanPath);

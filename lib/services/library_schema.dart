@@ -12,7 +12,7 @@ final _log = AppLogger('LibraryDatabase');
 
 /// Schema lifecycle is independent of collection reads and scan transactions.
 abstract final class LibrarySchema {
-  static const version = 17;
+  static const version = 18;
   static const visibleView = 'library_visible';
   static const searchFtsTable = 'library_search_fts';
   static const lookupSummaryTable = 'library_lookup_summary';
@@ -58,6 +58,9 @@ abstract final class LibrarySchema {
         match_key TEXT,
         album_key TEXT,
         search_text TEXT,
+        search_track TEXT,
+        search_album TEXT,
+        search_artist TEXT,
         sort_genre TEXT,
         sort_release TEXT,
         sort_added INTEGER
@@ -135,6 +138,9 @@ abstract final class LibrarySchema {
     if (oldVersion < 10) {
       for (final column in const [
         'search_text',
+        'search_track',
+        'search_album',
+        'search_artist',
         'sort_genre',
         'sort_release',
         'sort_added',
@@ -182,6 +188,18 @@ abstract final class LibrarySchema {
     if (oldVersion < 17) {
       // Reinstall the triggers and repair counts created by older upserts.
       await _createLookupSummary(db);
+    }
+    if (oldVersion < 18) {
+      for (final column in const [
+        'search_track',
+        'search_album',
+        'search_artist',
+      ]) {
+        await sqlite.addColumnIfMissing(db, 'library', column, 'TEXT');
+      }
+      // Only derived search/genre fields change. Track IDs, album/match keys,
+      // source ownership and collection references remain byte-for-byte stable.
+      await _backfillQueueColumns(db);
     }
   }
 
@@ -287,39 +305,48 @@ abstract final class LibrarySchema {
   }
 
   static Future<void> _backfillQueueColumns(Database db) async {
-    final rows = await db.query(
-      'library',
-      columns: [
-        'id',
-        'track_name',
-        'artist_name',
-        'album_name',
-        'album_artist',
-        'genre',
-        'release_date',
-        'file_mod_time',
-        'scanned_at',
-      ],
-    );
-    final batch = db.batch();
-    for (final row in rows) {
-      batch.update(
+    String? afterId;
+    while (true) {
+      final rows = await db.query(
         'library',
-        LibraryRowMapper.queue(
-          trackName: row['track_name'] as String?,
-          artistName: row['artist_name'] as String?,
-          albumName: row['album_name'] as String?,
-          albumArtist: row['album_artist'] as String?,
-          genre: row['genre'] as String?,
-          releaseDate: row['release_date'] as String?,
-          fileModTime: (row['file_mod_time'] as num?)?.toInt(),
-          scannedAt: row['scanned_at'] as String?,
-        ),
-        where: 'id = ?',
-        whereArgs: [row['id']],
+        columns: [
+          'id',
+          'track_name',
+          'artist_name',
+          'album_name',
+          'album_artist',
+          'genre',
+          'release_date',
+          'file_mod_time',
+          'scanned_at',
+        ],
+        where: afterId == null ? null : 'id > ?',
+        whereArgs: afterId == null ? null : [afterId],
+        orderBy: 'id',
+        limit: 300,
       );
+      if (rows.isEmpty) return;
+      final batch = db.batch();
+      for (final row in rows) {
+        batch.update(
+          'library',
+          LibraryRowMapper.queue(
+            trackName: row['track_name'] as String?,
+            artistName: row['artist_name'] as String?,
+            albumName: row['album_name'] as String?,
+            albumArtist: row['album_artist'] as String?,
+            genre: row['genre'] as String?,
+            releaseDate: row['release_date'] as String?,
+            fileModTime: (row['file_mod_time'] as num?)?.toInt(),
+            scannedAt: row['scanned_at'] as String?,
+          ),
+          where: 'id = ?',
+          whereArgs: [row['id']],
+        );
+      }
+      await batch.commit(noResult: true);
+      afterId = rows.last['id'] as String;
     }
-    await batch.commit(noResult: true);
   }
 
   static Future<void> _createLookupSummary(DatabaseExecutor db) async {

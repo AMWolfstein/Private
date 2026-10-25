@@ -106,6 +106,11 @@ abstract final class LibraryRowMapper {
     required int? fileModTime,
     required String? scannedAt,
   }) => {
+    'search_track': sqlite.normalizeSearchText(trackName),
+    'search_album': sqlite.normalizeSearchText(albumName),
+    'search_artist': sqlite.normalizeSearchText(
+      (albumArtist ?? '').trim().isEmpty ? artistName : albumArtist,
+    ),
     'search_text':
         [
               trackName,
@@ -113,10 +118,10 @@ abstract final class LibraryRowMapper {
               albumName,
               (albumArtist ?? '').trim().isEmpty ? artistName : albumArtist,
             ]
-            .map(sqlite.normalizeLookupText)
+            .map(sqlite.normalizeSearchText)
             .where((value) => value.isNotEmpty)
             .join(' '),
-    'sort_genre': sqlite.normalizeLookupText(genre),
+    'sort_genre': sqlite.normalizeGenreTags(genre),
     'sort_release': releaseDate?.trim() ?? '',
     'sort_added':
         fileModTime ??

@@ -98,6 +98,12 @@ class SettingsSearchCatalog {
           keywords: const ['transition', 'motion'],
         ),
         SettingsSearchEntry(
+          icon: Icons.text_fields,
+          title: l10n.appearanceCustomFont,
+          subtitle: l10n.appearanceCustomFontSubtitle,
+          keywords: const ['import font', 'ttf', 'otf', 'typeface'],
+        ),
+        SettingsSearchEntry(
           icon: Icons.blur_on,
           title: l10n.appearanceGlassQuality,
           subtitle: l10n.appearanceGlassQualitySubtitle,
@@ -107,6 +113,12 @@ class SettingsSearchCatalog {
             'liquid glass',
             'lite',
           ],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.opacity,
+          title: l10n.appearanceGlassClarity,
+          subtitle: l10n.appearanceGlassClaritySubtitle,
+          keywords: const ['frosted', 'soft', 'balanced', 'clear', 'crystal'],
         ),
         SettingsSearchEntry(
           icon: Icons.grid_view_outlined,
@@ -259,6 +271,26 @@ class SettingsSearchCatalog {
             keywords: const ['usb', 'dac', 'dsd', 'dop', 'hardware volume'],
           ),
           SettingsSearchEntry(
+            icon: Icons.graphic_eq,
+            title: l10n.usbDsdOverPcm,
+            subtitle: l10n.usbDsdOverPcmDescription,
+            targetLabel: l10n.usbBitPerfect,
+            keywords: const ['usb', 'dsd', 'dop', 'pcm'],
+          ),
+          SettingsSearchEntry(
+            icon: Icons.volume_up,
+            title: l10n.usbFixedVolume,
+            subtitle: l10n.usbFixedVolumeDescription,
+            targetLabel: l10n.usbBitPerfect,
+            keywords: const ['usb', 'fixed volume', 'dac'],
+          ),
+          SettingsSearchEntry(
+            icon: Icons.tune,
+            title: l10n.usbHardwareVolume,
+            targetLabel: l10n.usbBitPerfect,
+            keywords: const ['usb', 'dac volume', 'hardware'],
+          ),
+          SettingsSearchEntry(
             icon: Icons.headphones,
             title: l10n.dapExclusive,
             subtitle: l10n.dapExclusiveDescription,
@@ -268,6 +300,11 @@ class SettingsSearchCatalog {
         ],
       ],
       lyrics = [
+        SettingsSearchEntry(
+          icon: Icons.format_size,
+          title: l10n.lyricsTextSize,
+          keywords: const ['lyrics font size', 'scale', 'text size'],
+        ),
         SettingsSearchEntry(
           icon: Icons.light_mode_outlined,
           title: l10n.lyricsKeepScreenOn,

@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
 
 enum LibrarySearchKind { songs, albums, artists, playlists }
 
@@ -6,9 +7,9 @@ enum LibrarySearchKind { songs, albums, artists, playlists }
 /// in any order. Punctuation is a separator, never a SQL/FTS operator.
 class LibrarySearchQuery {
   LibrarySearchQuery(String text)
-    : text = text.trim().toLowerCase(),
-      terms = RegExp(r'[\p{L}\p{N}]+', unicode: true)
-          .allMatches(text.toLowerCase())
+    : text = sqlite.normalizeSearchText(text),
+      terms = RegExp(r'[\p{L}\p{N}][\p{L}\p{N}\p{M}]*', unicode: true)
+          .allMatches(sqlite.normalizeSearchText(text))
           .map((match) => match.group(0)!)
           .toSet()
           .toList(growable: false);
@@ -17,12 +18,12 @@ class LibrarySearchQuery {
   final List<String> terms;
 
   bool matches(String value) {
-    final normalized = value.toLowerCase();
+    final normalized = sqlite.normalizeSearchText(value);
     return terms.isNotEmpty && terms.every(normalized.contains);
   }
 
   int rank(String value) {
-    final normalized = value.trim().toLowerCase();
+    final normalized = sqlite.normalizeSearchText(value);
     if (normalized == text) return 0;
     if (normalized.startsWith(text)) return 1;
     if (normalized.contains(text)) return 2;
@@ -126,9 +127,9 @@ class LibrarySearchStore {
     final args = <Object?>[];
     const alias = 'l';
     const table = 'library_visible';
-    const artist = 'album_artist_norm';
-    const album = 'album_name_norm';
-    const title = 'track_name_norm';
+    const artist = 'search_artist';
+    const album = 'search_album';
+    const title = 'search_track';
     final column = switch (kind) {
       LibrarySearchKind.songs => '$alias.search_text',
       LibrarySearchKind.albums => "$alias.$album || ' ' || $alias.$artist",
@@ -151,7 +152,8 @@ class LibrarySearchStore {
         $alias.artist_name AS artist, $alias.album_name AS album,
         COALESCE(NULLIF($alias.album_artist, ''), $alias.artist_name) AS album_artist,
         $alias.album_key, $alias.$title AS title_key,
-        $alias.$album AS album_sort, $alias.$artist AS artist_key,
+        $alias.$album AS album_sort, $alias.album_artist_norm AS artist_key,
+        $alias.$artist AS artist_search,
         $alias.cover_path AS cover,
         $alias.file_path AS sample_path
       FROM $table $alias WHERE $predicate
@@ -173,7 +175,7 @@ class LibrarySearchStore {
         SELECT '' AS source, artist_key AS id, MIN(album_artist) AS title,
           MIN(album_artist) AS artist, MAX(NULLIF(cover, '')) AS cover,
           MAX(sample_path) AS sample_path, COUNT(*) AS track_count,
-          artist_key AS title_key
+          MIN(artist_search) AS title_key
         FROM ($rows) WHERE artist_key != '' GROUP BY artist_key''',
       LibrarySearchKind.playlists => throw StateError('Not a track index'),
     };

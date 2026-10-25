@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/screens/settings/about_page.dart';
 import 'package:spotiflac_android/screens/settings/settings_tab.dart';
+import 'package:spotiflac_android/screens/settings/settings_search_catalog.dart';
 import 'support/material_test_theme.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 
@@ -26,6 +27,66 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets('retired root keywords no longer advertise settings', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    for (final query in ['amoled', 'layout', 'grid', 'provider']) {
+      await tester.enterText(find.byType(TextField), query);
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsItem), findsNothing, reason: query);
+    }
+  });
+
+  testWidgets('new controls are searchable and have a highlight target', (
+    tester,
+  ) async {
+    for (final query in ['glass clarity', 'custom font', 'text size']) {
+      await pumpSettings(tester);
+      final l10n = AppLocalizations.of(
+        tester.element(find.byType(SettingsTab)),
+      );
+      final label = switch (query) {
+        'glass clarity' => l10n.appearanceGlassClarity,
+        'custom font' => l10n.appearanceCustomFont,
+        _ => l10n.lyricsTextSize,
+      };
+      await tester.enterText(find.byType(TextField), query);
+      await tester.pumpAndSettle();
+      expect(find.text(label), findsOneWidget);
+      await tester.tap(find.text(label));
+      await tester.pumpAndSettle();
+      expect(
+        find.byWidgetPredicate(
+          (widget) => widget is SettingsSearchTarget && widget.label == label,
+        ),
+        findsOneWidget,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    }
+  });
+
+  testWidgets('USB sub-options are indexed only for Android audio', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    final l10n = AppLocalizations.of(tester.element(find.byType(SettingsTab)));
+    final android = SettingsSearchCatalog(l10n, androidAudio: true);
+    final other = SettingsSearchCatalog(l10n);
+    for (final label in [
+      l10n.usbDsdOverPcm,
+      l10n.usbFixedVolume,
+      l10n.usbHardwareVolume,
+    ]) {
+      final entry = android.playback.singleWhere(
+        (entry) => entry.title == label,
+      );
+      expect(entry.targetLabel, l10n.usbBitPerfect);
+      expect(other.playback.any((entry) => entry.title == label), isFalse);
+    }
+  });
 
   testWidgets('retired download settings and player chooser are absent', (
     tester,

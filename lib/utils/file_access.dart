@@ -130,13 +130,17 @@ Future<bool> deleteFile(
   try {
     if (isContentUri(path)) {
       final deleted = await PlatformBridge.safDelete(path);
-      confirmedAbsent = deleted || !await PlatformBridge.safExists(path);
+      confirmedAbsent =
+          deleted || (await fileExistenceByPath([path]))[path] == false;
     } else {
-      final file = File(path);
-      if (await file.exists()) {
-        await file.delete();
+      try {
+        await File(path).delete();
+        confirmedAbsent = true;
+      } on FileSystemException {
+        // exists()/stat() can hide permission failures as "not found".
+        // Only the tri-state probe's explicit absence permits index cleanup.
+        confirmedAbsent = (await fileExistenceByPath([path]))[path] == false;
       }
-      confirmedAbsent = !await file.exists();
     }
   } catch (_) {
     return false;

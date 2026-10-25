@@ -228,6 +228,143 @@ ProviderContainer _container(_CollectionsDatabase db) {
 
 void main() {
   test(
+    'deleted local IDs purge lazy playlists and Loved without ISRC collateral',
+    () async {
+      final db = _CollectionsDatabase();
+      db.releaseWrite.complete();
+      db.releasePlaylistRead.complete();
+      final removed = _track(
+        'deleted',
+      ).copyWith(source: 'local', isrc: 'USAAA2600001');
+      final retained = _track(
+        'retained-copy',
+      ).copyWith(source: 'local', isrc: 'USAAA2600001');
+      final remote = _track('deleted').copyWith(source: 'legacy-provider');
+      Map<String, dynamic> row(String key, Track track) => {
+        'track_key': key,
+        'track_json': jsonEncode(track.toJson()),
+        'added_at': '2026-10-25',
+      };
+      db.loved['isrc:USAAA2600001'] = row('isrc:USAAA2600001', removed);
+      db.loved['local:retained-copy'] = row('local:retained-copy', retained);
+      db.loved['legacy-provider:deleted'] = row(
+        'legacy-provider:deleted',
+        remote,
+      );
+      db.playlists['playlist'] = {
+        'id': 'playlist',
+        'name': 'Mix',
+        'created_at': '2026-10-25',
+        'updated_at': '2026-10-25',
+      };
+      db.playlistTracks['playlist'] = [
+        row('isrc:USAAA2600001', removed),
+        row('occurrence:2:isrc:USAAA2600001', removed),
+        row('local:retained-copy', retained),
+        row('legacy-provider:deleted', remote),
+      ];
+      final container = _container(db);
+      final notifier = container.read(libraryCollectionsProvider.notifier);
+      await notifier.removeLocalLibraryTracks(['deleted']);
+      expect(
+        db.loved.keys,
+        unorderedEquals(['local:retained-copy', 'legacy-provider:deleted']),
+      );
+      expect(db.playlistTracks['playlist']!.map((row) => row['track_key']), [
+        'local:retained-copy',
+        'legacy-provider:deleted',
+      ]);
+      final current = container.read(libraryCollectionsProvider);
+      expect(current.loved.map((entry) => entry.track.id), [
+        'retained-copy',
+        'deleted',
+      ]);
+      expect(current.playlists.single.trackCount, 2);
+      expect(current.playlists.single.tracksLoaded, isTrue);
+    },
+  );
+
+  test(
+    'failed deletion cleanup preserves Loved membership for retry',
+    () async {
+      final db = _CollectionsDatabase();
+      db.releaseWrite.complete();
+      final removed = _track('deleted').copyWith(source: 'local');
+      db.loved['local:deleted'] = {
+        'track_key': 'local:deleted',
+        'track_json': jsonEncode(removed.toJson()),
+        'added_at': '2026-10-25',
+      };
+      final container = _container(db);
+      final notifier = container.read(libraryCollectionsProvider.notifier);
+      db.failNextWrite = true;
+      await expectLater(
+        notifier.removeLocalLibraryTracks(['deleted']),
+        throwsStateError,
+      );
+      expect(db.loved.keys, ['local:deleted']);
+      expect(
+        container.read(libraryCollectionsProvider).loved.single.track.id,
+        'deleted',
+      );
+      await notifier.removeLocalLibraryTracks(['deleted']);
+      expect(db.loved, isEmpty);
+      expect(container.read(libraryCollectionsProvider).loved, isEmpty);
+    },
+  );
+
+  test(
+    'unreadable collections are not treated as empty deletion cleanup',
+    () async {
+      final db = _CollectionsDatabase();
+      db.releaseWrite.complete();
+      final pending = Completer<LibraryCollectionsSnapshot>();
+      db.pendingSnapshot = pending.future;
+      db.loved['local:deleted'] = {
+        'track_key': 'local:deleted',
+        'track_json': jsonEncode(
+          _track('deleted').copyWith(source: 'local').toJson(),
+        ),
+        'added_at': '2026-10-25',
+      };
+      final container = _container(db);
+      final notifier = container.read(libraryCollectionsProvider.notifier);
+      final cleanup = notifier.removeLocalLibraryTracks(['deleted']);
+      final rejected = expectLater(cleanup, throwsStateError);
+      await db.snapshotReadStarted.future;
+      pending.completeError(StateError('snapshot temporarily unreadable'));
+      await rejected;
+      expect(db.loved.keys, ['local:deleted']);
+      expect(db.events, isEmpty);
+      db.pendingSnapshot = null;
+      await notifier.removeLocalLibraryTracks(['deleted']);
+      expect(db.loved, isEmpty);
+    },
+  );
+
+  test(
+    'disposal during cleanup cannot report complete collection removal',
+    () async {
+      final db = _CollectionsDatabase();
+      db.loved['local:deleted'] = {
+        'track_key': 'local:deleted',
+        'track_json': jsonEncode(
+          _track('deleted').copyWith(source: 'local').toJson(),
+        ),
+        'added_at': '2026-10-25',
+      };
+      final container = _container(db);
+      final notifier = container.read(libraryCollectionsProvider.notifier);
+      final cleanup = notifier.removeLocalLibraryTracks(['deleted']);
+      final rejected = expectLater(cleanup, throwsStateError);
+      await db.writeStarted.future;
+      container.dispose();
+      db.releaseWrite.complete();
+      await rejected;
+    },
+  );
+
+  test(
     'playlist import retains all 202 positions and re-import is idempotent',
     () async {
       final db = _CollectionsDatabase();

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -90,6 +91,15 @@ void main() {
           calls.add(call.method);
           final result = call.method == 'safDelete' ? deleted : exists;
           if (result is PlatformException) throw result;
+          if (call.method == 'safExistsBatch') {
+            return jsonEncode({
+              uri: switch (result) {
+                true => 'found',
+                false => 'missing',
+                _ => 'unknown',
+              },
+            });
+          }
           return result;
         });
         addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
@@ -101,7 +111,7 @@ void main() {
         });
         expect(await deleteFile(uri, deletionEvents: events), expected);
         expect(reactions, expected ? [uri] : isEmpty);
-        expect(calls, ['safDelete', if (deleted == false) 'safExists']);
+        expect(calls, ['safDelete', if (deleted == false) 'safExistsBatch']);
       },
     );
   }

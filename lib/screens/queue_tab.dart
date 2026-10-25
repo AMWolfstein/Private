@@ -171,6 +171,10 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   void _resetLibraryPaging() {
     _resetLibraryOffsets();
     _queueLibraryPageDataCache.clear();
+    _isSelectionMode = false;
+    _selectedIds.clear();
+    _selectionAnchorId = null;
+    _hideSelectionOverlay();
   }
 
   void _loadMoreLibraryItems({
@@ -1035,6 +1039,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
           _syncSelectionOverlay(
             items: selectionItems,
             bottomPadding: bottomPadding,
+            isLoading: isLibraryPageLoading,
           );
         }
         if (_isPlaylistSelectionMode) {

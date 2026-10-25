@@ -32,7 +32,7 @@ impl Fixture {
             })
             .collect::<Vec<_>>()
             .join(",");
-        db.execute_batch(&format!("PRAGMA journal_mode=WAL; PRAGMA user_version=17;
+        db.execute_batch(&format!("PRAGMA journal_mode=WAL; PRAGMA user_version=18;
             CREATE TABLE library({definitions});
             CREATE TABLE library_sources(id TEXT PRIMARY KEY,path TEXT,enabled INTEGER);
             INSERT INTO library_sources VALUES('source','/music',1),('other','/other',1);
@@ -575,12 +575,41 @@ fn mapper_preserves_null_artist_flags_and_replaygain_contract() {
     row["albumArtist"] = json!("");
     row["metadataFromFilename"] = json!(true);
     let mapped = encode(&row, "nas").unwrap();
-    assert_eq!(mapped.len(), 39);
+    assert_eq!(mapped.len(), 42);
     assert_eq!(mapped["explicit"], 1);
     assert_eq!(mapped["has_replaygain"], 1);
     assert_eq!(mapped["audio_metadata_scan_version"], 0);
     assert_eq!(mapped["album_artist_norm"], "");
     assert_eq!(mapped["search_text"], "track full artist album artist");
+}
+
+#[test]
+fn mapper_normalizes_search_and_genres_without_changing_persisted_keys() {
+    let mut row = track("unicode", "/music/unicode.flac");
+    row["trackName"] = json!("Cafe\u{301}");
+    row["albumName"] = json!("E\u{301}te\u{301}");
+    row["artistName"] = json!("E\u{301}LISE");
+    row["genre"] = json!("E\u{301}lectro; ROCK");
+    let mapped = encode(&row, "source").unwrap();
+    assert_eq!(mapped["search_track"], "café");
+    assert_eq!(mapped["search_album"], "été");
+    assert_eq!(mapped["search_artist"], "élise");
+    assert_eq!(mapped["search_text"], "café élise été élise");
+    assert_eq!(mapped["sort_genre"], "électro;rock");
+    assert_eq!(mapped["album_key"], "e\u{301}te\u{301}|e\u{301}lise");
+    assert_eq!(mapped["match_key"], "cafe\u{301}|e\u{301}lise");
+}
+
+#[test]
+fn genre_keys_preserve_leading_separators_and_crlf_alignment() {
+    let mut row = track("genre-separators", "/music/genre-separators.flac");
+    row["genre"] = json!("\r\n \u{a0}E\u{301}LECTRO\u{a0} ;\r\n  Rock  \r\n");
+    let mapped = encode(&row, "source").unwrap();
+    assert_eq!(mapped["sort_genre"], ";;électro;;;rock;;");
+    assert_eq!(
+        mapped["genre"],
+        "\r\n \u{a0}E\u{301}LECTRO\u{a0} ;\r\n  Rock  \r\n"
+    );
 }
 
 #[test]

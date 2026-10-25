@@ -7,15 +7,18 @@ const localLibraryActiveScanStartedAtKey =
 const localLibraryRecoveredScanKey = 'local_library_recovered_scan';
 
 DateTime? readLocalLibraryLastScannedAt(SharedPreferences prefs) {
-  final lastScannedAtStr = prefs.getString(localLibraryLastScannedAtKey);
-  if (lastScannedAtStr != null && lastScannedAtStr.isNotEmpty) {
-    return DateTime.tryParse(lastScannedAtStr);
+  final raw = prefs.get(localLibraryLastScannedAtKey);
+  if (raw is String) {
+    return DateTime.tryParse(raw);
   }
 
   // Backward compatibility for older builds that may have stored epoch millis.
-  final lastScannedAtMs = prefs.getInt(localLibraryLastScannedAtKey);
-  if (lastScannedAtMs != null) {
-    return DateTime.fromMillisecondsSinceEpoch(lastScannedAtMs);
+  if (raw is int) {
+    try {
+      return DateTime.fromMillisecondsSinceEpoch(raw);
+    } on ArgumentError {
+      return null;
+    }
   }
 
   return null;

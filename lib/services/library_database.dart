@@ -643,32 +643,11 @@ class LibraryDatabase {
   Future<List<Map<String, dynamic>>> getQueueLocalAlbumTracks(
     String albumName,
     String artistName,
-  ) async {
-    final db = await database;
-    final rows = await db.query(
-      visibleLibraryView,
-      where:
-          "LOWER(album_name) = ? AND LOWER(COALESCE(NULLIF(album_artist, ''), artist_name)) = ?",
-      whereArgs: [albumName.toLowerCase(), artistName.toLowerCase()],
-      orderBy:
-          'COALESCE(disc_number, 0), COALESCE(track_number, 0), track_name',
-    );
-    return rows.map(LibraryRowMapper.decode).toList(growable: false);
-  }
+  ) async => (await _queueStore()).localAlbumTracks(albumName, artistName);
 
   Future<List<Map<String, dynamic>>> getQueueLocalAlbumTracksByKey(
     String albumKey,
-  ) async {
-    final db = await database;
-    final rows = await db.query(
-      visibleLibraryView,
-      where: 'album_key = ?',
-      whereArgs: [albumKey],
-      orderBy:
-          'COALESCE(disc_number, 0), COALESCE(track_number, 0), track_name',
-    );
-    return rows.map(LibraryRowMapper.decode).toList(growable: false);
-  }
+  ) async => (await _queueStore()).localAlbumTracksByKey(albumKey);
 
   Future<Map<String, dynamic>?> getById(String id) async {
     final db = await database;

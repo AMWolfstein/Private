@@ -29,7 +29,8 @@ columns = """id TEXT PRIMARY KEY, track_name TEXT, artist_name TEXT,
 album_name TEXT, album_artist TEXT, album_key TEXT, sort_track TEXT,
 sort_album TEXT, sort_album_artist TEXT, track_name_norm TEXT,
 album_name_norm TEXT, album_artist_norm TEXT, search_text TEXT,
-cover_url TEXT, cover_path TEXT, file_path TEXT, enabled INTEGER"""
+cover_url TEXT, cover_path TEXT, file_path TEXT, enabled INTEGER,
+search_track TEXT, search_album TEXT, search_artist TEXT"""
 db.execute('CREATE TABLE history_db.history (' + columns + ')')
 db.execute('CREATE TABLE library (' + columns + ')')
 db.execute('CREATE VIEW library_visible AS SELECT * FROM library WHERE enabled = 1')
@@ -46,6 +47,7 @@ def track(local, id, title, artist, album, path=None, enabled=1):
       sort_album=album.lower(), sort_album_artist=artist.lower(),
       track_name_norm=title.lower(), album_name_norm=album.lower(),
       album_artist_norm=artist.lower(), search_text=(title+' '+artist+' '+album).lower(),
+      search_track=title.lower(), search_album=album.lower(), search_artist=artist.lower(),
       file_path=path, enabled=enabled)
     cur = db.execute('INSERT INTO '+table+' ('+','.join(fields)+') VALUES ('+','.join('?' for _ in fields)+')', list(fields.values()))
     fts = 'library_search_fts' if local else 'history_db.history_search_fts'

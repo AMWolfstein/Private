@@ -10,6 +10,8 @@ IsrcDuplicateEntry _entry(String id) {
     artistName: 'Artist',
     albumName: 'Album',
     filePath: '/music/$id.flac',
+    bitDepth: 16,
+    sampleRate: 44100,
   );
 }
 
@@ -102,4 +104,56 @@ void main() {
     expect(plan.retainedEntries, isEmpty);
     expect(plan.entriesToDelete, isEmpty);
   });
+
+  test('keep-best ranks lossy bitrate ahead of a larger sample rate', () {
+    final low = IsrcDuplicateEntry(
+      id: 'low',
+      source: 'local',
+      trackName: 'Track',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: '/music/low.mp3',
+      format: 'mp3',
+      bitrate: 128,
+      sampleRate: 48000,
+    );
+    final high = IsrcDuplicateEntry(
+      id: 'high',
+      source: 'local',
+      trackName: 'Track',
+      artistName: 'Artist',
+      albumName: 'Album',
+      filePath: '/music/high.mp3',
+      format: 'mp3',
+      bitrate: 320,
+      sampleRate: 44100,
+    );
+    final plan = buildKeepBestAllDuplicatePlan([
+      IsrcDuplicateGroup(isrc: 'USABC2600001', entries: [low, high]),
+    ]);
+    expect(plan.retainedEntries, [high]);
+    expect(plan.entriesToDelete, [low]);
+  });
+
+  test(
+    'automatic keep-best skips uncertain fidelity instead of erasing it',
+    () {
+      final unknown = IsrcDuplicateEntry(
+        id: 'unknown',
+        source: 'local',
+        trackName: 'Track',
+        artistName: 'Artist',
+        albumName: 'Album',
+        filePath: '/music/copy.m4a',
+      );
+      final plan = buildKeepBestAllDuplicatePlan([
+        IsrcDuplicateGroup(
+          isrc: 'USABC2600001',
+          entries: [_entry('known'), unknown],
+        ),
+      ]);
+      expect(plan.entriesToDelete, isEmpty);
+      expect(plan.groupCount, 0);
+    },
+  );
 }

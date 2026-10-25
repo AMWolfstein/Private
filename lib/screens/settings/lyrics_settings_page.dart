@@ -26,7 +26,10 @@ class LyricsSettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  const LyricsSizeSetting(),
+                  SettingsSearchTarget(
+                    label: context.l10n.lyricsTextSize,
+                    child: const LyricsSizeSetting(),
+                  ),
                   SettingsSwitchItem(
                     icon: Icons.light_mode_outlined,
                     title: context.l10n.lyricsKeepScreenOn,

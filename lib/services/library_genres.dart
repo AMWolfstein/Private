@@ -1,20 +1,27 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/services/library_row_mapper.dart';
+import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
 
 /// Split multi-value tags without treating names such as Hip-Hop/Rap as two genres.
 /// The visible view respects disabled/disconnected library sources.
 const libraryGenreTagsSql =
     '''
-WITH RECURSIVE tags(id, remaining, genre) AS (
-  SELECT id, REPLACE(REPLACE(COALESCE(genre, ''), CHAR(10), ';'), CHAR(13), ';') || ';', ''
+WITH RECURSIVE tags(id, remaining, remaining_keys, genre, genre_key) AS (
+  SELECT id,
+    REPLACE(REPLACE(COALESCE(genre, ''), CHAR(10), ';'), CHAR(13), ';') || ';',
+    REPLACE(REPLACE(COALESCE(sort_genre, ''), CHAR(10), ';'), CHAR(13), ';') || ';',
+    '', ''
   FROM ${LibrarySchema.visibleView}
   UNION ALL
   SELECT id, SUBSTR(remaining, INSTR(remaining, ';') + 1),
-    TRIM(SUBSTR(remaining, 1, INSTR(remaining, ';') - 1))
+    SUBSTR(remaining_keys, INSTR(remaining_keys, ';') + 1),
+    TRIM(SUBSTR(remaining, 1, INSTR(remaining, ';') - 1)),
+    TRIM(SUBSTR(remaining_keys, 1, INSTR(remaining_keys, ';') - 1))
   FROM tags WHERE remaining != ''
 ), genres AS (
-  SELECT DISTINCT id, LOWER(genre) AS genre_key, genre FROM tags WHERE genre != ''
+  SELECT DISTINCT id, genre_key, genre FROM tags
+  WHERE genre != '' AND genre_key != ''
 )
 ''';
 
@@ -42,7 +49,7 @@ class LibraryGenres {
       WHERE l.id IN (SELECT id FROM genres WHERE genre_key = ?)
       ORDER BY l.track_name_norm, l.artist_name_norm, l.id LIMIT ? OFFSET ?
     ''',
-      [genre, size, offset],
+      [sqlite.normalizeSearchText(genre), size, offset],
     );
     return rows.map(LibraryRowMapper.decode).toList(growable: false);
   }

@@ -89,6 +89,9 @@ void main() {
     String album = 'Local',
     String artist = 'Artist',
     String title = 'Song',
+    int? totalTracks = 2,
+    bool explicit = false,
+    String releaseDate = '2026',
   }) async {
     final file = path ?? '/$id.flac';
     final track = LocalLibraryItem(
@@ -101,12 +104,13 @@ void main() {
       scannedAt: DateTime.utc(2026),
       fileModTime: 1,
       trackNumber: number,
-      totalTracks: 2,
+      totalTracks: totalTracks,
+      explicit: explicit,
       discNumber: 1,
       totalDiscs: 1,
       bitDepth: 16,
       genre: 'Pop',
-      releaseDate: '2026',
+      releaseDate: releaseDate,
       hasReplayGain: number == 1,
     );
     await db.insert('library', LibraryRowMapper.encode(track.toJson()));
@@ -147,6 +151,143 @@ void main() {
     store = LibraryQueueStore(db, localFts: false);
   });
   tearDown(() => db.close());
+
+  test(
+    'album navigation resolves the normalized key with Unicode names',
+    () async {
+      await addLocal('unicode-2', 2, album: 'Été', artist: 'Björk');
+      await addLocal('unicode-1', 1, album: 'Été', artist: 'Björk');
+      await addLocal('other-edition', 1, album: 'Été', artist: 'Other');
+
+      final rows = await store.localAlbumTracks('  ÉTÉ ', ' BJÖRK  ');
+      expect(rows.map((row) => row['id']), ['unicode-1', 'unicode-2']);
+      expect(await store.localAlbumTracks('Été', 'Missing'), isEmpty);
+      expect(await store.localAlbumTracksByKey('été|björk'), rows);
+    },
+  );
+
+  test(
+    'queue tracks retain source ownership and explicit tags on round trip',
+    () async {
+      await db.insert('library_sources', {
+        'id': 'music',
+        'path': '/music',
+        'display_name': 'Music',
+      });
+      await addLocal('explicit', 1, source: 'music', explicit: true);
+
+      final page = await store.trackPage(const QueueLibraryDbQuery());
+      final item = LocalLibraryItem.fromJson(
+        Map<String, dynamic>.from(
+          page.rows.singleWhere(
+                (row) => (row['item'] as Map)['id'] == 'explicit',
+              )['item']
+              as Map,
+        ),
+      );
+      expect(item.sourceId, 'music');
+      expect(item.explicit, isTrue);
+      final saved = LibraryRowMapper.encode(item.toJson());
+      expect(saved['source_id'], 'music');
+      expect(saved['explicit'], 1);
+    },
+  );
+
+  test('singles use total-track tags across pages and badge counts', () async {
+    await addLocal('single-copy-1', 1, album: 'Tagged Single', totalTracks: 1);
+    await addLocal('single-copy-2', 1, album: 'Tagged Single', totalTracks: 1);
+    await addLocal('partial', 1, album: 'Partial Album', totalTracks: 10);
+    await addLocal('unknown', 1, album: 'Unknown Album', totalTracks: null);
+    await addLocal('conflict-1', 1, album: 'Conflicting Album', totalTracks: 1);
+    await addLocal(
+      'conflict-2',
+      2,
+      album: 'Conflicting Album',
+      totalTracks: 10,
+    );
+
+    for (final quality in [null, 'unrecognized']) {
+      final query = QueueLibraryDbQuery(quality: quality);
+      final counts = await store.counts(query);
+      expect(
+        [counts.allTrackCount, counts.albumCount, counts.singleTrackCount],
+        [9, 4, 2],
+      );
+      final albums = await store.albumPage(query);
+      expect(albums.rows.map((row) => row['album_name']).toSet(), {
+        'Local',
+        'Partial Album',
+        'Unknown Album',
+        'Conflicting Album',
+      });
+      final singles = await store.trackPage(
+        QueueLibraryDbQuery(filterMode: 'singles', quality: quality),
+      );
+      expect(_tracks(singles).toSet(), {
+        'local:single-copy-1',
+        'local:single-copy-2',
+      });
+    }
+    final filtered = await store.counts(
+      const QueueLibraryDbQuery(searchQuery: 'Song', quality: 'unrecognized'),
+    );
+    expect(filtered.albumCount, 4);
+    expect(filtered.singleTrackCount, 2);
+    final allReleases = await store.albumPage(
+      const QueueLibraryDbQuery(includeSingleTrackAlbums: true),
+    );
+    expect(allReleases.rows, hasLength(5));
+  });
+
+  test('artist releases order compact and ISO tags chronologically', () async {
+    await addLocal(
+      'compact',
+      1,
+      album: 'Compact',
+      artist: 'Chronology',
+      releaseDate: '20250101',
+    );
+    await addLocal(
+      'iso',
+      1,
+      album: 'ISO',
+      artist: 'Chronology',
+      releaseDate: '2026-01-01',
+    );
+    await addLocal(
+      'year',
+      1,
+      album: 'Year',
+      artist: 'Chronology',
+      releaseDate: '2024',
+    );
+    await addLocal(
+      'invalid',
+      1,
+      album: 'Invalid',
+      artist: 'Chronology',
+      releaseDate: '2026-99-99',
+    );
+
+    final query = const QueueLibraryDbQuery(
+      albumArtist: 'Chronology',
+      sortMode: 'artist-releases-newest',
+      includeSingleTrackAlbums: true,
+      limit: 2,
+    );
+    final first = await store.albumPage(query);
+    expect(first.rows.map((row) => row['album_name']), ['ISO', 'Compact']);
+    final second = await store.albumPage(
+      QueueLibraryDbQuery(
+        albumArtist: 'Chronology',
+        sortMode: 'artist-releases-newest',
+        includeSingleTrackAlbums: true,
+        cursor: first.nextCursor,
+        limit: 2,
+      ),
+    );
+    expect(second.rows.map((row) => row['album_name']), ['Year', 'Invalid']);
+  });
 
   test(
     'track cursors match offset ordering across source ties for every sort',
@@ -278,11 +419,14 @@ void main() {
         }
       }
       final albums = (await store.albumPage(const QueueLibraryDbQuery())).rows;
+      expect(albums, hasLength(3));
       expect(
-        albums.map((row) => row['track_count']),
-        everyElement(greaterThan(1)),
+        albums.singleWhere(
+          (row) => row['album_name'] == 'Local Single',
+        )['track_count'],
+        1,
+        reason: 'a partial two-track release remains an album',
       );
-      expect(albums, hasLength(2));
       expect(
         (await store.albumPage(
           const QueueLibraryDbQuery(includeSingleTrackAlbums: true),

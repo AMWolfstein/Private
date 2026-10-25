@@ -37,8 +37,9 @@ class PlayerArtwork extends StatelessWidget {
 
     final uri = artUri;
     // Remote artwork is never loaded: legacy rows may still carry an http URL.
-    if (uri == null || uri.isEmpty || uri.startsWith('http'))
+    if (uri == null || uri.isEmpty || uri.startsWith('http')) {
       return placeholder;
+    }
 
     if (uri.startsWith('file://') || p.isAbsolute(uri)) {
       final path = uri.startsWith('file://')

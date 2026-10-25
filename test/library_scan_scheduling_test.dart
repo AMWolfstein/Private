@@ -33,6 +33,13 @@ class _Database implements LibraryDatabase {
   bool failScanErrorWrite = false;
   int? countOverride;
   Future<({int inserted, int skipped})> Function()? fullReplacement;
+  int clearCalls = 0;
+
+  @override
+  Future<void> clearAll() async {
+    clearCalls++;
+    countOverride = 0;
+  }
 
   @override
   Future<List<LocalLibrarySource>> getSources() async =>
@@ -530,6 +537,65 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(scans, hasLength(1));
   });
+
+  test(
+    'clear joins native publication and drops queued reconnect scans',
+    () async {
+      final active = library.startSourceScan('active');
+      await _waitFor(() => scans.length == 1);
+      await reconnect();
+      final clearing = library.clearLibrary();
+      await _waitFor(() => calls.contains('cancelLibraryScan'));
+      expect(database.clearCalls, 0);
+      await library.startSourceScan('reconnect');
+      expect(scans, hasLength(1));
+      database.countOverride = 7;
+      scans.single.$2.complete(jsonEncode({'committed': true, 'skipped': 0}));
+      await active;
+      await clearing;
+      await Future<void>.delayed(Duration.zero);
+      expect(database.clearCalls, 1);
+      expect(database.countOverride, 0);
+      expect(container.read(localLibraryProvider).totalCount, 0);
+      expect(container.read(localLibraryProvider).lastScannedAt, isNull);
+      expect(scans, hasLength(1));
+    },
+  );
+
+  test('clear retires scan admission waiting for its source', () async {
+    final pending = Completer<List<LocalLibrarySource>>();
+    final entered = Completer<void>();
+    database.sourceRead = () {
+      if (!entered.isCompleted) entered.complete();
+      return pending.future;
+    };
+    final starting = library.startSourceScan('active');
+    await entered.future;
+    database.sourceRead = null;
+    await library.clearLibrary();
+    pending.complete(List.of(database.sources));
+    await starting;
+    expect(scans, isEmpty);
+    expect(database.clearCalls, 1);
+  });
+
+  test(
+    'clear avoids state publication after disposal during refresh',
+    () async {
+      final pending = Completer<List<LocalLibrarySource>>();
+      final entered = Completer<void>();
+      database.sourceRead = () {
+        if (!entered.isCompleted) entered.complete();
+        return pending.future;
+      };
+      final clearing = library.clearLibrary();
+      await entered.future;
+      container.dispose();
+      pending.complete(List.of(database.sources));
+      await clearing;
+      expect(database.clearCalls, 1);
+    },
+  );
 
   test('disposing a paused scan cancels native ownership', () async {
     final active = library.startSourceScan('active');

@@ -14,8 +14,9 @@ use std::{
     path::Path,
     time::Duration,
 };
+use unicode_normalization::UnicodeNormalization;
 
-const SCHEMA_VERSION: i64 = 17;
+const SCHEMA_VERSION: i64 = 18;
 const SCAN_VERSION: i64 = 4;
 const BATCH_SIZE: usize = 300;
 const MAX_ROW_BYTES: usize = 16 * 1024 * 1024;
@@ -151,6 +152,19 @@ pub(crate) fn scan_incremental(
 
 fn normalized(value: &str) -> String {
     path_keys::dart_lower(path_keys::dart_trim(value))
+}
+
+fn search_normalized(value: &str) -> String {
+    normalized(value).nfc().collect()
+}
+
+fn normalized_genre_tags(value: &str) -> String {
+    // Empty segments preserve the raw tag split's positions (including CRLF).
+    value
+        .split([';', '\r', '\n'])
+        .map(search_normalized)
+        .collect::<Vec<_>>()
+        .join(";")
 }
 
 fn text<'a>(row: &'a Value, key: &str) -> Result<&'a str, String> {
@@ -319,15 +333,31 @@ fn encode(row: &Value, source: &str) -> Result<Map<String, Value>, String> {
         album_artist
     };
     values.insert(
+        "search_track".into(),
+        track.nfc().collect::<String>().into(),
+    );
+    values.insert(
+        "search_album".into(),
+        album.nfc().collect::<String>().into(),
+    );
+    values.insert(
+        "search_artist".into(),
+        search_album_artist.nfc().collect::<String>().into(),
+    );
+    values.insert(
         "search_text".into(),
         [track, artist, album, search_album_artist]
             .into_iter()
+            .map(|value| value.nfc().collect::<String>())
             .filter(|value| !value.is_empty())
             .collect::<Vec<_>>()
             .join(" ")
             .into(),
     );
-    values.insert("sort_genre".into(), normalized(text(row, "genre")?).into());
+    values.insert(
+        "sort_genre".into(),
+        normalized_genre_tags(text(row, "genre")?).into(),
+    );
     values.insert(
         "sort_release".into(),
         path_keys::dart_trim(text(row, "releaseDate")?).into(),

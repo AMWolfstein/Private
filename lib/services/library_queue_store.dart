@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/library_database_models.dart';
 import 'package:spotiflac_android/services/library_schema.dart';
+import 'package:spotiflac_android/services/library_row_mapper.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
 import 'package:spotiflac_android/utils/library_format_filters.dart';
 
@@ -60,6 +61,26 @@ class LibraryQueueStore {
 
   const LibraryQueueStore(this._db, {required this.localFts});
 
+  Future<List<Map<String, dynamic>>> localAlbumTracks(
+    String albumName,
+    String artistName,
+  ) => localAlbumTracksByKey(
+    '${sqlite.normalizeLookupText(albumName)}|${sqlite.normalizeLookupText(artistName)}',
+  );
+
+  Future<List<Map<String, dynamic>>> localAlbumTracksByKey(
+    String albumKey,
+  ) async {
+    final rows = await _db.query(
+      LibrarySchema.visibleView,
+      where: 'album_key = ?',
+      whereArgs: [albumKey],
+      orderBy:
+          'COALESCE(disc_number, 0), COALESCE(track_number, 0), track_name',
+    );
+    return rows.map(LibraryRowMapper.decode).toList(growable: false);
+  }
+
   Future<QueueLibraryDbPage> trackPage(QueueLibraryDbQuery request) async {
     final args = <Object?>[];
     final orderTerms = _queueTrackOrderTerms(request.sortMode);
@@ -99,11 +120,11 @@ class LibraryQueueStore {
       parts.add('''
         SELECT
           COUNT(*) AS all_count,
-          COUNT(DISTINCT CASE WHEN grouped.track_count > ${isAlbumCompletenessFilter(request.metadata) ? 0 : 1} THEN l.album_key END) AS album_count,
-          COALESCE(SUM(CASE WHEN grouped.track_count = 1 THEN 1 ELSE 0 END), 0) AS single_count
+          COUNT(DISTINCT CASE WHEN ${isAlbumCompletenessFilter(request.metadata) ? '1' : 'grouped.album_total_tracks != 1'} THEN l.album_key END) AS album_count,
+          COALESCE(SUM(CASE WHEN grouped.album_total_tracks = 1 THEN 1 ELSE 0 END), 0) AS single_count
         FROM ${LibrarySchema.visibleView} l
         JOIN (
-          SELECT album_key, COUNT(*) AS track_count
+          SELECT album_key, MAX(COALESCE(total_tracks, 0)) AS album_total_tracks
           FROM ${LibrarySchema.visibleView} candidate
           GROUP BY album_key
         ) grouped ON grouped.album_key = l.album_key
@@ -158,10 +179,11 @@ class LibraryQueueStore {
       parts.add('''
         SELECT
           COALESCE(SUM(track_count), 0) AS all_count,
-          COALESCE(SUM(CASE WHEN track_count > 1 THEN 1 ELSE 0 END), 0) AS album_count,
-          COALESCE(SUM(CASE WHEN track_count = 1 THEN 1 ELSE 0 END), 0) AS single_count
+          COALESCE(SUM(CASE WHEN album_total_tracks != 1 THEN 1 ELSE 0 END), 0) AS album_count,
+          COALESCE(SUM(CASE WHEN album_total_tracks = 1 THEN track_count ELSE 0 END), 0) AS single_count
         FROM (
-          SELECT l.album_key, COUNT(*) AS track_count
+          SELECT l.album_key, COUNT(*) AS track_count,
+            MAX(COALESCE(l.total_tracks, 0)) AS album_total_tracks
           FROM ${LibrarySchema.visibleView} l
           GROUP BY l.album_key
         )
@@ -275,7 +297,7 @@ class LibraryQueueStore {
             SELECT album_key
             FROM ${LibrarySchema.visibleView} candidate
             GROUP BY album_key
-            HAVING COUNT(*) = 1
+            HAVING MAX(COALESCE(total_tracks, 0)) = 1
           )
           ''');
       }
@@ -285,6 +307,8 @@ class LibraryQueueStore {
           'local' AS queue_source,
           'local_' || l.id AS unified_id,
           l.id,
+          l.source_id,
+          l.explicit,
           l.track_name,
           l.artist_name,
           l.album_name,
@@ -347,6 +371,8 @@ class LibraryQueueStore {
           NULL AS queue_source,
           NULL AS unified_id,
           NULL AS id,
+          NULL AS source_id,
+          NULL AS explicit,
           NULL AS track_name,
           NULL AS artist_name,
           NULL AS album_name,
@@ -407,12 +433,13 @@ class LibraryQueueStore {
         request.format == null &&
         request.metadata == null;
     final releaseDatedOnly = request.sortMode == 'release-date-newest';
-    final releaseOrder = releaseDatedOnly
+    final releaseOrder =
+        (releaseDatedOnly || request.sortMode == 'artist-releases-newest')
         ? metadataReleaseDateSql('l.release_date')
         : "COALESCE(l.release_date, '')";
     final assessesCompleteness = isAlbumCompletenessFilter(request.metadata);
-    final minimumTracks =
-        request.includeSingleTrackAlbums || assessesCompleteness ? 0 : 1;
+    final includeSingles =
+        request.includeSingleTrackAlbums || assessesCompleteness;
     final completenessSql = assessesCompleteness
         ? albumCompletenessSql(localAlbumInventorySql())
         : null;
@@ -457,12 +484,12 @@ class LibraryQueueStore {
             MAX(COALESCE(sort_added, 0)) AS latest_added
           FROM ${LibrarySchema.visibleView} candidate
           GROUP BY album_key
-          HAVING COUNT(*) > $minimumTracks
+          ${includeSingles ? '' : 'HAVING MAX(COALESCE(total_tracks, 0)) != 1'}
         ) c ON c.album_key = l.album_key'''}
         ${assessesCompleteness ? 'JOIN ($completenessSql) ac ON ac.album_key = l.album_key' : ''}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         GROUP BY $albumKey
-        ${unfiltered ? 'HAVING $albumKey IS NOT NULL AND COUNT(*) > $minimumTracks' : 'HAVING 1'}
+        ${unfiltered ? 'HAVING $albumKey IS NOT NULL ${includeSingles ? '' : 'AND MAX(COALESCE(l.total_tracks, 0)) != 1'}' : 'HAVING 1'}
         ${releaseDatedOnly ? "AND MAX($releaseOrder) != ''" : ''}
         ''';
       parts.add(
@@ -519,7 +546,7 @@ class LibraryQueueStore {
       where.add('l.album_artist_norm = ?');
       args.add(sqlite.normalizeLookupText(request.albumArtist));
     }
-    final query = sqlite.normalizeLookupText(request.searchQuery);
+    final query = sqlite.normalizeSearchText(request.searchQuery);
     if (query.isNotEmpty) {
       final ftsQuery = sqlite.ftsPhraseSearchQuery(query);
       if (localFts && ftsQuery != null) {
@@ -918,6 +945,8 @@ class LibraryQueueStore {
     final source = row['queue_source'] as String? ?? 'local';
     final item = <String, dynamic>{
       'id': row['id'],
+      'sourceId': row['source_id'],
+      'explicit': row['explicit'] == 1 || row['explicit'] == true,
       'trackName': row['track_name'],
       'artistName': row['artist_name'],
       'albumName': row['album_name'],

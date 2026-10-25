@@ -7,13 +7,14 @@ extension _QueueTabItemWidgets on _QueueTabState {
     List<UnifiedLibraryItem> unifiedItems,
     double bottomPadding,
   ) {
-    final selectedCount = _selectedIds.length;
+    final selectedItems = _selectedItemsFromAll(unifiedItems);
+    final selectedCount = selectedItems.length;
     final allSelected =
         selectedCount == unifiedItems.length && unifiedItems.isNotEmpty;
 
     return LibraryTrackSelectionBar(
       playbackActions: LibrarySelectionPlaybackActions(
-        items: _selectedItemsFromAll(unifiedItems),
+        items: selectedItems,
         onClose: _exitSelectionMode,
       ),
       selectedCount: selectedCount,

@@ -135,7 +135,7 @@ class LibraryNativeAdapter {
       database,
       p.join(directory.path, 'local_library.db'),
       tables: ['library', 'library_path_keys', 'library_sources'],
-      version: 17,
+      version: 18,
       copyRows: false,
     );
     _check(isCancelled);
@@ -375,7 +375,7 @@ class LibraryNativeAdapter {
             'CREATE INDEX $alias.native_library_snapshot_id '
             'ON library(source_id, id)',
           );
-          await txn.execute('PRAGMA $alias.user_version = 17');
+          await txn.execute('PRAGMA $alias.user_version = 18');
         });
       });
       _check(isCancelled);

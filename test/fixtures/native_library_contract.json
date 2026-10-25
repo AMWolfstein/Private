@@ -48,7 +48,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1791288000000
+        "sort_added": 1791288000000,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -100,7 +103,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1791288000000
+        "sort_added": 1791288000000,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -155,7 +161,10 @@
         "search_text": "café i 💫 artist album other",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1791288000000
+        "sort_added": 1791288000000,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "other"
       }
     },
     {
@@ -210,7 +219,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "rock",
         "sort_release": "2026-10",
-        "sort_added": 0
+        "sort_added": 0,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -264,7 +276,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1770000000000
+        "sort_added": 1770000000000,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -316,7 +331,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 0
+        "sort_added": 0,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -368,7 +386,10 @@
         "search_text": "",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1791288000000
+        "sort_added": 1791288000000,
+        "search_track": "",
+        "search_album": "",
+        "search_artist": ""
       }
     },
     {
@@ -421,7 +442,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1791288000123
+        "sort_added": 1791288000123,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -472,7 +496,10 @@
         "search_text": "café i 💫 artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1791288000123
+        "sort_added": 1791288000123,
+        "search_track": "café i 💫",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     },
     {
@@ -523,7 +550,10 @@
         "search_text": "αβσ i artist album artist",
         "sort_genre": "",
         "sort_release": "",
-        "sort_added": 1793584860000
+        "sort_added": 1793584860000,
+        "search_track": "αβσ i",
+        "search_album": "album",
+        "search_artist": "artist"
       }
     }
   ],

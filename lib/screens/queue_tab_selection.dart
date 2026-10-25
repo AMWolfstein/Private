@@ -68,6 +68,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
   void _syncSelectionOverlay({
     required List<UnifiedLibraryItem> items,
     required double bottomPadding,
+    required bool isLoading,
   }) {
     if (!mounted) return;
     if (_suppressSelectionOverlay ||
@@ -75,6 +76,26 @@ extension _QueueTabSelectionActions on _QueueTabState {
         _isPlaylistSelectionMode) {
       _hideSelectionOverlay();
       return;
+    }
+
+    // Keep selected rows through a refresh's transient loading snapshot, then
+    // prune rows that no longer belong to the visible query. The toolbar and
+    // its actions must refer to the same resolved set of tracks.
+    if (!isLoading) {
+      final visibleIds = items.map((item) => item.id).toSet();
+      if (_selectedIds.any((id) => !visibleIds.contains(id))) {
+        _setState(() {
+          _selectedIds.retainAll(visibleIds);
+          if (!_selectedIds.contains(_selectionAnchorId)) {
+            _selectionAnchorId = _selectedIds.lastOrNull;
+          }
+          if (_selectedIds.isEmpty) _isSelectionMode = false;
+        });
+        if (!_isSelectionMode) {
+          _hideSelectionOverlay();
+          return;
+        }
+      }
     }
 
     _selectionOverlayItems = items;

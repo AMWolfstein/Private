@@ -61,7 +61,10 @@ class AppearanceSettingsPage extends ConsumerWidget {
                           .read(settingsProvider.notifier)
                           .setGlassQuality,
                     ),
-                    const _MornyeGlassClaritySlider(),
+                    SettingsSearchTarget(
+                      label: context.l10n.appearanceGlassClarity,
+                      child: const _MornyeGlassClaritySlider(),
+                    ),
                     SettingsSwitchItem(
                       key: const ValueKey('mornye-glass-outlines'),
                       icon: Icons.rounded_corner,
@@ -114,7 +117,10 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         .read(settingsProvider.notifier)
                         .setHeroAnimationsEnabled(value),
                   ),
-                  const CustomFontSetting(),
+                  SettingsSearchTarget(
+                    label: context.l10n.appearanceCustomFont,
+                    child: const CustomFontSetting(),
+                  ),
                 ],
               ),
             ),
