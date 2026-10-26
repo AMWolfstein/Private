@@ -26,9 +26,9 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 | D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | **Decided (owner, 2026-10-24): accept GPL-3.0.** Change `LICENSE` to GPL-3.0-or-later in the same commit that first adds Sistrum code; keep the MIT notice for the original SpotiFLAC code and add `THIRD-PARTY-NOTICES` for each module. |
 | D2 | **Minimum SDK.** Sistrum requires API 31. This app uses `flutter.minSdkVersion` = 24. | Sistrum code assumes API 31 or newer. It uses `DynamicsProcessing` (API 28) and the newer `AudioTrack` and `MediaCodec` encodings without version checks. | **Decided (owner, 2026-10-24): raise minSdk to 31 (Android 12)** in the first engine-port code commit; record it in `LOCAL_OFFLINE_MIGRATION_PLAN.md`. |
 | D3 | **Direct USB (libusb in Rust).** Media3 cannot do this. The Java USB API (`UsbRequest`) has no isochronous transfers. | The libusb direct USB driver must stay native, so the NDK stays. | **Decided (owner, 2026-10-24): drop Direct USB.** Remove it with the feature-removal workflow during the USB step (section 7, step 11). The Android 14+ bit-perfect path (`UsbBitPerfectPlugin.kt`, including DoP) stays. |
-| D4 | **AAudio exact-rate output (`HiResPlayback.kt`, Oboe).** AAudio has no Java API. | Removing it removes the last C++ code in `cpp/`. | Drop it. On Android 14 and newer, the bit-perfect mixer route (`setPreferredMixerAttributes`, already in `UsbBitPerfectPlugin.kt`) covers USB DACs. Android below 14 falls back to normal mixed output. |
-| D5 | **CUE "Split into Tracks".** FFmpeg cuts the file today: it stream-copies, or re-encodes to FLAC. Android has no FLAC muxer, and Sistrum has no splitter. | Media3 can **play** CUE tracks directly with `MediaItem.ClippingConfiguration`. Today CUE tracks **must** be split before they play (`cueVirtualTrackRequiresSplitMessage`, `lib/utils/file_access.dart:26`). | Play CUE tracks directly first, as in Sistrum's planned task T037. Then decide whether Split stays (section 5.6) or is removed under `AGENTS.md`'s feature-removal workflow. |
-| D6 | **The bridge between Flutter and Media3** (section 6). | This decides how much Dart playback code changes. | Phase 1: keep `audio_service` for the session, notification and Android Auto. Replace only `audioplayers` and the native decks with one Kotlin engine plugin. A Media3 `MediaSessionService` comes later as its own step, as Sistrum also decided (ADR-006). |
+| D4 | **AAudio exact-rate output (`HiResPlayback.kt`, Oboe).** AAudio has no Java API. | Removing it removes the last C++ code in `cpp/`. | **Decided (owner, 2026-10-26): remove it.** Delete `HiResPlayback.kt`, Oboe, the `dapExclusive` setting, its strings, search entry and backup key (old imports ignore it). Bit-perfect USB on Android 14+ stays. |
+| D5 | **CUE "Split into Tracks".** FFmpeg cuts the file today: it stream-copies, or re-encodes to FLAC. Android has no FLAC muxer, and Sistrum has no splitter. | Media3 can **play** CUE tracks directly with `MediaItem.ClippingConfiguration`. Today CUE tracks **must** be split before they play (`cueVirtualTrackRequiresSplitMessage`, `lib/utils/file_access.dart:26`). | **Decided (owner, 2026-10-26): remove Split into Tracks.** CUE tracks play directly through Media3 `ClippingConfiguration` instead. Remove Split only in the same batch that makes CUE tracks playable, never before (today CUE tracks play only after a split). |
+| D6 | **The bridge between Flutter and Media3** (section 6). | This decides how much Dart playback code changes. | **Decided (owner, 2026-10-26): remove `audio_service` and move playback to Kotlin.** A Media3 `MediaSessionService` in Kotlin owns the player, queue, session, notification, Android Auto, media buttons and background playback (section 6.1). Flutter becomes the UI that controls it. |
 | D7 | **Formats with no decoder after FFmpeg.** Sistrum lists `tta` with no provider (`DecoderRegistry.kt`). TAK and anything else FFmpeg plays are also uncovered. | Removing FFmpeg does not change playback: playback never used FFmpeg here. But analysis, ReplayGain scan, haptics and AutoMix lose FFmpeg's decoders. | Accept those as unsupported. Show them in a skipped or failed list (Sistrum FR-064a, the decode-failure log). |
 
 ---
@@ -61,10 +61,10 @@ Sistrum paths are relative to `androidApp/src/main/kotlin/com/amwolfstein/sistru
 | SAF `content://` playback with leases and the cache copy | `content_uri_playback_cache.dart`, `safOpenPlaybackLease`, patched `UrlSource` | Media3 `ContentDataSource` and `DefaultDataSource` read `content://` directly | none needed | The 256 MB copy cache (`ContentUriPlaybackCache`) and the `/proc/self/fd` patch become unnecessary for playback. Keep them only until every caller has moved. |
 | Playback errors keep the song for retry; same-ID duration and artwork updates reach open players (`AGENTS.md` rule) | `music_player_service.dart` `_reportPlaybackError` | Same Dart logic, fed by `EngineEvent.Error` | `EngineEvent.kt`, `DecodeFailureLog.kt` | It is an engine-agnostic contract, so keep its tests. |
 | Speed | `deck.setPlaybackRate` | `ExoPlayer.setPlaybackParameters(PlaybackParameters(speed, pitch))` (Sonic) | — | Media3 can change pitch separately from speed (used by AutoMix, 3.4). |
-| Volume, focus ducking, noisy and headphone events | `audio_session`, `_configureAudioSession`, `_pauseForFocusLoss`, `_startHeadphoneMonitoring` | Keep `audio_session`. Media3 runs with `handleAudioFocus = false`, as Sistrum does. | `player/media3/FocusVolumeRamp.kt` | Sistrum ramps the duck to 0.2. Optional. |
-| Sleep timer, repeat, shuffle, queue, session restore, autoplay | Dart | unchanged | — | Engine-agnostic. |
-| Notification, lock screen, Android Auto, media buttons | `audio_service` | Phase 1: unchanged. Phase 2: Media3 `MediaSessionService` or `MediaLibraryService` (decision D6). | ADR-006 (Sistrum also kept the framework session in 001) | — |
-| Home-screen widget | `player_widget_service.dart`, `PlayerWidgetProvider.kt` | unchanged (driven by Dart state) | — | — |
+| Volume, focus ducking, noisy and headphone events | `audio_session`, `_configureAudioSession`, `_pauseForFocusLoss`, `_startHeadphoneMonitoring` | Kotlin `PlaybackService` handles focus, noisy and headset events (D6); remove `audio_session`. Media3 runs with `handleAudioFocus = false` as in Sistrum. | `player/media3/FocusVolumeRamp.kt` | Sistrum ramps the duck to 0.2. Optional. |
+| Sleep timer, repeat, shuffle, queue, session restore, autoplay | Dart | Move to Kotlin `PlaybackCoordinator` (D6, section 6.1); port the Dart tests first | — | Must keep working with the app closed. |
+| Notification, lock screen, Android Auto, media buttons | `audio_service` | Media3 `MediaLibraryService` in Kotlin (decision D6); remove `audio_service` and `third_party/audio_service`. | ADR-006 (Sistrum also kept the framework session in 001) | — |
+| Home-screen widget | `player_widget_service.dart`, `PlayerWidgetProvider.kt` | Updated by the Kotlin service, so it also works with the app closed (D6) | — | — |
 
 ### 3.2 Sound processing (the EQ and the chain)
 
@@ -220,32 +220,62 @@ Use this instead:
 3. **Dependencies:** `androidx.media3:media3-exoplayer` and `media3-common` 1.11.1 (Sistrum's pin; check for a newer stable). Add `androidx.work` only if measured loudness (3.3) is wanted.
 4. **One commit per unit**, following `AGENTS.md`: code, then graphify, then docs. Record each port in `LOCAL_OFFLINE_MIGRATION_PLAN.md` with the Sistrum commit it came from.
 
-### 6.1 The Flutter ↔ Media3 bridge (phase 1)
+### 6.1 Playback moves to Kotlin; Flutter is the UI (decision D6)
 
-Add one Kotlin plugin (for example `Media3EnginePlugin.kt`) that owns the `PlayerEngine`. Remove `audioplayers` and its vendored copy.
+`audio_service` goes. Without it, nothing keeps the Flutter engine alive when the app is closed, so **everything
+that must keep working with the screen off or the app closed moves to Kotlin**. That covers the player, queue,
+session, notification, Android Auto, media buttons, widget updates, sleep timer and play history. Flutter stays the
+UI and sends commands.
 
-**Method channel** (`com.zarz.spotiflac/engine`):
+**Kotlin side** (largely from Sistrum):
+
+| Piece | What it does | Sistrum source |
+|---|---|---|
+| `PlaybackService` (Media3 `MediaLibraryService`) | Foreground service, notification with the favorite and shuffle actions, lock screen, Android Auto browse tree, media buttons | `player/PlaybackService.kt`, `AndroidPlaybackSession.kt`, `AndroidPlaybackRuntime.kt` |
+| `PlaybackCoordinator` | Queue, shuffle, repeat, next and previous, errors kept for retry, session save and restore, history and play counts | `player/PlaybackCoordinator.kt`, `PlaybackSessionStore.kt`, `QueueHandoff.kt` |
+| `Media3Engine` | Two ExoPlayers, gapless, AutoMix transitions, DSP chain, normalization | `player/media3/*`, `player/dsp/*` |
+| Focus, noisy and headset events | Pause on focus loss or unplug, resume on headphones connected | `PlaybackService.kt`, `FocusVolumeRamp.kt` (replaces `audio_session`) |
+
+Port Sistrum's command-path fixes with them (FR-080…092 in Sistrum's 001 spec): one command channel, ordered
+shutdown, foreground start on every start path.
+
+**Dart side:**
+- `music_player_service.dart` (2263 lines) and its helpers (`music_player_runtime.dart`, `music_player_automix.dart`,
+  `music_player_autoplay.dart`, `playback_*`, `library_queue_store.dart`) shrink to a **client**. It sends
+  commands and shows the state the service reports.
+- **Player decisions move to Kotlin:**
+  - the queue and its order;
+  - AutoMix timing and the beat-match plan;
+  - the autoplay and personalization picks;
+  - normalization gain.
+
+  Port them with their existing Dart tests as the specification: translate each test to Kotlin first, then the code.
+- Remove `audio_service`, `third_party/audio_service`, `audio_session` and `audioplayers` (with its vendored copy).
+
+**Method channel** (`<package>/playback`, Dart → Kotlin):
 
 | Method | Purpose |
 |---|---|
-| `prepare(item, next?)` | Item fields: path or URI, clip start/end for CUE, gain dB, format hint. `next` is for gapless. |
-| `play`, `pause`, `seek`, `stop` | Transport |
-| `setSpeed`, `setPitch` | AutoMix rate and pitch |
-| `setEqualizer(settings)` | EQ chain |
-| `setNormalization(gainDb)` | ReplayGain gain |
-| `beginTransition(plan)` | AutoMix: duration, curve, speed/pitch/low-pass/echo, beat offset |
-| `snapTransition()` | Ends a running transition at once |
-| `audioSessionId` | For EQ apps and the limiter |
+| `setQueue(items, startIndex, startPosition)`, `enqueue(items, playNext)`, `move`, `remove` | Queue. Items carry the path or URI, CUE clip start and end, and display metadata. |
+| `play`, `pause`, `seek`, `skipToNext`, `skipToPrevious`, `skipToIndex`, `stop` | Transport |
+| `setShuffle`, `setRepeat`, `setSleepTimer`, `cancelSleepTimer` | Modes |
+| `setSettings(map)` | EQ, normalization, AutoMix, speed and pitch, bit-perfect, autoplay, "play on headphones connected" |
+| `restoreSession`, `retry` | Session restore; retry after an error |
 
-**Event channel:** state, position, duration, completion, `TransitionStarted`, errors (with the decoder provider name), and output or route changes.
+**Event channel** (Kotlin → Dart): the queue, current item, state, position, duration, errors (with the decoder
+provider name), AutoMix status, output and route changes, and the equalizer and limiter status.
 
-**Dart side:** `MusicPlaybackDeck` keeps its public API but talks to the plugin. AutoMix stops using two Dart decks and a volume timer. Instead it sends one `beginTransition` and the plugin runs both ExoPlayers on a shared session.
+**Library data while the app is closed.** Android Auto browsing, history and play counts need the library and the
+collections while no Dart code runs. Kotlin reads and writes the same SQLite database files that Dart uses, with
+Android's SQLite (the same engine as `sqflite`). It must follow the same schema, WAL and locking rules, and the two
+sides must never hold conflicting copies.
 
-The USB routes (`UsbBitPerfectPlugin`, `UsbDirectPlayback`) stay separate plugins, used when USB mode is on, as today.
-
-**Background playback:** `audio_service` keeps the Flutter engine alive in its service, so the plugin must live in that engine (it already does for `audioplayers`).
-
-Phase 2 (optional): a Media3 `MediaSessionService` and `MediaLibraryService` for the notification and Android Auto, replacing `audio_service`. This is a separate project with its own risks (R9 in Sistrum's discovery: token and notification migration).
+This is the biggest single step in the plan. Do it as its own milestone, after the Media3 engine works under the
+current `audio_service` setup:
+1. Characterization tests for today's notification, Android Auto, media button, restore and focus behaviour.
+2. The Kotlin service and coordinator.
+3. Switch the Dart client.
+4. Remove `audio_service`.
 
 ---
 
@@ -262,9 +292,10 @@ Each step: tests first where the step is risky, one analyze and full test run pe
 7. **Decoder Registry plus Kotlin providers.** Add the new formats to the scanner's playable set. Add a skipped or failed list.
 8. **DSP chain:** EQ (N-band), balance, compressor, limiter, normalization gain.
 9. **AutoMix on two ExoPlayers** with live effects (F13). Delete the renderer.
-10. **CUE playback** with `ClippingConfiguration` (decision D5). Then the Split decision (F6).
-11. **USB paths:** remove Direct USB (D3). Feed the Android 14+ bit-perfect path from the Kotlin decoders or claxon. Remove libFLAC and WavPack C. Remove Oboe and `HiResPlayback` (decision D4).
-12. **Remove:**
+10. **CUE playback** with `ClippingConfiguration`, and in the same batch remove Split into Tracks (decision D5, F6).
+11. **Playback moves to Kotlin** (D6, section 6.1): its own milestone, then remove `audio_service`, `audio_session` and `audioplayers`.
+12. **USB paths:** remove Direct USB (D3). Feed the Android 14+ bit-perfect path from the Kotlin decoders or claxon. Remove libFLAC and WavPack C. Remove Oboe and `HiResPlayback` (decision D4).
+13. **Remove:**
     - `audioplayers` and `third_party/audioplayers_android`;
     - `ffmpeg_kit_flutter_new_audio` and `lib/services/ffmpeg_*.dart`;
     - `android/app/src/main/cpp/`, `externalNativeBuild` and the `cmake` blocks;
@@ -272,12 +303,14 @@ Each step: tests first where the step is risky, one analyze and full test run pe
     - the developer engine switch.
 
     Use the `AGENTS.md` feature-removal workflow: graphify first, then prove no references remain.
-13. **Update `AGENTS.md` rules that name the old engine:**
+14. **Update `AGENTS.md` rules that name the old engine:**
     - "Audio playback uses only the built-in player…": keep the meaning, and name Media3.
     - "Exact PCM output decodes FLAC through the integer native source…": change it to the chosen Kotlin or claxon FLAC decoder.
     - "Artwork probing and FFmpeg processing for those retained features remain supported": remove the FFmpeg wording.
-    - "Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations": update it per D5.
-14. **Device checks** (owner): gapless, crossfade by ear, EQ, USB DAC bit-perfect, DSD, power with AutoMix on. Never report these as passed from host tests.
+    - "Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations": drop "and CUE splitting" (D5).
+    - "CUE tracks have Split into Tracks": replace with "CUE tracks play directly" (D5).
+    - Remove the "DAP hi-res" mentions (D4) and the `audio_service` patch notes (D6).
+15. **Device checks** (owner): gapless, crossfade by ear, EQ, USB DAC bit-perfect, DSD, power with AutoMix on. Never report these as passed from host tests.
 
 ---
 
@@ -340,8 +373,8 @@ Unzip the release APK and list `lib/` before and after to confirm, as Sistrum 00
 | AutoMix CPU and battery (Sistrum SC-013 not met). | Measure on a weak device. Keep AutoMix off by default until measured. |
 | Lower decode speed in Kotlin for WMA, APE and DSD on weak phones. | Sistrum 002 M6 never ran. Run the per-format real-time-factor test (Sistrum T040) here. |
 | Analysis results change (FFmpeg ebur128 → Kotlin meter). | Sistrum's meter is validated against an FFmpeg oracle. Keep a tolerance test: ±0.1 LU integrated, ±0.1 dB true peak. |
-| CUE Split has no clean replacement. | Play CUE directly (D5). Decide Split separately. |
-| Background playback breaks when the plugin moves engines. | Keep `audio_service` in phase 1. Device test: screen off for 1 hour, Bluetooth, headset buttons. |
+| CUE tracks become unplayable if Split is removed first. | Remove Split only in the batch that makes CUE tracks play directly (D5). |
+| Background playback, Android Auto or the notification break when `audio_service` goes (D6). | Move playback to Kotlin step by step (6.1) with a characterization test for each `audio_service` behaviour first. Device test: screen off for 1 hour, Bluetooth, headset buttons, Android Auto, widget. |
 
 ---
 
