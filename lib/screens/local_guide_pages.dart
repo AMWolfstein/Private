@@ -338,7 +338,9 @@ class _TutorialPage extends StatelessWidget {
 
         return ScrollEdgeFade(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            // 24 + the setup header height, matching the other steps so the
+            // floating Next button never covers the last tip or Ready card.
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 104),
             physics: const BouncingScrollPhysics(),
             child: Center(
               child: ConstrainedBox(

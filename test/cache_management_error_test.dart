@@ -12,6 +12,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/error_card.dart';
 
 class _Settings extends SettingsNotifier {
@@ -51,6 +52,12 @@ void main() {
         await temporary.create();
         await support.create();
         await File('${cache.path}/entry').writeAsBytes([1, 2, 3]);
+        // The audio-analysis row can be cleared, so its bytes are part of the
+        // displayed total.
+        await Directory('${support.path}/audio_analysis_cache').create();
+        await File(
+          '${support.path}/audio_analysis_cache/aa.json',
+        ).writeAsBytes([1, 2, 3, 4, 5]);
       });
 
       final firstCachePath = Completer<String?>();
@@ -136,6 +143,11 @@ void main() {
       await _pumpUntilFound(tester, find.text(strings.cacheSummaryTitle));
       expect(find.byType(ErrorCard), findsNothing);
       expect(find.byType(CircularProgressIndicator), findsNothing);
+      // 3 bytes in the app cache + 5 in the audio-analysis cache.
+      expect(
+        find.text(strings.cacheEstimatedTotal(formatBytes(8))),
+        findsOneWidget,
+      );
       expect(cacheReads, 2);
       expect(temporaryReads, 2);
       expect(tester.takeException(), isNull);

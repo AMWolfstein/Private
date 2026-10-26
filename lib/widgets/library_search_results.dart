@@ -49,6 +49,12 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
   // Hidden while a sheet or dialog opened from the bar is on screen.
   bool _suppressSelectionBar = false;
   List<LibrarySearchHit> _visibleSongs = const [];
+  // Bumped when the results or selection they were built from change, so a
+  // slow lookup cannot insert rows the user is no longer looking at.
+  int _selectionGeneration = 0;
+  // A second tap on a row whose lookup is still running must not select it
+  // twice.
+  final Set<String> _resolvingIds = {};
 
   bool get _selecting => _selected.isNotEmpty;
 
@@ -57,6 +63,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.query != widget.query) {
       _pages = 1;
+      _selectionGeneration++;
       // A selection belongs to the results it was made in.
       _selected.clear();
       _suppressSelectionBar = false;
@@ -82,22 +89,44 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       setState(() => _selected.remove(id));
       return;
     }
-    final item = await _resolve(hit);
-    if (!mounted || item == null) return;
-    if (_selected.isEmpty) {
-      FocusScope.of(context).unfocus();
-      HapticFeedback.mediumImpact();
+    if (!_resolvingIds.add(id)) return;
+    final generation = _selectionGeneration;
+    try {
+      final item = await _resolve(hit);
+      if (!mounted || item == null) return;
+      if (generation != _selectionGeneration) return;
+      if (_selected.containsKey(item.id)) return;
+      if (_selected.isEmpty) {
+        FocusScope.of(context).unfocus();
+        HapticFeedback.mediumImpact();
+      }
+      setState(() => _selected[item.id] = item);
+    } catch (error) {
+      if (!mounted || generation != _selectionGeneration) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
+    } finally {
+      _resolvingIds.remove(id);
     }
-    setState(() => _selected[item.id] = item);
   }
 
   Future<void> _selectAllVisible() async {
-    final items = await Future.wait(
-      _visibleSongs
-          .where((hit) => !_selected.containsKey(_itemId(hit)))
-          .map(_resolve),
-    );
-    if (!mounted) return;
+    final generation = _selectionGeneration;
+    final hits = _visibleSongs
+        .where((hit) => !_selected.containsKey(_itemId(hit)))
+        .toList(growable: false);
+    List<UnifiedLibraryItem?> items;
+    try {
+      items = await Future.wait(hits.map(_resolve));
+    } catch (error) {
+      if (!mounted || generation != _selectionGeneration) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
+      return;
+    }
+    if (!mounted || generation != _selectionGeneration) return;
     setState(() {
       for (final item in items.whereType<UnifiedLibraryItem>()) {
         _selected[item.id] = item;
@@ -107,6 +136,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
 
   void _exitSelection() {
     if (!mounted) return;
+    _selectionGeneration++;
     setState(() {
       _selected.clear();
       _suppressSelectionBar = false;
@@ -185,6 +215,8 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
   void _select(LibrarySearchKind? kind) => setState(() {
     _kind = kind;
     _pages = 1;
+    // Results from the previous category may still be resolving.
+    _selectionGeneration++;
   });
 
   Future<void> _open(LibrarySearchHit hit, {bool play = false}) async {

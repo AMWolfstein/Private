@@ -39,6 +39,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     required LibraryCollectionsState collectionState,
     required bool hasMoreLibrary,
     required bool isPageLoading,
+    required Object? error,
+    required VoidCallback onRetry,
   }) {
     // Dedicated Library sections use rows; the Library overview uses cards.
 
@@ -91,6 +93,18 @@ extension _QueueTabFilterWidgets on _QueueTabState {
 
     final content = CustomScrollView(
       slivers: [
+        if (error != null)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: ErrorCard(
+                error: error.toString(),
+                colorScheme: colorScheme,
+                onRetry: onRetry,
+              ),
+            ),
+          ),
+
         if (totalTrackCount > 0 && filterMode == 'all')
           SliverToBoxAdapter(
             child: _countHeaderRow(
@@ -233,30 +247,16 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: _AnimatedLibrarySliverGrid(
-              maxCrossAxisExtent: _libraryAlbumGridExtent,
-              extentListenable: _libraryGridExtentNotifier,
-              extentScale: 1.45,
-              minExtent: 150,
-              maxExtent: 300,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.72,
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final playlistIndex = playlistIndexes[index];
-                return KeyedSubtree(
-                  key: ValueKey(
-                    'plgrid_${collectionState.playlists[playlistIndex].id}',
-                  ),
-                  child: _buildAllTabGridCollectionItem(
-                    context: context,
-                    colorScheme: colorScheme,
-                    entry: _CollectionEntry.playlist(playlistIndex),
-                    collectionState: collectionState,
-                  ),
-                );
-              }, childCount: playlistIndexes.length),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            sliver: SliverList.builder(
+              itemCount: playlistIndexes.length,
+              itemBuilder: (context, index) => _buildPlaylistCollectionRow(
+                context: context,
+                colorScheme: colorScheme,
+                playlistIndex: playlistIndexes[index],
+                collectionState: collectionState,
+                filteredUnifiedItems: allFilteredUnifiedItems,
+              ),
             ),
           ),
         ],
@@ -327,7 +327,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
             ),
           ),
 
-        if (totalTrackCount == 0 &&
+        if (error == null &&
+            totalTrackCount == 0 &&
             (filterMode != 'albums' || filteredGroupedLocalAlbums.isEmpty) &&
             (filterMode != 'playlists' || playlistIndexes.isEmpty) &&
             !showFilteringIndicator &&
@@ -423,13 +424,21 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       icon: icon,
       title: message,
       message: subtitle,
-      // Every empty branch here means "you have not downloaded anything of
-      // this kind yet", so the way forward is always search.
-      action: FilledButton.icon(
-        onPressed: () => ShellNavigationService.requestTab(ShellTab.home),
-        icon: const Icon(Icons.search),
-        label: Text(context.l10n.navHome),
-      ),
+      // Playlists start empty on a fresh install, so their empty state has to
+      // offer creation instead of sending the user to another section.
+      action: filterMode == 'playlists'
+          ? FilledButton.icon(
+              onPressed: () => _showCreatePlaylistDialog(context),
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.collectionCreatePlaylist),
+            )
+          // Every other empty branch means "you have not downloaded anything of
+          // this kind yet", so the way forward is always search.
+          : FilledButton.icon(
+              onPressed: () => ShellNavigationService.requestTab(ShellTab.home),
+              icon: const Icon(Icons.search),
+              label: Text(context.l10n.navHome),
+            ),
     );
   }
 

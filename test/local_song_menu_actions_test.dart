@@ -162,12 +162,14 @@ void main() {
     var done = false;
     Object? error;
     unawaited(
-      action.then<void>(
-        (_) {},
-        onError: (Object e) {
-          error = e;
-        },
-      ).whenComplete(() => done = true),
+      action
+          .then<void>(
+            (_) {},
+            onError: (Object e) {
+              error = e;
+            },
+          )
+          .whenComplete(() => done = true),
     );
     await pumpUntilCondition(
       tester,
@@ -380,9 +382,7 @@ void main() {
     );
     await mount(tester, item: cue);
     await openMenu(tester);
-    final l10n = AppLocalizations.of(
-      tester.element(find.byType(LocalSongRow)),
-    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
     await tester.ensureVisible(find.text(l10n.trackRemoveFromDevice));
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.trackRemoveFromDevice));
@@ -438,9 +438,7 @@ void main() {
     );
     final actions = <Future<bool>>[];
     await mount(tester, item: cue, actions: actions);
-    final l10n = AppLocalizations.of(
-      tester.element(find.byType(LocalSongRow)),
-    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
 
     Future<void> tapSplit(LocalLibraryItem item) async {
       await mount(tester, item: item, actions: actions);
@@ -516,9 +514,7 @@ void main() {
       scannedAt: DateTime(2026),
     );
     await mount(tester, item: remote);
-    final l10n = AppLocalizations.of(
-      tester.element(find.byType(LocalSongRow)),
-    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
 
     await openMenu(tester);
     await tester.tap(find.text(l10n.trackMetadataShare));
@@ -543,9 +539,7 @@ void main() {
 
   testWidgets('ReplayGain cancel reports no change', (tester) async {
     await mount(tester);
-    final l10n = AppLocalizations.of(
-      tester.element(find.byType(LocalSongRow)),
-    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
     for (final label in [l10n.trackReplayGain, l10n.trackRemoveReplayGain]) {
       await openMenu(tester);
       await tester.ensureVisible(find.text(label));
@@ -564,9 +558,7 @@ void main() {
     tester,
   ) async {
     await mount(tester);
-    final l10n = AppLocalizations.of(
-      tester.element(find.byType(LocalSongRow)),
-    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
     await openMenu(tester);
     await tester.tap(find.text(l10n.homeGoToAlbum));
     await runAction(tester, pendingAction!);
@@ -580,6 +572,83 @@ void main() {
     await tester.tap(find.text(l10n.mornyeGoToArtist));
     await pumpUntil(tester, find.byType(LocalArtistScreen));
     expect(find.byType(LocalArtistScreen), findsOneWidget);
+  });
+
+  testWidgets('go to artist splits a featured credit', (tester) async {
+    await mount(
+      tester,
+      item: LocalLibraryItem(
+        id: 'song',
+        trackName: 'Song',
+        artistName: 'Artist feat. Guest',
+        albumName: 'Album',
+        filePath: song.filePath,
+        scannedAt: DateTime(2026),
+      ),
+    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
+    await openMenu(tester);
+    await tester.ensureVisible(find.text(l10n.mornyeGoToArtist));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.mornyeGoToArtist));
+    await pumpUntil(tester, find.byType(LocalArtistScreen));
+    // A featured credit navigates to the primary artist, not the whole credit.
+    expect(
+      tester
+          .widget<LocalArtistScreen>(find.byType(LocalArtistScreen))
+          .artistName,
+      'Artist',
+    );
+  });
+
+  testWidgets('the metadata sheet cannot be dismissed while saving', (
+    tester,
+  ) async {
+    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    final saving = Completer<Map<String, dynamic>>();
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      switch (call.method) {
+        case 'editFileMetadata':
+          return saving.future;
+        case 'acquireMediaDirectory' || 'releaseMediaDirectory':
+          return '';
+      }
+      return null;
+    });
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+    await mount(tester);
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
+    await openMenu(tester);
+    await tester.ensureVisible(find.text(l10n.trackEditMetadata));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.trackEditMetadata));
+    await pumpUntil(tester, find.byType(EditMetadataSheet));
+    await tester.pump(const Duration(milliseconds: 300));
+    // The route's own drag must not bypass the PopScope guard.
+    expect(
+      tester.widget<BottomSheet>(find.byType(BottomSheet)).enableDrag,
+      isFalse,
+    );
+
+    await tester.tap(find.text(l10n.dialogSave));
+    await tester.pump();
+    await tester.binding.handlePopRoute();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byType(EditMetadataSheet), findsOneWidget);
+
+    saving.complete({'method': 'native'});
+    await tester.pumpAndSettle();
+    expect(find.byType(EditMetadataSheet), findsNothing);
+    await runAction(tester, pendingAction!);
+    expect(await pendingAction!, isTrue);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('CUE split confirm explains the destination picker', (
@@ -621,19 +690,14 @@ void main() {
       scannedAt: DateTime(2026),
     );
     await mount(tester, item: cue);
-    final l10n = AppLocalizations.of(
-      tester.element(find.byType(LocalSongRow)),
-    );
+    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
     await openMenu(tester);
     await tester.ensureVisible(find.text(l10n.cueSplitTitle));
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.cueSplitTitle));
     await pumpUntil(tester, find.text(l10n.cueSplitConfirmTitle));
     await tester.pumpAndSettle();
-    expect(
-      find.text(l10n.cueSplitConfirmMessage('Album', 1)),
-      findsOneWidget,
-    );
+    expect(find.text(l10n.cueSplitConfirmMessage('Album', 1)), findsOneWidget);
     await tester.tap(find.text(l10n.cueSplitButton));
     await runAction(tester, pendingAction!);
     await tester.pumpAndSettle();

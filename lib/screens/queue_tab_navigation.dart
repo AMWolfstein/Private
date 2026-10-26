@@ -97,22 +97,6 @@ extension _QueueTabNavigation on _QueueTabState {
     );
   }
 
-  void _openLovedFolder() {
-    _navigateWithUnfocus(
-      MaterialPageRoute(
-        builder: (_) => const LibraryTracksFolderScreen(
-          mode: LibraryTracksFolderMode.loved,
-        ),
-      ),
-    );
-  }
-
-  void _openFavoriteArtistsFolder() {
-    _navigateWithUnfocus(
-      MaterialPageRoute(builder: (_) => const FavoriteArtistsScreen()),
-    );
-  }
-
   void _openPlaylistById(String playlistId) {
     _navigateWithUnfocus(
       MaterialPageRoute(
@@ -128,53 +112,69 @@ extension _QueueTabNavigation on _QueueTabState {
     final controller = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    final playlistName = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(dialogContext.l10n.collectionCreatePlaylist),
-          content: Form(
-            key: formKey,
-            child: TextFormField(
-              controller: controller,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: dialogContext.l10n.collectionPlaylistNameHint,
+    final String? playlistName;
+    try {
+      playlistName = await showAppDialog<String>(
+        context: context,
+        builder: (dialogContext) {
+          return AppAlertDialog(
+            title: Text(dialogContext.l10n.collectionCreatePlaylist),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: dialogContext.l10n.collectionPlaylistNameHint,
+                ),
+                validator: (value) {
+                  final trimmed = value?.trim() ?? '';
+                  if (trimmed.isEmpty) {
+                    return dialogContext.l10n.collectionPlaylistNameRequired;
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (_) {
+                  if (formKey.currentState?.validate() != true) return;
+                  Navigator.of(dialogContext).pop(controller.text.trim());
+                },
               ),
-              validator: (value) {
-                final trimmed = value?.trim() ?? '';
-                if (trimmed.isEmpty) {
-                  return dialogContext.l10n.collectionPlaylistNameRequired;
-                }
-                return null;
-              },
-              onFieldSubmitted: (_) {
-                if (formKey.currentState?.validate() != true) return;
-                Navigator.of(dialogContext).pop(controller.text.trim());
-              },
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(dialogContext.l10n.dialogCancel),
-            ),
-            FilledButton(
-              onPressed: () {
-                if (formKey.currentState?.validate() != true) return;
-                Navigator.of(dialogContext).pop(controller.text.trim());
-              },
-              child: Text(dialogContext.l10n.actionCreate),
-            ),
-          ],
-        );
-      },
-    );
+            actions: [
+              AppDialogAction(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(dialogContext.l10n.dialogCancel),
+              ),
+              AppDialogAction(
+                filled: true,
+                isDefault: true,
+                onPressed: () {
+                  if (formKey.currentState?.validate() != true) return;
+                  Navigator.of(dialogContext).pop(controller.text.trim());
+                },
+                child: Text(dialogContext.l10n.actionCreate),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      controller.dispose();
+    }
 
-    if (playlistName == null || playlistName.isEmpty) return;
-    await ref
-        .read(libraryCollectionsProvider.notifier)
-        .createPlaylist(playlistName);
+    if (playlistName == null || playlistName.isEmpty || !context.mounted) {
+      return;
+    }
+    try {
+      await ref
+          .read(libraryCollectionsProvider.notifier)
+          .createPlaylist(playlistName);
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
+    }
   }
 
   /// Pass a finite [size] (e.g. 56) for list view, or `null` for grid view

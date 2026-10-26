@@ -85,7 +85,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     final status = await Permission.storage.request();
 
     if (status.isGranted) {
-      setState(() => _hasStoragePermission = true);
+      if (mounted) setState(() => _hasStoragePermission = true);
       return true;
     } else if (status.isPermanentlyDenied) {
       if (mounted) {
@@ -117,6 +117,21 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
   }
 
   Future<void> _pickLibraryFolder() async {
+    try {
+      await _pickLibraryFolderInternal();
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.l10n.snackbarError(context.friendlyError(error)),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _pickLibraryFolderInternal() async {
     if (Platform.isAndroid && _androidSdkVersion >= 29) {
       // Use SAF tree picker - no MANAGE_EXTERNAL_STORAGE needed
       final messenger = ScaffoldMessenger.of(context);
@@ -172,9 +187,20 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       );
       return;
     }
-    await ref
-        .read(localLibraryProvider.notifier)
-        .scanAllSources(forceFullScan: forceFullScan);
+    try {
+      await ref
+          .read(localLibraryProvider.notifier)
+          .scanAllSources(forceFullScan: forceFullScan);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.l10n.snackbarError(context.friendlyError(error)),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _cancelScan() async {
@@ -279,7 +305,19 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       ),
     );
     if (confirmed != true) return;
-    await ref.read(localLibraryProvider.notifier).removeSource(source.id);
+    try {
+      await ref.read(localLibraryProvider.notifier).removeSource(source.id);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.l10n.snackbarError(context.friendlyError(error)),
+          ),
+        ),
+      );
+      return;
+    }
     final settings = ref.read(settingsProvider);
     if (settings.localLibraryPath == source.path) {
       ref
@@ -479,6 +517,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                 ),
                 for (final source in librarySources)
                   Consumer(
+                    key: ValueKey(source.id),
                     builder: (context, ref, _) {
                       final scan = ref.watch(
                         localLibraryProvider.select((state) {

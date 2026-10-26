@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +27,27 @@ void main() {
     test('invalidates results from the previous cutoff estimator', () {
       expect(AudioAnalysisData.cacheVersion, 14);
     });
+
+    test(
+      'a truncated cached spectrogram decodes to null instead of hanging',
+      () async {
+        // 1x1 transparent PNG. Half of it is a valid header with a partial
+        // IDAT, which is what an interrupted cache write leaves behind.
+        final png = base64Decode(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8'
+          'BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+        );
+        final decoded = await decodeCachedSpectrogramBytes(png);
+        expect(decoded, isNotNull);
+        decoded!.dispose();
+
+        final truncated = Uint8List.sublistView(png, 0, png.length ~/ 2);
+        final result = await decodeCachedSpectrogramBytes(
+          truncated,
+        ).timeout(const Duration(seconds: 5));
+        expect(result, isNull);
+      },
+    );
 
     test('round-trips the source modification time used for invalidation', () {
       final data = AudioAnalysisData(

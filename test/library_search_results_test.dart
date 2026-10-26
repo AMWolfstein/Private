@@ -331,4 +331,81 @@ void main() {
       },
     );
   }
+
+  testWidgets('a pending Select All cannot apply to a newer query', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final pendingSecondRow = Completer<UnifiedLibraryItem?>();
+    final query = ValueNotifier('Song');
+    addTearDown(query.dispose);
+    UnifiedLibraryItem local(String id) => UnifiedLibraryItem.fromLocalLibrary(
+      LocalLibraryItem(
+        id: id,
+        trackName: 'Song $id',
+        artistName: 'Artist',
+        albumName: 'Album',
+        filePath: '/music/$id.mp3',
+        scannedAt: DateTime(2026),
+      ),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          librarySearchProvider.overrideWith((ref, request) async {
+            if (request.query != 'Song') return const <LibrarySearchHit>[];
+            return request.kind == LibrarySearchKind.songs
+                ? [
+                    for (final id in ['a', 'b'])
+                      LibrarySearchHit(
+                        kind: LibrarySearchKind.songs,
+                        id: id,
+                        title: 'Song $id',
+                        source: 'local',
+                      ),
+                  ]
+                : const <LibrarySearchHit>[];
+          }),
+          librarySearchTrackProvider.overrideWith(
+            (ref, key) => key.id == 'b'
+                ? pendingSecondRow.future
+                : Future.value(local(key.id)),
+          ),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: ValueListenableBuilder(
+              valueListenable: query,
+              builder: (context, value, _) => CustomScrollView(
+                slivers: [
+                  LibrarySearchResults(query: value, onOpenArtist: (_) {}),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.longPress(find.text('Song a'));
+    await tester.pumpAndSettle();
+    expect(find.text('1 selected'), findsOneWidget);
+
+    // Select all resolves "Song b" slowly; the user searches again meanwhile.
+    await tester.tap(find.text('Select All'));
+    await tester.pump();
+    query.value = 'Other';
+    await tester.pumpAndSettle();
+    expect(find.textContaining('selected'), findsNothing);
+
+    // The late lookup must not reselect rows for the old query.
+    pendingSecondRow.complete(local('b'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('selected'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 }

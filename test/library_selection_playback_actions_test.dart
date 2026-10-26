@@ -23,6 +23,16 @@ class _Controller extends MusicPlayerController {
   }
 }
 
+class _FailingController extends _Controller {
+  final error = StateError('queue unavailable');
+
+  @override
+  Future<void> enqueueLibraryItems(
+    List<UnifiedLibraryItem> items, {
+    bool playNext = false,
+  }) async => throw error;
+}
+
 void main() {
   for (final mornye in [true]) {
     for (final size in [const Size(390, 844), const Size(844, 390)]) {
@@ -90,4 +100,69 @@ void main() {
       });
     }
   }
+
+  testWidgets('a failed Play next reports the error and closes the bar', (
+    tester,
+  ) async {
+    final controller = _FailingController();
+    var closed = false;
+    final items = [
+      UnifiedLibraryItem.fromLocalLibrary(
+        LocalLibraryItem(
+          id: 'first',
+          trackName: 'first',
+          artistName: 'Artist',
+          albumName: 'Album',
+          filePath: 'content://library/first.flac',
+          scannedAt: DateTime(2026),
+        ),
+      ),
+    ];
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          musicPlayerControllerProvider.overrideWithValue(controller),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.bottomCenter,
+              child: LibraryTrackSelectionBar(
+                selectedCount: 1,
+                allSelected: true,
+                onClose: () => closed = true,
+                onToggleSelectAll: () {},
+                bottomPadding: 0,
+                onReplayGain: ({required remove}) {},
+                onDelete: () {},
+                playbackActions: LibrarySelectionPlaybackActions(
+                  items: items,
+                  onClose: () => closed = true,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Play next'));
+    await tester.pumpAndSettle();
+    final context = tester.element(
+      find.byType(LibrarySelectionPlaybackActions),
+    );
+    expect(
+      find.text(
+        context.l10n.snackbarCannotOpenFile(
+          context.friendlyError(controller.error),
+        ),
+      ),
+      findsOneWidget,
+    );
+    // Closing first keeps the bar from covering the error message.
+    expect(closed, isTrue);
+    expect(tester.takeException(), isNull);
+  });
 }

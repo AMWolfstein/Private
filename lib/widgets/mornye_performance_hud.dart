@@ -219,8 +219,11 @@ class _MornyePerformanceHudState extends ConsumerState<MornyePerformanceHud> {
   }
 
   void _move(Offset delta) => setState(() {
-    MornyePerformanceHud._position =
-        (MornyePerformanceHud._position ?? _defaultPosition) + delta;
+    // Store the clamped position so overshooting an edge does not leave the
+    // HUD stuck until the drag is reversed.
+    MornyePerformanceHud._position = _clamped(
+      (MornyePerformanceHud._position ?? _defaultPosition) + delta,
+    );
   });
 
   Offset get _defaultPosition =>

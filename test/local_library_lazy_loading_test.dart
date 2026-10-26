@@ -13,6 +13,7 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/queue_tab.dart';
 import 'package:spotiflac_android/services/library_database.dart';
+import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
 import 'support/material_test_theme.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 
@@ -141,6 +142,37 @@ class _SongsCollections extends LibraryCollectionsNotifier {
       ],
     );
   }
+}
+
+class _EditableCollections extends LibraryCollectionsNotifier {
+  @override
+  LibraryCollectionsState build() => LibraryCollectionsState(
+    isLoaded: true,
+    playlists: [
+      for (final (index, name) in ['One', 'Two'].indexed)
+        UserPlaylistCollection(
+          id: name.toLowerCase(),
+          name: name,
+          createdAt: DateTime.utc(2026, 1, index + 1),
+          updatedAt: DateTime.utc(2026, 1, index + 1),
+          tracks: const [],
+        ),
+    ],
+  );
+
+  void rename(String id, String name) {
+    state = state.copyWith(
+      playlists: [
+        for (final playlist in state.playlists)
+          playlist.id == id ? playlist.copyWith(name: name) : playlist,
+      ],
+    );
+  }
+}
+
+class _EmptyCollections extends LibraryCollectionsNotifier {
+  @override
+  LibraryCollectionsState build() => LibraryCollectionsState(isLoaded: true);
 }
 
 void main() {
@@ -287,6 +319,71 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets('playlist rows show renames without changing the count', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final collections = _EditableCollections();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(() => local),
+          libraryCollectionsProvider.overrideWith(() => collections),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    // Library sections use rows, not the old album-style grid.
+    expect(find.byKey(const ValueKey('plrow_one')), findsOneWidget);
+    expect(find.text('One'), findsOneWidget);
+    expect(find.byType(SliverGrid), findsNothing);
+
+    // Renaming keeps the playlist count, so only a watched playlists list
+    // makes the row update.
+    collections.rename('one', 'Renamed');
+    await tester.pumpAndSettle();
+    expect(find.text('Renamed'), findsOneWidget);
+    expect(find.text('One'), findsNothing);
+    expect(find.text('Two'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('an empty Playlists section offers creating one', (tester) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(() => local),
+          libraryCollectionsProvider.overrideWith(_EmptyCollections.new),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Create playlist'), findsOneWidget);
+    await tester.tap(find.text('Create playlist'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AppAlertDialog), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   test('browse observes the local index only while enabled', () async {
     final container = ProviderContainer(

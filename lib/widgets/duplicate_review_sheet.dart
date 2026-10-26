@@ -12,6 +12,7 @@ import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/utils/duplicate_cleanup_policy.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
+import 'package:spotiflac_android/widgets/error_card.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 
 /// Bottom sheet listing tracks that exist more than once (same ISRC) across
@@ -227,6 +228,16 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
           return const Padding(
             padding: EdgeInsets.all(32),
             child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: ErrorCard(
+              error: snapshot.error.toString(),
+              colorScheme: colorScheme,
+              onRetry: _reload,
+            ),
           );
         }
         final groups = snapshot.data ?? const [];

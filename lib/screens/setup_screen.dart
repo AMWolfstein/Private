@@ -387,111 +387,121 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
 
     final progress = (_currentStep + 1) / _totalSteps;
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Row(
-                children: [
-                  if (_currentStep > 0)
-                    IconButton.filledTonal(
-                      onPressed: _prevPage,
-                      tooltip: MaterialLocalizations.of(
-                        context,
-                      ).backButtonTooltip,
-                      icon: const Icon(Icons.arrow_back),
-                      style: IconButton.styleFrom(
-                        backgroundColor: colorScheme.surfaceContainerHighest,
-                        foregroundColor: colorScheme.onSurfaceVariant,
-                      ),
-                    )
-                  else
-                    const SizedBox(width: 48),
-                  const Spacer(),
-                  SizedBox(
-                    width: 48,
-                    height: 48,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        CircularProgressIndicator(
-                          value: progress,
-                          strokeWidth: 4,
+    return PopScope(
+      canPop: _currentStep == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) _prevPage();
+      },
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                child: Row(
+                  children: [
+                    if (_currentStep > 0)
+                      IconButton.filledTonal(
+                        onPressed: _prevPage,
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
+                        icon: const Icon(Icons.arrow_back),
+                        style: IconButton.styleFrom(
                           backgroundColor: colorScheme.surfaceContainerHighest,
-                          color: colorScheme.primary,
-                          strokeCap: StrokeCap.round,
+                          foregroundColor: colorScheme.onSurfaceVariant,
                         ),
-                        Center(
-                          child: Text(
-                            '${_currentStep + 1}/$_totalSteps',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurfaceVariant,
+                      )
+                    else
+                      const SizedBox(width: 48),
+                    const Spacer(),
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CircularProgressIndicator(
+                            value: progress,
+                            strokeWidth: 4,
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
+                            color: colorScheme.primary,
+                            strokeCap: StrokeCap.round,
+                          ),
+                          Center(
+                            child: Text(
+                              '${_currentStep + 1}/$_totalSteps',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  _buildWelcomeStep(colorScheme),
-                  ...buildLocalGuidePages(
-                    context,
-                    firstIndex: 1,
-                    currentIndex: _currentStep,
-                  ),
-                  _buildStorageStep(colorScheme),
-                  if (_androidSdkVersion >= 33)
-                    _buildNotificationStep(colorScheme),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: _currentStep < _totalSteps - 1
-          ? FloatingActionButton.extended(
-              onPressed: !_isLoading && _isStepCompleted(_currentStep)
-                  ? _nextPage
-                  : null,
-              label: Row(
-                children: [
-                  Text(context.l10n.setupNext),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.arrow_forward),
-                ],
-              ),
-              icon: const SizedBox.shrink(), // Custom layout
-            )
-          : FloatingActionButton.extended(
-              onPressed: !_isLoading && _isStepCompleted(_currentStep)
-                  ? _completeSetup
-                  : null,
-              label: _isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: colorScheme.onPrimary,
+                        ],
                       ),
-                    )
-                  : Text(context.l10n.setupGetStarted),
-              icon: const Icon(Icons.check),
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-            ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    _buildWelcomeStep(colorScheme),
+                    ...buildLocalGuidePages(
+                      context,
+                      firstIndex: 1,
+                      currentIndex: _currentStep,
+                    ),
+                    _buildStorageStep(colorScheme),
+                    if (_androidSdkVersion >= 33)
+                      _buildNotificationStep(colorScheme),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: _currentStep < _totalSteps - 1
+            ? FloatingActionButton.extended(
+                onPressed: !_isLoading && _isStepCompleted(_currentStep)
+                    ? _nextPage
+                    : null,
+                label: Row(
+                  children: [
+                    Text(context.l10n.setupNext),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_forward),
+                  ],
+                ),
+                icon: const SizedBox.shrink(), // Custom layout
+              )
+            : FloatingActionButton.extended(
+                onPressed: !_isLoading && _isStepCompleted(_currentStep)
+                    ? _completeSetup
+                    : null,
+                label: _isLoading
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: colorScheme.onPrimary,
+                        ),
+                      )
+                    : Text(context.l10n.setupGetStarted),
+                icon: const Icon(Icons.check),
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+              ),
+      ),
     );
   }
 

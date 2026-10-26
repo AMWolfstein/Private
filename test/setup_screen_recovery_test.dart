@@ -214,6 +214,25 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('system back steps backwards through setup instead of exiting', (
+    tester,
+  ) async {
+    await prefs.setString('setup_progress_v1', '{"version":3,"step":2}');
+    await tester.pumpWidget(_setup());
+    await tester.pumpAndSettle();
+    expect(find.text('3/8'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('2/8'), findsOneWidget);
+    expect(find.text('Finding Music'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('1/8'), findsOneWidget);
+    expect(find.text('Home reached'), findsNothing);
+    expect(pickerCalls, 0);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('a draft saved with the language step resumes on the same tip', (
     tester,
   ) async {

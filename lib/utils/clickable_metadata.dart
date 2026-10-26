@@ -5,14 +5,41 @@ import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/services/library_database.dart';
 import 'package:spotiflac_android/services/shell_navigation_service.dart';
+import 'package:spotiflac_android/utils/artist_utils.dart';
+import 'package:spotiflac_android/utils/logger.dart';
 
 Future<void> navigateToArtistCredits(
   BuildContext context, {
   required String artistNames,
   String? artistIds,
 }) async {
-  final name = artistNames.split(RegExp(r'\s*,\s*')).first.trim();
-  if (name.isEmpty) return;
+  final raw = artistNames.trim();
+  if (raw.isEmpty) return;
+  final names = splitArtistNames(raw);
+  if (names.isEmpty) return;
+
+  var name = names.first;
+  if (names.length > 1) {
+    // A comma can belong to the name ("Tyler, The Creator"). Keep the whole
+    // credit when the scanned library knows it as one artist.
+    try {
+      final rows = await LibraryDatabase.instance.getQueueArtistPage(
+        QueueLibraryDbQuery(searchQuery: raw, limit: 20),
+      );
+      for (final row in rows) {
+        final artist = (row['artist_name'] as String? ?? '').trim();
+        if (artist.toLowerCase() == raw.toLowerCase()) {
+          name = artist;
+          break;
+        }
+      }
+    } catch (error) {
+      AppLogger(
+        'ClickableMetadata',
+      ).w('Artist match lookup failed, using the first credit: $error');
+    }
+  }
+  if (name.isEmpty || !context.mounted) return;
   await navigateToArtist(context, artistName: name);
 }
 
@@ -45,7 +72,11 @@ Future<void> navigateToAlbum(
       albumName,
       (artistName ?? '').trim(),
     );
-  } catch (_) {}
+  } catch (error) {
+    AppLogger(
+      'ClickableMetadata',
+    ).w('Album track lookup failed for "$albumName": $error');
+  }
   if (!context.mounted) return;
 
   final tracks = rows.map(LocalLibraryItem.fromJson).toList(growable: false);

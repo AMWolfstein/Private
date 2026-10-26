@@ -42,6 +42,26 @@ const double audioSpectrogramDynamicRangeDb = 120;
 const int audioSpectrogramSampleWindowCount = 16;
 const int audioSpectrogramMaxSelectedChannelSamples = 8 * 1024 * 1024;
 
+/// Decodes a cached spectrogram image, returning null when the bytes are not a
+/// complete image.
+///
+/// `decodeImageFromList` reports a truncated PNG as an unhandled async error
+/// and never completes its callback, so the cache path must use a codec whose
+/// failure can be caught (and the damaged file dropped).
+@visibleForTesting
+Future<ui.Image?> decodeCachedSpectrogramBytes(Uint8List bytes) async {
+  try {
+    final codec = await ui.instantiateImageCodec(bytes);
+    try {
+      return (await codec.getNextFrame()).image;
+    } finally {
+      codec.dispose();
+    }
+  } catch (_) {
+    return null;
+  }
+}
+
 String formatAudioAnalysisSpectralCutoff(
   double? cutoffHz, {
   required String notDetectedLabel,
@@ -1049,19 +1069,33 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     String filePath, {
     required int channel,
   }) async {
+    File? file;
     try {
       final dir = await _cacheDir();
       final key = _cacheKey(filePath);
-      final file = File(
-        '${dir.path}/${_spectrogramCacheFileName(key, channel)}',
-      );
+      file = File('${dir.path}/${_spectrogramCacheFileName(key, channel)}');
       if (!await file.exists()) return null;
 
-      final bytes = await file.readAsBytes();
-      final completer = Completer<ui.Image>();
-      ui.decodeImageFromList(bytes, completer.complete);
-      return await completer.future;
+      final image = await decodeCachedSpectrogramBytes(
+        await file.readAsBytes(),
+      );
+      if (image != null) return image;
+      // A truncated PNG (app killed during the write) must not wedge the card:
+      // drop it so the next analysis regenerates it.
+      try {
+        await file.delete();
+      } catch (_) {
+        // The cache trim retries an unreadable entry later.
+      }
+      return null;
     } catch (_) {
+      if (file != null) {
+        try {
+          await file.delete();
+        } catch (_) {
+          // The cache trim retries an unreadable entry later.
+        }
+      }
       return null;
     }
   }

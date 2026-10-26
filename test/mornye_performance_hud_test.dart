@@ -236,6 +236,11 @@ void main() {
     await tester.drag(handle, const Offset(-900, -900));
     await tester.pump();
     expect(tester.getTopLeft(panel), Offset.zero);
+    // Overshooting an edge stores the clamped position, so a normal drag from
+    // the corner moves immediately instead of consuming the overshoot.
+    await tester.drag(handle, const Offset(40, 60));
+    await tester.pump();
+    expect(tester.getTopLeft(panel), const Offset(40, 60));
   });
 
   testWidgets('statistics pass taps through; the buttons do not', (

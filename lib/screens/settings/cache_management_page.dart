@@ -640,7 +640,9 @@ class _CacheOverview {
     return appCacheStats.totalSizeBytes +
         (tempStats?.totalSizeBytes ?? 0) +
         coverStats.totalSizeBytes +
-        libraryCoverStats.totalSizeBytes;
+        libraryCoverStats.totalSizeBytes +
+        // The row can be cleared, so its bytes belong in the total too.
+        audioAnalysisStats.totalSizeBytes;
   }
 }
 

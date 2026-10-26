@@ -283,6 +283,9 @@ Future<bool> editLocalSongMetadata(
     context: context,
     useRootNavigator: true,
     isScrollControlled: true,
+    // The editor blocks back and barrier dismissal while saving; the route's
+    // own drag would bypass that guard.
+    enableDrag: false,
     builder: (_) => EditMetadataSheet(
       colorScheme: Theme.of(context).colorScheme,
       initialValues: values,

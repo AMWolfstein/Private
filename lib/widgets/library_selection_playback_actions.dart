@@ -47,8 +47,21 @@ class LibrarySelectionPlaybackActions extends ConsumerWidget {
           onPressed: items.isEmpty
               ? null
               : () async {
-                  final controller = ref.read(musicPlayerControllerProvider);
-                  await controller.enqueueLibraryItems(items, playNext: next);
+                  try {
+                    final controller = ref.read(musicPlayerControllerProvider);
+                    await controller.enqueueLibraryItems(items, playNext: next);
+                  } catch (error) {
+                    if (!context.mounted) return;
+                    final messenger = ScaffoldMessenger.of(context);
+                    final message = context.l10n.snackbarCannotOpenFile(
+                      context.friendlyError(error),
+                    );
+                    // The bar is painted over the snackbar, so close it first,
+                    // like the success path, or the error stays hidden.
+                    onClose();
+                    messenger.showSnackBar(SnackBar(content: Text(message)));
+                    return;
+                  }
                   if (context.mounted) onClose();
                 },
         ),

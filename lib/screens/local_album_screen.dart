@@ -149,6 +149,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     final container = ProviderScope.containerOf(context, listen: false);
     final libraryNotifier = ref.read(localLibraryProvider.notifier);
     final tracksById = {for (final track in currentTracks) track.id: track};
+    final deletedIds = <String>{};
 
     final deletedCount = await confirmAndDeleteTracks(
       context: context,
@@ -160,6 +161,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           final deleted = await deleteFile(item.filePath);
           if (!deleted) return false;
         }
+        deletedIds.add(id);
         return true;
       },
       persistDeletedItems: (ids) async {
@@ -179,9 +181,23 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       onExitSelectionMode: exitSelectionMode,
     );
 
-    if (deletedCount == currentTracks.length && mounted) {
+    if (deletedCount == null || deletedCount == 0 || !mounted) return;
+
+    final remaining = [
+      for (final item in _loadedTracks ?? widget.tracks)
+        if (!deletedIds.contains(item.id)) item,
+    ];
+    if (remaining.isEmpty) {
       Navigator.pop(context);
+      return;
     }
+    // The caller passes a static track list and this page does not watch the
+    // library, so drop the deleted rows ourselves or they would stay on screen
+    // with a stale footer until the page is reopened.
+    setState(() {
+      _loadedTracks = remaining;
+      _rebuildTrackCaches();
+    });
   }
 
   Future<void> _openFile(LocalLibraryItem track) async {

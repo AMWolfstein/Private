@@ -38,7 +38,6 @@ import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/batch_track_actions.dart';
 import 'package:spotiflac_android/widgets/local_song_row.dart';
 import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/screens/favorite_artists_screen.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
 import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
@@ -50,7 +49,6 @@ import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
 
 part 'queue_tab_helpers.dart';
-part 'queue_tab_widgets.dart';
 part 'queue_tab_selection.dart';
 part 'queue_tab_navigation.dart';
 part 'queue_tab_collection_items.dart';
@@ -942,6 +940,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
           s.playlistCount,
           s.hasPlaylistTracks,
           s.isLoaded,
+          // The playlist rows render names, covers, counts and order from the
+          // state; reloading the playlists list must rebuild them.
+          s.playlists,
         ),
       ),
     );
@@ -1054,14 +1055,21 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     final hasLibraryContent = localLibraryEnabled && localLibraryTotalCount > 0;
     final hasActiveSearch =
         _searchQuery.isNotEmpty || _searchController.text.trim().isNotEmpty;
+    final libraryError = countsValue.hasError
+        ? countsValue.error
+        : activePageValue.error;
     final shouldShowLibraryControls =
-        hasLibraryContent || hasAnyLibraryItems || hasActiveSearch;
+        hasLibraryContent ||
+        hasAnyLibraryItems ||
+        hasActiveSearch ||
+        libraryError != null;
 
     // PERF-201: the active filter's page data is only needed in selection
     // mode; other builds must not copy and regroup it.
     if (_isSelectionMode || _isPlaylistSelectionMode) {
-      final selectionItems = getFilterData(historyFilterMode)
-          .filteredUnifiedItems;
+      final selectionItems = getFilterData(
+        historyFilterMode,
+      ).filteredUnifiedItems;
       final bottomPadding = MediaQuery.paddingOf(context).bottom;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_isSelectionMode) {
@@ -1156,6 +1164,16 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                       collectionState: collectionState,
                       hasMoreLibrary: hasMoreLibrary,
                       isPageLoading: isLibraryPageLoading,
+                      error: libraryError,
+                      onRetry: () {
+                        _resetLibraryOffsets();
+                        ref.invalidate(
+                          _queueLibraryCountsProvider(countsRequest),
+                        );
+                        ref.invalidate(
+                          _queueLibraryPageProvider(activePageRequest),
+                        );
+                      },
                     ),
             ),
           ), // ScrollConfiguration

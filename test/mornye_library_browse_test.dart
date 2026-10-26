@@ -281,6 +281,76 @@ void main() {
     expect(requests.last.search, 'My album');
     expect(requests.last.limit, 40);
     expect(offsets.last, 0);
+    // Hiding the field drops its query, so the section cannot stay filtered
+    // with no visible field or clear control.
+    await tester.tap(find.byTooltip('Search your library'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsNothing);
+    expect(requests.last.search, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a failed page waits for Retry instead of loading on scroll', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    var failNextPage = true;
+    final offsets = <int>[];
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
+            offsets.add(page.offset);
+            if (page.offset > 0 && failNextPage) {
+              failNextPage = false;
+              throw StateError('page failed');
+            }
+            return LibraryBrowsePage(
+              List.generate(40, (i) => _album(page.offset + i)),
+            );
+          }),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: MornyeLibraryScreen(
+              page: MornyeLibraryPage.albums,
+              onOpenSection: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final scroll = tester.widget<CustomScrollView>(
+      find.byType(CustomScrollView),
+    );
+    scroll.controller!.jumpTo(scroll.controller!.position.maxScrollExtent);
+    await tester.pumpAndSettle();
+    expect(offsets, [0, 40]);
+    // Scroll ticks with an error present must not hammer the failing page.
+    scroll.controller!.jumpTo(scroll.controller!.position.maxScrollExtent);
+    await tester.pumpAndSettle();
+    expect(offsets, [0, 40]);
+    // The retry row sits after the loaded page, so the second jump built it.
+    expect(find.text('Retry'), findsOneWidget);
+    // Retry keeps the loaded page and resumes from its end.
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle();
+    expect(offsets, [0, 40, 40]);
+    expect(find.text('Retry'), findsNothing);
+    expect(
+      tester
+          .widget<SliverGrid>(find.byType(SliverGrid))
+          .delegate
+          .estimatedChildCount,
+      80,
+    );
     expect(tester.takeException(), isNull);
   });
 }

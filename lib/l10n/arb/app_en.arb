@@ -1503,6 +1503,15 @@
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
+  "collectionRemovedTracks": "{count, plural, =1{1 track removed} other{{count} tracks removed}}",
+  "@collectionRemovedTracks": {
+    "description": "Snackbar after removing tracks from a playlist or Loved",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "collectionLovedEmptyTitle": "No loved songs yet",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"

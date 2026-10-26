@@ -72,7 +72,11 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
       if (!_overview &&
           _scroll.position.extentAfter < 500 &&
           !_loading &&
-          !(_overview && _query.isNotEmpty)) {
+          !(_overview && _query.isNotEmpty) &&
+          // A failed page must not be retried on every scroll tick; the
+          // error row exposes an explicit Retry instead.
+          ref.read(libraryBrowseProvider(_request)).value?.loadMoreError ==
+              null) {
         unawaited(
           ref.read(libraryBrowseProvider(_request).notifier).loadMore(),
         );
@@ -86,6 +90,27 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
     _scroll.dispose();
     _search.dispose();
     super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    if (_overview) return;
+    final provider = libraryBrowseProvider(_request);
+    ref.invalidate(provider);
+    try {
+      await ref.read(provider.future);
+    } catch (_) {
+      // The error row offers its own Retry; pull-to-refresh must not rethrow.
+    }
+  }
+
+  void _retry() {
+    final provider = libraryBrowseProvider(_request);
+    if (ref.read(provider).value?.loadMoreError != null) {
+      // Keep the pages already loaded instead of starting the section over.
+      unawaited(ref.read(provider.notifier).loadMore());
+      return;
+    }
+    ref.invalidate(provider);
   }
 
   void _searchChanged(String value) {
@@ -247,7 +272,16 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
       IconButton(
         tooltip: context.l10n.librarySearchHint,
         icon: const Icon(Icons.search),
-        onPressed: () => setState(() => _showSearch = !_showSearch),
+        onPressed: () => setState(() {
+          _showSearch = !_showSearch;
+          if (_showSearch) return;
+          // Hiding the field must also drop its query, or the overview keeps
+          // showing results with no field or clear control left.
+          _debounce?.cancel();
+          _search.clear();
+          _query = '';
+          _rows = const [];
+        }),
       ),
       if (!_overview && !_artists) ...[
         IconButton(
@@ -266,11 +300,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
       ],
     ];
     final content = RefreshIndicator(
-      onRefresh: () async {
-        if (_overview) return;
-        ref.invalidate(libraryBrowseProvider(_request));
-        await ref.read(libraryBrowseProvider(_request).future);
-      },
+      onRefresh: _refresh,
       child: CustomScrollView(
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
@@ -519,8 +549,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
               SliverToBoxAdapter(
                 child: Center(
                   child: TextButton.icon(
-                    onPressed: () =>
-                        ref.invalidate(libraryBrowseProvider(_request)),
+                    onPressed: _retry,
                     icon: const Icon(Icons.refresh),
                     label: Text(context.l10n.dialogRetry),
                   ),

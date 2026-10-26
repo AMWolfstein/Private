@@ -22,7 +22,8 @@ class _Local extends LocalLibraryNotifier {
   LocalLibraryState build() => LocalLibraryState();
 
   @override
-  Future<void> removeItems(Iterable<String> ids) async => removedIds.addAll(ids);
+  Future<void> removeItems(Iterable<String> ids) async =>
+      removedIds.addAll(ids);
 
   @override
   Future<void> removePhysicalFiles(Iterable<String> paths) async =>
@@ -129,6 +130,100 @@ void main() {
     expect(cueFile.existsSync(), isTrue);
     expect(audioFile.existsSync(), isTrue);
     expect(songFile.existsSync(), isTrue);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a partial album delete drops only the deleted row', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(430, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    final directory = Directory.systemTemp.createTempSync('album_partial_');
+    addTearDown(() => directory.deleteSync(recursive: true));
+    final firstFile = File('${directory.path}/first.flac')
+      ..writeAsBytesSync([102, 76, 97, 67]);
+    final secondFile = File('${directory.path}/second.flac')
+      ..writeAsBytesSync([102, 76, 97, 67]);
+    LocalLibraryItem row(String id, String name, int number, File file) =>
+        LocalLibraryItem(
+          id: id,
+          trackName: name,
+          artistName: 'Artist',
+          albumName: 'Album',
+          filePath: file.path,
+          format: 'flac',
+          trackNumber: number,
+          scannedAt: DateTime(2026),
+        );
+    final rows = [
+      row('first', 'First', 1, firstFile),
+      row('second', 'Second', 2, secondFile),
+    ];
+    final library = _Local();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          localLibraryProvider.overrideWith(() => library),
+          currentMediaItemProvider.overrideWithBuild(
+            (ref, notifier) => const Stream<MediaItem?>.empty(),
+          ),
+          playbackPlayingProvider.overrideWith((ref) => false),
+          musicPlayerControllerProvider.overrideWithValue(_Player()),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: LocalAlbumScreen(
+            albumName: 'Album',
+            artistName: 'Artist',
+            tracks: rows,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LocalAlbumScreen)),
+    );
+
+    await tester.longPress(
+      find.byWidgetPredicate(
+        (widget) => widget is AlbumTrackTile && widget.trackName == 'First',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(DestructiveSelectionButton),
+        matching: find.text(l10n.downloadedAlbumDeleteCount(1)),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.dialogDelete));
+    await tester.pumpAndSettle();
+    // Deleting a real file finishes on the platform event loop, not the fake
+    // test clock, so wait for the recorded cleanup before asserting.
+    final deadline = DateTime.now().add(const Duration(seconds: 5));
+    while (library.removedPaths.isEmpty && DateTime.now().isBefore(deadline)) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 5)),
+      );
+      await tester.pump(const Duration(milliseconds: 10));
+    }
+    await tester.pumpAndSettle();
+
+    expect(firstFile.existsSync(), isFalse);
+    expect(secondFile.existsSync(), isTrue);
+    expect(library.removedPaths, [firstFile.path]);
+    // The page is still open and only the deleted row disappeared.
+    expect(find.byType(LocalAlbumScreen), findsOneWidget);
+    expect(find.text('First'), findsNothing);
+    expect(find.text('Second'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

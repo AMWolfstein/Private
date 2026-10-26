@@ -142,6 +142,19 @@ class _RemovalCollections extends _Collections {
       _remove('playlist', keys);
 }
 
+class _FailingRemovalCollections extends _Collections {
+  final error = StateError('remove failed');
+
+  @override
+  Future<int> removeLovedTracks(Iterable<String> keys) async => throw error;
+
+  @override
+  Future<int> removeTracksFromPlaylist(
+    String id,
+    Iterable<String> keys,
+  ) async => throw error;
+}
+
 class _SingleLovedCollections extends _Collections {
   @override
   LibraryCollectionsState build() => LibraryCollectionsState(
@@ -335,12 +348,54 @@ void main() {
           final l10n = AppLocalizations.of(
             tester.element(find.byType(LibraryTracksFolderScreen)),
           );
-          expect(find.text(l10n.selectionSelected(2)), findsOneWidget);
+          expect(find.text(l10n.collectionRemovedTracks(2)), findsOneWidget);
           expect(tester.takeException(), isNull);
         },
       );
     }
   }
+
+  testWidgets('a failed removal reports the error and closes the bar', (
+    tester,
+  ) async {
+    final collections = _FailingRemovalCollections();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          musicPlayerControllerProvider.overrideWithValue(_Player()),
+          playbackProvider.overrideWith(_Playback.new),
+          libraryCollectionsProvider.overrideWith(() => collections),
+          localLibraryProvider.overrideWith(_Library.new),
+          localLibraryCoverProvider.overrideWith((ref, request) async => null),
+          localLibraryFirstCoverProvider.overrideWith(
+            (ref, request) async => null,
+          ),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LibraryTracksFolderScreen(
+            mode: LibraryTracksFolderMode.playlist,
+            playlistId: 'playlist',
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('First'));
+    await tester.longPress(find.text('First'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.remove_circle_outline));
+    await tester.pumpAndSettle();
+    final context = tester.element(find.byType(LibraryTracksFolderScreen));
+    expect(find.text(context.friendlyError(collections.error)), findsOneWidget);
+    // The row stays, but the bar closes so it cannot cover the error message.
+    expect(find.text('First'), findsOneWidget);
+    expect(find.byIcon(Icons.remove_circle_outline), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
   for (final mornye in [true]) {
     testWidgets('playlist row queues its neighbors (Mornye: $mornye)', (

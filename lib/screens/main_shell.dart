@@ -589,24 +589,3 @@ class _LibraryTabRoot extends ConsumerWidget {
     return const QueueTab();
   }
 }
-
-class _KeepAliveTabPage extends StatefulWidget {
-  final Widget child;
-
-  const _KeepAliveTabPage({required this.child});
-
-  @override
-  State<_KeepAliveTabPage> createState() => _KeepAliveTabPageState();
-}
-
-class _KeepAliveTabPageState extends State<_KeepAliveTabPage>
-    with AutomaticKeepAliveClientMixin<_KeepAliveTabPage> {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.child;
-  }
-}

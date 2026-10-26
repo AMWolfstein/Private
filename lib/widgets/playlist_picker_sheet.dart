@@ -217,28 +217,40 @@ class _PlaylistPickerSheetContentState
                 context,
                 widget.playlistNamePrefill,
               );
-              if (name == null || name.trim().isEmpty || !context.mounted) {
-                return;
-              }
-              final playlistId = await notifier.createPlaylist(name.trim());
-              await notifier.addTracksToPlaylist(
-                playlistId,
-                widget.tracks,
-                preserveOccurrences: widget.preserveOccurrences,
-              );
-              if (!mounted) return;
-              setState(() {
-                _committedPlaylistIds.add(playlistId);
-                _selectedPlaylistIds.remove(playlistId);
-              });
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    context.l10n.collectionAddedToPlaylist(name.trim()),
+              final trimmed = name?.trim() ?? '';
+              if (trimmed.isEmpty || !mounted) return;
+              // Creating and filling the playlist must not race Done or a
+              // second tap on this row.
+              setState(() => _isSubmitting = true);
+              try {
+                final playlistId = await notifier.createPlaylist(trimmed);
+                await notifier.addTracksToPlaylist(
+                  playlistId,
+                  widget.tracks,
+                  preserveOccurrences: widget.preserveOccurrences,
+                );
+                if (!mounted) return;
+                setState(() {
+                  _committedPlaylistIds.add(playlistId);
+                  _selectedPlaylistIds.remove(playlistId);
+                });
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      context.l10n.collectionAddedToPlaylist(trimmed),
+                    ),
                   ),
-                ),
-              );
+                );
+              } catch (error) {
+                _log.e('Failed to create playlist', error);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(context.friendlyError(error))),
+                );
+              } finally {
+                if (mounted) setState(() => _isSubmitting = false);
+              }
             },
           ),
           Flexible(
@@ -306,13 +318,29 @@ class _PlaylistPickerSheetContentState
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
-                error: (_, _) => Padding(
+                error: (error, _) => Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-                  child: Text(
-                    context.l10n.collectionNoPlaylistsYet,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        context.friendlyError(error),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      TextButton.icon(
+                        onPressed: () => ref.invalidate(
+                          libraryPlaylistPickerSummariesProvider(
+                            _summaryRequest,
+                          ),
+                        ),
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: Text(context.l10n.dialogRetry),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -343,53 +371,55 @@ Future<String?> _promptPlaylistName(
   final controller = TextEditingController(text: playlistNamePrefill);
   final formKey = GlobalKey<FormState>();
 
-  final result = await showAppDialog<String>(
-    context: context,
-    builder: (dialogContext) {
-      return AppAlertDialog(
-        title: Text(dialogContext.l10n.collectionCreatePlaylist),
-        content: Form(
-          key: formKey,
-          child: TextFormField(
-            controller: controller,
-            autofocus: true,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              hintText: dialogContext.l10n.collectionPlaylistNameHint,
+  try {
+    return await showAppDialog<String>(
+      context: context,
+      builder: (dialogContext) {
+        return AppAlertDialog(
+          title: Text(dialogContext.l10n.collectionCreatePlaylist),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: controller,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                hintText: dialogContext.l10n.collectionPlaylistNameHint,
+              ),
+              validator: (value) {
+                final trimmed = value?.trim() ?? '';
+                if (trimmed.isEmpty) {
+                  return dialogContext.l10n.collectionPlaylistNameRequired;
+                }
+                return null;
+              },
+              onFieldSubmitted: (_) {
+                if (formKey.currentState?.validate() != true) return;
+                Navigator.of(dialogContext).pop(controller.text.trim());
+              },
             ),
-            validator: (value) {
-              final trimmed = value?.trim() ?? '';
-              if (trimmed.isEmpty) {
-                return dialogContext.l10n.collectionPlaylistNameRequired;
-              }
-              return null;
-            },
-            onFieldSubmitted: (_) {
-              if (formKey.currentState?.validate() != true) return;
-              Navigator.of(dialogContext).pop(controller.text.trim());
-            },
           ),
-        ),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(dialogContext.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDefault: true,
-            onPressed: () {
-              if (formKey.currentState?.validate() != true) return;
-              Navigator.of(dialogContext).pop(controller.text.trim());
-            },
-            child: Text(dialogContext.l10n.actionCreate),
-          ),
-        ],
-      );
-    },
-  );
-
-  return result;
+          actions: [
+            AppDialogAction(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(dialogContext.l10n.dialogCancel),
+            ),
+            AppDialogAction(
+              filled: true,
+              isDefault: true,
+              onPressed: () {
+                if (formKey.currentState?.validate() != true) return;
+                Navigator.of(dialogContext).pop(controller.text.trim());
+              },
+              child: Text(dialogContext.l10n.actionCreate),
+            ),
+          ],
+        );
+      },
+    );
+  } finally {
+    controller.dispose();
+  }
 }
 
 class _PlaylistPickerRow extends StatelessWidget {

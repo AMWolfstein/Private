@@ -27,11 +27,14 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
 
   bool _isExporting = false;
   bool _isImporting = false;
+  // Held from the picker until the restore (or its cancellation) finishes, so
+  // a second Import tap cannot start a competing restore.
+  bool _restoring = false;
   bool _includeSettings = true;
   bool _includeHistory = true;
   bool _includeCollections = true;
 
-  bool get _isBusy => _isExporting || _isImporting;
+  bool get _isBusy => _isExporting || _isImporting || _restoring;
   bool get _hasSelection =>
       _includeSettings || _includeHistory || _includeCollections;
 
@@ -88,6 +91,15 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
 
   Future<void> _restoreBackup() async {
     if (_isBusy) return;
+    setState(() => _restoring = true);
+    try {
+      await _runRestore();
+    } finally {
+      if (mounted) setState(() => _restoring = false);
+    }
+  }
+
+  Future<void> _runRestore() async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
 

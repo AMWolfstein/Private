@@ -160,25 +160,37 @@ class _LibraryTracksFolderScreenState
     final count = keysToRemove.length;
     final notifier = ref.read(libraryCollectionsProvider.notifier);
 
-    switch (widget.mode) {
-      case LibraryTracksFolderMode.loved:
-        await notifier.removeLovedTracks(keysToRemove);
-        break;
-      case LibraryTracksFolderMode.playlist:
-        if (widget.playlistId != null) {
-          await notifier.removeTracksFromPlaylist(
-            widget.playlistId!,
-            keysToRemove,
-          );
-        }
-        break;
+    try {
+      switch (widget.mode) {
+        case LibraryTracksFolderMode.loved:
+          await notifier.removeLovedTracks(keysToRemove);
+          break;
+        case LibraryTracksFolderMode.playlist:
+          if (widget.playlistId != null) {
+            await notifier.removeTracksFromPlaylist(
+              widget.playlistId!,
+              keysToRemove,
+            );
+          }
+          break;
+      }
+    } catch (error) {
+      if (!mounted) return;
+      final message = context.friendlyError(error);
+      // The bar is painted over the snackbar, so leave selection mode first,
+      // like the success path, or the error stays hidden behind the panel.
+      exitSelectionMode();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+      return;
     }
 
+    if (!mounted) return;
     exitSelectionMode();
 
-    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.selectionSelected(count))),
+      SnackBar(content: Text(context.l10n.collectionRemovedTracks(count))),
     );
   }
 
@@ -457,11 +469,11 @@ class _LibraryTracksFolderScreenState
     final playlistId = widget.playlistId;
     if (playlistId == null) return;
 
-    final picked = await FilePicker.pickFile(type: FileType.image);
-    if (picked == null) return;
-
     Directory? materializedDir;
     try {
+      final picked = await FilePicker.pickFile(type: FileType.image);
+      if (picked == null) return;
+
       var sourcePath = picked.path;
       if (sourcePath == null || sourcePath.isEmpty) {
         materializedDir = await Directory.systemTemp.createTemp(
@@ -484,6 +496,11 @@ class _LibraryTracksFolderScreenState
       await ref
           .read(libraryCollectionsProvider.notifier)
           .setPlaylistCover(playlistId, sourcePath);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
     } finally {
       try {
         if (materializedDir != null && await materializedDir.exists()) {
@@ -499,9 +516,16 @@ class _LibraryTracksFolderScreenState
     final playlistId = widget.playlistId;
     if (playlistId == null) return;
 
-    await ref
-        .read(libraryCollectionsProvider.notifier)
-        .removePlaylistCover(playlistId);
+    try {
+      await ref
+          .read(libraryCollectionsProvider.notifier)
+          .removePlaylistCover(playlistId);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
+    }
   }
 
   Widget _buildAppBar(
@@ -732,57 +756,70 @@ class _LibraryTracksFolderScreenState
     final controller = TextEditingController(text: currentName);
     final formKey = GlobalKey<FormState>();
 
-    final nextName = await showAppDialog<String>(
-      context: context,
-      builder: (dialogContext) {
-        return AppAlertDialog(
-          title: Text(dialogContext.l10n.collectionRenamePlaylist),
-          content: Form(
-            key: formKey,
-            child: TextFormField(
-              controller: controller,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: dialogContext.l10n.collectionPlaylistNameHint,
+    final String? nextName;
+    try {
+      nextName = await showAppDialog<String>(
+        context: context,
+        builder: (dialogContext) {
+          return AppAlertDialog(
+            title: Text(dialogContext.l10n.collectionRenamePlaylist),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: dialogContext.l10n.collectionPlaylistNameHint,
+                ),
+                validator: (value) {
+                  final trimmed = value?.trim() ?? '';
+                  if (trimmed.isEmpty) {
+                    return dialogContext.l10n.collectionPlaylistNameRequired;
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (_) {
+                  if (formKey.currentState?.validate() != true) return;
+                  Navigator.of(dialogContext).pop(controller.text.trim());
+                },
               ),
-              validator: (value) {
-                final trimmed = value?.trim() ?? '';
-                if (trimmed.isEmpty) {
-                  return dialogContext.l10n.collectionPlaylistNameRequired;
-                }
-                return null;
-              },
-              onFieldSubmitted: (_) {
-                if (formKey.currentState?.validate() != true) return;
-                Navigator.of(dialogContext).pop(controller.text.trim());
-              },
             ),
-          ),
-          actions: [
-            AppDialogAction(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(dialogContext.l10n.dialogCancel),
-            ),
-            AppDialogAction(
-              filled: true,
-              onPressed: () {
-                if (formKey.currentState?.validate() != true) return;
-                Navigator.of(dialogContext).pop(controller.text.trim());
-              },
-              child: Text(dialogContext.l10n.dialogSave),
-            ),
-          ],
-        );
-      },
-    );
+            actions: [
+              AppDialogAction(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(dialogContext.l10n.dialogCancel),
+              ),
+              AppDialogAction(
+                filled: true,
+                onPressed: () {
+                  if (formKey.currentState?.validate() != true) return;
+                  Navigator.of(dialogContext).pop(controller.text.trim());
+                },
+                child: Text(dialogContext.l10n.dialogSave),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      controller.dispose();
+    }
 
     if (nextName == null || nextName.trim().isEmpty || !context.mounted) {
       return;
     }
 
-    await ref
-        .read(libraryCollectionsProvider.notifier)
-        .renamePlaylist(playlistId, nextName.trim());
+    try {
+      await ref
+          .read(libraryCollectionsProvider.notifier)
+          .renamePlaylist(playlistId, nextName.trim());
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
+      return;
+    }
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

@@ -110,8 +110,10 @@ class _HomeTabState extends ConsumerState<HomeTab>
 
   void _onSearchChanged() {
     final text = _urlController.text.trim();
-    if (text == _query) return;
+    // Cancel first: backspacing to the committed query must not leave the
+    // previous keystroke's timer running against an empty field.
     _searchDebounce?.cancel();
+    if (text == _query) return;
     _searchDebounce = Timer(_searchDebounceDelay, () {
       if (mounted) setState(() => _query = text);
     });
