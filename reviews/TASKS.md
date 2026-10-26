@@ -334,7 +334,7 @@ or exported components.
     Rust unit tests could NOT link in this environment (no host C compiler/`cc`), so they are
     reported as not run, not passed. No APK, instrumentation or device execution.
 
-- [ ] **T10: Make scanning and cover caching cheaper**
+- [x] **T10: Make scanning and cover caching cheaper**
   - Findings: PERF-501, PERF-502 (P2); also PERF-503, PERF-504.
   - Files: `rust_backend/crates/local/src/backend/cover.rs` (`cache_cover`),
     `crates/local/src/files.rs` (`StagedFile::publish`),
@@ -352,6 +352,26 @@ or exported components.
     tracks; T1 did not cover it). Measure first: OPT-PERF-002 (block-based repair of an
     interrupted scan output), OPT-PERF-005 (same as PERF-503), OPT-PERF-008 (faster seeking
     in a CUE split).
+  - Completed 2026-10-26: code `2063adf`, graph `1578d99`. Shared published-thumbnail SHA-256 cover files,
+    unsynced cache-only publication (exports stay durable), validated warm-key pointers
+    with 30-day expiry, typed unreadable-tag failures without whole-file copies, one-pass
+    Ogg artwork, streamed unchanged CUE headers and cached sibling metadata, zero-row
+    full-scan CUE fallback (FA-DATA-011), block output repair and input seeking only for
+    reencoded CUE splits. Required performance/Rust reviews and fix-only follow-ups PASS.
+  - Release host measurements: 2k shared-cover tracks cold 6,891 -> 705 ms, 2,000 -> 1
+    cover files and 36,260,000 -> 166,130 payload bytes including 2,000 pointers; 201
+    large-cover tracks cold 3,024 -> 1,439 ms, 201 -> 3 covers. Warm rescans increased
+    174 -> 203 ms / 21 -> 24 ms. Unoptimized large-art cold time regressed; retained in
+    the evidence rather than hidden. Opus read bytes 5,682,607 -> 2,874,095; 1 MiB repair
+    1,742.626 -> 1.538 ms; late CUE extraction 4.267 -> 0.414 s with identical decoded PCM.
+    Synthetic single observations, not device throughput; no syscall/provider benchmark.
+  - Analysis clean; full serial Flutter 1,757 passed / 3 skipped / 0 failed; affected
+    files rerun 23/23. Rust fmt/Clippy/workspace 196 passed / 1 ignored. Final Android
+    host 94 passed / 1 skipped / 0 failed; instrumentation sources compiled, never run
+    on a device. The temporary timing harness is preserved outside the repo. No APK.
+    Checks ran serially with bounded workers/heaps for the owner's RAM limit. Source,
+    raw counts and measurement caveats are in VERIFICATION.md and T10_MEASUREMENTS.json.
+    Write-only lookup-summary trigger/table removal remains T14.
 
 - [ ] **T11: Fix the UI bugs from the UI re-audit**
   - Source: the 2026-10-23 UI re-audit at `8e11147`, which replaced the old T11.

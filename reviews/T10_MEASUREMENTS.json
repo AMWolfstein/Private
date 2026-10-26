@@ -1,0 +1,249 @@
+{
+  "baseline": "c5d4d25",
+  "seek": [
+    {
+      "start": 30.013,
+      "length": 29.991,
+      "output_seek_seconds": 0.4869930209999893,
+      "output_seek_pcm_hash": "SHA256=6b5ba588d6567346671063c95dca5aee3d74677b34cb5532fb63c173cb611127",
+      "input_seek_seconds": 0.413743021000073,
+      "input_seek_pcm_hash": "SHA256=6b5ba588d6567346671063c95dca5aee3d74677b34cb5532fb63c173cb611127"
+    },
+    {
+      "start": 1800.013,
+      "length": 29.991,
+      "output_seek_seconds": 2.4292363559998194,
+      "output_seek_pcm_hash": "SHA256=6b5ba588d6567346671063c95dca5aee3d74677b34cb5532fb63c173cb611127",
+      "input_seek_seconds": 0.42257427599997754,
+      "input_seek_pcm_hash": "SHA256=6b5ba588d6567346671063c95dca5aee3d74677b34cb5532fb63c173cb611127"
+    },
+    {
+      "start": 3500.123,
+      "length": 29.991,
+      "output_seek_seconds": 4.267243778999955,
+      "output_seek_pcm_hash": "SHA256=6879680f6f352b38079d484d18b684798757753504a68bb6f85dfc610f65ff1b",
+      "input_seek_seconds": 0.4137973310000689,
+      "input_seek_pcm_hash": "SHA256=6879680f6f352b38079d484d18b684798757753504a68bb6f85dfc610f65ff1b"
+    }
+  ],
+  "repair_timing": "repair timing 1MiB: legacy=1742.62591ms block=1.538492ms",
+  "opus_output": "\nrunning 1 test\ntest tags_and_artwork_share_one_comment_packet_pass ... opus cover pass bytes: separate=5682607 combined=2874095 saved=2808512\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.67s\n\n",
+  "harness_correction": "Initial shared Cargo target directory reused the baseline executable for after; invalid after rows excluded. Final after uses a fresh isolated target directory, with pointer/file-count assertions.",
+  "scope": "Synthetic host fixtures, single observations, not Android device throughput. Storage includes pointer payloads; file counts distinguish covers from pointers. No syscall profiling.",
+  "validation": {
+    "flutter_analyze": "No issues found!",
+    "flutter_full": {
+      "passed": 1757,
+      "skipped": 3,
+      "failed": 0,
+      "runner_elapsed": "17:32"
+    },
+    "flutter_affected": {
+      "passed": 23,
+      "failed": 0
+    },
+    "rust_workspace": {
+      "passed": 196,
+      "ignored": 1,
+      "failed": 0,
+      "format": "passed",
+      "clippy": "passed"
+    },
+    "android_instrumentation": "Kotlin/Java sources compiled; no device execution",
+    "apk": "not built"
+  },
+  "cover_dev_profile": "dev (unoptimized), both revisions; serial workers",
+  "cover_dev": [
+    {
+      "revision": "before",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "cold",
+      "tracks": 2000,
+      "cover_files": 2000,
+      "pointers": 0,
+      "cover_bytes": 36260000,
+      "elapsed_ms": 10226
+    },
+    {
+      "revision": "before",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "warm",
+      "tracks": 2000,
+      "cover_files": 2000,
+      "pointers": 0,
+      "cover_bytes": 36260000,
+      "elapsed_ms": 590
+    },
+    {
+      "revision": "before",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "cold",
+      "tracks": 201,
+      "cover_files": 201,
+      "pointers": 0,
+      "cover_bytes": 185806410,
+      "elapsed_ms": 12980
+    },
+    {
+      "revision": "before",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "warm",
+      "tracks": 201,
+      "cover_files": 201,
+      "pointers": 0,
+      "cover_bytes": 185806410,
+      "elapsed_ms": 104
+    },
+    {
+      "revision": "after",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "cold",
+      "tracks": 2000,
+      "cover_files": 1,
+      "pointers": 2000,
+      "cover_bytes": 166130,
+      "elapsed_ms": 5163
+    },
+    {
+      "revision": "after",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "warm",
+      "tracks": 2000,
+      "cover_files": 1,
+      "pointers": 2000,
+      "cover_bytes": 166130,
+      "elapsed_ms": 652
+    },
+    {
+      "revision": "after",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "cold",
+      "tracks": 201,
+      "cover_files": 3,
+      "pointers": 201,
+      "cover_bytes": 2788104,
+      "elapsed_ms": 20198
+    },
+    {
+      "revision": "after",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "warm",
+      "tracks": 201,
+      "cover_files": 3,
+      "pointers": 201,
+      "cover_bytes": 2788104,
+      "elapsed_ms": 65
+    }
+  ],
+  "cover_release": [
+    {
+      "revision": "before",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "cold",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 2000,
+      "cover_files": 2000,
+      "pointers": 0,
+      "cover_bytes": 36260000,
+      "elapsed_ms": 6891
+    },
+    {
+      "revision": "before",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "warm",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 2000,
+      "cover_files": 2000,
+      "pointers": 0,
+      "cover_bytes": 36260000,
+      "elapsed_ms": 174
+    },
+    {
+      "revision": "before",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "cold",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 201,
+      "cover_files": 201,
+      "pointers": 0,
+      "cover_bytes": 185806410,
+      "elapsed_ms": 3024
+    },
+    {
+      "revision": "before",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "warm",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 201,
+      "cover_files": 201,
+      "pointers": 0,
+      "cover_bytes": 185806410,
+      "elapsed_ms": 21
+    },
+    {
+      "revision": "after",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "cold",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 2000,
+      "cover_files": 1,
+      "pointers": 2000,
+      "cover_bytes": 166130,
+      "elapsed_ms": 705
+    },
+    {
+      "revision": "after",
+      "corpus": "2000 FLAC files sharing one cover",
+      "cache": "warm",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 2000,
+      "cover_files": 1,
+      "pointers": 2000,
+      "cover_bytes": 166130,
+      "elapsed_ms": 203
+    },
+    {
+      "revision": "after",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "cold",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 201,
+      "cover_files": 3,
+      "pointers": 201,
+      "cover_bytes": 2788104,
+      "elapsed_ms": 1439
+    },
+    {
+      "revision": "after",
+      "corpus": "201 FLAC files sharing three large covers",
+      "cache": "warm",
+      "profile": "release, thin LTO, codegen-units=1; isolated per revision",
+      "tracks": 201,
+      "cover_files": 3,
+      "pointers": 201,
+      "cover_bytes": 2788104,
+      "elapsed_ms": 24
+    }
+  ],
+  "android_with_timing_diagnostic": {
+    "tests": 96,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "passed": 95
+  },
+  "measurement_notes": [
+    "Optimized cold scans improved; warm scans increased 174->203 ms and 21->24 ms. Single observations, not distributions.",
+    "Unoptimized large-cover cold scan increased 12980->20198 ms; release builds were measured to avoid treating unoptimized SHA-256 cost as production throughput.",
+    "No strace/syscall counts or 200-file Android SAF provider benchmark were run; copy suppression and CUE ownership are covered by host policy tests/static trace."
+  ],
+  "android_final": {
+    "tests": 95,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "passed": 94
+  },
+  "source_commit": "2063adf",
+  "graph_commit": "1578d99"
+}

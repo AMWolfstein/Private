@@ -128,38 +128,6 @@
   - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
 - Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
 
-### PERF-501 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/local/src/backend/cover.rs:109-183` (`cache_cover`), `rust_backend/crates/local/src/files.rs:586-600` (`StagedFile::publish`)
-- Scenario: the cover cache is keyed per file (`uri|lastModified` or `path|size|mtime`), so every track with embedded art writes its own thumbnail. Each write runs `sync_all` plus a directory fsync (source-confirmed).
-  - Example: 10k tracks across ~800 albums gives ~10k files and ~20k fsyncs for a cache that can be regenerated.
-  - The in-memory dedup (32 entries) only skips the repeated decode.
-- Fix: ~20 lines, either of:
-  - name the file by a hash of the thumbnail bytes and skip it if it exists; this must stay compatible with the cover sweep and with DATA-502/CONC-102;
-  - publish the cache without fsync.
-- Measure: scan time of a 2k-track corpus, `strace -c -e fsync,fdatasync`, and `du` of the cover dir against the distinct album count.
-
-### PERF-502 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:253-270` (`acceptRead`), `SafMetadataReadPolicy.kt:22-28`
-- Scenario: unreadable or missing tags (`metadataFromFilename: true`) make `acceptRead` throw `IOException`. The fallback then:
-  - copies the whole file to temp;
-  - reads it again;
-  - retries the direct read.
-  The file is never stored, so this repeats on every incremental scan. The path is source-confirmed; how often it happens in real libraries is unknown.
-- Fix: return a typed "file readable, tags unreadable" result and skip the copy and retry for it, keeping the fallback for open/seek failures; ~10 lines.
-- Measure: count `copyUriToTemp` calls while scanning 200 untagged MP3s.
-
-### PERF-503 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `rust_backend/crates/local/src/backend/library.rs:89-112`, `rust_backend/crates/core/src/tags/containers.rs:257-310`
-- Scenario: Ogg/Opus covers are reassembled twice on a cache miss: the comment packet with its base64 art goes through `extract_cover` and again through `read_library_metadata`. FLAC already uses a merged pass.
-- Fix: reuse the assembled packet; ~30 lines. Measure on an Opus-heavy corpus first.
-
-### PERF-504 [P3] [confidence: high] [VALIDATED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1555-1575,1508-1509,1098-1099`
-- Scenario:
-  - Every incremental scan copies each unchanged `.cue` to temp, one at a time, just to re-resolve its audio sibling.
-  - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
-- Fix: persist the cue→audio URI mapping, or resolve it from the cached listing; ~20 lines.
-
 <!-- Mornye parity pass (2026-10-20): upstream v5.1.1/latest Mornye path of the online
 artist/album/playlist screens compared with the local screens. Upstream refs are
 `spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
@@ -438,6 +406,42 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### PERF-501 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `2063adf` (T10). Published-thumbnail SHA-256 names share covers across local and SAF readers; cache-only publication skips fsync, exported covers remain durable. Validated key pointers preserve warm reads and expire after 30 days. Release host cold scan: 2,000 shared-cover tracks 6,891 -> 705 ms, 2,000 -> 1 cover files and 36,260,000 -> 166,130 payload bytes (including pointers). Large-cover fixture: 3,024 -> 1,439 ms. Warm observations were slightly slower; exact limitations and unoptimized regression are retained in VERIFICATION.md / T10_MEASUREMENTS.json. Syscall profiling was not run.
+- Location: `rust_backend/crates/local/src/backend/cover.rs:109-183` (`cache_cover`), `rust_backend/crates/local/src/files.rs:586-600` (`StagedFile::publish`)
+- Scenario: the cover cache is keyed per file (`uri|lastModified` or `path|size|mtime`), so every track with embedded art writes its own thumbnail. Each write runs `sync_all` plus a directory fsync (source-confirmed).
+  - Example: 10k tracks across ~800 albums gives ~10k files and ~20k fsyncs for a cache that can be regenerated.
+  - The in-memory dedup (32 entries) only skips the repeated decode.
+- Fix: ~20 lines, either of:
+  - name the file by a hash of the thumbnail bytes and skip it if it exists; this must stay compatible with the cover sweep and with DATA-502/CONC-102;
+  - publish the cache without fsync.
+- Measure: scan time of a 2k-track corpus, `strace -c -e fsync,fdatasync`, and `du` of the cover dir against the distinct album count.
+
+### PERF-502 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `2063adf` (T10). `UnreadableTagsException` distinguishes a readable payload with unusable tags from access/seek failures. Host policy regressions assert zero whole-document copy calls for typed tag failures; one bounded descriptor retry remains for provider materialization, and access/seek failures retain the temporary-copy fallback. No 200-file real-provider or device benchmark was run.
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:253-270` (`acceptRead`), `SafMetadataReadPolicy.kt:22-28`
+- Scenario: unreadable or missing tags (`metadataFromFilename: true`) make `acceptRead` throw `IOException`. The fallback then:
+  - copies the whole file to temp;
+  - reads it again;
+  - retries the direct read.
+  The file is never stored, so this repeats on every incremental scan. The path is source-confirmed; how often it happens in real libraries is unknown.
+- Fix: return a typed "file readable, tags unreadable" result and skip the copy and retry for it, keeping the fallback for open/seek failures; ~10 lines.
+- Measure: count `copyUriToTemp` calls while scanning 200 untagged MP3s.
+
+### PERF-503 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `2063adf` (T10; also OPT-PERF-005). `ogg_with_cover` shares one comment-packet assembly between metadata and artwork. Crafted 2 MiB artwork fixture reads 5,682,607 -> 2,874,095 bytes (2,808,512 fewer), with matching metadata/artwork and a passing regression. No Opus-heavy device scan benchmark was run.
+- Location: `rust_backend/crates/local/src/backend/library.rs:89-112`, `rust_backend/crates/core/src/tags/containers.rs:257-310`
+- Scenario: Ogg/Opus covers are reassembled twice on a cache miss: the comment packet with its base64 art goes through `extract_cover` and again through `read_library_metadata`. FLAC already uses a merged pass.
+- Fix: reuse the assembled packet; ~30 lines. Measure on an Opus-heavy corpus first.
+
+### PERF-504 [P3] [confidence: high] [RESOLVED]
+- Resolution: `2063adf` (T10). Unchanged CUE sheets stream their FILE line directly instead of copying the whole sheet; cached child listing entries supply sibling names/timestamps. The parser has no 64 KiB prefix truncation and stops lazily at FILE. Full-scan ownership now requires usable CUE rows (FA-DATA-011), leaving standalone audio available otherwise. Host regressions and instrumentation source compilation passed; no provider/device execution was run.
+- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1555-1575,1508-1509,1098-1099`
+- Scenario:
+  - Every incremental scan copies each unchanged `.cue` to temp, one at a time, just to re-resolve its audio sibling.
+  - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
+- Fix: persist the cue→audio URI mapping, or resolve it from the cached listing; ~20 lines.
 
 ### PERF-201 [P3] [confidence: medium] [RESOLVED]
 - Resolution: `fcacc49` (T9). Selection data is computed only in the selection branch, and the playlist-excluded list is memoised per collections instance (`_QueueLibraryPageData.toFilterContentData`). Combined with PERF-602/OPT-PERF-001, queue builds no longer regroup loaded pages on every frame.
