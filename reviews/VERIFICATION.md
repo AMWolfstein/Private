@@ -70,6 +70,16 @@ Newest first. One line per run: date, commit, command, result.
 | 2026-10-20 | `c51713b` | Now Playing parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator traced PLAY-001 and checked PLAY-003/004 in source (reviewer claim that `audio_info_sheet.dart` exists here was wrong) | 4 open (PLAY-001..004); no tests run |
 | 2026-10-23 | `8e11147` | `/audit ui` re-audit: 5 chunks × (flutter-dart-auditor + ux-auditor), orchestrator source checks of UI-402 (demoted P1→P2), UI-404, UI-407, UI-413, UX-230 and the artist ground rebuild (PERF-605) | 57 new open, 3 resolved (UI-102, UX-103, UX-105); `dart fix --dry-run lib/widgets` (reviewer) nothing to fix; no analyze/tests/device (review only) |
 
+## T11 — 2026-10-27 — source `f0d2318`, graph `4b59361`
+
+| Check | Outcome and evidence |
+|---|---|
+| `flutter analyze` | Final **No issues found!** (12.2 s). The first analysis pass caught three infos introduced by the fixes: the orphaned `favorite_artists_screen.dart` import in `queue_tab.dart`, a redundant `library_database_models.dart` import, and two `State.mounted` guards that protect a build context (now `context.mounted`) in `playlist_picker_sheet.dart` and `queue_tab_navigation.dart`. |
+| `flutter test` | PASS: **1,770 passed / 3 skipped / 0 failed** (5:46). The first full run had two failures, both defects in the new T11 tests rather than the fixes: the partial album-delete test asserted before the real `File.delete()` finished on the platform event loop (it now waits with a bounded `runAsync` pump loop), and the failed-page test looked for the Retry row before the scroll extent grew (it now scrolls to the new end first). Both files then passed together (`+7`) and the whole suite was re-run for the reported count. |
+| Reviews | flutter-dart-auditor and ux-auditor PASS on the T11 diff. Their findings were fixed and re-reviewed: an unused `_KeepAliveTabPage`-era helper pair, a `context.mounted` guard after the new artist lookup, an untested removal-failure path, and a P2 where the selection bar painted over the snackbar reporting a failed removal or enqueue (both call sites now close the bar before showing the message). The fix-only re-review of that delta PASS with no remaining findings. |
+| Bookkeeping | Every in-scope finding moves to `Resolved` with its test (27 findings: UI-402/403/404/406/407/413, UX-218, UI-203/204/205/206/408/409/410/411/412/414/415/416/417, UX-202/208/215/217/219, BUG-303/304). Codex FA-UX-003/FA-UX-004 (playlist rows, Create when empty), FA-CONC-002 (merged into UI-411), FA-UI-002/FA-UI-003 (duplicates) are closed with the same commit. `lib/screens/queue_tab_widgets.dart` is deleted with the playlist grid. |
+| Not run | APK packaging, instrumentation and device execution (no Kotlin/Rust/Android source changed), TalkBack, contrast and RTL checks. The English-only product has no RTL surface to test. |
+
 ## T10 — 2026-10-26 — source `2063adf`, graph `1578d99`
 
 The owner requested limited RAM use. Checks now run serially: Flutter concurrency 1,

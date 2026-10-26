@@ -373,7 +373,7 @@ or exported components.
     raw counts and measurement caveats are in VERIFICATION.md and T10_MEASUREMENTS.json.
     Write-only lookup-summary trigger/table removal remains T14.
 
-- [ ] **T11: Fix the UI bugs from the UI re-audit**
+- [x] **T11: Fix the UI bugs from the UI re-audit**
   - Source: the 2026-10-23 UI re-audit at `8e11147`, which replaced the old T11.
   - Findings (P2): UI-402, UI-403, UI-404, UI-406, UI-407, UI-413, UX-218.
   - Also (P3): UI-203, UI-204, UI-205, UI-206, UI-408, UI-409, UI-410, UI-411, UI-412,
@@ -403,6 +403,26 @@ or exported components.
     sections use rows), FA-UX-004 (no Create action when there are no playlists),
     FA-CONC-002 (stale Select all results come back after the query changes; fix with
     UI-411), FA-UI-002 (same as UI-203), FA-UI-003 (same as UI-206).
+  - Completed 2026-10-27: code `f0d2318`, graph `4b59361`. Album multi-select drops the
+    deleted rows and rebuilds its footer; the metadata sheet cannot be dismissed
+    mid-save; Home cancels a stale search debounce; a damaged cached spectrogram is
+    deleted and regenerated; Playlists rebuilds after renames, covers and track edits;
+    Backup Import is single-flight; setup tips clear the Next button and system Back
+    steps through setup. Search drops stale select-all/load results (FA-CONC-002),
+    failed pages wait for Retry, hiding search clears its query, Queue keeps its failed
+    filter with a retry action, and pick/scan/remove/rename/cover failures are reported
+    instead of escaping. Library -> Playlists is rows and offers Create when empty
+    (FA-UX-003/FA-UX-004), tabs build lazily, and the performance HUD clamps its drag.
+    Selection action failures close the bar before showing the message so the panel
+    cannot cover it; artist credits prefer an exact full credit (BUG-303) and album
+    lookups log their failures (BUG-304). Required flutter-dart-auditor and ux-auditor
+    passes plus fix-only re-review PASS; the last pass caught the snackbar painted
+    behind the selection bar, fixed in both call sites. `flutter analyze`: No issues
+    found. Full serial `flutter test`: 1,770 passed / 3 skipped / 0 failed; the first
+    run exposed two defects in the new tests (real file deletion outrunning the fake
+    test clock, and the Retry row built only after the scroll extent grows), both fixed
+    and the suite re-run. No Rust or Android source changed, so those check scripts were
+    not required. No APK, instrumentation or device execution.
 
 - [ ] **T12: Fix UI accessibility, RTL, large text and translations**
   - Source: the 2026-10-23 UI re-audit at `8e11147`, plus the old T11 items that are still

@@ -19,16 +19,6 @@
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
 
-### BUG-303 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/utils/clickable_metadata.dart:14` (`navigateToArtistCredits`), caller `lib/widgets/local_song_menu.dart:162`
-- Scenario: splits artist names on commas only → "A feat. B" opens as one artist; "Tyler, The Creator" becomes "Tyler".
-- Fix: use `splitArtistNames` and prefer an exact library match.
-
-### BUG-304 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/utils/clickable_metadata.dart:44-48` (`navigateToAlbum`)
-- Scenario: DB error swallowed by `catch (_) {}` → "album information unavailable", nothing logged.
-- Fix: log via `AppLogger`; ~3 lines.
-
 ### UX-102 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/local_artist_screen.dart:583-607` (Popular page dots)
 - Scenario: dot hit box ≈16×32 px, below the 48px rule.
@@ -43,31 +33,6 @@
 - Location: `lib/screens/listening_statistics_screen.dart:150-154,237-263`
 - Scenario: error refresh `IconButton` has no tooltip; activity rows are announced as fragments; fixed 68px date column wraps at large scale.
 - Fix: tooltip, `Semantics(label:, excludeSemantics: true)` per row, min-width instead of fixed width; ~8 lines.
-
-### UI-203 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart:177` (`_removeSelected`)
-- Scenario: back out while the playlist/Loved removal awaits → `exitSelectionMode()` (setState) runs before `if (!mounted) return`.
-- Fix: move the mounted check above it; 1 line.
-
-### UI-204 [P3] [confidence: high] [VALIDATED]
-- Location: `queue_tab_navigation.dart:128`, `library_tracks_folder_screen.dart:771`, `playlist_picker_sheet.dart:355`
-- Scenario: dialog-owned `TextEditingController`s are never disposed.
-- Fix: `try/finally { controller.dispose(); }` in each.
-
-### UI-205 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/playlist_picker_sheet.dart:221-249` (Create playlist `onTap`)
-- Scenario: create flow bypasses `_isSubmitting` and has no try/catch → a throw is unhandled; double-tap or Done during the awaits can create twice / run concurrently.
-- Fix: set `_isSubmitting` around the flow and catch with `friendlyError`.
-
-### UI-206 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/duplicate_review_sheet.dart:226-232`
-- Scenario: `findIsrcDuplicateGroups()` throws → `snapshot.data ?? const []` shows "no duplicates".
-- Fix: handle `snapshot.hasError` with `friendlyError` + retry; ~8 lines.
-
-### UX-202 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/settings/cache_management_page.dart:631-636` (`totalKnownDiskCacheBytes`)
-- Scenario: audio-analysis cache is listed and cleared but left out of "Estimated total".
-- Fix: add `audioAnalysisStats.totalSizeBytes`; 1 line.
 
 ### SEC-302 [P3] [confidence: high] [VALIDATED]
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
@@ -139,90 +104,10 @@ with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
 Ours equals v5.1.1 apart from intentional deltas (Immersive view, no motion artwork,
 external player or download lookups). Upstream-latest items are in `UPSTREAM.md`. -->
 
-### UI-402 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_album_screen.dart` (`_deleteSelected`)
-- Scenario: in an album, select some (not all) tracks and confirm delete → files are deleted but the rows stay on screen; footer count/duration/quality are stale; tapping a stale row fails to open a missing file.
-- Root cause: `_deleteSelected` only exits selection and pops when every track was deleted; it never drops deleted ids from `_loadedTracks`/`widget.tracks` or calls `_rebuildTrackCaches`. Callers pass static track lists, and the build watches no library provider.
-- Fix: after a non-zero delete, remove the deleted ids in `setState` and rebuild the caches (the per-track menu path already refreshes); ~8 lines + widget test.
-- Guards checked: `pruneSelection` trims only selected ids; the pop guard covers the all-deleted case only. (Reported as P1 by flutter-dart-auditor; demoted: no data loss, the view is stale.)
-
-### UI-403 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/track_metadata_edit_sheet.dart` (`_save`), shown from `lib/widgets/local_song_menu.dart` (`editLocalSongMetadata`)
-- Scenario: tap Save, then dismiss the sheet (barrier tap or Back) while the save writes → tags are written, but `mounted` is false so the sheet never pops `true`; the caller sees null and skips the re-read/upsert, so the library row and player keep the old tags until a rescan, and a failure is never reported.
-- Fix: `PopScope(canPop: !_saving)` and `isDismissible`/`enableDrag` false while saving (or return the result through a caller-owned callback); ~5 lines.
-- Guards checked: none block dismissal during the save.
-
-### UI-404 [P2] [confidence: high] [VALIDATED]
-- Location: `lib/screens/home_tab.dart` (`_onSearchChanged`)
-- Scenario: query is `''`; type "a" (300 ms debounce starts) and backspace within 300 ms → `text == _query` returns before `_searchDebounce?.cancel()`, the pending timer fires and sets `_query = 'a'` under an empty field; Home shelves stay hidden behind stale results.
-- Fix: cancel the debounce before the equality check; 1 line + test.
-
 ### UI-405 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/screens/local_artist_screen.dart` (Popular row divider `Positioned(left: 80, right: 20)` and row padding `fromLTRB(20, 8, 10, 8)`), `lib/screens/track_metadata_edit_sheet.dart` (`_selectionField` `EdgeInsets.only(left: 4, ...)`)
 - Scenario: RTL locale → the divider inset and label inset sit on the wrong side.
 - Fix: `PositionedDirectional`/`EdgeInsetsDirectional`; ~3 lines.
-
-### UI-406 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/audio_analysis_widget.dart` (`_loadSpectrogramFromCache`; consumers `_tryLoadFromCache`, `_analyze`, `_changeSpectrogramChannel`)
-- Scenario: a truncated cached spectrogram PNG (app killed during the non-atomic write) → `ui.decodeImageFromList(bytes, completer.complete)` reports the decode error as an unhandled async error and never completes the completer; the surrounding try/catch never fires.
-- Impact: channel switch spins forever (chips and Save disabled) on every reopen; the cache key is never released or trimmed; Analyze with a valid JSON cache never clears `_analyzing`.
-- Fix: decode with `ui.instantiateImageCodec` + `getNextFrame()` inside the try/catch, dispose the codec, delete the bad file and regenerate; ~8 lines.
-
-### UI-407 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/queue_tab.dart` (`QueueTab.build`: `libraryCollectionsProvider.select` tuple, then `ref.read`)
-- Scenario: Library → Playlists; open a playlist and rename it, change its cover or edit its tracks without changing the playlist count; go back → the grid keeps the old name, cover, track count and sort order. Singles' playlist-membership filter is stale the same way.
-- Root cause: the build watches only counts and flags, but renders `playlists[i]` fields from `ref.read`; `LibraryCollectionsState` has no `==`.
-- Fix: also watch `select((s) => s.playlists)` for the playlists section (or move the grid into a `Consumer`); ~5 lines + test.
-
-### UI-408 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/queue_tab.dart` (`activePageValue`/`countsValue` handling), `lib/screens/queue_tab_filter_widgets.dart`
-- Scenario: the library page or counts provider throws → error is never surfaced; the page shows the empty "go Home" state and can hide the search field.
-- Fix: render `ErrorCard` with retry (`ref.invalidate`) on `hasError`; ~10 lines.
-
-### UI-409 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/mornye_library_screen.dart` (search `IconButton` toggle)
-- Scenario: type a query, then tap the search icon to hide the field → `_query` stays set; the overview keeps showing search results and Albums/Artists stay filtered with no visible field or clear control.
-- Fix: clear `_search`/`_query` when hiding, or keep the field while a query is set; ~4 lines.
-
-### UI-410 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/mornye_library_screen.dart` (scroll listener, Retry, `onRefresh`), `lib/providers/library_browse_provider.dart` (`loadMore`)
-- Scenario: `loadMore()` fails on Albums/Artists → every scroll tick near the end retries it; Retry invalidates the provider and drops every loaded page; pull-to-refresh rethrows from `onRefresh`.
-- Fix: skip auto load-more while `loadMoreError` is set, make Retry call `loadMore()`, catch in `onRefresh`; ~8 lines. Needs a forced failure to confirm.
-
-### UI-411 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/library_search_results.dart` (`_toggleSelection`, `_selectAllVisible`)
-- Scenario: double-tap an unselected search result before its lookup resolves → both taps select it; a lookup error escapes the tap callback and fails select-all silently.
-- Fix: in-flight set, re-check after the await, try/catch with a snackbar; ~10 lines.
-
-### UI-412 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/library_selection_playback_actions.dart` (Play next / Add to queue)
-- Scenario: `enqueueLibraryItems` throws → unhandled async error, the bar stays open, no snackbar.
-- Fix: try/catch with `showCannotOpenFileSnackBar`, as the other playback paths do; ~6 lines.
-
-### UI-413 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/settings/backup_restore_page.dart` (`_restoreBackup`, `_isBusy`)
-- Scenario: tap Import, pick a large backup; while it parses or the confirm dialog is open, tap Import again → `_isImporting` is set only after confirmation, so a second restore runs and both interleave settings, history (which clears first) and collection restores.
-- Fix: a `_restoring` flag set at entry, cleared in `finally`, included in `_isBusy`; ~5 lines.
-
-### UI-414 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/settings/library_settings_page.dart` (`_pickLibraryFolder`, `_startScan`, `_removeSource`, `_requestStoragePermission`)
-- Scenario: the SAF picker throws or `addSource` fails → nothing visible happens; scan and remove have no catch; `_requestStoragePermission` calls `setState` after an await without `mounted` (pre-API 29).
-- Fix: try/catch with the page's existing `snackbarError(friendlyError)`; add the `mounted` check; ~15 lines.
-
-### UI-415 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/mornye_performance_hud.dart` (`_move` vs `_clamped`)
-- Scenario: drag the developer HUD past an edge → the stored position is unclamped, so it seems stuck until the overshoot is undone; after rotation it can sit far off-screen.
-- Fix: store `_clamped(next)` in `_move`; 1 line.
-
-### UI-416 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/screens/settings/library_settings_page.dart` (keyless `Consumer` per library source)
-- Scenario: remove a middle source → row state is reused by position; switches may flash.
-- Fix: `key: ValueKey(source.id)`; 1 line.
-
-### UI-417 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/main_shell.dart` (`_KeepAliveTabPage`)
-- Scenario: unused leftover from the previous tab host (`LazyTabView` replaced it).
-- Fix: delete it; ~20 lines.
 
 ### UI-418 [P3] [confidence: low] [NEEDS VERIFICATION]
 - Location: `lib/widgets/player_lyrics.dart` (`_TimedLyricSweepPainter.paint`)
@@ -238,11 +123,6 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Location: `lib/screens/lyrics_share_screen.dart` (6:4 `Expanded` split)
 - Scenario: landscape phone or large text → the line list shows about one row.
 - Fix: side-by-side layout below a height threshold; ~15 lines.
-
-### UX-208 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart` (`_removeSelected`)
-- Scenario: remove 3 tracks from a playlist or Loved → the snackbar reads "3 selected" (`selectionSelected`).
-- Fix: a removed-from-playlist/Loved l10n string; ~5 lines + arb.
 
 ### UX-209 [P2] [confidence: medium] [NEEDS VERIFICATION]
 - Location: `lib/screens/queue_tab_collection_items.dart` (`_buildCollectionGridItem`), `lib/screens/queue_tab_filter_widgets.dart` (playlists grid `childAspectRatio: 0.72`)
@@ -274,30 +154,10 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Scenario: 1.5-2x font on albums with 10+ tracks → track numbers wrap or overflow.
 - Fix: `FittedBox(scaleDown)` + `maxLines: 1`, or a text-scaled width; 2-3 lines.
 
-### UX-215 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/playlist_picker_sheet.dart` (`error:` branch)
-- Scenario: the summaries provider throws → "No playlists yet" with no retry.
-- Fix: `friendlyError` + Retry (`ref.invalidate`); ~8 lines.
-
 ### UX-216 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/widgets/library_search_results.dart` (load-more `IconButton`)
 - Scenario: the load-more button's tooltip is the category name ("Songs").
 - Fix: a Show more string; 1 line + arb.
-
-### UX-217 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/library_tracks_folder_screen.dart` (`_pickCoverImage`, `_removeCoverImage`, rename), `lib/screens/queue_tab_navigation.dart` (`_showCreatePlaylistDialog`)
-- Scenario: setting a cover, renaming or creating a playlist throws → no feedback; the Songs-tab create dialog uses stock `AlertDialog` instead of `AppAlertDialog`.
-- Fix: catch with `friendlyError` snackbars; use `showAppDialog`/`AppAlertDialog`; ~15 lines.
-
-### UX-218 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/local_guide_pages.dart` (`_TutorialPage` bottom gap) vs `lib/screens/setup_screen.dart` (`floatingActionButton`)
-- Scenario: setup tip pages (especially the last with the Ready card) at a small viewport or large text → content ends 12-32dp above the bottom, so the Next button permanently covers it.
-- Fix: the same `24 + _headerHeight`-style bottom padding the other steps use; ~3 lines.
-
-### UX-219 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/setup_screen.dart` (no `PopScope`)
-- Scenario: press system Back on setup step 4 → the app exits instead of going to step 3.
-- Fix: `PopScope(canPop: _currentStep == 0, onPopInvokedWithResult: → _prevPage)`; ~8 lines.
 
 ### UX-220 [P3] [confidence: high] [VALIDATED]
 - Location: `lib/widgets/settings_group.dart` (`SettingsChoiceChip`), `lib/screens/settings/metadata_separator_settings_page.dart` (separator rows)
@@ -406,6 +266,174 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
 ## Resolved
+
+### UI-402 [P2] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `local_album_screen.dart` drops the deleted ids from `_loadedTracks` in `setState` and rebuilds the track/quality caches after a partial delete, keeping the page open with only the removed row gone (`local_album_cue_delete_test.dart`).
+- Location: `lib/screens/local_album_screen.dart` (`_deleteSelected`)
+- Scenario: in an album, select some (not all) tracks and confirm delete → files are deleted but the rows stay on screen; footer count/duration/quality are stale; tapping a stale row fails to open a missing file.
+- Root cause: `_deleteSelected` only exits selection and pops when every track was deleted; it never drops deleted ids from `_loadedTracks`/`widget.tracks` or calls `_rebuildTrackCaches`. Callers pass static track lists, and the build watches no library provider.
+- Fix: after a non-zero delete, remove the deleted ids in `setState` and rebuild the caches (the per-track menu path already refreshes); ~8 lines + widget test.
+- Guards checked: `pruneSelection` trims only selected ids; the pop guard covers the all-deleted case only. (Reported as P1 by flutter-dart-auditor; demoted: no data loss, the view is stale.)
+
+### UI-403 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `track_metadata_edit_sheet.dart` guards the sheet with `PopScope(canPop: !_saving)` and the caller disables drag-close while the save runs, so the sheet always returns its result (`local_song_menu_actions_test.dart`).
+- Location: `lib/screens/track_metadata_edit_sheet.dart` (`_save`), shown from `lib/widgets/local_song_menu.dart` (`editLocalSongMetadata`)
+- Scenario: tap Save, then dismiss the sheet (barrier tap or Back) while the save writes → tags are written, but `mounted` is false so the sheet never pops `true`; the caller sees null and skips the re-read/upsert, so the library row and player keep the old tags until a rescan, and a failure is never reported.
+- Fix: `PopScope(canPop: !_saving)` and `isDismissible`/`enableDrag` false while saving (or return the result through a caller-owned callback); ~5 lines.
+- Guards checked: none block dismissal during the save.
+
+### UI-404 [P2] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `home_tab.dart` cancels the pending search debounce before the unchanged-query early return, so backspacing to the committed query cannot apply a stale one (`home_tab_rebuild_test.dart`).
+- Location: `lib/screens/home_tab.dart` (`_onSearchChanged`)
+- Scenario: query is `''`; type "a" (300 ms debounce starts) and backspace within 300 ms → `text == _query` returns before `_searchDebounce?.cancel()`, the pending timer fires and sets `_query = 'a'` under an empty field; Home shelves stay hidden behind stale results.
+- Fix: cancel the debounce before the equality check; 1 line + test.
+
+### UI-406 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `audio_analysis_widget.dart` decodes cached spectrogram bytes through `ui.instantiateImageCodec`/`getNextFrame` in a catchable path and deletes the damaged cache file, so the analysis regenerates instead of spinning (`audio_analysis_spectrogram_test.dart`).
+- Location: `lib/widgets/audio_analysis_widget.dart` (`_loadSpectrogramFromCache`; consumers `_tryLoadFromCache`, `_analyze`, `_changeSpectrogramChannel`)
+- Scenario: a truncated cached spectrogram PNG (app killed during the non-atomic write) → `ui.decodeImageFromList(bytes, completer.complete)` reports the decode error as an unhandled async error and never completes the completer; the surrounding try/catch never fires.
+- Impact: channel switch spins forever (chips and Save disabled) on every reopen; the cache key is never released or trimmed; Analyze with a valid JSON cache never clears `_analyzing`.
+- Fix: decode with `ui.instantiateImageCodec` + `getNextFrame()` inside the try/catch, dispose the codec, delete the bad file and regenerate; ~8 lines.
+
+### UI-407 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `queue_tab.dart` selects `s.playlists`, so renames, cover changes and track edits reach the page when the user returns to it (`local_library_lazy_loading_test.dart`, `playlist_playback_test.dart`).
+- Location: `lib/screens/queue_tab.dart` (`QueueTab.build`: `libraryCollectionsProvider.select` tuple, then `ref.read`)
+- Scenario: Library → Playlists; open a playlist and rename it, change its cover or edit its tracks without changing the playlist count; go back → the grid keeps the old name, cover, track count and sort order. Singles' playlist-membership filter is stale the same way.
+- Root cause: the build watches only counts and flags, but renders `playlists[i]` fields from `ref.read`; `LibraryCollectionsState` has no `==`.
+- Fix: also watch `select((s) => s.playlists)` for the playlists section (or move the grid into a `Consumer`); ~5 lines + test.
+
+### UI-413 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `backup_restore_page.dart` sets `_restoring` on entry, includes it in `_isBusy` and clears it in `finally`, so Import cannot run twice (`backup_restore_picker_test.dart`).
+- Location: `lib/screens/settings/backup_restore_page.dart` (`_restoreBackup`, `_isBusy`)
+- Scenario: tap Import, pick a large backup; while it parses or the confirm dialog is open, tap Import again → `_isImporting` is set only after confirmation, so a second restore runs and both interleave settings, history (which clears first) and collection restores.
+- Fix: a `_restoring` flag set at entry, cleared in `finally`, included in `_isBusy`; ~5 lines.
+
+### UX-218 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `local_guide_pages.dart` reserves 104 dp (24 dp plus the 80 dp setup header) under the tips, so the Next button never covers them.
+- Location: `lib/screens/local_guide_pages.dart` (`_TutorialPage` bottom gap) vs `lib/screens/setup_screen.dart` (`floatingActionButton`)
+- Scenario: setup tip pages (especially the last with the Ready card) at a small viewport or large text → content ends 12-32dp above the bottom, so the Next button permanently covers it.
+- Fix: the same `24 + _headerHeight`-style bottom padding the other steps use; ~3 lines.
+
+### UI-203 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `library_tracks_folder_screen.dart` checks `mounted` before `exitSelectionMode()` after the delete await.
+- Location: `lib/screens/library_tracks_folder_screen.dart:177` (`_removeSelected`)
+- Scenario: back out while the playlist/Loved removal awaits → `exitSelectionMode()` (setState) runs before `if (!mounted) return`.
+- Fix: move the mounted check above it; 1 line.
+
+### UI-204 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). Text controllers in `queue_tab_navigation.dart`, `library_tracks_folder_screen.dart` and `playlist_picker_sheet.dart` are disposed in `finally`.
+- Location: `queue_tab_navigation.dart:128`, `library_tracks_folder_screen.dart:771`, `playlist_picker_sheet.dart:355`
+- Scenario: dialog-owned `TextEditingController`s are never disposed.
+- Fix: `try/finally { controller.dispose(); }` in each.
+
+### UI-205 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). Creating a playlist in `playlist_picker_sheet.dart` is guarded by `_isSubmitting` and resets in `finally`, so a second tap, Done or a drag-dismiss cannot race it.
+- Location: `lib/widgets/playlist_picker_sheet.dart:221-249` (Create playlist `onTap`)
+- Scenario: create flow bypasses `_isSubmitting` and has no try/catch → a throw is unhandled; double-tap or Done during the awaits can create twice / run concurrently.
+- Fix: set `_isSubmitting` around the flow and catch with `friendlyError`.
+
+### UI-206 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `duplicate_review_sheet.dart` shows an `ErrorCard` with Retry when the review query fails and reloads on tap.
+- Location: `lib/widgets/duplicate_review_sheet.dart:226-232`
+- Scenario: `findIsrcDuplicateGroups()` throws → `snapshot.data ?? const []` shows "no duplicates".
+- Fix: handle `snapshot.hasError` with `friendlyError` + retry; ~8 lines.
+
+### UI-408 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `queue_tab.dart` keeps the failed filter selected and offers retry, and `queue_tab_filter_widgets.dart` shows the `ErrorCard` instead of the empty state.
+- Location: `lib/screens/queue_tab.dart` (`activePageValue`/`countsValue` handling), `lib/screens/queue_tab_filter_widgets.dart`
+- Scenario: the library page or counts provider throws → error is never surfaced; the page shows the empty "go Home" state and can hide the search field.
+- Fix: render `ErrorCard` with retry (`ref.invalidate`) on `hasError`; ~10 lines.
+
+### UI-409 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `mornye_library_screen.dart` cancels the debounce and clears the controller, query and rows when search is hidden.
+- Location: `lib/screens/mornye_library_screen.dart` (search `IconButton` toggle)
+- Scenario: type a query, then tap the search icon to hide the field → `_query` stays set; the overview keeps showing search results and Albums/Artists stay filtered with no visible field or clear control.
+- Fix: clear `_search`/`_query` when hiding, or keep the field while a query is set; ~4 lines.
+
+### UI-410 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). Failed pages wait for Retry: the screen skips auto-load while `loadMoreError` is set, refresh no longer rethrows, and `library_browse_provider.dart` retains the loaded rows with the error (`mornye_library_browse_test.dart`).
+- Location: `lib/screens/mornye_library_screen.dart` (scroll listener, Retry, `onRefresh`), `lib/providers/library_browse_provider.dart` (`loadMore`)
+- Scenario: `loadMore()` fails on Albums/Artists → every scroll tick near the end retries it; Retry invalidates the provider and drops every loaded page; pull-to-refresh rethrows from `onRefresh`.
+- Fix: skip auto load-more while `loadMoreError` is set, make Retry call `loadMore()`, catch in `onRefresh`; ~8 lines. Needs a forced failure to confirm.
+
+### UI-411 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `library_search_results.dart` bumps a generation when the query changes, drops stale load/select-all results and reports the failure instead of applying them (also FA-CONC-002; `library_search_results_test.dart`).
+- Location: `lib/widgets/library_search_results.dart` (`_toggleSelection`, `_selectAllVisible`)
+- Scenario: double-tap an unselected search result before its lookup resolves → both taps select it; a lookup error escapes the tap callback and fails select-all silently.
+- Fix: in-flight set, re-check after the await, try/catch with a snackbar; ~10 lines.
+
+### UI-412 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `library_selection_playback_actions.dart` reports enqueue failures and closes the selection bar first, so the message is not painted behind it (`library_selection_playback_actions_test.dart`).
+- Location: `lib/widgets/library_selection_playback_actions.dart` (Play next / Add to queue)
+- Scenario: `enqueueLibraryItems` throws → unhandled async error, the bar stays open, no snackbar.
+- Fix: try/catch with `showCannotOpenFileSnackBar`, as the other playback paths do; ~6 lines.
+
+### UI-414 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `library_settings_page.dart` guards every pick/scan/remove await with `mounted` and reports failures through `friendlyError`.
+- Location: `lib/screens/settings/library_settings_page.dart` (`_pickLibraryFolder`, `_startScan`, `_removeSource`, `_requestStoragePermission`)
+- Scenario: the SAF picker throws or `addSource` fails → nothing visible happens; scan and remove have no catch; `_requestStoragePermission` calls `setState` after an await without `mounted` (pre-API 29).
+- Fix: try/catch with the page's existing `snackbarError(friendlyError)`; add the `mounted` check; ~15 lines.
+
+### UI-415 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `mornye_performance_hud.dart` stores the clamped drag position, so the HUD stays inside the screen (`mornye_performance_hud_test.dart`).
+- Location: `lib/widgets/mornye_performance_hud.dart` (`_move` vs `_clamped`)
+- Scenario: drag the developer HUD past an edge → the stored position is unclamped, so it seems stuck until the overshoot is undone; after rotation it can sit far off-screen.
+- Fix: store `_clamped(next)` in `_move`; 1 line.
+
+### UI-416 [P3] [confidence: low] [RESOLVED]
+- Resolution: `f0d2318` (T11). `library_settings_page.dart` keys source rows by `ValueKey(source.id)`, so a toggle follows its own source.
+- Location: `lib/screens/settings/library_settings_page.dart` (keyless `Consumer` per library source)
+- Scenario: remove a middle source → row state is reused by position; switches may flash.
+- Fix: `key: ValueKey(source.id)`; 1 line.
+
+### UI-417 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `main_shell.dart` builds tab pages through `LazyTabView`; the eager `_KeepAliveTabPage` wrapper is gone.
+- Location: `lib/screens/main_shell.dart` (`_KeepAliveTabPage`)
+- Scenario: unused leftover from the previous tab host (`LazyTabView` replaced it).
+- Fix: delete it; ~20 lines.
+
+### UX-202 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `cache_management_page.dart` includes `audioAnalysisStats.totalSizeBytes` in the cache total (`cache_management_error_test.dart`).
+- Location: `lib/screens/settings/cache_management_page.dart:631-636` (`totalKnownDiskCacheBytes`)
+- Scenario: audio-analysis cache is listed and cleared but left out of "Estimated total".
+- Fix: add `audioAnalysisStats.totalSizeBytes`; 1 line.
+
+### UX-208 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). Removals report `collectionRemovedTracks(count)`; the old "N selected" wording was replaced (`playlist_playback_test.dart`).
+- Location: `lib/screens/library_tracks_folder_screen.dart` (`_removeSelected`)
+- Scenario: remove 3 tracks from a playlist or Loved → the snackbar reads "3 selected" (`selectionSelected`).
+- Fix: a removed-from-playlist/Loved l10n string; ~5 lines + arb.
+
+### UX-215 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). `playlist_picker_sheet.dart` shows `friendlyError` with Retry (`ref.invalidate`) when the playlist summaries fail.
+- Location: `lib/widgets/playlist_picker_sheet.dart` (`error:` branch)
+- Scenario: the summaries provider throws → "No playlists yet" with no retry.
+- Fix: `friendlyError` + Retry (`ref.invalidate`); ~8 lines.
+
+### UX-217 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `f0d2318` (T11). Cover, rename and collection-create failures in `library_tracks_folder_screen.dart`, `queue_tab_navigation.dart` and `playlist_picker_sheet.dart` are caught and shown instead of escaping.
+- Location: `lib/screens/library_tracks_folder_screen.dart` (`_pickCoverImage`, `_removeCoverImage`, rename), `lib/screens/queue_tab_navigation.dart` (`_showCreatePlaylistDialog`)
+- Scenario: setting a cover, renaming or creating a playlist throws → no feedback; the Songs-tab create dialog uses stock `AlertDialog` instead of `AppAlertDialog`.
+- Fix: catch with `friendlyError` snackbars; use `showAppDialog`/`AppAlertDialog`; ~15 lines.
+
+### UX-219 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `setup_screen.dart` uses `PopScope(canPop: _currentStep == 0)` and routes system Back through `_prevPage` (`setup_screen_recovery_test.dart`).
+- Location: `lib/screens/setup_screen.dart` (no `PopScope`)
+- Scenario: press system Back on setup step 4 → the app exits instead of going to step 3.
+- Fix: `PopScope(canPop: _currentStep == 0, onPopInvokedWithResult: → _prevPage)`; ~8 lines.
+
+### BUG-303 [P3] [confidence: low] [RESOLVED]
+- Resolution: `f0d2318` (T11). `navigateToArtistCredits` splits the credit list, prefers an exact library match for the full credit ("Tyler, The Creator") and falls back to the first name, with a `context.mounted` guard (`local_song_menu_actions_test.dart`).
+- Location: `lib/utils/clickable_metadata.dart:14` (`navigateToArtistCredits`), caller `lib/widgets/local_song_menu.dart:162`
+- Scenario: splits artist names on commas only → "A feat. B" opens as one artist; "Tyler, The Creator" becomes "Tyler".
+- Fix: use `splitArtistNames` and prefer an exact library match.
+
+### BUG-304 [P3] [confidence: high] [RESOLVED]
+- Resolution: `f0d2318` (T11). `navigateToAlbum` logs a failed track lookup through `AppLogger` before showing the unavailable message.
+- Location: `lib/utils/clickable_metadata.dart:44-48` (`navigateToAlbum`)
+- Scenario: DB error swallowed by `catch (_) {}` → "album information unavailable", nothing logged.
+- Fix: log via `AppLogger`; ~3 lines.
+
 
 ### PERF-501 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `2063adf` (T10). Published-thumbnail SHA-256 names share covers across local and SAF readers; cache-only publication skips fsync, exported covers remain durable. Validated key pointers preserve warm reads and expire after 30 days. Release host cold scan: 2,000 shared-cover tracks 6,891 -> 705 ms, 2,000 -> 1 cover files and 36,260,000 -> 166,130 payload bytes (including pointers). Large-cover fixture: 3,024 -> 1,439 ms. Warm observations were slightly slower; exact limitations and unoptimized regression are retained in VERIFICATION.md / T10_MEASUREMENTS.json. Syscall profiling was not run.
