@@ -1,6 +1,8 @@
 //! Library scan DTOs composed from the existing tag and quality readers.
 
-use super::{AudioMetadata, CoverArt, file::ObservedReader, read_container_format, read_tags};
+use super::{
+    AudioMetadata, CoverArt, extract_cover, file::ObservedReader, read_container_format, read_tags,
+};
 use crate::lyrics::lrc::has_usable_content;
 use crate::media::{mp3_quality, ogg_quality, probe_mp4_quality, probe_quality, riff_quality};
 use serde_json::{Value, json};
@@ -90,8 +92,15 @@ pub fn read_library_metadata(
     read_observed(file, path, hint, scan_time, mod_time, check, None)
 }
 
-/// FLAC scans collect artwork during the existing tag pass. Other formats keep
-/// their existing readers; callers request this only on a FLAC cover-cache miss.
+/// Formats whose library tag reader also yields embedded artwork, so a cover
+/// cache miss costs one pass instead of two.
+pub fn library_reads_cover_with_tags(format: &str) -> bool {
+    matches!(format, "flac" | "ogg" | "opus")
+}
+
+/// FLAC and Ogg scans collect artwork during the existing tag pass. Other
+/// formats keep their existing readers; callers request this only on a cover
+/// cache miss.
 pub fn read_library_metadata_with_cover(
     file: &mut (impl Read + Seek),
     path: &str,
@@ -152,8 +161,17 @@ fn read(
     if let Err(error) = &metadata {
         result["metadataReadError"] = error.clone().into();
     }
-    if !tagged && let Some(cover) = cover {
-        *cover = None;
+    if let Some(cover) = cover {
+        if !tagged {
+            *cover = None;
+        }
+        // A successful FLAC/Ogg tag pass already reports the artwork. Every
+        // other case keeps its existing second read: formats whose tag reader
+        // has no artwork (for example Opus carried in MP4), and files whose
+        // tags failed before the artwork could be reached.
+        if cover.is_none() && (!tagged || !library_reads_cover_with_tags(format)) {
+            *cover = extract_cover(file, format, &|| Ok(())).ok();
+        }
     }
     if let Ok(metadata) = metadata {
         apply_tags(&mut result, metadata, format, path, hint)?;

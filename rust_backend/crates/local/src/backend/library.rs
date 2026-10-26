@@ -88,7 +88,7 @@ impl Backend {
                 cache_key,
                 |_, format, check| {
                     let file = file.as_mut().ok_or("audio file unavailable")?;
-                    if format == "flac" {
+                    if spotiflac_core::tags::library_reads_cover_with_tags(format) {
                         let (tags, cover) = read_library_metadata_with_cover(
                             file, path, hint, scan_time, mod_time, check,
                         )?;

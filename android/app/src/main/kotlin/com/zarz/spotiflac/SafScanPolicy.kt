@@ -1,7 +1,40 @@
 package com.zarz.spotiflac
 
+import java.util.Locale
+
 // Pure decisions shared by the SAF scan paths. Kept free of Android types so
 // the host unit tests can cover the deletion and resume rules.
+
+/**
+ * Audio file named by the first `FILE` line of a CUE sheet, without its path.
+ * Quoted names may contain spaces; an unquoted name is everything before the
+ * trailing type word.
+ */
+internal fun cueAudioFileName(lines: Iterable<String>): String? {
+    for (line in lines) {
+        val trimmed = line.trim().let { value ->
+            if (value.startsWith("\uFEFF")) value.removePrefix("\uFEFF").trim() else value
+        }
+        if (!trimmed.uppercase(Locale.ROOT).startsWith("FILE ")) continue
+        val rest = trimmed.substring(5).trim()
+        val filename = if (rest.startsWith("\"")) {
+            val endQuote = rest.indexOf('"', 1)
+            if (endQuote > 0) rest.substring(1, endQuote) else rest
+        } else {
+            val parts = rest.split("\\s+".toRegex())
+            if (parts.size >= 2) parts.dropLast(1).joinToString(" ") else rest
+        }
+        return filename.substringAfterLast("/").substringAfterLast("\\")
+    }
+    return null
+}
+
+/**
+ * A CUE sheet owns its backing audio only once it produced usable rows. A
+ * malformed sheet must leave the audio to the standalone scan instead of
+ * hiding a playable file.
+ */
+internal fun safCueProducedRows(rowCount: Int): Boolean = rowCount > 0
 
 /** Returns a non-null reason when a children cursor is not authoritative. */
 internal fun safListingFailureReason(loading: Boolean, error: String?): String? = when {

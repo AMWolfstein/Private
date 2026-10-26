@@ -178,28 +178,79 @@ Future<({int deleted, List<String> errors})> _pruneCoversInWorker(
   }
   var deleted = 0;
   final errors = <String>[];
+  final survived = <String>{};
+  final pointers = <File>[];
   await for (final entity in directory.list(
     recursive: true,
     followLinks: false,
   )) {
-    if (entity is! File || retainedPaths.contains(entity.path)) continue;
+    if (entity is! File) continue;
+    if (_coverPointerName.hasMatch(_fileName(entity.path))) {
+      // Key→content metadata: resolved below, once this pass knows which
+      // cover files survived.
+      pointers.add(entity);
+      continue;
+    }
+    if (retainedPaths.contains(entity.path)) {
+      survived.add(entity.path);
+      continue;
+    }
     try {
-      if (retainedPaths.contains(await entity.resolveSymbolicLinks())) continue;
+      if (retainedPaths.contains(await entity.resolveSymbolicLinks())) {
+        survived.add(entity.path);
+        continue;
+      }
       final before = await entity.stat();
       if (before.type != FileSystemEntityType.file ||
           before.modified.isAfter(cutoff)) {
+        survived.add(entity.path);
         continue;
       }
       await entity.delete();
       deleted++;
     } catch (error) {
+      survived.add(entity.path);
       final message =
           'Failed deleting stale library cover cache ${entity.path}: $error';
       errors.add(message);
     }
   }
+  // Old per-track mtime keys must not live forever just because their shared
+  // cover is still referenced. Missing pointers only cause a safe cache miss.
+  final expiry = DateTime.now().subtract(const Duration(days: 30));
+  final pointerCutoff = cutoff.isBefore(expiry) ? cutoff : expiry;
+  for (final pointer in pointers) {
+    try {
+      final modified = (await pointer.stat()).modified;
+      final target = await pointer.readAsString();
+      final name = target.trim();
+      if (modified.isAfter(pointerCutoff) &&
+          _coverFileName.hasMatch(name) &&
+          survived.contains(
+            '${pointer.parent.path}${Platform.pathSeparator}$name',
+          )) {
+        continue;
+      }
+      await pointer.delete();
+      deleted++;
+    } catch (error) {
+      final message =
+          'Failed deleting stale library cover pointer ${pointer.path}: $error';
+      errors.add(message);
+    }
+  }
   return (deleted: deleted, errors: errors);
 }
+
+/// `cover_` + 64 lowercase hex + `.id`: a pointer from a per-track cache key to
+/// the content-addressed cover it resolved to.
+final _coverPointerName = RegExp(r'^cover_[0-9a-f]{64}\.id$');
+
+/// The content file a pointer may name; also rejects path separators.
+final _coverFileName = RegExp(r'^cover_[0-9a-f]{64}\.(jpg|png)$');
+
+String _fileName(String path) =>
+    path.substring(path.lastIndexOf(Platform.pathSeparator) + 1);
 
 /// Pages by stable ID (not OFFSET, since rows are removed during traversal).
 /// A high-water mark bounds the run if a concurrent scan adds new rows.

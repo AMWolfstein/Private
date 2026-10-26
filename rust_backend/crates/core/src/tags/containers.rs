@@ -258,17 +258,7 @@ pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
     // Identification and comments are the first two packets for both codecs.
     // Stop before audio; the byte budget bounds fragmented comment/art packets.
     let packets = ogg_packets(reader, 2, None)?;
-    let stream = ogg_stream_is_opus(&packets);
-    let packet = packets.iter().find_map(|packet| {
-        if stream != Some(false) && packet.len() > 8 && packet.starts_with(b"OpusTags") {
-            Some(&packet[8..])
-        } else if stream != Some(true) && packet.len() > 7 && packet.starts_with(b"\x03vorbis") {
-            Some(&packet[7..])
-        } else {
-            None
-        }
-    });
-    let data = packet.ok_or("no Vorbis comments found")?;
+    let data = ogg_comment_packet(&packets)?;
     // An encoder-only or empty comment list is valid. Tag presence is a
     // container property, independent of which fields the user filled in.
     if !valid_comments(data) {
@@ -277,36 +267,65 @@ pub(super) fn ogg(reader: &mut impl Read) -> Result<AudioMetadata, String> {
     Ok(comments::ogg(&comments::parse(data, 512 * 1024)))
 }
 
-pub(super) fn ogg_cover(reader: &mut impl Read) -> Result<CoverArt, String> {
+/// Scans collect tags and artwork from the first read of the comment packet:
+/// the base64 picture can be several megabytes, so assembling it twice per
+/// cache miss is wasted storage traffic.
+pub(super) fn ogg_with_cover(
+    reader: &mut impl Read,
+    cover: &mut Option<CoverArt>,
+) -> Result<AudioMetadata, String> {
     let packets = ogg_packets(reader, 2, None)?;
-    let stream = ogg_stream_is_opus(&packets);
-    for packet in &packets {
-        let comments = if stream != Some(false) && packet.starts_with(b"OpusTags") {
-            &packet[8..]
-        } else if stream != Some(true) && packet.starts_with(b"\x03vorbis") {
-            &packet[7..]
-        } else {
-            continue;
-        };
-        for (key, value) in comments::parse(comments, 24 * 1024 * 1024) {
-            if !key.eq_ignore_ascii_case("METADATA_BLOCK_PICTURE") {
-                continue;
-            }
-            let value: Vec<_> = value
-                .bytes()
-                .filter(|byte| !matches!(byte, b' ' | b'\t' | b'\r' | b'\n'))
-                .collect();
-            let decoded = base64::engine::general_purpose::STANDARD
-                .decode(&value)
-                .or_else(|_| base64::engine::general_purpose::STANDARD_NO_PAD.decode(&value));
-            if let Ok(decoded) = decoded
-                && let Some((_, cover)) = picture_block(&decoded, true)
+    let data = ogg_comment_packet(&packets)?;
+    if !valid_comments(data) {
+        return Err("invalid Vorbis comments".into());
+    }
+    *cover = ogg_cover_from_comments(data);
+    // Keep the metadata parse budgets identical to the tags-only reader.
+    Ok(comments::ogg(&comments::parse(data, 512 * 1024)))
+}
+
+fn ogg_comment_packet(packets: &[Vec<u8>]) -> Result<&[u8], String> {
+    let stream = ogg_stream_is_opus(packets);
+    packets
+        .iter()
+        .find_map(|packet| {
+            if stream != Some(false) && packet.len() > 8 && packet.starts_with(b"OpusTags") {
+                Some(&packet[8..])
+            } else if stream != Some(true) && packet.len() > 7 && packet.starts_with(b"\x03vorbis")
             {
-                return Ok(cover);
+                Some(&packet[7..])
+            } else {
+                None
             }
+        })
+        .ok_or_else(|| "no Vorbis comments found".into())
+}
+
+fn ogg_cover_from_comments(comments: &[u8]) -> Option<CoverArt> {
+    for (key, value) in comments::parse(comments, 24 * 1024 * 1024) {
+        if !key.eq_ignore_ascii_case("METADATA_BLOCK_PICTURE") {
+            continue;
+        }
+        let value: Vec<_> = value
+            .bytes()
+            .filter(|byte| !matches!(byte, b' ' | b'\t' | b'\r' | b'\n'))
+            .collect();
+        let decoded = base64::engine::general_purpose::STANDARD
+            .decode(&value)
+            .or_else(|_| base64::engine::general_purpose::STANDARD_NO_PAD.decode(&value));
+        if let Ok(decoded) = decoded
+            && let Some((_, cover)) = picture_block(&decoded, true)
+        {
+            return Some(cover);
         }
     }
-    Err("no cover art found".into())
+    None
+}
+
+pub(super) fn ogg_cover(reader: &mut impl Read) -> Result<CoverArt, String> {
+    let packets = ogg_packets(reader, 2, None)?;
+    let data = ogg_comment_packet(&packets)?;
+    ogg_cover_from_comments(data).ok_or_else(|| "no cover art found".into())
 }
 
 pub(super) fn ape(reader: &mut (impl Read + Seek)) -> Result<AudioMetadata, String> {

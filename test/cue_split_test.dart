@@ -375,6 +375,85 @@ void main() {
       expect(File('${directory.path}/01 - First.flac').existsSync(), isFalse);
     });
 
+    test(
+      're-encoding seeks before the input and keeps the track length',
+      () async {
+        final commands = <List<String>>[];
+        final result = await FFmpegCue.splitCueToTracks(
+          audioPath: '${directory.path}/album.flac',
+          outputDir: directory.path,
+          tracks: [
+            CueSplitTrackInfo(
+              number: 1,
+              title: 'First',
+              artist: '',
+              startSec: 0,
+              endSec: 10,
+            ),
+            CueSplitTrackInfo(
+              number: 2,
+              title: 'Second',
+              artist: '',
+              startSec: 90.5,
+              endSec: 190.5,
+            ),
+          ],
+          albumMetadata: const {},
+          execute: (arguments) async {
+            commands.add(List.of(arguments));
+            final output = arguments[arguments.length - 2];
+            await File(output).writeAsBytes([1, 2, 3]);
+            return FFmpegResult(success: true, returnCode: 0, output: '');
+          },
+        );
+
+        expect(result, isNotNull);
+        expect(commands, hasLength(2));
+        final second = commands[1];
+        // Input seeking: the decoder starts at the track boundary.
+        expect(second.indexOf('-ss'), lessThan(second.indexOf('-i')));
+        expect(second.sublist(second.indexOf('-ss'), second.indexOf('-i')), [
+          '-ss',
+          '00:01:30.500',
+        ]);
+        // `-t` is the track length, not the absolute end of the sheet.
+        expect(second[second.indexOf('-t') + 1], '00:01:40.000');
+        expect(second, isNot(contains('-to')));
+        final codecIndex = second.indexOf('-c:a');
+        expect(second.sublist(codecIndex, codecIndex + 4), [
+          '-c:a',
+          'flac',
+          '-compression_level',
+          '8',
+        ]);
+      },
+    );
+
+    test(
+      'stream copy keeps output seeking for its packet boundaries',
+      () async {
+        final commands = <List<String>>[];
+        final result = await FFmpegCue.splitCueToTracks(
+          audioPath: '${directory.path}/album.mp3',
+          outputDir: directory.path,
+          tracks: [track(1, 'First', 90.5)],
+          albumMetadata: const {},
+          execute: (arguments) async {
+            commands.add(List.of(arguments));
+            final output = arguments[arguments.length - 2];
+            await File(output).writeAsBytes([1, 2, 3]);
+            return FFmpegResult(success: true, returnCode: 0, output: '');
+          },
+        );
+
+        expect(result, isNotNull);
+        final arguments = commands.single;
+        expect(arguments.indexOf('-i'), lessThan(arguments.indexOf('-ss')));
+        expect(arguments[arguments.indexOf('-to') + 1], '00:01:40.500');
+        expect(arguments, containsAllInOrder(['-c:a', 'copy']));
+      },
+    );
+
     test('duplicate track names never share an output file', () async {
       final result = await FFmpegCue.splitCueToTracks(
         audioPath: '${directory.path}/album.flac',
@@ -397,7 +476,10 @@ void main() {
       expect(result!.failed, 1);
       expect(result.paths.single, contains('01 - Same.flac'));
       expect(File('${directory.path}/01 - Same.flac').existsSync(), isTrue);
-      expect(File('${directory.path}/01 - Same (2).flac').existsSync(), isFalse);
+      expect(
+        File('${directory.path}/01 - Same (2).flac').existsSync(),
+        isFalse,
+      );
     });
   });
 }

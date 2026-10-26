@@ -22,6 +22,20 @@ fn reader(data: &[u8]) -> Result<ImageReader<Cursor<&[u8]>>, String> {
     }
 }
 
+/// Stable content address for cached artwork: full SHA-256, lowercase hex.
+/// Tracks that embed identical artwork therefore share one cache file, and the
+/// name never depends on a path or a modified time.
+pub fn content_id(data: &[u8]) -> String {
+    use sha2::{Digest, Sha256};
+    use std::fmt::Write;
+    let digest = Sha256::digest(data);
+    let mut id = String::with_capacity(64);
+    for byte in digest {
+        write!(id, "{byte:02x}").expect("formatting into a String cannot fail");
+    }
+    id
+}
+
 pub fn dimensions(data: &[u8]) -> (u32, u32) {
     reader(data)
         .and_then(|reader| reader.into_dimensions().map_err(|error| error.to_string()))

@@ -54,20 +54,40 @@ abstract final class FFmpegCue {
         outputName = '$stem ($copy).$outputExt';
       }
       final outputPath = '$outputDir${Platform.pathSeparator}$outputName';
-      final arguments = <String>[
-        '-v',
-        'error',
-        '-hide_banner',
-        '-i',
-        audioPath,
-        '-ss',
-        _formatSeconds(track.startSec),
-      ];
-      if (track.endSec > 0) {
-        arguments.addAll(['-to', _formatSeconds(track.endSec)]);
+      final reencode = outputExt == 'flac';
+      final arguments = <String>['-v', 'error', '-hide_banner'];
+      if (reencode) {
+        // Seeking before the input starts decoding at the track boundary.
+        // With `-ss` after `-i` every track decodes its own prefix again,
+        // which grows quadratically across a long album. `-t` replaces the
+        // absolute `-to` end: both describe the same samples.
+        arguments.addAll([
+          '-ss',
+          _formatSeconds(track.startSec),
+          '-i',
+          audioPath,
+        ]);
+        if (track.endSec > 0) {
+          arguments.addAll([
+            '-t',
+            _formatSeconds(track.endSec - track.startSec),
+          ]);
+        }
+      } else {
+        // Stream copy does not decode, so keep the boundary semantics of
+        // output seeking rather than changing where packets are cut.
+        arguments.addAll([
+          '-i',
+          audioPath,
+          '-ss',
+          _formatSeconds(track.startSec),
+        ]);
+        if (track.endSec > 0) {
+          arguments.addAll(['-to', _formatSeconds(track.endSec)]);
+        }
       }
       arguments.addAll(
-        outputExt == 'flac'
+        reencode
             ? ['-c:a', 'flac', '-compression_level', '8']
             : ['-c:a', 'copy'],
       );

@@ -596,6 +596,22 @@ impl StagedFile {
             .and_then(|parent| parent.into_std_file().sync_all());
         Ok(())
     }
+
+    /// Regenerable output (the library cover cache): publish with the atomic
+    /// rename but without the per-file and directory fsyncs a durable write
+    /// pays. A crash can only cost a cache miss on the ordered filesystems the
+    /// app supports, and an album now shares one file.
+    pub fn publish_unsynced(
+        mut self,
+        check: &dyn Fn() -> Result<(), String>,
+    ) -> Result<(), String> {
+        check()?;
+        self.parent
+            .rename(&self.name, &self.parent, &self.target)
+            .map_err(|error| error.to_string())?;
+        self.published = true;
+        Ok(())
+    }
 }
 
 impl Drop for StagedFile {

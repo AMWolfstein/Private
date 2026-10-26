@@ -172,19 +172,34 @@ private fun countSafScanRows(path: String): Int {
     }
 }
 
-private fun repairSafScanOutput(path: String) {
+// One read per block while repairing an interrupted scan output.
+private const val safScanRepairBlockBytes = 8 * 1024
+
+/**
+ * Truncates an interrupted NDJSON scan output to its last complete line.
+ * The search walks backwards in blocks: an interrupted row is one line that can
+ * be megabytes of JSON, so a byte-at-a-time read costs thousands of syscalls.
+ * Kept internal so the host tests can cover the boundary cases.
+ */
+internal fun repairSafScanOutput(path: String) {
     val output = File(path)
     if (!output.exists()) return
     try {
         RandomAccessFile(output, "rw").use { file ->
-            var position = file.length() - 1
-            while (position >= 0) {
-                file.seek(position)
-                if (file.readByte().toInt() == '\n'.code) {
-                    file.setLength(position + 1)
-                    return
+            var end = file.length()
+            val block = ByteArray(safScanRepairBlockBytes)
+            while (end > 0) {
+                val size = minOf(block.size.toLong(), end).toInt()
+                val start = end - size
+                file.seek(start)
+                file.readFully(block, 0, size)
+                for (offset in size - 1 downTo 0) {
+                    if (block[offset] == '\n'.code.toByte()) {
+                        file.setLength(start + offset + 1)
+                        return
+                    }
                 }
-                position--
+                end = start
             }
             // No complete line survived the interruption.
             file.setLength(0)
@@ -266,28 +281,33 @@ private fun pruneSafScanResume(outputPath: String, currentUris: Set<String>) {
      */
 internal fun MainActivity.extractCueAudioFileName(cueTempPath: String): String? {
         try {
-            val lines = File(cueTempPath).readLines()
-            for (line in lines) {
-                val trimmed = line.trim().let { l ->
-                    if (l.startsWith("\uFEFF")) l.removePrefix("\uFEFF").trim() else l
-                }
-                if (trimmed.uppercase(Locale.ROOT).startsWith("FILE ")) {
-                    val rest = trimmed.substring(5).trim()
-                    val filename = if (rest.startsWith("\"")) {
-                        val endQuote = rest.indexOf('"', 1)
-                        if (endQuote > 0) rest.substring(1, endQuote) else rest
-                    } else {
-                        val parts = rest.split("\\s+".toRegex())
-                        if (parts.size >= 2) parts.dropLast(1).joinToString(" ") else rest
-                    }
-                    return filename.substringAfterLast("/").substringAfterLast("\\")
-                }
-            }
+            return File(cueTempPath).useLines { cueAudioFileName(it.asIterable()) }
         } catch (e: Exception) {
             android.util.Log.w("SpotiFLAC", "Failed to extract audio filename from CUE: ${e.message}")
         }
         return null
     }
+
+    /**
+     * Read the FILE line straight from the SAF descriptor. An unchanged sheet
+     * only needs its backing audio resolved; copying the sheet to a temporary
+     * file first buys nothing.
+     */
+internal fun MainActivity.readCueAudioFileNameFromUri(uri: Uri): String? {
+    return try {
+        contentResolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.useLines { lines ->
+            // Stop at FILE without a temporary copy or a fixed prefix limit:
+            // valid sheets may put a long REM preamble before the filename.
+            cueAudioFileName(lines.asIterable())
+        }
+    } catch (e: Exception) {
+        android.util.Log.w(
+            "SpotiFLAC",
+            "SAF scan: failed reading CUE header: ${e.javaClass.simpleName}",
+        )
+        null
+    }
+}
 
     private val cueSiblingAudioExtensions = listOf(
         ".flac", ".wav", ".ape", ".mp3", ".ogg", ".wv", ".m4a", ".mp4", ".aac"
@@ -302,19 +322,19 @@ internal fun MainActivity.extractCueAudioFileName(cueTempPath: String): String? 
 
 internal fun MainActivity.getSafChildFileLookup(
         dir: DocumentFile,
-        cache: MutableMap<String, Map<String, DocumentFile>>,
-    ): Map<String, DocumentFile> {
+        cache: MutableMap<String, Map<String, SafChildEntry>>,
+    ): Map<String, SafChildEntry> {
         val dirKey = dir.uri.toString()
         return cache.getOrPut(dirKey) { safChildFileLookup(listSafChildrenOrThrow(dir)) }
     }
 
-private fun safChildFileLookup(children: List<SafChildEntry>): Map<String, DocumentFile> =
+private fun safChildFileLookup(children: List<SafChildEntry>): Map<String, SafChildEntry> =
     buildMap {
         for (child in children) {
             if (child.isDirectory) continue
             val childName = child.name?.trim().orEmpty()
             if (childName.isBlank()) continue
-            put(childName.lowercase(Locale.ROOT), child.doc)
+            put(childName.lowercase(Locale.ROOT), child)
         }
     }
 
@@ -323,7 +343,7 @@ private fun safChildFileLookup(children: List<SafChildEntry>): Map<String, Docum
 private fun rememberCueDirectoryListing(
     dir: DocumentFile,
     children: List<SafChildEntry>,
-    cache: MutableMap<String, Map<String, DocumentFile>>,
+    cache: MutableMap<String, Map<String, SafChildEntry>>,
 ) {
     if (children.any { !it.isDirectory && it.name?.endsWith(".cue", ignoreCase = true) == true }) {
         cache[dir.uri.toString()] = safChildFileLookup(children)
@@ -435,12 +455,14 @@ private fun <T, R> runSafReadsInOrder(
     }
 }
 
-internal fun MainActivity.resolveCueAudioSibling(
+/** Resolves the backing audio from the traversal listing, keeping the name and
+ * timestamp the listing already returned instead of querying the document. */
+internal fun MainActivity.resolveCueAudioEntry(
         parentDir: DocumentFile,
         cueName: String,
         audioFileName: String?,
-        childLookupCache: MutableMap<String, Map<String, DocumentFile>>,
-    ): DocumentFile? {
+        childLookupCache: MutableMap<String, Map<String, SafChildEntry>>,
+    ): SafChildEntry? {
         val childLookup = getSafChildFileLookup(parentDir, childLookupCache)
 
         val directMatch = audioFileName
@@ -660,7 +682,7 @@ internal fun MainActivity.scanSafTree(
         // Every file seen by this traversal; used to prune a resumed output.
         val listedUris = mutableSetOf<String>()
         val visitedDirUris = mutableSetOf<String>()
-        val safChildLookupCache = mutableMapOf<String, Map<String, DocumentFile>>()
+        val safChildLookupCache = mutableMapOf<String, Map<String, SafChildEntry>>()
         var traversalErrors = 0
 
         val queue: ArrayDeque<Pair<DocumentFile, String>> = ArrayDeque()
@@ -898,14 +920,14 @@ internal fun MainActivity.scanSafTree(
 
                 val audioFileName = extractCueAudioFileName(tempCuePath)
 
-                val audioDoc = resolveCueAudioSibling(
+                val audioEntry = resolveCueAudioEntry(
                     parentDir = parentDir,
                     cueName = cueName,
                     audioFileName = audioFileName,
                     childLookupCache = safChildLookupCache,
                 )
 
-                if (audioDoc == null) {
+                if (audioEntry == null) {
                     reportLibraryScanError(cueUri, "Resolve CUE audio", "No audio file found for $cueName")
                     errors++
                     if (!cueAlreadyIndexed) {
@@ -915,18 +937,19 @@ internal fun MainActivity.scanSafTree(
                     continue
                 }
 
-                cueReferencedAudioUris.add(audioDoc.uri.toString())
-
                 if (cueAlreadyIndexed) {
+                    // The earlier pass already produced this sheet's rows, so it
+                    // still owns the backing audio.
+                    cueReferencedAudioUris.add(audioEntry.doc.uri.toString())
                     // This entry is already part of `scanned` (checkpoint size);
                     // counting it again would double the percentage.
                     continue
                 }
 
-                val audioName = try { audioDoc.name ?: "audio.flac" } catch (_: Exception) { "audio.flac" }
-                val audioLastModified = try { audioDoc.lastModified() } catch (_: Exception) { cueDoc.lastModified() }
+                val audioName = audioEntry.name?.takeIf { it.isNotBlank() } ?: "audio.flac"
+                val audioLastModified = audioEntry.lastModified
                 val coverCacheKey = buildLibraryCoverCacheKey(
-                    audioDoc.uri.toString(),
+                    audioEntry.doc.uri.toString(),
                     audioLastModified,
                 )
 
@@ -934,7 +957,7 @@ internal fun MainActivity.scanSafTree(
 
                 val cueResultsJson = scanCueFromUri(
                     tempCuePath,
-                    audioDoc.uri,
+                    audioEntry.doc.uri,
                     audioName,
                     cueDoc.uri.toString(),
                     cueLastModified,
@@ -944,6 +967,9 @@ internal fun MainActivity.scanSafTree(
                 val cueArray = JSONArray(cueResultsJson)
                 for (j in 0 until cueArray.length()) {
                     putResult(cueArray.getJSONObject(j))
+                }
+                if (safCueProducedRows(cueArray.length())) {
+                    cueReferencedAudioUris.add(audioEntry.doc.uri.toString())
                 }
                 ndjsonWriter?.flush()
                 recordCheckpoint(cueUri, cue.lastModified)
@@ -1134,7 +1160,7 @@ internal fun MainActivity.scanSafTreeIncremental(
         val unchangedCueFiles = mutableListOf<CueEntry>()
         val currentUris = mutableSetOf<String>()
         val visitedDirUris = mutableSetOf<String>()
-        val safChildLookupCache = mutableMapOf<String, Map<String, DocumentFile>>()
+        val safChildLookupCache = mutableMapOf<String, Map<String, SafChildEntry>>()
         var traversalErrors = 0
 
         val existingCueVirtualPaths = cueVirtualPathsByCue(existingFiles.keys)
@@ -1271,20 +1297,20 @@ internal fun MainActivity.scanSafTreeIncremental(
                 result.put("cancelled", true)
                 return result.toString()
             }
-            var tempCue: String? = null
             var audioFileName: String? = null
             try {
-                tempCue = copyUriToTemp(cue.doc.uri, ".cue", cue.name)
-                audioFileName = tempCue?.let { extractCueAudioFileName(it) }
-                // The CUE/audio basename fallback works without a temp copy, so
+                // The sheet is unchanged: read its FILE line from the document
+                // itself instead of copying it to a temporary file.
+                audioFileName = readCueAudioFileNameFromUri(cue.doc.uri)
+                // The CUE/audio basename fallback works without the header, so
                 // a read failure does not orphan the backing audio.
-                val audioDoc = resolveCueAudioSibling(
+                val audioEntry = resolveCueAudioEntry(
                     parentDir = cue.parentDir,
                     cueName = cue.name,
                     audioFileName = audioFileName,
                     childLookupCache = safChildLookupCache,
                 )
-                if (audioDoc == null) {
+                if (audioEntry == null) {
                     errors++
                     // Report the display name: the Logs screen can export paths.
                     reportLibraryScanError(cue.name, "Resolve CUE audio", "No audio file found for ${cue.name}")
@@ -1295,14 +1321,9 @@ internal fun MainActivity.scanSafTreeIncremental(
                     }
                     continue
                 }
-                val audioUri = audioDoc.uri.toString()
+                val audioUri = audioEntry.doc.uri.toString()
                 cueReferencedAudioUris.add(audioUri)
-                val audioLastModified = try {
-                    audioDoc.lastModified()
-                } catch (_: Exception) {
-                    0L
-                }
-                if (safFileChanged(existingFiles[audioUri], audioLastModified)) {
+                if (safFileChanged(existingFiles[audioUri], audioEntry.lastModified)) {
                     cuesToRescan.add(cue)
                 }
             } catch (e: Exception) {
@@ -1313,8 +1334,6 @@ internal fun MainActivity.scanSafTreeIncremental(
                 audioFileName?.let {
                     unresolvedCueAudioKeys.add(unresolvedCueAudioKey(cue.parentDir, it))
                 }
-            } finally {
-                try { tempCue?.let { File(it).delete() } } catch (_: Exception) {}
             }
         }
         cueFilesToScan.addAll(cuesToRescan)
@@ -1426,14 +1445,14 @@ internal fun MainActivity.scanSafTreeIncremental(
 
                 audioFileName = extractCueAudioFileName(tempCuePath)
 
-                val audioDoc = resolveCueAudioSibling(
+                val audioEntry = resolveCueAudioEntry(
                     parentDir = parentDir,
                     cueName = cueName,
                     audioFileName = audioFileName,
                     childLookupCache = safChildLookupCache,
                 )
 
-                if (audioDoc == null) {
+                if (audioEntry == null) {
                     reportLibraryScanError(cueUri, "Resolve CUE audio", "No audio file found for $cueName")
                     errors++
                     if (retainExistingCueRows()) {
@@ -1446,18 +1465,20 @@ internal fun MainActivity.scanSafTreeIncremental(
                     continue
                 }
 
-                audioUri = audioDoc.uri.toString()
+                audioUri = audioEntry.doc.uri.toString()
 
-                val audioName = try { audioDoc.name ?: "audio.flac" } catch (_: Exception) { "audio.flac" }
-                val audioLastModified = try { audioDoc.lastModified() } catch (_: Exception) { cueLastModified }
+                // The traversal listing already returned these values: querying
+                // the document again costs a provider round trip per track.
+                val audioName = audioEntry.name?.takeIf { it.isNotBlank() } ?: "audio.flac"
+                val audioLastModified = audioEntry.lastModified
                 val coverCacheKey = buildLibraryCoverCacheKey(
-                    audioDoc.uri.toString(),
+                    audioEntry.doc.uri.toString(),
                     audioLastModified,
                 )
 
                 val cueResultsJson = scanCueFromUri(
                     tempCuePath,
-                    audioDoc.uri,
+                    audioEntry.doc.uri,
                     audioName,
                     cueDoc.uri.toString(),
                     cueLastModified,
@@ -1476,7 +1497,7 @@ internal fun MainActivity.scanSafTreeIncremental(
                 // Only a sheet that produced rows owns its audio: a failed or
                 // empty parse must keep the standalone row instead of deleting
                 // it in removedUris.
-                if (cueArray.length() > 0) {
+                if (safCueProducedRows(cueArray.length())) {
                     cueReferencedAudioUris.add(audioUri)
                 }
 

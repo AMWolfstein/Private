@@ -130,29 +130,30 @@ internal object RustCoreBackend : CoreBackend {
         if (path.startsWith("/proc/self/fd/") && descriptor != null) {
             val directory = libraryCoverDirectory
             // Never key artwork by the descriptor number: Android reuses it.
-            val key = cacheKey.trim().takeIf { it.isNotEmpty() }
-            val hash = key?.codePoints()?.reduce(5381) { hash, codePoint -> hash * 33 + codePoint }
-                ?.toUInt()?.toString(16)
-            val cached = if (directory != null && hash != null) {
-                listOf(File(directory, "cover_$hash.jpg"), File(directory, "cover_$hash.png"))
-                    .firstOrNull { it.isFile }
+            val key = cacheKey.trim()
+            val pointer = if (directory != null && key.isNotEmpty()) {
+                File(directory, coverPointerName(key))
             } else null
+            val cached = pointer?.let { readCoverPointer(it, directory!!) }
             val result = com.spotiflac.backend.readLibraryMetadataFromDescriptor(
                 descriptor, hint, java.time.Instant.now().toString(),
-                directory != null && hash != null && cached == null, null,
+                directory != null && cached == null, null,
             )
             val metadata = JSONObject(result.metadataJson)
             var cover = cached
-            if (directory != null && hash != null && result.coverBytes.isNotEmpty()) {
+            if (directory != null && result.coverBytes.isNotEmpty()) {
                 try {
-                    val extension = if (result.coverMime.contains("png")) "png" else "jpg"
-                    val output = File(directory, "cover_$hash.$extension")
-                    val staged = File.createTempFile("cover_", ".tmp", directory)
-                    try {
-                        staged.writeBytes(result.coverBytes)
-                        check(staged.renameTo(output)) { "Could not publish library artwork" }
-                        cover = output
-                    } finally { staged.delete() }
+                    val name = coverFileName(result.coverBytes, result.coverMime)
+                    val output = File(directory, name)
+                    if (!output.isFile || output.length() == 0L) {
+                        val staged = File.createTempFile("cover_", ".tmp", directory)
+                        try {
+                            staged.writeBytes(result.coverBytes)
+                            check(staged.renameTo(output)) { "Could not publish library artwork" }
+                        } finally { staged.delete() }
+                    }
+                    cover = output
+                    pointer?.let { writeCoverPointer(it, name) }
                 } catch (error: Exception) {
                     android.util.Log.w("SpotiFLAC", "Could not cache document artwork", error)
                 }

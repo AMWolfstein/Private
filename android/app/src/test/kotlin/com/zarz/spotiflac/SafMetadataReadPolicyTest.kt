@@ -31,39 +31,49 @@ class SafMetadataReadPolicyTest {
         assertEquals(0, failures)
     }
 
-    @Test fun rejectsTemporaryWorkspaceMetadataAndRetriesDescriptorOnce() {
-        val guessed = mapOf(
-            "metadataFromFilename" to true,
-            "albumName" to "native-media-work",
-            "trackName" to "Artist",
-            "artistName" to "Song",
-        )
+    @Test fun filenameDerivedMetadataSkipsTheCopyAndRetriesDescriptorOnce() {
         val tags = mapOf("trackName" to "Song", "artistName" to "Artist", "albumName" to "Album")
         var reads = 0
         var copies = 0
         val result = readSafMetadataWithFallback(
-            directRead = { if (++reads == 1) guessed else tags },
-            fallbackRead = { copies++; guessed },
-            accept = { it["metadataFromFilename"] != true },
+            directRead = {
+                reads++
+                if (reads == 1) throw UnreadableTagsException("Audio tags unreadable")
+                tags
+            },
+            fallbackRead = { copies++; error("Unexpected whole-document copy") },
             retryDirectOnFailure = true,
         )
         assertEquals(tags, result)
         assertEquals(2, reads)
-        assertEquals(1, copies)
+        assertEquals(0, copies)
     }
 
-    @Test fun persistentNasReadFailureDoesNotPublishGuessedMetadataOrLoop() {
+    @Test fun persistentlyUnreadableTagsNeverCopyOrLoop() {
         var reads = 0
         var copies = 0
-        val guessed = mapOf("metadataFromFilename" to true, "albumName" to "native-media-work")
-        val result = readSafMetadataWithFallback(
-            directRead = { reads++; guessed },
-            fallbackRead = { copies++; guessed },
-            accept = { it["metadataFromFilename"] != true },
+        val failures = mutableListOf<String?>()
+        val result = readSafMetadataWithFallback<Map<String, Any>>(
+            directRead = { reads++; throw UnreadableTagsException("Audio tags unreadable") },
+            fallbackRead = { copies++; error("Unexpected whole-document copy") },
             retryDirectOnFailure = true,
+            onFailure = { failures.add(it?.message) },
         )
         assertNull(result)
         assertEquals(2, reads)
+        assertEquals(0, copies)
+        assertEquals(listOf("Audio tags unreadable"), failures)
+    }
+
+    @Test fun unreadableTagsFoundOnlyByTheCopySkipTheRetry() {
+        var reads = 0
+        var copies = 0
+        assertNull(readSafMetadataWithFallback<Any>(
+            directRead = { reads++; throw java.io.IOException("Descriptor unavailable") },
+            fallbackRead = { copies++; throw UnreadableTagsException("Audio tags unreadable") },
+            retryDirectOnFailure = true,
+        ))
+        assertEquals(1, reads)
         assertEquals(1, copies)
     }
 

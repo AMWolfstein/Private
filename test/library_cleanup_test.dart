@@ -149,6 +149,37 @@ void main() {
   );
 
   test(
+    'cover cleanup keeps key pointers while their content survives',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'cover-pointer-prune-',
+      );
+      addTearDown(() => directory.delete(recursive: true));
+      final id = 'a' * 64;
+      final cover = await File(
+        '${directory.path}/cover_$id.jpg',
+      ).writeAsBytes([1]);
+      await cover.setLastModified(DateTime(2020));
+      final live = await File(
+        '${directory.path}/cover_${'b' * 64}.id',
+      ).writeAsString('cover_$id.jpg');
+      final expired = await File(
+        '${directory.path}/cover_${'e' * 64}.id',
+      ).writeAsString('cover_$id.jpg');
+      await expired.setLastModified(DateTime(2020));
+      final stale = await File(
+        '${directory.path}/cover_${'c' * 64}.id',
+      ).writeAsString('cover_${'d' * 64}.jpg');
+      await stale.setLastModified(DateTime(2020));
+      expect(await pruneUnreferencedLibraryCovers(directory, {cover.path}), 2);
+      expect(await cover.exists(), isTrue);
+      expect(await live.exists(), isTrue);
+      expect(await stale.exists(), isFalse);
+      expect(await expired.exists(), isFalse);
+    },
+  );
+
+  test(
     'cover cleanup retains recent payloads awaiting a DB reference',
     () async {
       final directory = await Directory.systemTemp.createTemp('recent-prune-');

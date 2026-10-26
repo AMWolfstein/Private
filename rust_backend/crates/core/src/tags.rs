@@ -13,8 +13,8 @@ use crate::text::utf8;
 pub(crate) use containers::{ogg_packets, ogg_stream_is_opus};
 pub use file::{file_metadata_extension, read_file_metadata};
 pub use library::{
-    library_extension, library_id, library_metadata, read_library_metadata,
-    read_library_metadata_with_cover,
+    library_extension, library_id, library_metadata, library_reads_cover_with_tags,
+    read_library_metadata, read_library_metadata_with_cover,
 };
 pub use separators::format_metadata_tag_value;
 use serde::Serialize;
@@ -207,7 +207,10 @@ fn read_tags(
         },
         "m4a" | "mp4" | "aac" => mp4::read(&mut reader),
         "mp3" => id3::read(&mut reader),
-        "ogg" | "opus" => containers::ogg(&mut reader),
+        "ogg" | "opus" => match cover {
+            Some(cover) => containers::ogg_with_cover(&mut reader, cover),
+            None => containers::ogg(&mut reader),
+        },
         "ape" | "wv" | "mpc" => containers::ape(&mut reader),
         "wav" => containers::riff(&mut reader, false),
         "aiff" | "aif" | "aifc" => containers::riff(&mut reader, true),

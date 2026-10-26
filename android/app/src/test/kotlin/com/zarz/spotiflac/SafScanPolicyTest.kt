@@ -7,6 +7,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SafScanPolicyTest {
+    @Test fun cueHeaderStreamsPastLongPreamblesAndStopsAtFile() {
+        val lines = sequence {
+            repeat(1024) { yield("REM " + "x".repeat(80)) }
+            yield("FILE \"different audio.flac\" WAVE")
+            error("The FILE line is enough; do not consume the remainder")
+        }
+        assertEquals("different audio.flac", cueAudioFileName(lines.asIterable()))
+    }
+
     @Test fun providerErrorAndLoadingCursorsAreNotAuthoritative() {
         assertEquals("provider-loading", safListingFailureReason(loading = true, error = null))
         assertEquals(
@@ -126,6 +135,43 @@ class SafScanPolicyTest {
             listOf(3, 1),
             safTreePersistFlags(reportedFlags = 2, readFlag = 1, writeFlag = 2),
         )
+    }
+
+    @Test fun cueAudioFileNameHandlesQuotedUnquotedAndBomHeaders() {
+        assertEquals(
+            "album.flac",
+            cueAudioFileName(listOf("REM comment", "FILE \"album.flac\" WAVE")),
+        )
+        assertEquals(
+            "Artist - Album.flac",
+            cueAudioFileName(listOf("file \"Artist - Album.flac\" WAVE")),
+        )
+        assertEquals(
+            "album.flac",
+            cueAudioFileName(listOf("FILE album.flac WAVE")),
+        )
+        assertEquals(
+            "my album.flac",
+            cueAudioFileName(listOf("FILE my album.flac WAVE")),
+        )
+        assertEquals(
+            "album.flac",
+            cueAudioFileName(listOf("\uFEFFFILE \"album.flac\" WAVE")),
+        )
+        assertEquals(
+            "album.flac",
+            cueAudioFileName(listOf("FILE \"C:\\\\Music\\\\album.flac\" WAVE")),
+        )
+        // A comment that merely mentions FILE is not a header.
+        assertNull(cueAudioFileName(listOf("REM FILE is missing", "TRACK 01 AUDIO")))
+        assertNull(cueAudioFileName(emptyList()))
+    }
+
+    @Test fun aMalformedSheetDoesNotHideItsBackingAudio() {
+        // No rows: the audio must be indexed as a standalone file.
+        assertFalse(safCueProducedRows(rowCount = 0))
+        assertTrue(safCueProducedRows(rowCount = 1))
+        assertTrue(safCueProducedRows(rowCount = 12))
     }
 
     @Test fun cueFailuresKeepEveryExistingVirtualTrack() {

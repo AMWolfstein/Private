@@ -182,6 +182,106 @@ fn artwork_across_many_pages_is_read_without_consuming_audio() {
     }
 }
 
+/// Counts the bytes the scan actually pulls from the container.
+struct CountingReader {
+    inner: Cursor<Vec<u8>>,
+    bytes: u64,
+    seeks: u64,
+}
+
+impl CountingReader {
+    fn new(data: Vec<u8>) -> Self {
+        Self {
+            inner: Cursor::new(data),
+            bytes: 0,
+            seeks: 0,
+        }
+    }
+}
+
+impl std::io::Read for CountingReader {
+    fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+        let count = std::io::Read::read(&mut self.inner, buffer)?;
+        self.bytes += count as u64;
+        Ok(count)
+    }
+}
+
+impl std::io::Seek for CountingReader {
+    fn seek(&mut self, position: std::io::SeekFrom) -> std::io::Result<u64> {
+        self.seeks += 1;
+        self.inner.seek(position)
+    }
+}
+
+fn opus_with_artwork(artwork: &[u8]) -> Vec<u8> {
+    use base64::Engine;
+    let mut picture = 3_u32.to_be_bytes().to_vec();
+    picture.extend(10_u32.to_be_bytes());
+    picture.extend(b"image/jpeg");
+    picture.extend(0_u32.to_be_bytes());
+    for value in [1000_u32, 1000, 24, 0, artwork.len() as u32] {
+        picture.extend(value.to_be_bytes());
+    }
+    picture.extend(artwork);
+    let comment = format!(
+        "METADATA_BLOCK_PICTURE={}",
+        base64::engine::general_purpose::STANDARD.encode(picture)
+    );
+    let mut tags = b"OpusTags".to_vec();
+    tags.extend(0_u32.to_le_bytes());
+    tags.extend(1_u32.to_le_bytes());
+    tags.extend((comment.len() as u32).to_le_bytes());
+    tags.extend(comment.as_bytes());
+    let mut sequence = 0;
+    let mut data = paged_packet(
+        b"OpusHead\x01\x02\0\0\x80\xbb\0\0\0\0\0",
+        &mut sequence,
+        255,
+    );
+    data.extend(paged_packet(&tags, &mut sequence, 255));
+    data
+}
+
+#[test]
+fn tags_and_artwork_share_one_comment_packet_pass() {
+    use spotiflac_core::tags::{
+        extract_cover, read_library_metadata, read_library_metadata_with_cover,
+    };
+    let artwork = vec![0x5a; 2 * 1024 * 1024];
+    let data = opus_with_artwork(&artwork);
+
+    let mut separate = CountingReader::new(data.clone());
+    let tags = read_library_metadata(&mut separate, "/music/song.opus", "", "scan", 0, &|| Ok(()))
+        .unwrap();
+    let cover = extract_cover(&mut separate, "opus", &|| Ok(())).unwrap();
+    assert_eq!(cover.data, artwork);
+
+    let mut combined = CountingReader::new(data);
+    let (combined_tags, combined_cover) =
+        read_library_metadata_with_cover(&mut combined, "/music/song.opus", "", "scan", 0, &|| {
+            Ok(())
+        })
+        .unwrap();
+    println!(
+        "opus cover pass bytes: separate={} combined={} saved={}",
+        separate.bytes,
+        combined.bytes,
+        separate.bytes.saturating_sub(combined.bytes)
+    );
+    // Same tag payload and quality result, without re-reading the packet.
+    for key in ["trackName", "format", "duration", "sampleRate"] {
+        assert_eq!(tags[key], combined_tags[key], "{key}");
+    }
+    assert_eq!(combined_cover.expect("combined cover").data, artwork);
+    assert!(
+        combined.bytes + artwork.len() as u64 <= separate.bytes,
+        "combined {} vs separate {}",
+        combined.bytes,
+        separate.bytes
+    );
+}
+
 #[test]
 fn malformed_or_incomplete_fragmented_comments_report_the_real_failure() {
     let mut sequence = 0;

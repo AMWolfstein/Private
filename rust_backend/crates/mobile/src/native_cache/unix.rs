@@ -228,6 +228,59 @@ fn collect(root: &CacheRoot, exclude_json: bool, check: Check<'_>) -> Result<Vec
     Ok(files)
 }
 
+/// `cover_` + 64 lowercase hex + `.id`: a key→content pointer the cover cache
+/// writes so a warm scan skips the embedded-artwork read.
+fn is_cover_pointer(name: &[u8]) -> bool {
+    let Some(id) = name.strip_prefix(b"cover_") else {
+        return false;
+    };
+    let Some(id) = id.strip_suffix(b".id") else {
+        return false;
+    };
+    is_content_id(id)
+}
+
+/// `cover_` + 64 lowercase hex + `.jpg`/`.png`, and nothing else.
+fn is_cover_file(name: &[u8]) -> bool {
+    let Some(rest) = name.strip_prefix(b"cover_") else {
+        return false;
+    };
+    let Some((id, extension)) = rest.split_at_checked(64) else {
+        return false;
+    };
+    is_content_id(id) && matches!(extension, b".jpg" | b".png")
+}
+
+fn is_content_id(id: &[u8]) -> bool {
+    id.len() == 64
+        && id
+            .iter()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(byte))
+}
+
+/// Reads the cache file name a pointer names. The payload is validated, so a
+/// corrupt pointer can never address anything outside the cache directory.
+fn pointer_target(entry: &Entry) -> Option<String> {
+    let fd = openat(
+        &entry.parent,
+        entry.name.as_c_str(),
+        OFlags::RDONLY | OFlags::CLOEXEC | OFlags::NOFOLLOW,
+        Mode::empty(),
+    )
+    .ok()?;
+    let mut buffer = [0_u8; 96];
+    let mut length = 0;
+    while length < buffer.len() {
+        let count = rustix::io::read(&fd, &mut buffer[length..]).ok()?;
+        if count == 0 {
+            break;
+        }
+        length += count;
+    }
+    let name = std::str::from_utf8(&buffer[..length]).ok()?.trim();
+    is_cover_file(name.as_bytes()).then(|| name.to_owned())
+}
+
 fn remove(entry: &Entry) -> Result<bool, String> {
     let current = match statat(
         &entry.parent,
@@ -373,7 +426,23 @@ fn prune(request: &Value, check: Check<'_>) -> Result<Value, String> {
     let retained = references(request, transaction.as_deref(), check)?;
     let entries = collect(&root, false, check)?;
     let mut outcome = Outcome::default();
+    // Pointers are disposable accelerators, not DB references. Expire them
+    // after 30 days even when shared artwork survives, so old per-track
+    // mtime keys cannot accumulate forever. Respect the caller's grace period.
+    let pointer_cutoff = cutoff.min(
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map_err(|error| error.to_string())?
+            .as_nanos() as i128
+            - 30 * 24 * 60 * 60 * 1_000_000_000_i128,
+    );
+    let mut survived = HashSet::new();
+    let mut pointers = Vec::new();
     for entry in entries {
+        if is_cover_pointer(entry.name.to_bytes()) {
+            pointers.push(entry);
+            continue;
+        }
         if !outcome.check(check)? {
             break;
         }
@@ -381,12 +450,40 @@ fn prune(request: &Value, check: Check<'_>) -> Result<Value, String> {
             || retained.contains(&entry.canonical)
             || modified(&entry.stat) > cutoff
         {
+            survived.insert(entry.display);
             continue;
         }
-        match remove(&entry) {
+        let removed = match remove(&entry) {
+            Ok(removed) => removed,
+            Err(error) => {
+                outcome.error(&entry, error);
+                false
+            }
+        };
+        if removed {
+            outcome.deleted += 1;
+        } else {
+            survived.insert(entry.display);
+        }
+    }
+    for pointer in pointers {
+        if !outcome.check(check)? {
+            break;
+        }
+        let keep = modified(&pointer.stat) > pointer_cutoff
+            && pointer_target(&pointer).is_some_and(|name| {
+                pointer
+                    .display
+                    .parent()
+                    .is_some_and(|parent| survived.contains(&parent.join(name)))
+            });
+        if keep {
+            continue;
+        }
+        match remove(&pointer) {
             Ok(true) => outcome.deleted += 1,
             Ok(false) => {}
-            Err(error) => outcome.error(&entry, error),
+            Err(error) => outcome.error(&pointer, error),
         }
     }
     // Read-only reference transaction; drop rolls it back without touching

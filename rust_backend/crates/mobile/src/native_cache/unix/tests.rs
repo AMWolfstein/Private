@@ -114,6 +114,44 @@ fn preserves_changed_payloads_between_listing_and_eviction() {
 }
 
 #[test]
+fn keeps_cover_pointers_only_while_their_content_file_survives() {
+    let fixture = TempDir::new().unwrap();
+    let root = fixture.path().join("covers");
+    fs::create_dir(&root).unwrap();
+    let id = "a".repeat(64);
+    let cover = old_file(
+        &root,
+        &format!("cover_{id}.jpg"),
+        4,
+        Duration::from_secs(600),
+    );
+    // Cache metadata is never a cover reference, but it still belongs to the
+    // file it names.
+    let live = root.join(format!("cover_{}.id", "b".repeat(64)));
+    fs::write(&live, format!("cover_{id}.jpg")).unwrap();
+    let stale = root.join(format!("cover_{}.id", "c".repeat(64)));
+    fs::write(&stale, format!("cover_{}.jpg", "d".repeat(64))).unwrap();
+    let expired = root.join(format!("cover_{}.id", "e".repeat(64)));
+    fs::write(&expired, format!("cover_{id}.jpg")).unwrap();
+    File::options()
+        .write(true)
+        .open(&expired)
+        .unwrap()
+        .set_times(
+            fs::FileTimes::new()
+                .set_modified(SystemTime::now() - Duration::from_secs(31 * 24 * 60 * 60)),
+        )
+        .unwrap();
+    let result = execute(&prune_request(&root, std::slice::from_ref(&cover)), &|| {
+        Ok(())
+    })
+    .unwrap();
+    assert_eq!(result["deleted"], 2);
+    assert!(cover.exists() && live.exists());
+    assert!(!stale.exists() && !expired.exists());
+}
+
+#[test]
 fn directory_replacement_never_redirects_deletion_outside_cache() {
     let fixture = TempDir::new().unwrap();
     let outside_fixture = TempDir::new().unwrap();

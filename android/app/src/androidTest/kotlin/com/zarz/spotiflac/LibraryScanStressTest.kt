@@ -82,7 +82,7 @@ class LibraryScanStressTest {
                 .put("after_first_native_bytes", firstNative)
                 .put("after_repeat_native_bytes", Debug.getNativeHeapAllocatedSize())
                 .put("peak_native_bytes", peakNative.get()).put("peak_pss_kib", peakPss.get())
-                .put("cover_files", covers.listFiles()?.size ?: 0).toString())
+                .put("cover_files", covers.listFiles()?.count { !it.name.endsWith(".id") } ?: 0).toString())
         } finally {
             running.set(false)
             sampler.join()

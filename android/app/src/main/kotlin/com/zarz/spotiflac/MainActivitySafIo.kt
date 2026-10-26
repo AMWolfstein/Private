@@ -254,7 +254,6 @@ private fun MainActivity.readMetadataFromUri(
     uri: Uri,
     displayNameHint: String? = null,
     fallbackExt: String? = null,
-    acceptRead: (JSONObject) -> Boolean = { true },
     retryDirectOnFailure: Boolean = false,
     onFailure: (String) -> Unit = {},
     read: (String, String) -> JSONObject?,
@@ -275,7 +274,6 @@ private fun MainActivity.readMetadataFromUri(
                 try { File(tempPath).delete() } catch (_: Exception) {}
             }
         },
-        accept = acceptRead,
         retryDirectOnFailure = retryDirectOnFailure,
         onFailure = { error ->
             onFailure(error?.message ?: "No readable audio metadata for $displayName")
@@ -291,13 +289,6 @@ internal fun MainActivity.readAudioMetadataFromUri(
     onFailure: (String) -> Unit = {},
 ): JSONObject? = readMetadataFromUri(
     uri, displayNameHint, fallbackExt,
-    acceptRead = {
-        val fromFilename = it.optBoolean("metadataFromFilename", false)
-        if (fromFilename) {
-            throw IOException(it.optString("metadataReadError", "Audio tags unreadable; only filename-derived metadata available"))
-        }
-        !fromFilename
-    },
     retryDirectOnFailure = true,
     onFailure = onFailure,
 ) { path, name ->
@@ -323,6 +314,16 @@ internal fun MainActivity.readAudioMetadataFromUri(
         path, name, coverCacheKey,
     ))
     if (obj.has("error")) throw IOException(obj.optString("error", "Audio metadata read failed"))
+    if (obj.optBoolean("metadataFromFilename", false)) {
+        // The tags are missing or unreadable, not the file: the copy fallback
+        // would re-read the same bytes on every scan.
+        throw UnreadableTagsException(
+            obj.optString(
+                "metadataReadError",
+                "Audio tags unreadable; only filename-derived metadata available",
+            ),
+        )
+    }
     obj
 }
 
