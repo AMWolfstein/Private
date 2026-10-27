@@ -1,4 +1,4 @@
-use spotiflac_core::tags::{read_audio_tags, read_library_metadata, rewrite_audio_tags};
+use sistrum_core::tags::{read_audio_tags, read_library_metadata, rewrite_audio_tags};
 use std::collections::BTreeMap;
 use std::io::Cursor;
 
@@ -140,7 +140,7 @@ fn continued_opus_comments_survive_page_and_old_packet_limits() {
 #[test]
 fn artwork_across_many_pages_is_read_without_consuming_audio() {
     use base64::Engine;
-    use spotiflac_core::tags::extract_cover;
+    use sistrum_core::tags::extract_cover;
     for length in [512 * 1024, 8 * 1024 * 1024] {
         let artwork = vec![0x5a; length];
         let mut picture = 3_u32.to_be_bytes().to_vec();
@@ -245,7 +245,7 @@ fn opus_with_artwork(artwork: &[u8]) -> Vec<u8> {
 
 #[test]
 fn tags_and_artwork_share_one_comment_packet_pass() {
-    use spotiflac_core::tags::{
+    use sistrum_core::tags::{
         extract_cover, read_library_metadata, read_library_metadata_with_cover,
     };
     let artwork = vec![0x5a; 2 * 1024 * 1024];

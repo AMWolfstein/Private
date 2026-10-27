@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
 
 String _tag(String kind, int time, String text) =>
     '[x-$kind:$time:${base64.encode(utf8.encode(text))}]';
@@ -178,7 +178,7 @@ ${_tag('translation', 2000, 'Second translation')}
     () {
       final lyrics = LyricsParser.parse('''
 [au:Example Writer, Another Writer]
-[by:SpotiFLAC-Mobile via Example Lyrics API (source: upstream)]
+[by:\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043-Mobile via Example Lyrics API (source: upstream)]
 [00:01.00]First line
 [00:04.00]Last line
 ''');
@@ -199,7 +199,7 @@ ${_tag('translation', 2000, 'Second translation')}
       expect(lyrics.provider, isNull);
       expect(
         LyricsParser.parse(
-          '[by:SpotiFLAC-Mobile (source: extension:example.lyrics)]\n[00:01]Line',
+          '[by:\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043-Mobile (source: extension:example.lyrics)]\n[00:01]Line',
         ).provider,
         'example.lyrics',
       );

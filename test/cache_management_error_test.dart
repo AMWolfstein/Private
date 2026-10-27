@@ -6,14 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/error_card.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/settings/cache_management_page.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/error_card.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -99,10 +99,10 @@ void main() {
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
             lowEndDeviceProvider.overrideWithValue(true),
-            mornyeLiquidGlassProvider.overrideWithValue(false),
+            sistrumLiquidGlassProvider.overrideWithValue(false),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.light),
+            theme: SistrumTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const CacheManagementPage(),

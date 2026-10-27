@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Orange",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "Glasranden",
-  "appearanceGlassOutlinesSubtitle": "Toon een lichte rand rond Mornye-glas. Uitschakelen laat het glas zelf ongewijzigd.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Toon een lichte rand rond Sistrum-glas. Uitschakelen laat het glas zelf ongewijzigd.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "Heel helder glas kan meer energie gebruiken en op oudere toestellen minder soepel aanvoelen. Verlaag de helderheid indien nodig.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Pas afspelen, bibliotheekscan, songteksten, Mornye-weergave en lokale opslag aan.",
+  "tutorialSettingsDesc": "Pas afspelen, bibliotheekscan, songteksten, Sistrum-weergave en lokale opslag aan.",
   "tutorialSettingsTip1": "Beheer muziekmappen en toegang tot lokale bestanden",
   "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Onvolledige albums",
   "libraryAlbumCompletenessUnknown": "Volledigheid van album onbekend",
   "libraryAlbumMissingTracks": "{present}/{expected} nummers · {missing} ontbrekend",
-  "mornyeSearch": "Search",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorite",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Search",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorite",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Go to Artist",
-  "mornyeFavorited": "Favorited",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Go to Artist",
+  "sistrumFavorited": "Favorited",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

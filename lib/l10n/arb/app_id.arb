@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "Rute audio USB berubah. Pemutaran dijeda; pilih lagu untuk menghubungkan ulang.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Merah (default)",
   "appearanceAccentOrange": "Oranye",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Merah muda",
   "appearanceGlassClarity": "Kebeningan kaca",
   "appearanceGlassOutlines": "Garis tepi kaca",
-  "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Mornye. Mematikannya tetap mempertahankan blur dan pembiasan.",
-  "appearanceGlassClaritySubtitle": "Atur kebeningan kaca menu dan navigasi Mornye. Kontras teks tetap terjaga.",
+  "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Sistrum. Mematikannya tetap mempertahankan blur dan pembiasan.",
+  "appearanceGlassClaritySubtitle": "Atur kebeningan kaca menu dan navigasi Sistrum. Kontras teks tetap terjaga.",
   "appearanceGlassTinted": "Berwarna",
   "appearanceGlassClear": "Bening",
   "appearanceGlassClearPerformance": "Kaca sangat bening dapat memakai lebih banyak daya dan terasa kurang lancar di perangkat lama. Kurangi kebeningan jika perlu.",
@@ -1178,7 +1178,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Atur pemutaran, pemindaian pustaka, lirik, tampilan Mornye, dan penyimpanan lokal.",
+  "tutorialSettingsDesc": "Atur pemutaran, pemindaian pustaka, lirik, tampilan Sistrum, dan penyimpanan lokal.",
   "tutorialSettingsTip1": "Kelola folder musik dan akses file lokal",
   "tutorialSettingsTip2": "Atur pustaka lokal, pemutaran, dan tampilan.",
   "@tutorialSettingsTip2": {
@@ -2462,15 +2462,15 @@
       }
     }
   },
-  "mornyeSearch": "Telusuri",
-  "mornyeContinuePlaying": "Lanjut Memutar",
-  "mornyeFavorite": "Favorit",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Telusuri",
+  "sistrumContinuePlaying": "Lanjut Memutar",
+  "sistrumFavorite": "Favorit",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Buka Artis",
-  "mornyeFavorited": "Terfavorit",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Buka Artis",
+  "sistrumFavorited": "Terfavorit",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Padukan musik dengan pencocokan bit dan penyesuaian tempo. Menggunakan crossfade bila beat tidak dapat dicocokkan.",

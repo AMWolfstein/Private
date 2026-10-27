@@ -9,21 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/app_search_field.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/widgets/selection_action_button.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/selection_action_button.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/track_card.dart';
 
 /// Every Dart source file under `lib/`, used by the source-level contracts
 /// below. Those contracts exist because the duplication they guard against was
@@ -84,19 +84,19 @@ void main() {
         AppTokens.standard,
       );
       expect(
-        MornyeTheme.build(Brightness.light).extension<AppTokens>(),
-        MornyeTheme.tokens,
+        SistrumTheme.build(Brightness.light).extension<AppTokens>(),
+        SistrumTheme.tokens,
       );
       expect(
-        MornyeTheme.build(Brightness.dark).colorScheme.primary,
-        MornyeTheme.darkAccent,
+        SistrumTheme.build(Brightness.dark).colorScheme.primary,
+        SistrumTheme.darkAccent,
       );
     });
 
     testWidgets(
-      'Mornye keeps a font family and Cupertino tracking in text roles',
+      'Sistrum keeps a font family and Cupertino tracking in text roles',
       (tester) async {
-        final theme = MornyeTheme.build(Brightness.light);
+        final theme = SistrumTheme.build(Brightness.light);
         final apple = theme.platform == TargetPlatform.iOS;
         for (final role in [
           theme.textTheme.bodyLarge,
@@ -237,12 +237,12 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(Brightness.light),
+                theme: SistrumTheme.build(Brightness.light),
                 home: Scaffold(
                   body: Directionality(
                     textDirection: direction,
                     child: StatefulBuilder(
-                      builder: (context, setState) => MornyeSegmentedControl(
+                      builder: (context, setState) => SistrumSegmentedControl(
                         labels: const ['System', 'Light', 'Dark'],
                         selectedIndex: selected,
                         onChanged: (index) => setState(() => selected = index),
@@ -276,12 +276,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: SistrumTheme.build(Brightness.dark),
             home: MediaQuery(
               data: const MediaQueryData(disableAnimations: true),
               child: Scaffold(
                 body: StatefulBuilder(
-                  builder: (context, setState) => MornyeSegmentedControl(
+                  builder: (context, setState) => SistrumSegmentedControl(
                     labels: const ['System', 'Light', 'Dark'],
                     selectedIndex: selected,
                     onChanged: (index) => setState(() => selected = index),
@@ -319,7 +319,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: SistrumTheme.build(Brightness.dark),
             home: Scaffold(
               body: AppSearchField(
                 controller: controller,
@@ -334,7 +334,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(MornyeGlass), findsOneWidget);
+      expect(find.byType(SistrumGlass), findsOneWidget);
       await tester.tap(find.byType(TextField));
       await tester.enterText(find.byType(TextField), 'Album');
       await tester.testTextInput.receiveAction(TextInputAction.search);
@@ -403,7 +403,7 @@ void main() {
       'local cache identity changes when artwork is replaced in place',
       () async {
         final directory = Directory.systemTemp.createTempSync(
-          'spotiflac-cover-palette-',
+          'sistrum-cover-palette-',
         );
         final file = File('${directory.path}/cover.jpg');
         try {

@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
+import 'package:sistrum/theme/app_tokens.dart';
 
 class AppTheme {
   static const Color defaultSeedColor = Color(0xFF1DB954);

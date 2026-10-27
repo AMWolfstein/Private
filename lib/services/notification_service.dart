@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/services/platform_bridge.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();

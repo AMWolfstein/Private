@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/widgets/lyrics_size_setting.dart';
-import 'package:spotiflac_android/widgets/lyrics_text_scale.dart';
-import 'package:spotiflac_android/widgets/player_lyrics.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/widgets/lyrics_size_setting.dart';
+import 'package:sistrum/widgets/lyrics_text_scale.dart';
+import 'package:sistrum/widgets/player_lyrics.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -62,11 +62,11 @@ void main() {
 
   for (final reduced in [false, true]) {
     testWidgets(
-      'Mornye subtly scales active lyrics without changing layout (reduced=$reduced)',
+      'Sistrum subtly scales active lyrics without changing layout (reduced=$reduced)',
       (tester) async {
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 1));
         addTearDown(preview.dispose);
-        final theme = MornyeTheme.build(Brightness.dark);
+        final theme = SistrumTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(

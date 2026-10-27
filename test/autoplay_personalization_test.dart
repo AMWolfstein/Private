@@ -4,9 +4,9 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/autoplay_personalization.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/autoplay_personalization.dart';
+import 'package:sistrum/services/music_player_service.dart';
 
 final _at = DateTime(2026, 10, 11, 9);
 const _rock = AutoplayLearningTrack(

@@ -286,8 +286,8 @@ double _hueDistance(double a, double b) {
   return d > 180 ? 360 - d : d;
 }
 
-/// Every colour Mornye derives from one cover. Build it only through
-/// [mornyeCoverColors]: screens differ by tone, never by hue or chroma.
+/// Every colour Sistrum derives from one cover. Build it only through
+/// [sistrumCoverColors]: screens differ by tone, never by hue or chroma.
 @immutable
 class CoverColors {
   const CoverColors._({
@@ -430,7 +430,7 @@ const _neutralAnalysis = CoverAnalysis(
 
 /// The one place cover colours are derived. Every screen and the artwork
 /// glass grounds use it, so one cover looks the same everywhere.
-CoverColors mornyeCoverColors(CoverAnalysis? analysis) {
+CoverColors sistrumCoverColors(CoverAnalysis? analysis) {
   final source = analysis ?? _neutralAnalysis;
   final bottom = Hct.fromInt(source.bottomEdge);
   final dominant = Hct.fromInt(source.dominant);

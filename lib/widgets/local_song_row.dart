@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/widgets/track_card.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
 
 /// Shared local song layout. Albums supply a number instead of artwork.
 class LocalSongRow extends StatelessWidget {
@@ -114,7 +114,7 @@ class LocalSongRow extends StatelessWidget {
         Builder(
           builder: (buttonContext) => IconButton(
             tooltip: context.l10n.a11yMoreOptionsFor(title),
-            onPressed: () => onMenu(mornyeMenuAnchor(buttonContext)),
+            onPressed: () => onMenu(sistrumMenuAnchor(buttonContext)),
             icon: const Icon(Icons.more_horiz),
           ),
         ),

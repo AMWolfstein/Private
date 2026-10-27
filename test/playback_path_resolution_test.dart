@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/services/library_database.dart';
 
 class _Library extends Fake implements LibraryDatabase {
   _Library(this.pathForIndex);

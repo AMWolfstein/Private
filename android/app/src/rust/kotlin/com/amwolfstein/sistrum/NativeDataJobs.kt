@@ -1,7 +1,7 @@
 package com.amwolfstein.sistrum
 
-import com.spotiflac.backend.CancellationRegistry
-import com.spotiflac.backend.RequestLease
+import com.sistrum.backend.CancellationRegistry
+import com.sistrum.backend.RequestLease
 import java.io.File
 import org.json.JSONArray
 import org.json.JSONObject

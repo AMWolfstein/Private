@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/services/ffmpeg_models.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 
@@ -116,7 +116,7 @@ abstract final class FFmpegOutput {
     if (plan.workingPath != plan.finalPath) {
       final source = File(inputPath);
       final backupPath =
-          '$inputPath.spotiflac-backup-${DateTime.now().microsecondsSinceEpoch}';
+          '$inputPath.sistrum-backup-${DateTime.now().microsecondsSinceEpoch}';
       final backup = File(backupPath);
       var backedUp = false;
       try {
@@ -166,7 +166,7 @@ abstract final class FFmpegOutput {
         return false;
       }
       staging = await reserve(
-        '$targetPath.spotiflac-staging-${DateTime.now().microsecondsSinceEpoch}',
+        '$targetPath.sistrum-staging-${DateTime.now().microsecondsSinceEpoch}',
       );
       await temp.copy(staging);
       return await finalize(

@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Orange",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "玻璃描边",
-  "appearanceGlassOutlinesSubtitle": "在 Mornye 玻璃周围显示浅色边框。关闭后，玻璃本身保持不变。",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周围显示浅色边框。关闭后，玻璃本身保持不变。",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "非常通透的玻璃可能更耗电，在较旧的设备上也可能不够流畅。如有需要，请降低清晰度。",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "调整播放、资料库扫描、歌词、Mornye 外观和本地存储。",
+  "tutorialSettingsDesc": "调整播放、资料库扫描、歌词、Sistrum 外观和本地存储。",
   "tutorialSettingsTip1": "管理音乐文件夹和本地文件访问",
   "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "不完整的专辑",
   "libraryAlbumCompletenessUnknown": "专辑完整度未知",
   "libraryAlbumMissingTracks": "{present}/{expected} 首曲目 · 缺失 {missing} 首",
-  "mornyeSearch": "Search",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorite",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Search",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorite",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Go to Artist",
-  "mornyeFavorited": "Favorited",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Go to Artist",
+  "sistrumFavorited": "Favorited",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

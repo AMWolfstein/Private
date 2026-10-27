@@ -25,7 +25,7 @@ else:
     assert args[:2] == ['build', 'apk']
     output = Path('build/app/outputs/flutter-apk')
     output.mkdir(parents=True, exist_ok=True)
-    for abi in os.environ['SPOTIFLAC_RUST_ANDROID_ABIS'].split(','):
+    for abi in os.environ['SISTRUM_RUST_ANDROID_ABIS'].split(','):
         (output / ('app-' + abi + '-release.apk')).write_bytes(b'fixture split')
     (output / 'app-release.apk').write_bytes(b'fixture universal')
 """
@@ -51,7 +51,7 @@ class AndroidBuildScriptTest(unittest.TestCase):
         self.tools.mkdir()
         self.log = self.project / "calls.jsonl"
         self.env = os.environ.copy()
-        self.env.pop("SPOTIFLAC_RUST_ANDROID_ABIS", None)
+        self.env.pop("SISTRUM_RUST_ANDROID_ABIS", None)
         self.env.update(PATH=str(self.tools) + os.pathsep + os.defpath, BUILD_TEST_LOG=str(self.log))
         self.tool(self.tools / "python3", PYTHON_STUB)
         git = self.tools / "git"
@@ -92,7 +92,7 @@ class AndroidBuildScriptTest(unittest.TestCase):
         self.assertEqual(audits[-1][audits[-1].index("--abis") + 1], "arm64-v8a,armeabi-v7a")
 
     def test_single_abi_audits_and_preserves_previous_artifacts(self):
-        self.env["SPOTIFLAC_RUST_ANDROID_ABIS"] = "arm64-v8a"
+        self.env["SISTRUM_RUST_ANDROID_ABIS"] = "arm64-v8a"
         output = self.project / "build/app/outputs/flutter-apk"
         output.mkdir(parents=True)
         previous = output / "app-armeabi-v7a-release.apk"
@@ -135,9 +135,9 @@ class AndroidBuildScriptTest(unittest.TestCase):
     def test_invalid_or_overridden_abis_stop_before_flutter(self):
         for abis in ("", "x86_64", "arm64-v8a,arm64-v8a", "armeabi-v7a, arm64-v8a"):
             with self.subTest(abis=abis):
-                self.env["SPOTIFLAC_RUST_ANDROID_ABIS"] = abis
+                self.env["SISTRUM_RUST_ANDROID_ABIS"] = abis
                 self.assertNotEqual(self.run_build().returncode, 0)
-        self.env.pop("SPOTIFLAC_RUST_ANDROID_ABIS")
+        self.env.pop("SISTRUM_RUST_ANDROID_ABIS")
         self.assertNotEqual(self.run_build("--target-platform=android-x64").returncode, 0)
         self.assertFalse(self.log.exists())
 

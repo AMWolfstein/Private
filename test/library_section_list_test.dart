@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:spotiflac_android/widgets/library_section_list.dart';
+import 'package:sistrum/widgets/library_section_list.dart';
 
 void main() {
   test('section initials preserve Unicode graphemes and bucket symbols', () {

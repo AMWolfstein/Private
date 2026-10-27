@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart' show HapticFeedback;
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/widgets/app_loading_indicator.dart';
-import 'package:spotiflac_android/widgets/player_lyrics.dart';
-import 'package:spotiflac_android/widgets/lyrics_text_scale.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/widgets/app_loading_indicator.dart';
+import 'package:sistrum/widgets/player_lyrics.dart';
+import 'package:sistrum/widgets/lyrics_text_scale.dart';
 
 class PlayerLyricsSection extends ConsumerWidget {
   const PlayerLyricsSection({
@@ -109,7 +109,7 @@ class PlayerLyricsSection extends ConsumerWidget {
           ),
           if (options != null)
             PositionedDirectional(
-              start: mornyeLyricsContentInset,
+              start: sistrumLyricsContentInset,
               bottom: 8,
               child: options!,
             ),

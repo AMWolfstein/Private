@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/batch_progress_dialog.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/batch_progress_dialog.dart';
 
 UnifiedLibraryItem _item(String path) => UnifiedLibraryItem(
   id: path,
@@ -33,7 +33,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           navigatorKey: navigator,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(

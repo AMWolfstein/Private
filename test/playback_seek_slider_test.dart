@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/widgets/playback_seek_slider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/widgets/playback_seek_slider.dart';
 
 void main() {
   testWidgets('scrubbing previews locally and commits only the final target', (
@@ -112,7 +112,7 @@ void main() {
     expect(sharedPreview.value, isNull);
   });
 
-  testWidgets('removing a Mornye slider releases its pending preview safely', (
+  testWidgets('removing a Sistrum slider releases its pending preview safely', (
     tester,
   ) async {
     final preview = PlaybackSeekPreview();
@@ -123,7 +123,7 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
 
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         home: Scaffold(
           body: PlaybackSeekSlider(
             preview: preview,

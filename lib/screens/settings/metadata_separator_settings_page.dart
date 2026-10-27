@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_content_card.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_content_card.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 /// Per-field separators applied when local tags are saved from Edit Metadata.
 class MetadataSeparatorSettingsPage extends ConsumerWidget {

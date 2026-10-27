@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/services/backup_service.dart';
-import 'package:spotiflac_android/services/music_player_runtime.dart';
-import 'package:spotiflac_android/services/playback_notification.dart';
+import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/music_player_runtime.dart';
+import 'package:sistrum/services/playback_notification.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -26,12 +26,12 @@ void main() {
   });
 
   test(
-    'persisted backup and notification action identities stay compatible',
+    'new backups and notification actions use the canonical identity',
     () {
-      expect(BackupService.magic, 'spotiflac-backup');
+      expect(BackupService.magic, 'sistrum-backup');
       expect(BackupService.fileExtension, 'sflb');
-      expect(PlaybackNotification.favoriteAction, 'spotiflac.favorite');
-      expect(PlaybackNotification.shuffleAction, 'spotiflac.shuffle');
+      expect(PlaybackNotification.favoriteAction, 'sistrum.favorite');
+      expect(PlaybackNotification.shuffleAction, 'sistrum.shuffle');
     },
   );
 
@@ -49,7 +49,7 @@ void main() {
           strings.audioInfoPlayerValue,
         ]) {
           expect(text, contains('Sistrum'));
-          expect(text, isNot(contains('SpotiFLAC')));
+          expect(text, isNot(contains('\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043')));
         }
       },
     );

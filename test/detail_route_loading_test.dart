@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
 
 LocalLibraryItem _track(int number) => LocalLibraryItem(
   id: 'track-$number',
@@ -31,7 +31,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           navigatorKey: navigator,
-          theme: MornyeTheme.build(Brightness.light),
+          theme: SistrumTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: Text('Library')),

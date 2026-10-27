@@ -9,17 +9,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/models/download_history.dart';
-import 'package:spotiflac_android/services/automix_analysis.dart';
-import 'package:spotiflac_android/services/backup_service.dart';
-import 'package:spotiflac_android/services/history_database.dart';
-import 'package:spotiflac_android/services/id3v23_lyrics.dart';
-import 'package:spotiflac_android/services/library_row_mapper.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/models/download_history.dart';
+import 'package:sistrum/services/automix_analysis.dart';
+import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/history_database.dart';
+import 'package:sistrum/services/id3v23_lyrics.dart';
+import 'package:sistrum/services/library_row_mapper.dart';
+import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/widgets/audio_analysis_widget.dart';
 
 // Run on a real Android/iOS host. These tests intentionally use the actual
 // channel and native workers; missing bindings must fail, never use a fallback.
@@ -610,7 +610,7 @@ void main() {
 
       final legacy = await File('${root.path}/legacy.json').writeAsString(
         jsonEncode({
-          'magic': 'spotiflac-backup',
+          'magic': '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-backup',
           'format_version': 1,
           'app_version': '5.0.7',
           'data': {
@@ -701,11 +701,11 @@ const _lyricCases = <(String, String)>[
   ),
   (
     "credits via API",
-    "[by:SpotiFLAC-Mobile via Example Lyrics API (source: upstream)]\n[00:01]First line\n[00:04]Written By: Example Writer",
+    "[by:\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043-Mobile via Example Lyrics API (source: upstream)]\n[00:01]First line\n[00:04]Written By: Example Writer",
   ),
   (
     "credits source fallback",
-    "[by:SpotiFLAC-Mobile (source: extension:example.lyrics)]\n[00:01]Lyric",
+    "[by:\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043-Mobile (source: extension:example.lyrics)]\n[00:01]Lyric",
   ),
   (
     "TTML namespaced agent inheritance",

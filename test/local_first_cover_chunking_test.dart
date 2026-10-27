@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
 
 /// OPT-PERF-006: the first-cover lookup resolves the batch in ordered 450-key
 /// chunks and stops at the first chunk that yields a usable cover.

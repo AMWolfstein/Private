@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/services/library_queue_store.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/services/library_queue_store.dart';
+import 'package:sistrum/services/library_schema.dart';
 
 /// Real schema17 local rows, album ties and an unavailable source. The history
 /// read fixture keeps the same named columns and covering album index as the

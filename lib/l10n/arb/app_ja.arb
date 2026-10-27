@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Orange",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "ガラスの輪郭",
-  "appearanceGlassOutlinesSubtitle": "Mornye のガラスの周りに薄い縁を表示します。オフにしてもガラス自体は変わりません。",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Sistrum のガラスの周りに薄い縁を表示します。オフにしてもガラス自体は変わりません。",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "透明度を高いガラスは、古い端末では消費電力が増え、動きがなめらかでなく感じられることがあります。必要に応じて透明度を下げてください。",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "再生、ライブラリのスキャン、歌詞、Mornye の外観、ローカルストレージを調整できます。",
+  "tutorialSettingsDesc": "再生、ライブラリのスキャン、歌詞、Sistrum の外観、ローカルストレージを調整できます。",
   "tutorialSettingsTip1": "音楽フォルダとローカルファイルへのアクセスを管理します",
   "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "不完全なアルバム",
   "libraryAlbumCompletenessUnknown": "アルバムの完全性は不明です",
   "libraryAlbumMissingTracks": "{present}/{expected} 曲 · {missing} 曲不足",
-  "mornyeSearch": "Search",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorite",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Search",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorite",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Go to Artist",
-  "mornyeFavorited": "Favorited",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Go to Artist",
+  "sistrumFavorited": "Favorited",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

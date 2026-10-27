@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart' show Theme, Text;
-import 'package:spotiflac_android/widgets/track_detail_actions.dart'
+import 'package:sistrum/widgets/track_detail_actions.dart'
     show loveAllTracks;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/playlist_picker_sheet.dart';
 
-/// Mornye album/playlist action row: Loved, Play, Shuffle, Add to playlist.
+/// Sistrum album/playlist action row: Loved, Play, Shuffle, Add to playlist.
 /// The primary action plays local files in place of the retired download action.
 class LocalCollectionActions extends ConsumerStatefulWidget {
   const LocalCollectionActions({

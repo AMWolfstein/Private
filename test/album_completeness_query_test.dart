@@ -8,17 +8,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/queue_tab.dart';
-import 'package:spotiflac_android/widgets/library_track_selection_bar.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/library_selection_playback_actions.dart';
-import 'package:spotiflac_android/services/history_database.dart';
-import 'package:spotiflac_android/services/library_database.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/queue_tab.dart';
+import 'package:sistrum/widgets/library_track_selection_bar.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/library_selection_playback_actions.dart';
+import 'package:sistrum/services/history_database.dart';
+import 'package:sistrum/services/library_database.dart';
 import 'support/material_test_theme.dart';
 
 String _definition(String file, String table) => RegExp(

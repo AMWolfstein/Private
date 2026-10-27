@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/library_search_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/library_search.dart';
-import 'package:spotiflac_android/services/local_track_batch_actions.dart';
-import 'package:spotiflac_android/widgets/app_choice_chip.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:spotiflac_android/widgets/library_track_selection_bar.dart';
-import 'package:spotiflac_android/widgets/library_selection_playback_actions.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/library_search_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library_search.dart';
+import 'package:sistrum/services/local_track_batch_actions.dart';
+import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/library_track_selection_bar.dart';
+import 'package:sistrum/widgets/library_selection_playback_actions.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/track_card.dart';
 
-/// Slivers shared by Material's Library and Mornye's Library/Songs screens.
+/// Slivers shared by Material's Library and Sistrum's Library/Songs screens.
 /// Only the current query's provider families are watched; late results from
 /// an earlier query cannot replace what the user is currently searching for.
 class LibrarySearchResults extends ConsumerStatefulWidget {

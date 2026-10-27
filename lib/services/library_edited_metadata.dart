@@ -1,5 +1,5 @@
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 /// Refresh editable tags while retaining the scanned file identity and audio facts.
 Map<String, dynamic> localMetadataAfterEdit(

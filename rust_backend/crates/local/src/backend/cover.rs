@@ -1,6 +1,6 @@
 use super::Backend;
 use cap_std::fs::OpenOptions;
-use spotiflac_core::tags::{CoverArt, extract_cover};
+use sistrum_core::tags::{CoverArt, extract_cover};
 use std::{cell::RefCell, io::Read, io::Write, path::Path};
 type Check<'a> = dyn Fn() -> Result<(), String> + 'a;
 
@@ -69,7 +69,7 @@ impl Backend {
         read: impl FnOnce(&crate::files::FilePath, &str, &Check<'_>) -> Result<CoverArt, String>,
         check: &Check<'_>,
     ) -> Result<String, String> {
-        let format = spotiflac_core::tags::library_extension(audio_path, hint);
+        let format = sistrum_core::tags::library_extension(audio_path, hint);
         // The scan's MP4-family reader also accepts .mp4/.aac. The standalone
         // cover export deliberately keeps its narrower legacy suffix policy.
         let format = matches!(format.as_str(), "mp4" | "aac").then_some("m4a");
@@ -138,7 +138,7 @@ impl Backend {
         } else {
             let name = format!(
                 "cover_{}.id",
-                spotiflac_core::cover::content_id(key.as_bytes())
+                sistrum_core::cover::content_id(key.as_bytes())
             );
             files
                 .resolve_legacy(&Path::new(cache_directory).join(name).to_string_lossy())
@@ -150,7 +150,7 @@ impl Backend {
             return Ok(target.display());
         }
         let mut cover = read(&input, &format, &check)?;
-        if let Ok(resized) = spotiflac_core::cover::library_thumbnail(&cover.data, &check) {
+        if let Ok(resized) = sistrum_core::cover::library_thumbnail(&cover.data, &check) {
             cover.mime = if resized.starts_with(b"\x89PNG") {
                 "image/png"
             } else if resized.starts_with(b"\xff\xd8") {
@@ -166,7 +166,7 @@ impl Backend {
         check()?;
         // Hash the published thumbnail, just like the Android descriptor path,
         // so local and SAF scans share one content file too.
-        let key_id = spotiflac_core::cover::content_id(&cover.data);
+        let key_id = sistrum_core::cover::content_id(&cover.data);
         let path =
             |extension| Path::new(cache_directory).join(format!("cover_{key_id}.{extension}"));
         let jpg = files.resolve_legacy(&path("jpg").to_string_lossy())?;
@@ -458,10 +458,7 @@ mod safety_tests {
             .unwrap();
         let published = std::fs::read(&cached).unwrap();
         assert_ne!(published, original);
-        let expected = format!(
-            "cover_{}.png",
-            spotiflac_core::cover::content_id(&published)
-        );
+        let expected = format!("cover_{}.png", sistrum_core::cover::content_id(&published));
         assert_eq!(
             Path::new(&cached).file_name().unwrap().to_str().unwrap(),
             expected

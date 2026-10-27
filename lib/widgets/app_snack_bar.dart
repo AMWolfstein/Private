@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
 
 /// Applies the same transient-message policy to existing snackbar call sites.
 /// A new message replaces the old one instead of building a stale FIFO queue.
@@ -94,7 +94,7 @@ void showCannotOpenFileSnackBar(BuildContext context, Object error) {
   );
 }
 
-/// Transient messages use the same glass as confirmation dialogs in Mornye.
+/// Transient messages use the same glass as confirmation dialogs in Sistrum.
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   BuildContext context, {
   required Widget content,
@@ -106,12 +106,12 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
 
   final theme = Theme.of(context);
   final reduceMotion = MediaQuery.disableAnimationsOf(context);
-  final snackBar = _MornyeSnackBar(
+  final snackBar = _SistrumSnackBar(
     duration: duration,
     reduceMotion: reduceMotion,
     content: Theme(
       data: theme,
-      child: MornyeGlassPanel.overlay(
+      child: SistrumGlassPanel.overlay(
         radius: 24,
         // Messages have no modal scrim; let more of the page show through.
         tintOpacity: 0.48,
@@ -163,8 +163,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   return messenger.showSnackBar(snackBar);
 }
 
-class _MornyeSnackBar extends SnackBar {
-  const _MornyeSnackBar({
+class _SistrumSnackBar extends SnackBar {
+  const _SistrumSnackBar({
     required super.content,
     required super.duration,
     required this.reduceMotion,

@@ -8,15 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/user_profile_provider.dart';
-import 'package:spotiflac_android/screens/settings/settings_tab.dart';
-import 'package:spotiflac_android/services/backup_service.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/services/user_profile_store.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/profile_avatar.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/user_profile_provider.dart';
+import 'package:sistrum/screens/settings/settings_tab.dart';
+import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/services/user_profile_store.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/profile_avatar.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -221,7 +221,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: SistrumTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: SettingsTab()),

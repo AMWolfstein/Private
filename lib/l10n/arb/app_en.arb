@@ -34,7 +34,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Orange",
@@ -45,14 +45,14 @@
   "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "Glass outlines",
-  "appearanceGlassOutlinesSubtitle": "Show a light rim around Mornye glass. Turning it off leaves the glass itself unchanged.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Show a light rim around Sistrum glass. Turning it off leaves the glass itself unchanged.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "Very clear glass may use more power and feel less smooth on older devices. Lower clarity if needed.",
   "appearanceGlassQuality": "Glass quality",
   "@appearanceGlassQuality": {
-    "description": "Segmented control title choosing how Mornye glass renders"
+    "description": "Segmented control title choosing how Sistrum glass renders"
   },
   "appearanceGlassQualityAuto": "Auto",
   "@appearanceGlassQualityAuto": {
@@ -1307,7 +1307,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Adjust playback, library scanning, lyrics, Mornye appearance and local storage.",
+  "tutorialSettingsDesc": "Adjust playback, library scanning, lyrics, Sistrum appearance and local storage.",
   "@tutorialSettingsDesc": {
     "description": "Tutorial settings page description"
   },
@@ -2726,15 +2726,15 @@
       }
     }
   },
-  "mornyeSearch": "Search",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorite",
-  "mornyeGoToArtist": "Go to Artist",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Search",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorite",
+  "sistrumGoToArtist": "Go to Artist",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Favorited",
-  "@mornyeFavorited": {
+  "sistrumFavorited": "Favorited",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

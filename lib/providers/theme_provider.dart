@@ -1,24 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
+import 'package:sistrum/models/theme_settings.dart';
 
 final initialThemeSettingsProvider = Provider<ThemeSettings>(
   (ref) => const ThemeSettings(),
 );
 
+/// Publishes renamed keys before startup reads them. Keep the source on a
+/// failed write so bootstrap can still use its compatibility fallback.
+Future<void> migrateLegacyThemePreferences(SharedPreferences prefs) async {
+  if (!prefs.containsKey(kSistrumAccentKey)) {
+    final accent = prefs.getString(kLegacyAccentKey);
+    if (accent != null && await prefs.setString(kSistrumAccentKey, accent)) {
+      await prefs.remove(kLegacyAccentKey);
+    }
+  }
+  if (!prefs.containsKey(kSistrumGlassOutlinesKey)) {
+    final outlines = prefs.getBool(kLegacyGlassOutlinesKey);
+    if (outlines != null &&
+        await prefs.setBool(kSistrumGlassOutlinesKey, outlines)) {
+      await prefs.remove(kLegacyGlassOutlinesKey);
+    }
+  }
+}
+
 ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
     playerView: playerViewFromString(prefs.getString(kPlayerViewKey)),
-    mornyeAccent: mornyeAccentFromString(prefs.getString(kMornyeAccentKey)),
+    sistrumAccent: sistrumAccentFromString(
+      prefs.getString(
+        prefs.containsKey(kSistrumAccentKey)
+            ? kSistrumAccentKey
+            : kLegacyAccentKey,
+      ),
+    ),
     useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
     customFontId: prefs.getString(kCustomFontIdKey) ?? '',
     customFontName: prefs.getString(kCustomFontNameKey) ?? '',
     lyricsTextScale: normalizeLyricsTextScale(
       prefs.getDouble(kLyricsTextScaleKey),
     ),
-    mornyeGlassOutlines: prefs.getBool(kMornyeGlassOutlinesKey) ?? true,
+    sistrumGlassOutlines:
+        prefs.getBool(
+          prefs.containsKey(kSistrumGlassOutlinesKey)
+              ? kSistrumGlassOutlinesKey
+              : kLegacyGlassOutlinesKey,
+        ) ??
+        true,
   );
 }
 
@@ -71,14 +101,14 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       final snapshot = state;
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
       await prefs.setString(kPlayerViewKey, snapshot.playerView.name);
-      await prefs.setString(kMornyeAccentKey, snapshot.mornyeAccent.name);
+      await prefs.setString(kSistrumAccentKey, snapshot.sistrumAccent.name);
       await prefs.setBool(kUseSystemFontKey, snapshot.useSystemFont);
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
       await prefs.setBool(
-        kMornyeGlassOutlinesKey,
-        snapshot.mornyeGlassOutlines,
+        kSistrumGlassOutlinesKey,
+        snapshot.sistrumGlassOutlines,
       );
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
@@ -95,8 +125,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     await _saveToStorage();
   }
 
-  Future<void> setMornyeAccent(MornyeAccent accent) async {
-    _editState((current) => current.copyWith(mornyeAccent: accent));
+  Future<void> setSistrumAccent(SistrumAccent accent) async {
+    _editState((current) => current.copyWith(sistrumAccent: accent));
     await _saveToStorage();
   }
 
@@ -117,8 +147,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     if (persist) await _saveToStorage();
   }
 
-  Future<void> setMornyeGlassOutlines(bool value) async {
-    _editState((current) => current.copyWith(mornyeGlassOutlines: value));
+  Future<void> setSistrumGlassOutlines(bool value) async {
+    _editState((current) => current.copyWith(sistrumGlassOutlines: value));
     await _saveToStorage();
   }
 }

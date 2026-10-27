@@ -3,28 +3,28 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/user_profile_provider.dart';
-import 'package:spotiflac_android/screens/settings/profile_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/about_page.dart';
-import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/backup_restore_page.dart';
-import 'package:spotiflac_android/screens/settings/cache_management_page.dart';
-import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/log_screen.dart';
-import 'package:spotiflac_android/screens/settings/lyrics_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/playback_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/settings_search_catalog.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/app_search_field.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/profile_avatar.dart';
+import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/user_profile_provider.dart';
+import 'package:sistrum/screens/settings/profile_settings_page.dart';
+import 'package:sistrum/screens/settings/about_page.dart';
+import 'package:sistrum/screens/settings/appearance_settings_page.dart';
+import 'package:sistrum/screens/settings/backup_restore_page.dart';
+import 'package:sistrum/screens/settings/cache_management_page.dart';
+import 'package:sistrum/screens/settings/library_settings_page.dart';
+import 'package:sistrum/screens/settings/log_screen.dart';
+import 'package:sistrum/screens/settings/lyrics_settings_page.dart';
+import 'package:sistrum/screens/settings/playback_settings_page.dart';
+import 'package:sistrum/screens/settings/settings_search_catalog.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/profile_avatar.dart';
 
 /// One entry on the Settings tab.
 class _Destination {
@@ -218,7 +218,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
         : SettingsSearchHighlightScope(targetLabel: targetLabel, child: page);
     await Navigator.of(
       context,
-    ).push(slidePageRoute<void>(page: MornyeSettingsTheme(child: destination)));
+    ).push(slidePageRoute<void>(page: SistrumSettingsTheme(child: destination)));
     if (!mounted) return;
 
     // A route's focus scope remembers its previously focused child. Keep the
@@ -241,7 +241,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     return SettingsItem(
       icon: destination.icon,
       iconColor: _iconColorFor(destination),
-      showIconInMornye: true,
+      showIconInSistrum: true,
       title: destination.title,
       subtitle: null,
       showDivider: showDivider,
@@ -261,7 +261,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       ),
       icon: entry.icon,
       iconColor: _iconColorFor(result.destination),
-      showIconInMornye: true,
+      showIconInSistrum: true,
       title: entry.title,
       subtitle: result.destination.title,
       showDivider: showDivider,
@@ -340,7 +340,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             ];
     }
 
-    return MornyeSettingsTheme(
+    return SistrumSettingsTheme(
       child: CustomScrollView(
         slivers: [
           if (widget.asPage)

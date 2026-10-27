@@ -22,22 +22,22 @@ if (keystorePropertiesFile.exists()) {
 }
 
 // Opt-in local build identity; normal builds retain the original package/name.
-val sideBySideBuild = providers.environmentVariable("SPOTIFLAC_SIDE_BY_SIDE")
+val sideBySideBuild = providers.environmentVariable("SISTRUM_SIDE_BY_SIDE")
     .map { it == "true" }
     .orElse(false)
     .get()
 
 val rustBackendDir = rootProject.file("../rust_backend")
-val rustAndroidAbis = providers.environmentVariable("SPOTIFLAC_RUST_ANDROID_ABIS")
+val rustAndroidAbis = providers.environmentVariable("SISTRUM_RUST_ANDROID_ABIS")
     .orElse("arm64-v8a,armeabi-v7a")
     .get()
     .split(",")
 val supportedRustAndroidAbis = setOf("arm64-v8a", "armeabi-v7a")
 require(rustAndroidAbis.size == rustAndroidAbis.toSet().size) {
-    "SPOTIFLAC_RUST_ANDROID_ABIS must not contain duplicate ABIs"
+    "SISTRUM_RUST_ANDROID_ABIS must not contain duplicate ABIs"
 }
 require(rustAndroidAbis.all { it in supportedRustAndroidAbis }) {
-    "SPOTIFLAC_RUST_ANDROID_ABIS must contain only arm64-v8a and/or armeabi-v7a"
+    "SISTRUM_RUST_ANDROID_ABIS must contain only arm64-v8a and/or armeabi-v7a"
 }
 
 android {
@@ -167,7 +167,7 @@ android {
 val buildRustBackend = tasks.register<Exec>("buildRustBackend") {
     workingDir(rootProject.projectDir.parentFile)
     commandLine("bash", "scripts/build_rust_backend.sh", "android")
-    environment("SPOTIFLAC_RUST_ANDROID_ABIS", rustAndroidAbis.joinToString(","))
+    environment("SISTRUM_RUST_ANDROID_ABIS", rustAndroidAbis.joinToString(","))
     environment(
         "ANDROID_NDK_HOME",
         System.getenv("ANDROID_NDK_HOME")
@@ -177,7 +177,7 @@ val buildRustBackend = tasks.register<Exec>("buildRustBackend") {
         include("**/*.rs", "**/*.toml", "**/*.lock", "**/*.js", "**/*.tsv", "**/*.pem")
         exclude("target/**", "smoke/**")
     })
-    inputs.property("SPOTIFLAC_RUST_ANDROID_ABIS", rustAndroidAbis.joinToString(","))
+    inputs.property("SISTRUM_RUST_ANDROID_ABIS", rustAndroidAbis.joinToString(","))
     inputs.file(rootProject.file("../scripts/build_rust_backend.sh"))
     outputs.dir(rustBackendDir.resolve("target/bindings/kotlin"))
     outputs.dir(rustBackendDir.resolve("target/android/jniLibs"))

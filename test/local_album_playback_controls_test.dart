@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/services/library_database.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/services/library_database.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/album_track_tile.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/album_track_tile.dart';
 
 class _Playing extends Notifier<bool> {
   @override
@@ -59,9 +59,9 @@ class _Playback extends PlaybackController {
 }
 
 void main() {
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'local album controls pause and resume without restarting ($mornye)',
+      'local album controls pause and resume without restarting ($sistrum)',
       (tester) async {
         SharedPreferences.setMockInitialValues({});
         tester.view.physicalSize = const Size(430, 1200);
@@ -119,8 +119,8 @@ void main() {
               playbackProvider.overrideWith(() => playback),
             ],
             child: MaterialApp(
-              theme: mornye
-                  ? MornyeTheme.build(Brightness.light)
+              theme: sistrum
+                  ? SistrumTheme.build(Brightness.light)
                   : AppTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -152,13 +152,13 @@ void main() {
                     widget.tooltip == 'Pause Song $number'),
           ),
         );
-        if (mornye) {
+        if (sistrum) {
           expect(find.text('Shuffle'), findsOneWidget);
           expect(find.byTooltip('Shuffle'), findsNothing);
           expect(find.byIcon(CupertinoIcons.heart), findsOneWidget);
           expect(find.byIcon(CupertinoIcons.text_badge_plus), findsOneWidget);
         }
-        final pauseIcon = mornye ? CupertinoIcons.pause_fill : Icons.pause;
+        final pauseIcon = sistrum ? CupertinoIcons.pause_fill : Icons.pause;
         const playIcon = Icons.play_arrow;
 
         await tester.tap(
@@ -268,7 +268,7 @@ void main() {
         await tester.tap(
           find.descendant(
             of: header,
-            matching: mornye ? find.text('Shuffle') : find.byTooltip('Shuffle'),
+            matching: sistrum ? find.text('Shuffle') : find.byTooltip('Shuffle'),
           ),
         );
         await tester.pumpAndSettle();

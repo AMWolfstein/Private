@@ -1,11 +1,11 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/isrc_utils.dart';
-import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
-import 'package:spotiflac_android/widgets/mornye_player_details_sheet.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/isrc_utils.dart';
+import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/sistrum_player_details_sheet.dart';
 
 Future<void> showPlayerDetailsSheet(
   BuildContext context,
@@ -13,22 +13,22 @@ Future<void> showPlayerDetailsSheet(
   required PlayerMetadataController metadata,
   required MediaItem? mediaItem,
 }) {
-  final mornye = context.isMornye;
+  final sistrum = context.isSistrum;
   final fallback = metadata.detailsSnapshot(mediaItem);
   final metadataFuture = metadata.readDetails(mediaItem);
   // The sheet's glass draws from the player's artwork.
-  final ground = MornyeArtworkGroundScope.forOverlays(context);
+  final ground = SistrumArtworkGroundScope.forOverlays(context);
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    useRootNavigator: mornye,
-    showDragHandle: !mornye,
+    useRootNavigator: sistrum,
+    showDragHandle: !sistrum,
     backgroundColor: Colors.transparent,
-    builder: (context) => MornyeArtworkGroundScope.wrapOverlay(
+    builder: (context) => SistrumArtworkGroundScope.wrapOverlay(
       ground,
       DraggableScrollableSheet(
         expand: false,
-        initialChildSize: mornye ? 0.75 : 0.6,
+        initialChildSize: sistrum ? 0.75 : 0.6,
         maxChildSize: 0.9,
         minChildSize: 0.4,
         builder: (context, scrollController) {
@@ -93,7 +93,7 @@ class _MetadataList extends StatelessWidget {
     ].where((r) => r.$2.trim().isNotEmpty && r.$2 != '0').toList();
 
     {
-      return MornyePlayerDetailsSheet(
+      return SistrumPlayerDetailsSheet(
         rows: rows,
         scrollController: scrollController,
         mediaItem: mediaItem,

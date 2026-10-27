@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/local_artist_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/local_artist_screen.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/clickable_metadata.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_artist_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -157,7 +157,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: SistrumTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(
@@ -170,10 +170,10 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(LocalArtistScreen), findsOneWidget);
         expect(
-          find.byType(MornyeArtistHeader),
+          find.byType(SistrumArtistHeader),
           findsNothing,
         ); // Slivers are composed directly.
-        expect(find.byType(MornyeArtistSurface), findsOneWidget);
+        expect(find.byType(SistrumArtistSurface), findsOneWidget);
         expect(find.text('Album'), findsWidgets);
         expect(find.byIcon(CupertinoIcons.star), findsOneWidget);
         expect(
@@ -258,7 +258,7 @@ void main() {
               playbackProvider.overrideWith(_Playback.new),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.light),
+              theme: SistrumTheme.build(Brightness.light),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
@@ -288,7 +288,7 @@ void main() {
                 as AlbumDetailHeader;
         expect(header.immersive, true);
         expect(header.squareArtwork, true);
-        expect(find.byType(MornyeArtistSurface), findsOneWidget);
+        expect(find.byType(SistrumArtistSurface), findsOneWidget);
         await tester.ensureVisible(find.byTooltip('Add to Loved'));
         await tester.tap(find.byTooltip('Add to Loved'));
         await tester.pumpAndSettle();

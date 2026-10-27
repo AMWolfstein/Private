@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/ffmpeg_metadata.dart';
-import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:sistrum/services/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/platform_bridge.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

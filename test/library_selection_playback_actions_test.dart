@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/library_selection_playback_actions.dart';
-import 'package:spotiflac_android/widgets/library_track_selection_bar.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/library_selection_playback_actions.dart';
+import 'package:sistrum/widgets/library_track_selection_bar.dart';
 
 class _Controller extends MusicPlayerController {
   List<String> enqueued = [];
@@ -34,9 +34,9 @@ class _FailingController extends _Controller {
 }
 
 void main() {
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     for (final size in [const Size(390, 844), const Size(844, 390)]) {
-      testWidgets('batch playback preserves selection order ($mornye, $size)', (
+      testWidgets('batch playback preserves selection order ($sistrum, $size)', (
         tester,
       ) async {
         tester.view.physicalSize = size;
@@ -63,7 +63,7 @@ void main() {
               musicPlayerControllerProvider.overrideWithValue(controller),
             ],
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

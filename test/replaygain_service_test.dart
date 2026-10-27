@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/ffmpeg_service.dart';
-import 'package:spotiflac_android/services/replaygain_service.dart';
+import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/replaygain_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/services/local_track_batch_actions.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/local_track_batch_actions.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
 
 class _Local extends LocalLibraryNotifier {
   final removedPaths = <String>[];

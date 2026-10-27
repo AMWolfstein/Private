@@ -2,14 +2,14 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/mornye_glass.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/mini_player.dart';
-import 'package:spotiflac_android/widgets/overflow_marquee.dart';
+import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/mini_player.dart';
+import 'package:sistrum/widgets/overflow_marquee.dart';
 
 void main() {
   const longTitle = 'A long song title with enough words to leave the viewport';
@@ -274,10 +274,10 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     for (final compact in [false, true]) {
       testWidgets(
-        'mini player scrolls title and artist (Mornye: $mornye, compact: $compact)',
+        'mini player scrolls title and artist (Sistrum: $sistrum, compact: $compact)',
         (tester) async {
           await tester.pumpWidget(
             ProviderScope(
@@ -296,13 +296,13 @@ void main() {
                   (ref) => const Stream.empty(),
                 ),
                 lowEndDeviceProvider.overrideWithValue(true),
-                mornyeGlassQualityProvider.overrideWithValue(
-                  MornyeGlassQuality.auto,
+                sistrumGlassQualityProvider.overrideWithValue(
+                  SistrumGlassQuality.auto,
                 ),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? MornyeTheme.build(Brightness.light)
+                theme: sistrum
+                    ? SistrumTheme.build(Brightness.light)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

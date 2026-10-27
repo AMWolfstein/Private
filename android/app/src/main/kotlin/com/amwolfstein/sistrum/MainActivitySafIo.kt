@@ -52,7 +52,7 @@ internal fun MainActivity.releaseSafTreeGrant(treeUri: String) {
             }
         }
         // The tree URI is user data and the Logs screen can export it.
-        android.util.Log.d("SpotiFLAC", "No persisted SAF grant to release")
+        android.util.Log.d("Sistrum", "No persisted SAF grant to release")
     }
 
     /**
@@ -156,7 +156,7 @@ internal fun MainActivity.copyUriToTemp(
             // which may return MediaStore URIs from SAF tree traversal
             if (isMediaStoreUri(uri)) {
                 android.util.Log.d(
-                    "SpotiFLAC",
+                    "Sistrum",
                     "SAF denied for MediaStore URI, trying MediaStore fallback: $uri",
                 )
                 val result = copyMediaStoreUriToTemp(uri, fallbackExt)
@@ -165,13 +165,13 @@ internal fun MainActivity.copyUriToTemp(
                 }
             }
             android.util.Log.w(
-                "SpotiFLAC",
+                "Sistrum",
                 "SAF read denied for $uri: ${e.message}",
             )
             return null
         } catch (e: Exception) {
             android.util.Log.w(
-                "SpotiFLAC",
+                "Sistrum",
                 "Failed copying SAF uri $uri to temp: ${e.message}",
             )
             return null
@@ -194,13 +194,13 @@ internal fun MainActivity.copyMediaStoreUriToTemp(uri: Uri, fallbackExt: String?
             } ?: return null
 
             android.util.Log.d(
-                "SpotiFLAC",
+                "Sistrum",
                 "MediaStore fallback succeeded for $uri",
             )
             return copied.absolutePath
         } catch (e: Exception) {
             android.util.Log.w(
-                "SpotiFLAC",
+                "Sistrum",
                 "MediaStore fallback also failed for $uri: ${e.message}",
             )
             return null
@@ -527,7 +527,7 @@ internal fun Context.safParentDir(childUri: Uri): DocumentFile? {
             val child = findSafChild(this, parent, name) ?: return null
             return parent.takeIf { DocumentsContract.getDocumentId(child.uri) == docId }
         } catch (e: Exception) {
-            android.util.Log.w("SpotiFLAC", "Failed to get SAF parent dir: ${e.message}")
+            android.util.Log.w("Sistrum", "Failed to get SAF parent dir: ${e.message}")
             return null
         }
     }

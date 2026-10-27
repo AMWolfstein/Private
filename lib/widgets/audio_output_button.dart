@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:sistrum/l10n/l10n.dart';
 
 /// Uses the system's real audio routes and keeps native discovery in native UI.
 class AudioOutputButton extends StatefulWidget {

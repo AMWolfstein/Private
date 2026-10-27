@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/utils/path_match_keys.dart';
+import 'package:sistrum/utils/path_match_keys.dart';
 
 String _document(String authority, String id, {String? tree}) => Uri(
   scheme: 'content',

@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Lautstärke",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Rot (Standard)",
   "appearanceAccentOrange": "Orange",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glastransparenz",
   "appearanceGlassOutlines": "Glas-Konturen",
-  "appearanceGlassOutlinesSubtitle": "Zeigt einen hellen Rand um das Mornye-Glas. Ausschalten lässt das Glas selbst unverändert.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Zeigt einen hellen Rand um das Sistrum-Glas. Ausschalten lässt das Glas selbst unverändert.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Eingefärbt",
   "appearanceGlassClear": "klar",
   "appearanceGlassClearPerformance": "Sehr klares Glas kann mehr Energie verbrauchen und auf älteren Geräten weniger flüssig wirken. Verringere bei Bedarf die Klarheit.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Passe Wiedergabe, Bibliotheks-Scan, Liedtexte, das Mornye-Erscheinungsbild und lokalen Speicher an.",
+  "tutorialSettingsDesc": "Passe Wiedergabe, Bibliotheks-Scan, Liedtexte, das Sistrum-Erscheinungsbild und lokalen Speicher an.",
   "tutorialSettingsTip1": "Verwalte Musikordner und lokalen Dateizugriff",
   "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Unvollständige Alben",
   "libraryAlbumCompletenessUnknown": "Vollständigkeit des Albums unbekannt",
   "libraryAlbumMissingTracks": "{present}/{expected} Titel · {missing} fehlen",
-  "mornyeSearch": "Suche",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorit",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Suche",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorit",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Zum Künstler",
-  "mornyeFavorited": "Favorisiert",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Zum Künstler",
+  "sistrumFavorited": "Favorisiert",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

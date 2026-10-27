@@ -2,19 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/screens/local_guide_pages.dart';
-import 'package:spotiflac_android/constants/language_choices.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/widgets/scroll_edge_fade.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/screens/local_guide_pages.dart';
+import 'package:sistrum/constants/language_choices.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/widgets/scroll_edge_fade.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('SetupScreen');
 

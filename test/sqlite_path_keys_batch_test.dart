@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/sqlite_helpers.dart';
-import 'package:spotiflac_android/utils/path_match_keys.dart';
+import 'package:sistrum/services/sqlite_helpers.dart';
+import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
 
 class _RecordingBatch implements Batch {

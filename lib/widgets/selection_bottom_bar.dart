@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/l10n/l10n.dart';
 
 /// Hosts selection bars above the shell navigation while keeping modal routes
 /// above the bar. A raw entry in the root [Overlay] stays above routes pushed
@@ -248,7 +248,7 @@ class SelectionBottomBar extends StatelessWidget {
           Tooltip(
             message: MaterialLocalizations.of(context).closeButtonTooltip,
             child: CupertinoButton(
-              color: MornyeTheme.controlFill(context),
+              color: SistrumTheme.controlFill(context),
               borderRadius: BorderRadius.circular(28),
               padding: const EdgeInsets.all(12),
               onPressed: onClose,
@@ -314,7 +314,7 @@ class SelectionBottomBar extends StatelessWidget {
       children: children,
       surfaceBuilder: (content) {
         {
-          return MornyeGlassPanel.overlay(child: content);
+          return SistrumGlassPanel.overlay(child: content);
         }
       },
     );

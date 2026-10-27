@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/download_history.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
-import 'package:spotiflac_android/utils/audio_format_utils.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/mime_utils.dart';
-import 'package:spotiflac_android/utils/path_match_keys.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/models/download_history.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/utils/artist_utils.dart';
+import 'package:sistrum/utils/audio_format_utils.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/mime_utils.dart';
+import 'package:sistrum/utils/path_match_keys.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 void main() {
   group('Finalized SAF audio names', () {});
@@ -21,7 +21,7 @@ void main() {
   group('file deletion', () {
     test('confirms a local file is absent before reporting success', () async {
       final tempDir = await Directory.systemTemp.createTemp(
-        'spotiflac-delete-test-',
+        'sistrum-delete-test-',
       );
       addTearDown(() async {
         if (await tempDir.exists()) {
@@ -68,7 +68,7 @@ void main() {
 
     test('a real file named with a #track suffix is not a CUE row', () async {
       final tempDir = await Directory.systemTemp.createTemp(
-        'spotiflac-cue-suffix-',
+        'sistrum-cue-suffix-',
       );
       addTearDown(() async {
         if (await tempDir.exists()) {
@@ -494,7 +494,7 @@ void main() {
     test('serializes, deserializes, copies, and compares values', () {
       const settings = ThemeSettings(
         themeMode: ThemeMode.dark,
-        mornyeAccent: MornyeAccent.blue,
+        sistrumAccent: SistrumAccent.blue,
         useSystemFont: true,
       );
 
@@ -504,15 +504,15 @@ void main() {
       expect(decoded, settings);
       expect(decoded.hashCode, settings.hashCode);
       expect(copied.themeMode, ThemeMode.light);
-      expect(decoded.mornyeAccent, MornyeAccent.blue);
-      expect(copied.mornyeAccent, MornyeAccent.blue);
+      expect(decoded.sistrumAccent, SistrumAccent.blue);
+      expect(copied.sistrumAccent, SistrumAccent.blue);
       expect(decoded.useSystemFont, isTrue);
       expect(copied.useSystemFont, isTrue);
       expect(ThemeSettings.fromJson({}).useSystemFont, isFalse);
-      expect(ThemeSettings.fromJson({}).mornyeAccent, MornyeAccent.red);
+      expect(ThemeSettings.fromJson({}).sistrumAccent, SistrumAccent.red);
       expect(
-        ThemeSettings.fromJson({kMornyeAccentKey: 'unknown'}).mornyeAccent,
-        MornyeAccent.red,
+        ThemeSettings.fromJson({kSistrumAccentKey: 'unknown'}).sistrumAccent,
+        SistrumAccent.red,
       );
       expect(
         ThemeSettings.fromJson({'theme_mode': 'invalid'}).themeMode,

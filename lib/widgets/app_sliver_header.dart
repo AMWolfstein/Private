@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart'
+import 'package:sistrum/widgets/album_detail_header.dart'
     show HeaderCircleButton;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/app_bar_layout.dart';
-import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/app_bar_layout.dart';
+import 'package:sistrum/widgets/sistrum_floating_header.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
 /// sub-page.
@@ -55,7 +55,7 @@ class AppSliverHeader extends ConsumerWidget {
     final edgeInset = detailHeaderEdgeInset(context);
 
     final opaque =
-        mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque;
+        sistrumHeaderMaterial(context, ref) == SistrumHeaderMaterial.opaque;
     final leading = this.leading;
 
     return SliverAppBar(
@@ -66,15 +66,15 @@ class AppSliverHeader extends ConsumerWidget {
       backgroundColor: opaque ? colorScheme.surface : Colors.transparent,
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
-      systemOverlayStyle: mornyeHeaderOverlayStyle(colorScheme.brightness),
+      systemOverlayStyle: sistrumHeaderOverlayStyle(colorScheme.brightness),
       automaticallyImplyLeading: false,
       leadingWidth: _showLeading ? kToolbarHeight + edgeInset : null,
       leading: _showLeading
           ? Padding(
               padding: EdgeInsetsDirectional.only(start: edgeInset),
               child: leading is IconButton
-                  ? MornyeHeaderCircle(child: leading)
-                  : MornyeHeaderControls(
+                  ? SistrumHeaderCircle(child: leading)
+                  : SistrumHeaderControls(
                       child:
                           leading ??
                           HeaderCircleButton(
@@ -88,9 +88,9 @@ class AppSliverHeader extends ConsumerWidget {
             )
           : null,
       actionsPadding: EdgeInsetsDirectional.only(
-        end: edgeInset + kMornyeHeaderEdgeGap,
+        end: edgeInset + kSistrumHeaderEdgeGap,
       ),
-      actions: [MornyeHeaderActions(actions: actions ?? const [])],
+      actions: [SistrumHeaderActions(actions: actions ?? const [])],
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
           // SliverAppBar adds the platform's actual top safe-area inset to its
@@ -144,7 +144,7 @@ class AppSliverHeader extends ConsumerWidget {
           if (opaque) return bar;
           return Stack(
             fit: StackFit.expand,
-            children: [const MornyeHeaderBacking(), bar],
+            children: [const SistrumHeaderBacking(), bar],
           );
         },
       ),

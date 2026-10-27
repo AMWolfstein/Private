@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/settings/metadata_separator_settings_page.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -27,7 +27,7 @@ void main() {
       ProviderScope(
         overrides: [settingsProvider.overrideWith(_Settings.new)],
         child: MaterialApp(
-          theme: ThemeData(extensions: const [MornyeTheme()]),
+          theme: ThemeData(extensions: const [SistrumTheme()]),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(

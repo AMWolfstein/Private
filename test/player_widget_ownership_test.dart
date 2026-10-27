@@ -4,17 +4,17 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/routes/now_playing_route.dart';
-import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/mornye_player_layout.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/player_details_sheet.dart';
-import 'package:spotiflac_android/widgets/player_gesture_regions.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/routes/now_playing_route.dart';
+import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/sistrum_player_layout.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/player_details_sheet.dart';
+import 'package:sistrum/widgets/player_gesture_regions.dart';
 
 MediaItem _item(String id, {String? source}) => MediaItem(
   id: id,
@@ -79,12 +79,12 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
-              body: MornyePlayerLayout(
+              body: SistrumPlayerLayout(
                 mediaItem: item,
                 metadata: metadata,
                 seekPreview: seekPreview,

@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/equalizer_provider.dart';
-import 'package:spotiflac_android/screens/equalizer_screen.dart';
-import 'package:spotiflac_android/services/playback_equalizer.dart';
-import 'package:spotiflac_android/models/equalizer_settings.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/mornye_level_slider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/equalizer_provider.dart';
+import 'package:sistrum/screens/equalizer_screen.dart';
+import 'package:sistrum/services/playback_equalizer.dart';
+import 'package:sistrum/models/equalizer_settings.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/sistrum_level_slider.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
     testWidgets(
-      'Mornye EQ fits narrow large text and changes band count ($brightness)',
+      'Sistrum EQ fits narrow large text and changes band count ($brightness)',
       (tester) async {
         SharedPreferences.setMockInitialValues({});
         playbackEqualizer.value = const EqualizerSettings();
@@ -25,7 +25,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: SistrumTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
@@ -55,7 +55,7 @@ void main() {
         expect(container.read(equalizerProvider).settings.gains.length, 5);
         final fader = find
             .byWidgetPredicate(
-              (widget) => widget is MornyeLevelSlider && widget.vertical,
+              (widget) => widget is SistrumLevelSlider && widget.vertical,
             )
             .first;
         await tester.ensureVisible(fader);

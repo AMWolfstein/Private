@@ -6,16 +6,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/library_search_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/library_search.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/library_search_results.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/library_search_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library_search.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/library_search_results.dart';
+import 'package:sistrum/widgets/track_card.dart';
 
 class _PlaybackRecorder extends PlaybackController {
   final paths = <String>[];
@@ -40,8 +40,8 @@ LibrarySearchHit _hit(
 );
 
 void main() {
-  for (final mornye in [true]) {
-    testWidgets('search song tap and Play both start audio ($mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('search song tap and Play both start audio ($sistrum)', (
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({});
@@ -95,7 +95,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
@@ -111,7 +111,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.widget<TrackCard>(find.byType(TrackCard)).style,
-        mornye ? TrackCardStyle.flat : TrackCardStyle.filled,
+        sistrum ? TrackCardStyle.flat : TrackCardStyle.filled,
       );
       await tester.tap(find.text('Song'));
       await tester.pumpAndSettle();
@@ -123,8 +123,8 @@ void main() {
     });
   }
 
-  for (final mornye in [true]) {
-    testWidgets('Library shows every result type and paginates ($mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('Library shows every result type and paginates ($sistrum)', (
       tester,
     ) async {
       final requests = <LibrarySearchRequest>[];
@@ -141,7 +141,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
@@ -224,9 +224,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'long-press selects songs for Library batch actions ($mornye)',
+      'long-press selects songs for Library batch actions ($sistrum)',
       (tester) async {
         SharedPreferences.setMockInitialValues({});
         // Tall enough that the selection bar never covers a result row.
@@ -273,7 +273,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

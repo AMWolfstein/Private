@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
-import 'package:spotiflac_android/services/ffmpeg_models.dart';
-import 'package:spotiflac_android/services/ffmpeg_support.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/audio_metadata_mapper.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg_support.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 

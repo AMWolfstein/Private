@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/services/ffmpeg_cue.dart';
-import 'package:spotiflac_android/services/ffmpeg_metadata.dart';
-import 'package:spotiflac_android/services/ffmpeg_models.dart';
-import 'package:spotiflac_android/services/ffmpeg_probe.dart';
-import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/ffmpeg_cue.dart';
+import 'package:sistrum/services/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg_probe.dart';
+import 'package:sistrum/services/ffmpeg_replaygain.dart';
 
-export 'package:spotiflac_android/services/ffmpeg_models.dart';
+export 'package:sistrum/services/ffmpeg_models.dart';
 
 /// Compatibility entry point for callers; feature modules own the operations.
 class FFmpegService {

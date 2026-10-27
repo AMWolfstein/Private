@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 /// Editable tags and request generations, independent of sheet navigation.
 class MetadataEditorController {

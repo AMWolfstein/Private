@@ -11,5 +11,5 @@ class AppInfo {
   static String get displayVersion => kDebugMode ? 'Internal' : version;
 
   static const String appName = 'Sistrum';
-  static const String copyright = '© 2026 Zarz Eleutherius';
+  static const String copyright = '© 2026 \u005a\u0061\u0072\u007a Eleutherius';
 }

@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/mornye_glass.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
-import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/screens/settings/appearance_settings_page.dart';
+import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
 
 final _levelCalls = <(int, bool)>[];
 var _outsideBuilds = 0;
@@ -33,15 +33,15 @@ class _OutsideGlass extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _outsideBuilds++;
-    final level = ref.watch(mornyeGlassClarityLevelProvider);
+    final level = ref.watch(sistrumGlassClarityLevelProvider);
     return SizedBox(height: 1, child: Text('$level'));
   }
 }
 
 void main() {
-  final slider = find.byKey(const ValueKey('mornye-glass-clarity'));
+  final slider = find.byKey(const ValueKey('sistrum-glass-clarity'));
   final preview = find.byWidgetPredicate(
-    (widget) => widget is MornyeGlassPanel && widget.clarityLevel != null,
+    (widget) => widget is SistrumGlassPanel && widget.clarityLevel != null,
   );
 
   setUp(() {
@@ -51,7 +51,7 @@ void main() {
 
   Future<(ProviderContainer, SharedPreferences)> open(
     WidgetTester tester, {
-    MornyeGlassAutoResult? autoResult,
+    SistrumGlassAutoResult? autoResult,
   }) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
@@ -67,7 +67,7 @@ void main() {
           settingsProvider.overrideWith(_CountingSettings.new),
           initialGlassAutoResultProvider.overrideWithValue(autoResult),
         ],
-        child: MornyeThemeWrapper(
+        child: SistrumThemeWrapper(
           builder: (light, dark, mode) => MaterialApp(
             theme: light,
             darkTheme: dark,
@@ -78,7 +78,7 @@ void main() {
               children: [
                 _OutsideGlass(),
                 Expanded(
-                  child: MornyeSettingsTheme(child: AppearanceSettingsPage()),
+                  child: SistrumSettingsTheme(child: AppearanceSettingsPage()),
                 ),
               ],
             ),
@@ -131,10 +131,10 @@ void main() {
       seen.add(value);
       // Only the preview follows the thumb.
       expect(
-        tester.widget<MornyeGlassPanel>(preview).clarityLevel,
+        tester.widget<SistrumGlassPanel>(preview).clarityLevel,
         value.round(),
       );
-      expect(container.read(mornyeGlassClarityLevelProvider), 3);
+      expect(container.read(sistrumGlassClarityLevelProvider), 3);
     }
     expect(seen, containsAll([2.0, 4.0, 5.0]));
     expect(_outsideBuilds, outsideBuilds);
@@ -144,12 +144,12 @@ void main() {
     await gesture.up();
     await tester.pumpAndSettle();
     expect(_levelCalls, [(5, true)]);
-    expect(container.read(mornyeGlassClarityLevelProvider), 5);
+    expect(container.read(sistrumGlassClarityLevelProvider), 5);
     expect(savedLevel(prefs), 5);
     expect(_outsideBuilds, outsideBuilds + 1);
     expect(tester.widget<Slider>(slider).value, 5);
     expect(tester.widget<Slider>(slider).label, 'Crystal');
-    expect(tester.widget<MornyeGlassPanel>(preview).clarityLevel, 5);
+    expect(tester.widget<SistrumGlassPanel>(preview).clarityLevel, 5);
     expect(tester.takeException(), isNull);
   });
 
@@ -171,9 +171,9 @@ void main() {
   ) async {
     final (container, _) = await open(
       tester,
-      autoResult: const MornyeGlassAutoResult(
+      autoResult: const SistrumGlassAutoResult(
         build: 'b',
-        step: MornyeGlassAutoStep.liteFrosted,
+        step: SistrumGlassAutoStep.liteFrosted,
         done: true,
       ),
     );
@@ -185,7 +185,7 @@ void main() {
     // The saved level stays visible; glass renders at Level 1.
     expect(widget.value, 3);
     expect(widget.onChanged, isNull);
-    expect(container.read(mornyeGlassClarityLevelProvider), 1);
+    expect(container.read(sistrumGlassClarityLevelProvider), 1);
     expect(
       find.text(
         'Auto measured this device and uses Frosted. Choose Lite or Full to '
@@ -197,12 +197,12 @@ void main() {
     // An explicit choice restores the slider and drops the note.
     container
         .read(settingsProvider.notifier)
-        .setGlassQuality(MornyeGlassQuality.lite);
+        .setGlassQuality(SistrumGlassQuality.lite);
     await tester.pump();
     expect(tester.widget<Slider>(slider).onChanged, isNotNull);
-    expect(container.read(mornyeGlassClarityLevelProvider), 3);
+    expect(container.read(sistrumGlassClarityLevelProvider), 3);
     expect(
-      find.byKey(const ValueKey('mornye-glass-auto-measured')),
+      find.byKey(const ValueKey('sistrum-glass-auto-measured')),
       findsNothing,
     );
   });
@@ -210,9 +210,9 @@ void main() {
   testWidgets('a measured lite step keeps the slider', (tester) async {
     await open(
       tester,
-      autoResult: const MornyeGlassAutoResult(
+      autoResult: const SistrumGlassAutoResult(
         build: 'b',
-        step: MornyeGlassAutoStep.lite,
+        step: SistrumGlassAutoStep.lite,
         done: true,
       ),
     );

@@ -4,8 +4,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -21,7 +21,7 @@ void main() {
       Future<void> pumpPage({required bool explicitInset}) async {
         await tester.pumpWidget(
           MaterialApp(
-            theme: MornyeTheme.build(brightness),
+            theme: SistrumTheme.build(brightness),
             home: ValueListenableBuilder<double>(
               valueListenable: inset,
               builder: (context, value, child) => MediaQuery(

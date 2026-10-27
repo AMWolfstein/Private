@@ -19,7 +19,7 @@ class PlaybackNotificationChannelTest {
         assumeTrue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val manager = context.getSystemService(NotificationManager::class.java)
-        val legacyId = "com.zarz.spotiflac.playback"
+        val legacyId = "com.amwolfstein.sistrum.playback"
         val currentId = "com.amwolfstein.sistrum.playback"
         val previousCurrent = manager.getNotificationChannel(currentId)
         try {

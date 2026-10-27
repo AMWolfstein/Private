@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 /// A single tonal selection inside a sheet, without a second glass layer.
 class AppChoiceChip extends StatelessWidget {
@@ -29,7 +29,7 @@ class AppChoiceChip extends StatelessWidget {
     final foreground = onSelected == null
         ? scheme.onSurfaceVariant
         // The accent is too light for small text on the tinted fill in light
-        // Mornye (about 3:1); dark keeps the accent, which already passes.
+        // Sistrum (about 3:1); dark keeps the accent, which already passes.
         : selected && scheme.brightness == Brightness.light
         ? scheme.onSurface
         : selected
@@ -46,8 +46,8 @@ class AppChoiceChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         color: selected
             ? scheme.primary.withValues(alpha: 0.12)
-            : MornyeTheme.controlFill(context),
-        disabledColor: MornyeTheme.controlFill(context, enabled: false),
+            : SistrumTheme.controlFill(context),
+        disabledColor: SistrumTheme.controlFill(context, enabled: false),
         onPressed: onSelected == null ? null : () => onSelected!(!selected),
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(

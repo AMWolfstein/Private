@@ -3,30 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/playback_notification_provider.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/screens/home_tab.dart';
-import 'package:spotiflac_android/screens/queue_tab.dart';
-import 'package:spotiflac_android/screens/settings/settings_tab.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/services/notification_service.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/mini_player.dart';
-import 'package:spotiflac_android/widgets/lazy_tab_view.dart';
-import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
-import 'package:spotiflac_android/widgets/mornye_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome_adaptivity.dart';
-import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/playback_notification_provider.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/screens/home_tab.dart';
+import 'package:sistrum/screens/queue_tab.dart';
+import 'package:sistrum/screens/settings/settings_tab.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/notification_service.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/mini_player.dart';
+import 'package:sistrum/widgets/lazy_tab_view.dart';
+import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/sistrum_bottom_bar.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/sistrum_chrome_adaptivity.dart';
+import 'package:sistrum/widgets/sistrum_floating_header.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
 
 class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key});
@@ -39,8 +39,8 @@ class _MainShellState extends ConsumerState<MainShell>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _currentIndex = 0;
   final _homeFeedScrollController = ScrollController();
-  final _mornyeChrome = MornyeChromeController();
-  final _chromeAdaptivity = MornyeChromeAdaptivity();
+  final _sistrumChrome = SistrumChromeController();
+  final _chromeAdaptivity = SistrumChromeAdaptivity();
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
@@ -121,7 +121,7 @@ class _MainShellState extends ConsumerState<MainShell>
     usbAudioStatus.removeListener(_onUsbAudioStatusChanged);
     ShellNavigationService.unregisterTabSelectionHandler(this);
     _homeFeedScrollController.dispose();
-    _mornyeChrome.dispose();
+    _sistrumChrome.dispose();
     _chromeAdaptivity.dispose();
     super.dispose();
   }
@@ -182,7 +182,7 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _onNavTap(int index, {bool resetHome = true}) {
-    _mornyeChrome.expand();
+    _sistrumChrome.expand();
     if (index == 0 && resetHome) {
       _resetHomeToMain(scrollToTop: _currentIndex == 0);
     }
@@ -195,7 +195,7 @@ class _MainShellState extends ConsumerState<MainShell>
       setState(() => _currentIndex = index);
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
-        showSearchTab: context.isMornye,
+        showSearchTab: context.isSistrum,
       );
       FocusManager.instance.primaryFocus?.unfocus();
       // Jump directly when skipping intermediate tabs to avoid
@@ -285,7 +285,7 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     ShellNavigationService.syncState(
       currentTabIndex: _currentIndex,
-      showSearchTab: context.isMornye,
+      showSearchTab: context.isSistrum,
     );
 
     final tabs = <Widget>[
@@ -323,11 +323,11 @@ class _MainShellState extends ConsumerState<MainShell>
         label: l10n.navHome,
       ),
       NavigationDestination(
-        icon: const MornyeNavigationIcon(
+        icon: const SistrumNavigationIcon(
           icon: CupertinoIcons.square_stack_fill,
           badgeCount: 0,
         ),
-        selectedIcon: const MornyeNavigationIcon(
+        selectedIcon: const SistrumNavigationIcon(
           icon: CupertinoIcons.square_stack_fill,
           badgeCount: 0,
         ),
@@ -336,7 +336,7 @@ class _MainShellState extends ConsumerState<MainShell>
       ...[],
       NavigationDestination(
         icon: const Icon(CupertinoIcons.search),
-        label: l10n.mornyeSearch,
+        label: l10n.sistrumSearch,
       ),
     ];
 
@@ -365,7 +365,7 @@ class _MainShellState extends ConsumerState<MainShell>
         NotificationListener<ScrollNotification>(
           onNotification: (notification) {
             if (canMinimizeChrome && index == _currentIndex) {
-              return _mornyeChrome.handleScroll(notification);
+              return _sistrumChrome.handleScroll(notification);
             }
             return false;
           },
@@ -390,11 +390,11 @@ class _MainShellState extends ConsumerState<MainShell>
     // The bar's palette follows the page behind it only where liquid chrome
     // is allowed; elsewhere it keeps the theme and its readable strong tint.
     final adaptiveChrome =
-        !useNavigationRail && mornyeLiquidChromeEnabled(context, ref);
+        !useNavigationRail && sistrumLiquidChromeEnabled(context, ref);
     // The developer A/B switch drops only the sampler; the bar keeps its
     // clear adaptive fill and the theme's palette.
     final sampleChrome =
-        adaptiveChrome && !ref.watch(mornyeBarSamplerDisabledProvider);
+        adaptiveChrome && !ref.watch(sistrumBarSamplerDisabledProvider);
 
     final shell = SelectionOverlayHost(
       child: BackButtonListener(
@@ -403,8 +403,8 @@ class _MainShellState extends ConsumerState<MainShell>
           return true;
         },
         // Header controls in the tab pages and the bottom bar share one
-        // backdrop read; see MornyeChromeBatch.
-        child: MornyeChromeBatch(
+        // backdrop read; see SistrumChromeBatch.
+        child: SistrumChromeBatch(
           child: Scaffold(
             extendBody: true,
             // The tab view keeps one element across the rail<->bar structure
@@ -452,7 +452,7 @@ class _MainShellState extends ConsumerState<MainShell>
                       Expanded(child: pageView),
                     ],
                   )
-                : MornyeChromeBackdrop(
+                : SistrumChromeBackdrop(
                     adaptivity: _chromeAdaptivity,
                     enabled: sampleChrome,
                     child: pageView,
@@ -469,7 +469,7 @@ class _MainShellState extends ConsumerState<MainShell>
                     builder: (context, child) {
                       final pageOverride =
                           ShellNavigationService.chromeBrightness.value;
-                      final brightness = mornyeChromeBrightness(
+                      final brightness = sistrumChromeBrightness(
                         pageOverride: pageOverride,
                         sampled: sampleChrome
                             ? _chromeAdaptivity.link.value
@@ -485,7 +485,7 @@ class _MainShellState extends ConsumerState<MainShell>
                                 (pageOverride == null &&
                                     brightness == theme.brightness)
                             ? theme
-                            : MornyeTheme.fromContext(
+                            : SistrumTheme.fromContext(
                                 context,
                                 brightness: brightness,
                                 chromeSurface: pageOverride == null
@@ -494,7 +494,7 @@ class _MainShellState extends ConsumerState<MainShell>
                                           .chromeSurface
                                           .value,
                               ),
-                        child: MornyeAdaptiveChromeScope(
+                        child: SistrumAdaptiveChromeScope(
                           active: adaptiveChrome,
                           child: child!,
                         ),
@@ -506,9 +506,9 @@ class _MainShellState extends ConsumerState<MainShell>
                       child: useNavigationRail
                           ? const MiniPlayer()
                           : ValueListenableBuilder<bool>(
-                              valueListenable: _mornyeChrome,
+                              valueListenable: _sistrumChrome,
                               builder: (context, collapsed, _) =>
-                                  MornyeBottomBar(
+                                  SistrumBottomBar(
                                     collapsed: canMinimizeChrome && collapsed,
                                     destinations: destinations,
                                     selectedIndex: selectedDestination,
@@ -517,7 +517,7 @@ class _MainShellState extends ConsumerState<MainShell>
                                     onSearch:
                                         ShellNavigationService.requestSearch,
                                     blurEnabled: ref.watch(
-                                      mornyeBlurEnabledProvider,
+                                      sistrumBlurEnabledProvider,
                                     ),
                                   ),
                             ),

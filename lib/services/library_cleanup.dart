@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:isolate';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/library_cover_snapshot.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
-import 'package:spotiflac_android/services/native_cache_maintenance.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/library_cover_snapshot.dart';
+import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/native_cache_maintenance.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/logger.dart';
 
 /// Removes rows superseded by a staged scan inside the caller's transaction.
 /// On partial scans, an unreadable file is not evidence that it was deleted.

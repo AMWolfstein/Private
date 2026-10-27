@@ -4,20 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/services/music_player_service.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/track_card.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/track_card.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
 
 final _tracks = [
   for (final name in ['First', 'Unavailable', 'Selected', 'Last'])
@@ -218,7 +218,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
+              theme: SistrumTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: withArtwork && tickersEnabled
@@ -287,9 +287,9 @@ void main() {
   }
 
   for (final mode in LibraryTracksFolderMode.values) {
-    for (final mornye in [true]) {
+    for (final sistrum in [true]) {
       testWidgets(
-        'selection dispatches one ${mode.name} removal (Mornye: $mornye)',
+        'selection dispatches one ${mode.name} removal (Sistrum: $sistrum)',
         (tester) async {
           final calls = <(String, List<String>)>[];
           await tester.pumpWidget(
@@ -312,8 +312,8 @@ void main() {
                 ),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
+                theme: sistrum
+                    ? SistrumTheme.build(Brightness.dark)
                     : AppTheme.light(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
@@ -327,7 +327,7 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
-          if (mornye) {
+          if (sistrum) {
             expect(find.text('Shuffle'), findsOneWidget);
             expect(find.byTooltip('Shuffle'), findsNothing);
           }
@@ -397,8 +397,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [true]) {
-    testWidgets('playlist row queues its neighbors (Mornye: $mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('playlist row queues its neighbors (Sistrum: $sistrum)', (
       tester,
     ) async {
       final player = _Player();
@@ -418,8 +418,8 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
+            theme: sistrum
+                ? SistrumTheme.build(Brightness.dark)
                 : AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -453,7 +453,7 @@ void main() {
       await tester.tap(
         find.descendant(
           of: actions,
-          matching: mornye ? find.text('Shuffle') : find.byTooltip('Shuffle'),
+          matching: sistrum ? find.text('Shuffle') : find.byTooltip('Shuffle'),
         ),
       );
       await tester.pumpAndSettle();

@@ -14,11 +14,11 @@ case "$PLATFORM" in
 esac
 
 if [[ "$PLATFORM" == "android" ]]; then
-  ANDROID_ABIS_RAW="${SPOTIFLAC_RUST_ANDROID_ABIS-arm64-v8a,armeabi-v7a}"
+  ANDROID_ABIS_RAW="${SISTRUM_RUST_ANDROID_ABIS-arm64-v8a,armeabi-v7a}"
   case "$ANDROID_ABIS_RAW" in
     arm64-v8a|armeabi-v7a|arm64-v8a,armeabi-v7a|armeabi-v7a,arm64-v8a) ;;
     *)
-      echo "Error: SPOTIFLAC_RUST_ANDROID_ABIS must contain arm64-v8a and/or armeabi-v7a, comma-separated without spaces or duplicates." >&2
+      echo "Error: SISTRUM_RUST_ANDROID_ABIS must contain arm64-v8a and/or armeabi-v7a, comma-separated without spaces or duplicates." >&2
       exit 1
       ;;
   esac
@@ -32,20 +32,20 @@ export CARGO_TARGET_DIR="$RUST_BACKEND_DIR/target"
 
 case "$(uname -s)" in
   Darwin)
-    HOST_LIBRARY="$CARGO_TARGET_DIR/release/libspotiflac_mobile.dylib"
+    HOST_LIBRARY="$CARGO_TARGET_DIR/release/libsistrum_mobile.dylib"
     # Keep cc-rs (QuickJS) and Rust compatible with the Swift host executable.
     export MACOSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET:-11.0}"
     ;;
-  Linux) HOST_LIBRARY="$CARGO_TARGET_DIR/release/libspotiflac_mobile.so" ;;
+  Linux) HOST_LIBRARY="$CARGO_TARGET_DIR/release/libsistrum_mobile.so" ;;
   *) echo "Error: use macOS or Linux for this build script." >&2; exit 1 ;;
 esac
 
 # Build separately from bindgen so CLI and cargo-metadata features are not
 # enabled in the shipped library through Cargo's workspace feature unification.
-cargo build --locked --release -p spotiflac-mobile
+cargo build --locked --release -p sistrum-mobile
 # Bindgen discovers each crate's uniffi.toml through Cargo metadata.
 for language in kotlin; do
-  cargo run --locked -p spotiflac-bindgen -- generate \
+  cargo run --locked -p sistrum-bindgen -- generate \
     --library "$HOST_LIBRARY" \
     --language "$language" \
     --out-dir "$CARGO_TARGET_DIR/bindings/$language" \
@@ -103,13 +103,13 @@ if [[ "$PLATFORM" == "android" ]]; then
   # Fold only identical functions whose addresses are not significant.
   export RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,--pack-dyn-relocs=android -C link-arg=-Wl,--icf=safe"
   for target in "${ANDROID_TARGETS[@]}"; do
-    cargo build --locked --release -p spotiflac-mobile --target "$target"
+    cargo build --locked --release -p sistrum-mobile --target "$target"
     case "$target" in
       aarch64-linux-android) ABI="arm64-v8a" ;;
       armv7-linux-androideabi) ABI="armeabi-v7a" ;;
     esac
     mkdir -p "$CARGO_TARGET_DIR/android/jniLibs/$ABI"
-    cp "$CARGO_TARGET_DIR/$target/release/libspotiflac_mobile.so" \
+    cp "$CARGO_TARGET_DIR/$target/release/libsistrum_mobile.so" \
       "$CARGO_TARGET_DIR/android/jniLibs/$ABI/"
   done
 fi

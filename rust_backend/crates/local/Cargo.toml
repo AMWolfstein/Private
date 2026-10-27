@@ -1,5 +1,5 @@
 [package]
-name = "spotiflac-local"
+name = "sistrum-local"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
-spotiflac-core.workspace = true
+sistrum-core.workspace = true
 cap-std.workspace = true
 chrono.workspace = true
 serde.workspace = true

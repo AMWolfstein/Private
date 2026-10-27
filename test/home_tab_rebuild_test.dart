@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/library_search_provider.dart';
-import 'package:spotiflac_android/providers/local_home_feed_provider.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/screens/home_tab.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/library_search_results.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library_search_provider.dart';
+import 'package:sistrum/providers/local_home_feed_provider.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/screens/home_tab.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/library_search_results.dart';
 
 /// PERF-603: a Loved toggle or playlist edit must not rebuild the whole Home
 /// feed. The dirty-rebuild log names every rebuilt widget, so HomeTab should
@@ -29,7 +29,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const HomeTab(mode: HomeTabMode.browse),
@@ -85,7 +85,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const HomeTab(mode: HomeTabMode.search),

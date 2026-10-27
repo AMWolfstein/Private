@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/services/library_duplicates.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library_duplicates.dart';
+import 'package:sistrum/services/library_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 

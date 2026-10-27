@@ -5,14 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderProxySliver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/mornye_floating_header.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/sistrum_floating_header.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
 
 /// Collapsing album-detail header shared by the album, local-album, and
 /// downloaded-album screens: full-bleed [background] (optionally blurred and
@@ -128,11 +128,11 @@ class AlbumDetailHeader extends StatelessWidget {
       screenSize.width.clamp(0.0, 440.0),
       math.max(240.0, screenSize.height * 0.55),
     );
-    final details = _buildMornyeDetails(context);
+    final details = _buildSistrumDetails(context);
     Widget toolbar({bool collapsed = true}) => Consumer(
       builder: (context, ref, _) {
         final opaque =
-            mornyeHeaderMaterial(context, ref) == MornyeHeaderMaterial.opaque;
+            sistrumHeaderMaterial(context, ref) == SistrumHeaderMaterial.opaque;
         final titleVisible =
             showTitleInAppBar ||
             appBarTitle != null ||
@@ -140,7 +140,7 @@ class AlbumDetailHeader extends StatelessWidget {
         final overArtwork = immersive && !collapsed;
         return _ArtworkBrightness(
           source: overArtwork ? paletteSource : null,
-          builder: (context, artwork) => MornyeHeaderBrightness(
+          builder: (context, artwork) => SistrumHeaderBrightness(
             brightness: artwork,
             child: SliverAppBar(
               pinned: true,
@@ -151,12 +151,12 @@ class AlbumDetailHeader extends StatelessWidget {
               scrolledUnderElevation: 0,
               // Without artwork data the transparent toolbar keeps the light
               // status icons it always had over the cover.
-              systemOverlayStyle: mornyeHeaderOverlayStyle(
+              systemOverlayStyle: sistrumHeaderOverlayStyle(
                 artwork ?? (overArtwork ? Brightness.dark : scheme.brightness),
               ),
               flexibleSpace: opaque
                   ? null
-                  : MornyeHeaderBacking(
+                  : SistrumHeaderBacking(
                       visible: immersive ? titleVisible : null,
                     ),
               title: AnimatedOpacity(
@@ -181,7 +181,7 @@ class AlbumDetailHeader extends StatelessWidget {
               leadingWidth: kToolbarHeight + edgeInset,
               leading: Padding(
                 padding: EdgeInsetsDirectional.only(start: edgeInset),
-                child: MornyeHeaderControls(
+                child: SistrumHeaderControls(
                   child:
                       leading ??
                       HeaderCircleButton(
@@ -194,10 +194,10 @@ class AlbumDetailHeader extends StatelessWidget {
                 ),
               ),
               actionsPadding: EdgeInsetsDirectional.only(
-                end: edgeInset + kMornyeHeaderEdgeGap,
+                end: edgeInset + kSistrumHeaderEdgeGap,
               ),
               actions: [
-                MornyeHeaderActions(actions: appBarActions ?? const []),
+                SistrumHeaderActions(actions: appBarActions ?? const []),
               ],
             ),
           ),
@@ -212,8 +212,8 @@ class AlbumDetailHeader extends StatelessWidget {
         scheme.surface,
       ];
       // The header controls' ground: the cover under this gradient.
-      final artwork = MornyeGroundAnchor(
-        layout: MornyeGroundLayout(stops: const [0, 0.48, 1], colors: gradient),
+      final artwork = SistrumGroundAnchor(
+        layout: SistrumGroundLayout(stops: const [0, 0.48, 1], colors: gradient),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -279,7 +279,7 @@ class AlbumDetailHeader extends StatelessWidget {
     ];
   }
 
-  Widget _buildMornyeDetails(BuildContext context) => Padding(
+  Widget _buildSistrumDetails(BuildContext context) => Padding(
     padding: EdgeInsets.fromLTRB(20, immersive ? 0 : 20, 20, 28),
     child: Column(
       children: [
@@ -300,8 +300,8 @@ class AlbumDetailHeader extends StatelessWidget {
                   ],
                 ),
                 // The cover scrolls under the header controls' glass.
-                child: MornyeGroundAnchor(
-                  layout: const MornyeGroundLayout(radius: 14),
+                child: SistrumGroundAnchor(
+                  layout: const SistrumGroundLayout(radius: 14),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),
                     child: LayoutBuilder(
@@ -546,7 +546,7 @@ class _AlbumScrollVeil extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (MediaQuery.disableAnimationsOf(context) ||
-        !ref.watch(mornyeLiquidGlassProvider)) {
+        !ref.watch(sistrumLiquidGlassProvider)) {
       return const SizedBox.shrink();
     }
     // Read here, not by the header: an inset change rebuilds only the veil.
@@ -558,7 +558,7 @@ class _AlbumScrollVeil extends ConsumerWidget {
       builder: (context, _) {
         final scrolled = position.hasPixels ? position.pixels : 0.0;
         final progress = extent > 0 ? (scrolled / extent).clamp(0.0, 1.0) : 0.0;
-        return MornyeGroundVeil(opacity: Curves.easeOut.transform(progress));
+        return SistrumGroundVeil(opacity: Curves.easeOut.transform(progress));
       },
     );
   }
@@ -633,7 +633,7 @@ class _ArtworkBrightnessState extends State<_ArtworkBrightness> {
       future: _lightness,
       initialData: CoverPalette.peekTopLightness(source),
       builder: (context, snapshot) =>
-          widget.builder(context, mornyeArtworkBrightness(snapshot.data)),
+          widget.builder(context, sistrumArtworkBrightness(snapshot.data)),
     );
   }
 }
@@ -703,7 +703,7 @@ class AlbumPlayActions extends StatelessWidget {
           ),
           SizedBox(width: gap),
           Expanded(
-            child: _MornyeHeaderButton(
+            child: _SistrumHeaderButton(
               icon: CupertinoIcons.shuffle,
               label: shuffleTooltip,
               compact: compact,
@@ -741,8 +741,8 @@ class HeaderFilledButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     {
-      return _MornyeHeaderButton(
-        icon: mornyeIconFor(icon),
+      return _SistrumHeaderButton(
+        icon: sistrumIconFor(icon),
         label: label,
         onPressed: onPressed,
         prominent: !tonal,
@@ -792,18 +792,18 @@ class HeaderCircleButton extends ConsumerWidget {
         return Tooltip(
           message: tooltip,
           child: SizedBox.square(
-            dimension: buttonSize ?? kMornyeHeaderControlSize,
+            dimension: buttonSize ?? kSistrumHeaderControlSize,
             child: CupertinoButton(
               padding: EdgeInsets.zero,
               borderRadius: BorderRadius.circular(
-                (buttonSize ?? kMornyeHeaderControlSize) / 2,
+                (buttonSize ?? kSistrumHeaderControlSize) / 2,
               ),
               color: scheme.onSurface.withValues(
                 alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
               ),
               onPressed: onPressed,
               child: Icon(
-                mornyeIconFor(icon),
+                sistrumIconFor(icon),
                 size: iconSize,
                 color: onPressed == null
                     ? scheme.onSurfaceVariant
@@ -813,20 +813,20 @@ class HeaderCircleButton extends ConsumerWidget {
           ),
         );
       }
-      final blurEnabled = ref.watch(mornyeBlurEnabledProvider);
+      final blurEnabled = ref.watch(sistrumBlurEnabledProvider);
       final button = IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        icon: Icon(mornyeIconFor(icon), size: iconSize),
+        icon: Icon(sistrumIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
-          minimumSize: Size.square(buttonSize ?? kMornyeHeaderControlSize),
+          minimumSize: Size.square(buttonSize ?? kSistrumHeaderControlSize),
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
       return Center(
         widthFactor: 1,
-        child: MornyeGlass.navigation(
-          radius: (buttonSize ?? kMornyeHeaderControlSize) / 2,
+        child: SistrumGlass.navigation(
+          radius: (buttonSize ?? kSistrumHeaderControlSize) / 2,
           tintColor:
               glassTintColor ??
               (scheme.brightness == Brightness.dark
@@ -836,7 +836,7 @@ class HeaderCircleButton extends ConsumerWidget {
               glassTintOpacity ??
               (scheme.brightness == Brightness.dark ? 0.45 : 0.55),
           blurEnabled: blurEnabled,
-          allowLens: mornyeLiquidChromeEnabled(context, ref),
+          allowLens: sistrumLiquidChromeEnabled(context, ref),
           child: button,
         ),
       );
@@ -844,8 +844,8 @@ class HeaderCircleButton extends ConsumerWidget {
   }
 }
 
-class _MornyeHeaderButton extends StatelessWidget {
-  const _MornyeHeaderButton({
+class _SistrumHeaderButton extends StatelessWidget {
+  const _SistrumHeaderButton({
     required this.icon,
     required this.label,
     required this.onPressed,

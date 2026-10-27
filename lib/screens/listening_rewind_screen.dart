@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
@@ -13,16 +13,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/services/listening_rewind.dart';
-import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/widgets/app_action_button.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_content_card.dart';
-import 'package:spotiflac_android/widgets/app_loading_indicator.dart';
-import 'package:spotiflac_android/widgets/player_artwork.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/services/listening_rewind.dart';
+import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/widgets/app_action_button.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_content_card.dart';
+import 'package:sistrum/widgets/app_loading_indicator.dart';
+import 'package:sistrum/widgets/player_artwork.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 final listeningRewindProvider = FutureProvider.autoDispose
     .family<ListeningRewind, ListeningRewindPeriod>((ref, period) async {
@@ -174,7 +174,7 @@ class _MonthlyRewindBanner extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    // Mornye keeps its neutral control fill and accent tint.
+    // Sistrum keeps its neutral control fill and accent tint.
     final foreground = colors.onSurface;
     final accent = colors.primary;
     final onAccent = colors.onPrimary;
@@ -593,7 +593,7 @@ class _RewindStoryState extends State<_RewindStory>
       image.dispose();
       if (bytes == null) return;
       final directory = await getTemporaryDirectory();
-      final file = File('${directory.path}/spotiflac_rewind.png');
+      final file = File('${directory.path}/sistrum_rewind.png');
       await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
       await SharePlus.instance.share(
         ShareParams(
@@ -783,7 +783,7 @@ class _StoryProgress extends StatelessWidget {
 }
 
 /// Colors of one slide. Material cycles through the tonal containers;
-/// Mornye stays dark over blurred artwork.
+/// Sistrum stays dark over blurred artwork.
 class _RewindPalette {
   const _RewindPalette(this.background, this.foreground, this.accent);
 
@@ -1181,7 +1181,7 @@ class _RewindSlide extends StatelessWidget {
   }
 }
 
-/// Artwork the Mornye backdrop shows behind [slide].
+/// Artwork the Sistrum backdrop shows behind [slide].
 String? _slideArtwork(_Slide slide, ListeningRewind rewind) => switch (slide) {
   _Slide.topArtist ||
   _Slide.artists ||
@@ -1198,7 +1198,7 @@ String? _slideArtwork(_Slide slide, ListeningRewind rewind) => switch (slide) {
 /// One background behind every slide, so colors blend while swiping.
 ///
 /// Material floats large expressive shapes that drift, turn and follow the
-/// swipe. Mornye cross-fades the slides' blurred artwork while it slowly
+/// swipe. Sistrum cross-fades the slides' blurred artwork while it slowly
 /// zooms. Reduced motion keeps the shapes and artwork still.
 class _RewindBackdrop extends StatefulWidget {
   const _RewindBackdrop({
@@ -1258,13 +1258,13 @@ class _RewindBackdropState extends State<_RewindBackdrop>
           final to = math.min(from + 1, last);
           final blend = page - from;
           final t = _ambient.value * 2 * math.pi;
-          return _mornye(from, to, blend, t);
+          return _sistrum(from, to, blend, t);
         },
       ),
     ),
   );
 
-  Widget _mornye(int from, int to, double blend, double t) {
+  Widget _sistrum(int from, int to, double blend, double t) {
     Widget artwork(String? uri, double opacity) => uri == null || opacity <= 0
         ? const SizedBox.shrink()
         : Opacity(
@@ -1820,7 +1820,7 @@ class _Fact extends StatelessWidget {
   }
 }
 
-/// A neutral Mornye tile replaces upstream Expressive decorative shapes.
+/// A neutral Sistrum tile replaces upstream Expressive decorative shapes.
 class _RewindBadge extends StatelessWidget {
   const _RewindBadge({
     required this.size,

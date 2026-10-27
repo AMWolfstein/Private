@@ -1,5 +1,5 @@
-import 'package:spotiflac_android/services/playback_session_prepare.dart';
-import 'package:spotiflac_android/services/music_haptics.dart';
+import 'package:sistrum/services/playback_session_prepare.dart';
+import 'package:sistrum/services/music_haptics.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -8,7 +8,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/widgets.dart'
     show AppLifecycleState, WidgetsBinding, WidgetsBindingObserver;
-import 'package:spotiflac_android/services/playback_notification.dart';
+import 'package:sistrum/services/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show
         AudioDevice,
@@ -17,32 +17,32 @@ import 'package:audio_session/audio_session.dart'
         AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/services/listening_statistics.dart'
+import 'package:sistrum/services/listening_statistics.dart'
     show ListeningTrack;
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/sqlite_helpers.dart'
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/sqlite_helpers.dart'
     show normalizeLookupText;
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/services/playback_normalization.dart';
-import 'package:spotiflac_android/services/playback_automation.dart';
-import 'package:spotiflac_android/services/playback_session_writer.dart';
-import 'package:spotiflac_android/services/content_uri_playback_cache.dart';
-import 'package:spotiflac_android/services/music_player_runtime.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/automix_analysis.dart';
-import 'package:spotiflac_android/services/automix_phase_lock.dart';
-import 'package:spotiflac_android/services/autoplay_personalization.dart';
-import 'package:spotiflac_android/services/automix_analyzer.dart';
-import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/automix_effect_renderer.dart';
-import 'package:spotiflac_android/services/automix_status.dart';
-import 'package:spotiflac_android/utils/int_utils.dart';
-import 'package:spotiflac_android/utils/ios_container_paths.dart';
-import 'package:spotiflac_android/utils/playback_artwork.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/playback_normalization.dart';
+import 'package:sistrum/services/playback_automation.dart';
+import 'package:sistrum/services/playback_session_writer.dart';
+import 'package:sistrum/services/content_uri_playback_cache.dart';
+import 'package:sistrum/services/music_player_runtime.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/automix_analysis.dart';
+import 'package:sistrum/services/automix_phase_lock.dart';
+import 'package:sistrum/services/autoplay_personalization.dart';
+import 'package:sistrum/services/automix_analyzer.dart';
+import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/automix_effect_renderer.dart';
+import 'package:sistrum/services/automix_status.dart';
+import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/ios_container_paths.dart';
+import 'package:sistrum/utils/playback_artwork.dart';
+import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 export 'music_player_runtime.dart';
 export 'playback_metadata.dart';
@@ -927,7 +927,7 @@ class MusicPlayerHandler extends BaseAudioHandler
           MediaAction.skipToPrevious,
           MediaAction.skipToNext,
         },
-        androidCompactActionIndices: _runtime.notification.mornye
+        androidCompactActionIndices: _runtime.notification.sistrum
             ? const [1, 2, 3]
             : const [0, 1, 2],
         processingState: failed
@@ -961,7 +961,7 @@ class MusicPlayerHandler extends BaseAudioHandler
           item: mediaItem.value,
           shuffle: _shuffle,
         ),
-        androidCompactActionIndices: _runtime.notification.mornye
+        androidCompactActionIndices: _runtime.notification.sistrum
             ? const [1, 2, 3]
             : const [0, 1, 2],
       ),
@@ -976,7 +976,8 @@ class MusicPlayerHandler extends BaseAudioHandler
     String name, [
     Map<String, dynamic>? extras,
   ]) async {
-    if (name == PlaybackNotification.favoriteAction) {
+    if (name == PlaybackNotification.favoriteAction ||
+        name == PlaybackNotification.legacyFavoriteAction) {
       final item = mediaItem.value;
       if (item == null || _savingNotificationFavorite) return;
       _savingNotificationFavorite = true;
@@ -996,7 +997,8 @@ class MusicPlayerHandler extends BaseAudioHandler
       } finally {
         _savingNotificationFavorite = false;
       }
-    } else if (name == PlaybackNotification.shuffleAction) {
+    } else if (name == PlaybackNotification.shuffleAction ||
+        name == PlaybackNotification.legacyShuffleAction) {
       if (mediaItem.value == null || _changingNotificationShuffle) return;
       _changingNotificationShuffle = true;
       try {

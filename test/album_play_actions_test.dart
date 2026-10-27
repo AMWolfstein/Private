@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -26,7 +26,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: SistrumTheme.build(brightness),
                 home: MediaQuery(
                   data: MediaQueryData(
                     size: Size(width, 600),

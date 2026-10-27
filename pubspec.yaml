@@ -1,4 +1,4 @@
-name: spotiflac_android
+name: sistrum
 description: Local offline Android music player
 publish_to: "none"
 version: 5.1.1+168
@@ -100,8 +100,8 @@ flutter:
   generate: true
 
   shaders:
-    - assets/shaders/mornye_selection_mask.frag
-    - assets/shaders/mornye_artwork_glass.frag
+    - assets/shaders/sistrum_selection_mask.frag
+    - assets/shaders/sistrum_artwork_glass.frag
 
   assets:
     - assets/images/

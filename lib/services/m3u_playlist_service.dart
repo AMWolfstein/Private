@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/services/platform_bridge.dart';
 
 String _buildM3uInBackground(List<Map<String, dynamic>> entries) =>
     M3uPlaylistService.buildM3u8Content(

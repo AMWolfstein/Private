@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/services/deleted_library_files.dart';
-import 'package:spotiflac_android/utils/confirm_and_delete_tracks.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/deleted_library_files.dart';
+import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
+import 'package:sistrum/utils/file_access.dart';
 
 /// Confirms, then deletes the files behind [selected] and removes their
 /// history or local-index rows. Files that cannot be deleted keep their rows.

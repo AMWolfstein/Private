@@ -37,7 +37,7 @@ class PlayerWidgetTest {
             }
         }
         // Existing PendingIntent actions remain compatible across the rename.
-        assertEquals("com.zarz.spotiflac.PLAYER_WIDGET_ACTION", PlayerWidgetProvider.ACTION)
+        assertEquals("com.amwolfstein.sistrum.PLAYER_WIDGET_ACTION", PlayerWidgetProvider.ACTION)
     }
 
     @Test

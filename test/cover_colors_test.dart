@@ -4,8 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_color_utilities/hct/hct.dart';
-import 'package:spotiflac_android/services/cover_analysis_store.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_analysis_store.dart';
+import 'package:sistrum/theme/cover_palette.dart';
 
 double contrast(Color a, Color b) {
   final la = a.computeLuminance();
@@ -60,7 +60,7 @@ void main() {
   test('every screen takes its colour from one base, by tone only', () {
     for (final name in fixtures) {
       final analysis = analyses[name]!;
-      final colors = mornyeCoverColors(analysis);
+      final colors = sistrumCoverColors(analysis);
       final roles = {
         'surface (album and artist)': colors.surface,
         'player top': colors.playerStops[0],
@@ -98,7 +98,7 @@ void main() {
 
   test('text, icons and accents meet WCAG AA on their backgrounds', () {
     for (final name in fixtures) {
-      final colors = mornyeCoverColors(analyses[name]);
+      final colors = sistrumCoverColors(analyses[name]);
       void aa(Color fg, Color bg, double ratio, String what) => expect(
         contrast(fg, bg),
         greaterThanOrEqualTo(ratio),
@@ -122,7 +122,7 @@ void main() {
   test('the accent stays in harmony with the background', () {
     for (final name in fixtures) {
       final analysis = analyses[name]!;
-      final colors = mornyeCoverColors(analysis);
+      final colors = sistrumCoverColors(analysis);
       if (!colors.hasAccent) continue;
       final references = [
         if (!colors.neutral) colors.hue,
@@ -147,7 +147,7 @@ void main() {
   });
 
   test('covers keep their character', () {
-    CoverColors of(String name) => mornyeCoverColors(analyses[name]);
+    CoverColors of(String name) => sistrumCoverColors(analyses[name]);
     // The report's cover: a warm gray continuation, not deep rust.
     final qamar = of('qamar');
     expect(qamar.chroma, lessThan(16));
@@ -172,7 +172,7 @@ void main() {
   });
 
   test('no cover or an unreadable one stays neutral gray', () {
-    final colors = mornyeCoverColors(null);
+    final colors = sistrumCoverColors(null);
     expect(colors.neutral, isTrue);
     expect(colors.hasAccent, isFalse);
     expect(colors.accent, Colors.white);

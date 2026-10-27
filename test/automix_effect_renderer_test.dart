@@ -4,9 +4,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/services/audio_analysis_jobs.dart';
-import 'package:spotiflac_android/services/automix_effect_renderer.dart';
+import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/services/audio_analysis_jobs.dart';
+import 'package:sistrum/services/automix_effect_renderer.dart';
 
 void main() {
   late Directory temporary;
@@ -73,7 +73,7 @@ void main() {
   test(
     'real filters change pitch, attenuate highs, and generate delayed echoes',
     () async {
-      final ffmpeg = Platform.environment['SPOTIFLAC_TEST_FFMPEG'] ?? 'ffmpeg';
+      final ffmpeg = Platform.environment['SISTRUM_TEST_FFMPEG'] ?? 'ffmpeg';
       final probe = await Process.run(ffmpeg, ['-version']);
       expect(probe.exitCode, 0);
       final jobs = AudioAnalysisJobs<bool>(

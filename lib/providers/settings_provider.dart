@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/models/mornye_glass.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
-import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/utils/logger.dart';
 
 const _settingsKey = 'app_settings';
 const _settingsCorruptBackupKey = 'app_settings_corrupt_backup';
@@ -457,7 +457,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setGlassQuality(MornyeGlassQuality quality) {
+  void setGlassQuality(SistrumGlassQuality quality) {
     state = state.copyWith(glassQuality: quality.name);
     _saveSettings();
   }

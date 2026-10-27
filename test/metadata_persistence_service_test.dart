@@ -3,10 +3,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/metadata_cover_resources.dart';
-import 'package:spotiflac_android/services/metadata_persistence_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
+import 'package:sistrum/services/metadata_cover_resources.dart';
+import 'package:sistrum/services/metadata_persistence_service.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/artist_utils.dart';
 
 class _Covers extends MetadataCoverResources {
   bool failResize = false;

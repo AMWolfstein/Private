@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'package:spotiflac_android/services/listening_statistics.dart';
+import 'package:sistrum/services/listening_statistics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/services/library_database.dart';
 
 typedef ArtistTrackRequest = ({
   String artist,

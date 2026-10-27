@@ -1,9 +1,9 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
-import 'package:spotiflac_android/utils/path_match_keys.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/duplicate_quality_policy.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/utils/path_match_keys.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/duplicate_quality_policy.dart';
 
 /// Review physical copies, not index rows, so duplicates are grouped by the
 /// file on disk rather than by how it was indexed.

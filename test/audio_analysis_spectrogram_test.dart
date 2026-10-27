@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/widgets/audio_analysis_widget.dart';
 
 void main() {
   group('audio analysis codec support', () {

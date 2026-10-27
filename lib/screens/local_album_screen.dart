@@ -1,45 +1,45 @@
-import 'package:spotiflac_android/utils/release_date_display.dart';
-import 'package:spotiflac_android/widgets/error_card.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
+import 'package:sistrum/utils/release_date_display.dart';
+import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'dart:io';
 import 'dart:math';
-import 'package:spotiflac_android/widgets/track_detail_actions.dart';
+import 'package:sistrum/widgets/track_detail_actions.dart';
 import 'package:audio_service/audio_service.dart' show MediaItem;
-import 'package:spotiflac_android/services/deleted_library_files.dart';
+import 'package:sistrum/services/deleted_library_files.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/audio_quality_badge_policy.dart';
-import 'package:spotiflac_android/utils/confirm_and_delete_tracks.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/image_cache_utils.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/models/album_track_order.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/screens/collapsing_header_scroll_mixin.dart';
-import 'package:spotiflac_android/screens/selection_mode_mixin.dart';
-import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/widgets/album_track_tile.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/widgets/destructive_selection_button.dart';
-import 'package:spotiflac_android/widgets/selection_action_button.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/library_selection_playback_actions.dart';
-import 'package:spotiflac_android/widgets/disc_separator_chip.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
-import 'package:spotiflac_android/widgets/local_collection_actions.dart';
-import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
-import 'package:spotiflac_android/utils/clickable_metadata.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/audio_quality_badge_policy.dart';
+import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/image_cache_utils.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/models/album_track_order.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/screens/collapsing_header_scroll_mixin.dart';
+import 'package:sistrum/screens/selection_mode_mixin.dart';
+import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/album_track_tile.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/destructive_selection_button.dart';
+import 'package:sistrum/widgets/selection_action_button.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/library_selection_playback_actions.dart';
+import 'package:sistrum/widgets/disc_separator_chip.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/local_collection_actions.dart';
+import 'package:sistrum/widgets/local_library_artwork_builder.dart';
+import 'package:sistrum/utils/clickable_metadata.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -259,7 +259,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           ? albumCover
           : artworkTrack?.coverPath,
       filePath: artworkTrack?.filePath,
-      builder: (context, coverPath) => MornyeArtistSurface(
+      builder: (context, coverPath) => SistrumArtistSurface(
         imageSource: coverPath,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, coverPath)),
@@ -370,7 +370,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
               onPressed: exitSelectionMode,
             )
           : null,
-      immersive: context.isMornye,
+      immersive: context.isSistrum,
       squareArtwork: true,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,

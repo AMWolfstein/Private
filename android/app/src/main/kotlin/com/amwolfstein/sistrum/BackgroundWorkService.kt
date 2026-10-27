@@ -30,7 +30,7 @@ class BackgroundWorkService : Service() {
     companion object {
         private const val CHANNEL_ID = "background_work"
         private const val NOTIFICATION_ID = 1002
-        private const val WAKELOCK_TAG = "SpotiFLAC:BackgroundWorkWakeLock"
+        private const val WAKELOCK_TAG = "Sistrum:BackgroundWorkWakeLock"
         private const val WAKELOCK_TIMEOUT_MS = 30 * 60 * 1000L
         private const val WAKELOCK_RENEW_INTERVAL_MS = 15 * 60 * 1000L
 

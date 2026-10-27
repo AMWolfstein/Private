@@ -5,10 +5,10 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/widgets/player_lyrics.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/widgets/player_lyrics.dart';
 
 const _text = 'AAAA BBBB';
 const _lyrics = ParsedLyrics(
@@ -73,7 +73,7 @@ void main() {
       (tester) async {
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 2));
         addTearDown(preview.dispose);
-        final theme = MornyeTheme.build(Brightness.dark);
+        final theme = SistrumTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
@@ -129,16 +129,16 @@ void main() {
     );
   }
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'playing lyrics retain their painter and refresh stopped highlights ($mornye)',
+      'playing lyrics retain their painter and refresh stopped highlights ($sistrum)',
       (tester) async {
         final playback = StreamController<PlaybackState>.broadcast();
         final preview = ValueNotifier<Duration?>(null);
         addTearDown(playback.close);
         addTearDown(preview.dispose);
-        final theme = mornye
-            ? MornyeTheme.build(Brightness.dark)
+        final theme = sistrum
+            ? SistrumTheme.build(Brightness.dark)
             : ThemeData.dark();
         await tester.pumpWidget(
           ProviderScope(
@@ -205,7 +205,7 @@ void main() {
 
         await report(4, playing: true, state: AudioProcessingState.buffering);
         await tester.pumpAndSettle();
-        if (mornye) {
+        if (sistrum) {
           expect(_paint, findsNothing);
         } else {
           final buffered = await _pixels(tester);
@@ -304,7 +304,7 @@ void main() {
             ),
           ],
         );
-        final theme = MornyeTheme.build(Brightness.dark);
+        final theme = SistrumTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
@@ -398,7 +398,7 @@ void main() {
       );
       final preview = ValueNotifier<Duration?>(const Duration(seconds: focus));
       addTearDown(preview.dispose);
-      final theme = MornyeTheme.build(Brightness.dark);
+      final theme = SistrumTheme.build(Brightness.dark);
       var width = 420.0;
       Future<void> pumpView() => tester.pumpWidget(
         ProviderScope(

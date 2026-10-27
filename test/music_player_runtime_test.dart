@@ -8,17 +8,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/services/app_state_database.dart';
-import 'package:spotiflac_android/services/autoplay_personalization.dart';
-import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/playback_notification.dart';
-import 'package:spotiflac_android/services/source_deletion_events.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/services/app_state_database.dart';
+import 'package:sistrum/services/autoplay_personalization.dart';
+import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/playback_notification.dart';
+import 'package:sistrum/services/source_deletion_events.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/logger.dart';
 
 class _Deck implements MusicPlaybackDeck {
   @override
@@ -1497,14 +1497,14 @@ void main() {
       expect(secondDecks.single.outputOptions!.values, everyElement(isTrue));
       final toggled = <String>[];
       first.configureNotification(
-        presentation: const PlaybackNotification(mornye: true),
+        presentation: const PlaybackNotification(sistrum: true),
         toggleFavorite: (item) async {
           toggled.add('first:${item.id}');
           return true;
         },
       );
       second.configureNotification(
-        presentation: const PlaybackNotification(mornye: true),
+        presentation: const PlaybackNotification(sistrum: true),
         toggleFavorite: (item) async {
           toggled.add('second:${item.id}');
           return false;

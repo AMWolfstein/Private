@@ -13,9 +13,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.os.PowerManager
-import com.spotiflac.backend.UsbDirectOutput
-import com.spotiflac.backend.UsbOutputFormat
-import com.spotiflac.backend.UsbHardwareVolume
+import com.sistrum.backend.UsbDirectOutput
+import com.sistrum.backend.UsbOutputFormat
+import com.sistrum.backend.UsbHardwareVolume
 import io.flutter.plugin.common.MethodCall
 import java.nio.ByteBuffer
 
@@ -23,10 +23,10 @@ import java.nio.ByteBuffer
 internal class UsbDirectPlayback(private val context: Context, private val emit: (Map<String, Any>) -> Unit) {
     private val manager = context.getSystemService(UsbManager::class.java)
     private val main = Handler(Looper.getMainLooper())
-    private val thread = HandlerThread("SpotiFLAC-USB-source", android.os.Process.THREAD_PRIORITY_AUDIO).apply { start() }
+    private val thread = HandlerThread("Sistrum-USB-source", android.os.Process.THREAD_PRIORITY_AUDIO).apply { start() }
     private val worker = Handler(thread.looper)
     private val wakeLock = context.getSystemService(PowerManager::class.java)
-        .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SpotiFLAC:UsbDirect")
+        .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Sistrum:UsbDirect")
     private val permissionAction = "${context.packageName}.USB_AUDIO_PERMISSION"
     private data class Permission(val device: UsbDevice, val call: MethodCall, val revision: Int, val done: (Any?, String?) -> Unit)
     private var permission: Permission? = null

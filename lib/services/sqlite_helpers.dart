@@ -1,14 +1,14 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/utils/path_match_keys.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:unorm_dart/unorm_dart.dart' as unicode;
 
 final _log = AppLogger('AppSqlite');
 
 Future<bool>? _trigramFts5Capability;
-const _trigramFts5ProbeTable = 'spotiflac_trigram_fts5_probe';
+const _trigramFts5ProbeTable = 'sistrum_trigram_fts5_probe';
 
 /// Caches an asynchronously-created value while also coalescing concurrent
 /// callers onto the same in-flight initialization.

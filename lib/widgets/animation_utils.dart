@@ -217,7 +217,7 @@ class TrackListSkeleton extends StatelessWidget {
               if (showCoverHeader)
                 const _CollectionHeaderSkeleton(showSubtitle: false),
               for (var index = 0; index < itemCount; index++)
-                _MornyeTrackSkeleton(
+                _SistrumTrackSkeleton(
                   numbered: false,
                   index: index,
                   showPreview: true,
@@ -251,7 +251,7 @@ class AlbumTrackListSkeleton extends StatelessWidget {
             children: [
               if (showCoverHeader) const _CollectionHeaderSkeleton(),
               for (var index = 0; index < itemCount; index++)
-                _MornyeTrackSkeleton(
+                _SistrumTrackSkeleton(
                   numbered: true,
                   index: index,
                   showPreview: true,
@@ -264,7 +264,7 @@ class AlbumTrackListSkeleton extends StatelessWidget {
   }
 }
 
-/// Mirrors each theme's collection header, including Mornye's full-width
+/// Mirrors each theme's collection header, including Sistrum's full-width
 /// square artwork and compact primary action between two circular controls.
 class _CollectionHeaderSkeleton extends StatelessWidget {
   const _CollectionHeaderSkeleton({this.showSubtitle = true});
@@ -360,8 +360,8 @@ class _CollectionHeaderSkeleton extends StatelessWidget {
   }
 }
 
-class _MornyeTrackSkeleton extends StatelessWidget {
-  const _MornyeTrackSkeleton({
+class _SistrumTrackSkeleton extends StatelessWidget {
+  const _SistrumTrackSkeleton({
     required this.numbered,
     required this.index,
     this.showPreview = false,

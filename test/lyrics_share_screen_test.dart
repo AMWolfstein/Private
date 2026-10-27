@@ -1,13 +1,13 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/screens/lyrics_share_screen.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/screens/lyrics_share_screen.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -46,7 +46,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: LyricsShareScreen(
@@ -108,7 +108,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: LyricsShareScreen(
@@ -137,7 +137,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: LyricsShareScreen(
@@ -184,7 +184,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: SistrumTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (context, child) => MediaQuery(

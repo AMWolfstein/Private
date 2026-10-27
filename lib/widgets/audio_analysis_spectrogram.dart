@@ -167,9 +167,9 @@ class _SpectrogramView extends StatelessWidget {
       ),
     );
     // The plot stays black in both appearances; its controls need matching
-    // contrast even when the surrounding Mornye page uses the light theme.
+    // contrast even when the surrounding Sistrum page uses the light theme.
     return Theme(
-      data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+      data: SistrumTheme.fromContext(context, brightness: Brightness.dark),
       child: card,
     );
   }

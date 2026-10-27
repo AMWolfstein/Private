@@ -4,7 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('AutoplayLearning');
 const _modelKey = 'autoplay_learning_model_v1';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 /// The standard search field used by top-level app surfaces.
 ///
@@ -37,14 +37,14 @@ class AppSearchField extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
 
-  /// See [MornyeGlass.samplesBackdrop]: false where the field scrolls over
+  /// See [SistrumGlass.samplesBackdrop]: false where the field scrolls over
   /// the plain page background.
   final bool samplesBackdrop;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final sistrum = context.isSistrum;
     final radius = BorderRadius.circular(28);
 
     final field = ValueListenableBuilder<TextEditingValue>(
@@ -65,7 +65,7 @@ class AppSearchField extends StatelessWidget {
                   : IconButton(
                       tooltip: clearTooltip,
                       icon: Icon(
-                        mornye
+                        sistrum
                             ? CupertinoIcons.clear_circled_solid
                             : Icons.clear,
                       ),
@@ -76,24 +76,24 @@ class AppSearchField extends StatelessWidget {
                     )),
           border: OutlineInputBorder(
             borderRadius: radius,
-            borderSide: mornye
+            borderSide: sistrum
                 ? BorderSide.none
                 : BorderSide(color: colorScheme.outlineVariant),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: radius,
-            borderSide: mornye
+            borderSide: sistrum
                 ? BorderSide.none
                 : BorderSide(color: colorScheme.outlineVariant),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: radius,
-            borderSide: mornye
+            borderSide: sistrum
                 ? BorderSide.none
                 : BorderSide(color: colorScheme.primary, width: 2),
           ),
           filled: true,
-          fillColor: mornye ? Colors.transparent : settingsGroupColor(context),
+          fillColor: sistrum ? Colors.transparent : settingsGroupColor(context),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 16,
@@ -106,9 +106,9 @@ class AppSearchField extends StatelessWidget {
     );
 
     return Consumer(
-      builder: (context, ref, child) => MornyeGlass.navigation(
+      builder: (context, ref, child) => SistrumGlass.navigation(
         radius: 28,
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        blurEnabled: ref.watch(sistrumBlurEnabledProvider),
         samplesBackdrop: samplesBackdrop,
         child: child!,
       ),

@@ -1,21 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_action_button.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_action_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/services/cover_cache_manager.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/error_card.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/services/cover_cache_manager.dart';
+import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/error_card.dart';
 
 class CacheManagementPage extends ConsumerStatefulWidget {
   const CacheManagementPage({super.key});

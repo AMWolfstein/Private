@@ -457,7 +457,7 @@ impl FilePath {
             let mut nonce = [0; 16];
             getrandom::fill(&mut nonce).map_err(|error| io::Error::other(error.to_string()))?;
             let name = format!(
-                ".spotiflac-{}.partial",
+                ".sistrum-{}.partial",
                 nonce
                     .iter()
                     .map(|byte| format!("{byte:02x}"))

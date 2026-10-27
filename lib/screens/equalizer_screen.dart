@@ -5,20 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/equalizer_settings.dart';
-import 'package:spotiflac_android/providers/equalizer_provider.dart';
-import 'package:spotiflac_android/services/playback_equalizer.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_choice_chip.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/services/equalizer_preset_io.dart';
-import 'package:spotiflac_android/widgets/mornye_level_slider.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/equalizer_settings.dart';
+import 'package:sistrum/providers/equalizer_provider.dart';
+import 'package:sistrum/services/playback_equalizer.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/services/equalizer_preset_io.dart';
+import 'package:sistrum/widgets/sistrum_level_slider.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
-/// The retained Mornye Settings surfaces around the upstream per-player DSP.
+/// The retained Sistrum Settings surfaces around the upstream per-player DSP.
 class EqualizerScreen extends ConsumerWidget {
   const EqualizerScreen({super.key});
 
@@ -91,7 +91,7 @@ class EqualizerScreen extends ConsumerWidget {
               mimeType: 'application/json',
             ),
           ],
-          fileNameOverrides: ['spotiflac-equalizer.json'],
+          fileNameOverrides: ['sistrum-equalizer.json'],
           sharePositionOrigin: box == null
               ? null
               : box.localToGlobal(Offset.zero) & box.size,
@@ -174,7 +174,7 @@ class EqualizerScreen extends ConsumerWidget {
           Text('$label · ${value.toStringAsFixed(1)} $unit'),
           SizedBox(
             height: 48,
-            child: MornyeLevelSlider(
+            child: SistrumLevelSlider(
               value: value,
               min: min,
               max: max,
@@ -186,7 +186,7 @@ class EqualizerScreen extends ConsumerWidget {
         ],
       ),
     );
-    return MornyeSettingsTheme(
+    return SistrumSettingsTheme(
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -312,7 +312,7 @@ class EqualizerScreen extends ConsumerWidget {
                                     ),
                                     const SizedBox(height: 8),
                                     Expanded(
-                                      child: MornyeLevelSlider(
+                                      child: SistrumLevelSlider(
                                         vertical: true,
                                         knobRadius: 10,
                                         value: settings.gains[index],

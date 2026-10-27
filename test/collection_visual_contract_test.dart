@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/widgets/local_collection_actions.dart';
-import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/local_collection_actions.dart';
+import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
 
 const _track = Track(
   id: '1',
@@ -70,14 +70,14 @@ void main() {
         localLibraryProvider.overrideWith(_Library.new),
       ],
       child: MaterialApp(
-        theme: MornyeTheme.build(brightness),
+        theme: SistrumTheme.build(brightness),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       ),
     );
-    test('Mornye primary content retains readable contrast ($brightness)', () {
-      final scheme = MornyeTheme.build(brightness).colorScheme;
+    test('Sistrum primary content retains readable contrast ($brightness)', () {
+      final scheme = SistrumTheme.build(brightness).colorScheme;
       final first = scheme.primary.computeLuminance();
       final second = scheme.onPrimary.computeLuminance();
       final contrast =
@@ -109,7 +109,7 @@ void main() {
         expect(playlist.tonal, isTrue);
         expect(
           loved.iconColor,
-          MornyeTheme.build(brightness).colorScheme.error,
+          SistrumTheme.build(brightness).colorScheme.error,
         );
         final l10n = tester.element(find.byType(LocalCollectionActions)).l10n;
         await tester.tap(find.byTooltip(l10n.trackOptionRemoveFromLoved));
@@ -136,8 +136,8 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
-          final surface = tester.widget<MornyeArtistSurface>(
-            find.byType(MornyeArtistSurface),
+          final surface = tester.widget<SistrumArtistSurface>(
+            find.byType(SistrumArtistSurface),
           );
           final header =
               tester
@@ -165,7 +165,7 @@ void main() {
                 ).copyWith(textScaler: const TextScaler.linear(.5)),
                 child: Scaffold(
                   body: Center(
-                    child: MornyeSegmentedControl(
+                    child: SistrumSegmentedControl(
                       labels: const ['One', 'Two'],
                       selectedIndex: 0,
                       onChanged: (_) {},

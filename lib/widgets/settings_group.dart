@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
-import 'package:spotiflac_android/widgets/app_switch.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:sistrum/widgets/app_switch.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
 
 /// Background fill for grouped cards, matching the Settings group look. Blends a
 /// translucent overlay over the surface so it stays visible on AMOLED (pure
@@ -267,8 +267,8 @@ class SettingsItem extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
 
-  /// Show category icons in Mornye's top-level settings and search results.
-  final bool showIconInMornye;
+  /// Show category icons in Sistrum's top-level settings and search results.
+  final bool showIconInSistrum;
   final String title;
   final Widget? titleTrailing;
   final String? subtitle;
@@ -281,7 +281,7 @@ class SettingsItem extends StatelessWidget {
     super.key,
     this.icon,
     this.iconColor,
-    this.showIconInMornye = false,
+    this.showIconInSistrum = false,
     required this.title,
     this.titleTrailing,
     this.subtitle,
@@ -294,7 +294,7 @@ class SettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final showIcon = icon != null && (showIconInMornye);
+    final showIcon = icon != null && (showIconInSistrum);
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -410,7 +410,7 @@ class SettingsSwitchItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDisabled = !enabled || onChanged == null;
-    final showIcon = icon != null && !context.isMornye;
+    final showIcon = icon != null && !context.isSistrum;
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -657,7 +657,7 @@ class SettingsInfoCard extends StatelessWidget {
 
   final EdgeInsetsGeometry? margin;
 
-  /// Uses the shared glass surface in Mornye without changing Material cards.
+  /// Uses the shared glass surface in Sistrum without changing Material cards.
   final bool glass;
 
   @override
@@ -679,7 +679,7 @@ class SettingsInfoCard extends StatelessWidget {
         children: [
           if (icon != null) ...[
             Icon(
-              useGlass ? mornyeIconFor(icon!) : icon,
+              useGlass ? sistrumIconFor(icon!) : icon,
               size: 20,
               color: useGlass ? colorScheme.primary : foreground,
             ),
@@ -719,7 +719,7 @@ class SettingsInfoCard extends StatelessWidget {
             vertical: tokens.gapXs,
           ),
       child: useGlass
-          ? MornyeGlassPanel.overlay(child: content)
+          ? SistrumGlassPanel.overlay(child: content)
           : DecoratedBox(
               decoration: BoxDecoration(
                 color: background,

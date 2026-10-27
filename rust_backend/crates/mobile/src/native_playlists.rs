@@ -24,7 +24,7 @@ pub(crate) fn execute(
                 .filter(|parent| !parent.as_os_str().is_empty())
                 .unwrap_or(Path::new("."));
             let mut staging = tempfile::Builder::new()
-                .prefix(".spotiflac-m3u-")
+                .prefix(".sistrum-m3u-")
                 .tempfile_in(parent)
                 .map_err(|e| e.to_string())?;
             {

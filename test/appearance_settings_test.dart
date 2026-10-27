@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/constants/language_choices.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/mornye_glass.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/screens/settings/appearance_settings_page.dart';
-import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/constants/language_choices.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/screens/settings/appearance_settings_page.dart';
+import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 void main() {
   test('the Brazilian translation keeps its users after the code rename', () {
@@ -46,11 +46,11 @@ void main() {
   test(
     'old themes retain outlines and new themes serialize the preference',
     () {
-      expect(ThemeSettings.fromJson({}).mornyeGlassOutlines, isTrue);
-      const settings = ThemeSettings(mornyeGlassOutlines: false);
+      expect(ThemeSettings.fromJson({}).sistrumGlassOutlines, isTrue);
+      const settings = ThemeSettings(sistrumGlassOutlines: false);
       expect(ThemeSettings.fromJson(settings.toJson()), settings);
       expect(
-        settings.copyWith(useSystemFont: true).mornyeGlassOutlines,
+        settings.copyWith(useSystemFont: true).sistrumGlassOutlines,
         isFalse,
       );
       expect(settings, isNot(const ThemeSettings()));
@@ -75,8 +75,8 @@ void main() {
         expected,
       );
     }
-    expect(mornyeGlassQualityFromString('lite'), MornyeGlassQuality.lite);
-    expect(mornyeGlassQualityFromString('fancy'), MornyeGlassQuality.auto);
+    expect(sistrumGlassQualityFromString('lite'), SistrumGlassQuality.lite);
+    expect(sistrumGlassQualityFromString('fancy'), SistrumGlassQuality.auto);
     expect(AppSettings().toJson().containsKey('forceBackdropBlur'), isFalse);
   });
   test('custom accents keep text readable in both appearances', () {
@@ -87,10 +87,10 @@ void main() {
     }
 
     for (final brightness in Brightness.values) {
-      for (final accent in MornyeAccent.values.where(
-        (accent) => accent != MornyeAccent.red,
+      for (final accent in SistrumAccent.values.where(
+        (accent) => accent != SistrumAccent.red,
       )) {
-        final scheme = MornyeTheme.build(
+        final scheme = SistrumTheme.build(
           brightness,
           accent: accent,
         ).colorScheme;
@@ -128,14 +128,14 @@ void main() {
           // Low-end Android on auto renders flat, opaque glass.
           if (lowEnd) lowEndDeviceProvider.overrideWithValue(true),
         ],
-        child: MornyeThemeWrapper(
+        child: SistrumThemeWrapper(
           builder: (light, dark, mode) => MaterialApp(
             theme: light,
             darkTheme: dark,
             themeMode: mode,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const MornyeSettingsTheme(child: AppearanceSettingsPage()),
+            home: const SistrumSettingsTheme(child: AppearanceSettingsPage()),
           ),
         ),
       ),
@@ -183,34 +183,34 @@ void main() {
       'glass outlines toggle survives restart and local themes ($mode)',
       (tester) async {
         SharedPreferences.setMockInitialValues({
-          'theme_style': 'mornye',
+          'theme_style': 'sistrum',
           kThemeModeKey: mode.name,
         });
         final prefs = await SharedPreferences.getInstance();
         await openSettings(tester, prefs);
-        final toggle = find.byKey(const ValueKey('mornye-glass-outlines'));
+        final toggle = find.byKey(const ValueKey('sistrum-glass-outlines'));
         await tester.ensureVisible(toggle);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
-        expect(prefs.getBool(kMornyeGlassOutlinesKey), isFalse);
+        expect(prefs.getBool(kSistrumGlassOutlinesKey), isFalse);
         final context = tester.element(toggle);
         final container = ProviderScope.containerOf(context);
-        expect(container.read(mornyeGlassOutlinesProvider), isFalse);
-        expect(container.read(mornyeGlassClarityLevelProvider), 3);
+        expect(container.read(sistrumGlassOutlinesProvider), isFalse);
+        expect(container.read(sistrumGlassClarityLevelProvider), 3);
         await tester.pumpWidget(const SizedBox());
         await openSettings(tester, prefs);
         expect(
           ProviderScope.containerOf(
             tester.element(toggle),
-          ).read(mornyeGlassOutlinesProvider),
+          ).read(sistrumGlassOutlinesProvider),
           isFalse,
         );
         await tester.ensureVisible(toggle);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
-        expect(prefs.getBool(kMornyeGlassOutlinesKey), isTrue);
+        expect(prefs.getBool(kSistrumGlassOutlinesKey), isTrue);
         expect(tester.takeException(), isNull);
       },
     );
@@ -219,14 +219,14 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        'theme_style': 'mornye',
+        'theme_style': 'sistrum',
         kThemeModeKey: mode.name,
       });
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
-      final slider = find.byKey(const ValueKey('mornye-glass-clarity'));
+      final slider = find.byKey(const ValueKey('sistrum-glass-clarity'));
       final warning = find.byKey(
-        const ValueKey('mornye-glass-clear-performance'),
+        const ValueKey('sistrum-glass-clear-performance'),
       );
       await tester.ensureVisible(slider);
       await tester.pumpAndSettle();
@@ -239,7 +239,7 @@ void main() {
       expect(
         ProviderScope.containerOf(
           context,
-        ).read(mornyeGlassClarityLevelProvider),
+        ).read(sistrumGlassClarityLevelProvider),
         5,
       );
       // Crystal on full glass is the one costly combination.
@@ -263,7 +263,7 @@ void main() {
       SharedPreferences.setMockInitialValues({kThemeModeKey: mode.name});
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
-      final quality = find.byKey(const ValueKey('mornye-glass-quality'));
+      final quality = find.byKey(const ValueKey('sistrum-glass-quality'));
       await tester.ensureVisible(quality);
       await tester.pumpAndSettle();
       for (final label in ['Auto', 'Lite', 'Full', 'Off']) {
@@ -277,14 +277,14 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(savedGlass(prefs)['glassQuality'], 'lite');
-      final slider = find.byKey(const ValueKey('mornye-glass-clarity'));
+      final slider = find.byKey(const ValueKey('sistrum-glass-clarity'));
       await tester.ensureVisible(slider);
       await tester.pumpAndSettle();
       await tester.drag(slider, const Offset(320, 0));
       await tester.pumpAndSettle();
       // Lite Crystal has no refraction cost, so no warning.
       expect(
-        find.byKey(const ValueKey('mornye-glass-clear-performance')),
+        find.byKey(const ValueKey('sistrum-glass-clear-performance')),
         findsNothing,
       );
 
@@ -301,7 +301,7 @@ void main() {
       expect(
         tester
             .widget<Text>(
-              find.byKey(const ValueKey('mornye-glass-clarity-unavailable')),
+              find.byKey(const ValueKey('sistrum-glass-clarity-unavailable')),
             )
             .data,
         'Glass is off. Choose Auto, Lite or Full to adjust clarity.',
@@ -320,14 +320,14 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        'theme_style': 'mornye',
+        'theme_style': 'sistrum',
         kThemeModeKey: mode.name,
       });
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs, lowEnd: true);
-      final slider = find.byKey(const ValueKey('mornye-glass-clarity'));
+      final slider = find.byKey(const ValueKey('sistrum-glass-clarity'));
       final hint = find.byKey(
-        const ValueKey('mornye-glass-clarity-unavailable'),
+        const ValueKey('sistrum-glass-clarity-unavailable'),
       );
       await tester.ensureVisible(slider);
       await tester.pumpAndSettle();
@@ -342,7 +342,7 @@ void main() {
       expect(tester.widget<Slider>(slider).value, 3);
       expect(prefs.getString('app_settings'), isNull);
 
-      final quality = find.byKey(const ValueKey('mornye-glass-quality'));
+      final quality = find.byKey(const ValueKey('sistrum-glass-quality'));
       await tester.ensureVisible(quality);
       await tester.pumpAndSettle();
       await tester.tap(
@@ -368,26 +368,26 @@ void main() {
         tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
       );
       SharedPreferences.setMockInitialValues({
-        'theme_style': 'mornye',
+        'theme_style': 'sistrum',
         kThemeModeKey: mode.name,
       });
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
-      final slider = find.byKey(const ValueKey('mornye-glass-clarity'));
+      final slider = find.byKey(const ValueKey('sistrum-glass-clarity'));
       await tester.ensureVisible(slider);
       await tester.pumpAndSettle();
       expect(tester.widget<Slider>(slider).onChanged, isNull);
       expect(
         tester
             .widget<Text>(
-              find.byKey(const ValueKey('mornye-glass-clarity-unavailable')),
+              find.byKey(const ValueKey('sistrum-glass-clarity-unavailable')),
             )
             .data,
         'Your system requests increased contrast, so glass stays opaque. '
         'Choose Lite or Full to use glass anyway; text contrast is '
         'preserved.',
       );
-      final quality = find.byKey(const ValueKey('mornye-glass-quality'));
+      final quality = find.byKey(const ValueKey('sistrum-glass-quality'));
       await tester.ensureVisible(quality);
       await tester.pumpAndSettle();
       await tester.tap(
@@ -398,7 +398,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.widget<Slider>(slider).onChanged, isNotNull);
       expect(
-        find.byKey(const ValueKey('mornye-glass-clarity-unavailable')),
+        find.byKey(const ValueKey('sistrum-glass-clarity-unavailable')),
         findsNothing,
       );
       expect(MediaQuery.highContrastOf(tester.element(slider)), isTrue);
@@ -417,11 +417,11 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('Mornye accent updates live and survives restart ($mode)', (
+    testWidgets('Sistrum accent updates live and survives restart ($mode)', (
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        'theme_style': 'mornye',
+        'theme_style': 'sistrum',
         kThemeModeKey: mode.name,
         'seed_color': 0xff123456,
       });
@@ -431,7 +431,7 @@ void main() {
       final initial = Theme.of(tester.element(page));
       expect(
         initial.colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.red, initial.brightness),
+        SistrumTheme.accentColor(SistrumAccent.red, initial.brightness),
       );
 
       final blue = find.byTooltip('Blue');
@@ -441,18 +441,18 @@ void main() {
       final theme = Theme.of(tester.element(page));
       expect(
         theme.colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.blue, theme.brightness),
+        SistrumTheme.accentColor(SistrumAccent.blue, theme.brightness),
       );
-      expect(prefs.getString(kMornyeAccentKey), 'blue');
+      expect(prefs.getString(kSistrumAccentKey), 'blue');
       expect(prefs.getInt('seed_color'), 0xff123456);
-      final overlay = MornyeTheme.fromContext(
+      final overlay = SistrumTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
       );
-      expect(overlay.extension<MornyeTheme>()!.accent, MornyeAccent.blue);
+      expect(overlay.extension<SistrumTheme>()!.accent, SistrumAccent.blue);
       expect(
         overlay.colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.blue, Brightness.dark),
+        SistrumTheme.accentColor(SistrumAccent.blue, Brightness.dark),
       );
 
       await tester.pumpWidget(const SizedBox());
@@ -472,13 +472,13 @@ void main() {
     });
   }
 
-  for (final style in ['mornye']) {
+  for (final style in ['sistrum']) {
     testWidgets(
       'system font persists and restores the default ($style)',
       (tester) async {
         SharedPreferences.setMockInitialValues({
           'theme_style': style,
-          kMornyeAccentKey: 'blue',
+          kSistrumAccentKey: 'blue',
           'use_dynamic_color': false,
         });
         final prefs = await SharedPreferences.getInstance();
@@ -500,13 +500,13 @@ void main() {
         final systemFamily = theme.textTheme.bodyLarge!.fontFamily;
         expect(systemFamily, isNot('Inter'));
         expect(prefs.getBool(kUseSystemFontKey), isTrue);
-        if (style == 'mornye') {
-          final overlay = MornyeTheme.fromContext(
+        if (style == 'sistrum') {
+          final overlay = SistrumTheme.fromContext(
             tester.element(page),
             brightness: Brightness.dark,
           );
-          expect(overlay.extension<MornyeTheme>()!.useSystemFont, isTrue);
-          expect(overlay.extension<MornyeTheme>()!.accent, MornyeAccent.blue);
+          expect(overlay.extension<SistrumTheme>()!.useSystemFont, isTrue);
+          expect(overlay.extension<SistrumTheme>()!.accent, SistrumAccent.blue);
           expect(overlay.textTheme.bodyLarge!.fontFamily, systemFamily);
         }
         await tester.pumpWidget(const SizedBox());

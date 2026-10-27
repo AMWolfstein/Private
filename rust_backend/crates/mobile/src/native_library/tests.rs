@@ -616,8 +616,8 @@ fn genre_keys_preserve_leading_separators_and_crlf_alignment() {
 fn rescan_preserves_legacy_ids_while_adding_a_legacy_hash_collision() {
     let fixture = Fixture::new();
     fixture.add("lib_legacy", "/music/Aa.flac", "source");
-    let first = spotiflac_core::tags::library_id("/music/Aa.flac");
-    let second = spotiflac_core::tags::library_id("/music/B@.flac");
+    let first = sistrum_core::tags::library_id("/music/Aa.flac");
+    let second = sistrum_core::tags::library_id("/music/B@.flac");
     fixture
         .scan(
             &[

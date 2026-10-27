@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus;
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/app_search_field.dart';
-import 'package:spotiflac_android/utils/ordered_range_selection.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/utils/ordered_range_selection.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
 
 class LogScreen extends ConsumerStatefulWidget {
   const LogScreen({super.key});

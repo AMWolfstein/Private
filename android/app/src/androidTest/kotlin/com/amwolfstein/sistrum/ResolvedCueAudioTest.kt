@@ -2,8 +2,8 @@ package com.amwolfstein.sistrum
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.spotiflac.backend.CancellationRegistry
-import com.spotiflac.backend.LocalBackend
+import com.sistrum.backend.CancellationRegistry
+import com.sistrum.backend.LocalBackend
 import android.os.ParcelFileDescriptor
 import java.io.File
 import org.json.JSONArray

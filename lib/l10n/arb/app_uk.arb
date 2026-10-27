@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "Шлях аудіо USB змінився. Відтворення призупинено; виберіть доріжку для повторного підключення.",
   "nowPlayingVolume": "Гучність",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Червоний (за замовчуванням)",
   "appearanceAccentOrange": "Помаранчевий",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Рожевий",
   "appearanceGlassClarity": "Прозорість скла",
   "appearanceGlassOutlines": "Контури скла",
-  "appearanceGlassOutlinesSubtitle": "Показувати світлу рамку навколо скла Mornye. Вимкнення не змінює сам ефект скла.",
-  "appearanceGlassClaritySubtitle": "Налаштуйте прозорість меню та навігації Mornye. Контрастність тексту зберігається.",
+  "appearanceGlassOutlinesSubtitle": "Показувати світлу рамку навколо скла Sistrum. Вимкнення не змінює сам ефект скла.",
+  "appearanceGlassClaritySubtitle": "Налаштуйте прозорість меню та навігації Sistrum. Контрастність тексту зберігається.",
   "appearanceGlassTinted": "Тонований",
   "appearanceGlassClear": "Очистити",
   "appearanceGlassClearPerformance": "Дуже прозоре скло може витрачати більше енергії та працювати менш плавно на старих пристроях. За потреби зменште прозорість.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Налаштовуйте відтворення, сканування медіатеки, тексти пісень, вигляд Mornye та локальне сховище.",
+  "tutorialSettingsDesc": "Налаштовуйте відтворення, сканування медіатеки, тексти пісень, вигляд Sistrum та локальне сховище.",
   "tutorialSettingsTip1": "Керуйте папками з музикою та доступом до локальних файлів",
   "tutorialSettingsTip2": "Налаштуйте локальну медіатеку, відтворення та оформлення.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Неповні альбоми",
   "libraryAlbumCompletenessUnknown": "Повнота альбому невідома",
   "libraryAlbumMissingTracks": "{present}/{expected} треків · відсутні: {missing}",
-  "mornyeSearch": "Пошук",
-  "mornyeContinuePlaying": "Продовжити відтворювання",
-  "mornyeFavorite": "Обране",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Пошук",
+  "sistrumContinuePlaying": "Продовжити відтворювання",
+  "sistrumFavorite": "Обране",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Перейти до виконавця",
-  "mornyeFavorited": "Додано до обраного",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Перейти до виконавця",
+  "sistrumFavorited": "Додано до обраного",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Поєднуйте композиції за допомогою синхронізації ритму та зміни темпу зі збереженням висоти тону. Використовує плавний перехід crossfade, якщо синхронізація ритму неможлива.",

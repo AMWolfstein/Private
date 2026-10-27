@@ -1,4 +1,4 @@
-import 'package:spotiflac_android/screens/lyrics_share_screen.dart';
+import 'package:sistrum/screens/lyrics_share_screen.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui' show ImageFilter;
@@ -13,32 +13,32 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/screens/now_playing_screen.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/widgets/mornye_volume_control.dart';
-import 'package:spotiflac_android/widgets/lyric_gap_indicator.dart';
-import 'package:spotiflac_android/widgets/mornye_player_queue.dart';
-import 'package:spotiflac_android/widgets/mornye_playback_button.dart';
-import 'package:spotiflac_android/widgets/mornye_playback_time.dart';
-import 'package:spotiflac_android/widgets/mornye_player_actions_sheet.dart';
-import 'package:spotiflac_android/widgets/mornye_player_favorite_button.dart';
-import 'package:spotiflac_android/widgets/mornye_player_details_sheet.dart';
-import 'package:spotiflac_android/widgets/mornye_metadata_row.dart';
-import 'package:spotiflac_android/widgets/mornye_artwork_glass.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/mornye_player_background.dart';
-import 'package:spotiflac_android/widgets/mini_player.dart';
-import 'package:spotiflac_android/widgets/playback_seek_slider.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/widgets/sistrum_volume_control.dart';
+import 'package:sistrum/widgets/lyric_gap_indicator.dart';
+import 'package:sistrum/widgets/sistrum_player_queue.dart';
+import 'package:sistrum/widgets/sistrum_playback_button.dart';
+import 'package:sistrum/widgets/sistrum_playback_time.dart';
+import 'package:sistrum/widgets/sistrum_player_actions_sheet.dart';
+import 'package:sistrum/widgets/sistrum_player_favorite_button.dart';
+import 'package:sistrum/widgets/sistrum_player_details_sheet.dart';
+import 'package:sistrum/widgets/sistrum_metadata_row.dart';
+import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/sistrum_player_background.dart';
+import 'package:sistrum/widgets/mini_player.dart';
+import 'package:sistrum/widgets/playback_seek_slider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -255,10 +255,10 @@ void main() {
 
   for (final brightness in [Brightness.light, Brightness.dark]) {
     testWidgets('swiping up the mini player opens the player '
-        '(Mornye: $brightness)', (tester) async {
+        '(Sistrum: $brightness)', (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(brightness),
+        theme: SistrumTheme.build(brightness),
         size: const Size(393, 852),
         // Paused, so the Material progress bar lets the frames settle.
         wrapPlayer: (_) => const Scaffold(
@@ -321,7 +321,7 @@ void main() {
   testWidgets('sharing reads document lyrics before opening the lyrics page', (
     tester,
   ) async {
-    await pumpNowPlaying(tester, theme: MornyeTheme.build(Brightness.dark));
+    await pumpNowPlaying(tester, theme: SistrumTheme.build(Brightness.dark));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
     expect(metadataReads, isEmpty);
@@ -338,7 +338,7 @@ void main() {
   });
 
   testWidgets('a track change cancels a pending lyrics share', (tester) async {
-    await pumpNowPlaying(tester, theme: MornyeTheme.build(Brightness.dark));
+    await pumpNowPlaying(tester, theme: SistrumTheme.build(Brightness.dark));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
@@ -357,13 +357,13 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'late duration refreshes the open Mornye player (dark: $mornye)',
+      'late duration refreshes the open Sistrum player (dark: $sistrum)',
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(mornye ? Brightness.dark : Brightness.light),
+          theme: SistrumTheme.build(sistrum ? Brightness.dark : Brightness.light),
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
             updatePosition: const Duration(seconds: 30),
@@ -407,7 +407,7 @@ void main() {
 
   for (final view in PlayerView.values) {
     for (final page in ['player', 'lyrics', 'queue']) {
-      testWidgets('cover swipe changes the track in the Mornye $page ($view)', (
+      testWidgets('cover swipe changes the track in the Sistrum $page ($view)', (
         tester,
       ) async {
         final queue = [item('first'), item('second')];
@@ -416,7 +416,7 @@ void main() {
         );
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playerView: view,
           queue: queue,
@@ -470,7 +470,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       glassLevel: 2,
       size: const Size(393, 852),
       playbackEvents: playback.stream,
@@ -491,7 +491,7 @@ void main() {
     final scroll = tester.widget<ListView>(list).controller!;
     final initial = scroll.offset;
     final pause = find.widgetWithIcon(
-      MornyePlaybackButton,
+      SistrumPlaybackButton,
       CupertinoIcons.pause_fill,
     );
     final touch = await tester.startGesture(
@@ -543,7 +543,7 @@ void main() {
         addTearDown(playbackEvents.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playbackEvents: playbackEvents.stream,
           wrapPlayer: (player) => Builder(
@@ -567,14 +567,14 @@ void main() {
             .hitTestable(at: Alignment.centerLeft)
             .first;
         final title = tester.getRect(titleFinder);
-        final volume = tester.getRect(find.byType(MornyeVolumeControl));
+        final volume = tester.getRect(find.byType(SistrumVolumeControl));
         expect(playingCover.width, playingCover.height);
         expect(playingCover.width, greaterThanOrEqualTo(393 * 0.84));
         expect(playingCover.left, greaterThan(0));
         expect(playingCover.bottom, lessThan(title.top));
         expect(
           find.descendant(
-            of: find.byType(MornyePlayerBackground),
+            of: find.byType(SistrumPlayerBackground),
             matching: cover,
           ),
           findsNothing,
@@ -596,7 +596,7 @@ void main() {
         expect(pausedCover.center.dx, closeTo(playingCover.center.dx, 0.01));
         expect(pausedCover.center.dy, closeTo(playingCover.center.dy, 0.01));
         expect(tester.getRect(titleFinder), title);
-        expect(tester.getRect(find.byType(MornyeVolumeControl)), volume);
+        expect(tester.getRect(find.byType(SistrumVolumeControl)), volume);
 
         playbackEvents.add(PlaybackState(playing: true));
         await settlePlayer(tester);
@@ -607,7 +607,7 @@ void main() {
     );
   }
 
-  testWidgets('Mornye lyrics keep wrapped, first and last lines at upper focus', (
+  testWidgets('Sistrum lyrics keep wrapped, first and last lines at upper focus', (
     tester,
   ) async {
     final lyrics = List.generate(100, (index) {
@@ -622,7 +622,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playback.stream,
     );
@@ -661,7 +661,7 @@ void main() {
   });
 
   for (final width in [393.0, 768.0]) {
-    testWidgets('Mornye lyrics fit the timeline without rewrapping ($width)', (
+    testWidgets('Sistrum lyrics fit the timeline without rewrapping ($width)', (
       tester,
     ) async {
       const original =
@@ -675,7 +675,7 @@ void main() {
           '[00:01.000]$original\n[00:15.000]Next line';
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: Size(width, 1024),
         playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
       );
@@ -732,7 +732,7 @@ void main() {
           final controller = _SeekController();
           await pumpNowPlaying(
             tester,
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: SistrumTheme.build(Brightness.dark),
             size: size,
             playbackEvents: playback.stream,
             controller: controller,
@@ -774,7 +774,7 @@ void main() {
               tester.getTopLeft(line).dy,
               closeTo(tester.getTopLeft(list).dy + focus + 16, 2),
             );
-            final label = tester.widget<MornyePlaybackTime>(
+            final label = tester.widget<SistrumPlaybackTime>(
               find.byKey(const ValueKey('elapsed:first')),
             );
             expect(label.seconds, seconds.floor());
@@ -847,7 +847,7 @@ void main() {
     final controller = _SeekController();
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 852),
       playbackEvents: playback.stream,
       controller: controller,
@@ -956,12 +956,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye landscape has no top handle or reserved toolbar height', (
+  testWidgets('Sistrum landscape has no top handle or reserved toolbar height', (
     tester,
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(
+      theme: SistrumTheme.build(
         Brightness.dark,
       ).copyWith(platform: TargetPlatform.android),
       size: const Size(900, 420),
@@ -984,7 +984,7 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: Size(393, height),
           playback: PlaybackState(updatePosition: const Duration(seconds: 30)),
           glassLevel: 2,
@@ -1009,7 +1009,7 @@ void main() {
         final headerTop = tester.getTopLeft(find.text('Second')).dy;
         final transport = find.byWidgetPredicate(
           (widget) =>
-              widget is MornyePlaybackButton &&
+              widget is SistrumPlaybackButton &&
               const [
                 CupertinoIcons.play_fill,
                 CupertinoIcons.backward_fill,
@@ -1103,7 +1103,7 @@ void main() {
         metadataOverrides['lyrics'] = '[00:00.00]$lyric\n[01:00.00]Second line';
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -1120,10 +1120,10 @@ void main() {
         final lyricsButton = find.byIcon(CupertinoIcons.quote_bubble);
         final queueButton = find.byIcon(CupertinoIcons.list_bullet);
         final play = find.widgetWithIcon(
-          MornyePlaybackButton,
+          SistrumPlaybackButton,
           CupertinoIcons.pause_fill,
         );
-        final volume = find.byType(MornyeVolumeControl);
+        final volume = find.byType(SistrumVolumeControl);
         await tester.tap(lyricsButton);
         await tester.pump();
         await completeLyrics(tester);
@@ -1204,7 +1204,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playbackEvents: playback.stream,
         );
@@ -1260,7 +1260,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playback: PlaybackState(playing: true),
         wrapPlayer: (player) => Builder(
@@ -1275,7 +1275,7 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       await settlePlayer(tester);
       await tester.pump(const Duration(seconds: 6));
-      expect(find.byType(MornyeVolumeControl).hitTestable(), findsOneWidget);
+      expect(find.byType(SistrumVolumeControl).hitTestable(), findsOneWidget);
       expect(
         find.byIcon(CupertinoIcons.quote_bubble).hitTestable(),
         findsOneWidget,
@@ -1284,7 +1284,7 @@ void main() {
     },
   );
 
-  testWidgets('Mornye player background does not reveal the page below', (
+  testWidgets('Sistrum player background does not reveal the page below', (
     tester,
   ) async {
     final background = ValueNotifier<Color>(Colors.white);
@@ -1292,7 +1292,7 @@ void main() {
     final capture = GlobalKey();
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.light),
+      theme: SistrumTheme.build(Brightness.light),
       size: const Size(393, 780),
       wrapPlayer: (player) => RepaintBoundary(
         key: capture,
@@ -1334,11 +1334,11 @@ void main() {
   });
 
   testWidgets(
-    'Mornye player menu floats above its button and retains dark colors',
+    'Sistrum player menu floats above its button and retains dark colors',
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: SistrumTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1348,7 +1348,7 @@ void main() {
       await tester.tap(moreButton);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 40));
-      final panel = find.byType(MornyePlayerActionsSheet);
+      final panel = find.byType(SistrumPlayerActionsSheet);
       final enteringWidth = tester.getSize(panel).width;
       await settlePlayer(tester);
       expect(tester.getSize(panel).width, enteringWidth);
@@ -1385,11 +1385,11 @@ void main() {
   );
 
   testWidgets(
-    'Mornye title opens artist and album destinations with subtitles',
+    'Sistrum title opens artist and album destinations with subtitles',
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1400,21 +1400,21 @@ void main() {
       expect(find.text('Go to Album'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(MornyePlayerNavigationMenu),
+          of: find.byType(SistrumPlayerNavigationMenu),
           matching: find.text('Artist'),
         ),
         findsOneWidget,
       );
       expect(
         find.descendant(
-          of: find.byType(MornyePlayerNavigationMenu),
+          of: find.byType(SistrumPlayerNavigationMenu),
           matching: find.text('Album'),
         ),
         findsOneWidget,
       );
       await tester.tapAt(const Offset(5, 770));
       await settlePlayer(tester);
-      expect(find.byType(MornyePlayerNavigationMenu), findsNothing);
+      expect(find.byType(SistrumPlayerNavigationMenu), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );
@@ -1431,7 +1431,7 @@ void main() {
     };
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(
+      theme: SistrumTheme.build(
         Brightness.dark,
       ).copyWith(platform: TargetPlatform.android),
       size: const Size(393, 852),
@@ -1446,8 +1446,8 @@ void main() {
     await settlePlayer(tester);
 
     expect(metadataReads, ['content://library/first.flac']);
-    final details = tester.widget<MornyePlayerDetailsSheet>(
-      find.byType(MornyePlayerDetailsSheet),
+    final details = tester.widget<SistrumPlayerDetailsSheet>(
+      find.byType(SistrumPlayerDetailsSheet),
     );
     expect(
       details.rows,
@@ -1465,7 +1465,7 @@ void main() {
   });
 
   testWidgets(
-    'Mornye Details keeps long values readable and Done visible while scrolling',
+    'Sistrum Details keeps long values readable and Done visible while scrolling',
     (tester) async {
       final rights = List.filled(10, 'A long copyright value').join(' ');
       metadataOverrides = {
@@ -1482,7 +1482,7 @@ void main() {
       };
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: SistrumTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(
@@ -1493,7 +1493,7 @@ void main() {
       await settlePlayer(tester);
       await tester.tap(find.text('Details'));
       await settlePlayer(tester);
-      final sheet = find.byType(MornyePlayerDetailsSheet);
+      final sheet = find.byType(SistrumPlayerDetailsSheet);
       expect(sheet, findsOneWidget);
       expect(Theme.of(tester.element(sheet)).brightness, Brightness.dark);
       expect(
@@ -1501,10 +1501,10 @@ void main() {
         findsNothing,
       );
       expect(
-        find.descendant(of: sheet, matching: find.byType(MornyeGlass)),
+        find.descendant(of: sheet, matching: find.byType(SistrumGlass)),
         findsOneWidget,
       );
-      final titleRow = find.widgetWithText(MornyeMetadataRow, 'Title');
+      final titleRow = find.widgetWithText(SistrumMetadataRow, 'Title');
       expect(
         tester
             .getTopLeft(
@@ -1531,11 +1531,11 @@ void main() {
   );
 
   testWidgets(
-    'Mornye star shares Library favorites across tracks and compact headers',
+    'Sistrum star shares Library favorites across tracks and compact headers',
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: SistrumTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1597,7 +1597,7 @@ void main() {
       await settlePlayer(tester);
       expect(find.byIcon(CupertinoIcons.star).hitTestable(), findsOneWidget);
       expect(
-        find.byType(MornyePlayerFavoriteButton).hitTestable(),
+        find.byType(SistrumPlayerFavoriteButton).hitTestable(),
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);
@@ -1618,7 +1618,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: layout == 'material' ? null : MornyeTheme.build(Brightness.dark),
+        theme: layout == 'material' ? null : SistrumTheme.build(Brightness.dark),
         size: layout == 'landscape'
             ? const Size(852, 393)
             : const Size(393, 852),
@@ -1771,14 +1771,14 @@ void main() {
     });
   }
 
-  testWidgets('Mornye lyrics stay blurred until playback starts', (
+  testWidgets('Sistrum lyrics stay blurred until playback starts', (
     tester,
   ) async {
     final playback = StreamController<PlaybackState>();
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playback.stream,
     );
@@ -1859,11 +1859,11 @@ void main() {
   });
 
   testWidgets(
-    'Mornye lyrics keep the active line sharp with bold leading-aligned text',
+    'Sistrum lyrics keep the active line sharp with bold leading-aligned text',
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: SistrumTheme.build(Brightness.light),
         size: const Size(393, 780),
         playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
       );
@@ -1899,11 +1899,11 @@ void main() {
   );
 
   testWidgets(
-    'Mornye queue replaces artwork while volume and playback stay in place',
+    'Sistrum queue replaces artwork while volume and playback stay in place',
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: SistrumTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1911,23 +1911,23 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       await settlePlayer(tester, const Duration(milliseconds: 16));
       expect(find.text('First lyric').hitTestable(), findsOneWidget);
-      final volume = tester.getRect(find.byType(MornyeVolumeControl));
+      final volume = tester.getRect(find.byType(SistrumVolumeControl));
       await tester.tap(find.byIcon(CupertinoIcons.list_bullet));
       await settlePlayer(tester, const Duration(milliseconds: 16));
-      expect(find.byType(MornyePlayerQueue), findsOneWidget);
+      expect(find.byType(SistrumPlayerQueue), findsOneWidget);
       expect(find.byType(BottomSheet), findsNothing);
-      expect(tester.getRect(find.byType(MornyeVolumeControl)), volume);
+      expect(tester.getRect(find.byType(SistrumVolumeControl)), volume);
       expect(tester.takeException(), isNull);
       await tester.tap(find.byIcon(CupertinoIcons.list_bullet));
       await tester.pump();
       expect(find.text('First lyric'), findsNothing);
       await tester.pump(const Duration(milliseconds: 120));
       expect(find.text('First lyric'), findsNothing);
-      expect(find.byType(MornyePlayerQueue), findsOneWidget);
-      expect(find.byType(MornyePlayerQueue).hitTestable(), findsNothing);
+      expect(find.byType(SistrumPlayerQueue), findsOneWidget);
+      expect(find.byType(SistrumPlayerQueue).hitTestable(), findsNothing);
       await settlePlayer(tester, const Duration(milliseconds: 16));
-      expect(find.byType(MornyePlayerQueue), findsNothing);
-      expect(tester.getRect(find.byType(MornyeVolumeControl)), volume);
+      expect(find.byType(SistrumPlayerQueue), findsNothing);
+      expect(tester.getRect(find.byType(SistrumVolumeControl)), volume);
     },
   );
 
@@ -1939,7 +1939,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playbackEvents: playback.stream,
         );
@@ -1947,7 +1947,7 @@ void main() {
         mediaItems.add(item('first'));
         await settlePlayer(tester);
         final pause = find.widgetWithIcon(
-          MornyePlaybackButton,
+          SistrumPlaybackButton,
           CupertinoIcons.pause_fill,
         );
         final pauseBounds = tester.getRect(pause);
@@ -1958,12 +1958,12 @@ void main() {
         final next = find.byIcon(CupertinoIcons.forward_fill);
         final previousBounds = tester.getRect(previous);
         final nextBounds = tester.getRect(next);
-        final volumeBounds = tester.getRect(find.byType(MornyeVolumeControl));
+        final volumeBounds = tester.getRect(find.byType(SistrumVolumeControl));
 
         playback.add(PlaybackState(playing: false));
         await settlePlayer(tester);
         final play = find.widgetWithIcon(
-          MornyePlaybackButton,
+          SistrumPlaybackButton,
           CupertinoIcons.play_fill,
         );
         final playSize = tester.getSize(find.byIcon(CupertinoIcons.play_fill));
@@ -1972,7 +1972,7 @@ void main() {
         expect(tester.getRect(play), pauseBounds);
         expect(tester.getRect(previous), previousBounds);
         expect(tester.getRect(next), nextBounds);
-        expect(tester.getRect(find.byType(MornyeVolumeControl)), volumeBounds);
+        expect(tester.getRect(find.byType(SistrumVolumeControl)), volumeBounds);
 
         playback.add(PlaybackState(playing: true));
         await settlePlayer(tester);
@@ -1986,21 +1986,21 @@ void main() {
     );
   }
 
-  testWidgets('Mornye player renders Apple-style transport controls', (
+  testWidgets('Sistrum player renders Apple-style transport controls', (
     tester,
   ) async {
-    await pumpNowPlaying(tester, theme: MornyeTheme.build(Brightness.light));
+    await pumpNowPlaying(tester, theme: SistrumTheme.build(Brightness.light));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
     expect(find.byIcon(CupertinoIcons.play_fill), findsOneWidget);
     expect(find.byIcon(CupertinoIcons.backward_fill), findsOneWidget);
     expect(find.byIcon(CupertinoIcons.forward_fill), findsOneWidget);
-    expect(find.byType(MornyeVolumeControl), findsOneWidget);
+    expect(find.byType(SistrumVolumeControl), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     final nextButton = find.widgetWithIcon(
-      MornyePlaybackButton,
+      SistrumPlaybackButton,
       CupertinoIcons.forward_fill,
     );
     final nextState = tester.state(nextButton);
@@ -2009,14 +2009,14 @@ void main() {
     expect(tester.state(nextButton), same(nextState));
   });
 
-  testWidgets('Mornye elapsed and remaining times roll on the same second', (
+  testWidgets('Sistrum elapsed and remaining times roll on the same second', (
     tester,
   ) async {
     final playbackEvents = StreamController<PlaybackState>();
     addTearDown(playbackEvents.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playbackEvents.stream,
     );
@@ -2042,11 +2042,11 @@ void main() {
     final remaining = find.byKey(const ValueKey('remaining:first'));
     void expectTimes(int elapsedSeconds, int remainingSeconds) {
       expect(
-        tester.widget<MornyePlaybackTime>(elapsed).seconds,
+        tester.widget<SistrumPlaybackTime>(elapsed).seconds,
         elapsedSeconds,
       );
       expect(
-        tester.widget<MornyePlaybackTime>(remaining).seconds,
+        tester.widget<SistrumPlaybackTime>(remaining).seconds,
         remainingSeconds,
       );
     }
@@ -2055,12 +2055,12 @@ void main() {
     await settlePlayer(tester);
     expectTimes(34, 146);
     final transport = tester
-        .widgetList<MornyePlaybackButton>(find.byType(MornyePlaybackButton))
+        .widgetList<SistrumPlaybackButton>(find.byType(SistrumPlaybackButton))
         .toList();
     await positionAt(34800);
     expectTimes(34, 146);
     final updatedTransport = tester
-        .widgetList<MornyePlaybackButton>(find.byType(MornyePlaybackButton))
+        .widgetList<SistrumPlaybackButton>(find.byType(SistrumPlaybackButton))
         .toList();
     for (var i = 0; i < transport.length; i++) {
       expect(updatedTransport[i], same(transport[i]));
@@ -2097,18 +2097,18 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye volume stays above the bottom actions on a phone', (
+  testWidgets('Sistrum volume stays above the bottom actions on a phone', (
     tester,
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 700),
     );
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
-    final volume = find.byType(MornyeVolumeControl);
+    final volume = find.byType(SistrumVolumeControl);
     final lyricsButton = find.byIcon(CupertinoIcons.quote_bubble);
     final slider = find.descendant(of: volume, matching: find.byType(Slider));
     expect(
@@ -2129,11 +2129,11 @@ void main() {
   });
 
   testWidgets(
-    'Mornye landscape opens the player and reveals hidden lyric actions on a bottom tap',
+    'Sistrum landscape opens the player and reveals hidden lyric actions on a bottom tap',
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playback: PlaybackState(playing: true),
       );
@@ -2146,7 +2146,7 @@ void main() {
       await settlePlayer(tester);
 
       final artwork = find.byType(Hero);
-      final volume = find.byType(MornyeVolumeControl);
+      final volume = find.byType(SistrumVolumeControl);
       final artRect = tester.getRect(artwork);
       expect(artRect.width, closeTo(artRect.height, 0.1));
       expect(artRect.width, greaterThan(140));
@@ -2245,30 +2245,30 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 852),
       playerView: PlayerView.immersive,
     );
     mediaItems.add(item('first'));
     await settlePlayer(tester);
-    final background = tester.element(find.byType(MornyePlayerBackground));
+    final background = tester.element(find.byType(SistrumPlayerBackground));
     expect(
       tester
-          .widget<MornyePlayerBackground>(find.byType(MornyePlayerBackground))
+          .widget<SistrumPlayerBackground>(find.byType(SistrumPlayerBackground))
           .fadeStart,
       .72,
     );
     tester.view.physicalSize = const Size(852, 393);
     await settlePlayer(tester);
     expect(
-      tester.element(find.byType(MornyePlayerBackground)),
+      tester.element(find.byType(SistrumPlayerBackground)),
       same(background),
     );
     expect(find.byKey(const ValueKey('full-player-artwork')), findsOneWidget);
     tester.view.physicalSize = const Size(393, 852);
     await settlePlayer(tester);
     expect(
-      tester.element(find.byType(MornyePlayerBackground)),
+      tester.element(find.byType(SistrumPlayerBackground)),
       same(background),
     );
     expect(
@@ -2283,7 +2283,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playerView: PlayerView.immersive,
       );
@@ -2321,7 +2321,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: size,
           playerView: PlayerView.immersive,
           playback: PlaybackState(playing: false),
@@ -2343,7 +2343,7 @@ void main() {
           );
           expect(
             find.descendant(
-              of: find.byType(MornyePlayerBackground),
+              of: find.byType(SistrumPlayerBackground),
               matching: full,
             ),
             findsOneWidget,
@@ -2375,7 +2375,7 @@ void main() {
             find.byIcon(CupertinoIcons.list_bullet).hitTestable(),
           );
           await settlePlayer(tester);
-          expect(find.byType(MornyePlayerQueue).hitTestable(), findsOneWidget);
+          expect(find.byType(SistrumPlayerQueue).hitTestable(), findsOneWidget);
           await tester.tap(
             find.byKey(const ValueKey('compact-player-artwork')),
           );
@@ -2392,11 +2392,11 @@ void main() {
   for (final view in PlayerView.values) {
     for (final drag in [false, true]) {
       testWidgets(
-        'Mornye minimizes into the current mini player ($view, drag: $drag)',
+        'Sistrum minimizes into the current mini player ($view, drag: $drag)',
         (tester) async {
           await pumpNowPlaying(
             tester,
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: SistrumTheme.build(Brightness.dark),
             playerView: view,
             size: const Size(393, 852),
             playback: PlaybackState(playing: true),
@@ -2440,7 +2440,7 @@ void main() {
           }
           final releasedCover = tester.getRect(fullCover);
           final releasedPanel = tester.getRect(
-            find.byType(MornyePlayerBackground),
+            find.byType(SistrumPlayerBackground),
           );
           if (drag) {
             route.endDrag(DragEndDetails(primaryVelocity: 0), 852);
@@ -2482,7 +2482,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: const Size(393, 852),
         );
         mediaItems.add(item('first'));
@@ -2494,11 +2494,11 @@ void main() {
         final element = tester.element(header);
         final expandedBounds = tester.getRect(header);
         final play = find.widgetWithIcon(
-          MornyePlaybackButton,
+          SistrumPlaybackButton,
           CupertinoIcons.play_fill,
         );
         final controlsBounds = tester.getRect(play);
-        final favorite = find.byType(MornyePlayerFavoriteButton);
+        final favorite = find.byType(SistrumPlayerFavoriteButton);
         final favoriteState = tester.state(favorite);
         for (var visit = 0; visit < 2; visit++) {
           await tester.tap(toggle);
@@ -2568,7 +2568,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playback: PlaybackState(
             playing: playing,
@@ -2616,7 +2616,7 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
@@ -2656,7 +2656,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 852),
     );
     mediaItems.add(item('first'));
@@ -2697,7 +2697,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 852),
       wrapPlayer: (player) => Builder(
         builder: (context) => MediaQuery(
@@ -2729,12 +2729,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye lyrics replace artwork while controls stay in place', (
+  testWidgets('Sistrum lyrics replace artwork while controls stay in place', (
     tester,
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(393, 700),
     );
     mediaItems.add(item('first'));
@@ -2743,7 +2743,7 @@ void main() {
     final artwork = find.byType(Hero);
     final fullArtwork = tester.getRect(artwork);
     expect(fullArtwork.height, fullArtwork.width);
-    final volume = find.byType(MornyeVolumeControl);
+    final volume = find.byType(SistrumVolumeControl);
     final volumeRect = tester.getRect(volume);
     final play = find.byIcon(CupertinoIcons.play_fill);
     final playRect = tester.getRect(play);
@@ -2815,10 +2815,10 @@ void main() {
     (tester) async {
       metadataOverrides['composer'] = 'Example Composer';
       metadataOverrides['lyrics'] =
-          '[by:SpotiFLAC-Mobile via Example Lyrics API (source: upstream)]\n[00:01]Last lyric';
+          '[by:\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043-Mobile via Example Lyrics API (source: upstream)]\n[00:01]Last lyric';
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -2854,7 +2854,7 @@ void main() {
     ].join('\n');
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(390, 844),
       playback: PlaybackState(
         processingState: AudioProcessingState.ready,
@@ -2899,7 +2899,7 @@ void main() {
           '[00:01.009]Original';
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -2912,15 +2912,15 @@ void main() {
       } else {
         await tester.tap(options);
         await settlePlayer(tester);
-        final glass = tester.widget<MornyeGlassPanel>(
-          find.byType(MornyeGlassPanel).last,
+        final glass = tester.widget<SistrumGlassPanel>(
+          find.byType(SistrumGlassPanel).last,
         );
         // Over the player the menu draws from its artwork: no backdrop read.
-        final panel = find.byType(MornyeGlassPanel).last;
+        final panel = find.byType(SistrumGlassPanel).last;
         expect(
           find.descendant(
             of: panel,
-            matching: find.byType(MornyeArtworkGlassSurface),
+            matching: find.byType(SistrumArtworkGlassSurface),
           ),
           findsOneWidget,
         );
@@ -2954,7 +2954,7 @@ void main() {
             '[00:01.009]Original';
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: landscape ? const Size(844, 390) : const Size(390, 844),
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -3002,9 +3002,9 @@ void main() {
     );
   }
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'TTML V3 without group metadata keeps the primary side ($mornye)',
+      'TTML V3 without group metadata keeps the primary side ($sistrum)',
       (tester) async {
         metadataOverrides['lyrics'] = '''
 <tt xmlns="http://www.w3.org/ns/ttml" xmlns:m="http://www.w3.org/ns/ttml#metadata">
@@ -3015,13 +3015,13 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
         mediaItems.add(item('first'));
         await settlePlayer(tester);
-        if (mornye) {
+        if (sistrum) {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         } else {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
@@ -3051,7 +3051,7 @@ void main() {
 
     for (final ttml in [false, true]) {
       testWidgets(
-        'backing vocals stay smaller under the lead with independent timing (Mornye: $mornye, TTML: $ttml)',
+        'backing vocals stay smaller under the lead with independent timing (Sistrum: $sistrum, TTML: $ttml)',
         (tester) async {
           metadataOverrides['lyrics'] = ttml
               ? '''
@@ -3068,13 +3068,13 @@ void main() {
           addTearDown(playback.close);
           await pumpNowPlaying(
             tester,
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+            theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
             size: const Size(390, 1100),
             playbackEvents: playback.stream,
           );
           mediaItems.add(item('first'));
           await settlePlayer(tester);
-          if (mornye) {
+          if (sistrum) {
             await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
           } else {
             await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
@@ -3147,7 +3147,7 @@ void main() {
             lessThan(lead.style!.fontSize! * 0.85),
           );
           expect(backing.textAlign, TextAlign.end);
-          if (mornye) {
+          if (sistrum) {
             // Inactive vocals shrink around their center. Check the row gap
             // before that paint transform, rather than the scaled text bounds.
             Finder lyricScale(Finder content) => find
@@ -3169,7 +3169,7 @@ void main() {
     }
 
     testWidgets(
-      'simultaneous wrapped lyrics stay inside the viewport ($mornye)',
+      'simultaneous wrapped lyrics stay inside the viewport ($sistrum)',
       (tester) async {
         const lead =
             'The first singer has a long line that wraps across several rows';
@@ -3180,14 +3180,14 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
         mediaItems.add(item('first'));
         await settlePlayer(tester);
         await tester.tap(
-          mornye
+          sistrum
               ? find.byIcon(CupertinoIcons.quote_bubble)
               : find.byIcon(CupertinoIcons.quote_bubble),
         );
@@ -3223,7 +3223,7 @@ void main() {
     );
 
     testWidgets(
-      'singers keep their side before and during overlapping vocals ($mornye)',
+      'singers keep their side before and during overlapping vocals ($sistrum)',
       (tester) async {
         metadataOverrides['lyrics'] =
             '[x-romaji:2000:${base64.encode(utf8.encode('Guest reading'))}]\n'
@@ -3234,13 +3234,13 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
         mediaItems.add(item('first'));
         await settlePlayer(tester);
-        if (mornye) {
+        if (sistrum) {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         } else {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
@@ -3338,7 +3338,7 @@ void main() {
       },
     );
 
-    testWidgets('player shows original, romanization and English ($mornye)', (
+    testWidgets('player shows original, romanization and English ($sistrum)', (
       tester,
     ) async {
       metadataOverrides['lyrics'] =
@@ -3347,12 +3347,12 @@ void main() {
           '[00:01.01]Original text';
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+        theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
       await settlePlayer(tester);
-      if (mornye) {
+      if (sistrum) {
         await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       } else {
         await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
@@ -3361,7 +3361,7 @@ void main() {
       for (final text in ['Original text', 'Romanized text', 'English text']) {
         expect(find.text(text), findsOneWidget);
       }
-      if (mornye) {
+      if (sistrum) {
         final pronunciation = tester.widget<Text>(find.text('Romanized text'));
         final translation = tester.widget<Text>(find.text('English text'));
         expect(pronunciation.style?.fontSize, 22);
@@ -3380,7 +3380,7 @@ void main() {
     });
 
     testWidgets(
-      'lyric language toggles fade, resize and remember choices ($mornye)',
+      'lyric language toggles fade, resize and remember choices ($sistrum)',
       (tester) async {
         metadataOverrides['lyrics'] =
             '[x-romaji:1009:${base64.encode(utf8.encode('Romanized text'))}]\n'
@@ -3389,7 +3389,7 @@ void main() {
         Future<void> openPlayer(String id) async {
           await pumpNowPlaying(
             tester,
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+            theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
             size: const Size(390, 844),
             playback: PlaybackState(
               processingState: AudioProcessingState.ready,
@@ -3398,7 +3398,7 @@ void main() {
           );
           mediaItems.add(item(id));
           await settlePlayer(tester);
-          if (mornye) {
+          if (sistrum) {
             await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
           } else {
             await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
@@ -3467,7 +3467,7 @@ void main() {
       },
     );
 
-    testWidgets('finished lyric stays bright until the next lead ($mornye)', (
+    testWidgets('finished lyric stays bright until the next lead ($sistrum)', (
       tester,
     ) async {
       metadataOverrides['lyrics'] =
@@ -3477,14 +3477,14 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+        theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
         playbackEvents: playback.stream,
       );
       mediaItems.add(item('first'));
       await settlePlayer(tester);
       await tester.tap(
-        mornye
+        sistrum
             ? find.byIcon(CupertinoIcons.quote_bubble)
             : find.byIcon(CupertinoIcons.quote_bubble),
       );
@@ -3519,7 +3519,7 @@ void main() {
     });
 
     testWidgets('an unfinished line holds the view while the next starts '
-        '($mornye)', (tester) async {
+        '($sistrum)', (tester) async {
       metadataOverrides['lyrics'] =
           '[00:01.00]<00:01.00>Long <00:02.00>held<00:06.00>\n'
           '[00:04.00]<00:04.00>Next<00:05.00>\n'
@@ -3528,14 +3528,14 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+        theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
         playbackEvents: playback.stream,
       );
       mediaItems.add(item('first'));
       await settlePlayer(tester);
       await tester.tap(
-        mornye
+        sistrum
             ? find.byIcon(CupertinoIcons.quote_bubble)
             : find.byIcon(CupertinoIcons.quote_bubble),
       );
@@ -3573,7 +3573,7 @@ void main() {
     });
 
     testWidgets(
-      'original and romanization follow word timing and pauses ($mornye)',
+      'original and romanization follow word timing and pauses ($sistrum)',
       (tester) async {
         final romanizationWords = base64.encode(
           utf8.encode(
@@ -3592,13 +3592,13 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
           size: const Size(390, 844),
           playbackEvents: playback.stream,
         );
         mediaItems.add(item('first'));
         await settlePlayer(tester);
-        if (mornye) {
+        if (sistrum) {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
         } else {
           await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
@@ -3615,7 +3615,7 @@ void main() {
           );
           await settlePlayer(tester);
           final pixels = <int>[];
-          for (final phrase in mornye ? text.split(' ') : [text]) {
+          for (final phrase in sistrum ? text.split(' ') : [text]) {
             final paint = find.descendant(
               of: find.byWidgetPredicate(
                 (widget) =>
@@ -3654,7 +3654,7 @@ void main() {
 
         for (final text in ['First second', 'Firsu secondu']) {
           final singingFirst = await pixelsAt(1100, text);
-          final moves = mornye && text == 'First second';
+          final moves = sistrum && text == 'First second';
           final firstEnded = await pixelsAt(moves ? 1800 : 1307, text);
           expect(firstEnded, isNot(orderedEquals(singingFirst)));
           if (moves) {
@@ -3673,7 +3673,7 @@ void main() {
         }
         final originalPixels = await pixelsAt(1100, 'First second');
         final options = find.byKey(const ValueKey('lyrics-language-options'));
-        if (mornye && options.hitTestable().evaluate().isEmpty) {
+        if (sistrum && options.hitTestable().evaluate().isEmpty) {
           final bounds = tester.getRect(find.byType(ListView));
           await tester.tapAt(Offset(bounds.right - 6, bounds.top + 10));
           await settlePlayer(tester);
@@ -3709,7 +3709,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           size: const Size(390, 844),
           playbackEvents: playback.stream,
           wrapPlayer: (player) => Builder(
@@ -3843,7 +3843,7 @@ void main() {
         '</p></div></body></tt>';
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: SistrumTheme.build(Brightness.dark),
       size: const Size(320, 844),
       playback: PlaybackState(
         processingState: AudioProcessingState.ready,
@@ -3894,7 +3894,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('short timed lyric keeps its Mornye leading alignment', (
+  testWidgets('short timed lyric keeps its Sistrum leading alignment', (
     tester,
   ) async {
     await pumpNowPlaying(tester);

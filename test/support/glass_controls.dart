@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 /// Glass lenses and capture views currently mounted.
 int glassLenses() =>
@@ -18,7 +18,7 @@ Future<void> pumpGlassControl(
   Widget Function(StateSetter setState) builder, {
   bool glass = true,
   bool liquid = true,
-  MornyeGlassLevel? level,
+  SistrumGlassLevel? level,
   int? clarityLevel,
   bool reduceMotion = false,
   bool highContrast = false,
@@ -28,15 +28,15 @@ Future<void> pumpGlassControl(
     ProviderScope(
       key: UniqueKey(),
       overrides: [
-        if (glass) mornyeShaderFiltersSupportedProvider.overrideWithValue(true),
-        mornyeGlassLevelProvider.overrideWithValue(
-          level ?? (liquid ? MornyeGlassLevel.liquid : MornyeGlassLevel.flat),
+        if (glass) sistrumShaderFiltersSupportedProvider.overrideWithValue(true),
+        sistrumGlassLevelProvider.overrideWithValue(
+          level ?? (liquid ? SistrumGlassLevel.liquid : SistrumGlassLevel.flat),
         ),
         if (clarityLevel != null)
-          mornyeGlassClarityLevelProvider.overrideWithValue(clarityLevel),
+          sistrumGlassClarityLevelProvider.overrideWithValue(clarityLevel),
       ],
       child: MaterialApp(
-        theme: MornyeTheme.build(Brightness.light),
+        theme: SistrumTheme.build(Brightness.light),
         home: MediaQuery(
           data: MediaQueryData(
             disableAnimations: reduceMotion,

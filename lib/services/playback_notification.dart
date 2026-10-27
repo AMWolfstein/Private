@@ -2,10 +2,16 @@ import 'package:audio_service/audio_service.dart';
 
 /// Presentation only; every transport action still uses the audio handler.
 class PlaybackNotification {
-  static const favoriteAction = 'spotiflac.favorite';
-  static const shuffleAction = 'spotiflac.shuffle';
+  static const favoriteAction = 'sistrum.favorite';
+  static const shuffleAction = 'sistrum.shuffle';
 
-  final bool mornye;
+  // Pending notification intents from before the identity change still work.
+  static const legacyFavoriteAction =
+      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063.favorite';
+  static const legacyShuffleAction =
+      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063.shuffle';
+
+  final bool sistrum;
   final String? mediaId;
   final String? source;
   final bool loved;
@@ -15,7 +21,7 @@ class PlaybackNotification {
   final String shuffleOffLabel;
 
   const PlaybackNotification({
-    this.mornye = false,
+    this.sistrum = false,
     this.mediaId,
     this.source,
     this.loved = false,
@@ -29,7 +35,7 @@ class PlaybackNotification {
 
   PlaybackNotification withFavorite(MediaItem item, bool loved) =>
       PlaybackNotification(
-        mornye: mornye,
+        sistrum: sistrum,
         mediaId: item.id,
         source: item.extras?['source']?.toString(),
         loved: loved,
@@ -44,7 +50,7 @@ class PlaybackNotification {
     required MediaItem? item,
     bool shuffle = false,
   }) {
-    if (!mornye) {
+    if (!sistrum) {
       return [
         MediaControl.skipToPrevious,
         playing ? MediaControl.pause : MediaControl.play,

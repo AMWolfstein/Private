@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/equalizer_settings.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/playback_equalizer.dart';
+import 'package:sistrum/models/equalizer_settings.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/playback_equalizer.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

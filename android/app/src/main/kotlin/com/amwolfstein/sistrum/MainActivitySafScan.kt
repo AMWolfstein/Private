@@ -143,7 +143,7 @@ private fun loadSafScanCheckpoint(path: String): MutableMap<String, Long> {
             entries[uri] = modified
         }
     } catch (e: Exception) {
-        android.util.Log.w("SpotiFLAC", "SAF scan: failed reading checkpoint: ${e.message}")
+        android.util.Log.w("Sistrum", "SAF scan: failed reading checkpoint: ${e.message}")
     }
     return entries
 }
@@ -170,7 +170,7 @@ private fun reconcileSafScanCheckpoint(
             } catch (_: Exception) {}
         }
     } catch (e: Exception) {
-        android.util.Log.w("SpotiFLAC", "SAF scan: failed reconciling checkpoint: ${e.message}")
+        android.util.Log.w("Sistrum", "SAF scan: failed reconciling checkpoint: ${e.message}")
         return loaded
     }
 
@@ -185,7 +185,7 @@ private fun countSafScanRows(path: String): Int {
     return try {
         output.useLines(Charsets.UTF_8) { lines -> lines.count { it.isNotBlank() } }
     } catch (e: Exception) {
-        android.util.Log.w("SpotiFLAC", "SAF scan: failed counting existing rows: ${e.message}")
+        android.util.Log.w("Sistrum", "SAF scan: failed counting existing rows: ${e.message}")
         0
     }
 }
@@ -223,7 +223,7 @@ internal fun repairSafScanOutput(path: String) {
             file.setLength(0)
         }
     } catch (e: Exception) {
-        android.util.Log.w("SpotiFLAC", "SAF scan: failed repairing output: ${e.message}")
+        android.util.Log.w("Sistrum", "SAF scan: failed repairing output: ${e.message}")
     }
 }
 
@@ -287,7 +287,7 @@ private fun pruneSafScanResume(outputPath: String, currentUris: Set<String>) {
             }
         }
     } catch (e: Exception) {
-        android.util.Log.w("SpotiFLAC", "SAF scan: failed pruning resumed output: ${e.message}")
+        android.util.Log.w("Sistrum", "SAF scan: failed pruning resumed output: ${e.message}")
     }
 }
 
@@ -301,7 +301,7 @@ internal fun MainActivity.extractCueAudioFileName(cueTempPath: String): String? 
         try {
             return File(cueTempPath).useLines { cueAudioFileName(it.asIterable()) }
         } catch (e: Exception) {
-            android.util.Log.w("SpotiFLAC", "Failed to extract audio filename from CUE: ${e.message}")
+            android.util.Log.w("Sistrum", "Failed to extract audio filename from CUE: ${e.message}")
         }
         return null
     }
@@ -320,7 +320,7 @@ internal fun MainActivity.readCueAudioFileNameFromUri(uri: Uri): String? {
         }
     } catch (e: Exception) {
         android.util.Log.w(
-            "SpotiFLAC",
+            "Sistrum",
             "SAF scan: failed reading CUE header: ${e.javaClass.simpleName}",
         )
         null

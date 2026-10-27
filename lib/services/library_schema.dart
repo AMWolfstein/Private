@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/services/library_row_mapper.dart';
-import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
-import 'package:spotiflac_android/utils/ios_container_paths.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library_row_mapper.dart';
+import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/utils/ios_container_paths.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('LibraryDatabase');
 

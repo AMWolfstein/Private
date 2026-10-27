@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
 
 void main() {
   group('unified guide copy', () {

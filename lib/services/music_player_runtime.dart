@@ -4,19 +4,19 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/app_state_database.dart';
-import 'package:spotiflac_android/services/autoplay_personalization.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/services/playback_notification.dart';
-import 'package:spotiflac_android/services/player_widget_service.dart';
-import 'package:spotiflac_android/services/source_deletion_events.dart';
-import 'package:spotiflac_android/services/system_volume_service.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/app_state_database.dart';
+import 'package:sistrum/services/autoplay_personalization.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/playback_notification.dart';
+import 'package:sistrum/services/player_widget_service.dart';
+import 'package:sistrum/services/source_deletion_events.dart';
+import 'package:sistrum/services/system_volume_service.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('MusicPlayerRuntime');
 
@@ -173,7 +173,7 @@ class MusicPlayerRuntime {
   Future<void> _publishNotificationFavorite() async {
     try {
       await dependencies.notificationChannel.invokeMethod<void>('update', {
-        'enabled': _notification.mornye && _notification.mediaId != null,
+        'enabled': _notification.sistrum && _notification.mediaId != null,
         'loved': _notification.loved,
         'label': _notification.favoriteActionLabel,
       });

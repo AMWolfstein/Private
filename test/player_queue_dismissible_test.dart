@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/player_queue_dismissible.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/player_queue_dismissible.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
     for (final direction in TextDirection.values) {
       testWidgets(
-        'Mornye queue swipe expands and follows $brightness $direction',
+        'Sistrum queue swipe expands and follows $brightness $direction',
         (tester) async {
           var removals = 0;
           await tester.pumpWidget(
             MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: SistrumTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Directionality(
@@ -94,7 +94,7 @@ void main() {
     var removals = 0;
     await tester.pumpWidget(
       MaterialApp(
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
@@ -125,7 +125,7 @@ void main() {
   testWidgets('a disabled row offers no Remove action', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(

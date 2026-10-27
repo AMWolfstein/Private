@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/constants/language_choices.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/models/mornye_glass.dart';
-import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/custom_font_setting.dart';
-import 'package:spotiflac_android/widgets/mornye_slider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/constants/language_choices.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/custom_font_setting.dart';
+import 'package:sistrum/widgets/sistrum_slider.dart';
 
 class AppearanceSettingsPage extends ConsumerWidget {
   const AppearanceSettingsPage({super.key});
@@ -26,8 +26,8 @@ class AppearanceSettingsPage extends ConsumerWidget {
     final themeSettings = ref.watch(
       themeProvider.select(
         (s) => (
-          mornyeAccent: s.mornyeAccent,
-          mornyeGlassOutlines: s.mornyeGlassOutlines,
+          sistrumAccent: s.sistrumAccent,
+          sistrumGlassOutlines: s.sistrumGlassOutlines,
           themeMode: s.themeMode,
           useSystemFont: s.useSystemFont,
           playerView: s.playerView,
@@ -50,14 +50,14 @@ class AppearanceSettingsPage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: SettingsGroup(
                   children: [
-                    _MornyeAccentPicker(
-                      selected: themeSettings.mornyeAccent,
+                    _SistrumAccentPicker(
+                      selected: themeSettings.sistrumAccent,
                       onChanged: ref
                           .read(themeProvider.notifier)
-                          .setMornyeAccent,
+                          .setSistrumAccent,
                     ),
                     _GlassQualitySelector(
-                      current: mornyeGlassQualityFromString(
+                      current: sistrumGlassQualityFromString(
                         settings.glassQuality,
                       ),
                       onChanged: ref
@@ -66,17 +66,17 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     ),
                     SettingsSearchTarget(
                       label: context.l10n.appearanceGlassClarity,
-                      child: const _MornyeGlassClaritySlider(),
+                      child: const _SistrumGlassClaritySlider(),
                     ),
                     SettingsSwitchItem(
-                      key: const ValueKey('mornye-glass-outlines'),
+                      key: const ValueKey('sistrum-glass-outlines'),
                       icon: Icons.rounded_corner,
                       title: context.l10n.appearanceGlassOutlines,
                       subtitle: context.l10n.appearanceGlassOutlinesSubtitle,
-                      value: themeSettings.mornyeGlassOutlines,
+                      value: themeSettings.sistrumGlassOutlines,
                       onChanged: ref
                           .read(themeProvider.notifier)
-                          .setMornyeGlassOutlines,
+                          .setSistrumGlassOutlines,
                       showDivider: false,
                     ),
                   ],
@@ -168,16 +168,16 @@ class AppearanceSettingsPage extends ConsumerWidget {
   }
 }
 
-class _MornyeGlassClaritySlider extends ConsumerStatefulWidget {
-  const _MornyeGlassClaritySlider();
+class _SistrumGlassClaritySlider extends ConsumerStatefulWidget {
+  const _SistrumGlassClaritySlider();
 
   @override
-  ConsumerState<_MornyeGlassClaritySlider> createState() =>
-      _MornyeGlassClaritySliderState();
+  ConsumerState<_SistrumGlassClaritySlider> createState() =>
+      _SistrumGlassClaritySliderState();
 }
 
-class _MornyeGlassClaritySliderState
-    extends ConsumerState<_MornyeGlassClaritySlider> {
+class _SistrumGlassClaritySliderState
+    extends ConsumerState<_SistrumGlassClaritySlider> {
   /// Only the preview follows a drag; the rest of the app updates on release.
   int? _dragLevel;
 
@@ -192,18 +192,18 @@ class _MornyeGlassClaritySliderState
     final l10n = context.l10n;
     // Match the renderer's policy without changing the stored clarity value.
     final contrastBlocked = ref.watch(
-      mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
+      sistrumGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
-    final quality = ref.watch(mornyeGlassQualityProvider);
+    final quality = ref.watch(sistrumGlassQualityProvider);
     // Auto measured that this device needs Level 1.
     final autoFrosted =
-        quality == MornyeGlassQuality.auto &&
-        ref.watch(mornyeGlassClarityLevelProvider) == 1 &&
-        ref.watch(mornyeGlassAutoStepProvider) ==
-            MornyeGlassAutoStep.liteFrosted;
+        quality == SistrumGlassQuality.auto &&
+        ref.watch(sistrumGlassClarityLevelProvider) == 1 &&
+        ref.watch(sistrumGlassAutoStepProvider) ==
+            SistrumGlassAutoStep.liteFrosted;
     final adjustable =
         !contrastBlocked &&
-        ref.watch(mornyeBlurEnabledProvider) &&
+        ref.watch(sistrumBlurEnabledProvider) &&
         !autoFrosted;
     final levelNames = [
       l10n.appearanceGlassLevelFrosted,
@@ -230,10 +230,10 @@ class _MornyeGlassClaritySliderState
                   ? l10n.appearanceGlassClarityContrast
                   : autoFrosted
                   ? l10n.appearanceGlassClarityAutoFrosted
-                  : quality == MornyeGlassQuality.off
+                  : quality == SistrumGlassQuality.off
                   ? l10n.appearanceGlassClarityOff
                   : l10n.appearanceGlassClarityDeviceOpaque,
-              key: const ValueKey('mornye-glass-clarity-unavailable'),
+              key: const ValueKey('sistrum-glass-clarity-unavailable'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -265,7 +265,7 @@ class _MornyeGlassClaritySliderState
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(18),
-                    child: MornyeGlassPanel(
+                    child: SistrumGlassPanel(
                       radius: 22,
                       clarityLevel: level,
                       child: Padding(
@@ -279,7 +279,7 @@ class _MornyeGlassClaritySliderState
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'Mornye',
+                                'Sistrum',
                                 style: theme.textTheme.titleMedium,
                               ),
                             ),
@@ -296,8 +296,8 @@ class _MornyeGlassClaritySliderState
           RepaintBoundary(
             child: Semantics(
               label: l10n.appearanceGlassClarity,
-              child: MornyeSlider(
-                key: const ValueKey('mornye-glass-clarity'),
+              child: SistrumSlider(
+                key: const ValueKey('sistrum-glass-clarity'),
                 value: level.toDouble(),
                 min: 1,
                 max: 5,
@@ -331,12 +331,12 @@ class _MornyeGlassClaritySliderState
           // Only full Crystal glass costs noticeably more to render.
           if (adjustable &&
               level == 5 &&
-              ref.watch(mornyeGlassLevelProvider) ==
-                  MornyeGlassLevel.liquid) ...[
+              ref.watch(sistrumGlassLevelProvider) ==
+                  SistrumGlassLevel.liquid) ...[
             const SizedBox(height: 8),
             Text(
               l10n.appearanceGlassClearPerformance,
-              key: const ValueKey('mornye-glass-clear-performance'),
+              key: const ValueKey('sistrum-glass-clear-performance'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -352,8 +352,8 @@ class _MornyeGlassClaritySliderState
 class _GlassQualitySelector extends ConsumerWidget {
   const _GlassQualitySelector({required this.current, required this.onChanged});
 
-  final MornyeGlassQuality current;
-  final ValueChanged<MornyeGlassQuality> onChanged;
+  final SistrumGlassQuality current;
+  final ValueChanged<SistrumGlassQuality> onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -361,29 +361,29 @@ class _GlassQualitySelector extends ConsumerWidget {
     final theme = Theme.of(context);
     final measured =
         ref.watch(
-          mornyeGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
+          sistrumGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
         ) ==
-        MornyeGlassAutoStatus.measured;
-    final measuredQuality = switch (ref.watch(mornyeGlassAutoStepProvider)) {
-      MornyeGlassAutoStep.full =>
-        ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid
+        SistrumGlassAutoStatus.measured;
+    final measuredQuality = switch (ref.watch(sistrumGlassAutoStepProvider)) {
+      SistrumGlassAutoStep.full =>
+        ref.watch(sistrumGlassLevelProvider) == SistrumGlassLevel.liquid
             ? l10n.appearanceGlassQualityFull
             : l10n.appearanceGlassQualityLite,
-      MornyeGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
-      MornyeGlassAutoStep.liteFrosted =>
+      SistrumGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
+      SistrumGlassAutoStep.liteFrosted =>
         '${l10n.appearanceGlassQualityLite} · '
             '${l10n.appearanceGlassLevelFrosted}',
     };
     final labels = {
-      MornyeGlassQuality.auto: l10n.appearanceGlassQualityAuto,
-      MornyeGlassQuality.lite: l10n.appearanceGlassQualityLite,
-      MornyeGlassQuality.full: l10n.appearanceGlassQualityFull,
-      MornyeGlassQuality.off: l10n.appearanceGlassQualityOff,
+      SistrumGlassQuality.auto: l10n.appearanceGlassQualityAuto,
+      SistrumGlassQuality.lite: l10n.appearanceGlassQualityLite,
+      SistrumGlassQuality.full: l10n.appearanceGlassQualityFull,
+      SistrumGlassQuality.off: l10n.appearanceGlassQualityOff,
     };
     return SettingsSearchTarget(
       label: l10n.appearanceGlassQuality,
       child: Padding(
-        key: const ValueKey('mornye-glass-quality'),
+        key: const ValueKey('sistrum-glass-quality'),
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,7 +397,7 @@ class _GlassQualitySelector extends ConsumerWidget {
               l10n.appearanceGlassQualitySubtitle,
               style: theme.textTheme.bodySmall,
             ),
-            MornyeSegmentedControl(
+            SistrumSegmentedControl(
               labels: labels.values.toList(),
               selectedIndex: labels.keys.toList().indexOf(current),
               onChanged: (index) => onChanged(labels.keys.elementAt(index)),
@@ -405,7 +405,7 @@ class _GlassQualitySelector extends ConsumerWidget {
             if (measured)
               Text(
                 l10n.appearanceGlassAutoMeasured(measuredQuality),
-                key: const ValueKey('mornye-glass-auto-measured'),
+                key: const ValueKey('sistrum-glass-auto-measured'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -417,23 +417,23 @@ class _GlassQualitySelector extends ConsumerWidget {
   }
 }
 
-class _MornyeAccentPicker extends StatelessWidget {
-  const _MornyeAccentPicker({required this.selected, required this.onChanged});
+class _SistrumAccentPicker extends StatelessWidget {
+  const _SistrumAccentPicker({required this.selected, required this.onChanged});
 
-  final MornyeAccent selected;
-  final ValueChanged<MornyeAccent> onChanged;
+  final SistrumAccent selected;
+  final ValueChanged<SistrumAccent> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final labels = {
-      MornyeAccent.red: l10n.appearanceAccentRed,
-      MornyeAccent.orange: l10n.appearanceAccentOrange,
-      MornyeAccent.green: l10n.appearanceAccentGreen,
-      MornyeAccent.teal: l10n.appearanceAccentTeal,
-      MornyeAccent.blue: l10n.appearanceAccentBlue,
-      MornyeAccent.purple: l10n.appearanceAccentPurple,
-      MornyeAccent.pink: l10n.appearanceAccentPink,
+      SistrumAccent.red: l10n.appearanceAccentRed,
+      SistrumAccent.orange: l10n.appearanceAccentOrange,
+      SistrumAccent.green: l10n.appearanceAccentGreen,
+      SistrumAccent.teal: l10n.appearanceAccentTeal,
+      SistrumAccent.blue: l10n.appearanceAccentBlue,
+      SistrumAccent.purple: l10n.appearanceAccentPurple,
+      SistrumAccent.pink: l10n.appearanceAccentPink,
     };
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -441,10 +441,10 @@ class _MornyeAccentPicker extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          for (final accent in MornyeAccent.values)
+          for (final accent in SistrumAccent.values)
             Builder(
               builder: (context) {
-                final color = MornyeTheme.accentColor(
+                final color = SistrumTheme.accentColor(
                   accent,
                   Theme.of(context).brightness,
                 );
@@ -494,7 +494,7 @@ class _ThemeModeSelector extends StatelessWidget {
       };
       return Padding(
         padding: const EdgeInsets.all(12),
-        child: MornyeSegmentedControl(
+        child: SistrumSegmentedControl(
           labels: labels.values.toList(),
           selectedIndex: labels.keys.toList().indexOf(currentMode),
           onChanged: (index) => onChanged(labels.keys.elementAt(index)),

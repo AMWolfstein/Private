@@ -1,24 +1,24 @@
-import 'package:spotiflac_android/providers/equalizer_provider.dart';
+import 'package:sistrum/providers/equalizer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/screens/main_shell.dart';
-import 'package:spotiflac_android/screens/setup_screen.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/services/app_navigation_service.dart';
-import 'package:spotiflac_android/services/app_orientation.dart';
-import 'package:spotiflac_android/theme/mornye_theme_wrapper.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/l10n/supported_locales.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/widgets/mornye_backdrop_groups.dart';
-import 'package:spotiflac_android/widgets/mornye_glass_auto_probe_host.dart';
-import 'package:spotiflac_android/widgets/mornye_performance_hud.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/widgets/mornye_glass_preparation.dart';
-import 'package:spotiflac_android/widgets/playback_feedback.dart';
+import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/screens/main_shell.dart';
+import 'package:sistrum/screens/setup_screen.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/services/app_navigation_service.dart';
+import 'package:sistrum/services/app_orientation.dart';
+import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/l10n/supported_locales.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/sistrum_glass_auto_probe_host.dart';
+import 'package:sistrum/widgets/sistrum_performance_hud.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/sistrum_glass_preparation.dart';
+import 'package:sistrum/widgets/playback_feedback.dart';
 
 String initialLocationForAppState({
   required bool isFirstLaunch,
@@ -157,10 +157,10 @@ class _OrientationFadeState extends State<_OrientationFade>
   }
 }
 
-class SpotiFLACApp extends ConsumerWidget {
+class SistrumApp extends ConsumerWidget {
   final bool disableOverscrollEffects;
 
-  const SpotiFLACApp({super.key, this.disableOverscrollEffects = false});
+  const SistrumApp({super.key, this.disableOverscrollEffects = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -188,7 +188,7 @@ class SpotiFLACApp extends ConsumerWidget {
       }
     }
 
-    return MornyeThemeWrapper(
+    return SistrumThemeWrapper(
       builder: (lightTheme, darkTheme, themeMode) {
         return MaterialApp.router(
           title: AppInfo.appName,
@@ -208,7 +208,7 @@ class SpotiFLACApp extends ConsumerWidget {
                 child: PlaybackFeedback(
                   // Header controls on pages outside the tabs (Settings and
                   // what it opens) share one backdrop read, like the shell's.
-                  child: MornyeChromeBatch(
+                  child: SistrumChromeBatch(
                     child: child ?? const SizedBox.shrink(),
                   ),
                 ),
@@ -220,9 +220,9 @@ class SpotiFLACApp extends ConsumerWidget {
               // level it sits above the router's Navigator, so the controller
               // never encounters it while collecting heroes. Removing the
               // inherited controller disables flights on the root Navigator.
-              child: MornyeGlassPreparation(
-                child: MornyeGlassAutoProbeHost(
-                  child: MornyePerformanceHudHost(
+              child: SistrumGlassPreparation(
+                child: SistrumGlassAutoProbeHost(
+                  child: SistrumPerformanceHudHost(
                     child: AdaptiveUiScaler(
                       child: heroAnimationsEnabled
                           ? appContent

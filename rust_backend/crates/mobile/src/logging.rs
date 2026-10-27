@@ -1,4 +1,4 @@
-use spotiflac_local::logging::{LogBuffer as CoreLogBuffer, LogClosed};
+use sistrum_local::logging::{LogBuffer as CoreLogBuffer, LogClosed};
 use std::sync::Arc;
 
 #[derive(Debug, thiserror::Error, uniffi::Error)]

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the supported Android release APKs for SpotiFLAC Mobile.
+# Build the supported Android release APKs for Sistrum Mobile.
 
 set -euo pipefail
 
@@ -10,22 +10,22 @@ FLUTTER_ARGS=()
 for argument in "$@"; do
   case "$argument" in
     --target-platform|--target-platform=*|--split-per-abi|--no-split-per-abi)
-      echo "Error: set SPOTIFLAC_RUST_ANDROID_ABIS to select the release APK architectures." >&2
+      echo "Error: set SISTRUM_RUST_ANDROID_ABIS to select the release APK architectures." >&2
       exit 1
       ;;
     *) FLUTTER_ARGS+=("$argument") ;;
   esac
 done
 
-ANDROID_ABIS_RAW="${SPOTIFLAC_RUST_ANDROID_ABIS-arm64-v8a,armeabi-v7a}"
+ANDROID_ABIS_RAW="${SISTRUM_RUST_ANDROID_ABIS-arm64-v8a,armeabi-v7a}"
 case "$ANDROID_ABIS_RAW" in
   arm64-v8a|armeabi-v7a|arm64-v8a,armeabi-v7a|armeabi-v7a,arm64-v8a) ;;
   *)
-    echo "Error: SPOTIFLAC_RUST_ANDROID_ABIS must contain arm64-v8a and/or armeabi-v7a, comma-separated without spaces or duplicates." >&2
+    echo "Error: SISTRUM_RUST_ANDROID_ABIS must contain arm64-v8a and/or armeabi-v7a, comma-separated without spaces or duplicates." >&2
     exit 1
     ;;
 esac
-export SPOTIFLAC_RUST_ANDROID_ABIS="$ANDROID_ABIS_RAW"
+export SISTRUM_RUST_ANDROID_ABIS="$ANDROID_ABIS_RAW"
 IFS=',' read -r -a ANDROID_ABIS <<< "$ANDROID_ABIS_RAW"
 TARGET_PLATFORMS=()
 for abi in "${ANDROID_ABIS[@]}"; do

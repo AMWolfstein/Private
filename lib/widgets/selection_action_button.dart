@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_action_button.dart';
+import 'package:sistrum/widgets/app_action_button.dart';
 
 /// Icon+label pill used in selection-mode bottom bars, with the active theme's
 /// disabled tones and room for a two-line label.

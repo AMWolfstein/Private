@@ -1,8 +1,8 @@
-import 'package:spotiflac_android/models/library_collections.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/utils/audio_quality_badge_policy.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/utils/audio_quality_badge_policy.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 enum LibraryItemSource { local }
 

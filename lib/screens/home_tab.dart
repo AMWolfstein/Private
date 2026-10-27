@@ -2,31 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/local_home_feed_provider.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/local_artist_screen.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/app_search_field.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:spotiflac_android/widgets/library_search_results.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/local_home_feed_provider.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/library_search_results.dart';
 
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/release_date_display.dart';
-import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/error_card.dart';
-import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/screens/settings/library_settings_page.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/release_date_display.dart';
+import 'package:sistrum/widgets/local_library_artwork_builder.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/audio_quality_badges.dart';
 
 part 'home_tab_feed.dart';
 part 'home_tab_widgets.dart';
@@ -168,7 +168,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
             slivers: [
               AppSliverHeader.tabRoot(
                 title: widget.mode == HomeTabMode.search
-                    ? l10n.mornyeSearch
+                    ? l10n.sistrumSearch
                     : l10n.homeTitle,
               ),
 

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/services/custom_font_service.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/services/custom_font_service.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -65,9 +65,9 @@ void main() {
   });
 
   testWidgets(
-    'custom typography survives Mornye local surface reconstruction',
+    'custom typography survives Sistrum local surface reconstruction',
     (tester) async {
-      final theme = MornyeTheme.build(
+      final theme = SistrumTheme.build(
         Brightness.dark,
         fontFamily: 'ImportedFont_test',
       );
@@ -76,7 +76,7 @@ void main() {
           theme: theme,
           home: Builder(
             builder: (context) {
-              final surface = MornyeTheme.fromContext(
+              final surface = SistrumTheme.fromContext(
                 context,
                 chromeSurface: Colors.red,
               );
@@ -106,7 +106,7 @@ void main() {
         'ImportedFont_test',
       );
       expect(
-        MornyeTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
+        SistrumTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
         isNot('ImportedFont_test'),
       );
     },

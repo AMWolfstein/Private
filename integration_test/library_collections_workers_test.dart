@@ -6,10 +6,10 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/models/library_collections.dart';
-import 'package:spotiflac_android/services/library_collections_database.dart';
-import 'package:spotiflac_android/services/library_collections_hydration.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/services/library_collections_database.dart';
+import 'package:sistrum/services/library_collections_hydration.dart';
+import 'package:sistrum/services/platform_bridge.dart';
 
 import '../test/support/library_collections_benchmark.dart';
 

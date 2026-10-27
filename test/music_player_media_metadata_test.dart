@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
+import 'package:sistrum/services/music_player_service.dart';
 
 void main() {
   const media = PlayableMedia(

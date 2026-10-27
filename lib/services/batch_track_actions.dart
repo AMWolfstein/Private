@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/replaygain_service.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/batch_progress_dialog.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/replaygain_service.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/batch_progress_dialog.dart';
 
 final _batchActionsLog = AppLogger('BatchActions');
 

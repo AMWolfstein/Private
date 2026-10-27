@@ -1,6 +1,6 @@
-import 'package:spotiflac_android/screens/equalizer_screen.dart';
-import 'package:spotiflac_android/screens/lyrics_share_screen.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
+import 'package:sistrum/screens/equalizer_screen.dart';
+import 'package:sistrum/screens/lyrics_share_screen.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
@@ -9,38 +9,38 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/routes/now_playing_route.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/clickable_metadata.dart';
-import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/audio_output_button.dart';
-import 'package:spotiflac_android/widgets/lyrics_screen_awake.dart';
-import 'package:spotiflac_android/widgets/player_artwork.dart';
-import 'package:spotiflac_android/widgets/player_track_swipe.dart';
-import 'package:spotiflac_android/widgets/player_gesture_regions.dart';
-import 'package:spotiflac_android/widgets/player_details_sheet.dart';
-import 'package:spotiflac_android/widgets/mornye_player_layout.dart';
-import 'package:spotiflac_android/widgets/player_lyrics_controls.dart';
-import 'package:spotiflac_android/widgets/player_lyrics_section.dart';
-import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/mornye_player_background.dart';
-import 'package:spotiflac_android/widgets/mornye_player_ground.dart';
-import 'package:spotiflac_android/widgets/mornye_artwork_contrast.dart';
-import 'package:spotiflac_android/widgets/mornye_player_actions_sheet.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/routes/now_playing_route.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/audio_output_button.dart';
+import 'package:sistrum/widgets/lyrics_screen_awake.dart';
+import 'package:sistrum/widgets/player_artwork.dart';
+import 'package:sistrum/widgets/player_track_swipe.dart';
+import 'package:sistrum/widgets/player_gesture_regions.dart';
+import 'package:sistrum/widgets/player_details_sheet.dart';
+import 'package:sistrum/widgets/sistrum_player_layout.dart';
+import 'package:sistrum/widgets/player_lyrics_controls.dart';
+import 'package:sistrum/widgets/player_lyrics_section.dart';
+import 'package:sistrum/widgets/playlist_picker_sheet.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/sistrum_player_background.dart';
+import 'package:sistrum/widgets/sistrum_player_ground.dart';
+import 'package:sistrum/widgets/sistrum_artwork_contrast.dart';
+import 'package:sistrum/widgets/sistrum_player_actions_sheet.dart';
+import 'package:sistrum/widgets/sistrum_context_menu.dart';
 
-export 'package:spotiflac_android/routes/now_playing_route.dart';
+export 'package:sistrum/routes/now_playing_route.dart';
 
 final _log = AppLogger('NowPlaying');
 
@@ -166,7 +166,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             (settings) => settings.playerView == PlayerView.immersive,
           ),
         );
-    final colorScheme = MornyeTheme.fromContext(
+    final colorScheme = SistrumTheme.fromContext(
       context,
       brightness: Brightness.dark,
     ).colorScheme;
@@ -206,7 +206,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       ),
     );
 
-    // The Mornye route moves the entire player together. A second,
+    // The Sistrum route moves the entire player together. A second,
     // delayed content fade would make dismissal appear to pause partway down.
     final route = ModalRoute.of(context);
 
@@ -234,7 +234,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           ),
           fullBleed: immersive && _currentPage == 0,
           child: Theme(
-            data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+            data: SistrumTheme.fromContext(context, brightness: Brightness.dark),
             child: key == _compactArtworkKey || immersive
                 ? PlayerArtwork(
                     artUri: mediaItem.artUri?.toString(),
@@ -289,7 +289,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
               Expanded(
                 child: NotificationListener<ScrollUpdateNotification>(
                   onNotification: _onLyricsScroll,
-                  child: MornyePlayerLayout(
+                  child: SistrumPlayerLayout(
                     mediaItem: mediaItem,
                     metadata: _trackMetadata,
                     seekPreview: _seekPreview,
@@ -315,7 +315,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                       showOptions: showOptions,
                     ),
                     lyricsOptions: _lyricsOptionsButton(colorScheme),
-                    onPageChanged: _setMornyePage,
+                    onPageChanged: _setSistrumPage,
                     onTrackNavigation: _showTrackNavigationMenu,
                     onMoreActions: (buttonContext, item, anchor) =>
                         _showMoreActions(
@@ -352,7 +352,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                       : Colors.transparent,
                                 ),
                                 icon: const Icon(CupertinoIcons.quote_bubble),
-                                onPressed: _toggleMornyeLyrics,
+                                onPressed: _toggleSistrumLyrics,
                               ),
                               AudioOutputButton(
                                 color: Colors.white,
@@ -373,7 +373,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                 ),
                                 icon: const Icon(CupertinoIcons.list_bullet),
                                 onPressed: () =>
-                                    _setMornyePage(_currentPage == 2 ? 0 : 2),
+                                    _setSistrumPage(_currentPage == 2 ? 0 : 2),
                               ),
                             ],
                           ),
@@ -415,12 +415,12 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       },
       child: HeroMode(
         // A route Hero renders outside the panel's gradient and slide, briefly
-        // exposing a detached rectangle. Keep Mornye artwork inside its panel.
+        // exposing a detached rectangle. Keep Sistrum artwork inside its panel.
         enabled: false,
         child: Theme(
-          data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+          data: SistrumTheme.fromContext(context, brightness: Brightness.dark),
           // The player's menus and sheets draw their glass from this ground.
-          child: MornyePlayerGround(
+          child: SistrumPlayerGround(
             source: _coverSource(mediaItem),
             immersive: immersive,
             showArtwork: _currentPage == 0,
@@ -430,7 +430,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                MornyeArtworkContrast(
+                SistrumArtworkContrast(
                   enabled: false,
                   targets: {
                     'header': _artworkHeaderKey,
@@ -441,7 +441,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     if (!mounted) return;
                     _artworkForeground.value = colors;
                   },
-                  child: MornyePlayerBackground(
+                  child: SistrumPlayerBackground(
                     artUri: mediaItem.artUri,
                     squareArtwork: !immersive,
                     artworkAspectRatio: artworkRatio,
@@ -500,11 +500,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     return art?.scheme == 'file' ? art!.toFilePath() : art?.toString();
   }
 
-  void _toggleMornyeLyrics() {
-    _setMornyePage(_currentPage == 1 ? 0 : 1);
+  void _toggleSistrumLyrics() {
+    _setSistrumPage(_currentPage == 1 ? 0 : 1);
   }
 
-  void _setMornyePage(int page) {
+  void _setSistrumPage(int page) {
     setState(() {
       _currentPage = page;
       _lyricsControlsHidden = false;
@@ -716,7 +716,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     _lyricsIdleTimer?.cancel();
     setState(() => _lyricsOptionsOpen = true);
     try {
-      final anchor = mornyeMenuAnchor(buttonContext);
+      final anchor = sistrumMenuAnchor(buttonContext);
       var menuWidth = 240.0;
       for (final (_, label, _) in actions) {
         final painter = TextPainter(
@@ -732,17 +732,17 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         if (painter.width + 80 > menuWidth) menuWidth = painter.width + 80;
         painter.dispose();
       }
-      final action = await showMornyeContextMenu<String>(
+      final action = await showSistrumContextMenu<String>(
         context: buttonContext,
         anchor: anchor,
         preferAbove: true,
         maxWidth: menuWidth,
-        builder: (menuContext) => MornyeContextMenu(
+        builder: (menuContext) => SistrumContextMenu(
           dense: true,
           groups: [
             [
               for (final (value, label, icon) in actions)
-                MornyeMenuAction(
+                SistrumMenuAction(
                   icon: icon,
                   label: label,
                   onPressed: () => Navigator.of(menuContext).pop(value),
@@ -770,11 +770,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     BuildContext titleContext,
     MediaItem mediaItem,
   ) async {
-    final action = await showMornyeContextMenu<String>(
+    final action = await showSistrumContextMenu<String>(
       context: titleContext,
       preferAbove: true,
       maxWidth: 280,
-      builder: (_) => MornyePlayerNavigationMenu(mediaItem: mediaItem),
+      builder: (_) => SistrumPlayerNavigationMenu(mediaItem: mediaItem),
     );
     if (!mounted) return;
     if (action == 'album') {
@@ -835,12 +835,12 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
               context,
             ).formatTimeOfDay(TimeOfDay.fromDateTime(sleepTimerEndsAt)),
           );
-    final action = await showMornyeContextMenu<String>(
+    final action = await showSistrumContextMenu<String>(
       context: context,
       anchor: anchor,
       preferAbove: true,
       maxWidth: 280,
-      builder: (_) => MornyePlayerActionsSheet(
+      builder: (_) => SistrumPlayerActionsSheet(
         mediaItem: mediaItem,
         sleepTimerSubtitle: sleepTimerSubtitle,
       ),
@@ -993,7 +993,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
 
   void _showQueueSheet(ColorScheme colorScheme) {
     {
-      _setMornyePage(2);
+      _setSistrumPage(2);
       return;
     }
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
+import 'package:sistrum/services/shell_navigation_service.dart';
 
 void main() {
   for (final separateSearch in [false, true]) {

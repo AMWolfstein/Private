@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/services/source_deletion_events.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/source_deletion_events.dart';
 
 class FileAccessStat {
   final int? size;

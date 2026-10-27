@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "La conexión de audio USB ha cambiado. La reproducción se ha detenido; selecciona una pista para volver a conectarte.",
   "nowPlayingVolume": "Volúmen",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Rojo (predeterminado)",
   "appearanceAccentOrange": "Naranja",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Rosado",
   "appearanceGlassClarity": "Transparencia del vidrio",
   "appearanceGlassOutlines": "Contornos de cristal",
-  "appearanceGlassOutlinesSubtitle": "Muestra un borde suave alrededor del cristal de Mornye. Desactivarlo no cambia el cristal en sí.",
-  "appearanceGlassClaritySubtitle": "Ajusta la transparencia en los menús y la navegación de Mornye. Se conserva el contraste del texto.",
+  "appearanceGlassOutlinesSubtitle": "Muestra un borde suave alrededor del cristal de Sistrum. Desactivarlo no cambia el cristal en sí.",
+  "appearanceGlassClaritySubtitle": "Ajusta la transparencia en los menús y la navegación de Sistrum. Se conserva el contraste del texto.",
   "appearanceGlassTinted": "Tintado",
   "appearanceGlassClear": "Borrar",
   "appearanceGlassClearPerformance": "El cristal muy transparente puede consumir más batería y ir menos fluido en dispositivos antiguos. Reduce la claridad si hace falta.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Ajusta la reproducción, el análisis de la biblioteca, las letras, la apariencia de Mornye y el almacenamiento local.",
+  "tutorialSettingsDesc": "Ajusta la reproducción, el análisis de la biblioteca, las letras, la apariencia de Sistrum y el almacenamiento local.",
   "tutorialSettingsTip1": "Gestiona las carpetas de música y el acceso a los archivos locales",
   "tutorialSettingsTip2": "Configura tu biblioteca local, la reproducción y la apariencia.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Álbumes incompletos",
   "libraryAlbumCompletenessUnknown": "Integridad del álbum desconocida",
   "libraryAlbumMissingTracks": "{present}/{expected} pistas · {missing} que faltan",
-  "mornyeSearch": "Buscar",
-  "mornyeContinuePlaying": "Seguir escuchando",
-  "mornyeFavorite": "Favorito",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Buscar",
+  "sistrumContinuePlaying": "Seguir escuchando",
+  "sistrumFavorite": "Favorito",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Ir a Artista",
-  "mornyeFavorited": "Agregado a favoritos",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Ir a Artista",
+  "sistrumFavorited": "Agregado a favoritos",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Mezcla canciones con sincronización de ritmos y ajuste de tempo que conserva el tono. Utiliza fundido cruzado cuando no es posible sincronizar los ritmos.",

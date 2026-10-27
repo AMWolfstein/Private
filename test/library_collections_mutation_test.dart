@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/services/library_collections_database.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/services/library_collections_database.dart';
 
 class _CollectionsDatabase implements LibraryCollectionsDatabase {
   final loved = <String, Map<String, dynamic>>{};

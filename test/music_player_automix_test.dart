@@ -7,17 +7,17 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/services/automix_analysis.dart';
-import 'package:spotiflac_android/services/automix_analyzer.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/music_haptics.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/playback_notification.dart';
-import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/services/automix_effect_renderer.dart';
-import 'package:spotiflac_android/services/automix_status.dart';
-import 'package:spotiflac_android/services/system_volume_service.dart';
+import 'package:sistrum/services/automix_analysis.dart';
+import 'package:sistrum/services/automix_analyzer.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/music_haptics.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/playback_notification.dart';
+import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/services/automix_effect_renderer.dart';
+import 'package:sistrum/services/automix_status.dart';
+import 'package:sistrum/services/system_volume_service.dart';
 
 class _EffectRenderer extends AutoMixEffectRenderer {
   final tails = <RenderedMixTail>[];
@@ -1312,7 +1312,7 @@ void main() {
     );
   }
 
-  test('Mornye notification follows theme and keeps transport state', () async {
+  test('Sistrum notification follows theme and keeps transport state', () async {
     await handler.restoreSession(
       items: _tracks,
       index: 0,
@@ -1321,7 +1321,7 @@ void main() {
     );
     configurePlaybackNotification(
       presentation: const PlaybackNotification(
-        mornye: true,
+        sistrum: true,
         mediaId: 'one',
         source: '/one.flac',
         loved: true,
@@ -1365,7 +1365,7 @@ void main() {
       ),
     );
     configurePlaybackNotification(
-      presentation: const PlaybackNotification(mornye: true),
+      presentation: const PlaybackNotification(sistrum: true),
       toggleFavorite: (_) async => false,
     );
     expect(
@@ -1379,7 +1379,7 @@ void main() {
     'notification shuffle toggles queue order without restarting audio',
     () async {
       configurePlaybackNotification(
-        presentation: const PlaybackNotification(mornye: true),
+        presentation: const PlaybackNotification(sistrum: true),
         toggleFavorite: (_) async => false,
       );
       await handler.setQueueAndPlay(_tracks, initialIndex: 1);
@@ -1603,7 +1603,7 @@ void main() {
       final save = Completer<void>();
       final selected = <String>[];
       configurePlaybackNotification(
-        presentation: const PlaybackNotification(mornye: true),
+        presentation: const PlaybackNotification(sistrum: true),
         toggleFavorite: (item) async {
           selected.add(item.id);
           await save.future;
@@ -1636,7 +1636,7 @@ void main() {
     var loved = false;
     configurePlaybackNotification(
       presentation: const PlaybackNotification(
-        mornye: true,
+        sistrum: true,
         favoriteLabel: 'Add to Loved',
         unfavoriteLabel: 'Remove from Loved',
       ),
@@ -1673,7 +1673,7 @@ void main() {
 
   test('failed favorite save leaves the notification icon unchanged', () async {
     configurePlaybackNotification(
-      presentation: const PlaybackNotification(mornye: true),
+      presentation: const PlaybackNotification(sistrum: true),
       toggleFavorite: (_) async => throw StateError('Save failed'),
     );
     handler.mediaItem.add(_tracks.first.toMediaItem());

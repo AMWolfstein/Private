@@ -3,17 +3,17 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/models/library_scan_failure.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/services/library_cleanup.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/notification_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/local_library_scan_prefs.dart';
-import 'package:spotiflac_android/utils/progress_stream_poller.dart';
+import 'package:sistrum/models/library_scan_failure.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/services/library_cleanup.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/notification_service.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/local_library_scan_prefs.dart';
+import 'package:sistrum/utils/progress_stream_poller.dart';
 
 final _log = AppLogger('LocalLibrary');
 

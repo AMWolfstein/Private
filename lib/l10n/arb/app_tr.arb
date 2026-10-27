@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Ses",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Turuncu",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Pembe",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "Cam çerçeveleri",
-  "appearanceGlassOutlinesSubtitle": "Mornye camının etrafında hafif bir kenar göster. Kapatmak camın kendisini değiştirmez.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Sistrum camının etrafında hafif bir kenar göster. Kapatmak camın kendisini değiştirmez.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "Çok şeffaf cam daha fazla güç tüketebilir ve eski cihazlarda daha az akıcı hissettirebilir. Gerekirse netliği düşürün.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Oynatmayı, kitaplık taramasını, şarkı sözlerini, Mornye görünümünü ve yerel depolamayı ayarlayın.",
+  "tutorialSettingsDesc": "Oynatmayı, kitaplık taramasını, şarkı sözlerini, Sistrum görünümünü ve yerel depolamayı ayarlayın.",
   "tutorialSettingsTip1": "Müzik klasörlerini ve yerel dosya erişimini yönetin",
   "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Eksik albümler",
   "libraryAlbumCompletenessUnknown": "Albüm tamlığı bilinmiyor",
   "libraryAlbumMissingTracks": "{present}/{expected} parça · {missing} eksik",
-  "mornyeSearch": "Search",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorite",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Search",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorite",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Go to Artist",
-  "mornyeFavorited": "Favorited",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Go to Artist",
+  "sistrumFavorited": "Favorited",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

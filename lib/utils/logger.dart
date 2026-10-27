@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/services/native_log_source.dart';
+import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/services/native_log_source.dart';
 
 const int _maxLogMessageLength = 500;
 const int _maxBufferedLogMessageLength = 4000;
@@ -309,7 +309,7 @@ class LogBuffer extends ChangeNotifier {
     final buffer = StringBuffer();
 
     buffer.writeln('=' * 60);
-    buffer.writeln('SPOTIFLAC LOG EXPORT');
+    buffer.writeln('SISTRUM LOG EXPORT');
     buffer.writeln(logExportPrivacyNotice);
     buffer.writeln('=' * 60);
     buffer.writeln();

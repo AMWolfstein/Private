@@ -9,26 +9,26 @@ import 'package:flutter/foundation.dart' show ValueListenable, listEquals;
 import 'package:flutter/rendering.dart'
     show OverflowBoxFit, RenderAbstractViewport, ScrollDirection;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/utils/lyrics_timeline.dart';
-import 'package:spotiflac_android/utils/synced_lyrics_scroll.dart';
-import 'package:spotiflac_android/widgets/aligned_lyric_pronunciation.dart';
-import 'package:spotiflac_android/widgets/lyric_supplement_transition.dart';
-import 'package:spotiflac_android/widgets/lyric_scroll_motion.dart';
-import 'package:spotiflac_android/widgets/lyric_gap_indicator.dart';
-import 'package:spotiflac_android/widgets/mornye_player_slider.dart';
-import 'package:spotiflac_android/widgets/lyrics_text_scale.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyrics_timeline.dart';
+import 'package:sistrum/utils/synced_lyrics_scroll.dart';
+import 'package:sistrum/widgets/aligned_lyric_pronunciation.dart';
+import 'package:sistrum/widgets/lyric_supplement_transition.dart';
+import 'package:sistrum/widgets/lyric_scroll_motion.dart';
+import 'package:sistrum/widgets/lyric_gap_indicator.dart';
+import 'package:sistrum/widgets/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/lyrics_text_scale.dart';
 
-const _mornyeLyricFontSize = 34.0;
-const mornyeLyricsContentInset = 28.0 + MornyePlayerSlider.horizontalInset;
+const _sistrumLyricFontSize = 34.0;
+const sistrumLyricsContentInset = 28.0 + SistrumPlayerSlider.horizontalInset;
 
 /// How much of the lyrics area's bottom the player's controls cover. The
-/// Mornye phone player lays lyrics out under its controls so they can grow
+/// Sistrum phone player lays lyrics out under its controls so they can grow
 /// when the controls hide; content that is not a scrolling lyric list keeps
 /// clear of this part.
 class LyricsCoveredBottom extends InheritedWidget {
@@ -497,8 +497,8 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     super.dispose();
   }
 
-  void _measureMornyeLines(BuildContext context, double width) {
-    final style = _mornyeLyricStyle(context);
+  void _measureSistrumLines(BuildContext context, double width) {
+    final style = _sistrumLyricStyle(context);
     final scaler = MediaQuery.textScalerOf(context);
     final direction = Directionality.of(context);
     final locale = Localizations.maybeLocaleOf(context);
@@ -540,7 +540,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       }
       painter.text = TextSpan(
         text: line.text,
-        style: _mornyeLyricStyle(context, background: line.isBackground),
+        style: _sistrumLyricStyle(context, background: line.isBackground),
       );
       painter.layout(maxWidth: width);
       final padding = _linePadding(index).vertical;
@@ -560,7 +560,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
           pronunciationHeight = 6 + painter.height;
           final aligned = LyricPronunciationLayout.measure(
             line: line,
-            primaryStyle: _mornyeLyricStyle(
+            primaryStyle: _sistrumLyricStyle(
               context,
               background: line.isBackground,
             ),
@@ -788,12 +788,12 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final loading = _visible
         ? ref.watch(playbackLoadingProvider)
         : ref.read(playbackLoadingProvider);
-    final mornye = context.isMornye;
+    final sistrum = context.isSistrum;
     final highContrast = MediaQuery.highContrastOf(context);
     final blurLyrics =
         !highContrast &&
         // Every defocused line is filtered again on each playback frame.
-        ref.watch(mornyeLiquidGlassProvider);
+        ref.watch(sistrumLiquidGlassProvider);
     final motion = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 420);
@@ -828,7 +828,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final inset = mornye ? mornyeLyricsContentInset : 24.0;
+          final inset = sistrum ? sistrumLyricsContentInset : 24.0;
           final contentWidth = (constraints.maxWidth - inset * 2).clamp(
             0.0,
             double.infinity,
@@ -840,10 +840,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
             0.0,
             double.infinity,
           );
-          final lyricScale = mornye && layoutWidth > 0
+          final lyricScale = sistrum && layoutWidth > 0
               ? contentWidth / layoutWidth
               : 1.0;
-          if (mornye) {
+          if (sistrum) {
             final previousExtents = _lineExtents;
             final previousScrollAnchor =
                 previousExtents != null && _scroll.hasClients
@@ -856,7 +856,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 previousExtents?.offsetForRow(previousScrollAnchor) ?? 0;
             final previousFocusOffset =
                 previousExtents?.offsetForRow(focusAnchor) ?? 0;
-            _measureMornyeLines(context, layoutWidth);
+            _measureSistrumLines(context, layoutWidth);
             // Reuse text measurements; only interpolate row heights as the
             // supplements fade. Scrolling follows the same animation clock.
             final geometryKey = (
@@ -923,7 +923,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               }
             });
           }
-          final topPadding = mornye
+          final topPadding = sistrum
               ? _focusInset
               : syncedLyricsCenterPadding(
                   viewportDimension: constraints.maxHeight,
@@ -931,7 +931,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 );
           // Leave enough trailing space for the final line to reach the same
           // upper focus position as every other line.
-          final bottomPadding = mornye && _lineExtents!.isNotEmpty
+          final bottomPadding = sistrum && _lineExtents!.isNotEmpty
               ? (constraints.maxHeight - _lineExtents!.last - topPadding).clamp(
                   topPadding,
                   double.infinity,
@@ -939,7 +939,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               : topPadding;
           return ListView.builder(
             controller: _scroll,
-            itemExtentBuilder: mornye
+            itemExtentBuilder: sistrum
                 ? (index, _) => index < lines.length
                       ? _lineExtents![index]
                       : widget.credits!.heightFor(context, contentWidth)
@@ -962,7 +962,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               final isActive = _activeLines.contains(index);
               final isPast = index < active;
 
-              final color = mornye
+              final color = sistrum
                   ? Colors.white
                   : isActive
                   ? widget.colorScheme.onSurface
@@ -982,7 +982,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                     child: SizedBox(
                       height: 24,
                       child: Align(
-                        alignment: mornye
+                        alignment: sistrum
                             ? AlignmentDirectional.centerStart
                             : Alignment.center,
                         child:
@@ -1019,7 +1019,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   initialPosition: _activeTransitionPosition,
                   seekPreview: widget.seekPreview,
                   supplementVisibility: visibility,
-                  pronunciationLayout: mornye
+                  pronunciationLayout: sistrum
                       ? _pronunciationLayouts[index]
                       : null,
                   textAlign: textAlign,
@@ -1030,8 +1030,8 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   textAlign: textAlign,
                   // Focus changes paint scale, never font metrics or wrapping
                   // shared by the plain and word-timed line.
-                  style: mornye
-                      ? _mornyeLyricStyle(
+                  style: sistrum
+                      ? _sistrumLyricStyle(
                           context,
                           background: line.isBackground,
                         ).copyWith(color: color)
@@ -1053,7 +1053,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   content,
                   color,
                   visibility: visibility,
-                  pronunciationLayout: mornye
+                  pronunciationLayout: sistrum
                       ? _pronunciationLayouts[index]
                       : null,
                   textAlign: textAlign,
@@ -1073,7 +1073,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   child: SizedBox(width: double.infinity, child: content),
                 ),
               );
-              if (mornye) {
+              if (sistrum) {
                 final activeLead = active < 0 ? -1 : _focus;
                 final distance = activeLead < 0
                     ? row + 1
@@ -1133,7 +1133,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                           },
                     child: AnimatedScale(
                       scale: isActive ? 1.0 : 0.96,
-                      alignment: !mornye
+                      alignment: !sistrum
                           ? Alignment.center
                           : (textAlign == TextAlign.end
                                     ? AlignmentDirectional.centerEnd
@@ -1142,7 +1142,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       duration: motion,
                       curve: Curves.easeOutCubic,
                       child: AnimatedOpacity(
-                        opacity: mornye
+                        opacity: sistrum
                             ? (isActive || highContrast ? 1 : 0.48)
                             : (isActive ? 1.0 : (isPast ? 0.55 : 0.85)),
                         duration: motion,
@@ -1458,10 +1458,10 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
 
 // Merged over the ambient text style, as a Text widget would, so measured,
 // plain and word-timed lines share the same metrics and wrapping.
-TextStyle _mornyeLyricStyle(BuildContext context, {bool background = false}) =>
+TextStyle _sistrumLyricStyle(BuildContext context, {bool background = false}) =>
     DefaultTextStyle.of(context).style.merge(
       (Theme.of(context).textTheme.headlineSmall ?? const TextStyle()).copyWith(
-        fontSize: _mornyeLyricFontSize * (background ? 0.68 : 1),
+        fontSize: _sistrumLyricFontSize * (background ? 0.68 : 1),
         height: context.tokens.lyricsLineHeight,
         fontWeight: FontWeight.bold,
       ),
@@ -1534,7 +1534,7 @@ Widget _withLyricSupplements(
       line.romanization?.trim().isNotEmpty != true) {
     return withSupplements(primary);
   }
-  final primaryStyle = _mornyeLyricStyle(
+  final primaryStyle = _sistrumLyricStyle(
     context,
     background: line.isBackground,
   );
@@ -1822,7 +1822,7 @@ class _WordHighlightedLyricLineState
 
   @override
   Widget build(BuildContext context) {
-    final style = _mornyeLyricStyle(
+    final style = _sistrumLyricStyle(
       context,
       background: widget.line.isBackground,
     );

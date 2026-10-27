@@ -11,12 +11,12 @@ pub enum LocalBackendError {
 /// Owns local scanning and atomic tag edits; no credentials or network runtime.
 #[derive(uniffi::Object)]
 pub struct LocalBackend {
-    pub(crate) inner: spotiflac_local::backend::Backend,
+    pub(crate) inner: sistrum_local::backend::Backend,
 }
 
 #[derive(uniffi::Object)]
 pub struct LocalDirectoryScope {
-    grants: Mutex<Option<Vec<spotiflac_local::files::TemporaryGrant>>>,
+    grants: Mutex<Option<Vec<sistrum_local::files::TemporaryGrant>>>,
 }
 
 #[uniffi::export]
@@ -34,7 +34,7 @@ impl LocalBackend {
     #[uniffi::constructor]
     pub fn new(data_directory: String) -> Result<Self, LocalBackendError> {
         Ok(Self {
-            inner: spotiflac_local::backend::Backend::new(Path::new(&data_directory))
+            inner: sistrum_local::backend::Backend::new(Path::new(&data_directory))
                 .map_err(LocalBackendError::Operation)?,
         })
     }

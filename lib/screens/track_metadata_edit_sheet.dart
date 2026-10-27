@@ -6,18 +6,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
-import 'package:spotiflac_android/controllers/metadata_editor_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
-import 'package:spotiflac_android/services/metadata_cover_resources.dart';
-import 'package:spotiflac_android/services/metadata_persistence_service.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
-import 'package:spotiflac_android/widgets/app_action_button.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/widgets/app_switch.dart';
-import 'package:spotiflac_android/widgets/metadata_text_field.dart';
+import 'package:sistrum/controllers/metadata_editor_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/services/metadata_cover_resources.dart';
+import 'package:sistrum/services/metadata_persistence_service.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/widgets/app_action_button.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/app_switch.dart';
+import 'package:sistrum/widgets/metadata_text_field.dart';
 
 class EditMetadataSheet extends StatefulWidget {
   final ColorScheme colorScheme;
@@ -611,7 +611,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Material(
-        color: MornyeTheme.controlFill(context),
+        color: SistrumTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
@@ -991,13 +991,13 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: MornyeTheme.controlFill(context),
+        color: SistrumTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: DividerTheme(
           data: DividerTheme.of(
             context,
-          ).copyWith(color: MornyeTheme.metadataDividerColor(context)),
+          ).copyWith(color: SistrumTheme.metadataDividerColor(context)),
           child: content,
         ),
       ),

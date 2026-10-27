@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
 
 /// Call only after deletion succeeds. Scanned rows can share a physical file,
 /// so every index must be cleared together. Capture the app container before

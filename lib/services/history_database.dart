@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
-import 'package:spotiflac_android/services/history_maintenance.dart';
-import 'package:spotiflac_android/utils/isrc_utils.dart' as isrc;
-import 'package:spotiflac_android/utils/ios_container_paths.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/utils/audio_format_utils.dart';
+import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/history_maintenance.dart';
+import 'package:sistrum/utils/isrc_utils.dart' as isrc;
+import 'package:sistrum/utils/ios_container_paths.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/audio_format_utils.dart';
 
 final _log = AppLogger('HistoryDatabase');
 

@@ -5,8 +5,8 @@ import 'dart:ui' as ui;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/utils/logger.dart';
 
 class PlayerWidgetArtwork {
   const PlayerWidgetArtwork(this.png, this.background);

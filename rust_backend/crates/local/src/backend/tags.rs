@@ -2,9 +2,7 @@ use super::Backend;
 use crate::files::LocalFiles;
 use cap_std::fs::{File, OpenOptions};
 use serde_json::{Value, json};
-use spotiflac_core::tags::{
-    rewrite_audio_tags, rewrite_flac_tags_if_changed, rewrite_m4a_freeform,
-};
+use sistrum_core::tags::{rewrite_audio_tags, rewrite_flac_tags_if_changed, rewrite_m4a_freeform};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::io::Read;

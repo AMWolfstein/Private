@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
+import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/audio_metadata_mapper.dart';
+import 'package:sistrum/utils/artist_utils.dart';
 
 void main() {
   test(

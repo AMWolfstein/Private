@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/controllers/metadata_editor_controller.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
+import 'package:sistrum/controllers/metadata_editor_controller.dart';
+import 'package:sistrum/models/metadata_separators.dart';
 
 void main() {
   test('save snapshots preserve empty tags and explicit track/disc totals', () {

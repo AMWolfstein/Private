@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
 
 void main() {
   test(
-    'old Material settings migrate to Mornye, retaining light/dark mode',
+    'old Material settings migrate to Sistrum, retaining light/dark mode',
     () {
       final theme = ThemeSettings.fromJson({
         'theme_style': 'material',

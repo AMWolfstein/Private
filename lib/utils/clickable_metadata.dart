@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/local_artist_screen.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/utils/artist_utils.dart';
+import 'package:sistrum/utils/logger.dart';
 
 Future<void> navigateToArtistCredits(
   BuildContext context, {

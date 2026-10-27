@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/settings/metadata_separator_settings_page.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -17,10 +17,10 @@ class _Settings extends SettingsNotifier {
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     for (final size in [const Size(390, 844), const Size(844, 390)]) {
       testWidgets(
-        'separator preview, save, cancel and reset ($mornye, $size)',
+        'separator preview, save, cancel and reset ($sistrum, $size)',
         (tester) async {
           tester.view.physicalSize = size;
           tester.view.devicePixelRatio = 1;
@@ -33,7 +33,7 @@ void main() {
             UncontrolledProviderScope(
               container: container,
               child: MaterialApp(
-                theme: ThemeData(extensions: [if (mornye) const MornyeTheme()]),
+                theme: ThemeData(extensions: [if (sistrum) const SistrumTheme()]),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: const MetadataSeparatorSettingsPage(),

@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/settings/playback_settings_page.dart';
-import 'package:spotiflac_android/screens/settings/settings_search_catalog.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/settings/playback_settings_page.dart';
+import 'package:sistrum/screens/settings/settings_search_catalog.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 void main() {
-  for (final mornye in [true]) {
-    testWidgets('automatic controls persist in both themes ($mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('automatic controls persist in both themes ($sistrum)', (
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({});
@@ -35,8 +35,8 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye
-                ? MornyeTheme.build(Brightness.dark, accent: MornyeAccent.blue)
+            theme: sistrum
+                ? SistrumTheme.build(Brightness.dark, accent: SistrumAccent.blue)
                 : AppTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,

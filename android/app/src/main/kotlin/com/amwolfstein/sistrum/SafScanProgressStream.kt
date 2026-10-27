@@ -48,7 +48,7 @@ internal object SafScanProgressStream {
                 events.success(parseJsonPayload(initialPayload))
             } catch (error: Exception) {
                 Log.w(
-                    "SpotiFLAC",
+                    "Sistrum",
                     "Library scan progress initial poll failed: ${error.message}",
                 )
             }
@@ -63,7 +63,7 @@ internal object SafScanProgressStream {
                     sinkFailures = 0
                 } catch (error: Exception) {
                     Log.w(
-                        "SpotiFLAC",
+                        "Sistrum",
                         "Library scan progress stream poll failed: ${error.message}",
                     )
                     sinkFailures++

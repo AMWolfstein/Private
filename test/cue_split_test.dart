@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/services/ffmpeg_cue.dart';
-import 'package:spotiflac_android/services/ffmpeg_models.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/widgets/local_song_file_actions.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/ffmpeg_cue.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/widgets/local_song_file_actions.dart';
 
 class _ScanLibrary extends LocalLibraryNotifier {
   _ScanLibrary(this.initialSources);

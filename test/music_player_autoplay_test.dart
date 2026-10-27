@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/music_player_service.dart';
 
 PlayableMedia track(
   String id, {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/app_tokens.dart';
 
 class AudioQualityBadge extends StatelessWidget {
   final String label;
@@ -53,7 +53,7 @@ class ExplicitBadge extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               // Opaque: the translucent fill left the white E at about 3.9:1
-              // on light Mornye.
+              // on light Sistrum.
               color: colorScheme.onSurfaceVariant,
               borderRadius: context.tokens.borderRadiusBadge,
             ),

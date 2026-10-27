@@ -1,24 +1,24 @@
-import 'package:spotiflac_android/services/playback_equalizer.dart';
+import 'package:sistrum/services/playback_equalizer.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart' show CupertinoButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/services/audio_route_info.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/int_utils.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/audio_analysis_widget.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/audio_route_info.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 /// Technical details of the playing track, from the file through the
 /// processing chain to the output device.
@@ -189,7 +189,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
   }
 }
 
-/// Mornye sheets are glass, so a settings cell color would vanish into them;
+/// Sistrum sheets are glass, so a settings cell color would vanish into them;
 /// rows use the translucent control fill, like the track details page.
 class _FactGroup extends StatelessWidget {
   const _FactGroup({required this.children});
@@ -201,7 +201,7 @@ class _FactGroup extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: MornyeTheme.controlFill(context),
+        color: SistrumTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
@@ -222,7 +222,7 @@ class _FactRow extends StatelessWidget {
     final colors = theme.colorScheme;
     final tokens = context.tokens;
 
-    // Mornye rows line up with the section header, as in iOS inset lists.
+    // Sistrum rows line up with the section header, as in iOS inset lists.
     final inset = 16.0;
     final valueStyle = (theme.textTheme.bodyLarge)?.copyWith(
       color: fact.emphasis ? colors.primary : colors.onSurfaceVariant,
@@ -269,7 +269,7 @@ class _FactRow extends StatelessWidget {
               height: 1,
               indent: inset,
               endIndent: 0,
-              color: MornyeTheme.metadataDividerColor(context),
+              color: SistrumTheme.metadataDividerColor(context),
             ),
         ],
       ),

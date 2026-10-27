@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/album_track_tile.dart';
-import 'package:spotiflac_android/widgets/destructive_selection_button.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/album_track_tile.dart';
+import 'package:sistrum/widgets/destructive_selection_button.dart';
 
 class _Local extends LocalLibraryNotifier {
   final removedIds = <String>[];
@@ -91,7 +91,7 @@ void main() {
           musicPlayerControllerProvider.overrideWithValue(_Player()),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: SistrumTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: LocalAlbumScreen(
@@ -175,7 +175,7 @@ void main() {
           musicPlayerControllerProvider.overrideWithValue(_Player()),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: SistrumTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: LocalAlbumScreen(

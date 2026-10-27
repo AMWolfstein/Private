@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/equalizer_preset_io.dart';
+import 'package:sistrum/services/equalizer_preset_io.dart';
 
 void main() {
   test('preset UTF-8 survives chunk boundaries and exact byte cap', () async {

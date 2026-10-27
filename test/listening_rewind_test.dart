@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/screens/listening_rewind_screen.dart';
-import 'package:spotiflac_android/services/listening_rewind.dart';
-import 'package:spotiflac_android/services/listening_statistics.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/screens/listening_rewind_screen.dart';
+import 'package:sistrum/services/listening_rewind.dart';
+import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 import 'support/sqlite_process_database.dart';
 
@@ -263,8 +263,8 @@ void main() {
     );
   });
 
-  for (final mornye in [true]) {
-    testWidgets('Rewind story steps through highlights ($mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('Rewind story steps through highlights ($sistrum)', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(1080, 2400);
@@ -278,7 +278,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             // Reduced motion: no auto-advance, so the story waits for taps.
@@ -439,8 +439,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [true]) {
-    testWidgets('yearly slides fit landscape with large text ($mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('yearly slides fit landscape with large text ($sistrum)', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(780, 360);
@@ -466,7 +466,7 @@ void main() {
             listeningRewindProvider.overrideWith((ref, period) async => rewind),
           ],
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (context, child) => MediaQuery(
@@ -550,7 +550,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => MediaQuery(
@@ -589,7 +589,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ListeningRewindScreen(

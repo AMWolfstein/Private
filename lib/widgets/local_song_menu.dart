@@ -1,30 +1,30 @@
 import 'dart:io';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/utils/clickable_metadata.dart';
-import 'package:spotiflac_android/widgets/local_song_file_actions.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/widgets/local_song_file_actions.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/services/library_edited_metadata.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/library_edited_metadata.dart';
+import 'package:sistrum/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/track_metadata_edit_sheet.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/audio_analysis_widget.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/track_metadata_edit_sheet.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
 
 final localSongLookupProvider = FutureProvider.autoDispose
     .family<
@@ -91,24 +91,24 @@ Future<bool> showLocalSongMenu(
   Rect? anchor,
 }) async {
   final cue = isCueSong(item);
-  final action = await showMornyeContextMenu<String>(
+  final action = await showSistrumContextMenu<String>(
     context: context,
     anchor: anchor,
     fitToAnchorSpace: true,
     builder: (menuContext) {
       final l10n = context.l10n;
-      MornyeMenuAction option(
+      SistrumMenuAction option(
         String id,
         IconData icon,
         String label, {
         bool destructive = false,
-      }) => MornyeMenuAction(
-        icon: mornyeIconFor(icon),
+      }) => SistrumMenuAction(
+        icon: sistrumIconFor(icon),
         label: label,
         destructive: destructive,
         onPressed: () => Navigator.of(menuContext).pop(id),
       );
-      return MornyeContextMenu(
+      return SistrumContextMenu(
         quickActions: [
           option('play', CupertinoIcons.play_fill, l10n.tooltipPlay),
           option('share', CupertinoIcons.share_solid, l10n.trackMetadataShare),
@@ -120,7 +120,7 @@ Future<bool> showLocalSongMenu(
             if (item.albumName.trim().isNotEmpty)
               option('album', Icons.album_outlined, l10n.homeGoToAlbum),
             if (item.artistName.trim().isNotEmpty)
-              option('artist', Icons.person_outline, l10n.mornyeGoToArtist),
+              option('artist', Icons.person_outline, l10n.sistrumGoToArtist),
           ],
           [
             if (!cue) ...[

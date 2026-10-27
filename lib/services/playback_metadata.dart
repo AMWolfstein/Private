@@ -1,7 +1,7 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/int_utils.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 /// Technical audio metadata carried with a queue item. This is available
 /// immediately when tracks change, before a fresh file probe completes.

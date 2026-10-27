@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/utils/logger.dart';
 
 var _snapshotSequence = 0;
 const _coverReferences =

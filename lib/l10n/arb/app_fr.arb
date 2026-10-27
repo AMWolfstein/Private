@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "La connexion audio USB a changé. La lecture est en pause ; sélectionnez un morceau pour rétablir la connexion.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Rouge (par défaut)",
   "appearanceAccentOrange": "Orange",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Rose",
   "appearanceGlassClarity": "Transparence du verre",
   "appearanceGlassOutlines": "Contours en verre",
-  "appearanceGlassOutlinesSubtitle": "Affiche un léger liseré autour du verre Mornye. La désactivation laisse le verre lui-même inchangé.",
-  "appearanceGlassClaritySubtitle": "Régler la transparence des menus et de la navigation dans Mornye. Le contraste du texte est conservé.",
+  "appearanceGlassOutlinesSubtitle": "Affiche un léger liseré autour du verre Sistrum. La désactivation laisse le verre lui-même inchangé.",
+  "appearanceGlassClaritySubtitle": "Régler la transparence des menus et de la navigation dans Sistrum. Le contraste du texte est conservé.",
   "appearanceGlassTinted": "Teinté",
   "appearanceGlassClear": "Effacer",
   "appearanceGlassClearPerformance": "Un verre très transparent peut consommer davantage et être moins fluide sur les anciens appareils. Réduisez la clarté si nécessaire.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Réglez la lecture, l'analyse de la bibliothèque, les paroles, l'apparence de Mornye et le stockage local.",
+  "tutorialSettingsDesc": "Réglez la lecture, l'analyse de la bibliothèque, les paroles, l'apparence de Sistrum et le stockage local.",
   "tutorialSettingsTip1": "Gérez les dossiers musicaux et l'accès aux fichiers locaux",
   "tutorialSettingsTip2": "Réglez votre bibliothèque locale, la lecture et l’apparence.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Albums incomplets",
   "libraryAlbumCompletenessUnknown": "Complétude de l'album inconnue",
   "libraryAlbumMissingTracks": "{present}/{expected} pistes · {missing} manquante(s)",
-  "mornyeSearch": "Rechercher",
-  "mornyeContinuePlaying": "Continuer à lire",
-  "mornyeFavorite": "Favoris",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Rechercher",
+  "sistrumContinuePlaying": "Continuer à lire",
+  "sistrumFavorite": "Favoris",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Aller à la page de l'artiste",
-  "mornyeFavorited": "Ajouté aux favoris",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Aller à la page de l'artiste",
+  "sistrumFavorited": "Ajouté aux favoris",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Mélangez des morceaux grâce à la synchronisation des rythmes et à l'ajustement du tempo tout en conservant la hauteur tonale. Utilise un fondu enchaîné lorsque les rythmes ne peuvent pas être synchronisés.",

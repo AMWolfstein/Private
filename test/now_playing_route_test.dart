@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/screens/now_playing_screen.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 const _sheet = Key('player-sheet');
 
@@ -33,7 +33,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         navigatorKey: navigator,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         home: const SizedBox(),
       ),
     );
@@ -108,7 +108,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         navigatorKey: navigator,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: SistrumTheme.build(Brightness.dark),
         home: const SizedBox(),
       ),
     );
@@ -146,7 +146,7 @@ void main() {
         final navigator = GlobalKey<NavigatorState>();
         final capture = GlobalKey();
         const background = Color(0xffff00ff);
-        final theme = MornyeTheme.build(brightness);
+        final theme = SistrumTheme.build(brightness);
         final playerBackground = theme.colorScheme.surface;
         await tester.pumpWidget(
           RepaintBoundary(

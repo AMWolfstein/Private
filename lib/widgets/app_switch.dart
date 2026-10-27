@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoColors;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/widgets/mornye_glass_thumb.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/widgets/sistrum_glass_thumb.dart';
 
 /// One switch style for settings, extension controls and editing sheets.
-/// Mornye keeps its wide oval thumb even when glass or motion is disabled.
+/// Sistrum keeps its wide oval thumb even when glass or motion is disabled.
 class AppSwitch extends StatelessWidget {
   const AppSwitch({
     super.key,
@@ -22,7 +22,7 @@ class AppSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _MornyeSwitch(
+    return _SistrumSwitch(
       value: value,
       onChanged: onChanged,
       semanticLabel: semanticLabel,
@@ -30,8 +30,8 @@ class AppSwitch extends StatelessWidget {
   }
 }
 
-class _MornyeSwitch extends ConsumerStatefulWidget {
-  const _MornyeSwitch({
+class _SistrumSwitch extends ConsumerStatefulWidget {
+  const _SistrumSwitch({
     required this.value,
     required this.onChanged,
     required this.semanticLabel,
@@ -42,10 +42,10 @@ class _MornyeSwitch extends ConsumerStatefulWidget {
   final String? semanticLabel;
 
   @override
-  ConsumerState<_MornyeSwitch> createState() => _MornyeSwitchState();
+  ConsumerState<_SistrumSwitch> createState() => _SistrumSwitchState();
 }
 
-class _MornyeSwitchState extends ConsumerState<_MornyeSwitch> {
+class _SistrumSwitchState extends ConsumerState<_SistrumSwitch> {
   // Geometry shared by the painted thumb and the glass overlay. The box is
   // 48dp tall so the switch stays a full-size tap target.
   static const _box = Size(71, 48);
@@ -73,9 +73,9 @@ class _MornyeSwitchState extends ConsumerState<_MornyeSwitch> {
         ? const Color(0xff39393d)
         : const Color(0xff8e8e93);
 
-    // Glass follows the shared thumb gate, upstream Mornye 9247b99a's
+    // Glass follows the shared thumb gate, upstream Sistrum 9247b99a's
     // enabled/motion/contrast/liquid checks, and needs an enabled control.
-    final glassAllowed = enabled && mornyeGlassThumbsEnabled(context, ref);
+    final glassAllowed = enabled && sistrumGlassThumbsEnabled(context, ref);
     final glass = _touchGlass ?? glassAllowed;
     final position = _dragPosition ?? (value ? 1.0 : 0.0);
     final thumbDuration = _dragPosition == null ? duration : Duration.zero;
@@ -130,13 +130,13 @@ class _MornyeSwitchState extends ConsumerState<_MornyeSwitch> {
                       if (Directionality.of(context) == TextDirection.rtl) {
                         x = _box.width - x;
                       }
-                      return MornyeGlassThumb(
+                      return SistrumGlassThumb(
                         center: Offset(x, _box.height / 2),
                         held: _touchGlass == true,
                         restSize: _thumb,
                         activeSize: const Size(58, 38.33),
-                        style: mornyeGlassThumbStyle(
-                          outlines: ref.watch(mornyeGlassOutlinesProvider),
+                        style: sistrumGlassThumbStyle(
+                          outlines: ref.watch(sistrumGlassOutlinesProvider),
                           dispersion: 1,
                         ),
                       );

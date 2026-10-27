@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoDynamicColor, kCupertinoModalBarrierColor;
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
 
 /// The drag handle shown at the top of every modal sheet.
 ///
@@ -180,7 +180,7 @@ Future<T?> showAppModalBottomSheet<T>({
   BoxConstraints? constraints,
   Color? backgroundColor,
 }) {
-  final mornye = context.isMornye;
+  final sistrum = context.isSistrum;
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
@@ -195,8 +195,8 @@ Future<T?> showAppModalBottomSheet<T>({
       context,
     ),
     elevation: 0,
-    builder: (context) => mornye
-        ? MornyeGlassPanel.overlay(child: Builder(builder: builder))
+    builder: (context) => sistrum
+        ? SistrumGlassPanel.overlay(child: Builder(builder: builder))
         : builder(context),
   );
 }
@@ -229,7 +229,7 @@ class AppSheetOption extends StatelessWidget {
     Widget adaptedIcon(Widget widget, double size) {
       if (widget case Icon(:final icon?)) {
         return Icon(
-          mornyeIconFor(icon),
+          sistrumIconFor(icon),
           size: size,
           color: enabled ? widget.color ?? scheme.primary : theme.disabledColor,
         );

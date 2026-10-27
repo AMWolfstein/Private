@@ -150,7 +150,7 @@ mod tests {
         );
         let mut file = std::fs::File::open(path).unwrap();
         let metadata =
-            spotiflac_core::tags::read_file_metadata(&mut file, path, "", &|| Ok(())).unwrap();
+            sistrum_core::tags::read_file_metadata(&mut file, path, "", &|| Ok(())).unwrap();
         assert_eq!(metadata["title"], "Offline title");
         assert!(
             fs::read(path)

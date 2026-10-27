@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/mini_player.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/mini_player.dart';
 
 void main() {
   Future<void> pumpPlayer(
@@ -27,10 +27,10 @@ void main() {
             (ref) => Stream.value(PlaybackState(playing: true)),
           ),
           lowEndDeviceProvider.overrideWithValue(true),
-          mornyeLiquidGlassProvider.overrideWithValue(false),
+          sistrumLiquidGlassProvider.overrideWithValue(false),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: SistrumTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(

@@ -1,4 +1,4 @@
-use spotiflac_core::cancellation as core;
+use sistrum_core::cancellation as core;
 use std::sync::Arc;
 
 #[derive(Debug, thiserror::Error, uniffi::Error)]

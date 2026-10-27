@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
-import 'package:spotiflac_android/services/ffmpeg_service.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/logger.dart';
 
 /// ReplayGain scanning and tag removal for existing audio files.
 ///

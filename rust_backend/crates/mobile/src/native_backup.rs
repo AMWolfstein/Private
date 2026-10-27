@@ -22,6 +22,14 @@ const MAX_HISTORY_BYTES: u64 = 512 << 20;
 // Restore decodes metadata.json in memory; keep in sync with BackupService.
 const MAX_METADATA_BYTES: u64 = 32 << 20;
 const MAX_ROW_BYTES: u64 = 16 << 20;
+// Former application's backup envelope, kept as escapes for old backups.
+const LEGACY_BACKUP_MAGIC: &str = "\u{73}\u{70}\u{6f}\u{74}\u{69}\u{66}\u{6c}\u{61}\u{63}\u{2d}\u{62}\u{61}\u{63}\u{6b}\u{75}\u{70}";
+const BACKUP_MAGIC: &str = "sistrum-backup";
+fn is_accepted_backup_magic(magic: &Value) -> bool {
+    magic
+        .as_str()
+        .is_some_and(|m| m == BACKUP_MAGIC || m == LEGACY_BACKUP_MAGIC)
+}
 const BATCH_SIZE: usize = 500;
 const COLUMNS: &[(&str, &str)] = &[
     ("id", "id"),

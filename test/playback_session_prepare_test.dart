@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/playback_session_prepare.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/playback_session_prepare.dart';
 
 Map<String, dynamic> _media(int index, {String? artwork, String? source}) =>
     PlayableMedia(

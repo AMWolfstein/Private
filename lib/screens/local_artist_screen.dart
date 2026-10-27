@@ -1,29 +1,29 @@
-import 'package:spotiflac_android/utils/release_date_display.dart';
-import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/error_card.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
+import 'package:sistrum/utils/release_date_display.dart';
+import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/sistrum_context_menu.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/local_artist_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_artist_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
 
-/// Mornye's former artist detail composition, backed entirely by local music.
+/// Sistrum's former artist detail composition, backed entirely by local music.
 class LocalArtistScreen extends ConsumerStatefulWidget {
   const LocalArtistScreen({
     super.key,
@@ -170,7 +170,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
         )
         .firstOrNull;
     final favorite = favoriteEntry != null;
-    return MornyeArtistSurface(
+    return SistrumArtistSurface(
       imageSource: cover,
       child: Builder(
         builder: (context) {
@@ -179,7 +179,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
             body: CustomScrollView(
               controller: _scroll,
               slivers: [
-                ...MornyeArtistHeader(
+                ...SistrumArtistHeader(
                   name: widget.artistName,
                   artwork: _artwork(
                     cover,
@@ -199,7 +199,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       glassTintOpacity: .10,
                       tooltip: favorite
                           ? context.l10n.artistOptionRemoveFromFavorites
-                          : context.l10n.mornyeFavorite,
+                          : context.l10n.sistrumFavorite,
                       onPressed: () async {
                         try {
                           if (favoriteEntry != null) {
@@ -388,7 +388,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                                           context,
                                           ref,
                                           track,
-                                          anchor: mornyeMenuAnchor(
+                                          anchor: sistrumMenuAnchor(
                                             buttonContext,
                                           ),
                                         ),
@@ -459,7 +459,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     );
   }
 
-  // Ported from the original online artist's Mornye featured-release card.
+  // Ported from the original online artist's Sistrum featured-release card.
   Widget _featuredAlbum(BuildContext context, LibraryBrowseEntry album) =>
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),

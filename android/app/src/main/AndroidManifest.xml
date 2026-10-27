@@ -27,7 +27,7 @@
 
     <application
         android:label="${appLabel}"
-        android:name=".SpotiFlacApplication"
+        android:name=".SistrumApplication"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_rules_legacy"

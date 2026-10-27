@@ -4,15 +4,15 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:spotiflac_android/models/library_collections.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/services/ffmpeg_service.dart';
-import 'package:spotiflac_android/services/library_collections_database.dart';
-import 'package:spotiflac_android/services/library_collections_hydration.dart';
-import 'package:spotiflac_android/services/collection_track_batch.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/library_collections_database.dart';
+import 'package:sistrum/services/library_collections_hydration.dart';
+import 'package:sistrum/services/collection_track_batch.dart';
+import 'package:sistrum/utils/logger.dart';
 
-export 'package:spotiflac_android/models/library_collections.dart';
+export 'package:sistrum/models/library_collections.dart';
 
 const _playlistCoverMaxDimension = 1024;
 const _playlistCoverMaxStoredBytes = 2 * 1024 * 1024;

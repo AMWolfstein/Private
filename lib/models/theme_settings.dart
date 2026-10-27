@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const String kThemeModeKey = 'theme_mode';
-const String kMornyeAccentKey = 'mornye_accent';
+const String kSistrumAccentKey = 'sistrum_accent';
 const String kUseSystemFontKey = 'use_system_font';
 const String kCustomFontIdKey = 'custom_font_id';
 const String kCustomFontNameKey = 'custom_font_name';
@@ -10,7 +10,12 @@ const String kLyricsTextScaleKey = 'lyrics_text_scale';
 
 double normalizeLyricsTextScale(num? value) =>
     value != null && value.isFinite ? value.toDouble().clamp(0.8, 1.4) : 1.0;
-const String kMornyeGlassOutlinesKey = 'mornye_glass_outlines';
+const String kSistrumGlassOutlinesKey = 'sistrum_glass_outlines';
+
+// Read settings and backups written before the identity change.
+const String kLegacyAccentKey = '\u006d\u006f\u0072\u006e\u0079\u0065_accent';
+const String kLegacyGlassOutlinesKey =
+    '\u006d\u006f\u0072\u006e\u0079\u0065_glass_outlines';
 
 enum PlayerView { normal, immersive }
 
@@ -19,72 +24,72 @@ PlayerView playerViewFromString(String? value) => PlayerView.values.firstWhere(
   orElse: () => PlayerView.normal,
 );
 
-enum MornyeAccent { red, orange, green, teal, blue, purple, pink }
+enum SistrumAccent { red, orange, green, teal, blue, purple, pink }
 
-MornyeAccent mornyeAccentFromString(String? value) =>
-    MornyeAccent.values.firstWhere(
+SistrumAccent sistrumAccentFromString(String? value) =>
+    SistrumAccent.values.firstWhere(
       (accent) => accent.name == value,
-      orElse: () => MornyeAccent.red,
+      orElse: () => SistrumAccent.red,
     );
 
 class ThemeSettings {
   final ThemeMode themeMode;
   final PlayerView playerView;
 
-  final MornyeAccent mornyeAccent;
+  final SistrumAccent sistrumAccent;
   final bool useSystemFont;
   final String customFontId;
   final String customFontName;
   final double lyricsTextScale;
-  final bool mornyeGlassOutlines;
+  final bool sistrumGlassOutlines;
 
   const ThemeSettings({
     this.themeMode = ThemeMode.system,
     this.playerView = PlayerView.normal,
 
-    this.mornyeAccent = MornyeAccent.red,
+    this.sistrumAccent = SistrumAccent.red,
     this.useSystemFont = false,
     this.customFontId = '',
     this.customFontName = '',
     this.lyricsTextScale = 1,
-    this.mornyeGlassOutlines = true,
+    this.sistrumGlassOutlines = true,
   });
 
   ThemeSettings copyWith({
     ThemeMode? themeMode,
     PlayerView? playerView,
 
-    MornyeAccent? mornyeAccent,
+    SistrumAccent? sistrumAccent,
     bool? useSystemFont,
     String? customFontId,
     String? customFontName,
     double? lyricsTextScale,
-    bool? mornyeGlassOutlines,
+    bool? sistrumGlassOutlines,
   }) {
     return ThemeSettings(
       themeMode: themeMode ?? this.themeMode,
       playerView: playerView ?? this.playerView,
 
-      mornyeAccent: mornyeAccent ?? this.mornyeAccent,
+      sistrumAccent: sistrumAccent ?? this.sistrumAccent,
       useSystemFont: useSystemFont ?? this.useSystemFont,
       customFontId: customFontId ?? this.customFontId,
       customFontName: customFontName ?? this.customFontName,
       lyricsTextScale: normalizeLyricsTextScale(
         lyricsTextScale ?? this.lyricsTextScale,
       ),
-      mornyeGlassOutlines: mornyeGlassOutlines ?? this.mornyeGlassOutlines,
+      sistrumGlassOutlines: sistrumGlassOutlines ?? this.sistrumGlassOutlines,
     );
   }
 
   Map<String, dynamic> toJson() => {
     kThemeModeKey: themeMode.name,
     kPlayerViewKey: playerView.name,
-    kMornyeAccentKey: mornyeAccent.name,
+    kSistrumAccentKey: sistrumAccent.name,
     kUseSystemFontKey: useSystemFont,
     kCustomFontIdKey: customFontId,
     kCustomFontNameKey: customFontName,
     kLyricsTextScaleKey: lyricsTextScale,
-    kMornyeGlassOutlinesKey: mornyeGlassOutlines,
+    kSistrumGlassOutlinesKey: sistrumGlassOutlines,
   };
 
   factory ThemeSettings.fromJson(Map<String, dynamic> json) {
@@ -92,14 +97,24 @@ class ThemeSettings {
       themeMode: themeModeFromString(json[kThemeModeKey] as String?),
       playerView: playerViewFromString(json[kPlayerViewKey]?.toString()),
 
-      mornyeAccent: mornyeAccentFromString(json[kMornyeAccentKey] as String?),
+      sistrumAccent: sistrumAccentFromString(
+        json[json.containsKey(kSistrumAccentKey)
+                ? kSistrumAccentKey
+                : kLegacyAccentKey]
+            as String?,
+      ),
       useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
       customFontId: json[kCustomFontIdKey] as String? ?? '',
       customFontName: json[kCustomFontNameKey] as String? ?? '',
       lyricsTextScale: normalizeLyricsTextScale(
         json[kLyricsTextScaleKey] as num?,
       ),
-      mornyeGlassOutlines: json[kMornyeGlassOutlinesKey] as bool? ?? true,
+      sistrumGlassOutlines:
+          json[json.containsKey(kSistrumGlassOutlinesKey)
+                  ? kSistrumGlassOutlinesKey
+                  : kLegacyGlassOutlinesKey]
+              as bool? ??
+          true,
     );
   }
 
@@ -109,24 +124,24 @@ class ThemeSettings {
     return other is ThemeSettings &&
         other.themeMode == themeMode &&
         other.playerView == playerView &&
-        other.mornyeAccent == mornyeAccent &&
+        other.sistrumAccent == sistrumAccent &&
         other.useSystemFont == useSystemFont &&
         other.customFontId == customFontId &&
         other.customFontName == customFontName &&
         other.lyricsTextScale == lyricsTextScale &&
-        other.mornyeGlassOutlines == mornyeGlassOutlines;
+        other.sistrumGlassOutlines == sistrumGlassOutlines;
   }
 
   @override
   int get hashCode =>
       themeMode.hashCode ^
       playerView.hashCode ^
-      mornyeAccent.hashCode ^
+      sistrumAccent.hashCode ^
       useSystemFont.hashCode ^
       customFontId.hashCode ^
       customFontName.hashCode ^
       lyricsTextScale.hashCode ^
-      mornyeGlassOutlines.hashCode;
+      sistrumGlassOutlines.hashCode;
 }
 
 ThemeMode themeModeFromString(String? value) {

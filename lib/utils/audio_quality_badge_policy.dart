@@ -1,5 +1,5 @@
-import 'package:spotiflac_android/utils/audio_format_utils.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/utils/audio_format_utils.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 const highQualityBadgeBitrateThresholdKbps = 900;
 

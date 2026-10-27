@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/widgets/mornye_slider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/widgets/sistrum_slider.dart';
 
 /// Sensitivity and strength sliders shown under the music haptics switch.
 class MusicHapticsSettings extends ConsumerStatefulWidget {
@@ -39,7 +39,7 @@ class _MusicHapticsSettingsState extends ConsumerState<MusicHapticsSettings> {
             Text('$label: $percent'),
             Semantics(
               label: label,
-              child: MornyeSlider(
+              child: SistrumSlider(
                 value: value,
                 divisions: 20,
                 label: percent,

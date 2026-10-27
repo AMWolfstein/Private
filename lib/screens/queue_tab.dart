@@ -1,52 +1,52 @@
-import 'package:spotiflac_android/widgets/library_fast_scroller.dart';
-import 'package:spotiflac_android/widgets/library_section_list.dart';
-import 'package:spotiflac_android/screens/local_artist_screen.dart';
+import 'package:sistrum/widgets/library_fast_scroller.dart';
+import 'package:sistrum/widgets/library_section_list.dart';
+import 'package:sistrum/screens/local_artist_screen.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_choice_chip.dart';
-import 'package:spotiflac_android/services/local_track_batch_actions.dart';
-import 'package:spotiflac_android/services/shell_navigation_service.dart';
-import 'package:spotiflac_android/widgets/error_card.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/app_search_field.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/widgets/library_search_results.dart';
-import 'package:spotiflac_android/widgets/library_track_selection_bar.dart';
-import 'package:spotiflac_android/widgets/library_selection_playback_actions.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/services/local_track_batch_actions.dart';
+import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/library_search_results.dart';
+import 'package:sistrum/widgets/library_track_selection_bar.dart';
+import 'package:sistrum/widgets/library_selection_playback_actions.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/utils/library_format_filters.dart';
-import 'package:spotiflac_android/utils/ordered_range_selection.dart';
-import 'package:spotiflac_android/models/unified_library_item.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/album_completeness.dart';
-import 'package:spotiflac_android/services/batch_track_actions.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
-import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/mornye_library_screen.dart';
-import 'package:spotiflac_android/screens/queue_library_refresh_policy.dart';
-import 'package:spotiflac_android/utils/clickable_metadata.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/library_format_filters.dart';
+import 'package:sistrum/utils/ordered_range_selection.dart';
+import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/local_library_artwork_builder.dart';
+import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/screens/sistrum_library_screen.dart';
+import 'package:sistrum/screens/queue_library_refresh_policy.dart';
+import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
 
 part 'queue_tab_helpers.dart';
 part 'queue_tab_selection.dart';
@@ -922,7 +922,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   @override
   Widget build(BuildContext context) {
     if (widget.librarySection == null) {
-      return MornyeLibraryScreen(
+      return SistrumLibraryScreen(
         onOpenSection: (section) => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => Scaffold(body: QueueTab(librarySection: section)),

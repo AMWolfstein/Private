@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
 
 /// Album-style track row: track number, title/subtitle, and a trailing play
 /// button that's hidden once selection mode is active.

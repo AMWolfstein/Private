@@ -7,17 +7,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
-import 'package:spotiflac_android/services/cover_analysis_store.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/theme/cover_colors.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:sistrum/services/cover_analysis_store.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/theme/cover_colors.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
 
-export 'package:spotiflac_android/theme/cover_colors.dart'
+export 'package:sistrum/theme/cover_colors.dart'
     show
         CoverAnalysis,
         CoverColors,
         analyzeCover,
-        mornyeCoverColors,
+        sistrumCoverColors,
         paletteSeedFromColorCounts;
 
 Future<List<List<int>>> _quantizePaletteInIsolate(Uint8List bytes) async {
@@ -46,7 +46,7 @@ Map<String, Object> _analyzeInIsolate(_Sample sample) => analyzeCover(
 
 /// Cover colours: one analysis per cover version, from one small decode.
 ///
-/// Screens read colours only through [colors] (see [mornyeCoverColors]);
+/// Screens read colours only through [colors] (see [sistrumCoverColors]);
 /// [resolve] and [peek] keep supplying generated schemes for headers.
 class CoverPalette {
   const CoverPalette._();
@@ -102,10 +102,10 @@ class CoverPalette {
   static CoverAnalysis? peekAnalysis(String source) =>
       _analyses[_sourceKeys[source]];
 
-  /// Mornye's colours for [source]; neutral gray while unknown or without a
+  /// Sistrum's colours for [source]; neutral gray while unknown or without a
   /// cover.
   static CoverColors colors(String? source) =>
-      mornyeCoverColors(source == null ? null : peekAnalysis(source));
+      sistrumCoverColors(source == null ? null : peekAnalysis(source));
 
   /// Cached scheme for [source], or null when it has not been resolved yet.
   static ColorScheme? peek(String source, Brightness brightness) {
@@ -121,7 +121,7 @@ class CoverPalette {
     Brightness brightness,
   ) {
     final schemeKey = '$key|${brightness.name}';
-    final scheme = _schemes[schemeKey] ??= mornyeCoverColors(
+    final scheme = _schemes[schemeKey] ??= sistrumCoverColors(
       analysis,
     ).scheme(brightness);
     while (_schemes.length > _maxEntries * 2) {
@@ -144,7 +144,7 @@ class CoverPalette {
 
   /// Resolves [source]'s colours; neutral when it cannot be read.
   static Future<CoverColors> resolveColors(String? source) async =>
-      mornyeCoverColors(source == null ? null : await resolveAnalysis(source));
+      sistrumCoverColors(source == null ? null : await resolveAnalysis(source));
 
   /// Mean perceptual lightness (CIE L*, 0..1) of the artwork's top quarter:
   /// what a transparent header floats over. Null when unreadable.
@@ -209,7 +209,7 @@ class CoverPalette {
   }
 
   static Future<CoverAnalysis?> _analyze(String source, String key) async {
-    final task = TimelineTask()..start('Mornye cover analysis');
+    final task = TimelineTask()..start('Sistrum cover analysis');
     try {
       return await _analyzeUntimed(source, key);
     } finally {

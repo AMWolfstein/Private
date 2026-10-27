@@ -1,4 +1,4 @@
-use spotiflac_core::tags::{
+use sistrum_core::tags::{
     AudioMetadata, extract_cover, read_audio_tags, read_library_metadata,
     read_library_metadata_with_cover,
 };

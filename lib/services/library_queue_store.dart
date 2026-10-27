@@ -1,11 +1,11 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/album_completeness.dart';
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/services/library_file_sizes.dart';
-import 'package:spotiflac_android/services/library_schema.dart';
-import 'package:spotiflac_android/services/library_row_mapper.dart';
-import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
-import 'package:spotiflac_android/utils/library_format_filters.dart';
+import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library_file_sizes.dart';
+import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library_row_mapper.dart';
+import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/utils/library_format_filters.dart';
 
 // SQL builders for the queue tab's local-library queries.
 

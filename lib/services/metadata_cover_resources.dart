@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:spotiflac_android/services/ffmpeg_service.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
+import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/platform_bridge.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});
 

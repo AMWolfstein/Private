@@ -1,11 +1,11 @@
 //! Host-only measurement for T10: cover-cache files and scan time for a corpus
 //! where several tracks share one embedded cover.
 //!
-//! `cargo run --release -p spotiflac-local --example cover_cache_probe -- <audio-dir> <data-dir>`
+//! `cargo run --release -p sistrum-local --example cover_cache_probe -- <audio-dir> <data-dir>`
 //! Use a fresh data directory for a cold run; reuse it for a warm run.
 //! Existing files are never removed.
 
-use spotiflac_local::backend::Backend;
+use sistrum_local::backend::Backend;
 use std::path::Path;
 
 fn main() {

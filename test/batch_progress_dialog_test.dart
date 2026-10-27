@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/batch_progress_dialog.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/batch_progress_dialog.dart';
 
 void main() {
   late GlobalKey<NavigatorState> navigator;
@@ -15,7 +15,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           navigatorKey: navigator,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: Text('Home')),

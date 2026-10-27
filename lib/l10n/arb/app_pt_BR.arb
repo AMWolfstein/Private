@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Orange",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "Contornos de vidro",
-  "appearanceGlassOutlinesSubtitle": "Mostra uma borda clara ao redor do vidro Mornye. Desativar não altera o próprio vidro.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Mostra uma borda clara ao redor do vidro Sistrum. Desativar não altera o próprio vidro.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "Vidro muito transparente pode consumir mais energia e parecer menos fluido em aparelhos mais antigos. Reduza a transparência se necessário.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Ajuste a reprodução, a análise da biblioteca, as letras, a aparência do Mornye e o armazenamento local.",
+  "tutorialSettingsDesc": "Ajuste a reprodução, a análise da biblioteca, as letras, a aparência do Sistrum e o armazenamento local.",
   "tutorialSettingsTip1": "Gerencie pastas de música e o acesso a arquivos locais",
   "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Álbuns incompletos",
   "libraryAlbumCompletenessUnknown": "Integridade do álbum desconhecida",
   "libraryAlbumMissingTracks": "{present}/{expected} faixas · {missing} ausentes",
-  "mornyeSearch": "Search",
-  "mornyeContinuePlaying": "Continue Playing",
-  "mornyeFavorite": "Favorite",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Search",
+  "sistrumContinuePlaying": "Continue Playing",
+  "sistrumFavorite": "Favorite",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Go to Artist",
-  "mornyeFavorited": "Favorited",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Go to Artist",
+  "sistrumFavorited": "Favorited",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

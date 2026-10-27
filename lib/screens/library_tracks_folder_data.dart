@@ -1,5 +1,5 @@
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
 
 /// Collection providers replace their track list when its contents change.
 /// Keep derived data across selection/layout rebuilds of the same snapshot.

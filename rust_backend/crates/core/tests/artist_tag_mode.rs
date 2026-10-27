@@ -1,4 +1,4 @@
-use spotiflac_core::tags::{embed_flac_metadata, read_audio_tags, rewrite_audio_tags};
+use sistrum_core::tags::{embed_flac_metadata, read_audio_tags, rewrite_audio_tags};
 use std::collections::BTreeMap;
 use std::io::Cursor;
 

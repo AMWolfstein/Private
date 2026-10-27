@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/models/library_scan_failure.dart';
+import 'package:sistrum/models/library_scan_failure.dart';
 
 const localLibraryLastScannedAtKey = 'local_library_last_scanned_at';
 const localLibraryActiveScanSourceKey = 'local_library_active_scan_source';

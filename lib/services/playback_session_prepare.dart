@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:spotiflac_android/services/music_player_service.dart';
-import 'package:spotiflac_android/utils/playback_artwork.dart';
+import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/utils/playback_artwork.dart';
 
 /// Resolve a saved queue in bounded groups, retaining its original order even
 /// when later file checks finish first. File existence is shared across tracks

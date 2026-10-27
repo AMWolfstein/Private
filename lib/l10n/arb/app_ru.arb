@@ -32,7 +32,7 @@
   "usbBitPerfectRouteChanged": "Маршрут USB-аудио изменился. Воспроизведение приостановлено; выберите трек для повторного подключения.",
   "nowPlayingVolume": "Громкость",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Sistrum player"
   },
   "appearanceAccentRed": "Красный (по умолчанию)",
   "appearanceAccentOrange": "Оранжевый",
@@ -43,8 +43,8 @@
   "appearanceAccentPink": "Розовый",
   "appearanceGlassClarity": "Glass clarity",
   "appearanceGlassOutlines": "Контуры стекла",
-  "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Mornye. Выключение не меняет само стекло.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Sistrum. Выключение не меняет само стекло.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
   "appearanceGlassClear": "Clear",
   "appearanceGlassClearPerformance": "Очень прозрачное стекло может расходовать больше энергии и работать менее плавно на старых устройствах. При необходимости уменьшите прозрачность.",
@@ -1171,7 +1171,7 @@
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
-  "tutorialSettingsDesc": "Настраивайте воспроизведение, сканирование медиатеки, тексты песен, оформление Mornye и локальное хранилище.",
+  "tutorialSettingsDesc": "Настраивайте воспроизведение, сканирование медиатеки, тексты песен, оформление Sistrum и локальное хранилище.",
   "tutorialSettingsTip1": "Управляйте папками с музыкой и доступом к локальным файлам",
   "tutorialSettingsTip2": "Настройте локальную медиатеку, воспроизведение и оформление.",
   "@tutorialSettingsTip2": {
@@ -2429,15 +2429,15 @@
   "libraryFilterIncompleteAlbums": "Неполные альбомы",
   "libraryAlbumCompletenessUnknown": "Полнота альбома неизвестна",
   "libraryAlbumMissingTracks": "{present}/{expected} треков · не хватает {missing}",
-  "mornyeSearch": "Поиск",
-  "mornyeContinuePlaying": "Продолжить воспроизведение",
-  "mornyeFavorite": "В избранное",
-  "@mornyeFavorite": {
+  "sistrumSearch": "Поиск",
+  "sistrumContinuePlaying": "Продолжить воспроизведение",
+  "sistrumFavorite": "В избранное",
+  "@sistrumFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeGoToArtist": "Перейти к исполнителю",
-  "mornyeFavorited": "Избранное",
-  "@mornyeFavorited": {
+  "sistrumGoToArtist": "Перейти к исполнителю",
+  "sistrumFavorited": "Избранное",
+  "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Плавный переход с подгонкой темпа и сохранением тональности. При невозможности синхронизации битов применяется кроссфейд.",

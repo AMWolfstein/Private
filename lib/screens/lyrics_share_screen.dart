@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 import 'dart:io';
 import 'dart:ui' show ImageByteFormat, ImageFilter;
 
@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/cover_palette.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
-import 'package:spotiflac_android/widgets/player_artwork.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/widgets/player_artwork.dart';
 
 /// Story-sized lyric cards stay short, like quoting a song rather than
 /// reproducing its lyrics.
@@ -161,7 +161,7 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
       image.dispose();
       if (bytes == null) throw StateError('Card could not be encoded');
       final directory = await getTemporaryDirectory();
-      final file = File('${directory.path}/spotiflac_lyrics.png');
+      final file = File('${directory.path}/sistrum_lyrics.png');
       await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
       await SharePlus.instance.share(
         ShareParams(
@@ -424,7 +424,7 @@ class _BackgroundPicker extends StatelessWidget {
                     child: SizedBox(
                       height: 52,
                       child: Center(
-                        // Mornye keeps round swatches with a selected ring.
+                        // Sistrum keeps round swatches with a selected ring.
                         child: AnimatedContainer(
                           duration: reduceMotion
                               ? Duration.zero
@@ -534,7 +534,7 @@ class _LineChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    // Inset Mornye rows retain their corners while selection changes.
+    // Inset Sistrum rows retain their corners while selection changes.
     const outer = Radius.circular(20);
     const inner = Radius.circular(6);
     final radius = BorderRadius.vertical(
@@ -558,7 +558,7 @@ class _LineChoice extends StatelessWidget {
             decoration: BoxDecoration(
               color: selected
                   ? colors.secondaryContainer
-                  : MornyeTheme.controlFill(context),
+                  : SistrumTheme.controlFill(context),
               borderRadius: radius,
             ),
             child: Material(

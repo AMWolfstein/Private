@@ -1,9 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
-import 'package:spotiflac_android/services/custom_font_service.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/services/custom_font_service.dart';
 
 class CustomFontSetting extends ConsumerStatefulWidget {
   const CustomFontSetting({super.key});

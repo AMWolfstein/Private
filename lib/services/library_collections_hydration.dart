@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:spotiflac_android/models/library_collections.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/services/library_collections_database.dart';
+import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/services/library_collections_database.dart';
 
 const _workerRowThreshold = 64;
 const _workerJsonThreshold = 64 * 1024;

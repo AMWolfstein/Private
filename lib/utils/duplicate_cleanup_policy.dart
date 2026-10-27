@@ -1,7 +1,7 @@
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/utils/path_match_keys.dart';
-import 'package:spotiflac_android/utils/duplicate_quality_policy.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/utils/path_match_keys.dart';
+import 'package:sistrum/utils/duplicate_quality_policy.dart';
 
 /// Clear every index of a deleted file, but never delete a retained alias.
 Future<int> deleteReviewedDuplicateCopies({

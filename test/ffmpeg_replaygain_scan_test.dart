@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/ffmpeg_service.dart';
-import 'package:spotiflac_android/services/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/ffmpeg_replaygain.dart';
 
 void main() {
   test('missing decoder reports unsupported and rejects a default summary', () {

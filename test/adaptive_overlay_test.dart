@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_choice_chip.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
 
 Widget _app(ThemeData theme, Widget home) => ProviderScope(
   child: MaterialApp(
@@ -18,12 +18,12 @@ Widget _app(ThemeData theme, Widget home) => ProviderScope(
 );
 
 void main() {
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     for (final brightness in Brightness.values) {
-      final theme = mornye
-          ? MornyeTheme.build(brightness)
+      final theme = sistrum
+          ? SistrumTheme.build(brightness)
           : ThemeData(brightness: brightness);
-      final variant = 'Mornye: $mornye, $brightness';
+      final variant = 'Sistrum: $sistrum, $brightness';
 
       testWidgets('sheet selects, disables and returns values ($variant)', (
         tester,
@@ -83,8 +83,8 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(MornyeGlassPanel),
-          mornye ? findsOneWidget : findsNothing,
+          find.byType(SistrumGlassPanel),
+          sistrum ? findsOneWidget : findsNothing,
         );
         await tester.tap(find.text('Unavailable'));
         expect(disabledTaps, 0);
@@ -142,8 +142,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(nestedNavigator.currentState!.canPop(), isTrue);
         expect(
-          find.byType(MornyeGlassPanel),
-          mornye ? findsOneWidget : findsNothing,
+          find.byType(SistrumGlassPanel),
+          sistrum ? findsOneWidget : findsNothing,
         );
         expect(
           Theme.of(tester.element(find.text('Import playlist'))).brightness,

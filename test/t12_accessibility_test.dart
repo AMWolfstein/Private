@@ -5,14 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/app_choice_chip.dart';
-import 'package:spotiflac_android/widgets/app_switch.dart';
-import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
-import 'package:spotiflac_android/widgets/metadata_text_field.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/widgets/app_switch.dart';
+import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/metadata_text_field.dart';
 
 /// WCAG 2.1 relative-contrast ratio between two opaque colours.
 double _contrast(Color a, Color b) {
@@ -24,7 +24,7 @@ double _contrast(Color a, Color b) {
 Widget _host(Widget child, {Brightness brightness = Brightness.light}) {
   return ProviderScope(
     child: MaterialApp(
-      theme: MornyeTheme.build(brightness),
+      theme: SistrumTheme.build(brightness),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: Center(child: child)),
@@ -102,7 +102,7 @@ void main() {
     testWidgets('explicit badge meets AA ($brightness)', (tester) async {
       await tester.pumpWidget(
         _host(
-          ExplicitBadge(colorScheme: MornyeTheme.build(brightness).colorScheme),
+          ExplicitBadge(colorScheme: SistrumTheme.build(brightness).colorScheme),
           brightness: brightness,
         ),
       );
@@ -229,7 +229,7 @@ void main() {
         SizedBox(
           width: 320,
           child: MetadataTextField(
-            MornyeTheme.build(Brightness.light).colorScheme,
+            SistrumTheme.build(Brightness.light).colorScheme,
             'Title',
             controller,
           ),

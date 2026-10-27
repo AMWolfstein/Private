@@ -3,7 +3,7 @@
 
 use crate::cancellation::RequestLease;
 use crate::tags::{AudioTagsError, check_lease, open_audio_file};
-use spotiflac_core::{cover, tags};
+use sistrum_core::{cover, tags};
 use std::sync::Arc;
 
 #[derive(uniffi::Record)]

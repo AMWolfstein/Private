@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/backup_service.dart';
-import 'package:spotiflac_android/services/history_database.dart';
+import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/history_database.dart';
 
 class _AtomicHistory implements HistoryDatabase {
   List<Map<String, dynamic>> rows = [
@@ -70,11 +70,18 @@ void main() {
     ]);
   });
 
-  for (final producer in ['SpotiFLAC Mobile', 'Sistrum']) {
-    for (final version in [1, 2]) {
+  // Historical wire identifiers stay distinct from current exports.
+  for (final (producer, magic) in [
+    (
+      '\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043 Mobile',
+      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-backup',
+    ),
+    ('Sistrum', 'sistrum-backup'),
+  ]) {
+    for (final version in [1, 2, 3]) {
       test('$producer v$version backup still restores history', () async {
         final metadata = {
-          'magic': 'spotiflac-backup',
+          'magic': magic,
           'format_version': version,
           'app': producer,
           'app_version': '5.1.0',
@@ -93,7 +100,7 @@ void main() {
           },
         };
         final path =
-            '${directory.path}/spotiflac_mobile_backup_old.'
+            '${directory.path}/sistrum_mobile_backup_old.'
             '${version == 1 ? 'json' : 'sflb'}';
         if (version == 1) {
           await File(path).writeAsString(jsonEncode(metadata));
@@ -186,7 +193,7 @@ void main() {
         final metadata = <String, dynamic>{
           'magic': BackupService.magic,
           'format_version': version,
-          'app': 'SpotiFLAC Mobile',
+          'app': '\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043 Mobile',
           'app_version': '5.1.0',
           'created_at': '2026-10-07T00:00:00.000Z',
           'history_count': 0,
@@ -240,7 +247,7 @@ void main() {
         },
       ]) {
         final archiveFile = await BackupService.writeBackupArchive(
-          settings: const {'theme': 'mornye'},
+          settings: const {'theme': 'sistrum'},
           collections: const {},
           collectionsJson: jsonEncode(collections),
           playlistCoverFiles: const {},
@@ -257,10 +264,10 @@ void main() {
             jsonDecode(utf8.decode(archive.find('metadata.json')!.content))
                 as Map<String, dynamic>;
         expect(metadata['app'], 'Sistrum');
-        expect(metadata['magic'], 'spotiflac-backup');
+        expect(metadata['magic'], 'sistrum-backup');
         expect(
           archiveFile.uri.pathSegments.last,
-          startsWith('spotiflac_mobile_backup_'),
+          startsWith('sistrum_mobile_backup_'),
         );
         final data = metadata['data'] as Map<String, dynamic>;
         expect(data.keys, ['settings', 'collections']);

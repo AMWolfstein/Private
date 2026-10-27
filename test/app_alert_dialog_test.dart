@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -15,7 +15,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: SistrumTheme.build(brightness),
                 builder: (context, child) => MediaQuery(
                   data: MediaQuery.of(
                     context,
@@ -70,7 +70,7 @@ void main() {
               Theme.of(bodyContext).colorScheme.onSurface,
             );
           }
-          final panel = find.byType(MornyeGlassPanel);
+          final panel = find.byType(SistrumGlassPanel);
           final openWidth = tester.getRect(panel).width;
           await tester.tap(find.text('Cancel'));
           await tester.pump();
@@ -89,15 +89,15 @@ void main() {
     }
   }
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'confirmation preserves cancel and confirm results (Mornye: $mornye)',
+      'confirmation preserves cancel and confirm results (Sistrum: $sistrum)',
       (tester) async {
         bool? result;
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
               home: Builder(
                 builder: (context) => Scaffold(
                   body: TextButton(
@@ -134,14 +134,14 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(MornyeGlassPanel),
-          mornye ? findsOneWidget : findsNothing,
+          find.byType(SistrumGlassPanel),
+          sistrum ? findsOneWidget : findsNothing,
         );
         expect(
           find.byType(AlertDialog),
-          mornye ? findsNothing : findsOneWidget,
+          sistrum ? findsNothing : findsOneWidget,
         );
-        if (mornye) {
+        if (sistrum) {
           final remove = find.widgetWithText(CupertinoButton, 'Remove');
           final cancel = find.widgetWithText(CupertinoButton, 'Cancel');
           expect(
@@ -153,7 +153,7 @@ void main() {
             DefaultTextStyle.of(
               tester.element(find.text('Remove')),
             ).style.color,
-            MornyeTheme.build(Brightness.dark).colorScheme.primary,
+            SistrumTheme.build(Brightness.dark).colorScheme.primary,
           );
           expect(find.byType(CupertinoAlertDialog), findsNothing);
           expect(find.byType(FilledButton), findsNothing);
@@ -188,7 +188,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: SistrumTheme.build(Brightness.light),
           home: MediaQuery(
             data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
             child: AppAlertDialog(

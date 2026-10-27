@@ -7,18 +7,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/screens/mornye_library_screen.dart';
-import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
-import 'package:spotiflac_android/widgets/local_library_artwork_builder.dart';
-import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/screens/sistrum_library_screen.dart';
+import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/local_library_artwork_builder.dart';
+import 'package:sistrum/widgets/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -70,10 +70,10 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  Widget app(Widget home, {bool mornye = false}) => ProviderScope(
+  Widget app(Widget home, {bool sistrum = false}) => ProviderScope(
     overrides: [settingsProvider.overrideWith(_Settings.new)],
     child: MaterialApp(
-      theme: MornyeTheme.build(mornye ? Brightness.dark : Brightness.light),
+      theme: SistrumTheme.build(sistrum ? Brightness.dark : Brightness.light),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: home,
@@ -188,8 +188,8 @@ void main() {
     },
   );
 
-  for (final mornye in [true]) {
-    testWidgets('blank album cover keeps the scanned track cover ($mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('blank album cover keeps the scanned track cover ($sistrum)', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(430, 1200);
@@ -215,7 +215,7 @@ void main() {
                 ),
               ],
             ),
-            mornye: mornye,
+            sistrum: sistrum,
           ),
         );
         await tester.pumpAndSettle();
@@ -223,7 +223,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester
-            .widget<MornyeArtistSurface>(find.byType(MornyeArtistSurface))
+            .widget<SistrumArtistSurface>(find.byType(SistrumArtistSurface))
             .imageSource,
         scannedCover.path,
       );
@@ -232,7 +232,7 @@ void main() {
     });
 
     for (final stale in [false, true]) {
-      testWidgets('album header recovers artwork ($mornye, stale: $stale)', (
+      testWidgets('album header recovers artwork ($sistrum, stale: $stale)', (
         tester,
       ) async {
         tester.view.physicalSize = const Size(430, 1200);
@@ -259,7 +259,7 @@ void main() {
                   ),
                 ],
               ),
-              mornye: mornye,
+              sistrum: sistrum,
             ),
           );
           await tester.pumpAndSettle();
@@ -269,7 +269,7 @@ void main() {
           tester,
           () =>
               tester
-                  .widget<MornyeArtistSurface>(find.byType(MornyeArtistSurface))
+                  .widget<SistrumArtistSurface>(find.byType(SistrumArtistSurface))
                   .imageSource ==
               preview,
         );
@@ -279,7 +279,7 @@ void main() {
     }
   }
 
-  testWidgets('Mornye album grid replaces a stale scan path', (tester) async {
+  testWidgets('Sistrum album grid replaces a stale scan path', (tester) async {
     final preview = await playerPreview(tester);
     await tester.runAsync(() async {
       await tester.pumpWidget(
@@ -301,12 +301,12 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.light),
+            theme: SistrumTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
-              body: MornyeLibraryScreen(
-                page: MornyeLibraryPage.albums,
+              body: SistrumLibraryScreen(
+                page: SistrumLibraryPage.albums,
                 onOpenSection: (_) {},
               ),
             ),

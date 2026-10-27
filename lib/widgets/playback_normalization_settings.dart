@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/widgets/app_choice_chip.dart';
-import 'package:spotiflac_android/widgets/mornye_slider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/widgets/sistrum_slider.dart';
 
 /// Gain mode and pre-amp shown under the volume normalization switch.
 class PlaybackNormalizationSettings extends ConsumerStatefulWidget {
@@ -70,7 +70,7 @@ class _PlaybackNormalizationSettingsState
           Text('${l10n.playbackNormalizationPreamp}: $value'),
           Semantics(
             label: l10n.playbackNormalizationPreamp,
-            child: MornyeSlider(
+            child: SistrumSlider(
               value: preamp.toDouble(),
               min: -15,
               max: 6,

@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
-import 'package:spotiflac_android/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/audio_analysis_widget.dart';
 
 void main() {
   for (final numbered in [false, true]) {
@@ -30,7 +30,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
+              theme: SistrumTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(
@@ -76,7 +76,7 @@ void main() {
           l10n.trackReplayGain,
           l10n.trackRemoveReplayGain,
           l10n.homeGoToAlbum,
-          l10n.mornyeGoToArtist,
+          l10n.sistrumGoToArtist,
         ]) {
           expect(find.text(label), findsOneWidget);
         }

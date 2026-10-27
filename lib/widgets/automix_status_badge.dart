@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/services/automix_status.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/services/automix_status.dart';
 
 class AutoMixStatusBadge extends StatelessWidget {
   const AutoMixStatusBadge({super.key});

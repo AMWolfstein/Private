@@ -1,10 +1,10 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/models/mornye_glass.dart';
-import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/theme_provider.dart';
+import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/theme_provider.dart';
 
 /// True on low-end hardware (arm32-only or low-RAM, resolved at startup in
 /// main.dart via a ProviderScope override). UI uses it to skip expensive
@@ -16,8 +16,8 @@ final lowEndDeviceProvider = Provider<bool>((ref) => false);
 final deviceSupportsLiquidGlassProvider = Provider<bool>((ref) => true);
 
 /// The Appearance glass quality choice.
-final mornyeGlassQualityProvider = Provider<MornyeGlassQuality>(
-  (ref) => mornyeGlassQualityFromString(
+final sistrumGlassQualityProvider = Provider<SistrumGlassQuality>(
+  (ref) => sistrumGlassQualityFromString(
     ref.watch(settingsProvider.select((s) => s.glassQuality)),
   ),
 );
@@ -26,14 +26,14 @@ final mornyeGlassQualityProvider = Provider<MornyeGlassQuality>(
 /// that request only while the device picks the glass quality; an explicit
 /// choice is used as is. This only controls decorative surfaces, never the
 /// inherited text or reduced-motion settings.
-final mornyeGlassContrastBlockedProvider = Provider.family<bool, bool>(
+final sistrumGlassContrastBlockedProvider = Provider.family<bool, bool>(
   (ref, highContrast) =>
       highContrast &&
-      ref.watch(mornyeGlassQualityProvider) == MornyeGlassQuality.auto,
+      ref.watch(sistrumGlassQualityProvider) == SistrumGlassQuality.auto,
 );
 
-/// How much of Mornye's glass the device renders.
-enum MornyeGlassLevel {
+/// How much of Sistrum's glass the device renders.
+enum SistrumGlassLevel {
   /// Opaque surfaces; no backdrop sampling.
   flat,
 
@@ -45,35 +45,35 @@ enum MornyeGlassLevel {
 }
 
 /// What `auto` picks for a device class.
-MornyeGlassLevel mornyeAutoGlassLevel({
+SistrumGlassLevel sistrumAutoGlassLevel({
   required bool lowEnd,
   required bool liquidCapable,
 }) => lowEnd
-    ? MornyeGlassLevel.flat
+    ? SistrumGlassLevel.flat
     : liquidCapable
-    ? MornyeGlassLevel.liquid
-    : MornyeGlassLevel.lite;
+    ? SistrumGlassLevel.liquid
+    : SistrumGlassLevel.lite;
 
 /// The device-class choice, before any measurement.
-final mornyeAutoDeviceGlassLevelProvider = Provider<MornyeGlassLevel>(
-  (ref) => mornyeAutoGlassLevel(
+final sistrumAutoDeviceGlassLevelProvider = Provider<SistrumGlassLevel>(
+  (ref) => sistrumAutoGlassLevel(
     lowEnd: ref.watch(lowEndDeviceProvider),
     liquidCapable: ref.watch(deviceSupportsLiquidGlassProvider),
   ),
 );
 
 /// The saved Auto measurement for this build, loaded in main.dart.
-final initialGlassAutoResultProvider = Provider<MornyeGlassAutoResult?>(
+final initialGlassAutoResultProvider = Provider<SistrumGlassAutoResult?>(
   (ref) => null,
 );
 
-/// Auto's measured step-down. Written by MornyeGlassAutoProbeHost; cleared
+/// Auto's measured step-down. Written by SistrumGlassAutoProbeHost; cleared
 /// from the developer options to measure again.
-class MornyeGlassAutoResultNotifier extends Notifier<MornyeGlassAutoResult?> {
+class SistrumGlassAutoResultNotifier extends Notifier<SistrumGlassAutoResult?> {
   @override
-  MornyeGlassAutoResult? build() => ref.watch(initialGlassAutoResultProvider);
+  SistrumGlassAutoResult? build() => ref.watch(initialGlassAutoResultProvider);
 
-  void record(MornyeGlassAutoResult result) {
+  void record(SistrumGlassAutoResult result) {
     state = result;
     saveGlassAutoResult(result);
   }
@@ -84,24 +84,24 @@ class MornyeGlassAutoResultNotifier extends Notifier<MornyeGlassAutoResult?> {
   }
 }
 
-final mornyeGlassAutoResultProvider =
-    NotifierProvider<MornyeGlassAutoResultNotifier, MornyeGlassAutoResult?>(
-      MornyeGlassAutoResultNotifier.new,
+final sistrumGlassAutoResultProvider =
+    NotifierProvider<SistrumGlassAutoResultNotifier, SistrumGlassAutoResult?>(
+      SistrumGlassAutoResultNotifier.new,
     );
 
 /// The step Auto renders (and measures) now: the measured one, else the
 /// device class's own.
-final mornyeGlassAutoStepProvider = Provider<MornyeGlassAutoStep>((ref) {
-  final measured = ref.watch(mornyeGlassAutoResultProvider)?.step;
+final sistrumGlassAutoStepProvider = Provider<SistrumGlassAutoStep>((ref) {
+  final measured = ref.watch(sistrumGlassAutoResultProvider)?.step;
   if (measured != null) return measured;
-  return ref.watch(mornyeAutoDeviceGlassLevelProvider) ==
-          MornyeGlassLevel.liquid
-      ? MornyeGlassAutoStep.full
-      : MornyeGlassAutoStep.lite;
+  return ref.watch(sistrumAutoDeviceGlassLevelProvider) ==
+          SistrumGlassLevel.liquid
+      ? SistrumGlassAutoStep.full
+      : SistrumGlassAutoStep.lite;
 });
 
 /// How Auto arrived at its level, for the HUD and Appearance.
-enum MornyeGlassAutoStatus {
+enum SistrumGlassAutoStatus {
   /// Not Auto, or Auto without glass (low-end or high contrast).
   device,
 
@@ -112,47 +112,47 @@ enum MornyeGlassAutoStatus {
   measured,
 }
 
-final mornyeGlassAutoStatusProvider =
-    Provider.family<MornyeGlassAutoStatus, bool>((ref, highContrast) {
-      if (ref.watch(mornyeGlassQualityProvider) != MornyeGlassQuality.auto ||
-          ref.watch(mornyeGlassContrastBlockedProvider(highContrast)) ||
-          ref.watch(mornyeAutoDeviceGlassLevelProvider) ==
-              MornyeGlassLevel.flat) {
-        return MornyeGlassAutoStatus.device;
+final sistrumGlassAutoStatusProvider =
+    Provider.family<SistrumGlassAutoStatus, bool>((ref, highContrast) {
+      if (ref.watch(sistrumGlassQualityProvider) != SistrumGlassQuality.auto ||
+          ref.watch(sistrumGlassContrastBlockedProvider(highContrast)) ||
+          ref.watch(sistrumAutoDeviceGlassLevelProvider) ==
+              SistrumGlassLevel.flat) {
+        return SistrumGlassAutoStatus.device;
       }
-      return ref.watch(mornyeGlassAutoResultProvider)?.done ?? false
-          ? MornyeGlassAutoStatus.measured
-          : MornyeGlassAutoStatus.measuring;
+      return ref.watch(sistrumGlassAutoResultProvider)?.done ?? false
+          ? SistrumGlassAutoStatus.measured
+          : SistrumGlassAutoStatus.measuring;
     });
 
-final mornyeGlassLevelProvider = Provider<MornyeGlassLevel>((ref) {
-  return switch (ref.watch(mornyeGlassQualityProvider)) {
-    MornyeGlassQuality.auto =>
-      ref.watch(mornyeAutoDeviceGlassLevelProvider) == MornyeGlassLevel.flat
-          ? MornyeGlassLevel.flat
-          : ref.watch(mornyeGlassAutoStepProvider) == MornyeGlassAutoStep.full
-          ? ref.watch(mornyeAutoDeviceGlassLevelProvider)
-          : MornyeGlassLevel.lite,
-    MornyeGlassQuality.lite => MornyeGlassLevel.lite,
-    MornyeGlassQuality.full => MornyeGlassLevel.liquid,
-    MornyeGlassQuality.off => MornyeGlassLevel.flat,
+final sistrumGlassLevelProvider = Provider<SistrumGlassLevel>((ref) {
+  return switch (ref.watch(sistrumGlassQualityProvider)) {
+    SistrumGlassQuality.auto =>
+      ref.watch(sistrumAutoDeviceGlassLevelProvider) == SistrumGlassLevel.flat
+          ? SistrumGlassLevel.flat
+          : ref.watch(sistrumGlassAutoStepProvider) == SistrumGlassAutoStep.full
+          ? ref.watch(sistrumAutoDeviceGlassLevelProvider)
+          : SistrumGlassLevel.lite,
+    SistrumGlassQuality.lite => SistrumGlassLevel.lite,
+    SistrumGlassQuality.full => SistrumGlassLevel.liquid,
+    SistrumGlassQuality.off => SistrumGlassLevel.flat,
   };
 });
 
 /// Whether the renderer supports backdrop shader filters (Impeller). Glass
 /// lenses need them; widget tests override this to exercise the glass path.
-final mornyeShaderFiltersSupportedProvider = Provider<bool>(
+final sistrumShaderFiltersSupportedProvider = Provider<bool>(
   (ref) => ui.ImageFilter.isShaderFilterSupported,
 );
 
-/// Backdrop blur for Mornye surfaces (frosted or liquid).
-final mornyeBlurEnabledProvider = Provider<bool>(
-  (ref) => ref.watch(mornyeGlassLevelProvider) != MornyeGlassLevel.flat,
+/// Backdrop blur for Sistrum surfaces (frosted or liquid).
+final sistrumBlurEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(sistrumGlassLevelProvider) != SistrumGlassLevel.flat,
 );
 
 /// Higher-quality glass and continuously filtered artwork / lyric effects.
-final mornyeLiquidGlassProvider = Provider<bool>(
-  (ref) => ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid,
+final sistrumLiquidGlassProvider = Provider<bool>(
+  (ref) => ref.watch(sistrumGlassLevelProvider) == SistrumGlassLevel.liquid,
 );
 
 /// Glass preferences stay out of ThemeData, so changing them repaints glass
@@ -160,18 +160,18 @@ final mornyeLiquidGlassProvider = Provider<bool>(
 ///
 /// The level glass renders at: the saved one, or Level 1 where Auto measured
 /// that this device needs it. Appearance edits the saved value.
-final mornyeGlassClarityLevelProvider = Provider<int>((ref) {
+final sistrumGlassClarityLevelProvider = Provider<int>((ref) {
   final autoFrosted =
-      ref.watch(mornyeGlassQualityProvider) == MornyeGlassQuality.auto &&
-      ref.watch(mornyeAutoDeviceGlassLevelProvider) != MornyeGlassLevel.flat &&
-      ref.watch(mornyeGlassAutoStepProvider) == MornyeGlassAutoStep.liteFrosted;
+      ref.watch(sistrumGlassQualityProvider) == SistrumGlassQuality.auto &&
+      ref.watch(sistrumAutoDeviceGlassLevelProvider) != SistrumGlassLevel.flat &&
+      ref.watch(sistrumGlassAutoStepProvider) == SistrumGlassAutoStep.liteFrosted;
   return autoFrosted
       ? 1
       : ref.watch(settingsProvider.select((s) => s.glassClarityLevel));
 });
 
 /// Developer A/B switches, only while the developer options are shown.
-final mornyeBarSamplerDisabledProvider = Provider<bool>(
+final sistrumBarSamplerDisabledProvider = Provider<bool>(
   (ref) => ref.watch(
     settingsProvider.select(
       (s) => s.developerOptionsUnlocked && s.barSamplerDisabled,
@@ -179,7 +179,7 @@ final mornyeBarSamplerDisabledProvider = Provider<bool>(
   ),
 );
 
-final mornyeHeaderBandBlurDisabledProvider = Provider<bool>(
+final sistrumHeaderBandBlurDisabledProvider = Provider<bool>(
   (ref) => ref.watch(
     settingsProvider.select(
       (s) => s.developerOptionsUnlocked && s.headerBandBlurDisabled,
@@ -187,6 +187,6 @@ final mornyeHeaderBandBlurDisabledProvider = Provider<bool>(
   ),
 );
 
-final mornyeGlassOutlinesProvider = Provider<bool>(
-  (ref) => ref.watch(themeProvider.select((s) => s.mornyeGlassOutlines)),
+final sistrumGlassOutlinesProvider = Provider<bool>(
+  (ref) => ref.watch(themeProvider.select((s) => s.sistrumGlassOutlines)),
 );

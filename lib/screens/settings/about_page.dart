@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/constants/app_info.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
+import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
 
 class AboutPage extends ConsumerStatefulWidget {
   const AboutPage({super.key});
@@ -131,7 +131,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                       title: context.l10n.aboutRemeasureGlass,
                       subtitle: context.l10n.aboutRemeasureGlassSubtitle,
                       onTap: ref
-                          .read(mornyeGlassAutoResultProvider.notifier)
+                          .read(sistrumGlassAutoResultProvider.notifier)
                           .clear,
                     ),
                     _AboutSettingsItem(

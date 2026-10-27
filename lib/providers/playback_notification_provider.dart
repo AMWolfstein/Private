@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/services/playback_notification.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/services/playback_notification.dart';
 
 /// Kept alive by the app shell so notification favorites share the exact
 /// Library identity and refresh when the same track is starred inside the app.
@@ -17,7 +17,7 @@ final playbackNotificationProvider = Provider.autoDispose
         String shuffleOff,
       })
     >((ref, labels) {
-      const mornye = true;
+      const sistrum = true;
       final item = ref.watch(currentMediaItemProvider).value;
       final track = item == null
           ? null
@@ -36,7 +36,7 @@ final playbackNotificationProvider = Provider.autoDispose
         final runtime = ref.read(musicPlayerRuntimeProvider);
         runtime.configureNotification(
           presentation: PlaybackNotification(
-            mornye: mornye,
+            sistrum: sistrum,
             mediaId: item?.id,
             source: item?.extras?['source']?.toString(),
             loved: loved,

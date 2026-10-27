@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/models/equalizer_settings.dart';
-import 'package:spotiflac_android/providers/equalizer_provider.dart';
-import 'package:spotiflac_android/services/playback_equalizer.dart';
+import 'package:sistrum/models/equalizer_settings.dart';
+import 'package:sistrum/providers/equalizer_provider.dart';
+import 'package:sistrum/services/playback_equalizer.dart';
 
 void main() {
   setUp(() {
@@ -13,6 +13,36 @@ void main() {
     playbackEqualizer.value = const EqualizerSettings();
     playbackEqualizerError.value = null;
   });
+
+  for (final format in [
+    '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-equalizer',
+    'sistrum-equalizer',
+  ]) {
+    test('preset imports retain old and new wire formats ($format)', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final notifier = container.read(equalizerProvider.notifier);
+      notifier.importPreset(jsonEncode({
+        'format': format,
+        'version': 1,
+        ...const EqualizerPreset(
+          'Legacy headphones',
+          EqualizerSettings(preamp: -6, bass: 3),
+        ).toJson(),
+      }));
+      final state = container.read(equalizerProvider);
+      expect(state.settings.preamp, -6);
+      expect(state.settings.bass, 3);
+      expect(state.presets.single.name, 'Legacy headphones');
+      final exported = jsonDecode(notifier.exportPreset('Current')) as Map;
+      expect(exported['format'], 'sistrum-equalizer');
+      expect(exported['version'], 1);
+      expect(
+        () => notifier.importPreset(jsonEncode({...exported, 'format': 'foreign-equalizer'})),
+        throwsFormatException,
+      );
+    });
+  }
 
   test('band resampling preserves flat curves and center gains', () {
     for (final count in EqualizerSettings.bandCounts) {

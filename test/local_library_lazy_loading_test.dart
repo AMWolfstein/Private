@@ -4,18 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/queue_tab.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/queue_tab.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -259,8 +259,8 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
   });
 
-  for (final mornye in [true]) {
-    testWidgets('playlist selection confirms one deletion (Mornye: $mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('playlist selection confirms one deletion (Sistrum: $sistrum)', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(800, 1200);
@@ -277,8 +277,8 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
+            theme: sistrum
+                ? SistrumTheme.build(Brightness.dark)
                 : AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -335,7 +335,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(() => collections),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
@@ -370,7 +370,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_EmptyCollections.new),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
@@ -434,7 +434,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_SongsCollections.new),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: QueueTab(librarySection: 'all')),
@@ -468,7 +468,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_SongsCollections.new),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => MediaQuery(

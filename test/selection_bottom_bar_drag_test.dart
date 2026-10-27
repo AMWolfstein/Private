@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:sistrum/l10n/l10n.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
 
 void main() {
-  for (final mornye in [true]) {
-    final name = mornye ? 'Mornye' : 'Material';
+  for (final sistrum in [true]) {
+    final name = sistrum ? 'Sistrum' : 'Material';
 
     Future<void> showPanel(
       WidgetTester tester,
@@ -27,8 +27,8 @@ void main() {
               ).copyWith(textScaler: TextScaler.linear(textScale)),
               child: child!,
             ),
-            theme: mornye
-                ? MornyeTheme.build(Brightness.light)
+            theme: sistrum
+                ? SistrumTheme.build(Brightness.light)
                 : AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

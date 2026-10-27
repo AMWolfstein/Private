@@ -2,8 +2,8 @@ use super::Backend;
 use cap_std::fs::OpenOptions;
 use chrono::{SecondsFormat, Utc};
 use serde_json::{Value, json};
-use spotiflac_core::cue::{self, CueSheet};
-use spotiflac_core::tags::{
+use sistrum_core::cue::{self, CueSheet};
+use sistrum_core::tags::{
     extract_cover, library_extension, library_id, library_metadata, read_library_metadata,
     read_library_metadata_with_cover,
 };
@@ -88,7 +88,7 @@ impl Backend {
                 cache_key,
                 |_, format, check| {
                     let file = file.as_mut().ok_or("audio file unavailable")?;
-                    if spotiflac_core::tags::library_reads_cover_with_tags(format) {
+                    if sistrum_core::tags::library_reads_cover_with_tags(format) {
                         let (tags, cover) = read_library_metadata_with_cover(
                             file, path, hint, scan_time, mod_time, check,
                         )?;
@@ -122,9 +122,8 @@ impl Backend {
                 let input = files.resolve_legacy(path)?;
                 input.open_native_read().map_err(|error| error.to_string())
             };
-            if let Ok(lyrics) = spotiflac_core::lyrics::file::sidecar(path, &open, check) {
-                result["hasLyrics"] =
-                    spotiflac_core::lyrics::lrc::has_usable_content(&lyrics).into();
+            if let Ok(lyrics) = sistrum_core::lyrics::file::sidecar(path, &open, check) {
+                result["hasLyrics"] = sistrum_core::lyrics::lrc::has_usable_content(&lyrics).into();
             }
         }
         check()?;
@@ -374,7 +373,7 @@ impl Backend {
         let mut duration = 0.0;
         if let Ok(mut file) = input.open(OpenOptions::new().read(true)) {
             if format == "flac" {
-                if let Ok(quality) = spotiflac_core::media::probe_quality(&mut file, check) {
+                if let Ok(quality) = sistrum_core::media::probe_quality(&mut file, check) {
                     depth = quality.bit_depth;
                     rate = quality.sample_rate;
                     if rate > 0 && quality.total_samples > 0 {
@@ -383,7 +382,7 @@ impl Backend {
                 }
             } else if format == "mp3"
                 && let Ok(metadata) =
-                    spotiflac_core::tags::read_file_metadata(&mut file, audio, "", check)
+                    sistrum_core::tags::read_file_metadata(&mut file, audio, "", check)
             {
                 rate = metadata["sample_rate"].as_i64().unwrap_or_default();
                 duration = metadata["duration"].as_f64().unwrap_or_default();

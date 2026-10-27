@@ -2,8 +2,8 @@ package com.amwolfstein.sistrum
 
 import android.content.Context
 import android.net.Uri
-import com.spotiflac.backend.LocalBackend
-import com.spotiflac.backend.RequestLease
+import com.sistrum.backend.LocalBackend
+import com.sistrum.backend.RequestLease
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +47,7 @@ internal object RustCoreBackend : CoreBackend {
     private lateinit var workspace: NativeMediaWorkspace
     private var manager: LocalBackend? = null
     private val directoryScopes = mutableMapOf<String, AutoCloseable>()
-    private val logs = com.spotiflac.backend.LogBuffer()
+    private val logs = com.sistrum.backend.LogBuffer()
     private var libraryCoverScope: AutoCloseable? = null
     @Volatile private var libraryCoverDirectory: File? = null
 
@@ -91,7 +91,7 @@ internal object RustCoreBackend : CoreBackend {
 
     internal fun runDataJob(request: JSONObject, bytes: ByteArray, lease: RequestLease): String {
         if (request.optString("operation") != "library_scan_incremental") {
-            return com.spotiflac.backend.runNativeDataJob(request.toString(), bytes, lease)
+            return com.sistrum.backend.runNativeDataJob(request.toString(), bytes, lease)
         }
         return withLibraryDirectories(listOf(request.getString("folder_path"))) { current ->
             val snapshot = request.optString("snapshot_path")
@@ -121,7 +121,7 @@ internal object RustCoreBackend : CoreBackend {
     override fun fileMetadataImplementation(path: String): String = "rust"
 
     override fun readFileMetadata(path: String, hint: String): String =
-        com.spotiflac.backend.readFileMetadata(path, hint, null)
+        com.sistrum.backend.readFileMetadata(path, hint, null)
 
 
 
@@ -135,7 +135,7 @@ internal object RustCoreBackend : CoreBackend {
                 File(directory, coverPointerName(key))
             } else null
             val cached = pointer?.let { readCoverPointer(it, directory!!) }
-            val result = com.spotiflac.backend.readLibraryMetadataFromDescriptor(
+            val result = com.sistrum.backend.readLibraryMetadataFromDescriptor(
                 descriptor, hint, java.time.Instant.now().toString(),
                 directory != null && cached == null, null,
             )
@@ -155,7 +155,7 @@ internal object RustCoreBackend : CoreBackend {
                     cover = output
                     pointer?.let { writeCoverPointer(it, name) }
                 } catch (error: Exception) {
-                    android.util.Log.w("SpotiFLAC", "Could not cache document artwork", error)
+                    android.util.Log.w("Sistrum", "Could not cache document artwork", error)
                 }
             }
             cover?.let { metadata.put("coverPath", it.path) }
@@ -267,7 +267,7 @@ internal object RustCoreBackend : CoreBackend {
                 JSONObject(readAudioMetadata("/proc/self/fd/$descriptor", audioName, cacheKey)).optString("coverPath", "")
             } catch (error: Exception) {
                 if (error is java.util.concurrent.CancellationException) throw error
-                android.util.Log.w("SpotiFLAC", "Could not read CUE artwork", error)
+                android.util.Log.w("Sistrum", "Could not read CUE artwork", error)
                 ""
             }
             return withLibraryDirectories(listOf(requireNotNull(cue.parent))) {
@@ -300,7 +300,7 @@ internal object RustCoreBackend : CoreBackend {
             audioPath.removePrefix("/proc/self/fd/").toIntOrNull()
         } else null
         if (descriptor != null) {
-            val artwork = com.spotiflac.backend.extractCoverFromDescriptor(
+            val artwork = com.sistrum.backend.extractCoverFromDescriptor(
                 descriptor, hint, null,
             )
             check(artwork.isNotEmpty()) { "No embedded artwork" }

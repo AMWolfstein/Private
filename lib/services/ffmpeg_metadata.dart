@@ -4,12 +4,12 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
-import 'package:spotiflac_android/services/ffmpeg_models.dart';
-import 'package:spotiflac_android/services/ffmpeg_support.dart';
-import 'package:spotiflac_android/services/id3v23_lyrics.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/audio_metadata_mapper.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg_support.dart';
+import 'package:sistrum/services/id3v23_lyrics.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 

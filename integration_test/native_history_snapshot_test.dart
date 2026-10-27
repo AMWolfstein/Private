@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/models/download_history.dart';
-import 'package:spotiflac_android/services/backup_service.dart';
-import 'package:spotiflac_android/services/history_database.dart';
-import 'package:spotiflac_android/services/sqlite_native_snapshot.dart';
+import 'package:sistrum/models/download_history.dart';
+import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/history_database.dart';
+import 'package:sistrum/services/sqlite_native_snapshot.dart';
 
 Map<String, dynamic> _track(int id) => DownloadHistoryItem(
   id: 'track-$id',

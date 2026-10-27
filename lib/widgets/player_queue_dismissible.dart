@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart' show CupertinoColors, CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart' show CustomSemanticsAction;
-import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:sistrum/l10n/l10n.dart';
 
 /// Removing a row affects the queue only, never the song on disk.
 class PlayerQueueDismissible extends StatefulWidget {
@@ -52,12 +52,12 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
         widget.onRemove();
         return false;
       },
-      background: _buildMornyeBackground(context),
+      background: _buildSistrumBackground(context),
       child: widget.child,
     ),
   );
 
-  Widget _buildMornyeBackground(BuildContext context) => DecoratedBox(
+  Widget _buildSistrumBackground(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
       color: CupertinoColors.systemRed.resolveFrom(context),
       borderRadius: BorderRadius.circular(16),

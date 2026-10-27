@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart' show CustomSemanticsAction;
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
-import 'package:spotiflac_android/theme/app_tokens.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/screens/now_playing_screen.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
-import 'package:spotiflac_android/widgets/overflow_marquee.dart';
-import 'package:spotiflac_android/widgets/player_artwork.dart';
-import 'package:spotiflac_android/widgets/mornye_chrome.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/overflow_marquee.dart';
+import 'package:sistrum/widgets/player_artwork.dart';
+import 'package:sistrum/widgets/sistrum_chrome.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});
@@ -110,7 +110,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     // skip keeping a paused video decoder for the full player's motion cover,
     // and stop the title marquee after a few passes: every marquee frame
     // re-filters the blurred chrome around it.
-    final fullEffects = ref.watch(mornyeLiquidGlassProvider);
+    final fullEffects = ref.watch(sistrumLiquidGlassProvider);
     final marqueeCycles = fullEffects ? null : 2;
 
     final player = Dismissible(
@@ -255,10 +255,10 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     );
     return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
-      child: MornyeGlass.navigation(
+      child: SistrumGlass.navigation(
         strongTint: true,
-        tintOpacity: MornyeTheme.chromeOpacity(context),
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        tintOpacity: SistrumTheme.chromeOpacity(context),
+        blurEnabled: ref.watch(sistrumBlurEnabledProvider),
         child: dismissible,
       ),
     );

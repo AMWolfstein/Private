@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
+import 'package:sistrum/l10n/l10n.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
 
 Widget _app(ThemeData theme, GlobalKey<NavigatorState> navigator) {
   return ProviderScope(
@@ -26,10 +26,10 @@ Widget _app(ThemeData theme, GlobalKey<NavigatorState> navigator) {
 }
 
 void main() {
-  for (final mornye in [true]) {
-    final name = mornye ? 'Mornye' : 'Material';
-    final theme = mornye
-        ? MornyeTheme.build(Brightness.light)
+  for (final sistrum in [true]) {
+    final name = sistrum ? 'Sistrum' : 'Material';
+    final theme = sistrum
+        ? SistrumTheme.build(Brightness.light)
         : AppTheme.light();
 
     testWidgets('$name: leaving a collection removes its selection bar', (

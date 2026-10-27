@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/models/library_collections.dart';
-import 'package:spotiflac_android/services/library_search.dart';
+import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/services/library_search.dart';
 
 typedef PlaylistSearchEntry = ({
   String id,

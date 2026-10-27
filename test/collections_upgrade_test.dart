@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/models/library_collections.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/services/collection_restore_codec.dart';
-import 'package:spotiflac_android/services/library_collections_database.dart';
+import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/services/collection_restore_codec.dart';
+import 'package:sistrum/services/library_collections_database.dart';
 
 import 'support/sqlite_process_database.dart';
 

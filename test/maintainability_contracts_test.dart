@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/audio_metadata_mapper.dart';
-import 'package:spotiflac_android/services/id3v23_lyrics.dart';
-import 'package:spotiflac_android/utils/artist_utils.dart';
+import 'package:sistrum/services/audio_metadata_mapper.dart';
+import 'package:sistrum/services/id3v23_lyrics.dart';
+import 'package:sistrum/utils/artist_utils.dart';
 
 void main() {
   group('home search logic', () {});

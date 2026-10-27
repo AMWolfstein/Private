@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:spotiflac_android/utils/int_utils.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
+import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 part 'track.g.dart';
 

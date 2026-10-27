@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/settings/library_settings_page.dart';
-import 'package:spotiflac_android/services/library_database.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/settings/library_settings_page.dart';
+import 'package:sistrum/services/library_database.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/settings_group.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -66,7 +66,7 @@ Finder get _cleanupRow => find.byWidgetPredicate(
 
 Future<void> _mount(
   WidgetTester tester, {
-  required bool mornye,
+  required bool sistrum,
   required _Library library,
   Size size = const Size(430, 1000),
   double textScale = 1,
@@ -83,7 +83,7 @@ Future<void> _mount(
         localLibraryProvider.overrideWith(() => library),
       ],
       child: MaterialApp(
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+        theme: sistrum ? SistrumTheme.build(Brightness.dark) : AppTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => MediaQuery(
@@ -117,7 +117,7 @@ void main() {
   ) async {
     await _mount(
       tester,
-      mornye: true,
+      sistrum: true,
       library: _Library(LocalLibraryState(), () async => 0),
       size: const Size(360, 640),
       textScale: 2,
@@ -144,8 +144,8 @@ void main() {
     expect(sheet, findsNothing);
   });
 
-  for (final mornye in [true]) {
-    testWidgets('source shows the scan failure reason (Mornye: $mornye)', (
+  for (final sistrum in [true]) {
+    testWidgets('source shows the scan failure reason (Sistrum: $sistrum)', (
       tester,
     ) async {
       const error =
@@ -165,18 +165,18 @@ void main() {
         ),
         () async => 0,
       );
-      await _mount(tester, mornye: mornye, library: library);
+      await _mount(tester, sistrum: sistrum, library: library);
       await tester.scrollUntilVisible(find.text('Saved music'), 200);
       await tester.pumpAndSettle();
       expect(find.textContaining(error), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('failed load shows saved folder and offers retry ($mornye)', (
+    testWidgets('failed load shows saved folder and offers retry ($sistrum)', (
       tester,
     ) async {
       final library = _RetryLibrary();
-      await _mount(tester, mornye: mornye, library: library);
+      await _mount(tester, sistrum: sistrum, library: library);
       await tester.scrollUntilVisible(find.text('Retry'), -300);
       await tester.pumpAndSettle();
       expect(
@@ -192,14 +192,14 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('cleanup removes missing local files ($mornye)', (
+    testWidgets('cleanup removes missing local files ($sistrum)', (
       tester,
     ) async {
       final localDone = Completer<int>();
       var localCalls = 0;
       await _mount(
         tester,
-        mornye: mornye,
+        sistrum: sistrum,
         library: _Library(LocalLibraryState(totalCount: 1), () {
           localCalls++;
           return localDone.future;
@@ -227,13 +227,13 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('cleanup reports errors and can retry ($mornye)', (
+    testWidgets('cleanup reports errors and can retry ($sistrum)', (
       tester,
     ) async {
       var calls = 0;
       await _mount(
         tester,
-        mornye: mornye,
+        sistrum: sistrum,
         library: _Library(LocalLibraryState(totalCount: 1), () async {
           calls++;
           if (calls == 1) throw StateError('cleanup failed');
@@ -254,12 +254,12 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('cleanup stays available for hidden source rows ($mornye)', (
+    testWidgets('cleanup stays available for hidden source rows ($sistrum)', (
       tester,
     ) async {
       await _mount(
         tester,
-        mornye: mornye,
+        sistrum: sistrum,
         library: _Library(
           LocalLibraryState(
             sources: const [
@@ -283,13 +283,13 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('cleanup cannot race an active scan ($mornye)', (tester) async {
+    testWidgets('cleanup cannot race an active scan ($sistrum)', (tester) async {
       var localCalls = 0;
       final library = _Library(LocalLibraryState(totalCount: 1), () async {
         localCalls++;
         return 0;
       });
-      await _mount(tester, mornye: mornye, library: library);
+      await _mount(tester, sistrum: sistrum, library: library);
       final originalTap = tester.widget<SettingsItem>(_cleanupRow).onTap!;
       library._beginScan();
       await tester.pump();

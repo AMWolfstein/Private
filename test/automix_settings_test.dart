@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/models/theme_settings.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/widgets/automix_settings.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/widgets/automix_settings.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
 
 void main() {
   testWidgets(
@@ -61,9 +61,9 @@ void main() {
     },
   );
 
-  for (final mornye in [true]) {
+  for (final sistrum in [true]) {
     testWidgets(
-      'effect picker follows app theme and saves selection ($mornye)',
+      'effect picker follows app theme and saves selection ($sistrum)',
       (tester) async {
         SharedPreferences.setMockInitialValues({});
         tester.view.physicalSize = const Size(350, 600);
@@ -81,15 +81,15 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: mornye
-                  ? MornyeTheme.build(
+              theme: sistrum
+                  ? SistrumTheme.build(
                       Brightness.dark,
-                      accent: MornyeAccent.blue,
+                      accent: SistrumAccent.blue,
                     )
                   : AppTheme.light(seedColor: Colors.blue),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: const MornyeSettingsTheme(
+              home: const SistrumSettingsTheme(
                 child: Scaffold(
                   body: SingleChildScrollView(child: AutoMixSettings()),
                 ),
@@ -103,7 +103,7 @@ void main() {
         expect(find.byType(AppBottomSheet), findsOneWidget);
         expect(find.byType(AppSheetOption), findsNWidgets(6));
         final context = tester.element(find.byType(AppBottomSheet));
-        expect(context.isMornye, mornye);
+        expect(context.isSistrum, sistrum);
         final selected = tester
             .widgetList<AppSheetOption>(find.byType(AppSheetOption))
             .singleWhere((option) => option.trailing != null);

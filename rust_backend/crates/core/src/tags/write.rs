@@ -309,7 +309,7 @@ fn flac_header(
     let (vendor, mut comments) = if let Some(index) = index {
         parse_comments(&blocks[index].1)?
     } else {
-        (b"SpotiFLAC".to_vec(), Vec::new())
+        (b"Sistrum".to_vec(), Vec::new())
     };
     if let Some(mode) = embed_mode {
         for (key, value) in fields.iter().filter(|(_, value)| !value.is_empty()) {
@@ -868,7 +868,7 @@ mod tests {
 
     fn editable_flac() -> (Vec<u8>, usize, Fields) {
         let mut comments = Vec::new();
-        put_string(&mut comments, b"SpotiFLAC");
+        put_string(&mut comments, b"Sistrum");
         comments.extend(2_u32.to_le_bytes());
         put_string(&mut comments, b"CUSTOM=preserve");
         put_string(&mut comments, b"TITLE=Example");

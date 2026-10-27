@@ -1,6 +1,6 @@
-import 'package:spotiflac_android/services/library_database_models.dart';
-import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
-import 'package:spotiflac_android/utils/audio_format_utils.dart';
+import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/utils/audio_format_utils.dart';
 
 /// Maps scan/domain metadata to storage rows without opening a database.
 abstract final class LibraryRowMapper {

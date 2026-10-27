@@ -1,7 +1,7 @@
 package com.amwolfstein.sistrum
 
-import com.spotiflac.backend.NativeDataJobException
-import com.spotiflac.backend.RequestLease
+import com.sistrum.backend.NativeDataJobException
+import com.sistrum.backend.RequestLease
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
@@ -18,19 +18,19 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 /** Exercises the actual generated Kotlin ABI against the host Rust library.
- * Set SPOTIFLAC_NATIVE_HOST_LIBRARY to the host dylib/so and optionally
- * SPOTIFLAC_JNA_HOST_DIRECTORY to desktop JNA's native dispatch directory.
+ * Set SISTRUM_NATIVE_HOST_LIBRARY to the host dylib/so and optionally
+ * SISTRUM_JNA_HOST_DIRECTORY to desktop JNA's native dispatch directory.
  * Ordinary Android-only checkouts skip these host ABI tests.
  */
 class NativeDataJobsTest {
     companion object {
         @BeforeClass @JvmStatic
         fun configureHostLibrary() {
-            val library = System.getenv("SPOTIFLAC_NATIVE_HOST_LIBRARY")
+            val library = System.getenv("SISTRUM_NATIVE_HOST_LIBRARY")
             assumeTrue("Build the Rust host library for ABI tests", !library.isNullOrBlank())
             require(File(library!!).isFile) { "Native host library does not exist" }
-            System.setProperty("uniffi.component.spotiflac_mobile.libraryOverride", library)
-            System.getenv("SPOTIFLAC_JNA_HOST_DIRECTORY")?.let {
+            System.setProperty("uniffi.component.sistrum_mobile.libraryOverride", library)
+            System.getenv("SISTRUM_JNA_HOST_DIRECTORY")?.let {
                 System.setProperty("jna.boot.library.path", it)
             }
         }

@@ -1,11 +1,11 @@
-import 'package:spotiflac_android/services/playback_equalizer.dart';
+import 'package:sistrum/services/playback_equalizer.dart';
 import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('AudioOutput');
 

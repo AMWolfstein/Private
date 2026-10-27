@@ -2,11 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
-import 'package:spotiflac_android/services/library_cleanup.dart';
-import 'package:spotiflac_android/utils/confirm_and_delete_tracks.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/services/library_cleanup.dart';
+import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
 import 'package:sqflite/sqflite.dart';
 
 class _DeleteDatabase implements Database, Transaction {

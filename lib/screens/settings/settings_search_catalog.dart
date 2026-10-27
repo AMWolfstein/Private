@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/l10n/app_localizations.dart';
+import 'package:sistrum/l10n/app_localizations.dart';
 
 /// A control or submenu that can be discovered from the root Settings search.
 ///
@@ -57,7 +57,7 @@ class SettingsSearchCatalog {
           title: l10n.appearanceGlassOutlines,
           subtitle: l10n.appearanceGlassOutlinesSubtitle,
           keywords: const [
-            'mornye',
+            'sistrum',
             'liquid glass',
             'border',
             'rim',

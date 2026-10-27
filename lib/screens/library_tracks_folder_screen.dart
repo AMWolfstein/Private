@@ -1,40 +1,40 @@
-import 'package:spotiflac_android/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
 import 'dart:math';
 import 'dart:io';
 
-import 'package:spotiflac_android/widgets/track_detail_actions.dart';
+import 'package:sistrum/widgets/track_detail_actions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
-import 'package:spotiflac_android/widgets/collection_scaffold.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_snack_bar.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/theme/mornye_icons.dart';
+import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/sistrum_icons.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
-import 'package:spotiflac_android/widgets/album_detail_header.dart';
-import 'package:spotiflac_android/widgets/local_collection_actions.dart';
-import 'package:spotiflac_android/widgets/mornye_artist_header.dart';
-import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/local_collection_actions.dart';
+import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
-import 'package:spotiflac_android/services/m3u_playlist_service.dart';
-import 'package:spotiflac_android/utils/file_access.dart';
-import 'package:spotiflac_android/providers/library_collections_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/screens/collapsing_header_scroll_mixin.dart';
-import 'package:spotiflac_android/screens/selection_mode_mixin.dart';
-import 'package:spotiflac_android/screens/library_tracks_folder_data.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
-import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/widgets/selection_action_button.dart';
-import 'package:spotiflac_android/widgets/selection_bottom_bar.dart';
-import 'package:spotiflac_android/widgets/playlist_picker_sheet.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/track.dart';
+import 'package:sistrum/services/m3u_playlist_service.dart';
+import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/screens/collapsing_header_scroll_mixin.dart';
+import 'package:sistrum/screens/selection_mode_mixin.dart';
+import 'package:sistrum/screens/library_tracks_folder_data.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/widgets/selection_action_button.dart';
+import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/playlist_picker_sheet.dart';
 
 String? _resolveRawCoverUrl(Track track) {
   final rawCover = track.coverUrl?.trim();
@@ -257,7 +257,7 @@ class _LibraryTracksFolderScreenState
     // Loved's heart has a neutral surface; playlist art is shared everywhere.
     final cover = loved ? null : preferred ?? local;
     {
-      return MornyeArtistSurface(
+      return SistrumArtistSurface(
         imageSource: cover,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, cover)),
@@ -477,7 +477,7 @@ class _LibraryTracksFolderScreenState
       var sourcePath = picked.path;
       if (sourcePath == null || sourcePath.isEmpty) {
         materializedDir = await Directory.systemTemp.createTemp(
-          'spotiflac_playlist_cover_',
+          'sistrum_playlist_cover_',
         );
         final pickedExtension = p.extension(picked.name);
         final materializedFile = File(
@@ -585,7 +585,7 @@ class _LibraryTracksFolderScreenState
 
     return AlbumDetailHeader(
       title: title,
-      immersive: context.isMornye,
+      immersive: context.isSistrum,
       squareArtwork: true,
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
@@ -635,13 +635,13 @@ class _LibraryTracksFolderScreenState
       appBarActions: [
         if (!isSelectionMode && entries.isNotEmpty)
           IconButton(
-            icon: Icon(mornyeIconFor(Icons.ios_share)),
+            icon: Icon(sistrumIconFor(Icons.ios_share)),
             tooltip: context.l10n.collectionExportM3u,
             onPressed: () => _exportAsM3u8(context, title, entries),
           ),
         if (isPlaylistMode && !isSelectionMode) ...[
           IconButton(
-            icon: Icon(mornyeIconFor(Icons.edit_outlined)),
+            icon: Icon(sistrumIconFor(Icons.edit_outlined)),
             tooltip: context.l10n.collectionRenamePlaylist,
             onPressed: () {
               final id = widget.playlistId ?? playlist?.id;
@@ -650,7 +650,7 @@ class _LibraryTracksFolderScreenState
             },
           ),
           IconButton(
-            icon: Icon(mornyeIconFor(Icons.camera_alt_outlined)),
+            icon: Icon(sistrumIconFor(Icons.camera_alt_outlined)),
             tooltip: context.l10n.collectionPlaylistChangeCover,
             onPressed: () => _showCoverOptionsSheet(context, hasCustomCover),
           ),
@@ -716,7 +716,7 @@ class _LibraryTracksFolderScreenState
                 vertical: 4,
               ),
               leading: Icon(
-                mornyeIconFor(Icons.image_outlined),
+                sistrumIconFor(Icons.image_outlined),
                 color: colorScheme.primary,
               ),
               title: Text(context.l10n.collectionPlaylistChangeCover),
@@ -732,7 +732,7 @@ class _LibraryTracksFolderScreenState
                   vertical: 4,
                 ),
                 leading: Icon(
-                  mornyeIconFor(Icons.delete_outline),
+                  sistrumIconFor(Icons.delete_outline),
                   color: colorScheme.primary,
                 ),
                 title: Text(context.l10n.collectionPlaylistRemoveCover),

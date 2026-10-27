@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotiflac_android/services/automix_phase_lock.dart';
+import 'package:sistrum/services/automix_phase_lock.dart';
 
 void main() {
   void samples(AutoMixPhaseLock lock, List<double?> errors) {

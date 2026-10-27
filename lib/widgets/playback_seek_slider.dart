@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/mornye_player_slider.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/sistrum_player_slider.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.
 class PlaybackSeekSlider extends StatefulWidget {
@@ -110,7 +110,7 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
               : null,
           child: IgnorePointer(
             ignoring: !enabled,
-            child: MornyePlayerSlider(
+            child: SistrumPlayerSlider(
               activeColor:
                   SliderTheme.of(context).activeTrackColor ?? Colors.white,
               inactiveColor:

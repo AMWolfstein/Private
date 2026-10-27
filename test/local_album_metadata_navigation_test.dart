@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/playback_provider.dart';
-import 'package:spotiflac_android/screens/local_album_screen.dart';
-import 'package:spotiflac_android/services/library_database.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/screens/local_album_screen.dart';
+import 'package:sistrum/services/library_database.dart';
 import 'support/material_test_theme.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/album_track_tile.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/album_track_tile.dart';
 
 class _Playback extends PlaybackController {
   final played = <String>[];
@@ -23,8 +23,8 @@ class _Playback extends PlaybackController {
 }
 
 void main() {
-  for (final mornye in [true]) {
-    testWidgets('album row and Play both play ($mornye)', (tester) async {
+  for (final sistrum in [true]) {
+    testWidgets('album row and Play both play ($sistrum)', (tester) async {
       SharedPreferences.setMockInitialValues({});
       tester.view.physicalSize = const Size(430, 1200);
       tester.view.devicePixelRatio = 1;
@@ -48,8 +48,8 @@ void main() {
           overrides: [playbackProvider.overrideWith(() => playback)],
           child: MaterialApp(
             navigatorKey: navigator,
-            theme: mornye
-                ? MornyeTheme.build(Brightness.light)
+            theme: sistrum
+                ? SistrumTheme.build(Brightness.light)
                 : AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

@@ -7,13 +7,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/library_browse_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/screens/mornye_library_screen.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/sistrum_library_screen.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
 
 import '../test/support/library_paging_fixture.dart';
 import 'performance_probe.dart';
@@ -157,7 +157,7 @@ void main() {
     }
 
     ProviderContainer container() => ProviderScope.containerOf(
-      tester.element(find.byType(MornyeLibraryScreen)),
+      tester.element(find.byType(SistrumLibraryScreen)),
     );
     LibraryBrowseState? current() =>
         container().read(libraryBrowseProvider(_request)).value;
@@ -200,13 +200,13 @@ void main() {
                   ),
               ],
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: SistrumTheme.build(brightness),
                 locale: const Locale('en'),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(
-                  body: MornyeLibraryScreen(
-                    page: MornyeLibraryPage.albums,
+                  body: SistrumLibraryScreen(
+                    page: SistrumLibraryPage.albums,
                     onOpenSection: (_) {},
                   ),
                 ),
@@ -328,7 +328,7 @@ void main() {
             '(plus mirrored history rows) and one unavailable source; shared '
             'decoded 384px PNG, no network.',
         'baseline':
-            'Previous growing-prefix reads through production SQL; same MornyeLibraryScreen.',
+            'Previous growing-prefix reads through production SQL; same SistrumLibraryScreen.',
         'paging':
             'Production AsyncNotifier and bounded page adapter; same SQL/store and UI.',
         'runs': runCounters,

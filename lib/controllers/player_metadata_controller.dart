@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:spotiflac_android/services/playback_metadata.dart';
-import 'package:spotiflac_android/utils/int_utils.dart';
-import 'package:spotiflac_android/utils/logger.dart';
-import 'package:spotiflac_android/utils/lyrics_parser.dart';
+import 'package:sistrum/services/playback_metadata.dart';
+import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/lyrics_parser.dart';
 
 final _log = AppLogger('PlayerMetadata');
 

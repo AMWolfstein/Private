@@ -166,7 +166,7 @@ class MainActivity: FlutterFragmentActivity() {
             // never hand it to Dart as a usable library source. Log only the
             // error class: provider messages can embed the user's folder URI.
             android.util.Log.w(
-                "SpotiFLAC",
+                "Sistrum",
                 "Failed to persist SAF permission: ${persistError?.javaClass?.simpleName ?: "no-grant"}",
             )
             deliver(errorJson("Could not keep access to the selected folder; pick it again"))
@@ -237,7 +237,7 @@ class MainActivity: FlutterFragmentActivity() {
 
             return if (subPath.isEmpty()) prefix else "$prefix/$subPath"
         } catch (e: Exception) {
-            android.util.Log.w("SpotiFLAC", "Failed to resolve SAF display path: ${e.message}")
+            android.util.Log.w("Sistrum", "Failed to resolve SAF display path: ${e.message}")
             return treeUri.toString()
         }
     }
@@ -351,7 +351,7 @@ class MainActivity: FlutterFragmentActivity() {
             mapOf(LARGE_JSON_RESULT_FILE_KEY to file.absolutePath)
         } catch (e: Exception) {
             android.util.Log.w(
-                "SpotiFLAC",
+                "Sistrum",
                 "Failed to spill large bridge JSON result to file: ${e.message}",
             )
             payload
@@ -450,7 +450,7 @@ class MainActivity: FlutterFragmentActivity() {
                 true
             } catch (e: Exception) {
                 android.util.Log.w(
-                    "SpotiFLAC",
+                    "Sistrum",
                     "Failed to create installation marker: ${e.message}"
                 )
                 false
@@ -487,7 +487,7 @@ class MainActivity: FlutterFragmentActivity() {
      */
 
     internal fun reportLibraryScanError(path: String, operation: String, message: String) {
-        android.util.Log.e("SpotiFLAC", "Library scan: $operation [$path]: $message")
+        android.util.Log.e("Sistrum", "Library scan: $operation [$path]: $message")
         recordSafScanFailure(path, message)
         val payload = mapOf(
             "path" to path,
@@ -510,7 +510,7 @@ class MainActivity: FlutterFragmentActivity() {
         val descriptor = try {
             contentResolver.openFileDescriptor(Uri.parse(uriStr), "r")
         } catch (e: Exception) {
-            android.util.Log.w("SpotiFLAC", "Failed to open SAF playback descriptor: ${e.message}")
+            android.util.Log.w("Sistrum", "Failed to open SAF playback descriptor: ${e.message}")
             null
         } ?: return null
 
@@ -755,11 +755,11 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             pendingSafTreeResult = result
                             try {
-                                android.util.Log.i("SpotiFLAC", "Launching SAF picker via $resolver")
+                                android.util.Log.i("Sistrum", "Launching SAF picker via $resolver")
                                 safTreeLauncher.launch(intent)
                             } catch (e: Exception) {
                                 pendingSafTreeResult = null
-                                android.util.Log.e("SpotiFLAC", "Failed to launch SAF picker: ${e.message}", e)
+                                android.util.Log.e("Sistrum", "Failed to launch SAF picker: ${e.message}", e)
                                 result.error(
                                     "saf_launch_failed",
                                     e.message ?: "Failed to launch folder picker",
@@ -840,7 +840,7 @@ class MainActivity: FlutterFragmentActivity() {
                                         }
                                     },
                                     onFailure = { error ->
-                                        android.util.Log.w("SpotiFLAC", "SAF library read probe failed", error)
+                                        android.util.Log.w("Sistrum", "SAF library read probe failed", error)
                                     },
                                 )
                             }
@@ -861,7 +861,7 @@ class MainActivity: FlutterFragmentActivity() {
                                         doc != null && doc.exists() && doc.canWrite()
                                     }
                                 } catch (e: Exception) {
-                                    android.util.Log.w("SpotiFLAC", "SAF tree access check failed: ${e.message}")
+                                    android.util.Log.w("Sistrum", "SAF tree access check failed: ${e.message}")
                                     false
                                 }
                             }
@@ -1022,7 +1022,7 @@ class MainActivity: FlutterFragmentActivity() {
                                         coreBackend.editFileMetadata(filePath, metadataJson)
                                     }
                                 } catch (e: Exception) {
-                                    android.util.Log.e("SpotiFLAC", "editFileMetadata failed: ${e.message}", e)
+                                    android.util.Log.e("Sistrum", "editFileMetadata failed: ${e.message}", e)
                                     """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
                                 }
                             }
@@ -1035,7 +1035,7 @@ class MainActivity: FlutterFragmentActivity() {
                                 try {
                                     coreBackend.writeM4aFreeformTags(filePath, metadataJson)
                                 } catch (e: Exception) {
-                                    android.util.Log.e("SpotiFLAC", "writeM4AFreeformTags failed: ${e.message}", e)
+                                    android.util.Log.e("Sistrum", "writeM4AFreeformTags failed: ${e.message}", e)
                                     """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
                                 }
                             }
@@ -1122,7 +1122,7 @@ class MainActivity: FlutterFragmentActivity() {
                             withContext(Dispatchers.IO) {
                                 coreBackend.releaseMemoryUnderPressure()
                             }
-                            android.util.Log.d("SpotiFLAC", "Backend memory pressure release completed")
+                            android.util.Log.d("Sistrum", "Backend memory pressure release completed")
                             result.success(null)
                         }
 

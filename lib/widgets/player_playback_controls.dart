@@ -1,20 +1,20 @@
-import 'package:spotiflac_android/widgets/audio_info_sheet.dart';
+import 'package:sistrum/widgets/audio_info_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/controllers/player_metadata_controller.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/playback_seek_preview.dart';
-import 'package:spotiflac_android/utils/string_utils.dart';
-import 'package:spotiflac_android/widgets/automix_status_badge.dart';
-import 'package:spotiflac_android/widgets/mornye_playback_button.dart';
-import 'package:spotiflac_android/widgets/mornye_playback_time.dart';
-import 'package:spotiflac_android/widgets/mornye_player_slider.dart';
-import 'package:spotiflac_android/widgets/playback_seek_slider.dart';
+import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/widgets/automix_status_badge.dart';
+import 'package:sistrum/widgets/sistrum_playback_button.dart';
+import 'package:sistrum/widgets/sistrum_playback_time.dart';
+import 'package:sistrum/widgets/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/playback_seek_slider.dart';
 
-const _mornyeTimelinePadding = 28.0;
+const _sistrumTimelinePadding = 28.0;
 
 class PlayerPlaybackControls extends ConsumerWidget {
   final String mediaId;
@@ -39,7 +39,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(musicPlayerControllerProvider);
-    final mornye = context.isMornye;
+    final sistrum = context.isSistrum;
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
     final playPauseSize = compact
@@ -63,20 +63,20 @@ class PlayerPlaybackControls extends ConsumerWidget {
                 final elapsedSeconds = (preview ?? position).inSeconds;
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: mornye ? _mornyeTimelinePadding : 16,
+                    horizontal: sistrum ? _sistrumTimelinePadding : 16,
                   ),
                   child: Column(
                     children: [
                       SliderTheme(
                         data: SliderThemeData(
                           trackHeight: 4,
-                          activeTrackColor: mornye
+                          activeTrackColor: sistrum
                               ? colorScheme.onSurface
                               : colorScheme.primary,
                           inactiveTrackColor: colorScheme.onSurface.withValues(
                             alpha: 0.18,
                           ),
-                          thumbColor: mornye
+                          thumbColor: sistrum
                               ? colorScheme.onSurface
                               : colorScheme.primary,
                           // A 7dp thumb was hard to grab; 10dp with a 24dp overlay
@@ -97,17 +97,17 @@ class PlayerPlaybackControls extends ConsumerWidget {
                           playing: isPlaying && !isLoading,
                         ),
                       ),
-                      if (!mornye) const SizedBox(height: 8),
+                      if (!sistrum) const SizedBox(height: 8),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: mornye
-                              ? MornyePlayerSlider.horizontalInset
+                          horizontal: sistrum
+                              ? SistrumPlayerSlider.horizontalInset
                               : 12,
                         ),
                         child: Row(
                           children: [
-                            if (mornye)
-                              MornyePlaybackTime(
+                            if (sistrum)
+                              SistrumPlaybackTime(
                                 key: ValueKey('elapsed:$mediaId'),
                                 seconds: elapsedSeconds,
                                 style: timeStyle,
@@ -118,8 +118,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                 style: timeStyle,
                               ),
                             Expanded(child: Center(child: quality)),
-                            if (mornye)
-                              MornyePlaybackTime(
+                            if (sistrum)
+                              SistrumPlaybackTime(
                                 key: ValueKey('remaining:$mediaId'),
                                 // Subtract whole seconds so both labels roll together,
                                 // even when the track duration includes milliseconds.
@@ -156,13 +156,13 @@ class PlayerPlaybackControls extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ...[],
-                MornyePlaybackButton(
+                SistrumPlaybackButton(
                   icon: CupertinoIcons.backward_fill,
                   color: colorScheme.onSurface,
                   tooltip: context.l10n.nowPlayingPreviousTrack,
                   onPressed: controller.previous,
                 ),
-                MornyePlaybackButton(
+                SistrumPlaybackButton(
                   icon: isPlaying
                       ? CupertinoIcons.pause_fill
                       : CupertinoIcons.play_fill,
@@ -175,7 +175,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                   loading: isLoading,
                   onPressed: () => controller.togglePlayPause(isPlaying),
                 ),
-                MornyePlaybackButton(
+                SistrumPlaybackButton(
                   icon: CupertinoIcons.forward_fill,
                   color: colorScheme.onSurface,
                   tooltip: context.l10n.nowPlayingNextTrack,

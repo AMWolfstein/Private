@@ -374,7 +374,7 @@ class _BubbleLayout extends SingleChildLayoutDelegate {
 }
 
 /// The section bubble beside the thumb. Material uses a container-colored
-/// shape pointing at the thumb; Mornye a plain rounded tile.
+/// shape pointing at the thumb; Sistrum a plain rounded tile.
 class _Bubble extends StatelessWidget {
   const _Bubble({super.key, required this.label, required this.motion});
 

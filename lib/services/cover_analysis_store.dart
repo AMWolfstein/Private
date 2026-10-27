@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/cover_colors.dart';
-import 'package:spotiflac_android/utils/logger.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/cover_colors.dart';
+import 'package:sistrum/utils/logger.dart';
 
 /// Persists cover analyses, so a cover analysed once shows its colours
 /// without decoding it again.

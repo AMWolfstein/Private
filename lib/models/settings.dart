@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:spotiflac_android/models/automix_options.dart';
-import 'package:spotiflac_android/models/metadata_separators.dart';
+import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/models/metadata_separators.dart';
 
 part 'settings.g.dart';
 
@@ -14,7 +14,7 @@ double playbackNormalizationPreampFromJson(Object? value) =>
 String playbackNormalizationModeFromJson(Object? value) =>
     value == 'album' ? 'album' : 'track';
 
-/// Default Mornye glass clarity level (Balanced).
+/// Default Sistrum glass clarity level (Balanced).
 const int kDefaultGlassClarityLevel = 3;
 
 int glassClarityLevelFromJson(Object? value) => value is num && value.isFinite
@@ -94,11 +94,11 @@ class AppSettings {
   /// its backdrop blur.
   final bool headerBandBlurDisabled;
 
-  /// Mornye glass renderer: `auto` (the device decides), `lite`, `full` or
-  /// `off`. See [MornyeGlassQuality].
+  /// Sistrum glass renderer: `auto` (the device decides), `lite`, `full` or
+  /// `off`. See [SistrumGlassQuality].
   final String glassQuality;
 
-  /// Mornye glass clarity level, 1 (Frosted) to 5 (Crystal).
+  /// Sistrum glass clarity level, 1 (Frosted) to 5 (Crystal).
   @JsonKey(fromJson: glassClarityLevelFromJson)
   final int glassClarityLevel;
   @JsonKey(fromJson: appLocaleFromJson)

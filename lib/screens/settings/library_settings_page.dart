@@ -1,26 +1,26 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_switch.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/library_scan_failure.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/services/platform_bridge.dart';
-import 'package:spotiflac_android/utils/adaptive_layout.dart';
-import 'package:spotiflac_android/widgets/duplicate_review_sheet.dart';
-import 'package:spotiflac_android/widgets/app_bottom_sheet.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/screens/settings/metadata_separator_settings_page.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/library_scan_failure.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/widgets/duplicate_review_sheet.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
 
 class LibrarySettingsPage extends ConsumerStatefulWidget {
   const LibrarySettingsPage({super.key});
@@ -614,7 +614,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   title: context.l10n.metadataSeparators,
                   onTap: () => Navigator.of(context).push(
                     slidePageRoute<void>(
-                      page: const MornyeSettingsTheme(
+                      page: const SistrumSettingsTheme(
                         child: MetadataSeparatorSettingsPage(),
                       ),
                     ),

@@ -1,23 +1,23 @@
-import 'package:spotiflac_android/screens/equalizer_screen.dart';
-import 'package:spotiflac_android/widgets/music_haptics_settings.dart';
-import 'package:spotiflac_android/widgets/playback_normalization_settings.dart';
+import 'package:sistrum/screens/equalizer_screen.dart';
+import 'package:sistrum/widgets/music_haptics_settings.dart';
+import 'package:sistrum/widgets/playback_normalization_settings.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/services/music_playback_deck.dart';
-import 'package:spotiflac_android/services/music_player_service.dart'
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/music_player_service.dart'
     show resetAutoplayLearning;
-import 'package:spotiflac_android/screens/listening_statistics_screen.dart';
-import 'package:spotiflac_android/utils/nav_bar_inset.dart';
-import 'package:spotiflac_android/widgets/animation_utils.dart';
-import 'package:spotiflac_android/widgets/app_alert_dialog.dart';
-import 'package:spotiflac_android/widgets/app_sliver_header.dart';
-import 'package:spotiflac_android/widgets/mornye_volume_control.dart';
-import 'package:spotiflac_android/widgets/settings_group.dart';
-import 'package:spotiflac_android/widgets/automix_settings.dart';
+import 'package:sistrum/screens/listening_statistics_screen.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/sistrum_volume_control.dart';
+import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/automix_settings.dart';
 
 class PlaybackSettingsPage extends ConsumerStatefulWidget {
   const PlaybackSettingsPage({super.key});
@@ -324,7 +324,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                                     : context.l10n.usbVolumeUnavailable,
                               ),
                               if (volume?.available == true)
-                                MornyeVolumeControl(
+                                SistrumVolumeControl(
                                   foreground: colorScheme.onSurface,
                                 ),
                             ],

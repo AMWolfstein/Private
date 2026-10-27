@@ -6,18 +6,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/settings.dart';
-import 'package:spotiflac_android/providers/settings_provider.dart';
-import 'package:spotiflac_android/providers/local_library_provider.dart';
-import 'package:spotiflac_android/providers/music_player_provider.dart';
-import 'package:spotiflac_android/screens/local_artist_screen.dart';
-import 'package:spotiflac_android/screens/track_metadata_edit_sheet.dart';
-import 'package:spotiflac_android/services/library_database.dart';
-import 'package:spotiflac_android/theme/mornye_theme.dart';
-import 'package:spotiflac_android/widgets/local_song_menu.dart';
-import 'package:spotiflac_android/widgets/local_song_row.dart';
-import 'package:spotiflac_android/widgets/mornye_context_menu.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/screens/track_metadata_edit_sheet.dart';
+import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/sistrum_context_menu.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -89,7 +89,7 @@ void main() {
           musicPlayerControllerProvider.overrideWithValue(player),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Directionality(
@@ -202,7 +202,7 @@ void main() {
           ),
         );
         await openMenu(tester);
-        final panel = tester.getRect(find.byType(MornyeContextMenu));
+        final panel = tester.getRect(find.byType(SistrumContextMenu));
         expect(panel.left, greaterThanOrEqualTo(16));
         expect(panel.right, lessThanOrEqualTo(374));
         if (top < 400) {
@@ -229,7 +229,7 @@ void main() {
       ),
     );
     await openMenu(tester);
-    final panel = tester.getRect(find.byType(MornyeContextMenu));
+    final panel = tester.getRect(find.byType(SistrumContextMenu));
     expect(panel.height, lessThanOrEqualTo(button.top - 24 + 0.5));
     expect(find.text('Remove from device').hitTestable(), findsNothing);
     await tester.ensureVisible(find.text('Remove from device'));
@@ -569,7 +569,7 @@ void main() {
     );
 
     await openMenu(tester);
-    await tester.tap(find.text(l10n.mornyeGoToArtist));
+    await tester.tap(find.text(l10n.sistrumGoToArtist));
     await pumpUntil(tester, find.byType(LocalArtistScreen));
     expect(find.byType(LocalArtistScreen), findsOneWidget);
   });
@@ -588,9 +588,9 @@ void main() {
     );
     final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
     await openMenu(tester);
-    await tester.ensureVisible(find.text(l10n.mornyeGoToArtist));
+    await tester.ensureVisible(find.text(l10n.sistrumGoToArtist));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(l10n.mornyeGoToArtist));
+    await tester.tap(find.text(l10n.sistrumGoToArtist));
     await pumpUntil(tester, find.byType(LocalArtistScreen));
     // A featured credit navigates to the primary artist, not the whole credit.
     expect(
