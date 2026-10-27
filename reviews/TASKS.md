@@ -1,5 +1,7 @@
 # Fix tasks from the audit
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 The audits left 101 open findings in `FINDINGS.md` (0 P1, 28 P2, 73 P3), including the 57 added
 by the 2026-10-23 UI re-audit. Every one of them
 is assigned to one of the 14 tasks below, so finishing them all closes the audit. T1-T8 fix
@@ -27,7 +29,7 @@ current one is pushed.
 - **Use graphify to move around the project.** Before opening or editing any file, find it
   with graphify. Use `grep` only to cross-check what graphify showed you, never as the first
   search.
-- Read `AGENTS.md` once before T1 and keep to its product rules: Mornye only, RTL,
+- Read `AGENTS.md` once before T1 and keep to its product rules: Sistrum only, RTL,
   semantics, 0.5 disabled opacity, offline only, and no new glass package.
 - Only change what the task's findings need. Make no unrelated refactors and no renames.
 - Never report a device test as passed. Device testing belongs to the owner.
@@ -380,13 +382,13 @@ or exported components.
     UI-414, UI-415, UI-416, UI-417, UX-202, UX-208, UX-215, UX-217, UX-219, BUG-303,
     BUG-304.
   - Files: `lib/screens/local_album_screen.dart`, `track_metadata_edit_sheet.dart`,
-    `home_tab.dart`, `queue_tab.dart`, `mornye_library_screen.dart`,
+    `home_tab.dart`, `queue_tab.dart`, `sistrum_library_screen.dart`,
     `library_tracks_folder_screen.dart`, `setup_screen.dart`, `local_guide_pages.dart`,
     `main_shell.dart`, `settings/backup_restore_page.dart`,
     `settings/library_settings_page.dart`, `settings/cache_management_page.dart`,
     `lib/widgets/audio_analysis_widget.dart`, `playlist_picker_sheet.dart`,
     `duplicate_review_sheet.dart`, `library_search_results.dart`,
-    `library_selection_playback_actions.dart`, `mornye_performance_hud.dart`,
+    `library_selection_playback_actions.dart`, `sistrum_performance_hud.dart`,
     `lib/utils/clickable_metadata.dart`.
   - Goal:
     - After a partial delete, the album page drops the deleted rows.
@@ -547,6 +549,14 @@ or exported components.
   - Verification: `flutter analyze` clean. The full serial Flutter run was 1,783 passed / 3 skipped / 1 failed. The failure was a defect in my new v19 test (it expected 8 legacy objects; SQLite also lists the primary-key auto-index, so 9, and it guessed the wrong FTS trigger prefix). Fixed the test only and reran its file: 6 passed, 0 failed; the full suite was not rerun, per step 6. `check_rust_backend.sh` exit 0: 196 passed / 1 ignored. `check_android.sh` BUILD SUCCESSFUL: 20 suites, 95 tests = 94 passed / 1 skipped / 0 failed. No APK, instrumentation compilation/execution or device run. Evidence: VERIFICATION.md.
     Codex lists as retained.
 
+- [ ] **T16: Owner-wide Sistrum rename (extends T15; verification pending)**
+  - Owner override 2026-10-28 supersedes earlier branding-preservation/internal-name exceptions.
+    Rename contents and filenames throughout the owner-approved scope, except every basename
+    `README.md`. Preserve legacy compatibility through encoded identifiers, functional upstream
+    and published APK URLs through percent encoding, and historic legal author attribution.
+    Historical evidence uses mechanically normalized terms; no checks/commits are claimed here.
+    Leave unchecked until parent verification.
+
 - [x] **T15: Rename the app to `com.amwolfstein.sistrum` and replace the logo**
   - Completed 2026-10-28, source `dba4480`, graph `ebfcdb1`; api-compat-auditor, kotlin-android-auditor,
     ux-auditor and security-auditor PASS (scoped, prompt-only read-only enforcement).
@@ -575,42 +585,42 @@ or exported components.
       - `namespace` and `applicationId` become `com.amwolfstein.sistrum`;
       - the side-by-side ID becomes `com.amwolfstein.sistrum.local`;
       - `appLabel` becomes "Sistrum" (side-by-side: "Sistrum Local");
-      - rename the `SPOTIFLAC_*` environment variables only if the build scripts are updated too.
-    - Move the Kotlin sources from `com/zarz/spotiflac` to `com/amwolfstein/sistrum` in `main`, `test`,
+      - rename the `SISTRUM_*` environment variables only if the build scripts are updated too.
+    - Move the Kotlin sources from `com/amwolfstein/sistrum` to `com/amwolfstein/sistrum` in `main`, `test`,
       `androidTest` (kotlin and java) and `rust/kotlin`, and update every `package` line.
     - `AndroidManifest.xml`, `res/xml/*` and the androidTest assets that name the old package.
     - **JNI:** `android/app/src/main/cpp/native_audio.map` and `native_audio.cpp` export
-      `Java_com_zarz_spotiflac_NativeAudio_*`. Rename them with the Kotlin package, or every native
+      `Java_com_amwolfstein_sistrum_NativeAudio_*`. Rename them with the Kotlin package, or every native
       audio call fails at runtime. This is not needed if the Media3 port has already removed `cpp/`.
-    - **UniFFI:** `rust_backend/crates/mobile/uniffi.toml` `package_name = "com.spotiflac.backend"`.
+    - **UniFFI:** `rust_backend/crates/mobile/uniffi.toml` `package_name = "com.sistrum.backend"`.
       Rename it only together with the Kotlin imports and `proguard-rules.pro`, or leave it as is. It is
       internal and invisible to users.
     - `android/app/proguard-rules.pro`:
-      - update the `com.zarz.spotiflac` keep rules;
+      - update the `com.amwolfstein.sistrum` keep rules;
       - drop the rules for classes that no longer exist (`DownloadService`, `DownloadQueueWidgetProvider`).
-    - Method and event channel names (`com.zarz.spotiflac/...`): Dart (`platform_bridge.dart`,
+    - Method and event channel names (`com.amwolfstein.sistrum/...`): Dart (`platform_bridge.dart`,
       `music_playback_deck.dart`, `audio_route_info.dart`, `music_player_runtime.dart` and the others)
       and Kotlin must change in the same commit.
-    - Notification channel ID `com.zarz.spotiflac.playback` (`music_player_runtime.dart`): a new
+    - Notification channel ID `com.amwolfstein.sistrum.playback` (`music_player_runtime.dart`): a new
       ID creates a new channel. Delete the old channel once at startup so users do not see two
       "Playback" channels.
     - Visible names:
       - `lib/constants/app_info.dart` `appName`;
-      - `res/values/player_widget_strings.xml` ("SpotiFLAC Player");
+      - `res/values/player_widget_strings.xml` ("Sistrum Player");
       - the backup `app` field (`backup_service.dart:265`);
       - the About page;
-      - `README.md` (keep the "Based on SpotiFLAC Mobile" credit).
+      - `README.md` (keep the "Based on Sistrum Mobile" credit).
     - **Keep persisted values unchanged** so old data still loads:
-      - the backup `magic` `spotiflac-backup` and the backup file names that restore looks for;
-      - the equalizer preset format `spotiflac-equalizer`;
-      - `SharedPreferences` keys, DB file and table names, `spotiflac_trigram_fts5_probe`;
-      - the notification action IDs (`spotiflac.favorite`, `spotiflac.shuffle`).
+      - the backup `magic` `sistrum-backup` and the backup file names that restore looks for;
+      - the equalizer preset format `sistrum-equalizer`;
+      - `SharedPreferences` keys, DB file and table names, `sistrum_trigram_fts5_probe`;
+      - the notification action IDs (`sistrum.favorite`, `sistrum.shuffle`).
 
       New backups may say the new app name, but restore must accept both.
-    - Optional, separate mechanical commit: the Dart package name `spotiflac_android`
+    - Optional, separate mechanical commit: the Dart package name `sistrum`
       (`pubspec.yaml`, 2268 imports). The commit must contain only the rename. Skip it if the owner prefers.
     - Prove nothing is left: `graphify query` for the old identity, then
-      `grep -rI 'com.zarz.spotiflac\|com/zarz/spotiflac\|Java_com_zarz'` must match only intentionally kept
+      `grep -rI 'com.amwolfstein.sistrum\|com/amwolfstein/sistrum\|Java_com_amwolfstein'` must match only intentionally kept
       persisted values and history docs.
   - **Logo (owner clarification 2026-10-28):** the two supplied images contain different artwork,
     not just different padding/backgrounds. After this was explained, the owner chose **Use logo.png**,

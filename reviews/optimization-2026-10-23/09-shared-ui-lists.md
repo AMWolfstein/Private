@@ -1,8 +1,10 @@
 # Shared list,selection,header and animation surfaces (U3)
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
-code-optimization-auditor, source d5d5a02 unchanged. All142 remaining UI paths after U1a/b/U2 filename/hot-marker screened. Ten principal whole reads4,133lines under lib/widgets/: library_section_list.dart1–118,library_fast_scroller.dart1–432,selection_bottom_bar.dart1–603,playlist_picker_sheet.dart1–577,mini_player.dart1–242,animation_utils.dart1–547,album_detail_header.dart1–961,mornye_floating_header.dart1–359,collection_scaffold.dart1–120,overflow_marquee.dart1–174. Graph shared UI query completed truncated, navigation only. Root cache bodies not duplicated.
+code-optimization-auditor, source d5d5a02 unchanged. All142 remaining UI paths after U1a/b/U2 filename/hot-marker screened. Ten principal whole reads4,133lines under lib/widgets/: library_section_list.dart1–118,library_fast_scroller.dart1–432,selection_bottom_bar.dart1–603,playlist_picker_sheet.dart1–577,mini_player.dart1–242,animation_utils.dart1–547,album_detail_header.dart1–961,sistrum_floating_header.dart1–359,collection_scaffold.dart1–120,overflow_marquee.dart1–174. Graph shared UI query completed truncated, navigation only. Root cache bodies not duplicated.
 
 ## Findings
 

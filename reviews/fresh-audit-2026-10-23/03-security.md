@@ -1,5 +1,7 @@
 # Security audit — channel/file trust boundaries
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Baseline `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`; role `.claude/agents/security-auditor.md`, using `.claude/skills/audit/SKILL.md`. Independent current implementation; no old findings imported. Audio engine excluded.
 
 ## Read ledger
@@ -8,10 +10,10 @@ Baseline `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`; role `.claude/agents/securi
 |---|---|
 | lib/services/platform_bridge.dart | 1–260,288–484,615–710,760–874 |
 | lib/utils/file_access.dart | 1–169 |
-| android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt | 1–108 |
-| android/app/src/main/kotlin/com/zarz/spotiflac/NativeMediaWorkspace.kt | 1–48 |
-| android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt | 110–175,325–425,558–585,678–879,902–1020,1038–1075; audio handlers excluded |
-| android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt | 1–327,357–436 |
+| android/app/src/rust/kotlin/com/amwolfstein/sistrum/NativeDataJobs.kt | 1–108 |
+| android/app/src/main/kotlin/com/amwolfstein/sistrum/NativeMediaWorkspace.kt | 1–48 |
+| android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt | 110–175,325–425,558–585,678–879,902–1020,1038–1075; audio handlers excluded |
+| android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt | 1–327,357–436 |
 | rust_backend/crates/mobile/src/data_jobs.rs | 1–73,103–184; engine-analysis internals excluded |
 | rust_backend/crates/mobile/src/native_cache.rs | 1–19 |
 | rust_backend/crates/mobile/src/native_cache/unix.rs | 1–397; explicit direct endpoint expansion |

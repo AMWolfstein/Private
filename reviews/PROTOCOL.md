@@ -1,5 +1,7 @@
 # Review protocol
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Shared by every reviewer (Claude Code agents in `.claude/agents/`, Codex, OpenCode). Agents
 read this once per invocation; it is the only place these rules live.
 
@@ -69,7 +71,7 @@ Read `AGENTS.md` for the full list. In short:
 - Offline-only Android music player; local files only. Do not suggest restoring providers,
   downloads, online lyrics, remote artwork, extension credentials, Wishlist, format
   conversion, external-player modes, the metadata/details route or any network feature.
-- Material Expressive UI was removed on purpose; Mornye is the only production theme.
+- Material Expressive UI was removed on purpose; Sistrum is the only production theme.
 - Preserve the Rust metadata backend and the existing Kotlin decoders.
 - Media3 migration is planned separately: do not propose broad optimization or replacement
   of legacy playback code. Report correctness, leaks, thread safety, buffers, FFI safety,

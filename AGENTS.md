@@ -4,7 +4,7 @@ This repo is being converted to a local/offline Android-only music player.
 **Read `LOCAL_OFFLINE_MIGRATION_PLAN.md` (esp. `## Progress`) and `git log --oneline -10`
 before continuing any migration work.**
 
-The app targets Android and local files only. Mornye is its sole production theme; keep
+The app targets Android and local files only. Sistrum is its sole production theme; keep
 light/dark modes and local storage, playback, lyrics, backup and USB support. Do not
 reintroduce providers, downloads, extension credentials or remote artwork loading.
 
@@ -29,7 +29,7 @@ Detailed logging is the first option in Logs; there is no separate App settings 
 Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
 Local lyrics reading and per-file metadata/lyrics editing remain supported. Appearance has
 no decorative Library preview card. Settings and Library subpages reuse the album header's
-circular back button in Mornye.
+circular back button in Sistrum.
 
 Settings no longer include the obsolete output-folder Files & Folders page or the
 download-era Metadata page. Music scanning stays under Local Library; local per-file tag
@@ -45,7 +45,7 @@ Playback errors keep the selected song for retry; same-ID duration/artwork updat
 Scanned artwork that is absent or stale falls back to the bounded local embedded-cover cache.
 Exact PCM output decodes FLAC through the integer native source; never trust vendor raw
 FLAC decoding to preserve source precision or label padded output as source bit depth.
-Switch and slider thumbs (AppSwitch, MornyeSlider, horizontal MornyeLevelSlider) turn into
+Switch and slider thumbs (AppSwitch, SistrumSlider, horizontal SistrumLevelSlider) turn into
 liquid glass only while touched and only when the glass thumb gate allows it; no lens or
 capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
 faders keep their painted controls.
@@ -57,7 +57,7 @@ is hidden on Settings and its subpages. Headers mirror in RTL. Only the bottom b
 rest; headers judge known backdrops (page, artwork top) and never sample themselves.
 Glass is configured by `glassQuality` (auto / lite / full / off; Auto follows the device class
 and alone honours high contrast) and `glassClarityLevel` 1-5 in app settings. Every clarity
-number lives in `kMornyeGlassLevels`; never store a percentage or add clarity formulas. Level 1
+number lives in `kSistrumGlassLevels`; never store a percentage or add clarity formulas. Level 1
 is a plain blur, never a lens; off has no lenses, blur or sampling; lite has no shader except
 touch-only thumbs and segment pills. Do not restore "Always use blur effects". The performance
 HUD is a hidden developer option (seven taps on About's version) and is absent when off; it starts
@@ -65,20 +65,20 @@ top-left, drags, minimizes to a pill and its statistics never take touches. Blur
 sigma 6 (lighter tint makes Clear and Crystal). Auto measures p90 raster time per build (above 14 ms:
 full -> lite -> Level 1 lite), saved outside the settings backup; explicit qualities are never measured.
 In the shell, persistent chrome shares one backdrop read: one public `LiquidGlassBatch`
-(`MornyeChromeBatch`) above pages and bar (a second one above the root navigator serves Settings
-and other root routes), joined only through `MornyeChromeMember` (header leading
+(`SistrumChromeBatch`) above pages and bar (a second one above the root navigator serves Settings
+and other root routes), joined only through `SistrumChromeMember` (header leading
 circle and actions, tab capsule, mini player, bar side buttons at rest). Blurs push its key through
 our own layer, on Impeller only; never import `liquid_glass_easy/src` or allocate ids. The band,
 page content, sheets, glass inside Opacity, folding side buttons and moving or covered routes read
 on their own. Glass over known artwork (the player's menus and sheets; album and artist header
-controls, which opt in through `MornyeHeaderControls`) reads nothing: it draws a pre-blurred
-ground image (`MornyePlayerGround`/`MornyePageGround`, 384 px wide, at most 6 MB in total, released
-with their screen) through our `mornye_artwork_glass.frag`; never a BackdropFilter, lens or view
+controls, which opt in through `SistrumHeaderControls`) reads nothing: it draws a pre-blurred
+ground image (`SistrumPlayerGround`/`SistrumPageGround`, 384 px wide, at most 6 MB in total, released
+with their screen) through our `sistrum_artwork_glass.frag`; never a BackdropFilter, lens or view
 there. Album, playlist and artist headers soften while scrolling by fading that ground over the
-artwork (`MornyeGroundVeil`), never a live blur. Lite and Level 1 draw the ground without the shader; an overlay picks its material once at
+artwork (`SistrumGroundVeil`), never a live blur. Lite and Level 1 draw the ground without the shader; an overlay picks its material once at
 open (opaque if its ground is not ready). No menu has a staged glass reveal: page menus keep one
 material from the first frame too.
-Cover colours come from one analysis per cover version (`CoverPalette` -> `mornyeCoverColors`:
+Cover colours come from one analysis per cover version (`CoverPalette` -> `sistrumCoverColors`:
 bottom/top edge, dominant, harmonized accent; HCT, chroma never above the cover's, AA on-colours;
 stored in the library DB's derived `cover_analysis` table). Screens and grounds take every cover
 colour from it; never add HSL or second copies of the colour maths.
@@ -178,9 +178,19 @@ conventions below. Review checkpoints commit only `reviews/` (`docs(review): <un
 
 Synced lyrics suspend hidden/background work and settled word tickers; line changes use the lyric spring with reduced-motion support, while scrubbing stays quick and manual scrolling keeps its anchor.
 
-Upstream is `mornyeapp/Mornye` (renamed SpotiFLAC-Mobile). Ports follow `reviews/PORT_PLAN.md`
-(setup, rules, batch order, testing once per batch) with specs in `reviews/UPSTREAM.md`. Never
-port renaming or branding.
+Upstream remains [the original project](https://github.com/%6D%6F%72%6E%79%65app/%4D%6F%72%6E%79%65),
+not a new Sistrum repository. Ports follow `reviews/PORT_PLAN.md` (setup, rules, batch
+order, testing once per batch) with specs in `reviews/UPSTREAM.md`.
+
+**T16 owner override (2026-10-28):** the owner explicitly supersedes the earlier
+branding-preservation rule for this owner-wide Sistrum rename (including internal
+identifiers and filenames). Every file whose basename is `README.md` remains unchanged.
+Legacy backups, settings and other persisted identities remain supported through encoded
+legacy identifiers; encoding must preserve their exact original runtime values. External
+upstream and published APK URLs use percent-encoded former tokens, not invented remote
+repositories or renamed remote artifacts. Historic copyright attribution remains with the
+original authors. Historical reports normalize names mechanically, not evidence of new runs.
+For later upstream ports, do not import unrelated upstream branding.
 
 ## Commit conventions
 

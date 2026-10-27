@@ -1,10 +1,12 @@
 # Flutter lifecycle and lyrics UX audit
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
 Application source d5d5a02; reviewers inspected HEAD5dcf7241, unchanged application source at coordinator checkpoint d3a25128. Roles: flutter-dart-auditor and ux-auditor. Fresh independent review; engine excluded; no application edits. Read-only enforcement prompt-only.
 
-Principal Flutter chunk, complete reads: lib/app.dart1–258; lib/routes/now_playing_route.dart1–270; lib/screens/main_shell.dart1–819,mornye_library_screen.dart1–586,local_artist_screen.dart1–752,local_album_screen.dart1–662,library_tracks_folder_screen.dart1–923,setup_screen.dart1–892.
+Principal Flutter chunk, complete reads: lib/app.dart1–258; lib/routes/now_playing_route.dart1–270; lib/screens/main_shell.dart1–819,sistrum_library_screen.dart1–586,local_artist_screen.dart1–752,local_album_screen.dart1–662,library_tracks_folder_screen.dart1–923,setup_screen.dart1–892.
 
 Named supplemental UI-01-S1: lib/utils/adaptive_layout.dart, lib/screens/selection_mode_mixin.dart, lib/widgets/collection_scaffold.dart complete; lib/providers/library_collections_provider.dart1–65,180–260,330–390,470–610.
 

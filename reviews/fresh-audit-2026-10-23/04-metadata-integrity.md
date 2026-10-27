@@ -1,12 +1,14 @@
 # Metadata/file-write integrity audit
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Application source `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`. Definitions: `.claude/agents/data-integrity-auditor.md` and `.claude/agents/rust-safety-auditor.md`; `.claude/skills/audit/SKILL.md`. Independent current-source review. Playback engine excluded; metadata/tag/lyrics/ReplayGain file editing retained.
 
 ## Findings
 
 ### DATA-001 [P1] [confidence: high] [VALIDATED — static caller trace]
 
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:377` (`writeUriFromPath`).
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt:377` (`writeUriFromPath`).
 - Scenario: metadata/ReplayGain edit of a SAF song opens the destination with `wt`; storage/provider failure interrupts copying. The original is now empty/partial and the complete staging copy is deleted.
 - Root cause: destructive direct publication without rollback/recovery, followed by unconditional temporary-input cleanup.
 - Impact: loss/corruption of user music after a failed ordinary edit.

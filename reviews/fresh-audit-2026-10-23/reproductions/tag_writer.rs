@@ -1,5 +1,6 @@
+// T16 mechanically renamed historical identifiers; this reproduction was not rerun.
 use std::{collections::BTreeMap,fs,io::Cursor};
-use spotiflac_core::tags::rewrite_audio_tags;
+use sistrum_core::tags::rewrite_audio_tags;
 fn syn(n:usize)->[u8;4]{[((n>>21)&127)as u8,((n>>14)&127)as u8,((n>>7)&127)as u8,(n&127)as u8]}
 fn main(){
  let payload=b"\x03Original Artist";

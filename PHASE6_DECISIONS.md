@@ -1,5 +1,7 @@
 # Phase 6 decisions (auto-resolved to recommended options)
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Per the resume instruction: decisions the assistant would normally have asked about were
 auto-resolved to the **recommended** option and recorded here instead. Each entry: question →
 options → chosen (recommended). Keep this file alongside `LOCAL_OFFLINE_MIGRATION_PLAN.md`;
@@ -8,7 +10,7 @@ fold any follow-ups into Phase 8.
 ## PD1 — Online detail screens (album_screen / artist_screen / playlist_screen)
 
 **Correction (V3, 2026-10-18):** The decision below overlooked the explicit requirement to
-reuse the online Mornye designs over local data. It is superseded for UI presentation:
+reuse the online Sistrum designs over local data. It is superseded for UI presentation:
 the original artist portrait/identity, featured release, five-song carousel and discography
 composition are restored in `local_artist_screen.dart`; album/playlist surfaces use the
 original immersive artwork, centered primary pill, Love and Add-to-playlist actions and footer.
@@ -25,7 +27,7 @@ online revival?
 
 **Chosen (recommended): (a) delete outright.** Reasoning: local browsing already has
 `local_album_screen.dart`, `library_tracks_folder_screen.dart` (playlist mode) and the
-`MornyeLibraryScreen(page: albums, artist: …)` scaffold used by `queue_tab` for artists; keeping
+`SistrumLibraryScreen(page: albums, artist: …)` scaffold used by `queue_tab` for artists; keeping
 extension-fetch screens that can only show errors is dead weight. Artist-name/album-name click
 navigation (`clickable_metadata.dart`, now-playing, favorite-artists) is re-pointed to the local
 scaffold. Deleted with them: `artist_screen_widgets.dart`, `album_screen.dart`'s snapshot/
@@ -68,7 +70,7 @@ keep `UnifiedLibraryItem` but strip the download-history lane?
 The pure-rename simplification (fold into `LocalLibraryItem`) is deferred to Phase 8 polish so
 the Phase 6 diff stays reviewable.
 
-## PD4 — Home search (Mornye home search removal)
+## PD4 — Home search (Sistrum home search removal)
 
 **Question:** what replaces extension-backed home search?
 

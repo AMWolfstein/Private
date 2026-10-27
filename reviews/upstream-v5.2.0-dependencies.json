@@ -1,4 +1,5 @@
 {
+  "_identity_note": "T16 mechanically normalized historical names and paths; original evidence used former terms. No checks rerun by this rename.",
   "upstream": "e0563ffad6df9f01d3e73e6099f74417422374de",
   "pub": {
     "dependencies": {
@@ -14,7 +15,7 @@
         "flutter_secure_storage",
         "http",
         "material_symbols_icons",
-        "mornye_discord",
+        "sistrum_discord",
         "receive_sharing_intent",
         "url_launcher",
         "video_player"
@@ -61,10 +62,10 @@
         "hyper-util",
         "libc",
         "md-5",
-        "mornye-core",
-        "mornye-extensions",
-        "mornye-network",
-        "mornye-providers",
+        "sistrum-core",
+        "sistrum-extensions",
+        "sistrum-network",
+        "sistrum-providers",
         "roxmltree",
         "rquickjs",
         "rusqlite",
@@ -97,9 +98,9 @@
       "shared_count": 15,
       "version_differences": {},
       "upstream_only": [
-        "mornye-core",
-        "mornye-extensions",
-        "mornye-network",
+        "sistrum-core",
+        "sistrum-extensions",
+        "sistrum-network",
         "zeroize"
       ]
     },

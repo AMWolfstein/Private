@@ -1,6 +1,8 @@
 # Upstream v5.2.0 selective backport — final report
 
-All planned PORT_PLAN batches are complete on `ccr-2fb644cd-nmesyt`. Scope follows the actual v5.1.1 baseline `78699a91`, then owner-approved Mornye follow-ups through `e0563ffa`; histories were not merged. Current fork architecture remains authoritative.
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
+All planned PORT_PLAN batches are complete on `ccr-2fb644cd-nmesyt`. Scope follows the actual v5.1.1 baseline `78699a91`, then owner-approved Sistrum follow-ups through `e0563ffa`; histories were not merged. Current fork architecture remains authoritative.
 
 - Evaluated tracked upstream items: **35** — **2 ADOPT**, **28 ADAPT**, **5 REJECT**. These are item IDs, not commit counts. Source/local mappings and mixed-commit exclusions: [audit matrix](upstream-v5.2.0-audit.md) and [UPSTREAM.md](UPSTREAM.md).
 - ALREADY IMPLEMENTED: equivalent retained title behavior under U-206, plus matching retained dependency versions/toolchain pins in Batch 15; not double-counted as new ports. No whole release was adopted.
@@ -14,7 +16,7 @@ Batch 16 source: `ef8ba64d766e4196a92602147ab7ef149823856e`. Graph checkpoint: `
 
 Removed unreachable Material Expressive layouts/components and direct dependencies/font, download/provider/re-enrichment helpers, unused iOS bridge methods and Rust filename/progress/clock/Hi-Res/AC4 tails. Removed dead model/settings fields, widgets, native resource helpers and resources. Legacy database schemas and backup import readers stay compatible. Regenerated model serializers and host UniFFI bindings; Android production and instrumentation Kotlin compile against the retained interface.
 
-Removed **70** unused localization keys across **20** locale files after the code cleanup; the second usage scan is empty. Retired tests exclusively exercising deleted APIs; retained fixtures now exercise Mornye controls, local album filtering, timing/ownership and deletion behavior. Added root-aware permission skip, shared paging fixture/timeout, bounded subprocess shutdown, temporary-directory cleanup and `scripts/check_android.sh`. Disabled selection actions explicitly expose disabled semantics and retain a 48px target. Artwork readback tests wait for the expected result with a bound instead of a fixed 30ms completion assumption.
+Removed **70** unused localization keys across **20** locale files after the code cleanup; the second usage scan is empty. Retired tests exclusively exercising deleted APIs; retained fixtures now exercise Sistrum controls, local album filtering, timing/ownership and deletion behavior. Added root-aware permission skip, shared paging fixture/timeout, bounded subprocess shutdown, temporary-directory cleanup and `scripts/check_android.sh`. Disabled selection actions explicitly expose disabled semantics and retain a 48px target. Artwork readback tests wait for the expected result with a bound instead of a fixed 30ms completion assumption.
 
 ## Verification
 

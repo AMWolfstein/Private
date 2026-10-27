@@ -4,6 +4,7 @@ Entry point for any agent (Claude Code, Codex, OpenCode) resuming review work. R
 `reviews/PROTOCOL.md`. Keep this file short; history lives in git.
 
 - Last reviewed commit: `dba4480` (T15 Sistrum identity; four scoped static reviewers PASS, including final splash/Korean fixes; no whole-project audit claim)
+- T16 pending: owner-wide Sistrum rename extends T15; the owner override supersedes earlier internal-name/branding-preservation exceptions. Every `README.md` stays unchanged; legacy support uses encoded identifiers. Verification and completion remain with the parent; no new checks or commits are claimed.
 - Next fix task: T1–T15 completed in their agreed host-verifiable scopes. T15 source `dba4480`; owner selected `logo/logo.png` after uploading both logos. Device branding and real old-backup restore remain owner checks; uninstall the retired Compose Sistrum app before installing this same-ID app. The 2026-10-28 fetch succeeded and the branch matched origin, so prior missing-push-credential notes are historical; T15 push verification belongs to the post-commit handoff. TEST-101's source-coupled remainder and agreed T12 device/RTL/English-copy deferrals remain open.
 - Next audit unit: CONTRACT-01 in `AUDIT_PLAN.md` (Dart/Kotlin/Rust contracts and cancellation).
   Historical audit rows reopened as partial/stale after upstream ports. New workflow is

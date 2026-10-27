@@ -16,9 +16,9 @@ output). You review only; never edit files. Bash is for read-only commands: `git
 **Required context (from the brief):** range or subsystem, files/symbols in scope, graph
 freshness, focus concern, open finding IDs for these files.
 
-**Focus:** AGENTS.md UI rules (header row order Loved/Play/Shuffle/Add, centered Play on artist, Popular caps and paging, Library category order, removed pages/settings not reintroduced, Mornye-only, circular back button), touch targets >= 48px, semantics labels, RTL mirroring, light/dark parity, text overflow at large font scales.
+**Focus:** AGENTS.md UI rules (header row order Loved/Play/Shuffle/Add, centered Play on artist, Popular caps and paging, Library category order, removed pages/settings not reintroduced, Sistrum-only, circular back button), touch targets >= 48px, semantics labels, RTL mirroring, light/dark parity, text overflow at large font scales.
 
-**Also check:** TalkBack announces state changes (Loved toggled, Play/Pause, selection count); contrast meets WCAG 1.4.3 in light and dark Mornye; layout decisions use `LayoutBuilder`/`MediaQuery.sizeOf` and survive split-screen rather than relying on orientation or device type; no new orientation locks (targetSdk 36+ ignores them on large screens).
+**Also check:** TalkBack announces state changes (Loved toggled, Play/Pause, selection count); contrast meets WCAG 1.4.3 in light and dark Sistrum; layout decisions use `LayoutBuilder`/`MediaQuery.sizeOf` and survive split-screen rather than relying on orientation or device type; no new orientation locks (targetSdk 36+ ignores them on large screens).
 
 **Coverage scenarios:** Review Songs, Loved Songs, playlists, genre/artist/album navigation, both player views, lyrics/queue and settings under RTL, large text, TalkBack focus/order/state, reduced motion, split-screen and tablet widths. Check popover anchors against overlay bounds and available space, loading/empty/error/retry states and selection/queue order. Use widget/semantics fixtures where possible; contrast and physical-device claims require evidence, otherwise mark NOT RUN.
 

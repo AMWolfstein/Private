@@ -1,5 +1,7 @@
 # Scanner/database integrity audit
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Source d5d5a02. Roles `.claude/agents/data-integrity-auditor.md` and `.claude/agents/kotlin-android-auditor.md`; `.claude/skills/audit/SKILL.md`. Independent current-source review; audio engine excluded.
 
 ### DATA-008 [P2] [confidence: high] [VALIDATED — static]
@@ -37,7 +39,7 @@ Source d5d5a02. Roles `.claude/agents/data-integrity-auditor.md` and `.claude/ag
 
 ### DATA-011 [P2] [confidence: high] [VALIDATED — static]
 
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:918`, full scan.
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:918`, full scan.
 - Scenario: initial/full SAF source has readable album.flac and malformed CUE with valid FILE reference but no usable tracks. CUE fails and standalone audio is omitted.
 - Root cause: backing URI is claimed before successful CUE row production.
 - Impact: malformed sidecar hides playable songs in a new/fully rescanned library.
@@ -50,12 +52,12 @@ Source d5d5a02. Roles `.claude/agents/data-integrity-auditor.md` and `.claude/ag
 
 Dart principal chunk complete: provider/local_library_provider1–1949; services/library_database1–1119,library_schema1–463,library_native_adapter1–414,sqlite_native_snapshot1–138. Supplemental: library_cleanup1–280,deleted_library_files1–16,source_deletion_events1–30,file_access1–169,library_row_mapper1–126,sqlite_helpers1–150/330–462; settings/library_settings_page175–290/625–730.
 
-Native principal chunk complete: MainActivitySafScan1–1645,SafScanPolicy1–85,SafScanProgressStream1–115,LibraryScanExitInfo1–46; local/backend/library.rs1–692 and library/scan.rs1–806; mobile/native_library.rs1–692,native_library/dart_date.rs1–99,path_keys.rs1–331. Native paths under android/app/src/main/kotlin/com/zarz/spotiflac and rust_backend/crates respectively.
+Native principal chunk complete: MainActivitySafScan1–1645,SafScanPolicy1–85,SafScanProgressStream1–115,LibraryScanExitInfo1–46; local/backend/library.rs1–692 and library/scan.rs1–806; mobile/native_library.rs1–692,native_library/dart_date.rs1–99,path_keys.rs1–331. Native paths under android/app/src/main/kotlin/com/amwolfstein/sistrum and rust_backend/crates respectively.
 
 Supplemental endpoints: library_native_adapter1–414;library_database110–157;local_library_provider918–1025/1095–1290;NativeDataJobs45–108;SafIo325–357;SafScanPolicyTest1–62 (remainder not certified);library_partial_scan_test1–77. Other test references searched without full-body certification.
 
 ## Verification and limits
 
-Graphify queries narrowed to LibraryNativeAdapter; ambiguous scanSafTreeIncremental graph result not used as evidence. Guards present for detached staging/owner transactions, cancellation/source identity, full-scan error preservation, tri-state cleanup, and failed DETACH retention. Coordinator ran spotiflac-local tests:20 passed,0 failed; doc tests0 (no doc-test coverage claimed). Rust core tags14 passed. Existing tests do not invalidate missing regressions. Android provider/device and Flutter execution NOT RUN. Remaining search/queue/model modules scheduled separately.
+Graphify queries narrowed to LibraryNativeAdapter; ambiguous scanSafTreeIncremental graph result not used as evidence. Guards present for detached staging/owner transactions, cancellation/source identity, full-scan error preservation, tri-state cleanup, and failed DETACH retention. Coordinator ran sistrum-local tests:20 passed,0 failed; doc tests0 (no doc-test coverage claimed). Rust core tags14 passed. Existing tests do not invalidate missing regressions. Android provider/device and Flutter execution NOT RUN. Remaining search/queue/model modules scheduled separately.
 
 Prior test-audit checkpoint e0de186 pushed successfully; no app source edits.

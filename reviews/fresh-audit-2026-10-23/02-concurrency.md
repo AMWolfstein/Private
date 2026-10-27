@@ -1,5 +1,7 @@
 # Concurrency audit — non-engine native-job lifecycle
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Baseline: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`. Reviewer definition: `.claude/agents/concurrency-auditor.md`. No old findings consulted; audio engine excluded.
 
 ## Exact read ledger
@@ -8,14 +10,14 @@ Baseline: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`. Reviewer definition: `.cla
 |---|---|
 | lib/services/platform_bridge.dart | 1–310,750–874 |
 | lib/services/activity_attachment.dart | 1–32 |
-| android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt | 57–115,126–258,332–440,558–610,685–775,1306–1345; non-engine only |
-| android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt | 1–108 |
-| android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt | 1–119,286–365 |
+| android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt | 57–115,126–258,332–440,558–610,685–775,1306–1345; non-engine only |
+| android/app/src/rust/kotlin/com/amwolfstein/sistrum/NativeDataJobs.kt | 1–108 |
+| android/app/src/rust/kotlin/com/amwolfstein/sistrum/SelectedCoreBackend.kt | 1–119,286–365 |
 | rust_backend/crates/mobile/src/cancellation.rs | 1–79 |
 | rust_backend/crates/mobile/src/data_jobs.rs | 1–184; audio-analysis internals excluded |
 | rust_backend/crates/core/src/cancellation.rs | 1–430 |
 | lib/main.dart | 1–100; attachment caller only |
-| android/app/src/test/kotlin/com/zarz/spotiflac/NativeDataJobsTest.kt | 1–150; test source inspected, not executed |
+| android/app/src/test/kotlin/com/amwolfstein/sistrum/NativeDataJobsTest.kt | 1–150; test source inspected, not executed |
 
 ## Findings
 

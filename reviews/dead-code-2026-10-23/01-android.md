@@ -1,5 +1,7 @@
 # Android dead-code review (N1)
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
 Role dead-code-hunter; application d5d5a02 unchanged, review baseline47039b90. Inventory303 native paths screened by filenames. Android declaration search output truncated, so no complete private-symbol coverage claim. Whole reads reported by reviewer: SafFileOps.kt; NativeReplayGainPolicy.kt and its test (retained by explicit owner decision); AndroidManifest.xml; proguard-rules.pro; CMakeLists.txt; native_audio.map. Additional Saf metadata-policy read not certified here because reported filename differed from inventory. Paths under android/app/src/main unless specified.
@@ -10,7 +12,7 @@ Graph native dead-code query completed, truncated navigation only. Candidate ref
 
 ### DEAD-001 [P3] [confidence: high] [VALIDATED — static]
 
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:116, writeFileToSafLocked.
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/SafFileOps.kt:116, writeFileToSafLocked.
 - Scenario: maintained SAF utility contains a private staged-file writer with no caller; its exclusive replacement/cleanup helpers remain compiled.
 - Root cause: offline feature removal left an unreachable writer island.
 - Impact: approximately150–180 lines of obsolete publication/cleanup policy obscure the live SAF path.

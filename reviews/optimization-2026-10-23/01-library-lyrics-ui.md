@@ -1,8 +1,10 @@
 # Library and lyrics UI hot paths (U1a)
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
-code-optimization-auditor; baseline968fbe57/appd5d5a02 unchanged, graph46c4ea6a reported fresh. Principal5,496 lines: lib/widgets/player_lyrics.dart1–2249,lib/screens/queue_tab.dart1–1247 (unchanged full reads retained, hot ranges reread),local_artist_screen.dart1–752,local_album_screen.dart1–662,mornye_library_screen.dart1–586. S1 queue_tab_helpers.dart185–235,queue_tab_filter_widgets.dart42–78 (earlier unchanged part bodies retained). Graph explain SyncedLyricsView completed before reads. No edits.
+code-optimization-auditor; baseline968fbe57/appd5d5a02 unchanged, graph46c4ea6a reported fresh. Principal5,496 lines: lib/widgets/player_lyrics.dart1–2249,lib/screens/queue_tab.dart1–1247 (unchanged full reads retained, hot ranges reread),local_artist_screen.dart1–752,local_album_screen.dart1–662,sistrum_library_screen.dart1–586. S1 queue_tab_helpers.dart185–235,queue_tab_filter_widgets.dart42–78 (earlier unchanged part bodies retained). Graph explain SyncedLyricsView completed before reads. No edits.
 
 ## Findings
 

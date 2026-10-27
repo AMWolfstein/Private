@@ -1,4 +1,5 @@
 {
+  "_identity_note": "T16 mechanically normalized historical names and paths; original evidence used former terms. No checks rerun by this rename.",
   "source": "d5d5a02ecdad86dca50a4448cf7810b7eec43ad9",
   "files": [
     {
@@ -337,62 +338,62 @@
       "lines": null
     },
     {
-      "path": "android/app/src/androidTest/java/com/zarz/spotiflac/LookupTestControlProvider.java",
+      "path": "android/app/src/androidTest/java/com/amwolfstein/sistrum/LookupTestControlProvider.java",
       "category": "tests",
       "lines": 54
     },
     {
-      "path": "android/app/src/androidTest/java/com/zarz/spotiflac/LookupTestDocumentsProvider.java",
+      "path": "android/app/src/androidTest/java/com/amwolfstein/sistrum/LookupTestDocumentsProvider.java",
       "category": "tests",
       "lines": 273
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/FFmpegCapabilitiesTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/FFmpegCapabilitiesTest.kt",
       "category": "tests",
       "lines": 75
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/HiResPlaybackTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/HiResPlaybackTest.kt",
       "category": "tests",
       "lines": 144
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/LibraryScanStressTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/LibraryScanStressTest.kt",
       "category": "tests",
       "lines": 93
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/LocalAudioFixtures.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/LocalAudioFixtures.kt",
       "category": "tests",
       "lines": 12
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/PlayerWidgetTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/PlayerWidgetTest.kt",
       "category": "tests",
       "lines": 97
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/RemoteSafPlaybackTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/RemoteSafPlaybackTest.kt",
       "category": "tests",
       "lines": 158
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/ResolvedCueAudioTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/ResolvedCueAudioTest.kt",
       "category": "tests",
       "lines": 91
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/SafDocumentLookupTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/SafDocumentLookupTest.kt",
       "category": "tests",
       "lines": 139
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/SafScanChildrenTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/SafScanChildrenTest.kt",
       "category": "tests",
       "lines": 147
     },
     {
-      "path": "android/app/src/androidTest/kotlin/com/zarz/spotiflac/UsbBitPerfectPluginTest.kt",
+      "path": "android/app/src/androidTest/kotlin/com/amwolfstein/sistrum/UsbBitPerfectPluginTest.kt",
       "category": "tests",
       "lines": 157
     },
@@ -437,172 +438,172 @@
       "lines": 132
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/AudioOutputActivity.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/AudioOutputActivity.kt",
       "category": "android",
       "lines": 39
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/AudioRouteInfo.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/AudioRouteInfo.kt",
       "category": "android",
       "lines": 157
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/BackgroundWorkService.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/BackgroundWorkService.kt",
       "category": "android",
       "lines": 218
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/BitPerfectPcm.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/BitPerfectPcm.kt",
       "category": "android",
       "lines": 64
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/CoreBackend.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/CoreBackend.kt",
       "category": "android",
       "lines": 40
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/DsdFile.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/DsdFile.kt",
       "category": "android",
       "lines": 185
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/DsdSource.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/DsdSource.kt",
       "category": "android",
       "lines": 89
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/ForegroundServiceStartPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/ForegroundServiceStartPolicy.kt",
       "category": "android",
       "lines": 18
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/HiResPlayback.kt",
       "category": "excluded-engine",
       "lines": 193
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/ImpellerCompatibility.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/ImpellerCompatibility.kt",
       "category": "android",
       "lines": 137
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/LibraryScanExitInfo.kt",
       "category": "android",
       "lines": 46
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt",
       "category": "android",
       "lines": 1345
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt",
       "category": "android",
       "lines": 436
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt",
       "category": "android",
       "lines": 1645
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/MusicHapticsPlugin.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/MusicHapticsPlugin.kt",
       "category": "excluded-engine",
       "lines": 104
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/NativeAudio.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/NativeAudio.kt",
       "category": "excluded-engine",
       "lines": 26
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/NativeMediaWorkspace.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/NativeMediaWorkspace.kt",
       "category": "android",
       "lines": 48
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/NativeReplayGainPolicy.kt",
       "category": "android",
       "lines": 53
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetConfigurationActivity.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/PlayerWidgetConfigurationActivity.kt",
       "category": "android",
       "lines": 54
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetLayoutPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/PlayerWidgetLayoutPolicy.kt",
       "category": "android",
       "lines": 12
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/PlayerWidgetProvider.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/PlayerWidgetProvider.kt",
       "category": "android",
       "lines": 297
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafCueLookup.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafCueLookup.kt",
       "category": "android",
       "lines": 31
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafDocumentLookup.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafDocumentLookup.kt",
       "category": "android",
       "lines": 70
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafDocumentStat.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafDocumentStat.kt",
       "category": "android",
       "lines": 34
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafDocumentStatPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafDocumentStatPolicy.kt",
       "category": "android",
       "lines": 20
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafFileOps.kt",
       "category": "android",
       "lines": 368
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafMetadataReadPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafMetadataReadPolicy.kt",
       "category": "android",
       "lines": 45
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafScanPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafScanPolicy.kt",
       "category": "android",
       "lines": 85
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafScanProgressStream.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafScanProgressStream.kt",
       "category": "android",
       "lines": 115
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SafTreeReadAccessPolicy.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SafTreeReadAccessPolicy.kt",
       "category": "android",
       "lines": 14
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/SpotiFlacApplication.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/SistrumApplication.kt",
       "category": "android",
       "lines": 11
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/UsbBitPerfectPlugin.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/UsbBitPerfectPlugin.kt",
       "category": "excluded-engine",
       "lines": 388
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/UsbDirectPlayback.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/UsbDirectPlayback.kt",
       "category": "excluded-engine",
       "lines": 333
     },
     {
-      "path": "android/app/src/main/kotlin/com/zarz/spotiflac/UsbPcmSource.kt",
+      "path": "android/app/src/main/kotlin/com/amwolfstein/sistrum/UsbPcmSource.kt",
       "category": "excluded-engine",
       "lines": 125
     },
@@ -827,87 +828,87 @@
       "lines": 6
     },
     {
-      "path": "android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt",
+      "path": "android/app/src/rust/kotlin/com/amwolfstein/sistrum/NativeDataJobs.kt",
       "category": "asset-or-other",
       "lines": 108
     },
     {
-      "path": "android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt",
+      "path": "android/app/src/rust/kotlin/com/amwolfstein/sistrum/SelectedCoreBackend.kt",
       "category": "asset-or-other",
       "lines": 365
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/BitPerfectPcmTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/BitPerfectPcmTest.kt",
       "category": "tests",
       "lines": 111
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/DsdFileTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/DsdFileTest.kt",
       "category": "tests",
       "lines": 88
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/ErrorJsonTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/ErrorJsonTest.kt",
       "category": "tests",
       "lines": 18
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/ForegroundServiceStartPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/ForegroundServiceStartPolicyTest.kt",
       "category": "tests",
       "lines": 29
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/ImpellerCompatibilityTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/ImpellerCompatibilityTest.kt",
       "category": "tests",
       "lines": 37
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/LibraryScanExitInfoTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/LibraryScanExitInfoTest.kt",
       "category": "tests",
       "lines": 26
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeDataJobsTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/NativeDataJobsTest.kt",
       "category": "tests",
       "lines": 150
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeMediaWorkspaceTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/NativeMediaWorkspaceTest.kt",
       "category": "tests",
       "lines": 77
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeReplayGainPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/NativeReplayGainPolicyTest.kt",
       "category": "tests",
       "lines": 91
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/NativeTemporaryMediaFileTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/NativeTemporaryMediaFileTest.kt",
       "category": "tests",
       "lines": 86
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/PlayerWidgetLayoutPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/PlayerWidgetLayoutPolicyTest.kt",
       "category": "tests",
       "lines": 14
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafDocumentStatPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/SafDocumentStatPolicyTest.kt",
       "category": "tests",
       "lines": 41
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafMetadataReadPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/SafMetadataReadPolicyTest.kt",
       "category": "tests",
       "lines": 172
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafScanPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/SafScanPolicyTest.kt",
       "category": "tests",
       "lines": 151
     },
     {
-      "path": "android/app/src/test/kotlin/com/zarz/spotiflac/SafTreeReadAccessPolicyTest.kt",
+      "path": "android/app/src/test/kotlin/com/amwolfstein/sistrum/SafTreeReadAccessPolicyTest.kt",
       "category": "tests",
       "lines": 47
     },
@@ -1027,12 +1028,12 @@
       "lines": null
     },
     {
-      "path": "assets/shaders/mornye_artwork_glass.frag",
+      "path": "assets/shaders/sistrum_artwork_glass.frag",
       "category": "asset-or-other",
       "lines": 63
     },
     {
-      "path": "assets/shaders/mornye_selection_mask.frag",
+      "path": "assets/shaders/sistrum_selection_mask.frag",
       "category": "asset-or-other",
       "lines": 19
     },
@@ -1142,37 +1143,37 @@
       "lines": 81
     },
     {
-      "path": "integration_test/mornye_artwork_performance_test.dart",
+      "path": "integration_test/sistrum_artwork_performance_test.dart",
       "category": "tests",
       "lines": 191
     },
     {
-      "path": "integration_test/mornye_glass_visual_test.dart",
+      "path": "integration_test/sistrum_glass_visual_test.dart",
       "category": "tests",
       "lines": 418
     },
     {
-      "path": "integration_test/mornye_liquid_glass_test.dart",
+      "path": "integration_test/sistrum_liquid_glass_test.dart",
       "category": "tests",
       "lines": 417
     },
     {
-      "path": "integration_test/mornye_lyrics_performance_test.dart",
+      "path": "integration_test/sistrum_lyrics_performance_test.dart",
       "category": "tests",
       "lines": 183
     },
     {
-      "path": "integration_test/mornye_menu_presentation_test.dart",
+      "path": "integration_test/sistrum_menu_presentation_test.dart",
       "category": "tests",
       "lines": 189
     },
     {
-      "path": "integration_test/mornye_performance_test.dart",
+      "path": "integration_test/sistrum_performance_test.dart",
       "category": "tests",
       "lines": 11
     },
     {
-      "path": "integration_test/mornye_rendering_performance_test.dart",
+      "path": "integration_test/sistrum_rendering_performance_test.dart",
       "category": "tests",
       "lines": 356
     },
@@ -1407,7 +1408,7 @@
       "lines": 73
     },
     {
-      "path": "lib/models/mornye_glass.dart",
+      "path": "lib/models/sistrum_glass.dart",
       "category": "dart-logic",
       "lines": 59
     },
@@ -1602,7 +1603,7 @@
       "lines": 819
     },
     {
-      "path": "lib/screens/mornye_library_screen.dart",
+      "path": "lib/screens/sistrum_library_screen.dart",
       "category": "flutter",
       "lines": 586
     },
@@ -2022,17 +2023,17 @@
       "lines": 263
     },
     {
-      "path": "lib/services/mornye_glass_auto_probe.dart",
+      "path": "lib/services/sistrum_glass_auto_probe.dart",
       "category": "dart-logic",
       "lines": 151
     },
     {
-      "path": "lib/services/mornye_glass_migration.dart",
+      "path": "lib/services/sistrum_glass_migration.dart",
       "category": "dart-logic",
       "lines": 41
     },
     {
-      "path": "lib/services/mornye_glass_warmup.dart",
+      "path": "lib/services/sistrum_glass_warmup.dart",
       "category": "dart-logic",
       "lines": 132
     },
@@ -2177,22 +2178,22 @@
       "lines": 425
     },
     {
-      "path": "lib/theme/mornye_glass_levels.dart",
+      "path": "lib/theme/sistrum_glass_levels.dart",
       "category": "flutter",
       "lines": 102
     },
     {
-      "path": "lib/theme/mornye_icons.dart",
+      "path": "lib/theme/sistrum_icons.dart",
       "category": "flutter",
       "lines": 216
     },
     {
-      "path": "lib/theme/mornye_theme.dart",
+      "path": "lib/theme/sistrum_theme.dart",
       "category": "flutter",
       "lines": 440
     },
     {
-      "path": "lib/theme/mornye_theme_wrapper.dart",
+      "path": "lib/theme/sistrum_theme_wrapper.dart",
       "category": "flutter",
       "lines": 40
     },
@@ -2597,157 +2598,157 @@
       "lines": 242
     },
     {
-      "path": "lib/widgets/mornye_artist_header.dart",
+      "path": "lib/widgets/sistrum_artist_header.dart",
       "category": "flutter",
       "lines": 424
     },
     {
-      "path": "lib/widgets/mornye_artwork_contrast.dart",
+      "path": "lib/widgets/sistrum_artwork_contrast.dart",
       "category": "flutter",
       "lines": 326
     },
     {
-      "path": "lib/widgets/mornye_artwork_glass.dart",
+      "path": "lib/widgets/sistrum_artwork_glass.dart",
       "category": "flutter",
       "lines": 1220
     },
     {
-      "path": "lib/widgets/mornye_backdrop_groups.dart",
+      "path": "lib/widgets/sistrum_backdrop_groups.dart",
       "category": "flutter",
       "lines": 371
     },
     {
-      "path": "lib/widgets/mornye_bottom_bar.dart",
+      "path": "lib/widgets/sistrum_bottom_bar.dart",
       "category": "flutter",
       "lines": 369
     },
     {
-      "path": "lib/widgets/mornye_chrome.dart",
+      "path": "lib/widgets/sistrum_chrome.dart",
       "category": "flutter",
       "lines": 732
     },
     {
-      "path": "lib/widgets/mornye_chrome_adaptivity.dart",
+      "path": "lib/widgets/sistrum_chrome_adaptivity.dart",
       "category": "flutter",
       "lines": 144
     },
     {
-      "path": "lib/widgets/mornye_context_menu.dart",
+      "path": "lib/widgets/sistrum_context_menu.dart",
       "category": "flutter",
       "lines": 408
     },
     {
-      "path": "lib/widgets/mornye_floating_header.dart",
+      "path": "lib/widgets/sistrum_floating_header.dart",
       "category": "flutter",
       "lines": 359
     },
     {
-      "path": "lib/widgets/mornye_glass_auto_probe_host.dart",
+      "path": "lib/widgets/sistrum_glass_auto_probe_host.dart",
       "category": "flutter",
       "lines": 106
     },
     {
-      "path": "lib/widgets/mornye_glass_preparation.dart",
+      "path": "lib/widgets/sistrum_glass_preparation.dart",
       "category": "flutter",
       "lines": 41
     },
     {
-      "path": "lib/widgets/mornye_glass_thumb.dart",
+      "path": "lib/widgets/sistrum_glass_thumb.dart",
       "category": "flutter",
       "lines": 180
     },
     {
-      "path": "lib/widgets/mornye_landscape_player.dart",
+      "path": "lib/widgets/sistrum_landscape_player.dart",
       "category": "flutter",
       "lines": 353
     },
     {
-      "path": "lib/widgets/mornye_level_slider.dart",
+      "path": "lib/widgets/sistrum_level_slider.dart",
       "category": "flutter",
       "lines": 252
     },
     {
-      "path": "lib/widgets/mornye_liquid_backdrop.dart",
+      "path": "lib/widgets/sistrum_liquid_backdrop.dart",
       "category": "flutter",
       "lines": 123
     },
     {
-      "path": "lib/widgets/mornye_metadata_row.dart",
+      "path": "lib/widgets/sistrum_metadata_row.dart",
       "category": "flutter",
       "lines": 61
     },
     {
-      "path": "lib/widgets/mornye_performance_hud.dart",
+      "path": "lib/widgets/sistrum_performance_hud.dart",
       "category": "flutter",
       "lines": 435
     },
     {
-      "path": "lib/widgets/mornye_playback_button.dart",
+      "path": "lib/widgets/sistrum_playback_button.dart",
       "category": "flutter",
       "lines": 186
     },
     {
-      "path": "lib/widgets/mornye_playback_time.dart",
+      "path": "lib/widgets/sistrum_playback_time.dart",
       "category": "flutter",
       "lines": 87
     },
     {
-      "path": "lib/widgets/mornye_player_actions_sheet.dart",
+      "path": "lib/widgets/sistrum_player_actions_sheet.dart",
       "category": "flutter",
       "lines": 191
     },
     {
-      "path": "lib/widgets/mornye_player_background.dart",
+      "path": "lib/widgets/sistrum_player_background.dart",
       "category": "flutter",
       "lines": 134
     },
     {
-      "path": "lib/widgets/mornye_player_details_sheet.dart",
+      "path": "lib/widgets/sistrum_player_details_sheet.dart",
       "category": "flutter",
       "lines": 148
     },
     {
-      "path": "lib/widgets/mornye_player_favorite_button.dart",
+      "path": "lib/widgets/sistrum_player_favorite_button.dart",
       "category": "flutter",
       "lines": 79
     },
     {
-      "path": "lib/widgets/mornye_player_ground.dart",
+      "path": "lib/widgets/sistrum_player_ground.dart",
       "category": "flutter",
       "lines": 237
     },
     {
-      "path": "lib/widgets/mornye_player_layout.dart",
+      "path": "lib/widgets/sistrum_player_layout.dart",
       "category": "flutter",
       "lines": 700
     },
     {
-      "path": "lib/widgets/mornye_player_queue.dart",
+      "path": "lib/widgets/sistrum_player_queue.dart",
       "category": "flutter",
       "lines": 238
     },
     {
-      "path": "lib/widgets/mornye_player_slider.dart",
+      "path": "lib/widgets/sistrum_player_slider.dart",
       "category": "flutter",
       "lines": 50
     },
     {
-      "path": "lib/widgets/mornye_selection_pill.dart",
+      "path": "lib/widgets/sistrum_selection_pill.dart",
       "category": "flutter",
       "lines": 721
     },
     {
-      "path": "lib/widgets/mornye_slider.dart",
+      "path": "lib/widgets/sistrum_slider.dart",
       "category": "flutter",
       "lines": 213
     },
     {
-      "path": "lib/widgets/mornye_squircle_border.dart",
+      "path": "lib/widgets/sistrum_squircle_border.dart",
       "category": "flutter",
       "lines": 34
     },
     {
-      "path": "lib/widgets/mornye_volume_control.dart",
+      "path": "lib/widgets/sistrum_volume_control.dart",
       "category": "flutter",
       "lines": 162
     },
@@ -6382,137 +6383,137 @@
       "lines": 812
     },
     {
-      "path": "test/mornye_artwork_contrast_test.dart",
+      "path": "test/sistrum_artwork_contrast_test.dart",
       "category": "tests",
       "lines": 377
     },
     {
-      "path": "test/mornye_artwork_glass_test.dart",
+      "path": "test/sistrum_artwork_glass_test.dart",
       "category": "tests",
       "lines": 534
     },
     {
-      "path": "test/mornye_bottom_bar_test.dart",
+      "path": "test/sistrum_bottom_bar_test.dart",
       "category": "tests",
       "lines": 972
     },
     {
-      "path": "test/mornye_chrome_adaptivity_test.dart",
+      "path": "test/sistrum_chrome_adaptivity_test.dart",
       "category": "tests",
       "lines": 180
     },
     {
-      "path": "test/mornye_collection_sheets_test.dart",
+      "path": "test/sistrum_collection_sheets_test.dart",
       "category": "tests",
       "lines": 260
     },
     {
-      "path": "test/mornye_context_menu_test.dart",
+      "path": "test/sistrum_context_menu_test.dart",
       "category": "tests",
       "lines": 436
     },
     {
-      "path": "test/mornye_detail_headers_test.dart",
+      "path": "test/sistrum_detail_headers_test.dart",
       "category": "tests",
       "lines": 555
     },
     {
-      "path": "test/mornye_floating_header_test.dart",
+      "path": "test/sistrum_floating_header_test.dart",
       "category": "tests",
       "lines": 495
     },
     {
-      "path": "test/mornye_glass_auto_probe_test.dart",
+      "path": "test/sistrum_glass_auto_probe_test.dart",
       "category": "tests",
       "lines": 313
     },
     {
-      "path": "test/mornye_glass_interaction_test.dart",
+      "path": "test/sistrum_glass_interaction_test.dart",
       "category": "tests",
       "lines": 510
     },
     {
-      "path": "test/mornye_glass_layout_test.dart",
+      "path": "test/sistrum_glass_layout_test.dart",
       "category": "tests",
       "lines": 101
     },
     {
-      "path": "test/mornye_glass_level_test.dart",
+      "path": "test/sistrum_glass_level_test.dart",
       "category": "tests",
       "lines": 514
     },
     {
-      "path": "test/mornye_glass_migration_test.dart",
+      "path": "test/sistrum_glass_migration_test.dart",
       "category": "tests",
       "lines": 172
     },
     {
-      "path": "test/mornye_glass_theme_isolation_test.dart",
+      "path": "test/sistrum_glass_theme_isolation_test.dart",
       "category": "tests",
       "lines": 98
     },
     {
-      "path": "test/mornye_landscape_player_test.dart",
+      "path": "test/sistrum_landscape_player_test.dart",
       "category": "tests",
       "lines": 151
     },
     {
-      "path": "test/mornye_library_actions_test.dart",
+      "path": "test/sistrum_library_actions_test.dart",
       "category": "tests",
       "lines": 222
     },
     {
-      "path": "test/mornye_library_browse_test.dart",
+      "path": "test/sistrum_library_browse_test.dart",
       "category": "tests",
       "lines": 286
     },
     {
-      "path": "test/mornye_loading_and_chrome_test.dart",
+      "path": "test/sistrum_loading_and_chrome_test.dart",
       "category": "tests",
       "lines": 114
     },
     {
-      "path": "test/mornye_menu_motion_test.dart",
+      "path": "test/sistrum_menu_motion_test.dart",
       "category": "tests",
       "lines": 153
     },
     {
-      "path": "test/mornye_performance_hud_test.dart",
+      "path": "test/sistrum_performance_hud_test.dart",
       "category": "tests",
       "lines": 337
     },
     {
-      "path": "test/mornye_playback_button_test.dart",
+      "path": "test/sistrum_playback_button_test.dart",
       "category": "tests",
       "lines": 152
     },
     {
-      "path": "test/mornye_playback_time_test.dart",
+      "path": "test/sistrum_playback_time_test.dart",
       "category": "tests",
       "lines": 90
     },
     {
-      "path": "test/mornye_player_queue_test.dart",
+      "path": "test/sistrum_player_queue_test.dart",
       "category": "tests",
       "lines": 116
     },
     {
-      "path": "test/mornye_search_glass_test.dart",
+      "path": "test/sistrum_search_glass_test.dart",
       "category": "tests",
       "lines": 75
     },
     {
-      "path": "test/mornye_slider_glass_test.dart",
+      "path": "test/sistrum_slider_glass_test.dart",
       "category": "tests",
       "lines": 193
     },
     {
-      "path": "test/mornye_tab_pill_motion_test.dart",
+      "path": "test/sistrum_tab_pill_motion_test.dart",
       "category": "tests",
       "lines": 130
     },
     {
-      "path": "test/mornye_volume_control_test.dart",
+      "path": "test/sistrum_volume_control_test.dart",
       "category": "tests",
       "lines": 96
     },
@@ -6937,7 +6938,7 @@
       "lines": 425
     },
     {
-      "path": "third_party/audio_service/SPOTIFLAC_PATCHES.md",
+      "path": "third_party/audio_service/SISTRUM_PATCHES.md",
       "category": "excluded-engine",
       "lines": 34
     },
@@ -7247,7 +7248,7 @@
       "lines": 25
     },
     {
-      "path": "third_party/audioplayers_android/SPOTIFLAC_PATCHES.md",
+      "path": "third_party/audioplayers_android/SISTRUM_PATCHES.md",
       "category": "excluded-engine",
       "lines": 19
     },

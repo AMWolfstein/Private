@@ -1,5 +1,7 @@
 # Native lyrics and tag-reader safety
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
 RUST-01-A rust-safety-auditor, source d5d5a02 unchanged. Complete under rust_backend/: crates/mobile/src/native_lyrics.rs1–1072,native_id3.rs1–261,library_metadata.rs1–267 (native_metadata.rs absent); crates/core/src/lyrics.rs1–3,lyrics/file.rs1–81,lyrics/lrc.rs1–46,tags/file.rs1–215,tags/id3.rs1–679,tags/mp4.rs1–252. S1/S2 mobile/src/native_xml.rs1–109,tags.rs245–310,data_jobs.rs1–75; core/src/tags.rs1–140,180–225,text.rs complete; lib/utils/lyrics_parser.dart209–248; lib/controllers/player_metadata_controller.dart1–30,80–150,170–210; targeted NativeDataJobs parser-limit refs. Graph query native lyrics/tag parser completed truncated, navigation only.
@@ -19,6 +21,6 @@ RUST-01-A rust-safety-auditor, source d5d5a02 unchanged. Complete under rust_bac
 
 ## Verification / limits
 
-Coordinator ran `cargo test --manifest-path rust_backend/Cargo.toml --offline --locked -p spotiflac-mobile native_lyrics -- --nocapture`: PASS6,0 failed/ignored,90 filtered; host unit tests, no Android/device or engine tests executed. Includes shared parser goldens and cancellation/depth guards; passing suite does not cover expansion trigger. No Clippy/full workspace gate or crafted-file run.
+Coordinator ran `cargo test --manifest-path rust_backend/Cargo.toml --offline --locked -p sistrum-mobile native_lyrics -- --nocapture`: PASS6,0 failed/ignored,90 filtered; host unit tests, no Android/device or engine tests executed. Includes shared parser goldens and cancellation/depth guards; passing suite does not cover expansion trigger. No Clippy/full workspace gate or crafted-file run.
 
 No unsafe-memory claim. TTML depth guard/iterative traversal checked; descriptor duplicate owns copied descriptor, Kotlin owner lifetime not rereviewed. ID3 UTF16 surrogate-unit replacement explicitly marked legacy compatibility, retained as unresolved contract boundary rather than new finding. Writers/decoders excluded. Result FINDINGS, one P2; RUST-01-B separate.

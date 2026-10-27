@@ -1,6 +1,8 @@
 # Local / Offline / Android-only Migration Plan
 
-Goal: convert `spotiflac_android` from an **extension-driven online downloader** into a
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
+Goal: convert `sistrum` from an **extension-driven online downloader** into a
 **local, offline, Android-only music player**.
 
 Chosen scope (confirmed):
@@ -20,13 +22,29 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
-**T15 — Sistrum identity (2026-10-28):** source `dba4480`, graph `ebfcdb1`. Renamed the base app to `com.amwolfstein.sistrum` / **Sistrum** and the side-by-side variant to `.local` / **Sistrum Local**; moved every Android source set and updated JNI, channels, manifests, reflection keeps, widget names and visible translated copy together. Preserved backup magic/file names, settings/DB identities, equalizer format, notification action IDs and the internal UniFFI/Dart package names. Old SpotiFLAC backups still load in host compatibility fixtures. The owner selected the transparent `logo/logo.png` after the two supplied images were confirmed to contain different artwork: full-colour inputs/in-app assets preserve it exactly; launcher/splash use the dark reference-corner colour, while themed/notification icons use alpha silhouettes. Android 12 splash uses a safe inset in light and dark. Four scoped reviewers PASS; three branding checks PASS; analysis clean. Full serial Flutter: 1,857 passed / 3 skipped / 1 failed (a missed Korean `SpotifyFLAC` brand); fixed/re-reviewed and its file rerun 22 passed / 0 failed, full suite not rerun per task rule. Android host: 96 passed / 1 skipped / 0 failures. ARM64 JNI and instrumentation source compilation PASS; all 18 compiled JNI exports use the new package. No APK, signing or device/instrumentation execution; launcher/themed icon/splash/notification appearance and real old-backup restore remain owner checks. The retired Compose Sistrum app must be uninstalled before installing this same-ID app. Existing RTL/copy and audit deferrals remain open. Details: `reviews/VERIFICATION.md`.
+**T16 — owner-wide Sistrum identity normalization (2026-10-28), verified locally, not committed:**
+extends T15 to internal identifiers, file names and documentation. The owner's explicit
+request overrides the prior branding-preservation rule; every basename `README.md` stays
+unchanged. Legacy persistence/backup support uses encoded identifiers with unchanged
+runtime values. Actual upstream and published APK destinations remain percent-encoded;
+historic legal authorship is preserved, not reassigned. Historical evidence below has
+mechanically normalized terms, not newly executed commands. Verified on the working tree:
+`flutter gen-l10n` exit 0; `flutter analyze` No issues found; full `flutter test --concurrency=1`
++1864 ~3, all passed (exit 0); `scripts/check_rust_backend.sh` exit 0, 216 passed / 0 failed;
+`scripts/check_android.sh` BUILD SUCCESSFUL, 97 tests = 96 passed / 1 skipped; host UniFFI
+bindings regenerated from `com.sistrum.backend`; `sync_opencode_agents.py --check` exit 0.
+Compatibility fixes made during verification: legacy-channel cleanup targets only the escaped
+former channel with a current-channel guard; native backup readers accept the encoded legacy
+magic; widget receives the encoded former action. Not run: ARM64 native build, instrumentation,
+device checks. No commits made yet.
 
-**Upstream port batch 17C, Mornye 5.2.6 (2026-10-27):** code `da3dc62`, `d6c1a86`, `c29d361` (each with its graph commit). Media controls follow metadata and artwork that arrive after a track starts; AutoMix lands the next song on the outgoing beat, verifies the landing (falling back to a plain crossfade), holds phase with bounded rate corrections and uses a bass handoff for uncertain beats. Analysis clean; full Flutter 1,831 passed / 4 skipped; Rust 215 passed / 1 ignored, Clippy clean. Android host unit tests and instrumentation NOT RUN (no Android SDK here). No APK or device run; crossfade by ear is the owner's check. Upstream checked through `c90ec647`. Details: [UPSTREAM.md](<reviews/UPSTREAM.md>) U-506 to U-508.
+**T15 — Sistrum identity (2026-10-28):** source `dba4480`, graph `ebfcdb1`. Renamed the base app to `com.amwolfstein.sistrum` / **Sistrum** and the side-by-side variant to `.local` / **Sistrum Local**; moved every Android source set and updated JNI, channels, manifests, reflection keeps, widget names and visible translated copy together. Preserved backup magic/file names, settings/DB identities, equalizer format, notification action IDs and the internal UniFFI/Dart package names. Old Sistrum backups still load in host compatibility fixtures. The owner selected the transparent `logo/logo.png` after the two supplied images were confirmed to contain different artwork: full-colour inputs/in-app assets preserve it exactly; launcher/splash use the dark reference-corner colour, while themed/notification icons use alpha silhouettes. Android 12 splash uses a safe inset in light and dark. Four scoped reviewers PASS; three branding checks PASS; analysis clean. Full serial Flutter: 1,857 passed / 3 skipped / 1 failed (a missed Korean `SpotifyFLAC` brand); fixed/re-reviewed and its file rerun 22 passed / 0 failed, full suite not rerun per task rule. Android host: 96 passed / 1 skipped / 0 failures. ARM64 JNI and instrumentation source compilation PASS; all 18 compiled JNI exports use the new package. No APK, signing or device/instrumentation execution; launcher/themed icon/splash/notification appearance and real old-backup restore remain owner checks. The retired Compose Sistrum app must be uninstalled before installing this same-ID app. Existing RTL/copy and audit deferrals remain open. Details: `reviews/VERIFICATION.md`.
 
-**Upstream port batch 17B, Mornye 5.2.6 (2026-10-27):** code `8e42f78`, `db7cb11`, `55167bf` (each with its graph commit). Settings subpages scroll their last rows above the floating bar; Songs and Albums sort by file size from a lazily filled, trigger-invalidated `track_file_sizes` table; Local Library lists the files the last scan of each folder could not read, with reasons. Analysis clean; full Flutter 1,808 passed / 4 skipped; Rust 213 passed / 1 ignored, Clippy clean. Android host unit tests NOT RUN (no Android SDK here). No APK or device run. Details: [UPSTREAM.md](<reviews/UPSTREAM.md>) U-503 to U-505.
+**Upstream port batch 17C, Sistrum 5.2.6 (2026-10-27):** code `da3dc62`, `d6c1a86`, `c29d361` (each with its graph commit). Media controls follow metadata and artwork that arrive after a track starts; AutoMix lands the next song on the outgoing beat, verifies the landing (falling back to a plain crossfade), holds phase with bounded rate corrections and uses a bass handoff for uncertain beats. Analysis clean; full Flutter 1,831 passed / 4 skipped; Rust 215 passed / 1 ignored, Clippy clean. Android host unit tests and instrumentation NOT RUN (no Android SDK here). No APK or device run; crossfade by ear is the owner's check. Upstream checked through `c90ec647`. Details: [UPSTREAM.md](<reviews/UPSTREAM.md>) U-506 to U-508.
 
-**Upstream port batch 17A, Mornye 5.2.6 (2026-10-27):** code `0acf9ee` (graph `9b46d11`) and `900239c`. Library scans index untagged MP3/MP4, raw ADTS AAC and ID3-prefixed FLAC instead of reporting errors; tag edits keep an ID3 prefix in front of FLAC; SAF and descriptor reads retry transient failures. The Flutter 3.47.7 semantics geometry crash is backported as an SDK patch applied by `scripts/prepare_flutter_sdk.dart`. Analysis clean; full Flutter 1,792 passed / 4 skipped; Rust 212 passed / 1 ignored, Clippy clean; `test_build_android.py` 6 passed. Android host unit tests NOT RUN (no Android SDK in this container). No APK or device run. Details: [UPSTREAM.md](<reviews/UPSTREAM.md>) U-501, U-502.
+**Upstream port batch 17B, Sistrum 5.2.6 (2026-10-27):** code `8e42f78`, `db7cb11`, `55167bf` (each with its graph commit). Settings subpages scroll their last rows above the floating bar; Songs and Albums sort by file size from a lazily filled, trigger-invalidated `track_file_sizes` table; Local Library lists the files the last scan of each folder could not read, with reasons. Analysis clean; full Flutter 1,808 passed / 4 skipped; Rust 213 passed / 1 ignored, Clippy clean. Android host unit tests NOT RUN (no Android SDK here). No APK or device run. Details: [UPSTREAM.md](<reviews/UPSTREAM.md>) U-503 to U-505.
+
+**Upstream port batch 17A, Sistrum 5.2.6 (2026-10-27):** code `0acf9ee` (graph `9b46d11`) and `900239c`. Library scans index untagged MP3/MP4, raw ADTS AAC and ID3-prefixed FLAC instead of reporting errors; tag edits keep an ID3 prefix in front of FLAC; SAF and descriptor reads retry transient failures. The Flutter 3.47.7 semantics geometry crash is backported as an SDK patch applied by `scripts/prepare_flutter_sdk.dart`. Analysis clean; full Flutter 1,792 passed / 4 skipped; Rust 212 passed / 1 ignored, Clippy clean; `test_build_android.py` 6 passed. Android host unit tests NOT RUN (no Android SDK in this container). No APK or device run. Details: [UPSTREAM.md](<reviews/UPSTREAM.md>) U-501, U-502.
 
 **Languages restored (2026-10-27):** code `e4d2463`, graph `467f435`. Reverts the English-only change `b06602f` by owner request. Restores the 19 translation arb files, the Appearance language picker, the setup language step, the saved locale, the Android locale config and the Indonesian player widget strings. The strings added since the translations were removed (about 6,800 across 19 locales) were machine-drafted per locale; untranslated keys fall back to English, and several terms are flagged for native review. ICU plural branches shadowed by `=1` were removed. `supported_locales.dart` lists every locale instead of the old 70% filter. Checks: `flutter gen-l10n` exit 0, 0 ICU warnings; `flutter analyze` No issues found; full serial Flutter 1,784 passed / 3 skipped / 0 failed; `check_android.sh` BUILD SUCCESSFUL, 95 tests = 94 passed + 1 skipped. Setup-recovery counters now show 9 pages. No APK, instrumentation or device run. Push NOT RUN: GitHub HTTPS credentials are missing.
 
@@ -49,7 +67,7 @@ _Last updated: 2026-10-27_
 **Status:** Phases 1-8 and the requested local-player refinements are implemented.
 Latest source validation passed. The signed ARM64-only side-by-side **build 168** includes
 fetched `d4dff781` (glass slider fix), source `2a2ab3be`, all completed upstream ports and Batch 16 cleanup.
-It retains **SpotiFLAC Local** (`com.zarz.spotiflac.local`), the cream/green launcher icon
+It retains **Sistrum Local** (`com.amwolfstein.sistrum.local`), the cream/green launcher icon
 and the certificate used by build 167. Physical-device validation remains pending.
 `c29daef` removes the About page credits, translators, special thanks, links and social sections
 (with `url_launcher`) and the Search tab Recent list (app-state schema v5 drops its tables);
@@ -68,63 +86,63 @@ Vision refinements V1-V4 captured; Phase 6 decisions recorded in `PHASE6_DECISIO
 
 **CUE delete and split safety, audit T2 (2026-10-23):** `76f2fb10` code, graph `772c6c83`. Deleting a CUE-backed row now only removes the DB row in all three paths (song menu, batch delete, album multi-select) through the shared `isCueBackedRow(path, format)` (virtual `#trackNN`, `.cue` path or `cue+*` format), so the sheet and its shared audio survive. Local virtual detection requires `\.cue#trackNN` (content URIs keep any trailing suffix), so a real file named `… #track1` stays deletable, and `stripCueTrackSuffix` never rewrites other paths. Splitting is guarded by a per-sheet in-flight set, returns `CueSplitResult(paths, failed)`, cleans failed outputs and dedupes repeated output names. Cover and SAF export failures are per-file and reported as partial success; the picked tree is matched to a library source by physical-path and removable-volume keys and rescanned, otherwise the snackbar says the tracks were saved outside the library. Also hides Copy/Edit on virtual rows, returns cancel from batch ReplayGain, rewrites the split confirm copy, and maps Rust CUE audio resolution errors to the stem fallback (SEC-201). Reviewers: data-integrity-auditor and test-auditor both PASS (the test pass was repeated after P3 cleanups in the new tests). PASS: `flutter analyze` clean; full Flutter suite `+1637 ~3` (1,637 passed, 3 skipped, 0 failed); `local_song_menu_actions_test.dart` 14/14 and the two timing-sensitive files together 15/15. `check_rust_backend.sh`: 93 passed, 2 failed, 1 ignored; both failures are pre-existing `crates/mobile` path-key fixture drift reproduced unchanged at `d015e7d9` in a clean worktree. NOT RUN: device, integration tests, APK (never built).
 
-**SAF scan correctness, audit T1 (2026-10-23):** `46c4ea6a` code, graph `ed278a7d`. A provider error is no longer an empty folder: `querySafChildrenOrThrow` throws on `DocumentsContract.EXTRA_ERROR`, a zero-row listing cannot replace rows an indexed source already has (`safEmptyListingIsUntrusted`, plus `has_indexed_rows` from Dart for forced scans, which delete the resume files), incremental scans throw instead of emitting removals for an empty listing, and pruning waits for a non-empty listing. Incremental scans treat a zero timestamp as changed, reconcile changed CUE sheets by claiming or retaining their backing audio (a failed or empty sheet keeps its `#trackNN` rows instead of deleting them), remove the standalone row a CUE now owns, skip an unchanged resumed CUE per audio key and count it before totals, and the resumed checkpoint is pruned against the current listing. The picker retries READ|WRITE then READ, treats a grant without READ as no grant and returns an error instead of a tree it cannot keep (Dart shows a SnackBar); scan state moved to the `MainActivity` companion with a process-scoped `SafScanProgressStream` so a recreated Activity keeps reporting; removing a source releases its persisted grant once unused and never for the legacy download tree (T5 removes that flow). CUE identity keeps its anchored `#track\d+$` fragment, and only Windows drive paths fold case. Reviewers: kotlin-android-auditor, data-integrity-auditor and (file deletion/SAF) security-auditor all PASS with no findings after three rounds; the security pass also fixed the live relocated double-decodes (SEC-004's cited file is gone). PASS: `flutter analyze` clean; Android host unit tests `BUILD SUCCESSFUL` (JDK 25, installed user-local at `~/.local/share/jvm/jdk-25` because the machine default is 21 and the build pins Java 25); full Flutter suite `06:05 +1609 ~3` (1,609 passed, 3 skipped, 0 failed). During verification the removal path deadlocked when it raced the initial index load (it awaited the load to look up the folder); it now reads the source list, falling back to one storage read only when the index has not loaded, and three pre-existing `mornye_artwork_glass_test` timing flakes (its 800 ms real-time decode budget under parallel load) were made deterministic by waiting up to 3 s; no test was skipped or disabled. The graph rebuild needed `--force`: graphify 0.9.72 extracts fewer symbols from the vendored `libusb.h` (357 -> 180), 217 nodes unrelated to this change. NOT RUN: device, integration tests, APK (never built).
+**SAF scan correctness, audit T1 (2026-10-23):** `46c4ea6a` code, graph `ed278a7d`. A provider error is no longer an empty folder: `querySafChildrenOrThrow` throws on `DocumentsContract.EXTRA_ERROR`, a zero-row listing cannot replace rows an indexed source already has (`safEmptyListingIsUntrusted`, plus `has_indexed_rows` from Dart for forced scans, which delete the resume files), incremental scans throw instead of emitting removals for an empty listing, and pruning waits for a non-empty listing. Incremental scans treat a zero timestamp as changed, reconcile changed CUE sheets by claiming or retaining their backing audio (a failed or empty sheet keeps its `#trackNN` rows instead of deleting them), remove the standalone row a CUE now owns, skip an unchanged resumed CUE per audio key and count it before totals, and the resumed checkpoint is pruned against the current listing. The picker retries READ|WRITE then READ, treats a grant without READ as no grant and returns an error instead of a tree it cannot keep (Dart shows a SnackBar); scan state moved to the `MainActivity` companion with a process-scoped `SafScanProgressStream` so a recreated Activity keeps reporting; removing a source releases its persisted grant once unused and never for the legacy download tree (T5 removes that flow). CUE identity keeps its anchored `#track\d+$` fragment, and only Windows drive paths fold case. Reviewers: kotlin-android-auditor, data-integrity-auditor and (file deletion/SAF) security-auditor all PASS with no findings after three rounds; the security pass also fixed the live relocated double-decodes (SEC-004's cited file is gone). PASS: `flutter analyze` clean; Android host unit tests `BUILD SUCCESSFUL` (JDK 25, installed user-local at `~/.local/share/jvm/jdk-25` because the machine default is 21 and the build pins Java 25); full Flutter suite `06:05 +1609 ~3` (1,609 passed, 3 skipped, 0 failed). During verification the removal path deadlocked when it raced the initial index load (it awaited the load to look up the folder); it now reads the source list, falling back to one storage read only when the index has not loaded, and three pre-existing `sistrum_artwork_glass_test` timing flakes (its 800 ms real-time decode budget under parallel load) were made deterministic by waiting up to 3 s; no test was skipped or disabled. The graph rebuild needed `--force`: graphify 0.9.72 extracts fewer symbols from the vendored `libusb.h` (357 -> 180), 217 nodes unrelated to this change. NOT RUN: device, integration tests, APK (never built).
 
-**Local ARM64 build 168 (2026-10-21):** Owner paused the new audit and requested the latest branch build. Fetched `d4dff781`; release metadata source `2a2ab3be`, graph `686a463f`. Analysis clean; full Flutter 1,514 passed / 3 skipped before the version-only bump; signed release compilation and artifact audits PASS. VersionCode2168, ARM64-only SpotiFLAC Local, cream/green icon and certificate matching167. APK 52,787,208 bytes, SHA256 `98c0ab17ef57b39870e24b654a1ad6be8883d7d09923a9a61c6ee5a2032cdecf`. Device NOT RUN. [Download](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-168/SpotiFLAC-Local-168-arm64-v8a.apk); details in reviews/LOCAL_BUILD_168.md. This supersedes the earlier source-session note that its environment could not package an APK.
+**Local ARM64 build 168 (2026-10-21):** Owner paused the new audit and requested the latest branch build. Fetched `d4dff781`; release metadata source `2a2ab3be`, graph `686a463f`. Analysis clean; full Flutter 1,514 passed / 3 skipped before the version-only bump; signed release compilation and artifact audits PASS. VersionCode2168, ARM64-only Sistrum Local, cream/green icon and certificate matching167. APK 52,787,208 bytes, SHA256 `98c0ab17ef57b39870e24b654a1ad6be8883d7d09923a9a61c6ee5a2032cdecf`. Device NOT RUN. [Download](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-168/%53%70%6F%74%69%46%4C%41%43-Local-168-arm64-v8a.apk); details in reviews/LOCAL_BUILD_168.md. This supersedes the earlier source-session note that its environment could not package an APK.
 
 **English only (2026-10-23):** `b06602f` code, graph `6d8a8d4`. Owner request: English is the only language. Deleted 19 translation arb files (including the `pt_BR` rename made earlier today), the Indonesian widget strings (`values-in`) and the stale `supported_locales.dart`; Android `locale_config` lists only `en`. Setup has no language step (seven or eight pages instead of eight or nine; drafts below version 3 move later steps back by one so they resume on the same tip), Appearance and settings search have no Language option, and `AppSettings` no longer stores a locale (old saved and backed-up `locale` keys are ignored). `MaterialApp` is fixed to English. This closes UX-204, UX-221 and Codex FA-UI-001; RTL and translation findings are deferred in T12. PASS: analysis clean. Full suite `06:32 +1610 ~4 -2`: the two failures were tests that checked Indonesian copy (`playback_feedback_test`, `tutorial_copy_test`), rewritten for English; both files re-run `00:01 +4: All tests passed!`. NOT RUN: device.
 
 **Brazilian locale code and snackbar durations (2026-10-23):** `23b1b46` code, graph `76d3226`. Owner decisions from the UI re-audit. UX-227: the "Português (Brasil)" translation is Brazilian (arquivo, você, tela, configurações) but was filed as `pt_PT`; it is now `pt_BR` (arb, supported locales, language list, Android `locale_config`), and `AppSettings.fromJson` maps a saved or backed-up `pt_PT` to `pt_BR` (`kRenamedLocales`). UX-238: snackbars still close within 3 s, but a request longer than the Material default keeps its time up to 8 s (restore restart hint 6 s, USB volume warning 8 s). UX-228 rejected (setup keeps the storage permission required); UX-234 (EQ gain mirrors in RTL) left for T12. Arabic is hidden from the language list because `filteredLocaleCodes` only lists languages that passed a 70% translation check; that list is stale (its generator `tool/check_translations.dart` is gone) and Arabic is about 23% translated. PASS: analysis clean, full suite `06:09 +1605 ~4: All tests passed!`. NOT RUN: device.
 
-**Menu material and Popular play button (2026-10-22):** `649946b` code, graph `bc10cdd`. Owner report: song ⋯ menus on Songs, artist and album pages took 1-2 s to turn from blur into glass. Page menus staged their glass (opaque while flying, then lens refraction and tint faded in over the last 38% of the 320 ms open, reversed on close); under heavy frames that read as a slow switch. All `showMornyeContextMenu` menus now keep one material from the first frame to the last, as the player's artwork menus already did. Artist Popular rows use the song rows' outlined circular Play/Pause (`LocalSongPlayButton`, extracted from `LocalSongRow`). PASS: analysis clean. Full suite: 2 failures, both `mornye_menu_motion_test` cases asserting the staged reveal (rewritten to assert glass from the first frame; file re-run `00:01 +3: All tests passed!`). NOT RUN: device.
+**Menu material and Popular play button (2026-10-22):** `649946b` code, graph `bc10cdd`. Owner report: song ⋯ menus on Songs, artist and album pages took 1-2 s to turn from blur into glass. Page menus staged their glass (opaque while flying, then lens refraction and tint faded in over the last 38% of the 320 ms open, reversed on close); under heavy frames that read as a slow switch. All `showSistrumContextMenu` menus now keep one material from the first frame to the last, as the player's artwork menus already did. Artist Popular rows use the song rows' outlined circular Play/Pause (`LocalSongPlayButton`, extracted from `LocalSongRow`). PASS: analysis clean. Full suite: 2 failures, both `sistrum_menu_motion_test` cases asserting the staged reveal (rewritten to assert glass from the first frame; file re-run `00:01 +3: All tests passed!`). NOT RUN: device.
 
-**Detail header ground veil (2026-10-22):** `d9008c3` code, graph `30c7bc4`. Owner HUD on an artist page (full, Level 5, 48 frames): reads=2, build 6.2/12.1/14.5 ms, raster 21.4/28.1/42.8 ms, jank 81%. The artist header re-blurred its full-width photo on every scroll frame (`ImageFiltered`, sigma up to 18). `MornyeGroundVeil` now paints the page's existing ground (artwork + gradient, pre-blurred at the clarity sigma, 384 px wide) over the artwork with eased opacity: the artist header by collapse (then the surface fade as before), album and playlist covers by how far the cover has scrolled under the toolbar. Same gates as the old blur (liquid glass, motion); nothing until the ground is ready. At Level 5 the ground (sigma 6) is softer-looking than none but less blurred than the old peak; the surface fade covers most of that range. PASS: analysis clean. Full suite: 2 failures, the artist test that asserted the live blur (rewritten to assert the veil and no `ImageFiltered`) and the bottom-bar header-inset rebuild test (the album header read the top inset at header level; moved into the veil); both files re-run `00:15 +50: All tests passed!`. NOT RUN: device re-measure.
+**Detail header ground veil (2026-10-22):** `d9008c3` code, graph `30c7bc4`. Owner HUD on an artist page (full, Level 5, 48 frames): reads=2, build 6.2/12.1/14.5 ms, raster 21.4/28.1/42.8 ms, jank 81%. The artist header re-blurred its full-width photo on every scroll frame (`ImageFiltered`, sigma up to 18). `SistrumGroundVeil` now paints the page's existing ground (artwork + gradient, pre-blurred at the clarity sigma, 384 px wide) over the artwork with eased opacity: the artist header by collapse (then the surface fade as before), album and playlist covers by how far the cover has scrolled under the toolbar. Same gates as the old blur (liquid glass, motion); nothing until the ground is ready. At Level 5 the ground (sigma 6) is softer-looking than none but less blurred than the old peak; the surface fade covers most of that range. PASS: analysis clean. Full suite: 2 failures, the artist test that asserted the live blur (rewritten to assert the veil and no `ImageFiltered`) and the bottom-bar header-inset rebuild test (the album header read the top inset at header level; moved into the veil); both files re-run `00:15 +50: All tests passed!`. NOT RUN: device re-measure.
 
-**Root route chrome batch (2026-10-22):** `fa09528` code, graph `6a31a2e`. A second `MornyeChromeBatch` above the router's navigator (in `MaterialApp.builder`) lets header controls on root routes (Settings and its subpages, also equalizer and statistics) share one key; tab pages keep joining the nearer shell batch. Controls keep 48 dp / 4 dp / 22 dp and the same glass. Host counts are unchanged (Settings 2, Appearance 4/5 on full; 1 and 2/3 on lite): the test renderer has no Impeller, so lens passes carry no key there, and with one member lite has nothing to merge. Expected on device: the back circle's two lens passes read once (about one read less per frame). PASS: analysis clean, full suite `05:35 +1602 ~4: All tests passed!`. NOT RUN: device re-measure.
+**Root route chrome batch (2026-10-22):** `fa09528` code, graph `6a31a2e`. A second `SistrumChromeBatch` above the router's navigator (in `MaterialApp.builder`) lets header controls on root routes (Settings and its subpages, also equalizer and statistics) share one key; tab pages keep joining the nearer shell batch. Controls keep 48 dp / 4 dp / 22 dp and the same glass. Host counts are unchanged (Settings 2, Appearance 4/5 on full; 1 and 2/3 on lite): the test renderer has no Impeller, so lens passes carry no key there, and with one member lite has nothing to merge. Expected on device: the back circle's two lens passes read once (about one read less per frame). PASS: analysis clean, full suite `05:35 +1602 ~4: All tests passed!`. NOT RUN: device re-measure.
 
-**Appearance segmented reads (2026-10-22):** `43fc2d0` code, graph `bf43f49`. Owner HUD on Appearance after the search fix (full, Level 5): reads=6, raster 16.9/27.0/39.9 ms, jank 55%. The two `MornyeSegmentedControl` tracks were resting lenses on the plain page; they now keep the tint without a read (the pill stays touch-only liquid glass). Host count: rest 6 -> 4, scrolled 9 -> 5 (back circle, clarity preview panel, band). `mornye_glass_level_test` counts one fewer blur. Full suite: 5 stale count failures in that file (fixed, file re-run 13/13) plus 3 in `mornye_artwork_glass_test` (`ground never became ready`: its 800 ms real-time decode wait under parallel load; passes alone and in repeated combined runs, also without this change's code path). Affected 19 files re-run: `01:55 +307: All tests passed!`. NOT RUN: device re-measure.
+**Appearance segmented reads (2026-10-22):** `43fc2d0` code, graph `bf43f49`. Owner HUD on Appearance after the search fix (full, Level 5): reads=6, raster 16.9/27.0/39.9 ms, jank 55%. The two `SistrumSegmentedControl` tracks were resting lenses on the plain page; they now keep the tint without a read (the pill stays touch-only liquid glass). Host count: rest 6 -> 4, scrolled 9 -> 5 (back circle, clarity preview panel, band). `sistrum_glass_level_test` counts one fewer blur. Full suite: 5 stale count failures in that file (fixed, file re-run 13/13) plus 3 in `sistrum_artwork_glass_test` (`ground never became ready`: its 800 ms real-time decode wait under parallel load; passes alone and in repeated combined runs, also without this change's code path). Affected 19 files re-run: `01:55 +307: All tests passed!`. NOT RUN: device re-measure.
 
 **Settings search reads (2026-10-22):** `d9574c1` code, graph `48a6318`. Owner HUD on Settings (full, Level 5, 60 Hz): reads=9, raster 14.8/26.9/49.1 ms, jank 41.9%. The Settings and Logs search fields were liquid lenses scrolling inside page content; like Home and Songs they now keep the tint without a backdrop read (`samplesBackdrop: false`). Host count on Settings: 4 -> 2 reads (only the back circle remains, plus the band once scrolled). PASS: analysis clean, full suite `05:56 +1602 ~4: All tests passed!`. NOT RUN: device re-measure.
 
 **Header controls (2026-10-22):** `be6d62c` code, graph `22fbd37`. Every pinned header except the player uses 48 dp controls 4 dp from the screen edge with 22 dp glyphs: the back (or selection Close) circle, one glass capsule for the page's icon and menu buttons (the Logs ⋯ menu and playlist actions now join it), and the profile photo at the trailing end, 8 dp after the capsule. The photo opens Settings, is a plain 48 dp photo outlined like the glass rim (no fill), shows on every page including selection mode, and hides on Settings and the pages Settings opens (`ShellNavigationService.settingsOpen`; tab pages keep it). The artist toolbar uses the shared leading width. Headers mirror in RTL (back at the start, photo at the end). PASS: analysis clean, full suite `06:00 +1602 ~4: All tests passed!`. NOT RUN: device.
 
-**Mornye 5.2.5 ports (2026-10-22):** Checked upstream `e0563ffa..9bf4c000` and ported U-401..U-412 in two batches (`reviews/UPSTREAM.md`): DSD/WavPack rows no longer fail a scan and invalid rows are skipped with previous entries kept; synced lyrics keep running while the app is inactive and late line timers catch up; FLAC-in-MP4 tag writes; Samsung SM-S711B Android 16 Skia fallback; hidden artwork-contrast readback and per-frame fast-scroller timers removed; RTL mirroring for shared Mornye widgets with the transport kept LTR; Go to Album keeps the album already on top; the no-lyrics state stays above the controls; lyric wrapping is stable when lines activate; spectrogram PNG export. Analysis clean; batch A full suite passed, batch B's three failures were stale icon lookups, fixed and re-run. Android unit tests not run (no SDK here); device validation pending.
+**Sistrum 5.2.5 ports (2026-10-22):** Checked upstream `e0563ffa..9bf4c000` and ported U-401..U-412 in two batches (`reviews/UPSTREAM.md`): DSD/WavPack rows no longer fail a scan and invalid rows are skipped with previous entries kept; synced lyrics keep running while the app is inactive and late line timers catch up; FLAC-in-MP4 tag writes; Samsung SM-S711B Android 16 Skia fallback; hidden artwork-contrast readback and per-frame fast-scroller timers removed; RTL mirroring for shared Sistrum widgets with the transport kept LTR; Go to Album keeps the album already on top; the no-lyrics state stays above the controls; lyric wrapping is stable when lines activate; spectrogram PNG export. Analysis clean; batch A full suite passed, batch B's three failures were stale icon lookups, fixed and re-run. Android unit tests not run (no SDK here); device validation pending.
 
-**Cover colours and artwork glass (2026-10-22):** One analysis per cover version replaces the three per-screen colour paths (Score seed, hue-bucket `sourceColor` with HSL tweaks, separate top-lightness decode): `analyzeCover` averages the whole image, bottom 20% and top 25% in CAM16-UCS from one 112 px decode plus the native quantizer's counts, with chroma ceilings over at least 10% of the area; `mornyeCoverColors` derives every role in HCT from the bottom edge (album/artist surface, player gradients, menus, lyrics card, home widget), never above the cover's chroma (floor 6, neutral below 6, cap 36), with AA on-colours and a Score accent kept only when harmonious. Results persist in the library DB's derived `cover_analysis` table (lazy, 4,000 rows). The player's menus, actions menu and details sheet, and album/artist header controls, draw from pre-blurred 384 px ground images through `mornye_artwork_glass.frag` (refraction and dispersion on full Levels 2-5; the plain ground on lite/Level 1); no backdrop reads there, one material per overlay, no staged reveal, 6 MB budget. The shader loads and warms at start; the ⋯ menu keeps its collection lookup alive. Timeline spans: `Mornye menu: open to first frame`, `Mornye ground: player|page`, `Mornye cover analysis`, `Mornye artwork glass: prepare`; the HUD shows `ground=`. Host ground build ~13 ms warm (25 ms first) with the 112 px fixture. PASS: analysis clean, full suite `04:35 +1602 ~4`. NOT RUN: device, integration tests.
+**Cover colours and artwork glass (2026-10-22):** One analysis per cover version replaces the three per-screen colour paths (Score seed, hue-bucket `sourceColor` with HSL tweaks, separate top-lightness decode): `analyzeCover` averages the whole image, bottom 20% and top 25% in CAM16-UCS from one 112 px decode plus the native quantizer's counts, with chroma ceilings over at least 10% of the area; `sistrumCoverColors` derives every role in HCT from the bottom edge (album/artist surface, player gradients, menus, lyrics card, home widget), never above the cover's chroma (floor 6, neutral below 6, cap 36), with AA on-colours and a Score accent kept only when harmonious. Results persist in the library DB's derived `cover_analysis` table (lazy, 4,000 rows). The player's menus, actions menu and details sheet, and album/artist header controls, draw from pre-blurred 384 px ground images through `sistrum_artwork_glass.frag` (refraction and dispersion on full Levels 2-5; the plain ground on lite/Level 1); no backdrop reads there, one material per overlay, no staged reveal, 6 MB budget. The shader loads and warms at start; the ⋯ menu keeps its collection lookup alive. Timeline spans: `Sistrum menu: open to first frame`, `Sistrum ground: player|page`, `Sistrum cover analysis`, `Sistrum artwork glass: prepare`; the HUD shows `ground=`. Host ground build ~13 ms warm (25 ms first) with the 112 px fixture. PASS: analysis clean, full suite `04:35 +1602 ~4`. NOT RUN: device, integration tests.
 
-**Public chrome batch (2026-10-22):** reworks the shared reads onto the package's public API: one `LiquidGlassBatch` over the shell (package-allocated key, read with `LiquidGlassBatch.backdropIdOf`), opt-in `MornyeChromeMember`, and our own `MornyeBackdropLayer` pushing the key on Impeller only; no `src/` imports and no own ids. Lite chrome frost goes through that layer; `LiquidGlassLite` (blur 0, `_kRimFromBackdrop = false` in 5.0.0) paints only the rim. The band reads on its own under the controls; folding side buttons, moving/covered routes, page content and tab-navigator sheets stay out. Reads per frame in the shell, lite and full alike: 1 at rest, 2 with the band, 3 mid-fold. PASS: analysis clean; full suite `04:25 +1587 ~4`; new tests for paint order (every row composited before the first member), lens keys, sheet exclusion and route transitions. NOT RUN: device, integration tests.
+**Public chrome batch (2026-10-22):** reworks the shared reads onto the package's public API: one `LiquidGlassBatch` over the shell (package-allocated key, read with `LiquidGlassBatch.backdropIdOf`), opt-in `SistrumChromeMember`, and our own `SistrumBackdropLayer` pushing the key on Impeller only; no `src/` imports and no own ids. Lite chrome frost goes through that layer; `LiquidGlassLite` (blur 0, `_kRimFromBackdrop = false` in 5.0.0) paints only the rim. The band reads on its own under the controls; folding side buttons, moving/covered routes, page content and tab-navigator sheets stay out. Reads per frame in the shell, lite and full alike: 1 at rest, 2 with the band, 3 mid-fold. PASS: analysis clean; full suite `04:25 +1587 ~4`; new tests for paint order (every row composited before the first member), lens keys, sheet exclusion and route transitions. NOT RUN: device, integration tests.
 
-**Shared chrome backdrop reads, sigma floor and measured Auto (2026-10-22):** `cb39d15` code, graph `bb6b95c`. Owner HUD runs (60 Hz) showed glass was all of the raster cost (off 5.0 ms avg; lite L1 14.4, L3 15.0, L5 20.3; full L5 29.6). The shell's `MornyeBackdropGroups` gives the persistent chrome two shared backdrop keys used by blur passes (`MornyeBackdropBlur`) and package lenses alike: surface (band, tab capsule, mini player) and controls (header leading circle and action capsule, bar side buttons); moving or covered routes read on their own. Before, on full: bar 1 read expanded / 5 collapsed, header circle 2 and capsule 2 (unbatched lens + blur), band 1; on lite: bar 1 / 3, circle 1, capsule 1, band 1. After, in the shell: 2 in total on either quality. Root routes (Settings, Appearance, About) keep their own reads. `kMornyeGlassLevels` never blurs below sigma 6. Auto samples p90 raster time after a 3 s warm-up (180 frames; >14 ms: full -> lite -> lite Level 1) and saves it per build under `mornye_glass_auto_probe`. Developer options and the HUD add bar sampler and band blur A/B switches and "Measure Auto glass again"; the HUD starts top-left, drags, minimizes and shows `reads=N`.
+**Shared chrome backdrop reads, sigma floor and measured Auto (2026-10-22):** `cb39d15` code, graph `bb6b95c`. Owner HUD runs (60 Hz) showed glass was all of the raster cost (off 5.0 ms avg; lite L1 14.4, L3 15.0, L5 20.3; full L5 29.6). The shell's `SistrumBackdropGroups` gives the persistent chrome two shared backdrop keys used by blur passes (`SistrumBackdropBlur`) and package lenses alike: surface (band, tab capsule, mini player) and controls (header leading circle and action capsule, bar side buttons); moving or covered routes read on their own. Before, on full: bar 1 read expanded / 5 collapsed, header circle 2 and capsule 2 (unbatched lens + blur), band 1; on lite: bar 1 / 3, circle 1, capsule 1, band 1. After, in the shell: 2 in total on either quality. Root routes (Settings, Appearance, About) keep their own reads. `kSistrumGlassLevels` never blurs below sigma 6. Auto samples p90 raster time after a 3 s warm-up (180 frames; >14 ms: full -> lite -> lite Level 1) and saves it per build under `sistrum_glass_auto_probe`. Developer options and the HUD add bar sampler and band blur A/B switches and "Measure Auto glass again"; the HUD starts top-left, drags, minimizes and shows `reads=N`.
 
-PASS: analysis clean; full Flutter suite `04:38 +1585 ~4: All tests passed!`; new `mornye_glass_auto_probe_test` (sampler, persistence, provider effects, host stepping full -> lite -> Level 1 from synthetic frame timings) and bar/header read counts from the layer tree (collapsed bar 3 -> 2 reads, header circle + capsule 2 -> 1), route-transition opt-out, HUD placement, drag, pill and tap-through. NOT RUN: integration tests and the device; APK build left to the owner's build agent.
+PASS: analysis clean; full Flutter suite `04:38 +1585 ~4: All tests passed!`; new `sistrum_glass_auto_probe_test` (sampler, persistence, provider effects, host stepping full -> lite -> Level 1 from synthetic frame timings) and bar/header read counts from the layer tree (collapsed bar 3 -> 2 reads, header circle + capsule 2 -> 1), route-transition opt-out, HUD placement, drag, pill and tap-through. NOT RUN: integration tests and the device; APK build left to the owner's build agent.
 
-**Glass quality, five clarity levels and performance HUD (2026-10-22):** `48ead6d` settings (A, C and D), `773d88d` level table (B), `fcbb391` HUD (E), `c5423d9` Songs search field without a backdrop read, graph `a81c746`. `glassQuality` (auto/lite/full/off) replaces "Always use blur effects": Auto = full on liquid-capable non-low-end devices, lite on other standard devices, off on low-end; explicit choices bypass the high-contrast block. `glassClarityLevel` 1-5 (Frosted, Soft, Balanced default, Clear, Crystal) is stored in app settings so backups carry it; `kMornyeGlassLevels` (`lib/theme/mornye_glass_levels.dart`) holds tint, blur sigma (10/8/6/4/2), dispersion (0/0/0.5/1/1.32), clear-fill mix, context-menu opacity and the adaptive bar's light fill. Rendering: off = opaque; Level 1 = grouped BackdropFilter + tint (+ LiquidGlassLite painted rim when outlines are on), never a lens; Levels 2-5 = lenses on full + Impeller, otherwise the same blur + lite rim. Touch-only thumbs and segment pills stay lenses under lite (not Level 1, not off); the tab bar's floating layout, header lenses and the bar's adaptive sampler need full above Level 1. The header band blur and bar fill read the table. Appearance has a quality segmented control and a 5-stop named slider (preview-only drag, one persisted commit); the Crystal note shows only on full. Startup migrates the old clarity double and blur flag once (<=0.2 -> off/3; (0.2,0.35] 1; (0.35,0.55] 2; (0.55,0.7] 3; (0.7,0.9) 4; >=0.9 5; forced blur -> full) and deletes them; old backups restore through the same mapping. The HUD (7 taps on About's version, Developer options) shows avg/p90/p99 build and raster ms, jank against the real refresh rate and the glass settings, with Reset and Copy; off it is not mounted and registers no timings callback.
+**Glass quality, five clarity levels and performance HUD (2026-10-22):** `48ead6d` settings (A, C and D), `773d88d` level table (B), `fcbb391` HUD (E), `c5423d9` Songs search field without a backdrop read, graph `a81c746`. `glassQuality` (auto/lite/full/off) replaces "Always use blur effects": Auto = full on liquid-capable non-low-end devices, lite on other standard devices, off on low-end; explicit choices bypass the high-contrast block. `glassClarityLevel` 1-5 (Frosted, Soft, Balanced default, Clear, Crystal) is stored in app settings so backups carry it; `kSistrumGlassLevels` (`lib/theme/sistrum_glass_levels.dart`) holds tint, blur sigma (10/8/6/4/2), dispersion (0/0/0.5/1/1.32), clear-fill mix, context-menu opacity and the adaptive bar's light fill. Rendering: off = opaque; Level 1 = grouped BackdropFilter + tint (+ LiquidGlassLite painted rim when outlines are on), never a lens; Levels 2-5 = lenses on full + Impeller, otherwise the same blur + lite rim. Touch-only thumbs and segment pills stay lenses under lite (not Level 1, not off); the tab bar's floating layout, header lenses and the bar's adaptive sampler need full above Level 1. The header band blur and bar fill read the table. Appearance has a quality segmented control and a 5-stop named slider (preview-only drag, one persisted commit); the Crystal note shows only on full. Startup migrates the old clarity double and blur flag once (<=0.2 -> off/3; (0.2,0.35] 1; (0.35,0.55] 2; (0.55,0.7] 3; (0.7,0.9) 4; >=0.9 5; forced blur -> full) and deletes them; old backups restore through the same mapping. The HUD (7 taps on About's version, Developer options) shows avg/p90/p99 build and raster ms, jank against the real refresh rate and the glass settings, with Reset and Copy; off it is not mounted and registers no timings callback.
 
-PASS: analysis clean; full Flutter suite `06:10 +1564 ~4: All tests passed!`; new `mornye_glass_migration_test` (every mapping row, startup migration, corrupt blob, old and new backups), `mornye_performance_hud_test` (stats, reveal, HUD off = no callback, Copy) and level/quality cases in `mornye_glass_level_test`, `appearance_settings_test`, `appearance_clarity_drag_test`, `app_switch_glass_test`, `mornye_floating_header_test`. Integration tests updated to levels but NOT RUN (need a device). APK NOT BUILT here (another agent builds it). Device measurement NOT RUN.
+PASS: analysis clean; full Flutter suite `06:10 +1564 ~4: All tests passed!`; new `sistrum_glass_migration_test` (every mapping row, startup migration, corrupt blob, old and new backups), `sistrum_performance_hud_test` (stats, reveal, HUD off = no callback, Copy) and level/quality cases in `sistrum_glass_level_test`, `appearance_settings_test`, `appearance_clarity_drag_test`, `app_switch_glass_test`, `sistrum_floating_header_test`. Integration tests updated to levels but NOT RUN (need a device). APK NOT BUILT here (another agent builds it). Device measurement NOT RUN.
 
-**Floating glass headers and adaptive bar (2026-10-22):** `a844497` headers, `9e597b9` bottom bar, graph `eb417e2`. `AppSliverHeader` (21 pages incl. settings), the album toolbar and the artist toolbar are transparent unless the level is flat or contrast blocks glass (then the old opaque bar). New `mornye_floating_header.dart`: glass back circle, runs of `IconButton` actions in one capsule (the Home avatar keeps its circle), and a `LiquidGlassScrollEdge` backing that fades in only when content is scrolled under (liquid: blur 5, 72% page tint; frosted, reduced motion or no shader filters: no blur, 94% tint and no lens). Status-bar style is explicit (a transparent AppBar estimates as dark); title/leading/action insets are directional. The album toolbar over its cover takes its palette and status icons from the cover's top-quarter CIE L* (`CoverPalette.topLightness`, one 112px decode, cached), otherwise the page. LiquidGlassAppBar was rejected (single capsule, no sliver collapse, no RTL). Bottom bar: where liquid chrome is allowed the shell wraps its pages in one `LiquidGlassView` (batch/realtime off) with an invisible `LiquidGlassAdaptiveArea` over the bar footprint; its verdict drives the bar theme and navigation-bar icons (artist page override still wins) and lets light bar glass drop its 50% floor (navigation 0.49→~0.28, mini player 0.70→~0.41). Sampling is held by `LiquidGlassAdaptivityController`: zero captures at rest, 6 Hz while scrolling, one look on scroll end, +400 ms and on visible-page change. Headers do not sample: inside the page they would read their own glass and band. Light-mode "solid white" bar was a style choice (≥50% white floor, `strongTint` skips the clarity clear-fill) over white pages, not a setting or device fallback.
+**Floating glass headers and adaptive bar (2026-10-22):** `a844497` headers, `9e597b9` bottom bar, graph `eb417e2`. `AppSliverHeader` (21 pages incl. settings), the album toolbar and the artist toolbar are transparent unless the level is flat or contrast blocks glass (then the old opaque bar). New `sistrum_floating_header.dart`: glass back circle, runs of `IconButton` actions in one capsule (the Home avatar keeps its circle), and a `LiquidGlassScrollEdge` backing that fades in only when content is scrolled under (liquid: blur 5, 72% page tint; frosted, reduced motion or no shader filters: no blur, 94% tint and no lens). Status-bar style is explicit (a transparent AppBar estimates as dark); title/leading/action insets are directional. The album toolbar over its cover takes its palette and status icons from the cover's top-quarter CIE L* (`CoverPalette.topLightness`, one 112px decode, cached), otherwise the page. LiquidGlassAppBar was rejected (single capsule, no sliver collapse, no RTL). Bottom bar: where liquid chrome is allowed the shell wraps its pages in one `LiquidGlassView` (batch/realtime off) with an invisible `LiquidGlassAdaptiveArea` over the bar footprint; its verdict drives the bar theme and navigation-bar icons (artist page override still wins) and lets light bar glass drop its 50% floor (navigation 0.49→~0.28, mini player 0.70→~0.41). Sampling is held by `LiquidGlassAdaptivityController`: zero captures at rest, 6 Hz while scrolling, one look on scroll end, +400 ms and on visible-page change. Headers do not sample: inside the page they would read their own glass and band. Light-mode "solid white" bar was a style choice (≥50% white floor, `strongTint` skips the clarity clear-fill) over white pages, not a setting or device fallback.
 
-PASS: analysis clean; full Flutter suite `06:11 +1545 ~4: All tests passed!`; new `mornye_floating_header_test` (glass/frosted/reduced-motion/no-shader/flat/high-contrast headers, back pops, title collapses, RTL, status bar, album artwork verdict) and `mornye_chrome_adaptivity_test` (no view when gated, held at rest, live while scrolling, single looks, page-change look, override precedence, clear light tint); `mornye_tab_pill_motion_test` now counts the bar capsule's lens. No golden tests exist. APK NOT BUILT: `scripts/build_android.sh` stops with "No Android SDK found"; dl.google.com is refused by the network policy, and NDK, Rust Android target, cargo-ndk and `android/key.properties` are absent. Device look/readability/smoothness NOT RUN.
+PASS: analysis clean; full Flutter suite `06:11 +1545 ~4: All tests passed!`; new `sistrum_floating_header_test` (glass/frosted/reduced-motion/no-shader/flat/high-contrast headers, back pops, title collapses, RTL, status bar, album artwork verdict) and `sistrum_chrome_adaptivity_test` (no view when gated, held at rest, live while scrolling, single looks, page-change look, override precedence, clear light tint); `sistrum_tab_pill_motion_test` now counts the bar capsule's lens. No golden tests exist. APK NOT BUILT: `scripts/build_android.sh` stops with "No Android SDK found"; dl.google.com is refused by the network policy, and NDK, Rust Android target, cargo-ndk and `android/key.properties` are absent. Device look/readability/smoothness NOT RUN.
 
-**Liquid-glass controls (2026-10-21):** `d42fef0` switch, `449ba4c` sliders, `9fa1948` tab bar. Shared `MornyeGlassThumb`: a painted pill at rest (no lens, ticker or capture) swapped for one `LiquidGlassMotionPill` (liquid_glass_easy 5.0.0) from touch-down until the contraction hides the glass. Gate (`mornyeGlassThumbsEnabled`): shader filters, liquid tier, clarity > 0.2, motion and contrast permitted, enabled control; latched per touch. AppSwitch keeps its gestures/InkWell/semantics/RTL/0.5 disabled opacity and onChanged rules (credit upstream Mornye `9247b99a^`; NativeGlassMetrics not reintroduced). `MornyeSlider` replaces `Slider` at the five settings sliders with identical arguments; with glass open its resting thumb is a white pill (owner option i: Material thumb remains the fallback). Horizontal `MornyeLevelSlider` (EQ pre-amp) gets the glass knob; vertical faders, seek and volume unchanged. Tab pill: drag squash/stretch via `LiquidGlassLensMotion` (12% cap); light resting pill tuned to the Apple Music reference (4% fill, shadow outside the fill; measured ~4% vs reference ~3.5-4% darkening). New `mornyeShaderFiltersSupportedProvider` makes the shader gate testable.
+**Liquid-glass controls (2026-10-21):** `d42fef0` switch, `449ba4c` sliders, `9fa1948` tab bar. Shared `SistrumGlassThumb`: a painted pill at rest (no lens, ticker or capture) swapped for one `LiquidGlassMotionPill` (liquid_glass_easy 5.0.0) from touch-down until the contraction hides the glass. Gate (`sistrumGlassThumbsEnabled`): shader filters, liquid tier, clarity > 0.2, motion and contrast permitted, enabled control; latched per touch. AppSwitch keeps its gestures/InkWell/semantics/RTL/0.5 disabled opacity and onChanged rules (credit upstream Sistrum `9247b99a^`; NativeGlassMetrics not reintroduced). `SistrumSlider` replaces `Slider` at the five settings sliders with identical arguments; with glass open its resting thumb is a white pill (owner option i: Material thumb remains the fallback). Horizontal `SistrumLevelSlider` (EQ pre-amp) gets the glass knob; vertical faders, seek and volume unchanged. Tab pill: drag squash/stretch via `LiquidGlassLensMotion` (12% cap); light resting pill tuned to the Apple Music reference (4% fill, shadow outside the fill; measured ~4% vs reference ~3.5-4% darkening). New `sistrumShaderFiltersSupportedProvider` makes the shader gate testable.
 
-PASS: analysis clean; full Flutter suite `05:33 +1532 ~4: All tests passed!`; new `app_switch_glass_test`, `mornye_slider_glass_test` (drawn thumb equals Slider's painted centre, LTR/RTL, discrete/continuous), `mornye_tab_pill_motion_test`. Graph refreshed in `e9cdfe2` (it already included the slider and tab-pill sources from the working tree; later refreshes had no topology changes). APK NOT BUILT (network policy blocks `dl.google.com`; Android SDK/NDK, JDK 25, signing key absent). Device look/smoothness NOT RUN.
+PASS: analysis clean; full Flutter suite `05:33 +1532 ~4: All tests passed!`; new `app_switch_glass_test`, `sistrum_slider_glass_test` (drawn thumb equals Slider's painted centre, LTR/RTL, discrete/continuous), `sistrum_tab_pill_motion_test`. Graph refreshed in `e9cdfe2` (it already included the slider and tab-pill sources from the working tree; later refreshes had no topology changes). APK NOT BUILT (network policy blocks `dl.google.com`; Android SDK/NDK, JDK 25, signing key absent). Device look/smoothness NOT RUN.
 
-**Glass clarity drag preview (2026-10-21):** `d6d467c` makes the Appearance clarity slider preview-only while dragging. It holds a local drag value; only the preview panel follows it, through a new optional `clarity` override on `MornyeGlassPanel`/`MornyeGlass`. Glass elsewhere (bottom bar, chrome, menus, glass preparation) keeps the committed provider value, so it no longer rebuilds per step or crosses the 0.2 lens/warm-up threshold mid-drag. Release saves once and updates the app in one step; when idle the slider follows the provider (resets, restores).
+**Glass clarity drag preview (2026-10-21):** `d6d467c` makes the Appearance clarity slider preview-only while dragging. It holds a local drag value; only the preview panel follows it, through a new optional `clarity` override on `SistrumGlassPanel`/`SistrumGlass`. Glass elsewhere (bottom bar, chrome, menus, glass preparation) keeps the committed provider value, so it no longer rebuilds per step or crosses the 0.2 lens/warm-up threshold mid-drag. Release saves once and updates the app in one step; when idle the slider follows the provider (resets, restores).
 
 PASS: analysis clean; full Flutter suite `05:42 +1515 ~4: All tests passed!`; new `appearance_clarity_drag_test` (no provider write or outside rebuild during drag, preview follows the drag, one persisted commit, external changes update the idle slider). Graph `d89f518`. APK NOT BUILT: `dl.google.com` is blocked by this environment's network policy and the Android SDK/NDK, JDK 25 and `android/key.properties` are absent. Device check NOT RUN.
 
-**Glass clarity slider jank (2026-10-21):** `a935e65` moves glass clarity and outlines out of the `MornyeTheme` ThemeExtension into `mornyeGlassClarityProvider`/`mornyeGlassOutlinesProvider`. `MornyeThemeWrapper` selects only accent, system font and theme mode, so a slider tick no longer rebuilds both ThemeData objects, runs MaterialApp's 300ms theme lerp or rebuilds every `Theme.of` dependent. The Appearance page and custom font tile select their fields. The clarity preview and slider, and the bottom-bar mini player, have their own repaint boundaries (the tab bar and side capsules already had them). No visual values changed; persist:false while dragging, saved on drag end.
+**Glass clarity slider jank (2026-10-21):** `a935e65` moves glass clarity and outlines out of the `SistrumTheme` ThemeExtension into `sistrumGlassClarityProvider`/`sistrumGlassOutlinesProvider`. `SistrumThemeWrapper` selects only accent, system font and theme mode, so a slider tick no longer rebuilds both ThemeData objects, runs MaterialApp's 300ms theme lerp or rebuilds every `Theme.of` dependent. The Appearance page and custom font tile select their fields. The clarity preview and slider, and the bottom-bar mini player, have their own repaint boundaries (the tab bar and side capsules already had them). No visual values changed; persist:false while dragging, saved on drag end.
 
-PASS: analysis clean; full Flutter suite `05:52 +1513 ~4: All tests passed!`; new `mornye_glass_theme_isolation_test` build-counter test. Integration tests updated but NOT RUN (need a device). Graph `de9edcd`. APK NOT BUILT: this container has no Android SDK, NDK 30.0.16248370, Rust `aarch64-linux-android` target, cargo-ndk or `android/key.properties`. Device smoothness and glass appearance NOT RUN.
+PASS: analysis clean; full Flutter suite `05:52 +1513 ~4: All tests passed!`; new `sistrum_glass_theme_isolation_test` build-counter test. Integration tests updated but NOT RUN (need a device). Graph `de9edcd`. APK NOT BUILT: this container has no Android SDK, NDK 30.0.16248370, Rust `aarch64-linux-android` target, cargo-ndk or `android/key.properties`. Device smoothness and glass appearance NOT RUN.
 
-**Local ARM64 build 167 (2026-10-21):** Built from `c76237c6`, incorporating all completed upstream ports and Batch 16 cleanup. Version 5.1.1 / build 167, split versionCode 2167. Release flags: `SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a flutter build apk --release --target-platform android-arm64 --split-per-abi --dart-define=GIT_COMMIT=c76237c6`.
+**Local ARM64 build 167 (2026-10-21):** Built from `c76237c6`, incorporating all completed upstream ports and Batch 16 cleanup. Version 5.1.1 / build 167, split versionCode 2167. Release flags: `SISTRUM_SIDE_BY_SIDE=true SISTRUM_RUST_ANDROID_ABIS=arm64-v8a flutter build apk --release --target-platform android-arm64 --split-per-abi --dart-define=GIT_COMMIT=c76237c6`.
 
-APK `SpotiFLAC-Local-167-arm64-v8a.apk`, 52,983,816 bytes; SHA-256 `8b5521fe78bbc1640675e26b1838776f370191c440a4288402d63efcc2b80639`. Package `com.zarz.spotiflac.local`, label SpotiFLAC Local, minimum API 24 / target API 37, ARM64 only. All 17 native libraries are AArch64 ELF64 with at least 16KB LOAD alignment; ZIP 16KB alignment, CRC/backend audit, embedded source revision, cream icon background and absence of INTERNET permission verified. APK signature verifies and certificate matches build 166 (`b912cdc7e97b78a19aff3ac8398abc3b36251de2af67243e8a6da2870e15c7b3`). This is an update to the existing Local app and installs alongside the original package.
+APK `Sistrum-Local-167-arm64-v8a.apk`, 52,983,816 bytes; SHA-256 `8b5521fe78bbc1640675e26b1838776f370191c440a4288402d63efcc2b80639`. Package `com.amwolfstein.sistrum.local`, label Sistrum Local, minimum API 24 / target API 37, ARM64 only. All 17 native libraries are AArch64 ELF64 with at least 16KB LOAD alignment; ZIP 16KB alignment, CRC/backend audit, embedded source revision, cream icon background and absence of INTERNET permission verified. APK signature verifies and certificate matches build 166 (`b912cdc7e97b78a19aff3ac8398abc3b36251de2af67243e8a6da2870e15c7b3`). This is an update to the existing Local app and installs alongside the original package.
 
 Analysis clean; full Flutter suite PASS: `03:16 +1513 ~3: All tests passed!`. Physical-device installation/playback NOT RUN. Initial build encountered a generated-plugin race when tests ran concurrently; after tests completed, release was rebuilt serially and passed. Do not run Flutter tests and APK builds concurrently in this checkout.
 
-Download branch: `apk-local-arm64-167`, containing APK, README, SHA256SUMS and APK_DETAILS.json. [Download APK](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-167/SpotiFLAC-Local-167-arm64-v8a.apk). Source → graph checkpoints: `c76237c6` → `a08624d2`; release docs checkpoint follows.
+Download branch: `apk-local-arm64-167`, containing APK, README, SHA256SUMS and APK_DETAILS.json. [Download APK](https://github.com/AMWolfstein/Private/raw/refs/heads/apk-local-arm64-167/%53%70%6F%74%69%46%4C%41%43-Local-167-arm64-v8a.apk). Source → graph checkpoints: `c76237c6` → `a08624d2`; release docs checkpoint follows.
 
 **Upstream port batch 16 (2026-10-21):** Retired unreachable Material Expressive UI and direct dependencies, download/provider/re-enrichment and iOS bridge APIs, dead Rust modules and unused settings/widgets/resources. Preserved offline metadata/lyrics editing, Audio Quality Analysis, CUE, local collections, playback and legacy backup/schema compatibility. Removed 70 unused l10n keys last; added native check script and test resource/timeout cleanup. Disabled selection actions retain explicit accessible state and 48px targets.
 
@@ -132,7 +150,7 @@ One reviewed source patch `ef8ba64d`; Graphify checkpoint recorded below. Cleanu
 
 PASS: analysis clean; Flutter 1513 passed / 3 skipped / zero failures (02:09); Android unit 55 passed / 1 skipped; Rust fmt/Clippy PASS, 165 passed / 1 ignored.
 Graph 331ab3d0, source ef8ba64d: 22,436 unique nodes / 42,940 valid links; synchronized, existing vendor extraction warnings remain.
-No APK; Native unit checks and Rust fmt/Clippy/tests pass; regenerated host UniFFI bindings. Instrumentation sources compile, but device execution is NOT RUN. Paging regression passes 10/10. Test-only APIs and their obsolete cases were retired; retained Mornye fixtures were adapted, not skipped. DEAD-806 remains partially open for legacy bookmark/path compatibility; DEAD-702 and unrelated DATA-501/KT-202 remain outside this batch. NativeReplayGainPolicy, MANAGE_EXTERNAL_STORAGE, live skeleton/ErrorCard/artist artwork, canonical ISRC helper and haptics SAF jobs retained. Atomic SAF helper retained per plan. No APK or runtime performance claim. material_ui remains an existing transitive dependency of retained go_router 18.0.2; no production material_ui imports/delegate remain. Replacing the router to remove that transitive dependency is outside this cleanup and needs a separate architectural decision. Next: none in PORT_PLAN; physical-device verification and separately approved remaining review fixes.
+No APK; Native unit checks and Rust fmt/Clippy/tests pass; regenerated host UniFFI bindings. Instrumentation sources compile, but device execution is NOT RUN. Paging regression passes 10/10. Test-only APIs and their obsolete cases were retired; retained Sistrum fixtures were adapted, not skipped. DEAD-806 remains partially open for legacy bookmark/path compatibility; DEAD-702 and unrelated DATA-501/KT-202 remain outside this batch. NativeReplayGainPolicy, MANAGE_EXTERNAL_STORAGE, live skeleton/ErrorCard/artist artwork, canonical ISRC helper and haptics SAF jobs retained. Atomic SAF helper retained per plan. No APK or runtime performance claim. material_ui remains an existing transitive dependency of retained go_router 18.0.2; no production material_ui imports/delegate remain. Replacing the router to remove that transitive dependency is outside this cleanup and needs a separate architectural decision. Next: none in PORT_PLAN; physical-device verification and separately approved remaining review fixes.
 
 **Upstream port batch 15 (2026-10-21):** Refreshed upstream main remains e0563ffa. Compared all shared Pub declarations and overrides, resolved shared Cargo versions through both workspaces, and checked Flutter/Gradle/Android toolchain pins. No retained dependency version changes are available; no manifest or lockfile changes required.
 
@@ -158,7 +176,7 @@ PASS: analysis clean; Flutter 1771 passed / 3 skipped / zero failures (04:18); K
 Graph 8ad07efd, source c4e9e536: 23,983 unique nodes / 46,028 valid links; synchronized, existing vendor extraction warnings remain.
 No APK; Recently Added ordering and release-tag-only Latest Releases queries unchanged. Optional long-press menus omitted; existing local detail navigation retained. Initial tests exposed viewport assumptions and missing standalone Intl date initialization, corrected before final checks. No music-file writes/dependencies/native changes or APK. Home same-path image invalidation remains with existing metadata/cache ownership. Tablet/device visual comparisons NOT RUN. Next: batch 14 (PLAY-001..004 and U-311).
 
-**Upstream port batch 12 (2026-10-21):** MORN-013..016 unify effective collection artwork, use tonal Loved/playlist actions with feedback, fit short-screen covers, and improve Mornye contrast and segmented touch targets.
+**Upstream port batch 12 (2026-10-21):** MORN-013..016 unify effective collection artwork, use tonal Loved/playlist actions with feedback, fit short-screen covers, and improve Sistrum contrast and segmented touch targets.
 
 Source `ce2538bf` → graph `5c2bdc49`; header fixture correction `8477c4bc` → final graph checkpoint. MORN-015 was already implemented by U-210 `c2f38c86` in batch 6.
 
@@ -174,7 +192,7 @@ PASS: analysis clean; Flutter 1759 passed / 3 skipped / zero failures (04:13); K
 Graph ff70d508, source 2a6ea366: 23,960 unique nodes / 45,975 valid links; synchronized, existing vendor extraction warnings remain.
 No APK; Retained playback regressions now begin with a virtual CUE row and compact release-date metadata, covering both themes; first real-song identity remains explicit in later fixture checks. Artist visual/device checks NOT RUN. Single badges require explicit total-track tags=1. No EP type exists in the local browse model/database, so EP badges are omitted rather than inferred from file counts; EPs remain under Albums. No dependencies, schemas, music-file writes, native changes or APK. Next: batch 12 (MORN-013..016; FIX_PLAN M5+M6).
 
-**Upstream port batch 10 (2026-10-20):** MORN-001..005 and MORN-017 align retained collection UI behavior: album selection owns the toolbar and hides playback actions; playlist/Loved use shared circular toolbar controls and collapse titles; hydration shows skeletons instead of empty flashes; current rows pause/resume without queue restart. Artist/album loading/error/empty presentation now uses retained Mornye primitives and hides an empty Popular heading.
+**Upstream port batch 10 (2026-10-20):** MORN-001..005 and MORN-017 align retained collection UI behavior: album selection owns the toolbar and hides playback actions; playlist/Loved use shared circular toolbar controls and collapse titles; hydration shows skeletons instead of empty flashes; current rows pause/resume without queue restart. Artist/album loading/error/empty presentation now uses retained Sistrum primitives and hides an empty Popular heading.
 
 Source `bc983981` → graph `afcb349a`; fixture duration `b55043ba` → `36cdf5d4`; hydration fixture isolation `b602dfb3` → `de2c48ba`, duplicate override correction `ad7e26eb` → `d6b8c566`. Upstream-latest collection patterns inspected at e0563ffa; existing offline behavior retained.
 
@@ -182,7 +200,7 @@ PASS: analysis clean; Flutter 1759 passed / 3 skipped / zero failures (04:13); K
 Graph d6b8c566, source ad7e26eb: 23,954 unique nodes / 45,967 valid links; synchronized, existing vendor extraction warnings remain.
 No APK; Six new light/dark collection-state regressions cover selection exit, hydration and current-row toggling. Initial fixture failures were missing duration and duplicate provider setup; corrected before final verification. No dependencies, schemas, music-file writes, native changes or APK. Physical visual checks NOT RUN. Next: batch 11 (MORN-006..012; FIX_PLAN M3+M4).
 
-**Upstream port batch 9 (2026-10-20):** U-301 adds the owner-selected optional per-player Android equalizer: 5/10/15/31 bands, tone/preamp/balance, headroom, limiter/compressor, local presets and bounded JSON import/share. A Mornye-only editor and player/settings menu routes use retained grouped controls. Audio-info now reports EQ/bypass/native errors. Existing playback transport and direct/exclusive output remain intact.
+**Upstream port batch 9 (2026-10-20):** U-301 adds the owner-selected optional per-player Android equalizer: 5/10/15/31 bands, tone/preamp/balance, headroom, limiter/compressor, local presets and bounded JSON import/share. A Sistrum-only editor and player/settings menu routes use retained grouped controls. Audio-info now reports EQ/bypass/native errors. Existing playback transport and direct/exclusive output remain intact.
 
 U-301 source `8e05cbbf` → graph `babdbbbe` (ecf594aa + 68c739df); installed picker/API and bounded stream import correction `892eb173` → `5c602c59`; scrolled-control test fixture `c7924c53` → final graph checkpoint (see history).
 
@@ -190,7 +208,7 @@ PASS: analysis clean; Flutter 1753 passed / 3 skipped / zero failures (04:16); A
 Graph fd1a520b, source 892eb173: 23,940 unique nodes / 45,919 valid links; synchronized, existing vendor extraction warnings remain.
 No APK; No dependencies/schema changes, user-music writes, Darwin backend or engine replacement. EQ defaults off and native failures are visible; direct/exclusive output bypass is covered by mocked transport tests. Physical sound/driver support and share/picker targets NOT RUN. Initial Dart/native check failures were installed picker/theme API mismatches, fixed before final verification; focused widget fixtures now settle scrolling before interaction. Model/preset/native-payload/transport/input-boundary tests imported or added. No APK. Next: batch 10 (MORN-001..005 and MORN-017; FIX_PLAN M1+M2).
 
-**Upstream port batch 8 (2026-10-20):** U-304 adds local Rewind highlights and seasonal invitations using recorded listening statistics and Mornye surfaces. U-305 adds pinned Unicode/month section headers and adaptive fast scrolling without changing the dedicated Songs/category layout or bounded paging. U-307 adapts compact launcher-player sizing, preserving existing controls/themes. U-312 bounds restoration checks, virtualizes Settings search, limits logo decoding, avoids redundant static contrast readbacks and scopes pinch updates to the grid.
+**Upstream port batch 8 (2026-10-20):** U-304 adds local Rewind highlights and seasonal invitations using recorded listening statistics and Sistrum surfaces. U-305 adds pinned Unicode/month section headers and adaptive fast scrolling without changing the dedicated Songs/category layout or bounded paging. U-307 adapts compact launcher-player sizing, preserving existing controls/themes. U-312 bounds restoration checks, virtualizes Settings search, limits logo decoding, avoids redundant static contrast readbacks and scopes pinch updates to the grid.
 
 Source → graph: U-304 `f4fb6794` → `39f9bf4a`; U-305 `6052f9ea` → `ef111d26` (includes U-209 cached locale formatters and U-312 pinned lists); U-307 `2c9c0305` → `e51d221c`; U-312 `c49d7af9` → `c05701ff`. Compatibility fixes `1c589407` → `4f5bc88d`; Rewind header/offline fixture fix `c3d79e0d` → final graph checkpoint (see history).
 
@@ -198,15 +216,15 @@ PASS: analysis clean; Flutter 1739 passed / 3 skipped / zero failures (04:10); A
 Graph 9020a7aa, source c3d79e0d: 23,813 unique nodes / 45,709 valid links; synchronized, existing vendor extraction warnings remain.
 No APK; No dependency/schema changes or user-owned music writes. Rewind share targets and launcher resizing on physical devices NOT RUN. Initial analysis mismatches corrected using retained APIs; initial Flutter failures caught an unbounded close control and an upstream remote-source fixture assumption, both corrected before final checks. No runtime speedup measurement. Android widget visual redesign/preview intentionally excluded. Next: batch 9 (U-301 equalizer only).
 
-**Upstream port batch 7 (2026-10-20):** U-308 completes local lyric quote cards, menu/long-press entry points, on-demand document reads and stale-share guards, restyled using retained Mornye controls. Compatible held-word glow honors reduced motion and a bounded fade window, preserving settled/background ticker suspension. U-302 adds optional local music haptics, stable SAF identity and owned decoder jobs, transport synchronization, basic-motor support and bounded sensitivity/strength settings.
+**Upstream port batch 7 (2026-10-20):** U-308 completes local lyric quote cards, menu/long-press entry points, on-demand document reads and stale-share guards, restyled using retained Sistrum controls. Compatible held-word glow honors reduced motion and a bounded fade window, preserving settled/background ticker suspension. U-302 adds optional local music haptics, stable SAF identity and owned decoder jobs, transport synchronization, basic-motor support and bounded sensitivity/strength settings.
 
-Source → graph: U-308 `d83068e6` → `9ae8c833` (78a5e078/2782b1f7); U-302 `df164fb1` → `ba844ef0` (11c6cf99/2455cabc/9acaa760). Follow-ups: artwork guard lint `b02895b0` → `1bb926e3`; Mornye selection fixture `a9433d82` → `6bb22e86`; virtualized-card assertion `de546bd7` → `e0fd4bbe`.
+Source → graph: U-308 `d83068e6` → `9ae8c833` (78a5e078/2782b1f7); U-302 `df164fb1` → `ba844ef0` (11c6cf99/2455cabc/9acaa760). Follow-ups: artwork guard lint `b02895b0` → `1bb926e3`; Sistrum selection fixture `a9433d82` → `6bb22e86`; virtualized-card assertion `de546bd7` → `e0fd4bbe`.
 
 PASS: analysis clean; Flutter 1692 passed / 3 skipped / zero failures (03:55); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes).
 Graph e0fd4bbe, source b02895b0: 23,480 unique nodes / 45,224 valid links; synchronized, existing vendor extraction warnings remain.
 No APK; No dependencies/schema changes or user-music writes. Music haptics defaults off; physical motor sensation/timing and OS share targets NOT RUN. Android VIBRATE permission is the only permission added. Initial quote-limit fixture assumed all rows remained visible; corrected to reveal rows, assert 5/5 and scope preview checks to LyricsShareCard before final verification. New card preserves local artwork policy; no network provider restored. Next: batch 8 (U-304, U-305, U-307, U-312).
 
-**Upstream port batch 6 (2026-10-20):** U-210 fits collection covers to short screens. U-217 adds release-triggered upward mini-player opening while keeping horizontal dismissal. U-218 adds bounded normalization pre-amp and Track/Album gain, with one cached tag read and live settings changes. U-303 adds a tappable quality badge and Mornye audio-info sheet with read-only Android route facts, current gain/rate/direct state, local analysis and copied reports.
+**Upstream port batch 6 (2026-10-20):** U-210 fits collection covers to short screens. U-217 adds release-triggered upward mini-player opening while keeping horizontal dismissal. U-218 adds bounded normalization pre-amp and Track/Album gain, with one cached tag read and live settings changes. U-303 adds a tappable quality badge and Sistrum audio-info sheet with read-only Android route facts, current gain/rate/direct state, local analysis and copied reports.
 
 Source → graph: U-210 `c2f38c86` → `e0f9ba6d` (d28e3f65); U-217 `8a9f6091` → `53b473f0` (37162363); U-218 `0d126507` → `ae93ce55` (9eea6a1a); U-303 `bd8f88a6` → `44cbd9e8` (40f65d3a plus U-209 acbc614f number-pattern reuse). Fixture correction `8b7adfe6` → graph checkpoint (see history); initial imported sheet tests lacked ProviderScope, corrected before final verification.
 
@@ -229,7 +247,7 @@ No APK, dependency/schema changes or physical-device validation. Next: batch 6 o
 **Upstream port batch 4 (2026-10-20; requested MEDIUM):** U-205 `6e44c6be` reports
 Android output failures without advancing the queue and supports retry; U-216 `95e2b158`
 notifies open players when a same-ID snapshot gains duration/artwork/metadata. U-206 targets
-the legacy Material fallback and is not imported: retained Mornye title/swipe behavior
+the legacy Material fallback and is not imported: retained Sistrum title/swipe behavior
 already avoids the outgoing-title stack. U-207 `d0818d7a` resolves verified SAF parents and propagates requested
 LRC write failures; excluded online re-enrichment/download tests remain absent. Current
 engine, UI and vendored descriptor patch retained. Graph checkpoints `a95ffcf6`, `4c66e5e7`,
@@ -237,7 +255,7 @@ engine, UI and vendored descriptor patch retained. Graph checkpoints `a95ffcf6`,
 Batch 4 verification: PASS: analysis clean; full Flutter 1,657 passed / 3 skipped / zero failures (4m10s); Android unit 59 passed / 1 skipped; changed plugin and instrumentation Kotlin/Java compiled (1m58s). No APK. Next is port batch 5.
 
 **Upstream port batch 3 (2026-10-20):** U-203 `e70ae974` recovers missing local album
-artwork in headers/grids, retaining Mornye controls and local images. U-212 `1d8e8f76`
+artwork in headers/grids, retaining Sistrum controls and local images. U-212 `1d8e8f76`
 shares aligned ID3 picture parsing, safely strips recognized-image NUL padding and repairs
 app-owned cached previews; extension hunks excluded. U-213 `d256e0c7` extends existing
 embedded artwork recovery to filesystem playback without any online fetching. U-204
@@ -310,7 +328,7 @@ The now-empty App settings category/page is removed; settings search routes logg
 Embed lyrics, its output-mode submenu, unused preference fields/setters/serialization and
 13 retired labels are removed. Local lyrics playback and metadata/lyrics editing remain.
 Appearance no longer has the decorative Library preview; color, glass, Player view and
-other appearance controls remain. Mornye Settings/Library subpages reuse the album header's
+other appearance controls remain. Sistrum Settings/Library subpages reuse the album header's
 HeaderCircleButton and back icon; custom selection-mode close controls stay functional.
 Build/log numbers increment to 166 for the ARM64 side-by-side Local release.
 Validation: generated settings/localizations refreshed; `flutter analyze` reports
@@ -320,12 +338,12 @@ increases content height. Removed settings/preview symbols and search entries ar
 Source changes were pushed before building the verified APK described below.
 
 **Verified ARM64 Local build 166:** Source `b62b3d9e`, version 5.1.1 / build 166,
-split versionCode 2166. Built with `SPOTIFLAC_SIDE_BY_SIDE=true`,
-`SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a` and `flutter build apk --release
+split versionCode 2166. Built with `SISTRUM_SIDE_BY_SIDE=true`,
+`SISTRUM_RUST_ANDROID_ABIS=arm64-v8a` and `flutter build apk --release
 --target-platform android-arm64 --split-per-abi --dart-define=GIT_COMMIT=b62b3d9e`.
 
-APK: **54,065,931 bytes**. Audited package `com.zarz.spotiflac.local`, label
-SpotiFLAC Local, minimum API 24 / target API 37, ARM64 only and all 17 native libraries.
+APK: **54,065,931 bytes**. Audited package `com.amwolfstein.sistrum.local`, label
+Sistrum Local, minimum API 24 / target API 37, ARM64 only and all 17 native libraries.
 APK CRC/backend checks, AArch64 ELF/ZIP 16 KB alignment, embedded source revision, offline
 permissions and cream adaptive icon background pass. APK signatures verify and match
 build 165, preserving Local app updates/data. Analysis is clean; 1,590 tests pass, 3 skip.
@@ -370,12 +388,12 @@ Physical-device validation remains pending.
 
 **ARM64 Local build 165 (2026-10-19):** `c4b79cee` includes the artwork row layout fix
 and increments Flutter/log build numbers to 165. Same release flags as build 164:
-`SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a`,
+`SISTRUM_SIDE_BY_SIDE=true SISTRUM_RUST_ANDROID_ABIS=arm64-v8a`,
 `flutter build apk --release --target-platform android-arm64 --split-per-abi
 --dart-define=GIT_COMMIT=c4b79cee`.
 
 APK: **54,328,531 bytes**, version 5.1.1 / build 165, split versionCode 2165.
-Verified **SpotiFLAC Local** / `com.zarz.spotiflac.local`, min API 24, target API 37,
+Verified **Sistrum Local** / `com.amwolfstein.sistrum.local`, min API 24, target API 37,
 only ARM64, all 17 native libraries AArch64 with 16 KB ELF/ZIP alignment, Rust packaging,
 offline permissions, cream adaptive background and the embedded source revision. Signature
 verification passes and the certificate matches build 164, preserving in-place updates.
@@ -410,15 +428,15 @@ published build 164 does not. Physical-device confirmation remains pending.
 numbers to 164, retaining version 5.1.1. Built with the same settings as build 163:
 ```
 source /workspace/toolchains/activate.sh
-SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a \
+SISTRUM_SIDE_BY_SIDE=true SISTRUM_RUST_ANDROID_ABIS=arm64-v8a \
   flutter build apk --release --target-platform android-arm64 --split-per-abi \
   --dart-define=GIT_COMMIT=1d29cf4f
 ```
 
-Output: **SpotiFLAC-Local-arm64-v8a.apk**, **54,328,531 bytes**, version 5.1.1 /
-build 164 (split versionCode 2164). Verified app name **SpotiFLAC Local**, package
-`com.zarz.spotiflac.local`, minimum API 24 and target API 37. The certificate matches build
-163, so it installs as an update to Local while retaining the original SpotiFLAC app.
+Output: **Sistrum-Local-arm64-v8a.apk**, **54,328,531 bytes**, version 5.1.1 /
+build 164 (split versionCode 2164). Verified app name **Sistrum Local**, package
+`com.amwolfstein.sistrum.local`, minimum API 24 and target API 37. The certificate matches build
+163, so it installs as an update to Local while retaining the original Sistrum app.
 All **17 native libraries** are AArch64 ELF64 with 16 KB-compatible ELF/ZIP alignment.
 Rust backend packaging, source revision, offline permissions, signature verification and
 the compiled cream adaptive icon background passed inspection. Host and ARM64 Rust backend
@@ -460,7 +478,7 @@ sequence has not been reproduced on a device.
 
 Validation: `flutter analyze` reports **No issues found**; **35 focused widget/playback tests
 pass**, including the new opacity regression, collection selection/queue behavior and
-Mornye detail headers. No native changes or APK build. Code, refreshed graph and progress
+Sistrum detail headers. No native changes or APK build. Code, refreshed graph and progress
 notes use the repository's separate commits.
 
 **Home and Library cleanup (2026-10-19):** Home no longer renders or subscribes to the
@@ -535,24 +553,24 @@ launcher background with light cream (`#FFF4DF` for the adaptive icon), keeps th
 green adaptive/monochrome logo, and regenerates the Android launcher resources. The legacy
 raster icon uses the matching cream-background design. Increments `pubspec.yaml` and the
 in-app log build number from 162 to 163 while retaining version 5.1.1. The existing
-side-by-side switch keeps **SpotiFLAC Local** / `com.zarz.spotiflac.local`, separate from the
-original SpotiFLAC package.
+side-by-side switch keeps **Sistrum Local** / `com.amwolfstein.sistrum.local`, separate from the
+original Sistrum package.
 
 Built using the same release/side-by-side settings as build 162, with ARM64 only:
 ```
 source /workspace/toolchains/activate.sh
-SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a \
+SISTRUM_SIDE_BY_SIDE=true SISTRUM_RUST_ANDROID_ABIS=arm64-v8a \
   flutter build apk --release --target-platform android-arm64 --split-per-abi \
   --dart-define=GIT_COMMIT=1474c860
 ```
 
-Output: **SpotiFLAC-Local-arm64-v8a.apk**, **54,345,707 bytes**, version 5.1.1 / build 163
+Output: **Sistrum-Local-arm64-v8a.apk**, **54,345,707 bytes**, version 5.1.1 / build 163
 (split manifest versionCode 2163), minimum API 24, target API 37. The signed manifest confirms
-`com.zarz.spotiflac.local`, label SpotiFLAC Local and only `arm64-v8a`. All **17 native
+`com.amwolfstein.sistrum.local`, label Sistrum Local and only `arm64-v8a`. All **17 native
 libraries** are AArch64 ELF64 with 16 KB-compatible ELF/ZIP alignment. Rust packaging, source
 revision, offline permissions, light legacy icon backgrounds and the compiled cream adaptive
 background passed inspection. `apksigner verify` passes; the certificate matches the previous
-Local APK, enabling an update without uninstalling or changing the original SpotiFLAC app.
+Local APK, enabling an update without uninstalling or changing the original Sistrum app.
 
 Static analysis is clean. The application code passed **1,615 Flutter tests, 3 skipped**
 immediately before this icon/version-only change. The host and ARM64 Rust backend were rebuilt
@@ -585,7 +603,7 @@ the code commit. No APK was built in that change; the commits were subsequently 
 
 **Selectable player view and History View cleanup (2026-10-18):** `c609d90` adds
 **Player view → Normal view / Immersive view**. Normal remains the default. The preference
-uses the existing Mornye full-bleed artwork layout/background rather than adding another
+uses the existing Sistrum full-bleed artwork layout/background rather than adding another
 player implementation. Immersive portrait artwork stays edge-to-edge while paused and fades
 into the existing controls; landscape keeps the established two-column layout. The saved
 theme setting loads at bootstrap, survives subsequent theme edits and serializes safely;
@@ -697,8 +715,8 @@ bridge signatures changed. Graph updated after the code commit. No Android/nativ
 or APK build was run; the previously delivered APK does not contain this fix.
 
 **Side-by-side ARM64 APK (2026-10-18):** `eb33f36` adds opt-in
-`SPOTIFLAC_SIDE_BY_SIDE=true` Gradle configuration. It sets the app name to **SpotiFLAC Local**
-and application ID to `com.zarz.spotiflac.local`; ordinary builds retain the original identity.
+`SISTRUM_SIDE_BY_SIDE=true` Gradle configuration. It sets the app name to **Sistrum Local**
+and application ID to `com.amwolfstein.sistrum.local`; ordinary builds retain the original identity.
 The packaged manifest also has unique provider authorities, with the original activity class
 resolved correctly under the new application ID. App settings/data and folder permissions are
 independent of the original installation. Graph refreshed in `3942d11`.
@@ -706,11 +724,11 @@ independent of the original installation. Graph refreshed in `3942d11`.
 Built with:
 ```
 source /workspace/toolchains/activate.sh
-SPOTIFLAC_SIDE_BY_SIDE=true SPOTIFLAC_RUST_ANDROID_ABIS=arm64-v8a \
+SISTRUM_SIDE_BY_SIDE=true SISTRUM_RUST_ANDROID_ABIS=arm64-v8a \
   flutter build apk --release --target-platform android-arm64 --split-per-abi
 ```
 
-Output: **SpotiFLAC-Local-arm64-v8a.apk**, 54,510,467 bytes, version 5.1.1 / Flutter build 162
+Output: **Sistrum-Local-arm64-v8a.apk**, 54,510,467 bytes, version 5.1.1 / Flutter build 162
 (ABI split manifest versionCode 2162), minimum Android API 24. `aapt dump badging` verifies
 name/package and only `arm64-v8a`; all 17 native libraries were checked as AArch64 ELF64,
 including the rebuilt Rust backend. `apksigner verify` passes (v2 signature). No physical device
@@ -761,7 +779,7 @@ or GitHub push performed for this change.
   (services/widgets/providers + track-metadata, queue/library, download picker, `main_shell`
   preview observers). Downloads now resolve the default service directly. **Deferred to Phase 6**
   (removed with the download engine): the extension *registry* (`extension_provider`),
-  `track_provider` + Mornye home search, and motion artwork.
+  `track_provider` + Sistrum home search, and motion artwork.
 - `83a02c4` — Phase 5c: explore home feed, weekly releases, artist concerts, motion artwork
   removed (`explore_provider` + featured section + `home_tab_explore` part; weekly-releases
   provider/service/screen; artist-concerts screens/button/model; motion-artwork download/proxy/
@@ -790,12 +808,12 @@ or GitHub push performed for this change.
   generated `app_localizations*.dart` now ignored).
 
 **Phase 5 summary:** the entire online extension/provider/search UI layer is gone; what remains
-online-coupled (`extension_provider` registry, `track_provider`, Mornye home search) is consumed
+online-coupled (`extension_provider` registry, `track_provider`, Sistrum home search) is consumed
 only by the download engine and is removed with it in Phase 6. Two now-dead settings
 (`homeFeedProvider`, explore-feed cache row) are deferred to the Phase 8 settings purge (V4).
 
 **Phase 6 summary (historical; Phase 7 changes below supersede the native/history details):** the app is now a local-only player in Dart. The download engine, extension
-registry, `track_provider`, Mornye home search and all download/verification UI are gone; the
+registry, `track_provider`, Sistrum home search and all download/verification UI are gone; the
 player, queue and search read the local library DB. Per PD2 the Dart SQL layer no longer queries the
 download history, but `history.db` remains ATTACHed and the native library scan still excludes it —
 both re-homed to Rust in Phase 7. Two kept-but-dormant pieces (`downloaded_embedded_cover_resolver`,
@@ -805,7 +823,7 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
 **Phase 7 implementation:**
 - `a9f63b9` pruned core online-support modules; `fa2afff` completed the reduction.
 - `7d54453` refreshed the graph from code commit `fa2afff0`.
-- New `spotiflac-local` crate owns local scans, CUE handling, metadata/tag writes, artwork,
+- New `sistrum-local` crate owns local scans, CUE handling, metadata/tag writes, artwork,
   lyrics and logging. Scoped file grants, cancellation, atomic file publication and shutdown
   draining remain; shutdown is idempotent and waits for active operations.
 - Removed `providers`, `network` and `extensions`; workspace now contains `core`, `local`,
@@ -860,8 +878,8 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
   renders from files; stale HTTP(S) artwork is ignored, including widget artwork. Cover export
   copies local artwork through staged publication and rejects remote URLs. Local metadata,
   tag/lyrics editing, backups, local profiles, playback, SAF and USB remain.
-- Mornye is the sole production theme, with existing light/dark, accents, glass and font
-  controls. Old Material preferences restore as Mornye. The old Material theme is retained
+- Sistrum is the sole production theme, with existing light/dark, accents, glass and font
+  controls. Old Material preferences restore as Sistrum. The old Material theme is retained
   only as a test harness for shared-widget fallback coverage.
 - Removed the download tutorial simulation and provider deep-link actions; onboarding now
   describes local scanning, playback and folder access. Removed online diagnostic heuristics,
@@ -887,7 +905,7 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
 - Release APK built with `flutter build apk --release --target-platform android-arm,android-arm64
   --dart-define=GIT_COMMIT=8609ad06`; **119,269,488 bytes**, Android API 24+, ARM64 + ARMv7.
   Artifact: `build/app/outputs/flutter-apk/app-release.apk`, also copied to
-  `/workspace/SpotiFLAC-offline.apk` for download.
+  `/workspace/Sistrum-offline.apk` for download.
 - `check_backend_apk.py` passed for Rust and both ABIs. Signature verification passed (APK v2,
   development key); ZIP alignment passed at 16 KB. All **17 ARM64 native libraries** have
   16 KB-or-greater ELF LOAD alignment. Both app libraries contain build commit `8609ad06`.
@@ -947,7 +965,7 @@ the `history.db` attach) are slated for Phases 7-8. `flutter analyze` repo-wide 
 - Changes are committed locally; no GitHub push or artifact publication was performed.
 
 **V3 detail-design correction (`0e6c88e`, 2026-10-18):**
-- Recovered the former Mornye artist/album/playlist designs from Git history rather than
+- Recovered the former Sistrum artist/album/playlist designs from Git history rather than
   retaining the generic local artist destination. `LocalArtistScreen` restores the portrait
   identity header, centered Play between Favorite and Shuffle, featured release card,
   five-song carousel, and separate Albums/Singles discography shelves.
@@ -1030,7 +1048,7 @@ extensions  -> core, network, providers
 mobile      -> core, network, extensions   (providers transitively)
 bindgen     -> uniffi only (CLI)
 ```
-- `core/src` has **zero** `use spotiflac_{network,extensions,providers}` hits → pruning core is
+- `core/src` has **zero** `use sistrum_{network,extensions,providers}` hits → pruning core is
   safe if `lib.rs` `pub mod` lines + internal refs are removed.
 - `mobile` is **7/… files online** (`extensions.rs`, `ffmpeg.rs`, `logging.rs`, `lyrics.rs`,
   `manager.rs`, `network_tags.rs`, `repository.rs`); the rest are local → **reduce, not delete**.
@@ -1042,7 +1060,7 @@ bindgen     -> uniffi only (CLI)
 - `rustix` must stay (kept `core/src/isrc/native_files.rs:55` + local `mobile` cache/tags use it).
   Dropping it would require replacing that one open-flag call site.
 - Android build hardwires Rust: `android/app/build.gradle.kts` (`buildRustBackend` task, sourceSets),
-  `proguard-rules.pro` keeps `com.spotiflac.backend.**`, Kotlin `SelectedCoreBackend.kt` /
+  `proguard-rules.pro` keeps `com.sistrum.backend.**`, Kotlin `SelectedCoreBackend.kt` /
   `NativeDataJobs.kt` import the generated bindings.
 
 **Biggest product coupling**
@@ -1054,7 +1072,7 @@ bindgen     -> uniffi only (CLI)
 **Platforms / assets**
 - Platforms present: `android/`, `ios/` only (no macos/windows/linux/web).
 - `third_party/`: keep `audio_service`, `audioplayers_android`; remove `discord/` (35 MB `.gpg`)
-  and `spotiflac_discord/` (**pubspec path dep** → must edit `pubspec.yaml` + regenerate lock).
+  and `sistrum_discord/` (**pubspec path dep** → must edit `pubspec.yaml` + regenerate lock).
 - Online dev tooling/docs to drop: `apps.json`, `NETWORK_STORAGE.md`, `crowdin.yml`, `cliff.toml`,
   `renovate.json`, `docs/artist_concerts.md`, iOS/Discord/SMB scripts.
 - No `.github/` workflows in the working tree.
@@ -1073,8 +1091,8 @@ bindgen     -> uniffi only (CLI)
 
 ### Vision refinements (user, 2026-10-16)
 
-- **V1 — Mornye theme only.** Remove all other themes and the theme picker; Mornye is the sole
-  look. Phase 8 retains light/dark, Mornye accents, glass and local font controls; the
+- **V1 — Sistrum theme only.** Remove all other themes and the theme picker; Sistrum is the sole
+  look. Phase 8 retains light/dark, Sistrum accents, glass and local font controls; the
   alternate Material theme and picker are removed.
 - **V2 — Home feed → local.** Rewire the home feed provider off Apple Music to local content.
   Implemented (2026-10-18): original large editorial cards for latest locally available
@@ -1082,7 +1100,7 @@ bindgen     -> uniffi only (CLI)
   and circular Artists shelves. Recent access/history remains beneath the feed. Each database
   shelf reads at most 12 entries and refreshes with the library index; playlist cards use saved
   collection summaries. All artwork and destinations are local. Search stays a separate mode.
-- **V3 — Reuse Mornye "online" theming for local artist / album / playlist screens**, replacing
+- **V3 — Reuse Sistrum "online" theming for local artist / album / playlist screens**, replacing
   the old local styling. Implemented by restoring the original detail composition over local
   data; artist navigation no longer opens a generic filtered album browser. Preserve local
   playback, selection, metadata, collection editing and export actions.
@@ -1101,7 +1119,7 @@ bindgen     -> uniffi only (CLI)
   Music/Library settings).
 
 Impact on phases: Phase 5 keeps a **localized** home feed (not dropped); adds a **theming
-consolidation** workstream (Mornye-only + style port); Phase 8 settings purge = all online settings.
+consolidation** workstream (Sistrum-only + style port); Phase 8 settings purge = all online settings.
 
 ---
 
@@ -1118,13 +1136,13 @@ Verify: `flutter build apk` still succeeds; no Dart touched.
 Note: do **not** touch `rust_backend/vendor/` — it is referenced by `[patch.crates-io]`.
 
 ### Phase 2 — Discord removal (Dart + pubspec + Gradle + manifest)
-Remove: `third_party/spotiflac_discord/`; `lib/services/discord_presence_service.dart`,
+Remove: `third_party/sistrum_discord/`; `lib/services/discord_presence_service.dart`,
 `discord_artwork_resolver.dart`; `lib/widgets/discord_presence_settings.dart`; Discord refs in
 `main_shell.dart`, `music_player_runtime.dart`, `settings/playback_settings_page.dart`;
 `models/settings.dart` `discordRichPresenceEnabled`; l10n `discordPresence*` keys (all 20 arb);
 `flutter_secure_storage` only if no other user (verify `secure_storage_options.dart`);
 `integration_test/discord_sdk_test.dart`, `test/discord_*_test.dart`.
-Edit: `pubspec.yaml` (drop `spotiflac_discord`), `pubspec.lock` (regen), `android/app/build.gradle.kts`
+Edit: `pubspec.yaml` (drop `sistrum_discord`), `pubspec.lock` (regen), `android/app/build.gradle.kts`
 (Discord AAR block, `discordSdkEnabled`, `pickFirsts`), `AndroidManifest.xml` (Discord
 `tools:node="remove"`), `scripts/build_android.sh` + `test_build_android.py` + `check_backend_apk.py`.
 
@@ -1162,7 +1180,7 @@ Remove settings pages: `extensions_page`, `extension_detail_page`,
 `lyrics_provider_priority_page`, `metadata_provider_priority_page`, `provider_priority_page`,
 `provider_priority_list_page`, `profile_settings_page`; `models/extension.dart`, `artist_concert.dart`.
 Edit: `home_tab*.dart`, `album_screen`, `artist_screen`, `playlist_screen`,
-`library_tracks_folder_screen`, `mornye_library_screen`, `track_metadata_edit_sheet`,
+`library_tracks_folder_screen`, `sistrum_library_screen`, `track_metadata_edit_sheet`,
 `track_metadata_lyrics`, `queue_tab*`, `main_shell.dart`, `settings_search_catalog.dart`,
 `settings_tab.dart`, `settings/lyrics_settings_page`, `settings/metadata_settings_page`,
 `settings/cache_management_page.dart`.
@@ -1186,7 +1204,7 @@ Suggested sub-order (mirrors the crate graph):
 1. **Prune `core` online-support modules**: `metadata::{deezer,musicbrainz,share,reenrich,catalog}`,
    `resolver`, `downloads`, `app_version`, lyrics `{config,payloads,lrclib,errors}`; remove their
    `pub mod` lines in `core/src/lib.rs` and fix internal refs (`metadata/reenrich.rs:5`).
-   Verify: `cargo test -p spotiflac-core`.
+   Verify: `cargo test -p sistrum-core`.
 2. **Re-home local `extensions::backend` pieces** (library scan + tags) into `core` or a new
    `local` module, decoupled from `ExtensionEnvironment`/`NetworkService`.
 3. **Reduce `mobile` to local-only**: drop `manager.rs`, `extensions.rs`, `repository.rs`,
@@ -1196,7 +1214,7 @@ Suggested sub-order (mirrors the crate graph):
 5. **Update build config**: `rust_backend/Cargo.toml` (members, workspace deps, patch), `Cargo.lock`,
    `scripts/build_rust_backend.sh` (drop ios), `scripts/check_rust_backend.sh`,
    `scripts/check_android_statx.sh`, `android/app/build.gradle.kts` (sourceSets/build task),
-   Kotlin `SelectedCoreBackend.kt` / `NativeDataJobs.kt` / `CoreBackend.kt`, `SpotiFLACBackend.podspec`,
+   Kotlin `SelectedCoreBackend.kt` / `NativeDataJobs.kt` / `CoreBackend.kt`, `SistrumBackend.podspec`,
    android tests for extensions/downloads (remove).
 Verify: `cargo test`, `scripts/build_rust_backend.sh android`, full `flutter build apk`, run app.
 

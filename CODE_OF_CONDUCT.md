@@ -60,7 +60,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-**[zarzet](https://github.com/zarzet)**.
+**[project issues](https://github.com/AMWolfstein/Private/issues)** (a public channel; do not include private incident details).
 
 All complaints will be reviewed and investigated promptly and fairly.
 

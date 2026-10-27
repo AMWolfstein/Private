@@ -1,5 +1,7 @@
 # API compatibility audit — transport chunk
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Source: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`. Role: `.claude/agents/api-compat-auditor.md`. Independent current-source assessment; old findings not consulted. Audio-engine methods excluded.
 
 ## Read ledger
@@ -11,9 +13,9 @@ Source: `d5d5a02ecdad86dca50a4448cf7810b7eec43ad9`. Role: `.claude/agents/api-co
 | lib/services/activity_attachment.dart | 1–32 |
 | lib/services/native_cache_maintenance.dart | 1–29 |
 | lib/services/native_log_source.dart | 1–30 |
-| android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt | 57–118,126–219,332–461,486–495,558–608,666–889,902–1345; non-engine handlers |
-| android/app/src/rust/kotlin/com/zarz/spotiflac/NativeDataJobs.kt | 1–108 |
-| android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt | 1–365; non-engine dispatch, explicit endpoint expansion |
+| android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt | 57–118,126–219,332–461,486–495,558–608,666–889,902–1345; non-engine handlers |
+| android/app/src/rust/kotlin/com/amwolfstein/sistrum/NativeDataJobs.kt | 1–108 |
+| android/app/src/rust/kotlin/com/amwolfstein/sistrum/SelectedCoreBackend.kt | 1–365; non-engine dispatch, explicit endpoint expansion |
 | rust_backend/crates/mobile/src/lib.rs | 1–20 |
 | rust_backend/crates/mobile/src/data_jobs.rs | 1–73,103–184 |
 | rust_backend/crates/mobile/src/cancellation.rs | 1–79 |

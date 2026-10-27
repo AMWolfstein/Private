@@ -1,5 +1,7 @@
 # Whole-project audit plan and path ledger
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 2026-10-21: workflow maintenance only. Application review units below are NOT RUN.
 Current anchor: 4faf09ba (pre-maintenance checkpoint); refresh baseline to actual source
 revision when starting each unit. Source after the upstream ports is authoritative.
@@ -32,7 +34,7 @@ unit's own files are unchanged. Do not use a global reviewed SHA to close unknow
 | METADATA-02 | P2 data-integrity + bug | metadata resolver unread body, Rust parse_lyrics parity, sidecar lookup and artwork cache | Unicode/timestamps, malformed/truncated/large input, cache invalidation and missing artwork fallback; bounded queries/read sizes | not reviewed |
 | TEST-01 | P2 test-auditor | test/, integration_test/, Android host/device tests, Rust tests, scripts/test_* | tests exercise new risks, meaningful assertions, bounded async waits, isolated fixtures; skips and zero-test runs explicit; optional targeted fuzz/Miri/sanitizer availability recorded | not reviewed |
 | RECONCILE-01 | P2 coordinator | every stale/partial subsystem in coverage.md not closed by preceding units | reviewed-path manifest vs current inventory, source changes/dependents since baseline, chunk and excluded-path totals; create further bounded chunks as needed | not reviewed |
-| FINAL-01 | final coordinator + relevant specialist only | cross-subsystem flow after all units/chunks complete | coverage reconciled, offline/Mornye exclusions preserved, unresolved findings/device limitations disclosed, no unexpected music writes; no blanket regression-free claim | not reviewed |
+| FINAL-01 | final coordinator + relevant specialist only | cross-subsystem flow after all units/chunks complete | coverage reconciled, offline/Sistrum exclusions preserved, unresolved findings/device limitations disclosed, no unexpected music writes; no blanket regression-free claim | not reviewed |
 
 ## Per-chunk evidence record (copy for each execution)
 

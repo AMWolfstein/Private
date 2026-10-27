@@ -1,5 +1,7 @@
 ## Open
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ### BUG-105 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/utils/lyrics_metadata_helper.dart:56`, :71-79
 - Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
@@ -25,7 +27,7 @@
   - DEAD-003: delete `cover_art_utils_test.dart`.
   - DEAD-004 and DEAD-632: trim `downloaded_embedded_cover_resolver_test.dart` and `cached_cover_decode_test.dart`.
   - DEAD-202: trim `platform_bridge_metadata_test.dart:157-167`.
-  - DEAD-203 and DEAD-304: trim `integration_test/lyrics_file_access_test.dart`, plus the `getLyricsLRCWithSource` stubs in `mornye_library_actions_test.dart:50` and `library_search_results_test.dart:54`.
+  - DEAD-203 and DEAD-304: trim `integration_test/lyrics_file_access_test.dart`, plus the `getLyricsLRCWithSource` stubs in `sistrum_library_actions_test.dart:50` and `library_search_results_test.dart:54`.
   - DEAD-207: delete `ios_library_folder_sheet_test.dart`, `ios_container_paths_test.dart` and `file_access_ios_test.dart`, and trim the bookmark cases in `platform_bridge_metadata_test.dart:181-193` and `installation_restore_test.dart:98-120`.
   - DEAD-401, DEAD-402 and DEAD-403: trim these. Keep the "old JSON still loads" and "key absent" assertions.
     - `models_and_utils_test.dart:545-615`
@@ -39,21 +41,21 @@
   - DEAD-504: delete `album_description_test.dart`.
   - UX-104: delete `track_history_snapshot_test.dart`, `track_collection_action_policy_test.dart` and `track_list_tile_selection_test.dart`. Trim `library_tracks_folder_data_test.dart` (`historyRequest`) and `maintainability_contracts_test.dart:91-94`.
   - DEAD-601: delete `expressive_seek_track_test.dart`. Trim `now_playing_lyrics_transition_test.dart:27,274-275`, and rework `player_widget_ownership_test.dart:80` (it builds `MaterialPlayerLayout`).
-    - A reviewer flagged `playback_seek_slider.dart:124` as a live use. It is not: the Mornye branch at `:83` always returns before it.
+    - A reviewer flagged `playback_seek_slider.dart:124` as a live use. It is not: the Sistrum branch at `:83` always returns before it.
   - DEAD-602: delete `smoothed_progress_test.dart`.
   - DEAD-603: trim `app_snack_bar_test.dart` and `shell_navigation_service_test.dart:162`.
-  - DEAD-631: trim `detail_route_loading_test.dart` and `mornye_loading_and_chrome_test.dart`.
+  - DEAD-631: trim `detail_route_loading_test.dart` and `sistrum_loading_and_chrome_test.dart`.
   - DEAD-633: delete `material_expressive_test.dart`, and trim `loading_motion_preferences_test.dart`, `adaptive_overlay_test.dart` and `support/material_test_theme.dart`.
 - Fix: apply the list together with each DEAD batch. The lists come from grep, so read each case before deleting it. Keep the tests that assert removed features stay removed (e.g. `tutorial_copy_test.dart:20-25`, `collections_upgrade_test.dart`).
 
-<!-- Mornye parity pass (2026-10-20): upstream v5.1.1/latest Mornye path of the online
+<!-- Sistrum parity pass (2026-10-20): upstream v5.1.1/latest Sistrum path of the online
 artist/album/playlist screens compared with the local screens. Upstream refs are
-`spotiflacapp/SpotiFLAC-Mobile`; see `UPSTREAM.md`. -->
+`%73%70%6F%74%69%66%6C%61%63app/%53%70%6F%74%69%46%4C%41%43-Mobile`; see `UPSTREAM.md`. -->
 
-<!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Mornye Home (explore feed) compared
+<!-- Home parity pass (2026-10-20): upstream v5.1.1/latest Sistrum Home (explore feed) compared
 with the local Apple Music Home. Overlaps: PERF-405, PERF-603. -->
 
-<!-- Now Playing parity pass (2026-10-20): ours vs upstream v5.1.1/latest Mornye player.
+<!-- Now Playing parity pass (2026-10-20): ours vs upstream v5.1.1/latest Sistrum player.
 Ours equals v5.1.1 apart from intentional deltas (Immersive view, no motion artwork,
 external player or download lookups). Upstream-latest items are in `UPSTREAM.md`. -->
 
@@ -71,7 +73,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UI-419 [P3] [confidence: low] [NEEDS VERIFICATION]
 - T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
-- Location: `lib/widgets/mornye_player_layout.dart` (compact cover rect, `_PlayerHeaderLayout.performLayout`)
+- Location: `lib/widgets/sistrum_player_layout.dart` (compact cover rect, `_PlayerHeaderLayout.performLayout`)
 - Scenario: RTL on the lyrics/queue page → the compact header uses physical left/right, so it is not a mirror of the expanded header and the ellipsis no longer aligns with the timeline end.
 - Fix: resolve left/right from `Directionality`; ~10 lines.
 
@@ -95,8 +97,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-234 [P3] [confidence: high] [VALIDATED]
 - T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
-- Location: `lib/widgets/mornye_level_slider.dart` (`_update`, `_LevelPainter`, thumb centre)
-- Scenario: RTL → the horizontal EQ gain slider does not mirror, unlike `MornyeSlider` and `AppSwitch`.
+- Location: `lib/widgets/sistrum_level_slider.dart` (`_update`, `_LevelPainter`, thumb centre)
+- Scenario: RTL → the horizontal EQ gain slider does not mirror, unlike `SistrumSlider` and `AppSwitch`.
 - Owner decision (2026-10-23): the gain slider mirrors in RTL like every other slider.
 - Fix: use `1 - fraction` when horizontal and RTL, in `_update`, the painter and the thumb centre; ~8 lines. The vertical EQ faders are unchanged.
 
@@ -134,7 +136,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: warn or fail release tasks without a keystore unless an opt-in property is set; ~5 lines. (Also reported by dependency-auditor as DEP-003; merged.)
 
 ### DEP-001 [P3] [confidence: high] [RESOLVED]
-- Resolution: `3352354` (T13). Removed unused direct timezone and synchronized declarations (both remain required transitively), plus html and open_filex with DC-DEAD-004/005. Normal flutter pub get removed html/csslib/open_filex without surviving-version churn. Rejected the cupertino_icons-removal premise: live CupertinoIcons references and mornye_icons fontPackage/fontFamily require its bundled font despite no direct package import.
+- Resolution: `3352354` (T13). Removed unused direct timezone and synchronized declarations (both remain required transitively), plus html and open_filex with DC-DEAD-004/005. Normal flutter pub get removed html/csslib/open_filex without surviving-version churn. Rejected the cupertino_icons-removal premise: live CupertinoIcons references and sistrum_icons fontPackage/fontFamily require its bundled font despite no direct package import.
 - Location: `pubspec.yaml:17` (`timezone`), :40 (`cupertino_icons`), :69 (`synchronized`)
 - Scenario: zero `package:` imports in lib/test/integration_test; `cupertino_icons` bundles an unused font.
 - Fix: remove the three lines, `flutter pub get`.
@@ -165,7 +167,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-106 [P3] [confidence: low] [RESOLVED]
 - Resolution: `601fa81` (T12). Compact Play/Shuffle pills become icon-only at text scale >=1.3 while retaining spoken names and 48dp targets; local_detail_design_test.dart and album_play_actions_test.dart cover large text.
-- Location: `lib/widgets/album_detail_header.dart:788-820` (`_MornyeHeaderButton`, compact)
+- Location: `lib/widgets/album_detail_header.dart:788-820` (`_SistrumHeaderButton`, compact)
 - Scenario: 360dp width at 1.5–2× font scale → Play/Shuffle labels ellipsize (`maxLines: 1`). Arithmetic only.
 - Fix: icon-only with semantics label above ~1.3× text scale; ~10 lines.
 
@@ -254,10 +256,10 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `_autoAdvance = !disableAnimations && !MediaQuery.accessibleNavigationOf(context)`; ~2 lines.
 
 ### UX-230 [P3] [confidence: high] [RESOLVED]
-- Resolution: `601fa81` (T12). HeaderCircleButton defaults to kMornyeHeaderControlSize (48dp), including tonal controls; t12_accessibility_test.dart covers the default.
+- Resolution: `601fa81` (T12). HeaderCircleButton defaults to kSistrumHeaderControlSize (48dp), including tonal controls; t12_accessibility_test.dart covers the default.
 - Location: `lib/widgets/album_detail_header.dart` (`HeaderCircleButton` defaults `buttonSize ?? 44`)
-- Scenario: the default back circle on album, playlist, artist and `AppSliverHeader` pages draws 44dp, while AGENTS.md says header controls are 48dp (`kMornyeHeaderControlSize`); the glass radius already assumes 48.
-- Fix: default to `kMornyeHeaderControlSize`; 3 lines (update header size tests).
+- Scenario: the default back circle on album, playlist, artist and `AppSliverHeader` pages draws 44dp, while AGENTS.md says header controls are 48dp (`kSistrumHeaderControlSize`); the glass radius already assumes 48.
+- Fix: default to `kSistrumHeaderControlSize`; 3 lines (update header size tests).
 
 ### UX-231 [P3] [confidence: medium] [RESOLVED]
 - Resolution: `601fa81` (T12). The metadata sheet announces Saving as a live region, exposes Advanced button/expanded state, and disables section motion under reduced motion.
@@ -278,14 +280,14 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: `minimumSize: Size(48, 48)` on both `CupertinoButton`s and a 48dp switch hit box; ~3 lines.
 
 ### UX-236 [P3] [confidence: low] [RESOLVED]
-- Resolution: `601fa81` (T12). Real Mornye theme colours are checked against WCAG AA (>=4.5:1) for both brightness modes in t12_accessibility_test.dart; selected light chip text uses onSurface and ExplicitBadge has an opaque fill. Host assertions, not a device/display certification.
+- Resolution: `601fa81` (T12). Real Sistrum theme colours are checked against WCAG AA (>=4.5:1) for both brightness modes in t12_accessibility_test.dart; selected light chip text uses onSurface and ExplicitBadge has an opaque fill. Host assertions, not a device/display certification.
 - Location: `lib/widgets/app_choice_chip.dart` (selected state), `lib/widgets/audio_quality_badges.dart` (`ExplicitBadge`)
-- Scenario: light Mornye, red accent → selected chip text about 4.4:1 and the light explicit badge about 3.9:1 (hand-computed).
+- Scenario: light Sistrum, red accent → selected chip text about 4.4:1 and the light explicit badge about 3.9:1 (hand-computed).
 - Fix: measure first; if below AA use `onSurface` for the selected label and an opaque badge fill.
 
 ### UX-239 [P2] [confidence: high] [RESOLVED]
 - Resolution: `601fa81` (T12). Enabled queue rows expose a Remove CustomSemanticsAction calling the same removal as swiping; disabled rows do not expose it (player_queue_dismissible_test.dart).
-- Location: `lib/widgets/mornye_player_queue.dart` (queue rows), `lib/widgets/player_queue_dismissible.dart`
+- Location: `lib/widgets/sistrum_player_queue.dart` (queue rows), `lib/widgets/player_queue_dismissible.dart`
 - Scenario: TalkBack or switch access in Up Next → removing a queued song is swipe-only; `Dismissible` exposes no semantic action and the row has no remove control.
 - Fix: a `CustomSemanticsAction` "Remove" calling the same removal; ~8 lines.
 
@@ -398,14 +400,14 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: render `ErrorCard` with retry (`ref.invalidate`) on `hasError`; ~10 lines.
 
 ### UI-409 [P3] [confidence: high] [RESOLVED]
-- Resolution: `f0d2318` (T11). `mornye_library_screen.dart` cancels the debounce and clears the controller, query and rows when search is hidden.
-- Location: `lib/screens/mornye_library_screen.dart` (search `IconButton` toggle)
+- Resolution: `f0d2318` (T11). `sistrum_library_screen.dart` cancels the debounce and clears the controller, query and rows when search is hidden.
+- Location: `lib/screens/sistrum_library_screen.dart` (search `IconButton` toggle)
 - Scenario: type a query, then tap the search icon to hide the field → `_query` stays set; the overview keeps showing search results and Albums/Artists stay filtered with no visible field or clear control.
 - Fix: clear `_search`/`_query` when hiding, or keep the field while a query is set; ~4 lines.
 
 ### UI-410 [P3] [confidence: medium] [RESOLVED]
-- Resolution: `f0d2318` (T11). Failed pages wait for Retry: the screen skips auto-load while `loadMoreError` is set, refresh no longer rethrows, and `library_browse_provider.dart` retains the loaded rows with the error (`mornye_library_browse_test.dart`).
-- Location: `lib/screens/mornye_library_screen.dart` (scroll listener, Retry, `onRefresh`), `lib/providers/library_browse_provider.dart` (`loadMore`)
+- Resolution: `f0d2318` (T11). Failed pages wait for Retry: the screen skips auto-load while `loadMoreError` is set, refresh no longer rethrows, and `library_browse_provider.dart` retains the loaded rows with the error (`sistrum_library_browse_test.dart`).
+- Location: `lib/screens/sistrum_library_screen.dart` (scroll listener, Retry, `onRefresh`), `lib/providers/library_browse_provider.dart` (`loadMore`)
 - Scenario: `loadMore()` fails on Albums/Artists → every scroll tick near the end retries it; Retry invalidates the provider and drops every loaded page; pull-to-refresh rethrows from `onRefresh`.
 - Fix: skip auto load-more while `loadMoreError` is set, make Retry call `loadMore()`, catch in `onRefresh`; ~8 lines. Needs a forced failure to confirm.
 
@@ -428,8 +430,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: try/catch with the page's existing `snackbarError(friendlyError)`; add the `mounted` check; ~15 lines.
 
 ### UI-415 [P3] [confidence: high] [RESOLVED]
-- Resolution: `f0d2318` (T11). `mornye_performance_hud.dart` stores the clamped drag position, so the HUD stays inside the screen (`mornye_performance_hud_test.dart`).
-- Location: `lib/widgets/mornye_performance_hud.dart` (`_move` vs `_clamped`)
+- Resolution: `f0d2318` (T11). `sistrum_performance_hud.dart` stores the clamped drag position, so the HUD stays inside the screen (`sistrum_performance_hud_test.dart`).
+- Location: `lib/widgets/sistrum_performance_hud.dart` (`_move` vs `_clamped`)
 - Scenario: drag the developer HUD past an edge → the stored position is unclamped, so it seems stuck until the overshoot is undone; after rotation it can sit far off-screen.
 - Fix: store `_clamped(next)` in `_move`; 1 line.
 
@@ -501,7 +503,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### PERF-502 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `2063adf` (T10). `UnreadableTagsException` distinguishes a readable payload with unusable tags from access/seek failures. Host policy regressions assert zero whole-document copy calls for typed tag failures; one bounded descriptor retry remains for provider materialization, and access/seek failures retain the temporary-copy fallback. No 200-file real-provider or device benchmark was run.
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:253-270` (`acceptRead`), `SafMetadataReadPolicy.kt:22-28`
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt:253-270` (`acceptRead`), `SafMetadataReadPolicy.kt:22-28`
 - Scenario: unreadable or missing tags (`metadataFromFilename: true`) make `acceptRead` throw `IOException`. The fallback then:
   - copies the whole file to temp;
   - reads it again;
@@ -518,7 +520,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### PERF-504 [P3] [confidence: high] [RESOLVED]
 - Resolution: `2063adf` (T10). Unchanged CUE sheets stream their FILE line directly instead of copying the whole sheet; cached child listing entries supply sibling names/timestamps. The parser has no 64 KiB prefix truncation and stops lazily at FILE. Full-scan ownership now requires usable CUE rows (FA-DATA-011), leaving standalone audio available otherwise. Host regressions and instrumentation source compilation passed; no provider/device execution was run.
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1555-1575,1508-1509,1098-1099`
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:1555-1575,1508-1509,1098-1099`
 - Scenario:
   - Every incremental scan copies each unchanged `.cue` to temp, one at a time, just to re-resolve its audio sibling.
   - Changed CUEs query `audioDoc.name`/`lastModified()` again, though the listing already holds them.
@@ -591,8 +593,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Fix: start it in parallel and await it before `runApp`; ~3 lines. Estimated saving 5–20 ms; check with `--trace-startup`.
 
 ### PERF-605 [P2] [confidence: medium] [RESOLVED]
-- Resolution: `fcacc49` (T9). The page ground is keyed by width and built at a monotonic height, so artist-header collapse frames reuse it; a failed build is remembered per input instead of re-decoding every frame. `MornyeGroundBuilder.debugBuildCount` regression covers collapse, widening and failure retry.
-- Location: `lib/widgets/mornye_artist_header.dart` (`MornyeGroundAnchor` around the collapsing artwork), `lib/widgets/mornye_artwork_glass.dart` (`_RenderGroundAnchor.performLayout` → `_changed` → `_schedule`; `_MornyePageGroundState._build` key includes `size`)
+- Resolution: `fcacc49` (T9). The page ground is keyed by width and built at a monotonic height, so artist-header collapse frames reuse it; a failed build is remembered per input instead of re-decoding every frame. `SistrumGroundBuilder.debugBuildCount` regression covers collapse, widening and failure retry.
+- Location: `lib/widgets/sistrum_artist_header.dart` (`SistrumGroundAnchor` around the collapsing artwork), `lib/widgets/sistrum_artwork_glass.dart` (`_RenderGroundAnchor.performLayout` → `_changed` → `_schedule`; `_SistrumPageGroundState._build` key includes `size`)
 - Scenario: scroll the artist page so the header collapses → the anchor's box shrinks each frame, every size change schedules a post-frame ground build, and the exact size is in the build key, so the page ground (cover decode, blur at the clarity sigma, `toImage`) is rebuilt roughly once per collapse frame; stale results are discarded by the generation check.
 - Impact: GPU/CPU work on every scroll frame of the artist header; a likely contributor to the artist-page raster p90 the owner measured (21-43 ms). Album and playlist anchors scroll with the content at a fixed size and are not affected.
 - Fix: build the ground once for the expanded size (e.g. anchor a fixed `maxExtent` box, or exclude height from the key and let the veil/controls sample it scaled); measure raster p90 before and after with the HUD.
@@ -759,8 +761,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: T7. The join compares the active operation's generation and only shares work with an operation started for the current generation; an accepted new Play bumps the generation before starting, so a Pause delayed on AutoMix cleanup cannot enqueue after it and win. Regression: "Play after Pause does not join an invalidated resume".
 
 ### KT-002 [P3] [confidence: low] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/HiResPlayback.kt, UsbDirectPlayback.kt, UsbPcmSource.kt, NativeAudio.kt
-- Scenario: `libspotiflac_audio` fails to load → `UnsatisfiedLinkError`/`ExceptionInInitializerError` (an `Error`, not `Exception`) escapes the worker-thread catch and crashes the process instead of falling back.
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/HiResPlayback.kt, UsbDirectPlayback.kt, UsbPcmSource.kt, NativeAudio.kt
+- Scenario: `libsistrum_audio` fails to load → `UnsatisfiedLinkError`/`ExceptionInInitializerError` (an `Error`, not `Exception`) escapes the worker-thread catch and crashes the process instead of falling back.
 - Resolution: T7. Verified by trace: the static `System.loadLibrary` failure (and a missing JNI symbol) reached only `Exception` handlers. New `NativePlaybackFailure.kt` converts `LinkageError` alone into an `IllegalStateException` that preserves the cause, leaving ordinary exceptions and fatal VM errors untouched; the existing prepare/command/pump boundaries in `HiResPlayback`, `UsbDirectPlayback` and `UsbBitPerfectPlugin` now contain it, `UsbPcmSource` releases partially initialised JNI state, and WavPack DSD construction cleans up its decoder handle before propagating. No external-player fallback was added. Regressions: `NativePlaybackFailureTest` (4 host tests).
 
 ### SEC-101 [P3] [confidence: medium] [RESOLVED]
@@ -955,7 +957,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `4dcb1f9b` (T3). MP3 edits never re-encode audio. Preservation requests refuse FFmpeg fallback after native refusal, retaining unsupported frames and the original audio.
 
 ### DATA-306 [P2] [confidence: medium] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafIo.kt:347`, :414 (`writeUriFromPath`); Dart callers `MetadataPersistenceService.writeBack`, `ReplayGainService._updateFile`
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt:347`, :414 (`writeUriFromPath`); Dart callers `MetadataPersistenceService.writeBack`, `ReplayGainService._updateFile`
 - Scenario: SAF write-back opens the original with mode `"wt"` (truncates immediately) then streams the temp copy; IO error, full storage or process death mid-copy leaves the only copy truncated; temp is deleted in `finally`.
 - Root cause: non-atomic write-back and unconditional temp deletion.
 - Impact: rare but total loss of a music file during SAF tag edit or ReplayGain.
@@ -1146,7 +1148,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-201 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/services/platform_bridge.dart:268` (`prepareRuntimeState`), :277 (`setDownloadDirectory`), :305 (`buildFilename`), :316 (`sanitizeFilename`); `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:917`, :925; `CoreBackend.kt:13-14`
+- Location: `lib/services/platform_bridge.dart:268` (`prepareRuntimeState`), :277 (`setDownloadDirectory`), :305 (`buildFilename`), :316 (`sanitizeFilename`); `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt:917`, :925; `CoreBackend.kt:13-14`
 - Scenario: no `PlatformBridge.` callers; native branches for buildFilename/sanitizeFilename unreachable (not in `nativeBackendMethods`), others have no handler.
 - Fix: delete wrappers, branches and interface members (~40 lines). (`SettingsNotifier.setDownloadDirectory` is a different symbol — see UX-003.)
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1158,13 +1160,13 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-203 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/services/platform_bridge.dart:574, 591, 607, 658` (`getLyricsLRC`, `getLyricsLRCWithSource`, `embedLyricsToFile`, `fetchAndSaveLyrics`); `android/app/src/rust/kotlin/com/zarz/spotiflac/SelectedCoreBackend.kt:34-54`, :390-406
+- Location: `lib/services/platform_bridge.dart:574, 591, 607, 658` (`getLyricsLRC`, `getLyricsLRCWithSource`, `embedLyricsToFile`, `fetchAndSaveLyrics`); `android/app/src/rust/kotlin/com/amwolfstein/sistrum/SelectedCoreBackend.kt:34-54`, :390-406
 - Scenario: Embed lyrics and fetch-and-save were removed (AGENTS.md) but remain wired end to end; no `lib/` callers.
 - Fix: delete wrappers, Kotlin branches and plumbing; update tests.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-206 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/services/platform_bridge.dart:223, 333-339`; `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:965-970`; `android/app/src/main/kotlin/com/zarz/spotiflac/SetupFolderPickerStore.kt`
+- Location: `lib/services/platform_bridge.dart:223, 333-339`; `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt:965-970`; `android/app/src/main/kotlin/com/amwolfstein/sistrum/SetupFolderPickerStore.kt`
 - Scenario: setup folder step removed; native still persists `for_setup` picks and emits `setupFolderSelectionChanged`; nothing reads it.
 - Fix: remove Dart members, handlers, `for_setup` branch and the store (~60 lines).
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1254,8 +1256,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-601 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/widgets/material_player_layout.dart`, `lib/widgets/player_queue_sheet.dart`, `lib/widgets/expressive_seek_track.dart`, and `!isMornye` branches in `now_playing_screen.dart`, `player_playback_controls.dart`, `mini_player.dart`, `player_details_sheet.dart`, `player_lyrics.dart`
-- Scenario: `MornyeThemeWrapper` always builds Mornye (`mornye_theme_wrapper.dart:19,27`), so these are reachable only from dead `!isMornye` paths.
+- Location: `lib/widgets/material_player_layout.dart`, `lib/widgets/player_queue_sheet.dart`, `lib/widgets/expressive_seek_track.dart`, and `!isSistrum` branches in `now_playing_screen.dart`, `player_playback_controls.dart`, `mini_player.dart`, `player_details_sheet.dart`, `player_lyrics.dart`
+- Scenario: `SistrumThemeWrapper` always builds Sistrum (`sistrum_theme_wrapper.dart:19,27`), so these are reachable only from dead `!isSistrum` paths.
 - Fix: delete (never restore Material Expressive); update `test/expressive_seek_track_test.dart`, `test/now_playing_lyrics_transition_test.dart`. `PlayerPlaybackModeButton` goes with the queue sheet. Final dead-code sweep.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
@@ -1273,8 +1275,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### DEAD-611 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/screens/queue_tab.dart:980-988`, `queue_tab_filter_widgets.dart:64-69,261-309`, `queue_tab_collection_items.dart:199-213`, `queue_tab_widgets.dart` (`_FilterChip`)
-- Scenario: in Mornye, overview `QueueTab` always returns `MornyeLibraryScreen` → filter-mode PageView, `_FilterChip`, track grid/pinch resize and `collectionEntries` rows are dead; Songs rows wrap `LibraryPlaylistDragSource` with no `DragTarget` on screen (inert long-press drag).
-- Fix: remove after checking widget tests that build a non-Mornye overview.
+- Scenario: in Sistrum, overview `QueueTab` always returns `SistrumLibraryScreen` → filter-mode PageView, `_FilterChip`, track grid/pinch resize and `collectionEntries` rows are dead; Songs rows wrap `LibraryPlaylistDragSource` with no `DragTarget` on screen (inert long-press drag).
+- Fix: remove after checking widget tests that build a non-Sistrum overview.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-631 [P3] [confidence: high] [RESOLVED]
@@ -1290,8 +1292,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-633 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/theme/material_expressive.dart:8` (`materialExpressiveEnabled`, `MaterialExpressiveScope`) and branches in `expressive_button`, `expressive_icon_button`, `expressive_navigation_bar`, `app_switch`, `app_loading_indicator`, `app_content_card`, `app_choice_chip`, `settings_group`; `ExpressiveNavigationBar` only at `main_shell.dart:773` (non-Mornye arm)
-- Scenario: `materialExpressiveEnabled` is `!isMornye && …` and Mornye is always installed → expressive branches never run; `material_3_expressive`/`material_ui` packages kept for dead code.
+- Location: `lib/theme/material_expressive.dart:8` (`materialExpressiveEnabled`, `MaterialExpressiveScope`) and branches in `expressive_button`, `expressive_icon_button`, `expressive_navigation_bar`, `app_switch`, `app_loading_indicator`, `app_content_card`, `app_choice_chip`, `settings_group`; `ExpressiveNavigationBar` only at `main_shell.dart:773` (non-Sistrum arm)
+- Scenario: `materialExpressiveEnabled` is `!isSistrum && …` and Sistrum is always installed → expressive branches never run; `material_3_expressive`/`material_ui` packages kept for dead code.
 - Fix: collapse callers to the non-expressive branch, delete the scope/helper/nav bar, then drop the packages if unused (cleanup, not restoration). Pair with DEAD-601.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
@@ -1302,9 +1304,9 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-622 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Mornye destinations; non-Mornye `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isMornye) const SettingsTab()` :542)
-- Scenario: `isMornye` is always true in production → these branches never run.
-- Fix: collapse the shell to the Mornye path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
+- Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Sistrum destinations; non-Sistrum `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isSistrum) const SettingsTab()` :542)
+- Scenario: `isSistrum` is always true in production → these branches never run.
+- Fix: collapse the shell to the Sistrum path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### TEST-201 [P2] [confidence: medium] [RESOLVED]
@@ -1354,7 +1356,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### DEAD-703 [P3] [confidence: high] [RESOLVED]
 - Location: `pubspec.yaml:123-126` (`Google Sans Flex` → `assets/fonts/GoogleSansFlex.ttf`, 277 KB)
-- Scenario: the font of the removed Material Expressive theme is still bundled. Mornye uses `Inter`, and only the test themes name this family.
+- Scenario: the font of the removed Material Expressive theme is still bundled. Sistrum uses `Inter`, and only the test themes name this family.
 - Fix: remove the pubspec font block and the TTF, and update `test/support/material_test_theme.dart`.
 - Repo-only cleanup (not bundled into the app): `assets/readme/*` (1.7 MB, unreferenced).
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1386,7 +1388,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### DEAD-803 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/providers/theme_provider.dart:14-17,81-84,113-131` (`setStyle`, `setUseDynamicColor`, `setSeedColor`, `setUseAmoled`), `lib/models/theme_settings.dart` (`useDynamicColor`, `seedColorValue`, `useAmoled`, `AppThemeStyle`), `lib/providers/playback_notification_provider.dart:22-24`
-- Scenario: these are multi-theme leftovers. The setters are never called (`setUseAmoled` only in a test), the fields are never read, and `AppThemeStyle` has the single value `mornye`, so the check is always true.
+- Scenario: these are multi-theme leftovers. The setters are never called (`setUseAmoled` only in a test), the fields are never read, and `AppThemeStyle` has the single value `sistrum`, so the check is always true.
 - Fix: remove them (~80 lines) but keep parsing the old keys for imports. Update `models_and_utils_test.dart:649-679` and `appearance_settings_test.dart:412`.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Old JSON/preference keys are accepted and ignored; retained theme/player/font fields round-trip. No persisted schema migration.
 
@@ -1400,7 +1402,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
   - `csv_import_service.dart`: `pickAndParseCsv`
   - `m3u_playlist_service.dart`: `writeExportFile`
   - `library_database.dart`: `albumKeyFor`, `getCoverPaths`
-  - `mornye_glass_warmup.dart`: `isReady`
+  - `sistrum_glass_warmup.dart`: `isReady`
   - `notification_service.dart`: `embeddingMetadataLabel`
   - `platform_bridge.dart`: `isForegroundServiceStartNotAllowed` (+ its code constant), `notificationPercentTotal`
   - `music_player_service.dart`: `restoreMusicAudioSessionAfterVideo`, `setPlaybackNormalizationEnabled`, `setUsbOutputOptions`, `musicPlayerHandler`, `musicPlayer{MediaItem,PlaybackState,Queue}Events`
@@ -1451,14 +1453,14 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
   - `AppSearchField.prefixIcon`
   - `StaggeredListItem.staggerDelay`/`.duration`
   - `EditMetadataSheet.sourceTrackId` (write-only)
-  - `artworkAspectRatio` in `mornye_player_layout.dart`/`mornye_player_background.dart`
-  - `MornyeArtistHeader.listeners`/`.badge`/`logoUrl` and `MornyeArtistSurface.logoSource` (remote-artist leftovers; logo set only in tests)
+  - `artworkAspectRatio` in `sistrum_player_layout.dart`/`sistrum_player_background.dart`
+  - `SistrumArtistHeader.listeners`/`.badge`/`logoUrl` and `SistrumArtistSurface.logoSource` (remote-artist leftovers; logo set only in tests)
   - `AppTokens.coverCompact` (never read)
 - Fix: delete the parameters and branches (~150 lines), and update the tests that set the logo params. Check with `grep -rnE "\b<param>:" lib test`, then confirm which class each hit belongs to.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. artworkAspectRatio remains live in Immersive view. SettingsInfoCard.glass remains live. Only parameters with no retained caller removed.
 
 ### DEAD-854 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/widgets/album_description.dart` (`AlbumDescription`), `lib/widgets/mornye_chrome.dart` (`MornyeFilterChip`), `lib/widgets/collection_scaffold.dart:22,38,117` (`bottomInset`), `lib/app.dart:50` (`/tutorial` redirect route)
+- Location: `lib/widgets/album_description.dart` (`AlbumDescription`), `lib/widgets/sistrum_chrome.dart` (`SistrumFilterChip`), `lib/widgets/collection_scaffold.dart:22,38,117` (`bottomInset`), `lib/app.dart:50` (`/tutorial` redirect route)
 - Scenario: these are used only by tests, or never navigated to.
 - Fix: delete the widgets with their tests, decide whether to keep `NowPlayingScreen.metadataControllerFactory` as a test seam, and drop the `/tutorial` alias. The `album_description_test` deletion is shared with DEAD-504.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. NowPlayingScreen.metadataControllerFactory remains a useful test seam. /tutorial alias and orphan widgets removed.
@@ -1482,7 +1484,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-904 [P3] [confidence: high] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:118,146,405,419` (`copyContentUriToTemp`, `writeFileToSaf`, `deleteContentUri`, `mimeTypeForExt`), `CoreBackend.kt:9-10,29` (`routesApplication`, `supportsOutputDescriptors`, `scanCueForLibrary`), `SelectedCoreBackend.kt:280`, `mobile/src/tags.rs:130` (`scan_cue_file_for_library` export)
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/SafFileOps.kt:118,146,405,419` (`copyContentUriToTemp`, `writeFileToSaf`, `deleteContentUri`, `mimeTypeForExt`), `CoreBackend.kt:9-10,29` (`routesApplication`, `supportsOutputDescriptors`, `scanCueForLibrary`), `SelectedCoreBackend.kt:280`, `mobile/src/tags.rs:130` (`scan_cue_file_for_library` export)
 - Scenario: nothing references these except their declarations (`writeFileToSaf` is used only by an androidTest).
 - Fix: delete them (~90 lines). Keep the local-crate `scan_cue_file_for_library`, which `scan.rs:471` uses.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1503,19 +1505,19 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-907 [P3] [confidence: high] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:94-400` (`resolveSafFile`, `inspectSafFiles`)
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:94-400` (`resolveSafFile`, `inspectSafFiles`)
 - Scenario: these are called only by the DEAD-202 handlers (`MainActivity.kt:1083,1090`). They make up ~300 lines, the bulk of that dead feature.
 - Fix: delete them with DEAD-202. Keep `SafFileOps.findDocumentDir` while `MainActivitySafScan.kt:282` uses it.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-908 [P3] [confidence: high] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/SafFileOps.kt:26-55,167-242` (unique/collision-aware/if-absent writers, `withSafNameLock`, `PublishTrace`, filename counters), `NativeResourcePools.kt:10` (`KeyedLockPool`), `MainActivity.kt:121-123,1137-1250` (`safCreate{IfAbsent,Unique,CollisionAware}FromPath`)
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/SafFileOps.kt:26-55,167-242` (unique/collision-aware/if-absent writers, `withSafNameLock`, `PublishTrace`, filename counters), `NativeResourcePools.kt:10` (`KeyedLockPool`), `MainActivity.kt:121-123,1137-1250` (`safCreate{IfAbsent,Unique,CollisionAware}FromPath`)
 - Scenario: the only Dart callers are the DEAD-202 wrappers at `platform_bridge.dart:494,510,528`. This is ~330 lines of download-era collision handling.
 - Fix: delete them with DEAD-202 and update `NativeResourcePoolsTest`. Keep `writeFileToSafLocked`, which `safCreateFromPath` uses.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Atomic writeFileToSafLocked helper retained as directed. Removed only dead collision entry points; active metadata publication uses MainActivity SAF I/O.
 
 ### DEAD-909 [P3] [confidence: high] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/NativeReplayGainPolicy.kt`, `NativeResourcePools.kt:35,41` (`activeKeyCount`, `BoundedRegistry`), `SafDocumentIdentity.kt:8` (`safDocumentMatchKey`), `NativeMediaWorkspace.kt:30` (`withOwnedTemporaryMediaFile`)
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/NativeReplayGainPolicy.kt`, `NativeResourcePools.kt:35,41` (`activeKeyCount`, `BoundedRegistry`), `SafDocumentIdentity.kt:8` (`safDocumentMatchKey`), `NativeMediaWorkspace.kt:30` (`withOwnedTemporaryMediaFile`)
 - Scenario: each is referenced only by its own Kotlin unit test.
 - Fix: delete them with their tests (~150 lines). If `NativeReplayGainPolicy` was meant to gate ReplayGain batches, decide that first: it is never consulted. Related: KT-001, DEAD-208.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Owner decision: NativeReplayGainPolicy and tests retained for future Media3 work; only orphan NativeResourcePools/SafDocumentIdentity/temp-ownership wrapper removed. This is a disposition, not removal of the policy.
@@ -1529,7 +1531,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. The finding belonged to the unreachable Hi-Res module removed with DEAD-902; active native_audio_analysis remains.
 
 ### PLAY-001 [P2] [confidence: medium-high] [RESOLVED]
-- Location: `lib/screens/now_playing_screen.dart:474-495` (Immersive artwork inside `MornyePlayerBackground`), `lib/widgets/mornye_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`
+- Location: `lib/screens/now_playing_screen.dart:474-495` (Immersive artwork inside `SistrumPlayerBackground`), `lib/widgets/sistrum_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`
 - Scenario: Player view = Immersive, swipe left/right on the cover → nothing happens. The background is a sibling of the layout in the `Stack`, so `PlayerTrackSwipeRegion` finds no `_SwipeScope` and returns its child unwrapped; Normal view works. AGENTS.md requires track changes in both views. Upstream has the same structure but only hits it with motion artwork.
 - Fix: lift `PlayerTrackSwipe` above the `Stack`, or give the background artwork its own scope; ~20 lines plus a widget test for Immersive swipe.
 - Resolution: `3dfa8b73`; verified in PORT_PLAN batch 14. Physical-device checks remain NOT RUN where applicable.
@@ -1567,7 +1569,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 ### HOME-003 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/screens/home_tab_feed.dart:22-29`, :40-43, :58, :110; `lib/screens/home_tab.dart:145`, :296
 - Scenario: no pull-to-refresh (upstream `RefreshIndicator`/`AppRefreshIndicator`); empty library shows bare `libraryEmptyCollection` text (upstream icon + `homeEmptyTitle`/`homeEmptySubtitle`, also not telling "library off" from "no folder"); loading is a bare spinner or nothing (upstream `ShimmerLoading`/`SkeletonBox` shelves, `home_tab_explore.dart:100-160`); `_feedRetry` is unstyled.
-- Fix: refresh indicator invalidating the feed providers, Mornye empty state, skeleton shelves.
+- Fix: refresh indicator invalidating the feed providers, Sistrum empty state, skeleton shelves.
 - Resolution: `0d9dbf9c`; verified in PORT_PLAN batch 13. Physical-device checks remain NOT RUN where applicable.
 
 ### HOME-004 [P3] [confidence: high] [RESOLVED]
@@ -1590,13 +1592,13 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### HOME-007 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/screens/home_tab_helpers.dart` (alias `_recentlyAddedProvider = localHomeTracksProvider`), `lib/screens/home_tab_search_results.dart` (only `part of`), `lib/screens/home_tab.dart:25,27`, :221-268
-- Scenario: dead leftovers: two empty/alias part files, and the non-Mornye `_buildHomeIntro` branch (brand title, `homeSubtitle`, logo asset) that Mornye-only builds never reach.
+- Scenario: dead leftovers: two empty/alias part files, and the non-Sistrum `_buildHomeIntro` branch (brand title, `homeSubtitle`, logo asset) that Sistrum-only builds never reach.
 - Fix: delete both part files and the branch, then re-run the dead-code checks for `homeSubtitle` and the logo asset. Tier 3 cleanup.
 - Resolution: `0d9dbf9c`; verified in PORT_PLAN batch 13. Physical-device checks remain NOT RUN where applicable.
 
 ### HOME-008 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/screens/main_shell.dart:353-357` (`_resetHomeToMain`), `lib/screens/home_tab_feed.dart:185-191`, :97, :244
-- Scenario: re-tapping Home while scrolled down does nothing (pops only); release/track/playlist cards have no keys, so cover state is reused by index when a shelf reorders; no long-press menu on Home cards (upstream Mornye context menu). Upstream also lacks tab-reselect scroll.
+- Scenario: re-tapping Home while scrolled down does nothing (pops only); release/track/playlist cards have no keys, so cover state is reused by index when a shelf reorders; no long-press menu on Home cards (upstream Sistrum context menu). Upstream also lacks tab-reselect scroll.
 - Fix: scroll to top on reselect; `ValueKey` per card; optional long-press with the local song/album menu.
 - Resolution: `0d9dbf9c`; verified in PORT_PLAN batch 13. Physical-device checks remain NOT RUN where applicable.
 
@@ -1619,14 +1621,14 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `c2f38c86`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable. ALREADY IMPLEMENTED by U-210 in batch 6; no duplicate change.
 
 ### MORN-016 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/widgets/mornye_chrome.dart:28`, `lib/theme/mornye_theme.dart:69`, :227
+- Location: `lib/widgets/sistrum_chrome.dart:28`, `lib/theme/sistrum_theme.dart:69`, :227
 - Scenario: segmented pill height `scale(15)+36` can drop below 48dp per segment; dark accent `rgb(224,61,60)` and the red-accent `onPrimary` special case have contrast issues. Upstream latest: height clamped to ≥56, accent `rgb(255,69,58)`, luminance-only `onPrimary`.
 - Fix: port the three upstream changes; check contrast.
 - Resolution: `ce2538bf`; verified in PORT_PLAN batch 12. Physical-device checks remain NOT RUN where applicable.
 
 ### MORN-006 [P3] [confidence: high] [RESOLVED]
 - Location: `lib/screens/local_album_screen.dart:396-405` (`_buildLocalHeaderMeta`)
-- Scenario: (a) genre missing (upstream Mornye shows it first, `album_screen.dart:346-349`); (b) year from `split('-')` shows "2024/05"/"20240501" verbatim, upstream uses `(\d{4})`; (c) `'$totalMinutes min'` is hard-coded English; (d) count/duration repeat the footer.
+- Scenario: (a) genre missing (upstream Sistrum shows it first, `album_screen.dart:346-349`); (b) year from `split('-')` shows "2024/05"/"20240501" verbatim, upstream uses `(\d{4})`; (c) `'$totalMinutes min'` is hard-coded English; (d) count/duration repeat the footer.
 - Fix: genre item, year regex, localized minutes, drop the duplicate; ~15 lines.
 - Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable.
 
@@ -1663,7 +1665,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 ### MORN-012 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/screens/local_artist_screen.dart:298-338` (Popular rows), :507-512 and :470-503 (album cards), :414-446 (featured card)
 - Scenario: Popular uses stock `ListTile` (upstream: L20/R10 padding, 17/15px text, radius 4, inset hairline divider, `artist_screen_widgets.dart:664-793`); album cards lack the year · track-count subtitle, `Semantics(button)` and responsive tile size (upstream :1061-1072, :915-920, `artist_screen.dart:192-202`); no Single/EP badge; featured card can print "0 tracks" and lacks the 4/8px gaps.
-- Fix: port the upstream Mornye row/card styling. Verify on device.
+- Fix: port the upstream Sistrum row/card styling. Verify on device.
 - Resolution: `df09d3ea`; verified in PORT_PLAN batch 11. Physical-device checks remain NOT RUN where applicable. Adapted to retained local inventory: explicit one-track releases get Single badges; EP type is absent from the local browse model, so EP badges are omitted and never guessed from stored file counts.
 
 ### MORN-001 [P2] [confidence: high] [RESOLVED]
@@ -1674,7 +1676,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### MORN-002 [P2] [confidence: high] [RESOLVED]
 - Location: `lib/screens/library_tracks_folder_screen.dart:636-654` (`leading:` override)
-- Scenario: playlist/Loved show a Material black 0.4 circle with `Icons.arrow_back` instead of the Mornye glass `chevron_back` back button that albums use (`album_detail_header.dart:147-155`); breaks the AGENTS back-button rule and light mode.
+- Scenario: playlist/Loved show a Material black 0.4 circle with `Icons.arrow_back` instead of the Sistrum glass `chevron_back` back button that albums use (`album_detail_header.dart:147-155`); breaks the AGENTS back-button rule and light mode.
 - Fix: no `leading` outside selection; in selection use `HeaderCircleButton(Icons.close)` (upstream latest :665-676). Same for the M3U/rename/cover buttons at :584-634 (`HeaderCircleButton(iconSize: 20)`).
 - Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
 
@@ -1698,8 +1700,8 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### MORN-017 [P3] [confidence: medium] [RESOLVED]
 - Location: `lib/screens/local_artist_screen.dart:247-268`, :274-291; `lib/screens/local_album_screen.dart:234-260`
-- Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Mornye back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
-- Fix: skeleton + `ErrorCard` + Mornye empty page; hide empty Popular.
+- Scenario: loading/error/empty states use bare Material widgets (spinner, `TextButton` Retry, plain `Scaffold`/`AppBar`) with no Sistrum back button or surface; Popular heading shows while loading and with "No local tracks". Upstream uses skeletons, `ErrorCard` (exists in `widgets/error_card.dart`) and hides empty Popular.
+- Fix: skeleton + `ErrorCard` + Sistrum empty page; hide empty Popular.
 - Resolution: `bc983981`; verified in PORT_PLAN batch 10. Physical-device checks remain NOT RUN where applicable.
 
 - UX-205 (`c29daef`): About page contributors, translators, special thanks, links and social sections removed (owner decision); no remote avatars remain.
@@ -1707,7 +1709,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - DEAD-705 (`c29daef`): Search tab Recent list, `recent_access_provider.dart`, its app-state methods and tables removed (app-state schema v5 drops them). UX-101 (whole-library load when opening a recent album) is resolved with it.
 
 ### DATA-501 [P1] [confidence: medium] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:741-757 (`querySafChildrenOrThrow`), consumed at :930, :1355; Dart `library_database.dart:373`, `library_cleanup.dart:18-27`
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:741-757 (`querySafChildrenOrThrow`), consumed at :930, :1355; Dart `library_database.dart:373`, `library_cleanup.dart:18-27`
 - Scenario: a cloud/network DocumentsProvider returns an empty children cursor with `DocumentsContract.EXTRA_ERROR` → treated as an empty folder, `traversalErrors` stays 0 → full scan: `error_count` 0 → `preserveMissing = false` → `deleteReplacedLibraryScanRows` deletes the subtree (or whole source if the root listing is empty); incremental: missing URIs go to `removedUris` → `deleteByPaths`.
 - Root cause: only `EXTRA_LOADING` is checked; a 0-row result with no errors is trusted as authoritative.
 - Impact: library rows for a folder or the whole source disappear after a transient provider failure (files untouched; restored by a later successful scan).
@@ -1716,7 +1718,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `46c4ea6a`. `querySafChildrenOrThrow` throws on `EXTRA_ERROR`; an empty listing cannot replace rows that a source already has (`safEmptyListingIsUntrusted`, `has_indexed_rows` passed for forced scans because they delete the resume files); incremental scans throw when the listing is empty and rows exist, and pruning only runs for a non-empty listing. `SafScanPolicyTest`, the `has_indexed_rows` forwarding test in `test/library_full_scan_test.dart`: PASS.
 
 ### KT-201 [P2] [confidence: high] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1465-1539 (changed-CUE loop in `scanSafTreeIncremental`), :1427, :1660
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:1465-1539 (changed-CUE loop in `scanSafTreeIncremental`), :1427, :1660
 - Scenario: a CUE whose mtime changed fails to re-scan (temp copy null, audio missing, parse throws) → catch only does `errors++`; old `cue#trackN` paths never added to `currentUris` → returned as removed → Dart deletes the CUE's tracks. `errors` not returned.
 - Root cause: failed re-index treated like deletion.
 - Impact: transient read error deletes all tracks of a CUE album from the library.
@@ -1725,7 +1727,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `46c4ea6a`. A failed changed-CUE re-scan keeps the existing `#trackN` rows in `currentUris` (retaining them only when the CUE previously owned them) and counts the error; a sheet that produced rows claims its audio. `SafScanPolicyTest` covers the suffix/base rules: PASS.
 
 ### KT-202 [P2] [confidence: high] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1604-1613, :1427-1430 (incremental scan)
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:1604-1613, :1427-1430 (incremental scan)
 - Scenario: a `.cue` is added beside an already-indexed, unchanged audio file → CUE tracks indexed, standalone row kept → duplicates until a full rescan.
 - Root cause: `cueReferencedAudioUris` only skips changed audio; never removes existing standalone rows.
 - Fix: add `existingFiles.keys ∩ cueReferencedAudioUris` to `finalRemovedUris`; ~3 lines.
@@ -1733,7 +1735,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `46c4ea6a`. A CUE that produced or retained rows claims its backing audio, and incremental removal deletes the standalone row through `safReferencedStandaloneUris`. `SafScanPolicyTest` standalone-removal cases: PASS.
 
 ### KT-203 [P2] [confidence: medium] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1003-1012, :1047-1160 (`scanSafTree` resume)
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:1003-1012, :1047-1160 (`scanSafTree` resume)
 - Scenario: full scan interrupted and resumed; checkpoint rebuilt from surviving NDJSON rows; files deleted/renamed in between stay in the output and are imported.
 - Root cause: resumed output not pruned against the current listing.
 - Impact: ghost tracks for deleted files.
@@ -1742,7 +1744,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `46c4ea6a`. The rebuilt checkpoint is pruned against the current listing before its rows are emitted, and resumed rows for unlisted URIs are dropped. `SafScanPolicyTest` checkpoint cases: PASS.
 
 ### KT-102 [P2] [confidence: high] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:191-196` (`safTreeLauncher` callback), :219
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt:191-196` (`safTreeLauncher` callback), :219
 - Scenario: picker returns OK but `data.flags` has no grant bits (`takeFlags == 0`) or `takePersistableUriPermission` throws (e.g. grant cap reached, see KT-105) → only logged; payload delivered as success.
 - Root cause: persist failure not propagated; no READ|WRITE fallback.
 - Impact: Dart stores a tree whose grant is lost after restart; the library silently loses access.
@@ -1751,31 +1753,31 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `46c4ea6a`. `safTreePersistFlags` retries READ|WRITE then READ; a grant without READ counts as no grant; a failed persist delivers `errorJson(...)`, Dart returns null and the picker surfaces a SnackBar. `ErrorJsonTest` and `SafScanPolicyTest` persist-flag cases: PASS.
 
 ### KT-103 [P3] [confidence: low] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:756-778` (`onDestroy`), :857-866, :74
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt:756-778` (`onDestroy`), :857-866, :74
 - Scenario: engine outlives the Activity; after Activity re-creation during a background scan, a new progress StreamHandler is installed without a Dart re-subscribe → progress stalls; `scope` never cancelled and backend channel handler not cleared → short Activity leak.
 - Fix: cancel `scope` in `onDestroy`; confirm `ProgressStreamPoller` re-subscribes.
 - Resolution: `46c4ea6a`. Scan state lives in the `MainActivity` companion (`safScanLock`, `safScanProgress`, `safScanCancel`, `safScanPaused`, `safScanActive`); progress runs through the process-scoped `SafScanProgressStream`; `onDestroy` always clears the channel handlers and only stops the stream/cancels the scope when `isFinishing`. Verified by tracing the recreated-Activity path: PASS.
 
 ### KT-104 [P3] [confidence: high] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:1459`, :1478
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt:1459`, :1478
 - Scenario: error JSON hand-built with only quote replacement → backslash/newline in a message yields invalid JSON → Dart `jsonDecode` throws.
 - Fix: use `errorJson(e.message ?: "unknown")`; 2 lines.
 - Resolution: `46c4ea6a`. Native error payloads use `errorJson(...)` (JSONObject escaping). `ErrorJsonTest` covers quotes, backslashes and newlines: PASS.
 
 ### KT-105 [P3] [confidence: medium] [RESOLVED]
-- Location: `android/app/src/main/kotlin/com/zarz/spotiflac/MainActivity.kt:193`
+- Location: `android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt:193`
 - Scenario: `releasePersistableUriPermission` is never called; replaced/removed folders keep grants until the platform cap (128/512) → later picks fail (silently, KT-102).
 - Fix: release grants when a library source is removed; ~15 lines.
 - Resolution: `46c4ea6a`. `safReleaseTree`/`releaseSafTreeGrant` drop the persisted grant when a `content://` source is removed, only after the row delete, only when no sibling source uses the tree, and never for the legacy `downloadTreeUri` (T5 removes that flow). New `test/library_loading_test.dart` cases cover release, a shared tree and the legacy tree: PASS.
 
 ### KT-204 [P3] [confidence: medium] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1396-1398, :1410
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:1396-1398, :1410
 - Scenario: providers without `COLUMN_LAST_MODIFIED` give 0 → edits never detected incrementally; replacing audio under an unchanged CUE keeps stale CUE data.
 - Fix: treat 0 as changed; ~2 lines.
 - Resolution: `46c4ea6a`. `safFileChanged` treats a zero timestamp on either side as changed, so providers without `COLUMN_LAST_MODIFIED` still pick up edits. `SafScanPolicyTest` zero-timestamp cases: PASS.
 
 ### KT-205 [P3] [confidence: high] [RESOLVED]
-- Location: android/app/src/main/kotlin/com/zarz/spotiflac/MainActivitySafScan.kt:1094-1096, :1558-1575
+- Location: android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafScan.kt:1094-1096, :1558-1575
 - Scenario: resumed scan skips indexed CUEs without `scanned++` (progress under-reports); unchanged-CUE copy failure only logged → audio indexed standalone, duplicating CUE rows.
 - Fix: count/progress before `continue`; treat unresolved unchanged CUE as an error.
 - Resolution: `46c4ea6a`. An unchanged resumed CUE is resolved before counting totals, its tracks are skipped per audio key (`unresolvedCueAudioKeys`) instead of per directory, and a failed resolution counts as an error rather than indexing the audio standalone. `SafScanPolicyTest` covers the resolution helpers: PASS.
@@ -1863,7 +1865,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### TEST-001 [P3] [confidence: high] [RESOLVED]
 - Location: test/local_song_menu_actions_test.dart:124-152 (popover placement loop)
-- Scenario: removing the `MornyeContextMenu` height constraint would still pass: 390x844 viewport with anchors at y=100/650 leaves room for the whole menu.
+- Scenario: removing the `SistrumContextMenu` height constraint would still pass: 390x844 viewport with anchors at y=100/650 leaves room for the whole menu.
 - Root cause: no short-viewport or mid-screen anchor case.
 - Impact: popover scroll/clamp behavior (LTR/RTL, above/below) is unprotected.
 - Fix: add a 390x420 case with a mid anchor; assert panel height <= free space and last item reachable only by scrolling.

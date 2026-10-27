@@ -30,6 +30,6 @@ architecture. Review-only; implementation needs separate authorization.
    into a project audit.
 7. After all path chunks, run the FINAL unit: reconcile exclusions and unresolved findings,
    verify both sides of changed contracts, inspect deletion dependents and recheck offline/
-   Mornye/retained-feature rules. Required evidence failures prevent completion. Publish the
+   Sistrum/retained-feature rules. Required evidence failures prevent completion. Publish the
    scope/revision, coverage totals, remaining investigations, device limitations and next
    actions; never claim the application regression-free from static review alone.

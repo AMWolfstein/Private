@@ -1,8 +1,10 @@
 # Artwork and non-engine presentation lifecycle
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
-CONC-02 coordinator acting as concurrency-auditor; source d5d5a02 unchanged at5179dfea. Principal complete reads: lib/controllers/player_metadata_controller.dart1–246; lib/services/cover_analysis_store.dart1–91,library_cover_snapshot.dart1–125,custom_font_service.dart1–96,shell_navigation_service.dart1–218,mornye_glass_auto_probe.dart1–151,mornye_glass_migration.dart1–41,downloaded_embedded_cover_resolver.dart1–1017; lib/providers/runtime_profile_provider.dart1–192. Graph query broad/truncated, narrowed explain DownloadedEmbeddedCoverResolver identified source symbol67. No code edits, builds or graph mutation.
+CONC-02 coordinator acting as concurrency-auditor; source d5d5a02 unchanged at5179dfea. Principal complete reads: lib/controllers/player_metadata_controller.dart1–246; lib/services/cover_analysis_store.dart1–91,library_cover_snapshot.dart1–125,custom_font_service.dart1–96,shell_navigation_service.dart1–218,sistrum_glass_auto_probe.dart1–151,sistrum_glass_migration.dart1–41,downloaded_embedded_cover_resolver.dart1–1017; lib/providers/runtime_profile_provider.dart1–192. Graph query broad/truncated, narrowed explain DownloadedEmbeddedCoverResolver identified source symbol67. No code edits, builds or graph mutation.
 
 Named ART-S1 direct consumers: lib/widgets/local_library_artwork_builder.dart complete; services/metadata_persistence_service.dart complete (previous DATA-01 scope); services/library_edited_metadata.dart complete; widgets/local_song_menu.dart285–340; screens/now_playing_screen.dart85–135; test/downloaded_embedded_cover_resolver_test.dart1–110; player_metadata_controller_test.dart test names/calls searched only. Cross-repository resolver callers/invalidation searched. Shared artwork grounds/palettes are separate coverage.
 

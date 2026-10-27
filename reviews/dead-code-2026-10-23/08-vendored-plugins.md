@@ -1,8 +1,10 @@
 # Vendored plugin dead-code review (N3)
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 ## Scope
 
-Role dead-code-hunter, appd5d5a02 unchanged; baseline47039b90. Inventory86 third_party files, including30 code files. Lexical private-method screen56 declarations,2 singleton candidates. Full reads both plugin pubspec.yaml,Android manifests,SPOTIFLAC_PATCHES.md. Ranges: audioplayers_android AudioplayersPlugin.kt25–72; audio_service AudioServicePlugin.java270–296,870–887; AudioService.java450–475,777–800. Candidate references searched across lib/test/integration_test/android/rust_backend/crates/scripts/third_party; plugin registration/lifecycle/channel roots considered. Graph-first native query completed, truncated navigation only.
+Role dead-code-hunter, appd5d5a02 unchanged; baseline47039b90. Inventory86 third_party files, including30 code files. Lexical private-method screen56 declarations,2 singleton candidates. Full reads both plugin pubspec.yaml,Android manifests,SISTRUM_PATCHES.md. Ranges: audioplayers_android AudioplayersPlugin.kt25–72; audio_service AudioServicePlugin.java270–296,870–887; AudioService.java450–475,777–800. Candidate references searched across lib/test/integration_test/android/rust_backend/crates/scripts/third_party; plugin registration/lifecycle/channel roots considered. Graph-first native query completed, truncated navigation only.
 
 ## Findings
 

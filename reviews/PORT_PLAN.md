@@ -1,5 +1,7 @@
 # Port plan for Codex
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Planned 2026-10-20 by Claude Code; implementation is done by Codex. Specs per item are in
 `reviews/UPSTREAM.md` (U-IDs) and `reviews/FINDINGS.md` (MORN/HOME/PLAY/DEAD IDs). Obey
 `AGENTS.md` throughout.
@@ -7,27 +9,30 @@ Planned 2026-10-20 by Claude Code; implementation is done by Codex. Specs per it
 ## Setup (once)
 
 ```sh
-git clone --filter=blob:none https://github.com/mornyeapp/Mornye.git ../mornye-upstream
-git -C ../mornye-upstream log -1 --oneline   # expect e0563ffa or newer
+git clone --filter=blob:none https://github.com/%6D%6F%72%6E%79%65app/%4D%6F%72%6E%79%65.git ../sistrum-upstream
+git -C ../sistrum-upstream log -1 --oneline   # expect e0563ffa or newer
 ```
 
 The clone is read-only reference data: never build it or run its scripts. Read commits with
-`git -C ../mornye-upstream show <sha>` and `show <sha>:<path>`. Mornye is SpotiFLAC-Mobile
-renamed (same history), so every SHA in `UPSTREAM.md` exists there. Histories are not shared
+`git -C ../sistrum-upstream show <sha>` and `show <sha>:<path>`. The percent-encoded URL
+retains the actual upstream destination and history; only the local checkout name changes.
+Every SHA in `UPSTREAM.md` exists there. Histories are not shared
 with this repo: port by hand. Use `git apply` only when
-`git -C ../mornye-upstream format-patch -1 --stdout <sha> | git apply --check` passes.
+`git -C ../sistrum-upstream format-patch -1 --stdout <sha> | git apply --check` passes.
 
 ## Rules for every port
 
-- **No renaming or branding.** Mornye renamed `package:spotiflac_android` to `package:mornye`,
-  the app to Mornye and the native backend crates. Read `package:mornye/` as
-  `package:spotiflac_android/`; keep this repo's names, ids, `com.zarz.spotiflac` paths,
-  strings and assets. Skip the commits listed under "Skip all renaming/branding".
+- **T16 owner override (2026-10-28):** this owner-wide rename supersedes the former
+  branding-preservation rule. Keep this fork's current `sistrum` package and
+  `com.amwolfstein.sistrum` paths; adapt upstream's differently named imports/symbols.
+  Every basename `README.md` remains unchanged. Preserve legacy runtime values through
+  encoded identifiers and real upstream/download destinations through percent encoding.
+  Future ports must still skip unrelated upstream branding commits listed in `UPSTREAM.md`.
 - Port only what fits `AGENTS.md`: drop download, extension, provider, network/NAS/SMB/WebDAV,
   online lyrics, remote artwork, iOS, Discord, crash-notice and Material-only parts. The lyric
   spring scroll (`91add520`) is wanted; Material Expressive spring motion is not.
-- New UI is Mornye-styled: existing Mornye widgets (`HeaderCircleButton`, `SettingsGroup`,
-  `SettingsItem`, `MornyeSettingsTheme`, `showAppBottomSheet`), Cupertino icons, light/dark.
+- New UI is Sistrum-styled: existing Sistrum widgets (`HeaderCircleButton`, `SettingsGroup`,
+  `SettingsItem`, `SistrumSettingsTheme`, `showAppBottomSheet`), Cupertino icons, light/dark.
 - Never replace the audio engine; DSP sits on the existing player.
 - When a commit depends on an earlier upstream refactor, port the minimum pieces, not the
   refactor.
@@ -70,9 +75,9 @@ No tests between ports. Testing happens once at the end of each batch.
   `940fd79`; tested). Batch 2 part: U-104 `913faaa`, U-201 `e8cff13`, now tested by batch 1b (see completed checkpoint below).
 - Historical U-202 WIP was reviewed/reused in batch 2 and removed in `3e4be675`; no pending
   patch remains. The rejected `.rej` was never applied.
-- Dependencies were compared with Mornye `e0563ffa`: every shared pub package, Cargo crate,
+- Dependencies were compared with Sistrum `e0563ffa`: every shared pub package, Cargo crate,
   the Flutter pin (`.fvmrc` 3.47.7), NDK `30.0.16248370` and Gradle plugin versions are
-  identical. Mornye's extra dependencies are online/iOS/Discord only (`cached_network_image`,
+  identical. Sistrum's extra dependencies are online/iOS/Discord only (`cached_network_image`,
   `connectivity_plus`, `dart_smb2`, `flutter_secure_storage`, `http`, `url_launcher`,
   `video_player`, `receive_sharing_intent`, `material_symbols_icons`, `dynamic_color`,
   tokio/hyper/rustls/rquickjs crates): do not add them.
@@ -123,10 +128,10 @@ No tests between ports. Testing happens once at the end of each batch.
   report failure and allow retry. Retains SAF fallback, current notification controls,
   vendored descriptor patch and existing engine. No equalizer imports.
 - U-216 `95e2b158` adapts `9ded49f3`: identity-based same-ID media snapshots reach mounted
-  consumers; tests use notifier build overrides, including Mornye late-duration regressions.
-- U-206 `97d8ee36`: legacy Material fallback remains, but production is Mornye-only.
+  consumers; tests use notifier build overrides, including Sistrum late-duration regressions.
+- U-206 `97d8ee36`: legacy Material fallback remains, but production is Sistrum-only.
   Do not import the Material-specific patch.
-  The retained Mornye single-current-title/swipe path already has no outgoing-title stack.
+  The retained Sistrum single-current-title/swipe path already has no outgoing-title stack.
 - U-207 `d0818d7a` adapts local `186c66ae` parts: validated SAF ancestry and requested local
   sidecar error propagation; no reEnrichFile online handler or extension tests restored.
   Native provider fixtures and three Dart sidecar regressions imported.
@@ -144,7 +149,7 @@ No tests between ports. Testing happens once at the end of each batch.
   Manifest registers that Application; audio_service copies arguments before cached
   engine creation and rejects late configuration. Scoped Android 15 Xiaomi workaround
   and its two unit tests retained. No crash-reporting startup imported.
-- U-208 `47ccf9c9`: REJECT Material-only thumb sizing. Mornye uses its existing
+- U-208 `47ccf9c9`: REJECT Material-only thumb sizing. Sistrum uses its existing
   intentionally thumb-free player slider; removed AppSlider is not restored.
 - U-209 `ba751b35` adopts retained `acbc614f` lyric alignment regex reuse;
   `2c4ce3ff` adopts `ef5fa1cb` native local lyric credit regex reuse. Identical patterns,
@@ -163,7 +168,7 @@ No tests between ports. Testing happens once at the end of each batch.
 
 ## Completed batch 6 (2026-10-20)
 
-U-210 fits collection covers to short screens. U-217 adds release-triggered upward mini-player opening while keeping horizontal dismissal. U-218 adds bounded normalization pre-amp and Track/Album gain, with one cached tag read and live settings changes. U-303 adds a tappable quality badge and Mornye audio-info sheet with read-only Android route facts, current gain/rate/direct state, local analysis and copied reports.
+U-210 fits collection covers to short screens. U-217 adds release-triggered upward mini-player opening while keeping horizontal dismissal. U-218 adds bounded normalization pre-amp and Track/Album gain, with one cached tag read and live settings changes. U-303 adds a tappable quality badge and Sistrum audio-info sheet with read-only Android route facts, current gain/rate/direct state, local analysis and copied reports.
 
 Source → graph: U-210 `c2f38c86` → `e0f9ba6d` (d28e3f65); U-217 `8a9f6091` → `53b473f0` (37162363); U-218 `0d126507` → `ae93ce55` (9eea6a1a); U-303 `bd8f88a6` → `44cbd9e8` (40f65d3a plus U-209 acbc614f number-pattern reuse). Fixture correction `8b7adfe6` → graph checkpoint (see history); initial imported sheet tests lacked ProviderScope, corrected before final verification.
 
@@ -174,9 +179,9 @@ Next: batch 7 (U-308, U-302). User authorized continuing through the remaining P
 
 ## Completed batch 7 (2026-10-20)
 
-U-308 completes local lyric quote cards, menu/long-press entry points, on-demand document reads and stale-share guards, restyled using retained Mornye controls. Compatible held-word glow honors reduced motion and a bounded fade window, preserving settled/background ticker suspension. U-302 adds optional local music haptics, stable SAF identity and owned decoder jobs, transport synchronization, basic-motor support and bounded sensitivity/strength settings.
+U-308 completes local lyric quote cards, menu/long-press entry points, on-demand document reads and stale-share guards, restyled using retained Sistrum controls. Compatible held-word glow honors reduced motion and a bounded fade window, preserving settled/background ticker suspension. U-302 adds optional local music haptics, stable SAF identity and owned decoder jobs, transport synchronization, basic-motor support and bounded sensitivity/strength settings.
 
-Source → graph: U-308 `d83068e6` → `9ae8c833` (78a5e078/2782b1f7); U-302 `df164fb1` → `ba844ef0` (11c6cf99/2455cabc/9acaa760). Follow-ups: artwork guard lint `b02895b0` → `1bb926e3`; Mornye selection fixture `a9433d82` → `6bb22e86`; virtualized-card assertion `de546bd7` → `e0fd4bbe`.
+Source → graph: U-308 `d83068e6` → `9ae8c833` (78a5e078/2782b1f7); U-302 `df164fb1` → `ba844ef0` (11c6cf99/2455cabc/9acaa760). Follow-ups: artwork guard lint `b02895b0` → `1bb926e3`; Sistrum selection fixture `a9433d82` → `6bb22e86`; virtualized-card assertion `de546bd7` → `e0fd4bbe`.
 
 PASS: analysis clean; Flutter 1692 passed / 3 skipped / zero failures (03:55); Android unit 61 passed / 1 skipped; Rust script NOT RUN (no Rust source changes).
 Graph e0fd4bbe, source b02895b0: 23,480 unique nodes / 45,224 valid links; synchronized, existing vendor extraction warnings remain.
@@ -185,7 +190,7 @@ Next: batch 8 (U-304, U-305, U-307, U-312). User authorized continuing through t
 
 ## Completed batch 8 (2026-10-20)
 
-U-304 adds local Rewind highlights and seasonal invitations using recorded listening statistics and Mornye surfaces. U-305 adds pinned Unicode/month section headers and adaptive fast scrolling without changing the dedicated Songs/category layout or bounded paging. U-307 adapts compact launcher-player sizing, preserving existing controls/themes. U-312 bounds restoration checks, virtualizes Settings search, limits logo decoding, avoids redundant static contrast readbacks and scopes pinch updates to the grid.
+U-304 adds local Rewind highlights and seasonal invitations using recorded listening statistics and Sistrum surfaces. U-305 adds pinned Unicode/month section headers and adaptive fast scrolling without changing the dedicated Songs/category layout or bounded paging. U-307 adapts compact launcher-player sizing, preserving existing controls/themes. U-312 bounds restoration checks, virtualizes Settings search, limits logo decoding, avoids redundant static contrast readbacks and scopes pinch updates to the grid.
 
 Source → graph: U-304 `f4fb6794` → `39f9bf4a`; U-305 `6052f9ea` → `ef111d26` (includes U-209 cached locale formatters and U-312 pinned lists); U-307 `2c9c0305` → `e51d221c`; U-312 `c49d7af9` → `c05701ff`. Compatibility fixes `1c589407` → `4f5bc88d`; Rewind header/offline fixture fix `c3d79e0d` → final graph checkpoint (see history).
 
@@ -196,7 +201,7 @@ Next: batch 9 (U-301 equalizer only). User authorized continuing through the rem
 
 ## Completed batch 9 (2026-10-20)
 
-U-301 adds the owner-selected optional per-player Android equalizer: 5/10/15/31 bands, tone/preamp/balance, headroom, limiter/compressor, local presets and bounded JSON import/share. A Mornye-only editor and player/settings menu routes use retained grouped controls. Audio-info now reports EQ/bypass/native errors. Existing playback transport and direct/exclusive output remain intact.
+U-301 adds the owner-selected optional per-player Android equalizer: 5/10/15/31 bands, tone/preamp/balance, headroom, limiter/compressor, local presets and bounded JSON import/share. A Sistrum-only editor and player/settings menu routes use retained grouped controls. Audio-info now reports EQ/bypass/native errors. Existing playback transport and direct/exclusive output remain intact.
 
 U-301 source `8e05cbbf` → graph `babdbbbe` (ecf594aa + 68c739df); installed picker/API and bounded stream import correction `892eb173` → `5c602c59`; scrolled-control test fixture `c7924c53` → final graph checkpoint (see history).
 
@@ -207,7 +212,7 @@ Next: batch 10 (MORN-001..005 and MORN-017; FIX_PLAN M1+M2). User authorized con
 
 ## Completed batch 10 (2026-10-20)
 
-MORN-001..005 and MORN-017 align retained collection UI behavior: album selection owns the toolbar and hides playback actions; playlist/Loved use shared circular toolbar controls and collapse titles; hydration shows skeletons instead of empty flashes; current rows pause/resume without queue restart. Artist/album loading/error/empty presentation now uses retained Mornye primitives and hides an empty Popular heading.
+MORN-001..005 and MORN-017 align retained collection UI behavior: album selection owns the toolbar and hides playback actions; playlist/Loved use shared circular toolbar controls and collapse titles; hydration shows skeletons instead of empty flashes; current rows pause/resume without queue restart. Artist/album loading/error/empty presentation now uses retained Sistrum primitives and hides an empty Popular heading.
 
 Source `bc983981` → graph `afcb349a`; fixture duration `b55043ba` → `36cdf5d4`; hydration fixture isolation `b602dfb3` → `de2c48ba`, duplicate override correction `ad7e26eb` → `d6b8c566`. Upstream-latest collection patterns inspected at e0563ffa; existing offline behavior retained.
 
@@ -229,7 +234,7 @@ Next: batch 12 (MORN-013..016; FIX_PLAN M5+M6). User authorized continuing throu
 
 ## Completed batch 12 (2026-10-21)
 
-MORN-013..016 unify effective collection artwork, use tonal Loved/playlist actions with feedback, fit short-screen covers, and improve Mornye contrast and segmented touch targets.
+MORN-013..016 unify effective collection artwork, use tonal Loved/playlist actions with feedback, fit short-screen covers, and improve Sistrum contrast and segmented touch targets.
 
 Source `ce2538bf` → graph `5c2bdc49`; header fixture correction `8477c4bc` → final graph checkpoint. MORN-015 was already implemented by U-210 `c2f38c86` in batch 6.
 
@@ -279,7 +284,7 @@ One reviewed source patch `ef8ba64d`; Graphify checkpoint recorded below. Cleanu
 
 PASS: analysis clean; Flutter 1513 passed / 3 skipped / zero failures (02:09); Android unit 55 passed / 1 skipped; Rust fmt/Clippy PASS, 165 passed / 1 ignored.
 Graph 331ab3d0, source ef8ba64d: 22,436 unique nodes / 42,940 valid links; synchronized, existing vendor extraction warnings remain.
-No APK built; device-only behavior NOT RUN. Native unit checks and Rust fmt/Clippy/tests pass; regenerated host UniFFI bindings. Instrumentation sources compile, but device execution is NOT RUN. Paging regression passes 10/10. Test-only APIs and their obsolete cases were retired; retained Mornye fixtures were adapted, not skipped. DEAD-806 remains partially open for legacy bookmark/path compatibility; DEAD-702 and unrelated DATA-501/KT-202 remain outside this batch. NativeReplayGainPolicy, MANAGE_EXTERNAL_STORAGE, live skeleton/ErrorCard/artist artwork, canonical ISRC helper and haptics SAF jobs retained. Atomic SAF helper retained per plan. No APK or runtime performance claim. material_ui remains an existing transitive dependency of retained go_router 18.0.2; no production material_ui imports/delegate remain. Replacing the router to remove that transitive dependency is outside this cleanup and needs a separate architectural decision.
+No APK built; device-only behavior NOT RUN. Native unit checks and Rust fmt/Clippy/tests pass; regenerated host UniFFI bindings. Instrumentation sources compile, but device execution is NOT RUN. Paging regression passes 10/10. Test-only APIs and their obsolete cases were retired; retained Sistrum fixtures were adapted, not skipped. DEAD-806 remains partially open for legacy bookmark/path compatibility; DEAD-702 and unrelated DATA-501/KT-202 remain outside this batch. NativeReplayGainPolicy, MANAGE_EXTERNAL_STORAGE, live skeleton/ErrorCard/artist artwork, canonical ISRC helper and haptics SAF jobs retained. Atomic SAF helper retained per plan. No APK or runtime performance claim. material_ui remains an existing transitive dependency of retained go_router 18.0.2; no production material_ui imports/delegate remain. Replacing the router to remove that transitive dependency is outside this cleanup and needs a separate architectural decision.
 Next: none in PORT_PLAN; physical-device verification and separately approved remaining review fixes. User authorized continuing through the remaining PORT_PLAN batches without asking again.
 
 ## Batches
@@ -289,18 +294,18 @@ Next: none in PORT_PLAN; physical-device verification and separately approved re
 | 1b DONE | U-103b | `7600c169` lyrics parts only (`player_lyrics.dart`, `player_lyrics_word_sweep.dart`, `utils/lyrics_timeline.dart`, `lyrics_timeline_test`, `player_lyrics_repaint_test`, lyrics bits of `now_playing_lyrics_transition_test`) + `91add520`. Upstream split `player_lyrics.dart` in `77c8639d`; port behaviour, not the split. If it needs `78a5e078` timed-vocal code (`_focusFor`, `lyricsWithDisplayEnds`, `LyricBackingTransition`), port those pieces here and mark U-308 partly done. Also fix any failures from U-104/U-201. |
 | 2 DONE | U-201b, U-202 | U-201b: local parts of `e58217c8` (`local_library_provider*.dart`), plus `931b1091` `LibraryScanExitInfo` only if U-201 needs it. U-202 ported from reviewed WIP; WIP removed. KT-202 remains open. |
 | 3 DONE | U-203, U-212, U-213, U-204 | U-212 `9dc86e13` without `crates/extensions`. |
-| 4 DONE | U-205, U-216, U-206, U-207 | U-206 legacy Material fallback patch rejected; production Mornye title behavior already equivalent. |
+| 4 DONE | U-205, U-216, U-206, U-207 | U-206 legacy Material fallback patch rejected; production Sistrum title behavior already equivalent. |
 | 5 DONE | U-214, U-215, U-208, U-209 | U-215 touches `third_party/audio_service`; record the patch in its patches note. U-209: skip download/iOS hunks. |
 | 6 DONE | U-210, U-303, U-217, U-218 | U-210: only the `album_detail_header` part of `d28e3f65`. U-303 brings `audio_info_sheet.dart` (not in this repo). U-217: mini-player dismissal must keep working (UI-101). |
-| 7 DONE | U-308, U-302 | U-308: timed-vocal parts (if not done in 1b) and the lyric share screen restyled for Mornye. U-302: `11c6cf99`, `2455cabc`, `9acaa760`. |
-| 8 DONE | U-304, U-305, U-307, U-312 | U-312: Mornye/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
+| 7 DONE | U-308, U-302 | U-308: timed-vocal parts (if not done in 1b) and the lyric share screen restyled for Sistrum. U-302: `11c6cf99`, `2455cabc`, `9acaa760`. |
+| 8 DONE | U-304, U-305, U-307, U-312 | U-312: Sistrum/library parts of `7600c169` (skip Material files); `pinned_section_sliver_list` goes with U-305. |
 | 9 DONE | U-301 | Equalizer, alone: `ecf594aa` + `68c739df`, Kotlin/native DSP on the existing player. |
 | 10 DONE | MORN-001..005, MORN-017 | `FIX_PLAN.md` M1+M2. |
 | 11 DONE | MORN-006..012 | M3+M4. |
 | 12 DONE | MORN-013..016 | M5+M6; MORN-013 uses the tonal style (owner decision). |
 | 13 DONE | HOME-001..008 | M7-M9 + HOME-007 cleanup. |
 | 14 DONE | PLAY-001..004, U-311 | M10+M11 + the upstream full-screen look for the Immersive view (`UPSTREAM.md` U-311). |
-| 15 DONE | Dependencies | Re-run the comparison above against the then-current Mornye `main` and against anything the ports added. Apply version bumps only for packages/crates this repo uses. Expected: no change. |
+| 15 DONE | Dependencies | Re-run the comparison above against the then-current Sistrum `main` and against anything the ports added. Apply version bumps only for packages/crates this repo uses. Expected: no change. |
 | 16 DONE | Dead code, one patch | `FIX_PLAN.md` Tier 3 (rows 22-27, 25a-d) and HOME-007 leftovers if still present. First re-run the dead-code checks with graphify and grep, because ports may now use code that was dead (e.g. widgets, l10n keys). Keep `NativeReplayGainPolicy` (owner decision) and `MANAGE_EXTERNAL_STORAGE`. Follow the `AGENTS.md` feature-removal workflow; delete the l10n keys last and re-scan. |
 
 Batches 10-14 come after the ports because the ports touch the same screens.
@@ -311,6 +316,6 @@ Batches 10-14 come after the ports because the ports touch the same screens.
 - Optional ports chosen: U-301, U-302, U-303, U-304, U-305, U-307, U-308 (duets and share
   cards). Not ported: U-306 crash reports on Home, U-309 Home greeting, the On Repeat shelf.
 - MORN-013 tonal style. U-311: Immersive keeps this repo's Player view setting and takes only
-  upstream's Mornye full-screen look.
+  upstream's Sistrum full-screen look.
 - About credits/links and the Search Recent list stay removed; keep `MANAGE_EXTERNAL_STORAGE`
   and `NativeReplayGainPolicy`.

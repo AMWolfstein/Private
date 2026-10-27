@@ -1,6 +1,14 @@
 # Audio engine migration: Media3/ExoPlayer, no FFmpeg
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 Status: plan only. Nothing in this file has been implemented or tested.
+
+Naming clarification after T16: in this plan, unqualified **Sistrum** source/module/spec
+references mean the **retired Compose reference app** (`AMWolfstein/Sistrum` at `88e5987`),
+not this renamed Flutter app. References to the upstream Flutter project retain their real
+percent-encoded identifiers. The GPL discussion below concerns a future engine port; this
+branding-only rename does not import that code or relicense the current MIT app.
 
 **Sources read for this plan:**
 
@@ -23,7 +31,7 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 
 | # | Decision | Why it matters | Recommendation |
 |---|---|---|---|
-| D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | **Decided (owner, 2026-10-24): accept GPL-3.0.** Change `LICENSE` to GPL-3.0-or-later in the same commit that first adds Sistrum code; keep the MIT notice for the original SpotiFLAC code and add `THIRD-PARTY-NOTICES` for each module. |
+| D1 | **Licence.** This app is **MIT**. Every Sistrum file is **GPL-3.0** (`codecs` 146, `metadata` 48, `dsp` 9 and `analysis` 15 files, `player/` and `analysis/` app code). Some files are ports of other GPL projects: Rhythm, Choir, aubio and Airmedy (`PcmAnalyzer.kt` is GPL-3.0-only). | Shipping Sistrum code makes the whole APK a GPL-3.0 work. You may relicense only code you wrote yourself. The Rhythm, Choir, aubio and Airmedy ports stay GPL. | **Decided (owner, 2026-10-24): accept GPL-3.0.** Change `LICENSE` to GPL-3.0-or-later in the same commit that first adds Sistrum code; keep the MIT notice for the original Sistrum code and add `THIRD-PARTY-NOTICES` for each module. |
 | D2 | **Minimum SDK.** Sistrum requires API 31. This app uses `flutter.minSdkVersion` = 24. | Sistrum code assumes API 31 or newer. It uses `DynamicsProcessing` (API 28) and the newer `AudioTrack` and `MediaCodec` encodings without version checks. | **Decided (owner, 2026-10-24): raise minSdk to 31 (Android 12)** in the first engine-port code commit; record it in `LOCAL_OFFLINE_MIGRATION_PLAN.md`. |
 | D3 | **Direct USB (libusb in Rust).** Media3 cannot do this. The Java USB API (`UsbRequest`) has no isochronous transfers. | The libusb direct USB driver must stay native, so the NDK stays. | **Decided (owner, 2026-10-24): drop Direct USB.** Remove it with the feature-removal workflow during the USB step (section 7, step 11). The Android 14+ bit-perfect path (`UsbBitPerfectPlugin.kt`, including DoP) stays. |
 | D4 | **AAudio exact-rate output (`HiResPlayback.kt`, Oboe).** AAudio has no Java API. | Removing it removes the last C++ code in `cpp/`. | **Decided (owner, 2026-10-26): remove it.** Delete `HiResPlayback.kt`, Oboe, the `dapExclusive` setting, its strings, search entry and backup key (old imports ignore it). Bit-perfect USB on Android 14+ stays. |
@@ -38,12 +46,12 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 | Layer | Code | Notes |
 |---|---|---|
 | Dart player service | `lib/services/music_player_service.dart` (2263 lines), `music_player_runtime.dart`, `music_player_automix.dart`, `music_player_autoplay.dart`, `playback_*.dart` | Owns the queue, session restore, history, normalization, sleep timer, AutoMix and headphone handling. |
-| Dart deck | `lib/services/music_playback_deck.dart` | Wraps one `audioplayers` `AudioPlayer` plus the native USB/hi-res route (`com.zarz.spotiflac/usb_pcm`). There are two decks for AutoMix. |
+| Dart deck | `lib/services/music_playback_deck.dart` | Wraps one `audioplayers` `AudioPlayer` plus the native USB/hi-res route (`com.amwolfstein.sistrum/usb_pcm`). There are two decks for AutoMix. |
 | Ordinary engine | `audioplayers` 6.8.1 with a vendored `third_party/audioplayers_android` | Android **MediaPlayer**. Local patches: `/proc/self/fd` SAF leases, output-error handling and a `DynamicsProcessing` EQ (`PlaybackEqualizer.kt`). **No gapless playback.** |
 | Session | vendored `third_party/audio_service` 0.18.19, `audio_session` 0.2.4 | Framework MediaSession, notification, Android Auto browse, focus and noisy events. |
 | Hi-res / bit-perfect | `UsbBitPerfectPlugin.kt` (AudioTrack and Android 14 preferred mixer), `HiResPlayback.kt` (Oboe AAudio), `UsbDirectPlayback.kt` and Rust `mobile/src/usb_audio/*` (libusb), `UsbPcmSource.kt`, `BitPerfectPcm.kt`, `DsdFile.kt`, `DsdSource.kt` | The USB route decodes with MediaExtractor/MediaCodec, **libFLAC** (`flac_pcm_source.cpp`) and **WavPack** (C). DSD goes through DoP or native USB only. |
-| C++ library | `android/app/src/main/cpp/` (CMake, `libspotiflac_audio.so`): Oboe 1.11, libFLAC 1.5.0, WavPack 5.9.0 | Exports 18 JNI functions (`native_audio.map`). |
-| Rust | `rust_backend` (UniFFI and JNA, `libspotiflac_mobile.so`) | Tags (read and write), CUE parsing, scan, covers, palette, backup, collections DB (`rusqlite` bundled), USB driver, and analysis maths for AutoMix and spectral cutoff on PCM that FFmpeg decoded. |
+| C++ library | `android/app/src/main/cpp/` (CMake, `libsistrum_audio.so`): Oboe 1.11, libFLAC 1.5.0, WavPack 5.9.0 | Exports 18 JNI functions (`native_audio.map`). |
+| Rust | `rust_backend` (UniFFI and JNA, `libsistrum_mobile.so`) | Tags (read and write), CUE parsing, scan, covers, palette, backup, collections DB (`rusqlite` bundled), USB driver, and analysis maths for AutoMix and spectral cutoff on PCM that FFmpeg decoded. |
 | FFmpeg | `ffmpeg_kit_flutter_new_audio` 2.5.7, wrappers `lib/services/ffmpeg_*.dart` (1190 lines) | Decodes for analysis, measures loudness, renders effects, splits CUE and resizes covers. It is a tag-writing **fallback only**. It is never used for playback. |
 
 ---
@@ -63,7 +71,7 @@ Sistrum paths are relative to `androidApp/src/main/kotlin/com/amwolfstein/sistru
 | Speed | `deck.setPlaybackRate` | `ExoPlayer.setPlaybackParameters(PlaybackParameters(speed, pitch))` (Sonic) | — | Media3 can change pitch separately from speed (used by AutoMix, 3.4). |
 | Volume, focus ducking, noisy and headphone events | `audio_session`, `_configureAudioSession`, `_pauseForFocusLoss`, `_startHeadphoneMonitoring` | Kotlin `PlaybackService` handles focus, noisy and headset events (D6); remove `audio_session`. Media3 runs with `handleAudioFocus = false` as in Sistrum. | `player/media3/FocusVolumeRamp.kt` | Sistrum ramps the duck to 0.2. Optional. |
 | Sleep timer, repeat, shuffle, queue, session restore, autoplay | Dart | Move to Kotlin `PlaybackCoordinator` (D6, section 6.1); port the Dart tests first | — | Must keep working with the app closed. |
-| Notification, lock screen, Android Auto, media buttons | `audio_service` | Media3 `MediaLibraryService` in Kotlin (decision D6); remove `audio_service` and `third_party/audio_service`. | ADR-006 (Sistrum also kept the framework session in 001) | Keep the behaviour ported from Mornye `463c2ce9`: metadata or artwork that arrives after a track starts must update the notification, lock screen and Auto without changing position or controls (Media3 `replaceMediaItem` or a metadata update on the session). |
+| Notification, lock screen, Android Auto, media buttons | `audio_service` | Media3 `MediaLibraryService` in Kotlin (decision D6); remove `audio_service` and `third_party/audio_service`. | ADR-006 (Sistrum also kept the framework session in 001) | Keep the behaviour ported from Sistrum `463c2ce9`: metadata or artwork that arrives after a track starts must update the notification, lock screen and Auto without changing position or controls (Media3 `replaceMediaItem` or a metadata update on the session). |
 | Home-screen widget | `player_widget_service.dart`, `PlayerWidgetProvider.kt` | Updated by the Kotlin service, so it also works with the app closed (D6) | — | — |
 
 ### 3.2 Sound processing (the EQ and the chain)
@@ -93,14 +101,14 @@ Sistrum paths are relative to `androidApp/src/main/kotlin/com/amwolfstein/sistru
 | Beat-grid analysis (head and tail windows) | `automix_analyzer.dart`: FFmpeg decodes to mono s16le, then Rust `automix` analyses it | `OfflineDecoder` (ExoPlayer and `CaptureAudioSink`) → downmix and resample (`dsp/resample/Resampler.kt`, `dsp/mix/Matrix.kt`) → the same Rust `automix` job, or Sistrum's `analysis/.../Aubio.kt` (tempo, onsets) | `analysis/OfflineDecoder.kt`, `CaptureAudioSink.kt`, `PcmDecoder.kt` | Section 5.1. |
 | Mix effects: speed, pitch, low-pass, echo, wet/dry ramp, limiter | `automix_effect_renderer.dart`: FFmpeg renders a WAV tail with `asetrate`, `atempo`, `lowpass`, `aecho`, `amix` and `alimiter`, which deck B then plays | **Live** on the incoming player: `PlaybackParameters` (speed and pitch), a low-pass biquad (from `BiquadEqualizer.kt`), a new small echo or delay `AudioProcessor`, the wet/dry curve in `GainProcessor`, and the limiter | `player/dsp/*`, `dsp/gain/Limiter.kt` | No temporary WAV and no 30 s FFmpeg job. The echo processor is new code, about 60 lines. |
 | Silence-aware crossfade start | none | silence profiles from analysis | `dsp/silence/Detector.kt`, `TransitionController.kt` (Sistrum 002 M2) | Optional. |
-| Beat landing check and phase lock (Mornye `9843149d`, `44c9ba92`, ported 2026-10-27) | `music_player_automix.dart` `_alignIncoming`, `_phaseError`; `automix_phase_lock.dart`; uncertain grids get a bass handoff at unchanged tempo | Keep the same rules in the Kotlin transition: seek the incoming player onto the outgoing beat grid (up to three tries), fall back to an unstretched crossfade when the landing cannot be verified, and apply small bounded rate corrections from spaced position samples during the overlap | none in Sistrum | Port `AutoMixPhaseLock` and its tests with the transition; ExoPlayer positions are more precise, so the tolerances may be tightened after device checks. |
+| Beat landing check and phase lock (Sistrum `9843149d`, `44c9ba92`, ported 2026-10-27) | `music_player_automix.dart` `_alignIncoming`, `_phaseError`; `automix_phase_lock.dart`; uncertain grids get a bass handoff at unchanged tempo | Keep the same rules in the Kotlin transition: seek the incoming player onto the outgoing beat grid (up to three tries), fall back to an unstretched crossfade when the landing cannot be verified, and apply small bounded rate corrections from spaced position samples during the overlap | none in Sistrum | Port `AutoMixPhaseLock` and its tests with the transition; ExoPlayer positions are more precise, so the tolerances may be tightened after device checks. |
 
 ### 3.5 Hi-res, bit-perfect, USB and DSD
 
 | Feature | Current code | Replacement | Sistrum source | Gap / note |
 |---|---|---|---|---|
 | Android 14+ bit-perfect mixer to USB DAC (`usbBitPerfect`, `usbAllowFixedVolume`, `dapExclusive`) | `UsbBitPerfectPlugin.kt` (own AudioTrack) | Keep the plugin. Change its **source** to the Kotlin decoders. | `player/decoders/kotlin/CodecStream.kt`, `codecs/*` | Media3 bypasses no processors on this path, so keep it separate from the Media3 chain. ReplayGain, AutoMix and EQ stay bypassed here, as today. |
-| Exact FLAC PCM (`AGENTS.md`: "never trust vendor raw FLAC decoding") | `flac_pcm_source.cpp` (libFLAC) | A Kotlin FLAC decoder, or Rust `claxon` (listed in `spotiflac-core`'s `Cargo.toml` but unused since `ef8ba64` removed the Hi-Res module; RUST-201: it needs a frame channel-count guard). If Rust moves to Kotlin (section 10), choose the Kotlin decoder. | **Sistrum has no Kotlin FLAC decoder.** It uses the platform decoder. WaxFlow has `codec/flac` that could be ported. | **Gap.** Choose claxon in Rust (no JNI hop for the USB worker) or port WaxFlow's FLAC. The platform decoder's float output is lossless only up to 24-bit. |
+| Exact FLAC PCM (`AGENTS.md`: "never trust vendor raw FLAC decoding") | `flac_pcm_source.cpp` (libFLAC) | A Kotlin FLAC decoder, or Rust `claxon` (listed in `sistrum-core`'s `Cargo.toml` but unused since `ef8ba64` removed the Hi-Res module; RUST-201: it needs a frame channel-count guard). If Rust moves to Kotlin (section 10), choose the Kotlin decoder. | **Sistrum has no Kotlin FLAC decoder.** It uses the platform decoder. WaxFlow has `codec/flac` that could be ported. | **Gap.** Choose claxon in Rust (no JNI hop for the USB worker) or port WaxFlow's FLAC. The platform decoder's float output is lossless only up to 24-bit. |
 | WavPack PCM for the USB path | WavPack C (`openWavPack`…) | `codecs/.../codec/wavpack/*`, `container/wv/*` | `KotlinWavPackProvider.kt` | Oracle-tested against WaxFlow in Sistrum. Sistrum's notes say WaxFlow refuses hybrid, float and >2-channel WavPack, so check the Kotlin port's own refusals. |
 | WavPack DSD | `WavPackDsdSource` (C) | `codecs/.../container/wv/WavPackDsd.kt`, `codec/wavpack/Dsd.kt` | — | — |
 | DSF and DFF over DoP or native USB (`usbDsdOverPcm`) | `DsdFile.kt`, `DsdSource.kt`, Rust USB | Keep `DsdFile.kt` or use `codecs/.../container/dsf`, `container/dff`, plus `codec/dsd/DopPacker.kt` | `KotlinDsdProvider.kt` | — |
@@ -144,7 +152,7 @@ Call sites, from `grep FFmpegKit|FFprobeKit|FFmpegService`:
 | F1 | **ReplayGain scan** (Edit / song menu: ReplayGain apply) | `replaygain_service.dart:71` → `FFmpegService.scanReplayGain` → `ffmpeg_replaygain.dart` (`ebur128=peak=true`) | Decodes the whole file. Measures integrated LUFS and the true peak. | `OfflineDecoder` → `analysis/.../PcmAnalyzer` (groups = LOUDNESS: `Loudness.kt` BS.1770 plus `AnalysisResampler` 192 kHz true peak). Gain = −18 − LUFS. Album: Sistrum's `AlbumLoudnessPlanner.kt` gates over the whole album. Tests: Sistrum validates against an FFmpeg oracle (`docs/analysis/ORACLE.md`). Port the oracle JSON as fixtures. |
 | F2 | **ReplayGain write fallback** | `replaygain_service.dart:166-167` → `writeAlbum/TrackReplayGainTags` (stream-copy remux) | Used only when the native Rust writer fails. Never for Opus, Ogg or M4A. | **Delete the fallback.** Rust `tags/write/*` writes FLAC, MP3 (ID3), Ogg/Opus, M4A, APE/WV/MPC, WAV and AIFF. On failure, keep the original and report it, as Opus and M4A already do. |
 | F3 | **Tag edit fallback** (Edit Metadata for MP3, M4A and Opus) | `metadata_persistence_service.dart:242-254` → `embedMetadataTo{Mp3,M4a,Opus}`; Rust returns `"method":"ffmpeg"` (`rust_backend/crates/local/src/backend/tags.rs:115`) when its native write fails | Remuxes with new metadata and cover. | **Delete the fallback.** Make Rust return an error instead of `method: ffmpeg`. Remove `MetadataSaveCodec`, `_embed`, `_fallbackTags` and `ffmpeg_metadata.dart`'s embed code. Rename `MetadataSaveFailure.ffmpeg` and the `metadataSaveFailedFfmpeg` string to a generic "the file could not be written". Keep `id3v23_lyrics.dart` only if a native path still calls it. |
-| F4 | **Cover resize** (save cover with max dimension; collection/playlist covers) | `metadata_cover_resources.dart:149`, `library_collections_provider.dart:36` → `resizeCoverArt` (`scale … lanczos`, JPEG q 2) | Decodes the image, scales it and encodes JPEG. | Rust `image` crate (already in `spotiflac-core`, used by `native_palette`), as a new `data_jobs` job, or Android `ImageDecoder` with a target size and `Bitmap.compress(JPEG, 95)`. Prefer Rust: it needs no channel per platform and gives the same output everywhere. |
+| F4 | **Cover resize** (save cover with max dimension; collection/playlist covers) | `metadata_cover_resources.dart:149`, `library_collections_provider.dart:36` → `resizeCoverArt` (`scale … lanczos`, JPEG q 2) | Decodes the image, scales it and encodes JPEG. | Rust `image` crate (already in `sistrum-core`, used by `native_palette`), as a new `data_jobs` job, or Android `ImageDecoder` with a target size and `Bitmap.compress(JPEG, 95)`. Prefer Rust: it needs no channel per platform and gives the same output everywhere. |
 | F5 | **Image dimensions probe** | `metadata_cover_resources.dart:71`, `library_collections_provider.dart:37` → `probeImageDimensions` | ffprobe on the image | Rust `image::image_dimensions` or `BitmapFactory` `inJustDecodeBounds`. |
 | F6 | **CUE split into tracks** | `local_song_file_actions.dart:344` → `splitCueToTracks` → `ffmpeg_cue.dart` (`-ss/-to`, copy, or FLAC level 8 for FLAC, WAV, APE and WV sources) | Cuts, and re-encodes lossless sources to FLAC. | See decision D5. (a) Play CUE tracks directly with `ClippingConfiguration`, which removes the *need* to split for playback. (b) If Split stays: decode with `OfflineDecoder` or the Kotlin decoders, encode with the platform FLAC encoder (`c2.android.flac.encoder`, probed at runtime), write the `fLaC` container yourself (STREAMINFO with the MD5 updated), then copy tags with the Rust writer. Lossy sources: MP3 frame-boundary byte copy; AAC/M4A through `MediaExtractor` + `MediaMuxer` (MP4); Opus through `MediaMuxer` OGG (API 29+). (b) is new code (about 400–600 lines) with no Sistrum source. |
 | F7 | **Audio Quality Analysis: spectrogram** | `audio_analysis_widget.dart:631` (`showspectrumpic` to PNG) | Decodes and renders a spectrogram image. | `OfflineDecoder` → `dsp/fft/Plan.kt` (FFT) → magnitude grid → paint in Dart (`CustomPainter`) or encode the PNG in Rust with `image`. Keep the current bounded size and time limits. |
@@ -198,7 +206,11 @@ Read from `specs/*/HANDOFF.md` and `tasks.md` at `88e5987`.
 
 ## 6. How to bring the code over
 
-`git cherry-pick` does not work between these repositories. They have no shared history, the paths differ (`androidApp/` vs `android/app/`), the packages differ (`com.amwolfstein.sistrum` vs `com.zarz.spotiflac`) and the UI frameworks differ (Compose vs Flutter).
+`git cherry-pick` does not work between these repositories. They have no shared history,
+the paths differ (`androidApp/` vs `android/app/`) and the UI frameworks differ (the retired
+Compose app vs this Flutter app). Both now use `com.amwolfstein.sistrum`; the retired
+Compose app must be uninstalled before installing this Flutter app because their signing
+identities can conflict. A shared package name does not make their code interchangeable.
 
 Use this instead:
 
@@ -342,7 +354,7 @@ The new code is pure Kotlin and JVM: Media3, Sistrum's `codecs`, `dsp` and `anal
 
 | Still there | Why it needs the NDK |
 |---|---|
-| **Rust backend** (`rust_backend`, `libspotiflac_mobile.so`) | `scripts/build_rust_backend.sh` links with the NDK's `aarch64-linux-android24-clang` and `armv7a-…-clang` and uses NDK `llvm-ar` and its sysroot. Its C dependencies (`rusqlite` with bundled SQLite through `libsqlite3-sys`, and `libusb1-sys` vendored) are compiled by the NDK's clang. The `buildRustBackend` Gradle task reads `ANDROID_NDK_HOME` (`android/app/build.gradle.kts:169-173`). |
+| **Rust backend** (`rust_backend`, `libsistrum_mobile.so`) | `scripts/build_rust_backend.sh` links with the NDK's `aarch64-linux-android24-clang` and `armv7a-…-clang` and uses NDK `llvm-ar` and its sysroot. Its C dependencies (`rusqlite` with bundled SQLite through `libsqlite3-sys`, and `libusb1-sys` vendored) are compiled by the NDK's clang. The `buildRustBackend` Gradle task reads `ANDROID_NDK_HOME` (`android/app/build.gradle.kts:169-173`). |
 | **Direct USB** (decision D3) | No longer: Direct USB is dropped (D3). Only the Rust backend keeps the NDK until section 10. |
 | AGP release packaging | With `ndk { debugSymbolLevel = "FULL" }`, AGP uses the NDK's tools to strip packaged `.so` files and extract symbols: `libflutter.so`, `libapp.so`, the Rust library and JNA's `libjnidispatch.so`. Without an NDK it only warns and ships unstripped libraries. |
 
@@ -357,7 +369,7 @@ So keep `ndkVersion = "30.0.16248370"`, `ndk.abiFilters` and the ABI splits. Rem
 | SDK | required | required |
 | NDK | required (CMake C++ and Rust) | required (Rust only) |
 | CMake | required | not needed |
-| Native libraries built from our own sources | `libspotiflac_audio.so` and `libspotiflac_mobile.so` | `libspotiflac_mobile.so` only |
+| Native libraries built from our own sources | `libsistrum_audio.so` and `libsistrum_mobile.so` | `libsistrum_mobile.so` only |
 | Third-party prebuilt `.so` | FFmpeg Kit, JNA, Flutter | JNA, Flutter |
 
 Unzip the release APK and list `lib/` before and after to confirm, as Sistrum 003 plans.
@@ -405,7 +417,7 @@ Two engine rewrites at once make failures hard to trace.
 | Library DB, collections, playlists, cache (`native_library`, `native_collections`, `native_playlist*`, `native_cache`) | about 3,000 | Android SQLite (`SQLiteDatabase`) | Medium: same schema, transactions and WAL rules |
 | Lyrics, XML, helpers (`native_lyrics.rs`, `native_xml.rs`, `core/src/lyrics`) | about 1,300 | Plain Kotlin | Easy |
 | CUE parser (`core/src/cue.rs`) | 430 | Sistrum `codecs/cue/Cue.kt` (GPL) or a direct translation | Easy |
-| Cover cache and palette (`core/src/cover*`, `native_palette.rs`, `image` crate) | about 960 | `ImageDecoder` / `BitmapFactory` plus `material-color-utilities` (Java). Keep the HCT rules in `AGENTS.md` (one analysis per cover version, `mornyeCoverColors`). | Easy to medium |
+| Cover cache and palette (`core/src/cover*`, `native_palette.rs`, `image` crate) | about 960 | `ImageDecoder` / `BitmapFactory` plus `material-color-utilities` (Java). Keep the HCT rules in `AGENTS.md` (one analysis per cover version, `sistrumCoverColors`). | Easy to medium |
 | Audio analysis maths (`native_audio_analysis.rs`) | 480 | Sistrum `:analysis` / `:dsp` | Easy |
 | Data jobs and cancellation (`data_jobs.rs`, `cancellation.rs`) | about 560 | Kotlin coroutines with `Job` cancellation | Easy |
 | UniFFI bindings, JNA, `SelectedCoreBackend.kt`, `NativeDataJobs.kt` | — | Removed | — |
@@ -468,14 +480,14 @@ removed.
 | SDK | required | required | required |
 | NDK | required | required (Rust) | **not needed** (if Direct USB is dropped) |
 | CMake, cargo, Rust toolchain | required | cargo and Rust toolchain only | **none** |
-| Native libraries from our own sources | `libspotiflac_audio.so`, `libspotiflac_mobile.so` | `libspotiflac_mobile.so` | **none** |
+| Native libraries from our own sources | `libsistrum_audio.so`, `libsistrum_mobile.so` | `libsistrum_mobile.so` | **none** |
 | Third-party prebuilt `.so` | FFmpeg Kit, JNA, Flutter | JNA, Flutter | Flutter only |
 
 Size: about as big as the Media3 migration itself, roughly 20,000 lines of Kotlin plus tests.
 
 ### 10.8 Other option considered: WaxFlow and WaxLabel in Go
 
-Mornye used a Go backend (gomobile) until `aa997264` (2026-09-14). That backend was the download app's code
+Sistrum used a Go backend (gomobile) until `aa997264` (2026-09-14). That backend was the download app's code
 (providers, extensions, downloads, online lyrics, scan, basic tag editing) and had **no audio decoding**, so
 restoring it does not help.
 

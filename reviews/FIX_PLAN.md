@@ -1,5 +1,7 @@
 # Fix plan
 
+> Identity normalization (T16, 2026-10-28): historical names, paths and command strings below were mechanically renamed. Original evidence used the former terms; no listed checks were rerun by this rename. Encoded upstream/download identifiers retain their actual destinations.
+
 These batches are proposals and have not been approved. Each one follows `PROTOCOL.md` Fix
 batches (with `review-fixer`) and the `AGENTS.md` code → graphify → docs commits. Do them in
 order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it in that batch.
@@ -46,7 +48,7 @@ order. Pick up any NEEDS VERIFICATION item in a batch only after confirming it i
 | P5 | PERF-404 (with UX-104), PERF-201, PERF-602 | Dead lookup sets and wasted per-build list work. |
 | P6 | PERF-405, PERF-603, PERF-604 | Home shelf caching and rebuild scope, and startup ordering. Only if measured. |
 
-## Tier 2c: Mornye parity (artist, album, playlist, Home, Now Playing)
+## Tier 2c: Sistrum parity (artist, album, playlist, Home, Now Playing)
 
 Owner (2026-10-20): done in this session after the upstream port batches, as port batches
 8-12 (M1+M2, M3+M4, M5+M6, M7-M9 with HOME-007, M10+M11), tested once per batch.
@@ -58,7 +60,7 @@ Owner (2026-10-20): done in this session after the upstream port batches, as por
 | M3 | MORN-006, MORN-007, MORN-008 | Album header meta (genre, year, localized minutes), CUE Play-all, ReplayGain label. |
 | M4 | MORN-009, MORN-010, MORN-011, MORN-012 | Artist header buttons, placeholders, collapse threshold, Popular rows and album cards. |
 | M5 | MORN-013, MORN-014 | Collection action styling/feedback (tonal style, owner-approved) and one cover source. |
-| M6 | MORN-015, MORN-016 | Upstream-latest landscape header and Mornye contrast/touch-target fixes. |
+| M6 | MORN-015, MORN-016 | Upstream-latest landscape header and Sistrum contrast/touch-target fixes. |
 
 | M7 | HOME-002, HOME-001 | Home shelves stop collapsing on library reloads; featured covers stop squashing. |
 | M8 | HOME-003, HOME-004, HOME-005 | Home refresh, empty/loading states, date/text/a11y and upstream sizing. |
@@ -73,7 +75,7 @@ tests to delete are listed in TEST-101.
 
 | # | Findings | What it removes |
 |---|---|---|
-| 22 | DEAD-601, DEAD-611, DEAD-622, DEAD-633, DEAD-703 | Mornye-only collapse: non-Mornye branches, Material Expressive leftovers and the unused font. |
+| 22 | DEAD-601, DEAD-611, DEAD-622, DEAD-633, DEAD-703 | Sistrum-only collapse: non-Sistrum branches, Material Expressive leftovers and the unused font. |
 | 23 | DEAD-001..004, DEAD-501..504, DEAD-632, DEAD-704 | Download, provider and re-enrich services and helpers. |
 | 24 | HOME-007, UX-104, DEAD-602, DEAD-603, DEAD-621, DEAD-631, DEAD-706 | Unused widgets and files. |
 | 25 | DEAD-201..208, DEAD-301..304, DEAD-401..403 | iOS paths, dead bridge methods, and dead settings fields. Keep the JSON parse. |
