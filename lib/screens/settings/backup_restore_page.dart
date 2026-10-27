@@ -12,6 +12,7 @@ import 'package:spotiflac_android/providers/user_profile_provider.dart';
 import 'package:spotiflac_android/services/backup_service.dart';
 import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/utils/logger.dart';
+import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 
@@ -359,6 +360,7 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          const NavBarSliverSpacer(),
         ],
       ),
     );

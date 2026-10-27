@@ -11,6 +11,7 @@ import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
+import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
@@ -626,6 +627,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const NavBarSliverSpacer(),
           ],
         ],
       ),

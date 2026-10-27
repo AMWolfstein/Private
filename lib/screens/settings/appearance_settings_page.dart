@@ -8,6 +8,7 @@ import 'package:spotiflac_android/models/mornye_glass.dart';
 import 'package:spotiflac_android/services/mornye_glass_auto_probe.dart';
 import 'package:spotiflac_android/models/theme_settings.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/mornye_chrome.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
@@ -141,10 +142,8 @@ class AppearanceSettingsPage extends ConsumerWidget {
               ),
             ),
 
-            const SliverFillRemaining(
-              hasScrollBody: false,
-              child: SizedBox(height: 32),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            const NavBarSliverSpacer(),
           ],
         ),
       ),

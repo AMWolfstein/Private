@@ -6,6 +6,7 @@ import 'package:spotiflac_android/providers/runtime_profile_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/theme/mornye_icons.dart';
 import 'package:spotiflac_android/utils/adaptive_layout.dart';
+import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 
@@ -164,6 +165,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const NavBarSliverSpacer(),
           ],
         ),
       ),

@@ -18,6 +18,7 @@ import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/widgets/app_sliver_header.dart';
 import 'package:spotiflac_android/screens/settings/metadata_separator_settings_page.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
+import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 
 class LibrarySettingsPage extends ConsumerStatefulWidget {
@@ -778,6 +779,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
+          const NavBarSliverSpacer(),
         ],
       ),
     );
