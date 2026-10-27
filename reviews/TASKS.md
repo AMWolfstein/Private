@@ -487,7 +487,7 @@ or exported components.
     the modal fixture explicitly keeps its underlying page at 1x and asserts the
     root-navigator picker is 2x, so no whole-page large-text pass is claimed.
 
-- [ ] **T13: Clean up build, dependencies and tests**
+- [x] **T13: Clean up build, dependencies and tests** (scoped cleanup complete; TEST-101 source-sweep remainder stays open)
   - Findings (all P3): SEC-302, DEP-001, DEP-002, TEST-101, TEST-203, TEST-205.
   - Files: `android/app/build.gradle.kts` (release signing), `pubspec.yaml`,
     `rust_backend/NOTICE`, `test/library_collections_hydration_test.dart`,
@@ -503,6 +503,27 @@ or exported components.
   - Codex: DC-DEAD-002 (ProGuard rules for removed classes), DC-DEAD-004 (unused
     `open_filex`), DC-DEAD-005 (direct `timezone`, `html` and `synchronized`; do it with
     DEP-001), DC-DEAD-006 (two orphan test-support files).
+  - Completed 2026-10-27: code `3352354`, graph `f0b1e2b`. Missing-key release fallback now warns explicitly;
+    no APK was built or signed. Removed only unused direct timezone/html/synchronized/open_filex;
+    timezone and synchronized remain transitive. Retained cupertino_icons because live Flutter
+    CupertinoIcons references require its font. Normal pub resolution removed html/csslib/open_filex
+    with no surviving-package version churn. Stale network/casing NOTICE prose and absent-class
+    ProGuard keeps are gone; the live Go resampling attribution/license and JNI/UniFFI keeps remain.
+  - TEST-203 is source-validated and fixed with ordering probes, synchronous/completed-future
+    negative controls and a Completer/event positive control, not minimum tick counts. Raw benchmark
+    heartbeat/max-gap measurements and parity/order/publication assertions remain. Two touched
+    hydration length assertions now use hasLength (TEST-205). The probe proves one caller scheduling
+    opportunity before completion, not continuous responsiveness or native/device throughput.
+  - DC-DEAD-006's two orphan helpers and an empty cover-cache test are removed; the obsolete
+    getLyricsLRCWithSource mock arms are trimmed. TEST-101 remains OPEN: its surviving iOS-path
+    tests still exercise source callers, and live cover/loading/SAF history and old-JSON contracts
+    are intentionally retained. Do not delete tests alone or claim the whole source sweep finished.
+  - dependency-auditor and two bounded test-auditor passes PASS, read-only enforcement prompt-only.
+    Analysis: No issues found (27.2s). Full serial Flutter: 1,800 passed / 3 skipped / 0 failed
+    (20:21); no recovery reruns needed. Android host check: BUILD SUCCESSFUL (2m22s), 94 passed /
+    1 skipped / 0 failed across 20 suites; it exercised the missing-keystore warning. Existing
+    Gradle/AGP/Kotlin deprecation warnings remain outside scope. Rust source unchanged (NOTICE only),
+    so Rust checks not required. No APK, instrumentation or device execution. Evidence: VERIFICATION.md.
 
 - [ ] **T14: Remove the dead code Codex found**
   - Source: `reviews/dead-code-2026-10-23/` (all P3, statically validated).

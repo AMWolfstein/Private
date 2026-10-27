@@ -19,40 +19,16 @@
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
 
-### SEC-302 [P3] [confidence: high] [VALIDATED]
-- Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
-- Scenario: no `key.properties` → release silently signs with the debug key; the "CI re-signs" comment has no workflow in the repo.
-- Fix: warn or fail release tasks without a keystore unless an opt-in property is set; ~5 lines. (Also reported by dependency-auditor as DEP-003; merged.)
-
 ### UX-207 [P3] [confidence: low] [NEEDS VERIFICATION]
 - T12 disposition: Owner-deferred T12: tablet/foldable landscape verification requires a device/emulator; not run and not claimed fixed.
 - Location: `AndroidManifest.xml:46` (`screenOrientation="portrait"`), `lib/services/app_orientation.dart:12-19`
 - Scenario: targetSdk 37 → Android 16+ ignores orientation locks on large screens (sw ≥ 600dp), so every page, not only the full player, can render in landscape there.
 - Fix: check non-player pages on a tablet/foldable emulator in landscape; fix layouts that assume portrait. No manifest change needed.
 
-### DEP-001 [P3] [confidence: high] [VALIDATED]
-- Location: `pubspec.yaml:17` (`timezone`), :40 (`cupertino_icons`), :69 (`synchronized`)
-- Scenario: zero `package:` imports in lib/test/integration_test; `cupertino_icons` bundles an unused font.
-- Fix: remove the three lines, `flutter pub get`.
-
-### DEP-002 [P3] [confidence: high] [VALIDATED]
-- Location: `rust_backend/NOTICE:17` (`crates/network/src/url.rs`), `pubspec.yaml:31` ("# HTTP & Network" over `crypto`)
-- Scenario: NOTICE attributes Go-licensed code to a crate that no longer exists; pubspec comment names a removed section.
-- Fix: repoint or drop the NOTICE sentence; retitle the comment. Docs only.
-
-### TEST-203 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `test/library_collections_hydration_test.dart:335-348,455-464` (`expect(ticks, greaterThan(1))`), `test/support/library_collections_benchmark.dart:71`, integration_test native heartbeats
-- Scenario: responsiveness asserted by counting real 1 ms `Timer.periodic` ticks; a fast parse (smaller fixture at :333) can yield 0–1 ticks.
-- Fix: order-based check (timer/microtask scheduled mid-work ran before completion) instead of a count.
-
-### TEST-205 [P3] [confidence: high] [VALIDATED]
-- Location: repo-wide (~55 `expect(x.length, N)`, ~8 `expect(x.isEmpty, isTrue)`, e.g. `library_collections_database_read_test.dart:151`, `local_artist_popular_test.dart:71-72`)
-- Scenario: weak matchers give poor failure messages; no false passes found.
-- Fix: use `hasLength`/`isEmpty`/`everyElement` only in files already being touched.
-
 ### TEST-101 [P3] [confidence: high] [VALIDATED]
+- T13 disposition (`3352354`): partially completed, still OPEN. Removed the two obsolete `getLyricsLRCWithSource` mock arms and the empty `cover_cache_maintenance_test.dart`; most listed deletions/trims were already completed by earlier batches. Retain live embedded-cover and `TrackListSkeleton` coverage, removed-key/old-JSON compatibility assertions, and the still-live SAF history fields. `ios_container_paths_test.dart` still exercises source callers in library schema/open, history and playback; deleting that test alone would hide the unfinished source cleanup. That separate source-removal work is outside T13; no whole dead-code-sweep completion claim.
 - Location: test trim map for the dead-code sweep (one entry instead of per-DEAD edits)
-- Scenario: these tests keep dead code alive and must be deleted or trimmed together with the matching entry:
+- Historical trim map (completed/retained entries are not new removal instructions; see T13 disposition): tests were assigned to removal/trim together with the matching source entry:
   - DEAD-001: delete `ffmpeg_decryption_output_test.dart`.
   - DEAD-002: delete `lyrics_metadata_helper_test.dart`, `re_enrich_release_policy_test.dart` and `re_enrich_result_test.dart`.
   - DEAD-003: delete `cover_art_utils_test.dart`.
@@ -149,6 +125,36 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Disposition: newly discovered pre-existing defect outside the T12 changed symbol (`_showAutoScanPicker`); recorded, not silently fixed. The corrected Auto scan test explicitly isolates the underlying page at 1x while asserting its root-navigator modal is still 2x. No whole-settings-page large-text pass is claimed.
 
 ## Resolved
+
+### SEC-302 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3352354` (T13). Missing android/key.properties now emits an explicit Gradle warning that release builds use the debug key and require a release keystore before distribution. The Android host check exercised that warning; the source contract pins it. No APK was built or signed.
+- Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
+- Scenario: no `key.properties` → release silently signs with the debug key; the "CI re-signs" comment has no workflow in the repo.
+- Fix: warn or fail release tasks without a keystore unless an opt-in property is set; ~5 lines. (Also reported by dependency-auditor as DEP-003; merged.)
+
+### DEP-001 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3352354` (T13). Removed unused direct timezone and synchronized declarations (both remain required transitively), plus html and open_filex with DC-DEAD-004/005. Normal flutter pub get removed html/csslib/open_filex without surviving-version churn. Rejected the cupertino_icons-removal premise: live CupertinoIcons references and mornye_icons fontPackage/fontFamily require its bundled font despite no direct package import.
+- Location: `pubspec.yaml:17` (`timezone`), :40 (`cupertino_icons`), :69 (`synchronized`)
+- Scenario: zero `package:` imports in lib/test/integration_test; `cupertino_icons` bundles an unused font.
+- Fix: remove the three lines, `flutter pub get`.
+
+### DEP-002 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3352354` (T13). Retitled crypto as Hashing and removed stale network URL and musicbrainz casing attribution prose. The retained ApproxBiLinear artwork port and the complete Go copyright/license text remain attributed.
+- Location: `rust_backend/NOTICE:17` (`crates/network/src/url.rs`), `pubspec.yaml:31` ("# HTTP & Network" over `crypto`)
+- Scenario: NOTICE attributes Go-licensed code to a crate that no longer exists; pubspec comment names a removed section.
+- Fix: repoint or drop the NOTICE sentence; retitle the comment. Docs only.
+
+### TEST-203 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3352354` (T13). Validated by tracing Isolate.spawn, worker-ready and 256-row acknowledgements: no minimum elapsed duration guarantees two 1ms ticks or one 10ms tick. Assertions now observe a caller microtask before operation completion; synchronous decode, completed-future and small inline-async negative controls reject a synchronous substitute, and a Completer/event handshake is the positive control. Exact data/order/parity/publication assertions remain. Benchmark heartbeat/max-gap fields remain raw measurements; their timer was not independently defective. Native integration sources use the same ordering probe but were not executed on a device. One caller opportunity is not continuous responsiveness, event fairness or native throughput certification.
+- Location: `test/library_collections_hydration_test.dart:335-348,455-464` (`expect(ticks, greaterThan(1))`), `test/support/library_collections_benchmark.dart:71`, integration_test native heartbeats
+- Scenario: responsiveness asserted by counting real 1 ms `Timer.periodic` ticks; a fast parse (smaller fixture at :333) can yield 0–1 ticks.
+- Fix: order-based check (timer/microtask scheduled mid-work ran before completion) instead of a count.
+
+### TEST-205 [P3] [confidence: high] [RESOLVED]
+- Resolution: `3352354` (T13). Replaced the two bare collection-length assertions in the touched hydration test with hasLength, preserving exact expectations and improving diagnostics. No repo-wide matcher-only churn; untouched files remain outside the requested scope.
+- Location: repo-wide (~55 `expect(x.length, N)`, ~8 `expect(x.isEmpty, isTrue)`, e.g. `library_collections_database_read_test.dart:151`, `local_artist_popular_test.dart:71-72`)
+- Scenario: weak matchers give poor failure messages; no false passes found.
+- Fix: use `hasLength`/`isEmpty`/`everyElement` only in files already being touched.
 
 ### UX-102 [P3] [confidence: high] [RESOLVED]
 - Resolution: `601fa81` (T12). Popular page dots use 48dp hit targets without changing the five-song pages or four-dot cap.
