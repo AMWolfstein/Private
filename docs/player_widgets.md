@@ -1,6 +1,6 @@
 # Android home-screen player widget
 
-Add **SpotiFLAC Player** from your launcher's widget picker. Resize it for compact,
+Add **Sistrum Player** from your launcher's widget picker. Resize it for compact,
 horizontal or large artwork layouts. Widget configuration offers artwork colors,
 light/dark appearance and artist-name visibility; reconfiguration depends on the launcher.
 Choose a local track in the app first. Artwork/text opens the app; transport buttons use
@@ -9,7 +9,7 @@ the existing playback queue. An empty widget opens the app with transport disabl
 Artwork is a static local thumbnail. Updates follow track/transport changes, with no
 continuous refresh timer. Remote artwork is ignored. Android controls update timing.
 
-`PlayerWidgetService` publishes through `com.zarz.spotiflac/player_widget`, discards stale
+`PlayerWidgetService` publishes through `com.amwolfstein.sistrum/player_widget`, discards stale
 artwork results and serializes commands. Native `RemoteViews` use per-widget preferences.
 If the process has been killed, a control opens the activity to restore the saved queue
 and execute the command; restored playback starts paused.

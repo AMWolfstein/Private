@@ -1,4 +1,4 @@
-# SpotiFLAC — local Android player
+# Sistrum — local Android player
 
 This fork is an offline music player for Android. It plays music already on your device;
 there are no online providers, extensions, downloads, network drives or accounts.
@@ -16,6 +16,12 @@ Open the APK on your phone and allow installation from the browser or file manag
 Android asks. A locally built APK uses the development signing key unless release signing
 is configured; it may not update an installation signed by a different key. Back up app data
 before replacing such an installation.
+
+The app ID is `com.amwolfstein.sistrum` (`com.amwolfstein.sistrum.local` for
+Sistrum Local). The retired Sistrum Compose app uses the same base ID: uninstall
+it before installing this app. This is a separate installation from SpotiFLAC;
+export a backup in the old player and restore it in Sistrum. Old backup formats
+and persisted settings remain compatible; folder permissions must be granted again.
 
 After setup, select a local music folder, grant access, scan it and choose a track.
 For removable storage, use Android's folder picker and retain its storage permission.
@@ -41,6 +47,12 @@ The APK is written to `build/app/outputs/flutter-apk/`. Use
 `scripts/check_backend_apk.py <apk> --backend rust --abis arm64-v8a,armeabi-v7a`
 to audit a universal build. Physical-device playback, SAF, USB and widget checks are
 separate from host tests.
+
+Branding uses the owner's transparent `logo/logo.png` without recolouring. With
+Python/Pillow available, run `python3 scripts/generate_sistrum_branding.py`, then
+`dart run flutter_launcher_icons` to regenerate icon inputs, the notification
+silhouette and launcher outputs. Android adds its own launcher/splash masks; the
+flat dark ground is not the textured rounded-square artwork in `logo/logo2.png`.
 
 The Rust workspace contains `core`, `local`, `mobile` and `bindgen`. Local file operations
 cross generated UniFFI Kotlin bindings; audio playback remains native Android.

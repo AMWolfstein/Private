@@ -547,9 +547,21 @@ or exported components.
   - Verification: `flutter analyze` clean. The full serial Flutter run was 1,783 passed / 3 skipped / 1 failed. The failure was a defect in my new v19 test (it expected 8 legacy objects; SQLite also lists the primary-key auto-index, so 9, and it guessed the wrong FTS trigger prefix). Fixed the test only and reran its file: 6 passed, 0 failed; the full suite was not rerun, per step 6. `check_rust_backend.sh` exit 0: 196 passed / 1 ignored. `check_android.sh` BUILD SUCCESSFUL: 20 suites, 95 tests = 94 passed / 1 skipped / 0 failed. No APK, instrumentation compilation/execution or device run. Evidence: VERIFICATION.md.
     Codex lists as retained.
 
-- [ ] **T15: Rename the app to `com.amwolfstein.sistrum` and replace the logo**
-  - Not from the audit: owner request 2026-10-24. **Blocked until the owner uploads `logo/logo.png`
-    and `logo/logo2.png`** (a new top-level `logo/` folder). Do not invent or redraw a logo.
+- [x] **T15: Rename the app to `com.amwolfstein.sistrum` and replace the logo**
+  - Completed 2026-10-28, source `dba4480`, graph `ebfcdb1`; api-compat-auditor, kotlin-android-auditor,
+    ux-auditor and security-auditor PASS (scoped, prompt-only read-only enforcement).
+    Preserved internal UniFFI and Dart packages; optional Dart package rename skipped as unrelated churn.
+    Host backup fixtures accept old/new producers and preserve portable settings/collections.
+    Analysis clean; full serial Flutter 1,857 passed / 3 skipped / 1 failed (missed Korean
+    `SpotifyFLAC` variant), fixed/re-reviewed and failing file rerun 22 passed / 0 failed;
+    full suite not rerun per step 6. Branding regressions 3/3; Android host 96 passed / 1 skipped /
+    0 failed. ARM64 native audio and instrumentation Kotlin/Java source compilation PASS;
+    compiled library exports all 18 new-package JNI symbols. No APK/signing/device run.
+    Owner still checks launcher/themed icon/splash/notification/widget/About and real old-backup restore.
+    See VERIFICATION.md for commands, logs and intentionally retained identities. Push verification
+    belongs to the post-commit handoff; existing audit findings/RTL/copy deferrals are unchanged.
+  - Not from the audit: owner request 2026-10-24. The owner uploaded `logo/logo.png`
+    and `logo/logo2.png` in `fc19668` and requested T15 on 2026-10-28. Do not invent or redraw a logo.
   - **Owner decisions (2026-10-24), already answered; do not ask again:**
     1. This app takes `com.amwolfstein.sistrum`. Sistrum's Compose app (`AMWolfstein/Sistrum`,
        `com.amwolfstein.sistrum` and `.dev`) is **retired**. Uninstall it from the phone before
@@ -600,9 +612,12 @@ or exported components.
     - Prove nothing is left: `graphify query` for the old identity, then
       `grep -rI 'com.zarz.spotiflac\|com/zarz/spotiflac\|Java_com_zarz'` must match only intentionally kept
       persisted values and history docs.
-  - **Logo:** `logo/logo.png` is the source image. Every output must look **exactly** like
-    `logo/logo2.png`: same crop, padding, background colour and shape. Compare each generated image with
-    `logo2.png` side by side and report any difference. Never stretch, recolour or redraw.
+  - **Logo (owner clarification 2026-10-28):** the two supplied images contain different artwork,
+    not just different padding/backgrounds. After this was explained, the owner chose **Use logo.png**,
+    not logo2.png. Preserve that transparent full-colour source without crop, tint, stretch or redraw.
+    Use the dark `#12100E` sampled from logo2.png's corner for launcher/splash grounds. The resulting
+    flat ground, source proportions and ribbons intentionally differ from logo2.png's textured,
+    illuminated rounded-square composition. Android's launcher/splash masks remain platform-controlled.
     - Launcher icon inputs used by `flutter_launcher_icons` (`pubspec.yaml`): `icon.png`,
       `icon_android.png`, `icon_foreground_android.png`, `adaptive_icon_background` (`#FFF4DF` today:
       take the new background from `logo2.png`), `adaptive_icon_foreground_inset: 16`. Regenerate with
