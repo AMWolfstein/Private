@@ -75,6 +75,13 @@ void main() {
           yield LicenseEntryWithLineBreaks(const [
             'libFLAC',
           ], await rootBundle.loadString('assets/licenses/flac.txt'));
+          yield LicenseEntryWithLineBreaks(const [
+            'FFmpeg',
+          ], await rootBundle.loadString('assets/licenses/ffmpeg.txt'));
+          yield LicenseEntryWithLineBreaks(const [
+            'FFmpeg',
+            'FFmpegKit',
+          ], await rootBundle.loadString('assets/licenses/lgpl-3.0.txt'));
         }
       });
       _startupBenchmark?.observeFirstFrame();
