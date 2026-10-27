@@ -216,4 +216,5 @@ dependencies {
     androidTestImplementation("com.antonkarpenko:ffmpeg-kit-audio:2.2.3")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.media:media:1.8.0")
 }

@@ -22,6 +22,11 @@ adding another playback engine or native SDK.
   Application startup supplies the existing device compatibility flags, including
   the scoped Xiaomi/Android 15 workaround. Arguments are copied and late changes
   rejected so Activity recreation cannot silently reconfigure the cached engine.
+- Android (upstream Mornye `463c2ce9`): prepare metadata artwork off the main
+  thread, then publish metadata, artwork and the notification on the main
+  looper, and refresh the playback state's media ID without changing position
+  or controls, so late artwork or tags reach the notification, lock screen and
+  Android Auto. Instrumentation test `MediaControlMetadataTest`.
 - iOS: allow the active music handler to re-publish retained Now Playing
   metadata after restoring its audio session on app lifecycle/video changes.
   Refresh keeps artwork and extrapolates elapsed time without restarting audio;
