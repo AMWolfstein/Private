@@ -72,6 +72,9 @@ Owner asked for every applicable fix, AutoMix and audio_service included (2026-1
 |---|---|---|---|
 | U-501 | `10b56148`, `1c2cca66`, `f37f7b16` | DONE `0acf9ee`: untagged MP3/MP4 read as songs with their display name; raw ADTS `.aac` reads ID3/APEv2 tags, cover and quality; an ID3v2 tag before FLAC is skipped on read and kept on tag writes; interrupted/short reads retry; the last direct SAF read waits 400 ms. Ogg hunks not needed (byte-bounded, untagged comments already accepted). Upstream Rust format, tagless and writer tests ported. | A |
 | U-502 | `d8a54db1` | DONE `900239c`: Flutter 3.47.7 semantics geometry crash backport (`patches/flutter/`, `scripts/prepare_flutter_sdk.dart`, run by `build_android.sh`); regression test fails on an unpatched SDK. CI workflow hunks not applicable. | A |
+| U-503 | `37466432` | DONE `8e42f78`: settings subpages pushed in the tab navigator end with `NavBarSliverSpacer`, so their last rows clear the floating bar and mini player; Appearance no longer fills the remaining space. Adapted test. | B |
+| U-504 | `e31df404`, `8edc3441` | DONE `db7cb11`: Songs and Albums sort by Size (Largest/Smallest first) through a lazily filled `track_file_sizes` table with invalidating triggers; unknown sizes last; not offered for Playlists or Artists. Local-only adaptation (no history sizes); adapted test. | B |
+| U-505 | `30a5c82f` | DONE `55167bf`: Rust and SAF scans report the first 100 unreadable files with reasons; Local Library shows the count per folder and a sheet listing them; kept per folder in prefs, cleared by a clean scan, Clear library and folder removal. Model and provider tests ported, Rust test applied. | B |
 
 ## New in Mornye 5.2.5 (`e0563ffa..9bf4c000`, checked 2026-10-22)
 
