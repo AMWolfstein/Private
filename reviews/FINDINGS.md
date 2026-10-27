@@ -19,27 +19,13 @@
 - Scenario: crafted WAV with up to 65535 channels allocates per-channel STFT buffers up front (~100 MB–2 GB) → OOM risk.
 - Fix: reject WAV channels > 32; 1 line.
 
-### UX-102 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/local_artist_screen.dart:583-607` (Popular page dots)
-- Scenario: dot hit box ≈16×32 px, below the 48px rule.
-- Fix: `ConstrainedBox(minWidth: 48, minHeight: 48)` around the detector, keep the 8px dot; ~3 lines.
-
-### UX-106 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/widgets/album_detail_header.dart:788-820` (`_MornyeHeaderButton`, compact)
-- Scenario: 360dp width at 1.5–2× font scale → Play/Shuffle labels ellipsize (`maxLines: 1`). Arithmetic only.
-- Fix: icon-only with semantics label above ~1.3× text scale; ~10 lines.
-
-### UX-107 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/listening_statistics_screen.dart:150-154,237-263`
-- Scenario: error refresh `IconButton` has no tooltip; activity rows are announced as fragments; fixed 68px date column wraps at large scale.
-- Fix: tooltip, `Semantics(label:, excludeSemantics: true)` per row, min-width instead of fixed width; ~8 lines.
-
 ### SEC-302 [P3] [confidence: high] [VALIDATED]
 - Location: `android/app/build.gradle.kts:134-141` (`release` signingConfig)
 - Scenario: no `key.properties` → release silently signs with the debug key; the "CI re-signs" comment has no workflow in the repo.
 - Fix: warn or fail release tasks without a keystore unless an opt-in property is set; ~5 lines. (Also reported by dependency-auditor as DEP-003; merged.)
 
 ### UX-207 [P3] [confidence: low] [NEEDS VERIFICATION]
+- T12 disposition: Owner-deferred T12: tablet/foldable landscape verification requires a device/emulator; not run and not claimed fixed.
 - Location: `AndroidManifest.xml:46` (`screenOrientation="portrait"`), `lib/services/app_orientation.dart:12-19`
 - Scenario: targetSdk 37 → Android 16+ ignores orientation locks on large screens (sw ≥ 600dp), so every page, not only the full player, can render in landscape there.
 - Fix: check non-player pages on a tablet/foldable emulator in landscape; fix layouts that assume portrait. No manifest change needed.
@@ -105,167 +91,227 @@ Ours equals v5.1.1 apart from intentional deltas (Immersive view, no motion artw
 external player or download lookups). Upstream-latest items are in `UPSTREAM.md`. -->
 
 ### UI-405 [P3] [confidence: high] [VALIDATED]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/screens/local_artist_screen.dart` (Popular row divider `Positioned(left: 80, right: 20)` and row padding `fromLTRB(20, 8, 10, 8)`), `lib/screens/track_metadata_edit_sheet.dart` (`_selectionField` `EdgeInsets.only(left: 4, ...)`)
 - Scenario: RTL locale → the divider inset and label inset sit on the wrong side.
 - Fix: `PositionedDirectional`/`EdgeInsetsDirectional`; ~3 lines.
 
 ### UI-418 [P3] [confidence: low] [NEEDS VERIFICATION]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/widgets/player_lyrics.dart` (`_TimedLyricSweepPainter.paint`)
 - Scenario: word-timed RTL lyrics (Arabic/Hebrew) → the colour sweep runs left to right against the reading direction.
 - Fix: mirror the reveal per RTL `TextBox` and order boxes by reading order; ~15 lines.
 
 ### UI-419 [P3] [confidence: low] [NEEDS VERIFICATION]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/widgets/mornye_player_layout.dart` (compact cover rect, `_PlayerHeaderLayout.performLayout`)
 - Scenario: RTL on the lyrics/queue page → the compact header uses physical left/right, so it is not a mirror of the expanded header and the ellipsis no longer aligns with the timeline end.
 - Fix: resolve left/right from `Directionality`; ~10 lines.
 
-### UI-420 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/screens/lyrics_share_screen.dart` (6:4 `Expanded` split)
-- Scenario: landscape phone or large text → the line list shows about one row.
-- Fix: side-by-side layout below a height threshold; ~15 lines.
-
-### UX-209 [P2] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/queue_tab_collection_items.dart` (`_buildCollectionGridItem`), `lib/screens/queue_tab_filter_widgets.dart` (playlists grid `childAspectRatio: 0.72`)
-- Scenario: 360dp phone at 2x font → fixed square cover leaves about 55dp for title and count, which need about 71dp → RenderFlex overflow.
-- Fix: `Expanded` cover or a text-scaled `mainAxisExtent`; ~5 lines + textScale 2 widget test.
-
-### UX-210 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/queue_tab_collection_items.dart` (playlist selection mode)
-- Scenario: in playlist selection mode, tiles expose no selected/checked state and still announce "Open playlist".
-- Fix: `Semantics(selected:)` and a select/deselect label in selection mode; ~8 lines.
-
-### UX-211 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/widgets/selection_bottom_bar.dart`, `lib/screens/library_tracks_folder_screen.dart` (`appBarTitle`)
-- Scenario: the "N selected" count changes silently for TalkBack.
-- Fix: `Semantics(liveRegion: true)` around the count; 1-2 lines.
-
-### UX-212 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/screens/queue_tab_filter_widgets.dart` (`_countHeaderRow`)
-- Scenario: 1.5-2x font on 360dp → Filter/Create buttons shrink inside `FittedBox(scaleDown)` below 48dp and below 1x text.
-- Fix: `Wrap` or a second row when narrow; ~10 lines.
-
-### UX-213 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/local_song_row.dart` (ellipsis and Play tooltips, explicit badge)
-- Scenario: playlist/Loved/genre/album rows announce only "More options"/"Play"; the explicit badge reads "Explicit E".
-- Fix: title/artist in tooltips (`a11yPlayTrackByArtist`, new "More options for {title}"), `excludeSemantics: true` on the badge; ~8 lines.
-
-### UX-214 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/local_song_row.dart` (numbered leading `SizedBox(width: 24)`)
-- Scenario: 1.5-2x font on albums with 10+ tracks → track numbers wrap or overflow.
-- Fix: `FittedBox(scaleDown)` + `maxLines: 1`, or a text-scaled width; 2-3 lines.
-
-### UX-216 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/library_search_results.dart` (load-more `IconButton`)
-- Scenario: the load-more button's tooltip is the category name ("Songs").
-- Fix: a Show more string; 1 line + arb.
-
-### UX-220 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/settings_group.dart` (`SettingsChoiceChip`), `lib/screens/settings/metadata_separator_settings_page.dart` (separator rows)
-- Scenario: TalkBack does not announce the selected Player view or separator.
-- Fix: `Semantics(selected:, button: true, inMutuallyExclusiveGroup: true)`; ~6 lines.
-
-### UX-222 [P3] [confidence: medium] [NEEDS VERIFICATION]
-- Location: `lib/widgets/music_haptics_settings.dart`, `lib/widgets/playback_normalization_settings.dart`
-- Scenario: Sensitivity, Strength and Pre-amp sliders are announced with only a value.
-- Fix: `Semantics(label:)` as the clarity slider does; ~3 lines.
-
 ### UX-223 [P3] [confidence: high] [VALIDATED]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/screens/settings/playback_settings_page.dart` (`-bit PCM`, `DSD (DoP)`, `DSD (Native)`, `kHz`, `Beta`), `about_page.dart` (version line), `log_screen.dart` (`Native` badge), `library_settings_page.dart` (`day/month/year` last-scanned)
 - Scenario: non-English locale → mixed-language labels and a fixed date order.
 - Fix: l10n keys and `DateFormat.yMd(locale)`; ~10 lines.
 
-### UX-224 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/settings/cache_management_page.dart` (`_buildClearTrailing`)
-- Scenario: five "Clear" buttons with no per-row label for TalkBack.
-- Fix: label or tooltip naming the cache; ~6 lines.
-
-### UX-225 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/screens/setup_screen.dart` (`animateToPage`), `lib/screens/local_guide_pages.dart` (staggered/implicit animations), `lib/widgets/settings_group.dart` (`SettingsSearchTarget._reveal` `ensureVisible`)
-- Scenario: reduced motion on → setup slides/bounces and the settings search scroll still animate.
-- Fix: `Duration.zero`/`jumpToPage` when `disableAnimationsOf`; ~10 lines.
-
 ### UX-226 [P3] [confidence: medium] [VALIDATED]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/screens/settings/library_settings_page.dart` (hero card `Alignment.centerLeft`, `Positioned(right:/left:)` decor, `EdgeInsets.only(right: 8)`)
 - Scenario: RTL → hero count and decor stay on physical sides.
 - Fix: directional alignment, `PositionedDirectional`, `EdgeInsetsDirectional`; ~4 lines.
 
-### UX-229 [P2] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/listening_rewind_screen.dart` (`_RewindStoryState` auto-advance)
-- Scenario: TalkBack on → slides auto-advance every 6 s while the reader is still speaking (only `disableAnimationsOf` is checked).
-- Fix: `_autoAdvance = !disableAnimations && !MediaQuery.accessibleNavigationOf(context)`; ~2 lines.
-
-### UX-230 [P3] [confidence: high] [VALIDATED]
-- Location: `lib/widgets/album_detail_header.dart` (`HeaderCircleButton` defaults `buttonSize ?? 44`)
-- Scenario: the default back circle on album, playlist, artist and `AppSliverHeader` pages draws 44dp, while AGENTS.md says header controls are 48dp (`kMornyeHeaderControlSize`); the glass radius already assumes 48.
-- Fix: default to `kMornyeHeaderControlSize`; 3 lines (update header size tests).
-
-### UX-231 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/screens/track_metadata_edit_sheet.dart` (saving spinner, Advanced header, `AnimatedSize`/`AnimatedRotation`)
-- Scenario: the saving spinner is unlabeled, the Advanced header has no button/expanded semantics, and its animations ignore reduced motion.
-- Fix: `Semantics(button:, expanded:)`, a live-region "Saving" label, zero durations under reduced motion; ~12 lines.
-
 ### UX-232 [P3] [confidence: medium] [VALIDATED]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/screens/listening_rewind_screen.dart` (left-third tap = previous, `EdgeInsets.fromLTRB(16, 8, 4, 0)`), `lib/screens/listening_statistics_screen.dart` (`chevron_left`/`chevron_right`)
 - Scenario: RTL → reversed story tap zones, asymmetric Close/progress insets, year arrows pointing the wrong way.
 - Fix: directional insets, flip the zone test, direction-aware chevrons; ~8 lines.
 
-### UX-233 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/widgets/metadata_text_field.dart`
-- Scenario: the visible label is a separate `Text`; most fields have no hint, so TalkBack may read an unlabeled edit box.
-- Fix: `Semantics(label:)` around the field; ~3 lines. Verify with a semantics test.
-
 ### UX-234 [P3] [confidence: high] [VALIDATED]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/widgets/mornye_level_slider.dart` (`_update`, `_LevelPainter`, thumb centre)
 - Scenario: RTL → the horizontal EQ gain slider does not mirror, unlike `MornyeSlider` and `AppSwitch`.
 - Owner decision (2026-10-23): the gain slider mirrors in RTL like every other slider.
 - Fix: use `1 - fraction` when horizontal and RTL, in `_update`, the painter and the thumb centre; ~8 lines. The vertical EQ faders are unchanged.
 
-### UX-235 [P3] [confidence: medium] [VALIDATED]
-- Location: `lib/widgets/app_choice_chip.dart`, `lib/widgets/app_action_button.dart`, `lib/widgets/app_switch.dart`
-- Scenario: default text scale → chip and action button are about 44dp tall and the standalone switch hit box 71x44; 45 chip call sites repeat the shortfall.
-- Fix: `minimumSize: Size(48, 48)` on both `CupertinoButton`s and a 48dp switch hit box; ~3 lines.
-
-### UX-236 [P3] [confidence: low] [NEEDS VERIFICATION]
-- Location: `lib/widgets/app_choice_chip.dart` (selected state), `lib/widgets/audio_quality_badges.dart` (`ExplicitBadge`)
-- Scenario: light Mornye, red accent → selected chip text about 4.4:1 and the light explicit badge about 3.9:1 (hand-computed).
-- Fix: measure first; if below AA use `onSurface` for the selected label and an opaque badge fill.
-
 ### UX-237 [P3] [confidence: high] [VALIDATED]
+- T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
 - Location: `lib/widgets/audio_analysis_info_card.dart` (`_formatChannelStats`, `_formatChannels`)
 - Scenario: `Ch n`, `P`, `R`, `DR`, `Clip` and `N/A` are hard-coded English.
 - Fix: arb keys; ~6 strings.
 
-### UX-239 [P2] [confidence: high] [VALIDATED]
+### UX-245 [P3] [confidence: high] [VALIDATED]
+- Location: `lib/screens/settings/library_settings_page.dart:1242-1263` (`_LibraryHeroCard`, non-scanning last-scanned row).
+- Scenario: Local Library settings at 360dp width / 2x text with the hero visible; the last-scanned timestamp row overflows 192px to the right.
+- Root cause: its `Row` has an unflexed `Text`; the timestamp's intrinsic width exceeds the available 280dp.
+- Guards checked: no Flexible/Expanded or wrap guard constrains that Text; the surrounding scroll view only scrolls vertically.
+- Evidence: T12 full serial run, `library_settings_cleanup_test.dart` Auto scan fixture before modal isolation; RenderFlex overflow at `library_settings_page.dart:1242:19` with `_LibraryHeroCard` ancestry. ux-auditor independently validated source/log evidence.
+- Fix: constrain the timestamp with Flexible/Expanded and allow wrapping; add a dedicated whole-page 360dp/2x regression fixture.
+- Disposition: newly discovered pre-existing defect outside the T12 changed symbol (`_showAutoScanPicker`); recorded, not silently fixed. The corrected Auto scan test explicitly isolates the underlying page at 1x while asserting its root-navigator modal is still 2x. No whole-settings-page large-text pass is claimed.
+
+## Resolved
+
+### UX-102 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). Popular page dots use 48dp hit targets without changing the five-song pages or four-dot cap.
+- Location: `lib/screens/local_artist_screen.dart:583-607` (Popular page dots)
+- Scenario: dot hit box ≈16×32 px, below the 48px rule.
+- Fix: `ConstrainedBox(minWidth: 48, minHeight: 48)` around the detector, keep the 8px dot; ~3 lines.
+
+### UX-106 [P3] [confidence: low] [RESOLVED]
+- Resolution: `601fa81` (T12). Compact Play/Shuffle pills become icon-only at text scale >=1.3 while retaining spoken names and 48dp targets; local_detail_design_test.dart and album_play_actions_test.dart cover large text.
+- Location: `lib/widgets/album_detail_header.dart:788-820` (`_MornyeHeaderButton`, compact)
+- Scenario: 360dp width at 1.5–2× font scale → Play/Shuffle labels ellipsize (`maxLines: 1`). Arithmetic only.
+- Fix: icon-only with semantics label above ~1.3× text scale; ~10 lines.
+
+### UX-107 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). Statistics Retry has a tooltip; daily rows expose one date/minutes semantic label and the date column can grow instead of wrapping at a fixed 68dp.
+- Location: `lib/screens/listening_statistics_screen.dart:150-154,237-263`
+- Scenario: error refresh `IconButton` has no tooltip; activity rows are announced as fragments; fixed 68px date column wraps at large scale.
+- Fix: tooltip, `Semantics(label:, excludeSemantics: true)` per row, min-width instead of fixed width; ~8 lines.
+
+### UI-420 [P3] [confidence: low] [RESOLVED]
+- Resolution: `601fa81` (T12). Lyrics sharing uses a side-by-side preview/line list only in sufficiently wide short windows; the toolbar always has the full width, wraps, and keeps four 48dp swatch targets (lyrics_share_screen_test.dart).
+- Location: `lib/screens/lyrics_share_screen.dart` (6:4 `Expanded` split)
+- Scenario: landscape phone or large text → the line list shows about one row.
+- Fix: side-by-side layout below a height threshold; ~15 lines.
+
+### UX-209 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). The fixed-aspect playlist grid was removed in T11 (`f0d2318`); Playlists uses rows. No additional grid fix or tablet claim is needed.
+- Location: `lib/screens/queue_tab_collection_items.dart` (`_buildCollectionGridItem`), `lib/screens/queue_tab_filter_widgets.dart` (playlists grid `childAspectRatio: 0.72`)
+- Scenario: 360dp phone at 2x font → fixed square cover leaves about 55dp for title and count, which need about 71dp → RenderFlex overflow.
+- Fix: `Expanded` cover or a text-scaled `mainAxisExtent`; ~5 lines + textScale 2 widget test.
+
+### UX-210 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Playlist selection rows expose selected state plus Select/Deselect playlist and checked semantics instead of only an open action.
+- Location: `lib/screens/queue_tab_collection_items.dart` (playlist selection mode)
+- Scenario: in playlist selection mode, tiles expose no selected/checked state and still announce "Open playlist".
+- Fix: `Semantics(selected:)` and a select/deselect label in selection mode; ~8 lines.
+
+### UX-211 [P3] [confidence: low] [RESOLVED]
+- Resolution: `601fa81` (T12). The shared selection-bar count is a live region, including the folder selection path that uses the same bar.
+- Location: `lib/widgets/selection_bottom_bar.dart`, `lib/screens/library_tracks_folder_screen.dart` (`appBarTitle`)
+- Scenario: the "N selected" count changes silently for TalkBack.
+- Fix: `Semantics(liveRegion: true)` around the count; 1-2 lines.
+
+### UX-212 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Queue count headers wrap each action independently instead of scaling an action row down; local_library_lazy_loading_test.dart covers Songs at 360dp/2x.
+- Location: `lib/screens/queue_tab_filter_widgets.dart` (`_countHeaderRow`)
+- Scenario: 1.5-2x font on 360dp → Filter/Create buttons shrink inside `FittedBox(scaleDown)` below 48dp and below 1x text.
+- Fix: `Wrap` or a second row when narrow; ~10 lines.
+
+### UX-213 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). Song Play/Pause and overflow labels name the track, omit a missing artist clause, and follow the playing state; explicit E is excluded from the spoken Explicit label (t12_accessibility_test.dart).
+- Location: `lib/widgets/local_song_row.dart` (ellipsis and Play tooltips, explicit badge)
+- Scenario: playlist/Loved/genre/album rows announce only "More options"/"Play"; the explicit badge reads "Explicit E".
+- Fix: title/artist in tooltips (`a11yPlayTrackByArtist`, new "More options for {title}"), `excludeSemantics: true` on the badge; ~8 lines.
+
+### UX-214 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Numbered song rows scale their number column with text and keep one line (t12_accessibility_test.dart, three-digit track at 2x).
+- Location: `lib/widgets/local_song_row.dart` (numbered leading `SizedBox(width: 24)`)
+- Scenario: 1.5-2x font on albums with 10+ tracks → track numbers wrap or overflow.
+- Fix: `FittedBox(scaleDown)` + `maxLines: 1`, or a text-scaled width; 2-3 lines.
+
+### UX-216 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). The library-search load-more button says Show more rather than repeating its category name.
+- Location: `lib/widgets/library_search_results.dart` (load-more `IconButton`)
+- Scenario: the load-more button's tooltip is the category name ("Songs").
+- Fix: a Show more string; 1 line + arb.
+
+### UX-220 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). SettingsChoiceChip and tag-separator rows expose selected/button/mutually-exclusive-group semantics.
+- Location: `lib/widgets/settings_group.dart` (`SettingsChoiceChip`), `lib/screens/settings/metadata_separator_settings_page.dart` (separator rows)
+- Scenario: TalkBack does not announce the selected Player view or separator.
+- Fix: `Semantics(selected:, button: true, inMutuallyExclusiveGroup: true)`; ~6 lines.
+
+### UX-222 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Haptics Sensitivity/Strength and normalization Pre-amp sliders have semantic labels and real percent/dB value formatters.
+- Location: `lib/widgets/music_haptics_settings.dart`, `lib/widgets/playback_normalization_settings.dart`
+- Scenario: Sensitivity, Strength and Pre-amp sliders are announced with only a value.
+- Fix: `Semantics(label:)` as the clarity slider does; ~3 lines.
+
+### UX-224 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Each cache Clear action names its cache in semantics and shares the visible action busy gate.
+- Location: `lib/screens/settings/cache_management_page.dart` (`_buildClearTrailing`)
+- Scenario: five "Clear" buttons with no per-row label for TalkBack.
+- Fix: label or tooltip naming the cache; ~6 lines.
+
+### UX-225 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). Setup jumps pages, guide animations use zero duration, and settings-search reveal scrolls immediately under reduced motion; Codex FA-UX-009 is the same finding.
+- Location: `lib/screens/setup_screen.dart` (`animateToPage`), `lib/screens/local_guide_pages.dart` (staggered/implicit animations), `lib/widgets/settings_group.dart` (`SettingsSearchTarget._reveal` `ensureVisible`)
+- Scenario: reduced motion on → setup slides/bounces and the settings search scroll still animate.
+- Fix: `Duration.zero`/`jumpToPage` when `disableAnimationsOf`; ~10 lines.
+
+### UX-229 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Rewind does not auto-advance when accessibleNavigation is enabled (listening_rewind_test.dart covers enabled/disabled behavior); also closes FA-UX-007.
+- Location: `lib/screens/listening_rewind_screen.dart` (`_RewindStoryState` auto-advance)
+- Scenario: TalkBack on → slides auto-advance every 6 s while the reader is still speaking (only `disableAnimationsOf` is checked).
+- Fix: `_autoAdvance = !disableAnimations && !MediaQuery.accessibleNavigationOf(context)`; ~2 lines.
+
+### UX-230 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). HeaderCircleButton defaults to kMornyeHeaderControlSize (48dp), including tonal controls; t12_accessibility_test.dart covers the default.
+- Location: `lib/widgets/album_detail_header.dart` (`HeaderCircleButton` defaults `buttonSize ?? 44`)
+- Scenario: the default back circle on album, playlist, artist and `AppSliverHeader` pages draws 44dp, while AGENTS.md says header controls are 48dp (`kMornyeHeaderControlSize`); the glass radius already assumes 48.
+- Fix: default to `kMornyeHeaderControlSize`; 3 lines (update header size tests).
+
+### UX-231 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). The metadata sheet announces Saving as a live region, exposes Advanced button/expanded state, and disables section motion under reduced motion.
+- Location: `lib/screens/track_metadata_edit_sheet.dart` (saving spinner, Advanced header, `AnimatedSize`/`AnimatedRotation`)
+- Scenario: the saving spinner is unlabeled, the Advanced header has no button/expanded semantics, and its animations ignore reduced motion.
+- Fix: `Semantics(button:, expanded:)`, a live-region "Saving" label, zero durations under reduced motion; ~12 lines.
+
+### UX-233 [P3] [confidence: low] [RESOLVED]
+- Resolution: `601fa81` (T12). MetadataTextField passes its visible label to the editable semantics node without changing its value (t12_accessibility_test.dart).
+- Location: `lib/widgets/metadata_text_field.dart`
+- Scenario: the visible label is a separate `Text`; most fields have no hint, so TalkBack may read an unlabeled edit box.
+- Fix: `Semantics(label:)` around the field; ~3 lines. Verify with a semantics test.
+
+### UX-235 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Choice/action Cupertino buttons have a 48dp minimum and the standalone switch hit box is 71x48dp; the shared-widget accessibility fixture checks chip/switch bounds.
+- Location: `lib/widgets/app_choice_chip.dart`, `lib/widgets/app_action_button.dart`, `lib/widgets/app_switch.dart`
+- Scenario: default text scale → chip and action button are about 44dp tall and the standalone switch hit box 71x44; 45 chip call sites repeat the shortfall.
+- Fix: `minimumSize: Size(48, 48)` on both `CupertinoButton`s and a 48dp switch hit box; ~3 lines.
+
+### UX-236 [P3] [confidence: low] [RESOLVED]
+- Resolution: `601fa81` (T12). Real Mornye theme colours are checked against WCAG AA (>=4.5:1) for both brightness modes in t12_accessibility_test.dart; selected light chip text uses onSurface and ExplicitBadge has an opaque fill. Host assertions, not a device/display certification.
+- Location: `lib/widgets/app_choice_chip.dart` (selected state), `lib/widgets/audio_quality_badges.dart` (`ExplicitBadge`)
+- Scenario: light Mornye, red accent → selected chip text about 4.4:1 and the light explicit badge about 3.9:1 (hand-computed).
+- Fix: measure first; if below AA use `onSurface` for the selected label and an opaque badge fill.
+
+### UX-239 [P2] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). Enabled queue rows expose a Remove CustomSemanticsAction calling the same removal as swiping; disabled rows do not expose it (player_queue_dismissible_test.dart).
 - Location: `lib/widgets/mornye_player_queue.dart` (queue rows), `lib/widgets/player_queue_dismissible.dart`
 - Scenario: TalkBack or switch access in Up Next → removing a queued song is swipe-only; `Dismissible` exposes no semantic action and the row has no remove control.
 - Fix: a `CustomSemanticsAction` "Remove" calling the same removal; ~8 lines.
 
-### UX-240 [P3] [confidence: high] [VALIDATED]
+### UX-240 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). The seek slider has a Playback position label and elapsed/total clock values for value/increase/decrease, retaining its five-second semantic adjustment (playback_seek_slider_test.dart).
 - Location: `lib/widgets/playback_seek_slider.dart` (`Semantics(slider: true, excludeSemantics: true)`)
 - Scenario: the seek bar is announced as an unnamed "slider, 37%".
 - Fix: a seek label (new arb key) and `formatClock` values for value/increase/decrease, as the volume slider does; ~6 lines.
 
-### UX-241 [P3] [confidence: high] [VALIDATED]
+### UX-241 [P3] [confidence: high] [RESOLVED]
+- Resolution: `601fa81` (T12). AutoMix duration, pitch and speed sliders expose their names and actual seconds/pitch/multiplier values instead of range percentages.
 - Location: `lib/widgets/automix_settings.dart` (`slider` helper)
 - Scenario: AutoMix duration, pitch and speed sliders are announced as unnamed range percentages ("50%" for pitch 0.0).
 - Fix: `Semantics(label:)` and a `semanticFormatterCallback` with the real value and unit, as `LyricsSizeSetting` does; ~6 lines.
 
-### UX-242 [P3] [confidence: medium] [NEEDS VERIFICATION]
+### UX-242 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Both player minimize toolbars are 48dp tall rather than constraining the icon button to 36dp.
 - Location: `lib/screens/now_playing_screen.dart` (minimize `IconButton` as the title of a 36dp toolbar)
 - Scenario: the minimize control is about 36dp tall. Swipe-down and Back still dismiss.
 - Fix: a 48dp toolbar or taller hit area; 1-3 lines.
 
-### UX-243 [P3] [confidence: medium] [VALIDATED]
+### UX-243 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). Mini player exposes Dismiss mini player as a CustomSemanticsAction sharing the swipe dismissal latch and stop path (mini_player_dismissal_test.dart).
 - Location: `lib/widgets/mini_player.dart` (`Dismissible`)
 - Scenario: dismissing the mini player is swipe-only; TalkBack/switch users cannot dismiss it.
 - Fix: a "Dismiss" `CustomSemanticsAction` running the same `setState` + `stop()`; ~6 lines. Fix together with UI-101.
 
-### UX-244 [P3] [confidence: medium] [VALIDATED]
+### UX-244 [P3] [confidence: medium] [RESOLVED]
+- Resolution: `601fa81` (T12). The selected lyric-line count is a live-region container (lyrics_share_screen_test.dart).
 - Location: `lib/screens/lyrics_share_screen.dart` (`_SelectionCount`)
 - Scenario: the "n/N" selected-lines count changes silently for TalkBack.
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
-## Resolved
 
 ### UI-402 [P2] [confidence: high] [RESOLVED]
 - Resolution: `f0d2318` (T11). `local_album_screen.dart` drops the deleted ids from `_loadedTracks` in `setState` and rebuilds the track/quality caches after a partial delete, keeping the page open with only the removed row gone (`local_album_cue_delete_test.dart`).

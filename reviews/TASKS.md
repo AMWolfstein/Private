@@ -424,7 +424,7 @@ or exported components.
     and the suite re-run. No Rust or Android source changed, so those check scripts were
     not required. No APK, instrumentation or device execution.
 
-- [ ] **T12: Fix UI accessibility, RTL, large text and translations**
+- [x] **T12: Fix UI accessibility, RTL, large text and translations** (agreed host-verifiable scope; deferrals retained)
   - Source: the 2026-10-23 UI re-audit at `8e11147`, plus the old T11 items that are still
     present.
   - Findings (P2): UX-209, UX-210, UX-229, UX-239.
@@ -462,6 +462,30 @@ or exported components.
     picker overflows at large text), FA-UI-001 (closed: the setup language step was
     removed), FA-UX-001 (same as UI-418, now P2), FA-UX-006 (same as UX-202), FA-UX-007
     (same as UX-229), FA-UX-008 (same as UX-232), FA-UX-009 (same as UX-225).
+  - Completed 2026-10-27 (agreed scope): code `601fa81`, graph `168d11d`.
+    Shared controls/header circles have 48dp targets; choices, separators, playlist
+    selection, metadata fields and saving/expanded state expose spoken state. Song
+    controls name the track and correctly distinguish Play/Pause; seek and settings
+    sliders speak their names and values. Queue removal and mini-player dismissal
+    have custom semantic actions; selection/lyrics counts are live regions, and
+    Rewind stops auto-advancing for screen readers. Queue actions wrap individually,
+    header pills become icon-only at large text, statistics dates can grow, album
+    track numbers scale, and lyrics sharing adapts to short/wide windows with a
+    full-width wrapping toolbar and 48dp swatches. Setup, guide, settings reveal,
+    edit-sheet sections and lyric crossfades honour reduced motion (FA-UX-002);
+    Auto scan options scroll at large text (FA-UX-005). Real-theme contrast assertions
+    cover both brightness modes at >=4.5:1 (UX-236); this is not a device claim.
+    UX-209 is already moot after T11 removed the playlist grid. Required UX and Flutter
+    reviews plus fix-only re-reviews PASS; they caught the incorrect spoken Pause
+    action, an unbreakable action row and a too-narrow lyrics-share toolbar, all fixed.
+    Verification: analysis clean; full serial Flutter 1,792 passed / 3 skipped / 5 failed. The four affected files were corrected and re-run (10 passed / 1 failed from a remaining generic tooltip helper), then that final file passed (1 test); no original failure remains unverified. The full suite was not re-run per step 6. No Rust/Android source changed; no APK,
+    instrumentation, tablet/emulator or physical TalkBack execution. UX-207 and the
+    RTL/English-only exclusions above remain explicitly open/deferred, not fixed.
+    FA-UX-006 was already closed with UX-202 in T11; FA-UX-007/009 close with UX-229/225.
+    Newly discovered pre-existing UX-245 (hero timestamp overflow at 360dp/2x) is
+    outside the changed picker symbol and remains a separate follow-up in FINDINGS.md;
+    the modal fixture explicitly keeps its underlying page at 1x and asserts the
+    root-navigator picker is 2x, so no whole-page large-text pass is claimed.
 
 - [ ] **T13: Clean up build, dependencies and tests**
   - Findings (all P3): SEC-302, DEP-001, DEP-002, TEST-101, TEST-203, TEST-205.
