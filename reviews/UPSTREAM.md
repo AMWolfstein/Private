@@ -75,6 +75,20 @@ Owner asked for every applicable fix, AutoMix and audio_service included (2026-1
 | U-503 | `37466432` | DONE `8e42f78`: settings subpages pushed in the tab navigator end with `NavBarSliverSpacer`, so their last rows clear the floating bar and mini player; Appearance no longer fills the remaining space. Adapted test. | B |
 | U-504 | `e31df404`, `8edc3441` | DONE `db7cb11`: Songs and Albums sort by Size (Largest/Smallest first) through a lazily filled `track_file_sizes` table with invalidating triggers; unknown sizes last; not offered for Playlists or Artists. Local-only adaptation (no history sizes); adapted test. | B |
 | U-505 | `30a5c82f` | DONE `55167bf`: Rust and SAF scans report the first 100 unreadable files with reasons; Local Library shows the count per folder and a sheet listing them; kept per folder in prefs, cleared by a clean scan, Clear library and folder removal. Model and provider tests ported, Rust test applied. | B |
+| U-506 | `463c2ce9`, `b80111b4` | DONE `da3dc62`: vendored audio_service publishes metadata, artwork and the notification on the main looper and refreshes the playback state's media ID, so late artwork/tags reach notification, lock screen and Auto. Instrumentation test added (compile/device NOT RUN); Dart session-restore and mini player metadata tests ported. Removed later with audio_service (migration D6); the rule is noted in `docs/AUDIO_ENGINE_MIGRATION.md`. | C |
+| U-507 | `9843149d` | DONE `d6c1a86`: a beat-matched mix seeks the silent next song onto the outgoing beat grid (up to three tries, leading by the previous lag). Test fails without the fix. | C |
+| U-508 | `44c9ba92` | DONE `c29d361`: energy-normalized onsets and 0.01 BPM tempo refinement (Dart and Rust), grid retries on nearby windows, landing verification with fallback to an unstretched crossfade, bounded phase-lock rate corrections, bass handoff for uncertain pulses, no beat matching with speed effects. Upstream tests ported to our inline harness on real time. | C |
+
+Not ported from this range: 36 translation commits (English only); Windows, Linux, macOS and
+desktop commits (`c90ec647`, `d14a2d72`, `e8d0a568`, `5f2a4dae`, `6ab91b45`, `f4a14c46`,
+`0beadb7c`, `d8903fb2`, `2b257c36`, `07bc4c35`, `7a0d6afb`, `8f553c7a`, `91a7f0b6`,
+`26acc723`, `7bbdf03e`, `b8333537`); `9b747632` (media_kit desktop deck); Subsonic/network
+(`fa2f7316`, `0409a351`); downloads (`44a7fad0`); conversion (`d396fb4c`); extensions/online
+(`a1e0e8f0`, `e76ccc3f`, `711e6c69`, `d859d3bf` online lyrics save, `61b840c6` Explore tab);
+rebrand tour (`a0acbc1f`, `0fe8b7df`); licence (`104b8a84`); version/AltStore bumps; Material-only
+(`07f64d9b`, `4664de14`, `bcd81cc8`); `56f62efc` (our Library overview always shows Playlists);
+`499db205` (format only). Already here: `40fff2d7`, `226910ee`; l10n validation (`9b3c9eea`,
+`ca80b76e`) is for translations.
 
 ## New in Mornye 5.2.5 (`e0563ffa..9bf4c000`, checked 2026-10-22)
 
