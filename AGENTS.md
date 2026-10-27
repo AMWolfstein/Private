@@ -201,7 +201,8 @@ untracked.
 
 ## Local verification commands
 
-Activate the repository toolchain, then run `flutter analyze` and the full `flutter test`.
+Activate the repository toolchain and run `dart scripts/prepare_flutter_sdk.dart` once per fresh Flutter
+install (it backports a semantics crash fix), then run `flutter analyze` and the full `flutter test`.
 Rust changes require `bash scripts/check_rust_backend.sh`; Android native changes require
 `bash scripts/check_android.sh` (host unit tests; no APK packaging). Instrumentation source
 compilation is separate from device execution; never report compilation as a device pass.

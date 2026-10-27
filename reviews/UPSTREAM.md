@@ -6,8 +6,8 @@ are not shared with this fork, so `git merge` is impossible; port commits by han
 with the `AGENTS.md` code → graphify → docs commits and one analyze + full `flutter test` per
 batch.
 
-- Last upstream commit checked: `9bf4c000` (2026-10-22, v5.2.5). Next check: only commits
-  after it (`git log 9bf4c000..origin/main` in a Mornye clone).
+- Last upstream commit checked: `c90ec647` (2026-10-25, v5.2.6). Next check: only commits
+  after it (`git log c90ec647..origin/main` in a Mornye clone).
 - **Skip all renaming/branding** (owner 2026-10-20): `37e21b57` (app + native backend rename,
   `package:mornye`), `51d34594`, `f72fe69e`, `ae728525`, `243fee8c`, the rebrand tour
   `8e4504e7`, release/AltStore bumps. Keep this fork's `spotiflac_android` package, names and
@@ -61,6 +61,17 @@ Skip from Mornye: branding (above), crash notices `00b7cf99`/`931b1091` (crash r
 U-306), Material-only `ba234d78`, `721a3fa7`, `5ecbb7ac`, Home listening/On Repeat `b946c373`,
 `1829363d`, downloads `a3b14a28`, network `b279733a`, `19056edf` and the network parts of
 `e58217c8`, iOS backup `27a45c04`.
+
+## New in Mornye 5.2.6 (`9bf4c000..c90ec647`, checked 2026-10-27)
+
+88 commits; 36 are translations and most of the rest are Windows/desktop, Subsonic/network,
+downloads, conversion, extensions, the rebrand tour, the LGPL licence change and version bumps.
+Owner asked for every applicable fix, AutoMix and audio_service included (2026-10-27).
+
+| ID | Upstream | What | Batch |
+|---|---|---|---|
+| U-501 | `10b56148`, `1c2cca66`, `f37f7b16` | DONE `0acf9ee`: untagged MP3/MP4 read as songs with their display name; raw ADTS `.aac` reads ID3/APEv2 tags, cover and quality; an ID3v2 tag before FLAC is skipped on read and kept on tag writes; interrupted/short reads retry; the last direct SAF read waits 400 ms. Ogg hunks not needed (byte-bounded, untagged comments already accepted). Upstream Rust format, tagless and writer tests ported. | A |
+| U-502 | `d8a54db1` | DONE `900239c`: Flutter 3.47.7 semantics geometry crash backport (`patches/flutter/`, `scripts/prepare_flutter_sdk.dart`, run by `build_android.sh`); regression test fails on an unpatched SDK. CI workflow hunks not applicable. | A |
 
 ## New in Mornye 5.2.5 (`e0563ffa..9bf4c000`, checked 2026-10-22)
 
