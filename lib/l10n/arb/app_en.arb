@@ -2747,6 +2747,18 @@
   "autoplayPersonalization": "Personalized autoplay",
   "autoplayPersonalizationDescription": "Learn from songs you listen to and skip, privately on this device. Turning this off stops learning and restores ordinary autoplay.",
   "autoplayResetLearning": "Reset recommendation learning",
+  "autoplayResetLearningConfirmTitle": "Reset recommendation learning?",
+  "@autoplayResetLearningConfirmTitle": {
+    "description": "Title of the confirmation before autoplay forgets what it learned"
+  },
+  "autoplayResetLearningConfirmMessage": "Autoplay forgets what it learned from your listening and skips. This can't be undone.",
+  "@autoplayResetLearningConfirmMessage": {
+    "description": "Explains that resetting autoplay learning cannot be undone"
+  },
+  "autoplayResetLearningConfirm": "Reset",
+  "@autoplayResetLearningConfirm": {
+    "description": "Destructive button that resets autoplay learning"
+  },
   "profileTitle": "Profile",
   "profileSetUp": "Set up your profile",
   "profileEdit": "Edit name and photo",

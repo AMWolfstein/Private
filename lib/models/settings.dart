@@ -142,7 +142,7 @@ class AppSettings {
     this.usbAllowFixedVolume = false,
     this.dapExclusive = false,
     this.autoplay = false,
-    this.autoplayPersonalization = false,
+    this.autoplayPersonalization = true,
     this.isFirstLaunch = true,
 
     this.historyFilterMode = 'all',

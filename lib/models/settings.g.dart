@@ -56,7 +56,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   usbAllowFixedVolume: json['usbAllowFixedVolume'] as bool? ?? false,
   dapExclusive: json['dapExclusive'] as bool? ?? false,
   autoplay: json['autoplay'] as bool? ?? false,
-  autoplayPersonalization: json['autoplayPersonalization'] as bool? ?? false,
+  autoplayPersonalization: json['autoplayPersonalization'] as bool? ?? true,
   isFirstLaunch: json['isFirstLaunch'] as bool? ?? true,
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
   enableLogging: json['enableLogging'] as bool? ?? false,
