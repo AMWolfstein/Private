@@ -124,15 +124,16 @@ Wishlist is removed from the Library, track menus, models, backups and native co
 queries. Collection schema v3 drops the obsolete table on upgrade; old JSON imports ignore
 that category. Keep Loved, playlists and favorite artists supported.
 
-English is the app's only language: no other translations, no language choice in setup or
-Appearance, and no saved locale. Do not restore translation files or a language picker.
+The app supports every locale with an arb file in `lib/l10n/arb` (English is the template). Setup
+and Appearance offer the language picker, and the chosen locale is saved. Untranslated strings fall
+back to English. Keep `lib/l10n/supported_locales.dart` and `lib/constants/language_choices.dart` in
+sync with the arb files. Do not reintroduce the old 70% completion filter.
 
 First-run setup and the local-player guide form one flow. Keep the local playback tips and
 permission checks under the same page counter and Back/Next navigation.
 Get Started finishes directly in Home from the final permission page; do not restore the
 old download/output-folder step or a second tutorial afterward. Persist both completion
-flags together, and migrate old setup drafts without restoring their output-folder fields
-or the removed language step.
+flags together, and migrate old setup drafts without restoring their output-folder fields.
 Music-library folder selection remains available under Local Library settings.
 
 ## graphify
