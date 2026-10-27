@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 import 'package:spotiflac_android/utils/audio_format_utils.dart';
 import 'package:spotiflac_android/services/library_queue_store.dart';
+import 'package:spotiflac_android/services/library_file_sizes.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
 import 'package:spotiflac_android/services/library_search.dart';
 import 'package:spotiflac_android/services/library_database_models.dart';
@@ -43,6 +44,7 @@ class LibraryDatabase {
   // null means this database connection has not attempted FTS setup yet.
   // false is a completed capability/setup result and must not be retried.
   bool? _searchFtsAvailable;
+  LibraryFileSizes? _fileSizes;
 
   LibraryDatabase._init();
 
@@ -617,14 +619,20 @@ class LibraryDatabase {
     return (await getQueueTrackPageResult(request)).rows;
   }
 
-  Future<LibraryQueueStore> _queueStore() async {
+  Future<LibraryQueueStore> _queueStore([QueueLibraryDbQuery? request]) async {
     final db = await database;
+    if (request != null &&
+        isLibrarySizeSort(request.sortMode) &&
+        request.includeLocal &&
+        request.source != 'downloaded') {
+      await (_fileSizes ??= LibraryFileSizes(db)).refresh();
+    }
     return LibraryQueueStore(db, localFts: searchFtsAvailable);
   }
 
   Future<QueueLibraryDbPage> getQueueTrackPageResult(
     QueueLibraryDbQuery request,
-  ) async => (await _queueStore()).trackPage(request);
+  ) async => (await _queueStore(request)).trackPage(request);
 
   Future<QueueLibraryCounts> getQueueCounts(
     QueueLibraryDbQuery request,
@@ -632,7 +640,7 @@ class LibraryDatabase {
 
   Future<QueueLibraryDbPage> getQueueAlbumPageResult(
     QueueLibraryDbQuery request,
-  ) async => (await _queueStore()).albumPage(request);
+  ) async => (await _queueStore(request)).albumPage(request);
 
   /// Album artists across downloaded and scanned music, excluding duplicate paths.
   Future<List<Map<String, dynamic>>> getQueueArtistPage(
@@ -932,6 +940,7 @@ class LibraryDatabase {
     final db = await database;
     await db.close();
     _database.reset();
+    _fileSizes = null;
     _searchFtsAvailable = null;
   }
 

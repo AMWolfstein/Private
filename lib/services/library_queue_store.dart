@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:spotiflac_android/services/album_completeness.dart';
 import 'package:spotiflac_android/services/library_database_models.dart';
+import 'package:spotiflac_android/services/library_file_sizes.dart';
 import 'package:spotiflac_android/services/library_schema.dart';
 import 'package:spotiflac_android/services/library_row_mapper.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
@@ -351,7 +352,9 @@ class LibraryQueueStore {
           l.sort_genre,
           l.sort_release,
           l.sort_added
+          ${_trackSizeColumns(request.sortMode)}
         FROM ${LibrarySchema.visibleView} l
+        ${_sizeJoin(request.sortMode, 'l')}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         ''';
       parts.add(
@@ -414,6 +417,7 @@ class LibraryQueueStore {
           NULL AS sort_genre,
           NULL AS sort_release,
           NULL AS sort_added
+          ${isLibrarySizeSort(request.sortMode) ? ', NULL AS file_size_bytes, 1 AS sort_size_unknown, 0 AS sort_size' : ''}
         WHERE 0
       ''';
     }
@@ -476,7 +480,9 @@ class LibraryQueueStore {
           ${releaseDatedOnly ? "SUBSTR(MAX(CASE WHEN $releaseOrder != '' THEN $releaseOrder || TRIM(l.release_date) END), 11) AS metadata_release_date," : ''}
           COALESCE(MAX($releaseOrder), '') AS sort_release,
           COALESCE(MAX(l.sort_genre), '') AS sort_genre
+          ${_albumSizeColumns(request.sortMode)}
         FROM ${LibrarySchema.visibleView} l
+        ${_sizeJoin(request.sortMode, 'l')}
         ${unfiltered ? '' : '''JOIN (
           SELECT
             album_key,
@@ -524,6 +530,7 @@ class LibraryQueueStore {
           NULL AS sort_artist,
           NULL AS sort_release,
           NULL AS sort_genre
+          ${isLibrarySizeSort(request.sortMode) ? ', 1 AS sort_size_unknown, 0 AS sort_size' : ''}
         WHERE 0
       ''';
     }
@@ -769,8 +776,29 @@ class LibraryQueueStore {
     ''';
   }
 
+  String _sizeJoin(String sortMode, String alias) => isLibrarySizeSort(sortMode)
+      ? 'LEFT JOIN track_file_sizes file_sizes ON file_sizes.item_id = $alias.id'
+      : '';
+
+  String _trackSizeColumns(String sortMode) => isLibrarySizeSort(sortMode)
+      ? ', file_sizes.size_bytes AS file_size_bytes, '
+            '(file_sizes.size_bytes IS NULL) AS sort_size_unknown, '
+            'COALESCE(file_sizes.size_bytes, 0) AS sort_size'
+      : '';
+
+  String _albumSizeColumns(String sortMode) => isLibrarySizeSort(sortMode)
+      ? ', (COUNT(file_sizes.size_bytes) < COUNT(*)) AS sort_size_unknown, '
+            'COALESCE(SUM(file_sizes.size_bytes), 0) AS sort_size'
+      : '';
+
   List<_QueueOrderTerm> _queueTrackOrderTerms(String sortMode) {
     return switch (sortMode) {
+      'size-asc' || 'size-desc' => [
+        const _QueueOrderTerm('sort_size_unknown'),
+        _QueueOrderTerm('sort_size', descending: sortMode == 'size-desc'),
+        const _QueueOrderTerm('sort_track'),
+        const _QueueOrderTerm('id'),
+      ],
       'oldest' => const [
         _QueueOrderTerm('sort_added'),
         _QueueOrderTerm('sort_track'),
@@ -836,6 +864,12 @@ class LibraryQueueStore {
 
   List<_QueueOrderTerm> _queueAlbumOrderTerms(String sortMode) {
     return switch (sortMode) {
+      'size-asc' || 'size-desc' => [
+        const _QueueOrderTerm('sort_size_unknown'),
+        _QueueOrderTerm('sort_size', descending: sortMode == 'size-desc'),
+        const _QueueOrderTerm('sort_album'),
+        const _QueueOrderTerm('album_key'),
+      ],
       'release-date-newest' => const [
         _QueueOrderTerm('sort_release', descending: true),
         _QueueOrderTerm('album_key'),
@@ -952,6 +986,7 @@ class LibraryQueueStore {
       'albumName': row['album_name'],
       'albumArtist': row['album_artist'],
       'filePath': row['file_path'],
+      'fileSize': row['file_size_bytes'],
       'isrc': row['isrc'],
       'trackNumber': row['track_number'],
       'totalTracks': row['total_tracks'],

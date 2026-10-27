@@ -169,6 +169,10 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
           for (final option in [
             ('a-z', context.l10n.searchSortTitleAZ),
             ('latest', context.l10n.libraryRecentlyAdded),
+            if (!_artists) ...[
+              ('size-desc', context.l10n.libraryFilterSortSizeLargest),
+              ('size-asc', context.l10n.libraryFilterSortSizeSmallest),
+            ],
           ])
             ListTile(
               title: Text(option.$2),

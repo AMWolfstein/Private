@@ -787,6 +787,27 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                                   () => tempSortMode = 'oldest',
                                 ),
                               ),
+                              // Playlists have no file size of their own.
+                              if (widget.librarySection != 'playlists') ...[
+                                AppChoiceChip(
+                                  label: Text(
+                                    context.l10n.libraryFilterSortSizeLargest,
+                                  ),
+                                  selected: tempSortMode == 'size-desc',
+                                  onSelected: (_) => setSheetState(
+                                    () => tempSortMode = 'size-desc',
+                                  ),
+                                ),
+                                AppChoiceChip(
+                                  label: Text(
+                                    context.l10n.libraryFilterSortSizeSmallest,
+                                  ),
+                                  selected: tempSortMode == 'size-asc',
+                                  onSelected: (_) => setSheetState(
+                                    () => tempSortMode = 'size-asc',
+                                  ),
+                                ),
+                              ],
                               AppChoiceChip(
                                 label: Text(context.l10n.searchSortTitleAZ),
                                 selected: tempSortMode == 'a-z',
