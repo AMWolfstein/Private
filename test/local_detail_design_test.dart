@@ -217,6 +217,12 @@ void main() {
               .first,
         );
         expect(dot.properties.selected, true);
+        // The 8dp dot sits in a full 48dp touch target.
+        final dotBox = tester.getSize(
+          find.byKey(const ValueKey('artist-popular-dot-3')),
+        );
+        expect(dotBox.width, greaterThanOrEqualTo(48));
+        expect(dotBox.height, greaterThanOrEqualTo(48));
         await tester.scrollUntilVisible(
           find.text('Albums'),
           250,
@@ -288,8 +294,11 @@ void main() {
         await tester.pumpAndSettle();
         expect(collections.loved.single.id, '1');
         expect(find.byTooltip('Add to playlist'), findsOneWidget);
-        expect(find.byTooltip('Shuffle'), findsNothing);
-        expect(find.text('Shuffle').hitTestable(), findsOneWidget);
+        // 1.6x on 360dp: the compact pills drop to icon-only and keep their
+        // accessible names instead of ellipsizing "Play" and "Shuffle".
+        expect(find.text('Shuffle'), findsNothing);
+        expect(find.byTooltip('Shuffle'), findsOneWidget);
+        expect(find.byTooltip('Play'), findsWidgets);
         expect(tester.takeException(), isNull);
       },
     );

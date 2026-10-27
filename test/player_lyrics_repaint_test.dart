@@ -67,6 +67,68 @@ Future<List<int>> _pixels(WidgetTester tester) async {
 }
 
 void main() {
+  for (final reduceMotion in [false, true]) {
+    testWidgets(
+      'word-timed lyric crossfades honor reduced motion: $reduceMotion',
+      (tester) async {
+        final preview = ValueNotifier<Duration?>(const Duration(seconds: 2));
+        addTearDown(preview.dispose);
+        final theme = MornyeTheme.build(Brightness.dark);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              playbackStateProvider.overrideWith(
+                (ref) => Stream.value(
+                  PlaybackState(
+                    processingState: AudioProcessingState.ready,
+                    updatePosition: const Duration(seconds: 2),
+                  ),
+                ),
+              ),
+            ],
+            child: MaterialApp(
+              theme: theme,
+              home: MediaQuery(
+                data: MediaQueryData(disableAnimations: reduceMotion),
+                child: Scaffold(
+                  body: SyncedLyricsView(
+                    lyrics: _lyrics,
+                    seekPreview: preview,
+                    colorScheme: theme.colorScheme,
+                    isActive: true,
+                    showPronunciation: false,
+                    showTranslation: false,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final switchers = tester
+            .widgetList<AnimatedSwitcher>(
+              find.descendant(
+                of: find.byType(SyncedLyricsView),
+                matching: find.byType(AnimatedSwitcher),
+              ),
+            )
+            .where((widget) => widget.child is KeyedSubtree);
+        expect(switchers, isNotEmpty);
+        for (final switcher in switchers) {
+          expect(
+            switcher.duration,
+            reduceMotion ? Duration.zero : const Duration(milliseconds: 320),
+          );
+          expect(
+            switcher.reverseDuration,
+            reduceMotion ? Duration.zero : const Duration(milliseconds: 260),
+          );
+        }
+        await tester.pumpWidget(const SizedBox.shrink());
+      },
+    );
+  }
+
   for (final mornye in [true]) {
     testWidgets(
       'playing lyrics retain their painter and refresh stopped highlights ($mornye)',

@@ -28,13 +28,21 @@ class AppChoiceChip extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final foreground = onSelected == null
         ? scheme.onSurfaceVariant
+        // The accent is too light for small text on the tinted fill in light
+        // Mornye (about 3:1); dark keeps the accent, which already passes.
+        : selected && scheme.brightness == Brightness.light
+        ? scheme.onSurface
         : selected
         ? scheme.primary
         : scheme.onSurface;
     return Semantics(
       selected: selected,
+      button: true,
+      inMutuallyExclusiveGroup: singleChoice,
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        // Keeps the chip a 48dp tap target even with short labels.
+        minimumSize: const Size(48, 48),
         borderRadius: BorderRadius.circular(24),
         color: selected
             ? scheme.primary.withValues(alpha: 0.12)

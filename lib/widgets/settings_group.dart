@@ -137,7 +137,9 @@ class _SettingsSearchTargetState extends State<SettingsSearchTarget> {
     await Scrollable.ensureVisible(
       context,
       alignment: 0.32,
-      duration: const Duration(milliseconds: 480),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 480),
       curve: Curves.easeOutCubic,
     );
     if (!mounted) return;
@@ -623,7 +625,15 @@ class SettingsChoiceChip extends StatelessWidget {
       ),
     );
 
-    return expand ? Expanded(child: chip) : chip;
+    // These chips are one choice in a group; announce which one is active.
+    final semantics = Semantics(
+      selected: isSelected,
+      button: true,
+      inMutuallyExclusiveGroup: true,
+      child: chip,
+    );
+
+    return expand ? Expanded(child: semantics) : semantics;
   }
 }
 

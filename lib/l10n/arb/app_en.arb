@@ -2365,6 +2365,58 @@
       }
     }
   },
+  "a11yPlayTrack": "Play {title}",
+  "@a11yPlayTrack": {
+    "description": "Play a track whose artist is not supplied",
+    "placeholders": {"title": {"type": "String"}}
+  },
+  "a11yPauseTrack": "Pause {title}",
+  "@a11yPauseTrack": {
+    "description": "Pause the currently playing track",
+    "placeholders": {"title": {"type": "String"}}
+  },
+  "a11yMoreOptionsFor": "More options for {title}",
+  "@a11yMoreOptionsFor": {
+    "description": "Accessibility label for a track row's overflow menu",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yDismissMiniPlayer": "Dismiss mini player",
+  "@a11yDismissMiniPlayer": {
+    "description": "Semantic action that dismisses the mini player"
+  },
+  "a11ySelectPlaylist": "Select playlist",
+  "@a11ySelectPlaylist": {
+    "description": "Accessibility label for selecting a playlist row"
+  },
+  "a11yDeselectPlaylist": "Deselect playlist",
+  "@a11yDeselectPlaylist": {
+    "description": "Accessibility label for deselecting a playlist row"
+  },
+  "a11yShowMore": "Show more",
+  "@a11yShowMore": {
+    "description": "Tooltip for the button that loads more library search results"
+  },
+  "a11yPlaybackPosition": "Playback position",
+  "@a11yPlaybackPosition": {
+    "description": "Accessibility label for the now playing seek slider"
+  },
+  "a11ySavingTrackDetails": "Saving track details",
+  "@a11ySavingTrackDetails": {
+    "description": "Announced while the metadata editor saves"
+  },
+  "cacheClearFor": "Clear {target}",
+  "@cacheClearFor": {
+    "description": "Accessibility label naming the cache a Clear button empties",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "logIssueSummary": "Issue Summary",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"

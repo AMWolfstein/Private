@@ -40,6 +40,8 @@ class AppActionButton extends StatelessWidget {
         : scheme.primary;
     final action = CupertinoButton(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      // Keeps short actions a 48dp tap target.
+      minimumSize: const Size(48, 48),
       borderRadius: BorderRadius.circular(28),
       color: prominent
           ? scheme.primary

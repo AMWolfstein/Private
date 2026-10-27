@@ -401,10 +401,15 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
                         if (_saving)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: const CupertinoActivityIndicator(),
+                            child: Semantics(
+                              label: context.l10n.a11ySavingTrackDetails,
+                              liveRegion: true,
+                              excludeSemantics: true,
+                              child: const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CupertinoActivityIndicator(),
+                              ),
                             ),
                           )
                         else
@@ -914,31 +919,39 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
     final collapsible = onHeaderTap != null;
     const inset = 16.0;
 
-    final headerRow = Row(
-      children: [
-        Icon(context.adaptiveIcon(icon), size: 20, color: cs.primary),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: cs.onSurface,
+    final headerRow = Semantics(
+      // The whole row toggles the section; expose it as a button that reports
+      // whether its fields are shown.
+      button: collapsible,
+      expanded: collapsible ? expanded : null,
+      child: Row(
+        children: [
+          Icon(context.adaptiveIcon(icon), size: 20, color: cs.primary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface,
+              ),
             ),
           ),
-        ),
-        if (collapsible)
-          AnimatedRotation(
-            turns: expanded ? 0.5 : 0,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutCubic,
-            child: Icon(
-              CupertinoIcons.chevron_down,
-              size: 22,
-              color: cs.onSurfaceVariant,
+          if (collapsible)
+            AnimatedRotation(
+              turns: expanded ? 0.5 : 0,
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 200),
+              curve: Curves.easeOutCubic,
+              child: Icon(
+                CupertinoIcons.chevron_down,
+                size: 22,
+                color: cs.onSurfaceVariant,
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
 
     final Widget header = collapsible
@@ -955,7 +968,9 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
           );
 
     final content = AnimatedSize(
-      duration: const Duration(milliseconds: 220),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 220),
       curve: Curves.easeOutCubic,
       alignment: Alignment.topCenter,
       child: Column(

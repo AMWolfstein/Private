@@ -82,6 +82,8 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
     };
     Widget slider(
       String label,
+      String semanticLabel,
+      String Function(double) spokenValue,
       double value,
       double min,
       double max,
@@ -95,14 +97,18 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label),
-            MornyeSlider(
-              value: value.clamp(min, max),
-              min: min,
-              max: max,
-              divisions: divisions,
-              label: value.toStringAsFixed(2),
-              onChanged: enabled ? draft : null,
-              onChangeEnd: enabled ? save : null,
+            Semantics(
+              label: semanticLabel,
+              child: MornyeSlider(
+                value: value.clamp(min, max),
+                min: min,
+                max: max,
+                divisions: divisions,
+                label: value.toStringAsFixed(2),
+                semanticFormatterCallback: spokenValue,
+                onChanged: enabled ? draft : null,
+                onChangeEnd: enabled ? save : null,
+              ),
             ),
           ],
         ),
@@ -122,6 +128,8 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
         if (settings.autoMixDuration != 0)
           slider(
             '${l10n.autoMixDuration}: ${(_duration ?? settings.autoMixDuration.toDouble()).round()} s',
+            l10n.autoMixDuration,
+            (value) => '${value.round()} s',
             _duration ?? settings.autoMixDuration.toDouble(),
             3,
             60,
@@ -144,6 +152,8 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
             settings.autoMixEffect == AutoMixEffect.custom)
           slider(
             '${l10n.autoMixPitch}: ${(_pitch ?? settings.autoMixPitch).toStringAsFixed(1)}',
+            l10n.autoMixPitch,
+            (value) => value.toStringAsFixed(1),
             _pitch ?? settings.autoMixPitch,
             -6,
             6,
@@ -157,6 +167,8 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
         if (settings.autoMixEffect == AutoMixEffect.custom) ...[
           slider(
             '${l10n.autoMixSpeed}: ${(_speed ?? settings.autoMixSpeed).toStringAsFixed(2)}×',
+            l10n.autoMixSpeed,
+            (value) => '${value.toStringAsFixed(2)}×',
             _speed ?? settings.autoMixSpeed,
             0.8,
             1.2,

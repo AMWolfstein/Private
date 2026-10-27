@@ -68,9 +68,13 @@ void main() {
           final loved = find.byTooltip('Loved');
           final playlist = find.byTooltip('Add to playlist');
           Finder pill(String label) => find.ancestor(
-            of: find.text(label),
+            of: scale >= 1.3 ? find.byTooltip(label) : find.text(label),
             matching: find.byType(CupertinoButton),
           );
+          if (scale >= 1.3) {
+            expect(find.text('Play'), findsNothing);
+            expect(find.text('Shuffle'), findsNothing);
+          }
           final play = pill('Play');
           final shuffle = pill('Shuffle');
           final rects = [

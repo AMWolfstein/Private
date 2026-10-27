@@ -1,16 +1,21 @@
 part of 'queue_tab.dart';
 
 extension _QueueTabFilterWidgets on _QueueTabState {
-  /// Count text left, action buttons right, always on one line; on narrow
-  /// widths the buttons scale down instead of truncating the count.
+  /// Count and independently wrapping actions keep their full text and targets.
   Widget _countHeaderRow(
     BuildContext context,
     String countText,
     List<Widget> actions,
   ) {
+    // A Wrap instead of a FittedBox: at large text the actions move to their
+    // own line instead of shrinking below a 48dp target and below 1x text.
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: Row(
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 12,
+        runSpacing: 4,
         children: [
           Text(
             countText,
@@ -18,14 +23,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: AlignmentDirectional.centerEnd,
-              child: Row(mainAxisSize: MainAxisSize.min, children: actions),
-            ),
-          ),
+          ...actions,
         ],
       ),
     );

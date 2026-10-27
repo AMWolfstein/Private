@@ -52,7 +52,9 @@ class ExplicitBadge extends StatelessWidget {
             height: 18,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.85),
+              // Opaque: the translucent fill left the white E at about 3.9:1
+              // on light Mornye.
+              color: colorScheme.onSurfaceVariant,
               borderRadius: context.tokens.borderRadiusBadge,
             ),
             child: Text(

@@ -395,7 +395,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
               SliverToBoxAdapter(
                 child: Center(
                   child: IconButton(
-                    tooltip: _label(kind),
+                    tooltip: context.l10n.a11yShowMore,
                     icon: const Icon(Icons.expand_more),
                     onPressed: () => setState(() => _pages++),
                   ),

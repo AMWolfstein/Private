@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
+import 'package:spotiflac_android/utils/string_utils.dart';
 import 'package:spotiflac_android/widgets/mornye_player_slider.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.
@@ -82,19 +84,23 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
       final currentMs = (_previewMs ?? widget.position.inMilliseconds)
           .clamp(0, maxMs)
           .toDouble();
-      String percentage(double milliseconds) =>
-          '${(milliseconds / maxMs * 100).clamp(0, 100).round()}%';
+      // Speak elapsed/total time rather than a bare percentage.
+      String clock(double milliseconds) =>
+          formatClock((milliseconds / 1000).round());
       return LayoutBuilder(
         builder: (context, constraints) => Semantics(
+          label: context.l10n.a11yPlaybackPosition,
           slider: true,
           enabled: enabled,
           excludeSemantics: true,
-          value: percentage(currentMs),
+          value: enabled ? '${clock(currentMs)} / ${clock(maxMs)}' : null,
           increasedValue: enabled
-              ? percentage((currentMs + 5000).clamp(0, maxMs).toDouble())
+              ? '${clock((currentMs + 5000).clamp(0, maxMs).toDouble())} / '
+                    '${clock(maxMs)}'
               : null,
           decreasedValue: enabled
-              ? percentage((currentMs - 5000).clamp(0, maxMs).toDouble())
+              ? '${clock((currentMs - 5000).clamp(0, maxMs).toDouble())} / '
+                    '${clock(maxMs)}'
               : null,
           onIncrease: enabled
               ? () => _adjust((currentMs + 5000).clamp(0, maxMs).toDouble())

@@ -162,13 +162,19 @@ class AlbumDetailHeader extends StatelessWidget {
               title: AnimatedOpacity(
                 opacity: titleVisible ? 1 : 0,
                 duration: const Duration(milliseconds: 180),
-                child: Text(
-                  appBarTitle ?? title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
+                // The only app bar title is the "N selected" counter, which
+                // has to be announced whenever the selection changes.
+                child: Semantics(
+                  liveRegion: appBarTitle != null,
+                  container: appBarTitle != null,
+                  child: Text(
+                    appBarTitle ?? title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -786,10 +792,12 @@ class HeaderCircleButton extends ConsumerWidget {
         return Tooltip(
           message: tooltip,
           child: SizedBox.square(
-            dimension: buttonSize ?? 44,
+            dimension: buttonSize ?? kMornyeHeaderControlSize,
             child: CupertinoButton(
               padding: EdgeInsets.zero,
-              borderRadius: BorderRadius.circular((buttonSize ?? 48) / 2),
+              borderRadius: BorderRadius.circular(
+                (buttonSize ?? kMornyeHeaderControlSize) / 2,
+              ),
               color: scheme.onSurface.withValues(
                 alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
               ),
@@ -811,14 +819,14 @@ class HeaderCircleButton extends ConsumerWidget {
         tooltip: tooltip,
         icon: Icon(mornyeIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
-          minimumSize: Size.square(buttonSize ?? 44),
+          minimumSize: Size.square(buttonSize ?? kMornyeHeaderControlSize),
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
       return Center(
         widthFactor: 1,
         child: MornyeGlass.navigation(
-          radius: (buttonSize ?? 48) / 2,
+          radius: (buttonSize ?? kMornyeHeaderControlSize) / 2,
           tintColor:
               glassTintColor ??
               (scheme.brightness == Brightness.dark
@@ -859,13 +867,19 @@ class _MornyeHeaderButton extends StatelessWidget {
         : prominent
         ? scheme.onPrimary
         : scheme.primary;
+    // The compact Play/Shuffle pills share the width with the Loved and
+    // Add-to-playlist circles; at large text the labels no longer fit, so the
+    // pills drop to icon-only and keep their accessible name.
+    final iconOnly =
+        compact && MediaQuery.textScalerOf(context).scale(1) >= 1.3;
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: compact ? 48 : 50),
       child: CupertinoButton(
         padding: EdgeInsets.symmetric(
-          horizontal: compact ? 6 : 16,
+          horizontal: iconOnly ? 0 : (compact ? 6 : 16),
           vertical: 12,
         ),
+        minimumSize: const Size(48, 48),
         borderRadius: BorderRadius.circular(28),
         color: prominent
             ? scheme.primary
@@ -873,26 +887,34 @@ class _MornyeHeaderButton extends StatelessWidget {
                 alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
               ),
         onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: compact ? 18 : 20, color: foreground),
-            SizedBox(width: compact ? 4 : 8),
-            Flexible(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: compact ? 15 : 17,
-                  fontWeight: FontWeight.w600,
-                  color: foreground,
+        child: iconOnly
+            ? Tooltip(
+                message: label,
+                child: Semantics(
+                  label: label,
+                  child: Icon(icon, size: 20, color: foreground),
                 ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icon, size: compact ? 18 : 20, color: foreground),
+                  SizedBox(width: compact ? 4 : 8),
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: compact ? 15 : 17,
+                        fontWeight: FontWeight.w600,
+                        color: foreground,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -209,44 +209,41 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: Column(
-          children: [
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: tokens.gapSm),
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio:
-                        lyricsShareCardSize.width / lyricsShareCardSize.height,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colors.shadow.withValues(alpha: 0.22),
-                            blurRadius: 24,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(28),
-                        child: FittedBox(
-                          child: CoverPaletteBuilder(
-                            imageSource: source,
-                            builder: (context, _) => RepaintBoundary(
-                              key: _cardKey,
-                              child: LyricsShareCard(
-                                title: widget.mediaItem.title,
-                                artist: widget.mediaItem.artist ?? '',
-                                artUri: widget.mediaItem.artUri?.toString(),
-                                lines: _quoted,
-                                background: _background,
-                                coverColors: CoverPalette.colors(source),
-                                placeholder: l10n.lyricsShareSelectHint(
-                                  lyricsShareMaxLines,
-                                ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final card = Padding(
+              padding: EdgeInsets.symmetric(vertical: tokens.gapSm),
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio:
+                      lyricsShareCardSize.width / lyricsShareCardSize.height,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.shadow.withValues(alpha: 0.22),
+                          blurRadius: 24,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(28),
+                      child: FittedBox(
+                        child: CoverPaletteBuilder(
+                          imageSource: source,
+                          builder: (context, _) => RepaintBoundary(
+                            key: _cardKey,
+                            child: LyricsShareCard(
+                              title: widget.mediaItem.title,
+                              artist: widget.mediaItem.artist ?? '',
+                              artUri: widget.mediaItem.artUri?.toString(),
+                              lines: _quoted,
+                              background: _background,
+                              coverColors: CoverPalette.colors(source),
+                              placeholder: l10n.lyricsShareSelectHint(
+                                lyricsShareMaxLines,
                               ),
                             ),
                           ),
@@ -256,60 +253,68 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                tokens.gapLg,
-                tokens.gapSm,
-                tokens.gapLg,
-                tokens.gapSm,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      l10n.lyricsShareSelectHint(lyricsShareMaxLines),
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: colors.onSurfaceVariant,
+            );
+            final picker = Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    tokens.gapLg,
+                    tokens.gapSm,
+                    tokens.gapLg,
+                    tokens.gapSm,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l10n.lyricsShareSelectHint(lyricsShareMaxLines),
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
                       ),
+                      _SelectionCount(count: _selected.length),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    controller: _list,
+                    padding: EdgeInsets.symmetric(horizontal: tokens.gapMd),
+                    itemCount: widget.lines.length,
+                    itemBuilder: (context, index) => _LineChoice(
+                      line: widget.lines[index],
+                      selected: _selected.contains(index),
+                      first: index == 0,
+                      last: index == widget.lines.length - 1,
+                      onTap: () => _toggle(index),
                     ),
                   ),
-                  _SelectionCount(count: _selected.length),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: ListView.builder(
-                controller: _list,
-                padding: EdgeInsets.symmetric(horizontal: tokens.gapMd),
-                itemCount: widget.lines.length,
-                itemBuilder: (context, index) => _LineChoice(
-                  line: widget.lines[index],
-                  selected: _selected.contains(index),
-                  first: index == 0,
-                  last: index == widget.lines.length - 1,
-                  onTap: () => _toggle(index),
                 ),
-              ),
-            ),
+              ],
+            );
             // Floating toolbar: background swatches beside the primary action.
-            Padding(
+            final toolbar = Padding(
               padding: EdgeInsets.fromLTRB(
                 tokens.gapMd,
                 tokens.gapSm,
                 tokens.gapMd,
                 tokens.gapMd,
               ),
-              child: Row(
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
-                  Expanded(
+                  SizedBox(
+                    // Four full-size swatch targets, plus the picker padding.
+                    width: 204,
                     child: _BackgroundPicker(
                       value: _background,
                       onChanged: (value) => setState(() => _background = value),
                     ),
                   ),
-                  const SizedBox(width: 8),
                   CupertinoButton.filled(
                     key: _shareButtonKey,
                     minimumSize: const Size(64, 56),
@@ -327,8 +332,33 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
                   ),
                 ],
               ),
-            ),
-          ],
+            );
+            // A landscape phone (or a very large text scale) leaves about one
+            // row of height in the stacked layout, so the line picker moves to
+            // the side of the preview instead.
+            final short = constraints.maxHeight < 560;
+            return Column(
+              children: [
+                Expanded(
+                  child: short && constraints.maxWidth >= 600
+                      ? Row(
+                          children: [
+                            Expanded(flex: 6, child: card),
+                            Expanded(flex: 4, child: picker),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            Expanded(flex: short ? 2 : 6, child: card),
+                            Expanded(flex: short ? 5 : 4, child: picker),
+                          ],
+                        ),
+                ),
+                // The toolbar always gets the full window width and can wrap.
+                toolbar,
+              ],
+            );
+          },
         ),
       ),
     );
@@ -470,11 +500,15 @@ class _SelectionCount extends StatelessWidget {
         color: active ? colors.primaryContainer : colors.surfaceContainerHigh,
         shape: const StadiumBorder(),
       ),
-      child: Text(
-        '$count/$lyricsShareMaxLines',
-        style: theme.textTheme.labelLarge?.copyWith(
-          color: active ? colors.onPrimaryContainer : colors.onSurfaceVariant,
-          fontFeatures: const [FontFeature.tabularFigures()],
+      child: Semantics(
+        liveRegion: true,
+        container: true,
+        child: Text(
+          '$count/$lyricsShareMaxLines',
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: active ? colors.onPrimaryContainer : colors.onSurfaceVariant,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
         ),
       ),
     );

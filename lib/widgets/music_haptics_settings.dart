@@ -37,12 +37,17 @@ class _MusicHapticsSettingsState extends ConsumerState<MusicHapticsSettings> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('$label: $percent'),
-            MornyeSlider(
-              value: value,
-              divisions: 20,
-              label: percent,
-              onChanged: widget.enabled ? draft : null,
-              onChangeEnd: widget.enabled ? save : null,
+            Semantics(
+              label: label,
+              child: MornyeSlider(
+                value: value,
+                divisions: 20,
+                label: percent,
+                semanticFormatterCallback: (value) =>
+                    '${(value * 100).round()}%',
+                onChanged: widget.enabled ? draft : null,
+                onChangeEnd: widget.enabled ? save : null,
+              ),
             ),
           ],
         ),

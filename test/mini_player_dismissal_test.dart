@@ -125,4 +125,61 @@ void main() {
       );
     }
   }
+
+  testWidgets('TalkBack can dismiss the mini player', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final media = StreamController<MediaItem?>();
+    final states = StreamController<PlaybackState>();
+    addTearDown(media.close);
+    addTearDown(states.close);
+    final controller = _Controller();
+    addTearDown(() {
+      if (!controller.stopped.isCompleted) controller.stopped.complete();
+    });
+    const song = MediaItem(id: 'song', title: 'Song', artist: 'Artist');
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          currentMediaItemProvider.overrideWithBuild(
+            (ref, notifier) => media.stream,
+          ),
+          playbackStateProvider.overrideWith((ref) => states.stream),
+          musicPlayerControllerProvider.overrideWithValue(controller),
+          lowEndDeviceProvider.overrideWithValue(true),
+          mornyeLiquidGlassProvider.overrideWithValue(false),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(
+            body: Align(alignment: Alignment.bottomCenter, child: MiniPlayer()),
+          ),
+        ),
+      ),
+    );
+    states.add(PlaybackState(playing: true));
+    media.add(song);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('mini-player-song')), findsOneWidget);
+
+    final semantics = tester.widget<Semantics>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.customSemanticsActions != null &&
+            widget.properties.customSemanticsActions!.isNotEmpty,
+      ),
+    );
+    final action = semantics.properties.customSemanticsActions!.keys.single;
+    expect(action.label, 'Dismiss mini player');
+    semantics.properties.customSemanticsActions!.values.single();
+    await tester.pumpAndSettle();
+
+    expect(controller.stops, 1);
+    expect(find.byKey(const ValueKey('mini-player-song')), findsNothing);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }

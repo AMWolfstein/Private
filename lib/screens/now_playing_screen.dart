@@ -260,7 +260,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           toolbarHeight:
               (MediaQuery.orientationOf(context) == Orientation.landscape
               ? 0
-              : 36),
+              : 48),
           automaticallyImplyLeading: false,
           title: MediaQuery.orientationOf(context) == Orientation.landscape
               ? null
@@ -298,7 +298,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     motionArtwork: artwork(),
                     insetArtwork: !immersive,
                     artworkAspectRatio: artworkRatio,
-                    artworkTopInset: MediaQuery.paddingOf(context).top + 36,
+                    artworkTopInset: MediaQuery.paddingOf(context).top + 48,
                     artworkKeys: (
                       header: _artworkHeaderKey,
                       controls: _artworkControlsKey,

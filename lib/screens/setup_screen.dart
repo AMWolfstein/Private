@@ -360,11 +360,18 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       await _saveProgress(step: step);
       if (!mounted) return;
       setState(() => _currentStep = step);
-      await _pageController?.animateToPage(
-        step,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      final controller = _pageController;
+      if (controller == null) return;
+      // Reduced motion turns the slide into a jump.
+      if (MediaQuery.disableAnimationsOf(context)) {
+        controller.jumpToPage(step);
+      } else {
+        await controller.animateToPage(
+          step,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
     } catch (e, stack) {
       _log.e('Failed to save setup step', e, stack);
     } finally {

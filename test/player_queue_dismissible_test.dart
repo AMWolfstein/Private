@@ -89,4 +89,63 @@ void main() {
       );
     }
   }
+
+  testWidgets('queued rows offer a Remove semantic action', (tester) async {
+    var removals = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: MornyeTheme.build(Brightness.dark),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Center(
+            child: PlayerQueueDismissible(
+              onRemove: () => removals++,
+              child: const SizedBox(width: 320, height: 64),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final semantics = tester.widget<Semantics>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.customSemanticsActions != null &&
+            widget.properties.customSemanticsActions!.isNotEmpty,
+      ),
+    );
+    final actions = semantics.properties.customSemanticsActions!;
+    expect(actions.keys.single.label, 'Remove');
+    actions.values.single();
+    expect(removals, 1);
+  });
+
+  testWidgets('a disabled row offers no Remove action', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: MornyeTheme.build(Brightness.dark),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Center(
+            child: PlayerQueueDismissible(
+              onRemove: () {},
+              enabled: false,
+              child: const SizedBox(width: 320, height: 64),
+            ),
+          ),
+        ),
+      ),
+    );
+    final semantics = tester.widget<Semantics>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.customSemanticsActions != null,
+      ),
+    );
+    expect(semantics.properties.customSemanticsActions, isEmpty);
+  });
 }

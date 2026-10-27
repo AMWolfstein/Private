@@ -33,37 +33,58 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             clipBehavior: Clip.antiAlias,
-            child: ListTile(
-              key: ValueKey('plrow_${playlist.id}'),
-              contentPadding: const EdgeInsetsDirectional.fromSTEB(8, 4, 12, 4),
-              leading: SizedBox.square(
-                dimension: 56,
-                child: _buildPlaylistCover(context, playlist, colorScheme, 56),
+            child: Semantics(
+              // Selection mode changes what a tap does: report the state so
+              // TalkBack does not just announce a plain "open playlist" row.
+              selected: _isPlaylistSelectionMode ? isSelected : null,
+              child: ListTile(
+                key: ValueKey('plrow_${playlist.id}'),
+                contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                  8,
+                  4,
+                  12,
+                  4,
+                ),
+                leading: SizedBox.square(
+                  dimension: 56,
+                  child: _buildPlaylistCover(
+                    context,
+                    playlist,
+                    colorScheme,
+                    56,
+                  ),
+                ),
+                title: Text(
+                  playlist.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  context.l10n.collectionPlaylistTracks(playlist.trackCount),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: _isPlaylistSelectionMode
+                    ? Semantics(
+                        checked: isSelected,
+                        label: isSelected
+                            ? context.l10n.a11yDeselectPlaylist
+                            : context.l10n.a11ySelectPlaylist,
+                        child: AnimatedSelectionCheckbox(
+                          visible: true,
+                          selected: isSelected,
+                          colorScheme: colorScheme,
+                          size: 24,
+                        ),
+                      )
+                    : const Icon(Icons.chevron_right),
+                onTap: _isPlaylistSelectionMode
+                    ? () => _togglePlaylistSelection(playlist.id)
+                    : () => _openPlaylistById(playlist.id),
+                onLongPress: _isPlaylistSelectionMode
+                    ? () => _togglePlaylistSelection(playlist.id)
+                    : () => _enterPlaylistSelectionMode(playlist.id),
               ),
-              title: Text(
-                playlist.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(
-                context.l10n.collectionPlaylistTracks(playlist.trackCount),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: _isPlaylistSelectionMode
-                  ? AnimatedSelectionCheckbox(
-                      visible: true,
-                      selected: isSelected,
-                      colorScheme: colorScheme,
-                      size: 24,
-                    )
-                  : const Icon(Icons.chevron_right),
-              onTap: _isPlaylistSelectionMode
-                  ? () => _togglePlaylistSelection(playlist.id)
-                  : () => _openPlaylistById(playlist.id),
-              onLongPress: _isPlaylistSelectionMode
-                  ? () => _togglePlaylistSelection(playlist.id)
-                  : () => _enterPlaylistSelectionMode(playlist.id),
             ),
           ),
         );

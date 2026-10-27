@@ -265,10 +265,15 @@ class SelectionBottomBar extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  context.l10n.selectionSelected(selectedCount),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                // The count changes on every pick; announce it as it updates.
+                Semantics(
+                  liveRegion: true,
+                  container: true,
+                  child: Text(
+                    context.l10n.selectionSelected(selectedCount),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(

@@ -522,7 +522,11 @@ class _RewindStoryState extends State<_RewindStory>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final autoAdvance = !MediaQuery.disableAnimationsOf(context);
+    // A screen reader or switch access needs to finish reading a slide; an
+    // auto-advance under them would cut the announcement off.
+    final autoAdvance =
+        !MediaQuery.disableAnimationsOf(context) &&
+        !MediaQuery.accessibleNavigationOf(context);
     if (autoAdvance != _autoAdvance) {
       _autoAdvance = autoAdvance;
       _restartProgress();

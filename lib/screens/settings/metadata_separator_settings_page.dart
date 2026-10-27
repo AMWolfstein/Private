@@ -125,19 +125,26 @@ class _SeparatorPickerState extends State<_SeparatorPicker> {
             SettingsGroup(
               children: [
                 for (var i = 0; i < labels.length; i++)
-                  SettingsItem(
-                    title: labels[i],
-                    trailing:
-                        _selected == (i < _presets.length ? _presets[i] : null)
-                        ? Icon(
-                            Icons.check,
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                    showDivider: i != labels.length - 1,
-                    onTap: () => setState(() {
-                      _selected = i < _presets.length ? _presets[i] : null;
-                    }),
+                  Semantics(
+                    // One of a set: announce which separator is chosen.
+                    selected:
+                        _selected == (i < _presets.length ? _presets[i] : null),
+                    inMutuallyExclusiveGroup: true,
+                    child: SettingsItem(
+                      title: labels[i],
+                      trailing:
+                          _selected ==
+                              (i < _presets.length ? _presets[i] : null)
+                          ? Icon(
+                              Icons.check,
+                              color: Theme.of(context).colorScheme.primary,
+                            )
+                          : const SizedBox.shrink(),
+                      showDivider: i != labels.length - 1,
+                      onTap: () => setState(() {
+                        _selected = i < _presets.length ? _presets[i] : null;
+                      }),
+                    ),
                   ),
               ],
             ),

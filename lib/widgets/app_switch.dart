@@ -46,8 +46,9 @@ class _MornyeSwitch extends ConsumerStatefulWidget {
 }
 
 class _MornyeSwitchState extends ConsumerState<_MornyeSwitch> {
-  // Geometry shared by the painted thumb and the glass overlay.
-  static const _box = Size(71, 44);
+  // Geometry shared by the painted thumb and the glass overlay. The box is
+  // 48dp tall so the switch stays a full-size tap target.
+  static const _box = Size(71, 48);
   static const _track = Size(63, 28);
   static const _thumb = Size(37, 24);
   static const _trackPadding = 2.0;

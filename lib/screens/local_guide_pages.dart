@@ -83,13 +83,16 @@ Widget _buildFeatureList(
   List<(IconData, String)> features,
 ) {
   final colorScheme = Theme.of(context).colorScheme;
+  final reduceMotion = MediaQuery.disableAnimationsOf(context);
   return Column(
     children: features.asMap().entries.map((entry) {
       final index = entry.key;
       final feature = entry.value;
       return TweenAnimationBuilder<double>(
         tween: Tween(begin: 0, end: 1),
-        duration: Duration(milliseconds: 600 + (index * 200)),
+        duration: reduceMotion
+            ? Duration.zero
+            : Duration(milliseconds: 600 + (index * 200)),
         curve: Curves.easeOutQuart,
         builder: (context, value, child) {
           return Transform.translate(
@@ -216,7 +219,9 @@ class _InteractiveSearchExampleState extends State<_InteractiveSearchExample> {
           ),
 
           AnimatedSize(
-            duration: const Duration(milliseconds: 400),
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 400),
             curve: Curves.easeOutBack,
             child: _showResult
                 ? Padding(
@@ -349,7 +354,9 @@ class _TutorialPage extends StatelessWidget {
                   children: [
                     SizedBox(height: topGap),
                     AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 500),
                       curve: Curves.easeOutBack,
                       transform: Matrix4.translationValues(
                         0,
@@ -369,7 +376,9 @@ class _TutorialPage extends StatelessWidget {
                     ),
                     SizedBox(height: iconTextGap),
                     AnimatedOpacity(
-                      duration: const Duration(milliseconds: 500),
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 500),
                       opacity: isActive ? 1.0 : 0.0,
                       curve: Curves.easeOut,
                       child: Text(
@@ -385,7 +394,9 @@ class _TutorialPage extends StatelessWidget {
                     ),
                     SizedBox(height: descriptionGap),
                     AnimatedOpacity(
-                      duration: const Duration(milliseconds: 500),
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 500),
                       opacity: isActive ? 1.0 : 0.0,
                       curve: Curves.easeOut,
                       child: Text(

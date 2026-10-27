@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/utils/playback_seek_preview.dart';
 import 'package:spotiflac_android/widgets/playback_seek_slider.dart';
@@ -15,6 +16,9 @@ void main() {
     addTearDown(sharedPreview.dispose);
     final completion = Completer<void>();
     Widget app(Duration position) => MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+
       home: Scaffold(
         body: PlaybackSeekSlider(
           preview: sharedPreview,
@@ -68,6 +72,9 @@ void main() {
     addTearDown(sharedPreview.dispose);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+
         home: Scaffold(
           body: PlaybackSeekSlider(
             preview: sharedPreview,
@@ -113,6 +120,9 @@ void main() {
     final completion = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+
         theme: MornyeTheme.build(Brightness.dark),
         home: Scaffold(
           body: PlaybackSeekSlider(
@@ -142,6 +152,9 @@ void main() {
     addTearDown(preview.dispose);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+
         home: Scaffold(
           body: PlaybackSeekSlider(
             preview: preview,
@@ -180,6 +193,9 @@ void main() {
     final seeks = <Duration>[];
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+
         home: Scaffold(
           body: PlaybackSeekSlider(
             position: const Duration(minutes: 2),
@@ -202,5 +218,36 @@ void main() {
     expect(ignore.ignoring, isTrue);
     await tester.tap(find.byType(Slider));
     expect(seeks, isEmpty);
+  });
+
+  testWidgets('the seek slider is labelled and speaks elapsed time', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: PlaybackSeekSlider(
+            position: const Duration(minutes: 1, seconds: 5),
+            duration: const Duration(minutes: 4),
+            onSeek: (_) async {},
+          ),
+        ),
+      ),
+    );
+    final data = tester
+        .getSemantics(
+          find.byWidgetPredicate(
+            (widget) => widget is Semantics && widget.properties.slider == true,
+          ),
+        )
+        .getSemanticsData();
+    expect(data.label, 'Playback position');
+    expect(data.value, '1:05 / 4:00');
+    expect(data.increasedValue, '1:10 / 4:00');
+    expect(data.decreasedValue, '1:00 / 4:00');
+    handle.dispose();
   });
 }

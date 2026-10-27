@@ -148,7 +148,8 @@ void main() {
           matching: find.byWidgetPredicate(
             (widget) =>
                 widget is IconButton &&
-                (widget.tooltip == 'Play' || widget.tooltip == 'Pause'),
+                (widget.tooltip == 'Play Song $number' ||
+                    widget.tooltip == 'Pause Song $number'),
           ),
         );
         if (mornye) {
@@ -192,7 +193,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.descendant(of: row(1), matching: find.byTooltip('Play')),
+          find.descendant(of: row(1), matching: find.byTooltip('Play Song 1')),
           findsOneWidget,
         );
 
@@ -202,7 +203,7 @@ void main() {
         expect(player._toggles, [true, false]);
         expect(playback._started, ['1']);
         expect(
-          find.descendant(of: row(1), matching: find.byTooltip('Pause')),
+          find.descendant(of: row(1), matching: find.byTooltip('Pause Song 1')),
           findsOneWidget,
         );
 

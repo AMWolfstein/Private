@@ -41,9 +41,11 @@ class LocalSongRow extends StatelessWidget {
     onLongPress: onLongPress,
     leading: numbered
         ? SizedBox(
-            width: 24,
+            // Grows with the text scale so 2-3 digit track numbers keep a line.
+            width: MediaQuery.textScalerOf(context).scale(24),
             child: Text(
               number?.toString() ?? '-',
+              maxLines: 1,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -68,6 +70,7 @@ class LocalSongRow extends StatelessWidget {
     titleTrailing: explicit
         ? Semantics(
             label: context.l10n.metadataExplicitValue,
+            excludeSemantics: true,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
               decoration: BoxDecoration(
@@ -99,10 +102,18 @@ class LocalSongRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         playControl ??
-            LocalSongPlayButton(isPlaying: isPlaying, onPressed: onPlay),
+            LocalSongPlayButton(
+              isPlaying: isPlaying,
+              onPressed: onPlay,
+              tooltip: isPlaying
+                  ? context.l10n.a11yPauseTrack(title)
+                  : artist.trim().isEmpty
+                  ? context.l10n.a11yPlayTrack(title)
+                  : context.l10n.a11yPlayTrackByArtist(title, artist),
+            ),
         Builder(
           builder: (buttonContext) => IconButton(
-            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            tooltip: context.l10n.a11yMoreOptionsFor(title),
             onPressed: () => onMenu(mornyeMenuAnchor(buttonContext)),
             icon: const Icon(Icons.more_horiz),
           ),
@@ -118,14 +129,20 @@ class LocalSongPlayButton extends StatelessWidget {
     super.key,
     required this.isPlaying,
     required this.onPressed,
+    this.tooltip,
   });
 
   final bool isPlaying;
   final VoidCallback onPressed;
 
+  /// Names the track for screen readers; falls back to Play/Pause.
+  final String? tooltip;
+
   @override
   Widget build(BuildContext context) => IconButton(
-    tooltip: isPlaying ? context.l10n.actionPause : context.l10n.tooltipPlay,
+    tooltip:
+        tooltip ??
+        (isPlaying ? context.l10n.actionPause : context.l10n.tooltipPlay),
     onPressed: onPressed,
     icon: DecoratedBox(
       decoration: BoxDecoration(

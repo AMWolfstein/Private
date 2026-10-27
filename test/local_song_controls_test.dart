@@ -58,7 +58,7 @@ void main() {
           greaterThan(tester.getTopLeft(find.text('Song')).dy),
         );
         await tester.tap(find.text('Song'));
-        await tester.tap(find.byTooltip('Play'));
+        await tester.tap(find.byTooltip('Play Song by Artist'));
         expect(plays, 2);
         await tester.tap(find.byIcon(Icons.more_horiz));
         await tester.pumpAndSettle();

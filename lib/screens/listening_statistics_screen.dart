@@ -152,6 +152,7 @@ class _ListeningStatisticsScreenState
                   child: ListTile(
                     title: Text(context.l10n.listeningStatsLoadError),
                     trailing: IconButton(
+                      tooltip: context.l10n.dialogRetry,
                       icon: const Icon(Icons.refresh),
                       onPressed: () =>
                           ref.invalidate(listeningSummaryProvider(period)),
@@ -238,34 +239,16 @@ class _ListeningStatisticsScreenState
                 for (final day in days.skip(
                   (days.length - 7).clamp(0, days.length),
                 ))
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 68,
-                          child: Text(
-                            DateFormat.MMMd(
-                              Localizations.localeOf(context).toLanguageTag(),
-                            ).format(DateTime.parse(day.key)),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: LinearProgressIndicator(
-                            value:
-                                day.value /
-                                days
-                                    .map((e) => e.value)
-                                    .reduce((a, b) => a > b ? a : b),
-                            minHeight: 8,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text('${(day.value / 60000).round()}'),
-                      ],
-                    ),
+                  _DailyActivityRow(
+                    label: DateFormat.MMMd(
+                      Localizations.localeOf(context).toLanguageTag(),
+                    ).format(DateTime.parse(day.key)),
+                    minutes: (day.value / 60000).round(),
+                    fraction:
+                        day.value /
+                        days
+                            .map((e) => e.value)
+                            .reduce((a, b) => a > b ? a : b),
                   ),
               ],
             ),
@@ -355,5 +338,55 @@ class _ListeningStatisticsScreenState
         ],
       ),
     ];
+  }
+}
+
+/// One day of the activity chart. Announced as a single value instead of a
+/// date, a decorative bar and a bare number.
+class _DailyActivityRow extends StatelessWidget {
+  const _DailyActivityRow({
+    required this.label,
+    required this.minutes,
+    required this.fraction,
+  });
+
+  final String label;
+  final int minutes;
+  final double fraction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: '$label: ${context.l10n.listeningStatsMinutes(minutes)}',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            Flexible(
+              child: ConstrainedBox(
+                // Grows with the text scale rather than wrapping a fixed 68dp.
+                constraints: const BoxConstraints(minWidth: 68),
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: LinearProgressIndicator(
+                value: fraction,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            const SizedBox(width: 12),
+            ExcludeSemantics(child: Text('$minutes')),
+          ],
+        ),
+      ),
+    );
   }
 }

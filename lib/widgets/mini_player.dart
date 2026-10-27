@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart' show CustomSemanticsAction;
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
@@ -74,6 +75,15 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
   String? _dismissedItemId;
   bool _dismissalSawPause = false;
 
+  /// Swipe-dismiss and the "Dismiss" accessibility action share this path.
+  void _dismiss(String itemId, bool isPlaying) {
+    setState(() {
+      _dismissedItemId = itemId;
+      _dismissalSawPause = !isPlaying;
+    });
+    ref.read(musicPlayerControllerProvider).stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaItem = ref.watch(currentMediaItemProvider).value;
@@ -106,13 +116,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     final player = Dismissible(
       key: ValueKey('mini-player-${mediaItem.id}'),
       direction: DismissDirection.horizontal,
-      onDismissed: (_) {
-        setState(() {
-          _dismissedItemId = mediaItem.id;
-          _dismissalSawPause = !isPlaying;
-        });
-        controller.stop();
-      },
+      onDismissed: (_) => _dismiss(mediaItem.id, isPlaying),
       child: DecoratedBox(
         key: _surfaceKey,
         position: DecorationPosition.foreground,
@@ -240,13 +244,22 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
       onVerticalDragEnd: _onVerticalDragEnd,
       child: player,
     );
+    // Swipe-only dismissal is invisible to TalkBack and switch access, so the
+    // bar also offers the same dismissal as a semantic action.
+    final dismissible = Semantics(
+      customSemanticsActions: {
+        CustomSemanticsAction(label: context.l10n.a11yDismissMiniPlayer): () =>
+            _dismiss(mediaItem.id, isPlaying),
+      },
+      child: swipeable,
+    );
     return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
       child: MornyeGlass.navigation(
         strongTint: true,
         tintOpacity: MornyeTheme.chromeOpacity(context),
         blurEnabled: ref.watch(mornyeBlurEnabledProvider),
-        child: swipeable,
+        child: dismissible,
       ),
     );
   }

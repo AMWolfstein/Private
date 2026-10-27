@@ -68,21 +68,26 @@ class _PlaybackNormalizationSettingsState
           ),
           const SizedBox(height: 16),
           Text('${l10n.playbackNormalizationPreamp}: $value'),
-          MornyeSlider(
-            value: preamp.toDouble(),
-            min: -15,
-            max: 6,
-            divisions: 21,
-            label: '${_signed(preamp)} dB',
-            onChanged: widget.enabled
-                ? (value) => setState(() => _preamp = value)
-                : null,
-            onChangeEnd: widget.enabled
-                ? (value) {
-                    notifier.setPlaybackNormalizationPreamp(value);
-                    setState(() => _preamp = null);
-                  }
-                : null,
+          Semantics(
+            label: l10n.playbackNormalizationPreamp,
+            child: MornyeSlider(
+              value: preamp.toDouble(),
+              min: -15,
+              max: 6,
+              divisions: 21,
+              label: '${_signed(preamp)} dB',
+              semanticFormatterCallback: (value) =>
+                  '${_signed(value.round())} dB',
+              onChanged: widget.enabled
+                  ? (value) => setState(() => _preamp = value)
+                  : null,
+              onChangeEnd: widget.enabled
+                  ? (value) {
+                      notifier.setPlaybackNormalizationPreamp(value);
+                      setState(() => _preamp = null);
+                    }
+                  : null,
+            ),
           ),
           Text(
             l10n.playbackNormalizationPreampHint,

@@ -47,16 +47,23 @@ class MetadataTextField extends StatelessWidget {
             ),
           ),
           ...[
-            CupertinoTextField(
-              controller: controller,
-              keyboardType: keyboard,
-              inputFormatters: inputFormatters,
-              maxLines: maxLines,
-              placeholder: hint,
-              cursorColor: cs.primary,
-              style: Theme.of(context).textTheme.bodyLarge,
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
-              decoration: null,
+            Semantics(
+              // The visible label sits above the field; name the edit box too.
+              label: label,
+              child: CupertinoTextField(
+                controller: controller,
+                keyboardType: keyboard,
+                inputFormatters: inputFormatters,
+                maxLines: maxLines,
+                placeholder: hint,
+                cursorColor: cs.primary,
+                style: Theme.of(context).textTheme.bodyLarge,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 14,
+                ),
+                decoration: null,
+              ),
             ),
             const Divider(height: 0.5),
           ],

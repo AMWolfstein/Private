@@ -453,6 +453,52 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Songs header wraps each action at 360dp and 2x text', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    returnSong = true;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(() => local),
+          libraryCollectionsProvider.overrideWith(_SongsCollections.new),
+        ],
+        child: MaterialApp(
+          theme: MornyeTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(2)),
+            child: child!,
+          ),
+          home: const Scaffold(body: QueueTab(librarySection: 'all')),
+        ),
+      ),
+    );
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(QueueTab)),
+    );
+    container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
+    await tester.pumpAndSettle();
+    final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+    final create = find.widgetWithText(
+      TextButton,
+      l10n.collectionCreatePlaylist,
+    );
+    expect(create, findsOneWidget);
+    final rect = tester.getRect(create);
+    expect(rect.left, greaterThanOrEqualTo(0));
+    expect(rect.right, lessThanOrEqualTo(360));
+    expect(rect.height, greaterThanOrEqualTo(48));
+    expect(tester.takeException(), isNull);
+  });
+
   for (final section in ['all', 'albums']) {
     testWidgets(
       'Queue $section stays lazy until the local library is enabled',

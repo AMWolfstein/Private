@@ -330,7 +330,11 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     return '$description\n$sizeInfo';
   }
 
-  Widget _buildClearTrailing(String actionKey, VoidCallback onPressed) {
+  Widget _buildClearTrailing(
+    String actionKey,
+    String targetLabel,
+    VoidCallback onPressed,
+  ) {
     if (_busyAction == actionKey) {
       return const SizedBox(
         width: 18,
@@ -339,9 +343,17 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       );
     }
 
-    return TextButton(
-      onPressed: _isBusy ? null : onPressed,
-      child: Text(context.l10n.dialogClear),
+    return Semantics(
+      // Every row says "Clear"; name the cache it clears for TalkBack.
+      label: context.l10n.cacheClearFor(targetLabel),
+      button: true,
+      enabled: !_isBusy,
+      excludeSemantics: true,
+      onTap: _isBusy ? null : onPressed,
+      child: TextButton(
+        onPressed: _isBusy ? null : onPressed,
+        child: Text(context.l10n.dialogClear),
+      ),
     );
   }
 
@@ -485,6 +497,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                     ),
                     trailing: _buildClearTrailing(
                       'clear_app_cache',
+                      context.l10n.cacheAppDirectory,
                       () => _confirmAndRunAction(
                         actionKey: 'clear_app_cache',
                         targetLabel: context.l10n.cacheAppDirectory,
@@ -503,6 +516,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                       ),
                       trailing: _buildClearTrailing(
                         'clear_temp_cache',
+                        context.l10n.cacheTempDirectory,
                         () => _confirmAndRunAction(
                           actionKey: 'clear_temp_cache',
                           targetLabel: context.l10n.cacheTempDirectory,
@@ -525,6 +539,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                     ),
                     trailing: _buildClearTrailing(
                       'clear_cover_cache',
+                      context.l10n.cacheCoverImage,
                       () => _confirmAndRunAction(
                         actionKey: 'clear_cover_cache',
                         targetLabel: context.l10n.cacheCoverImage,
@@ -549,6 +564,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                     ),
                     trailing: _buildClearTrailing(
                       'clear_library_cover_cache',
+                      context.l10n.cacheLibraryCover,
                       () => _confirmAndRunAction(
                         actionKey: 'clear_library_cover_cache',
                         targetLabel: context.l10n.cacheLibraryCover,
@@ -573,6 +589,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                     ),
                     trailing: _buildClearTrailing(
                       'clear_audio_analysis_cache',
+                      context.l10n.cacheAudioAnalysis,
                       () => _confirmAndRunAction(
                         actionKey: 'clear_audio_analysis_cache',
                         targetLabel: context.l10n.cacheAudioAnalysis,
@@ -599,6 +616,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                         '${context.l10n.cacheCleanupUnusedDesc}\n${context.l10n.cacheCleanupUnusedSubtitle}',
                     trailing: _buildClearTrailing(
                       'cleanup_unused',
+                      context.l10n.cacheCleanupUnused,
                       _cleanupUnusedData,
                     ),
                     showDivider: false,

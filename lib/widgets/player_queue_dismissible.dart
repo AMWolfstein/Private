@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart' show CupertinoColors, CupertinoIcons;
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart' show CustomSemanticsAction;
 import 'package:spotiflac_android/l10n/l10n.dart';
 
 /// Removing a row affects the queue only, never the song on disk.
@@ -29,21 +30,31 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
   }
 
   @override
-  Widget build(BuildContext context) => Dismissible(
-    key: const ValueKey('queue-dismiss'),
-    direction: widget.enabled
-        ? DismissDirection.endToStart
-        : DismissDirection.none,
-    dismissThresholds: const {DismissDirection.endToStart: 0.5},
-    onUpdate: (details) => _progress.value = details.progress,
-    // Remove before collapsing so a concurrently playing row is never left
-    // dismissed in the tree. The service resolves the entry by identity.
-    confirmDismiss: (_) async {
-      widget.onRemove();
-      return false;
-    },
-    background: _buildMornyeBackground(context),
-    child: widget.child,
+  Widget build(BuildContext context) => Semantics(
+    // A queued row can also be removed with TalkBack or switch access, which
+    // cannot swipe; the action runs the same removal as the swipe.
+    customSemanticsActions: widget.enabled
+        ? {
+            CustomSemanticsAction(label: context.l10n.dialogRemove):
+                widget.onRemove,
+          }
+        : const {},
+    child: Dismissible(
+      key: const ValueKey('queue-dismiss'),
+      direction: widget.enabled
+          ? DismissDirection.endToStart
+          : DismissDirection.none,
+      dismissThresholds: const {DismissDirection.endToStart: 0.5},
+      onUpdate: (details) => _progress.value = details.progress,
+      // Remove before collapsing so a concurrently playing row is never left
+      // dismissed in the tree. The service resolves the entry by identity.
+      confirmDismiss: (_) async {
+        widget.onRemove();
+        return false;
+      },
+      background: _buildMornyeBackground(context),
+      child: widget.child,
+    ),
   );
 
   Widget _buildMornyeBackground(BuildContext context) => DecoratedBox(

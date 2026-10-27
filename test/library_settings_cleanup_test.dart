@@ -68,9 +68,12 @@ Future<void> _mount(
   WidgetTester tester, {
   required bool mornye,
   required _Library library,
+  Size size = const Size(430, 1000),
+  double textScale = 1,
+  double? pageTextScale,
 }) async {
   SharedPreferences.setMockInitialValues({});
-  tester.view.physicalSize = const Size(430, 1000);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
@@ -83,7 +86,20 @@ Future<void> _mount(
         theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const LibrarySettingsPage(),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        ),
+        home: Builder(
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(pageTextScale ?? textScale),
+            ),
+            child: const LibrarySettingsPage(),
+          ),
+        ),
       ),
     ),
   );
@@ -96,6 +112,38 @@ Future<void> _mount(
 }
 
 void main() {
+  testWidgets('Auto scan picker can scroll to the final option at 2x text', (
+    tester,
+  ) async {
+    await _mount(
+      tester,
+      mornye: true,
+      library: _Library(LocalLibraryState(), () async => 0),
+      size: const Size(360, 640),
+      textScale: 2,
+      // Isolate the modal contract from the existing hero timestamp overflow
+      // (UX-245). The root-navigator sheet still inherits 2x below.
+      pageTextScale: 1,
+    );
+    await tester.scrollUntilVisible(find.text('Auto Scan'), -200);
+    await tester.tap(find.text('Auto Scan'));
+    await tester.pumpAndSettle();
+    final sheet = find.byType(BottomSheet);
+    final l10n = AppLocalizations.of(tester.element(sheet));
+    expect(MediaQuery.textScalerOf(tester.element(sheet)).scale(16), 32);
+    final last = find.descendant(
+      of: sheet,
+      matching: find.text(l10n.libraryAutoScanWeekly),
+    );
+    await tester.ensureVisible(last);
+    await tester.pumpAndSettle();
+    expect(last.hitTestable(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(last);
+    await tester.pumpAndSettle();
+    expect(sheet, findsNothing);
+  });
+
   for (final mornye in [true]) {
     testWidgets('source shows the scan failure reason (Mornye: $mornye)', (
       tester,
