@@ -845,6 +845,44 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
+  "libraryFilterSortSizeLargest": "Ukuran (Terbesar dahulu)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Ukuran (Terkecil dahulu)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
+  "libraryUnreadableFiles": "{count, plural, =1{1 file tidak dapat dibaca} other{{count} file tidak dapat dibaca}}",
+  "@libraryUnreadableFiles": {
+    "description": "Count of files the last scan of a library folder skipped because it could not read them",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryUnreadableFilesTitle": "File tidak dapat dibaca",
+  "@libraryUnreadableFilesTitle": {
+    "description": "Title of the list of files a library scan could not read, and the action that opens it"
+  },
+  "libraryUnreadableFilesSubtitle": "File ini tidak dimasukkan ke pustaka Anda. File mungkin rusak, masih diunduh, atau diblokir oleh aplikasi penyimpanan.",
+  "@libraryUnreadableFilesSubtitle": {
+    "description": "Explanation above the list of files a library scan could not read"
+  },
+  "libraryUnreadableFilesAction": "Lihat file dan alasannya",
+  "@libraryUnreadableFilesAction": {
+    "description": "Subtitle of the library folder action that lists unreadable files"
+  },
+  "libraryUnreadableFilesMore": "{count, plural, =1{1 file lain tidak ditampilkan} other{{count} file lain tidak ditampilkan}}",
+  "@libraryUnreadableFilesMore": {
+    "description": "Note below the unreadable files list when the scan skipped more files than it lists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "libraryShowDuplicateIndicator": "Tampilkan Tanda File Ganda",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"

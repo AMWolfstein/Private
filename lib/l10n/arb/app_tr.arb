@@ -838,6 +838,44 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
+  "libraryFilterSortSizeLargest": "Boyut (önce en büyük)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Boyut (önce en küçük)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
+  "libraryUnreadableFiles": "{count, plural, =1{1 dosya okunamadı} other{{count} dosya okunamadı}}",
+  "@libraryUnreadableFiles": {
+    "description": "Count of files the last scan of a library folder skipped because it could not read them",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryUnreadableFilesTitle": "Okunamayan dosyalar",
+  "@libraryUnreadableFilesTitle": {
+    "description": "Title of the list of files a library scan could not read, and the action that opens it"
+  },
+  "libraryUnreadableFilesSubtitle": "Bu dosyalar kitaplığınızın dışında bırakıldı. Bozuk olabilirler, hâlâ indiriliyor olabilirler veya depolama uygulaması tarafından engellenmiş olabilirler.",
+  "@libraryUnreadableFilesSubtitle": {
+    "description": "Explanation above the list of files a library scan could not read"
+  },
+  "libraryUnreadableFilesAction": "Hangi dosyalar ve nedenleri",
+  "@libraryUnreadableFilesAction": {
+    "description": "Subtitle of the library folder action that lists unreadable files"
+  },
+  "libraryUnreadableFilesMore": "{count, plural, =1{1 dosya daha listelenmiyor} other{{count} dosya daha listelenmiyor}}",
+  "@libraryUnreadableFilesMore": {
+    "description": "Note below the unreadable files list when the scan skipped more files than it lists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "libraryShowDuplicateIndicator": "Kopya Belirtecini Göster",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"

@@ -838,6 +838,44 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
+  "libraryFilterSortSizeLargest": "आकार (सबसे बड़ा पहले)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "आकार (सबसे छोटा पहले)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
+  "libraryUnreadableFiles": "{count, plural, =1{1 फ़ाइल नहीं पढ़ी जा सकी} other{{count} फ़ाइलें नहीं पढ़ी जा सकीं}}",
+  "@libraryUnreadableFiles": {
+    "description": "Count of files the last scan of a library folder skipped because it could not read them",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryUnreadableFilesTitle": "न पढ़ी जा सकने वाली फ़ाइलें",
+  "@libraryUnreadableFilesTitle": {
+    "description": "Title of the list of files a library scan could not read, and the action that opens it"
+  },
+  "libraryUnreadableFilesSubtitle": "ये फ़ाइलें आपकी लाइब्रेरी से बाहर रखी गईं। हो सकता है ये खराब हों, अभी डाउनलोड हो रही हों, या स्टोरेज ऐप से अवरुद्ध हों।",
+  "@libraryUnreadableFilesSubtitle": {
+    "description": "Explanation above the list of files a library scan could not read"
+  },
+  "libraryUnreadableFilesAction": "कौन-सी फ़ाइलें और क्यों देखें",
+  "@libraryUnreadableFilesAction": {
+    "description": "Subtitle of the library folder action that lists unreadable files"
+  },
+  "libraryUnreadableFilesMore": "{count, plural, =1{1 और फ़ाइल सूची में नहीं है} other{{count} और फ़ाइलें सूची में नहीं हैं}}",
+  "@libraryUnreadableFilesMore": {
+    "description": "Note below the unreadable files list when the scan skipped more files than it lists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"

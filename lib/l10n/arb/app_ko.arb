@@ -838,6 +838,44 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
+  "libraryFilterSortSizeLargest": "크기 (큰 순)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "크기 (작은 순)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
+  "libraryUnreadableFiles": "{count, plural, =1{파일 1개를 읽을 수 없음} other{파일 {count}개를 읽을 수 없음}}",
+  "@libraryUnreadableFiles": {
+    "description": "Count of files the last scan of a library folder skipped because it could not read them",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryUnreadableFilesTitle": "읽을 수 없는 파일",
+  "@libraryUnreadableFilesTitle": {
+    "description": "Title of the list of files a library scan could not read, and the action that opens it"
+  },
+  "libraryUnreadableFilesSubtitle": "이 파일은 라이브러리에서 제외되었습니다. 손상되었거나, 아직 다운로드 중이거나, 저장소 앱에서 차단되었을 수 있습니다.",
+  "@libraryUnreadableFilesSubtitle": {
+    "description": "Explanation above the list of files a library scan could not read"
+  },
+  "libraryUnreadableFilesAction": "파일과 원인 보기",
+  "@libraryUnreadableFilesAction": {
+    "description": "Subtitle of the library folder action that lists unreadable files"
+  },
+  "libraryUnreadableFilesMore": "{count, plural, =1{파일 1개가 더 있지만 목록에 없습니다} other{파일 {count}개가 더 있지만 목록에 없습니다}}",
+  "@libraryUnreadableFilesMore": {
+    "description": "Note below the unreadable files list when the scan skipped more files than it lists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "libraryShowDuplicateIndicator": "중복 표시기 표시",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"

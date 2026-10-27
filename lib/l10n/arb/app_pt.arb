@@ -659,6 +659,44 @@
   "libraryExternalStorage": "Armazenamento externo",
   "libraryRemoveFolder": "Remover pasta da biblioteca",
   "libraryRemoveFolderMessage": "Remover esta pasta e as suas faixas indexadas do SpotiFLAC Mobile? Os ficheiros de áudio do armazenamento não serão eliminados.",
+  "libraryFilterSortSizeLargest": "Tamanho (maior primeiro)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Tamanho (menor primeiro)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
+  "libraryUnreadableFiles": "{count, plural, =1{Não foi possível ler 1 arquivo} other{Não foi possível ler {count} arquivos}}",
+  "@libraryUnreadableFiles": {
+    "description": "Count of files the last scan of a library folder skipped because it could not read them",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryUnreadableFilesTitle": "Arquivos ilegíveis",
+  "@libraryUnreadableFilesTitle": {
+    "description": "Title of the list of files a library scan could not read, and the action that opens it"
+  },
+  "libraryUnreadableFilesSubtitle": "Estes arquivos ficaram fora da sua biblioteca. Podem estar danificados, ainda em download ou bloqueados pelo app de armazenamento.",
+  "@libraryUnreadableFilesSubtitle": {
+    "description": "Explanation above the list of files a library scan could not read"
+  },
+  "libraryUnreadableFilesAction": "Veja quais arquivos e por quê",
+  "@libraryUnreadableFilesAction": {
+    "description": "Subtitle of the library folder action that lists unreadable files"
+  },
+  "libraryUnreadableFilesMore": "{count, plural, =1{1 arquivo a mais não está listado} other{{count} arquivos a mais não estão listados}}",
+  "@libraryUnreadableFilesMore": {
+    "description": "Note below the unreadable files list when the scan skipped more files than it lists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
