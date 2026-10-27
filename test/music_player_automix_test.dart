@@ -21,6 +21,7 @@ import 'package:spotiflac_android/services/system_volume_service.dart';
 
 class _EffectRenderer extends AutoMixEffectRenderer {
   final tails = <RenderedMixTail>[];
+  final bassHandoffs = <bool>[];
   bool fail = false;
 
   @override
@@ -29,7 +30,9 @@ class _EffectRenderer extends AutoMixEffectRenderer {
     required Duration start,
     required Duration duration,
     required AutoMixOptions options,
+    bool bassHandoff = false,
   }) async {
+    bassHandoffs.add(bassHandoff);
     if (fail) return null;
     final work = await Directory.systemTemp.createTemp('fake-mix-tail-');
     addTearDown(() async {
@@ -45,6 +48,7 @@ class _Analyzer extends AutoMixAnalyzer {
   final calls = <String>[];
   Completer<AutoMixBeatGrid?>? pending;
   bool matchBeats = false;
+  double confidence = 0.9;
 
   @override
   Future<AutoMixBeatGrid?> analyze(String path, {double offset = 0}) async {
@@ -53,7 +57,7 @@ class _Analyzer extends AutoMixAnalyzer {
       return AutoMixBeatGrid(
         bpm: offset > 0 ? 120 : 124,
         phase: 0.17,
-        confidence: 0.9,
+        confidence: confidence,
         firstSound: 0.1,
       );
     }
@@ -96,7 +100,17 @@ class _AudioNative {
   final resumeGates = <String, Completer<void>>{};
   final stalled = <String>{};
   final clocks = <String, Stopwatch>{};
+  final rates = <String, double>{};
+  final ignoredSeeks = <String>{};
+  final missingPositions = <String>{};
   bool emitsDuration = true;
+
+  int currentPosition(String id) =>
+      (positions[id] ?? 0) +
+      (stalled.contains(id)
+          ? 0
+          : ((clocks[id]?.elapsedMilliseconds ?? 0) * (rates[id] ?? 1))
+                .round());
 
   void install() {
     for (final name in [
@@ -137,9 +151,15 @@ class _AudioNative {
             unawaited(event(id, 'audio.onPrepared', true));
             if (emitsDuration) unawaited(event(id, 'audio.onDuration', 60000));
           case 'seek':
-            positions[id] = args['position']! as int;
-            clocks[id]?.reset();
+            if (!ignoredSeeks.contains(id)) {
+              positions[id] = args['position']! as int;
+              clocks[id]?.reset();
+            }
             unawaited(event(id, 'audio.onSeekComplete'));
+          case 'setPlaybackRate':
+            positions[id] = currentPosition(id);
+            clocks[id]?.reset();
+            rates[id] = (args['playbackRate']! as num).toDouble();
           case 'resume':
             await resumeGate?.future;
             await resumeGates[id]?.future;
@@ -168,10 +188,8 @@ class _AudioNative {
           case 'getDuration':
             return 60000;
           case 'getCurrentPosition':
-            return (positions[id] ?? 0) +
-                (stalled.contains(id)
-                    ? 0
-                    : clocks[id]?.elapsedMilliseconds ?? 0);
+            if (missingPositions.contains(id)) return null;
+            return currentPosition(id);
         }
         return null;
       },
@@ -1669,7 +1687,7 @@ void main() {
   Future<void> prepare() async {
     setAutoMixEnabled(true);
     await handler.setQueueAndPlay(_tracks);
-    await _until(() => analyzer.calls.length == 2);
+    await _until(() => analyzer.calls.length >= 2);
     await _until(
       () => native.calls.any((call) => call.$2 == 'setPlaybackRate'),
     );
@@ -1794,8 +1812,7 @@ void main() {
       analyzer.matchBeats = true;
       await prepare();
       final incoming = native.prepared;
-      int position(String id) =>
-          native.positions[id]! + native.clocks[id]!.elapsedMilliseconds;
+      int position(String id) => native.currentPosition(id);
       // The current song keeps playing while the next decoder starts late.
       final startup = Completer<void>();
       native.resumeGates[incoming] = startup;
@@ -1813,6 +1830,114 @@ void main() {
       // 55.67 s, with the next song slowed from 124 to 120 BPM.
       final expected = 170 + (position('music-player') - 55670) * 120 / 124;
       expect(position(incoming), closeTo(expected, 20));
+    },
+  );
+
+  test('unverified beat alignment uses an unstretched crossfade', () async {
+    analyzer.matchBeats = true;
+    await prepare();
+    final incoming = native.prepared;
+    native.ignoredSeeks.add(incoming);
+    final startup = Completer<void>();
+    native.resumeGates[incoming] = startup;
+    native.positions['music-player'] = 55500;
+    native.clocks['music-player'] = Stopwatch()..start();
+    await _until(
+      () => native.calls.any(
+        (call) => call.$1 == incoming && call.$2 == 'resume',
+      ),
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 120));
+    startup.complete();
+    await _until(() => handler.mediaItem.value?.id == 'two');
+    expect(autoMixStatus.value, AutoMixStatus.crossfading);
+    expect(handler.playbackState.value.speed, 1);
+    expect(native.rates[incoming], 1);
+  });
+
+  test(
+    'phase drift is corrected while mixing and pause restores the rate',
+    () async {
+      analyzer.matchBeats = true;
+      await prepare();
+      final incoming = native.prepared;
+      native.positions['music-player'] = 55500;
+      native.clocks['music-player'] = Stopwatch()..start();
+      await _until(() => handler.mediaItem.value?.id == 'two');
+      expect(autoMixStatus.value, AutoMixStatus.mixing);
+      native.positions[incoming] = native.positions[incoming]! - 35;
+      await _until(() => native.rates[incoming]! > 120 / 124 + 0.005);
+      expect(native.rates[incoming], lessThanOrEqualTo(120 / 124 * 1.02));
+      await handler.pause();
+      expect(native.rates[incoming], 1);
+      expect(native.live, {incoming});
+      expect(native.playing, isEmpty);
+    },
+  );
+
+  test(
+    'a corrected mix finishes at normal speed and releases the outgoing deck',
+    () async {
+      analyzer.matchBeats = true;
+      await prepare();
+      final incoming = native.prepared;
+      native.positions['music-player'] = 55500;
+      native.clocks['music-player'] = Stopwatch()..start();
+      await _until(() => handler.mediaItem.value?.id == 'two');
+      native.positions[incoming] = native.positions[incoming]! - 35;
+      await _until(() => native.rates[incoming]! > 120 / 124 + 0.005);
+      await Future<void>.delayed(const Duration(seconds: 14));
+      expect(handler.mediaItem.value?.id, 'two');
+      expect(autoMixStatus.value, AutoMixStatus.idle);
+      expect(native.rates[incoming], 1);
+      expect(native.lastVolume(incoming), 1);
+      expect(native.live, isNot(contains('music-player')));
+      expect(native.playing, {incoming});
+    },
+  );
+
+  test(
+    'missing phase readings keep both decks audible without further corrections',
+    () async {
+      analyzer.matchBeats = true;
+      await prepare();
+      final incoming = native.prepared;
+      native.positions['music-player'] = 55500;
+      native.clocks['music-player'] = Stopwatch()..start();
+      await _until(() => handler.mediaItem.value?.id == 'two');
+      expect(autoMixStatus.value, AutoMixStatus.mixing);
+      native.missingPositions.add('music-player');
+      await _until(() => autoMixStatus.value == AutoMixStatus.crossfading);
+      expect(native.playing, {'music-player', incoming});
+      expect(native.lastVolume('music-player'), greaterThan(0));
+      expect(native.lastVolume(incoming), greaterThan(0));
+      expect(native.rates[incoming], closeTo(120 / 124, 0.00001));
+      await handler.pause();
+      expect(native.rates[incoming], 1);
+      expect(native.live, {incoming});
+    },
+  );
+
+  test(
+    'uncertain measured beats execute a bass handoff at unchanged tempo',
+    () async {
+      analyzer.matchBeats = true;
+      analyzer.confidence = 0.4;
+      await prepare();
+      await _until(
+        () => native.sources.values.any((path) => path.endsWith('/tail.wav')),
+      );
+      expect(effectRenderer.bassHandoffs, [true]);
+      final incoming = native.sources.entries
+          .singleWhere((entry) => entry.value == '/two.flac')
+          .key;
+      native.positions['music-player'] = 55000;
+      await _until(() => handler.mediaItem.value?.id == 'two');
+      expect(autoMixStatus.value, AutoMixStatus.crossfading);
+      expect(native.rates[incoming], 1);
+      await handler.pause();
+      expect(native.live, {incoming});
+      expect(await effectRenderer.tails.single.directory.exists(), isFalse);
     },
   );
 

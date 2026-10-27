@@ -12,10 +12,11 @@ import 'package:spotiflac_android/theme/mornye_theme.dart';
 import 'package:spotiflac_android/widgets/mini_player.dart';
 
 void main() {
-  Future<StreamController<MediaItem?>> pumpPlayer(WidgetTester tester) async {
+  Future<void> pumpPlayer(
+    WidgetTester tester,
+    StreamController<MediaItem?> media,
+  ) async {
     SharedPreferences.setMockInitialValues({});
-    final media = StreamController<MediaItem?>();
-    addTearDown(media.close);
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -38,13 +39,14 @@ void main() {
         ),
       ),
     );
-    return media;
   }
 
   testWidgets('mounted mini player follows track and metadata changes', (
     tester,
   ) async {
-    final media = await pumpPlayer(tester);
+    final media = StreamController<MediaItem?>();
+    addTearDown(media.close);
+    await pumpPlayer(tester, media);
     const first = MediaItem(id: 'first', title: 'First', artist: 'Artist A');
     const second = MediaItem(id: 'second', title: 'Second', artist: 'Artist B');
     State? playerState;
@@ -76,7 +78,9 @@ void main() {
   testWidgets('returning to the mini player shows the latest song', (
     tester,
   ) async {
-    final media = await pumpPlayer(tester);
+    final media = StreamController<MediaItem?>();
+    addTearDown(media.close);
+    await pumpPlayer(tester, media);
     media.add(const MediaItem(id: 'first', title: 'First', artist: 'Artist A'));
     await tester.pumpAndSettle();
     final playerState = tester.state(find.byType(MiniPlayer));

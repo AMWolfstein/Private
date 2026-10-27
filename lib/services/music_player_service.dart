@@ -30,6 +30,7 @@ import 'package:spotiflac_android/services/content_uri_playback_cache.dart';
 import 'package:spotiflac_android/services/music_player_runtime.dart';
 import 'package:spotiflac_android/services/music_playback_deck.dart';
 import 'package:spotiflac_android/services/automix_analysis.dart';
+import 'package:spotiflac_android/services/automix_phase_lock.dart';
 import 'package:spotiflac_android/services/autoplay_personalization.dart';
 import 'package:spotiflac_android/services/automix_analyzer.dart';
 import 'package:spotiflac_android/models/automix_options.dart';
