@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotiflac_android/models/library_scan_failure.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/library_collections_provider.dart';
 import 'package:spotiflac_android/services/library_cleanup.dart';
@@ -37,6 +38,9 @@ class LocalLibraryState {
   final List<LocalLibrarySource> sources;
   final String? scanningSourceId;
   final int excludedDownloadedCount;
+
+  /// Files the last scan of each source could not read, by source ID.
+  final Map<String, LibraryScanFailures> scanFailures;
   LocalLibraryState({
     this.isLoading = false,
     this.loadFailed = false,
@@ -55,6 +59,7 @@ class LocalLibraryState {
     this.sources = const <LocalLibrarySource>[],
     this.scanningSourceId,
     this.excludedDownloadedCount = 0,
+    this.scanFailures = const {},
   });
 
   LocalLibraryState copyWith({
@@ -77,6 +82,7 @@ class LocalLibraryState {
     String? scanningSourceId,
     bool clearScanningSourceId = false,
     int? excludedDownloadedCount,
+    Map<String, LibraryScanFailures>? scanFailures,
   }) {
     return LocalLibraryState(
       isLoading: isLoading ?? this.isLoading,
@@ -101,6 +107,7 @@ class LocalLibraryState {
           : scanningSourceId ?? this.scanningSourceId,
       excludedDownloadedCount:
           excludedDownloadedCount ?? this.excludedDownloadedCount,
+      scanFailures: scanFailures ?? this.scanFailures,
     );
   }
 }
@@ -250,11 +257,13 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
         DateTime? lastScannedAt;
         var excludedDownloadedCount = 0;
+        var scanFailures = const <String, LibraryScanFailures>{};
         try {
           final prefs = await _prefs;
           lastScannedAt = readLocalLibraryLastScannedAt(prefs);
           excludedDownloadedCount =
               prefs.getInt(_excludedDownloadedCountKey) ?? 0;
+          scanFailures = readLocalLibraryScanFailures(prefs);
         } catch (e) {
           _log.w('Failed to load lastScannedAt: $e');
         }
@@ -269,6 +278,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           loadedIndexVersion: state.loadedIndexVersion + 1,
           lastScannedAt: lastScannedAt,
           excludedDownloadedCount: excludedDownloadedCount,
+          scanFailures: scanFailures,
           sources: sources,
         );
         _log.i(
@@ -416,6 +426,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         );
     _sourceVersion++;
     await _db.removeSource(sourceId);
+    await _setScanFailures(sourceId, null);
     await _refreshSummaryFromStorage();
     // Folder grants are a bounded platform resource; release the tree once no
     // remaining source refers to it.
@@ -1040,6 +1051,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           _log.i('Skipped $skippedDownloads files already in download history');
         }
 
+        await _recordScanFailures(activeSourceId);
+        if (!ref.mounted) return;
         final now = DateTime.now();
         _sourceVersion++;
         await _db.updateSourceState(
@@ -1257,6 +1270,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           _log.i('Deleted $deleteCount items from database');
         }
 
+        await _recordScanFailures(activeSourceId);
+        if (!ref.mounted) return;
         final now = DateTime.now();
         _sourceVersion++;
         await _db.updateSourceState(
@@ -1368,6 +1383,52 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       } catch (e) {
         _log.w('Failed to clear active library scan marker: $e');
       }
+    }
+  }
+
+  /// Keeps the files a finished scan could not read, per source; a clean
+  /// scan clears them.
+  Future<void> _recordScanFailures(String sourceId) async {
+    final failures =
+        await _readNativeScanFailures() ??
+        LibraryScanFailures(count: state.scanErrorCount, files: const []);
+    if (!ref.mounted) return;
+    // Progress polling stops before the last files finish, so the finished
+    // report has the final count.
+    if (failures.count > state.scanErrorCount) {
+      state = state.copyWith(scanErrorCount: failures.count);
+    }
+    await _setScanFailures(sourceId, failures.count > 0 ? failures : null);
+  }
+
+  Future<LibraryScanFailures?> _readNativeScanFailures() async {
+    try {
+      final progress = await PlatformBridge.getLibraryScanProgress();
+      if (progress['is_complete'] != true) return null;
+      return LibraryScanFailures.fromProgress(progress);
+    } catch (e) {
+      _log.w('Failed to read library scan failures: $e');
+      return null;
+    }
+  }
+
+  Future<void> _setScanFailures(
+    String sourceId,
+    LibraryScanFailures? failures,
+  ) async {
+    final current = state.scanFailures;
+    if (failures == null && !current.containsKey(sourceId)) return;
+    final next = {...current};
+    if (failures == null) {
+      next.remove(sourceId);
+    } else {
+      next[sourceId] = failures;
+    }
+    state = state.copyWith(scanFailures: next);
+    try {
+      await writeLocalLibraryScanFailures(await _prefs, next);
+    } catch (e) {
+      _log.w('Failed to save library scan failures: $e');
     }
   }
 
@@ -1724,6 +1785,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         final prefs = await SharedPreferences.getInstance();
         await clearLocalLibraryLastScannedAt(prefs);
         await prefs.remove(_excludedDownloadedCountKey);
+        await writeLocalLibraryScanFailures(prefs, const {});
       } catch (e) {
         _log.w('Failed to clear lastScannedAt: $e');
       }
@@ -1731,7 +1793,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       if (!ref.mounted) return;
       await _refreshSummaryFromStorage();
       if (!ref.mounted) return;
-      state = state.copyWith(clearLastScannedAt: true);
+      state = state.copyWith(clearLastScannedAt: true, scanFailures: const {});
       _log.i('Library cleared');
     } finally {
       _pendingReconnectScans.clear();
@@ -1947,8 +2009,8 @@ final libraryExistingBatchLoaderProvider =
         List<LocalLibraryBatchLookupRequest>,
       )
     >(
-      (ref) => (requests) =>
-          LibraryDatabase.instance.findExistingBatch(requests),
+      (ref) =>
+          (requests) => LibraryDatabase.instance.findExistingBatch(requests),
     );
 
 final localLibraryFirstCoverProvider = FutureProvider.autoDispose
@@ -1970,11 +2032,7 @@ final localLibraryFirstCoverProvider = FutureProvider.autoDispose
             artistName: track.artistName,
           ),
       ];
-      for (
-        var start = 0;
-        start < lookups.length;
-        start += chunkSize
-      ) {
+      for (var start = 0; start < lookups.length; start += chunkSize) {
         final end = (start + chunkSize).clamp(0, lookups.length);
         final rows = await load(lookups.sublist(start, end));
         for (final row in rows) {
