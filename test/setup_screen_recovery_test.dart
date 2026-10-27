@@ -137,7 +137,7 @@ void main() {
       expect(prefs.containsKey('setup_progress_v1'), isFalse);
       // The first page renders, so initialization (and its permission check)
       // completed instead of stopping at the malformed draft.
-      expect(find.text('1/8'), findsOneWidget);
+      expect(find.text('1/9'), findsOneWidget);
       expect(pickerCalls, 0);
     },
   );
@@ -152,12 +152,13 @@ void main() {
         addTearDown(tester.view.reset);
         await tester.pumpWidget(_setup());
         await tester.pumpAndSettle();
-        final total = sdk >= 33 ? 8 : 7;
+        final total = sdk >= 33 ? 9 : 8;
         expect(find.text('1/$total'), findsOneWidget);
         // The five playback tips share setup's page counter and Next/Back controls.
-        for (var step = 0; step < 6; step++) {
+        for (var step = 0; step < 7; step++) {
           await next(tester);
           const guideTitles = [
+            'Choose Language',
             'Finding Music',
             'Local playback',
             'Your Library',
@@ -195,21 +196,21 @@ void main() {
   testWidgets('merged guide can go back and resumes its saved tip', (
     tester,
   ) async {
-    await prefs.setString('setup_progress_v1', '{"version":3,"step":2}');
+    await prefs.setString('setup_progress_v1', '{"version":2,"step":3}');
     await tester.pumpWidget(_setup());
     await tester.pumpAndSettle();
-    expect(find.text('3/8'), findsOneWidget);
+    expect(find.text('4/9'), findsOneWidget);
     expect(find.text('Local playback'), findsOneWidget);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
-    expect(find.text('2/8'), findsOneWidget);
+    expect(find.text('3/9'), findsOneWidget);
     expect(find.text('Finding Music'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
     await tester.pumpWidget(_setup());
     await tester.pumpAndSettle();
-    expect(find.text('2/8'), findsOneWidget);
+    expect(find.text('3/9'), findsOneWidget);
     await next(tester);
-    expect(find.text('3/8'), findsOneWidget);
+    expect(find.text('4/9'), findsOneWidget);
     expect(pickerCalls, 0);
     expect(tester.takeException(), isNull);
   });
@@ -217,32 +218,38 @@ void main() {
   testWidgets('system back steps backwards through setup instead of exiting', (
     tester,
   ) async {
-    await prefs.setString('setup_progress_v1', '{"version":3,"step":2}');
+    await prefs.setString('setup_progress_v1', '{"version":2,"step":3}');
     await tester.pumpWidget(_setup());
     await tester.pumpAndSettle();
-    expect(find.text('3/8'), findsOneWidget);
+    expect(find.text('4/9'), findsOneWidget);
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    expect(find.text('2/8'), findsOneWidget);
+    expect(find.text('3/9'), findsOneWidget);
     expect(find.text('Finding Music'), findsOneWidget);
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    expect(find.text('1/8'), findsOneWidget);
+    expect(find.text('2/9'), findsOneWidget);
+    expect(find.text('Choose Language'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('1/9'), findsOneWidget);
     expect(find.text('Home reached'), findsNothing);
     expect(pickerCalls, 0);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('a draft saved with the language step resumes on the same tip', (
-    tester,
-  ) async {
-    await prefs.setString('setup_progress_v1', '{"version":2,"step":3}');
-    await tester.pumpWidget(_setup());
-    await tester.pumpAndSettle();
-    expect(find.text('3/8'), findsOneWidget);
-    expect(find.text('Local playback'), findsOneWidget);
-    expect(find.text('Choose Language'), findsNothing);
-  });
+  testWidgets(
+    'a draft saved without the language step resumes on the same tip',
+    (tester) async {
+      // Version 3 (English-only builds) had no language page at step 1.
+      await prefs.setString('setup_progress_v1', '{"version":3,"step":2}');
+      await tester.pumpWidget(_setup());
+      await tester.pumpAndSettle();
+      expect(find.text('4/9'), findsOneWidget);
+      expect(find.text('Local playback'), findsOneWidget);
+      expect(find.text('Choose Language'), findsNothing);
+    },
+  );
 
   testWidgets('old folder-step draft resumes on the final permission page', (
     tester,
@@ -253,7 +260,7 @@ void main() {
     );
     await tester.pumpWidget(_setup());
     await tester.pumpAndSettle();
-    expect(find.text('8/8'), findsOneWidget);
+    expect(find.text('9/9'), findsOneWidget);
     expect(find.text('Get Started'), findsOneWidget);
     expect(find.text('Old downloads'), findsNothing);
     expect(pickerCalls, 0);
@@ -267,14 +274,14 @@ void main() {
       await tester.pumpWidget(_setup());
       await tester.pumpAndSettle();
       expect(find.text('Grant Permission'), findsOneWidget);
-      expect(find.text('7/8'), findsOneWidget);
+      expect(find.text('8/9'), findsOneWidget);
       binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
       audioGranted = true;
       binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await tester.pumpAndSettle();
       expect(find.text('Storage Permission Granted!'), findsOneWidget);
       expect(permissionRequests, 0);
-      expect(find.text('7/8'), findsOneWidget);
+      expect(find.text('8/9'), findsOneWidget);
     },
   );
 
@@ -295,13 +302,13 @@ void main() {
     final draft =
         jsonDecode(prefs.getString('setup_progress_v1')!)
             as Map<String, dynamic>;
-    expect(draft['version'], 3);
-    expect(draft['step'], 7);
+    expect(draft['version'], 2);
+    expect(draft['step'], 8);
     expect(draft.keys, isNot(contains('treeUri')));
     await tester.pumpWidget(const SizedBox());
     await tester.pumpWidget(_setup());
     await tester.pumpAndSettle();
-    expect(find.text('8/8'), findsOneWidget);
+    expect(find.text('9/9'), findsOneWidget);
     await tester.tap(find.text('Get Started'));
     await tester.pumpAndSettle();
     expect(find.text('Home reached'), findsOneWidget);

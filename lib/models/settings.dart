@@ -101,6 +101,8 @@ class AppSettings {
   /// Mornye glass clarity level, 1 (Frosted) to 5 (Crystal).
   @JsonKey(fromJson: glassClarityLevelFromJson)
   final int glassClarityLevel;
+  @JsonKey(fromJson: appLocaleFromJson)
+  final String locale;
   final bool keepScreenOnLyrics;
   final bool listeningStatisticsEnabled;
 
@@ -152,6 +154,7 @@ class AppSettings {
     this.headerBandBlurDisabled = false,
     this.glassQuality = 'auto',
     this.glassClarityLevel = kDefaultGlassClarityLevel,
+    this.locale = 'system',
     this.keepScreenOnLyrics = true,
     this.listeningStatisticsEnabled = true,
     this.localLibraryEnabled = false,
@@ -199,6 +202,7 @@ class AppSettings {
     bool? headerBandBlurDisabled,
     String? glassQuality,
     int? glassClarityLevel,
+    String? locale,
     bool? keepScreenOnLyrics,
     bool? listeningStatisticsEnabled,
     bool? localLibraryEnabled,
@@ -255,6 +259,7 @@ class AppSettings {
           headerBandBlurDisabled ?? this.headerBandBlurDisabled,
       glassQuality: glassQuality ?? this.glassQuality,
       glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
+      locale: locale ?? this.locale,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       listeningStatisticsEnabled:
           listeningStatisticsEnabled ?? this.listeningStatisticsEnabled,

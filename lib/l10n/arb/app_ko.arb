@@ -1,0 +1,2763 @@
+{
+  "@@locale": "ko",
+  "libraryGenres": "장르",
+  "appearancePlayerView": "플레이어 보기",
+  "appearancePlayerViewNormal": "일반 보기",
+  "appearancePlayerViewImmersive": "몰입 보기",
+  "settingsPlaybackSubtitle": "플레이어, 볼륨, AutoMix, 및 오디오 출력",
+  "sectionVolumeAndTransitions": "볼륨 및 전환",
+  "sectionAudioOutput": "오디오 출력",
+  "usbBitPerfect": "Hi-res 및 bit-perfect 오디오",
+  "usbBitPerfectDescription": "지원되는 출력에서는 소스의 정밀도를 그대로 유지합니다. 아래에서 다이렉트 USB 또는 AAudio 전용 출력을 선택하세요. 그 외의 경우 Android USB 출력은 Android 14 이상에서만 사용할 수 있습니다. 이 설정은 다음 트랙부터 적용되며, AutoMix 또는 볼륨 정규화가 적용되지 않은 상태에서 작동합니다. 다이렉트 USB 출력에서는 휴대전화의 시스템 볼륨 조절이 작동하지 않을 수 있습니다",
+  "usbHardwareVolume": "DAC 하드웨어 볼륨",
+  "usbVolumeWarningTitle": "청취 볼륨을 확인하세요",
+  "usbVolumeWarning": "다이렉트 USB 오디오는 일반 재생보다 훨씬 크게 출력될 수 있으며, 휴대전화의 볼륨 버튼으로 음량이 조절되지 않을 수 있습니다. 시작하기 전에 DAC 또는 앰프의 볼륨을 낮추세요. 지원되는 경우 SpotiFLAC은 연결 시 DAC의 볼륨을 최대 −40 dB로 설정합니다. 하지만 이것이 모든 앰프나 헤드폰에서 안전한 청취 음량을 보장하는 것은 아닙니다",
+  "usbVolumeAccept": "이해했습니다",
+  "usbVolumeUnavailable": "이 DAC에는 검증된 하드웨어 볼륨 조절 기능이 없기 때문에 재생이 일시 중지되었습니다. DAC 또는 앰프의 볼륨을 낮춘 다음, 필요하다면 고정 볼륨 출력을 활성화하고 트랙을 다시 선택하세요",
+  "usbFixedVolume": "고정 볼륨 USB 출력 허용",
+  "usbFixedVolumeDescription": "앱에서 볼륨을 조절할 수 없는 DAC용입니다. 자체 볼륨 조절 기능이 없는 USB 헤드셋에서는 켜지 않은 상태로 유지하세요. 이 설정은 다음 트랙부터 적용됩니다",
+  "usbFixedVolumeWarning": "이 출력에서는 앱이 볼륨을 낮출 수 없습니다. 오디오가 최대 음량으로 시작할 수 있으며, 휴대전화의 볼륨 슬라이더로도 조절되지 않습니다. DAC 또는 외부 앰프의 볼륨을 먼저 낮춘 후에만 계속 진행하세요. 자체 볼륨 조절 기능이 없는 헤드셋에서는 이 기능을 활성화하지 마세요",
+  "dapExclusive": "DAP hi-res (AAudio 전용)",
+  "dapExclusiveDescription": "FLAC/WAV PCM 파일을 트랙의 원본 샘플레이트와 정밀도 그대로 재생하려면 Oboe/AAudio를 사용합니다. Android 8.1 이상과 호환되는 하드웨어가 필요합니다. 전용 접근 가능 여부를 확인하며, 지원되지 않는 형식은 일반 재생 방식으로 처리됩니다. DSD는 다이렉트 USB 드라이버가 필요합니다. 이 설정은 다음 트랙부터 적용됩니다",
+  "dapExclusiveUnavailable": "이 트랙과 현재 출력에서는 AAudio 전용 접근을 사용할 수 없습니다. 일반 재생 방식으로 전환합니다. USB DAC을 사용하는 경우 다이렉트 USB 드라이버를 사용해 보세요",
+  "usbDirect": "다이렉트 USB 드라이버",
+  "usbDirectDescription": "FLAC/WAV, DSF/DFF 및 WavPack DSD를 재생하려면 독점 USB 오디오를 사용하며, Android의 USB 권한이 필요합니다. 네이티브 DSD는 인식된 호환 DAC이 필요합니다. 그 외의 PCM 형식은 일반 재생 방식을 사용합니다. 이 설정은 다음 트랙부터 적용됩니다",
+  "usbDsdOverPcm": "DSD over PCM (DoP)",
+  "usbDsdOverPcmDescription": "DAC이 DoP를 명시적으로 지원하는 경우에만 활성화하세요. 네이티브 DSD를 사용할 수 없을 때 DSF/DFF 및 WavPack DSD를 PCM 데이터 안에 담아 전송합니다. 호환되지 않는 기기에서는 잡음이 재생될 수 있으므로, 일반 USB 헤드셋에서는 이 기능을 꺼두세요",
+  "usbDsdUnsupported": "이 DSD 형식 또는 연결된 DAC은 지원되지 않습니다. 재생이 중지되었습니다",
+  "usbPermissionDenied": "USB 권한이 부여되지 않았습니다. 일반 재생을 사용합니다",
+  "usbBitPerfectPending": "다음 트랙과 호환 가능한 USB 출력이 연결되기를 기다리고 있습니다",
+  "usbBitPerfectNoDevice": "USB DAC이 연결되어 있지 않습니다. 일반 오디오 출력을 사용합니다",
+  "usbBitPerfectFallback": "이 기기 또는 오디오 형식은 Bit-Perfect 출력을 지원하지 않습니다. 일반 재생을 사용합니다",
+  "usbBitPerfectRouteChanged": "USB 오디오 출력 경로가 변경되었습니다. 재생이 일시 중지되었습니다. 다시 연결하려면 트랙을 선택하세요",
+  "nowPlayingVolume": "볼륨",
+  "@nowPlayingVolume": {
+    "description": "System volume control label in the Mornye player"
+  },
+  "appearanceAccentRed": "빨간색 (기본값)",
+  "appearanceAccentOrange": "주황색",
+  "appearanceAccentGreen": "초록색",
+  "appearanceAccentTeal": "청록색",
+  "appearanceAccentBlue": "파란색",
+  "appearanceAccentPurple": "보라색",
+  "appearanceAccentPink": "분홍색",
+  "appearanceGlassClarity": "글래스 투명도",
+  "appearanceGlassOutlines": "글래스 테두리",
+  "appearanceGlassOutlinesSubtitle": "Mornye 글래스 주변에 밝은 테두리를 표시합니다. 끄면 글래스 자체는 그대로 유지됩니다.",
+  "appearanceGlassClaritySubtitle": "Mornye 메뉴와 하단바의 투명도를 조절할 수 있습니다. 텍스트 대비는 유지됩니다",
+  "appearanceGlassTinted": "색조",
+  "appearanceGlassClear": "투명",
+  "appearanceGlassClearPerformance": "아주 투명한 글래스는 전력을 더 쓰고 오래된 기기에서 덜 부드러울 수 있습니다. 필요하면 투명도를 낮추세요.",
+  "appearanceGlassQuality": "글래스 품질",
+  "appearanceGlassQualityAuto": "자동",
+  "appearanceGlassQualityLite": "라이트",
+  "appearanceGlassQualityFull": "풀",
+  "appearanceGlassQualityOff": "끔",
+  "appearanceGlassQualitySubtitle": "자동은 이 기기에 맞춰 풀, 라이트 또는 끔을 선택합니다. 라이트는 굴절을 생략해 전력을 아낍니다.",
+  "appearanceGlassLevelFrosted": "프로스트",
+  "appearanceGlassLevelSoft": "부드럽게",
+  "appearanceGlassLevelBalanced": "균형",
+  "appearanceGlassLevelClear": "선명",
+  "appearanceGlassLevelCrystal": "크리스털",
+  "appearanceGlassClarityOff": "글래스가 꺼져 있습니다. 선명도를 조절하려면 자동, 라이트 또는 풀을 선택하세요.",
+  "appearanceGlassClarityDeviceOpaque": "이 기기에서는 글래스가 불투명합니다. 선명도를 조절하려면 라이트 또는 풀을 선택하세요.",
+  "appearanceGlassClarityContrast": "시스템에서 대비 강화를 요청해 글래스가 불투명하게 유지됩니다. 그래도 글래스를 쓰려면 라이트 또는 풀을 선택하세요. 텍스트 대비는 유지됩니다.",
+  "appearanceGlassAutoMeasured": "이 기기에서 측정했습니다. 자동은 {quality}을(를) 사용합니다.",
+  "appearanceGlassClarityAutoFrosted": "자동이 이 기기를 측정해 프로스트를 사용합니다. 선명도를 설정하려면 라이트 또는 풀을 선택하세요.",
+  "appearanceUseSystemFont": "시스템 글꼴 사용",
+  "appearanceUseSystemFontSubtitle": "앱 텍스트에 기기 기본 글꼴을 사용합니다",
+  "appName": "SpotiFLAC Mobile",
+  "@appName": {
+    "description": "App name - DO NOT TRANSLATE"
+  },
+  "navHome": "홈",
+  "@navHome": {
+    "description": "Bottom navigation - Home tab"
+  },
+  "navLibrary": "라이브러리",
+  "@navLibrary": {
+    "description": "Bottom navigation - Library tab"
+  },
+  "homeTitle": "홈",
+  "@homeTitle": {
+    "description": "Home screen title"
+  },
+  "historyFilterAll": "모두",
+  "@historyFilterAll": {
+    "description": "Filter chip - show all items"
+  },
+  "historyFilterSingles": "싱글",
+  "@historyFilterSingles": {
+    "description": "Filter chip - show singles only"
+  },
+  "homeLatestReleases": "내 라이브러리의 최신 릴리스",
+  "artistPopular": "인기곡",
+  "libraryRecentlyAdded": "최근 추가됨",
+  "librarySearchHint": "라이브러리 검색",
+  "homeLibraryDisabled": "내 음악을 여기에 표시하려면 로컬 라이브러리를 켜세요.",
+  "homeChooseLibraryFolder": "로컬 라이브러리 설정에서 음악 폴더를 선택하세요.",
+  "homeLibraryEmpty": "라이브러리 폴더에 음악을 추가한 뒤 라이브러리를 스캔하세요.",
+  "libraryEmptyCollection": "음악이 여기에 표시됩니다",
+  "settingsTitle": "설정",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  "settingsAppearance": "디자인",
+  "@settingsAppearance": {
+    "description": "Settings section - visual customization"
+  },
+  "settingsAbout": "정보",
+  "@settingsAbout": {
+    "description": "Settings section - app info"
+  },
+  "appearanceTitle": "디자인",
+  "@appearanceTitle": {
+    "description": "Appearance settings page title"
+  },
+  "appearanceThemeSystem": "시스템",
+  "@appearanceThemeSystem": {
+    "description": "Follow system theme"
+  },
+  "appearanceThemeLight": "밝은",
+  "@appearanceThemeLight": {
+    "description": "Light theme"
+  },
+  "appearanceThemeDark": "어두운",
+  "@appearanceThemeDark": {
+    "description": "Dark theme"
+  },
+  "trackRemoveReplayGain": "리플레이게인 제거",
+  "replayGainRemoving": "리플레이게인 제거 중...",
+  "replayGainRemoveConfirmMessage": "{count} 개의 트랙에서 트랙 및 앨범 리플레이게인 태그를 제거하시겠습니까? 오디오, 앨범 아트 및 기타 메타데이터는 보존됩니다",
+  "@replayGainRemoveConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionRemoveReplayGainCount": "RG 제거 ({count})",
+  "@selectionRemoveReplayGainCount": {
+    "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainRemoveBatchSuccess": "{total} 개 중 {success} 개의 트랙에서 리플레이게인이 제거됨",
+  "@replayGainRemoveBatchSuccess": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionReplayGainCount": "리플레이게인 ({count})",
+  "@selectionReplayGainCount": {
+    "description": "Batch selection action button label for ReplayGain",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainBatchConfirmTitle": "리플레이게인 추가",
+  "@replayGainBatchConfirmTitle": {
+    "description": "Title of the batch ReplayGain confirmation dialog"
+  },
+  "replayGainBatchConfirmMessage": "음량을 분석하고 {count} 개의 트랙에 리플레이게인 태그를 추가하시겠습니까?",
+  "@replayGainBatchConfirmMessage": {
+    "description": "Message of the batch ReplayGain confirmation dialog",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainBatchAnalyzing": "리플레이게인을 분석하는 중...",
+  "@replayGainBatchAnalyzing": {
+    "description": "Progress dialog title while batch scanning ReplayGain"
+  },
+  "replayGainBatchSuccess": "{total} 개의 트랙 중 {success} 개에 리플레이게인이 추가됨",
+  "@replayGainBatchSuccess": {
+    "description": "Snackbar after batch ReplayGain completes",
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainUnsupportedDecoder": "일부 트랙은 리플레이게인 디코더에서 지원하지 않는 오디오 코덱을 사용하기 때문에 분석할 수 없습니다. 해당 파일은 변경되지 않았습니다",
+  "metadataSeparators": "태그 구분자",
+  "metadataSeparatorsDescription": "메타데이터 편집으로 태그를 저장할 때 쉼표 또는 세미콜론으로 구분된 값을 어떻게 합칠지 선택합니다. 사용자 지정 아티스트 구분자는 합쳐진 태그 하나로 기록합니다. & 또는 /가 포함된 이름은 그대로 유지됩니다.",
+  "metadataSeparatorSource": "원본 형식 유지",
+  "metadataSeparatorComma": "쉼표 (,)",
+  "metadataSeparatorSemicolon": "세미콜론 (;)",
+  "metadataSeparatorSlash": "슬래시 (/)",
+  "metadataSeparatorCustom": "사용자 지정 구분자",
+  "metadataSeparatorPreview": "미리보기",
+  "metadataSeparatorInvalid": "줄바꿈이나 제어 문자 없이 1–16자를 사용하세요.",
+  "optionsDetailedLogging": "상세 로깅",
+  "@optionsDetailedLogging": {
+    "description": "Enable verbose logs for debugging"
+  },
+  "optionsDetailedLoggingOn": "상세한 로그가 기록되고 있습니다",
+  "@optionsDetailedLoggingOn": {
+    "description": "Status when logging enabled"
+  },
+  "optionsDetailedLoggingOff": "버그 보고서 활성화",
+  "@optionsDetailedLoggingOff": {
+    "description": "Status when logging disabled"
+  },
+  "extensionsDisabled": "비활성화됨",
+  "@extensionsDisabled": {
+    "description": "Extension status - inactive"
+  },
+  "aboutTitle": "정보",
+  "@aboutTitle": {
+    "description": "About page title"
+  },
+  "aboutApp": "앱 정보",
+  "@aboutApp": {
+    "description": "Section for app info"
+  },
+  "aboutVersion": "버전",
+  "@aboutVersion": {
+    "description": "Version info label"
+  },
+  "aboutDeveloperOptions": "개발자 옵션",
+  "aboutDeveloperOptionsEnabled": "개발자 옵션 켜짐",
+  "aboutPerformanceHud": "성능 HUD",
+  "aboutPerformanceHudSubtitle": "모든 화면 위에 빌드 및 래스터 프레임 시간을 표시합니다.",
+  "aboutHideDeveloperOptions": "개발자 옵션 숨기기",
+  "aboutBarSampler": "하단 바 샘플링",
+  "aboutBarSamplerSubtitle": "하단 바가 뒤쪽 페이지의 밝기를 따라가도록 합니다. 비용을 측정하려면 끄세요.",
+  "aboutHeaderBandBlur": "헤더 띠 블러",
+  "aboutHeaderBandBlurSubtitle": "스크롤된 헤더 뒤의 띠를 흐립니다. 비용을 측정하려면 끄세요. 색조는 유지됩니다.",
+  "aboutRemeasureGlass": "자동 글래스 다시 측정",
+  "aboutRemeasureGlassSubtitle": "자동이 프레임 시간을 다시 샘플링해 풀, 라이트 또는 라이트 프로스트를 선택합니다.",
+  "aboutAppDescription": "로컬 음악을 재생하고 정리하세요. 메타데이터와 가사 편집을 지원합니다.",
+  "trackMetadataShare": "공유",
+  "@trackMetadataShare": {
+    "description": "Action button - share track"
+  },
+  "setupGrantPermission": "권한 부여",
+  "@setupGrantPermission": {
+    "description": "Button to request permission"
+  },
+  "setupStorageAccessRequired": "저장소 접근 권한 필요",
+  "@setupStorageAccessRequired": {
+    "description": "Title when storage access needed"
+  },
+  "setupStorageAccessMessageAndroid11": "Android 11 이상에서는 선택한 폴더의 음악을 스캔하고 편집하려면 저장소 접근 권한이 필요합니다.",
+  "setupOpenSettings": "설정 열기",
+  "@setupOpenSettings": {
+    "description": "Button to open system settings"
+  },
+  "setupPermissionDeniedMessage": "권한이 거부되었습니다. 계속하려면 모든 권한을 허용해 주세요",
+  "@setupPermissionDeniedMessage": {
+    "description": "Error when permission denied"
+  },
+  "setupPermissionRequired": "'{permissionType}' 권한 필요",
+  "@setupPermissionRequired": {
+    "description": "Generic permission required title",
+    "placeholders": {
+      "permissionType": {
+        "type": "String",
+        "description": "Type of permission (Storage/Notification)"
+      }
+    }
+  },
+  "setupPermissionRequiredMessage": "최상의 사용 경험을 위해 '{permissionType}' 권한이 필요합니다. 설정에서 나중에 변경할 수 있습니다",
+  "@setupPermissionRequiredMessage": {
+    "description": "Generic permission required message",
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "setupStorageGranted": "저장소 접근 권한이 부여되었습니다!",
+  "@setupStorageGranted": {
+    "description": "Success message for storage permission"
+  },
+  "setupStorageRequired": "저장소 접근 권한 필요",
+  "@setupStorageRequired": {
+    "description": "Title when storage permission needed"
+  },
+  "setupStorageDescription": "로컬 음악 파일을 스캔하고 편집하려면 저장소 접근을 허용하세요.",
+  "setupNotificationGranted": "알림 권한이 부여되었습니다!",
+  "@setupNotificationGranted": {
+    "description": "Success message for notification permission"
+  },
+  "setupNotificationEnable": "알림 활성화",
+  "@setupNotificationEnable": {
+    "description": "Button to enable notifications"
+  },
+  "setupSelectFolder": "폴더 선택",
+  "@setupSelectFolder": {
+    "description": "Button to select folder"
+  },
+  "setupEnableNotifications": "알림 활성화",
+  "@setupEnableNotifications": {
+    "description": "Button to enable notifications"
+  },
+  "setupNotificationBackgroundDescription": "로컬 스캔의 재생 제어와 진행 알림을 허용하세요.",
+  "setupSkipForNow": "건너뛰기",
+  "@setupSkipForNow": {
+    "description": "Skip button text"
+  },
+  "setupNext": "다음",
+  "@setupNext": {
+    "description": "Next button text"
+  },
+  "setupGetStarted": "시작하기",
+  "@setupGetStarted": {
+    "description": "Final setup button"
+  },
+  "setupAllowAccessToManageFiles": "다음 화면에서 '모든 파일 관리 권한 허용'을 활성화해 주세요",
+  "@setupAllowAccessToManageFiles": {
+    "description": "Instruction for file access permission"
+  },
+  "setupLanguageTitle": "언어 선택",
+  "@setupLanguageTitle": {
+    "description": "Title for the language selection step in setup"
+  },
+  "setupLanguageDescription": "앱에서 사용할 언어를 선택하세요. 나중에 설정에서 변경할 수 있습니다",
+  "@setupLanguageDescription": {
+    "description": "Description for the language selection step in setup"
+  },
+  "setupLanguageSystemDefault": "시스템 기본값",
+  "@setupLanguageSystemDefault": {
+    "description": "Option to use the system language"
+  },
+  "dialogCancel": "취소",
+  "@dialogCancel": {
+    "description": "Dialog button - cancel action"
+  },
+  "dialogSave": "저장",
+  "@dialogSave": {
+    "description": "Dialog button - save changes"
+  },
+  "dialogDelete": "삭제",
+  "@dialogDelete": {
+    "description": "Dialog button - delete item"
+  },
+  "dialogRetry": "다시 시도",
+  "@dialogRetry": {
+    "description": "Dialog button - retry action"
+  },
+  "dialogClear": "지우기",
+  "@dialogClear": {
+    "description": "Dialog button - clear items"
+  },
+  "dialogDone": "완료",
+  "@dialogDone": {
+    "description": "Dialog button - action completed"
+  },
+  "dialogRemove": "제거",
+  "@dialogRemove": {
+    "description": "Dialog button - remove item"
+  },
+  "dialogDeleteSelectedTitle": "선택 항목 삭제",
+  "@dialogDeleteSelectedTitle": {
+    "description": "Dialog title - delete selected items"
+  },
+  "dialogDeleteSelectedMessage": "기록에서 {count} 개의 {count, plural, =1{트랙} other{트랙}}을 삭제하시겠습니까?\n\n저장소에서도 파일이 삭제됩니다",
+  "@dialogDeleteSelectedMessage": {
+    "description": "Dialog message - delete selected tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionExportM3u": "M3U8로 내보내기",
+  "@collectionExportM3u": {
+    "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
+  },
+  "collectionExportM3uDone": "{total} 개의 트랙 중 {exported} 개 내보내기 완료",
+  "@collectionExportM3uDone": {
+    "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
+    "placeholders": {
+      "exported": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionExportM3uNone": "내보낼 로컬 오디오 파일이 없습니다",
+  "collectionExportM3uFailed": "내보내기 실패",
+  "@collectionExportM3uFailed": {
+    "description": "Snackbar when writing or sharing the M3U8 export fails"
+  },
+  "libraryReviewDuplicates": "중복된 트랙 보기",
+  "@libraryReviewDuplicates": {
+    "description": "Library settings row opening the duplicate review sheet"
+  },
+  "libraryReviewDuplicatesSubtitle": "중복 저장된 트랙을 찾을 수 있습니다",
+  "@libraryReviewDuplicatesSubtitle": {
+    "description": "Subtitle for the duplicate review settings row"
+  },
+  "duplicatesTitle": "중복",
+  "@duplicatesTitle": {
+    "description": "Title of the duplicate review sheet"
+  },
+  "duplicatesEmpty": "중복된 트랙이 없습니다",
+  "@duplicatesEmpty": {
+    "description": "Shown when the duplicate review sheet finds nothing"
+  },
+  "duplicatesKeepBest": "최고 음질 선택",
+  "@duplicatesKeepBest": {
+    "description": "Button that deletes all but the highest-quality copy in a duplicate group"
+  },
+  "duplicatesKeepBestAll": "모두에 대해 최상의 파일 유지",
+  "@duplicatesKeepBestAll": {
+    "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
+  },
+  "duplicatesKeepBestAllMessage": "{groupCount} 개의 {groupCount, plural, =1{트랙} other{트랙}} 중 가장 음질이 좋은 복사본을 유지하고, {count} 개의 음질이 낮은 {count, plural, =1{복사본} other{복사본}}을 삭제하시겠습니까?\n\n삭제된 파일은 저장소에서 제거됩니다",
+  "@duplicatesKeepBestAllMessage": {
+    "description": "Confirmation message for keeping the best copy across every duplicate group",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "groupCount": {
+        "type": "int"
+      }
+    }
+  },
+  "duplicatesKeepBestMessage": "'{trackName}'의 {count} 개의 저음질 복사본을 삭제하시겠습니까?",
+  "@duplicatesKeepBestMessage": {
+    "description": "Confirmation message for the keep-best action",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "trackName": {
+        "type": "String"
+      }
+    }
+  },
+  "duplicatesDeleteCopyMessage": "'{trackName}'의 복사본을 삭제하시겠습니까?",
+  "@duplicatesDeleteCopyMessage": {
+    "description": "Confirmation message for deleting one duplicate copy",
+    "placeholders": {
+      "trackName": {
+        "type": "String"
+      }
+    }
+  },
+  "snackbarDeletedTracks": "{count} 개의 {count, plural, =1{트랙} other{트랙}}이 삭제됨",
+  "@snackbarDeletedTracks": {
+    "description": "Snackbar - tracks deleted",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarCannotOpenFile": "파일을 열 수 없음: {error}",
+  "@snackbarCannotOpenFile": {
+    "description": "Snackbar - file open error",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "snackbarFileNotFound": "파일을 찾을 수 없음",
+  "@snackbarFileNotFound": {
+    "description": "Snackbar - file doesn't exist"
+  },
+  "errorRateLimited": "사용 제한됨",
+  "@errorRateLimited": {
+    "description": "Error title - too many requests"
+  },
+  "errorRateLimitedMessage": "요청이 너무 많습니다. 잠시 후 다시 검색해 주세요",
+  "@errorRateLimitedMessage": {
+    "description": "Error message - rate limit explanation"
+  },
+  "searchEmptyResultSubtitle": "다른 키워드를 검색해 보세요",
+  "@searchEmptyResultSubtitle": {
+    "description": "Subtitle shown under the empty search result state on the home screen"
+  },
+  "actionPause": "일시 중지",
+  "@actionPause": {
+    "description": "Action button - pause download"
+  },
+  "actionResume": "계속",
+  "@actionResume": {
+    "description": "Action button - resume download"
+  },
+  "actionCancel": "취소",
+  "@actionCancel": {
+    "description": "Action button - cancel operation"
+  },
+  "actionSelectAll": "모두 선택",
+  "@actionSelectAll": {
+    "description": "Action button - select all items"
+  },
+  "actionDeselect": "선택 해제",
+  "@actionDeselect": {
+    "description": "Action button - deselect all"
+  },
+  "selectionSelected": "{count} 개 선택됨",
+  "@selectionSelected": {
+    "description": "Selection count indicator",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionAllSelected": "모든 트랙 선택됨",
+  "@selectionAllSelected": {
+    "description": "Status - all items selected"
+  },
+  "selectionSelectToDelete": "삭제할 트랙을 선택",
+  "@selectionSelectToDelete": {
+    "description": "Placeholder when nothing selected"
+  },
+  "searchSongs": "노래",
+  "@searchSongs": {
+    "description": "Search result category - songs"
+  },
+  "searchArtists": "아티스트",
+  "@searchArtists": {
+    "description": "Search result category - artists"
+  },
+  "searchAlbums": "앨범",
+  "@searchAlbums": {
+    "description": "Search result category - albums"
+  },
+  "searchPlaylists": "재생목록",
+  "@searchPlaylists": {
+    "description": "Search result category - playlists"
+  },
+  "searchSortTitle": "결과 정렬",
+  "@searchSortTitle": {
+    "description": "Bottom sheet title for search sort options"
+  },
+  "searchSortTitleAZ": "제목 (오름차순)",
+  "@searchSortTitleAZ": {
+    "description": "Sort option - title ascending"
+  },
+  "searchSortTitleZA": "제목 (내림차순)",
+  "@searchSortTitleZA": {
+    "description": "Sort option - title descending"
+  },
+  "searchSortArtistAZ": "아티스트 (오름차순)",
+  "@searchSortArtistAZ": {
+    "description": "Sort option - artist ascending"
+  },
+  "searchSortArtistZA": "아티스트 (내림차순)",
+  "@searchSortArtistZA": {
+    "description": "Sort option - artist descending"
+  },
+  "searchSortDateOldest": "발매일자 (오래된순)",
+  "@searchSortDateOldest": {
+    "description": "Sort option - oldest release first"
+  },
+  "searchSortDateNewest": "발매일자 (최신순)",
+  "@searchSortDateNewest": {
+    "description": "Sort option - newest release first"
+  },
+  "tooltipPlay": "재생",
+  "@tooltipPlay": {
+    "description": "Tooltip - play button"
+  },
+  "logTitle": "로그",
+  "@logTitle": {
+    "description": "Logs screen title"
+  },
+  "logCopied": "로그가 클립보드에 복사됨",
+  "@logCopied": {
+    "description": "Snackbar - logs copied"
+  },
+  "logSearchHint": "로그 검색...",
+  "@logSearchHint": {
+    "description": "Log search placeholder"
+  },
+  "logFilterLevel": "레벨",
+  "@logFilterLevel": {
+    "description": "Filter by log level"
+  },
+  "logFilterSection": "필터",
+  "@logFilterSection": {
+    "description": "Filter section title"
+  },
+  "logShareLogs": "로그 공유",
+  "@logShareLogs": {
+    "description": "Share button tooltip"
+  },
+  "logClearLogs": "로그 지우기",
+  "@logClearLogs": {
+    "description": "Clear button tooltip"
+  },
+  "logClearLogsTitle": "로그 지우기",
+  "@logClearLogsTitle": {
+    "description": "Clear logs dialog title"
+  },
+  "logClearLogsMessage": "모든 로그를 지우시겠습니까?",
+  "@logClearLogsMessage": {
+    "description": "Clear logs confirmation message"
+  },
+  "logFilterBySeverity": "심각성에 따라 로그 분류",
+  "@logFilterBySeverity": {
+    "description": "Filter dialog title"
+  },
+  "logNoLogsYet": "아직 로그 없음",
+  "@logNoLogsYet": {
+    "description": "Empty state title"
+  },
+  "logNoLogsYetSubtitle": "앱을 사용하는 동안에 로그가 여기에 표시됩니다",
+  "@logNoLogsYetSubtitle": {
+    "description": "Empty state subtitle"
+  },
+  "logEntriesFiltered": "항목 ({count} 개 필터됨)",
+  "@logEntriesFiltered": {
+    "description": "Log count with filter active",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logEntries": "항목 ({count})",
+  "@logEntries": {
+    "description": "Total log count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sectionLyrics": "가사",
+  "@sectionLyrics": {
+    "description": "Settings section header"
+  },
+  "lyricsKeepScreenOn": "가사 보는 동안 화면 켜짐 유지",
+  "lyricsKeepScreenOnSubtitle": "가사가 열려 있는 동안 재생이 일시정지된 경우를 포함하여 화면이 꺼지지 않도록 합니다",
+  "sectionColor": "색상",
+  "@sectionColor": {
+    "description": "Settings section header"
+  },
+  "sectionTheme": "테마",
+  "@sectionTheme": {
+    "description": "Settings section header"
+  },
+  "sectionLanguage": "언어",
+  "@sectionLanguage": {
+    "description": "Settings section header for language"
+  },
+  "appearanceLanguage": "앱 언어",
+  "@appearanceLanguage": {
+    "description": "Language setting title"
+  },
+  "settingsAppearanceSubtitle": "테마, 색상, 디스플레이",
+  "@settingsAppearanceSubtitle": {
+    "description": "Appearance settings description"
+  },
+  "settingsLogsSubtitle": "디버깅을 위한 앱 로그 보기",
+  "@settingsLogsSubtitle": {
+    "description": "Logs settings description"
+  },
+  "pressBackAgainToExit": "종료하려면 뒤로가기 버튼을 다시 탭하세요",
+  "@pressBackAgainToExit": {
+    "description": "Exit confirmation message"
+  },
+  "tracksCount": "{count, plural, =1{1 개의 트랙} other{{count} 개의 트랙}}",
+  "@tracksCount": {
+    "description": "Track count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trackMetadata": "메타데이터",
+  "@trackMetadata": {
+    "description": "Tab title - track metadata"
+  },
+  "trackLyrics": "가사",
+  "@trackLyrics": {
+    "description": "Tab title - lyrics"
+  },
+  "trackAlbum": "앨범",
+  "@trackAlbum": {
+    "description": "Metadata label - album name"
+  },
+  "trackCopiedToClipboard": "클립보드에 복사됨",
+  "@trackCopiedToClipboard": {
+    "description": "Snackbar - content copied"
+  },
+  "snackbarDeleteTracksFailed": "{count, plural, =1{트랙 1개를} other{트랙 {count}개를}} 삭제할 수 없습니다. 저장소 접근을 확인하고 다시 시도하세요.",
+  "dateDaysAgo": "{count} 일 전",
+  "@dateDaysAgo": {
+    "description": "Relative date - days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearanceHeroAnimations": "히어로 애니메이션",
+  "@appearanceHeroAnimations": {
+    "description": "Toggle for shared-element (Hero) transitions"
+  },
+  "appearanceHeroAnimationsSubtitle": "화면 간 이동 시 앨범 커버가 날아가는 애니메이션을 표시합니다 (예시: 플레이어를 실행할 경우)",
+  "@appearanceHeroAnimationsSubtitle": {
+    "description": "Subtitle for the Hero animations toggle"
+  },
+  "downloadedAlbumDeleteSelected": "선택 항목 삭제",
+  "@downloadedAlbumDeleteSelected": {
+    "description": "Button - delete selected tracks"
+  },
+  "downloadedAlbumDeleteMessage": "앨범에서 {count} 개의 {count, plural, =1{트랙} other{트랙}}을 삭제하시겠습니까?\n\n저장소에서도 파일이 삭제됩니다",
+  "@downloadedAlbumDeleteMessage": {
+    "description": "Delete confirmation with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadedAlbumTapToSelect": "트랙을 탭하여 선택하세요",
+  "@downloadedAlbumTapToSelect": {
+    "description": "Selection hint"
+  },
+  "downloadedAlbumDeleteCount": "{count} 개의 {count, plural, =1{트랙} other{트랙}} 삭제",
+  "@downloadedAlbumDeleteCount": {
+    "description": "Delete button text with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadedAlbumSelectToDelete": "삭제할 트랙 선택",
+  "@downloadedAlbumSelectToDelete": {
+    "description": "Placeholder when nothing selected"
+  },
+  "downloadedAlbumDiscHeader": "디스크 {discNumber}",
+  "@downloadedAlbumDiscHeader": {
+    "description": "Header for disc separator in multi-disc albums",
+    "placeholders": {
+      "discNumber": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "settingsLocalLibrary": "로컬 라이브러리",
+  "@settingsLocalLibrary": {
+    "description": "Settings menu item - local library"
+  },
+  "settingsLocalLibrarySubtitle": "음악 스캔 및 중복 감지",
+  "@settingsLocalLibrarySubtitle": {
+    "description": "Subtitle for local library settings"
+  },
+  "settingsCache": "저장소 및 캐시",
+  "@settingsCache": {
+    "description": "Settings menu item - cache management"
+  },
+  "settingsCacheSubtitle": "크기 보기 및 캐시된 데이터 지우기",
+  "@settingsCacheSubtitle": {
+    "description": "Subtitle for cache management menu"
+  },
+  "libraryTitle": "로컬 라이브러리",
+  "@libraryTitle": {
+    "description": "Library settings page title"
+  },
+  "libraryScanSettings": "스캔 설정",
+  "@libraryScanSettings": {
+    "description": "Section header for scan settings"
+  },
+  "libraryEnableLocalLibrary": "로컬 라이브러리 활성화",
+  "@libraryEnableLocalLibrary": {
+    "description": "Toggle to enable library scanning"
+  },
+  "libraryEnableLocalLibrarySubtitle": "기존 음악을 스캔하고 추적하세요",
+  "@libraryEnableLocalLibrarySubtitle": {
+    "description": "Subtitle for enable toggle"
+  },
+  "libraryFolderHint": "탭하여 폴더를 선택하세요",
+  "@libraryFolderHint": {
+    "description": "Placeholder when no folder selected"
+  },
+  "libraryAddFolder": "라이브러리 폴더 추가",
+  "@libraryAddFolder": {
+    "description": "Action to add another local library source"
+  },
+  "libraryAddFolderSubtitle": "내부 저장소, SD 카드, SSD 또는 다른 외부 드라이브",
+  "@libraryAddFolderSubtitle": {
+    "description": "Supported storage locations for local library sources"
+  },
+  "librarySourceOffline": "오프라인. 이 트랙을 복원하려면 저장소를 다시 연결하세요",
+  "@librarySourceOffline": {
+    "description": "Library source is temporarily disconnected"
+  },
+  "librarySourceDisabled": "비활성화됨",
+  "@librarySourceDisabled": {
+    "description": "Library source has been disabled by the user"
+  },
+  "librarySourceScanCount": "{total} 개의 파일 중 {scanned} 개 스캔 완료 ({progress}%)",
+  "@librarySourceScanCount": {
+    "description": "Live progress for one library folder scan",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "progress": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryExternalStorage": "외부 저장소",
+  "@libraryExternalStorage": {
+    "description": "Label for a removable or external library source"
+  },
+  "libraryRemoveFolder": "라이브러리 폴더 제거",
+  "@libraryRemoveFolder": {
+    "description": "Action to remove one indexed library source"
+  },
+  "libraryRemoveFolderMessage": "SpotiFLAC Mobile에서 이 폴더와 색인된 트랙을 제거하시겠습니까? 저장소의 오디오 파일은 삭제되지 않습니다",
+  "@libraryRemoveFolderMessage": {
+    "description": "Confirmation shown before removing a library source"
+  },
+  "libraryShowDuplicateIndicator": "중복 표시기 표시",
+  "@libraryShowDuplicateIndicator": {
+    "description": "Toggle for duplicate indicator in search"
+  },
+  "libraryShowDuplicateIndicatorSubtitle": "기존 트랙을 검색할 때 표시합니다",
+  "@libraryShowDuplicateIndicatorSubtitle": {
+    "description": "Subtitle for duplicate indicator toggle"
+  },
+  "libraryAutoScan": "자동 스캔",
+  "@libraryAutoScan": {
+    "description": "Setting for automatic library scanning"
+  },
+  "libraryAutoScanSubtitle": "라이브러리에서 새 파일을 자동으로 스캔합니다",
+  "@libraryAutoScanSubtitle": {
+    "description": "Subtitle for auto scan setting"
+  },
+  "libraryAutoScanOff": "끄기",
+  "@libraryAutoScanOff": {
+    "description": "Auto scan disabled"
+  },
+  "libraryAutoScanOnOpen": "앱을 열 때마다",
+  "@libraryAutoScanOnOpen": {
+    "description": "Auto scan when app opens"
+  },
+  "libraryAutoScanDaily": "매일",
+  "@libraryAutoScanDaily": {
+    "description": "Auto scan once per day"
+  },
+  "libraryAutoScanWeekly": "주간",
+  "@libraryAutoScanWeekly": {
+    "description": "Auto scan once per week"
+  },
+  "libraryActions": "작업",
+  "@libraryActions": {
+    "description": "Section header for library actions"
+  },
+  "libraryScan": "라이브러리 스캔",
+  "@libraryScan": {
+    "description": "Button to start library scan"
+  },
+  "libraryScanSubtitle": "오디오 파일 스캔",
+  "@libraryScanSubtitle": {
+    "description": "Subtitle for scan button"
+  },
+  "libraryScanSelectFolderFirst": "먼저 폴더를 선택하세요",
+  "@libraryScanSelectFolderFirst": {
+    "description": "Message when trying to scan without folder"
+  },
+  "libraryCleanupMissingFiles": "누락된 파일 정리",
+  "@libraryCleanupMissingFiles": {
+    "description": "Button to remove entries for missing files"
+  },
+  "libraryCleanupMissingFilesSubtitle": "더 이상 존재하지 않는 파일에 대한 항목을 제거합니다",
+  "@libraryCleanupMissingFilesSubtitle": {
+    "description": "Subtitle for cleanup button"
+  },
+  "libraryClear": "라이브러리 정리",
+  "@libraryClear": {
+    "description": "Button to clear all library entries"
+  },
+  "libraryClearSubtitle": "스캔된 모든 트랙을 제거합니다",
+  "@libraryClearSubtitle": {
+    "description": "Subtitle for clear button"
+  },
+  "libraryClearConfirmTitle": "라이브러리 정리",
+  "@libraryClearConfirmTitle": {
+    "description": "Dialog title for clear confirmation"
+  },
+  "libraryClearConfirmMessage": "이렇게 하면 라이브러리에서 스캔된 모든 트랙이 제거됩니다. 실제 음악 파일은 삭제되지 않습니다",
+  "@libraryClearConfirmMessage": {
+    "description": "Dialog message for clear confirmation"
+  },
+  "libraryAbout": "로컬 라이브러리에 대한 정보",
+  "@libraryAbout": {
+    "description": "Section header for about info"
+  },
+  "libraryAboutDescription": "음악 폴더를 스캔하고 로컬 오디오 파일에 저장된 태그를 살펴봅니다. FLAC, ALAC, M4A, MP3, Opus, OGG, WAV, AIFF, APE를 지원합니다.",
+  "libraryTracksUnit": "{count, plural, =1{트랙} other{트랙}}",
+  "@libraryTracksUnit": {
+    "description": "Unit label for tracks count (without the number itself)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryFilesUnit": "{count, plural, =1{파일} other{파일}}",
+  "@libraryFilesUnit": {
+    "description": "Unit label for files count during library scanning",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryLastScanned": "마지막 스캔 시간: {time}",
+  "@libraryLastScanned": {
+    "description": "Last scan time display",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryLastScannedNever": "스캔한 적 없음",
+  "@libraryLastScannedNever": {
+    "description": "Shown when library has never been scanned"
+  },
+  "libraryScanning": "스캔하는 중...",
+  "@libraryScanning": {
+    "description": "Status during scan"
+  },
+  "libraryScanFinalizing": "라이브러리를 마무리하는 중...",
+  "@libraryScanFinalizing": {
+    "description": "Status shown after file scanning finishes but library persistence is still running"
+  },
+  "libraryScanPaused": "스캔이 일시 중지됨",
+  "@libraryScanPaused": {
+    "description": "Status shown while a library scan is paused by the user"
+  },
+  "libraryScanProgress": "{total} 개의 파일 중 {progress}%",
+  "@libraryScanProgress": {
+    "description": "Scan progress display",
+    "placeholders": {
+      "progress": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryRemovedMissingFiles": "라이브러리에서 {count} 개의 누락된 파일이 삭제됨",
+  "@libraryRemovedMissingFiles": {
+    "description": "Snackbar after cleanup",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryCleared": "라이브러리가 초기화됨",
+  "@libraryCleared": {
+    "description": "Snackbar after clearing library"
+  },
+  "libraryStorageAccessRequired": "저장소 접근 권한 필요",
+  "@libraryStorageAccessRequired": {
+    "description": "Dialog title for storage permission"
+  },
+  "libraryStorageAccessMessage": "SpotifyFLAC은 음악 라이브러리를 스캔하기 위해 저장소 접근 권한이 필요합니다. 설정에서 권한을 부여해 주세요",
+  "@libraryStorageAccessMessage": {
+    "description": "Dialog message for storage permission"
+  },
+  "libraryFilterAll": "모두",
+  "@libraryFilterAll": {
+    "description": "Filter chip - show all library items"
+  },
+  "libraryFilterDownloaded": "로컬 파일",
+  "libraryFilterLocal": "로컬",
+  "@libraryFilterLocal": {
+    "description": "Filter chip - show only local library items"
+  },
+  "libraryFilterTitle": "필터",
+  "@libraryFilterTitle": {
+    "description": "Filter bottom sheet title"
+  },
+  "libraryFilterReset": "초기화",
+  "@libraryFilterReset": {
+    "description": "Reset all filters button"
+  },
+  "libraryFilterApply": "적용",
+  "@libraryFilterApply": {
+    "description": "Apply filters button"
+  },
+  "libraryFilterSource": "출처",
+  "@libraryFilterSource": {
+    "description": "Filter section - source type"
+  },
+  "libraryFilterQuality": "음질",
+  "@libraryFilterQuality": {
+    "description": "Filter section - audio quality"
+  },
+  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "@libraryFilterQualityHiRes": {
+    "description": "Filter option - high resolution audio"
+  },
+  "libraryFilterQualityCD": "CD (16bit)",
+  "@libraryFilterQualityCD": {
+    "description": "Filter option - CD quality audio"
+  },
+  "libraryFilterQualityLossy": "손실 압축",
+  "@libraryFilterQualityLossy": {
+    "description": "Filter option - lossy compressed audio"
+  },
+  "libraryFilterFormat": "형식",
+  "@libraryFilterFormat": {
+    "description": "Filter section - file format"
+  },
+  "libraryFilterMetadata": "메타데이터",
+  "@libraryFilterMetadata": {
+    "description": "Filter section - metadata completeness"
+  },
+  "libraryFilterMetadataComplete": "전체 메타데이터",
+  "@libraryFilterMetadataComplete": {
+    "description": "Filter option - items with complete metadata"
+  },
+  "libraryFilterMetadataMissingAny": "메타데이터 누락",
+  "@libraryFilterMetadataMissingAny": {
+    "description": "Filter option - items missing any tracked metadata field"
+  },
+  "libraryFilterMetadataMissingYear": "연도 누락",
+  "@libraryFilterMetadataMissingYear": {
+    "description": "Filter option - items missing release year/date"
+  },
+  "libraryFilterMetadataMissingGenre": "장르 누락",
+  "@libraryFilterMetadataMissingGenre": {
+    "description": "Filter option - items missing genre"
+  },
+  "libraryFilterMetadataMissingAlbumArtist": "앨범 아티스트 누락",
+  "@libraryFilterMetadataMissingAlbumArtist": {
+    "description": "Filter option - items missing album artist"
+  },
+  "libraryFilterSort": "정렬",
+  "@libraryFilterSort": {
+    "description": "Filter section - sort order"
+  },
+  "libraryFilterSortLatest": "최신순",
+  "@libraryFilterSortLatest": {
+    "description": "Sort option - newest first"
+  },
+  "libraryFilterSortOldest": "오래된순",
+  "@libraryFilterSortOldest": {
+    "description": "Sort option - oldest first"
+  },
+  "libraryFilterSortAlbumAsc": "앨범 (오름차순)",
+  "@libraryFilterSortAlbumAsc": {
+    "description": "Sort option - album ascending"
+  },
+  "libraryFilterSortAlbumDesc": "앨범 (내림차순)",
+  "@libraryFilterSortAlbumDesc": {
+    "description": "Sort option - album descending"
+  },
+  "libraryFilterSortGenreAsc": "장르 (오름차순)",
+  "@libraryFilterSortGenreAsc": {
+    "description": "Sort option - genre ascending"
+  },
+  "libraryFilterSortGenreDesc": "장르 (내림차순)",
+  "@libraryFilterSortGenreDesc": {
+    "description": "Sort option - genre descending"
+  },
+  "timeJustNow": "방금 전",
+  "@timeJustNow": {
+    "description": "Relative time - less than a minute ago"
+  },
+  "timeMinutesAgo": "{count, plural, =1{1 분 전} other{{count} 분 전}}",
+  "@timeMinutesAgo": {
+    "description": "Relative time - minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timeHoursAgo": "{count, plural, =1{1 시간 전} other{{count} 시간 전}}",
+  "@timeHoursAgo": {
+    "description": "Relative time - hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tutorialSearchTitle": "음악 찾기",
+  "@tutorialSearchTitle": {
+    "description": "Tutorial search page title"
+  },
+  "tutorialSearchDesc": "스캔 후 로컬 곡, 아티스트, 앨범을 검색하세요.",
+  "tutorialLibraryTitle": "내 라이브러리",
+  "@tutorialLibraryTitle": {
+    "description": "Tutorial library page title"
+  },
+  "tutorialLibraryDesc": "스캔한 음악은 곡, 아티스트, 앨범, 재생목록으로 정리됩니다.",
+  "tutorialLibraryTip1": "기기에 있는 트랙을 둘러보고 검색하세요",
+  "tutorialLibraryTip2": "트랙을 탭하여 내부 플레이어로 재생할 수 있습니다",
+  "@tutorialLibraryTip2": {
+    "description": "Tutorial library tip 2"
+  },
+  "tutorialLibraryTip3": "트랙, 앨범, 재생목록을 리스트 뷰 또는 그리드 뷰로 탐색할 수 있습니다",
+  "@tutorialLibraryTip3": {
+    "description": "Tutorial library tip 3"
+  },
+  "tutorialSettingsTitle": "사용자 환경 맞춤 설정",
+  "@tutorialSettingsTitle": {
+    "description": "Tutorial settings page title"
+  },
+  "tutorialSettingsDesc": "재생, 라이브러리 스캔, 가사, Mornye 모양과 로컬 저장소를 조정하세요.",
+  "tutorialSettingsTip1": "음악 폴더와 로컬 파일 접근을 관리하세요",
+  "tutorialSettingsTip2": "로컬 라이브러리, 재생 및 모양 설정을 조정하세요.",
+  "@tutorialSettingsTip2": {
+    "description": "Tutorial settings tip 2"
+  },
+  "tutorialSettingsTip3": "앱 테마 및 디자인을 꾸며볼 수 있습니다",
+  "@tutorialSettingsTip3": {
+    "description": "Tutorial settings tip 3"
+  },
+  "tutorialReadyMessage": "음악 폴더를 선택하고 라이브러리를 스캔한 뒤 들어보세요.",
+  "libraryForceFullScan": "전제 스캔 강제 실행",
+  "@libraryForceFullScan": {
+    "description": "Button to force a complete rescan of library"
+  },
+  "libraryForceFullScanSubtitle": "캐시를 무시하고 모든 파일을 다시 스캔합니다",
+  "@libraryForceFullScanSubtitle": {
+    "description": "Subtitle for force full scan button"
+  },
+  "cacheTitle": "저장소 및 캐시",
+  "@cacheTitle": {
+    "description": "Cache management page title"
+  },
+  "cacheSummaryTitle": "캐시 요약",
+  "@cacheSummaryTitle": {
+    "description": "Heading for cache summary card"
+  },
+  "cacheSummarySubtitle": "캐시를 지워도 원본 음악 파일은 유지됩니다.",
+  "cacheEstimatedTotal": "예상 캐시 사용량: {size}",
+  "@cacheEstimatedTotal": {
+    "description": "Total cache size shown in summary",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheSectionStorage": "캐시된 데이터",
+  "@cacheSectionStorage": {
+    "description": "Section header for cache entries"
+  },
+  "cacheSectionMaintenance": "유지 관리",
+  "@cacheSectionMaintenance": {
+    "description": "Section header for cleanup actions"
+  },
+  "cacheAppDirectory": "앱 캐시 디렉토리",
+  "@cacheAppDirectory": {
+    "description": "Cache item title for app cache directory"
+  },
+  "cacheAppDirectoryDesc": "HTTP 응답, WebView 데이터 및 기타 임시 앱 데이터입니다",
+  "@cacheAppDirectoryDesc": {
+    "description": "Description of what app cache directory contains"
+  },
+  "cacheTempDirectory": "임시 디렉토리",
+  "@cacheTempDirectory": {
+    "description": "Cache item title for temporary files directory"
+  },
+  "cacheTempDirectoryDesc": "임시 로컬 아트워크 및 오디오 처리 파일입니다.",
+  "cacheCoverImage": "앨범 커버 캐시",
+  "@cacheCoverImage": {
+    "description": "Cache item title for persistent cover images"
+  },
+  "cacheCoverImageDesc": "이전 버전의 사용 중단된 이미지 캐시입니다. 로컬 아트워크는 라이브러리 캐시에 남아 있습니다.",
+  "cacheLibraryCover": "라이브러리 표지 캐시",
+  "@cacheLibraryCover": {
+    "description": "Cache item title for local library cover art images"
+  },
+  "cacheLibraryCoverDesc": "로컬 음악 파일에서 추출된 앨범 커버입니다. 다음 스캔 시 다시 추출됩니다",
+  "@cacheLibraryCoverDesc": {
+    "description": "Description of what library cover cache contains"
+  },
+  "libraryPlaybackNormalization": "볼륨 정규화",
+  "@libraryPlaybackNormalization": {
+    "description": "Toggle title for ReplayGain playback normalization in the built-in player"
+  },
+  "libraryPlaybackNormalizationSubtitle": "트랙에 ReplayGain 또는 R128 태그가 있는 경우에 이를 사용하여 트랙 간 음량을 일정하게 맞춥니다",
+  "@libraryPlaybackNormalizationSubtitle": {
+    "description": "Subtitle explaining playback volume normalization"
+  },
+  "cacheAudioAnalysis": "오디오 분석 캐시",
+  "@cacheAudioAnalysis": {
+    "description": "Cache item title for saved audio analysis results"
+  },
+  "cacheAudioAnalysisDesc": "저장된 스펙트로그램과 분석 결과입니다. 다음에 실행할 경우에 다시 분석합니다",
+  "@cacheAudioAnalysisDesc": {
+    "description": "Description of what audio analysis cache contains"
+  },
+  "cacheCleanupUnusedDesc": "로컬 파일이 없는 라이브러리 항목을 제거합니다.",
+  "cacheNoData": "캐시된 데이터가 없음",
+  "@cacheNoData": {
+    "description": "Label when cache category has no data"
+  },
+  "cacheSizeWithFiles": "{count} 개의 파일에 {size} 사용",
+  "@cacheSizeWithFiles": {
+    "description": "Cache size and file count",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cacheClearSuccess": "지워짐: {target}",
+  "@cacheClearSuccess": {
+    "description": "Snackbar after clearing selected cache",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheClearConfirmTitle": "캐시를 지우시겠습니까?",
+  "@cacheClearConfirmTitle": {
+    "description": "Dialog title before clearing one cache category"
+  },
+  "cacheClearConfirmMessage": "{target}의 캐시 데이터를 지울까요? 원본 음악 파일은 유지됩니다.",
+  "cacheClearAllConfirmTitle": "모든 캐시를 지우시겠습니까?",
+  "@cacheClearAllConfirmTitle": {
+    "description": "Dialog title before clearing all caches"
+  },
+  "cacheClearAllConfirmMessage": "이 페이지의 모든 캐시 항목을 지울까요? 원본 음악 파일은 유지됩니다.",
+  "cacheClearAll": "모든 캐시 지우기",
+  "@cacheClearAll": {
+    "description": "Button label to clear all caches"
+  },
+  "cacheCleanupUnused": "사용되지 않는 데이터 정리",
+  "@cacheCleanupUnused": {
+    "description": "Action title for cleaning unused entries"
+  },
+  "cacheCleanupUnusedSubtitle": "라이브러리 색인에서 없는 로컬 파일을 제거합니다",
+  "cacheRefreshStats": "통계 새로고침",
+  "@cacheRefreshStats": {
+    "description": "Button label to refresh cache statistics"
+  },
+  "trackEditMetadata": "메타데이터 편집",
+  "@trackEditMetadata": {
+    "description": "Menu action - edit embedded metadata"
+  },
+  "audioBitrate": "비트레이트",
+  "@audioBitrate": {
+    "description": "Label for bitrate selection"
+  },
+  "actionCreate": "만들기",
+  "@actionCreate": {
+    "description": "Generic action button - create"
+  },
+  "collectionLoved": "좋아하는 노래",
+  "@collectionLoved": {
+    "description": "Custom folder for favorite tracks"
+  },
+  "collectionFavoriteArtists": "좋아하는 아티스트",
+  "@collectionFavoriteArtists": {
+    "description": "Custom folder for favorite artists"
+  },
+  "collectionPlaylist": "재생목록",
+  "@collectionPlaylist": {
+    "description": "Single playlist label"
+  },
+  "collectionAddToPlaylist": "재생목록에 추가",
+  "@collectionAddToPlaylist": {
+    "description": "Action to add a track to user playlist"
+  },
+  "collectionCreatePlaylist": "재생목록 만들기",
+  "@collectionCreatePlaylist": {
+    "description": "Action to create a new playlist"
+  },
+  "collectionNoPlaylistsYet": "아직 재생목록이 없음",
+  "@collectionNoPlaylistsYet": {
+    "description": "Empty state title when user has no playlists"
+  },
+  "collectionPlaylistTracks": "{count, plural, =1{1 개의 트랙} other{{count} 개의 트랙}}",
+  "@collectionPlaylistTracks": {
+    "description": "Track count label for custom playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionAddedToPlaylist": "'{playlistName}'에 추가됨",
+  "@collectionAddedToPlaylist": {
+    "description": "Snackbar after adding track to playlist",
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionAlreadyInPlaylist": "이미 '{playlistName}'에 있음",
+  "@collectionAlreadyInPlaylist": {
+    "description": "Snackbar when track already exists in playlist",
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionPlaylistNameHint": "재생목록 이름",
+  "@collectionPlaylistNameHint": {
+    "description": "Hint text for playlist name input"
+  },
+  "collectionPlaylistNameRequired": "재생목록 이름은 필수입니다",
+  "@collectionPlaylistNameRequired": {
+    "description": "Validation error for empty playlist name"
+  },
+  "collectionRenamePlaylist": "재생목록 이름 변경",
+  "@collectionRenamePlaylist": {
+    "description": "Action to rename playlist"
+  },
+  "collectionDeletePlaylist": "재생목록 삭제",
+  "@collectionDeletePlaylist": {
+    "description": "Action to delete playlist"
+  },
+  "collectionPlaylistRenamed": "재생목록 이름 변경 완료",
+  "@collectionPlaylistRenamed": {
+    "description": "Snackbar after renaming playlist"
+  },
+  "collectionRemovedTracks": "{count, plural, =1{트랙 1개를 제거했습니다} other{트랙 {count}개를 제거했습니다}}",
+  "collectionLovedEmptyTitle": "'좋아요 표시한 음악' 폴더가 비어 있음",
+  "@collectionLovedEmptyTitle": {
+    "description": "Loved empty state title"
+  },
+  "collectionLovedEmptySubtitle": "트랙에 하트를 탭하여 '좋아요'를 유지하세요",
+  "@collectionLovedEmptySubtitle": {
+    "description": "Loved empty state subtitle"
+  },
+  "collectionFavoriteArtistsEmptyTitle": "아직 좋아하는 아티스트가 없음",
+  "@collectionFavoriteArtistsEmptyTitle": {
+    "description": "Favorite artists empty state title"
+  },
+  "collectionFavoriteArtistsEmptySubtitle": "아티스트 페이지에서 하트를 탭하여 여기에 추가하세요",
+  "@collectionFavoriteArtistsEmptySubtitle": {
+    "description": "Favorite artists empty state subtitle"
+  },
+  "collectionPlaylistEmptyTitle": "재생목록이 비어 있음",
+  "@collectionPlaylistEmptyTitle": {
+    "description": "Playlist empty state title"
+  },
+  "collectionPlaylistEmptySubtitle": "아무 트랙에서 +를 길게 탭하여 여기에 추가하세요",
+  "@collectionPlaylistEmptySubtitle": {
+    "description": "Playlist empty state subtitle"
+  },
+  "collectionRemoveFromPlaylist": "재생목록에서 제거",
+  "@collectionRemoveFromPlaylist": {
+    "description": "Tooltip for removing track from playlist"
+  },
+  "collectionRemoveFromFolder": "폴더에서 제거",
+  "@collectionRemoveFromFolder": {
+    "description": "Tooltip for removing track from Loved folder"
+  },
+  "collectionRemovedFromFavoriteArtists": "'{artistName}'가 좋아하는 아티스트에서 제거됨",
+  "@collectionRemovedFromFavoriteArtists": {
+    "description": "Snackbar after removing artist from favorite artists",
+    "placeholders": {
+      "artistName": {
+        "type": "String"
+      }
+    }
+  },
+  "trackOptionAddToLoved": "좋아요 표시한 음악에 추가",
+  "@trackOptionAddToLoved": {
+    "description": "Bottom sheet action label - add track to loved folder"
+  },
+  "trackOptionRemoveFromLoved": "좋아요 표시한 음악에서 제거",
+  "@trackOptionRemoveFromLoved": {
+    "description": "Bottom sheet action label - remove track from loved folder"
+  },
+  "artistOptionRemoveFromFavorites": "즐겨찾는 아티스트에서 제거",
+  "@artistOptionRemoveFromFavorites": {
+    "description": "Action label - remove artist from favorite artists"
+  },
+  "collectionPlaylistChangeCover": "앨범 커버 변경",
+  "@collectionPlaylistChangeCover": {
+    "description": "Bottom sheet action to pick a custom cover image for a playlist"
+  },
+  "collectionPlaylistRemoveCover": "앨범 커버 제거",
+  "@collectionPlaylistRemoveCover": {
+    "description": "Bottom sheet action to remove custom cover image from a playlist"
+  },
+  "settingsBackup": "백업 및 복원",
+  "@settingsBackup": {
+    "description": "Settings menu item - backup and restore page"
+  },
+  "settingsBackupSubtitle": "라이브러리, 기록 및 설정을 새 기기로 옮겨보세요",
+  "@settingsBackupSubtitle": {
+    "description": "Subtitle for backup and restore settings item"
+  },
+  "backupTitle": "백업 및 복원",
+  "@backupTitle": {
+    "description": "App bar title for the backup and restore page"
+  },
+  "backupExportSectionTitle": "백업 생성",
+  "@backupExportSectionTitle": {
+    "description": "Section title for the export/backup card"
+  },
+  "backupExportSectionDescription": "설정, 로컬 프로필, 컬렉션 및 선택적 이전 라이브러리 기록을 백업 파일에 저장합니다.",
+  "backupExportButton": "백업 파일 생성",
+  "@backupExportButton": {
+    "description": "Button to create and share a backup file"
+  },
+  "backupImportSectionTitle": "백업 복원",
+  "@backupImportSectionTitle": {
+    "description": "Section title for the import/restore card"
+  },
+  "backupImportSectionDescription": "데이터를 복원할 백업 파일을 선택하세요. 이 작업을 수행하면 현재 기기에 저장된 설정, 기록 및 라이브러리가 백업 파일의 내용으로 대체됩니다",
+  "@backupImportSectionDescription": {
+    "description": "Description for the restore action"
+  },
+  "backupImportButton": "백업 파일 선택",
+  "@backupImportButton": {
+    "description": "Button to pick a backup file to restore"
+  },
+  "backupCreated": "백업 생성 완료",
+  "@backupCreated": {
+    "description": "Snackbar after a backup file is created"
+  },
+  "backupCreateFailed": "백업 생성 실패",
+  "@backupCreateFailed": {
+    "description": "Snackbar when backup creation fails"
+  },
+  "backupTooLarge": "이 백업은 복원하기에 너무 큽니다. 항목을 줄여서 다시 시도하세요.",
+  "backupRestorePartiallyFailed": "백업 복원에 실패했습니다. 이미 복원됨: {categories}",
+  "backupListeningStatisticsExcluded": "청취 통계와 재생 횟수는 포함되지 않습니다.",
+  "backupRestoreConfirmTitle": "이 백업을 복원하시겠습니까?",
+  "@backupRestoreConfirmTitle": {
+    "description": "Confirmation dialog title before restoring a backup"
+  },
+  "backupRestoreConfirmButton": "복원",
+  "@backupRestoreConfirmButton": {
+    "description": "Confirm button to proceed with restore"
+  },
+  "backupRestored": "백업 복원 성공",
+  "@backupRestored": {
+    "description": "Snackbar after a successful restore"
+  },
+  "backupRestoreFailed": "백업 복원 실패",
+  "@backupRestoreFailed": {
+    "description": "Snackbar when restore fails"
+  },
+  "backupInvalidFile": "이 파일은 유효한 SpotiFLAC 백업이 아닙니다",
+  "@backupInvalidFile": {
+    "description": "Snackbar when the chosen file is not a valid backup"
+  },
+  "backupRestoreRestartHint": "모든 변경 사항을 적용하려면 앱을 다시 시작하세요",
+  "@backupRestoreRestartHint": {
+    "description": "Hint shown after restoring that an app restart is recommended"
+  },
+  "backupContentsTitle": "백업 콘텐츠",
+  "@backupContentsTitle": {
+    "description": "Header above the list summarizing what the backup contains"
+  },
+  "backupSettingsOnly": "설정 만",
+  "backupSelectHistory": "이전 라이브러리 기록",
+  "backupSelectCollections": "라이브러리 컬렉션",
+  "backupSelectCollectionsDescription": "좋아요 표시한 음악, 즐겨찾는 아티스트, 재생목록 및 재생목록 커버",
+  "backupSelectedExportDescription": "선택한 카테고리를 백업 파일에 저장합니다. 오디오 파일은 포함되지 않습니다",
+  "backupSelectAtLeastOne": "백업을 생성하려면 최소 하나 이상의 카테고리를 선택하세요",
+  "backupSelectedRestoreMessage": "아래 나열된 카테고리만 복원됩니다. 이 백업에 포함되지 않은 카테고리는 변경되지 않습니다. 복원하면 기존 데이터가 덮어쓰여질 수 있으며 되돌릴 수 없습니다",
+  "backupContentsSettings": "앱 설정",
+  "@backupContentsSettings": {
+    "description": "Backup contents row label for settings"
+  },
+  "backupContentsHistory": "{count} 개의 기록 {count, plural, =1{항목} other{항목}}",
+  "@backupContentsHistory": {
+    "description": "Backup contents row for history count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupContentsLiked": "{count} 개의 좋아요 표시한 {count, plural, =1{음악} other{음악}}",
+  "@backupContentsLiked": {
+    "description": "Backup contents row for liked tracks count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupContentsPlaylists": "{count, plural, =1{1 개의 재생목록} other{{count} 개의 재생목록}}",
+  "@backupContentsPlaylists": {
+    "description": "Backup contents row for playlist count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupContentsArtists": "{count, plural, =1{1 명의 좋아하는 아티스트} other{{count} 명의 좋아하는 아티스트}}",
+  "@backupContentsArtists": {
+    "description": "Backup contents row for favorite artists count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarRemovedTracksFromLoved": "'좋아요 표시한 음악'에서 {count} 개의 트랙이 제거됨",
+  "@snackbarRemovedTracksFromLoved": {
+    "description": "Snackbar after removing multiple tracks from Loved folder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarAddedTracksToLoved": "'좋아요 표시한 음악'에 {count} 개의 트랙이 추가됨",
+  "@snackbarAddedTracksToLoved": {
+    "description": "Snackbar after adding multiple tracks to Loved folder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeGoToAlbum": "앨범으로 이동",
+  "@homeGoToAlbum": {
+    "description": "Context menu item to navigate to the album page"
+  },
+  "snackbarMetadataSaved": "메타데이터 저장 성공",
+  "@snackbarMetadataSaved": {
+    "description": "Snackbar after successfully saving track metadata"
+  },
+  "snackbarError": "오류: {error}",
+  "@snackbarError": {
+    "description": "Generic error snackbar with error detail",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noTracksFoundForAlbum": "이 앨범에서 트랙을 찾을 수 없음",
+  "@noTracksFoundForAlbum": {
+    "description": "Empty state message when an album has no tracks"
+  },
+  "snackbarUnsupportedAudioFormat": "지원되지 않는 오디오 형식",
+  "@snackbarUnsupportedAudioFormat": {
+    "description": "Snackbar when the audio format is not supported for the requested operation"
+  },
+  "cacheRefresh": "새로고침",
+  "@cacheRefresh": {
+    "description": "Tooltip for refresh button on cache management page"
+  },
+  "editMetadataFieldTitle": "제목",
+  "@editMetadataFieldTitle": {
+    "description": "Chip label for title field in auto-fill selector"
+  },
+  "editMetadataFieldArtist": "아티스트",
+  "@editMetadataFieldArtist": {
+    "description": "Chip label for artist field in auto-fill selector"
+  },
+  "editMetadataFieldAlbum": "앨범",
+  "@editMetadataFieldAlbum": {
+    "description": "Chip label for album field in auto-fill selector"
+  },
+  "editMetadataFieldAlbumArtist": "앨범 아티스트",
+  "@editMetadataFieldAlbumArtist": {
+    "description": "Chip label for album artist field in auto-fill selector"
+  },
+  "editMetadataFieldDate": "날짜",
+  "@editMetadataFieldDate": {
+    "description": "Chip label for date field in auto-fill selector"
+  },
+  "editMetadataFieldTrackNum": "트랙 #",
+  "@editMetadataFieldTrackNum": {
+    "description": "Chip label for track number field in auto-fill selector"
+  },
+  "editMetadataFieldDiscNum": "디스크 #",
+  "@editMetadataFieldDiscNum": {
+    "description": "Chip label for disc number field in auto-fill selector"
+  },
+  "editMetadataFieldGenre": "장르",
+  "@editMetadataFieldGenre": {
+    "description": "Chip label for genre field in auto-fill selector"
+  },
+  "editMetadataFieldIsrc": "ISRC",
+  "@editMetadataFieldIsrc": {
+    "description": "Chip label for ISRC field in auto-fill selector"
+  },
+  "editMetadataFieldLabel": "레이블",
+  "@editMetadataFieldLabel": {
+    "description": "Chip label for label field in auto-fill selector"
+  },
+  "editMetadataFieldCopyright": "저작권",
+  "@editMetadataFieldCopyright": {
+    "description": "Chip label for copyright field in auto-fill selector"
+  },
+  "editMetadataFieldCover": "앨범 커버",
+  "@editMetadataFieldCover": {
+    "description": "Chip label for cover art field in auto-fill selector"
+  },
+  "queueFilteringIndicator": "필터링하는 중...",
+  "@queueFilteringIndicator": {
+    "description": "Shown while filter results are being computed"
+  },
+  "queueTrackCount": "{count, plural, =1{1 개의 트랙} other{{count} 개의 트랙}}",
+  "@queueTrackCount": {
+    "description": "Track count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueAlbumCount": "{count, plural, =1{1 개의 앨범} other{{count} 개의 앨범}}",
+  "@queueAlbumCount": {
+    "description": "Album count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEmptyAlbums": "로컬 앨범이 없습니다",
+  "queueEmptyAlbumsSubtitle": "앨범을 추가하려면 음악 폴더를 스캔하세요",
+  "queueEmptySingles": "로컬 싱글이 없습니다",
+  "queueEmptySinglesSubtitle": "스캔한 싱글 트랙이 여기에 표시됩니다",
+  "queuePlaylistCount": "{count, plural, =1{1 개의 재생목록} other{{count} 개의 재생목록}}",
+  "@queuePlaylistCount": {
+    "description": "Playlist count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEmptyPlaylistsSubtitle": "트랙을 정리하려면 재생목록을 만드세요",
+  "@queueEmptyPlaylistsSubtitle": {
+    "description": "Empty state subtitle for the playlists library view"
+  },
+  "queueEmptyHistory": "로컬 트랙이 없습니다",
+  "queueEmptyHistorySubtitle": "라이브러리를 채우려면 음악 폴더를 스캔하세요",
+  "selectionAllPlaylistsSelected": "모든 재생목록이 선택됨",
+  "@selectionAllPlaylistsSelected": {
+    "description": "Shown when all playlists are selected in selection mode"
+  },
+  "selectionTapPlaylistsToSelect": "선택할 재생목록을 탭하세요",
+  "@selectionTapPlaylistsToSelect": {
+    "description": "Hint shown in playlist selection mode"
+  },
+  "selectionSelectPlaylistsToDelete": "삭제할 재생 목록 선택",
+  "@selectionSelectPlaylistsToDelete": {
+    "description": "Hint shown when no playlists are selected for deletion"
+  },
+  "audioAnalysisTitle": "오디오 음질 분석",
+  "@audioAnalysisTitle": {
+    "description": "Title for audio analysis section"
+  },
+  "audioAnalysisDescription": "스펙트럼 분석으로 무손실 음질을 확인합니다",
+  "@audioAnalysisDescription": {
+    "description": "Description for audio analysis tap-to-analyze prompt"
+  },
+  "audioAnalysisAnalyzing": "오디오를 분석하는 중...",
+  "@audioAnalysisAnalyzing": {
+    "description": "Loading text while analyzing audio"
+  },
+  "audioAnalysisSampleRate": "샘플링 레이트",
+  "@audioAnalysisSampleRate": {
+    "description": "Sample rate metric label"
+  },
+  "audioAnalysisCodec": "코덱",
+  "@audioAnalysisCodec": {
+    "description": "Audio codec metric label"
+  },
+  "audioAnalysisContainer": "컨테이너",
+  "@audioAnalysisContainer": {
+    "description": "Audio container metric label"
+  },
+  "audioAnalysisDecodedFormat": "디코딩 형식",
+  "@audioAnalysisDecodedFormat": {
+    "description": "Decoded sample format metric label"
+  },
+  "audioAnalysisBitDepth": "비트 심도",
+  "@audioAnalysisBitDepth": {
+    "description": "Bit depth metric label"
+  },
+  "audioAnalysisChannels": "채널",
+  "@audioAnalysisChannels": {
+    "description": "Channels metric label"
+  },
+  "audioAnalysisDuration": "재생시간",
+  "@audioAnalysisDuration": {
+    "description": "Duration metric label"
+  },
+  "audioAnalysisNyquist": "나이퀴스트",
+  "@audioAnalysisNyquist": {
+    "description": "Nyquist frequency metric label"
+  },
+  "audioAnalysisFileSize": "크기",
+  "@audioAnalysisFileSize": {
+    "description": "File size metric label"
+  },
+  "audioAnalysisDynamicRange": "다이나믹 레인지",
+  "@audioAnalysisDynamicRange": {
+    "description": "Dynamic range metric label"
+  },
+  "audioAnalysisPeak": "최대 피크",
+  "@audioAnalysisPeak": {
+    "description": "Peak amplitude metric label"
+  },
+  "audioAnalysisRms": "RMS",
+  "@audioAnalysisRms": {
+    "description": "RMS level metric label"
+  },
+  "audioAnalysisLufs": "LUFS",
+  "@audioAnalysisLufs": {
+    "description": "Integrated loudness metric label"
+  },
+  "audioAnalysisTruePeak": "트루 피크",
+  "@audioAnalysisTruePeak": {
+    "description": "True peak metric label"
+  },
+  "audioAnalysisClipping": "클리핑",
+  "@audioAnalysisClipping": {
+    "description": "Clipping metric label"
+  },
+  "audioAnalysisNoClipping": "클리핑 없음",
+  "@audioAnalysisNoClipping": {
+    "description": "Displayed when no clipped samples were detected"
+  },
+  "audioAnalysisSpectralCutoff": "주파수 컷오프",
+  "@audioAnalysisSpectralCutoff": {
+    "description": "Estimated spectral cutoff metric label"
+  },
+  "audioAnalysisCutoffNotDetected": "감지되지 않음",
+  "@audioAnalysisCutoffNotDetected": {
+    "description": "Displayed when no reliable broadband spectral cutoff can be detected"
+  },
+  "audioAnalysisChannelStats": "채널별 통계",
+  "@audioAnalysisChannelStats": {
+    "description": "Per-channel audio analysis section label"
+  },
+  "audioAnalysisSamples": "샘플",
+  "@audioAnalysisSamples": {
+    "description": "Total samples metric label"
+  },
+  "audioAnalysisRescan": "다시 분석",
+  "@audioAnalysisRescan": {
+    "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
+  },
+  "audioAnalysisSaveSpectrogram": "스펙트로그램 저장",
+  "audioAnalysisSpectrogramSaved": "스펙트로그램을 {fileName}에 저장했습니다",
+  "audioAnalysisSpectrogramSaveFailed": "스펙트로그램을 저장할 수 없습니다",
+  "audioAnalysisRescanning": "오디오를 다시 분석하는 중...",
+  "@audioAnalysisRescanning": {
+    "description": "Loading text while audio is being re-analyzed after an explicit refresh"
+  },
+  "metadataSaveFailedFfmpeg": "FFmpeg를 통해 메타데이터 저장 실패",
+  "@metadataSaveFailedFfmpeg": {
+    "description": "Snackbar error when FFmpeg fails to write metadata"
+  },
+  "metadataSaveFailedStorage": "저장소에 메타데이터 다시 쓰기 실패",
+  "@metadataSaveFailedStorage": {
+    "description": "Snackbar error when writing metadata file back to storage fails"
+  },
+  "notifScanningLibrary": "로컬 라이브러리를 스캔하는 중",
+  "@notifScanningLibrary": {
+    "description": "Notification title while scanning local library"
+  },
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} 개의 파일 • {percentage}%",
+  "@notifLibraryScanProgressWithTotal": {
+    "description": "Notification body for library scan progress when total is known",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanProgressNoTotal": "{scanned} 게의 파일이 스캔됨",
+  "@notifLibraryScanProgressNoTotal": {
+    "description": "Notification body for library scan progress when total is unknown",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanComplete": "라이브러리 스캔 완료",
+  "@notifLibraryScanComplete": {
+    "description": "Notification title when library scan finishes"
+  },
+  "notifLibraryScanCompleteBody": "{count} 개의 트랙이 색인됨",
+  "@notifLibraryScanCompleteBody": {
+    "description": "Notification body for library scan complete - number of indexed tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanExcluded": "{count} 개가 제외됨",
+  "@notifLibraryScanExcluded": {
+    "description": "Library scan complete suffix - excluded track count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanErrors": "{count} 개의 오류",
+  "@notifLibraryScanErrors": {
+    "description": "Library scan complete suffix - error count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanFailed": "라이브러리 스캔 실패",
+  "@notifLibraryScanFailed": {
+    "description": "Notification title when library scan fails"
+  },
+  "notifLibraryScanInterruptedBody": "이전 라이브러리 스캔이 중단되었습니다. 계속하려면 폴더를 다시 스캔하세요. 색인된 트랙은 여전히 사용할 수 있습니다.",
+  "notifLibraryScanCancelled": "라이브러리 스캔이 취소됨",
+  "@notifLibraryScanCancelled": {
+    "description": "Notification title when library scan is cancelled by the user"
+  },
+  "notifLibraryScanStopped": "스캔이 완료되기 전에 중단되었습니다",
+  "@notifLibraryScanStopped": {
+    "description": "Notification body when library scan is cancelled"
+  },
+  "notifLibraryScanPaused": "라이브러리 스캔이 일시 중지됨",
+  "@notifLibraryScanPaused": {
+    "description": "Notification title when the user pauses a library scan"
+  },
+  "notifLibraryScanPausedBody": "{count} 개의 파일을 스캔하였습니다. 여기에서 계속하려면 로컬 라이브러리 설정에서 다시 시작하세요",
+  "@notifLibraryScanPausedBody": {
+    "description": "Notification body for a paused library scan - files scanned so far",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSearchHintDefault": "지원되는 URL을 붙여넣거나 검색...",
+  "@homeSearchHintDefault": {
+    "description": "Default placeholder for the main search field on Home"
+  },
+  "tutorialSearchHint": "붙여넣기 또는 검색하기...",
+  "@tutorialSearchHint": {
+    "description": "Placeholder shown in the tutorial search demo"
+  },
+  "trackCoverNoEmbeddedArt": "내장된 앨범 커버가 없음",
+  "@trackCoverNoEmbeddedArt": {
+    "description": "Message shown when a track file has no embedded cover art"
+  },
+  "trackCoverReplace": "표지 교체",
+  "@trackCoverReplace": {
+    "description": "Button label for replacing selected cover art"
+  },
+  "trackCoverPick": "표지 선택",
+  "@trackCoverPick": {
+    "description": "Button label for selecting cover art"
+  },
+  "trackCoverClearSelected": "선택된 표지 지우기",
+  "@trackCoverClearSelected": {
+    "description": "Tooltip for clearing the newly selected cover art"
+  },
+  "trackCoverCurrent": "현재 표지",
+  "@trackCoverCurrent": {
+    "description": "Label for the currently embedded cover preview"
+  },
+  "trackCoverSelected": "선택된 표지",
+  "@trackCoverSelected": {
+    "description": "Label for the newly selected cover preview"
+  },
+  "trackCoverReplaceNotice": "저장을 탭하면 선택한 표지가 현재 내장된 표지를 대체합니다",
+  "@trackCoverReplaceNotice": {
+    "description": "Notice shown when a new cover has been selected but not saved yet"
+  },
+  "trackCoverResolution": "커버 해상도",
+  "@trackCoverResolution": {
+    "description": "Label for selecting the embedded cover art resolution"
+  },
+  "trackCoverResolutionHint": "저장할 때 이미지의 긴 변 길이를 설정합니다. 확대해도 이미지의 세부 정보는 늘어나지 않습니다",
+  "@trackCoverResolutionHint": {
+    "description": "Explanation below the embedded cover art resolution selector"
+  },
+  "trackCoverResizeFailed": "앨범 커버를 원하는 크기로 조정할 수 없습니다. 다른 크기나 이미지를 사용해 보세요",
+  "@trackCoverResizeFailed": {
+    "description": "Error shown when resizing cover art before saving metadata fails"
+  },
+  "nowPlayingRepeatOff": "반복 끄기",
+  "@nowPlayingRepeatOff": {
+    "description": "Repeat toggle tooltip when repeat is disabled"
+  },
+  "nowPlayingRepeatAll": "모두 반복",
+  "@nowPlayingRepeatAll": {
+    "description": "Repeat toggle tooltip when the whole queue repeats"
+  },
+  "nowPlayingRepeatOne": "한 곡 반복",
+  "@nowPlayingRepeatOne": {
+    "description": "Repeat toggle tooltip when the current track repeats"
+  },
+  "logAutoScrollOn": "자동 스크롤: ON",
+  "@logAutoScrollOn": {
+    "description": "Tooltip when auto-scroll is enabled on the log screen"
+  },
+  "logAutoScrollOff": "자동 스크롤: OFF",
+  "@logAutoScrollOff": {
+    "description": "Tooltip when auto-scroll is disabled on the log screen"
+  },
+  "logCopyLogs": "로그 복사",
+  "@logCopyLogs": {
+    "description": "Tooltip for copying logs"
+  },
+  "logClearSearch": "로그 지우기",
+  "@logClearSearch": {
+    "description": "Tooltip for clearing the log search field"
+  },
+  "clickableInformationUnavailable": "{type} 정보를 사용할 수 없음",
+  "@clickableInformationUnavailable": {
+    "description": "Snackbar shown when clickable metadata cannot open a destination",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yOpenItemCount": "{title}, {count} 개의 {count, plural, =1{항목} other{항목}} 열기",
+  "@a11yOpenItemCount": {
+    "description": "Accessibility label for opening a grouped item with count",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "a11yOpenAlbumByArtistTrackCount": "'{artistName}'의 앨범 '{albumName}' 열기 ({trackCount} 번째 곡)",
+  "@a11yOpenAlbumByArtistTrackCount": {
+    "description": "Accessibility label for opening an album item with track count",
+    "placeholders": {
+      "albumName": {
+        "type": "String"
+      },
+      "artistName": {
+        "type": "String"
+      },
+      "trackCount": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsLyrics": "가사",
+  "@settingsLyrics": {
+    "description": "Settings menu item - lyrics settings"
+  },
+  "settingsLyricsSubtitle": "로컬 가사, 저장 방식 및 글자 크기",
+  "editMetadataFieldDateHint": "YYYY-MM-DD 또는 YYYY",
+  "@editMetadataFieldDateHint": {
+    "description": "Hint text for the edit metadata date field"
+  },
+  "editMetadataFieldTrackTotal": "전체 트랙 수",
+  "@editMetadataFieldTrackTotal": {
+    "description": "Label for total tracks field in the edit metadata sheet"
+  },
+  "editMetadataFieldDiscTotal": "전체 디스크 수",
+  "@editMetadataFieldDiscTotal": {
+    "description": "Label for total discs field in the edit metadata sheet"
+  },
+  "editMetadataFieldComposer": "작곡가",
+  "@editMetadataFieldComposer": {
+    "description": "Label for composer field in the edit metadata sheet"
+  },
+  "editMetadataFieldComment": "주석",
+  "@editMetadataFieldComment": {
+    "description": "Label for comment field in the edit metadata sheet"
+  },
+  "trackAlbumType": "발매 유형",
+  "@trackAlbumType": {
+    "description": "Label for an album or release type metadata value"
+  },
+  "editMetadataFieldAlbumTypeHint": "앨범, 싱글, EP, 컴필레이션...",
+  "@editMetadataFieldAlbumTypeHint": {
+    "description": "Hint for the release type metadata field"
+  },
+  "editMetadataFieldExplicit": "성인용",
+  "@editMetadataFieldExplicit": {
+    "description": "Label for the explicit content metadata field"
+  },
+  "editMetadataFieldExplicitHint": "이 트랙에 성인용 콘텐츠가 포함되어 있음을 표시합니다",
+  "@editMetadataFieldExplicitHint": {
+    "description": "Description for the explicit content metadata switch"
+  },
+  "metadataExplicitValue": "성인용",
+  "@metadataExplicitValue": {
+    "description": "Displayed value when a track is marked explicit"
+  },
+  "editMetadataFieldUpc": "UPC / 바코드",
+  "@editMetadataFieldUpc": {
+    "description": "Label for the release barcode metadata field"
+  },
+  "editMetadataFieldUpcHint": "숫자 UPC, EAN, 또는 GTIN",
+  "@editMetadataFieldUpcHint": {
+    "description": "Hint for the release barcode metadata field"
+  },
+  "editMetadataAdvanced": "고급",
+  "@editMetadataAdvanced": {
+    "description": "Expandable section label for advanced metadata fields"
+  },
+  "libraryFilterMetadataMissingTrackNumber": "트랙 번호 누락",
+  "@libraryFilterMetadataMissingTrackNumber": {
+    "description": "Filter option - items missing track number"
+  },
+  "libraryFilterMetadataMissingDiscNumber": "디스크 번호 누락",
+  "@libraryFilterMetadataMissingDiscNumber": {
+    "description": "Filter option - items missing disc number"
+  },
+  "libraryFilterMetadataMissingArtist": "아티스트 누락",
+  "@libraryFilterMetadataMissingArtist": {
+    "description": "Filter option - items missing artist"
+  },
+  "libraryFilterMetadataIncorrectIsrcFormat": "ISRC 형식이 잘못됨",
+  "@libraryFilterMetadataIncorrectIsrcFormat": {
+    "description": "Filter option - items with an invalid ISRC format"
+  },
+  "libraryFilterMetadataMissingIsrc": "ISRC 누락",
+  "@libraryFilterMetadataMissingIsrc": {
+    "description": "Filter option - items without any ISRC tag"
+  },
+  "libraryFilterMetadataMissingLabel": "레이블 누락",
+  "@libraryFilterMetadataMissingLabel": {
+    "description": "Filter option - items missing record label"
+  },
+  "collectionDeletePlaylistsMessage": "{count} 개의 {count, plural, =1{재생목록} other{재생목록}}을 삭제하시겠습니까?",
+  "@collectionDeletePlaylistsMessage": {
+    "description": "Confirmation message for deleting selected playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionPlaylistsDeleted": "{count} 개의 {count, plural, =1{재생목록} other{재생목록}}이 삭제됨",
+  "@collectionPlaylistsDeleted": {
+    "description": "Snackbar after deleting selected playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionAddedTracksToPlaylist": "''{playlistName}''에 {count} 개의 {count, plural, =1{트랙} other{트랙}}이 추가됨",
+  "@collectionAddedTracksToPlaylist": {
+    "description": "Snackbar after adding multiple tracks to a playlist",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionAddedTracksToPlaylistWithExisting": "''{playlistName}''에 {count} 개의 {count, plural, =1{트랙} other{트랙}}이 추가됨 ({alreadyCount} 개의 트랙은 이미 재생목록에 있음)",
+  "@collectionAddedTracksToPlaylistWithExisting": {
+    "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "playlistName": {
+        "type": "String"
+      },
+      "alreadyCount": {
+        "type": "int"
+      }
+    }
+  },
+  "itemCount": "{count} 개의 {count, plural, =1{항목} other{항목}}",
+  "@itemCount": {
+    "description": "Generic item count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionDeleteTracksCount": "{count} 개의 {count, plural, =1{트랙} other{트랙}} 삭제",
+  "@selectionDeleteTracksCount": {
+    "description": "Button label for deleting selected tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "a11ySelectTrack": "트랙 선택",
+  "@a11ySelectTrack": {
+    "description": "Accessibility label for selecting a track"
+  },
+  "a11yDeselectTrack": "트랙 선택 해제",
+  "@a11yDeselectTrack": {
+    "description": "Accessibility label for deselecting a track"
+  },
+  "a11yPlayTrackByArtist": "'{artistName}'의 '{trackName}' 재생",
+  "@a11yPlayTrackByArtist": {
+    "description": "Accessibility label for playing a local library track",
+    "placeholders": {
+      "trackName": {
+        "type": "String"
+      },
+      "artistName": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yPlayTrack": "{title} 재생",
+  "a11yPauseTrack": "{title} 일시정지",
+  "a11yMoreOptionsFor": "{title}의 추가 옵션",
+  "a11yDismissMiniPlayer": "미니 플레이어 닫기",
+  "a11ySelectPlaylist": "재생목록 선택",
+  "a11yDeselectPlaylist": "재생목록 선택 해제",
+  "a11yShowMore": "더 보기",
+  "a11yPlaybackPosition": "재생 위치",
+  "a11ySavingTrackDetails": "트랙 정보 저장 중",
+  "cacheClearFor": "{target} 지우기",
+  "logIssueSummary": "문제 요약",
+  "@logIssueSummary": {
+    "description": "Header for log issue analysis summary"
+  },
+  "logTotalErrors": "총 오류 수: {count}",
+  "@logTotalErrors": {
+    "description": "Total error count in log issue analysis",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryScanCancelled": "스캔이 취소됨",
+  "@libraryScanCancelled": {
+    "description": "Library scan status when a scan was cancelled"
+  },
+  "libraryScanCancelledSubtitle": "준비가 되면 스캔을 다시 시도할 수 있습니다",
+  "@libraryScanCancelledSubtitle": {
+    "description": "Library scan status subtitle after cancellation"
+  },
+  "audioAnalysisStereo": "스테레오",
+  "@audioAnalysisStereo": {
+    "description": "Audio channel layout label - stereo"
+  },
+  "audioAnalysisMono": "모노",
+  "@audioAnalysisMono": {
+    "description": "Audio channel layout label - mono"
+  },
+  "unknownArtist": "알 수 없는 아티스트",
+  "@unknownArtist": {
+    "description": "Fallback artist name when metadata is missing"
+  },
+  "permissionAudio": "오디오",
+  "@permissionAudio": {
+    "description": "Audio permission type label"
+  },
+  "permissionStorage": "저장소",
+  "@permissionStorage": {
+    "description": "Storage permission type label"
+  },
+  "permissionNotification": "알림",
+  "@permissionNotification": {
+    "description": "Notification permission type label"
+  },
+  "libraryPlayback": "재생",
+  "@libraryPlayback": {
+    "description": "Section header for playback settings in library settings"
+  },
+  "nowPlayingNothingPlaying": "재생 중인 노래가 없음",
+  "@nowPlayingNothingPlaying": {
+    "description": "Empty state when no track is currently playing"
+  },
+  "nowPlayingMinimize": "최소화",
+  "@nowPlayingMinimize": {
+    "description": "Tooltip for minimizing the now playing screen"
+  },
+  "nowPlayingUpNext": "다음 곡",
+  "@nowPlayingUpNext": {
+    "description": "Title for the playback queue sheet"
+  },
+  "nowPlayingAudioOutput": "오디오 출력",
+  "nowPlayingWrittenBy": "작성자: {writers}",
+  "@nowPlayingWrittenBy": {
+    "placeholders": {
+      "writers": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingLyricsProvider": "가사: {provider}",
+  "@nowPlayingLyricsProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingAudioOutputUnavailable": "오디오 출력 설정을 열 수 없습니다",
+  "nowPlayingPreviousTrack": "이전 트랙",
+  "@nowPlayingPreviousTrack": {
+    "description": "Tooltip for the previous-track playback control"
+  },
+  "nowPlayingNextTrack": "다음 트랙",
+  "@nowPlayingNextTrack": {
+    "description": "Tooltip for the next-track playback control"
+  },
+  "nowPlayingDetails": "트랙 세부 정보",
+  "@nowPlayingDetails": {
+    "description": "Menu item and section title for track metadata details"
+  },
+  "nowPlayingSleepTimer": "취침 타이머",
+  "@nowPlayingSleepTimer": {
+    "description": "Menu item and sheet title for the playback sleep timer"
+  },
+  "nowPlayingSleepTimerActive": "{time}에 종료",
+  "@nowPlayingSleepTimerActive": {
+    "description": "Active sleep timer deadline shown in the player menu",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 분} other{{minutes} 분}}",
+  "@nowPlayingSleepTimerMinutes": {
+    "description": "Duration choice for the playback sleep timer",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "nowPlayingSleepTimerOff": "취침 타이머 끄기",
+  "@nowPlayingSleepTimerOff": {
+    "description": "Action to cancel the active playback sleep timer"
+  },
+  "nowPlayingSleepTimerSet": "{duration} 동안 취침 타이머가 설정됨",
+  "@nowPlayingSleepTimerSet": {
+    "description": "Confirmation after setting the playback sleep timer",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingSleepTimerCancelled": "취침 타이머 꺼짐",
+  "@nowPlayingSleepTimerCancelled": {
+    "description": "Confirmation after cancelling the playback sleep timer"
+  },
+  "nowPlayingTabPlayer": "플레이어",
+  "@nowPlayingTabPlayer": {
+    "description": "Tab label for the player view"
+  },
+  "nowPlayingTabLyrics": "가사",
+  "@nowPlayingTabLyrics": {
+    "description": "Tab label for the lyrics view"
+  },
+  "nowPlayingNoLyrics": "이 파일에는 가사가 없음",
+  "@nowPlayingNoLyrics": {
+    "description": "Empty state when the playing file has no embedded lyrics"
+  },
+  "nowPlayingInstrumental": "연주곡",
+  "@nowPlayingInstrumental": {
+    "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
+  },
+  "nowPlayingLyricsLanguageOptions": "가시 언어 옵션",
+  "@nowPlayingLyricsLanguageOptions": {
+    "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
+  },
+  "nowPlayingHidePronunciation": "발음 숨기기",
+  "nowPlayingShowPronunciation": "발음 보기",
+  "nowPlayingHideTranslation": "번역 숨기기",
+  "nowPlayingShowTranslation": "번역 보기",
+  "nowPlayingShuffleOn": "셔플 켜기",
+  "@nowPlayingShuffleOn": {
+    "description": "Tooltip when shuffle mode is enabled"
+  },
+  "nowPlayingPlayInOrder": "순서대로 재생",
+  "@nowPlayingPlayInOrder": {
+    "description": "Tooltip when shuffle mode is disabled"
+  },
+  "nowPlayingShuffleLibrary": "라이브러리 셔플",
+  "@nowPlayingShuffleLibrary": {
+    "description": "Button label to shuffle and play the entire local library"
+  },
+  "nowPlayingQueueEmpty": "현재 재생목록이 비어 있음",
+  "@nowPlayingQueueEmpty": {
+    "description": "Empty state when the playback queue has no items"
+  },
+  "nowPlayingNoMetadata": "사용할 수 있는 메타데이터가 없음",
+  "@nowPlayingNoMetadata": {
+    "description": "Empty state when track metadata cannot be loaded"
+  },
+  "selectionDeletePlaylistsCount": "{count} 개의 {count, plural, =1{재생목록} other{재생목록}} 삭제",
+  "@selectionDeletePlaylistsCount": {
+    "description": "Button label for deleting multiple selected playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "actionShuffle": "셔플",
+  "@actionShuffle": {
+    "description": "Tooltip for shuffle playback action"
+  },
+  "metadataOriginal": "원본",
+  "@metadataOriginal": {
+    "description": "Label for keeping the original embedded cover resolution"
+  },
+  "unknownTitle": "알 수 없는 제목",
+  "@unknownTitle": {
+    "description": "Fallback track title when metadata is missing"
+  },
+  "trackPlayNext": "다음 곡 재생",
+  "@trackPlayNext": {
+    "description": "Menu action to play a track as the next queue item"
+  },
+  "trackAddToQueue": "현재 재생목록에 추가",
+  "@trackAddToQueue": {
+    "description": "Menu action to add a track to the playback queue"
+  },
+  "settingsSearchHint": "설정 검색",
+  "@settingsSearchHint": {
+    "description": "Placeholder of the search field on the Settings tab"
+  },
+  "settingsSearchNoResults": "'{query}'과 일치하는 설정이 없음",
+  "@settingsSearchNoResults": {
+    "description": "Shown when a Settings search returns nothing",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryFilterMetadataMissingLyrics": "가사 누락",
+  "@libraryFilterMetadataMissingLyrics": {
+    "description": "Filter option for tracks without embedded or sidecar lyrics"
+  },
+  "libraryFilterMetadataMissingReplayGain": "리플레이게인 누락",
+  "@libraryFilterMetadataMissingReplayGain": {
+    "description": "Filter option for scanned tracks without ReplayGain gain tags"
+  },
+  "libraryFilterMetadataHasReplayGain": "ReplayGain 있음",
+  "libraryFilterIncompleteAlbums": "불완전한 앨범",
+  "libraryAlbumCompletenessUnknown": "앨범 완성도 알 수 없음",
+  "libraryAlbumMissingTracks": "{present}/{expected}곡 · {missing}곡 누락",
+  "mornyeSearch": "검색",
+  "mornyeContinuePlaying": "계속 재생",
+  "mornyeFavorite": "즐겨찾기",
+  "@mornyeFavorite": {
+    "description": "Compact context menu action that adds a track to Loved"
+  },
+  "mornyeGoToArtist": "아티스트로 이동",
+  "mornyeFavorited": "즐겨추가에 추가됨",
+  "@mornyeFavorited": {
+    "description": "Selected state of the compact favorite action"
+  },
+  "autoMixDescription": "곡을 비트에 맞춰 믹싱하고, 음정은 유지한 채 템포를 조절합니다. 비트를 맞출 수 없는 경우에는 크로스페이드를 사용합니다",
+  "autoMixOn": "AutoMix 켜기",
+  "autoMixOff": "AutoMix 끄기",
+  "autoplayOn": "자동재생 켜기",
+  "autoplayOff": "자동재생 끄기",
+  "autoplayFromLibrary": "라이브러리에서 자동재생",
+  "autoplayDescription": "대기열이 끝나면 라이브러리의 관련 곡으로 계속 재생합니다.",
+  "autoplayPersonalization": "개인화 자동재생",
+  "autoplayPersonalizationDescription": "듣고 건너뛴 곡에서 이 기기 안에서만 학습합니다. 끄면 학습이 멈추고 일반 자동재생으로 돌아갑니다.",
+  "autoplayResetLearning": "추천 학습 초기화",
+  "profileTitle": "프로필",
+  "profileSetUp": "프로필 설정",
+  "profileEdit": "이름 및 사진 편집",
+  "backupIncludesProfile": "프로필 이름과 사진 포함",
+  "profileName": "이름",
+  "profileNameHint": "당신의 이름을 입력하세요",
+  "profileChangePhoto": "사진 선택",
+  "profileRemovePhoto": "사진 삭제",
+  "profilePhotoError": "20MB보다 작은 유효한 이미지를 선택하세요",
+  "profileSaveError": "프로필을 저장할 수 없습니다. 다시 시도하세요",
+  "motionArtwork": "애니메이션 아트워크",
+  "listeningStats": "청취 통계",
+  "listeningStatsRecord": "청취 기록",
+  "listeningStatsDescription": "지금부터 이 기기에만 저장됩니다. 내장 플레이어의 재생만 기록하며, 일시정지, 버퍼링, 탐색은 청취 시간에 더해지지 않습니다. 30초 이상 재생하면 한 번으로 집계됩니다.",
+  "listeningStatsEmpty": "내장 플레이어로 음악을 재생하면 청취 요약이 시작됩니다. 이전 청취 기록은 복구할 수 없습니다.",
+  "listeningStatsDays": "{days}일",
+  "listeningStatsMinutes": "{minutes}분",
+  "listeningStatsTotals": "{plays, plural, =1{재생 1회} other{재생 {plays}회}} · {tracks, plural, =1{트랙 1개} other{트랙 {tracks}개}} · {days, plural, =1{활동일 1일} other{활동일 {days}일}}",
+  "listeningStatsPreviousYear": "이전 해",
+  "listeningStatsNextYear": "다음 해",
+  "listeningStatsActivity": "최근 청취일 · 분",
+  "listeningStatsTopArtists": "최다 청취 아티스트",
+  "listeningStatsTopTracks": "최다 청취 트랙",
+  "listeningStatsLoadError": "청취 통계를 불러올 수 없습니다",
+  "listeningStatsClear": "청취 통계 지우기",
+  "listeningStatsClearError": "청취 통계를 지울 수 없습니다. 다시 시도하세요.",
+  "listeningStatsClearDescription": "이 기기의 모든 청취 통계를 삭제할까요? 음악과 재생목록은 유지됩니다.",
+  "libraryLoading": "라이브러리 불러오는 중…",
+  "libraryLoadFailed": "라이브러리를 불러올 수 없습니다. 다시 시도해 저장된 폴더와 트랙 색인을 불러오세요.",
+  "autoMixSettingsTitle": "믹스 전환",
+  "autoMixAutomaticDuration": "자동 길이",
+  "autoMixDuration": "믹스 길이",
+  "autoMixEffect": "전환 효과",
+  "autoMixEffectAuto": "자동",
+  "autoMixEffectCrossfade": "크로스페이드",
+  "autoMixEffectMuffled": "먹먹하게",
+  "autoMixEffectEcho": "에코",
+  "autoMixEffectPitch": "피치",
+  "autoMixEffectCustom": "사용자 지정",
+  "autoMixEffectsHelp": "효과는 믹스 중 나가는 곡의 끝부분에 적용됩니다. 짧은 곡은 더 짧게 겹칩니다.",
+  "autoMixSpeed": "속도",
+  "autoMixPitch": "피치 (반음)",
+  "autoMixEcho": "에코",
+  "autoMixLowPass": "먹먹한 필터",
+  "autoMixMixing": "믹싱 중",
+  "autoMixCrossfading": "크로스페이드 중",
+  "playbackAutomation": "자동 재생",
+  "playbackPauseOnMute": "음소거 시 일시정지",
+  "snackbarPlaybackMuted": "미디어 볼륨이 0입니다. 재생을 일시정지했습니다. 다시 재생을 누르세요.",
+  "playbackPauseOnMuteDescription": "미디어 볼륨이 0이면 일시정지하고, 볼륨을 올리면 재생을 이어갑니다. 직접 일시정지한 경우에는 계속 멈춰 있습니다. 표준 오디오 출력에서만 동작합니다.",
+  "playbackOnHeadphonesConnected": "헤드폰 연결 시 재생",
+  "playbackOnHeadphonesConnectedDescription": "유선 또는 블루투스 헤드폰이 연결되면 현재 곡을 이어서 재생합니다. 연결이 끊기면 일시정지합니다. 내장 플레이어에서만 동작합니다.",
+  "appearanceCustomFont": "사용자 지정 글꼴",
+  "appearanceCustomFontSubtitle": "TTF 또는 OTF 파일(최대 10MB)을 가져옵니다. 테마와 시스템 글꼴보다 우선합니다.",
+  "appearanceCustomFontInvalid": "이 글꼴을 불러올 수 없습니다. 10MB 이하의 올바른 TTF 또는 OTF 파일을 선택하세요.",
+  "appearanceCustomFontReset": "테마 글꼴 사용",
+  "lyricsTextSize": "가사 글자 크기",
+  "lyricsTextPreview": "좋아하는 노래의 모든 가사를 따라가세요",
+  "setupLocalPlayback": "로컬 음악을 오프라인으로 재생하세요",
+  "tutorialPlaybackTitle": "로컬 재생",
+  "tutorialPlaybackDesc": "스캔된 트랙을 골라 재생하고 대기열을 관리하세요.",
+  "tutorialStorageTitle": "음악 폴더",
+  "tutorialStorageDesc": "Android 저장소 접근으로 로컬 음악을 관리하세요.",
+  "tutorialStorageTip1": "음악이 들어 있는 폴더를 선택하세요",
+  "tutorialStorageTip2": "필요하면 Android 폴더 선택기에서 접근을 허용하세요",
+  "tutorialStorageTip3": "로컬 파일을 추가하거나 바꾼 뒤 다시 스캔하세요",
+  "librarySourceReady": "준비됨",
+  "tutorialPlaybackTip1": "내장 플레이어로 음악을 재생하거나 일시정지하세요",
+  "tutorialPlaybackTip2": "로컬 트랙을 대기열과 재생목록에 추가하세요",
+  "tutorialPlaybackTip3": "들으면서 내장 또는 별도 가사를 읽으세요",
+  "cueSplitButton": "트랙으로 분할",
+  "@cueSplitButton": {
+    "description": "Button text to start CUE splitting"
+  },
+  "cueSplitConfirmMessage": "'{album}'을 {count} 개의 개별 FLAC 파일로 분할하시겠습니까?\n\n파일은 동일한 디렉토리에 저장됩니다",
+  "@cueSplitConfirmMessage": {
+    "description": "CUE split confirmation dialog message",
+    "placeholders": {
+      "album": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitConfirmTitle": "CUE 앨범 분할",
+  "@cueSplitConfirmTitle": {
+    "description": "CUE split confirmation dialog title"
+  },
+  "cueSplitFailed": "CUE 분할 실패",
+  "@cueSplitFailed": {
+    "description": "Snackbar when CUE split fails"
+  },
+  "cueSplitSplitting": "CUE 시트를 분할하는 중... ({current}/{total})",
+  "@cueSplitSplitting": {
+    "description": "Snackbar while splitting CUE",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitSuccess": "{count} 개의 트랙 분할 성공",
+  "@cueSplitSuccess": {
+    "description": "Snackbar after successful CUE split",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitPartialSuccess": "{count}개 트랙으로 분할했습니다. {failed}개는 만들 수 없었습니다",
+  "cueSplitSavedOutsideLibrary": "트랙이 음악 라이브러리 밖에 저장되었습니다. 로컬 라이브러리에서 해당 폴더를 추가하면 볼 수 있습니다.",
+  "cueSplitTitle": "CUE 시트 분할",
+  "@cueSplitTitle": {
+    "description": "Title for CUE split bottom sheet"
+  },
+  "snackbarAddedToQueueGeneric": "현재 재생목록에 추가됨",
+  "@snackbarAddedToQueueGeneric": {
+    "description": "Snackbar when a track is added to the playback queue without naming it"
+  },
+  "snackbarPlayingNext": "다음 곡 재생",
+  "@snackbarPlayingNext": {
+    "description": "Snackbar when a track is inserted as the next queue item"
+  },
+  "trackCopyFilePath": "파일 경로 복사",
+  "@trackCopyFilePath": {
+    "description": "Action - copy file path"
+  },
+  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmTitle": "기기에서 제거하시겠습니까?",
+  "@trackDeleteConfirmTitle": {
+    "description": "Delete confirmation title"
+  },
+  "trackRemoveFromDevice": "기기에서 제거",
+  "@trackRemoveFromDevice": {
+    "description": "Action - delete downloaded file"
+  },
+  "trackReplayGain": "리플레이게인 다시 스캔",
+  "@trackReplayGain": {
+    "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
+  },
+  "playbackNormalizationMode": "게인 모드",
+  "playbackNormalizationModeTrack": "트랙",
+  "playbackNormalizationModeAlbum": "앨범",
+  "playbackNormalizationPreamp": "프리앰프",
+  "playbackNormalizationPreampValue": "{gain} dB (목표 {target} LUFS)",
+  "playbackNormalizationPreampHint": "값을 낮추면 더 작게 재생됩니다. 정규화는 트랙을 낮추기만 하므로 클리핑이 생기지 않습니다.",
+  "audioInfoTitle": "오디오 정보",
+  "audioInfoSource": "원본 파일",
+  "audioInfoSignal": "신호",
+  "audioInfoLoudness": "음량",
+  "audioInfoProcessing": "처리",
+  "audioInfoOutput": "출력",
+  "audioInfoAnalysis": "스펙트럼 및 레벨 분석",
+  "audioInfoQuality": "품질",
+  "audioInfoHiResLossless": "Hi-Res 무손실",
+  "audioInfoLossless": "무손실",
+  "audioInfoLossy": "손실",
+  "audioInfoFormat": "포맷",
+  "audioInfoCodec": "코덱",
+  "audioInfoSampleRate": "샘플 레이트",
+  "audioInfoBitDepth": "비트 심도",
+  "audioInfoChannels": "채널",
+  "audioInfoChannelCount": "{count, plural, =1{모노} =2{스테레오} other{{count}채널}}",
+  "audioInfoBitrate": "비트레이트",
+  "audioInfoDuration": "길이",
+  "audioInfoFileSize": "파일 크기",
+  "audioInfoCompression": "압축",
+  "audioInfoCompressionValue": "비압축 크기의 {percent}%",
+  "audioInfoLocation": "위치",
+  "audioInfoLocationLocal": "기기 저장소",
+  "audioInfoLocationShared": "공유 폴더",
+  "audioInfoPcmRate": "비압축 데이터 전송률",
+  "audioInfoFrequencyRange": "주파수 범위",
+  "audioInfoFrequencyRangeValue": "최대 {frequency} (나이퀴스트)",
+  "audioInfoDynamicRange": "이론적 다이내믹 레인지",
+  "audioInfoTrackGain": "트랙 게인",
+  "audioInfoTrackPeak": "트랙 피크",
+  "audioInfoAlbumGain": "앨범 게인",
+  "audioInfoAlbumPeak": "앨범 피크",
+  "audioInfoNoGainTags": "ReplayGain 태그 없음",
+  "audioInfoApplied": "{gain} 적용됨",
+  "audioInfoOn": "켜짐",
+  "audioInfoOff": "꺼짐",
+  "audioInfoBypassed": "직접 출력으로 우회됨",
+  "audioInfoPlayer": "플레이어",
+  "audioInfoPlayerValue": "SpotiFLAC 내장 플레이어",
+  "audioInfoSignalPath": "신호 경로",
+  "audioInfoPathSystem": "시스템 믹서",
+  "audioInfoPathDirect": "USB 직접 출력, 시스템 믹서 우회",
+  "audioInfoPathExclusive": "독점 출력, 시스템 믹서 우회",
+  "audioInfoDecoder": "디코더",
+  "audioInfoHardware": "하드웨어",
+  "audioInfoSoftware": "소프트웨어",
+  "audioInfoBands": "{count}밴드",
+  "audioInfoTempo": "템포",
+  "audioInfoResampling": "리샘플링",
+  "audioInfoResamplingNone": "없음, 레이트 일치",
+  "audioInfoBitPerfect": "비트 퍼펙트",
+  "audioInfoBitPerfectActive": "예, 변형되지 않은 샘플",
+  "audioInfoBitPerfectNo": "아니요, 시스템에서 믹스됨",
+  "audioInfoDevice": "기기",
+  "audioInfoDeviceType": "{type, select, speaker{기기 스피커} earpiece{수화기} wired_headphones{유선 헤드폰} wired_headset{유선 헤드셋} line{라인 출력} bluetooth{블루투스} bluetooth_le{블루투스 LE 오디오} usb{USB 오디오} usb_headset{USB 헤드셋} hdmi{HDMI} dock{도크} cast{캐스트} hearing_aid{보청기} airplay{AirPlay} car{자동차 오디오} other{기타}}",
+  "audioInfoOutputRate": "출력 샘플 레이트",
+  "audioInfoOutputFormat": "출력 포맷",
+  "audioInfoDeviceRates": "기기 샘플 레이트",
+  "audioInfoDeviceFormats": "기기 포맷",
+  "audioInfoAnyRate": "모두",
+  "audioInfoBuffer": "믹서 버퍼",
+  "audioInfoLatency": "출력 지연",
+  "audioInfoLowLatency": "저지연 오디오",
+  "audioInfoProAudio": "프로 오디오",
+  "audioInfoSupported": "지원됨",
+  "audioInfoNotSupported": "지원되지 않음",
+  "audioInfoSpatial": "공간 음향",
+  "audioInfoHeadTracking": "헤드 트래킹",
+  "audioInfoUnavailable": "사용할 수 없음",
+  "audioInfoFixedVolume": "기기에서 제어됨",
+  "audioInfoCopy": "보고서 복사",
+  "audioInfoCopied": "오디오 정보를 복사했습니다",
+  "lyricsShareTitle": "가사 공유",
+  "lyricsShareSelectHint": "최대 {count}줄 선택",
+  "lyricsShareLimit": "최대 {count}줄까지 공유할 수 있습니다",
+  "lyricsShareAction": "공유",
+  "lyricsShareError": "가사 이미지를 만들 수 없습니다",
+  "lyricsShareBackgroundArtwork": "아트워크",
+  "lyricsShareBackgroundColor": "커버 색상",
+  "lyricsShareBackgroundDark": "어둡게",
+  "lyricsShareBackgroundLight": "밝게",
+  "musicHaptics": "음악 햅틱",
+  "musicHapticsDescription": "다운로드한 곡과 로컬 곡의 비트에 맞춰 진동합니다",
+  "musicHapticsSensitivity": "민감도",
+  "musicHapticsStrength": "세기",
+  "listeningRewind": "리와인드",
+  "listeningRewindDescription": "최근 몇 주와 몇 달의 하이라이트를 다시 보세요",
+  "listeningRewindChoosePeriod": "기간 선택",
+  "listeningRewindLastWeeks": "최근 {weeks}주",
+  "listeningRewindLastMonths": "최근 {months}개월",
+  "listeningRewindThisYear": "{year}년 지금까지",
+  "listeningRewindIntroTitle": "나의 리와인드",
+  "listeningRewindIntroBody": "{start}부터 {end}까지 재생한 음악을 돌아봅니다.",
+  "listeningRewindMinutesTitle": "들은 시간",
+  "listeningRewindMinutesUnit": "{minutes, plural, =1{분} other{분}}",
+  "listeningRewindHours": "{hours, plural, =1{음악을 약 1시간 들었어요} other{음악을 약 {hours}시간 들었어요}}",
+  "listeningRewindMore": "지난 기간보다 {percent}% 더 들었어요",
+  "listeningRewindLess": "지난 기간보다 {percent}% 덜 들었어요",
+  "listeningRewindSame": "지난 기간과 거의 같아요",
+  "listeningRewindTopArtistTitle": "가장 많이 들은 아티스트",
+  "listeningRewindArtistShare": "청취 시간의 {percent}%",
+  "listeningRewindArtistsTitle": "돌려 듣는 아티스트",
+  "listeningRewindTopTrackTitle": "가장 많이 들은 곡",
+  "listeningRewindPlays": "{plays, plural, =1{재생 1회} other{재생 {plays}회}}",
+  "listeningRewindTracksTitle": "반복해서 들은 곡",
+  "listeningRewindTopAlbumTitle": "자꾸 돌아오게 된 앨범",
+  "listeningRewindNewArtistsTitle": "새로운 발견",
+  "listeningRewindNewArtistsBody": "{count, plural, =1{새 아티스트 1명을 찾았어요} other{새 아티스트 {count}명을 찾았어요}}",
+  "listeningRewindRhythmTitle": "나의 청취 리듬",
+  "listeningRewindPeakDay": "가장 많이 들은 날",
+  "listeningRewindFavoriteDay": "좋아하는 날",
+  "listeningRewindStreak": "최장 연속 기록",
+  "listeningRewindStreakDays": "{days, plural, =1{1일} other{{days}일 연속}}",
+  "listeningRewindReplayTitle": "멈출 수 없었던 곡",
+  "listeningRewindReplayBody": "{date}에 {plays}번 재생했어요",
+  "listeningRewindOutroTitle": "여기까지가 리와인드예요",
+  "listeningRewindOutroBody": "계속 들어주세요. 다음 리와인드가 이미 만들어지고 있어요.",
+  "listeningRewindEmpty": "이 기간에는 아직 청취 기록이 충분하지 않아요. 내장 플레이어로 음악을 재생한 뒤 다시 확인하세요.",
+  "listeningRewindLoadError": "리와인드를 불러올 수 없습니다",
+  "listeningRewindSlide": "{count}개 중 {index}번째 슬라이드",
+  "listeningRewindShare": "공유",
+  "listeningRewindShareError": "리와인드를 공유할 수 없습니다",
+  "listeningRewindNext": "다음",
+  "listeningRewindPrevious": "이전",
+  "listeningRewindMonthlyReady": "지난 4주의 기록을 다시 볼 수 있어요",
+  "listeningRewindYearTitle": "{year}년의 음악",
+  "listeningRewindYearEyebrow": "연말 리와인드",
+  "listeningRewindYearBanner": "올해 가장 많이 들은 아티스트, 곡, 순간들",
+  "listeningRewindYearIntroBody": "올해 재생한 모든 음악을 첫 곡부터 가장 많이 들은 달까지 돌아봅니다.",
+  "listeningRewindNumbersTitle": "올해의 숫자",
+  "listeningRewindSongsLabel": "곡",
+  "listeningRewindArtistsLabel": "아티스트",
+  "listeningRewindAlbumsLabel": "앨범",
+  "listeningRewindDaysLabel": "음악과 함께한 날",
+  "listeningRewindDaysShare": "전체 날의 {percent}%에 음악이 있었어요",
+  "listeningRewindMonthsTitle": "월별 기록",
+  "listeningRewindBiggestMonthLabel": "가장 많이 들은 달",
+  "listeningRewindBiggestMonth": "가장 많이 들은 달은 {month}이었어요",
+  "listeningRewindMonthlyArtistsTitle": "이달의 아티스트",
+  "listeningRewindLoyalTitle": "늘 곁에 있었어요",
+  "listeningRewindLoyalBody": "{days, plural, =1{함께한 날 1일} other{함께한 날 {days}일}}",
+  "listeningRewindFirstSongTitle": "올해가 시작된 곳",
+  "listeningRewindFirstSongBody": "첫 청취일 {date}에 가장 많이 들은 곡",
+  "listeningRewindYearOutroTitle": "그렇게 {year}년이 지나갔어요",
+  "listeningRewindYearOutroBody": "또 한 해도 좋은 음악과 함께하길.",
+  "equalizerTitle": "이퀄라이저",
+  "equalizerDescription": "5–31밴드, 톤 컨트롤, 프리앰프 및 다이내믹스",
+  "equalizerEnable": "이퀄라이저 켜기",
+  "equalizerBands": "밴드",
+  "equalizerTone": "톤 & 스테레오",
+  "equalizerPreamp": "프리앰프",
+  "equalizerBass": "저음",
+  "equalizerTreble": "고음",
+  "equalizerBalance": "밸런스",
+  "equalizerDynamics": "다이내믹스",
+  "equalizerHeadroom": "자동 헤드룸",
+  "equalizerHeadroomDescription": "강조되는 주파수를 위해 입력 게인을 낮춥니다.",
+  "equalizerLimiter": "피크 리미터",
+  "equalizerLimiterDescription": "클리핑을 줄이려고 피크를 −0.5 dBFS 이하로 유지합니다.",
+  "equalizerCompressor": "컴프레서",
+  "equalizerCompressorDescription": "조용한 부분과 큰 부분의 차이를 줄입니다.",
+  "equalizerThreshold": "임계값",
+  "equalizerRatio": "비율",
+  "equalizerAttack": "어택",
+  "equalizerRelease": "릴리스",
+  "equalizerPresets": "프리셋",
+  "equalizerSavePreset": "프리셋 저장",
+  "equalizerPresetName": "프리셋 이름",
+  "equalizerImport": "프리셋 가져오기",
+  "equalizerExport": "프리셋 공유",
+  "equalizerResetTitle": "이퀄라이저를 초기화할까요?",
+  "equalizerResetDescription": "평탄한 곡선과 기본 톤 및 다이내믹스 설정으로 되돌립니다. 저장된 프리셋은 유지됩니다.",
+  "equalizerBypass": "비트 퍼펙트, USB 직접 출력, 독점 Hi-Res 출력은 EQ를 우회합니다. EQ를 쓰려면 비트 퍼펙트 출력을 끄세요.",
+  "equalizerEffectivePreamp": "헤드룸 적용 후 입력 게인",
+  "equalizerDeletePreset": "프리셋 삭제",
+  "equalizerCustom": "사용자 지정",
+  "releaseTypeSingle": "싱글",
+  "@@last_modified": "2026-04-28",
+  "updateLater": "나중에",
+  "@updateLater": {
+    "description": "Update button - dismiss"
+  },
+  "downloadDirectory": "다운로드 디렉토리",
+  "@downloadDirectory": {
+    "description": "Setting - download folder"
+  },
+  "safMigrationTitle": "저장소 업데이트 필요",
+  "@safMigrationTitle": {
+    "description": "Title of SAF migration dialog"
+  },
+  "storageAutomaticFolder": "자동 폴더",
+  "downloadFolderReselect": "폴더 다시 선택",
+  "@downloadFolderReselect": {
+    "description": "Button that reopens the folder picker to restore download folder access"
+  }
+}

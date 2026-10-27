@@ -28,11 +28,14 @@ void main() {
       }
     });
 
-    test('English describes the current feature set', () {
+    test('English and Indonesian describe the current feature set', () {
       final english = lookupAppLocalizations(const Locale('en'));
+      final indonesian = lookupAppLocalizations(const Locale('id'));
 
       expect(english.setupLocalPlayback, contains('offline'));
       expect(english.tutorialLibraryTip2, contains('built-in player'));
+      expect(indonesian.setupLocalPlayback, contains('offline'));
+      expect(indonesian.tutorialLibraryTip2, contains('pemutar bawaan'));
     });
   });
 }

@@ -113,7 +113,7 @@ void main() {
   group('restored settings sanitization', () {
     const restored = AppSettings(
       keepScreenOnLyrics: false,
-
+      locale: 'id',
       isFirstLaunch: false,
       localLibraryEnabled: true,
       localLibraryPath: 'content://tree/library',
@@ -132,7 +132,7 @@ void main() {
       expect(sanitized.localLibraryPath, isEmpty);
       expect(sanitized.localLibraryBookmark, isEmpty);
       expect(sanitized.localLibraryAutoScan, 'off');
-      expect(sanitized.keepScreenOnLyrics, restored.keepScreenOnLyrics);
+      expect(sanitized.locale, restored.locale);
     });
 
     test('persists the sanitized state before bootstrap routing', () async {
