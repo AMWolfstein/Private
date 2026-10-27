@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "android/app/build.gradle.kts": {
-    "mtime": 1793128119.6900525,
-    "seen": 1793129618.0155437,
-    "ast_hash": "a90bd92300888670234845a93ea0b9b4",
+    "mtime": 1793130591.5229957,
+    "seen": 1793130703.248523,
+    "ast_hash": "8af0a9625ffd207a2e74ee976d4956dc",
     "semantic_hash": ""
   },
   "android/app/src/androidTest/java/com/zarz/spotiflac/LookupTestControlProvider.java": {
@@ -5478,9 +5478,9 @@
     "semantic_hash": ""
   },
   "test/music_player_runtime_test.dart": {
-    "mtime": 1792883627.9424891,
-    "seen": 1793129618.0176475,
-    "ast_hash": "a9a26e59a502dc19a3c2179850398f97",
+    "mtime": 1793130618.9195774,
+    "seen": 1793130703.2509048,
+    "ast_hash": "0de17f77a5520157671b9d4247491398",
     "semantic_hash": ""
   },
   "test/native_backup_contract_test.dart": {
@@ -5880,9 +5880,9 @@
     "semantic_hash": "bd95c8d1d8797de5d8f93c1e1f633545"
   },
   "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioService.java": {
-    "mtime": 1793128120.223997,
-    "seen": 1793129618.0178068,
-    "ast_hash": "27b5080bef58e1dc2aa61881da43f44a",
+    "mtime": 1793130591.5234478,
+    "seen": 1793130703.2510533,
+    "ast_hash": "72b82116db07c9a58018e75f5007fd73",
     "semantic_hash": ""
   },
   "third_party/audio_service/android/src/main/java/com/ryanheise/audioservice/AudioServiceActivity.java": {
@@ -6252,9 +6252,9 @@
     "semantic_hash": "d7e4be869fb81741c40d87526c7d67ff"
   },
   "third_party/audio_service/SPOTIFLAC_PATCHES.md": {
-    "mtime": 1792620523.5196257,
-    "seen": 1793129618.0181,
-    "ast_hash": "5d72408e0ba840f8e58cffbdaa73c717",
+    "mtime": 1793130604.2849443,
+    "seen": 1793130703.2514367,
+    "ast_hash": "03155b7be62cab129b3f1d24210be7d0",
     "semantic_hash": ""
   },
   "third_party/audio_service/pubspec.yaml": {
@@ -6630,9 +6630,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793129665.9617367,
-    "seen": 1793129766.783426,
-    "ast_hash": "6f3766f8efb7e119a462c2480dad0986",
+    "mtime": 1793130579.8739042,
+    "seen": 1793130703.251224,
+    "ast_hash": "34016e8c99ff12befb2d77c1a88d5f12",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7110,9 +7110,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1793129665.960399,
-    "seen": 1793129766.7834673,
-    "ast_hash": "eaae44158b6da11d56b98f7567d91c17",
+    "mtime": 1793130579.8722029,
+    "seen": 1793130703.2512908,
+    "ast_hash": "ddd0fdb8eb9c7540e14ccd5e961bebea",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -8463,6 +8463,18 @@
     "mtime": 1793130163.362174,
     "seen": 1793130239.4281418,
     "ast_hash": "73d98eccca36ac4abf6582e5f946430c",
+    "semantic_hash": ""
+  },
+  "android/app/src/androidTest/java/com/ryanheise/audioservice/MediaControlMetadataTest.java": {
+    "mtime": 1793130591.5231693,
+    "seen": 1793130703.2485268,
+    "ast_hash": "733e68e1a56064ab19212b09be0dc26d",
+    "semantic_hash": ""
+  },
+  "test/mini_player_metadata_test.dart": {
+    "mtime": 1793130654.8742032,
+    "seen": 1793130703.2508307,
+    "ast_hash": "b084c12a30347a1c624492274c96815f",
     "semantic_hash": ""
   }
 }
