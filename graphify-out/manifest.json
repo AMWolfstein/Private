@@ -774,33 +774,33 @@
     "semantic_hash": "e03cf5fb99cd2d172b787dff920377a6"
   },
   "lib/screens/settings/about_page.dart": {
-    "mtime": 1792657512.285569,
-    "seen": 1793129618.0158958,
-    "ast_hash": "27bbe63916b5a7769cf8ab0be4ff5eff",
+    "mtime": 1793129687.6518934,
+    "seen": 1793129766.7818737,
+    "ast_hash": "14d6044ff019254896f9ff1f38b977f7",
     "semantic_hash": ""
   },
   "lib/screens/settings/appearance_settings_page.dart": {
-    "mtime": 1793050500.865887,
-    "seen": 1793129618.0158973,
-    "ast_hash": "76bbc6603f97b6fb89361cd9f1f45b13",
+    "mtime": 1793129687.6571462,
+    "seen": 1793129766.7818763,
+    "ast_hash": "d09adb42c92fad09a86ae262e9b84dd2",
     "semantic_hash": ""
   },
   "lib/screens/settings/backup_restore_page.dart": {
-    "mtime": 1793128120.1300526,
-    "seen": 1793129618.0158985,
-    "ast_hash": "f0ee0d1bb376a8e72d92ad56cadc0ff1",
+    "mtime": 1793129687.6526184,
+    "seen": 1793129766.7818775,
+    "ast_hash": "4388607fe11b4a7a4bb92a88b35e8370",
     "semantic_hash": ""
   },
   "lib/screens/settings/cache_management_page.dart": {
-    "mtime": 1793128120.1300526,
-    "seen": 1793129618.0158997,
-    "ast_hash": "181f764c5ee2275e63d02ec163c07ac3",
+    "mtime": 1793129687.6534288,
+    "seen": 1793129766.781879,
+    "ast_hash": "316b114dcb098279350437529a218eca",
     "semantic_hash": ""
   },
   "lib/screens/settings/library_settings_page.dart": {
-    "mtime": 1793128120.1340525,
-    "seen": 1793129618.0159013,
-    "ast_hash": "0f7d9c1a57c976ab46dc59e0fb1f6706",
+    "mtime": 1793129687.6546404,
+    "seen": 1793129766.7818809,
+    "ast_hash": "20971b7afcc16c38537996f6cdf32ccf",
     "semantic_hash": ""
   },
   "lib/screens/settings/log_screen.dart": {
@@ -810,15 +810,15 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/lyrics_settings_page.dart": {
-    "mtime": 1793050500.865887,
-    "seen": 1793129618.015904,
-    "ast_hash": "43d8ac71edc60d6f91cd48ac819ea693",
+    "mtime": 1793129687.6553593,
+    "seen": 1793129766.7818844,
+    "ast_hash": "ca871092aed1e84bcd48dc9c6f842a30",
     "semantic_hash": ""
   },
   "lib/screens/settings/playback_settings_page.dart": {
-    "mtime": 1792620523.4058504,
-    "seen": 1793129618.015909,
-    "ast_hash": "08bb03596712dc928c5024833a9297d3",
+    "mtime": 1793129687.656556,
+    "seen": 1793129766.781889,
+    "ast_hash": "3621a05ad8a3f9aee1d7ab62e24a1fad",
     "semantic_hash": ""
   },
   "lib/screens/settings/profile_settings_page.dart": {
@@ -6060,9 +6060,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1792766791.4836628,
-    "seen": 1793129618.0179179,
-    "ast_hash": "95413eb68c26ebf478a66a5603629cce",
+    "mtime": 1793129665.9624493,
+    "seen": 1793129766.7834206,
+    "ast_hash": "4b1f44078c54c01d91abde47c9878f78",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6630,9 +6630,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793128119.6900525,
-    "seen": 1793129618.0179262,
-    "ast_hash": "2e923038d002a96fcf988fdca8a373e6",
+    "mtime": 1793129665.9617367,
+    "seen": 1793129766.783426,
+    "ast_hash": "6f3766f8efb7e119a462c2480dad0986",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7086,9 +7086,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/metadata_separator_settings_page.dart": {
-    "mtime": 1793128120.1340525,
-    "seen": 1793129618.015907,
-    "ast_hash": "09f6dcda1d1cd980b30478471396fc93",
+    "mtime": 1793129730.4709032,
+    "seen": 1793129766.781887,
+    "ast_hash": "16026bbf66e112a659b56738b2934be5",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/tags/separators.rs": {
@@ -7110,9 +7110,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1792683893.1828809,
-    "seen": 1793129618.0179846,
-    "ast_hash": "4f391f07aa8773b04d04e599c128346e",
+    "mtime": 1793129665.960399,
+    "seen": 1793129766.7834673,
+    "ast_hash": "eaae44158b6da11d56b98f7567d91c17",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/zarz/spotiflac/LibraryScanExitInfo.kt": {
@@ -8433,6 +8433,12 @@
     "mtime": 1793128613.0818152,
     "seen": 1793129618.0177515,
     "ast_hash": "8266dc0f2815b8537b6afd8505c5bf71",
+    "semantic_hash": ""
+  },
+  "test/settings_bottom_inset_test.dart": {
+    "mtime": 1793129712.4381473,
+    "seen": 1793129766.7832901,
+    "ast_hash": "2736c5e9be809295d0ce76d8b2a143ae",
     "semantic_hash": ""
   }
 }
