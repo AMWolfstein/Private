@@ -70,6 +70,19 @@ Newest first. One line per run: date, commit, command, result.
 | 2026-10-20 | `c51713b` | Now Playing parity: ux-auditor + flutter-dart-auditor vs upstream v5.1.1/latest; orchestrator traced PLAY-001 and checked PLAY-003/004 in source (reviewer claim that `audio_info_sheet.dart` exists here was wrong) | 4 open (PLAY-001..004); no tests run |
 | 2026-10-23 | `8e11147` | `/audit ui` re-audit: 5 chunks × (flutter-dart-auditor + ux-auditor), orchestrator source checks of UI-402 (demoted P1→P2), UI-404, UI-407, UI-413, UX-230 and the artist ground rebuild (PERF-605) | 57 new open, 3 resolved (UI-102, UX-103, UX-105); `dart fix --dry-run lib/widgets` (reviewer) nothing to fix; no analyze/tests/device (review only) |
 
+## T14 — 2026-10-27 — source `506b892`, graph `35e4e09`
+
+| Check | Outcome and evidence |
+|---|---|
+| `flutter analyze` | **No issues found!** (15.4 s), exit 0, before and after the test fix. Log: `.dart_tool/t14-analyze.log`. |
+| `flutter test --concurrency=1 --reporter expanded` | `+1783 ~3 -1`, exit 1. The single failure was `library_schema_test.dart` "v19 upgrade removes the legacy lookup summary...": a defect in the new test, not the migration (it expected 8 legacy objects but SQLite also lists the table's auto-index, so 9; the migration assertions themselves passed). Corrected the count and the FTS check (compare the `library_search_fts_*` triggers before and after, because FTS exists only when the host SQLite supports trigram), then reran only that file: **6 passed, 0 failed**. Analysis rerun clean. The full suite was not rerun, per step 6. Log: `.dart_tool/t14-flutter-test.log`. |
+| `bash scripts/check_rust_backend.sh` | Exit 0. Test results 42 + 4 + 2 + 4 + 9 + 6 + 28 + 101 = **196 passed / 0 failed / 1 ignored** (101 is `spotiflac_mobile`, including the schema-20 fixture). Log: `.dart_tool/t14-rust-check.log`. |
+| `SPOTIFLAC_GRADLE_MAX_WORKERS=1 JAVA_TOOL_OPTIONS='-Xmx1g' GRADLE_OPTS='-Dorg.gradle.jvmargs=-Xmx1g -Dorg.gradle.workers.max=1' bash scripts/check_android.sh` | **BUILD SUCCESSFUL** (2m12s), exit 0; 20 app suites, 95 tests = **94 passed / 1 skipped / 0 failed/errors**. `:app:testDebugUnitTest` executed; 269 tasks, 14 executed / 255 up-to-date. This compiles `SafFileOps.kt` after the removal. Existing Gradle deprecation warnings remain. Log: `.dart_tool/t14-android-check.log`. |
+| Reviews | dead-code-hunter + flutter-dart-auditor (DC-DEAD-003/007-014), kotlin-android-auditor with SAF checks (DC-DEAD-001/015) and data-integrity-auditor (schema v20) all PASS, 0 findings. Prompt-only read-only enforcement; no reviewer-run tests. Three earlier implementation subagents failed on a usage limit before finishing; their partial native edits were verified against the discovery map and the schema/test work was redone directly. |
+| `graphify update .` | Exit 0 after source commit `506b892`; graph commit `35e4e09`, five tracked files. JSON validation: **24,107 unique nodes / 45,857 valid edges**. Post-refresh explains find no `shuffleLibrary`, `HistoryMaintenanceUpdate`, `PlayerPlaybackMode` or `TwoFingerPinchListener` node. |
+| Removal proof | Repo-wide searches of lib, test, integration_test, android, third_party and rust crates find no reference to the removed symbols; the only substring hits are the retained `deactivateMediaSession`. Nothing references `logo.svg` or the five deleted README images. |
+| Not run | APK builds/signing, release R8, instrumentation compilation/execution (`integration_test/native_library_staging_test.dart` was edited but is NOT RUN) and device tests. No startup-time or size-saving claim. The unused library `getAll()` definition was left in place (outside the listed findings). |
+
 ## T13 — 2026-10-27 — source `3352354`, graph `f0b1e2b`
 
 | Check | Outcome and evidence |

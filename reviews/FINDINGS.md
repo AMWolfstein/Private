@@ -1,14 +1,5 @@
 ## Open
 
-### DATA-002 [P2] [confidence: medium] [VALIDATED]
-- T8 disposition: recent-album whole-library reads are already gone; localAlbumFor is keyed. The only remaining getAll() caller is unused shuffleLibrary, explicitly assigned to T14 with DC-DEAD-008. This item remains open for that deletion; no unmeasured shuffle optimization is claimed.
-- Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
-- Scenario: tapping a recent album calls unbounded `getAll()`, decodes every library row, then filters by album in Dart; shuffle does the same for all rows.
-- Root cause: `getAll()` has no bound and its ORDER BY matches no index (temp B-tree sort of the whole view).
-- Impact: jank and memory spikes on large libraries for a single album tap.
-- Fix: album tap → `getQueueLocalAlbumTracksByKey` (indexed); shuffle → select only id/file_path; ~20 lines.
-- Evidence: the only two non-test `getAll()` callers.
-
 ### BUG-105 [P3] [confidence: medium] [VALIDATED]
 - Location: `lib/utils/lyrics_metadata_helper.dart:56`, :71-79
 - Scenario: lone `\r` separators are not split; header-only LRC counted as usable. Pattern also strips `[Chorus: X]` headers.
@@ -125,6 +116,16 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Disposition: newly discovered pre-existing defect outside the T12 changed symbol (`_showAutoScanPicker`); recorded, not silently fixed. The corrected Auto scan test explicitly isolates the underlying page at 1x while asserting its root-navigator modal is still 2x. No whole-settings-page large-text pass is claimed.
 
 ## Resolved
+
+### DATA-002 [P2] [confidence: medium] [RESOLVED]
+- Resolution: `506b892` (T14). The last whole-library `getAll()` caller, the unused `MusicPlayerController.shuffleLibrary` (DC-DEAD-008), was deleted; the recent-album read was already keyed in T8. `rg "\.getAll\(\)" lib` finds no remaining caller of the library `getAll()`; its definition is untouched.
+- T8 disposition: recent-album whole-library reads are already gone; localAlbumFor is keyed. The only remaining getAll() caller is unused shuffleLibrary, explicitly assigned to T14 with DC-DEAD-008. This item remains open for that deletion; no unmeasured shuffle optimization is claimed.
+- Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
+- Scenario: tapping a recent album calls unbounded `getAll()`, decodes every library row, then filters by album in Dart; shuffle does the same for all rows.
+- Root cause: `getAll()` has no bound and its ORDER BY matches no index (temp B-tree sort of the whole view).
+- Impact: jank and memory spikes on large libraries for a single album tap.
+- Fix: album tap → `getQueueLocalAlbumTracksByKey` (indexed); shuffle → select only id/file_path; ~20 lines.
+- Evidence: the only two non-test `getAll()` callers.
 
 ### SEC-302 [P3] [confidence: high] [RESOLVED]
 - Resolution: `3352354` (T13). Missing android/key.properties now emits an explicit Gradle warning that release builds use the debug key and require a release keystore before distribution. The Android host check exercised that warning; the source contract pins it. No APK was built or signed.

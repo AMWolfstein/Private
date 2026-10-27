@@ -525,7 +525,7 @@ or exported components.
     Gradle/AGP/Kotlin deprecation warnings remain outside scope. Rust source unchanged (NOTICE only),
     so Rust checks not required. No APK, instrumentation or device execution. Evidence: VERIFICATION.md.
 
-- [ ] **T14: Remove the dead code Codex found**
+- [x] **T14: Remove the dead code Codex found**
   - Source: `reviews/dead-code-2026-10-23/` (all P3, statically validated).
   - Findings: DC-DEAD-001 (unused SAF staged-writer island in `SafFileOps.kt`), DC-DEAD-003
     (six unused README images and `logo.svg`, 1.1 MB), DC-DEAD-007
@@ -541,6 +541,10 @@ or exported components.
     with graphify and grep that no references remain. Delete only tests that exist solely for
     the removed code.
   - Keep `NativeReplayGainPolicy`, public plugin APIs and the FFI, JNI and test seams that
+  - Completed 2026-10-27: code `506b892`, graph `35e4e09`. Removed DC-DEAD-001 (the unused SAF staged-writer island in `SafFileOps.kt`; the live `sanitizeFilename`/`ensureDocumentDir`/`createOrReuseDocumentFile` path and the separate recoverable `writeUriFromPath` writer stay), DC-DEAD-003 (six README images and `logo.svg`; `assets/readme/1.jpg` is a live test fixture and stays), DC-DEAD-007, 008 (closes DATA-002), 009, 010, 012 (only the download-completion island; the live count/page helpers and their four tests stay), 013 (two orphan widgets and their tests), 014 and 015 (two private `AudioService.java` wrappers; `deactivateMediaSession` and every `setActive(true)` path stay). DC-DEAD-011 (`existsInLibrary`) and UI-417 (`_KeepAliveTabPage`) were already gone before T14. `NativeReplayGainPolicy` and the public plugin/FFI/JNI/test seams are untouched.
+  - Also done here, as T9 and T10 deferred it to T14: the write-only `library_lookup_summary` table and its six triggers are dropped by library schema v20 (triggers first, then the table; FTS triggers and `recursive_triggers` unchanged). Rust `SCHEMA_VERSION` follows to 20 atomically because Rust only opens Dart-stamped snapshots. A real v19 fixture (table, index and all six triggers) proves the upgrade and a second run is harmless.
+  - Reviews: dead-code-hunter + flutter-dart-auditor, kotlin-android-auditor (with SAF security checks) and data-integrity-auditor all PASS with no findings; read-only enforcement was prompt-only.
+  - Verification: `flutter analyze` clean. The full serial Flutter run was 1,783 passed / 3 skipped / 1 failed. The failure was a defect in my new v19 test (it expected 8 legacy objects; SQLite also lists the primary-key auto-index, so 9, and it guessed the wrong FTS trigger prefix). Fixed the test only and reran its file: 6 passed, 0 failed; the full suite was not rerun, per step 6. `check_rust_backend.sh` exit 0: 196 passed / 1 ignored. `check_android.sh` BUILD SUCCESSFUL: 20 suites, 95 tests = 94 passed / 1 skipped / 0 failed. No APK, instrumentation compilation/execution or device run. Evidence: VERIFICATION.md.
     Codex lists as retained.
 
 - [ ] **T15: Rename the app to `com.amwolfstein.sistrum` and replace the logo**
