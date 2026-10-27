@@ -73,7 +73,7 @@ pub(super) fn read(reader: &mut (impl Read + Seek)) -> Result<AudioMetadata, Str
             }
         }
     }
-    if metadata.title.is_empty() && metadata.artist.is_empty() {
+    if metadata == AudioMetadata::default() {
         Err("no ID3 tags found".into())
     } else {
         Ok(metadata)
@@ -536,6 +536,20 @@ fn v1(reader: &mut (impl Read + Seek)) -> Result<AudioMetadata, String> {
         genre: GENRES.get(data[127] as usize).unwrap_or(&"").to_string(),
         ..AudioMetadata::default()
     })
+}
+
+/// The length of a whole ID3v2 tag, footer included, from its 10-byte header,
+/// or None when the header is not ID3v2. Some taggers put one in front of a
+/// FLAC or ADTS stream, and players skip it.
+pub(crate) fn v2_tag_length(header: &[u8]) -> Option<u64> {
+    if header.len() < 10
+        || &header[..3] != b"ID3"
+        || header[6..10].iter().any(|value| *value >= 128)
+    {
+        return None;
+    }
+    let footer = if header[5] & 0x10 != 0 { 10 } else { 0 };
+    Some(10 + syncsafe(&header[6..10]) + footer)
 }
 
 fn syncsafe(data: &[u8]) -> u64 {

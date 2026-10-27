@@ -30,17 +30,33 @@ pub(super) fn flac_with_cover(
     Ok(metadata)
 }
 
+/// Locate the FLAC marker after an optional ID3v2 tag, leaving the reader at
+/// the first metadata block. Writers retain the prefix outside this region.
+pub(super) fn flac_start(reader: &mut (impl Read + Seek)) -> Result<u64, String> {
+    let mut signature = [0; 4];
+    exact(reader, &mut signature)?;
+    let mut start = 0;
+    if &signature[..3] == b"ID3" {
+        let mut header = [0; 10];
+        header[..4].copy_from_slice(&signature);
+        exact(reader, &mut header[4..])?;
+        start = id3::v2_tag_length(&header).ok_or("invalid ID3v2 header before fLaC")?;
+        seek(reader, SeekFrom::Start(start))?;
+        exact(reader, &mut signature)?;
+    }
+    if &signature != b"fLaC" {
+        return Err("fLaC head incorrect".into());
+    }
+    Ok(start)
+}
+
 fn flac_inner(
     reader: &mut (impl Read + Seek),
     mut cover: Option<&mut Option<CoverArt>>,
 ) -> Result<AudioMetadata, String> {
-    let mut signature = [0; 4];
-    exact(reader, &mut signature)?;
-    if &signature != b"fLaC" {
-        return Err("fLaC head incorrect".into());
-    }
+    let start = flac_start(reader)?;
     let end = seek(reader, SeekFrom::End(0))?;
-    seek(reader, SeekFrom::Start(4))?;
+    seek(reader, SeekFrom::Start(start + 4))?;
     let mut metadata = AudioMetadata::default();
     let mut found = false;
     let mut front_cover = false;
