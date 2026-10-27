@@ -60,7 +60,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         kLegacyGlassClarityKey: ?clarity,
         'app_settings': jsonEncode({
-          'keepScreenOnLyrics': false,
+          'locale': 'ar',
           kLegacyForceBackdropBlurKey: ?force,
           if (force == null) 'isFirstLaunch': false,
         }),
@@ -70,11 +70,7 @@ void main() {
       final saved = blob(prefs);
       expect(saved['glassQuality'], quality.name);
       expect(saved['glassClarityLevel'], level);
-      expect(
-        saved['keepScreenOnLyrics'],
-        isFalse,
-        reason: 'other settings survive',
-      );
+      expect(saved['locale'], 'ar', reason: 'other settings survive');
       expect(saved.containsKey(kLegacyForceBackdropBlurKey), isFalse);
       expect(prefs.containsKey(kLegacyGlassClarityKey), isFalse);
       final settings = loadBootstrapSettings(prefs);
@@ -139,7 +135,7 @@ void main() {
       addTearDown(container.dispose);
       final notifier = container.read(settingsProvider.notifier);
       await notifier.ensureLoaded();
-      final backup = const AppSettings(keepScreenOnLyrics: false).toJson()
+      final backup = const AppSettings(locale: 'de').toJson()
         ..remove('glassQuality')
         ..remove('glassClarityLevel')
         ..[kLegacyForceBackdropBlurKey] = force;
@@ -151,7 +147,7 @@ void main() {
         (quality.name, level),
         reason: 'clarity $clarity, force $force',
       );
-      expect(restored.keepScreenOnLyrics, isFalse);
+      expect(restored.locale, 'de');
     }
   });
 

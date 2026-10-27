@@ -1,0 +1,1997 @@
+{
+  "@@locale": "pt",
+  "libraryGenres": "Géneros",
+  "appearancePlayerView": "Visualização do player",
+  "appearancePlayerViewNormal": "Visualização normal",
+  "appearancePlayerViewImmersive": "Visualização imersiva",
+  "settingsPlaybackSubtitle": "Player, volume, AutoMix e saída de áudio",
+  "sectionVolumeAndTransitions": "Volume e transições",
+  "sectionAudioOutput": "Saída de áudio",
+  "usbBitPerfect": "Áudio hi-res e bit-perfect",
+  "usbBitPerfectDescription": "Preserva a precisão da origem em saídas compatíveis. Escolha USB direto ou AAudio exclusivo abaixo; caso contrário, a saída USB do Android exige Android 14 ou posterior. Aplica-se a partir da próxima faixa, sem AutoMix nem normalização. O volume do sistema pode não controlar o USB direto.",
+  "usbHardwareVolume": "Volume de hardware do DAC",
+  "usbVolumeWarningTitle": "Verifique o volume de escuta",
+  "usbVolumeWarning": "O áudio USB direto pode ficar muito mais alto do que a reprodução normal, e os botões de volume do telemóvel podem não o controlar. Reduza o volume do seu DAC ou amplificador antes de começar. Quando suportado, o SpotiFLAC define o DAC para no máximo −40 dB ao ligar; isto não garante um nível de escuta seguro em todos os amplificadores ou auscultadores.",
+  "usbVolumeAccept": "Compreendo",
+  "usbVolumeUnavailable": "A reprodução foi pausada porque este DAC não tem controlo de volume de hardware verificado. Reduza o volume do DAC ou do amplificador, ative a saída de volume fixo se necessário e selecione a faixa novamente.",
+  "usbFixedVolume": "Permitir saída USB de volume fixo",
+  "usbFixedVolumeDescription": "Para DACs sem controlo de volume acessível à app. Mantenha desativado para auscultadores USB sem controlo de volume próprio. Aplica-se a partir da próxima faixa.",
+  "usbFixedVolumeWarning": "A app não consegue reduzir o volume nesta saída. O áudio pode começar no nível máximo, e o controlo de volume do telemóvel não ajudará. Continue apenas depois de reduzir o volume no seu DAC ou amplificador externo. Não ative esta opção para auscultadores sem controlo de volume próprio.",
+  "dapExclusive": "DAP hi-res (AAudio exclusivo)",
+  "dapExclusiveDescription": "Usa Oboe/AAudio na taxa e precisão originais da faixa para PCM de FLAC/WAV. Requer Android 8.1 ou posterior e hardware compatível. O acesso exclusivo é verificado; formatos indisponíveis usam a reprodução normal. DSD requer o driver USB direto. Aplica-se a partir da próxima faixa.",
+  "dapExclusiveUnavailable": "O acesso exclusivo AAudio não está disponível para esta faixa e para a saída atual. A usar reprodução normal. Para um DAC USB, experimente o driver USB direto.",
+  "usbDirect": "Driver USB direto",
+  "usbDirectDescription": "Usa áudio USB exclusivo para FLAC/WAV, DSF/DFF e DSD WavPack, com a permissão USB do Android. DSD nativo requer um DAC compatível reconhecido. Outros formatos PCM usam a reprodução normal. Aplica-se a partir da próxima faixa.",
+  "usbDsdOverPcm": "DSD sobre PCM (DoP)",
+  "usbDsdOverPcmDescription": "Ative apenas se o seu DAC suportar DoP explicitamente. Envia DSF/DFF e DSD WavPack dentro de uma portadora PCM quando o DSD nativo não estiver disponível. Um dispositivo incompatível pode reproduzir ruído; mantenha desativado para auscultadores USB comuns.",
+  "usbDsdUnsupported": "Este formato DSD ou o DAC ligado não é suportado. A reprodução foi interrompida.",
+  "usbPermissionDenied": "A permissão USB não foi concedida. A usar reprodução normal.",
+  "usbBitPerfectPending": "A aguardar a próxima faixa e uma saída USB compatível.",
+  "usbBitPerfectNoDevice": "Nenhum DAC USB ligado. A usar a saída de áudio normal.",
+  "usbBitPerfectFallback": "Este dispositivo ou formato de áudio não suporta saída bit-perfect. A usar reprodução normal.",
+  "usbBitPerfectRouteChanged": "A rota de áudio USB mudou. A reprodução foi pausada; selecione uma faixa para reconectar.",
+  "nowPlayingVolume": "Volume",
+  "appearanceAccentRed": "Vermelho (predefinido)",
+  "appearanceAccentOrange": "Laranja",
+  "appearanceAccentGreen": "Verde",
+  "appearanceAccentTeal": "Verde-azulado",
+  "appearanceAccentBlue": "Azul",
+  "appearanceAccentPurple": "Roxo",
+  "appearanceAccentPink": "Rosa",
+  "appearanceGlassClarity": "Transparência do vidro",
+  "appearanceGlassOutlines": "Contornos de vidro",
+  "appearanceGlassOutlinesSubtitle": "Mostra uma borda clara ao redor do vidro Mornye. Desativar não altera o próprio vidro.",
+  "appearanceGlassClaritySubtitle": "Ajuste a transparência nos menus e na navegação do Mornye. O contraste do texto é preservado.",
+  "appearanceGlassTinted": "Tingido",
+  "appearanceGlassClear": "Transparente",
+  "appearanceGlassClearPerformance": "Vidro muito transparente pode consumir mais energia e parecer menos fluido em dispositivos mais antigos. Reduza a transparência se necessário.",
+  "appearanceGlassQuality": "Qualidade do vidro",
+  "appearanceGlassQualityAuto": "Automático",
+  "appearanceGlassQualityLite": "Leve",
+  "appearanceGlassQualityFull": "Completo",
+  "appearanceGlassQualityOff": "Desativado",
+  "appearanceGlassQualitySubtitle": "Automático escolhe Completo, Leve ou Desativado para este dispositivo. Leve não usa refração para poupar energia.",
+  "appearanceGlassLevelFrosted": "Fosco",
+  "appearanceGlassLevelSoft": "Suave",
+  "appearanceGlassLevelBalanced": "Equilibrado",
+  "appearanceGlassLevelClear": "Transparente",
+  "appearanceGlassLevelCrystal": "Cristal",
+  "appearanceGlassClarityOff": "O vidro está desativado. Escolha Automático, Leve ou Completo para ajustar a transparência.",
+  "appearanceGlassClarityDeviceOpaque": "O vidro é opaco neste dispositivo. Escolha Leve ou Completo para ajustar a transparência.",
+  "appearanceGlassClarityContrast": "O sistema pede mais contraste, por isso o vidro permanece opaco. Escolha Leve ou Completo para usar o vidro mesmo assim; o contraste do texto é preservado.",
+  "appearanceGlassAutoMeasured": "Medido neste dispositivo: Automático usa {quality}.",
+  "appearanceGlassClarityAutoFrosted": "O modo Automático mediu este dispositivo e usa Fosco. Escolha Leve ou Completo para definir a transparência.",
+  "appearanceUseSystemFont": "Usar fonte do sistema",
+  "appearanceUseSystemFontSubtitle": "Usa a tipografia predefinida do seu dispositivo para o texto da app.",
+  "appName": "SpotiFLAC Mobile",
+  "@appName": {
+    "description": "App name - DO NOT TRANSLATE"
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom navigation - Home tab"
+  },
+  "navLibrary": "Library",
+  "@navLibrary": {
+    "description": "Bottom navigation - Library tab"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Home screen title"
+  },
+  "historyFilterAll": "All",
+  "@historyFilterAll": {
+    "description": "Filter chip - show all items"
+  },
+  "historyFilterSingles": "Singles",
+  "@historyFilterSingles": {
+    "description": "Filter chip - show singles only"
+  },
+  "homeLatestReleases": "Lançamentos recentes na sua biblioteca",
+  "artistPopular": "Populares",
+  "libraryRecentlyAdded": "Adicionados recentemente",
+  "librarySearchHint": "Pesquise na sua biblioteca",
+  "homeLibraryDisabled": "Ative a Biblioteca Local para mostrar a sua música aqui.",
+  "homeChooseLibraryFolder": "Escolha uma pasta de música nas definições da Biblioteca Local.",
+  "homeLibraryEmpty": "Adicione música às pastas da biblioteca e depois analise a biblioteca.",
+  "libraryEmptyCollection": "A sua música aparecerá aqui",
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  "settingsAppearance": "Appearance",
+  "@settingsAppearance": {
+    "description": "Settings section - visual customization"
+  },
+  "settingsAbout": "About",
+  "@settingsAbout": {
+    "description": "Settings section - app info"
+  },
+  "appearanceTitle": "Appearance",
+  "@appearanceTitle": {
+    "description": "Appearance settings page title"
+  },
+  "appearanceThemeSystem": "System",
+  "@appearanceThemeSystem": {
+    "description": "Follow system theme"
+  },
+  "appearanceThemeLight": "Light",
+  "@appearanceThemeLight": {
+    "description": "Light theme"
+  },
+  "appearanceThemeDark": "Dark",
+  "@appearanceThemeDark": {
+    "description": "Dark theme"
+  },
+  "trackRemoveReplayGain": "Remover ReplayGain",
+  "replayGainRemoving": "A remover ReplayGain...",
+  "replayGainRemoveConfirmMessage": "Remover as tags ReplayGain de faixa e de álbum de {count} faixa(s)? O áudio, as capas e os outros metadados serão preservados.",
+  "selectionRemoveReplayGainCount": "Remover RG ({count})",
+  "replayGainRemoveBatchSuccess": "ReplayGain removido de {success} de {total} faixas",
+  "selectionReplayGainCount": "ReplayGain ({count})",
+  "replayGainBatchConfirmTitle": "Adicionar ReplayGain",
+  "replayGainBatchConfirmMessage": "Analisar a sonoridade e gravar as tags ReplayGain em {count} faixa(s)?",
+  "replayGainBatchAnalyzing": "A analisar ReplayGain...",
+  "replayGainBatchSuccess": "ReplayGain adicionado a {success} de {total} faixas",
+  "replayGainUnsupportedDecoder": "Algumas faixas não puderam ser analisadas porque o codec de áudio não é suportado pelo descodificador ReplayGain. Os seus ficheiros não foram alterados.",
+  "metadataSeparators": "Separadores de tags",
+  "metadataSeparatorsDescription": "Escolha como os valores separados por vírgula ou ponto e vírgula são unidos ao guardar tags com Editar metadados. Separadores de artista personalizados gravam uma única tag unida. Nomes que contenham & ou / são preservados.",
+  "metadataSeparatorSource": "Manter formatação original",
+  "metadataSeparatorComma": "Vírgula (,)",
+  "metadataSeparatorSemicolon": "Ponto e vírgula (;)",
+  "metadataSeparatorSlash": "Barra (/)",
+  "metadataSeparatorCustom": "Separador personalizado",
+  "metadataSeparatorPreview": "Pré-visualização",
+  "metadataSeparatorInvalid": "Use de 1 a 16 caracteres, sem quebras de linha nem caracteres de controlo.",
+  "optionsDetailedLogging": "Detailed Logging",
+  "@optionsDetailedLogging": {
+    "description": "Enable verbose logs for debugging"
+  },
+  "optionsDetailedLoggingOn": "Detailed logs are being recorded",
+  "@optionsDetailedLoggingOn": {
+    "description": "Status when logging enabled"
+  },
+  "optionsDetailedLoggingOff": "Enable for bug reports",
+  "@optionsDetailedLoggingOff": {
+    "description": "Status when logging disabled"
+  },
+  "extensionsDisabled": "Disabled",
+  "@extensionsDisabled": {
+    "description": "Extension status - inactive"
+  },
+  "aboutTitle": "About",
+  "@aboutTitle": {
+    "description": "About page title"
+  },
+  "aboutApp": "App",
+  "@aboutApp": {
+    "description": "Section for app info"
+  },
+  "aboutVersion": "Version",
+  "@aboutVersion": {
+    "description": "Version info label"
+  },
+  "aboutDeveloperOptions": "Opções de programador",
+  "aboutDeveloperOptionsEnabled": "Opções de programador ativadas",
+  "aboutPerformanceHud": "HUD de desempenho",
+  "aboutPerformanceHudSubtitle": "Mostra os tempos de construção e de rasterização dos quadros em todos os ecrãs.",
+  "aboutHideDeveloperOptions": "Ocultar opções de programador",
+  "aboutBarSampler": "Amostragem da barra inferior",
+  "aboutBarSamplerSubtitle": "Faz a barra inferior acompanhar o brilho da página por trás dela. Desative para medir o custo.",
+  "aboutHeaderBandBlur": "Desfoque da banda do cabeçalho",
+  "aboutHeaderBandBlurSubtitle": "Desfoca a banda atrás dos cabeçalhos ao deslocar. Desative para medir o custo; a tonalidade mantém-se.",
+  "aboutRemeasureGlass": "Voltar a medir o vidro automático",
+  "aboutRemeasureGlassSubtitle": "O modo Automático volta a medir os tempos de quadro e escolhe Completo, Leve ou Leve Fosco.",
+  "aboutAppDescription": "Reproduza e organize a sua música local, com edição de metadados e letras.",
+  "trackMetadataShare": "Share",
+  "@trackMetadataShare": {
+    "description": "Action button - share track"
+  },
+  "setupGrantPermission": "Grant Permission",
+  "@setupGrantPermission": {
+    "description": "Button to request permission"
+  },
+  "setupStorageAccessRequired": "Storage Access Required",
+  "@setupStorageAccessRequired": {
+    "description": "Title when storage access needed"
+  },
+  "setupStorageAccessMessageAndroid11": "O Android 11+ exige acesso ao armazenamento para analisar e editar música na pasta escolhida.",
+  "setupOpenSettings": "Open Settings",
+  "@setupOpenSettings": {
+    "description": "Button to open system settings"
+  },
+  "setupPermissionDeniedMessage": "Permission denied. Please grant all permissions to continue.",
+  "@setupPermissionDeniedMessage": {
+    "description": "Error when permission denied"
+  },
+  "setupPermissionRequired": "{permissionType} Permission Required",
+  "@setupPermissionRequired": {
+    "description": "Generic permission required title",
+    "placeholders": {
+      "permissionType": {
+        "type": "String",
+        "description": "Type of permission (Storage/Notification)"
+      }
+    }
+  },
+  "setupPermissionRequiredMessage": "{permissionType} permission is required for the best experience. You can change this later in Settings.",
+  "@setupPermissionRequiredMessage": {
+    "description": "Generic permission required message",
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "setupStorageGranted": "Storage Permission Granted!",
+  "@setupStorageGranted": {
+    "description": "Success message for storage permission"
+  },
+  "setupStorageRequired": "Storage Permission Required",
+  "@setupStorageRequired": {
+    "description": "Title when storage permission needed"
+  },
+  "setupStorageDescription": "Permita o acesso ao armazenamento para analisar e editar os seus ficheiros de música locais.",
+  "setupNotificationGranted": "Notification Permission Granted!",
+  "@setupNotificationGranted": {
+    "description": "Success message for notification permission"
+  },
+  "setupNotificationEnable": "Enable Notifications",
+  "@setupNotificationEnable": {
+    "description": "Button to enable notifications"
+  },
+  "setupSelectFolder": "Select Folder",
+  "@setupSelectFolder": {
+    "description": "Button to select folder"
+  },
+  "setupEnableNotifications": "Enable Notifications",
+  "@setupEnableNotifications": {
+    "description": "Button to enable notifications"
+  },
+  "setupNotificationBackgroundDescription": "Permita controlos de reprodução e notificações de progresso para as análises locais.",
+  "setupSkipForNow": "Skip for now",
+  "@setupSkipForNow": {
+    "description": "Skip button text"
+  },
+  "setupNext": "Next",
+  "@setupNext": {
+    "description": "Next button text"
+  },
+  "setupGetStarted": "Get Started",
+  "@setupGetStarted": {
+    "description": "Final setup button"
+  },
+  "setupAllowAccessToManageFiles": "Please enable \"Allow access to manage all files\" in the next screen.",
+  "@setupAllowAccessToManageFiles": {
+    "description": "Instruction for file access permission"
+  },
+  "setupLanguageTitle": "Escolha o idioma",
+  "setupLanguageDescription": "Selecione o idioma preferido para a app. Pode alterá-lo mais tarde nas Definições.",
+  "setupLanguageSystemDefault": "Predefinição do sistema",
+  "dialogCancel": "Cancel",
+  "@dialogCancel": {
+    "description": "Dialog button - cancel action"
+  },
+  "dialogSave": "Save",
+  "@dialogSave": {
+    "description": "Dialog button - save changes"
+  },
+  "dialogDelete": "Delete",
+  "@dialogDelete": {
+    "description": "Dialog button - delete item"
+  },
+  "dialogRetry": "Retry",
+  "@dialogRetry": {
+    "description": "Dialog button - retry action"
+  },
+  "dialogClear": "Clear",
+  "@dialogClear": {
+    "description": "Dialog button - clear items"
+  },
+  "dialogDone": "Done",
+  "@dialogDone": {
+    "description": "Dialog button - action completed"
+  },
+  "dialogRemove": "Remove",
+  "@dialogRemove": {
+    "description": "Dialog button - remove item"
+  },
+  "dialogDeleteSelectedTitle": "Delete Selected",
+  "@dialogDeleteSelectedTitle": {
+    "description": "Dialog title - delete selected items"
+  },
+  "dialogDeleteSelectedMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from history?\n\nThis will also delete the files from storage.",
+  "@dialogDeleteSelectedMessage": {
+    "description": "Dialog message - delete selected tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionExportM3u": "Exportar como M3U8",
+  "collectionExportM3uDone": "Exportadas {exported} de {total} faixas",
+  "collectionExportM3uNone": "Nenhum ficheiro de áudio local para exportar",
+  "collectionExportM3uFailed": "A exportação falhou",
+  "libraryReviewDuplicates": "Rever duplicados",
+  "libraryReviewDuplicatesSubtitle": "Encontre faixas guardadas mais de uma vez",
+  "duplicatesTitle": "Duplicados",
+  "duplicatesEmpty": "Nenhuma faixa duplicada encontrada.",
+  "duplicatesKeepBest": "Manter a melhor",
+  "duplicatesKeepBestAll": "Manter a melhor de todas",
+  "duplicatesKeepBestAllMessage": "Manter a melhor cópia de {groupCount} {groupCount, plural, =1{faixa} other{faixas}} e eliminar {count} {count, plural, =1{cópia de qualidade inferior} other{cópias de qualidade inferior}}?\n\nOs ficheiros eliminados serão removidos do armazenamento.",
+  "duplicatesKeepBestMessage": "Eliminar {count} cópias de qualidade inferior de \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "Eliminar esta cópia de \"{trackName}\"?",
+  "snackbarDeletedTracks": "Deleted {count} {count, plural, =1{track} other{tracks}}",
+  "@snackbarDeletedTracks": {
+    "description": "Snackbar - tracks deleted",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarCannotOpenFile": "Cannot open file: {error}",
+  "@snackbarCannotOpenFile": {
+    "description": "Snackbar - file open error",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "snackbarFileNotFound": "File not found",
+  "@snackbarFileNotFound": {
+    "description": "Snackbar - file doesn't exist"
+  },
+  "errorRateLimited": "Rate Limited",
+  "@errorRateLimited": {
+    "description": "Error title - too many requests"
+  },
+  "errorRateLimitedMessage": "Too many requests. Please wait a moment before searching again.",
+  "@errorRateLimitedMessage": {
+    "description": "Error message - rate limit explanation"
+  },
+  "searchEmptyResultSubtitle": "Tente outra palavra-chave",
+  "actionPause": "Pause",
+  "@actionPause": {
+    "description": "Action button - pause download"
+  },
+  "actionResume": "Resume",
+  "@actionResume": {
+    "description": "Action button - resume download"
+  },
+  "actionCancel": "Cancel",
+  "@actionCancel": {
+    "description": "Action button - cancel operation"
+  },
+  "actionSelectAll": "Select All",
+  "@actionSelectAll": {
+    "description": "Action button - select all items"
+  },
+  "actionDeselect": "Deselect",
+  "@actionDeselect": {
+    "description": "Action button - deselect all"
+  },
+  "selectionSelected": "{count} selected",
+  "@selectionSelected": {
+    "description": "Selection count indicator",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionAllSelected": "All tracks selected",
+  "@selectionAllSelected": {
+    "description": "Status - all items selected"
+  },
+  "selectionSelectToDelete": "Select tracks to delete",
+  "@selectionSelectToDelete": {
+    "description": "Placeholder when nothing selected"
+  },
+  "searchSongs": "Songs",
+  "@searchSongs": {
+    "description": "Search result category - songs"
+  },
+  "searchArtists": "Artists",
+  "@searchArtists": {
+    "description": "Search result category - artists"
+  },
+  "searchAlbums": "Albums",
+  "@searchAlbums": {
+    "description": "Search result category - albums"
+  },
+  "searchPlaylists": "Playlists",
+  "@searchPlaylists": {
+    "description": "Search result category - playlists"
+  },
+  "searchSortTitle": "Sort Results",
+  "@searchSortTitle": {
+    "description": "Bottom sheet title for search sort options"
+  },
+  "searchSortTitleAZ": "Title (A-Z)",
+  "@searchSortTitleAZ": {
+    "description": "Sort option - title ascending"
+  },
+  "searchSortTitleZA": "Title (Z-A)",
+  "@searchSortTitleZA": {
+    "description": "Sort option - title descending"
+  },
+  "searchSortArtistAZ": "Artist (A-Z)",
+  "@searchSortArtistAZ": {
+    "description": "Sort option - artist ascending"
+  },
+  "searchSortArtistZA": "Artist (Z-A)",
+  "@searchSortArtistZA": {
+    "description": "Sort option - artist descending"
+  },
+  "searchSortDateOldest": "Release Date (Oldest)",
+  "@searchSortDateOldest": {
+    "description": "Sort option - oldest release first"
+  },
+  "searchSortDateNewest": "Release Date (Newest)",
+  "@searchSortDateNewest": {
+    "description": "Sort option - newest release first"
+  },
+  "tooltipPlay": "Play",
+  "@tooltipPlay": {
+    "description": "Tooltip - play button"
+  },
+  "logTitle": "Logs",
+  "@logTitle": {
+    "description": "Logs screen title"
+  },
+  "logCopied": "Logs copied to clipboard",
+  "@logCopied": {
+    "description": "Snackbar - logs copied"
+  },
+  "logSearchHint": "Search logs...",
+  "@logSearchHint": {
+    "description": "Log search placeholder"
+  },
+  "logFilterLevel": "Level",
+  "@logFilterLevel": {
+    "description": "Filter by log level"
+  },
+  "logFilterSection": "Filter",
+  "@logFilterSection": {
+    "description": "Filter section title"
+  },
+  "logShareLogs": "Share logs",
+  "@logShareLogs": {
+    "description": "Share button tooltip"
+  },
+  "logClearLogs": "Clear logs",
+  "@logClearLogs": {
+    "description": "Clear button tooltip"
+  },
+  "logClearLogsTitle": "Clear Logs",
+  "@logClearLogsTitle": {
+    "description": "Clear logs dialog title"
+  },
+  "logClearLogsMessage": "Are you sure you want to clear all logs?",
+  "@logClearLogsMessage": {
+    "description": "Clear logs confirmation message"
+  },
+  "logFilterBySeverity": "Filter logs by severity",
+  "@logFilterBySeverity": {
+    "description": "Filter dialog title"
+  },
+  "logNoLogsYet": "No logs yet",
+  "@logNoLogsYet": {
+    "description": "Empty state title"
+  },
+  "logNoLogsYetSubtitle": "Logs will appear here as you use the app",
+  "@logNoLogsYetSubtitle": {
+    "description": "Empty state subtitle"
+  },
+  "logEntriesFiltered": "Entries ({count} filtered)",
+  "@logEntriesFiltered": {
+    "description": "Log count with filter active",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logEntries": "Entries ({count})",
+  "@logEntries": {
+    "description": "Total log count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sectionLyrics": "Lyrics",
+  "@sectionLyrics": {
+    "description": "Settings section header"
+  },
+  "lyricsKeepScreenOn": "Manter o ecrã ligado ao ver as letras",
+  "lyricsKeepScreenOnSubtitle": "Impede que o ecrã desligue enquanto as letras estiverem abertas, mesmo com a reprodução pausada.",
+  "sectionColor": "Color",
+  "@sectionColor": {
+    "description": "Settings section header"
+  },
+  "sectionTheme": "Theme",
+  "@sectionTheme": {
+    "description": "Settings section header"
+  },
+  "sectionLanguage": "Language",
+  "@sectionLanguage": {
+    "description": "Settings section header for language selection"
+  },
+  "appearanceLanguage": "App Language",
+  "@appearanceLanguage": {
+    "description": "Setting title for language selection"
+  },
+  "settingsAppearanceSubtitle": "Theme, colors, display",
+  "@settingsAppearanceSubtitle": {
+    "description": "Appearance settings description"
+  },
+  "settingsLogsSubtitle": "View app logs for debugging",
+  "@settingsLogsSubtitle": {
+    "description": "Logs settings description"
+  },
+  "pressBackAgainToExit": "Press back again to exit",
+  "@pressBackAgainToExit": {
+    "description": "Exit confirmation message"
+  },
+  "tracksCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "@tracksCount": {
+    "description": "Track count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trackMetadata": "Metadata",
+  "@trackMetadata": {
+    "description": "Tab title - track metadata"
+  },
+  "trackLyrics": "Lyrics",
+  "@trackLyrics": {
+    "description": "Tab title - lyrics"
+  },
+  "trackAlbum": "Album",
+  "@trackAlbum": {
+    "description": "Metadata label - album name"
+  },
+  "trackCopiedToClipboard": "Copied to clipboard",
+  "@trackCopiedToClipboard": {
+    "description": "Snackbar - content copied"
+  },
+  "snackbarDeleteTracksFailed": "Não foi possível eliminar {count} {count, plural, =1{faixa} other{faixas}}. Verifique o acesso ao armazenamento e tente novamente.",
+  "dateDaysAgo": "{count} days ago",
+  "@dateDaysAgo": {
+    "description": "Relative date - days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearanceHeroAnimations": "Animações de transição",
+  "appearanceHeroAnimationsSubtitle": "Faz as capas deslizarem entre ecrãs, por exemplo ao abrir o player",
+  "downloadedAlbumDeleteSelected": "Delete Selected",
+  "@downloadedAlbumDeleteSelected": {
+    "description": "Button - delete selected tracks"
+  },
+  "downloadedAlbumDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
+  "@downloadedAlbumDeleteMessage": {
+    "description": "Delete confirmation with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadedAlbumTapToSelect": "Tap tracks to select",
+  "@downloadedAlbumTapToSelect": {
+    "description": "Selection hint"
+  },
+  "downloadedAlbumDeleteCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "@downloadedAlbumDeleteCount": {
+    "description": "Delete button text with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadedAlbumSelectToDelete": "Select tracks to delete",
+  "@downloadedAlbumSelectToDelete": {
+    "description": "Placeholder when nothing selected"
+  },
+  "downloadedAlbumDiscHeader": "Disc {discNumber}",
+  "@downloadedAlbumDiscHeader": {
+    "description": "Header for disc separator in multi-disc albums",
+    "placeholders": {
+      "discNumber": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "settingsLocalLibrary": "Local Library",
+  "@settingsLocalLibrary": {
+    "description": "Settings menu item - local library"
+  },
+  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "@settingsLocalLibrarySubtitle": {
+    "description": "Subtitle for local library settings"
+  },
+  "settingsCache": "Storage & Cache",
+  "@settingsCache": {
+    "description": "Settings menu item - cache management"
+  },
+  "settingsCacheSubtitle": "View size and clear cached data",
+  "@settingsCacheSubtitle": {
+    "description": "Subtitle for cache management menu"
+  },
+  "libraryTitle": "Local Library",
+  "@libraryTitle": {
+    "description": "Library settings page title"
+  },
+  "libraryScanSettings": "Scan Settings",
+  "@libraryScanSettings": {
+    "description": "Section header for scan settings"
+  },
+  "libraryEnableLocalLibrary": "Enable Local Library",
+  "@libraryEnableLocalLibrary": {
+    "description": "Toggle to enable library scanning"
+  },
+  "libraryEnableLocalLibrarySubtitle": "Scan and track your existing music",
+  "@libraryEnableLocalLibrarySubtitle": {
+    "description": "Subtitle for enable toggle"
+  },
+  "libraryFolderHint": "Tap to select folder",
+  "@libraryFolderHint": {
+    "description": "Placeholder when no folder selected"
+  },
+  "libraryAddFolder": "Adicionar pasta à biblioteca",
+  "libraryAddFolderSubtitle": "Armazenamento interno, cartão SD, SSD ou outra unidade externa",
+  "librarySourceOffline": "Offline. Volte a ligar o armazenamento para restaurar estas faixas",
+  "librarySourceDisabled": "Desativada",
+  "librarySourceScanCount": "{scanned} de {total} ficheiros analisados ({progress}%)",
+  "libraryExternalStorage": "Armazenamento externo",
+  "libraryRemoveFolder": "Remover pasta da biblioteca",
+  "libraryRemoveFolderMessage": "Remover esta pasta e as suas faixas indexadas do SpotiFLAC Mobile? Os ficheiros de áudio do armazenamento não serão eliminados.",
+  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "@libraryShowDuplicateIndicator": {
+    "description": "Toggle for duplicate indicator in search"
+  },
+  "libraryShowDuplicateIndicatorSubtitle": "Show when searching for existing tracks",
+  "@libraryShowDuplicateIndicatorSubtitle": {
+    "description": "Subtitle for duplicate indicator toggle"
+  },
+  "libraryAutoScan": "Auto Scan",
+  "@libraryAutoScan": {
+    "description": "Setting for automatic library scanning"
+  },
+  "libraryAutoScanSubtitle": "Automatically scan your library for new files",
+  "@libraryAutoScanSubtitle": {
+    "description": "Subtitle for auto scan setting"
+  },
+  "libraryAutoScanOff": "Off",
+  "@libraryAutoScanOff": {
+    "description": "Auto scan disabled"
+  },
+  "libraryAutoScanOnOpen": "Every app open",
+  "@libraryAutoScanOnOpen": {
+    "description": "Auto scan when app opens"
+  },
+  "libraryAutoScanDaily": "Daily",
+  "@libraryAutoScanDaily": {
+    "description": "Auto scan once per day"
+  },
+  "libraryAutoScanWeekly": "Weekly",
+  "@libraryAutoScanWeekly": {
+    "description": "Auto scan once per week"
+  },
+  "libraryActions": "Actions",
+  "@libraryActions": {
+    "description": "Section header for library actions"
+  },
+  "libraryScan": "Scan Library",
+  "@libraryScan": {
+    "description": "Button to start library scan"
+  },
+  "libraryScanSubtitle": "Scan for audio files",
+  "@libraryScanSubtitle": {
+    "description": "Subtitle for scan button"
+  },
+  "libraryScanSelectFolderFirst": "Select a folder first",
+  "@libraryScanSelectFolderFirst": {
+    "description": "Message when trying to scan without folder"
+  },
+  "libraryCleanupMissingFiles": "Cleanup Missing Files",
+  "@libraryCleanupMissingFiles": {
+    "description": "Button to remove entries for missing files"
+  },
+  "libraryCleanupMissingFilesSubtitle": "Remove entries for files that no longer exist",
+  "@libraryCleanupMissingFilesSubtitle": {
+    "description": "Subtitle for cleanup button"
+  },
+  "libraryClear": "Clear Library",
+  "@libraryClear": {
+    "description": "Button to clear all library entries"
+  },
+  "libraryClearSubtitle": "Remove all scanned tracks",
+  "@libraryClearSubtitle": {
+    "description": "Subtitle for clear button"
+  },
+  "libraryClearConfirmTitle": "Clear Library",
+  "@libraryClearConfirmTitle": {
+    "description": "Dialog title for clear confirmation"
+  },
+  "libraryClearConfirmMessage": "This will remove all scanned tracks from your library. Your actual music files will not be deleted.",
+  "@libraryClearConfirmMessage": {
+    "description": "Dialog message for clear confirmation"
+  },
+  "libraryAbout": "About Local Library",
+  "@libraryAbout": {
+    "description": "Section header for about info"
+  },
+  "libraryAboutDescription": "Analise as suas pastas de música e navegue pelas tags guardadas nos ficheiros de áudio locais. Suporta FLAC, ALAC, M4A, MP3, Opus, OGG, WAV, AIFF e APE.",
+  "libraryTracksUnit": "{count, plural, =1{track} other{tracks}}",
+  "@libraryTracksUnit": {
+    "description": "Unit label for tracks count (without the number itself)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryFilesUnit": "{count, plural, =1{file} other{files}}",
+  "@libraryFilesUnit": {
+    "description": "Unit label for files count during library scanning",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryLastScanned": "Last scanned: {time}",
+  "@libraryLastScanned": {
+    "description": "Last scan time display",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryLastScannedNever": "Never",
+  "@libraryLastScannedNever": {
+    "description": "Shown when library has never been scanned"
+  },
+  "libraryScanning": "Scanning...",
+  "@libraryScanning": {
+    "description": "Status during scan"
+  },
+  "libraryScanFinalizing": "Finalizing library...",
+  "@libraryScanFinalizing": {
+    "description": "Status shown after file scanning finishes but library persistence is still running"
+  },
+  "libraryScanPaused": "Análise pausada",
+  "libraryScanProgress": "{progress}% of {total} files",
+  "@libraryScanProgress": {
+    "description": "Scan progress display",
+    "placeholders": {
+      "progress": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryRemovedMissingFiles": "Removed {count} missing files from library",
+  "@libraryRemovedMissingFiles": {
+    "description": "Snackbar after cleanup",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryCleared": "Library cleared",
+  "@libraryCleared": {
+    "description": "Snackbar after clearing library"
+  },
+  "libraryStorageAccessRequired": "Storage Access Required",
+  "@libraryStorageAccessRequired": {
+    "description": "Dialog title for storage permission"
+  },
+  "libraryStorageAccessMessage": "SpotiFLAC needs storage access to scan your music library. Please grant permission in settings.",
+  "@libraryStorageAccessMessage": {
+    "description": "Dialog message for storage permission"
+  },
+  "libraryFilterAll": "All",
+  "@libraryFilterAll": {
+    "description": "Filter chip - show all library items"
+  },
+  "libraryFilterDownloaded": "Ficheiros locais",
+  "libraryFilterLocal": "Local",
+  "@libraryFilterLocal": {
+    "description": "Filter chip - show only local library items"
+  },
+  "libraryFilterTitle": "Filters",
+  "@libraryFilterTitle": {
+    "description": "Filter bottom sheet title"
+  },
+  "libraryFilterReset": "Reset",
+  "@libraryFilterReset": {
+    "description": "Reset all filters button"
+  },
+  "libraryFilterApply": "Apply",
+  "@libraryFilterApply": {
+    "description": "Apply filters button"
+  },
+  "libraryFilterSource": "Source",
+  "@libraryFilterSource": {
+    "description": "Filter section - source type"
+  },
+  "libraryFilterQuality": "Quality",
+  "@libraryFilterQuality": {
+    "description": "Filter section - audio quality"
+  },
+  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "@libraryFilterQualityHiRes": {
+    "description": "Filter option - high resolution audio"
+  },
+  "libraryFilterQualityCD": "CD (16bit)",
+  "@libraryFilterQualityCD": {
+    "description": "Filter option - CD quality audio"
+  },
+  "libraryFilterQualityLossy": "Lossy",
+  "@libraryFilterQualityLossy": {
+    "description": "Filter option - lossy compressed audio"
+  },
+  "libraryFilterFormat": "Format",
+  "@libraryFilterFormat": {
+    "description": "Filter section - file format"
+  },
+  "libraryFilterMetadata": "Metadata",
+  "@libraryFilterMetadata": {
+    "description": "Filter section - metadata completeness"
+  },
+  "libraryFilterMetadataComplete": "Complete metadata",
+  "@libraryFilterMetadataComplete": {
+    "description": "Filter option - items with complete metadata"
+  },
+  "libraryFilterMetadataMissingAny": "Missing any metadata",
+  "@libraryFilterMetadataMissingAny": {
+    "description": "Filter option - items missing any tracked metadata field"
+  },
+  "libraryFilterMetadataMissingYear": "Missing year",
+  "@libraryFilterMetadataMissingYear": {
+    "description": "Filter option - items missing release year/date"
+  },
+  "libraryFilterMetadataMissingGenre": "Missing genre",
+  "@libraryFilterMetadataMissingGenre": {
+    "description": "Filter option - items missing genre"
+  },
+  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
+  "@libraryFilterMetadataMissingAlbumArtist": {
+    "description": "Filter option - items missing album artist"
+  },
+  "libraryFilterSort": "Sort",
+  "@libraryFilterSort": {
+    "description": "Filter section - sort order"
+  },
+  "libraryFilterSortLatest": "Latest",
+  "@libraryFilterSortLatest": {
+    "description": "Sort option - newest first"
+  },
+  "libraryFilterSortOldest": "Oldest",
+  "@libraryFilterSortOldest": {
+    "description": "Sort option - oldest first"
+  },
+  "libraryFilterSortAlbumAsc": "Album (A-Z)",
+  "@libraryFilterSortAlbumAsc": {
+    "description": "Sort option - album ascending"
+  },
+  "libraryFilterSortAlbumDesc": "Album (Z-A)",
+  "@libraryFilterSortAlbumDesc": {
+    "description": "Sort option - album descending"
+  },
+  "libraryFilterSortGenreAsc": "Genre (A-Z)",
+  "@libraryFilterSortGenreAsc": {
+    "description": "Sort option - genre ascending"
+  },
+  "libraryFilterSortGenreDesc": "Genre (Z-A)",
+  "@libraryFilterSortGenreDesc": {
+    "description": "Sort option - genre descending"
+  },
+  "timeJustNow": "Just now",
+  "@timeJustNow": {
+    "description": "Relative time - less than a minute ago"
+  },
+  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "@timeMinutesAgo": {
+    "description": "Relative time - minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "@timeHoursAgo": {
+    "description": "Relative time - hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tutorialSearchTitle": "Finding Music",
+  "@tutorialSearchTitle": {
+    "description": "Tutorial search page title"
+  },
+  "tutorialSearchDesc": "Pesquise músicas, artistas e álbuns locais depois de analisar a biblioteca.",
+  "tutorialLibraryTitle": "Your Library",
+  "@tutorialLibraryTitle": {
+    "description": "Tutorial library page title"
+  },
+  "tutorialLibraryDesc": "A sua música analisada fica organizada em músicas, artistas, álbuns e listas de reprodução.",
+  "tutorialLibraryTip1": "Navegue e pesquise faixas já presentes no seu dispositivo",
+  "tutorialLibraryTip2": "Tap any track to play it with your music player",
+  "@tutorialLibraryTip2": {
+    "description": "Tutorial library tip 2"
+  },
+  "tutorialLibraryTip3": "Switch between list and grid view for better browsing",
+  "@tutorialLibraryTip3": {
+    "description": "Tutorial library tip 3"
+  },
+  "tutorialSettingsTitle": "Customize Your Experience",
+  "@tutorialSettingsTitle": {
+    "description": "Tutorial settings page title"
+  },
+  "tutorialSettingsDesc": "Ajuste a reprodução, a análise da biblioteca, as letras, a aparência do Mornye e o armazenamento local.",
+  "tutorialSettingsTip1": "Gerir pastas de música e o acesso aos ficheiros locais",
+  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "@tutorialSettingsTip2": {
+    "description": "Tutorial settings tip 2"
+  },
+  "tutorialSettingsTip3": "Customize app theme and appearance",
+  "@tutorialSettingsTip3": {
+    "description": "Tutorial settings tip 3"
+  },
+  "tutorialReadyMessage": "Escolha uma pasta de música, analise a biblioteca e comece a ouvir.",
+  "libraryForceFullScan": "Force Full Scan",
+  "@libraryForceFullScan": {
+    "description": "Button to force a complete rescan of library"
+  },
+  "libraryForceFullScanSubtitle": "Rescan all files, ignoring cache",
+  "@libraryForceFullScanSubtitle": {
+    "description": "Subtitle for force full scan button"
+  },
+  "cacheTitle": "Storage & Cache",
+  "@cacheTitle": {
+    "description": "Cache management page title"
+  },
+  "cacheSummaryTitle": "Cache overview",
+  "@cacheSummaryTitle": {
+    "description": "Heading for cache summary card"
+  },
+  "cacheSummarySubtitle": "Limpar a cache mantém os seus ficheiros de música originais.",
+  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "@cacheEstimatedTotal": {
+    "description": "Total cache size shown in summary",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheSectionStorage": "Cached Data",
+  "@cacheSectionStorage": {
+    "description": "Section header for cache entries"
+  },
+  "cacheSectionMaintenance": "Maintenance",
+  "@cacheSectionMaintenance": {
+    "description": "Section header for cleanup actions"
+  },
+  "cacheAppDirectory": "App cache directory",
+  "@cacheAppDirectory": {
+    "description": "Cache item title for app cache directory"
+  },
+  "cacheAppDirectoryDesc": "HTTP responses, WebView data, and other temporary app data.",
+  "@cacheAppDirectoryDesc": {
+    "description": "Description of what app cache directory contains"
+  },
+  "cacheTempDirectory": "Temporary directory",
+  "@cacheTempDirectory": {
+    "description": "Cache item title for temporary files directory"
+  },
+  "cacheTempDirectoryDesc": "Ficheiros temporários locais de capas e processamento de áudio.",
+  "cacheCoverImage": "Cover image cache",
+  "@cacheCoverImage": {
+    "description": "Cache item title for persistent cover images"
+  },
+  "cacheCoverImageDesc": "Cache de imagens desativada de versões anteriores. As capas locais permanecem na cache da biblioteca.",
+  "cacheLibraryCover": "Library cover cache",
+  "@cacheLibraryCover": {
+    "description": "Cache item title for local library cover art images"
+  },
+  "cacheLibraryCoverDesc": "Cover art extracted from local music files. Will re-extract on next scan.",
+  "@cacheLibraryCoverDesc": {
+    "description": "Description of what library cover cache contains"
+  },
+  "libraryPlaybackNormalization": "Normalização de volume",
+  "libraryPlaybackNormalizationSubtitle": "Equilibra a sonoridade entre faixas usando as suas tags ReplayGain ou R128, quando existirem",
+  "cacheAudioAnalysis": "Cache de análise de áudio",
+  "cacheAudioAnalysisDesc": "Espectrogramas e resultados de análise guardados. Serão analisados novamente na próxima abertura.",
+  "cacheCleanupUnusedDesc": "Remove registos da biblioteca cujos ficheiros locais estão em falta.",
+  "cacheNoData": "No cached data",
+  "@cacheNoData": {
+    "description": "Label when cache category has no data"
+  },
+  "cacheSizeWithFiles": "{size} in {count} files",
+  "@cacheSizeWithFiles": {
+    "description": "Cache size and file count",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cacheClearSuccess": "Cleared: {target}",
+  "@cacheClearSuccess": {
+    "description": "Snackbar after clearing selected cache",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheClearConfirmTitle": "Clear cache?",
+  "@cacheClearConfirmTitle": {
+    "description": "Dialog title before clearing one cache category"
+  },
+  "cacheClearConfirmMessage": "Limpar os dados em cache de {target}? Os ficheiros de música originais serão mantidos.",
+  "cacheClearAllConfirmTitle": "Clear all cache?",
+  "@cacheClearAllConfirmTitle": {
+    "description": "Dialog title before clearing all caches"
+  },
+  "cacheClearAllConfirmMessage": "Limpar todas as categorias de cache desta página? Os ficheiros de música originais serão mantidos.",
+  "cacheClearAll": "Clear all cache",
+  "@cacheClearAll": {
+    "description": "Button label to clear all caches"
+  },
+  "cacheCleanupUnused": "Cleanup unused data",
+  "@cacheCleanupUnused": {
+    "description": "Action title for cleaning unused entries"
+  },
+  "cacheCleanupUnusedSubtitle": "Remove do índice da biblioteca os ficheiros locais em falta",
+  "cacheRefreshStats": "Refresh stats",
+  "@cacheRefreshStats": {
+    "description": "Button label to refresh cache statistics"
+  },
+  "trackEditMetadata": "Edit Metadata",
+  "@trackEditMetadata": {
+    "description": "Menu action - edit embedded metadata"
+  },
+  "audioBitrate": "Bitrate",
+  "@audioBitrate": {
+    "description": "Label for bitrate selection"
+  },
+  "actionCreate": "Create",
+  "@actionCreate": {
+    "description": "Generic action button - create"
+  },
+  "collectionLoved": "Músicas favoritas",
+  "@collectionLoved": {
+    "description": "Custom folder for favorite tracks"
+  },
+  "collectionFavoriteArtists": "Artistas favoritos",
+  "collectionPlaylist": "Playlist",
+  "@collectionPlaylist": {
+    "description": "Single playlist label"
+  },
+  "collectionAddToPlaylist": "Add to playlist",
+  "@collectionAddToPlaylist": {
+    "description": "Action to add a track to user playlist"
+  },
+  "collectionCreatePlaylist": "Create playlist",
+  "@collectionCreatePlaylist": {
+    "description": "Action to create a new playlist"
+  },
+  "collectionNoPlaylistsYet": "No playlists yet",
+  "@collectionNoPlaylistsYet": {
+    "description": "Empty state title when user has no playlists"
+  },
+  "collectionPlaylistTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "@collectionPlaylistTracks": {
+    "description": "Track count label for custom playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionAddedToPlaylist": "Added to \"{playlistName}\"",
+  "@collectionAddedToPlaylist": {
+    "description": "Snackbar after adding track to playlist",
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionAlreadyInPlaylist": "Already in \"{playlistName}\"",
+  "@collectionAlreadyInPlaylist": {
+    "description": "Snackbar when track already exists in playlist",
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionPlaylistNameHint": "Playlist name",
+  "@collectionPlaylistNameHint": {
+    "description": "Hint text for playlist name input"
+  },
+  "collectionPlaylistNameRequired": "Playlist name is required",
+  "@collectionPlaylistNameRequired": {
+    "description": "Validation error for empty playlist name"
+  },
+  "collectionRenamePlaylist": "Rename playlist",
+  "@collectionRenamePlaylist": {
+    "description": "Action to rename playlist"
+  },
+  "collectionDeletePlaylist": "Delete playlist",
+  "@collectionDeletePlaylist": {
+    "description": "Action to delete playlist"
+  },
+  "collectionPlaylistRenamed": "Playlist renamed",
+  "@collectionPlaylistRenamed": {
+    "description": "Snackbar after renaming playlist"
+  },
+  "collectionRemovedTracks": "{count, plural, =1{1 faixa removida} other{{count} faixas removidas}}",
+  "collectionLovedEmptyTitle": "No loved songs yet",
+  "@collectionLovedEmptyTitle": {
+    "description": "Loved empty state title"
+  },
+  "collectionLovedEmptySubtitle": "Tap love on tracks to keep your favorites",
+  "@collectionLovedEmptySubtitle": {
+    "description": "Loved empty state subtitle"
+  },
+  "collectionFavoriteArtistsEmptyTitle": "Ainda não há artistas favoritos",
+  "collectionFavoriteArtistsEmptySubtitle": "Toque no coração na página de um artista para o guardar aqui",
+  "collectionPlaylistEmptyTitle": "Playlist is empty",
+  "@collectionPlaylistEmptyTitle": {
+    "description": "Playlist empty state title"
+  },
+  "collectionPlaylistEmptySubtitle": "Long-press + on any track to add it here",
+  "@collectionPlaylistEmptySubtitle": {
+    "description": "Playlist empty state subtitle"
+  },
+  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "@collectionRemoveFromPlaylist": {
+    "description": "Tooltip for removing track from playlist"
+  },
+  "collectionRemoveFromFolder": "Remove from folder",
+  "@collectionRemoveFromFolder": {
+    "description": "Tooltip for removing track from Loved folder"
+  },
+  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removido dos Artistas favoritos",
+  "trackOptionAddToLoved": "Add to Loved",
+  "@trackOptionAddToLoved": {
+    "description": "Bottom sheet action label - add track to loved folder"
+  },
+  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "@trackOptionRemoveFromLoved": {
+    "description": "Bottom sheet action label - remove track from loved folder"
+  },
+  "artistOptionRemoveFromFavorites": "Remover dos Artistas favoritos",
+  "collectionPlaylistChangeCover": "Change cover image",
+  "@collectionPlaylistChangeCover": {
+    "description": "Bottom sheet action to pick a custom cover image for a playlist"
+  },
+  "collectionPlaylistRemoveCover": "Remove cover image",
+  "@collectionPlaylistRemoveCover": {
+    "description": "Bottom sheet action to remove custom cover image from a playlist"
+  },
+  "settingsBackup": "Cópia de segurança e restauro",
+  "settingsBackupSubtitle": "Mova a sua biblioteca, o histórico e as definições para um novo dispositivo",
+  "backupTitle": "Cópia de segurança e restauro",
+  "backupExportSectionTitle": "Criar cópia de segurança",
+  "backupExportSectionDescription": "Guarde definições, perfis locais, coleções e registos opcionais de bibliotecas antigas num ficheiro de cópia de segurança.",
+  "backupExportButton": "Criar ficheiro de cópia de segurança",
+  "backupImportSectionTitle": "Restaurar cópia de segurança",
+  "backupImportSectionDescription": "Escolha um ficheiro de cópia de segurança para restaurar os seus dados. Isto substitui as definições, o histórico e a biblioteca atuais neste dispositivo.",
+  "backupImportButton": "Escolher ficheiro de cópia de segurança",
+  "backupCreated": "Cópia de segurança criada",
+  "backupCreateFailed": "Falha ao criar a cópia de segurança",
+  "backupTooLarge": "Esta cópia de segurança seria grande demais para ser restaurada. Inclua menos categorias e tente novamente.",
+  "backupRestorePartiallyFailed": "Falha ao restaurar a cópia de segurança. Já restaurado: {categories}",
+  "backupListeningStatisticsExcluded": "As estatísticas de audição e as contagens de reproduções não estão incluídas.",
+  "backupRestoreConfirmTitle": "Restaurar esta cópia de segurança?",
+  "backupRestoreConfirmButton": "Restaurar",
+  "backupRestored": "Cópia de segurança restaurada com sucesso",
+  "backupRestoreFailed": "Falha ao restaurar a cópia de segurança",
+  "backupInvalidFile": "Este ficheiro não é uma cópia de segurança válida do SpotiFLAC",
+  "backupRestoreRestartHint": "Reinicie a app para garantir que todas as alterações são aplicadas.",
+  "backupContentsTitle": "Conteúdo da cópia de segurança",
+  "backupSettingsOnly": "Apenas definições",
+  "backupSelectHistory": "Registos antigos da biblioteca",
+  "backupSelectCollections": "Coleções da biblioteca",
+  "backupSelectCollectionsDescription": "Faixas com gosto, artistas favoritos, listas de reprodução e capas de listas.",
+  "backupSelectedExportDescription": "Guarde as categorias selecionadas num ficheiro de cópia de segurança. Os ficheiros de áudio não são incluídos.",
+  "backupSelectAtLeastOne": "Selecione pelo menos uma categoria para criar uma cópia de segurança.",
+  "backupSelectedRestoreMessage": "Serão restauradas apenas as categorias listadas abaixo. As categorias não incluídas nesta cópia de segurança permanecerão inalteradas. A restauração pode substituir dados existentes e não pode ser desfeita.",
+  "backupContentsSettings": "Definições da app",
+  "backupContentsHistory": "{count} {count, plural, =1{item do histórico} other{itens do histórico}}",
+  "backupContentsLiked": "{count} {count, plural, =1{faixa com gosto} other{faixas com gosto}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 lista de reprodução} other{{count} listas de reprodução}}",
+  "backupContentsArtists": "{count, plural, =1{1 artista favorito} other{{count} artistas favoritos}}",
+  "snackbarRemovedTracksFromLoved": "Removed {count} tracks from Loved",
+  "@snackbarRemovedTracksFromLoved": {
+    "description": "Snackbar after removing multiple tracks from Loved folder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarAddedTracksToLoved": "Added {count} tracks to Loved",
+  "@snackbarAddedTracksToLoved": {
+    "description": "Snackbar after adding multiple tracks to Loved folder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeGoToAlbum": "Go to Album",
+  "@homeGoToAlbum": {
+    "description": "Context menu item to navigate to the album page"
+  },
+  "snackbarMetadataSaved": "Metadata saved successfully",
+  "@snackbarMetadataSaved": {
+    "description": "Snackbar after successfully saving track metadata"
+  },
+  "snackbarError": "Error: {error}",
+  "@snackbarError": {
+    "description": "Generic error snackbar with error detail",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noTracksFoundForAlbum": "No tracks found for this album",
+  "@noTracksFoundForAlbum": {
+    "description": "Empty state message when an album has no tracks"
+  },
+  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "@snackbarUnsupportedAudioFormat": {
+    "description": "Snackbar when the audio format is not supported for the requested operation"
+  },
+  "cacheRefresh": "Refresh",
+  "@cacheRefresh": {
+    "description": "Tooltip for refresh button on cache management page"
+  },
+  "editMetadataFieldTitle": "Title",
+  "@editMetadataFieldTitle": {
+    "description": "Chip label for title field in auto-fill selector"
+  },
+  "editMetadataFieldArtist": "Artist",
+  "@editMetadataFieldArtist": {
+    "description": "Chip label for artist field in auto-fill selector"
+  },
+  "editMetadataFieldAlbum": "Album",
+  "@editMetadataFieldAlbum": {
+    "description": "Chip label for album field in auto-fill selector"
+  },
+  "editMetadataFieldAlbumArtist": "Album Artist",
+  "@editMetadataFieldAlbumArtist": {
+    "description": "Chip label for album artist field in auto-fill selector"
+  },
+  "editMetadataFieldDate": "Date",
+  "@editMetadataFieldDate": {
+    "description": "Chip label for date field in auto-fill selector"
+  },
+  "editMetadataFieldTrackNum": "Track #",
+  "@editMetadataFieldTrackNum": {
+    "description": "Chip label for track number field in auto-fill selector"
+  },
+  "editMetadataFieldDiscNum": "Disc #",
+  "@editMetadataFieldDiscNum": {
+    "description": "Chip label for disc number field in auto-fill selector"
+  },
+  "editMetadataFieldGenre": "Genre",
+  "@editMetadataFieldGenre": {
+    "description": "Chip label for genre field in auto-fill selector"
+  },
+  "editMetadataFieldIsrc": "ISRC",
+  "@editMetadataFieldIsrc": {
+    "description": "Chip label for ISRC field in auto-fill selector"
+  },
+  "editMetadataFieldLabel": "Label",
+  "@editMetadataFieldLabel": {
+    "description": "Chip label for label field in auto-fill selector"
+  },
+  "editMetadataFieldCopyright": "Copyright",
+  "@editMetadataFieldCopyright": {
+    "description": "Chip label for copyright field in auto-fill selector"
+  },
+  "editMetadataFieldCover": "Cover Art",
+  "@editMetadataFieldCover": {
+    "description": "Chip label for cover art field in auto-fill selector"
+  },
+  "queueFilteringIndicator": "Filtering...",
+  "@queueFilteringIndicator": {
+    "description": "Shown while filter results are being computed"
+  },
+  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "@queueTrackCount": {
+    "description": "Track count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueAlbumCount": "{count, plural, =1{1 album} other{{count} albums}}",
+  "@queueAlbumCount": {
+    "description": "Album count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEmptyAlbums": "Nenhum álbum local",
+  "queueEmptyAlbumsSubtitle": "Analise uma pasta de música para adicionar álbuns",
+  "queueEmptySingles": "Nenhum single local",
+  "queueEmptySinglesSubtitle": "As faixas avulsas analisadas aparecem aqui",
+  "queuePlaylistCount": "{count, plural, =1{1 lista de reprodução} other{{count} listas de reprodução}}",
+  "queueEmptyPlaylistsSubtitle": "Crie uma lista de reprodução para organizar as suas faixas",
+  "queueEmptyHistory": "Nenhuma faixa local",
+  "queueEmptyHistorySubtitle": "Analise uma pasta de música para preencher a biblioteca",
+  "selectionAllPlaylistsSelected": "All playlists selected",
+  "@selectionAllPlaylistsSelected": {
+    "description": "Shown when all playlists are selected in selection mode"
+  },
+  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "@selectionTapPlaylistsToSelect": {
+    "description": "Hint shown in playlist selection mode"
+  },
+  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "@selectionSelectPlaylistsToDelete": {
+    "description": "Hint shown when no playlists are selected for deletion"
+  },
+  "audioAnalysisTitle": "Audio Quality Analysis",
+  "@audioAnalysisTitle": {
+    "description": "Title for audio analysis section"
+  },
+  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "@audioAnalysisDescription": {
+    "description": "Description for audio analysis tap-to-analyze prompt"
+  },
+  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "@audioAnalysisAnalyzing": {
+    "description": "Loading text while analyzing audio"
+  },
+  "audioAnalysisSampleRate": "Sample Rate",
+  "@audioAnalysisSampleRate": {
+    "description": "Sample rate metric label"
+  },
+  "audioAnalysisCodec": "Codec",
+  "audioAnalysisContainer": "Contentor",
+  "audioAnalysisDecodedFormat": "Formato descodificado",
+  "audioAnalysisBitDepth": "Bit Depth",
+  "@audioAnalysisBitDepth": {
+    "description": "Bit depth metric label"
+  },
+  "audioAnalysisChannels": "Channels",
+  "@audioAnalysisChannels": {
+    "description": "Channels metric label"
+  },
+  "audioAnalysisDuration": "Duration",
+  "@audioAnalysisDuration": {
+    "description": "Duration metric label"
+  },
+  "audioAnalysisNyquist": "Nyquist",
+  "@audioAnalysisNyquist": {
+    "description": "Nyquist frequency metric label"
+  },
+  "audioAnalysisFileSize": "Size",
+  "@audioAnalysisFileSize": {
+    "description": "File size metric label"
+  },
+  "audioAnalysisDynamicRange": "Dynamic Range",
+  "@audioAnalysisDynamicRange": {
+    "description": "Dynamic range metric label"
+  },
+  "audioAnalysisPeak": "Peak",
+  "@audioAnalysisPeak": {
+    "description": "Peak amplitude metric label"
+  },
+  "audioAnalysisRms": "RMS",
+  "@audioAnalysisRms": {
+    "description": "RMS level metric label"
+  },
+  "audioAnalysisLufs": "LUFS",
+  "audioAnalysisTruePeak": "Pico real",
+  "audioAnalysisClipping": "Corte",
+  "audioAnalysisNoClipping": "Sem corte",
+  "audioAnalysisSpectralCutoff": "Corte espetral",
+  "audioAnalysisCutoffNotDetected": "Não detetado",
+  "audioAnalysisChannelStats": "Estatísticas por canal",
+  "audioAnalysisSamples": "Samples",
+  "@audioAnalysisSamples": {
+    "description": "Total samples metric label"
+  },
+  "audioAnalysisRescan": "Re-analyze",
+  "@audioAnalysisRescan": {
+    "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
+  },
+  "audioAnalysisSaveSpectrogram": "Guardar espectrograma",
+  "audioAnalysisSpectrogramSaved": "Espectrograma guardado em {fileName}",
+  "audioAnalysisSpectrogramSaveFailed": "Não foi possível guardar o espectrograma",
+  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "@audioAnalysisRescanning": {
+    "description": "Loading text while audio is being re-analyzed after an explicit refresh"
+  },
+  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "@metadataSaveFailedFfmpeg": {
+    "description": "Snackbar error when FFmpeg fails to write metadata"
+  },
+  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "@metadataSaveFailedStorage": {
+    "description": "Snackbar error when writing metadata file back to storage fails"
+  },
+  "notifScanningLibrary": "Scanning local library",
+  "@notifScanningLibrary": {
+    "description": "Notification title while scanning local library"
+  },
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "@notifLibraryScanProgressWithTotal": {
+    "description": "Notification body for library scan progress when total is known",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "@notifLibraryScanProgressNoTotal": {
+    "description": "Notification body for library scan progress when total is unknown",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanComplete": "Library scan complete",
+  "@notifLibraryScanComplete": {
+    "description": "Notification title when library scan finishes"
+  },
+  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "@notifLibraryScanCompleteBody": {
+    "description": "Notification body for library scan complete - number of indexed tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanExcluded": "{count} excluded",
+  "@notifLibraryScanExcluded": {
+    "description": "Library scan complete suffix - excluded track count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanErrors": "{count} errors",
+  "@notifLibraryScanErrors": {
+    "description": "Library scan complete suffix - error count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanFailed": "Library scan failed",
+  "@notifLibraryScanFailed": {
+    "description": "Notification title when library scan fails"
+  },
+  "notifLibraryScanInterruptedBody": "A análise anterior da biblioteca foi interrompida. Analise a pasta novamente para continuar. As suas faixas indexadas continuam disponíveis.",
+  "notifLibraryScanCancelled": "Library scan cancelled",
+  "@notifLibraryScanCancelled": {
+    "description": "Notification title when library scan is cancelled by the user"
+  },
+  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "@notifLibraryScanStopped": {
+    "description": "Notification body when library scan is cancelled"
+  },
+  "notifLibraryScanPaused": "Análise da biblioteca pausada",
+  "notifLibraryScanPausedBody": "{count} ficheiros analisados. Retome nas definições da Biblioteca Local para continuar a partir daqui.",
+  "homeSearchHintDefault": "Cole um URL suportado ou pesquise...",
+  "tutorialSearchHint": "Cole ou pesquise...",
+  "trackCoverNoEmbeddedArt": "Nenhuma capa incorporada encontrada",
+  "trackCoverReplace": "Substituir capa",
+  "trackCoverPick": "Escolher capa",
+  "trackCoverClearSelected": "Limpar capa selecionada",
+  "trackCoverCurrent": "Capa atual",
+  "trackCoverSelected": "Capa selecionada",
+  "trackCoverReplaceNotice": "A capa selecionada substituirá a capa incorporada atual quando tocar em Guardar.",
+  "trackCoverResolution": "Resolução da capa",
+  "trackCoverResolutionHint": "Define a maior dimensão ao guardar. Ampliar não acrescenta detalhe à imagem.",
+  "trackCoverResizeFailed": "Não foi possível redimensionar a imagem da capa. Experimente outro tamanho ou outra imagem.",
+  "nowPlayingRepeatOff": "Repetição desativada",
+  "nowPlayingRepeatAll": "Repetir tudo",
+  "nowPlayingRepeatOne": "Repetir uma",
+  "logAutoScrollOn": "Deslocamento automático ATIVADO",
+  "logAutoScrollOff": "Deslocamento automático DESATIVADO",
+  "logCopyLogs": "Copiar registos",
+  "logClearSearch": "Limpar pesquisa",
+  "clickableInformationUnavailable": "Informação de {type} indisponível",
+  "a11yOpenItemCount": "Abrir {title}, {count} {count, plural, =1{item} other{itens}}",
+  "a11yOpenAlbumByArtistTrackCount": "Abrir o álbum {albumName} de {artistName}, {trackCount} faixas",
+  "settingsLyrics": "Lyrics",
+  "@settingsLyrics": {
+    "description": "Settings menu item - lyrics settings"
+  },
+  "settingsLyricsSubtitle": "Letras locais, modo de guardar e tamanho do texto",
+  "editMetadataFieldDateHint": "AAAA-MM-DD ou AAAA",
+  "editMetadataFieldTrackTotal": "Total de faixas",
+  "editMetadataFieldDiscTotal": "Total de discos",
+  "editMetadataFieldComposer": "Compositor",
+  "editMetadataFieldComment": "Comentário",
+  "trackAlbumType": "Tipo de lançamento",
+  "editMetadataFieldAlbumTypeHint": "Álbum, single, EP, compilação...",
+  "editMetadataFieldExplicit": "Explícito",
+  "editMetadataFieldExplicitHint": "Marcar esta faixa como contendo conteúdo explícito",
+  "metadataExplicitValue": "Explícito",
+  "editMetadataFieldUpc": "UPC / Código de barras",
+  "editMetadataFieldUpcHint": "UPC, EAN ou GTIN numérico",
+  "editMetadataAdvanced": "Avançado",
+  "libraryFilterMetadataMissingTrackNumber": "Número da faixa em falta",
+  "libraryFilterMetadataMissingDiscNumber": "Número do disco em falta",
+  "libraryFilterMetadataMissingArtist": "Artista em falta",
+  "libraryFilterMetadataIncorrectIsrcFormat": "Formato ISRC incorreto",
+  "libraryFilterMetadataMissingIsrc": "ISRC em falta",
+  "libraryFilterMetadataMissingLabel": "Editora em falta",
+  "collectionDeletePlaylistsMessage": "Eliminar {count} {count, plural, =1{lista de reprodução} other{listas de reprodução}}?",
+  "collectionPlaylistsDeleted": "{count} {count, plural, =1{lista de reprodução eliminada} other{listas de reprodução eliminadas}}",
+  "collectionAddedTracksToPlaylist": "Adicionada(s) {count} {count, plural, =1{faixa} other{faixas}} a {playlistName}",
+  "collectionAddedTracksToPlaylistWithExisting": "Adicionada(s) {count} {count, plural, =1{faixa} other{faixas}} a {playlistName} ({alreadyCount} já estavam na lista de reprodução)",
+  "itemCount": "{count} {count, plural, =1{item} other{itens}}",
+  "selectionDeleteTracksCount": "Eliminar {count} {count, plural, =1{faixa} other{faixas}}",
+  "a11ySelectTrack": "Selecionar faixa",
+  "a11yDeselectTrack": "Desmarcar faixa",
+  "a11yPlayTrackByArtist": "Reproduzir {trackName} de {artistName}",
+  "a11yPlayTrack": "Reproduzir {title}",
+  "a11yPauseTrack": "Pausar {title}",
+  "a11yMoreOptionsFor": "Mais opções para {title}",
+  "a11yDismissMiniPlayer": "Dispensar mini player",
+  "a11ySelectPlaylist": "Selecionar lista de reprodução",
+  "a11yDeselectPlaylist": "Desmarcar lista de reprodução",
+  "a11yShowMore": "Mostrar mais",
+  "a11yPlaybackPosition": "Posição da reprodução",
+  "a11ySavingTrackDetails": "A guardar detalhes da faixa",
+  "cacheClearFor": "Limpar {target}",
+  "logIssueSummary": "Resumo de problemas",
+  "logTotalErrors": "Total de erros: {count}",
+  "libraryScanCancelled": "Análise cancelada",
+  "libraryScanCancelledSubtitle": "Pode tentar a análise novamente quando quiser.",
+  "audioAnalysisStereo": "Estéreo",
+  "audioAnalysisMono": "Mono",
+  "unknownArtist": "Artista desconhecido",
+  "permissionAudio": "Áudio",
+  "permissionStorage": "Armazenamento",
+  "permissionNotification": "Notificação",
+  "libraryPlayback": "Reprodução",
+  "nowPlayingNothingPlaying": "Nada está a tocar",
+  "nowPlayingMinimize": "Minimizar",
+  "nowPlayingUpNext": "A seguir",
+  "nowPlayingAudioOutput": "Saída de áudio",
+  "nowPlayingWrittenBy": "Escrito por: {writers}",
+  "nowPlayingLyricsProvider": "Letras: {provider}",
+  "nowPlayingAudioOutputUnavailable": "Não foi possível abrir as definições de saída de áudio.",
+  "nowPlayingPreviousTrack": "Faixa anterior",
+  "nowPlayingNextTrack": "Próxima faixa",
+  "nowPlayingDetails": "Detalhes",
+  "nowPlayingSleepTimer": "Temporizador de paragem",
+  "nowPlayingSleepTimerActive": "Termina às {time}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minuto} other{{minutes} minutos}}",
+  "nowPlayingSleepTimerOff": "Desativar temporizador de paragem",
+  "nowPlayingSleepTimerSet": "Temporizador de paragem definido para {duration}",
+  "nowPlayingSleepTimerCancelled": "Temporizador de paragem desativado",
+  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabLyrics": "Letras",
+  "nowPlayingNoLyrics": "Este ficheiro não tem letras",
+  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingLyricsLanguageOptions": "Opções de idioma das letras",
+  "nowPlayingHidePronunciation": "Ocultar pronúncia",
+  "nowPlayingShowPronunciation": "Mostrar pronúncia",
+  "nowPlayingHideTranslation": "Ocultar tradução",
+  "nowPlayingShowTranslation": "Mostrar tradução",
+  "nowPlayingShuffleOn": "Reprodução aleatória ativada",
+  "nowPlayingPlayInOrder": "Reproduzir por ordem",
+  "nowPlayingShuffleLibrary": "Reproduzir biblioteca aleatoriamente",
+  "nowPlayingQueueEmpty": "A fila está vazia",
+  "nowPlayingNoMetadata": "Nenhum metadado disponível",
+  "selectionDeletePlaylistsCount": "Eliminar {count} {count, plural, =1{lista de reprodução} other{listas de reprodução}}",
+  "actionShuffle": "Aleatório",
+  "metadataOriginal": "Original",
+  "unknownTitle": "Título desconhecido",
+  "trackPlayNext": "Reproduzir a seguir",
+  "trackAddToQueue": "Adicionar à fila",
+  "settingsSearchHint": "Pesquisar configurações",
+  "settingsSearchNoResults": "Nenhuma configuração corresponde a \"{query}\"",
+  "libraryFilterMetadataMissingLyrics": "Letras em falta",
+  "libraryFilterMetadataMissingReplayGain": "ReplayGain em falta",
+  "libraryFilterMetadataHasReplayGain": "Tem ReplayGain",
+  "libraryFilterIncompleteAlbums": "Álbuns incompletos",
+  "libraryAlbumCompletenessUnknown": "Integridade do álbum desconhecida",
+  "libraryAlbumMissingTracks": "{present}/{expected} faixas · {missing} em falta",
+  "mornyeSearch": "Pesquisar",
+  "mornyeContinuePlaying": "Continuar a ouvir",
+  "mornyeFavorite": "Favorito",
+  "mornyeGoToArtist": "Ir para o artista",
+  "mornyeFavorited": "Adicionado aos favoritos",
+  "autoMixDescription": "Combina músicas com alinhamento de batidas e ajuste de andamento que preserva o tom. Usa crossfade quando as batidas não podem ser alinhadas.",
+  "autoMixOn": "AutoMix ativado",
+  "autoMixOff": "AutoMix desativado",
+  "autoplayOn": "Reprodução automática ativada",
+  "autoplayOff": "Reprodução automática desativada",
+  "autoplayFromLibrary": "Reprodução automática da sua biblioteca",
+  "autoplayDescription": "Continue com músicas relacionadas da sua biblioteca quando a fila terminar.",
+  "autoplayPersonalization": "Reprodução automática personalizada",
+  "autoplayPersonalizationDescription": "Aprende com as músicas que ouve e salta, de forma privada neste dispositivo. Desativar interrompe a aprendizagem e restaura a reprodução automática normal.",
+  "autoplayResetLearning": "Repor aprendizagem de recomendações",
+  "profileTitle": "Perfil",
+  "profileSetUp": "Configure o seu perfil",
+  "profileEdit": "Editar nome e foto",
+  "backupIncludesProfile": "Inclui o seu nome e foto de perfil",
+  "profileName": "Nome",
+  "profileNameHint": "O seu nome",
+  "profileChangePhoto": "Escolher foto",
+  "profileRemovePhoto": "Remover foto",
+  "profilePhotoError": "Escolha uma imagem válida com menos de 20 MB.",
+  "profileSaveError": "Não foi possível guardar o seu perfil. Tente novamente.",
+  "motionArtwork": "Capa animada",
+  "listeningStats": "Estatísticas de audição",
+  "listeningStatsRecord": "Registar audição",
+  "listeningStatsDescription": "Guardado apenas neste dispositivo, a partir de agora. Regista apenas o player integrado; pausas, buffering e avanços não contam como tempo de audição. Uma reprodução conta após 30 segundos.",
+  "listeningStatsEmpty": "Reproduza música com o player integrado para começar o seu resumo de audição. Audições anteriores não podem ser recuperadas.",
+  "listeningStatsDays": "{days} dias",
+  "listeningStatsMinutes": "{minutes} min",
+  "listeningStatsTotals": "{plays, plural, =1{1 reprodução} other{{plays} reproduções}} · {tracks, plural, =1{1 faixa} other{{tracks} faixas}} · {days, plural, =1{1 dia ativo} other{{days} dias ativos}}",
+  "listeningStatsPreviousYear": "Ano anterior",
+  "listeningStatsNextYear": "Próximo ano",
+  "listeningStatsActivity": "Dias recentes de audição · minutos",
+  "listeningStatsTopArtists": "Artistas mais ouvidos",
+  "listeningStatsTopTracks": "Faixas mais ouvidas",
+  "listeningStatsLoadError": "Não foi possível carregar as estatísticas de audição",
+  "listeningStatsClear": "Limpar estatísticas de audição",
+  "listeningStatsClearError": "Não foi possível limpar as estatísticas de audição. Tente novamente.",
+  "listeningStatsClearDescription": "Eliminar todas as estatísticas de audição deste dispositivo? A sua música e as suas listas de reprodução serão mantidas.",
+  "libraryLoading": "A carregar a biblioteca…",
+  "libraryLoadFailed": "Não foi possível carregar a biblioteca. Tente novamente para carregar as pastas guardadas e o índice de faixas.",
+  "autoMixSettingsTitle": "Transições de mistura",
+  "autoMixAutomaticDuration": "Duração automática",
+  "autoMixDuration": "Duração da mistura",
+  "autoMixEffect": "Efeito de transição",
+  "autoMixEffectAuto": "Automático",
+  "autoMixEffectCrossfade": "Crossfade",
+  "autoMixEffectMuffled": "Abafado",
+  "autoMixEffectEcho": "Eco",
+  "autoMixEffectPitch": "Tom",
+  "autoMixEffectCustom": "Personalizado",
+  "autoMixEffectsHelp": "Os efeitos aplicam-se ao final da música que sai, durante a mistura. As músicas curtas usam uma sobreposição mais curta.",
+  "autoMixSpeed": "Velocidade",
+  "autoMixPitch": "Tom (semitons)",
+  "autoMixEcho": "Eco",
+  "autoMixLowPass": "Filtro abafado",
+  "autoMixMixing": "A misturar",
+  "autoMixCrossfading": "Crossfade",
+  "playbackAutomation": "Reprodução automática",
+  "playbackPauseOnMute": "Pausar quando silenciado",
+  "snackbarPlaybackMuted": "O volume multimédia está em zero. Reprodução pausada. Prima play para continuar.",
+  "playbackPauseOnMuteDescription": "Pausa com o volume multimédia em zero e retoma quando for aumentado. As pausas manuais permanecem pausadas. Apenas saída de áudio padrão.",
+  "playbackOnHeadphonesConnected": "Reproduzir ao ligar auscultadores",
+  "playbackOnHeadphonesConnectedDescription": "Retoma a música atual quando auscultadores com fios ou Bluetooth são ligados. Desligá-los pausa a reprodução. Apenas player integrado.",
+  "appearanceCustomFont": "Tipo de letra personalizado",
+  "appearanceCustomFontSubtitle": "Importe um ficheiro TTF ou OTF (até 10 MB). Substitui o tema e a fonte do sistema.",
+  "appearanceCustomFontInvalid": "Não foi possível carregar este tipo de letra. Escolha um ficheiro TTF ou OTF válido de até 10 MB.",
+  "appearanceCustomFontReset": "Usar fonte do tema",
+  "lyricsTextSize": "Tamanho do texto das letras",
+  "lyricsTextPreview": "Acompanhe cada linha da sua música preferida",
+  "setupLocalPlayback": "Reproduza a sua música local offline",
+  "tutorialPlaybackTitle": "Reprodução local",
+  "tutorialPlaybackDesc": "Escolha uma faixa analisada, reproduza-a e faça a gestão da sua fila de reprodução.",
+  "tutorialStorageTitle": "Pastas de música",
+  "tutorialStorageDesc": "Use o acesso ao armazenamento do Android para gerir a sua coleção local.",
+  "tutorialStorageTip1": "Escolha as pastas que contêm a sua música",
+  "tutorialStorageTip2": "Conceda acesso através do seletor de pastas do Android, quando necessário",
+  "tutorialStorageTip3": "Analise novamente depois de adicionar ou alterar ficheiros locais",
+  "librarySourceReady": "Pronto",
+  "tutorialPlaybackTip1": "Reproduza ou pause música com o player integrado",
+  "tutorialPlaybackTip2": "Adicione faixas locais à fila e às listas de reprodução",
+  "tutorialPlaybackTip3": "Leia letras incorporadas ou em ficheiro separado enquanto ouve",
+  "cueSplitButton": "Split into Tracks",
+  "@cueSplitButton": {
+    "description": "Button text to start CUE splitting"
+  },
+  "cueSplitConfirmMessage": "Split \"{album}\" into {count} individual FLAC files?\n\nFiles will be saved to the same directory.",
+  "@cueSplitConfirmMessage": {
+    "description": "CUE split confirmation dialog message",
+    "placeholders": {
+      "album": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitConfirmTitle": "Split CUE Album",
+  "@cueSplitConfirmTitle": {
+    "description": "CUE split confirmation dialog title"
+  },
+  "cueSplitFailed": "CUE split failed",
+  "@cueSplitFailed": {
+    "description": "Snackbar when CUE split fails"
+  },
+  "cueSplitSplitting": "Splitting CUE sheet... ({current}/{total})",
+  "@cueSplitSplitting": {
+    "description": "Snackbar while splitting CUE",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitSuccess": "Split into {count} tracks successfully",
+  "@cueSplitSuccess": {
+    "description": "Snackbar after successful CUE split",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitPartialSuccess": "Dividido em {count} faixas; {failed} não puderam ser criadas",
+  "cueSplitSavedOutsideLibrary": "As faixas foram guardadas fora da sua biblioteca de música. Adicione essa pasta em Biblioteca Local para as ver.",
+  "cueSplitTitle": "Split CUE Sheet",
+  "@cueSplitTitle": {
+    "description": "Title for CUE split bottom sheet"
+  },
+  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarPlayingNext": "Playing next",
+  "trackCopyFilePath": "Copy file path",
+  "@trackCopyFilePath": {
+    "description": "Action - copy file path"
+  },
+  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmTitle": "Remove from device?",
+  "@trackDeleteConfirmTitle": {
+    "description": "Delete confirmation title"
+  },
+  "trackRemoveFromDevice": "Remove from device",
+  "@trackRemoveFromDevice": {
+    "description": "Action - delete downloaded file"
+  },
+  "trackReplayGain": "Rescan ReplayGain",
+  "playbackNormalizationMode": "Modo de ganho",
+  "playbackNormalizationModeTrack": "Faixa",
+  "playbackNormalizationModeAlbum": "Álbum",
+  "playbackNormalizationPreamp": "Pré-amp",
+  "playbackNormalizationPreampValue": "{gain} dB (alvo {target} LUFS)",
+  "playbackNormalizationPreampHint": "Valores mais baixos tocam mais baixo. A normalização só reduz faixas, por isso nunca satura.",
+  "audioInfoTitle": "Informações de áudio",
+  "audioInfoSource": "Ficheiro de origem",
+  "audioInfoSignal": "Sinal",
+  "audioInfoLoudness": "Sonoridade",
+  "audioInfoProcessing": "Processamento",
+  "audioInfoOutput": "Saída",
+  "audioInfoAnalysis": "Análise de espetro e nível",
+  "audioInfoQuality": "Qualidade",
+  "audioInfoHiResLossless": "Hi-Res sem perdas",
+  "audioInfoLossless": "Sem perdas",
+  "audioInfoLossy": "Com perdas",
+  "audioInfoFormat": "Formato",
+  "audioInfoCodec": "Codec",
+  "audioInfoSampleRate": "Taxa de amostragem",
+  "audioInfoBitDepth": "Profundidade de bits",
+  "audioInfoChannels": "Canais",
+  "audioInfoChannelCount": "{count, plural, =1{Mono} =2{Estéreo} other{{count} canais}}",
+  "audioInfoBitrate": "Taxa de bits",
+  "audioInfoDuration": "Duração",
+  "audioInfoFileSize": "Tamanho do ficheiro",
+  "audioInfoCompression": "Compressão",
+  "audioInfoCompressionValue": "{percent}% do tamanho não comprimido",
+  "audioInfoLocation": "Localização",
+  "audioInfoLocationLocal": "Armazenamento do dispositivo",
+  "audioInfoLocationShared": "Pasta partilhada",
+  "audioInfoPcmRate": "Taxa de dados não comprimidos",
+  "audioInfoFrequencyRange": "Gama de frequências",
+  "audioInfoFrequencyRangeValue": "Até {frequency} (Nyquist)",
+  "audioInfoDynamicRange": "Gama dinâmica teórica",
+  "audioInfoTrackGain": "Ganho da faixa",
+  "audioInfoTrackPeak": "Pico da faixa",
+  "audioInfoAlbumGain": "Ganho do álbum",
+  "audioInfoAlbumPeak": "Pico do álbum",
+  "audioInfoNoGainTags": "Sem tags ReplayGain",
+  "audioInfoApplied": "Aplicado {gain}",
+  "audioInfoOn": "Ativado",
+  "audioInfoOff": "Desativado",
+  "audioInfoBypassed": "Ignorado pela saída direta",
+  "audioInfoPlayer": "Player",
+  "audioInfoPlayerValue": "Player integrado do SpotiFLAC",
+  "audioInfoSignalPath": "Percurso do sinal",
+  "audioInfoPathSystem": "Mistura do sistema",
+  "audioInfoPathDirect": "USB direto, ignora a mistura do sistema",
+  "audioInfoPathExclusive": "Saída exclusiva, ignora a mistura do sistema",
+  "audioInfoDecoder": "Descodificador",
+  "audioInfoHardware": "Hardware",
+  "audioInfoSoftware": "Software",
+  "audioInfoBands": "{count} bandas",
+  "audioInfoTempo": "Andamento",
+  "audioInfoResampling": "Reamostragem",
+  "audioInfoResamplingNone": "Nenhuma, as taxas coincidem",
+  "audioInfoBitPerfect": "Bit-perfect",
+  "audioInfoBitPerfectActive": "Sim, amostras inalteradas",
+  "audioInfoBitPerfectNo": "Não, misturado pelo sistema",
+  "audioInfoDevice": "Dispositivo",
+  "audioInfoDeviceType": "{type, select, speaker{Altifalante do telemóvel} earpiece{Auscultador do telemóvel} wired_headphones{Auscultadores com fios} wired_headset{Headset com fios} line{Saída de linha} bluetooth{Bluetooth} bluetooth_le{Bluetooth LE Audio} usb{Áudio USB} usb_headset{Headset USB} hdmi{HDMI} dock{Dock} cast{Transmissão} hearing_aid{Aparelho auditivo} airplay{AirPlay} car{Áudio do carro} other{Outro}}",
+  "audioInfoOutputRate": "Taxa de amostragem da saída",
+  "audioInfoOutputFormat": "Formato da saída",
+  "audioInfoDeviceRates": "Taxas de amostragem do dispositivo",
+  "audioInfoDeviceFormats": "Formatos do dispositivo",
+  "audioInfoAnyRate": "Qualquer",
+  "audioInfoBuffer": "Buffer da mistura",
+  "audioInfoLatency": "Latência da saída",
+  "audioInfoLowLatency": "Áudio de baixa latência",
+  "audioInfoProAudio": "Pro audio",
+  "audioInfoSupported": "Suportado",
+  "audioInfoNotSupported": "Não suportado",
+  "audioInfoSpatial": "Áudio espacial",
+  "audioInfoHeadTracking": "Seguimento de cabeça",
+  "audioInfoUnavailable": "Indisponível",
+  "audioInfoFixedVolume": "Controlado pelo dispositivo",
+  "audioInfoCopy": "Copiar relatório",
+  "audioInfoCopied": "Informações de áudio copiadas",
+  "lyricsShareTitle": "Partilhar letra",
+  "lyricsShareSelectHint": "Selecione até {count} linhas",
+  "lyricsShareLimit": "Pode partilhar até {count} linhas",
+  "lyricsShareAction": "Partilhar",
+  "lyricsShareError": "Não foi possível criar a imagem da letra",
+  "lyricsShareBackgroundArtwork": "Capa",
+  "lyricsShareBackgroundColor": "Cor da capa",
+  "lyricsShareBackgroundDark": "Escuro",
+  "lyricsShareBackgroundLight": "Claro",
+  "musicHaptics": "Vibração musical",
+  "musicHapticsDescription": "Vibra ao ritmo das músicas transferidas e locais",
+  "musicHapticsSensitivity": "Sensibilidade",
+  "musicHapticsStrength": "Intensidade",
+  "listeningRewind": "Retrospetiva",
+  "listeningRewindDescription": "Reviva os destaques das suas últimas semanas e meses",
+  "listeningRewindChoosePeriod": "Escolha um período",
+  "listeningRewindLastWeeks": "Últimas {weeks} semanas",
+  "listeningRewindLastMonths": "Últimos {months} meses",
+  "listeningRewindThisYear": "Até agora em {year}",
+  "listeningRewindIntroTitle": "A sua Retrospetiva",
+  "listeningRewindIntroBody": "Um olhar para o que ouviu de {start} a {end}.",
+  "listeningRewindMinutesTitle": "Ouviu durante",
+  "listeningRewindMinutesUnit": "{minutes, plural, =1{minuto} other{minutos}}",
+  "listeningRewindHours": "{hours, plural, =1{Isto dá cerca de 1 hora de música} other{Isto dá cerca de {hours} horas de música}}",
+  "listeningRewindMore": "Mais {percent}% do que no período anterior",
+  "listeningRewindLess": "Menos {percent}% do que no período anterior",
+  "listeningRewindSame": "Quase o mesmo que no período anterior",
+  "listeningRewindTopArtistTitle": "O seu artista principal",
+  "listeningRewindArtistShare": "{percent}% do seu tempo de audição",
+  "listeningRewindArtistsTitle": "Artistas em rotação",
+  "listeningRewindTopTrackTitle": "A sua música principal",
+  "listeningRewindPlays": "{plays, plural, =1{1 reprodução} other{{plays} reproduções}}",
+  "listeningRewindTracksTitle": "Músicas em repetição",
+  "listeningRewindTopAlbumTitle": "O álbum para o qual não parava de voltar",
+  "listeningRewindNewArtistsTitle": "Novas descobertas",
+  "listeningRewindNewArtistsBody": "{count, plural, =1{Descobriu 1 novo artista} other{Descobriu {count} novos artistas}}",
+  "listeningRewindRhythmTitle": "O seu ritmo de audição",
+  "listeningRewindPeakDay": "Dia mais intenso",
+  "listeningRewindFavoriteDay": "Dia favorito",
+  "listeningRewindStreak": "Sequência mais longa",
+  "listeningRewindStreakDays": "{days, plural, =1{1 dia} other{{days} dias seguidos}}",
+  "listeningRewindReplayTitle": "Não consegui parar de ouvir",
+  "listeningRewindReplayBody": "Reproduziu {plays} vezes em {date}",
+  "listeningRewindOutroTitle": "Esta foi a sua Retrospetiva",
+  "listeningRewindOutroBody": "Continue a ouvir. A sua próxima Retrospetiva já está a formar-se.",
+  "listeningRewindEmpty": "Ainda não há audição suficiente neste período. Reproduza música com o player integrado e volte mais tarde.",
+  "listeningRewindLoadError": "Não foi possível carregar a sua Retrospetiva",
+  "listeningRewindSlide": "Diapositivo {index} de {count}",
+  "listeningRewindShare": "Partilhar",
+  "listeningRewindShareError": "Não foi possível partilhar a sua Retrospetiva",
+  "listeningRewindNext": "Seguinte",
+  "listeningRewindPrevious": "Anterior",
+  "listeningRewindMonthlyReady": "As suas últimas 4 semanas estão prontas para repetir",
+  "listeningRewindYearTitle": "O seu {year} na música",
+  "listeningRewindYearEyebrow": "Retrospetiva de fim de ano",
+  "listeningRewindYearBanner": "Os seus artistas, músicas e momentos principais do ano",
+  "listeningRewindYearIntroBody": "Tudo o que ouviu este ano, desde a sua primeira música até ao seu mês mais intenso.",
+  "listeningRewindNumbersTitle": "O seu ano em números",
+  "listeningRewindSongsLabel": "Músicas",
+  "listeningRewindArtistsLabel": "Artistas",
+  "listeningRewindAlbumsLabel": "Álbuns",
+  "listeningRewindDaysLabel": "Dias com música",
+  "listeningRewindDaysShare": "Música em {percent}% dos seus dias",
+  "listeningRewindMonthsTitle": "Mês a mês",
+  "listeningRewindBiggestMonthLabel": "Mês mais intenso",
+  "listeningRewindBiggestMonth": "O seu mês mais intenso foi {month}",
+  "listeningRewindMonthlyArtistsTitle": "Artista do mês",
+  "listeningRewindLoyalTitle": "Sempre consigo",
+  "listeningRewindLoyalBody": "{days, plural, =1{Consigo em 1 dia} other{Consigo em {days} dias diferentes}}",
+  "listeningRewindFirstSongTitle": "Onde começou o seu ano",
+  "listeningRewindFirstSongBody": "A sua música mais ouvida no seu primeiro dia de audição, {date}",
+  "listeningRewindYearOutroTitle": "Foi este o seu {year}",
+  "listeningRewindYearOutroBody": "Mais um ano de ótima música.",
+  "equalizerTitle": "Equalizador",
+  "equalizerDescription": "5–31 bandas, controlos de tom, pré-amp e dinâmica",
+  "equalizerEnable": "Ativar equalizador",
+  "equalizerBands": "Bandas",
+  "equalizerTone": "Tom e estéreo",
+  "equalizerPreamp": "Pré-amp",
+  "equalizerBass": "Graves",
+  "equalizerTreble": "Agudos",
+  "equalizerBalance": "Equilíbrio",
+  "equalizerDynamics": "Dinâmica",
+  "equalizerHeadroom": "Margem automática",
+  "equalizerHeadroomDescription": "Reduz o ganho de entrada para dar espaço às frequências reforçadas.",
+  "equalizerLimiter": "Limitador de picos",
+  "equalizerLimiterDescription": "Mantém os picos abaixo de −0,5 dBFS para reduzir a saturação.",
+  "equalizerCompressor": "Compressor",
+  "equalizerCompressorDescription": "Reduz a diferença entre passagens suaves e fortes.",
+  "equalizerThreshold": "Limiar",
+  "equalizerRatio": "Razão",
+  "equalizerAttack": "Ataque",
+  "equalizerRelease": "Libertação",
+  "equalizerPresets": "Predefinições",
+  "equalizerSavePreset": "Guardar predefinição",
+  "equalizerPresetName": "Nome da predefinição",
+  "equalizerImport": "Importar predefinição",
+  "equalizerExport": "Partilhar predefinição",
+  "equalizerResetTitle": "Repor o equalizador?",
+  "equalizerResetDescription": "Repõe uma curva plana e as definições padrão de tom e dinâmica. As predefinições guardadas são mantidas.",
+  "equalizerBypass": "Bit-perfect, USB direto e saídas Hi-Res exclusivas ignoram o EQ. Desative a saída bit-perfect para usar o EQ.",
+  "equalizerEffectivePreamp": "Ganho de entrada após a margem",
+  "equalizerDeletePreset": "Eliminar predefinição",
+  "equalizerCustom": "Personalizado",
+  "releaseTypeSingle": "Single",
+  "@@last_modified": "2026-01-16",
+  "updateLater": "Later",
+  "@updateLater": {
+    "description": "Update button - dismiss"
+  },
+  "downloadDirectory": "Download Directory",
+  "@downloadDirectory": {
+    "description": "Setting - download folder"
+  },
+  "safMigrationTitle": "Storage Update Required",
+  "@safMigrationTitle": {
+    "description": "Title of SAF migration dialog"
+  }
+}

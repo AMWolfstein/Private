@@ -69,6 +69,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   glassClarityLevel: json['glassClarityLevel'] == null
       ? kDefaultGlassClarityLevel
       : glassClarityLevelFromJson(json['glassClarityLevel']),
+  locale: json['locale'] == null ? 'system' : appLocaleFromJson(json['locale']),
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
   listeningStatisticsEnabled:
       json['listeningStatisticsEnabled'] as bool? ?? true,
@@ -118,6 +119,7 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'headerBandBlurDisabled': instance.headerBandBlurDisabled,
       'glassQuality': instance.glassQuality,
       'glassClarityLevel': instance.glassClarityLevel,
+      'locale': instance.locale,
       'keepScreenOnLyrics': instance.keepScreenOnLyrics,
       'listeningStatisticsEnabled': instance.listeningStatisticsEnabled,
       'localLibraryEnabled': instance.localLibraryEnabled,

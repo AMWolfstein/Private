@@ -1,0 +1,2763 @@
+{
+  "@@locale": "ru",
+  "libraryGenres": "Жанры",
+  "appearancePlayerView": "Вид плеера",
+  "appearancePlayerViewNormal": "Обычный вид",
+  "appearancePlayerViewImmersive": "Полноэкранный вид",
+  "settingsPlaybackSubtitle": "Воспроизведение, громкость, автомикс и аудиовыход",
+  "sectionVolumeAndTransitions": "Громкость и переходы",
+  "sectionAudioOutput": "Аудиовыход",
+  "usbBitPerfect": "Hi-Res и Bit-perfect",
+  "usbBitPerfectDescription": "Сохранение исходной точности для поддерживаемых выходов. Ниже выберите прямой USB-выход или эксклюзивный режим AAudio; в противном случае для вывода USB требуется Android 14 или новее. Параметр применяется со следующего трека без учета AutoMix и нормализации. Системная громкость может не регулировать прямой вывод USB.",
+  "usbHardwareVolume": "Аппаратная громкость ЦАПа",
+  "usbVolumeWarningTitle": "Проверьте уровень громкости",
+  "usbVolumeWarning": "Прямое воспроизведение через USB-аудио может быть намного громче стандартного, а аппаратные кнопки громкости могут его не регулировать. Снизьте громкость на вашем ЦАП или усилителе до начала воспроизведения. Когда устройство поддерживается, SpotiFLAC при подключении выставляет на ЦАП уровень не выше −40 дБ, но это не гарантирует безопасную громкость на каждом усилителе или наушниках.",
+  "usbVolumeAccept": "Я понимаю",
+  "usbVolumeUnavailable": "Воспроизведение приостановлено, так как у данного ЦАП не обнаружено проверенного аппаратного управления громкостью. Уменьшите громкость на ЦАП или усилителе, при необходимости включите вывод с фиксированной громкостью и выберите трек заново.",
+  "usbFixedVolume": "Разрешить вывод по USB с фиксированной громкостью",
+  "usbFixedVolumeDescription": "Предназначено для ЦАП, у которых приложение не имеет доступа к управлению громкостью. Не используйте для USB-гарнитур без собственной регулировки громкости. Вступает в силу со следующего трека.",
+  "usbFixedVolumeWarning": "Приложению недоступно снижение громкости на этом аудиовыходе. Звук может быть на максимальной мощности, а регулятор громкости смартфона не поможет. Продолжайте лишь после того, как убавите громкость на ЦАП или внешнем усилителе. Не активируйте для наушников/гарнитур без встроенного регулятора громкости.",
+  "dapExclusive": "DAP Hi-Res (эксклюзив AAudio)",
+  "dapExclusiveDescription": "Используйте Oboe/AAudio с исходной частотой дискретизации и точностью трека для форматов FLAC/WAV PCM. Требуется Android 8.1 или более поздней версии и совместимое оборудование. Эксклюзивный доступ проверен; для недоступных форматов используется обычное воспроизведение. Для DSD требуется драйвер прямого USB-подключения. Применяется со следующего трека.",
+  "dapExclusiveUnavailable": "Эксклюзивный режим AAudio недоступен для данного трека и выбранного аудиовыхода. Применяется стандартное воспроизведение. При использовании USB-ЦАП попробуйте задействовать прямой USB-драйвер.",
+  "usbDirect": "Прямой USB драйвер",
+  "usbDirectDescription": "Использовать эксклюзивный вывод звука по USB для FLAC/WAV, DSF/DFF и WavPack DSD с разрешением Android USB. Для нативного DSD требуется распознанный совместимый ЦАП. Остальные форматы PCM воспроизводятся стандартным способом. Применяется со следующего трека.",
+  "usbDsdOverPcm": "DSD через PCM (DoP)",
+  "usbDsdOverPcmDescription": "Включайте только в том случае, если ваш ЦАП явно поддерживает DoP. Передает DSF/DFF и WavPack DSD внутри контейнера PCM, когда нативный DSD недоступен. Несовместимое устройство может воспроизводить шум; оставляйте выключенным для обычных USB-гарнитур.",
+  "usbDsdUnsupported": "Этот формат DSD или подключенный ЦАП не поддерживается. Воспроизведение остановлено.",
+  "usbPermissionDenied": "Разрешение на USB не получено. Используется обычное воспроизведение.",
+  "usbBitPerfectPending": "Ожидание следующего трека и совместимого USB-выхода.",
+  "usbBitPerfectNoDevice": "USB ЦАП не подключен. Используется обычный аудиовыход.",
+  "usbBitPerfectFallback": "Это устройство или аудиоформат не поддерживает вывод bit-perfect. Используется обычное воспроизведение.",
+  "usbBitPerfectRouteChanged": "Маршрут USB-аудио изменился. Воспроизведение приостановлено; выберите трек для повторного подключения.",
+  "nowPlayingVolume": "Громкость",
+  "@nowPlayingVolume": {
+    "description": "System volume control label in the Mornye player"
+  },
+  "appearanceAccentRed": "Красный (по умолчанию)",
+  "appearanceAccentOrange": "Оранжевый",
+  "appearanceAccentGreen": "Зелёный",
+  "appearanceAccentTeal": "Морской",
+  "appearanceAccentBlue": "Синий",
+  "appearanceAccentPurple": "Фиолетовый",
+  "appearanceAccentPink": "Розовый",
+  "appearanceGlassClarity": "Glass clarity",
+  "appearanceGlassOutlines": "Контуры стекла",
+  "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Mornye. Выключение не меняет само стекло.",
+  "appearanceGlassClaritySubtitle": "Adjust transparency in Mornye menus and navigation. Text contrast is preserved.",
+  "appearanceGlassTinted": "Tinted",
+  "appearanceGlassClear": "Clear",
+  "appearanceGlassClearPerformance": "Очень прозрачное стекло может расходовать больше энергии и работать менее плавно на старых устройствах. При необходимости уменьшите прозрачность.",
+  "appearanceGlassQuality": "Качество стекла",
+  "appearanceGlassQualityAuto": "Авто",
+  "appearanceGlassQualityLite": "Лёгкое",
+  "appearanceGlassQualityFull": "Полное",
+  "appearanceGlassQualityOff": "Выкл.",
+  "appearanceGlassQualitySubtitle": "«Авто» выбирает «Полное», «Лёгкое» или «Выкл.» для этого устройства. «Лёгкое» не использует преломление и экономит энергию.",
+  "appearanceGlassLevelFrosted": "Матовое",
+  "appearanceGlassLevelSoft": "Мягкое",
+  "appearanceGlassLevelBalanced": "Сбалансированное",
+  "appearanceGlassLevelClear": "Прозрачное",
+  "appearanceGlassLevelCrystal": "Кристальное",
+  "appearanceGlassClarityOff": "Стекло выключено. Выберите «Авто», «Лёгкое» или «Полное», чтобы настроить прозрачность.",
+  "appearanceGlassClarityDeviceOpaque": "На этом устройстве стекло непрозрачное. Выберите «Лёгкое» или «Полное», чтобы настроить прозрачность.",
+  "appearanceGlassClarityContrast": "В системе включён повышенный контраст, поэтому стекло остаётся непрозрачным. Выберите «Лёгкое» или «Полное», чтобы всё равно использовать стекло; контраст текста сохраняется.",
+  "appearanceGlassAutoMeasured": "Измерено на этом устройстве: «Авто» использует {quality}.",
+  "appearanceGlassClarityAutoFrosted": "«Авто» измерило это устройство и использует «Матовое». Выберите «Лёгкое» или «Полное», чтобы задать прозрачность.",
+  "appearanceUseSystemFont": "Использовать системный шрифт",
+  "appearanceUseSystemFontSubtitle": "Использовать системный шрифт вашего устройства для текста приложения.",
+  "appName": "SpotiFLAC Mobile",
+  "@appName": {
+    "description": "App name - DO NOT TRANSLATE"
+  },
+  "navHome": "Главная",
+  "@navHome": {
+    "description": "Bottom navigation - Home tab"
+  },
+  "navLibrary": "Медиатека",
+  "@navLibrary": {
+    "description": "Bottom navigation - Library tab"
+  },
+  "homeTitle": "Главная",
+  "@homeTitle": {
+    "description": "Home screen title"
+  },
+  "historyFilterAll": "Все",
+  "@historyFilterAll": {
+    "description": "Filter chip - show all items"
+  },
+  "historyFilterSingles": "Синглы",
+  "@historyFilterSingles": {
+    "description": "Filter chip - show singles only"
+  },
+  "homeLatestReleases": "Новые релизы в вашей медиатеке",
+  "artistPopular": "Популярное",
+  "libraryRecentlyAdded": "Недавно добавленные",
+  "librarySearchHint": "Поиск в вашей медиатеке",
+  "homeLibraryDisabled": "Включите локальную медиатеку, чтобы показывать здесь вашу музыку.",
+  "homeChooseLibraryFolder": "Выберите папку с музыкой в настройках локальной медиатеки.",
+  "homeLibraryEmpty": "Добавьте музыку в папки медиатеки, затем просканируйте её.",
+  "libraryEmptyCollection": "Ваша музыка появится здесь",
+  "settingsTitle": "Настройки",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  "settingsAppearance": "Внешний вид",
+  "@settingsAppearance": {
+    "description": "Settings section - visual customization"
+  },
+  "settingsAbout": "О программе",
+  "@settingsAbout": {
+    "description": "Settings section - app info"
+  },
+  "appearanceTitle": "Внешний вид",
+  "@appearanceTitle": {
+    "description": "Appearance settings page title"
+  },
+  "appearanceThemeSystem": "Системная",
+  "@appearanceThemeSystem": {
+    "description": "Follow system theme"
+  },
+  "appearanceThemeLight": "Светлая",
+  "@appearanceThemeLight": {
+    "description": "Light theme"
+  },
+  "appearanceThemeDark": "Тёмная",
+  "@appearanceThemeDark": {
+    "description": "Dark theme"
+  },
+  "trackRemoveReplayGain": "Удалить ReplayGain",
+  "replayGainRemoving": "Удаление ReplayGain...",
+  "replayGainRemoveConfirmMessage": "Удалить теги ReplayGain трека и альбома для {count, plural, one {{count} трека} other {{count} треков}}? Аудио, обложки и другие метаданные будут сохранены.",
+  "@replayGainRemoveConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionRemoveReplayGainCount": "Удалить RG ({count})",
+  "@selectionRemoveReplayGainCount": {
+    "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainRemoveBatchSuccess": "ReplayGain удален из {success} из {total, plural, one {{total} трека} few {{total} треков} many {{total} треков} other {{total} треков}}",
+  "@replayGainRemoveBatchSuccess": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionReplayGainCount": "ReplayGain ({count})",
+  "@selectionReplayGainCount": {
+    "description": "Batch selection action button label for ReplayGain",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainBatchConfirmTitle": "Добавить ReplayGain",
+  "@replayGainBatchConfirmTitle": {
+    "description": "Title of the batch ReplayGain confirmation dialog"
+  },
+  "replayGainBatchConfirmMessage": "Проанализировать громкость и записать ReplayGain теги на {count} трек(-а)?",
+  "@replayGainBatchConfirmMessage": {
+    "description": "Message of the batch ReplayGain confirmation dialog",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainBatchAnalyzing": "Анализ ReplayGain...",
+  "@replayGainBatchAnalyzing": {
+    "description": "Progress dialog title while batch scanning ReplayGain"
+  },
+  "replayGainBatchSuccess": "ReplayGain добавлен к {success} треков {total}",
+  "@replayGainBatchSuccess": {
+    "description": "Snackbar after batch ReplayGain completes",
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainUnsupportedDecoder": "Некоторые треки не могут быть проанализированы, так как их аудио кодек не поддерживается декодером ReplayGain, их файлы не были изменены.",
+  "metadataSeparators": "Разделители тегов",
+  "metadataSeparatorsDescription": "Выберите, как объединяются значения, разделённые запятыми или точками с запятой, при сохранении тегов через «Редактировать метаданные». Свой разделитель исполнителей записывает один объединённый тег. Имена с & или / сохраняются.",
+  "metadataSeparatorSource": "Как в исходном файле",
+  "metadataSeparatorComma": "Запятая (,)",
+  "metadataSeparatorSemicolon": "Точка с запятой (;)",
+  "metadataSeparatorSlash": "Косая черта (/)",
+  "metadataSeparatorCustom": "Свой разделитель",
+  "metadataSeparatorPreview": "Предпросмотр",
+  "metadataSeparatorInvalid": "Используйте от 1 до 16 символов без переводов строк и управляющих символов.",
+  "optionsDetailedLogging": "Подробный лог",
+  "@optionsDetailedLogging": {
+    "description": "Enable verbose logs for debugging"
+  },
+  "optionsDetailedLoggingOn": "Ведутся подробные логи",
+  "@optionsDetailedLoggingOn": {
+    "description": "Status when logging enabled"
+  },
+  "optionsDetailedLoggingOff": "Включить для отчётов об ошибках",
+  "@optionsDetailedLoggingOff": {
+    "description": "Status when logging disabled"
+  },
+  "extensionsDisabled": "Выключено",
+  "@extensionsDisabled": {
+    "description": "Extension status - inactive"
+  },
+  "aboutTitle": "О программе",
+  "@aboutTitle": {
+    "description": "About page title"
+  },
+  "aboutApp": "Приложение",
+  "@aboutApp": {
+    "description": "Section for app info"
+  },
+  "aboutVersion": "Версия",
+  "@aboutVersion": {
+    "description": "Version info label"
+  },
+  "aboutDeveloperOptions": "Параметры разработчика",
+  "aboutDeveloperOptionsEnabled": "Параметры разработчика включены",
+  "aboutPerformanceHud": "Индикатор производительности",
+  "aboutPerformanceHudSubtitle": "Показывать время построения и растеризации кадров поверх каждого экрана.",
+  "aboutHideDeveloperOptions": "Скрыть параметры разработчика",
+  "aboutBarSampler": "Выборка нижней панели",
+  "aboutBarSamplerSubtitle": "Нижняя панель повторяет яркость страницы под ней. Выключите, чтобы измерить её нагрузку.",
+  "aboutHeaderBandBlur": "Размытие полосы заголовка",
+  "aboutHeaderBandBlurSubtitle": "Размывать полосу за прокрученными заголовками. Выключите, чтобы измерить нагрузку; оттенок останется.",
+  "aboutRemeasureGlass": "Измерить стекло «Авто» заново",
+  "aboutRemeasureGlassSubtitle": "«Авто» снова измерит время кадров и выберет «Полное», «Лёгкое» или «Матовое лёгкое».",
+  "aboutAppDescription": "Воспроизводите и упорядочивайте локальную музыку, редактируйте метаданные и тексты песен.",
+  "trackMetadataShare": "Поделиться",
+  "@trackMetadataShare": {
+    "description": "Action button - share track"
+  },
+  "setupGrantPermission": "Предоставить разрешение",
+  "@setupGrantPermission": {
+    "description": "Button to request permission"
+  },
+  "setupStorageAccessRequired": "Требуется доступ к хранилищу",
+  "@setupStorageAccessRequired": {
+    "description": "Title when storage access needed"
+  },
+  "setupStorageAccessMessageAndroid11": "Android 11+ требует доступа к хранилищу, чтобы сканировать и редактировать музыку в выбранной папке.",
+  "setupOpenSettings": "Открыть настройки",
+  "@setupOpenSettings": {
+    "description": "Button to open system settings"
+  },
+  "setupPermissionDeniedMessage": "В разрешении отказано. Пожалуйста, предоставьте все разрешения для продолжения.",
+  "@setupPermissionDeniedMessage": {
+    "description": "Error when permission denied"
+  },
+  "setupPermissionRequired": "Требуется разрешение {permissionType}",
+  "@setupPermissionRequired": {
+    "description": "Generic permission required title",
+    "placeholders": {
+      "permissionType": {
+        "type": "String",
+        "description": "Type of permission (Storage/Notification)"
+      }
+    }
+  },
+  "setupPermissionRequiredMessage": "Для оптимальной работы требуется разрешение {permissionType}. Вы можете изменить это позже в настройках.",
+  "@setupPermissionRequiredMessage": {
+    "description": "Generic permission required message",
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "setupStorageGranted": "Доступ к хранилищу предоставлен!",
+  "@setupStorageGranted": {
+    "description": "Success message for storage permission"
+  },
+  "setupStorageRequired": "Требуется доступ к хранилищу",
+  "@setupStorageRequired": {
+    "description": "Title when storage permission needed"
+  },
+  "setupStorageDescription": "Разрешите доступ к хранилищу, чтобы сканировать и редактировать локальные музыкальные файлы.",
+  "setupNotificationGranted": "Разрешение на уведомление предоставлено!",
+  "@setupNotificationGranted": {
+    "description": "Success message for notification permission"
+  },
+  "setupNotificationEnable": "Включить уведомления",
+  "@setupNotificationEnable": {
+    "description": "Button to enable notifications"
+  },
+  "setupSelectFolder": "Выбрать папку",
+  "@setupSelectFolder": {
+    "description": "Button to select folder"
+  },
+  "setupEnableNotifications": "Включить уведомления",
+  "@setupEnableNotifications": {
+    "description": "Button to enable notifications"
+  },
+  "setupNotificationBackgroundDescription": "Разрешите элементы управления воспроизведением и уведомления о ходе локального сканирования.",
+  "setupSkipForNow": "Пропустить",
+  "@setupSkipForNow": {
+    "description": "Skip button text"
+  },
+  "setupNext": "Далее",
+  "@setupNext": {
+    "description": "Next button text"
+  },
+  "setupGetStarted": "Приступить к работе",
+  "@setupGetStarted": {
+    "description": "Final setup button"
+  },
+  "setupAllowAccessToManageFiles": "Пожалуйста, включите \"Разрешить доступ для управления всеми файлами\" на следующем экране.",
+  "@setupAllowAccessToManageFiles": {
+    "description": "Instruction for file access permission"
+  },
+  "setupLanguageTitle": "Выберите язык",
+  "@setupLanguageTitle": {
+    "description": "Title for the language selection step in setup"
+  },
+  "setupLanguageDescription": "Выберите язык для приложения. Вы можете изменить его позже в настройках.",
+  "@setupLanguageDescription": {
+    "description": "Description for the language selection step in setup"
+  },
+  "setupLanguageSystemDefault": "Системные настройки",
+  "@setupLanguageSystemDefault": {
+    "description": "Option to use the system language"
+  },
+  "dialogCancel": "Отмена",
+  "@dialogCancel": {
+    "description": "Dialog button - cancel action"
+  },
+  "dialogSave": "Сохранить",
+  "@dialogSave": {
+    "description": "Dialog button - save changes"
+  },
+  "dialogDelete": "Удалить",
+  "@dialogDelete": {
+    "description": "Dialog button - delete item"
+  },
+  "dialogRetry": "Повторить",
+  "@dialogRetry": {
+    "description": "Dialog button - retry action"
+  },
+  "dialogClear": "Очистить",
+  "@dialogClear": {
+    "description": "Dialog button - clear items"
+  },
+  "dialogDone": "Готово",
+  "@dialogDone": {
+    "description": "Dialog button - action completed"
+  },
+  "dialogRemove": "Убрать",
+  "@dialogRemove": {
+    "description": "Dialog button - remove item"
+  },
+  "dialogDeleteSelectedTitle": "Удалить выбранные",
+  "@dialogDeleteSelectedTitle": {
+    "description": "Dialog title - delete selected items"
+  },
+  "dialogDeleteSelectedMessage": "Удалить {count} {count, plural, few {трека} many {треков} =1{трек} other{треков}} из истории? Это также удалит файлы из хранилища.",
+  "@dialogDeleteSelectedMessage": {
+    "description": "Dialog message - delete selected tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionExportM3u": "Экспорт в M3U8",
+  "@collectionExportM3u": {
+    "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
+  },
+  "collectionExportM3uDone": "Экспортировано {exported} из {total, plural, one {{total} трека} few {{total} треков} many {{total} треков} other {{total} треков}}",
+  "@collectionExportM3uDone": {
+    "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
+    "placeholders": {
+      "exported": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionExportM3uNone": "Нет локальных аудиофайлов для экспорта",
+  "collectionExportM3uFailed": "Ошибка экспорта",
+  "@collectionExportM3uFailed": {
+    "description": "Snackbar when writing or sharing the M3U8 export fails"
+  },
+  "libraryReviewDuplicates": "Проверка дубликатов",
+  "@libraryReviewDuplicates": {
+    "description": "Library settings row opening the duplicate review sheet"
+  },
+  "libraryReviewDuplicatesSubtitle": "Поиск треков, сохраненных более одного раза",
+  "@libraryReviewDuplicatesSubtitle": {
+    "description": "Subtitle for the duplicate review settings row"
+  },
+  "duplicatesTitle": "Дубликаты",
+  "@duplicatesTitle": {
+    "description": "Title of the duplicate review sheet"
+  },
+  "duplicatesEmpty": "Дублированные треки не найдены.",
+  "@duplicatesEmpty": {
+    "description": "Shown when the duplicate review sheet finds nothing"
+  },
+  "duplicatesKeepBest": "Оставить лучшее",
+  "@duplicatesKeepBest": {
+    "description": "Button that deletes all but the highest-quality copy in a duplicate group"
+  },
+  "duplicatesKeepBestAll": "Оставить лучшее качество",
+  "@duplicatesKeepBestAll": {
+    "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
+  },
+  "duplicatesKeepBestAllMessage": "Сохранить лучшую копию из {groupCount} {groupCount, plural, =1{трека} few{треков} other{треков}} и удалить {count} {count, plural, =1{копию} few{копии} other{копий}} более низкого качества?\n\nУдалённые файлы будут стерты из хранилища.",
+  "@duplicatesKeepBestAllMessage": {
+    "description": "Confirmation message for keeping the best copy across every duplicate group",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "groupCount": {
+        "type": "int"
+      }
+    }
+  },
+  "duplicatesKeepBestMessage": "Удалить {count} копий {trackName} низкого качества?",
+  "@duplicatesKeepBestMessage": {
+    "description": "Confirmation message for the keep-best action",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "trackName": {
+        "type": "String"
+      }
+    }
+  },
+  "duplicatesDeleteCopyMessage": "Удалить эту копию \"{trackName}\"?",
+  "@duplicatesDeleteCopyMessage": {
+    "description": "Confirmation message for deleting one duplicate copy",
+    "placeholders": {
+      "trackName": {
+        "type": "String"
+      }
+    }
+  },
+  "snackbarDeletedTracks": "Удалено {count} {count, plural, few {трека} many {треков} =1{трек} other{треков}}",
+  "@snackbarDeletedTracks": {
+    "description": "Snackbar - tracks deleted",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarCannotOpenFile": "Невозможно открыть файл: {error}",
+  "@snackbarCannotOpenFile": {
+    "description": "Snackbar - file open error",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "snackbarFileNotFound": "Файл не найден",
+  "@snackbarFileNotFound": {
+    "description": "Snackbar - file doesn't exist"
+  },
+  "errorRateLimited": "Превышение запросов",
+  "@errorRateLimited": {
+    "description": "Error title - too many requests"
+  },
+  "errorRateLimitedMessage": "Слишком много запросов. Пожалуйста, подождите минуту перед повторным поиском.",
+  "@errorRateLimitedMessage": {
+    "description": "Error message - rate limit explanation"
+  },
+  "searchEmptyResultSubtitle": "Попробуйте другое ключевое слово",
+  "@searchEmptyResultSubtitle": {
+    "description": "Subtitle shown under the empty search result state on the home screen"
+  },
+  "actionPause": "Пауза",
+  "@actionPause": {
+    "description": "Action button - pause download"
+  },
+  "actionResume": "Возобновить",
+  "@actionResume": {
+    "description": "Action button - resume download"
+  },
+  "actionCancel": "Отмена",
+  "@actionCancel": {
+    "description": "Action button - cancel operation"
+  },
+  "actionSelectAll": "Выбрать все",
+  "@actionSelectAll": {
+    "description": "Action button - select all items"
+  },
+  "actionDeselect": "Снять выделение",
+  "@actionDeselect": {
+    "description": "Action button - deselect all"
+  },
+  "selectionSelected": "{count} выбрано",
+  "@selectionSelected": {
+    "description": "Selection count indicator",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionAllSelected": "Все треки выбраны",
+  "@selectionAllSelected": {
+    "description": "Status - all items selected"
+  },
+  "selectionSelectToDelete": "Выберите треки для удаления",
+  "@selectionSelectToDelete": {
+    "description": "Placeholder when nothing selected"
+  },
+  "searchSongs": "Песни",
+  "@searchSongs": {
+    "description": "Search result category - songs"
+  },
+  "searchArtists": "Исполнители",
+  "@searchArtists": {
+    "description": "Search result category - artists"
+  },
+  "searchAlbums": "Альбомы",
+  "@searchAlbums": {
+    "description": "Search result category - albums"
+  },
+  "searchPlaylists": "Плейлисты",
+  "@searchPlaylists": {
+    "description": "Search result category - playlists"
+  },
+  "searchSortTitle": "Упорядочить результаты",
+  "@searchSortTitle": {
+    "description": "Bottom sheet title for search sort options"
+  },
+  "searchSortTitleAZ": "Название (А-Я)",
+  "@searchSortTitleAZ": {
+    "description": "Sort option - title ascending"
+  },
+  "searchSortTitleZA": "Название (Я-А)",
+  "@searchSortTitleZA": {
+    "description": "Sort option - title descending"
+  },
+  "searchSortArtistAZ": "Исполнитель (А-Я)",
+  "@searchSortArtistAZ": {
+    "description": "Sort option - artist ascending"
+  },
+  "searchSortArtistZA": "Исполнитель (Я-А)",
+  "@searchSortArtistZA": {
+    "description": "Sort option - artist descending"
+  },
+  "searchSortDateOldest": "Дата релиза (старейшая)",
+  "@searchSortDateOldest": {
+    "description": "Sort option - oldest release first"
+  },
+  "searchSortDateNewest": "Дата релиза (новейшая)",
+  "@searchSortDateNewest": {
+    "description": "Sort option - newest release first"
+  },
+  "tooltipPlay": "Воспроизвести",
+  "@tooltipPlay": {
+    "description": "Tooltip - play button"
+  },
+  "logTitle": "Логи",
+  "@logTitle": {
+    "description": "Logs screen title"
+  },
+  "logCopied": "Логи скопированы в буфер обмена",
+  "@logCopied": {
+    "description": "Snackbar - logs copied"
+  },
+  "logSearchHint": "Поиск логов...",
+  "@logSearchHint": {
+    "description": "Log search placeholder"
+  },
+  "logFilterLevel": "Уровень",
+  "@logFilterLevel": {
+    "description": "Filter by log level"
+  },
+  "logFilterSection": "Фильтр",
+  "@logFilterSection": {
+    "description": "Filter section title"
+  },
+  "logShareLogs": "Поделиться логами",
+  "@logShareLogs": {
+    "description": "Share button tooltip"
+  },
+  "logClearLogs": "Очистить логи",
+  "@logClearLogs": {
+    "description": "Clear button tooltip"
+  },
+  "logClearLogsTitle": "Очистить логи",
+  "@logClearLogsTitle": {
+    "description": "Clear logs dialog title"
+  },
+  "logClearLogsMessage": "Вы уверены, что хотите очистить все логи?",
+  "@logClearLogsMessage": {
+    "description": "Clear logs confirmation message"
+  },
+  "logFilterBySeverity": "Фильтровать логи по серьезности",
+  "@logFilterBySeverity": {
+    "description": "Filter dialog title"
+  },
+  "logNoLogsYet": "Логов нет",
+  "@logNoLogsYet": {
+    "description": "Empty state title"
+  },
+  "logNoLogsYetSubtitle": "Логи появятся здесь по мере использования приложения",
+  "@logNoLogsYetSubtitle": {
+    "description": "Empty state subtitle"
+  },
+  "logEntriesFiltered": "Записи ({count} фильтровано)",
+  "@logEntriesFiltered": {
+    "description": "Log count with filter active",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logEntries": "Записи ({count})",
+  "@logEntries": {
+    "description": "Total log count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sectionLyrics": "Тексты песен",
+  "@sectionLyrics": {
+    "description": "Settings section header"
+  },
+  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
+  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "sectionColor": "Цвет",
+  "@sectionColor": {
+    "description": "Settings section header"
+  },
+  "sectionTheme": "Тема",
+  "@sectionTheme": {
+    "description": "Settings section header"
+  },
+  "sectionLanguage": "Язык",
+  "@sectionLanguage": {
+    "description": "Settings section header for language"
+  },
+  "appearanceLanguage": "Язык приложения",
+  "@appearanceLanguage": {
+    "description": "Language setting title"
+  },
+  "settingsAppearanceSubtitle": "Тема, цвета, дисплей",
+  "@settingsAppearanceSubtitle": {
+    "description": "Appearance settings description"
+  },
+  "settingsLogsSubtitle": "Просмотреть логи для отладки",
+  "@settingsLogsSubtitle": {
+    "description": "Logs settings description"
+  },
+  "pressBackAgainToExit": "Нажмите «Назад» ещё раз, чтобы выйти",
+  "@pressBackAgainToExit": {
+    "description": "Exit confirmation message"
+  },
+  "tracksCount": "{count, plural, few {{count} трека} many {{count} треков} =1 {1 трек} other {{count} треков}}",
+  "@tracksCount": {
+    "description": "Track count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trackMetadata": "Метаданные",
+  "@trackMetadata": {
+    "description": "Tab title - track metadata"
+  },
+  "trackLyrics": "Текст песни",
+  "@trackLyrics": {
+    "description": "Tab title - lyrics"
+  },
+  "trackAlbum": "Альбом",
+  "@trackAlbum": {
+    "description": "Metadata label - album name"
+  },
+  "trackCopiedToClipboard": "Скопировано в буфер обмена",
+  "@trackCopiedToClipboard": {
+    "description": "Snackbar - content copied"
+  },
+  "snackbarDeleteTracksFailed": "Не удалось удалить {count} {count, plural, =1{трек} other{треков}}. Проверьте доступ к хранилищу и попробуйте снова.",
+  "dateDaysAgo": "{count} дней назад",
+  "@dateDaysAgo": {
+    "description": "Relative date - days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearanceHeroAnimations": "Hero-анимации",
+  "@appearanceHeroAnimations": {
+    "description": "Toggle for shared-element (Hero) transitions"
+  },
+  "appearanceHeroAnimationsSubtitle": "Переходы между экранами, например, при открытии плеера",
+  "@appearanceHeroAnimationsSubtitle": {
+    "description": "Subtitle for the Hero animations toggle"
+  },
+  "downloadedAlbumDeleteSelected": "Удалить выбранные",
+  "@downloadedAlbumDeleteSelected": {
+    "description": "Button - delete selected tracks"
+  },
+  "downloadedAlbumDeleteMessage": "Удалить {count} {count, plural, =1{трек} few{трека} other{треков}} из этого альбома?\n\nЭто также приведёт к удалению файлов из хранилища.",
+  "@downloadedAlbumDeleteMessage": {
+    "description": "Delete confirmation with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadedAlbumTapToSelect": "Нажмите на треки для выбора",
+  "@downloadedAlbumTapToSelect": {
+    "description": "Selection hint"
+  },
+  "downloadedAlbumDeleteCount": "Удалить {count} {count, plural, =1{трек} few{трека} other{треков}}",
+  "@downloadedAlbumDeleteCount": {
+    "description": "Delete button text with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadedAlbumSelectToDelete": "Выберите треки для удаления",
+  "@downloadedAlbumSelectToDelete": {
+    "description": "Placeholder when nothing selected"
+  },
+  "downloadedAlbumDiscHeader": "Диск {discNumber}",
+  "@downloadedAlbumDiscHeader": {
+    "description": "Header for disc separator in multi-disc albums",
+    "placeholders": {
+      "discNumber": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "settingsLocalLibrary": "Локальная медиатека",
+  "@settingsLocalLibrary": {
+    "description": "Settings menu item - local library"
+  },
+  "settingsLocalLibrarySubtitle": "Сканировать и обнаружить дубликаты",
+  "@settingsLocalLibrarySubtitle": {
+    "description": "Subtitle for local library settings"
+  },
+  "settingsCache": "Хранилище и кэш",
+  "@settingsCache": {
+    "description": "Settings menu item - cache management"
+  },
+  "settingsCacheSubtitle": "Просмотреть размер и очистить кэш",
+  "@settingsCacheSubtitle": {
+    "description": "Subtitle for cache management menu"
+  },
+  "libraryTitle": "Локальная медиатека",
+  "@libraryTitle": {
+    "description": "Library settings page title"
+  },
+  "libraryScanSettings": "Настройки сканирования",
+  "@libraryScanSettings": {
+    "description": "Section header for scan settings"
+  },
+  "libraryEnableLocalLibrary": "Включить локальную медиатеку",
+  "@libraryEnableLocalLibrary": {
+    "description": "Toggle to enable library scanning"
+  },
+  "libraryEnableLocalLibrarySubtitle": "Сканировать и отслеживать вашу существующую музыку",
+  "@libraryEnableLocalLibrarySubtitle": {
+    "description": "Subtitle for enable toggle"
+  },
+  "libraryFolderHint": "Нажмите, чтобы выбрать папку",
+  "@libraryFolderHint": {
+    "description": "Placeholder when no folder selected"
+  },
+  "libraryAddFolder": "Добавить папку медиатеки",
+  "@libraryAddFolder": {
+    "description": "Action to add another local library source"
+  },
+  "libraryAddFolderSubtitle": "Внутреннее хранилище, SD-карта, SSD или другой внешний диск",
+  "@libraryAddFolderSubtitle": {
+    "description": "Supported storage locations for local library sources"
+  },
+  "librarySourceOffline": "Офлайн. Подключите накопитель, чтобы восстановить доступ к этим трекам",
+  "@librarySourceOffline": {
+    "description": "Library source is temporarily disconnected"
+  },
+  "librarySourceDisabled": "Отключено",
+  "@librarySourceDisabled": {
+    "description": "Library source has been disabled by the user"
+  },
+  "librarySourceScanCount": "{scanned} из {total} сканированных файлов ({progress}%)",
+  "@librarySourceScanCount": {
+    "description": "Live progress for one library folder scan",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "progress": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryExternalStorage": "Внешнее хранилище",
+  "@libraryExternalStorage": {
+    "description": "Label for a removable or external library source"
+  },
+  "libraryRemoveFolder": "Удалить папку медиатеки",
+  "@libraryRemoveFolder": {
+    "description": "Action to remove one indexed library source"
+  },
+  "libraryRemoveFolderMessage": "Удалить эту папку и проиндексированные треки из SpotiFLAC Mobile? Аудио файлы на накопителе не будут удалены.",
+  "@libraryRemoveFolderMessage": {
+    "description": "Confirmation shown before removing a library source"
+  },
+  "libraryShowDuplicateIndicator": "Показать индикатор дубликатов",
+  "@libraryShowDuplicateIndicator": {
+    "description": "Toggle for duplicate indicator in search"
+  },
+  "libraryShowDuplicateIndicatorSubtitle": "Показать при поиске существующих треков",
+  "@libraryShowDuplicateIndicatorSubtitle": {
+    "description": "Subtitle for duplicate indicator toggle"
+  },
+  "libraryAutoScan": "Автосканирование",
+  "@libraryAutoScan": {
+    "description": "Setting for automatic library scanning"
+  },
+  "libraryAutoScanSubtitle": "Автоматически сканировать медиатеку на новые файлы",
+  "@libraryAutoScanSubtitle": {
+    "description": "Subtitle for auto scan setting"
+  },
+  "libraryAutoScanOff": "Выкл",
+  "@libraryAutoScanOff": {
+    "description": "Auto scan disabled"
+  },
+  "libraryAutoScanOnOpen": "Каждое открытие приложения",
+  "@libraryAutoScanOnOpen": {
+    "description": "Auto scan when app opens"
+  },
+  "libraryAutoScanDaily": "Ежедневно",
+  "@libraryAutoScanDaily": {
+    "description": "Auto scan once per day"
+  },
+  "libraryAutoScanWeekly": "Еженедельно",
+  "@libraryAutoScanWeekly": {
+    "description": "Auto scan once per week"
+  },
+  "libraryActions": "Действия",
+  "@libraryActions": {
+    "description": "Section header for library actions"
+  },
+  "libraryScan": "Сканировать медиатеку",
+  "@libraryScan": {
+    "description": "Button to start library scan"
+  },
+  "libraryScanSubtitle": "Сканировать аудио файлы",
+  "@libraryScanSubtitle": {
+    "description": "Subtitle for scan button"
+  },
+  "libraryScanSelectFolderFirst": "Сначала выберите папку",
+  "@libraryScanSelectFolderFirst": {
+    "description": "Message when trying to scan without folder"
+  },
+  "libraryCleanupMissingFiles": "Очистка отсутствующих файлов",
+  "@libraryCleanupMissingFiles": {
+    "description": "Button to remove entries for missing files"
+  },
+  "libraryCleanupMissingFilesSubtitle": "Удалить записи для файлов, которых больше не существует",
+  "@libraryCleanupMissingFilesSubtitle": {
+    "description": "Subtitle for cleanup button"
+  },
+  "libraryClear": "Очистить медиатеку",
+  "@libraryClear": {
+    "description": "Button to clear all library entries"
+  },
+  "libraryClearSubtitle": "Удалить все сканированные треки",
+  "@libraryClearSubtitle": {
+    "description": "Subtitle for clear button"
+  },
+  "libraryClearConfirmTitle": "Очистить медиатеку",
+  "@libraryClearConfirmTitle": {
+    "description": "Dialog title for clear confirmation"
+  },
+  "libraryClearConfirmMessage": "Это удалит все сканированные треки из вашей медиатеки. Ваши фактические файлы не будут удалены.",
+  "@libraryClearConfirmMessage": {
+    "description": "Dialog message for clear confirmation"
+  },
+  "libraryAbout": "О локальной медиатеке",
+  "@libraryAbout": {
+    "description": "Section header for about info"
+  },
+  "libraryAboutDescription": "Сканируйте папки с музыкой и просматривайте теги, сохранённые в локальных аудиофайлах. Поддерживаются FLAC, ALAC, M4A, MP3, Opus, OGG, WAV, AIFF и APE.",
+  "libraryTracksUnit": "{count, plural, =1{трек} few{трека} other{треков}}",
+  "@libraryTracksUnit": {
+    "description": "Unit label for tracks count (without the number itself)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryFilesUnit": "{count, plural, =1{файл} few{файла} other{файлов}}",
+  "@libraryFilesUnit": {
+    "description": "Unit label for files count during library scanning",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryLastScanned": "Последнее сканирование: {time}",
+  "@libraryLastScanned": {
+    "description": "Last scan time display",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryLastScannedNever": "Никогда",
+  "@libraryLastScannedNever": {
+    "description": "Shown when library has never been scanned"
+  },
+  "libraryScanning": "Сканирование...",
+  "@libraryScanning": {
+    "description": "Status during scan"
+  },
+  "libraryScanFinalizing": "Завершение работы с библиотекой...",
+  "@libraryScanFinalizing": {
+    "description": "Status shown after file scanning finishes but library persistence is still running"
+  },
+  "libraryScanPaused": "Scan paused",
+  "@libraryScanPaused": {
+    "description": "Status shown while a library scan is paused by the user"
+  },
+  "libraryScanProgress": "{progress}% из {total} файлов",
+  "@libraryScanProgress": {
+    "description": "Scan progress display",
+    "placeholders": {
+      "progress": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryRemovedMissingFiles": "Удалено {count} {count, plural, one{отсутствующий файл} few{трека} many{отсутствующих файлов} other{отсутствующих файлов}} в медиатеке",
+  "@libraryRemovedMissingFiles": {
+    "description": "Snackbar after cleanup",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryCleared": "Медиатека очищена",
+  "@libraryCleared": {
+    "description": "Snackbar after clearing library"
+  },
+  "libraryStorageAccessRequired": "Требуется доступ к хранилищу",
+  "@libraryStorageAccessRequired": {
+    "description": "Dialog title for storage permission"
+  },
+  "libraryStorageAccessMessage": "SpotiFLAC требуется доступ к хранилищу для сканирования вашей медиатеки. Пожалуйста, предоставьте разрешение в настройках.",
+  "@libraryStorageAccessMessage": {
+    "description": "Dialog message for storage permission"
+  },
+  "libraryFilterAll": "Все",
+  "@libraryFilterAll": {
+    "description": "Filter chip - show all library items"
+  },
+  "libraryFilterDownloaded": "Локальные файлы",
+  "libraryFilterLocal": "Локальные",
+  "@libraryFilterLocal": {
+    "description": "Filter chip - show only local library items"
+  },
+  "libraryFilterTitle": "Фильтры",
+  "@libraryFilterTitle": {
+    "description": "Filter bottom sheet title"
+  },
+  "libraryFilterReset": "Сброс",
+  "@libraryFilterReset": {
+    "description": "Reset all filters button"
+  },
+  "libraryFilterApply": "Применить",
+  "@libraryFilterApply": {
+    "description": "Apply filters button"
+  },
+  "libraryFilterSource": "Источник",
+  "@libraryFilterSource": {
+    "description": "Filter section - source type"
+  },
+  "libraryFilterQuality": "Качество",
+  "@libraryFilterQuality": {
+    "description": "Filter section - audio quality"
+  },
+  "libraryFilterQualityHiRes": "Hi-Res (24 бит)",
+  "@libraryFilterQualityHiRes": {
+    "description": "Filter option - high resolution audio"
+  },
+  "libraryFilterQualityCD": "CD (16 бит)",
+  "@libraryFilterQualityCD": {
+    "description": "Filter option - CD quality audio"
+  },
+  "libraryFilterQualityLossy": "С потерями",
+  "@libraryFilterQualityLossy": {
+    "description": "Filter option - lossy compressed audio"
+  },
+  "libraryFilterFormat": "Формат",
+  "@libraryFilterFormat": {
+    "description": "Filter section - file format"
+  },
+  "libraryFilterMetadata": "Метаданные",
+  "@libraryFilterMetadata": {
+    "description": "Filter section - metadata completeness"
+  },
+  "libraryFilterMetadataComplete": "Полные метаданные",
+  "@libraryFilterMetadataComplete": {
+    "description": "Filter option - items with complete metadata"
+  },
+  "libraryFilterMetadataMissingAny": "Не хватает метаданных",
+  "@libraryFilterMetadataMissingAny": {
+    "description": "Filter option - items missing any tracked metadata field"
+  },
+  "libraryFilterMetadataMissingYear": "Отсутствует год",
+  "@libraryFilterMetadataMissingYear": {
+    "description": "Filter option - items missing release year/date"
+  },
+  "libraryFilterMetadataMissingGenre": "Отсутствует жанр",
+  "@libraryFilterMetadataMissingGenre": {
+    "description": "Filter option - items missing genre"
+  },
+  "libraryFilterMetadataMissingAlbumArtist": "Отсутствует исполнитель альбома",
+  "@libraryFilterMetadataMissingAlbumArtist": {
+    "description": "Filter option - items missing album artist"
+  },
+  "libraryFilterSort": "Сортировка",
+  "@libraryFilterSort": {
+    "description": "Filter section - sort order"
+  },
+  "libraryFilterSortLatest": "Последние",
+  "@libraryFilterSortLatest": {
+    "description": "Sort option - newest first"
+  },
+  "libraryFilterSortOldest": "Старые",
+  "@libraryFilterSortOldest": {
+    "description": "Sort option - oldest first"
+  },
+  "libraryFilterSortAlbumAsc": "Альбом (А-Я)",
+  "@libraryFilterSortAlbumAsc": {
+    "description": "Sort option - album ascending"
+  },
+  "libraryFilterSortAlbumDesc": "Альбом (Я-А)",
+  "@libraryFilterSortAlbumDesc": {
+    "description": "Sort option - album descending"
+  },
+  "libraryFilterSortGenreAsc": "Жанр (А-Я)",
+  "@libraryFilterSortGenreAsc": {
+    "description": "Sort option - genre ascending"
+  },
+  "libraryFilterSortGenreDesc": "Жанр (Я-А)",
+  "@libraryFilterSortGenreDesc": {
+    "description": "Sort option - genre descending"
+  },
+  "timeJustNow": "Только что",
+  "@timeJustNow": {
+    "description": "Relative time - less than a minute ago"
+  },
+  "timeMinutesAgo": "{count, plural, one{{count} минуту назад} few{{count} минуты назад} other{{count} минут назад}}",
+  "@timeMinutesAgo": {
+    "description": "Relative time - minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timeHoursAgo": "{count, plural, one{{count} час назад} few{{count} часа назад} other{{count} часов назад}}",
+  "@timeHoursAgo": {
+    "description": "Relative time - hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tutorialSearchTitle": "Поиск музыки",
+  "@tutorialSearchTitle": {
+    "description": "Tutorial search page title"
+  },
+  "tutorialSearchDesc": "Ищите локальные песни, исполнителей и альбомы после сканирования медиатеки.",
+  "tutorialLibraryTitle": "Ваша медиатека",
+  "@tutorialLibraryTitle": {
+    "description": "Tutorial library page title"
+  },
+  "tutorialLibraryDesc": "Отсканированная музыка упорядочена по песням, исполнителям, альбомам и плейлистам.",
+  "tutorialLibraryTip1": "Просматривайте и ищите треки, уже находящиеся на устройстве",
+  "tutorialLibraryTip2": "Нажмите на трек, чтобы воспроизвести его с помощью встроенного проигрывателя",
+  "@tutorialLibraryTip2": {
+    "description": "Tutorial library tip 2"
+  },
+  "tutorialLibraryTip3": "Просматривайте треки, альбомы и плейлисты в виде списка или сетки",
+  "@tutorialLibraryTip3": {
+    "description": "Tutorial library tip 3"
+  },
+  "tutorialSettingsTitle": "Настройте приложение под себя",
+  "@tutorialSettingsTitle": {
+    "description": "Tutorial settings page title"
+  },
+  "tutorialSettingsDesc": "Настраивайте воспроизведение, сканирование медиатеки, тексты песен, оформление Mornye и локальное хранилище.",
+  "tutorialSettingsTip1": "Управляйте папками с музыкой и доступом к локальным файлам",
+  "tutorialSettingsTip2": "Настройте локальную медиатеку, воспроизведение и оформление.",
+  "@tutorialSettingsTip2": {
+    "description": "Tutorial settings tip 2"
+  },
+  "tutorialSettingsTip3": "Настроить тему и внешний вид приложения",
+  "@tutorialSettingsTip3": {
+    "description": "Tutorial settings tip 3"
+  },
+  "tutorialReadyMessage": "Выберите папку с музыкой, просканируйте медиатеку и начинайте слушать.",
+  "libraryForceFullScan": "Полное сканирование",
+  "@libraryForceFullScan": {
+    "description": "Button to force a complete rescan of library"
+  },
+  "libraryForceFullScanSubtitle": "Пересканировать все файлы, игнорировать кэш",
+  "@libraryForceFullScanSubtitle": {
+    "description": "Subtitle for force full scan button"
+  },
+  "cacheTitle": "Хранилище и кэш",
+  "@cacheTitle": {
+    "description": "Cache management page title"
+  },
+  "cacheSummaryTitle": "Просмотр кэша",
+  "@cacheSummaryTitle": {
+    "description": "Heading for cache summary card"
+  },
+  "cacheSummarySubtitle": "Очистка кэша сохраняет исходные музыкальные файлы.",
+  "cacheEstimatedTotal": "Приблизительное использование кэша: {size}",
+  "@cacheEstimatedTotal": {
+    "description": "Total cache size shown in summary",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheSectionStorage": "Кэшированные данные",
+  "@cacheSectionStorage": {
+    "description": "Section header for cache entries"
+  },
+  "cacheSectionMaintenance": "Обслуживание",
+  "@cacheSectionMaintenance": {
+    "description": "Section header for cleanup actions"
+  },
+  "cacheAppDirectory": "Папка кэша приложения",
+  "@cacheAppDirectory": {
+    "description": "Cache item title for app cache directory"
+  },
+  "cacheAppDirectoryDesc": "HTTP-ответы, данные WebView и другие временные данные приложения.",
+  "@cacheAppDirectoryDesc": {
+    "description": "Description of what app cache directory contains"
+  },
+  "cacheTempDirectory": "Временная директория",
+  "@cacheTempDirectory": {
+    "description": "Cache item title for temporary files directory"
+  },
+  "cacheTempDirectoryDesc": "Временные локальные обложки и файлы обработки аудио.",
+  "cacheCoverImage": "Кэш обложек",
+  "@cacheCoverImage": {
+    "description": "Cache item title for persistent cover images"
+  },
+  "cacheCoverImageDesc": "Устаревший кэш изображений из предыдущих версий. Локальные обложки остаются в кэше медиатеки.",
+  "cacheLibraryCover": "Кэш обложек медиатеки",
+  "@cacheLibraryCover": {
+    "description": "Cache item title for local library cover art images"
+  },
+  "cacheLibraryCoverDesc": "Обложка извлечена из локальных музыкальных файлов. Будет повторно извлечено при следующем сканировании.",
+  "@cacheLibraryCoverDesc": {
+    "description": "Description of what library cover cache contains"
+  },
+  "libraryPlaybackNormalization": "Нормализация громкости",
+  "@libraryPlaybackNormalization": {
+    "description": "Toggle title for ReplayGain playback normalization in the built-in player"
+  },
+  "libraryPlaybackNormalizationSubtitle": "Выравнивайте уровень громкости между треками с помощью тегов ReplayGain или R128, если они имеются",
+  "@libraryPlaybackNormalizationSubtitle": {
+    "description": "Subtitle explaining playback volume normalization"
+  },
+  "cacheAudioAnalysis": "Кэш аудиоанализа",
+  "@cacheAudioAnalysis": {
+    "description": "Cache item title for saved audio analysis results"
+  },
+  "cacheAudioAnalysisDesc": "Сохраненные спектрограммы и результаты анализа. Будут проанализированы повторно при следующем открытии.",
+  "@cacheAudioAnalysisDesc": {
+    "description": "Description of what audio analysis cache contains"
+  },
+  "cacheCleanupUnusedDesc": "Удалить записи медиатеки, локальные файлы которых отсутствуют.",
+  "cacheNoData": "Нет кэшированных данных",
+  "@cacheNoData": {
+    "description": "Label when cache category has no data"
+  },
+  "cacheSizeWithFiles": "{size} в {count} файлах",
+  "@cacheSizeWithFiles": {
+    "description": "Cache size and file count",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cacheClearSuccess": "Очищено: {target}",
+  "@cacheClearSuccess": {
+    "description": "Snackbar after clearing selected cache",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheClearConfirmTitle": "Очистить кэш?",
+  "@cacheClearConfirmTitle": {
+    "description": "Dialog title before clearing one cache category"
+  },
+  "cacheClearConfirmMessage": "Очистить кэшированные данные для {target}? Исходные музыкальные файлы будут сохранены.",
+  "cacheClearAllConfirmTitle": "Очистить весь кэш?",
+  "@cacheClearAllConfirmTitle": {
+    "description": "Dialog title before clearing all caches"
+  },
+  "cacheClearAllConfirmMessage": "Очистить все категории кэша на этой странице? Исходные музыкальные файлы будут сохранены.",
+  "cacheClearAll": "Очистить весь кэш",
+  "@cacheClearAll": {
+    "description": "Button label to clear all caches"
+  },
+  "cacheCleanupUnused": "Очистка неиспользуемых данных",
+  "@cacheCleanupUnused": {
+    "description": "Action title for cleaning unused entries"
+  },
+  "cacheCleanupUnusedSubtitle": "Удалить отсутствующие локальные файлы из индекса медиатеки",
+  "cacheRefreshStats": "Обновить статистику",
+  "@cacheRefreshStats": {
+    "description": "Button label to refresh cache statistics"
+  },
+  "trackEditMetadata": "Редактировать метаданные",
+  "@trackEditMetadata": {
+    "description": "Menu action - edit embedded metadata"
+  },
+  "audioBitrate": "Битрейт",
+  "@audioBitrate": {
+    "description": "Label for bitrate selection"
+  },
+  "actionCreate": "Создать",
+  "@actionCreate": {
+    "description": "Generic action button - create"
+  },
+  "collectionLoved": "Любимые песни",
+  "@collectionLoved": {
+    "description": "Custom folder for favorite tracks"
+  },
+  "collectionFavoriteArtists": "Избранный исполнитель",
+  "@collectionFavoriteArtists": {
+    "description": "Custom folder for favorite artists"
+  },
+  "collectionPlaylist": "Плейлист",
+  "@collectionPlaylist": {
+    "description": "Single playlist label"
+  },
+  "collectionAddToPlaylist": "Добавить в плейлист",
+  "@collectionAddToPlaylist": {
+    "description": "Action to add a track to user playlist"
+  },
+  "collectionCreatePlaylist": "Создать плейлист",
+  "@collectionCreatePlaylist": {
+    "description": "Action to create a new playlist"
+  },
+  "collectionNoPlaylistsYet": "Плейлисты отсутствуют",
+  "@collectionNoPlaylistsYet": {
+    "description": "Empty state title when user has no playlists"
+  },
+  "collectionPlaylistTracks": "{count, plural, one{{count} трек} few{{count} трека} other{{count} треков}}",
+  "@collectionPlaylistTracks": {
+    "description": "Track count label for custom playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionAddedToPlaylist": "Добавлено в \"{playlistName}\"",
+  "@collectionAddedToPlaylist": {
+    "description": "Snackbar after adding track to playlist",
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionAlreadyInPlaylist": "Уже в \"{playlistName}\"",
+  "@collectionAlreadyInPlaylist": {
+    "description": "Snackbar when track already exists in playlist",
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionPlaylistNameHint": "Название плейлиста",
+  "@collectionPlaylistNameHint": {
+    "description": "Hint text for playlist name input"
+  },
+  "collectionPlaylistNameRequired": "Имя плейлиста обязательно",
+  "@collectionPlaylistNameRequired": {
+    "description": "Validation error for empty playlist name"
+  },
+  "collectionRenamePlaylist": "Переименовать плейлист",
+  "@collectionRenamePlaylist": {
+    "description": "Action to rename playlist"
+  },
+  "collectionDeletePlaylist": "Удалить плейлист",
+  "@collectionDeletePlaylist": {
+    "description": "Action to delete playlist"
+  },
+  "collectionPlaylistRenamed": "Плейлист переименован",
+  "@collectionPlaylistRenamed": {
+    "description": "Snackbar after renaming playlist"
+  },
+  "collectionRemovedTracks": "{count, plural, =1{Удалён 1 трек} other{Удалено треков: {count}}}",
+  "collectionLovedEmptyTitle": "Папка Любимые пуста",
+  "@collectionLovedEmptyTitle": {
+    "description": "Loved empty state title"
+  },
+  "collectionLovedEmptySubtitle": "Нажмите \"любовь\" на треках, чтобы сохранить ваши избранные",
+  "@collectionLovedEmptySubtitle": {
+    "description": "Loved empty state subtitle"
+  },
+  "collectionFavoriteArtistsEmptyTitle": "Нет избранных исполнителей",
+  "@collectionFavoriteArtistsEmptyTitle": {
+    "description": "Favorite artists empty state title"
+  },
+  "collectionFavoriteArtistsEmptySubtitle": "Нажмите на сердце на странице исполнителя, чтобы сохранить его здесь",
+  "@collectionFavoriteArtistsEmptySubtitle": {
+    "description": "Favorite artists empty state subtitle"
+  },
+  "collectionPlaylistEmptyTitle": "Плейлист пуст",
+  "@collectionPlaylistEmptyTitle": {
+    "description": "Playlist empty state title"
+  },
+  "collectionPlaylistEmptySubtitle": "Удерживайте + на любом треке, чтобы добавить его сюда",
+  "@collectionPlaylistEmptySubtitle": {
+    "description": "Playlist empty state subtitle"
+  },
+  "collectionRemoveFromPlaylist": "Удалить из плейлиста",
+  "@collectionRemoveFromPlaylist": {
+    "description": "Tooltip for removing track from playlist"
+  },
+  "collectionRemoveFromFolder": "Убрать из папки",
+  "@collectionRemoveFromFolder": {
+    "description": "Tooltip for removing track from Loved folder"
+  },
+  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" удалено из избранных исполнителей",
+  "@collectionRemovedFromFavoriteArtists": {
+    "description": "Snackbar after removing artist from favorite artists",
+    "placeholders": {
+      "artistName": {
+        "type": "String"
+      }
+    }
+  },
+  "trackOptionAddToLoved": "Добавить в Любимое",
+  "@trackOptionAddToLoved": {
+    "description": "Bottom sheet action label - add track to loved folder"
+  },
+  "trackOptionRemoveFromLoved": "Исключить из Любимых",
+  "@trackOptionRemoveFromLoved": {
+    "description": "Bottom sheet action label - remove track from loved folder"
+  },
+  "artistOptionRemoveFromFavorites": "Удалить из избранных исполнителей",
+  "@artistOptionRemoveFromFavorites": {
+    "description": "Action label - remove artist from favorite artists"
+  },
+  "collectionPlaylistChangeCover": "Изменить обложку",
+  "@collectionPlaylistChangeCover": {
+    "description": "Bottom sheet action to pick a custom cover image for a playlist"
+  },
+  "collectionPlaylistRemoveCover": "Удалить обложку",
+  "@collectionPlaylistRemoveCover": {
+    "description": "Bottom sheet action to remove custom cover image from a playlist"
+  },
+  "settingsBackup": "Резервирование и восстановление",
+  "@settingsBackup": {
+    "description": "Settings menu item - backup and restore page"
+  },
+  "settingsBackupSubtitle": "Переместить свою медиатеку, историю и настройки на новое устройство",
+  "@settingsBackupSubtitle": {
+    "description": "Subtitle for backup and restore settings item"
+  },
+  "backupTitle": "Резервирование и восстановление",
+  "@backupTitle": {
+    "description": "App bar title for the backup and restore page"
+  },
+  "backupExportSectionTitle": "Создать резервную копию",
+  "@backupExportSectionTitle": {
+    "description": "Section title for the export/backup card"
+  },
+  "backupExportSectionDescription": "Сохраните настройки, локальные профили, подборки и необязательные устаревшие записи медиатеки в файле резервной копии.",
+  "backupExportButton": "Создать файл резервной копии",
+  "@backupExportButton": {
+    "description": "Button to create and share a backup file"
+  },
+  "backupImportSectionTitle": "Восстановить резервную копию",
+  "@backupImportSectionTitle": {
+    "description": "Section title for the import/restore card"
+  },
+  "backupImportSectionDescription": "Выберите файл резервной копии для восстановления данных. Это заменит текущие настройки, историю и медиатеку на этом устройстве.",
+  "@backupImportSectionDescription": {
+    "description": "Description for the restore action"
+  },
+  "backupImportButton": "Выберите файл резервной копии",
+  "@backupImportButton": {
+    "description": "Button to pick a backup file to restore"
+  },
+  "backupCreated": "Резервная копия создана",
+  "@backupCreated": {
+    "description": "Snackbar after a backup file is created"
+  },
+  "backupCreateFailed": "Не удалось создать резервную копию",
+  "@backupCreateFailed": {
+    "description": "Snackbar when backup creation fails"
+  },
+  "backupTooLarge": "Эта резервная копия слишком большая для восстановления. Включите меньше категорий и попробуйте снова.",
+  "backupRestorePartiallyFailed": "Не удалось восстановить резервную копию. Уже восстановлено: {categories}",
+  "backupListeningStatisticsExcluded": "Статистика прослушивания и количество воспроизведений не включены.",
+  "backupRestoreConfirmTitle": "Восстановить эту резервную копию?",
+  "@backupRestoreConfirmTitle": {
+    "description": "Confirmation dialog title before restoring a backup"
+  },
+  "backupRestoreConfirmButton": "Восстановить",
+  "@backupRestoreConfirmButton": {
+    "description": "Confirm button to proceed with restore"
+  },
+  "backupRestored": "Резервная копия успешно восстановлена",
+  "@backupRestored": {
+    "description": "Snackbar after a successful restore"
+  },
+  "backupRestoreFailed": "Не удалось восстановить резервную копию",
+  "@backupRestoreFailed": {
+    "description": "Snackbar when restore fails"
+  },
+  "backupInvalidFile": "Этот файл не является резервной копией SpotiFLAC",
+  "@backupInvalidFile": {
+    "description": "Snackbar when the chosen file is not a valid backup"
+  },
+  "backupRestoreRestartHint": "Перезапустите приложение, чтобы убедиться, что все изменения применяются.",
+  "@backupRestoreRestartHint": {
+    "description": "Hint shown after restoring that an app restart is recommended"
+  },
+  "backupContentsTitle": "Содержимое резервной копии",
+  "@backupContentsTitle": {
+    "description": "Header above the list summarizing what the backup contains"
+  },
+  "backupSettingsOnly": "Только настройки",
+  "backupSelectHistory": "Устаревшие записи медиатеки",
+  "backupSelectCollections": "Коллекции медиатеки",
+  "backupSelectCollectionsDescription": "Любимые треки, любимые исполнители, плейлисты и обложки плейлистов.",
+  "backupSelectedExportDescription": "Сохранить выбранные категории в файл резервной копии. Аудио файлы не включены.",
+  "backupSelectAtLeastOne": "Выберите хотя бы одну категорию для создания резервной копии.",
+  "backupSelectedRestoreMessage": "Будут восстановлены только перечисленные ниже категории. Категории, не вошедшие в эту резервную копию, останутся без изменений. Восстановление может перезаписать существующие данные, это действие нельзя отменить.",
+  "backupContentsSettings": "Настройки приложения",
+  "@backupContentsSettings": {
+    "description": "Backup contents row label for settings"
+  },
+  "backupContentsHistory": "{count} {count, plural, =1{элемент истории} few{элемента истории} other{элементов истории}}",
+  "@backupContentsHistory": {
+    "description": "Backup contents row for history count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupContentsLiked": "{count} {count, plural, =1{понравившийся трек} few{понравившихся трека} other{понравившихся треков}}",
+  "@backupContentsLiked": {
+    "description": "Backup contents row for liked tracks count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupContentsPlaylists": "{count, plural, one{{count} плейлист} few{{count} плейлиста} other{{count} плейлистов}}",
+  "@backupContentsPlaylists": {
+    "description": "Backup contents row for playlist count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupContentsArtists": "{count, plural, one{{count} любимый исполнитель} few{{count} любимых исполнителя} other{{count} любимых исполнителей}}",
+  "@backupContentsArtists": {
+    "description": "Backup contents row for favorite artists count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarRemovedTracksFromLoved": "Удалено {count, plural, one {{count} трек} few {{count} трека} other {{count} треков}} из Любимых",
+  "@snackbarRemovedTracksFromLoved": {
+    "description": "Snackbar after removing multiple tracks from Loved folder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackbarAddedTracksToLoved": "Добавлено {count, plural, one {{count} трек} few {{count} трека} other {{count} треков}} в Любимые",
+  "@snackbarAddedTracksToLoved": {
+    "description": "Snackbar after adding multiple tracks to Loved folder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeGoToAlbum": "Перейти к альбому",
+  "@homeGoToAlbum": {
+    "description": "Context menu item to navigate to the album page"
+  },
+  "snackbarMetadataSaved": "Метаданные успешно сохранены",
+  "@snackbarMetadataSaved": {
+    "description": "Snackbar after successfully saving track metadata"
+  },
+  "snackbarError": "Ошибка: {error}",
+  "@snackbarError": {
+    "description": "Generic error snackbar with error detail",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noTracksFoundForAlbum": "Трек-лист для этого альбома не найден",
+  "@noTracksFoundForAlbum": {
+    "description": "Empty state message when an album has no tracks"
+  },
+  "snackbarUnsupportedAudioFormat": "Неподдерживаемый аудио формат",
+  "@snackbarUnsupportedAudioFormat": {
+    "description": "Snackbar when the audio format is not supported for the requested operation"
+  },
+  "cacheRefresh": "Обновить",
+  "@cacheRefresh": {
+    "description": "Tooltip for refresh button on cache management page"
+  },
+  "editMetadataFieldTitle": "Название",
+  "@editMetadataFieldTitle": {
+    "description": "Chip label for title field in auto-fill selector"
+  },
+  "editMetadataFieldArtist": "Исполнитель",
+  "@editMetadataFieldArtist": {
+    "description": "Chip label for artist field in auto-fill selector"
+  },
+  "editMetadataFieldAlbum": "Альбом",
+  "@editMetadataFieldAlbum": {
+    "description": "Chip label for album field in auto-fill selector"
+  },
+  "editMetadataFieldAlbumArtist": "Исполнитель альбома",
+  "@editMetadataFieldAlbumArtist": {
+    "description": "Chip label for album artist field in auto-fill selector"
+  },
+  "editMetadataFieldDate": "Дата",
+  "@editMetadataFieldDate": {
+    "description": "Chip label for date field in auto-fill selector"
+  },
+  "editMetadataFieldTrackNum": "Трек #",
+  "@editMetadataFieldTrackNum": {
+    "description": "Chip label for track number field in auto-fill selector"
+  },
+  "editMetadataFieldDiscNum": "Диск #",
+  "@editMetadataFieldDiscNum": {
+    "description": "Chip label for disc number field in auto-fill selector"
+  },
+  "editMetadataFieldGenre": "Жанр",
+  "@editMetadataFieldGenre": {
+    "description": "Chip label for genre field in auto-fill selector"
+  },
+  "editMetadataFieldIsrc": "ISRC",
+  "@editMetadataFieldIsrc": {
+    "description": "Chip label for ISRC field in auto-fill selector"
+  },
+  "editMetadataFieldLabel": "Заголовок",
+  "@editMetadataFieldLabel": {
+    "description": "Chip label for label field in auto-fill selector"
+  },
+  "editMetadataFieldCopyright": "Авторские права",
+  "@editMetadataFieldCopyright": {
+    "description": "Chip label for copyright field in auto-fill selector"
+  },
+  "editMetadataFieldCover": "Обложка",
+  "@editMetadataFieldCover": {
+    "description": "Chip label for cover art field in auto-fill selector"
+  },
+  "queueFilteringIndicator": "Фильтрация...",
+  "@queueFilteringIndicator": {
+    "description": "Shown while filter results are being computed"
+  },
+  "queueTrackCount": "{count, plural, one{{count} трек} few{{count} трека} other{{count} треков}}",
+  "@queueTrackCount": {
+    "description": "Track count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueAlbumCount": "{count, plural, one{{count} альбом} few{{count} альбома} other{{count} альбомов}}",
+  "@queueAlbumCount": {
+    "description": "Album count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEmptyAlbums": "Нет локальных альбомов",
+  "queueEmptyAlbumsSubtitle": "Просканируйте папку с музыкой, чтобы добавить альбомы",
+  "queueEmptySingles": "Нет локальных синглов",
+  "queueEmptySinglesSubtitle": "Отсканированные синглы появятся здесь",
+  "queuePlaylistCount": "{count, plural, one{{count} плейлист} few{{count} плейлиста} other{{count} плейлистов}}",
+  "@queuePlaylistCount": {
+    "description": "Playlist count label with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEmptyPlaylistsSubtitle": "Создайте плейлист для организации ваших треков",
+  "@queueEmptyPlaylistsSubtitle": {
+    "description": "Empty state subtitle for the playlists library view"
+  },
+  "queueEmptyHistory": "Нет локальных треков",
+  "queueEmptyHistorySubtitle": "Просканируйте папку с музыкой, чтобы заполнить медиатеку",
+  "selectionAllPlaylistsSelected": "Выбраны все плейлисты",
+  "@selectionAllPlaylistsSelected": {
+    "description": "Shown when all playlists are selected in selection mode"
+  },
+  "selectionTapPlaylistsToSelect": "Нажмите на плейлисты для выбора",
+  "@selectionTapPlaylistsToSelect": {
+    "description": "Hint shown in playlist selection mode"
+  },
+  "selectionSelectPlaylistsToDelete": "Выберите плейлисты для удаления",
+  "@selectionSelectPlaylistsToDelete": {
+    "description": "Hint shown when no playlists are selected for deletion"
+  },
+  "audioAnalysisTitle": "Анализ качества аудио",
+  "@audioAnalysisTitle": {
+    "description": "Title for audio analysis section"
+  },
+  "audioAnalysisDescription": "Проверка на Lossless качество с помощью анализа спектра",
+  "@audioAnalysisDescription": {
+    "description": "Description for audio analysis tap-to-analyze prompt"
+  },
+  "audioAnalysisAnalyzing": "Анализ аудио...",
+  "@audioAnalysisAnalyzing": {
+    "description": "Loading text while analyzing audio"
+  },
+  "audioAnalysisSampleRate": "Частота дискретизации",
+  "@audioAnalysisSampleRate": {
+    "description": "Sample rate metric label"
+  },
+  "audioAnalysisCodec": "Codec",
+  "@audioAnalysisCodec": {
+    "description": "Audio codec metric label"
+  },
+  "audioAnalysisContainer": "Контейнер",
+  "@audioAnalysisContainer": {
+    "description": "Audio container metric label"
+  },
+  "audioAnalysisDecodedFormat": "Декодированный формат",
+  "@audioAnalysisDecodedFormat": {
+    "description": "Decoded sample format metric label"
+  },
+  "audioAnalysisBitDepth": "Разрядность",
+  "@audioAnalysisBitDepth": {
+    "description": "Bit depth metric label"
+  },
+  "audioAnalysisChannels": "Каналы",
+  "@audioAnalysisChannels": {
+    "description": "Channels metric label"
+  },
+  "audioAnalysisDuration": "Продолжительность",
+  "@audioAnalysisDuration": {
+    "description": "Duration metric label"
+  },
+  "audioAnalysisNyquist": "Nyquist",
+  "@audioAnalysisNyquist": {
+    "description": "Nyquist frequency metric label"
+  },
+  "audioAnalysisFileSize": "Размер",
+  "@audioAnalysisFileSize": {
+    "description": "File size metric label"
+  },
+  "audioAnalysisDynamicRange": "Динамический диапазон",
+  "@audioAnalysisDynamicRange": {
+    "description": "Dynamic range metric label"
+  },
+  "audioAnalysisPeak": "Пик",
+  "@audioAnalysisPeak": {
+    "description": "Peak amplitude metric label"
+  },
+  "audioAnalysisRms": "RMS",
+  "@audioAnalysisRms": {
+    "description": "RMS level metric label"
+  },
+  "audioAnalysisLufs": "LUFS",
+  "@audioAnalysisLufs": {
+    "description": "Integrated loudness metric label"
+  },
+  "audioAnalysisTruePeak": "Реальный пик",
+  "@audioAnalysisTruePeak": {
+    "description": "True peak metric label"
+  },
+  "audioAnalysisClipping": "Клиппинг",
+  "@audioAnalysisClipping": {
+    "description": "Clipping metric label"
+  },
+  "audioAnalysisNoClipping": "Нет клиппинга",
+  "@audioAnalysisNoClipping": {
+    "description": "Displayed when no clipped samples were detected"
+  },
+  "audioAnalysisSpectralCutoff": "Спектральный срез",
+  "@audioAnalysisSpectralCutoff": {
+    "description": "Estimated spectral cutoff metric label"
+  },
+  "audioAnalysisCutoffNotDetected": "Не обнаружено",
+  "@audioAnalysisCutoffNotDetected": {
+    "description": "Displayed when no reliable broadband spectral cutoff can be detected"
+  },
+  "audioAnalysisChannelStats": "Статистика по каналам",
+  "@audioAnalysisChannelStats": {
+    "description": "Per-channel audio analysis section label"
+  },
+  "audioAnalysisSamples": "Сэмплы",
+  "@audioAnalysisSamples": {
+    "description": "Total samples metric label"
+  },
+  "audioAnalysisRescan": "Переанализировать",
+  "@audioAnalysisRescan": {
+    "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
+  },
+  "audioAnalysisSaveSpectrogram": "Сохранить спектрограмму",
+  "audioAnalysisSpectrogramSaved": "Спектрограмма сохранена в {fileName}",
+  "audioAnalysisSpectrogramSaveFailed": "Не удалось сохранить спектрограмму",
+  "audioAnalysisRescanning": "Переанализ аудио...",
+  "@audioAnalysisRescanning": {
+    "description": "Loading text while audio is being re-analyzed after an explicit refresh"
+  },
+  "metadataSaveFailedFfmpeg": "Не удалось сохранить метаданные через FFmpeg",
+  "@metadataSaveFailedFfmpeg": {
+    "description": "Snackbar error when FFmpeg fails to write metadata"
+  },
+  "metadataSaveFailedStorage": "Не удалось записать метаданные обратно в хранилище",
+  "@metadataSaveFailedStorage": {
+    "description": "Snackbar error when writing metadata file back to storage fails"
+  },
+  "notifScanningLibrary": "Сканирование локальной медиатеки",
+  "@notifScanningLibrary": {
+    "description": "Notification title while scanning local library"
+  },
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} файлов • {percentage}%",
+  "@notifLibraryScanProgressWithTotal": {
+    "description": "Notification body for library scan progress when total is known",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanProgressNoTotal": "{scanned} файлов отсканировано",
+  "@notifLibraryScanProgressNoTotal": {
+    "description": "Notification body for library scan progress when total is unknown",
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanComplete": "Сканирование медиатеки завершено",
+  "@notifLibraryScanComplete": {
+    "description": "Notification title when library scan finishes"
+  },
+  "notifLibraryScanCompleteBody": "{count} треков индексировано",
+  "@notifLibraryScanCompleteBody": {
+    "description": "Notification body for library scan complete - number of indexed tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanExcluded": "{count} исключено",
+  "@notifLibraryScanExcluded": {
+    "description": "Library scan complete suffix - excluded track count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanErrors": "{count} ошибок",
+  "@notifLibraryScanErrors": {
+    "description": "Library scan complete suffix - error count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifLibraryScanFailed": "Ошибка сканирования медиатеки",
+  "@notifLibraryScanFailed": {
+    "description": "Notification title when library scan fails"
+  },
+  "notifLibraryScanInterruptedBody": "Предыдущее сканирование медиатеки было прервано. Просканируйте папку снова, чтобы продолжить. Проиндексированные треки по-прежнему доступны.",
+  "notifLibraryScanCancelled": "Сканирование медиатеки отменено",
+  "@notifLibraryScanCancelled": {
+    "description": "Notification title when library scan is cancelled by the user"
+  },
+  "notifLibraryScanStopped": "Сканирование остановлено перед завершением.",
+  "@notifLibraryScanStopped": {
+    "description": "Notification body when library scan is cancelled"
+  },
+  "notifLibraryScanPaused": "Library scan paused",
+  "@notifLibraryScanPaused": {
+    "description": "Notification title when the user pauses a library scan"
+  },
+  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "@notifLibraryScanPausedBody": {
+    "description": "Notification body for a paused library scan - files scanned so far",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSearchHintDefault": "Вставьте URL или найдите...",
+  "@homeSearchHintDefault": {
+    "description": "Default placeholder for the main search field on Home"
+  },
+  "tutorialSearchHint": "Вставьте или найдите...",
+  "@tutorialSearchHint": {
+    "description": "Placeholder shown in the tutorial search demo"
+  },
+  "trackCoverNoEmbeddedArt": "Не найдено встроенных обложек альбома",
+  "@trackCoverNoEmbeddedArt": {
+    "description": "Message shown when a track file has no embedded cover art"
+  },
+  "trackCoverReplace": "Заменить обложку",
+  "@trackCoverReplace": {
+    "description": "Button label for replacing selected cover art"
+  },
+  "trackCoverPick": "Выбрать обложку",
+  "@trackCoverPick": {
+    "description": "Button label for selecting cover art"
+  },
+  "trackCoverClearSelected": "Очистить выбранную обложку",
+  "@trackCoverClearSelected": {
+    "description": "Tooltip for clearing the newly selected cover art"
+  },
+  "trackCoverCurrent": "Текущая обложка",
+  "@trackCoverCurrent": {
+    "description": "Label for the currently embedded cover preview"
+  },
+  "trackCoverSelected": "Выбранная обложка",
+  "@trackCoverSelected": {
+    "description": "Label for the newly selected cover preview"
+  },
+  "trackCoverReplaceNotice": "Выбранная обложка заменит текущую встроенную при нажатии \"Сохранить\".",
+  "@trackCoverReplaceNotice": {
+    "description": "Notice shown when a new cover has been selected but not saved yet"
+  },
+  "trackCoverResolution": "Разрешение обложки",
+  "@trackCoverResolution": {
+    "description": "Label for selecting the embedded cover art resolution"
+  },
+  "trackCoverResolutionHint": "Задает длину самой большой стороны при сохранении. Увеличение размера не улучшает детализацию изображения.",
+  "@trackCoverResolutionHint": {
+    "description": "Explanation below the embedded cover art resolution selector"
+  },
+  "trackCoverResizeFailed": "Не удалось изменить размер обложки. Пожалуйста, попробуйте другой размер или изображение.",
+  "@trackCoverResizeFailed": {
+    "description": "Error shown when resizing cover art before saving metadata fails"
+  },
+  "nowPlayingRepeatOff": "Повтор выключен",
+  "@nowPlayingRepeatOff": {
+    "description": "Repeat toggle tooltip when repeat is disabled"
+  },
+  "nowPlayingRepeatAll": "Повторять всё",
+  "@nowPlayingRepeatAll": {
+    "description": "Repeat toggle tooltip when the whole queue repeats"
+  },
+  "nowPlayingRepeatOne": "Повтор трека",
+  "@nowPlayingRepeatOne": {
+    "description": "Repeat toggle tooltip when the current track repeats"
+  },
+  "logAutoScrollOn": "Автопрокрутка ВКЛ",
+  "@logAutoScrollOn": {
+    "description": "Tooltip when auto-scroll is enabled on the log screen"
+  },
+  "logAutoScrollOff": "Автопрокрутка ВЫКЛ",
+  "@logAutoScrollOff": {
+    "description": "Tooltip when auto-scroll is disabled on the log screen"
+  },
+  "logCopyLogs": "Скопировать логи",
+  "@logCopyLogs": {
+    "description": "Tooltip for copying logs"
+  },
+  "logClearSearch": "Очистить поиск",
+  "@logClearSearch": {
+    "description": "Tooltip for clearing the log search field"
+  },
+  "clickableInformationUnavailable": "Информация о {type} недоступна",
+  "@clickableInformationUnavailable": {
+    "description": "Snackbar shown when clickable metadata cannot open a destination",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yOpenItemCount": "Открыть {title}, {count} {count, plural, =1{элемент} few{элемента} other{элементов}}",
+  "@a11yOpenItemCount": {
+    "description": "Accessibility label for opening a grouped item with count",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "a11yOpenAlbumByArtistTrackCount": "Открыть альбом {albumName} от {artistName}, {trackCount} {trackCount, plural, one{трек} few{трека} other{треков}}",
+  "@a11yOpenAlbumByArtistTrackCount": {
+    "description": "Accessibility label for opening an album item with track count",
+    "placeholders": {
+      "albumName": {
+        "type": "String"
+      },
+      "artistName": {
+        "type": "String"
+      },
+      "trackCount": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsLyrics": "Тексты песен",
+  "@settingsLyrics": {
+    "description": "Settings menu item - lyrics settings"
+  },
+  "settingsLyricsSubtitle": "Локальные тексты, режим сохранения и размер текста",
+  "editMetadataFieldDateHint": "ГГГГ-ММ-ДД либо ГГГГ",
+  "@editMetadataFieldDateHint": {
+    "description": "Hint text for the edit metadata date field"
+  },
+  "editMetadataFieldTrackTotal": "Всего треков",
+  "@editMetadataFieldTrackTotal": {
+    "description": "Label for total tracks field in the edit metadata sheet"
+  },
+  "editMetadataFieldDiscTotal": "Всего дисков",
+  "@editMetadataFieldDiscTotal": {
+    "description": "Label for total discs field in the edit metadata sheet"
+  },
+  "editMetadataFieldComposer": "Композитор",
+  "@editMetadataFieldComposer": {
+    "description": "Label for composer field in the edit metadata sheet"
+  },
+  "editMetadataFieldComment": "Комментарий",
+  "@editMetadataFieldComment": {
+    "description": "Label for comment field in the edit metadata sheet"
+  },
+  "trackAlbumType": "Тип Релиза",
+  "@trackAlbumType": {
+    "description": "Label for an album or release type metadata value"
+  },
+  "editMetadataFieldAlbumTypeHint": "Альбом, сингл, EP, сборник...",
+  "@editMetadataFieldAlbumTypeHint": {
+    "description": "Hint for the release type metadata field"
+  },
+  "editMetadataFieldExplicit": "Explicit",
+  "@editMetadataFieldExplicit": {
+    "description": "Label for the explicit content metadata field"
+  },
+  "editMetadataFieldExplicitHint": "Пометить этот трек как содержащий откровенное содержимое(Explicit)",
+  "@editMetadataFieldExplicitHint": {
+    "description": "Description for the explicit content metadata switch"
+  },
+  "metadataExplicitValue": "Explicit",
+  "@metadataExplicitValue": {
+    "description": "Displayed value when a track is marked explicit"
+  },
+  "editMetadataFieldUpc": "UPC / Штрихкод",
+  "@editMetadataFieldUpc": {
+    "description": "Label for the release barcode metadata field"
+  },
+  "editMetadataFieldUpcHint": "Числовой UPC, EAN, или GTIN",
+  "@editMetadataFieldUpcHint": {
+    "description": "Hint for the release barcode metadata field"
+  },
+  "editMetadataAdvanced": "Расширенные",
+  "@editMetadataAdvanced": {
+    "description": "Expandable section label for advanced metadata fields"
+  },
+  "libraryFilterMetadataMissingTrackNumber": "Отсутствует номер трека",
+  "@libraryFilterMetadataMissingTrackNumber": {
+    "description": "Filter option - items missing track number"
+  },
+  "libraryFilterMetadataMissingDiscNumber": "Отсутствует номер диска",
+  "@libraryFilterMetadataMissingDiscNumber": {
+    "description": "Filter option - items missing disc number"
+  },
+  "libraryFilterMetadataMissingArtist": "Отсутствует исполнитель",
+  "@libraryFilterMetadataMissingArtist": {
+    "description": "Filter option - items missing artist"
+  },
+  "libraryFilterMetadataIncorrectIsrcFormat": "Некорректный формат ISRC",
+  "@libraryFilterMetadataIncorrectIsrcFormat": {
+    "description": "Filter option - items with an invalid ISRC format"
+  },
+  "libraryFilterMetadataMissingIsrc": "Отсутствует ISRC",
+  "@libraryFilterMetadataMissingIsrc": {
+    "description": "Filter option - items without any ISRC tag"
+  },
+  "libraryFilterMetadataMissingLabel": "Без лейбла",
+  "@libraryFilterMetadataMissingLabel": {
+    "description": "Filter option - items missing record label"
+  },
+  "collectionDeletePlaylistsMessage": "Удалить {count} {count, plural, =1{плейлист} few{плейлиста} other{плейлистов}}?",
+  "@collectionDeletePlaylistsMessage": {
+    "description": "Confirmation message for deleting selected playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionPlaylistsDeleted": "{count} {count, plural, =1{плейлист} few{плейлиста} other{плейлистов}}",
+  "@collectionPlaylistsDeleted": {
+    "description": "Snackbar after deleting selected playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionAddedTracksToPlaylist": "Добавлено {count} {count, plural, =1{трек} few{трека} other{треков}} в {playlistName}",
+  "@collectionAddedTracksToPlaylist": {
+    "description": "Snackbar after adding multiple tracks to a playlist",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionAddedTracksToPlaylistWithExisting": "Добавлено: {count} {count, plural, =1{трек} few{трека} other{треков}} в {playlistName} ({alreadyCount} уже в плейлисте)",
+  "@collectionAddedTracksToPlaylistWithExisting": {
+    "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "playlistName": {
+        "type": "String"
+      },
+      "alreadyCount": {
+        "type": "int"
+      }
+    }
+  },
+  "itemCount": "{count} {count, plural, =1{элемент} few{элемента} other{элементов}}",
+  "@itemCount": {
+    "description": "Generic item count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionDeleteTracksCount": "Удалить {count} {count, plural, =1{трек} few{трека} other{треков}}",
+  "@selectionDeleteTracksCount": {
+    "description": "Button label for deleting selected tracks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "a11ySelectTrack": "Выбрать трек",
+  "@a11ySelectTrack": {
+    "description": "Accessibility label for selecting a track"
+  },
+  "a11yDeselectTrack": "Отменить выбор трека",
+  "@a11yDeselectTrack": {
+    "description": "Accessibility label for deselecting a track"
+  },
+  "a11yPlayTrackByArtist": "Играть {trackName} от {artistName}",
+  "@a11yPlayTrackByArtist": {
+    "description": "Accessibility label for playing a local library track",
+    "placeholders": {
+      "trackName": {
+        "type": "String"
+      },
+      "artistName": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yPlayTrack": "Воспроизвести {title}",
+  "a11yPauseTrack": "Пауза: {title}",
+  "a11yMoreOptionsFor": "Другие действия для {title}",
+  "a11yDismissMiniPlayer": "Скрыть мини-плеер",
+  "a11ySelectPlaylist": "Выбрать плейлист",
+  "a11yDeselectPlaylist": "Снять выбор с плейлиста",
+  "a11yShowMore": "Показать больше",
+  "a11yPlaybackPosition": "Позиция воспроизведения",
+  "a11ySavingTrackDetails": "Сохранение сведений о треке",
+  "cacheClearFor": "Очистить {target}",
+  "logIssueSummary": "Краткое описание проблемы",
+  "@logIssueSummary": {
+    "description": "Header for log issue analysis summary"
+  },
+  "logTotalErrors": "Всего ошибок: {count}",
+  "@logTotalErrors": {
+    "description": "Total error count in log issue analysis",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryScanCancelled": "Сканирование отменено",
+  "@libraryScanCancelled": {
+    "description": "Library scan status when a scan was cancelled"
+  },
+  "libraryScanCancelledSubtitle": "Вы можете повторить сканирование, когда будете готовы.",
+  "@libraryScanCancelledSubtitle": {
+    "description": "Library scan status subtitle after cancellation"
+  },
+  "audioAnalysisStereo": "Стерео",
+  "@audioAnalysisStereo": {
+    "description": "Audio channel layout label - stereo"
+  },
+  "audioAnalysisMono": "Моно",
+  "@audioAnalysisMono": {
+    "description": "Audio channel layout label - mono"
+  },
+  "unknownArtist": "Неизвестный исполнитель",
+  "@unknownArtist": {
+    "description": "Fallback artist name when metadata is missing"
+  },
+  "permissionAudio": "Аудио",
+  "@permissionAudio": {
+    "description": "Audio permission type label"
+  },
+  "permissionStorage": "Хранилище",
+  "@permissionStorage": {
+    "description": "Storage permission type label"
+  },
+  "permissionNotification": "Уведомление",
+  "@permissionNotification": {
+    "description": "Notification permission type label"
+  },
+  "libraryPlayback": "Воспроизведение",
+  "@libraryPlayback": {
+    "description": "Section header for playback settings in library settings"
+  },
+  "nowPlayingNothingPlaying": "Ничего не играет",
+  "@nowPlayingNothingPlaying": {
+    "description": "Empty state when no track is currently playing"
+  },
+  "nowPlayingMinimize": "Свернуть",
+  "@nowPlayingMinimize": {
+    "description": "Tooltip for minimizing the now playing screen"
+  },
+  "nowPlayingUpNext": "Далее",
+  "@nowPlayingUpNext": {
+    "description": "Title for the playback queue sheet"
+  },
+  "nowPlayingAudioOutput": "Аудиовыход",
+  "nowPlayingWrittenBy": "Автор(ы): {writers}",
+  "@nowPlayingWrittenBy": {
+    "placeholders": {
+      "writers": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingLyricsProvider": "Провайдер текста:{provider}",
+  "@nowPlayingLyricsProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingAudioOutputUnavailable": "Невозможно открыть настройки аудиовыхода.",
+  "nowPlayingPreviousTrack": "Предыдущий трек",
+  "@nowPlayingPreviousTrack": {
+    "description": "Tooltip for the previous-track playback control"
+  },
+  "nowPlayingNextTrack": "Следующий трек",
+  "@nowPlayingNextTrack": {
+    "description": "Tooltip for the next-track playback control"
+  },
+  "nowPlayingDetails": "Подробности",
+  "@nowPlayingDetails": {
+    "description": "Menu item and section title for track metadata details"
+  },
+  "nowPlayingSleepTimer": "Таймер сна",
+  "@nowPlayingSleepTimer": {
+    "description": "Menu item and sheet title for the playback sleep timer"
+  },
+  "nowPlayingSleepTimerActive": "Заканчивается в {time}",
+  "@nowPlayingSleepTimerActive": {
+    "description": "Active sleep timer deadline shown in the player menu",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, one{{minutes} минута} few{{minutes} минуты} other{{minutes} минут}}",
+  "@nowPlayingSleepTimerMinutes": {
+    "description": "Duration choice for the playback sleep timer",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "nowPlayingSleepTimerOff": "Отключить таймер сна",
+  "@nowPlayingSleepTimerOff": {
+    "description": "Action to cancel the active playback sleep timer"
+  },
+  "nowPlayingSleepTimerSet": "Таймер сна установлен на {duration}",
+  "@nowPlayingSleepTimerSet": {
+    "description": "Confirmation after setting the playback sleep timer",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "nowPlayingSleepTimerCancelled": "Таймер сна отключен",
+  "@nowPlayingSleepTimerCancelled": {
+    "description": "Confirmation after cancelling the playback sleep timer"
+  },
+  "nowPlayingTabPlayer": "Плеер",
+  "@nowPlayingTabPlayer": {
+    "description": "Tab label for the player view"
+  },
+  "nowPlayingTabLyrics": "Текст песни",
+  "@nowPlayingTabLyrics": {
+    "description": "Tab label for the lyrics view"
+  },
+  "nowPlayingNoLyrics": "В файле нет текста",
+  "@nowPlayingNoLyrics": {
+    "description": "Empty state when the playing file has no embedded lyrics"
+  },
+  "nowPlayingInstrumental": "Инструментальный",
+  "@nowPlayingInstrumental": {
+    "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
+  },
+  "nowPlayingLyricsLanguageOptions": "Параметры языка текстов песен",
+  "@nowPlayingLyricsLanguageOptions": {
+    "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
+  },
+  "nowPlayingHidePronunciation": "Скрыть произношение",
+  "nowPlayingShowPronunciation": "Показать произношение",
+  "nowPlayingHideTranslation": "Скрыть перевод",
+  "nowPlayingShowTranslation": "Показать перевод",
+  "nowPlayingShuffleOn": "Перемешивание вкл",
+  "@nowPlayingShuffleOn": {
+    "description": "Tooltip when shuffle mode is enabled"
+  },
+  "nowPlayingPlayInOrder": "Играть в очереди",
+  "@nowPlayingPlayInOrder": {
+    "description": "Tooltip when shuffle mode is disabled"
+  },
+  "nowPlayingShuffleLibrary": "Перемешать медиатеку",
+  "@nowPlayingShuffleLibrary": {
+    "description": "Button label to shuffle and play the entire local library"
+  },
+  "nowPlayingQueueEmpty": "Очередь пуста",
+  "@nowPlayingQueueEmpty": {
+    "description": "Empty state when the playback queue has no items"
+  },
+  "nowPlayingNoMetadata": "Метаданные не доступны",
+  "@nowPlayingNoMetadata": {
+    "description": "Empty state when track metadata cannot be loaded"
+  },
+  "selectionDeletePlaylistsCount": "Удалить {count} {count, plural, =1{плейлист} few{плейлиста} other{плейлистов}}",
+  "@selectionDeletePlaylistsCount": {
+    "description": "Button label for deleting multiple selected playlists",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "actionShuffle": "Перемешать",
+  "@actionShuffle": {
+    "description": "Tooltip for shuffle playback action"
+  },
+  "metadataOriginal": "Оригинал",
+  "@metadataOriginal": {
+    "description": "Label for keeping the original embedded cover resolution"
+  },
+  "unknownTitle": "Неизвестное название",
+  "@unknownTitle": {
+    "description": "Fallback track title when metadata is missing"
+  },
+  "trackPlayNext": "Играть далее",
+  "@trackPlayNext": {
+    "description": "Menu action to play a track as the next queue item"
+  },
+  "trackAddToQueue": "Добавить в очередь",
+  "@trackAddToQueue": {
+    "description": "Menu action to add a track to the playback queue"
+  },
+  "settingsSearchHint": "Настройки поиска",
+  "@settingsSearchHint": {
+    "description": "Placeholder of the search field on the Settings tab"
+  },
+  "settingsSearchNoResults": "Нет настроек, соответствующих \"{query}\"",
+  "@settingsSearchNoResults": {
+    "description": "Shown when a Settings search returns nothing",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryFilterMetadataMissingLyrics": "Текст отсутствует",
+  "@libraryFilterMetadataMissingLyrics": {
+    "description": "Filter option for tracks without embedded or sidecar lyrics"
+  },
+  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "@libraryFilterMetadataMissingReplayGain": {
+    "description": "Filter option for scanned tracks without ReplayGain gain tags"
+  },
+  "libraryFilterMetadataHasReplayGain": "Есть ReplayGain",
+  "libraryFilterIncompleteAlbums": "Неполные альбомы",
+  "libraryAlbumCompletenessUnknown": "Полнота альбома неизвестна",
+  "libraryAlbumMissingTracks": "{present}/{expected} треков · не хватает {missing}",
+  "mornyeSearch": "Поиск",
+  "mornyeContinuePlaying": "Продолжить воспроизведение",
+  "mornyeFavorite": "В избранное",
+  "@mornyeFavorite": {
+    "description": "Compact context menu action that adds a track to Loved"
+  },
+  "mornyeGoToArtist": "Перейти к исполнителю",
+  "mornyeFavorited": "Избранное",
+  "@mornyeFavorited": {
+    "description": "Selected state of the compact favorite action"
+  },
+  "autoMixDescription": "Плавный переход с подгонкой темпа и сохранением тональности. При невозможности синхронизации битов применяется кроссфейд.",
+  "autoMixOn": "Автомикс вкл",
+  "autoMixOff": "Автомикс выкл",
+  "autoplayOn": "Автовоспроизведение вкл",
+  "autoplayOff": "Автовоспроизведение выкл",
+  "autoplayFromLibrary": "Автовоспроизведение из вашей медиатеки",
+  "autoplayDescription": "Продолжать с похожими песнями из медиатеки, когда очередь заканчивается.",
+  "autoplayPersonalization": "Персональное автовоспроизведение",
+  "autoplayPersonalizationDescription": "Обучаться по песням, которые вы слушаете и пропускаете, приватно на этом устройстве. Выключение прекращает обучение и возвращает обычное автовоспроизведение.",
+  "autoplayResetLearning": "Сбросить обучение рекомендаций",
+  "profileTitle": "Профиль",
+  "profileSetUp": "Настройте свой профиль",
+  "profileEdit": "Изменить имя и фото",
+  "backupIncludesProfile": "Включает в себя имя профиля и фото",
+  "profileName": "Имя",
+  "profileNameHint": "Ваше имя",
+  "profileChangePhoto": "Выбрать фото",
+  "profileRemovePhoto": "Удалить фото",
+  "profilePhotoError": "Выберите изображение размером менее 20 МБ.",
+  "profileSaveError": "Не удалось сохранить ваш профиль. Пожалуйста, попробуйте еще раз.",
+  "motionArtwork": "Анимированные обложки",
+  "listeningStats": "Статистика прослушивания",
+  "listeningStatsRecord": "Записывать прослушивание",
+  "listeningStatsDescription": "Хранится только на этом устройстве, начиная с текущего момента. Записывается только встроенный плеер; паузы, буферизация и перемотка не добавляют время. Воспроизведение засчитывается после 30 секунд.",
+  "listeningStatsEmpty": "Слушайте музыку во встроенном плеере, чтобы начать свою сводку. Прошлое прослушивание восстановить нельзя.",
+  "listeningStatsDays": "{days} дн.",
+  "listeningStatsMinutes": "{minutes} мин",
+  "listeningStatsTotals": "{plays, plural, =1{1 воспроизведение} other{воспроизведений: {plays}}} · {tracks, plural, =1{1 трек} other{треков: {tracks}}} · {days, plural, =1{1 активный день} other{активных дней: {days}}}",
+  "listeningStatsPreviousYear": "Предыдущий год",
+  "listeningStatsNextYear": "Следующий год",
+  "listeningStatsActivity": "Дни прослушивания · минуты",
+  "listeningStatsTopArtists": "Топ исполнителей",
+  "listeningStatsTopTracks": "Топ треков",
+  "listeningStatsLoadError": "Не удалось загрузить статистику прослушивания",
+  "listeningStatsClear": "Очистить статистику прослушивания",
+  "listeningStatsClearError": "Не удалось очистить статистику прослушивания. Попробуйте снова.",
+  "listeningStatsClearDescription": "Удалить всю статистику прослушивания на этом устройстве? Ваша музыка и плейлисты останутся.",
+  "libraryLoading": "Загрузка медиатеки…",
+  "libraryLoadFailed": "Не удалось загрузить медиатеку. Повторите попытку, чтобы загрузить сохранённые папки и индекс треков.",
+  "autoMixSettingsTitle": "Переходы микса",
+  "autoMixAutomaticDuration": "Автоматическая длительность",
+  "autoMixDuration": "Длительность микса",
+  "autoMixEffect": "Эффект перехода",
+  "autoMixEffectAuto": "Авто",
+  "autoMixEffectCrossfade": "Наплыв",
+  "autoMixEffectMuffled": "Приглушение",
+  "autoMixEffectEcho": "Эхо",
+  "autoMixEffectPitch": "Высота",
+  "autoMixEffectCustom": "Свой",
+  "autoMixEffectsHelp": "Эффекты применяются к концу уходящей песни во время микса. Для коротких песен наложение короче.",
+  "autoMixSpeed": "Скорость",
+  "autoMixPitch": "Высота (полутоны)",
+  "autoMixEcho": "Эхо",
+  "autoMixLowPass": "Фильтр приглушения",
+  "autoMixMixing": "Микс",
+  "autoMixCrossfading": "Наплыв",
+  "playbackAutomation": "Автоматическое воспроизведение",
+  "playbackPauseOnMute": "Пауза при выключении звука",
+  "snackbarPlaybackMuted": "Громкость медиа на нуле. Воспроизведение приостановлено. Нажмите «Играть», чтобы продолжить.",
+  "playbackPauseOnMuteDescription": "Пауза при нулевой громкости медиа и возобновление при увеличении. Ручная пауза остаётся. Только стандартный аудиовыход.",
+  "playbackOnHeadphonesConnected": "Играть при подключении наушников",
+  "playbackOnHeadphonesConnectedDescription": "Возобновлять текущую песню при подключении проводных или Bluetooth-наушников. Отключение ставит на паузу. Только встроенный плеер.",
+  "appearanceCustomFont": "Свой шрифт",
+  "appearanceCustomFontSubtitle": "Импортируйте файл TTF или OTF (до 10 МБ). Заменяет шрифт темы и системы.",
+  "appearanceCustomFontInvalid": "Не удалось загрузить этот шрифт. Выберите корректный файл TTF или OTF до 10 МБ.",
+  "appearanceCustomFontReset": "Использовать шрифт темы",
+  "lyricsTextSize": "Размер текста песни",
+  "lyricsTextPreview": "Следите за каждой строкой любимой песни",
+  "setupLocalPlayback": "Слушайте локальную музыку офлайн",
+  "tutorialPlaybackTitle": "Локальное воспроизведение",
+  "tutorialPlaybackDesc": "Выберите отсканированный трек, включите его и управляйте очередью.",
+  "tutorialStorageTitle": "Папки с музыкой",
+  "tutorialStorageDesc": "Используйте доступ Android к хранилищу, чтобы управлять локальной коллекцией.",
+  "tutorialStorageTip1": "Выберите папки с вашей музыкой",
+  "tutorialStorageTip2": "При необходимости дайте доступ через выбор папки Android",
+  "tutorialStorageTip3": "Пересканируйте медиатеку после добавления или изменения локальных файлов",
+  "librarySourceReady": "Готово",
+  "tutorialPlaybackTip1": "Включайте и ставьте на паузу музыку во встроенном плеере",
+  "tutorialPlaybackTip2": "Добавляйте локальные треки в очередь и плейлисты",
+  "tutorialPlaybackTip3": "Читайте встроенные или сопутствующие тексты песен во время прослушивания",
+  "cueSplitButton": "Разделить на Треки",
+  "@cueSplitButton": {
+    "description": "Button text to start CUE splitting"
+  },
+  "cueSplitConfirmMessage": "Разбить \"{album}\" на {count} отдельных FLAC-файлов?",
+  "@cueSplitConfirmMessage": {
+    "description": "CUE split confirmation dialog message",
+    "placeholders": {
+      "album": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitConfirmTitle": "Разделенный CUE-альбом",
+  "@cueSplitConfirmTitle": {
+    "description": "CUE split confirmation dialog title"
+  },
+  "cueSplitFailed": "Разделение CUE не удалось",
+  "@cueSplitFailed": {
+    "description": "Snackbar when CUE split fails"
+  },
+  "cueSplitSplitting": "Разделение CUE sheet... ({current}/{total})",
+  "@cueSplitSplitting": {
+    "description": "Snackbar while splitting CUE",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitSuccess": "Успешно разделено на {count} треков",
+  "@cueSplitSuccess": {
+    "description": "Snackbar after successful CUE split",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueSplitPartialSuccess": "Разделено на треки: {count}; не удалось создать: {failed}",
+  "cueSplitSavedOutsideLibrary": "Треки сохранены вне папок медиатеки. Добавьте эту папку в локальную медиатеку, чтобы увидеть их.",
+  "cueSplitTitle": "Разделить CUE Sheet",
+  "@cueSplitTitle": {
+    "description": "Title for CUE split bottom sheet"
+  },
+  "snackbarAddedToQueueGeneric": "Добавлено в очередь",
+  "@snackbarAddedToQueueGeneric": {
+    "description": "Snackbar when a track is added to the playback queue without naming it"
+  },
+  "snackbarPlayingNext": "Следующий",
+  "@snackbarPlayingNext": {
+    "description": "Snackbar when a track is inserted as the next queue item"
+  },
+  "trackCopyFilePath": "Скопировать путь к файлу",
+  "@trackCopyFilePath": {
+    "description": "Action - copy file path"
+  },
+  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmTitle": "Удалить с устройства?",
+  "@trackDeleteConfirmTitle": {
+    "description": "Delete confirmation title"
+  },
+  "trackRemoveFromDevice": "Удалить с устройства",
+  "@trackRemoveFromDevice": {
+    "description": "Action - delete downloaded file"
+  },
+  "trackReplayGain": "Пересканировать ReplayGain",
+  "@trackReplayGain": {
+    "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
+  },
+  "playbackNormalizationMode": "Режим громкости",
+  "playbackNormalizationModeTrack": "Трек",
+  "playbackNormalizationModeAlbum": "Альбом",
+  "playbackNormalizationPreamp": "Предусиление",
+  "playbackNormalizationPreampValue": "{gain} дБ (цель {target} LUFS)",
+  "playbackNormalizationPreampHint": "Меньшие значения звучат тише. Нормализация только понижает громкость треков, поэтому не даёт клиппинга.",
+  "audioInfoTitle": "Сведения об аудио",
+  "audioInfoSource": "Исходный файл",
+  "audioInfoSignal": "Сигнал",
+  "audioInfoLoudness": "Громкость",
+  "audioInfoProcessing": "Обработка",
+  "audioInfoOutput": "Выход",
+  "audioInfoAnalysis": "Анализ спектра и уровня",
+  "audioInfoQuality": "Качество",
+  "audioInfoHiResLossless": "Hi-Res Lossless",
+  "audioInfoLossless": "Без потерь",
+  "audioInfoLossy": "С потерями",
+  "audioInfoFormat": "Формат",
+  "audioInfoCodec": "Кодек",
+  "audioInfoSampleRate": "Частота дискретизации",
+  "audioInfoBitDepth": "Разрядность",
+  "audioInfoChannels": "Каналы",
+  "audioInfoChannelCount": "{count, plural, =1{Моно} =2{Стерео} other{Каналов: {count}}}",
+  "audioInfoBitrate": "Битрейт",
+  "audioInfoDuration": "Длительность",
+  "audioInfoFileSize": "Размер файла",
+  "audioInfoCompression": "Сжатие",
+  "audioInfoCompressionValue": "{percent}% от несжатого размера",
+  "audioInfoLocation": "Расположение",
+  "audioInfoLocationLocal": "Память устройства",
+  "audioInfoLocationShared": "Общая папка",
+  "audioInfoPcmRate": "Скорость несжатых данных",
+  "audioInfoFrequencyRange": "Диапазон частот",
+  "audioInfoFrequencyRangeValue": "До {frequency} (частота Найквиста)",
+  "audioInfoDynamicRange": "Теоретический динамический диапазон",
+  "audioInfoTrackGain": "Усиление трека",
+  "audioInfoTrackPeak": "Пик трека",
+  "audioInfoAlbumGain": "Усиление альбома",
+  "audioInfoAlbumPeak": "Пик альбома",
+  "audioInfoNoGainTags": "Нет тегов ReplayGain",
+  "audioInfoApplied": "Применено {gain}",
+  "audioInfoOn": "Вкл.",
+  "audioInfoOff": "Выкл.",
+  "audioInfoBypassed": "Обходится прямым выводом",
+  "audioInfoPlayer": "Плеер",
+  "audioInfoPlayerValue": "Встроенный плеер SpotiFLAC",
+  "audioInfoSignalPath": "Путь сигнала",
+  "audioInfoPathSystem": "Системный микшер",
+  "audioInfoPathDirect": "Прямой USB, обходит системный микшер",
+  "audioInfoPathExclusive": "Эксклюзивный вывод, обходит системный микшер",
+  "audioInfoDecoder": "Декодер",
+  "audioInfoHardware": "Аппаратный",
+  "audioInfoSoftware": "Программный",
+  "audioInfoBands": "Полос: {count}",
+  "audioInfoTempo": "Темп",
+  "audioInfoResampling": "Пересэмплирование",
+  "audioInfoResamplingNone": "Нет, частоты совпадают",
+  "audioInfoBitPerfect": "Bit-perfect",
+  "audioInfoBitPerfectActive": "Да, сэмплы без изменений",
+  "audioInfoBitPerfectNo": "Нет, микшируется системой",
+  "audioInfoDevice": "Устройство",
+  "audioInfoDeviceType": "{type, select, speaker{Динамик телефона} earpiece{Разговорный динамик} wired_headphones{Проводные наушники} wired_headset{Проводная гарнитура} line{Линейный выход} bluetooth{Bluetooth} bluetooth_le{Bluetooth LE Audio} usb{USB-аудио} usb_headset{USB-гарнитура} hdmi{HDMI} dock{Док-станция} cast{Трансляция} hearing_aid{Слуховой аппарат} airplay{AirPlay} car{Автомагнитола} other{Другое}}",
+  "audioInfoOutputRate": "Частота выхода",
+  "audioInfoOutputFormat": "Формат выхода",
+  "audioInfoDeviceRates": "Частоты устройства",
+  "audioInfoDeviceFormats": "Форматы устройства",
+  "audioInfoAnyRate": "Любая",
+  "audioInfoBuffer": "Буфер микшера",
+  "audioInfoLatency": "Задержка вывода",
+  "audioInfoLowLatency": "Аудио с низкой задержкой",
+  "audioInfoProAudio": "Pro Audio",
+  "audioInfoSupported": "Поддерживается",
+  "audioInfoNotSupported": "Не поддерживается",
+  "audioInfoSpatial": "Пространственный звук",
+  "audioInfoHeadTracking": "Отслеживание головы",
+  "audioInfoUnavailable": "Недоступно",
+  "audioInfoFixedVolume": "Управляется устройством",
+  "audioInfoCopy": "Копировать отчёт",
+  "audioInfoCopied": "Сведения об аудио скопированы",
+  "lyricsShareTitle": "Поделиться текстом",
+  "lyricsShareSelectHint": "Выберите до {count} строк",
+  "lyricsShareLimit": "Можно поделиться не более чем {count} строками",
+  "lyricsShareAction": "Поделиться",
+  "lyricsShareError": "Не удалось создать изображение с текстом",
+  "lyricsShareBackgroundArtwork": "Обложка",
+  "lyricsShareBackgroundColor": "Цвет обложки",
+  "lyricsShareBackgroundDark": "Тёмный",
+  "lyricsShareBackgroundLight": "Светлый",
+  "musicHaptics": "Вибрация под музыку",
+  "musicHapticsDescription": "Вибрировать в такт скачанным и локальным песням",
+  "musicHapticsSensitivity": "Чувствительность",
+  "musicHapticsStrength": "Сила",
+  "listeningRewind": "Итоги прослушивания",
+  "listeningRewindDescription": "Вспомните лучшее за последние недели и месяцы",
+  "listeningRewindChoosePeriod": "Выберите период",
+  "listeningRewindLastWeeks": "Последние {weeks} нед.",
+  "listeningRewindLastMonths": "Последние {months} мес.",
+  "listeningRewindThisYear": "{year} до сих пор",
+  "listeningRewindIntroTitle": "Ваши итоги",
+  "listeningRewindIntroBody": "Взгляд назад на то, что вы слушали с {start} по {end}.",
+  "listeningRewindMinutesTitle": "Вы слушали",
+  "listeningRewindMinutesUnit": "{minutes, plural, =1{минуту} other{минут}}",
+  "listeningRewindHours": "{hours, plural, =1{Это примерно 1 час музыки} other{Это примерно {hours} ч музыки}}",
+  "listeningRewindMore": "На {percent}% больше, чем в предыдущем периоде",
+  "listeningRewindLess": "На {percent}% меньше, чем в предыдущем периоде",
+  "listeningRewindSame": "Примерно так же, как в предыдущем периоде",
+  "listeningRewindTopArtistTitle": "Ваш главный исполнитель",
+  "listeningRewindArtistShare": "{percent}% времени прослушивания",
+  "listeningRewindArtistsTitle": "Исполнители в ротации",
+  "listeningRewindTopTrackTitle": "Ваша главная песня",
+  "listeningRewindPlays": "{plays, plural, =1{1 воспроизведение} other{Воспроизведений: {plays}}}",
+  "listeningRewindTracksTitle": "Песни на повторе",
+  "listeningRewindTopAlbumTitle": "Альбом, к которому вы возвращались",
+  "listeningRewindNewArtistsTitle": "Новые открытия",
+  "listeningRewindNewArtistsBody": "{count, plural, =1{Вы открыли 1 нового исполнителя} other{Вы открыли новых исполнителей: {count}}}",
+  "listeningRewindRhythmTitle": "Ваш ритм прослушивания",
+  "listeningRewindPeakDay": "Самый активный день",
+  "listeningRewindFavoriteDay": "Любимый день",
+  "listeningRewindStreak": "Самая длинная серия",
+  "listeningRewindStreakDays": "{days, plural, =1{1 день} other{{days} дн. подряд}}",
+  "listeningRewindReplayTitle": "Не получалось остановиться",
+  "listeningRewindReplayBody": "Вы включали её {plays} раз, {date}",
+  "listeningRewindOutroTitle": "Это ваши итоги",
+  "listeningRewindOutroBody": "Продолжайте слушать. Следующие итоги уже складываются.",
+  "listeningRewindEmpty": "За этот период прослушиваний пока мало. Включите музыку во встроенном плеере и возвращайтесь позже.",
+  "listeningRewindLoadError": "Не удалось загрузить ваши итоги",
+  "listeningRewindSlide": "Слайд {index} из {count}",
+  "listeningRewindShare": "Поделиться",
+  "listeningRewindShareError": "Не удалось поделиться итогами",
+  "listeningRewindNext": "Далее",
+  "listeningRewindPrevious": "Назад",
+  "listeningRewindMonthlyReady": "Последние 4 недели готовы к повтору",
+  "listeningRewindYearTitle": "Ваш {year} в музыке",
+  "listeningRewindYearEyebrow": "Итоги года",
+  "listeningRewindYearBanner": "Ваши главные исполнители, песни и моменты года",
+  "listeningRewindYearIntroBody": "Всё, что вы слушали в этом году, от первой песни до самого активного месяца.",
+  "listeningRewindNumbersTitle": "Ваш год в цифрах",
+  "listeningRewindSongsLabel": "Песни",
+  "listeningRewindArtistsLabel": "Исполнители",
+  "listeningRewindAlbumsLabel": "Альбомы",
+  "listeningRewindDaysLabel": "Дни с музыкой",
+  "listeningRewindDaysShare": "Музыка в {percent}% ваших дней",
+  "listeningRewindMonthsTitle": "По месяцам",
+  "listeningRewindBiggestMonthLabel": "Самый активный месяц",
+  "listeningRewindBiggestMonth": "Ваш самый активный месяц: {month}",
+  "listeningRewindMonthlyArtistsTitle": "Исполнитель месяца",
+  "listeningRewindLoyalTitle": "Всегда рядом",
+  "listeningRewindLoyalBody": "{days, plural, =1{С вами 1 день} other{С вами {days} разных дней}}",
+  "listeningRewindFirstSongTitle": "С чего начался ваш год",
+  "listeningRewindFirstSongBody": "Ваша самая популярная песня в первый день прослушивания, {date}",
+  "listeningRewindYearOutroTitle": "Таким был ваш {year}",
+  "listeningRewindYearOutroBody": "Ещё один год отличной музыки.",
+  "equalizerTitle": "Эквалайзер",
+  "equalizerDescription": "От 5 до 31 полосы, регуляторы тембра, предусилитель и динамика",
+  "equalizerEnable": "Включить эквалайзер",
+  "equalizerBands": "Полосы",
+  "equalizerTone": "Тембр и стерео",
+  "equalizerPreamp": "Предусилитель",
+  "equalizerBass": "Низкие",
+  "equalizerTreble": "Высокие",
+  "equalizerBalance": "Баланс",
+  "equalizerDynamics": "Динамика",
+  "equalizerHeadroom": "Автоматический запас",
+  "equalizerHeadroomDescription": "Снижает входное усиление, чтобы освободить место для усиленных частот.",
+  "equalizerLimiter": "Пиковый лимитер",
+  "equalizerLimiterDescription": "Удерживать пики ниже −0,5 dBFS, чтобы уменьшить клиппинг.",
+  "equalizerCompressor": "Компрессор",
+  "equalizerCompressorDescription": "Уменьшает разницу между тихими и громкими фрагментами.",
+  "equalizerThreshold": "Порог",
+  "equalizerRatio": "Соотношение",
+  "equalizerAttack": "Атака",
+  "equalizerRelease": "Восстановление",
+  "equalizerPresets": "Пресеты",
+  "equalizerSavePreset": "Сохранить пресет",
+  "equalizerPresetName": "Название пресета",
+  "equalizerImport": "Импорт пресета",
+  "equalizerExport": "Поделиться пресетом",
+  "equalizerResetTitle": "Сбросить эквалайзер?",
+  "equalizerResetDescription": "Вернуть плоскую кривую и стандартные настройки тембра и динамики. Сохранённые пресеты останутся.",
+  "equalizerBypass": "Bit-perfect, прямой USB и эксклюзивные Hi-Res выходы обходят эквалайзер. Отключите bit-perfect, чтобы использовать эквалайзер.",
+  "equalizerEffectivePreamp": "Входное усиление после запаса",
+  "equalizerDeletePreset": "Удалить пресет",
+  "equalizerCustom": "Свой",
+  "releaseTypeSingle": "Сингл",
+  "@@last_modified": "2026-04-28",
+  "updateLater": "Позже",
+  "@updateLater": {
+    "description": "Update button - dismiss"
+  },
+  "downloadDirectory": "Папка для скачивания",
+  "@downloadDirectory": {
+    "description": "Setting - download folder"
+  },
+  "safMigrationTitle": "Требуется обновление хранилища",
+  "@safMigrationTitle": {
+    "description": "Title of SAF migration dialog"
+  },
+  "storageAutomaticFolder": "Автоматическая папка",
+  "downloadFolderReselect": "Выбрать папку заново",
+  "@downloadFolderReselect": {
+    "description": "Button that reopens the folder picker to restore download folder access"
+  }
+}
