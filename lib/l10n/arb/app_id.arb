@@ -11,7 +11,7 @@
   "usbBitPerfectDescription": "Pertahankan kualitas audio di perangkat output yang didukung. Pilih Direct USB atau AAudio Exclusive di bawah; juga, output USB Android butuh Android 14+. Berlaku di lagu selanjutnya, tanpa AutoMix & normalisasi. Mungkin Anda tidak dapat mengatur volume.",
   "usbHardwareVolume": "Volume hardware DAC",
   "usbVolumeWarningTitle": "Periksa volume Anda",
-  "usbVolumeWarning": "Memutar dengan Direct USB akan membuat suara lebih keras dari biasanya, dan tombol volume mungkin tidak akan berfungsi. Pelankan volume DAC atau amplifier Anda sebelum mendengar. Bila mendukung, SpotiFLAC mengatur volume DAC pada -40dB saat terhubung; tapi ini tidak menjamin suara akan berada di batas aman.",
+  "usbVolumeWarning": "Memutar dengan Direct USB akan membuat suara lebih keras dari biasanya, dan tombol volume mungkin tidak akan berfungsi. Pelankan volume DAC atau amplifier Anda sebelum mendengar. Bila mendukung, Sistrum mengatur volume DAC pada -40dB saat terhubung; tapi ini tidak menjamin suara akan berada di batas aman.",
   "usbVolumeAccept": "Saya paham",
   "usbVolumeUnavailable": "Pemutaran dijeda karena kontrol volume pada hardware DAC tidak dapat diverifikasi. Turunkan volume DAC atau Amplifier, lalu hidupkan volume output tetap bila dibutuhkan lalu putar lagi.",
   "usbFixedVolume": "Izinkan volume tetap output USB",
@@ -66,7 +66,7 @@
   "appearanceGlassClarityAutoFrosted": "Otomatis mengukur perangkat ini dan memakai Buram. Pilih Lite atau Full untuk mengatur kejernihan.",
   "appearanceUseSystemFont": "Gunakan font sistem",
   "appearanceUseSystemFontSubtitle": "Menggunakan font default perangkat untuk aplikasi.",
-  "appName": "SpotiFLAC Mobile",
+  "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -841,7 +841,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Hapus folder ini dan lagu di dalamnya dari SpotiFLAC Mobile? File audio di perangkat tidak akan dihapus.",
+  "libraryRemoveFolderMessage": "Hapus folder ini dan lagu di dalamnya dari Sistrum? File audio di perangkat tidak akan dihapus.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -1032,7 +1032,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "SpotiFLAC butuh akses penyimpanan untuk memindai Koleksi musik Anda. Mohon berikan perizinan di Setelan.",
+  "libraryStorageAccessMessage": "Sistrum butuh akses penyimpanan untuk memindai Koleksi musik Anda. Mohon berikan perizinan di Setelan.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -1519,7 +1519,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "File ini bukan cadangan SpotiFLAC yang valid",
+  "backupInvalidFile": "File ini bukan cadangan Sistrum yang valid",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -2674,7 +2674,7 @@
   "audioInfoOff": "Nonaktif",
   "audioInfoBypassed": "Dilewati oleh output langsung",
   "audioInfoPlayer": "Pemutar",
-  "audioInfoPlayerValue": "Pemutar bawaan SpotiFLAC",
+  "audioInfoPlayerValue": "Pemutar bawaan Sistrum",
   "audioInfoSignalPath": "Jalur sinyal",
   "audioInfoPathSystem": "Mixer sistem",
   "audioInfoPathDirect": "USB langsung, melewati mixer sistem",

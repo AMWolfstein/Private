@@ -10,6 +10,6 @@ class AppInfo {
 
   static String get displayVersion => kDebugMode ? 'Internal' : version;
 
-  static const String appName = 'SpotiFLAC Mobile';
+  static const String appName = 'Sistrum';
   static const String copyright = '© 2026 Zarz Eleutherius';
 }

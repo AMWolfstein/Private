@@ -37,7 +37,7 @@ class PlaybackDependencies {
     bool? isIOS,
     bool? isAndroid,
     this.notificationChannel = const MethodChannel(
-      'com.zarz.spotiflac/playback_notification',
+      'com.amwolfstein.sistrum/playback_notification',
     ),
   }) : _sessionDatabase = sessionDatabase,
        _libraryDatabase = libraryDatabase,
@@ -77,17 +77,17 @@ class PlaybackDependencies {
   static MusicPlaybackDeck _createDeck(String playerId) =>
       MusicPlaybackDeck(playerId: playerId);
   static Future<AudioSession> _getAudioSession() => AudioSession.instance;
+  static const notificationConfig = AudioServiceConfig(
+    androidNotificationChannelId: 'com.amwolfstein.sistrum.playback',
+    androidNotificationChannelName: 'Playback',
+    androidNotificationIcon: 'drawable/ic_stat_sistrum',
+    androidNotificationOngoing: true,
+    androidStopForegroundOnPause: true,
+  );
+
   static Future<MusicPlayerHandler> _initializeAudioHandler(
     MusicPlayerHandler Function() builder,
-  ) => AudioService.init(
-    builder: builder,
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.zarz.spotiflac.playback',
-      androidNotificationChannelName: 'Playback',
-      androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
-    ),
-  );
+  ) => AudioService.init(builder: builder, config: notificationConfig);
 }
 
 /// Owns a player lifetime and its latest immutable settings. Configuration is

@@ -8,7 +8,7 @@ import 'package:spotiflac_android/widgets/audio_output_button.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const channel = MethodChannel('com.zarz.spotiflac/audio_output');
+  const channel = MethodChannel('com.amwolfstein.sistrum/audio_output');
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
@@ -35,10 +35,10 @@ void main() {
       ) async {
         if (call.method == 'create') {
           final args = call.arguments as Map<Object?, Object?>;
-          expect(args['viewType'], 'com.zarz.spotiflac/audio_output');
+          expect(args['viewType'], 'com.amwolfstein.sistrum/audio_output');
           viewId = args['id'] as int;
           viewChannel = MethodChannel(
-            'com.zarz.spotiflac/audio_output/$viewId',
+            'com.amwolfstein.sistrum/audio_output/$viewId',
           );
           messenger.setMockMethodCallHandler(
             viewChannel!,

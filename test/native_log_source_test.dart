@@ -6,7 +6,7 @@ import 'package:spotiflac_android/services/native_log_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const channel = MethodChannel('com.zarz.spotiflac/backend');
+  const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   const source = NativeLogSource(channel: channel);
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;

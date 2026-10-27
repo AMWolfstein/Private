@@ -70,6 +70,68 @@ void main() {
     ]);
   });
 
+  for (final producer in ['SpotiFLAC Mobile', 'Sistrum']) {
+    for (final version in [1, 2]) {
+      test('$producer v$version backup still restores history', () async {
+        final metadata = {
+          'magic': 'spotiflac-backup',
+          'format_version': version,
+          'app': producer,
+          'app_version': '5.1.0',
+          'history_count': 1,
+          'data': {
+            'settings': {'theme': 'dark', 'locale': 'id'},
+            'collections': {
+              'loved': [
+                {'key': 'local:legacy-song'},
+              ],
+            },
+            if (version == 1)
+              'history': [
+                {'id': 'legacy-song', 'title': 'Still here'},
+              ],
+          },
+        };
+        final path =
+            '${directory.path}/spotiflac_mobile_backup_old.'
+            '${version == 1 ? 'json' : 'sflb'}';
+        if (version == 1) {
+          await File(path).writeAsString(jsonEncode(metadata));
+        } else {
+          final metadataBytes = utf8.encode(jsonEncode(metadata));
+          final historyBytes = utf8.encode(
+            '${jsonEncode({'id': 'legacy-song', 'title': 'Still here'})}\n',
+          );
+          final archive = Archive()
+            ..addFile(
+              ArchiveFile('metadata.json', metadataBytes.length, metadataBytes),
+            )
+            ..addFile(
+              ArchiveFile('history.ndjson', historyBytes.length, historyBytes),
+            );
+          await File(path).writeAsBytes(ZipEncoder().encode(archive));
+        }
+
+        final bundle = await BackupService.parseFile(
+          path,
+          temporaryDirectory: directory,
+        );
+        expect(bundle, isNotNull);
+        addTearDown(bundle!.cleanup);
+        expect(bundle.settings, {'theme': 'dark', 'locale': 'id'});
+        expect(bundle.likedCount, 1);
+        expect(bundle.collections['loved'], [
+          {'key': 'local:legacy-song'},
+        ]);
+        final history = _AtomicHistory();
+        await BackupService.restoreHistory(bundle, historyDatabase: history);
+        expect(history.rows, [
+          {'id': 'legacy-song', 'title': 'Still here'},
+        ]);
+      });
+    }
+  }
+
   test('legacy JSON cannot select a local cover source path', () {
     final bundle = BackupService.parse(
       jsonEncode({
@@ -194,6 +256,12 @@ void main() {
         final metadata =
             jsonDecode(utf8.decode(archive.find('metadata.json')!.content))
                 as Map<String, dynamic>;
+        expect(metadata['app'], 'Sistrum');
+        expect(metadata['magic'], 'spotiflac-backup');
+        expect(
+          archiveFile.uri.pathSegments.last,
+          startsWith('spotiflac_mobile_backup_'),
+        );
         final data = metadata['data'] as Map<String, dynamic>;
         expect(data.keys, ['settings', 'collections']);
         expect(data['collections'], collections);

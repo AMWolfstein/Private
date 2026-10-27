@@ -12,7 +12,7 @@ import 'package:spotiflac_android/l10n/app_localizations.dart';
 import 'package:spotiflac_android/services/audio_route_info.dart';
 import 'package:spotiflac_android/widgets/audio_info_sheet.dart';
 
-const _route = MethodChannel('com.zarz.spotiflac/audio_route');
+const _route = MethodChannel('com.amwolfstein.sistrum/audio_route');
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -295,7 +295,7 @@ void main() {
     });
   }
 
-  const backendChannel = MethodChannel('com.zarz.spotiflac/backend');
+  const backendChannel = MethodChannel('com.amwolfstein.sistrum/backend');
 
   /// Records native calls made while [body] runs; other channel traffic is
   /// irrelevant here and answered with null.

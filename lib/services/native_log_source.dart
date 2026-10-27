@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 /// Logging transport is independent of the bridge whose calls it records.
 class NativeLogSource {
   const NativeLogSource({
-    MethodChannel channel = const MethodChannel('com.zarz.spotiflac/backend'),
+    MethodChannel channel = const MethodChannel(
+      'com.amwolfstein.sistrum/backend',
+    ),
   }) : _channel = channel;
 
   final MethodChannel _channel;

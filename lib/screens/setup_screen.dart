@@ -550,7 +550,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
                     'assets/images/logo-transparent.png',
                     width: logoSize,
                     height: logoSize,
-                    color: colorScheme.primary,
                     fit: BoxFit.contain,
                   ),
                   SizedBox(height: titleGap),

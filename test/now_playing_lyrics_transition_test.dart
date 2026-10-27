@@ -42,7 +42,7 @@ import 'package:spotiflac_android/widgets/playback_seek_slider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const backendChannel = MethodChannel('com.zarz.spotiflac/backend');
+  const backendChannel = MethodChannel('com.amwolfstein.sistrum/backend');
   const secureStorageChannel = MethodChannel(
     'plugins.it_nomads.com/flutter_secure_storage',
   );

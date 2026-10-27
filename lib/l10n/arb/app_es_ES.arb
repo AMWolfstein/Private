@@ -11,7 +11,7 @@
   "usbBitPerfectDescription": "Mantén la precisión de la fuente en salidas compatibles. Elige a continuación entre USB directo o AAudio exclusivo; de lo contrario, la salida USB de Android requiere Android 14 o una versión posterior. Se aplica a partir de la siguiente pista, sin AutoMix ni normalización. Es posible que el volumen del sistema no controle la salida USB directa.",
   "usbHardwareVolume": "Volumen del hardware del DAC",
   "usbVolumeWarningTitle": "Revisa el volumen de audio",
-  "usbVolumeWarning": "El audio directo por USB puede ser mucho más alto que la reproducción normal, y es posible que los botones de volumen del teléfono no lo controlen. Baja el volumen de tu DAC o amplificador antes de comenzar. Cuando sea compatible, SpotiFLAC configura el DAC a un máximo de −40 dB al conectarse; esto no garantiza un nivel de escucha seguro en todos los amplificadores o audífonos.",
+  "usbVolumeWarning": "El audio directo por USB puede ser mucho más alto que la reproducción normal, y es posible que los botones de volumen del teléfono no lo controlen. Baja el volumen de tu DAC o amplificador antes de comenzar. Cuando sea compatible, Sistrum configura el DAC a un máximo de −40 dB al conectarse; esto no garantiza un nivel de escucha seguro en todos los amplificadores o audífonos.",
   "usbVolumeAccept": "Entiendo",
   "usbVolumeUnavailable": "La reproducción está en pausa porque este DAC no cuenta con un control de volumen de hardware verificado. Baja el volumen del DAC o del amplificador; luego, si es necesario, activa la salida de volumen fijo y vuelve a seleccionar la pista.",
   "usbFixedVolume": "Permitir salida USB de volumen fijo",
@@ -66,7 +66,7 @@
   "appearanceGlassClarityAutoFrosted": "Auto midió este dispositivo y usa Esmerilado. Elige Lite o Completa para ajustar la claridad.",
   "appearanceUseSystemFont": "Usar la fuente del sistema",
   "appearanceUseSystemFontSubtitle": "Utiliza la fuente predeterminada de tu dispositivo para el texto de la aplicación.",
-  "appName": "SpotiFLAC",
+  "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -834,7 +834,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "¿Deseas eliminar esta carpeta y sus pistas indexadas de SpotiFLAC Mobile? Los archivos de audio almacenados no se borrarán.",
+  "libraryRemoveFolderMessage": "¿Deseas eliminar esta carpeta y sus pistas indexadas de Sistrum? Los archivos de audio almacenados no se borrarán.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -1025,7 +1025,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "SpotiFLAC necesita acceso al almacenamiento para escanear tu biblioteca musical. Por favor, concede el permiso en los ajustes.",
+  "libraryStorageAccessMessage": "Sistrum necesita acceso al almacenamiento para escanear tu biblioteca musical. Por favor, concede el permiso en los ajustes.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -1512,7 +1512,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "Este archivo no es una copia de seguridad válida de SpotiFLAC",
+  "backupInvalidFile": "Este archivo no es una copia de seguridad válida de Sistrum",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -2641,7 +2641,7 @@
   "audioInfoOff": "Desactivado",
   "audioInfoBypassed": "Omitido por la salida directa",
   "audioInfoPlayer": "Reproductor",
-  "audioInfoPlayerValue": "Reproductor integrado de SpotiFLAC",
+  "audioInfoPlayerValue": "Reproductor integrado de Sistrum",
   "audioInfoSignalPath": "Ruta de la señal",
   "audioInfoPathSystem": "Mezclador del sistema",
   "audioInfoPathDirect": "USB directo, omite el mezclador del sistema",

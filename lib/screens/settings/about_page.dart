@@ -205,26 +205,16 @@ class _AppHeaderCard extends StatelessWidget {
           padding: EdgeInsets.all(contentPadding),
           child: Column(
             children: [
-              Container(
+              Image.asset(
+                'assets/images/logo-transparent.png',
                 width: logoSize,
                 height: logoSize,
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(
-                  'assets/images/logo-transparent.png',
-                  color: colorScheme.onPrimary,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => Image.asset(
+                  'assets/images/logo.png',
+                  width: logoSize,
+                  height: logoSize,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, _, _) => ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      width: logoSize,
-                      height: logoSize,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
                 ),
               ),
               SizedBox(height: titleGap),

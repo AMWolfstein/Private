@@ -293,7 +293,7 @@ void main() {
   testWidgets(
     'CUE split can be cancelled and deleting its row preserves the backing sheet',
     (tester) async {
-      const channel = MethodChannel('com.zarz.spotiflac/backend');
+      const channel = MethodChannel('com.amwolfstein.sistrum/backend');
       final calls = <String>[];
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
         call,
@@ -398,7 +398,7 @@ void main() {
   });
 
   testWidgets('a second Split tap does not start another job', (tester) async {
-    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    const channel = MethodChannel('com.amwolfstein.sistrum/backend');
     final parseCalls = <String>[];
     final gate = Completer<Map<String, dynamic>>();
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
@@ -483,7 +483,7 @@ void main() {
   testWidgets('share and metadata actions run from the song menu', (
     tester,
   ) async {
-    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    const channel = MethodChannel('com.amwolfstein.sistrum/backend');
     final calls = <String>[];
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
       call,
@@ -604,7 +604,7 @@ void main() {
   testWidgets('the metadata sheet cannot be dismissed while saving', (
     tester,
   ) async {
-    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    const channel = MethodChannel('com.amwolfstein.sistrum/backend');
     final saving = Completer<Map<String, dynamic>>();
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
       call,
@@ -654,7 +654,7 @@ void main() {
   testWidgets('CUE split confirm explains the destination picker', (
     tester,
   ) async {
-    const channel = MethodChannel('com.zarz.spotiflac/backend');
+    const channel = MethodChannel('com.amwolfstein.sistrum/backend');
     final calls = <String>[];
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
       call,

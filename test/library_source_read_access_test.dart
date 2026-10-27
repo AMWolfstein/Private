@@ -4,7 +4,7 @@ import 'package:spotiflac_android/services/platform_bridge.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const channel = MethodChannel('com.zarz.spotiflac/backend');
+  const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   const tree = 'content://example.documents/tree/sd-card%3AMusic';
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;

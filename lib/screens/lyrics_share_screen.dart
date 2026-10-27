@@ -804,18 +804,15 @@ class LyricsShareCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // The asset is already a disc with the glyph cut
-                          // out, so it only needs the card's text color.
                           Image.asset(
                             'assets/images/logo-transparent.png',
                             width: 26,
                             height: 26,
-                            color: foreground,
                             errorBuilder: (_, _, _) => const SizedBox.shrink(),
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'SpotiFLAC-Mobile',
+                            'Sistrum',
                             style: TextStyle(
                               color: foreground,
                               fontSize: 13,

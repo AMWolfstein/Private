@@ -11,7 +11,7 @@
   "usbBitPerfectDescription": "Conserva la precisión de la fuente en las salidas compatibles. Elige USB directo o AAudio exclusivo abajo; de lo contrario, la salida USB de Android requiere Android 14 o superior. Se aplica desde la siguiente pista, sin AutoMix ni normalización. Es posible que el volumen del sistema no controle el USB directo.",
   "usbHardwareVolume": "Volumen por hardware del DAC",
   "usbVolumeWarningTitle": "Revisa el volumen de escucha",
-  "usbVolumeWarning": "El USB directo puede sonar mucho más alto que la reproducción normal, y los botones de volumen del teléfono podrían no controlarlo. Baja el volumen del DAC o del amplificador antes de empezar. Si es compatible, SpotiFLAC ajusta el DAC a −40 dB como máximo al conectarlo; esto no garantiza un nivel seguro en todos los amplificadores ni en todos los auriculares.",
+  "usbVolumeWarning": "El USB directo puede sonar mucho más alto que la reproducción normal, y los botones de volumen del teléfono podrían no controlarlo. Baja el volumen del DAC o del amplificador antes de empezar. Si es compatible, Sistrum ajusta el DAC a −40 dB como máximo al conectarlo; esto no garantiza un nivel seguro en todos los amplificadores ni en todos los auriculares.",
   "usbVolumeAccept": "Entendido",
   "usbVolumeUnavailable": "La reproducción está en pausa porque este DAC no tiene un control de volumen por hardware verificado. Baja el volumen del DAC o del amplificador, activa la salida de volumen fijo si hace falta y vuelve a elegir la pista.",
   "usbFixedVolume": "Permitir salida USB de volumen fijo",
@@ -63,7 +63,7 @@
   "appearanceGlassClarityAutoFrosted": "Auto midió este dispositivo y usa Esmerilado. Elige Lite o Completa para ajustar la claridad.",
   "appearanceUseSystemFont": "Usar la fuente del sistema",
   "appearanceUseSystemFontSubtitle": "Usa la tipografía predeterminada de tu dispositivo para el texto de la app.",
-  "appName": "SpotiFLAC Mobile",
+  "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -658,7 +658,7 @@
   "librarySourceScanCount": "{scanned} de {total} archivos analizados ({progress} %)",
   "libraryExternalStorage": "Almacenamiento externo",
   "libraryRemoveFolder": "Quitar carpeta de la biblioteca",
-  "libraryRemoveFolderMessage": "¿Quitar esta carpeta y sus pistas indexadas de SpotiFLAC Mobile? Los archivos de audio del almacenamiento no se eliminarán.",
+  "libraryRemoveFolderMessage": "¿Quitar esta carpeta y sus pistas indexadas de Sistrum? Los archivos de audio del almacenamiento no se eliminarán.",
   "libraryFilterSortSizeLargest": "Tamaño (más grande primero)",
   "@libraryFilterSortSizeLargest": {
     "description": "Library sort option - largest files first"
@@ -843,7 +843,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "SpotiFLAC needs storage access to scan your music library. Please grant permission in settings.",
+  "libraryStorageAccessMessage": "Sistrum needs storage access to scan your music library. Please grant permission in settings.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -1256,7 +1256,7 @@
   "backupRestoreConfirmButton": "Restaurar",
   "backupRestored": "Copia de seguridad restaurada correctamente",
   "backupRestoreFailed": "No se pudo restaurar la copia de seguridad",
-  "backupInvalidFile": "Este archivo no es una copia de seguridad válida de SpotiFLAC",
+  "backupInvalidFile": "Este archivo no es una copia de seguridad válida de Sistrum",
   "backupRestoreRestartHint": "Reinicia la app para asegurarte de que se apliquen todos los cambios.",
   "backupContentsTitle": "Contenido de la copia",
   "backupSettingsOnly": "Solo ajustes",
@@ -1880,7 +1880,7 @@
   "audioInfoOff": "Desactivado",
   "audioInfoBypassed": "Omitido por la salida directa",
   "audioInfoPlayer": "Reproductor",
-  "audioInfoPlayerValue": "Reproductor integrado de SpotiFLAC",
+  "audioInfoPlayerValue": "Reproductor integrado de Sistrum",
   "audioInfoSignalPath": "Ruta de la señal",
   "audioInfoPathSystem": "Mezclador del sistema",
   "audioInfoPathDirect": "USB directo, omite el mezclador del sistema",

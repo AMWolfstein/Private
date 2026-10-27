@@ -12,7 +12,7 @@ void main() {
 
         expect(
           strings.appName,
-          contains('SpotiFLAC'),
+          'Sistrum',
           reason: 'Unexpected app name for $locale',
         );
         expect(

@@ -293,7 +293,7 @@ class LogBuffer extends ChangeNotifier {
 
   String export() {
     final buffer = StringBuffer();
-    buffer.writeln('SpotiFLAC Log Export');
+    buffer.writeln('Sistrum Log Export');
     buffer.writeln(logExportPrivacyNotice);
     buffer.writeln('Generated: ${DateTime.now().toIso8601String()}');
     buffer.writeln('Entries: ${_entries.length}');

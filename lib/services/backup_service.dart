@@ -262,7 +262,7 @@ class BackupService {
       final metadata = {
         'magic': magic,
         'format_version': formatVersion,
-        'app': 'SpotiFLAC Mobile',
+        'app': AppInfo.appName,
         'app_version': AppInfo.displayVersion,
         'created_at': DateTime.now().toIso8601String(),
         'history_count': historyCount,

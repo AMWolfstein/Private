@@ -11,7 +11,7 @@ import 'package:spotiflac_android/services/platform_bridge.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const backendChannel = MethodChannel('com.zarz.spotiflac/backend');
+  const backendChannel = MethodChannel('com.amwolfstein.sistrum/backend');
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

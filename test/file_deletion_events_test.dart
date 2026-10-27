@@ -70,7 +70,7 @@ void main() {
     },
   );
 
-  const channel = MethodChannel('com.zarz.spotiflac/backend');
+  const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   const uri = 'content://test.provider/document/song.flac';
   for (final (deleted, exists, expected) in [
     (true, true, true),

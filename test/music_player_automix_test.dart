@@ -678,8 +678,8 @@ void main() {
   });
 
   group('USB playback transport', () {
-    const methods = MethodChannel('com.zarz.spotiflac/usb_pcm');
-    const events = MethodChannel('com.zarz.spotiflac/usb_pcm/events');
+    const methods = MethodChannel('com.amwolfstein.sistrum/usb_pcm');
+    const events = MethodChannel('com.amwolfstein.sistrum/usb_pcm/events');
     late MusicPlaybackDeck deck;
     late List<String> usbCalls;
     late int token;

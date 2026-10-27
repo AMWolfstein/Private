@@ -41,7 +41,7 @@ require(rustAndroidAbis.all { it in supportedRustAndroidAbis }) {
 }
 
 android {
-    namespace = "com.zarz.spotiflac"
+    namespace = "com.amwolfstein.sistrum"
     compileSdk = 37
     ndkVersion = "30.0.16248370"
 
@@ -92,8 +92,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = if (sideBySideBuild) "com.zarz.spotiflac.local" else "com.zarz.spotiflac"
-        manifestPlaceholders["appLabel"] = if (sideBySideBuild) "SpotiFLAC Local" else "SpotiFLAC Mobile"
+        applicationId = if (sideBySideBuild) "com.amwolfstein.sistrum.local" else "com.amwolfstein.sistrum"
+        manifestPlaceholders["appLabel"] = if (sideBySideBuild) "Sistrum Local" else "Sistrum"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         minSdk = flutter.minSdkVersion
         targetSdk = 37

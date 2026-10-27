@@ -558,7 +558,7 @@ void main() {
     'old external preference cannot redirect local queue playback',
     () async {
       final calls = <MethodCall>[];
-      const channel = MethodChannel('com.zarz.spotiflac/backend');
+      const channel = MethodChannel('com.amwolfstein.sistrum/backend');
       final messenger =
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
       messenger.setMockMethodCallHandler(channel, (call) async {

@@ -23,7 +23,7 @@ UnifiedLibraryItem _item(String path) => UnifiedLibraryItem(
 );
 
 void main() {
-  const channel = MethodChannel('com.zarz.spotiflac/backend');
+  const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   late BuildContext pageContext;
   late GlobalKey<NavigatorState> navigator;
 

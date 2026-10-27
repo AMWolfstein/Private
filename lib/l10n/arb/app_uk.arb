@@ -11,7 +11,7 @@
   "usbBitPerfectDescription": "Зберігає точність джерела на сумісних виходах. Виберіть нижче прямий USB або ексклюзивний AAudio; в іншому випадку для виходу Android USB потрібен Android 14 або пізніша версія. Застосовується з наступного треку, без автомікшування або нормалізації. Системна гучність може не керувати прямим USB.",
   "usbHardwareVolume": "Апаратний обсяг ЦАП",
   "usbVolumeWarningTitle": "Перевірте гучність прослуховування",
-  "usbVolumeWarning": "Пряме відтворення аудіо через USB може бути набагато гучнішим за звичайне, і кнопки гучності телефону можуть не керувати ним. Зменште гучність ЦАП або підсилювача перед початком роботи. Якщо підтримується, SpotiFLAC встановлює ЦАП максимум на −40 дБ під час підключення; це не гарантує безпечного рівня прослуховування на кожному підсилювачі чи навушниках.",
+  "usbVolumeWarning": "Пряме відтворення аудіо через USB може бути набагато гучнішим за звичайне, і кнопки гучності телефону можуть не керувати ним. Зменште гучність ЦАП або підсилювача перед початком роботи. Якщо підтримується, Sistrum встановлює ЦАП максимум на −40 дБ під час підключення; це не гарантує безпечного рівня прослуховування на кожному підсилювачі чи навушниках.",
   "usbVolumeAccept": "Я розумію",
   "usbVolumeUnavailable": "Відтворення призупинено, оскільки цей ЦАП не має перевіреного апаратного керування гучністю. Зменште гучність ЦАП або підсилювача, потім за потреби увімкніть вихід з фіксованою гучністю та виберіть доріжку ще раз.",
   "usbFixedVolume": "Дозволити вихід USB з фіксованою гучністю",
@@ -66,7 +66,7 @@
   "appearanceGlassClarityAutoFrosted": "«Авто» виміряло цей пристрій і використовує матове скло. Оберіть Lite або Повну, щоб налаштувати прозорість.",
   "appearanceUseSystemFont": "Використовувати системний шрифт",
   "appearanceUseSystemFontSubtitle": "Використовуйте стандартний шрифт вашого пристрою для тексту в додатку.",
-  "appName": "SpotiFLAC Mobile",
+  "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -834,7 +834,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Видалити цю теку та її індексовані треки зі SpotiFLAC Mobile? Аудіофайли на сховищі не будуть видалені.",
+  "libraryRemoveFolderMessage": "Видалити цю теку та її індексовані треки зі Sistrum? Аудіофайли на сховищі не будуть видалені.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -1025,7 +1025,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "SpotiFLAC потрібен доступ до сховища для сканування вашої музичної бібліотеки. Надайте дозвіл у налаштуваннях.",
+  "libraryStorageAccessMessage": "Sistrum потрібен доступ до сховища для сканування вашої музичної бібліотеки. Надайте дозвіл у налаштуваннях.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -1512,7 +1512,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "Цей файл не є дійсною резервною копією SpotiFLAC",
+  "backupInvalidFile": "Цей файл не є дійсною резервною копією Sistrum",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -2641,7 +2641,7 @@
   "audioInfoOff": "Вимк.",
   "audioInfoBypassed": "Обійдено прямим виходом",
   "audioInfoPlayer": "Плеєр",
-  "audioInfoPlayerValue": "Вбудований плеєр SpotiFLAC",
+  "audioInfoPlayerValue": "Вбудований плеєр Sistrum",
   "audioInfoSignalPath": "Шлях сигналу",
   "audioInfoPathSystem": "Системний мікшер",
   "audioInfoPathDirect": "Прямий USB, обходить системний мікшер",

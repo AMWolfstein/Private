@@ -18,7 +18,7 @@ class AudioOutputButton extends StatefulWidget {
 
 class _AudioOutputButtonState extends State<AudioOutputButton> {
   static const _androidChannel = MethodChannel(
-    'com.zarz.spotiflac/audio_output',
+    'com.amwolfstein.sistrum/audio_output',
   );
   MethodChannel? _viewChannel;
   bool _opening = false;
@@ -50,7 +50,7 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
 
   void _attachView(int id) {
     _viewChannel?.setMethodCallHandler(null);
-    _viewChannel = MethodChannel('com.zarz.spotiflac/audio_output/$id')
+    _viewChannel = MethodChannel('com.amwolfstein.sistrum/audio_output/$id')
       ..setMethodCallHandler((call) async {
         if (mounted && call.method == 'pickerChanged') {
           widget.onPickerChanged?.call(call.arguments == true);
@@ -95,7 +95,7 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
         return SizedBox.square(
           dimension: 48,
           child: UiKitView(
-            viewType: 'com.zarz.spotiflac/audio_output',
+            viewType: 'com.amwolfstein.sistrum/audio_output',
             creationParams: _appearance,
             creationParamsCodec: const StandardMessageCodec(),
             onPlatformViewCreated: _attachView,

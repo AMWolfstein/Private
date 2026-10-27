@@ -39,7 +39,7 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
 }
 
 void _mockMetadataFile(WidgetTester tester) {
-  const channel = MethodChannel('com.zarz.spotiflac/backend');
+  const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   final messenger = tester.binding.defaultBinaryMessenger;
   messenger.setMockMethodCallHandler(
     channel,

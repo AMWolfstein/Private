@@ -105,8 +105,8 @@ class MusicPlaybackDeck {
     ]);
   }
 
-  static const _channel = MethodChannel('com.zarz.spotiflac/usb_pcm');
-  static const _events = EventChannel('com.zarz.spotiflac/usb_pcm/events');
+  static const _channel = MethodChannel('com.amwolfstein.sistrum/usb_pcm');
+  static const _events = EventChannel('com.amwolfstein.sistrum/usb_pcm/events');
   static Stream<dynamic>? _nativeEvents;
   static int _nextToken = 0;
   final AudioPlayer _ordinary;

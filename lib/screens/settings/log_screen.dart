@@ -212,9 +212,7 @@ class _LogScreenState extends ConsumerState<LogScreen> {
 
   void _shareLogs() async {
     final logs = await LogBuffer().exportWithDeviceInfo();
-    SharePlus.instance.share(
-      ShareParams(text: logs, subject: 'SpotiFLAC Mobile Logs'),
-    );
+    SharePlus.instance.share(ShareParams(text: logs, subject: 'Sistrum Logs'));
   }
 
   void _shareSelectedLogs() {
@@ -224,7 +222,7 @@ class _LogScreenState extends ConsumerState<LogScreen> {
       ShareParams(
         text:
             '$logExportPrivacyNotice\n\n${formatLogEntries(selectedInUserOrder)}',
-        subject: 'SpotiFLAC Mobile Logs',
+        subject: 'Sistrum Logs',
       ),
     );
   }

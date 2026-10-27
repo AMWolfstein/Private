@@ -122,7 +122,7 @@ bool shouldResetRestoredInstallation({
 }
 
 class PlatformBridge {
-  static const _channel = MethodChannel('com.zarz.spotiflac/backend');
+  static const _channel = MethodChannel('com.amwolfstein.sistrum/backend');
 
   static int _nativeDataJobSerial = 0;
   static final _nativeDataJobs = <String, Set<_NativeDataJobState>>{};
@@ -190,7 +190,7 @@ class PlatformBridge {
   static const _jsonResultFileKey = '__json_file';
   static const _backgroundJsonDecodeThresholdBytes = 128 * 1024;
   static const _libraryScanProgressEvents = EventChannel(
-    'com.zarz.spotiflac/library_scan_progress_stream',
+    'com.amwolfstein.sistrum/library_scan_progress_stream',
   );
   static final StreamController<void> _libraryStorageEvents =
       StreamController<void>.broadcast();
