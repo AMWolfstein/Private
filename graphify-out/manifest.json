@@ -1152,9 +1152,9 @@
     "semantic_hash": ""
   },
   "lib/services/music_player_automix.dart": {
-    "mtime": 1792620523.4200919,
-    "seen": 1793129618.0160363,
-    "ast_hash": "ea833978358e888fd5b40ccb83fd049a",
+    "mtime": 1793130824.5391126,
+    "seen": 1793130862.3857396,
+    "ast_hash": "3493a1764ad6e43c5f2c8ea1f43e6329",
     "semantic_hash": ""
   },
   "lib/services/music_player_autoplay.dart": {
@@ -5454,9 +5454,9 @@
     "semantic_hash": "563d068a41ce3356d2870858e5e23729"
   },
   "test/music_player_automix_test.dart": {
-    "mtime": 1792620523.5036256,
-    "seen": 1793129618.0176046,
-    "ast_hash": "f4bb6d101f92cb5e01d611f26a74f05b",
+    "mtime": 1793130794.127526,
+    "seen": 1793130862.3871171,
+    "ast_hash": "1aeceaac5c00bb33e217ac73bb87382d",
     "semantic_hash": ""
   },
   "test/music_player_autoplay_test.dart": {
