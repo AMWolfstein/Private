@@ -30,10 +30,25 @@ void main() {
   });
   tearDown(() => db.close());
 
+  Future<List<String>> lookupObjects() async => [
+    for (final row in await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%' ORDER BY name",
+    ))
+      row['name']! as String,
+  ];
+
+  Future<List<Object?>> ftsTriggers() async => [
+    for (final row in await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='trigger' AND name LIKE 'library_search_fts_%' ORDER BY name",
+    ))
+      row['name'],
+  ];
+
   test(
-    'fresh schema maintains lookup counts across replace, source move and deletion',
+    'fresh schema has no lookup summary and keeps replace, move and delete behaviour',
     () async {
       await LibrarySchema.create(db, LibrarySchema.version);
+      expect(await lookupObjects(), isEmpty);
       for (final id in ['a', 'b']) {
         await db.insert(
           'library',
@@ -41,17 +56,12 @@ void main() {
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
-      Future<List<Map<String, Object?>>> counts() => db.query(
-        LibrarySchema.lookupSummaryTable,
-        orderBy: 'source_id, kind, value',
-      );
-      expect((await counts()).map((row) => row['ref_count']), [2, 2]);
       await db.insert(
         'library',
         LibraryRowMapper.encode(_track('a', isrc: 'new')),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      expect((await counts()).map((row) => row['ref_count']), [1, 1, 2]);
+      expect(await db.query('library'), hasLength(2));
       await db.insert('library_sources', {
         'id': 'nas',
         'path': '/storage/emulated/0/Music',
@@ -72,9 +82,9 @@ void main() {
       );
       expect((await db.query(LibrarySchema.visibleView)).single['id'], 'b');
       await db.delete('library', where: 'id = ?', whereArgs: ['a']);
-      expect((await counts()).map((row) => row['ref_count']), [1, 1]);
+      expect((await db.query('library')).single['id'], 'b');
       await db.delete('library');
-      expect(await counts(), isEmpty);
+      expect(await db.query('library'), isEmpty);
     },
   );
 
@@ -116,30 +126,46 @@ void main() {
       );
       expect(await db.query('library_path_keys'), isNotEmpty);
       expect((await db.query(LibrarySchema.visibleView)).single['id'], 'old');
-      expect(
-        (await db.query(
-          LibrarySchema.lookupSummaryTable,
-        )).map((row) => row['ref_count']),
-        [1, 1],
-      );
+      expect(await lookupObjects(), isEmpty);
     },
   );
 
   test(
-    'v16 upgrade repairs existing lookup counts and replacement triggers',
+    'v19 upgrade removes the legacy lookup summary and keeps rows, FTS and writes working',
     () async {
-      await LibrarySchema.create(db, 16);
-      await db.execute('DROP TRIGGER library_lookup_insert_isrc');
+      await LibrarySchema.create(db, 19);
+      // create() no longer builds the retired objects, so install them as a
+      // real v19 database had them: table, index and all six triggers.
       await db.execute('''
-      CREATE TRIGGER library_lookup_insert_isrc AFTER INSERT ON library
-      WHEN NEW.isrc IS NOT NULL AND NEW.isrc != ''
-      BEGIN
-        INSERT OR IGNORE INTO library_lookup_summary(source_id, kind, value, ref_count)
-        VALUES (NEW.source_id, 'isrc', NEW.isrc, 0);
-        UPDATE library_lookup_summary SET ref_count = ref_count + 1
-        WHERE source_id = NEW.source_id AND kind = 'isrc' AND value = NEW.isrc;
-      END
-    ''');
+        CREATE TABLE library_lookup_summary (
+          source_id TEXT NOT NULL, kind TEXT NOT NULL,
+          value TEXT NOT NULL, ref_count INTEGER NOT NULL,
+          PRIMARY KEY (source_id, kind, value)
+        )
+      ''');
+      await db.execute(
+        'CREATE INDEX idx_library_lookup_summary_value ON library_lookup_summary(kind, value)',
+      );
+      for (final kind in ['isrc', 'match']) {
+        final column = kind == 'isrc' ? 'isrc' : 'match_key';
+        await db.execute(
+          'CREATE TRIGGER library_lookup_insert_$kind AFTER INSERT ON library '
+          'BEGIN UPDATE library_lookup_summary SET ref_count = ref_count + 1 '
+          'WHERE value = NEW.$column; END',
+        );
+        await db.execute(
+          'CREATE TRIGGER library_lookup_delete_$kind AFTER DELETE ON library '
+          'BEGIN UPDATE library_lookup_summary SET ref_count = ref_count - 1 '
+          'WHERE value = OLD.$column; END',
+        );
+        await db.execute(
+          'CREATE TRIGGER library_lookup_update_$kind AFTER UPDATE OF source_id, $column ON library '
+          'BEGIN UPDATE library_lookup_summary SET ref_count = ref_count + 1 '
+          'WHERE value = NEW.$column; END',
+        );
+      }
+      // Table, its primary-key auto-index, the value index and six triggers.
+      expect(await lookupObjects(), hasLength(9));
       for (final id in ['a', 'b']) {
         await db.insert(
           'library',
@@ -147,20 +173,33 @@ void main() {
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
-      Future<List<Map<String, Object?>>> counts() =>
-          db.query(LibrarySchema.lookupSummaryTable, orderBy: 'kind');
-      expect((await counts()).map((row) => row['ref_count']), [1, 2]);
-      await LibrarySchema.upgrade(db, 16, LibrarySchema.version);
-      expect((await counts()).map((row) => row['ref_count']), [2, 2]);
+      final before = await db.query('library', orderBy: 'id');
+      // FTS exists only when the host SQLite supports trigram; either way the
+      // upgrade must leave exactly the same FTS triggers behind.
+      final ftsBefore = await ftsTriggers();
+
+      await LibrarySchema.upgrade(db, 19, LibrarySchema.version);
+
+      expect(await lookupObjects(), isEmpty);
+      expect(await db.query('library', orderBy: 'id'), before);
+      expect(await ftsTriggers(), ftsBefore);
       await db.insert(
         'library',
-        LibraryRowMapper.encode(_track('a')),
+        LibraryRowMapper.encode(_track('a', isrc: 'new')),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      expect((await counts()).map((row) => row['ref_count']), [2, 2]);
+      await db.update(
+        'library',
+        {'isrc': 'moved'},
+        where: 'id = ?',
+        whereArgs: ['b'],
+      );
       await db.delete('library', where: 'id = ?', whereArgs: ['a']);
-      expect((await counts()).map((row) => row['ref_count']), [1, 1]);
       expect((await db.query('library')).single['id'], 'b');
+
+      // Re-running the cleanup on an already clean database is harmless.
+      await LibrarySchema.upgrade(db, 19, LibrarySchema.version);
+      expect(await lookupObjects(), isEmpty);
     },
   );
 
@@ -188,20 +227,23 @@ void main() {
     expect(LibraryRowMapper.decode(tagged)['explicit'], true);
   });
 
-  test('schema v19 indexes album_artist_norm for artist pages (PERF-401)', () async {
-    await LibrarySchema.create(db, LibrarySchema.version);
-    final indexes = await db.rawQuery(
-      "SELECT name FROM sqlite_master WHERE type='index' "
-      "AND name='idx_library_album_artist_norm'",
-    );
-    expect(indexes, hasLength(1));
-    final plan = await db.rawQuery(
-      'EXPLAIN QUERY PLAN SELECT l.* FROM library_visible l '
-      "WHERE l.album_artist_norm = 'artist' LIMIT 40",
-    );
-    final detail = plan.map((row) => row.values.join(' ')).join(' | ');
-    expect(detail, contains('idx_library_album_artist_norm'));
-  });
+  test(
+    'schema v19 indexes album_artist_norm for artist pages (PERF-401)',
+    () async {
+      await LibrarySchema.create(db, LibrarySchema.version);
+      final indexes = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='index' "
+        "AND name='idx_library_album_artist_norm'",
+      );
+      expect(indexes, hasLength(1));
+      final plan = await db.rawQuery(
+        'EXPLAIN QUERY PLAN SELECT l.* FROM library_visible l '
+        "WHERE l.album_artist_norm = 'artist' LIMIT 40",
+      );
+      final detail = plan.map((row) => row.values.join(' ')).join(' | ');
+      expect(detail, contains('idx_library_album_artist_norm'));
+    },
+  );
 
   test('v18 to v19 upgrade adds the missing album_artist_norm index', () async {
     await LibrarySchema.create(db, 18);

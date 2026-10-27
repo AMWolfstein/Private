@@ -12,9 +12,11 @@ final _log = AppLogger('LibraryDatabase');
 
 /// Schema lifecycle is independent of collection reads and scan transactions.
 abstract final class LibrarySchema {
-  static const version = 19;
+  static const version = 20;
   static const visibleView = 'library_visible';
   static const searchFtsTable = 'library_search_fts';
+
+  /// Retired table name; only the v20 upgrade still refers to it.
   static const lookupSummaryTable = 'library_lookup_summary';
   static const _legacySourceId = LocalLibraryItem.legacySourceId;
 
@@ -80,7 +82,6 @@ abstract final class LibrarySchema {
     await _createQueueIndexes(db);
     await sqlite.createPathKeyTable(db, 'library_path_keys');
     await _createSources(db);
-    await _createLookupSummary(db);
     final ftsAvailable = await createSearchFts(db);
     _log.i('Library database schema created with indexes');
     return ftsAvailable;
@@ -185,10 +186,6 @@ abstract final class LibrarySchema {
     if (oldVersion < 16) {
       await sqlite.backfillPathKeys(db, 'library', 'library_path_keys');
     }
-    if (oldVersion < 17) {
-      // Reinstall the triggers and repair counts created by older upserts.
-      await _createLookupSummary(db);
-    }
     if (oldVersion < 18) {
       for (final column in const [
         'search_track',
@@ -205,6 +202,9 @@ abstract final class LibrarySchema {
       // PERF-401: artist pages and the Artists shelf filter, group and order
       // by album_artist_norm; without the index every page scans the library.
       await _createNormalizedIndexes(db);
+    }
+    if (oldVersion < 20) {
+      await _dropLegacyLookupSummary(db);
     }
   }
 
@@ -355,87 +355,17 @@ abstract final class LibrarySchema {
     }
   }
 
-  static Future<void> _createLookupSummary(DatabaseExecutor db) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS $lookupSummaryTable (
-        source_id TEXT NOT NULL, kind TEXT NOT NULL,
-        value TEXT NOT NULL, ref_count INTEGER NOT NULL,
-        PRIMARY KEY (source_id, kind, value)
-      )
-    ''');
-    await db.execute(
-      'CREATE INDEX IF NOT EXISTS idx_library_lookup_summary_value ON $lookupSummaryTable(kind, value)',
-    );
-    for (final (kind, column) in const [
-      ('isrc', 'isrc'),
-      ('match', 'match_key'),
-    ]) {
+  /// The lookup summary had no production reader after T9. Triggers go first:
+  /// dropping the table while they are attached to `library` would break writes.
+  static Future<void> _dropLegacyLookupSummary(DatabaseExecutor db) async {
+    for (final kind in const ['isrc', 'match']) {
       for (final operation in const ['insert', 'delete', 'update']) {
         await db.execute(
           'DROP TRIGGER IF EXISTS library_lookup_${operation}_$kind',
         );
       }
-      await db.execute('''
-        CREATE TRIGGER library_lookup_insert_$kind AFTER INSERT ON library
-        WHEN NEW.$column IS NOT NULL AND NEW.$column != ''
-        BEGIN
-          INSERT INTO $lookupSummaryTable(source_id, kind, value, ref_count)
-          SELECT NEW.source_id, '$kind', NEW.$column, 0
-          -- An outer INSERT OR REPLACE overrides trigger conflict policies.
-          -- Avoid a conflicting insert instead of relying on OR IGNORE.
-          WHERE NOT EXISTS (
-            SELECT 1 FROM $lookupSummaryTable
-            WHERE source_id = NEW.source_id AND kind = '$kind' AND value = NEW.$column
-          );
-          UPDATE $lookupSummaryTable SET ref_count = ref_count + 1
-          WHERE source_id = NEW.source_id AND kind = '$kind' AND value = NEW.$column;
-        END
-      ''');
-      await db.execute('''
-        CREATE TRIGGER library_lookup_delete_$kind AFTER DELETE ON library
-        WHEN OLD.$column IS NOT NULL AND OLD.$column != ''
-        BEGIN
-          UPDATE $lookupSummaryTable SET ref_count = ref_count - 1
-          WHERE source_id = OLD.source_id AND kind = '$kind' AND value = OLD.$column;
-          DELETE FROM $lookupSummaryTable
-          WHERE source_id = OLD.source_id AND kind = '$kind' AND value = OLD.$column
-            AND ref_count <= 0;
-        END
-      ''');
-      await db.execute('''
-        CREATE TRIGGER library_lookup_update_$kind AFTER UPDATE OF source_id, $column ON library
-        WHEN OLD.source_id IS NOT NEW.source_id OR OLD.$column IS NOT NEW.$column
-        BEGIN
-          UPDATE $lookupSummaryTable SET ref_count = ref_count - 1
-          WHERE OLD.$column IS NOT NULL AND OLD.$column != ''
-            AND source_id = OLD.source_id AND kind = '$kind' AND value = OLD.$column;
-          DELETE FROM $lookupSummaryTable
-          WHERE source_id = OLD.source_id AND kind = '$kind' AND value = OLD.$column
-            AND ref_count <= 0;
-          INSERT INTO $lookupSummaryTable(source_id, kind, value, ref_count)
-          SELECT NEW.source_id, '$kind', NEW.$column, 0
-          WHERE NEW.$column IS NOT NULL AND NEW.$column != '' AND NOT EXISTS (
-            SELECT 1 FROM $lookupSummaryTable
-            WHERE source_id = NEW.source_id AND kind = '$kind' AND value = NEW.$column
-          );
-          UPDATE $lookupSummaryTable SET ref_count = ref_count + 1
-          WHERE NEW.$column IS NOT NULL AND NEW.$column != ''
-            AND source_id = NEW.source_id AND kind = '$kind' AND value = NEW.$column;
-        END
-      ''');
     }
-    await db.delete(lookupSummaryTable);
-    for (final (kind, column) in const [
-      ('isrc', 'isrc'),
-      ('match', 'match_key'),
-    ]) {
-      await db.rawInsert('''
-        INSERT INTO $lookupSummaryTable(source_id, kind, value, ref_count)
-        SELECT source_id, '$kind', $column, COUNT(*)
-        FROM library WHERE $column IS NOT NULL AND $column != ''
-        GROUP BY source_id, $column
-      ''');
-    }
+    await db.execute('DROP TABLE IF EXISTS $lookupSummaryTable');
   }
 
   static Future<void> migrateIosContainerPaths(Database db) async {

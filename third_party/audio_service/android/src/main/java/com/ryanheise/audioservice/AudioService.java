@@ -460,10 +460,6 @@ public class AudioService extends MediaBrowserServiceCompat {
         if (action != null) mediaSessionCallback.onCustomAction(action, extras);
     }
 
-    private boolean needCustomMediaControl(MediaControl control) {
-        return control.customAction != null;
-    }
-
     private Bundle mapToBundle(Map<?, ?> map) {
         if (map == null) {
             return null;
@@ -781,11 +777,6 @@ public class AudioService extends MediaBrowserServiceCompat {
     private void releaseWakeLock() {
         if (wakeLock.isHeld())
             wakeLock.release();
-    }
-
-    private void activateMediaSession() {
-        if (!mediaSession.isActive())
-            mediaSession.setActive(true);
     }
 
     private void deactivateMediaSession() {

@@ -91,8 +91,8 @@ Future<Map<String, Object?>> nativeLibraryDigest(DatabaseExecutor db) async => {
   'keys': await db.rawQuery(
     'SELECT * FROM library_path_keys ORDER BY item_id,path_key',
   ),
-  'lookup': await db.rawQuery(
-    'SELECT * FROM library_lookup_summary ORDER BY source_id,kind,value',
+  'lookupObjects': await db.rawQuery(
+    "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%' ORDER BY name",
   ),
   if ((await db.rawQuery(
     "SELECT name FROM sqlite_master WHERE name='library_search_fts'",

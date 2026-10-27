@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
-import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/screens/local_artist_screen.dart';
 import 'package:spotiflac_android/services/library_database.dart';
@@ -98,24 +97,6 @@ Future<void> navigateToAlbum(
     ),
     page: DetailPage.album(first.albumName, artistName: pageArtist),
   );
-}
-
-/// Opens the album for a track. Local-only builds match the track's album
-/// name and artist against the scanned library instead of remote providers.
-Future<void> navigateToTrackAlbum(BuildContext context, Track track) async {
-  final albumName = track.albumName.trim();
-  if (albumName.isEmpty) return;
-  await navigateToAlbum(
-    context,
-    albumName: albumName,
-    artistName: _preferredAlbumArtist(track),
-    coverUrl: track.coverUrl,
-  );
-}
-
-String _preferredAlbumArtist(Track track) {
-  final albumArtist = (track.albumArtist ?? '').trim();
-  return albumArtist.isNotEmpty ? albumArtist : track.artistName;
 }
 
 /// The detail page a route shows, so a link to the page already on top keeps

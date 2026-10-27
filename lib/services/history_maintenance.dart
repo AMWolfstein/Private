@@ -1,18 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:spotiflac_android/models/download_history.dart';
 import 'package:spotiflac_android/services/sqlite_helpers.dart' as sqlite;
-
-/// A delayed probe owns only fields it changed on the file it inspected.
-/// Newer user edits and results for a replacement file remain authoritative.
-class HistoryMaintenanceUpdate {
-  const HistoryMaintenanceUpdate({
-    required this.original,
-    required this.updated,
-  });
-
-  final DownloadHistoryItem original;
-  final DownloadHistoryItem updated;
-}
 
 /// Streaming restore is atomic, including failures after a flushed batch.
 Future<void> replaceHistoryRows(

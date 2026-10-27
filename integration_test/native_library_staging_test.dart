@@ -119,13 +119,12 @@ void main() {
       ),
       isEmpty,
     );
-    final lookups = await database.rawQuery(
-      'SELECT source_id, kind, value, ref_count FROM library_lookup_summary ORDER BY source_id,kind,value',
+    expect(
+      await database.rawQuery(
+        "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%'",
+      ),
+      isEmpty,
     );
-    final expected = await database.rawQuery(
-      "SELECT source_id, 'match' AS kind, match_key AS value, COUNT(*) AS ref_count FROM library WHERE match_key IS NOT NULL AND match_key != '' GROUP BY source_id, match_key ORDER BY source_id,kind,value",
-    );
-    expect(lookups, expected);
     if ((await database.rawQuery(
       "SELECT name FROM sqlite_master WHERE name='library_search_fts'",
     )).isNotEmpty) {

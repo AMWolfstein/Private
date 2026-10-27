@@ -32,7 +32,7 @@ impl Fixture {
             })
             .collect::<Vec<_>>()
             .join(",");
-        db.execute_batch(&format!("PRAGMA journal_mode=WAL; PRAGMA user_version=19;
+        db.execute_batch(&format!("PRAGMA journal_mode=WAL; PRAGMA user_version=20;
             CREATE TABLE library({definitions});
             CREATE TABLE library_sources(id TEXT PRIMARY KEY,path TEXT,enabled INTEGER);
             INSERT INTO library_sources VALUES('source','/music',1),('other','/other',1);

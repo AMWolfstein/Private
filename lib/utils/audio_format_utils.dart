@@ -191,20 +191,3 @@ int? _bitrateFromQuality(String? quality) {
   final sampleRate = rate < 1000 ? (rate * 1000).round() : rate.round();
   return (bitDepth, sampleRate);
 }
-
-String? displayFormatForCodec(String? value) {
-  final normalized = normalizeOptionalString(
-    value,
-  )?.toLowerCase().replaceAll('-', '_');
-  return switch (normalized) {
-    'flac' => 'FLAC',
-    'alac' => 'ALAC',
-    'aac' || 'mp4a' => 'AAC',
-    'eac3' || 'ec_3' => 'EAC3',
-    'ac3' || 'ac_3' => 'AC3',
-    'ac4' || 'ac_4' => 'AC4',
-    'mp3' => 'MP3',
-    'opus' => 'OPUS',
-    _ => null,
-  };
-}

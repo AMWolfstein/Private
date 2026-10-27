@@ -16,7 +16,7 @@ use std::{
 };
 use unicode_normalization::UnicodeNormalization;
 
-const SCHEMA_VERSION: i64 = 19;
+const SCHEMA_VERSION: i64 = 20;
 const SCAN_VERSION: i64 = 4;
 const BATCH_SIZE: usize = 300;
 const MAX_ROW_BYTES: usize = 16 * 1024 * 1024;

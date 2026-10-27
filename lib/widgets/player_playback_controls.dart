@@ -191,8 +191,6 @@ class PlayerPlaybackControls extends ConsumerWidget {
   }
 }
 
-enum PlayerPlaybackMode { autoplay, repeat, shuffle }
-
 class _QualityBadge extends StatelessWidget {
   final PlayerMetadataController metadata;
   final ColorScheme colorScheme;

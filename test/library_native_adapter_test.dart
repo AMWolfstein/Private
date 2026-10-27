@@ -262,13 +262,12 @@ void main() {
         )).map((r) => r['item_id']).toSet(),
         {'new', 'download', 'other'},
       );
-      final lookup = await live.rawQuery(
-        "SELECT ref_count FROM library_lookup_summary WHERE source_id='source' AND kind='match'",
+      expect(
+        await live.rawQuery(
+          "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%'",
+        ),
+        isEmpty,
       );
-      expect(lookup, [
-        {'ref_count': 1},
-        {'ref_count': 1},
-      ]);
       await cleaned();
     },
   );

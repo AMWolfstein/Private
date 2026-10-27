@@ -58,7 +58,7 @@ class LibraryDatabase {
         onOpen: LibrarySchema.migrateIosContainerPaths,
       );
       // Library upserts use INSERT OR REPLACE. Recursive triggers ensure the
-      // implicit delete also decrements materialized lookup ref-counts.
+      // implicit delete also fires the external-content FTS delete trigger.
       await db.execute('PRAGMA recursive_triggers = ON');
       // onCreate normally initializes this derived index. Retry once after
       // opening an existing database in case an earlier setup was

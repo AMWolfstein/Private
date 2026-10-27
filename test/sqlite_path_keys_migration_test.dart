@@ -249,11 +249,11 @@ void main() {
       )).single.values.single,
       503,
     );
-    expect((await db.query(LibrarySchema.lookupSummaryTable)).single, {
-      'source_id': 'legacy',
-      'kind': 'match',
-      'value': 'song|artist',
-      'ref_count': 503,
-    });
+    expect(
+      await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%'",
+      ),
+      isEmpty,
+    );
   });
 }
