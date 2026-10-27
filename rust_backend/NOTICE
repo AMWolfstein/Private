@@ -7,16 +7,10 @@ quantization (Google LLC, Apache-2.0) and Dart SDK Random compatibility
 rusqlite 0.40.2 and roxmltree 0.21.1 under their MIT licenses, packaged in
 `assets/licenses/native_data_jobs.txt`.
 
-The English title-casing control flow in
-`crates/core/src/metadata/musicbrainz/casing.rs` follows
-`golang.org/x/text/cases`. Its frozen Unicode 15 data is generated using the
-public Go APIs. No Go runtime is linked into
-the Rust backend. Retain this notice in source and binary distributions.
-The artwork resampling in `crates/core/src/cover.rs` also follows the
+The artwork resampling in `crates/core/src/cover.rs` follows the
 ApproxBiLinear pixel-center and premultiplied-alpha calculations from
-`golang.org/x/image/draw`, under the same Go Authors BSD license below.
-URL reference parsing and serialization in `crates/network/src/url.rs` follow
-`net/url`, also under that license.
+`golang.org/x/image/draw`, under the Go Authors BSD license below.
+Retain this notice in source and binary distributions.
 
 Copyright 2009 The Go Authors.
 Copyright 2014 The Go Authors. All rights reserved.

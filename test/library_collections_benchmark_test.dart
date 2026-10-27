@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +7,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'support/library_collections_benchmark.dart';
 
 void main() {
+  test('measurement separates caller ordering from heartbeat counts', () async {
+    final synchronous = await measureCollectionOperation(() => 42);
+    expect(synchronous.value, 42);
+    expect(synchronous.yieldedBeforeCompletion, isFalse);
+    final completed = await measureCollectionOperation(() => Future.value(42));
+    expect(completed.yieldedBeforeCompletion, isFalse);
+    final release = Completer<int>();
+    final pending = measureCollectionOperation(() => release.future);
+    // An event handshake, not a minimum elapsed-time or heartbeat requirement.
+    Timer.run(() => release.complete(42));
+    final asynchronous = await pending;
+    expect(asynchronous.value, 42);
+    expect(asynchronous.yieldedBeforeCompletion, isTrue);
+    expect(
+      asynchronous.timing.keys,
+      containsAll(['microseconds', 'heartbeat_count', 'maximum_gap_us']),
+    );
+  });
+
   test(
     'paired large collection workers benchmark',
     () async {

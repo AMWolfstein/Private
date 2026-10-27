@@ -13,6 +13,8 @@ import 'package:spotiflac_android/services/collection_restore_codec.dart';
 import 'package:spotiflac_android/services/library_collections_database.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 
+import '../test/support/caller_yield_probe.dart';
+
 const _date = '2026-10-07T05:00:00.000';
 const _tables = {
   'loved': 'loved_tracks',
@@ -233,15 +235,16 @@ void main() {
             beats++;
           });
           try {
-            if (native) {
-              await LibraryCollectionsDatabase.replaceDatabaseFromBackup(
-                db,
-                input,
-                nowIso: _date,
-              );
-            } else {
-              await _legacyRestore(db, input);
-            }
+            final result = await probeCallerYield<void>(
+              () => native
+                  ? LibraryCollectionsDatabase.replaceDatabaseFromBackup(
+                      db,
+                      input,
+                      nowIso: _date,
+                    )
+                  : _legacyRestore(db, input),
+            );
+            expect(result.yieldedBeforeCompletion, isTrue);
           } finally {
             elapsed.stop();
             timer.cancel();
@@ -254,7 +257,6 @@ void main() {
           final digest = await _digest(db);
           expected ??= digest;
           expect(digest, expected);
-          expect(beats, greaterThan(0));
         }
       }
       final report = {

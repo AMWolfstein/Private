@@ -47,7 +47,6 @@ void _mockMetadataFile(WidgetTester tester) {
       'safStat' => jsonEncode({'exists': true, 'size': 100}),
       'readAudioMetadata' ||
       'readFileMetadata' => jsonEncode({'title': 'Track', 'artist': 'Artist'}),
-      'getLyricsLRCWithSource' => jsonEncode({'lyrics': '', 'source': ''}),
       'getSafFileModTimes' => '{}',
       _ => null,
     },

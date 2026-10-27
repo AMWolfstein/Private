@@ -11,6 +11,8 @@ import 'package:spotiflac_android/services/backup_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/services/user_profile_store.dart';
 
+import '../test/support/caller_yield_probe.dart';
+
 Future<void> _dartWrite(String path, List<Map<String, dynamic>> files) =>
     Isolate.run(() async {
       final encoder = ZipFileEncoder()..create(path);
@@ -318,15 +320,21 @@ void main() {
         });
         try {
           if (native) {
-            expect((await _nativeWrite(path, files))['published'], true);
+            final result = await probeCallerYield(
+              () => _nativeWrite(path, files),
+            );
+            expect(result.yieldedBeforeCompletion, isTrue);
+            expect(result.value['published'], true);
           } else {
-            await _dartWrite(path, files);
+            final result = await probeCallerYield<void>(
+              () => _dartWrite(path, files),
+            );
+            expect(result.yieldedBeforeCompletion, isTrue);
           }
         } finally {
           time.stop();
           timer.cancel();
         }
-        expect(beats, greaterThan(0));
         heartbeat[label]!.add({'count': beats, 'maximum_gap_us': maximumGap});
         (native ? nativeTimes : dartTimes).add(time.elapsedMicroseconds);
         sizes[label] = await File(path).length();

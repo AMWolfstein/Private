@@ -132,11 +132,13 @@ android {
         }
 
         release {
-            // For local builds: use release signing if key.properties exists
-            // For CI builds: APK is signed by GitHub Action after build
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
+                logger.warn(
+                    "Release signing: android/key.properties is missing; release builds " +
+                        "will use the debug key. Configure a release keystore before distribution."
+                )
                 signingConfigs.getByName("debug")
             }
             isMinifyEnabled = true

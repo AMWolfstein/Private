@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,6 +6,8 @@ import 'package:spotiflac_android/models/library_collections.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/services/library_collections_database.dart';
 import 'package:spotiflac_android/services/library_collections_hydration.dart';
+
+import 'support/caller_yield_probe.dart';
 
 Map<String, dynamic> trackRow(int index) => {
   'track_key': 'example:$index',
@@ -328,7 +329,7 @@ void main() {
         ),
         knownKeys: known,
       );
-      expect(loaded.tracks.length, 80);
+      expect(loaded.tracks, hasLength(80));
       expect(loaded.membershipUnchanged, isTrue);
       expect(loaded.trackKeys, known);
       expect(await directory.exists(), isFalse);
@@ -350,21 +351,21 @@ void main() {
         ],
       );
       final expected = jsonEncode(state.toJson());
-      var ticks = 0;
-      final timer = Timer.periodic(
-        const Duration(milliseconds: 1),
-        (_) => ticks++,
+      final pending = probeCallerYield(
+        () => exportLibraryCollectionsState(state),
       );
-      final pending = exportLibraryCollectionsState(state);
       final newer = state.copyWith(loved: const [], playlists: const []);
-      final actual = await pending;
-      timer.cancel();
-      expect(jsonEncode(actual), expected);
-      final json = await exportLibraryCollectionsJson(state);
+      final result = await pending;
+      expect(result.yieldedBeforeCompletion, isTrue);
+      expect(jsonEncode(result.value), expected);
+      final jsonResult = await probeCallerYield(
+        () => exportLibraryCollectionsJson(state),
+      );
+      expect(jsonResult.yieldedBeforeCompletion, isTrue);
+      final json = jsonResult.value;
       expect(json, expected);
       expect(jsonDecode(json), jsonDecode(expected));
       expect(newer.lovedCount, 0);
-      expect(ticks, greaterThan(1));
     },
   );
 
@@ -442,7 +443,7 @@ void main() {
         rows,
         knownKeys: {...validKeys, 'corrupt'},
       );
-      expect(corrupted.tracks.length, 81);
+      expect(corrupted.tracks, hasLength(81));
       expect(corrupted.tracks.last.key, 'example:0');
       expect(corrupted.trackKeys, validKeys);
       expect(corrupted.membershipUnchanged, isFalse);
@@ -468,20 +469,41 @@ void main() {
     },
   );
 
-  test('large collection parsing leaves caller timers able to run', () async {
-    final snapshot = collectionFixture(20000);
-    var ticks = 0;
-    final timer = Timer.periodic(
-      const Duration(milliseconds: 1),
-      (_) => ticks++,
-    );
-    final loaded = await hydrateLibraryCollectionsSnapshot(snapshot);
-    timer.cancel();
-    expect(loaded.lovedCount, 20000);
-    expect(loaded.containsLovedKey('example:19999'), isTrue);
-    // The old synchronous parsing path cannot service this timer while parsing.
-    expect(ticks, greaterThan(1));
-  });
+  test(
+    'caller yield probe rejects synchronous parsing and completed futures',
+    () async {
+      final snapshot = collectionFixture(3);
+      final synchronous = await probeCallerYield(
+        () => decodeLibraryCollectionsSnapshot(snapshot),
+      );
+      expect(synchronous.value.lovedCount, 3);
+      expect(synchronous.yieldedBeforeCompletion, isFalse);
+      final completed = await probeCallerYield(
+        () => Future.value(decodeLibraryCollectionsSnapshot(snapshot)),
+      );
+      expect(completed.value.lovedCount, 3);
+      expect(completed.yieldedBeforeCompletion, isFalse);
+      final inlineAsync = await probeCallerYield(
+        () => hydrateLibraryCollectionsSnapshot(snapshot),
+      );
+      expect(inlineAsync.value.lovedCount, 3);
+      expect(inlineAsync.yieldedBeforeCompletion, isFalse);
+    },
+  );
+
+  test(
+    'large collection parsing yields caller before worker completion',
+    () async {
+      final snapshot = collectionFixture(20000);
+      final result = await probeCallerYield(
+        () => hydrateLibraryCollectionsSnapshot(snapshot),
+      );
+      final loaded = result.value;
+      expect(loaded.lovedCount, 20000);
+      expect(loaded.containsLovedKey('example:19999'), isTrue);
+      expect(result.yieldedBeforeCompletion, isTrue);
+    },
+  );
 
   test(
     'worker failure releases a pending batch and allows subsequent loads',

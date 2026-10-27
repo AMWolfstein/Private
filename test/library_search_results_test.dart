@@ -51,7 +51,6 @@ void main() {
         (call) async => switch (call.method) {
           'safStat' => jsonEncode({'exists': true, 'size': 100}),
           'readAudioMetadata' || 'readFileMetadata' => '{}',
-          'getLyricsLRCWithSource' => jsonEncode({'lyrics': '', 'source': ''}),
           'getSafFileModTimes' => '{}',
           _ => null,
         },

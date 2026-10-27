@@ -45,12 +45,6 @@
 -keep,allowoptimization class com.zarz.spotiflac.MainActivity {
     public <init>();
 }
--keep,allowoptimization class com.zarz.spotiflac.DownloadService {
-    public <init>();
-}
--keep,allowoptimization class com.zarz.spotiflac.DownloadQueueWidgetProvider {
-    public <init>();
-}
 
 # Flutter's fragment builders instantiate this class through reflection.
 -keep,allowoptimization class com.zarz.spotiflac.MainActivity$ImpellerAwareFlutterFragment {

@@ -14,7 +14,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.3
-  timezone: ^0.11.1
 
   # State Management
   flutter_riverpod: ^3.4.2
@@ -28,7 +27,7 @@ dependencies:
   path: ^1.9.1
   sqflite: ^2.4.4+1
 
-# HTTP & Network
+  # Hashing
   crypto: ^3.0.7
 
   # Streaming backup archives
@@ -58,12 +57,9 @@ dependencies:
 
   # FFmpeg for local tag editing, ReplayGain and CUE splitting
   ffmpeg_kit_flutter_new_audio: 2.5.7
-  open_filex: ^4.7.0
 
 
   xml: ^7.1.0
-  html: ^0.15.7
-  synchronized: ^3.4.0
   unorm_dart: ^0.3.3
 
   # Notifications

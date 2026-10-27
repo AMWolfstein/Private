@@ -11,6 +11,8 @@ import 'package:spotiflac_android/services/library_collections_hydration.dart';
 import 'package:spotiflac_android/services/library_playlist_search.dart';
 import 'package:spotiflac_android/services/library_search.dart';
 
+import 'caller_yield_probe.dart';
+
 LibraryCollectionsSnapshot _fixture(int count) => LibraryCollectionsSnapshot(
   lovedRows: [
     for (var index = 0; index < count; index++)
@@ -61,9 +63,8 @@ String _stateDigest(LibraryCollectionsState state) => sha256
     )
     .toString();
 
-Future<({T value, Map<String, int> timing})> measureCollectionOperation<T>(
-  FutureOr<T> Function() operation,
-) async {
+Future<({T value, bool yieldedBeforeCompletion, Map<String, int> timing})>
+measureCollectionOperation<T>(FutureOr<T> Function() operation) async {
   final watch = Stopwatch()..start();
   var beats = 0;
   var last = 0;
@@ -74,9 +75,9 @@ Future<({T value, Map<String, int> timing})> measureCollectionOperation<T>(
     last = now;
     beats++;
   });
-  late T value;
+  late ({T value, bool yieldedBeforeCompletion}) result;
   try {
-    value = await operation();
+    result = await probeCallerYield(operation);
   } finally {
     watch.stop();
     timer.cancel();
@@ -85,7 +86,8 @@ Future<({T value, Map<String, int> timing})> measureCollectionOperation<T>(
     maximumGap = watch.elapsedMicroseconds - last;
   }
   return (
-    value: value,
+    value: result.value,
+    yieldedBeforeCompletion: result.yieldedBeforeCompletion,
     timing: {
       'microseconds': watch.elapsedMicroseconds,
       'heartbeat_count': beats,
@@ -112,6 +114,9 @@ Future<Map<String, dynamic>> benchmarkCollectionHydration({
             ? hydrateLibraryCollectionsSnapshot(snapshot)
             : decodeLibraryCollectionsSnapshot(snapshot),
       );
+      if (useWorker && !result.yieldedBeforeCompletion) {
+        throw StateError('Hydration worker completed before caller probe');
+      }
       final digest = await compute(_stateDigest, result.value);
       if (digest != baselineDigest) {
         throw StateError('Collection parity failed');
