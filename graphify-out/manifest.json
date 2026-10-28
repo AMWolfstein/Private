@@ -222,9 +222,9 @@
     "semantic_hash": ""
   },
   "lib/models/unified_library_item.dart": {
-    "mtime": 1793139562.1976285,
-    "seen": 1793209372.9112175,
-    "ast_hash": "7426e4af39046b6c2a3ec0f0e702ab2d",
+    "mtime": 1793213789.573119,
+    "seen": 1793214252.975907,
+    "ast_hash": "ba6faa3f9fd35ecb97307f51fc9801c3",
     "semantic_hash": ""
   },
   "lib/providers/custom_font_provider.dart": {
@@ -258,9 +258,9 @@
     "semantic_hash": ""
   },
   "lib/providers/music_player_provider.dart": {
-    "mtime": 1793205838.7935858,
-    "seen": 1793209372.9112723,
-    "ast_hash": "cafab01c5c9d001b77aa458235cebfc9",
+    "mtime": 1793213760.3021696,
+    "seen": 1793214252.975969,
+    "ast_hash": "888369fc01b3421122442efef90dc376",
     "semantic_hash": ""
   },
   "lib/providers/playback_notification_provider.dart": {
@@ -402,15 +402,15 @@
     "semantic_hash": ""
   },
   "lib/screens/queue_tab_item_widgets.dart": {
-    "mtime": 1792947070.959187,
-    "seen": 1793209372.911474,
-    "ast_hash": "d197517025685c8ee087efa588403c99",
+    "mtime": 1793213760.3030136,
+    "seen": 1793214252.9761755,
+    "ast_hash": "c857866ab756c64b221e4fa6d6b21580",
     "semantic_hash": ""
   },
   "lib/screens/queue_tab_navigation.dart": {
-    "mtime": 1793205838.7995858,
-    "seen": 1793209372.911479,
-    "ast_hash": "e21395e635a271ba9b87b47084c1426e",
+    "mtime": 1793213771.3476813,
+    "seen": 1793214252.9761817,
+    "ast_hash": "c5816b2ee9c583245a6f8bb6dd4a0715",
     "semantic_hash": ""
   },
   "lib/screens/queue_tab_selection.dart": {
@@ -582,9 +582,9 @@
     "semantic_hash": ""
   },
   "lib/services/batch_track_actions.dart": {
-    "mtime": 1793139562.4489534,
-    "seen": 1793209372.9116914,
-    "ast_hash": "474b49e69c0b5736dd48e96096e92918",
+    "mtime": 1793213760.3001683,
+    "seen": 1793214252.9764447,
+    "ast_hash": "d44eafa68501f98dbc23e8513684a9d6",
     "semantic_hash": ""
   },
   "lib/services/collection_restore_codec.dart": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "lib/services/local_track_batch_actions.dart": {
-    "mtime": 1793205838.811586,
-    "seen": 1793209372.9118927,
-    "ast_hash": "a56de0bbad2e79576de1f870f60c80f9",
+    "mtime": 1793213760.303758,
+    "seen": 1793214252.976676,
+    "ast_hash": "d0e19101aae516afc254ae589347ef9e",
     "semantic_hash": ""
   },
   "lib/services/m3u_playlist_service.dart": {
@@ -1254,9 +1254,9 @@
     "semantic_hash": "1b96ec6dc37332bd9241510880589220"
   },
   "lib/widgets/library_search_results.dart": {
-    "mtime": 1793205838.8245862,
-    "seen": 1793209372.912514,
-    "ast_hash": "8d2950b2e55f5cfbf618eedbcc289577",
+    "mtime": 1793213760.3011608,
+    "seen": 1793214252.97738,
+    "ast_hash": "ee31d370067386d1521f85b167626538",
     "semantic_hash": ""
   },
   "lib/widgets/library_selection_playback_actions.dart": {
@@ -4194,9 +4194,9 @@
     "semantic_hash": ""
   },
   "test/album_completeness_query_test.dart": {
-    "mtime": 1793205838.8375864,
-    "seen": 1793209372.9158766,
-    "ast_hash": "bef15800ef797caa0e17f438aeeaa1df",
+    "mtime": 1793213791.8756902,
+    "seen": 1793214252.9809542,
+    "ast_hash": "b0d13304302a91c65182e2027ad68331",
     "semantic_hash": ""
   },
   "test/album_completeness_test.dart": {
@@ -5916,9 +5916,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793212929.845682,
-    "seen": 1793213674.541966,
-    "ast_hash": "d07d2acd817560ceb0e537c1ed0b4209",
+    "mtime": 1793213682.8814168,
+    "seen": 1793214252.9831362,
+    "ast_hash": "51804240d1551451b0d659f545b37721",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7290,9 +7290,9 @@
     "semantic_hash": ""
   },
   "test/batch_track_actions_test.dart": {
-    "mtime": 1793139561.05071,
-    "seen": 1793209372.9160857,
-    "ast_hash": "0d94a30076598b83fc4358ef445db6d8",
+    "mtime": 1793213771.207673,
+    "seen": 1793214252.9811883,
+    "ast_hash": "d2abec95eac1fb8b915208169372b304",
     "semantic_hash": ""
   },
   "test/cache_management_error_test.dart": {
@@ -8310,9 +8310,9 @@
     "semantic_hash": ""
   },
   "test/sistrum_library_actions_test.dart": {
-    "mtime": 1793139561.01,
-    "seen": 1793209372.9171808,
-    "ast_hash": "b15699f4f9249f3ec91d70f022582f3a",
+    "mtime": 1793213771.208187,
+    "seen": 1793214252.9823778,
+    "ast_hash": "b2f58028979dc3c720ac1a9f7ab864bb",
     "semantic_hash": ""
   },
   "test/sistrum_library_browse_test.dart": {
