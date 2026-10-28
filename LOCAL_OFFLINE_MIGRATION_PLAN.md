@@ -50,8 +50,9 @@ playback resolves the matched `LocalLibraryItem` rows and builds its queue throu
 audio facts and local-only artwork, while `resolveTrackFilePaths` stays a path-only projection for M3U export. Thirteenth: QueueTab
 and its seven parts moved to `lib/screens/library/`, HomeTab and its two parts to `lib/screens/home/`. Fourteenth: the flat services
 directory split into `lib/services/library/` (database/query/schema helpers), `lib/services/playback/` (player, session and AutoMix)
-and `lib/services/ffmpeg/` (FFmpeg operations), with shared infrastructure left at the root. Analyze and the full `flutter test`
-pass.
+and `lib/services/ffmpeg/` (FFmpeg operations), with shared infrastructure left at the root. Fifteenth: widgets split into
+`lib/widgets/audio_analysis/` (the analysis library and parts), `lib/widgets/player/` and `lib/widgets/glass/`, with shared app
+controls kept at the root. Analyze and the full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
