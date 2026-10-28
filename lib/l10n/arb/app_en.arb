@@ -1743,6 +1743,10 @@
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
+  "snackbarMetadataSavedIndexStale": "Metadata saved, but the library could not refresh",
+  "@snackbarMetadataSavedIndexStale": {
+    "description": "Snackbar after saving track metadata when refreshing the library index failed"
+  },
   "snackbarError": "Error: {error}",
   "@snackbarError": {
     "description": "Generic error snackbar with error detail",

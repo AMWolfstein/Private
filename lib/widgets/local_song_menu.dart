@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:sistrum/theme/sistrum_icons.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +7,7 @@ import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/services/batch_track_actions.dart';
 import 'package:sistrum/utils/clickable_metadata.dart';
 import 'package:sistrum/widgets/local_song_file_actions.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/services/library_edited_metadata.dart';
+import 'package:sistrum/services/metadata_index_reconciler.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -295,48 +293,26 @@ Future<bool> editLocalSongMetadata(
     ),
   );
   if (saved != true) return false;
+  final index = await const MetadataIndexReconciler().reconcile(item);
+  var refreshed = index.indexed;
   try {
-    final fresh = await PlatformBridge.readFileMetadata(item.filePath);
-    if (fresh['error'] == null) {
-      final json = localMetadataAfterEdit(item, fresh);
-      try {
-        final directory = Directory(
-          '${(await getApplicationSupportDirectory()).path}/library_covers',
-        );
-        await directory.create(recursive: true);
-        final path =
-            '${directory.path}/edited_${DateTime.now().microsecondsSinceEpoch}.jpg';
-        final cover = await PlatformBridge.extractCoverToFile(
-          item.filePath,
-          path,
-        );
-        final file = File(path);
-        if (cover['error'] == null &&
-            await file.exists() &&
-            await file.length() > 0) {
-          json['coverPath'] = path;
-          // Reference-aware cover pruning reclaims the old image only after
-          // the database stops referring to it, including failed refreshes.
-        } else if (await file.exists()) {
-          await file.delete();
-        }
-      } catch (error) {
-        AppLogger(
-          'SongMetadata',
-        ).w('Saved tags but could not refresh artwork: $error');
-      }
-      await LibraryDatabase.instance.upsert(json, sourceId: item.sourceId);
-    }
     await library.reloadFromStorage();
   } catch (error) {
+    refreshed = false;
     AppLogger(
       'SongMetadata',
     ).w('Saved tags but could not refresh the library index: $error');
   }
   if (context.mounted) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(context.l10n.snackbarMetadataSaved)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          refreshed
+              ? context.l10n.snackbarMetadataSaved
+              : context.l10n.snackbarMetadataSavedIndexStale,
+        ),
+      ),
+    );
   }
   return true;
 }
