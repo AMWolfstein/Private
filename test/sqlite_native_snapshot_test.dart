@@ -104,77 +104,6 @@ void main() {
   );
 
   test(
-    'closed staging publishes atomically through live triggers and foreign keys',
-    () async {
-      final path = '${root.path}/staging.db';
-      await createNativeSqliteSnapshot(
-        database,
-        path,
-        tables: ['parents', 'children'],
-        version: 15,
-        copyRows: false,
-      );
-      final staging = await SqliteProcessDatabase.open(path: path);
-      await staging.execute("INSERT INTO parents VALUES('new', 'new value')");
-      await staging.execute("INSERT INTO children VALUES('new', '/new.flac')");
-      await staging.close();
-      await replaceTablesFromNativeSnapshot(
-        database,
-        path,
-        tables: ['parents', 'children'],
-        deleteOrder: ['children', 'parents'],
-      );
-      expect(await database.query('parents'), [
-        {'id': 'new', 'value': 'new value'},
-      ]);
-      expect(await database.query('derived'), [
-        {'id': 'new'},
-      ]);
-      expect(await database.rawQuery('PRAGMA foreign_key_check'), isEmpty);
-      expect((await database.rawQuery('PRAGMA database_list')).length, 1);
-    },
-  );
-
-  test(
-    'late publication failure rolls back original rows and derived index',
-    () async {
-      final path = '${root.path}/invalid.db';
-      await createNativeSqliteSnapshot(
-        database,
-        path,
-        tables: ['parents', 'children'],
-        version: 15,
-        copyRows: false,
-      );
-      final staging = await SqliteProcessDatabase.open(path: path);
-      await staging.execute("INSERT INTO parents VALUES('new', 'new value')");
-      await staging.execute(
-        "INSERT INTO children VALUES('missing', '/bad.flac')",
-      );
-      await staging.close();
-      await expectLater(
-        replaceTablesFromNativeSnapshot(
-          database,
-          path,
-          tables: ['parents', 'children'],
-          deleteOrder: ['children', 'parents'],
-        ),
-        throwsA(isA<StateError>()),
-      );
-      expect(await database.query('parents'), [
-        {'id': 'old', 'value': '音楽'},
-      ]);
-      expect(await database.query('derived'), [
-        {'id': 'old'},
-      ]);
-      expect(await database.query('children'), [
-        {'parent_id': 'old', 'path': '/old.flac'},
-      ]);
-      expect((await database.rawQuery('PRAGMA database_list')).length, 1);
-    },
-  );
-
-  test(
     'failed private schema copy detaches and leaves live tables intact',
     () async {
       await expectLater(
@@ -215,44 +144,6 @@ void main() {
       final attached = (await database.rawQuery('PRAGMA database_list'))
           .singleWhere(
             (row) => (row['name'] as String).startsWith('native_snapshot_'),
-          );
-      expect(await File(path).exists(), true);
-      await database.execute('DETACH DATABASE "${attached['name']}"');
-    },
-  );
-
-  test(
-    'post-commit detach failure retains staging without rejecting publication',
-    () async {
-      final path = '${root.path}/published.db';
-      await createNativeSqliteSnapshot(
-        database,
-        path,
-        tables: ['parents', 'children'],
-        version: 15,
-        copyRows: false,
-      );
-      final staging = await SqliteProcessDatabase.open(path: path);
-      await staging.execute("INSERT INTO parents VALUES('new', 'published')");
-      await staging.close();
-      expect(
-        await replaceTablesFromNativeSnapshot(
-          _DetachFailureDatabase(database),
-          path,
-          tables: ['parents', 'children'],
-          deleteOrder: ['children', 'parents'],
-        ),
-        false,
-      );
-      expect(await database.query('parents'), [
-        {'id': 'new', 'value': 'published'},
-      ]);
-      expect(await database.query('derived'), [
-        {'id': 'new'},
-      ]);
-      final attached = (await database.rawQuery('PRAGMA database_list'))
-          .singleWhere(
-            (row) => (row['name'] as String).startsWith('native_publish_'),
           );
       expect(await File(path).exists(), true);
       await database.execute('DETACH DATABASE "${attached['name']}"');

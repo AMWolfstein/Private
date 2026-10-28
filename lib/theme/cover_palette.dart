@@ -77,13 +77,6 @@ class CoverPalette {
   static bool _isNetworkSource(String source) =>
       source.startsWith('http://') || source.startsWith('https://');
 
-  /// Includes the local file version so replacing artwork at the same path
-  /// cannot reuse a palette derived from the previous image.
-  static Future<String> cacheKeyFor(
-    String source,
-    Brightness brightness,
-  ) async => '${await _versionKey(source)}|${brightness.name}';
-
   static Future<String> _versionKey(String source) async {
     if (_isNetworkSource(source)) return source;
     try {

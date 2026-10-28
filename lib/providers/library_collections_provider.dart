@@ -154,10 +154,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     }
   }
 
-  Future<void> ensurePlaylistsLoaded(Iterable<String> playlistIds) async {
-    await Future.wait(playlistIds.toSet().map(ensurePlaylistLoaded));
-  }
-
   bool _replacePlaylistById(
     String playlistId,
     UserPlaylistCollection Function(UserPlaylistCollection playlist) update,

@@ -280,7 +280,7 @@ void main() {
       // cannot manufacture completed listening.
       service.finish(skipped: true);
       expect(service.observations, 1);
-      expect(service.adjustment(_rock, _jazz, _at), lessThan(0));
+      expect(_adjustment(service, _rock, _jazz, _at), lessThan(0));
       service.finish(skipped: true);
       expect(service.observations, 1);
     },
@@ -313,7 +313,7 @@ void main() {
     elapsed += const Duration(seconds: 95);
     service.finish();
     expect(service.observations, 1);
-    expect(service.adjustment(_jazz, _rock, _at), greaterThan(0));
+    expect(_adjustment(service, _jazz, _rock, _at), greaterThan(0));
   });
 
   test(
@@ -343,7 +343,7 @@ void main() {
       gate.complete(null);
       await service.ensureLoaded();
       expect(service.observations, 0);
-      expect(service.adjustment(_rock, _jazz, _at), 0);
+      expect(_adjustment(service, _rock, _jazz, _at), 0);
     },
   );
 
@@ -382,7 +382,7 @@ void main() {
       service.finish();
       service.setEnabled(false);
       await service.flush();
-      expect(service.adjustment(_jazz, _rock, _at), 0);
+      expect(_adjustment(service, _jazz, _rock, _at), 0);
       final next = AutoplayPersonalization(
         load: () async => saved,
         save: (_) async {},
@@ -421,3 +421,11 @@ void main() {
     },
   );
 }
+
+double _adjustment(
+  AutoplayPersonalization service,
+  AutoplayLearningTrack track,
+  AutoplayLearningTrack seed,
+  DateTime at,
+) =>
+    service.rankingSnapshot?.rankAdjustment(track, previous: seed, at: at) ?? 0;

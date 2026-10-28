@@ -18,27 +18,6 @@ void main() {
     expect(local.displayQuality, 'OPUS');
   });
 
-  group('Library audio quality badge color', () {
-    test('keeps legacy 24-bit labels highlighted', () {
-      expect(shouldHighlightAudioQualityBadge('24-bit/96kHz'), isTrue);
-      expect(shouldHighlightAudioQualityBadge('FLAC 24bit-48kHz'), isTrue);
-      expect(shouldHighlightAudioQualityBadge('24/192kHz'), isTrue);
-    });
-
-    test('highlights only measured bitrates above 900 kbps', () {
-      expect(shouldHighlightAudioQualityBadge('900kbps'), isFalse);
-      expect(shouldHighlightAudioQualityBadge('901kbps'), isTrue);
-      expect(shouldHighlightAudioQualityBadge('FLAC 1760 kbps'), isTrue);
-      expect(shouldHighlightAudioQualityBadge('1.76 Mbps'), isTrue);
-    });
-
-    test('leaves normal lossy bitrate labels neutral', () {
-      expect(shouldHighlightAudioQualityBadge('AAC 320kbps'), isFalse);
-      expect(shouldHighlightAudioQualityBadge('OPUS 256k'), isFalse);
-      expect(shouldHighlightAudioQualityBadge('16-bit/44.1kHz'), isFalse);
-    });
-  });
-
   group('standard Library audio quality labels', () {
     test('uses measured bitrate instead of stale stored metadata', () {
       expect(
@@ -96,25 +75,5 @@ void main() {
         );
       },
     );
-  });
-
-  group('Library grid audio quality label', () {
-    test('keeps both parts of detailed bit-depth labels', () {
-      expect(
-        formatLibraryGridAudioQualityLabel('16-bit/44.1kHz'),
-        '16-bit/44.1kHz',
-      );
-      expect(
-        formatLibraryGridAudioQualityLabel('16-bit/1411kbps'),
-        '16-bit/1411kbps',
-      );
-      expect(isDetailedLibraryAudioQualityLabel('16-bit/44.1kHz'), isTrue);
-    });
-
-    test('keeps bitrate-only grid labels compact', () {
-      expect(formatLibraryGridAudioQualityLabel('FLAC 1760kbps'), '1760k');
-      expect(formatLibraryGridAudioQualityLabel('Bitrate 1760kbps'), '1760k');
-      expect(isDetailedLibraryAudioQualityLabel('FLAC 1760kbps'), isFalse);
-    });
   });
 }

@@ -32,10 +32,6 @@ void main() {
           await write(Colors.blue);
           final first = await CoverPalette.resolve(file.path, Brightness.light);
           expect(first, isNotNull);
-          final oldKey = await CoverPalette.cacheKeyFor(
-            file.path,
-            Brightness.light,
-          );
           // The small source-key lookup may evict a file while Flutter still
           // retains its decoded image. A later edit must stay fresh too.
           for (var index = 0; index < 33; index++) {
@@ -48,10 +44,6 @@ void main() {
           await write(Colors.red);
           await file.setLastModified(
             DateTime.now().add(const Duration(seconds: 1)),
-          );
-          expect(
-            await CoverPalette.cacheKeyFor(file.path, Brightness.light),
-            isNot(oldKey),
           );
           final second = await CoverPalette.resolve(
             file.path,

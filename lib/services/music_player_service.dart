@@ -28,7 +28,6 @@ import 'package:sistrum/services/automix_analysis.dart';
 import 'package:sistrum/services/automix_phase_lock.dart';
 import 'package:sistrum/services/autoplay_personalization.dart';
 import 'package:sistrum/services/automix_analyzer.dart';
-import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/automix_effect_renderer.dart';
 import 'package:sistrum/services/automix_status.dart';
@@ -45,44 +44,6 @@ part 'music_player_automix.dart';
 part 'music_player_autoplay.dart';
 
 final _log = AppLogger('MusicPlayer');
-
-void configurePlaybackNotification({
-  required PlaybackNotification presentation,
-  required Future<bool> Function(MediaItem) toggleFavorite,
-}) => musicPlayerRuntime.configureNotification(
-  presentation: presentation,
-  toggleFavorite: toggleFavorite,
-);
-
-void setPlaybackAutomationOptions({
-  required bool enabled,
-  required bool pauseOnMute,
-  required bool playOnHeadphonesConnected,
-}) => musicPlayerRuntime.configure(
-  musicPlayerRuntime.settings.copyWith(
-    pauseOnMute: enabled && pauseOnMute,
-    playOnHeadphonesConnected: enabled && playOnHeadphonesConnected,
-  ),
-);
-
-void setAutoMixEnabled(bool enabled) => musicPlayerRuntime.configure(
-  musicPlayerRuntime.settings.copyWith(autoMix: enabled),
-);
-
-void setAutoMixOptions(AutoMixOptions options) => musicPlayerRuntime.configure(
-  musicPlayerRuntime.settings.copyWith(
-    autoMixDuration: options.durationSeconds,
-    autoMixEffect: options.effect,
-    autoMixSpeed: options.speed,
-    autoMixPitch: options.pitchSemitones,
-    autoMixEcho: options.echo,
-    autoMixLowPass: options.lowPass,
-  ),
-);
-
-void setUsbBitPerfectEnabled(bool enabled) => musicPlayerRuntime.configure(
-  musicPlayerRuntime.settings.copyWith(usbBitPerfect: enabled),
-);
 
 /// Gain and rate the player applies to the current track.
 class PlaybackProcessing {

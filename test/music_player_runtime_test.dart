@@ -641,7 +641,8 @@ void main() {
       await _settle();
       expect(learning.observations, 1);
       expect(
-        learning.adjustment(
+        _adjustment(
+          learning,
           const AutoplayLearningTrack(
             source: '/one.flac',
             title: 'One',
@@ -1421,3 +1422,11 @@ void main() {
     },
   );
 }
+
+double _adjustment(
+  AutoplayPersonalization service,
+  AutoplayLearningTrack track,
+  AutoplayLearningTrack seed,
+  DateTime at,
+) =>
+    service.rankingSnapshot?.rankAdjustment(track, previous: seed, at: at) ?? 0;

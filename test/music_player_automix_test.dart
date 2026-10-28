@@ -1312,68 +1312,75 @@ void main() {
     );
   }
 
-  test('Sistrum notification follows theme and keeps transport state', () async {
-    await handler.restoreSession(
-      items: _tracks,
-      index: 0,
-      position: const Duration(seconds: 12),
-      shuffle: false,
-    );
-    configurePlaybackNotification(
-      presentation: const PlaybackNotification(
-        sistrum: true,
-        mediaId: 'one',
-        source: '/one.flac',
-        loved: true,
-      ),
-      toggleFavorite: (_) async => false,
-    );
-    final state = handler.playbackState.value;
-    expect(state.playing, isFalse);
-    expect(state.updatePosition, const Duration(seconds: 12));
-    expect(state.controls.map((control) => control.action), [
-      MediaAction.custom,
-      MediaAction.skipToPrevious,
-      MediaAction.play,
-      MediaAction.skipToNext,
-      MediaAction.custom,
-    ]);
-    expect(state.controls.first.androidIcon, contains('heart_filled'));
-    expect(
-      state.controls.last.customAction?.name,
-      PlaybackNotification.shuffleAction,
-    );
-    expect(state.androidCompactActionIndices, [1, 2, 3]);
+  test(
+    'Sistrum notification follows theme and keeps transport state',
+    () async {
+      await handler.restoreSession(
+        items: _tracks,
+        index: 0,
+        position: const Duration(seconds: 12),
+        shuffle: false,
+      );
+      configurePlaybackNotification(
+        presentation: const PlaybackNotification(
+          sistrum: true,
+          mediaId: 'one',
+          source: '/one.flac',
+          loved: true,
+        ),
+        toggleFavorite: (_) async => false,
+      );
+      final state = handler.playbackState.value;
+      expect(state.playing, isFalse);
+      expect(state.updatePosition, const Duration(seconds: 12));
+      expect(state.controls.map((control) => control.action), [
+        MediaAction.custom,
+        MediaAction.skipToPrevious,
+        MediaAction.play,
+        MediaAction.skipToNext,
+        MediaAction.custom,
+      ]);
+      expect(state.controls.first.androidIcon, contains('heart_filled'));
+      expect(
+        state.controls.last.customAction?.name,
+        PlaybackNotification.shuffleAction,
+      );
+      expect(state.androidCompactActionIndices, [1, 2, 3]);
 
-    configurePlaybackNotification(
-      presentation: const PlaybackNotification(),
-      toggleFavorite: (_) async => false,
-    );
-    expect(handler.playbackState.value.controls, [
-      MediaControl.skipToPrevious,
-      MediaControl.play,
-      MediaControl.skipToNext,
-    ]);
-    expect(handler.playbackState.value.androidCompactActionIndices, [0, 1, 2]);
-    expect(handler.playbackState.value.updatePosition, state.updatePosition);
-    handler.playbackState.add(
-      PlaybackState(
-        playing: true,
-        processingState: AudioProcessingState.ready,
-        updatePosition: const Duration(seconds: 12),
-        updateTime: DateTime.now().subtract(const Duration(seconds: 5)),
-      ),
-    );
-    configurePlaybackNotification(
-      presentation: const PlaybackNotification(sistrum: true),
-      toggleFavorite: (_) async => false,
-    );
-    expect(
-      handler.playbackState.value.updatePosition.inMilliseconds,
-      inInclusiveRange(17000, 17200),
-      reason: 'Changing icons must not reset the live playback position',
-    );
-  });
+      configurePlaybackNotification(
+        presentation: const PlaybackNotification(),
+        toggleFavorite: (_) async => false,
+      );
+      expect(handler.playbackState.value.controls, [
+        MediaControl.skipToPrevious,
+        MediaControl.play,
+        MediaControl.skipToNext,
+      ]);
+      expect(handler.playbackState.value.androidCompactActionIndices, [
+        0,
+        1,
+        2,
+      ]);
+      expect(handler.playbackState.value.updatePosition, state.updatePosition);
+      handler.playbackState.add(
+        PlaybackState(
+          playing: true,
+          processingState: AudioProcessingState.ready,
+          updatePosition: const Duration(seconds: 12),
+          updateTime: DateTime.now().subtract(const Duration(seconds: 5)),
+        ),
+      );
+      configurePlaybackNotification(
+        presentation: const PlaybackNotification(sistrum: true),
+        toggleFavorite: (_) async => false,
+      );
+      expect(
+        handler.playbackState.value.updatePosition.inMilliseconds,
+        inInclusiveRange(17000, 17200),
+        reason: 'Changing icons must not reset the live playback position',
+      );
+    },
+  );
 
   test(
     'notification shuffle toggles queue order without restarting audio',
@@ -2157,3 +2164,45 @@ void main() {
     expect(analyzer.calls, isEmpty);
   });
 }
+
+void configurePlaybackNotification({
+  required PlaybackNotification presentation,
+  required Future<bool> Function(MediaItem) toggleFavorite,
+}) => musicPlayerRuntime.configureNotification(
+  presentation: presentation,
+  toggleFavorite: toggleFavorite,
+);
+
+void setPlaybackAutomationOptions({
+  required bool enabled,
+  required bool pauseOnMute,
+  required bool playOnHeadphonesConnected,
+}) => musicPlayerRuntime.configure(
+  musicPlayerRuntime.settings.copyWith(
+    pauseOnMute: enabled && pauseOnMute,
+    playOnHeadphonesConnected: enabled && playOnHeadphonesConnected,
+  ),
+);
+
+void setAutoMixEnabled(bool enabled) => musicPlayerRuntime.configure(
+  musicPlayerRuntime.settings.copyWith(autoMix: enabled),
+);
+
+void setAutoMixOptions(AutoMixOptions options) => musicPlayerRuntime.configure(
+  musicPlayerRuntime.settings.copyWith(
+    autoMixDuration: options.durationSeconds,
+    autoMixEffect: options.effect,
+    autoMixSpeed: options.speed,
+    autoMixPitch: options.pitchSemitones,
+    autoMixEcho: options.echo,
+    autoMixLowPass: options.lowPass,
+  ),
+);
+
+void setUsbBitPerfectEnabled(bool enabled) => musicPlayerRuntime.configure(
+  musicPlayerRuntime.settings.copyWith(usbBitPerfect: enabled),
+);
+
+void setAutoplayEnabled(bool enabled) => musicPlayerRuntime.configure(
+  musicPlayerRuntime.settings.copyWith(autoplay: enabled),
+);

@@ -70,9 +70,6 @@ class _SelectionCollections extends LibraryCollectionsNotifier {
   );
 
   @override
-  Future<void> ensurePlaylistsLoaded(Iterable<String> ids) async {}
-
-  @override
   Future<int> deletePlaylists(Iterable<String> ids) async {
     final selected = ids.toSet();
     _record(selected.toList());

@@ -296,8 +296,6 @@ class UpdateChecker {
     }
   }
 
-  static String get currentVersion => AppInfo.version;
-
   static List<ReleaseAsset> _collectReleaseAssets(List<dynamic> assets) {
     final releaseAssets = <ReleaseAsset>[];
 

@@ -13,7 +13,6 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/app_search_field.dart';
@@ -396,37 +395,6 @@ void main() {
       expect(source, contains('showAppBottomSheet<String>'));
       expect(source, isNot(contains('PopupMenuButton')));
     });
-  });
-
-  group('CoverPalette', () {
-    test(
-      'local cache identity changes when artwork is replaced in place',
-      () async {
-        final directory = Directory.systemTemp.createTempSync(
-          'sistrum-cover-palette-',
-        );
-        final file = File('${directory.path}/cover.jpg');
-        try {
-          file.writeAsBytesSync(const [1, 2, 3]);
-          file.setLastModifiedSync(DateTime.utc(2026, 1, 1));
-          final before = await CoverPalette.cacheKeyFor(
-            file.path,
-            Brightness.dark,
-          );
-
-          file.writeAsBytesSync(const [4, 5, 6, 7]);
-          file.setLastModifiedSync(DateTime.utc(2026, 1, 2));
-          final after = await CoverPalette.cacheKeyFor(
-            file.path,
-            Brightness.dark,
-          );
-
-          expect(after, isNot(before));
-        } finally {
-          directory.deleteSync(recursive: true);
-        }
-      },
-    );
   });
 
   group('AlbumDetailHeader', () {

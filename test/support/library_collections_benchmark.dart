@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
@@ -296,42 +295,3 @@ String _encodedState(LibraryCollectionsState state) =>
     _jsonDigest(state.toJson());
 String _jsonDigest(Map<String, dynamic> value) =>
     sha256.convert(utf8.encode(jsonEncode(value))).toString();
-
-Future<String> _encodeExportMap(Map<String, dynamic> value) =>
-    Isolate.run(() => jsonEncode(value));
-Future<String> _legacyJsonExport(LibraryCollectionsState state) =>
-    _encodeExportMap(state.toJson());
-
-Future<Map<String, dynamic>> benchmarkCollectionJsonExport({
-  int rows = 40000,
-}) async {
-  final state = await compute(
-    decodeLibraryCollectionsSnapshot,
-    await compute(_fixture, rows),
-  );
-  final expected = await _legacyJsonExport(state);
-  await exportLibraryCollectionsJson(state);
-  final baseline = <Map<String, int>>[];
-  final worker = <Map<String, int>>[];
-  for (var sample = 0; sample < 5; sample++) {
-    for (final useWorker in sample.isEven ? [false, true] : [true, false]) {
-      final result = await measureCollectionOperation<String>(
-        () => useWorker
-            ? exportLibraryCollectionsJson(state)
-            : _legacyJsonExport(state),
-      );
-      if (result.value != expected) {
-        throw StateError('Collection JSON export parity failed');
-      }
-      (useWorker ? worker : baseline).add(result.timing);
-    }
-  }
-  return {
-    'rows': rows,
-    'json_characters': expected.length,
-    'baseline': baseline,
-    'worker': worker,
-    'note':
-        'Full model-to-encoded-JSON: original UI map+encoding isolate versus bounded single worker JSON.',
-  };
-}

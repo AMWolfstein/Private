@@ -1,13 +1,6 @@
 import 'package:sistrum/utils/audio_format_utils.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
-const highQualityBadgeBitrateThresholdKbps = 900;
-
-final RegExp _bitDepthQualityPattern = RegExp(
-  r'\b\d+\s*(?:-\s*)?bit\b',
-  caseSensitive: false,
-);
-
 String? _libraryFileFormatLabel(String? format) {
   final rawFormat = normalizeOptionalString(format);
   if (rawFormat == null) return null;
@@ -70,55 +63,4 @@ int? _bitrateFromStoredQuality(String? quality) {
   if (value == null || value <= 0) return null;
   final unit = match?.group(2)?.toLowerCase();
   return unit == 'mbps' ? (value * 1000).round() : value.round();
-}
-
-/// Keeps detailed bit-depth labels intact in Library grid badges while
-/// shortening bitrate-only labels that already include a codec name.
-String formatLibraryGridAudioQualityLabel(String quality) {
-  final normalized = quality.trim().toLowerCase();
-  if (_bitDepthQualityPattern.hasMatch(normalized)) return quality;
-
-  final bitrateTextMatch = RegExp(
-    r'(\d+)\s*k(?:bps)?',
-    caseSensitive: false,
-  ).firstMatch(quality);
-  if (bitrateTextMatch != null) {
-    return '${bitrateTextMatch.group(1)}k';
-  }
-
-  final bitrateIdMatch = RegExp(r'_(\d+)$').firstMatch(normalized);
-  if (bitrateIdMatch != null) {
-    return '${bitrateIdMatch.group(1)}k';
-  }
-
-  return quality.split(' ').first;
-}
-
-bool isDetailedLibraryAudioQualityLabel(String quality) {
-  final normalized = quality.trim().toLowerCase();
-  return _bitDepthQualityPattern.hasMatch(normalized) &&
-      normalized.contains('/');
-}
-
-/// Preserves the highlighted color used by legacy 24-bit Library badges while
-/// also supporting newer labels that display a measured bitrate instead.
-bool shouldHighlightAudioQualityBadge(String quality) {
-  final normalized = quality.trim().toLowerCase();
-  if (RegExp(r'\b24(?:\s*[- ]?\s*bit|/)').hasMatch(normalized)) {
-    return true;
-  }
-
-  final kbpsMatch = RegExp(
-    r'\b(\d+(?:\.\d+)?)\s*k(?:bps)?\b',
-  ).firstMatch(normalized);
-  final kbps = double.tryParse(kbpsMatch?.group(1) ?? '');
-  if (kbps != null) {
-    return kbps > highQualityBadgeBitrateThresholdKbps;
-  }
-
-  final mbpsMatch = RegExp(
-    r'\b(\d+(?:\.\d+)?)\s*mbps\b',
-  ).firstMatch(normalized);
-  final mbps = double.tryParse(mbpsMatch?.group(1) ?? '');
-  return mbps != null && mbps * 1000 > highQualityBadgeBitrateThresholdKbps;
 }

@@ -13,7 +13,6 @@ image.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 regex.workspace = true
-claxon.workspace = true
 
 
 [lints]

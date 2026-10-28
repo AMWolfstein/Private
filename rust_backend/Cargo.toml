@@ -31,7 +31,6 @@ thiserror = "2.0"
 uniffi = { version = "=0.32.2", default-features = false }
 url = "2.5"
 regex = "=1.13.1"
-claxon = "=0.4.3"
 chrono = { version = "=0.4.45", default-features = false, features = ["clock"] }
 cap-std = "=4.0.3"
 rustix = { version = "=1.1.5", features = ["fs"] }

@@ -523,32 +523,6 @@ class LibraryDatabase {
     });
   }
 
-  Future<List<Map<String, dynamic>>> getAll({int? limit, int? offset}) async {
-    final db = await database;
-    final rows = await db.query(
-      visibleLibraryView,
-      orderBy: 'album_artist, album_name, disc_number, track_number',
-      limit: limit,
-      offset: offset,
-    );
-    return rows.map(LibraryRowMapper.decode).toList();
-  }
-
-  String _orderByForSort(LocalLibrarySortMode sortMode) {
-    return switch (sortMode) {
-      LocalLibrarySortMode.title =>
-        'track_name_norm, artist_name_norm, album_name_norm, disc_number, track_number',
-      LocalLibrarySortMode.artist =>
-        'artist_name_norm, album_name_norm, disc_number, track_number, track_name_norm',
-      LocalLibrarySortMode.latest =>
-        'scanned_at DESC, album_artist_norm, album_name_norm, disc_number, track_number',
-      LocalLibrarySortMode.quality =>
-        'COALESCE(bit_depth, 0) DESC, COALESCE(sample_rate, 0) DESC, COALESCE(bitrate, 0) DESC, album_artist_norm, album_name_norm, disc_number, track_number',
-      LocalLibrarySortMode.album =>
-        'album_artist_norm, album_name_norm, COALESCE(disc_number, 0), COALESCE(track_number, 0), track_name_norm',
-    };
-  }
-
   Future<List<Map<String, dynamic>>> getQueueTrackPage(
     QueueLibraryDbQuery request,
   ) async {
@@ -624,22 +598,6 @@ class LibraryDatabase {
       whereArgs: [matchKeyFor(trackName, artistName)],
     );
     return rows.map(LibraryRowMapper.decode).toList();
-  }
-
-  Future<Map<String, dynamic>?> findFirstByTrackAndArtist(
-    String trackName,
-    String artistName,
-  ) async {
-    final db = await database;
-    final rows = await db.query(
-      visibleLibraryView,
-      where: 'match_key = ?',
-      whereArgs: [matchKeyFor(trackName, artistName)],
-      orderBy: _orderByForSort(LocalLibrarySortMode.album),
-      limit: 1,
-    );
-    if (rows.isEmpty) return null;
-    return LibraryRowMapper.decode(rows.first);
   }
 
   Future<Map<String, dynamic>?> findExisting({
@@ -938,12 +896,6 @@ class LibraryDatabase {
       rethrow;
     }
     return file.path;
-  }
-
-  Future<Set<String>> getAllFilePaths() async {
-    final db = await database;
-    final rows = await db.rawQuery('SELECT file_path FROM library');
-    return rows.map((r) => r['file_path'] as String).toSet();
   }
 
   Future<int> deleteByPaths(List<String> filePaths) async {

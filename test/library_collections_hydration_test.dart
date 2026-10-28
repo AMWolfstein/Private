@@ -358,44 +358,7 @@ void main() {
       final result = await pending;
       expect(result.yieldedBeforeCompletion, isTrue);
       expect(jsonEncode(result.value), expected);
-      final jsonResult = await probeCallerYield(
-        () => exportLibraryCollectionsJson(state),
-      );
-      expect(jsonResult.yieldedBeforeCompletion, isTrue);
-      final json = jsonResult.value;
-      expect(json, expected);
-      expect(jsonDecode(json), jsonDecode(expected));
       expect(newer.lovedCount, 0);
-    },
-  );
-
-  test(
-    'JSON fragment worker preserves escaping and small empty categories',
-    () async {
-      final state = LibraryCollectionsState(
-        loved: [
-          CollectionTrackEntry(
-            key: 'example:escaped',
-            addedAt: DateTime.utc(2026),
-            track: const Track(
-              id: 'escaped',
-              name: '"音楽"\n\\line\t',
-              artistName: 'İstanbul 🎵',
-              albumName: '',
-              duration: 180,
-              comment: 'comma , colon : braces {} bracket []',
-              source: 'example',
-            ),
-          ),
-        ],
-      );
-      final json = await exportLibraryCollectionsJson(state);
-      expect(json, jsonEncode(state.toJson()));
-      expect((jsonDecode(json) as Map)['favoriteArtists'], isEmpty);
-      expect(
-        await exportLibraryCollectionsJson(LibraryCollectionsState()),
-        jsonEncode(LibraryCollectionsState().toJson()),
-      );
     },
   );
 

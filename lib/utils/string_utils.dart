@@ -94,20 +94,6 @@ String? buildDisplayAudioQuality({
   return normalizeOptionalString(storedQuality);
 }
 
-bool isPlaceholderQualityLabel(String? quality) {
-  final normalized = normalizeOptionalString(quality)?.toLowerCase();
-  if (normalized == null) return false;
-
-  return const {
-    'best',
-    'lossless',
-    'hi-res',
-    'hi-res-max',
-    'high',
-    'cd',
-  }.contains(normalized);
-}
-
 /// Byte count expressed as a plain megabyte number with 1 decimal, e.g. "3.4".
 String formatMegabytes(num bytes) {
   return (bytes / (1024 * 1024)).toStringAsFixed(1);

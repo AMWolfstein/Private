@@ -383,14 +383,6 @@ class AutoplayPersonalization {
     }
   }
 
-  double adjustment(
-    AutoplayLearningTrack track,
-    AutoplayLearningTrack seed,
-    DateTime at,
-  ) => !_enabled || !_loaded || _disposed
-      ? 0
-      : _model.rankAdjustment(track, previous: seed, at: at);
-
   Future<void> flush() {
     _saveTimer?.cancel();
     _saveTimer = null;

@@ -809,7 +809,7 @@ void main() {
       );
       final container = _container(db);
       final notifier = container.read(libraryCollectionsProvider.notifier);
-      await notifier.ensurePlaylistsLoaded(const []);
+      await Future<void>.value();
       final first = notifier.ensurePlaylistLoaded('playlist');
       await db.playlistReadStarted.future;
       final second = notifier.ensurePlaylistLoaded('playlist');
@@ -855,7 +855,7 @@ void main() {
     };
     final container = _container(db);
     final notifier = container.read(libraryCollectionsProvider.notifier);
-    await notifier.ensurePlaylistsLoaded(const []);
+    await Future<void>.value();
     final loading = notifier.ensurePlaylistLoaded('playlist');
     await db.playlistReadStarted.future;
     container.dispose();
@@ -871,7 +871,7 @@ void main() {
       final db = _CollectionsDatabase();
       final container = _container(db);
       final notifier = container.read(libraryCollectionsProvider.notifier);
-      await notifier.ensurePlaylistsLoaded(const []);
+      await Future<void>.value();
       final active = notifier.toggleLoved(_track('active'));
       await db.writeStarted.future;
       final queued = notifier.toggleLoved(_track('queued'));
@@ -890,7 +890,7 @@ void main() {
       final db = _CollectionsDatabase();
       final container = _container(db);
       final notifier = container.read(libraryCollectionsProvider.notifier);
-      await notifier.ensurePlaylistsLoaded(const []);
+      await Future<void>.value();
       Future<bool> toggle() => switch (kind) {
         'loved' => notifier.toggleLoved(_track('song')),
         _ => notifier.toggleFavoriteArtist(
@@ -933,7 +933,7 @@ void main() {
       }
       final container = _container(db);
       final notifier = container.read(libraryCollectionsProvider.notifier);
-      await notifier.ensurePlaylistsLoaded(const []);
+      await Future<void>.value();
       final deletion = notifier.deletePlaylists(['target']);
       await db.writeStarted.future;
       final creation = notifier.createPlaylist('New');
@@ -964,7 +964,7 @@ void main() {
       final db = _CollectionsDatabase()..failNextWrite = true;
       final container = _container(db);
       final notifier = container.read(libraryCollectionsProvider.notifier);
-      await notifier.ensurePlaylistsLoaded(const []);
+      await Future<void>.value();
       final failed = notifier.toggleLoved(_track('failed'));
       final failure = expectLater(failed, throwsStateError);
       await db.writeStarted.future;

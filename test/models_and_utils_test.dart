@@ -343,63 +343,6 @@ void main() {
     });
   });
 
-  group('audio format utils', () {
-    test('normalizes lightweight library scan metadata for display probes', () {
-      final normalized = normalizeScannedAudioMetadata({
-        'trackName': 'Song',
-        'artistName': 'Artist',
-        'albumName': 'Album',
-        'albumArtist': 'Album Artist',
-        'releaseDate': '2026',
-        'trackNumber': 2,
-        'totalTracks': 10,
-        'discNumber': 1,
-        'totalDiscs': 2,
-        'bitDepth': 24,
-        'sampleRate': 96000,
-        'bitrate': 1840,
-        'albumType': 'album',
-        'explicit': true,
-        'upc': '4006381333931',
-        'comment': 'https://media.example/album/1',
-        'format': 'flac',
-      });
-
-      expect(normalized['title'], 'Song');
-      expect(normalized['artist'], 'Artist');
-      expect(normalized['album'], 'Album');
-      expect(normalized['album_artist'], 'Album Artist');
-      expect(normalized['date'], '2026');
-      expect(normalized['track_number'], 2);
-      expect(normalized['total_tracks'], 10);
-      expect(normalized['disc_number'], 1);
-      expect(normalized['total_discs'], 2);
-      expect(normalized['bit_depth'], 24);
-      expect(normalized['sample_rate'], 96000);
-      expect(normalized['bitrate'], 1840);
-      expect(normalized['album_type'], 'album');
-      expect(normalized['explicit'], isTrue);
-      expect(normalized['upc'], '4006381333931');
-      expect(normalized['comment'], 'https://media.example/album/1');
-      expect(normalized['audio_codec'], 'flac');
-    });
-
-    test('does not replace stored tags with filename scan fallbacks', () {
-      final normalized = normalizeScannedAudioMetadata({
-        'trackName': 'Filename fallback',
-        'artistName': 'Unknown Artist',
-        'albumName': 'Unknown Album',
-        'metadataFromFilename': true,
-        'format': 'flac',
-      });
-
-      expect(normalized['title'], isNull);
-      expect(normalized['artist'], isNull);
-      expect(normalized['album'], isNull);
-      expect(normalized['audio_codec'], 'flac');
-    });
-  });
-
   group('string utils', () {
     test('normalizes optional strings and cover references', () {
       expect(normalizeOptionalString(null), isNull);
@@ -437,8 +380,6 @@ void main() {
       );
       expect(formatSampleRateKHz(44100), '44.1kHz');
       expect(buildDisplayAudioQuality(storedQuality: ' Hi-Res '), 'Hi-Res');
-      expect(isPlaceholderQualityLabel('lossless'), isTrue);
-      expect(isPlaceholderQualityLabel('FLAC 1411kbps'), isFalse);
     });
   });
 

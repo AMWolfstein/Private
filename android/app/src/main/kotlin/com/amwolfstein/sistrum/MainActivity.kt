@@ -63,7 +63,6 @@ class MainActivity: FlutterFragmentActivity() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var backendChannel: MethodChannel? = null
     private var audioOutputChannel: MethodChannel? = null
-    private var concertCalendarChannel: MethodChannel? = null
     internal val coreBackend: CoreBackend by lazy { createCoreBackend(applicationContext) }
     private val nativeBackendMethods = setOf(
         "setScreenAwake",
@@ -557,8 +556,6 @@ class MainActivity: FlutterFragmentActivity() {
             pendingSafTreeResult = null
             pending?.success(null)
         }
-        concertCalendarChannel?.setMethodCallHandler(null)
-        concertCalendarChannel = null
         audioOutputChannel?.setMethodCallHandler(null)
         audioOutputChannel = null
         // The engine outlives this Activity. Clear its handlers so it does not
@@ -609,34 +606,6 @@ class MainActivity: FlutterFragmentActivity() {
         }
         if (!flutterEngine.plugins.has(MusicHapticsPlugin::class.java)) {
             flutterEngine.plugins.add(MusicHapticsPlugin())
-        }
-        concertCalendarChannel = MethodChannel(messenger, "com.amwolfstein.sistrum/concert_calendar").also { channel ->
-            channel.setMethodCallHandler { call, result ->
-                if (call.method != "add") {
-                    result.notImplemented()
-                } else {
-                    val start = call.argument<Number>("start")?.toLong()
-                    if (start == null) {
-                        result.success(false)
-                    } else {
-                        val suppliedEnd = call.argument<Number>("end")?.toLong()
-                        val end = suppliedEnd?.takeIf { it > start } ?: (start + 3600000)
-                        try {
-                            startActivity(Intent(Intent.ACTION_INSERT).apply {
-                                data = android.provider.CalendarContract.Events.CONTENT_URI
-                                putExtra(android.provider.CalendarContract.Events.TITLE, call.argument<String>("title"))
-                                putExtra(android.provider.CalendarContract.Events.EVENT_LOCATION, call.argument<String>("location"))
-                                putExtra(android.provider.CalendarContract.Events.DESCRIPTION, call.argument<String>("url"))
-                                putExtra(android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME, start)
-                                putExtra(android.provider.CalendarContract.EXTRA_EVENT_END_TIME, end)
-                            })
-                            result.success(true)
-                        } catch (_: Exception) {
-                            result.success(false)
-                        }
-                    }
-                }
-            }
         }
         audioOutputChannel = MethodChannel(messenger, "com.amwolfstein.sistrum/audio_output").also { channel ->
             channel.setMethodCallHandler { call, result ->

@@ -306,13 +306,7 @@ class _CollectionHydrationAccumulator {
       );
 }
 
-enum _CollectionWorkerMode {
-  snapshot,
-  playlist,
-  export,
-  exportJson,
-  backupJson,
-}
+enum _CollectionWorkerMode { snapshot, playlist, export, backupJson }
 
 typedef _CollectionWorkerRequest = ({
   SendPort result,
@@ -445,14 +439,8 @@ void _collectionHydrationWorker(_CollectionWorkerRequest request) async {
       request.result.send(true);
     } else if (message == null) {
       commands.close();
-      if (request.mode == _CollectionWorkerMode.export ||
-          request.mode == _CollectionWorkerMode.exportJson) {
-        final exported = exporter.finish();
-        Isolate.exit(request.result, [
-          request.mode == _CollectionWorkerMode.exportJson
-              ? jsonEncode(exported)
-              : exported,
-        ]);
+      if (request.mode == _CollectionWorkerMode.export) {
+        Isolate.exit(request.result, [exporter.finish()]);
       }
       if (request.mode == _CollectionWorkerMode.backupJson) {
         Isolate.exit(request.result, [
@@ -591,9 +579,6 @@ Future<String> exportCollectionsBackupSnapshot(
     );
   }
 }
-
-Future<String> exportLibraryCollectionsJson(LibraryCollectionsState state) =>
-    _exportLibraryCollectionsInWorker(state, _CollectionWorkerMode.exportJson);
 
 Future<T> _exportLibraryCollectionsInWorker<T>(
   LibraryCollectionsState state,
