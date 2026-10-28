@@ -22,6 +22,15 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Whole-repo dead-code scan removed (2026-10-28):** unused Dart members (`sistrumArrowForward`, three `LibraryDatabase`
+getters, `readPositiveBitrateKbps`, `favoriteActionLabel`, `UpdateChecker.currentVersion`, unused icon-map arms), the
+`concert_calendar` MethodChannel in `MainActivity.kt`, the `claxon` and mobile `sha2` Cargo dependencies, the
+`network_tls` fixtures, and test-only code (player/autoplay configuration wrappers moved into the test, collections JSON
+export, native snapshot publication, grid quality label and badge highlight policy, `normalizeScannedAudioMetadata`,
+`isPlaceholderQualityLabel`, the `activeLyricIndices` oracle, `CoverPalette.cacheKeyFor`). `CoverPalette.debugClearMemory`
+stays (a `@visibleForTesting` seam). Verified with analyze, full `flutter test` and `cargo test --offline`; Kotlin
+checks and device tests are not run.
+
 **Risky leftovers removed (2026-10-28):** the single-folder settings (`localLibraryPath`/`localLibraryBookmark`), iOS bookmark
 plumbing and single-folder source migration, the library (v20) and collections (v4) schema upgraders (the versions stay
 pinned by Rust, older databases are no longer upgraded), upgrade-only SQLite helpers, the `EXISTS:` history marker and
