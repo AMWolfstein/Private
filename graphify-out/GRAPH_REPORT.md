@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-28)
 
 ## Corpus Check
-- 1336 files · ~1,423,570 words
+- 1336 files · ~1,423,626 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 125 file(s) not represented in the graph (top: .xml 39, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `afb2b381`
+- Built from commit: `cd33c4e3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3006,7 +3006,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.03333333333333333 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `Object?`, `Duration`, `Color?`, `Future`, `music_playback_deck.dart`, `events_posix.c`, `ValueStream`, `MediaItemCopyWith`, `AudioServicePlugin.java`, `List`, `Widget`, `package:flutter/foundation.dart`, `library_collections_provider.dart`, `playback_feedback.dart`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `PlaybackStateCopyWith`, `playback_automation.dart`, `int get`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `_RatingMessageExtension`, `UsbPcmSource`, `AudioHandler`, `package:flutter_test/flutter_test.dart`, `static const`, `AudioService`, `package:flutter/material.dart`, `package:flutter_test/flutter_test.dart`, `unified_library_item.dart`, `shell_navigation_service.dart`, `MusicPlayerHandler`, `AndroidPlaybackInfo`, `library_collections_hydration.dart`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.03076923076923077 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `Ipv4Addr`, `libc/net/sockopt.rs`, `PollFd<'fd>`, `RawFd`, `ret`, `setsockopt`, `ret`, `Signal`, `at.rs`, `SocketAddrXdp`, `libc/fs/dir.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `msg.rs`, `fs/ioctl.rs`, `OwnedFd`, `net/types.rs`, `Uid`, `SendAncillaryMessage`, `to_ipv6mr`, `linux_raw/termios/syscalls.rs`, `runtime/syscalls.rs`, `c`, `linux_raw/mm/syscalls.rs`, `Ipv4PathMtuDiscovery`, `Ipv6PathMtuDiscovery`, `Pid`, `Timespec`, `LinkNameSpaceType`, `linux_raw/net/write_sockaddr.rs`, `.from`, `ioctl/mod.rs`, `setns.rs`?**

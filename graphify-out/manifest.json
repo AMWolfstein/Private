@@ -144,9 +144,9 @@
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
-    "mtime": 1793183759.638034,
-    "seen": 1793185546.0969703,
-    "ast_hash": "3d83076677ade8fd37818693d1679ce7",
+    "mtime": 1793198410.4415078,
+    "seen": 1793198968.9838698,
+    "ast_hash": "d3406c6d4de8c2c35ddeb489fa68558e",
     "semantic_hash": ""
   },
   "lib/controllers/metadata_editor_controller.dart": {
@@ -5472,9 +5472,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1793179475.8577967,
-    "seen": 1793180395.6160135,
-    "ast_hash": "3df06ce7217e3af84f9ca66e1eb1805d",
+    "mtime": 1793198410.437991,
+    "seen": 1793198968.989145,
+    "ast_hash": "78559e45026d0141966ce52bb9f9bd79",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -5922,9 +5922,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793196339.6891003,
-    "seen": 1793198166.6910949,
-    "ast_hash": "21f717eeecb9942c86c322bd78253ee5",
+    "mtime": 1793198168.4788463,
+    "seen": 1793198968.9890635,
+    "ast_hash": "a6d10c1fa3d7cc2a3098b05907af5aa8",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -8280,9 +8280,9 @@
     "semantic_hash": ""
   },
   "test/sistrum_glass_auto_probe_test.dart": {
-    "mtime": 1793187101.8769338,
-    "seen": 1793188646.5718212,
-    "ast_hash": "5196f1f2ffa0498e15b29e7885ef36aa",
+    "mtime": 1793198410.4455495,
+    "seen": 1793198968.9884732,
+    "ast_hash": "ac89a987d0c22e5883ee0fe91b31f924",
     "semantic_hash": ""
   },
   "test/sistrum_glass_interaction_test.dart": {
