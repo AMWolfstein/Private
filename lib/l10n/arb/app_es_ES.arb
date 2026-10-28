@@ -2783,5 +2783,32 @@
   "downloadFolderReselect": "Volver a seleccionar carpeta",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Buscar actualizaciones",
+  "optionsCheckUpdatesSubtitle": "Notificar cuando una nueva versión esté disponible",
+  "optionsUpdateChannel": "Tipo de actualizaciones",
+  "optionsUpdateChannelStable": "Solo versiones estables",
+  "optionsUpdateChannelPreview": "Obtener versiones preliminares",
+  "optionsUpdateChannelWarning": "La versión preliminar puede contener errores o funciones incompletas",
+  "updateAvailable": "Actualización Disponible",
+  "updateStartingDownload": "Iniciando descarga...",
+  "updateDownloadFailed": "Descarga fallida",
+  "updateFailedMessage": "Error al descargar la actualización",
+  "updateNewVersionReady": "Una nueva versión está lista",
+  "updateRequiredTitle": "Actualización Necesaria",
+  "updateRequiredNotice": "Esta versión está {count} lanzamientos detrás de la actual y ya no es soportada. Actualice para seguir usando la app.",
+  "updateCurrent": "Actual",
+  "updateNew": "Nuevo",
+  "updateDownloading": "Descargando...",
+  "updateWhatsNew": "Novedades",
+  "updateDownloadInstall": "Descargar & Instalar",
+  "updateDontRemind": "No recordar",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "Consulte las notas de la versión para obtener más detalles.",
+  "notifDownloadingUpdate": "Descargar Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage} %",
+  "notifUpdateReady": "Actualización preparada",
+  "notifUpdateReadyBody": "Se ha descargado Sistrum v{version}. Toca para instalar.",
+  "notifUpdateFailed": "La actualización falló",
+  "notifUpdateFailedBody": "No se pudo descargar la actualización. Inténtalo de nuevo más tarde."
 }

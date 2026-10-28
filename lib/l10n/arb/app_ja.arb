@@ -2782,5 +2782,32 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "更新を確認",
+  "optionsCheckUpdatesSubtitle": "Notify when new version is available",
+  "optionsUpdateChannel": "更新チャンネル",
+  "optionsUpdateChannelStable": "安定版リリースのみ",
+  "optionsUpdateChannelPreview": "プレビューリリースを入手",
+  "optionsUpdateChannelWarning": "Preview may contain bugs or incomplete features",
+  "updateAvailable": "更新が利用可能です",
+  "updateStartingDownload": "ダウンロードを開始中...",
+  "updateDownloadFailed": "ダウンロードに失敗しました",
+  "updateFailedMessage": "更新のダウンロードに失敗しました",
+  "updateNewVersionReady": "新しいバージョンの準備ができています",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateCurrent": "現在",
+  "updateNew": "新着",
+  "updateDownloading": "ダウンロード中...",
+  "updateWhatsNew": "新着情報",
+  "updateDownloadInstall": "ダウンロードとインストール",
+  "updateDontRemind": "通知しない",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "See release notes for details.",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateReady": "Update Ready",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "Update Failed",
+  "notifUpdateFailedBody": "Could not download update. Try again later."
 }

@@ -30,6 +30,11 @@ dependencies:
   # Hashing
   crypto: ^3.0.7
 
+  # In-app updates from GitHub releases
+  http: ^1.6.0
+  url_launcher: ^6.3.3
+  open_filex: ^4.7.0
+
   # Streaming backup archives
   archive: ^4.5.0
 

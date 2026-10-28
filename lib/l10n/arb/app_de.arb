@@ -2782,5 +2782,32 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Nach Updates suchen",
+  "optionsCheckUpdatesSubtitle": "Benachrichtigen, wenn neue Version verfügbar",
+  "optionsUpdateChannel": "Update-Kanal",
+  "optionsUpdateChannelStable": "Nur stabile Versionen",
+  "optionsUpdateChannelPreview": "Vorschau-Versionen erhalten",
+  "optionsUpdateChannelWarning": "Vorschau kann Fehler oder unvollständige Funktionen enthalten",
+  "updateAvailable": "Update verfügbar",
+  "updateStartingDownload": "Download wird gestartet...",
+  "updateDownloadFailed": "Download fehlgeschlagen",
+  "updateFailedMessage": "Das Update konnte nicht heruntergeladen werden",
+  "updateNewVersionReady": "Eine neue Version ist verfügbar",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateCurrent": "Aktuell",
+  "updateNew": "Neu",
+  "updateDownloading": "Wird heruntergeladen...",
+  "updateWhatsNew": "Was ist neu",
+  "updateDownloadInstall": "Herunterladen & Installieren",
+  "updateDontRemind": "Nicht erinnern",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "See release notes for details.",
+  "notifDownloadingUpdate": "Sistrum v{version} wird heruntergeladen",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateReady": "Update bereit",
+  "notifUpdateReadyBody": "Sistrum v{version} heruntergeladen. Zum Installieren tippen.",
+  "notifUpdateFailed": "Update fehlgeschlagen",
+  "notifUpdateFailedBody": "Update konnte nicht heruntergeladen werden. Versuche es später erneut."
 }

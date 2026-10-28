@@ -320,7 +320,12 @@ void main() {
       find.byKey(const ValueKey('developer-remeasure-glass')),
       200,
     );
+    await tester.ensureVisible(sampler);
+    await tester.pumpAndSettle();
     await tester.tap(sampler);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(band);
+    await tester.pumpAndSettle();
     await tester.tap(band);
     await tester.pump();
     final settings = container.read(settingsProvider);

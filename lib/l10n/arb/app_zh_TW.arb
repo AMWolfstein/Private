@@ -2781,5 +2781,32 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "檢查更新",
+  "optionsCheckUpdatesSubtitle": "當有新版本可用時通知",
+  "optionsUpdateChannel": "選擇更新版本",
+  "optionsUpdateChannelStable": "僅取得正式版更新",
+  "optionsUpdateChannelPreview": "取得預覽版更新",
+  "optionsUpdateChannelWarning": "預覽版本可能包含錯誤或未完成的功能",
+  "updateAvailable": "Update Available",
+  "updateStartingDownload": "Starting download...",
+  "updateDownloadFailed": "Download failed",
+  "updateFailedMessage": "Failed to download update",
+  "updateNewVersionReady": "A new version is ready",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateCurrent": "Current",
+  "updateNew": "New",
+  "updateDownloading": "Downloading...",
+  "updateWhatsNew": "What's New",
+  "updateDownloadInstall": "Download & Install",
+  "updateDontRemind": "Don't remind",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "See release notes for details.",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateReady": "Update Ready",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "Update Failed",
+  "notifUpdateFailedBody": "Could not download update. Try again later."
 }

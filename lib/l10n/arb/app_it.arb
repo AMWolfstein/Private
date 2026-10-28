@@ -2781,5 +2781,32 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Controlla aggiornamenti",
+  "optionsCheckUpdatesSubtitle": "Notifica quando una nuova versione è disponibile",
+  "optionsUpdateChannel": "Aggiorna canale",
+  "optionsUpdateChannelStable": "Solo versioni stabili",
+  "optionsUpdateChannelPreview": "Ottieni le versioni in anteprima",
+  "optionsUpdateChannelWarning": "L'anteprima può contenere bug o funzionalità incomplete",
+  "updateAvailable": "Aggiornamento disponibile",
+  "updateStartingDownload": "Starting download...",
+  "updateDownloadFailed": "Download failed",
+  "updateFailedMessage": "Failed to download update",
+  "updateNewVersionReady": "A new version is ready",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateCurrent": "Current",
+  "updateNew": "New",
+  "updateDownloading": "Downloading...",
+  "updateWhatsNew": "What's New",
+  "updateDownloadInstall": "Scarica e installa",
+  "updateDontRemind": "Don't remind",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "See release notes for details.",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateReady": "Update Ready",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "Update Failed",
+  "notifUpdateFailedBody": "Could not download update. Try again later."
 }

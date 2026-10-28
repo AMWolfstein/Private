@@ -2782,5 +2782,32 @@
   "downloadFolderReselect": "Sélectionner à nouveau le dossier",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Vérifier les mises à jour",
+  "optionsCheckUpdatesSubtitle": "M'avertir lorsqu'une nouvelle version est disponible",
+  "optionsUpdateChannel": "Chaîne de mise à jour",
+  "optionsUpdateChannelStable": "Uniquement les versions stables",
+  "optionsUpdateChannelPreview": "Accédez aux versions préliminaires",
+  "optionsUpdateChannelWarning": "La version préliminaire peut contenir des bogues ou des fonctionnalités incomplètes",
+  "updateAvailable": "Mise à jour disponible",
+  "updateStartingDownload": "Début du téléchargement...",
+  "updateDownloadFailed": "Échec du téléchargement",
+  "updateFailedMessage": "Échec du téléchargement de la mise à jour",
+  "updateNewVersionReady": "Une nouvelle version est disponible",
+  "updateRequiredTitle": "Mise à jour requise",
+  "updateRequiredNotice": "Cette version a {count} versions de retard et n'est plus prise en charge. Effectuez la mise à jour pour continuer à utiliser l'application.",
+  "updateCurrent": "Actuel",
+  "updateNew": "Nouveau",
+  "updateDownloading": "Téléchargement en cours...",
+  "updateWhatsNew": "Quoi de neuf ?",
+  "updateDownloadInstall": "Télécharger & Installer",
+  "updateDontRemind": "Ne plus me le rappeler",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "Pour plus de détails, consultez les notes de mise à jour.",
+  "notifDownloadingUpdate": "Télécharger Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} Mo • {percentage}%",
+  "notifUpdateReady": "Prêt pour la mise à jour",
+  "notifUpdateReadyBody": "Sistrum v{version} a été téléchargé. Appuyez pour l'installer.",
+  "notifUpdateFailed": "Échec de la mise à jour",
+  "notifUpdateFailedBody": "Impossible de télécharger la mise à jour. Veuillez réessayer plus tard."
 }

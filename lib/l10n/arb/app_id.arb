@@ -2816,5 +2816,32 @@
   "downloadFolderReselect": "Pilih Folder Baru",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Periksa Update",
+  "optionsCheckUpdatesSubtitle": "Beritahu saat versi baru tersedia",
+  "optionsUpdateChannel": "Channel Update",
+  "optionsUpdateChannelStable": "Versi Stabil",
+  "optionsUpdateChannelPreview": "Versi Preview",
+  "optionsUpdateChannelWarning": "Mungkin ada bug atau fitur belum selesai di versi Preview",
+  "updateAvailable": "Update Tersedia",
+  "updateStartingDownload": "Memulai download...",
+  "updateDownloadFailed": "Download gagal",
+  "updateFailedMessage": "Gagal mendownload update",
+  "updateNewVersionReady": "Versi baru tersedia",
+  "updateRequiredTitle": "Harus update",
+  "updateRequiredNotice": "Versi yang Anda gunakan, {count} sudah tidak didukung. Update untuk terus menggunakan aplikasi.",
+  "updateCurrent": "Saat ini",
+  "updateNew": "Baru",
+  "updateDownloading": "Mendownload...",
+  "updateWhatsNew": "Yang Baru",
+  "updateDownloadInstall": "Download & Instal",
+  "updateDontRemind": "Tidak usah",
+  "updateViewRelease": "Lihat Rilisan",
+  "updateSeeReleaseNotes": "Lihat catatan yang baru untuk detail.",
+  "notifDownloadingUpdate": "Mendownload Sistrum v{version}",
+  "notifUpdateProgress": "{received}/{total}MB • {percentage}%",
+  "notifUpdateReady": "Update Siap",
+  "notifUpdateReadyBody": "Sistrum v{version} didownload. Ketuk untuk instal.",
+  "notifUpdateFailed": "Update Gagal",
+  "notifUpdateFailedBody": "Tidak dapat mendownload update. Coba lagi nanti."
 }

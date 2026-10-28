@@ -2783,5 +2783,32 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Güncelleştirmeleri Denetle",
+  "optionsCheckUpdatesSubtitle": "Yeni sürüm çıktığında bildir",
+  "optionsUpdateChannel": "Güncelleme Kanalı",
+  "optionsUpdateChannelStable": "Sadece stabil sürümler",
+  "optionsUpdateChannelPreview": "Önizleme sürümlerini al",
+  "optionsUpdateChannelWarning": "Önizleme sürümleri hatalar veya tamamlanmamış özellikler içerebilir",
+  "updateAvailable": "Güncelleme Mevcut",
+  "updateStartingDownload": "İndirme başlıyor...",
+  "updateDownloadFailed": "İndirme başarısız",
+  "updateFailedMessage": "Güncelleme indirilemedi",
+  "updateNewVersionReady": "Yeni bir sürüm hazır",
+  "updateRequiredTitle": "Güncelleme gerekli",
+  "updateRequiredNotice": "Bu sürüm {count} sürüm geride ve artık desteklenmiyor. Uygulamayı kullanmaya devam etmek için güncelleyin.",
+  "updateCurrent": "Şimdiki",
+  "updateNew": "Yeni",
+  "updateDownloading": "İndiriliyor...",
+  "updateWhatsNew": "Yenilikler",
+  "updateDownloadInstall": "İndir & Yükle",
+  "updateDontRemind": "Bir daha sorma",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "Ayrıntılar için sürüm notlarına bakın.",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • %{percentage}",
+  "notifUpdateReady": "Güncelleme Hazır",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "Güncelleme başarısız",
+  "notifUpdateFailedBody": "Güncelleme indirilemedi. Daha sonra tekrar deneyin."
 }

@@ -2783,5 +2783,32 @@
   "downloadFolderReselect": "Выбрать папку заново",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Проверить обновления",
+  "optionsCheckUpdatesSubtitle": "Уведомлять о наличии новой версии",
+  "optionsUpdateChannel": "Канал обновлений",
+  "optionsUpdateChannelStable": "Только стабильные релизы",
+  "optionsUpdateChannelPreview": "Предварительные версии",
+  "optionsUpdateChannelWarning": "Предварительная версия может содержать ошибки или неполные функции",
+  "updateAvailable": "Доступно обновление",
+  "updateStartingDownload": "Загрузка началась...",
+  "updateDownloadFailed": "Не удалось скачать",
+  "updateFailedMessage": "Сбой загрузки обновления",
+  "updateNewVersionReady": "Доступна новая версия",
+  "updateRequiredTitle": "Требуется обновление",
+  "updateRequiredNotice": "Эта версия {count} больше не поддерживается. Обновите, чтобы продолжить использовать приложение.",
+  "updateCurrent": "Текущая",
+  "updateNew": "Новая",
+  "updateDownloading": "Скачивание...",
+  "updateWhatsNew": "Что нового",
+  "updateDownloadInstall": "Скачать и установить",
+  "updateDontRemind": "Не напоминать",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "Смотрите примечания к релизу для подробностей.",
+  "notifDownloadingUpdate": "Скачивание Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} МБ • {percentage}%",
+  "notifUpdateReady": "Обновление готово",
+  "notifUpdateReadyBody": "Sistrum v{version} скачана. Нажмите, чтобы установить.",
+  "notifUpdateFailed": "Ошибка обновления",
+  "notifUpdateFailedBody": "Не удалось скачать обновление. Попробуйте позже."
 }

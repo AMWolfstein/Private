@@ -4,8 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/string_utils.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -30,6 +32,7 @@ class NotificationService {
       'The previous library scan was interrupted. Scan the folder again to continue. Your indexed tracks are still available.';
 
   static const String libraryScanWorkKind = 'library_scan';
+  static const String updateDownloadWorkKind = 'app_update';
 
   // Kinds whose progress the Android foreground-service notification shows,
   // replacing the plugin's progress notification so only one is visible.
@@ -65,6 +68,14 @@ class NotificationService {
     title: _l10n?.notifScanningLibrary ?? 'Scanning local library',
   );
 
+  Future<void> beginUpdateDownloadWork({required String version}) =>
+      beginBackgroundWork(
+        updateDownloadWorkKind,
+        title:
+            _l10n?.notifDownloadingUpdate(version) ??
+            'Downloading ${AppInfo.appName} v$version',
+      );
+
   Future<bool> _showInBackgroundWork(
     String kind, {
     required String title,
@@ -86,6 +97,7 @@ class NotificationService {
     }
   }
 
+  static const int updateDownloadId = 2;
   static const int libraryScanId = 3;
   static const String libraryChannelId = 'library_scan';
   static const String libraryChannelName = 'Library Scan';
@@ -331,5 +343,68 @@ class NotificationService {
   /// Clears a paused-scan notice once the foreground service shows progress.
   Future<void> cancelLibraryScanNotification() async {
     await _notifications.cancel(id: libraryScanId);
+  }
+
+  Future<void> showUpdateDownloadProgress({
+    required String version,
+    required int received,
+    required int total,
+  }) async {
+    if (!_isInitialized) await initialize();
+
+    final percentage = total > 0 ? (received * 100 ~/ total) : 0;
+    final receivedMB = formatMegabytes(received);
+    final totalMB = formatMegabytes(total);
+    final title =
+        _l10n?.notifDownloadingUpdate(version) ??
+        'Downloading ${AppInfo.appName} v$version';
+    final body =
+        _l10n?.notifUpdateProgress(receivedMB, totalMB, percentage) ??
+        '$receivedMB / $totalMB MB • $percentage%';
+    if (await _showInBackgroundWork(
+      updateDownloadWorkKind,
+      title: title,
+      body: body,
+      progress: total > 0 ? percentage : -1,
+    )) {
+      return;
+    }
+
+    await _showSafely(
+      id: updateDownloadId,
+      title: title,
+      body: body,
+      details: _details(progress: percentage),
+    );
+  }
+
+  Future<void> showUpdateDownloadComplete({required String version}) async {
+    if (!_isInitialized) await initialize();
+
+    await _showSafely(
+      id: updateDownloadId,
+      title: _l10n?.notifUpdateReady ?? 'Update Ready',
+      body:
+          _l10n?.notifUpdateReadyBody(version) ??
+          '${AppInfo.appName} v$version downloaded. Tap to install.',
+      details: _details(progress: null),
+    );
+  }
+
+  Future<void> showUpdateDownloadFailed() async {
+    if (!_isInitialized) await initialize();
+
+    await _showSafely(
+      id: updateDownloadId,
+      title: _l10n?.notifUpdateFailed ?? 'Update Failed',
+      body:
+          _l10n?.notifUpdateFailedBody ??
+          'Could not download update. Try again later.',
+      details: _details(progress: null),
+    );
+  }
+
+  Future<void> cancelUpdateNotification() async {
+    await _notifications.cancel(id: updateDownloadId);
   }
 }

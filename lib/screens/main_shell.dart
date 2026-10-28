@@ -17,6 +17,8 @@ import 'package:sistrum/services/shell_navigation_service.dart';
 import 'package:sistrum/services/music_playback_deck.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:sistrum/services/notification_service.dart';
+import 'package:sistrum/services/update_checker.dart';
+import 'package:sistrum/widgets/update_dialog.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/mini_player.dart';
 import 'package:sistrum/widgets/lazy_tab_view.dart';
@@ -84,7 +86,40 @@ class _MainShellState extends ConsumerState<MainShell>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       unawaited(ref.read(musicPlayerRuntimeProvider).restoreSession());
+      unawaited(_checkForUpdates());
     });
+  }
+
+  bool _hasCheckedUpdate = false;
+
+  Future<void> _checkForUpdates() async {
+    if (_hasCheckedUpdate) return;
+    _hasCheckedUpdate = true;
+
+    final settings = ref.read(settingsProvider);
+
+    // The check runs even when the user disabled update prompts: versions
+    // that fall forceUpdateThreshold stable releases behind must update, and
+    // that enforcement cannot be opted out of.
+    final updateInfo = await UpdateChecker().checkForUpdate(
+      channel: settings.updateChannel,
+    );
+    if (updateInfo == null || !mounted) return;
+
+    final forced =
+        updateInfo.releasesBehind >= UpdateChecker.forceUpdateThreshold;
+    if (!forced && !settings.checkForUpdates) return;
+
+    unawaited(
+      showUpdateDialog(
+        context,
+        updateInfo: updateInfo,
+        forced: forced,
+        onDisableUpdates: () {
+          ref.read(settingsProvider.notifier).setCheckForUpdates(false);
+        },
+      ),
+    );
   }
 
   void _onUsbAudioStatusChanged() {

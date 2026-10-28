@@ -2768,7 +2768,7 @@
   "equalizerCustom": "自定义",
   "releaseTypeSingle": "单曲",
   "@@last_modified": "2026-04-28",
-  "updateLater": "Later",
+  "updateLater": "稍后",
   "@updateLater": {
     "description": "Update button - dismiss"
   },
@@ -2784,5 +2784,32 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "检查更新",
+  "optionsCheckUpdatesSubtitle": "当有新版本可用时通知",
+  "optionsUpdateChannel": "更新频道",
+  "optionsUpdateChannelStable": "仅稳定版本",
+  "optionsUpdateChannelPreview": "获取预览版本",
+  "optionsUpdateChannelWarning": "预览版本可能包含错误或者尚未完善的功能",
+  "updateAvailable": "有可用更新",
+  "updateStartingDownload": "开始下载…",
+  "updateDownloadFailed": "下载失败",
+  "updateFailedMessage": "下载更新失败",
+  "updateNewVersionReady": "新版本已就绪",
+  "updateRequiredTitle": "需要更新",
+  "updateRequiredNotice": "此版本落后 {count} 个版本，不再受支持。更新以继续使用应用。",
+  "updateCurrent": "当前",
+  "updateNew": "新",
+  "updateDownloading": "正在下载…",
+  "updateWhatsNew": "新功能",
+  "updateDownloadInstall": "下载并安装",
+  "updateDontRemind": "不再提醒",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "查看发行说明了解详情。",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB · {percentage}%",
+  "notifUpdateReady": "更新就绪",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "更新失败",
+  "notifUpdateFailedBody": "无法下载更新，请稍后重试。"
 }

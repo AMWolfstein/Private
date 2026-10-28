@@ -2662,5 +2662,31 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "检查更新",
+  "optionsCheckUpdatesSubtitle": "当有新版本可用时通知",
+  "optionsUpdateChannel": "更新频道",
+  "optionsUpdateChannelStable": "仅稳定版本",
+  "optionsUpdateChannelPreview": "获取预览版本",
+  "optionsUpdateChannelWarning": "预览版本可能包含错误或者尚未完善的功能",
+  "updateAvailable": "Update Available",
+  "updateStartingDownload": "Starting download...",
+  "updateDownloadFailed": "Download failed",
+  "updateFailedMessage": "Failed to download update",
+  "updateNewVersionReady": "A new version is ready",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateCurrent": "Current",
+  "updateNew": "New",
+  "updateDownloading": "Downloading...",
+  "updateWhatsNew": "What's New",
+  "updateDownloadInstall": "Download & Install",
+  "updateDontRemind": "Don't remind",
+  "updateSeeReleaseNotes": "See release notes for details.",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateReady": "Update Ready",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "Update Failed",
+  "notifUpdateFailedBody": "Could not download update. Try again later."
 }

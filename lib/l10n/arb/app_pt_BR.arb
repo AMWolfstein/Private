@@ -2765,7 +2765,7 @@
   "equalizerCustom": "Personalizado",
   "releaseTypeSingle": "Single",
   "@@last_modified": "2026-04-28",
-  "updateLater": "Depois",
+  "updateLater": "Later",
   "@updateLater": {
     "description": "Update button - dismiss"
   },
@@ -2781,5 +2781,28 @@
   "downloadFolderReselect": "Re-select folder",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Check for Updates",
+  "optionsCheckUpdatesSubtitle": "Notify when new version is available",
+  "optionsUpdateChannel": "Update Channel",
+  "optionsUpdateChannelStable": "Stable releases only",
+  "optionsUpdateChannelPreview": "Get preview releases",
+  "optionsUpdateChannelWarning": "Preview may contain bugs or incomplete features",
+  "updateAvailable": "Update Available",
+  "updateStartingDownload": "Starting download...",
+  "updateDownloadFailed": "Download failed",
+  "updateFailedMessage": "Failed to download update",
+  "updateNewVersionReady": "A new version is ready",
+  "updateCurrent": "Current",
+  "updateNew": "New",
+  "updateDownloading": "Downloading...",
+  "updateWhatsNew": "What's New",
+  "updateDownloadInstall": "Download & Install",
+  "updateDontRemind": "Don't remind",
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateReady": "Update Ready",
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateFailed": "Update Failed",
+  "notifUpdateFailedBody": "Could not download update. Try again later."
 }

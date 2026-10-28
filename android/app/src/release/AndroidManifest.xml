@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- Release playback and file operations are strictly local. -->
-    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <!-- Playback and file operations are local; the network is used only to
+         read GitHub releases and download updates. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
 </manifest>

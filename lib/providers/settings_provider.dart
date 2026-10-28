@@ -430,6 +430,18 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
+  void setCheckForUpdates(bool enabled) {
+    state = state.copyWith(checkForUpdates: enabled);
+    _saveSettings();
+  }
+
+  void setUpdateChannel(String channel) {
+    state = state.copyWith(
+      updateChannel: channel == 'preview' ? 'preview' : 'stable',
+    );
+    _saveSettings();
+  }
+
   void setDeveloperOptionsUnlocked(bool unlocked) {
     state = state.copyWith(
       developerOptionsUnlocked: unlocked,

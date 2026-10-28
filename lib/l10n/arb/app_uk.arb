@@ -2784,5 +2784,32 @@
   "downloadFolderReselect": "Обрати теку повторно",
   "@downloadFolderReselect": {
     "description": "Button that reopens the folder picker to restore download folder access"
-  }
+  },
+  "optionsCheckUpdates": "Перевірити наявність оновлень",
+  "optionsCheckUpdatesSubtitle": "Повідомити, коли буде доступна нова версія",
+  "optionsUpdateChannel": "Канал оновлень",
+  "optionsUpdateChannelStable": "Тільки стабільні релізи",
+  "optionsUpdateChannelPreview": "Отримати попередні релізи",
+  "optionsUpdateChannelWarning": "Тестовий реліз може містити помилки або неповні функції",
+  "updateAvailable": "Доступне оновлення",
+  "updateStartingDownload": "Початок завантаження...",
+  "updateDownloadFailed": "Не вдалося завантажити",
+  "updateFailedMessage": "Не вдалося завантажити оновлення",
+  "updateNewVersionReady": "Доступна нова версія",
+  "updateRequiredTitle": "Потрібне оновлення",
+  "updateRequiredNotice": "Ця версія {count} релізів і більше не підтримується. Оновіть, щоб користуватися додатком.",
+  "updateCurrent": "Поточна",
+  "updateNew": "Нова",
+  "updateDownloading": "Завантаження...",
+  "updateWhatsNew": "Що нового",
+  "updateDownloadInstall": "Завантажити та встановити",
+  "updateDontRemind": "Не нагадувати",
+  "updateViewRelease": "View Release",
+  "updateSeeReleaseNotes": "Детальнішу інформацію див. у примітках до випуску.",
+  "notifDownloadingUpdate": "Завантаження Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} МБ • {percentage}%",
+  "notifUpdateReady": "Оновлення готове",
+  "notifUpdateReadyBody": "Sistrum v{version} завантажена. Натисніть щоб установити.",
+  "notifUpdateFailed": "Не вдалося оновити",
+  "notifUpdateFailedBody": "Не вдалося завантажити оновлення. Спробуйте пізніше."
 }

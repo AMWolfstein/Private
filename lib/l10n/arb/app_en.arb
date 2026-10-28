@@ -3397,5 +3397,143 @@
   "equalizerEffectivePreamp": "Input gain after headroom",
   "equalizerDeletePreset": "Delete preset",
   "equalizerCustom": "Custom",
-  "releaseTypeSingle": "Single"
+  "releaseTypeSingle": "Single",
+  "optionsCheckUpdates": "Check for Updates",
+  "@optionsCheckUpdates": {
+    "description": "Auto update check toggle"
+  },
+  "optionsCheckUpdatesSubtitle": "Notify when new version is available",
+  "@optionsCheckUpdatesSubtitle": {
+    "description": "Subtitle for update check"
+  },
+  "optionsUpdateChannel": "Update Channel",
+  "@optionsUpdateChannel": {
+    "description": "Stable vs preview releases"
+  },
+  "optionsUpdateChannelStable": "Stable releases only",
+  "@optionsUpdateChannelStable": {
+    "description": "Only stable updates"
+  },
+  "optionsUpdateChannelPreview": "Get preview releases",
+  "@optionsUpdateChannelPreview": {
+    "description": "Include beta/preview updates"
+  },
+  "optionsUpdateChannelWarning": "Preview may contain bugs or incomplete features",
+  "@optionsUpdateChannelWarning": {
+    "description": "Warning about preview channel"
+  },
+  "updateAvailable": "Update Available",
+  "@updateAvailable": {
+    "description": "Update dialog title"
+  },
+  "updateLater": "Later",
+  "@updateLater": {
+    "description": "Update button - dismiss"
+  },
+  "updateStartingDownload": "Starting download...",
+  "@updateStartingDownload": {
+    "description": "Update status - initializing"
+  },
+  "updateDownloadFailed": "Download failed",
+  "@updateDownloadFailed": {
+    "description": "Update error title"
+  },
+  "updateFailedMessage": "Failed to download update",
+  "@updateFailedMessage": {
+    "description": "Update error message"
+  },
+  "updateNewVersionReady": "A new version is ready",
+  "@updateNewVersionReady": {
+    "description": "Update subtitle"
+  },
+  "updateRequiredTitle": "Update required",
+  "@updateRequiredTitle": {
+    "description": "Title of the mandatory update dialog shown when the installed version is too old"
+  },
+  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "@updateRequiredNotice": {
+    "description": "Subtitle of the mandatory update dialog; explains why the dialog cannot be dismissed",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "updateCurrent": "Current",
+  "@updateCurrent": {
+    "description": "Label for current version"
+  },
+  "updateNew": "New",
+  "@updateNew": {
+    "description": "Label for new version"
+  },
+  "updateDownloading": "Downloading...",
+  "@updateDownloading": {
+    "description": "Update status - downloading"
+  },
+  "updateWhatsNew": "What's New",
+  "@updateWhatsNew": {
+    "description": "Changelog section title"
+  },
+  "updateDownloadInstall": "Download & Install",
+  "@updateDownloadInstall": {
+    "description": "Update button - download and install"
+  },
+  "updateDontRemind": "Don't remind",
+  "@updateDontRemind": {
+    "description": "Update button - skip this version"
+  },
+  "updateViewRelease": "View Release",
+  "@updateViewRelease": {
+    "description": "Update button - open the release page when this install cannot update itself (deb, Flatpak, no matching package)"
+  },
+  "updateSeeReleaseNotes": "See release notes for details.",
+  "@updateSeeReleaseNotes": {
+    "description": "Fallback changelog text when release notes cannot be parsed"
+  },
+  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "@notifDownloadingUpdate": {
+    "description": "Notification title while downloading an app update",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "@notifUpdateProgress": {
+    "description": "Notification body showing update download progress",
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "notifUpdateReady": "Update Ready",
+  "@notifUpdateReady": {
+    "description": "Notification title when app update download is complete"
+  },
+  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "@notifUpdateReadyBody": {
+    "description": "Notification body when app update is ready to install",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "notifUpdateFailed": "Update Failed",
+  "@notifUpdateFailed": {
+    "description": "Notification title when app update download fails"
+  },
+  "notifUpdateFailedBody": "Could not download update. Try again later.",
+  "@notifUpdateFailedBody": {
+    "description": "Notification body when app update download fails"
+  }
 }

@@ -81,6 +81,12 @@ class AppSettings {
   final bool enableLogging;
   final bool heroAnimationsEnabled;
 
+  /// Offer new GitHub releases at startup. Versions far behind still prompt.
+  final bool checkForUpdates;
+
+  /// `stable` or `preview` (includes pre-releases).
+  final String updateChannel;
+
   /// Revealed by tapping the About version row seven times.
   final bool developerOptionsUnlocked;
 
@@ -148,6 +154,8 @@ class AppSettings {
     this.historyFilterMode = 'all',
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
+    this.checkForUpdates = true,
+    this.updateChannel = 'stable',
     this.developerOptionsUnlocked = false,
     this.performanceHudEnabled = false,
     this.barSamplerDisabled = false,
@@ -196,6 +204,8 @@ class AppSettings {
     String? historyFilterMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
+    bool? checkForUpdates,
+    String? updateChannel,
     bool? developerOptionsUnlocked,
     bool? performanceHudEnabled,
     bool? barSamplerDisabled,
@@ -250,6 +260,8 @@ class AppSettings {
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
+      checkForUpdates: checkForUpdates ?? this.checkForUpdates,
+      updateChannel: updateChannel ?? this.updateChannel,
       developerOptionsUnlocked:
           developerOptionsUnlocked ?? this.developerOptionsUnlocked,
       performanceHudEnabled:
