@@ -60,8 +60,8 @@ extension _QueueTabItemWidgets on _QueueTabState {
     return LocalSongRow(
       title: item.trackName,
       artist: item.artistName,
-      cover: item.localCoverPath ?? item.coverUrl,
-      explicit: item.localItem?.explicit ?? false,
+      cover: item.localCoverPath,
+      explicit: item.localItem.explicit,
       isSelectionMode: _isSelectionMode,
       isSelected: _selectedIds.contains(item.id),
       onSelect: () => _toggleSelection(item.id),

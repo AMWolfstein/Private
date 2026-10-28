@@ -51,12 +51,10 @@ Future<void> deleteLibraryTracks(
   final cueIds = <String>[];
   var deletedCount = 0;
   for (final item in selected) {
-    if (isCueBackedRow(item.filePath, item.localItem?.format)) {
+    if (isCueBackedRow(item.filePath, item.localItem.format)) {
       // A CUE row shares its backing sheet/audio with sibling tracks; removing
       // the row must never delete those files.
-      final localId = item.localItem?.id;
-      if (localId == null) continue;
-      cueIds.add(localId);
+      cueIds.add(item.localItem.id);
       deletedCount++;
       continue;
     }

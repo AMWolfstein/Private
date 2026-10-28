@@ -394,7 +394,7 @@ void main() {
           .items
           .single
           .localItem
-          ?.id,
+          .id,
       'complete2',
     );
 
@@ -485,7 +485,7 @@ void main() {
             .items
             .single
             .localItem
-            ?.id,
+            .id,
         'complete2',
       );
       expect(tester.takeException(), isNull);

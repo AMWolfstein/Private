@@ -1,9 +1,7 @@
 part of 'queue_tab.dart';
 
 extension _QueueTabNavigation on _QueueTabState {
-  String _libraryPlaybackMediaId(UnifiedLibraryItem item) {
-    return item.localItem?.id ?? item.id;
-  }
+  String _libraryPlaybackMediaId(UnifiedLibraryItem item) => item.localItem.id;
 
   /// Plays [item] and queues the rest of the library (in display order) so playback continues to the next track. Honors player
   /// mode and shuffle.
@@ -33,29 +31,8 @@ extension _QueueTabNavigation on _QueueTabState {
     }
   }
 
-  PlayableMedia _toPlayableMedia(UnifiedLibraryItem item) {
-    final local = item.localItem;
-    if (local != null) return playableFromLocal(local);
-
-    final cover = item.coverUrl ?? item.localCoverPath ?? '';
-    String? art;
-    if (cover.isNotEmpty) {
-      art =
-          (cover.startsWith('http') ||
-              cover.startsWith('content://') ||
-              cover.startsWith('file://'))
-          ? cover
-          : Uri.file(cover).toString();
-    }
-    return PlayableMedia(
-      id: item.id,
-      source: item.filePath,
-      title: item.trackName,
-      artist: item.artistName,
-      album: item.albumName,
-      artUri: art,
-    );
-  }
+  PlayableMedia _toPlayableMedia(UnifiedLibraryItem item) =>
+      playableFromLocal(item.localItem);
 
   void _navigateWithUnfocus(Route<dynamic> route) {
     Navigator.of(context).push(route);

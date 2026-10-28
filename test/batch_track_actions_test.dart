@@ -7,19 +7,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/services/library_database_models.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/batch_progress_dialog.dart';
 
 UnifiedLibraryItem _item(String path) => UnifiedLibraryItem(
-  id: path,
-  trackName: path,
-  artistName: 'Artist',
-  albumName: 'Album',
-  filePath: path,
-  addedAt: DateTime(2026),
-  source: LibraryItemSource.local,
+  LocalLibraryItem(
+    id: path,
+    trackName: path,
+    artistName: 'Artist',
+    albumName: 'Album',
+    filePath: path,
+    scannedAt: DateTime(2026),
+  ),
 );
 
 void main() {

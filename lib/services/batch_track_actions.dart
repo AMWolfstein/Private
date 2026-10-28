@@ -108,12 +108,10 @@ Future<bool> runBatchReplayGain(
       if (ok) {
         successCount++;
         try {
-          if (item.localItem case final local?) {
-            await LibraryDatabase.instance.updateAudioMetadata(
-              local.id,
-              hasReplayGain: !remove,
-            );
-          }
+          await LibraryDatabase.instance.updateAudioMetadata(
+            item.localItem.id,
+            hasReplayGain: !remove,
+          );
         } catch (e) {
           _batchActionsLog.w('Could not refresh ReplayGain availability: $e');
         }

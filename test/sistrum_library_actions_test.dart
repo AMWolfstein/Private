@@ -10,6 +10,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/services/library_database_models.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/app_action_button.dart';
@@ -132,13 +133,14 @@ void main() {
                 context,
                 [
                   UnifiedLibraryItem(
-                    id: 'track',
-                    trackName: 'Track',
-                    artistName: 'Artist',
-                    albumName: 'Album',
-                    filePath: '/missing/track.flac',
-                    addedAt: DateTime(2026),
-                    source: LibraryItemSource.local,
+                    LocalLibraryItem(
+                      id: 'track',
+                      trackName: 'Track',
+                      artistName: 'Artist',
+                      albumName: 'Album',
+                      filePath: '/missing/track.flac',
+                      scannedAt: DateTime(2026),
+                    ),
                   ),
                 ],
                 onExitSelectionMode: () => exitedSelection = true,

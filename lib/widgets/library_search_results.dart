@@ -228,9 +228,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
             librarySearchTrackProvider((source: hit.source, id: hit.id)).future,
           );
           if (!mounted || item == null) return;
-          final localItem = item.localItem;
-          if (localItem == null) return;
-          final media = playableFromLocal(localItem);
+          final media = playableFromLocal(item.localItem);
           await ref.read(playbackProvider.notifier).playMediaQueue([
             media,
           ], startIndex: 0);

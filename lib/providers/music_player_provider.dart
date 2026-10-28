@@ -221,10 +221,7 @@ class MusicPlayerController {
     List<UnifiedLibraryItem> items, {
     bool playNext = false,
   }) async {
-    final media = [
-      for (final item in items)
-        if (item.localItem != null) playableFromLocal(item.localItem!),
-    ];
+    final media = [for (final item in items) playableFromLocal(item.localItem)];
     await (await ensureInitialized())?.enqueueAll(media, playNext: playNext);
   }
 
