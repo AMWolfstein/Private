@@ -13,7 +13,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/queue_tab.dart';
+import 'package:sistrum/screens/library/queue_tab.dart';
 import 'package:sistrum/widgets/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/library_selection_playback_actions.dart';

@@ -8,7 +8,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/screens/home_tab.dart';
+import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/library_search_results.dart';
 

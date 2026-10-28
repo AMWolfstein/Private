@@ -11,7 +11,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/screens/home_tab.dart';
+import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/services/library_database.dart';
