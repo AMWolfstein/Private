@@ -22,6 +22,13 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Risky leftovers removed (2026-10-28):** the single-folder settings (`localLibraryPath`/`localLibraryBookmark`), iOS bookmark
+plumbing and single-folder source migration, the library (v20) and collections (v4) schema upgraders (the versions stay
+pinned by Rust, older databases are no longer upgraded), upgrade-only SQLite helpers, the `EXISTS:` history marker and
+extension-stripped path keys (Dart and Rust, fixture regenerated). Kept because they are stored data or persisted
+identity: the `legacy` source id and its placeholder row, the `builtin:`/`isrc:` collection keys and `Track` provider
+fields, and lyrics provider-credit parsing. The `bookmark` column stays in the library_sources table (unused).
+
 **Old-install migrations removed (2026-10-28):** theme/glass/locale/equalizer key fallbacks, legacy notification and widget
 actions, the old playback-channel cleanup, the retired cover cache, the download queue table (app-state DB v6), the
 SharedPreferences collections import, dead download-filename/tag helpers, iOS picker/notification options and the legacy
