@@ -324,12 +324,6 @@ class SettingsSearchCatalog {
           keywords: const ['temporary files'],
         ),
         SettingsSearchEntry(
-          icon: Icons.image_outlined,
-          title: l10n.cacheCoverImage,
-          subtitle: l10n.cacheCoverImageDesc,
-          keywords: const ['artwork cache'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.library_music_outlined,
           title: l10n.cacheLibraryCover,
           subtitle: l10n.cacheLibraryCoverDesc,

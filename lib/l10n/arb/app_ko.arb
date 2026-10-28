@@ -1206,11 +1206,6 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "임시 로컬 아트워크 및 오디오 처리 파일입니다.",
-  "cacheCoverImage": "앨범 커버 캐시",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "이전 버전의 사용 중단된 이미지 캐시입니다. 로컬 아트워크는 라이브러리 캐시에 남아 있습니다.",
   "cacheLibraryCover": "라이브러리 표지 캐시",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -2713,19 +2708,6 @@
   "updateLater": "나중에",
   "@updateLater": {
     "description": "Update button - dismiss"
-  },
-  "downloadDirectory": "다운로드 디렉토리",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
-  },
-  "safMigrationTitle": "저장소 업데이트 필요",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "storageAutomaticFolder": "자동 폴더",
-  "downloadFolderReselect": "폴더 다시 선택",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "optionsCheckUpdates": "업데이트 확인",
   "optionsCheckUpdatesSubtitle": "새 버전이 출시되면 알림",

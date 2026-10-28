@@ -1206,11 +1206,6 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "अस्थायी स्थानीय आर्टवर्क और ऑडियो प्रोसेसिंग फ़ाइलें।",
-  "cacheCoverImage": "Cover image cache",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "पुराने संस्करणों की हटाई गई इमेज कैश। स्थानीय आर्टवर्क आपके लाइब्रेरी कैश में रहता है।",
   "cacheLibraryCover": "Library cover cache",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -2710,19 +2705,6 @@
   "updateLater": "Later",
   "@updateLater": {
     "description": "Update button - dismiss"
-  },
-  "downloadDirectory": "Download Directory",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
-  },
-  "safMigrationTitle": "Storage Update Required",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "storageAutomaticFolder": "Automatic folder",
-  "downloadFolderReselect": "Re-select folder",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "optionsCheckUpdates": "Check for Updates",
   "optionsCheckUpdatesSubtitle": "Notify when new version is available",

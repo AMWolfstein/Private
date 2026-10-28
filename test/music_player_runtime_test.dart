@@ -1092,7 +1092,7 @@ void main() {
       expect(handler.playbackState.value.playing, isTrue);
       expect(titles.last, 'Two');
 
-      await controller.playSingle(_track);
+      await controller.playAll([_track]);
       await container.pump();
       expect(handler.playbackState.value.playing, isTrue);
       expect(titles.last, 'One');
@@ -1374,7 +1374,7 @@ void main() {
       ];
       for (final container in containers) {
         addTearDown(container.dispose);
-        await container.read(musicPlayerControllerProvider).playSingle(_track);
+        await container.read(musicPlayerControllerProvider).playAll([_track]);
       }
       expect(firstDecks.single.state, PlayerState.playing);
       expect(secondDecks.single.state, PlayerState.playing);

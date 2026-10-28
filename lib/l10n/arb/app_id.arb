@@ -1213,11 +1213,6 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "File sementara untuk artwork lokal dan pemrosesan audio.",
-  "cacheCoverImage": "Cache foto cover",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "Cache gambar lama dari versi sebelumnya. Artwork lokal tetap ada di cache pustaka Anda.",
   "cacheLibraryCover": "Cache cover koleksi",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -2745,19 +2740,6 @@
   "updateLater": "Nanti",
   "@updateLater": {
     "description": "Update button - dismiss"
-  },
-  "downloadDirectory": "Folder Download",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
-  },
-  "safMigrationTitle": "Butuh Update Penyimpanan",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "storageAutomaticFolder": "Folder bawaan",
-  "downloadFolderReselect": "Pilih Folder Baru",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "optionsCheckUpdates": "Periksa Update",
   "optionsCheckUpdatesSubtitle": "Beritahu saat versi baru tersedia",

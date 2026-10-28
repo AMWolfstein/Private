@@ -81,31 +81,6 @@ String? audioFormatForPath(String? filePath, {String? fileName}) {
   return null;
 }
 
-String? nonPlaceholderQuality(String? quality) {
-  final normalized = normalizeOptionalString(quality);
-  if (normalized == null || isPlaceholderQualityLabel(normalized)) {
-    return null;
-  }
-  final bitrateMatch = RegExp(
-    r'\b(\d+)\s*kbps\b',
-    caseSensitive: false,
-  ).firstMatch(normalized);
-  if (bitrateMatch != null) {
-    final bitrate = int.tryParse(bitrateMatch.group(1) ?? '');
-    if (bitrate != null && bitrate < 16) return null;
-  }
-  final lower = normalized.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_');
-  const requestedLosslessLabels = {
-    'hi_res_lossless',
-    'hires_lossless',
-    'hi_res',
-    'hires',
-    'flac_best_available',
-  };
-  if (requestedLosslessLabels.contains(lower)) return null;
-  return normalized;
-}
-
 String? normalizeAudioFormatValue(String? value) {
   final normalized = normalizeOptionalString(
     value,
@@ -136,58 +111,4 @@ bool isLossyAudioFormat(String? value) {
     'opus',
     'm4a',
   }.contains(normalizeAudioFormatValue(value));
-}
-
-/// Returns a provider-independent quality label suitable for a filename.
-///
-/// Requested labels such as LOSSLESS and HI_RES are intentionally ignored:
-/// they describe provider intent, not the audio that was actually written.
-String? buildQualityVariantFilenameLabel({
-  String? detectedFormat,
-  int? bitDepth,
-  int? sampleRate,
-  int? bitrateKbps,
-  String? measuredQuality,
-}) {
-  if (isLossyAudioFormat(detectedFormat)) {
-    final effectiveBitrate =
-        bitrateKbps ?? _bitrateFromQuality(measuredQuality);
-    return effectiveBitrate != null && effectiveBitrate >= 16
-        ? '${effectiveBitrate}kbps'
-        : null;
-  }
-
-  final measured = _losslessSpecsFromQuality(measuredQuality);
-  final effectiveBitDepth = bitDepth ?? measured?.$1;
-  final effectiveSampleRate = sampleRate ?? measured?.$2;
-  if (effectiveBitDepth == null ||
-      effectiveBitDepth <= 0 ||
-      effectiveSampleRate == null ||
-      effectiveSampleRate <= 0) {
-    return null;
-  }
-  return '${effectiveBitDepth}bit-${formatSampleRateKHz(effectiveSampleRate)}';
-}
-
-int? _bitrateFromQuality(String? quality) {
-  final match = RegExp(
-    r'\b(\d+)\s*kbps\b',
-    caseSensitive: false,
-  ).firstMatch(quality ?? '');
-  final value = int.tryParse(match?.group(1) ?? '');
-  return value != null && value >= 16 ? value : null;
-}
-
-(int, int)? _losslessSpecsFromQuality(String? quality) {
-  final match = RegExp(
-    r'\b(\d+)\s*(?:-|\s)?bit\s*[/_-]\s*(\d+(?:\.\d+)?)\s*k?hz\b',
-    caseSensitive: false,
-  ).firstMatch(quality ?? '');
-  final bitDepth = int.tryParse(match?.group(1) ?? '');
-  final rate = double.tryParse(match?.group(2) ?? '');
-  if (bitDepth == null || bitDepth <= 0 || rate == null || rate <= 0) {
-    return null;
-  }
-  final sampleRate = rate < 1000 ? (rate * 1000).round() : rate.round();
-  return (bitDepth, sampleRate);
 }

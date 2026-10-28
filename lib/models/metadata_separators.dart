@@ -60,14 +60,3 @@ String formatMetadataTagValue(String value, String separator) {
       .where((part) => part.isNotEmpty)
       .join(separator);
 }
-
-Map<String, String> formatTagFields(
-  Map<String, String> fields,
-  MetadataSeparators separators,
-) {
-  final selected = separators.toJson();
-  return {
-    for (final entry in fields.entries)
-      entry.key: formatMetadataTagValue(entry.value, selected[entry.key] ?? ''),
-  };
-}

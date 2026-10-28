@@ -39,9 +39,6 @@ class _ProfileSettingsPageState extends ConsumerState<ProfileSettingsPage> {
     try {
       final picked = await FilePicker.pickFile(
         type: FileType.image,
-        darwinOptions: const DarwinOptions(
-          assetRepresentationMode: DarwinAssetRepresentationMode.compatible,
-        ),
       );
       if (picked == null) return;
       if ((await picked.length() ?? 0) > 20 * 1024 * 1024) {

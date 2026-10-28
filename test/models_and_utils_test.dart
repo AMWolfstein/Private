@@ -180,61 +180,18 @@ void main() {
       'lib/services/app_state_database.dart',
     ).readAsStringSync();
 
-    test('v4 normalizes playback queue and scalar state', () {
-      expect(source, contains('await _migratePlaybackSessionToV4(db);'));
-      expect(source, contains('media_json TEXT NOT NULL'));
-      expect(source, contains('position_ms INTEGER NOT NULL DEFAULT 0'));
-      expect(source, contains('updatePlaybackSessionState'));
-    });
-
-    test('v5 drops the retired recent-access tables', () {
-      expect(source, contains('const _dbVersion = 5;'));
+    test('v6 drops the retired download queue and recent-access tables', () {
+      expect(source, contains('const _dbVersion = 6;'));
       expect(source, contains('DROP TABLE IF EXISTS'));
       for (final table in [
+        'download_queue_items',
         'recent_access_items',
         'hidden_recent_downloads',
         'recent_access_state',
       ]) {
         expect(source, contains("'$table'"));
       }
-    });
-  });
-
-  group('quality variant filenames', () {
-    test('uses measured lossless specifications instead of request labels', () {
-      expect(
-        buildQualityVariantFilenameLabel(
-          detectedFormat: 'flac',
-          bitDepth: 24,
-          sampleRate: 96000,
-          measuredQuality: 'LOSSLESS',
-        ),
-        '24bit-96kHz',
-      );
-      expect(
-        buildQualityVariantFilenameLabel(
-          detectedFormat: 'flac',
-          measuredQuality: 'LOSSLESS',
-        ),
-        isNull,
-      );
-    });
-
-    test('uses measured bitrate for lossy output', () {
-      expect(
-        buildQualityVariantFilenameLabel(
-          detectedFormat: 'mp3',
-          bitrateKbps: 320,
-        ),
-        '320kbps',
-      );
-      expect(
-        buildQualityVariantFilenameLabel(
-          detectedFormat: 'opus',
-          measuredQuality: 'OPUS 256kbps',
-        ),
-        '256kbps',
-      );
+      expect(source, contains('media_json TEXT NOT NULL'));
     });
   });
 

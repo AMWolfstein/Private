@@ -153,8 +153,6 @@ class MusicPlayerController {
     await handler?.setQueueAndPlay(items, initialIndex: initialIndex);
   }
 
-  Future<void> playSingle(PlayableMedia item) => playAll([item]);
-
   Future<void> playLocal(
     List<LocalLibraryItem> items, {
     int initialIndex = 0,

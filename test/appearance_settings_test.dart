@@ -16,8 +16,7 @@ import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 
 void main() {
-  test('the Brazilian translation keeps its users after the code rename', () {
-    expect(AppSettings.fromJson({'locale': 'pt_PT'}).locale, 'pt_BR');
+  test('locale settings fall back to the system language', () {
     expect(AppSettings.fromJson({'locale': 'pt_BR'}).locale, 'pt_BR');
     expect(AppSettings.fromJson({'locale': 'de'}).locale, 'de');
     expect(AppSettings.fromJson({}).locale, 'system');

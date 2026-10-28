@@ -1354,14 +1354,6 @@
   "@cacheTempDirectoryDesc": {
     "description": "Description of what temporary directory contains"
   },
-  "cacheCoverImage": "Cover image cache",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "Retired image cache from earlier versions. Local artwork remains in your library cache.",
-  "@cacheCoverImageDesc": {
-    "description": "Description of what cover image cache contains"
-  },
   "cacheLibraryCover": "Library cover cache",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -1621,7 +1613,7 @@
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
-  "backupExportSectionDescription": "Save settings, local profiles, collections and optional legacy library records in a backup file.",
+  "backupExportSectionDescription": "Save settings, your profile and collections in a backup file.",
   "@backupExportSectionDescription": {
     "description": "Description of what a backup contains"
   },
@@ -3084,7 +3076,7 @@
   "@musicHaptics": {
     "description": "Setting that vibrates the phone along with the music"
   },
-  "musicHapticsDescription": "Vibrate along with the beat of downloaded and local songs",
+  "musicHapticsDescription": "Vibrate along with the beat of your local songs",
   "@musicHapticsDescription": {
     "description": "Subtitle of the music haptics setting"
   },

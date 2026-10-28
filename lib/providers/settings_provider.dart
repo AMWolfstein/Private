@@ -10,8 +10,6 @@ import 'package:sistrum/utils/logger.dart';
 
 const _settingsKey = 'app_settings';
 const _settingsCorruptBackupKey = 'app_settings_corrupt_backup';
-const _migrationVersionKey = 'settings_migration_version';
-const _currentMigrationVersion = 12;
 final _log = AppLogger('SettingsProvider');
 
 /// Startup override used to render the correct route/locale on the first
@@ -131,33 +129,10 @@ class SettingsNotifier extends Notifier<AppSettings> {
         state = !loaded.isFirstLaunch && !loaded.hasCompletedTutorial
             ? loaded.copyWith(hasCompletedTutorial: true)
             : loaded;
-
-        await _runMigrations(prefs);
       }
     }
 
     LogBuffer.loggingEnabled = state.enableLogging;
-  }
-
-  Future<void> _runMigrations(SharedPreferences prefs) async {
-    final lastMigration = prefs.getInt(_migrationVersionKey) ?? 0;
-
-    if (lastMigration < _currentMigrationVersion) {
-      for (final key in const [
-        'explore_home_feed_cache',
-        'explore_home_feed_ts',
-        'bridge_metadata_lookup_cache_v1',
-      ]) {
-        await prefs.remove(key);
-      }
-
-      // Migration 2: existing users who already completed setup should skip tutorial
-      if (!state.isFirstLaunch && !state.hasCompletedTutorial) {
-        state = state.copyWith(hasCompletedTutorial: true);
-      }
-      await prefs.setInt(_migrationVersionKey, _currentMigrationVersion);
-      await _saveSettings();
-    }
   }
 
   Future<void> _saveSettings({bool throwOnFailure = false}) {
@@ -210,19 +185,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       _log.e('Failed to parse settings from backup: $e', e, stack);
       rethrow;
     }
-    if (!json.containsKey('glassQuality')) {
-      // Backups made before glass quality carry the retired blur override
-      // (and possibly the clarity double); map them like local preferences.
-      final legacy = mapLegacyGlassPreferences(
-        clarity: json[kLegacyGlassClarityKey] as num?,
-        forceBackdropBlur: json[kLegacyForceBackdropBlurKey] as bool?,
-      );
-      restored = restored.copyWith(
-        glassQuality: legacy.quality.name,
-        glassClarityLevel: legacy.level,
-      );
-    }
-
     final candidate = restored.copyWith(
       isFirstLaunch: current.isFirstLaunch,
       hasCompletedTutorial: current.hasCompletedTutorial,
@@ -410,11 +372,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       _saveSettingsFuture = null;
       saved.complete();
     }
-  }
-
-  void setLibraryFilterMode(String mode) {
-    state = state.copyWith(libraryFilterMode: mode);
-    _saveSettings();
   }
 
   void setEnableLogging(bool enabled) {

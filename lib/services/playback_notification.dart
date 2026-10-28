@@ -5,12 +5,6 @@ class PlaybackNotification {
   static const favoriteAction = 'sistrum.favorite';
   static const shuffleAction = 'sistrum.shuffle';
 
-  // Pending notification intents from before the identity change still work.
-  static const legacyFavoriteAction =
-      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063.favorite';
-  static const legacyShuffleAction =
-      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063.shuffle';
-
   final bool sistrum;
   final String? mediaId;
   final String? source;

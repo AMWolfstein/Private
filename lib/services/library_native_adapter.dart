@@ -27,7 +27,7 @@ class LibraryNativeAdapter {
     this.temporaryDirectory,
     String? platform,
   }) : _run = nativeJobRunner ?? PlatformBridge.runNativeDataJob,
-       _platform = platform ?? (Platform.isAndroid ? 'android' : 'ios');
+       _platform = platform ?? 'android';
 
   final Database database;
   final Directory? temporaryDirectory;

@@ -10,44 +10,39 @@ import 'package:sistrum/providers/theme_provider.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  for (final canonical in [false, true]) {
-    test('theme legacy fallback and canonical precedence ($canonical)', () async {
-      const oldAccent = '\u006d\u006f\u0072\u006e\u0079\u0065_accent';
-      const oldOutlines =
-          '\u006d\u006f\u0072\u006e\u0079\u0065_glass_outlines';
+  test(
+    'theme settings round-trip through json and bootstrap preferences',
+    () async {
       final values = <String, Object>{
-        oldAccent: 'blue',
-        oldOutlines: false,
-        if (canonical) kSistrumAccentKey: 'green',
-        if (canonical) kSistrumGlassOutlinesKey: true,
+        kSistrumAccentKey: 'green',
+        kSistrumGlassOutlinesKey: false,
       };
       final restored = ThemeSettings.fromJson(values);
-      expect(
-        restored.sistrumAccent,
-        canonical ? SistrumAccent.green : SistrumAccent.blue,
-      );
-      expect(restored.sistrumGlassOutlines, canonical);
-      expect(restored.toJson(), isNot(contains(oldAccent)));
-      expect(restored.toJson(), isNot(contains(oldOutlines)));
-      expect(restored.toJson()[kSistrumAccentKey], canonical ? 'green' : 'blue');
-      expect(restored.toJson()[kSistrumGlassOutlinesKey], canonical);
+      expect(restored.sistrumAccent, SistrumAccent.green);
+      expect(restored.sistrumGlassOutlines, isFalse);
+      expect(restored.toJson()[kSistrumAccentKey], 'green');
+      expect(restored.toJson()[kSistrumGlassOutlinesKey], isFalse);
 
       SharedPreferences.setMockInitialValues(values);
       final prefs = await SharedPreferences.getInstance();
       expect(loadBootstrapThemeSettings(prefs), restored);
       final container = ProviderContainer(
         overrides: [
-          themeProvider.overrideWith(() => ThemeNotifier(preferences: Future.value(prefs))),
+          themeProvider.overrideWith(
+            () => ThemeNotifier(preferences: Future.value(prefs)),
+          ),
         ],
       );
       addTearDown(container.dispose);
-      final notifier = container.read(themeProvider.notifier);
-      await notifier.setLyricsTextScale(1.1);
-      expect(container.read(themeProvider).sistrumAccent, restored.sistrumAccent);
-      expect(prefs.getString(kSistrumAccentKey), canonical ? 'green' : 'blue');
-      expect(prefs.getBool(kSistrumGlassOutlinesKey), canonical);
-    });
-  }
+      await container.read(themeProvider.notifier).setLyricsTextScale(1.1);
+      expect(
+        container.read(themeProvider).sistrumAccent,
+        restored.sistrumAccent,
+      );
+      expect(prefs.getString(kSistrumAccentKey), 'green');
+      expect(prefs.getBool(kSistrumGlassOutlinesKey), isFalse);
+    },
+  );
 
   test(
     'early theme edits preserve untouched saved settings and await saving',

@@ -969,21 +969,6 @@ class LibraryDatabase {
     return file.path;
   }
 
-  Future<void> updateFileModTimes(Map<String, int> fileModTimes) async {
-    if (fileModTimes.isEmpty) return;
-    final db = await database;
-    final batch = db.batch();
-    for (final entry in fileModTimes.entries) {
-      batch.update(
-        'library',
-        {'file_mod_time': entry.value, 'sort_added': entry.value},
-        where: 'file_path = ?',
-        whereArgs: [entry.key],
-      );
-    }
-    await batch.commit(noResult: true);
-  }
-
   Future<Set<String>> getAllFilePaths() async {
     final db = await database;
     final rows = await db.rawQuery('SELECT file_path FROM library');

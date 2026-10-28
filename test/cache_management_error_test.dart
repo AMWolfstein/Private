@@ -114,7 +114,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
       // Fail only the cache path. The concurrently started support/temporary
-      // lookups and CoverCacheManager.getStats receive valid directories.
+      // lookups receive valid directories.
       firstCachePath.completeError(
         PlatformException(
           code: 'cache-unavailable',
@@ -126,7 +126,7 @@ void main() {
       final error = tester.widget<ErrorCard>(find.byType(ErrorCard));
       expect(error.error, contains('Cache path failed'));
       expect(error.onRetry, isNotNull);
-      expect(supportReads, greaterThanOrEqualTo(2));
+      expect(supportReads, greaterThanOrEqualTo(1));
       expect(temporaryReads, 1);
       expect(tester.takeException(), isNull);
 

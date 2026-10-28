@@ -176,11 +176,6 @@ class NotificationService {
         onlyAlertOnce: inProgress,
         icon: '@mipmap/ic_launcher',
       ),
-      iOS: DarwinNotificationDetails(
-        presentAlert: !inProgress,
-        presentBadge: !inProgress,
-        presentSound: !inProgress,
-      ),
     );
   }
 

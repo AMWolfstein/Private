@@ -12,8 +12,6 @@ class _Database implements LibraryCollectionsDatabase {
   Map<String, dynamic> saved = {};
   String? oldCover;
   @override
-  Future<bool> migrateFromSharedPreferences() async => false;
-  @override
   Future<LibraryCollectionsSnapshot> loadSnapshot() async =>
       LibraryCollectionsSnapshot(
         lovedRows: const [],

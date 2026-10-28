@@ -909,8 +909,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     String name, [
     Map<String, dynamic>? extras,
   ]) async {
-    if (name == PlaybackNotification.favoriteAction ||
-        name == PlaybackNotification.legacyFavoriteAction) {
+    if (name == PlaybackNotification.favoriteAction) {
       final item = mediaItem.value;
       if (item == null || _savingNotificationFavorite) return;
       _savingNotificationFavorite = true;
@@ -930,8 +929,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       } finally {
         _savingNotificationFavorite = false;
       }
-    } else if (name == PlaybackNotification.shuffleAction ||
-        name == PlaybackNotification.legacyShuffleAction) {
+    } else if (name == PlaybackNotification.shuffleAction) {
       if (mediaItem.value == null || _changingNotificationShuffle) return;
       _changingNotificationShuffle = true;
       try {

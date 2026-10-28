@@ -1206,11 +1206,6 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "Geçici yerel kapak resmi ve ses işleme dosyaları.",
-  "cacheCoverImage": "Kapak resmi önbelleği",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "Eski sürümlerden kalma emekli görsel önbelleği. Yerel kapak resimleri kitaplık önbelleğinizde kalır.",
   "cacheLibraryCover": "Kütüphane kapağı önbelleği",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -2712,19 +2707,6 @@
   "updateLater": "Daha Sonra",
   "@updateLater": {
     "description": "Update button - dismiss"
-  },
-  "downloadDirectory": "İndirme Dizini",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
-  },
-  "safMigrationTitle": "Storage Update Required",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "storageAutomaticFolder": "Automatic folder",
-  "downloadFolderReselect": "Re-select folder",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "optionsCheckUpdates": "Güncelleştirmeleri Denetle",
   "optionsCheckUpdatesSubtitle": "Yeni sürüm çıktığında bildir",

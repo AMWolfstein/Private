@@ -21,12 +21,7 @@ int glassClarityLevelFromJson(Object? value) => value is num && value.isFinite
     ? value.round().clamp(1, 5)
     : kDefaultGlassClarityLevel;
 
-/// Languages whose code changed; saved settings and old backups keep their
-/// choice. The Brazilian translation used to be filed under `pt_PT`.
-const Map<String, String> kRenamedLocales = {'pt_PT': 'pt_BR'};
-
-String appLocaleFromJson(Object? value) =>
-    value is String ? kRenamedLocales[value] ?? value : 'system';
+String appLocaleFromJson(Object? value) => value is String ? value : 'system';
 
 double musicHapticsLevelFromJson(Object? value) =>
     value is num && value.isFinite ? value.toDouble().clamp(0, 1) : 0.5;

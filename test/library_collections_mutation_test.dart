@@ -38,9 +38,6 @@ class _CollectionsDatabase implements LibraryCollectionsDatabase {
   }
 
   @override
-  Future<bool> migrateFromSharedPreferences() async => false;
-
-  @override
   Future<LibraryCollectionsSnapshot> loadSnapshot() async {
     if (!snapshotReadStarted.isCompleted) snapshotReadStarted.complete();
     return pendingSnapshot ??

@@ -12,11 +12,6 @@ double normalizeLyricsTextScale(num? value) =>
     value != null && value.isFinite ? value.toDouble().clamp(0.8, 1.4) : 1.0;
 const String kSistrumGlassOutlinesKey = 'sistrum_glass_outlines';
 
-// Read settings and backups written before the identity change.
-const String kLegacyAccentKey = '\u006d\u006f\u0072\u006e\u0079\u0065_accent';
-const String kLegacyGlassOutlinesKey =
-    '\u006d\u006f\u0072\u006e\u0079\u0065_glass_outlines';
-
 enum PlayerView { normal, immersive }
 
 PlayerView playerViewFromString(String? value) => PlayerView.values.firstWhere(
@@ -98,10 +93,7 @@ class ThemeSettings {
       playerView: playerViewFromString(json[kPlayerViewKey]?.toString()),
 
       sistrumAccent: sistrumAccentFromString(
-        json[json.containsKey(kSistrumAccentKey)
-                ? kSistrumAccentKey
-                : kLegacyAccentKey]
-            as String?,
+        json[kSistrumAccentKey] as String?,
       ),
       useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
       customFontId: json[kCustomFontIdKey] as String? ?? '',
@@ -109,12 +101,7 @@ class ThemeSettings {
       lyricsTextScale: normalizeLyricsTextScale(
         json[kLyricsTextScaleKey] as num?,
       ),
-      sistrumGlassOutlines:
-          json[json.containsKey(kSistrumGlassOutlinesKey)
-                  ? kSistrumGlassOutlinesKey
-                  : kLegacyGlassOutlinesKey]
-              as bool? ??
-          true,
+      sistrumGlassOutlines: json[kSistrumGlassOutlinesKey] as bool? ?? true,
     );
   }
 

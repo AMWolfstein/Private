@@ -1206,11 +1206,6 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "Тимчасові локальні обкладинки та файли обробки аудіо.",
-  "cacheCoverImage": "Кеш зображень обкладинок",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "Застарілий кеш зображень із попередніх версій. Локальні обкладинки лишаються в кеші медіатеки.",
   "cacheLibraryCover": "Кеш бібліотеки обкладинок",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -2713,19 +2708,6 @@
   "updateLater": "Пізніше",
   "@updateLater": {
     "description": "Update button - dismiss"
-  },
-  "downloadDirectory": "Каталог завантажень",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
-  },
-  "safMigrationTitle": "Потрібне оновлення сховища",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "storageAutomaticFolder": "Автоматична тека",
-  "downloadFolderReselect": "Обрати теку повторно",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "optionsCheckUpdates": "Перевірити наявність оновлень",
   "optionsCheckUpdatesSubtitle": "Повідомити, коли буде доступна нова версія",

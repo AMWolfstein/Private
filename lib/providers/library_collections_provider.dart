@@ -76,7 +76,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
   Future<void> _load() async {
     _loadFailure = null;
     try {
-      await _db.migrateFromSharedPreferences();
       if (!ref.mounted) return;
       final snapshot = await _db.loadSnapshot();
       try {
@@ -967,6 +966,5 @@ final libraryPlaylistPickerSummariesProvider = FutureProvider.autoDispose
       request,
     ) async {
       final db = LibraryCollectionsDatabase.instance;
-      await db.migrateFromSharedPreferences();
       return db.loadPlaylistPickerSummaries(request.trackKeys);
     });

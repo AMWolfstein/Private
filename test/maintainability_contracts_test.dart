@@ -32,29 +32,12 @@ void main() {
         'BIT_DEPTH': '24',
       };
 
-      final native = AudioMetadataMapper.vorbisToNativeChunkFields(metadata);
       final m4a = AudioMetadataMapper.convertToM4aTags(metadata);
       final m4aIdentity = AudioMetadataMapper.m4aReleaseIdentityFields(
         metadata,
       );
       final id3 = AudioMetadataMapper.convertToId3Tags(metadata);
 
-      expect(native['title'], 'Track');
-      expect(native['artist'], 'Artist');
-      expect(native['album'], 'Album');
-      expect(native['album_artist'], 'Album Artist');
-      expect(native['track_number'], '3');
-      expect(native['track_total'], '12');
-      expect(native['disc_number'], '1');
-      expect(native['disc_total'], '2');
-      expect(native['replaygain_track_gain'], '-5.00 dB');
-      expect(native['date'], '2026-08-01');
-      expect(native['genre'], 'Pop');
-      expect(native['label'], 'Label');
-      expect(native['copyright'], 'Copyright');
-      expect(native['composer'], 'Composer');
-      expect(native['comment'], 'Comment');
-      expect(native['explicit'], '1');
       expect(m4a['isrc'], 'TEST12345678');
       expect(m4a['lyrics'], 'Lyrics');
       expect(m4aIdentity['explicit'], '1');
@@ -66,7 +49,6 @@ void main() {
       expect(id3['album'], 'Album');
       expect(id3['track'], '3/12');
       expect(id3['disc'], '1/2');
-      expect(native, isNot(contains('bit_depth')));
     });
 
     test('builds Vorbis artist entries without losing other tags', () {

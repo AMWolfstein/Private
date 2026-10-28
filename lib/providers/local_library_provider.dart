@@ -1079,15 +1079,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           _log.i(
             'Incremental scan: ${existingFiles.length} existing files in database',
           );
-          final backfilledModTimes = await _backfillLegacyFileModTimes(
-            isSaf: isSaf,
-            existingFiles: existingFiles,
-          );
-          if (backfilledModTimes.isNotEmpty) {
-            await _db.updateFileModTimes(backfilledModTimes);
-            existingFiles.addAll(backfilledModTimes);
-            _log.i('Backfilled ${backfilledModTimes.length} legacy mod times');
-          }
         }
 
         final useSnapshotBridge =
@@ -1798,80 +1789,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<LocalLibraryItem?> getById(String id) async {
     final json = await _db.getById(id);
     return json == null ? null : LocalLibraryItem.fromJson(json);
-  }
-
-  Future<Map<String, int>> _backfillLegacyFileModTimes({
-    required bool isSaf,
-    required Map<String, int> existingFiles,
-  }) async {
-    final legacyPaths = existingFiles.entries
-        // Negative timestamps deliberately force a metadata-version rescan;
-        // only a missing timestamp (zero) may be filled from the filesystem.
-        .where((entry) => entry.value == 0)
-        .map((entry) => entry.key)
-        .toList();
-    if (legacyPaths.isEmpty) {
-      return const {};
-    }
-
-    if (isSaf) {
-      final uris = legacyPaths
-          .where((path) => path.startsWith('content://'))
-          .toList();
-      if (uris.isEmpty) {
-        return const {};
-      }
-      const chunkSize = 500;
-      final backfilled = <String, int>{};
-      try {
-        for (var i = 0; i < uris.length; i += chunkSize) {
-          if (_scanCancelRequested) {
-            break;
-          }
-          final end = (i + chunkSize < uris.length)
-              ? i + chunkSize
-              : uris.length;
-          final chunk = uris.sublist(i, end);
-          final chunkResult = await PlatformBridge.getSafFileModTimes(chunk);
-          backfilled.addAll(chunkResult);
-        }
-        return backfilled;
-      } catch (e) {
-        _log.w('Failed to backfill SAF mod times: $e');
-        return const {};
-      }
-    }
-
-    final paths = legacyPaths
-        .where((path) => !path.startsWith('content://'))
-        .toList(growable: false);
-    const chunkSize = 24;
-    final backfilled = <String, int>{};
-
-    for (var i = 0; i < paths.length; i += chunkSize) {
-      if (_scanCancelRequested) {
-        break;
-      }
-      final end = (i + chunkSize < paths.length) ? i + chunkSize : paths.length;
-      final chunk = paths.sublist(i, end);
-      final chunkEntries = await Future.wait<MapEntry<String, int>?>(
-        chunk.map((path) async {
-          try {
-            final stat = await File(path).stat();
-            if (stat.type == FileSystemEntityType.file) {
-              return MapEntry(path, stat.modified.millisecondsSinceEpoch);
-            }
-          } catch (_) {}
-          return null;
-        }),
-      );
-      for (final entry in chunkEntries) {
-        if (entry != null) {
-          backfilled[entry.key] = entry.value;
-        }
-      }
-    }
-    return backfilled;
   }
 }
 

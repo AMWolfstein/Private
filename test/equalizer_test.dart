@@ -14,22 +14,22 @@ void main() {
     playbackEqualizerError.value = null;
   });
 
-  for (final format in [
-    '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-equalizer',
-    'sistrum-equalizer',
-  ]) {
-    test('preset imports retain old and new wire formats ($format)', () {
+  {
+    const format = 'sistrum-equalizer';
+    test('preset imports use the Sistrum wire format', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
       final notifier = container.read(equalizerProvider.notifier);
-      notifier.importPreset(jsonEncode({
-        'format': format,
-        'version': 1,
-        ...const EqualizerPreset(
-          'Legacy headphones',
-          EqualizerSettings(preamp: -6, bass: 3),
-        ).toJson(),
-      }));
+      notifier.importPreset(
+        jsonEncode({
+          'format': format,
+          'version': 1,
+          ...const EqualizerPreset(
+            'Legacy headphones',
+            EqualizerSettings(preamp: -6, bass: 3),
+          ).toJson(),
+        }),
+      );
       final state = container.read(equalizerProvider);
       expect(state.settings.preamp, -6);
       expect(state.settings.bass, 3);
@@ -38,7 +38,9 @@ void main() {
       expect(exported['format'], 'sistrum-equalizer');
       expect(exported['version'], 1);
       expect(
-        () => notifier.importPreset(jsonEncode({...exported, 'format': 'foreign-equalizer'})),
+        () => notifier.importPreset(
+          jsonEncode({...exported, 'format': 'foreign-equalizer'}),
+        ),
         throwsFormatException,
       );
     });

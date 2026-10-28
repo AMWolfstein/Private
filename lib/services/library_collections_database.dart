@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/services/collection_restore_codec.dart';
@@ -22,9 +21,6 @@ const _tableLoved = 'loved_tracks';
 const _tablePlaylists = 'playlists';
 const _tablePlaylistTracks = 'playlist_tracks';
 const _tableFavoriteArtists = 'favorite_artists';
-
-const _legacyCollectionsStorageKey = 'library_collections_v1';
-const _migrationDoneKey = 'library_collections_migrated_to_sqlite_v1';
 
 class LibraryCollectionsSnapshot {
   final List<Map<String, dynamic>> lovedRows;
@@ -68,8 +64,6 @@ class LibraryCollectionsDatabase {
       LibraryCollectionsDatabase._init();
   static final sqlite.SingleFlightInitializer<Database> _database =
       sqlite.SingleFlightInitializer<Database>();
-
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   LibraryCollectionsDatabase._init();
 
@@ -170,88 +164,6 @@ class LibraryCollectionsDatabase {
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_${_tableFavoriteArtists}_added_at ON $_tableFavoriteArtists(added_at DESC)',
     );
-  }
-
-  Future<bool> migrateFromSharedPreferences() async {
-    final prefs = await _prefs;
-    if (prefs.getBool(_migrationDoneKey) == true) {
-      return false;
-    }
-
-    final raw = prefs.getString(_legacyCollectionsStorageKey);
-    if (raw == null || raw.isEmpty) {
-      await prefs.setBool(_migrationDoneKey, true);
-      return false;
-    }
-
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! Map) {
-        await prefs.setBool(_migrationDoneKey, true);
-        return false;
-      }
-
-      final root = Map<String, dynamic>.from(decoded);
-      final lovedRaw = (root['loved'] as List?) ?? const [];
-      final playlistsRaw = (root['playlists'] as List?) ?? const [];
-      final nowIso = DateTime.now().toIso8601String();
-
-      final db = await database;
-      await db.transaction((txn) async {
-        for (final entry in lovedRaw.whereType<Map<Object?, Object?>>()) {
-          final map = Map<String, dynamic>.from(entry);
-          final trackKey = map['key'] as String?;
-          final track = map['track'];
-          if (trackKey == null || track is! Map<Object?, Object?>) continue;
-          final addedAt = (map['addedAt'] as String?) ?? nowIso;
-          await txn.insert(_tableLoved, {
-            'track_key': trackKey,
-            'track_json': jsonEncode(track),
-            'added_at': addedAt,
-          }, conflictAlgorithm: ConflictAlgorithm.replace);
-        }
-
-        for (final playlistEntry
-            in playlistsRaw.whereType<Map<Object?, Object?>>()) {
-          final playlist = Map<String, dynamic>.from(playlistEntry);
-          final playlistId = playlist['id'] as String?;
-          if (playlistId == null || playlistId.isEmpty) continue;
-
-          final createdAt = (playlist['createdAt'] as String?) ?? nowIso;
-          final updatedAt = (playlist['updatedAt'] as String?) ?? createdAt;
-          await txn.insert(_tablePlaylists, {
-            'id': playlistId,
-            'name': (playlist['name'] as String?) ?? '',
-            'cover_image_path': playlist['coverImagePath'] as String?,
-            'created_at': createdAt,
-            'updated_at': updatedAt,
-          }, conflictAlgorithm: ConflictAlgorithm.replace);
-
-          final tracksRaw = (playlist['tracks'] as List?) ?? const [];
-          for (final trackEntry
-              in tracksRaw.whereType<Map<Object?, Object?>>()) {
-            final trackMap = Map<String, dynamic>.from(trackEntry);
-            final trackKey = trackMap['key'] as String?;
-            final track = trackMap['track'];
-            if (trackKey == null || track is! Map<Object?, Object?>) continue;
-            final addedAt = (trackMap['addedAt'] as String?) ?? nowIso;
-            await txn.insert(_tablePlaylistTracks, {
-              'playlist_id': playlistId,
-              'track_key': trackKey,
-              'track_json': jsonEncode(track),
-              'added_at': addedAt,
-            }, conflictAlgorithm: ConflictAlgorithm.replace);
-          }
-        }
-      });
-
-      await prefs.setBool(_migrationDoneKey, true);
-      _log.i('Migrated legacy collections data to SQLite');
-      return true;
-    } catch (e, stack) {
-      _log.e('Failed migrating collections to SQLite: $e', e, stack);
-      return false;
-    }
   }
 
   /// A stable paged row file for backup; it never loads playlist UI models.
@@ -892,27 +804,6 @@ class LibraryCollectionsDatabase {
     rowsPath: rowsPath,
     expectedCount: expectedCount,
   );
-
-  Future<void> deletePlaylistTrack({
-    required String playlistId,
-    required String trackKey,
-    required String playlistUpdatedAt,
-  }) async {
-    final db = await database;
-    await db.transaction((txn) async {
-      await txn.delete(
-        _tablePlaylistTracks,
-        where: 'playlist_id = ? AND track_key = ?',
-        whereArgs: [playlistId, trackKey],
-      );
-      await txn.update(
-        _tablePlaylists,
-        {'updated_at': playlistUpdatedAt},
-        where: 'id = ?',
-        whereArgs: [playlistId],
-      );
-    });
-  }
 
   Future<void> deletePlaylistTracks({
     required String playlistId,

@@ -43,14 +43,6 @@ void main() {
       }
       expect(formatMetadataTagValue(' A, B ; C ', '; '), 'A; B; C');
       expect(formatMetadataTagValue(' A, B ', ''), ' A, B ');
-      expect(
-        formatTagFields({
-          'artist': 'A, B',
-          'composer': 'C; D',
-          'title': 'A, B',
-        }, const MetadataSeparators(artist: ' / ', composer: ' | ')),
-        {'artist': 'A / B', 'composer': 'C | D', 'title': 'A, B'},
-      );
       for (final invalid in ['\n', '\x00', 'abcdefghijklmnopq']) {
         expect(MetadataSeparators.fromJson({'artist': invalid}).artist, '');
         expect(formatMetadataTagValue('A, B', invalid), 'A, B');

@@ -9,7 +9,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/cover_cache_manager.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/string_utils.dart';
@@ -71,7 +70,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     final appCacheDirFuture = getApplicationCacheDirectory();
     final tempDirFuture = getTemporaryDirectory();
     final appSupportDirFuture = getApplicationSupportDirectory();
-    final coverStatsFuture = CoverCacheManager.getStats();
 
     final appCacheDir = await appCacheDirFuture;
     final tempDir = await tempDirFuture;
@@ -94,7 +92,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
 
     final appCacheStats = await appCacheStatsFuture;
     final tempStats = await tempStatsFuture;
-    final coverStats = await coverStatsFuture;
     final libraryCoverStats = await libraryCoverStatsFuture;
     final audioAnalysisStats = await audioAnalysisStatsFuture;
 
@@ -104,7 +101,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       tempPath: tempIsSameAsAppCache ? null : tempPath,
       tempStats: tempStats,
       tempIsSameAsAppCache: tempIsSameAsAppCache,
-      coverStats: coverStats,
       libraryCoverStats: libraryCoverStats,
       audioAnalysisStats: audioAnalysisStats,
     );
@@ -175,10 +171,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     await _clearDirectoryContents(tempDir.path);
   }
 
-  Future<void> _clearCoverCache() async {
-    await CoverCacheManager.clearCache();
-  }
-
   Future<void> _clearLibraryCoverCache() async {
     final appSupportDir = await getApplicationSupportDirectory();
     final libraryCoverDir = Directory('${appSupportDir.path}/library_covers');
@@ -197,7 +189,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     if (currentOverview != null && !currentOverview.tempIsSameAsAppCache) {
       await _clearTempCache();
     }
-    await _clearCoverCache();
     await _clearLibraryCoverCache();
     await _clearAudioAnalysisCache();
   }
@@ -526,29 +517,6 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                       ),
                     ),
                   SettingsItem(
-                    icon: Icons.image_outlined,
-                    title: context.l10n.cacheCoverImage,
-                    subtitle: _buildSubtitle(
-                      context.l10n.cacheCoverImageDesc,
-                      overview.coverStats.fileCount > 0 &&
-                              overview.coverStats.totalSizeBytes > 0
-                          ? context.l10n.cacheSizeWithFiles(
-                              formatBytes(overview.coverStats.totalSizeBytes),
-                              overview.coverStats.fileCount,
-                            )
-                          : context.l10n.cacheNoData,
-                    ),
-                    trailing: _buildClearTrailing(
-                      'clear_cover_cache',
-                      context.l10n.cacheCoverImage,
-                      () => _confirmAndRunAction(
-                        actionKey: 'clear_cover_cache',
-                        targetLabel: context.l10n.cacheCoverImage,
-                        action: _clearCoverCache,
-                      ),
-                    ),
-                  ),
-                  SettingsItem(
                     icon: Icons.library_music_outlined,
                     title: context.l10n.cacheLibraryCover,
                     subtitle: _buildSubtitle(
@@ -641,7 +609,6 @@ class _CacheOverview {
   final String? tempPath;
   final _DirectoryStats? tempStats;
   final bool tempIsSameAsAppCache;
-  final CacheStats coverStats;
   final _DirectoryStats libraryCoverStats;
   final _DirectoryStats audioAnalysisStats;
 
@@ -651,7 +618,6 @@ class _CacheOverview {
     this.tempPath,
     this.tempStats,
     required this.tempIsSameAsAppCache,
-    required this.coverStats,
     required this.libraryCoverStats,
     required this.audioAnalysisStats,
   });
@@ -659,7 +625,6 @@ class _CacheOverview {
   int get totalKnownDiskCacheBytes {
     return appCacheStats.totalSizeBytes +
         (tempStats?.totalSizeBytes ?? 0) +
-        coverStats.totalSizeBytes +
         libraryCoverStats.totalSizeBytes +
         // The row can be cleared, so its bytes belong in the total too.
         audioAnalysisStats.totalSizeBytes;

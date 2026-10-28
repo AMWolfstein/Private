@@ -59,8 +59,7 @@ class PlayerWidgetProvider : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        // Launcher PendingIntents created before the rename still carry the former action.
-        if (intent.action != ACTION && intent.action != LEGACY_ACTION) return
+        if (intent.action != ACTION) return
         val command = intent.getStringExtra(COMMAND) ?: return
         if (!PlayerWidgetCommandPolicy.isAllowed(command)) return
         val pending = goAsync()
@@ -89,9 +88,6 @@ class PlayerWidgetProvider : AppWidgetProvider() {
     companion object {
         const val ACTION = "com.amwolfstein.sistrum.PLAYER_WIDGET_ACTION"
 
-        /** Former action of pre-rename launcher PendingIntents; written as escapes. */
-        const val LEGACY_ACTION =
-            "\u0063\u006f\u006d.\u007a\u0061\u0072\u007a.\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063.PLAYER_WIDGET_ACTION"
         const val COMMAND = "player_widget_command"
         fun preferences(context: Context) = context.getSharedPreferences("player_widget", Context.MODE_PRIVATE)
 

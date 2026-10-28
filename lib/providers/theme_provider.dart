@@ -7,48 +7,18 @@ final initialThemeSettingsProvider = Provider<ThemeSettings>(
   (ref) => const ThemeSettings(),
 );
 
-/// Publishes renamed keys before startup reads them. Keep the source on a
-/// failed write so bootstrap can still use its compatibility fallback.
-Future<void> migrateLegacyThemePreferences(SharedPreferences prefs) async {
-  if (!prefs.containsKey(kSistrumAccentKey)) {
-    final accent = prefs.getString(kLegacyAccentKey);
-    if (accent != null && await prefs.setString(kSistrumAccentKey, accent)) {
-      await prefs.remove(kLegacyAccentKey);
-    }
-  }
-  if (!prefs.containsKey(kSistrumGlassOutlinesKey)) {
-    final outlines = prefs.getBool(kLegacyGlassOutlinesKey);
-    if (outlines != null &&
-        await prefs.setBool(kSistrumGlassOutlinesKey, outlines)) {
-      await prefs.remove(kLegacyGlassOutlinesKey);
-    }
-  }
-}
-
 ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
     playerView: playerViewFromString(prefs.getString(kPlayerViewKey)),
-    sistrumAccent: sistrumAccentFromString(
-      prefs.getString(
-        prefs.containsKey(kSistrumAccentKey)
-            ? kSistrumAccentKey
-            : kLegacyAccentKey,
-      ),
-    ),
+    sistrumAccent: sistrumAccentFromString(prefs.getString(kSistrumAccentKey)),
     useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
     customFontId: prefs.getString(kCustomFontIdKey) ?? '',
     customFontName: prefs.getString(kCustomFontNameKey) ?? '',
     lyricsTextScale: normalizeLyricsTextScale(
       prefs.getDouble(kLyricsTextScaleKey),
     ),
-    sistrumGlassOutlines:
-        prefs.getBool(
-          prefs.containsKey(kSistrumGlassOutlinesKey)
-              ? kSistrumGlassOutlinesKey
-              : kLegacyGlassOutlinesKey,
-        ) ??
-        true,
+    sistrumGlassOutlines: prefs.getBool(kSistrumGlassOutlinesKey) ?? true,
   );
 }
 

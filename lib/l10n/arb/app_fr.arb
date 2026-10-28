@@ -1206,11 +1206,6 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "Fichiers temporaires locaux de pochettes et de traitement audio.",
-  "cacheCoverImage": "Cache des images de couverture",
-  "@cacheCoverImage": {
-    "description": "Cache item title for persistent cover images"
-  },
-  "cacheCoverImageDesc": "Ancien cache d'images des versions précédentes. Les pochettes locales restent dans le cache de votre bibliothèque.",
   "cacheLibraryCover": "Cache de couverture de bibliothèque",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
@@ -2711,19 +2706,6 @@
   "updateLater": "Plus tard",
   "@updateLater": {
     "description": "Update button - dismiss"
-  },
-  "downloadDirectory": "Répertoire de téléchargement",
-  "@downloadDirectory": {
-    "description": "Setting - download folder"
-  },
-  "safMigrationTitle": "Mise à jour du stockage requise",
-  "@safMigrationTitle": {
-    "description": "Title of SAF migration dialog"
-  },
-  "storageAutomaticFolder": "Dossier automatique",
-  "downloadFolderReselect": "Sélectionner à nouveau le dossier",
-  "@downloadFolderReselect": {
-    "description": "Button that reopens the folder picker to restore download folder access"
   },
   "optionsCheckUpdates": "Vérifier les mises à jour",
   "optionsCheckUpdatesSubtitle": "M'avertir lorsqu'une nouvelle version est disponible",

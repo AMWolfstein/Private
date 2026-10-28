@@ -21,25 +21,6 @@ class _Database implements LibraryCollectionsDatabase {
   }
 
   @override
-  Future<void> deletePlaylistTrack({
-    required String playlistId,
-    required String trackKey,
-    required String playlistUpdatedAt,
-  }) => owner.transaction((txn) async {
-    await txn.delete(
-      'playlist_tracks',
-      where: 'playlist_id=? AND track_key=?',
-      whereArgs: [playlistId, trackKey],
-    );
-    await txn.update(
-      'playlists',
-      {'updated_at': playlistUpdatedAt},
-      where: 'id=?',
-      whereArgs: [playlistId],
-    );
-  });
-
-  @override
   Future<void> deleteLovedTracks(List<String> keys) =>
       LibraryCollectionsDatabase.deleteDatabaseLovedTracks(owner, keys);
 

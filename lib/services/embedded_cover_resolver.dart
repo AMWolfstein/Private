@@ -594,7 +594,7 @@ class EmbeddedCoverResolver {
         );
       } else {
         final tempDir = await Directory.systemTemp.createTemp(
-          'download_cover_preview_',
+          'cover_preview_',
         );
         outputPath = p.join(tempDir.path, 'cover_preview.jpg');
       }
