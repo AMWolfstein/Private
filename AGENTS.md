@@ -102,6 +102,10 @@ with Playlists in its own category. Genres uses bounded local tag queries agains
 library, with exact tag matching and no online catalog. Songs contains only tracks (including
 playlist members), with no collection rows or individual playlists mixed into the list.
 
+Library pages have no search field (search lives in the bottom Search tab). Songs headers show Play/Shuffle, the
+player favorite is a heart, Listening statistics is the tab after Home, Edit Metadata has no cover resizer, and each
+lyric line takes its direction from its first strong letter.
+
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
 Add to queue, Go to album/artist, Copy file path, Edit Metadata, ReplayGain apply/remove,

@@ -22,6 +22,13 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Library/player UI batch (2026-10-28):** Library pages have no search (the bottom Search tab
+remains); Songs shows Play/Shuffle like albums; the player and media notification use a heart;
+the artist favorite/shuffle buttons use the tonal album style; Listening statistics is a tab
+between Home and Library; the cover resizer is gone from Edit metadata; lyric lines take their
+direction from the first strong letter; Equalizer band names start-align. Device validation is
+still the owner's.
+
 **Upstream ledger 5.1.1 → 5.2.6 (2026-10-28):** every upstream commit in `5a895265..c90ec647`
 (533) checked one by one; verdicts in `reviews/upstream-v5.1.1-v5.2.6-ledger.md` (144 recorded
 earlier, 12 ported now, 339 not applicable, 38 translations). Ported as U-509..U-516: autoplay
