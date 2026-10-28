@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/library_edited_metadata.dart';
+import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/library_edited_metadata.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 

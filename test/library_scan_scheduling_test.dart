@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/utils/local_library_scan_prefs.dart';

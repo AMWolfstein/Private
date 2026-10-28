@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/services/music_player_runtime.dart';
+import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
 import 'package:sistrum/widgets/sistrum_chrome.dart';

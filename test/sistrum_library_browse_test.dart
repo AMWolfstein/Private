@@ -7,7 +7,7 @@ import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/sistrum_library_screen.dart';
 import 'package:sistrum/screens/library_tracks_folder_screen.dart';

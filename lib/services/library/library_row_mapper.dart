@@ -1,4 +1,4 @@
-import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/utils/audio_format_utils.dart';
 

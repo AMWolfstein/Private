@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:sistrum/services/ffmpeg_probe.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});

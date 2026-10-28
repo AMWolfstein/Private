@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/audio_analysis_jobs.dart';
-import 'package:sistrum/services/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix_analysis.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 

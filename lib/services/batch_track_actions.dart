@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/replaygain_service.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';

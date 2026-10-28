@@ -14,7 +14,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/music_player_runtime.dart';
+import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/mini_player.dart';
 import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';

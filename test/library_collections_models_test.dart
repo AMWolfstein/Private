@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 Track _track(String id, {String? source, String? isrc}) => Track(
   id: id,

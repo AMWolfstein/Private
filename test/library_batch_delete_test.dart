@@ -6,7 +6,7 @@ import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/services/deleted_library_files.dart';
-import 'package:sistrum/services/library_cleanup.dart';
+import 'package:sistrum/services/library/library_cleanup.dart';
 import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
 import 'package:sqflite/sqflite.dart';
 

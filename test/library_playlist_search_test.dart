@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/services/library_playlist_search.dart';
-import 'package:sistrum/services/library_search.dart';
+import 'package:sistrum/services/library/library_playlist_search.dart';
+import 'package:sistrum/services/library/library_search.dart';
 
 List<PlaylistSearchEntry> _referencePage(PlaylistSearchRequest request) {
   final query = LibrarySearchQuery(request.query);

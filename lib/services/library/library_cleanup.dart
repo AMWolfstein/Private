@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:isolate';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_cover_snapshot.dart';
-import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library/library_cover_snapshot.dart';
+import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/native_cache_maintenance.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';

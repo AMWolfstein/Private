@@ -6,7 +6,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/artist_utils.dart';
 import 'package:sistrum/utils/audio_format_utils.dart';
 import 'package:sistrum/utils/file_access.dart';

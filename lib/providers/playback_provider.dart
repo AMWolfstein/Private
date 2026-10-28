@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/services/sqlite_native_snapshot.dart';

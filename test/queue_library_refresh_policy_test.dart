@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:sistrum/screens/queue_library_refresh_policy.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 void main() {
   const empty = QueueLibraryCounts(

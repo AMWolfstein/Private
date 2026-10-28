@@ -10,7 +10,7 @@ import 'package:sistrum/screens/library_tracks_folder_screen.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/app_search_field.dart';

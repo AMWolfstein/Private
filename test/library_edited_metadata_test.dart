@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/library_edited_metadata.dart';
+import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/library_edited_metadata.dart';
 
 void main() {
   final item = LocalLibraryItem(

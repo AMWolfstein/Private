@@ -1,4 +1,4 @@
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 bool queueLibraryCountsHaveContent(QueueLibraryCounts counts) =>
     counts.allTrackCount > 0 ||

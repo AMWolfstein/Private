@@ -7,10 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/automix_analysis.dart';
-import 'package:sistrum/services/automix_analyzer.dart';
-import 'package:sistrum/services/music_playback_deck.dart';
-import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/playback/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix_analyzer.dart';
+import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/services/playback/music_player_service.dart';
 
 Uint8List _drumWav(double bpm, {bool silent = false}) {
   const sampleRate = 44100;

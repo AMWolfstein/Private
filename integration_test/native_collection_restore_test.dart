@@ -10,7 +10,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/collection_restore_codec.dart';
-import 'package:sistrum/services/library_collections_database.dart';
+import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 import '../test/support/caller_yield_probe.dart';

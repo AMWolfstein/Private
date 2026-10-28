@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/replaygain_service.dart';
 
 void main() {

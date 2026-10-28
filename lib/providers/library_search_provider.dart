@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/library_playlist_search.dart';
-import 'package:sistrum/services/library_search.dart';
+import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/library_playlist_search.dart';
+import 'package:sistrum/services/library/library_search.dart';
 
 typedef LibrarySearchRequest = ({
   String query,

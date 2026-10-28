@@ -17,7 +17,7 @@ import 'package:sistrum/screens/library/queue_tab.dart';
 import 'package:sistrum/widgets/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/library_selection_playback_actions.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'support/material_test_theme.dart';
 
 String _definition(String file, String table) => RegExp(
@@ -76,7 +76,7 @@ if data['visibleIds'] is not None:
 print(json.dumps([dict(row) for row in db.execute(data['sql'], data['args'])]))
 ''',
       jsonEncode({
-        'library': _definition('lib/services/library_schema.dart', 'library'),
+        'library': _definition('lib/services/library/library_schema.dart', 'library'),
         'sql': sql,
         'visibleIds': _visibleTrackIds?.toList(),
         'args': arguments ?? [],

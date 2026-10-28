@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/services/library_collections_database.dart';
+import 'package:sistrum/services/library/library_collections_database.dart';
 
 import '../test/support/library_collections_benchmark.dart';
 import '../test/support/playlist_batch_benchmark.dart';

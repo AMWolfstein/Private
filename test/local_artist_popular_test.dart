@@ -5,7 +5,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'support/sqlite_process_database.dart';
 

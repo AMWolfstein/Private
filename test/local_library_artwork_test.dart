@@ -14,7 +14,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/sistrum_library_screen.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/local_library_artwork_builder.dart';

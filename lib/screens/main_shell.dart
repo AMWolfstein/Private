@@ -14,7 +14,7 @@ import 'package:sistrum/screens/library/queue_tab.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
-import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/update_checker.dart';

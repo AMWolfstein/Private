@@ -16,7 +16,7 @@ import 'package:sistrum/utils/audio_quality_badge_policy.dart';
 import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/image_cache_utils.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/batch_track_actions.dart';
 import 'package:sistrum/models/album_track_order.dart';
 import 'package:sistrum/models/unified_library_item.dart';

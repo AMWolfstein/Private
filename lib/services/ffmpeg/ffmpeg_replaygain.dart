@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:sistrum/services/ffmpeg_models.dart';
-import 'package:sistrum/services/ffmpeg_support.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');

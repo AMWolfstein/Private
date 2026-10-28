@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/local_guide_pages.dart';
-import 'package:sistrum/services/library_folder_selection.dart';
+import 'package:sistrum/services/library/library_folder_selection.dart';
 import 'package:sistrum/constants/language_choices.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/widgets/scroll_edge_fade.dart';

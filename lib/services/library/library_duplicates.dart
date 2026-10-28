@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_database_models.dart';
-import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/duplicate_quality_policy.dart';

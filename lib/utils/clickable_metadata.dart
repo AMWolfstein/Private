@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/utils/artist_utils.dart';

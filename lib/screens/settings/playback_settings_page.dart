@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/music_playback_deck.dart';
-import 'package:sistrum/services/music_player_service.dart'
+import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/services/playback/music_player_service.dart'
     show resetAutoplayLearning;
 import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';

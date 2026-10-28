@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/cover_colors.dart';
 import 'package:sistrum/utils/logger.dart';
 

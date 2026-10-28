@@ -11,7 +11,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/library_tracks_folder_screen.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/album_track_tile.dart';

@@ -8,7 +8,7 @@ import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/album_completeness.dart';
-import 'package:sistrum/services/library_queue_store.dart';
+import 'package:sistrum/services/library/library_queue_store.dart';
 
 import 'support/library_paging_fixture.dart';
 import 'support/sqlite_process_database.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
-import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/utils/file_access.dart';
 
 /// The outcome of one local-library deletion pass.

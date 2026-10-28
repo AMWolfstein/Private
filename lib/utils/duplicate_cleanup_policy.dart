@@ -1,4 +1,4 @@
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sistrum/utils/duplicate_quality_policy.dart';

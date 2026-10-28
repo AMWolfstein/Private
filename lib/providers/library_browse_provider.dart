@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/album_completeness.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 typedef LibraryBrowseRequest = ({
   bool artists,

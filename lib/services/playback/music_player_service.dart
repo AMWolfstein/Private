@@ -1,12 +1,12 @@
-import 'package:sistrum/services/playback_session_prepare.dart';
-import 'package:sistrum/services/music_haptics.dart';
+import 'package:sistrum/services/playback/playback_session_prepare.dart';
+import 'package:sistrum/services/playback/music_haptics.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
-import 'package:sistrum/services/playback_notification.dart';
+import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show
         AudioDevice,
@@ -15,23 +15,23 @@ import 'package:audio_session/audio_session.dart'
         AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:sistrum/services/listening_statistics.dart' show ListeningTrack;
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/sqlite_helpers.dart' show normalizeLookupText;
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/services/playback_normalization.dart';
-import 'package:sistrum/services/playback_automation.dart';
-import 'package:sistrum/services/playback_session_writer.dart';
-import 'package:sistrum/services/content_uri_playback_cache.dart';
-import 'package:sistrum/services/music_player_runtime.dart';
-import 'package:sistrum/services/music_playback_deck.dart';
-import 'package:sistrum/services/automix_analysis.dart';
-import 'package:sistrum/services/automix_phase_lock.dart';
-import 'package:sistrum/services/autoplay_personalization.dart';
-import 'package:sistrum/services/automix_analyzer.dart';
+import 'package:sistrum/services/playback/playback_normalization.dart';
+import 'package:sistrum/services/playback/playback_automation.dart';
+import 'package:sistrum/services/playback/playback_session_writer.dart';
+import 'package:sistrum/services/playback/content_uri_playback_cache.dart';
+import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/services/playback/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix_phase_lock.dart';
+import 'package:sistrum/services/playback/autoplay_personalization.dart';
+import 'package:sistrum/services/playback/automix_analyzer.dart';
 import 'package:sistrum/models/playable_media.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/automix_effect_renderer.dart';
-import 'package:sistrum/services/automix_status.dart';
+import 'package:sistrum/services/playback/automix_effect_renderer.dart';
+import 'package:sistrum/services/playback/automix_status.dart';
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';

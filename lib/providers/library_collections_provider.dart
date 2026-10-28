@@ -6,10 +6,10 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/ffmpeg_metadata.dart';
-import 'package:sistrum/services/ffmpeg_probe.dart';
-import 'package:sistrum/services/library_collections_database.dart';
-import 'package:sistrum/services/library_collections_hydration.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
+import 'package:sistrum/services/library/library_collections_database.dart';
+import 'package:sistrum/services/library/library_collections_hydration.dart';
 import 'package:sistrum/services/collection_track_batch.dart';
 import 'package:sistrum/utils/logger.dart';
 

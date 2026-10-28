@@ -1,4 +1,4 @@
-import 'package:sistrum/services/playback_equalizer.dart';
+import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -9,8 +9,8 @@ import 'package:sistrum/controllers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/audio_route_info.dart';
-import 'package:sistrum/services/music_playback_deck.dart';
-import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 String _tableDefinition(String path, String table) {
   final source = File(path).readAsStringSync();
@@ -51,7 +51,7 @@ print('library passed')
 ''',
         jsonEncode({
           'library': _tableDefinition(
-            'lib/services/library_schema.dart',
+            'lib/services/library/library_schema.dart',
             'library',
           ),
           'localPredicate': localPredicate,

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:sistrum/services/ffmpeg_replaygain.dart';
-import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/metadata_edit_result.dart';
-import 'package:sistrum/services/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';

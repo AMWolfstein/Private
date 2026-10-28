@@ -1,6 +1,6 @@
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/utils/audio_quality_badge_policy.dart';
 import 'package:sistrum/utils/string_utils.dart';
 

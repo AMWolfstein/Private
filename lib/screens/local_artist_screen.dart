@@ -16,7 +16,7 @@ import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/local_song_row.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';

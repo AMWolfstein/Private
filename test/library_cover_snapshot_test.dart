@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_cover_snapshot.dart';
-import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library/library_cover_snapshot.dart';
+import 'package:sistrum/services/library/library_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 

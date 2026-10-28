@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');

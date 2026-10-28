@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback_automation.dart';
+import 'package:sistrum/services/playback/playback_automation.dart';
 
 AudioDevice device(String id, AudioDeviceType type, {bool output = true}) =>
     AudioDevice(

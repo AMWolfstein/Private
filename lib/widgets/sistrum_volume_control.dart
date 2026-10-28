@@ -7,7 +7,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/sistrum_player_slider.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:volume_controller/volume_controller.dart';
-import 'package:sistrum/services/music_playback_deck.dart';
+import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/system_volume_service.dart';
 
 final usbVolumeProvider = StreamProvider.autoDispose<UsbVolumeState?>((ref) {

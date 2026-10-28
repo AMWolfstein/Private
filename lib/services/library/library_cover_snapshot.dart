@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/utils/logger.dart';
 
 var _snapshotSequence = 0;

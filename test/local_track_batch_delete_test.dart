@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/library_database_models.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 

@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_native_adapter.dart';
-import 'package:sistrum/services/library_row_mapper.dart';
+import 'package:sistrum/services/library/library_native_adapter.dart';
+import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/sqlite_native_snapshot.dart';
 

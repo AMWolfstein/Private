@@ -13,7 +13,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/screens/track_metadata_edit_sheet.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/local_song_row.dart';

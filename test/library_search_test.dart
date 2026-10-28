@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_search.dart';
+import 'package:sistrum/services/library/library_search.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 
 // Execute the production SQL, including bound parameters, against real SQLite.

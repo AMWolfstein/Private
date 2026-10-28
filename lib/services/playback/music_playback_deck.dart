@@ -1,4 +1,4 @@
-import 'package:sistrum/services/playback_equalizer.dart';
+import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'dart:async';
 import 'dart:io';
 

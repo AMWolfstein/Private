@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sistrum/services/playback_metadata.dart';
+import 'package:sistrum/services/playback/playback_metadata.dart';
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';

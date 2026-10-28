@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library_database_models.dart';
-import 'package:sistrum/services/library_queue_store.dart';
-import 'package:sistrum/services/library_row_mapper.dart';
-import 'package:sistrum/services/library_schema.dart';
+import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_row_mapper.dart';
+import 'package:sistrum/services/library/library_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
 import 'package:sistrum/services/metadata_persistence_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';

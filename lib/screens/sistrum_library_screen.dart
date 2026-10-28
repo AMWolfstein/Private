@@ -14,7 +14,7 @@ import 'package:sistrum/screens/library_tracks_folder_screen.dart';
 import 'package:sistrum/screens/favorite_artists_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/services/album_completeness.dart';
-import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';

@@ -5,10 +5,10 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/library_collections_database.dart';
-import 'package:sistrum/services/library_collections_hydration.dart';
-import 'package:sistrum/services/library_playlist_search.dart';
-import 'package:sistrum/services/library_search.dart';
+import 'package:sistrum/services/library/library_collections_database.dart';
+import 'package:sistrum/services/library/library_collections_hydration.dart';
+import 'package:sistrum/services/library/library_playlist_search.dart';
+import 'package:sistrum/services/library/library_search.dart';
 
 import 'caller_yield_probe.dart';
 
