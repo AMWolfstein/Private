@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/services/deleted_library_files.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 
 String trackDeletionResultMessage(
@@ -11,19 +12,18 @@ String trackDeletionResultMessage(
   if (deleted < requested) l10n.snackbarDeleteTracksFailed(requested - deleted),
 ].join('\n');
 
-/// Shows a delete-confirmation dialog, deletes the given [ids] one by one via
-/// [deleteItem], then shows a "deleted N tracks" snackbar.
-/// [onExitSelectionMode] runs after persistence if the screen is still open.
+/// Shows a delete-confirmation dialog, runs [deleteItems] for the confirmed
+/// IDs, then shows a "deleted N tracks" snackbar. [onExitSelectionMode] runs
+/// after the deletion if the screen is still open.
 ///
-/// Returns the number of items [deleteItem] reported deleted, or null if the
-/// user cancelled the dialog.
-/// [persistDeletedItems] commits successfully deleted IDs once before the UI
-/// reports completion, including partial success if a later deletion throws.
-Future<int?> confirmAndDeleteTracks({
+/// The destructive policy (CUE protection, physical deletion, index cleanup)
+/// belongs to [deleteItems]; this helper only owns the confirmation, the
+/// selection exit and the result message. Returns the deletion outcome, or null
+/// if the user cancelled the dialog.
+Future<DeletedLibraryTracks?> confirmAndDeleteTracks({
   required BuildContext context,
   required List<String> ids,
-  required Future<bool> Function(String id) deleteItem,
-  Future<void> Function(List<String> ids)? persistDeletedItems,
+  required Future<DeletedLibraryTracks> Function(List<String> ids) deleteItems,
   required VoidCallback onExitSelectionMode,
 }) async {
   final confirmed = await showAppDialog<bool>(
@@ -52,17 +52,7 @@ Future<int?> confirmAndDeleteTracks({
 
   if (confirmed != true || !context.mounted) return null;
 
-  final deletedIds = <String>[];
-  try {
-    for (final id in ids) {
-      if (await deleteItem(id)) deletedIds.add(id);
-    }
-  } finally {
-    if (deletedIds.isNotEmpty && persistDeletedItems != null) {
-      await persistDeletedItems(deletedIds);
-    }
-  }
-  final deletedCount = deletedIds.length;
+  final result = await deleteItems(ids);
 
   if (context.mounted) {
     onExitSelectionMode();
@@ -71,7 +61,7 @@ Future<int?> confirmAndDeleteTracks({
         content: Text(
           trackDeletionResultMessage(
             context.l10n,
-            deleted: deletedCount,
+            deleted: result.deletedCount,
             requested: ids.length,
           ),
         ),
@@ -79,5 +69,5 @@ Future<int?> confirmAndDeleteTracks({
     );
   }
 
-  return deletedCount;
+  return result;
 }

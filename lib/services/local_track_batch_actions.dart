@@ -3,11 +3,8 @@ import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/services/deleted_library_files.dart';
 import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
-import 'package:sistrum/utils/file_access.dart';
 
 /// Confirms, then deletes the files behind [selected] and removes their
 /// local-index rows. Files that cannot be deleted keep their rows.
@@ -47,26 +44,9 @@ Future<void> deleteLibraryTracks(
   final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
-  final deletedPaths = <String>{};
-  final cueIds = <String>[];
-  var deletedCount = 0;
-  for (final item in selected) {
-    if (isCueBackedRow(item.filePath, item.localItem.format)) {
-      // A CUE row shares its backing sheet/audio with sibling tracks; removing
-      // the row must never delete those files.
-      cueIds.add(item.localItem.id);
-      deletedCount++;
-      continue;
-    }
-    final cleanPath = EmbeddedCoverResolver.cleanFilePath(item.filePath);
-    if (!await deleteFile(cleanPath)) continue;
-    deletedPaths.add(cleanPath);
-    deletedCount++;
-  }
-  await removeDeletedLibraryFileEntries(container, deletedPaths);
-  if (cueIds.isNotEmpty) {
-    await container.read(localLibraryProvider.notifier).removeItems(cueIds);
-  }
+  final result = await deleteLocalLibraryTracks(container, [
+    for (final item in selected) item.localItem,
+  ]);
   if (!isActive() || !context.mounted) return;
   onComplete();
   messenger.showSnackBar(
@@ -74,7 +54,7 @@ Future<void> deleteLibraryTracks(
       content: Text(
         trackDeletionResultMessage(
           l10n,
-          deleted: deletedCount,
+          deleted: result.deletedCount,
           requested: selected.length,
         ),
       ),

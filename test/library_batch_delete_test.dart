@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/services/deleted_library_files.dart';
 import 'package:sistrum/services/library_cleanup.dart';
 import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
 import 'package:sqflite/sqflite.dart';
@@ -93,13 +94,12 @@ void main() {
   });
 
   for (final mode in ['partial', 'cancel', 'throw', 'none', 'leave']) {
-    testWidgets('batch confirmation persists successful IDs: $mode', (
+    testWidgets('batch confirmation runs one deletion operation: $mode', (
       tester,
     ) async {
       final events = <String>[];
-      final persisted = <List<String>>[];
       final commit = Completer<void>();
-      int? result;
+      DeletedLibraryTracks? result;
       Object? failure;
       await tester.pumpWidget(
         ProviderScope(
@@ -114,17 +114,26 @@ void main() {
                       result = await confirmAndDeleteTracks(
                         context: context,
                         ids: ['first', 'failed', 'last'],
-                        deleteItem: (id) async {
-                          events.add(id);
-                          if (mode == 'throw' && id == 'last') {
+                        deleteItems: (ids) async {
+                          events.add('delete:${ids.join(',')}');
+                          if (mode == 'none') {
+                            return DeletedLibraryTracks(
+                              deletedIds: const [],
+                              requested: ids.length,
+                            );
+                          }
+                          await commit.future;
+                          if (mode == 'throw') {
                             throw StateError('file delete failed');
                           }
-                          return mode != 'none' && id != 'failed';
-                        },
-                        persistDeletedItems: (ids) async {
-                          persisted.add(List.of(ids));
-                          await commit.future;
-                          events.add('committed');
+                          final deletedIds = mode == 'partial'
+                              ? const ['first', 'last']
+                              : ids;
+                          events.add('deleted:${deletedIds.join(',')}');
+                          return DeletedLibraryTracks(
+                            deletedIds: deletedIds,
+                            requested: ids.length,
+                          );
                         },
                         onExitSelectionMode: () => events.add('exit'),
                       );
@@ -147,28 +156,30 @@ void main() {
         await tester.tap(find.widgetWithText(AppDialogAction, 'Delete'));
       }
       await tester.pumpAndSettle();
-      if (mode == 'cancel' || mode == 'none') {
-        expect(persisted, isEmpty);
+      if (mode == 'cancel') {
+        expect(events, isEmpty);
       } else {
-        expect(persisted, [
-          mode == 'throw' ? ['first'] : ['first', 'last'],
-        ]);
-        expect(events, isNot(contains('exit')));
+        // One operation receives every confirmed ID; a synchronous result can
+        // already have shown its snackbar by now.
+        expect(events.first, 'delete:first,failed,last');
       }
       if (mode == 'leave') await tester.pumpWidget(const SizedBox());
       commit.complete();
       await tester.pumpAndSettle();
       if (mode == 'throw') {
         expect(failure, isStateError);
-        expect(events.last, 'committed');
         expect(events, isNot(contains('exit')));
       } else {
         expect(failure, isNull);
-        expect(result, mode == 'cancel' ? null : (mode == 'none' ? 0 : 2));
+        expect(result?.deletedCount, switch (mode) {
+          'cancel' => null,
+          'none' => 0,
+          'partial' => 2,
+          _ => 3,
+        });
         if (mode == 'cancel') {
           expect(events, isEmpty);
         } else if (mode == 'leave') {
-          expect(events.last, 'committed');
           expect(events, isNot(contains('exit')));
         } else {
           expect(events.last, 'exit');

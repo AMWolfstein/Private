@@ -20,7 +20,6 @@ import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/services/batch_track_actions.dart';
 import 'package:sistrum/models/album_track_order.dart';
 import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/collapsing_header_scroll_mixin.dart';
@@ -149,41 +148,23 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
   Future<void> _deleteSelected(List<LocalLibraryItem> currentTracks) async {
     final container = ProviderScope.containerOf(context, listen: false);
-    final libraryNotifier = ref.read(localLibraryProvider.notifier);
     final tracksById = {for (final track in currentTracks) track.id: track};
     final deletedIds = <String>{};
 
-    final deletedCount = await confirmAndDeleteTracks(
+    final result = await confirmAndDeleteTracks(
       context: context,
       ids: selectedIds.toList(),
-      deleteItem: (id) async {
-        final item = tracksById[id];
-        if (item == null) return false;
-        if (!isCueBackedRow(item.filePath, item.format)) {
-          final deleted = await deleteFile(item.filePath);
-          if (!deleted) return false;
-        }
-        deletedIds.add(id);
-        return true;
-      },
-      persistDeletedItems: (ids) async {
-        final items = ids.map((id) => tracksById[id]!);
-        await removeDeletedLibraryFileEntries(
-          container,
-          items
-              .where((item) => !isCueBackedRow(item.filePath, item.format))
-              .map((item) => item.filePath),
-        );
-        await libraryNotifier.removeItems(
-          items
-              .where((item) => isCueBackedRow(item.filePath, item.format))
-              .map((item) => item.id),
-        );
+      deleteItems: (ids) async {
+        final deleted = await deleteLocalLibraryTracks(container, [
+          for (final id in ids) ?tracksById[id],
+        ]);
+        deletedIds.addAll(deleted.deletedIds);
+        return deleted;
       },
       onExitSelectionMode: exitSelectionMode,
     );
 
-    if (deletedCount == null || deletedCount == 0 || !mounted) return;
+    if (result == null || result.deletedCount == 0 || !mounted) return;
 
     final remaining = [
       for (final item in _loadedTracks ?? widget.tracks)

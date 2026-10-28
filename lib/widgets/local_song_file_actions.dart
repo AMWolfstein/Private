@@ -241,22 +241,15 @@ Future<bool> deleteLocalSong(
     ),
   );
   if (confirmed != true) return false;
-  if (isCueSong(item)) {
-    // A CUE row shares its backing sheet/audio with other tracks, and the
-    // sheet itself may be the only row for the album.
-    await container.read(localLibraryProvider.notifier).removeItem(item.id);
-    return true;
+  // A CUE row only drops its virtual row; the shared sheet and audio stay.
+  final result = await deleteLocalLibraryTracks(container, [item]);
+  final deleted = result.deletedCount > 0;
+  if (!deleted && context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.snackbarDeleteTracksFailed(1))),
+    );
   }
-  if (!await deleteFile(item.filePath)) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.snackbarDeleteTracksFailed(1))),
-      );
-    }
-    return false;
-  }
-  await removeDeletedLibraryFileEntries(container, [item.filePath]);
-  return true;
+  return deleted;
 }
 
 /// Splits the backing CUE album into a user-selected local SAF folder.

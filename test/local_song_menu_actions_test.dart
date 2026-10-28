@@ -34,6 +34,9 @@ class _Local extends LocalLibraryNotifier {
       removedPaths.addAll(paths);
   @override
   Future<void> removeItem(String id) async => removedItemIds.add(id);
+  @override
+  Future<void> removeItems(Iterable<String> ids) async =>
+      removedItemIds.addAll(ids);
 }
 
 class _Player extends MusicPlayerController {
