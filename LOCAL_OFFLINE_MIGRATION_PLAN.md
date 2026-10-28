@@ -29,7 +29,10 @@ restoration no longer imports the player engine) and album route identity (`Deta
 `lib/utils/detail_page_route.dart`. Third: update checks distinguish a verified "no newer release" (null) from an unreachable or
 unverifiable release list (`UpdateCheckException`), and Settings > Updates offers a retry instead of claiming the app is
 up to date. Fourth: FFmpeg metadata writes throw `FFmpegMetadataFailure` with a concise cause, and the metadata save result keeps
-it (`MetadataSaveResult.failed(error)`) instead of dropping it. Analyze and the full `flutter test` pass.
+it (`MetadataSaveResult.failed(error)`) instead of dropping it. Fifth: small clarity fixes — profile-save rollback keeps the
+original failure, `saveMetadata` became `buildMetadataTags`, the full player lost its fixed-opacity fade wrapper, the
+storage-permission ternary collapsed, Loved toggling is inlined, and scan preparation no longer keeps the unused
+`resolvedPath` placeholder. Analyze and the full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
