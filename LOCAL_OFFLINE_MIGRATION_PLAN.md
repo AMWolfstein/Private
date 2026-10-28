@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Version reset (2026-10-28):** app version is now 1.0.0 build 1 (`pubspec.yaml` 1.0.0+1, `AppInfo`). Earlier entries below keep their historical 5.1.1 build numbers.
+
 **Second dead-code pass (2026-10-28):** removed `LocalLibrarySortMode`, `LocalLibraryItem.matchKey`, write-only fields
 (`fadeOutDuration`, `latestScanned`, `CoverColors.dominantColor`, `BackupBundle.appVersion`, `pickSafTree(forSetup)`),
 `readLyricsWithSafCopy` and its tests, the collections state export worker chain (`exportLibraryCollectionsState`), the
