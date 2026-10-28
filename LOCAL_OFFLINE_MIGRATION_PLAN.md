@@ -22,6 +22,15 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Upstream ledger 5.1.1 → 5.2.6 (2026-10-28):** every upstream commit in `5a895265..c90ec647`
+(533) checked one by one; verdicts in `reviews/upstream-v5.1.1-v5.2.6-ledger.md` (144 recorded
+earlier, 12 ported now, 339 not applicable, 38 translations). Ported as U-509..U-516: autoplay
+learning default and reset confirmation (`b3f4244`), far-line lyrics test (`78cac12`), FFmpegKit LGPL
+notices (`eb44a8e`), and adaptive scrollable sheets, choice rows, log level sheet, Beta badge,
+statistics skeleton and 840dp tablet centring (`f609257`). `flutter analyze` clean; full
+`flutter test` passed (1870, 4 skipped). Not done: the upstream translation import; device testing
+belongs to the owner.
+
 **T16 — owner-wide Sistrum identity normalization (2026-10-28), verified locally, not committed:**
 extends T15 to internal identifiers, file names and documentation. The owner's explicit
 request overrides the prior branding-preservation rule; every basename `README.md` stays

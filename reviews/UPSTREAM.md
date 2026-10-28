@@ -82,7 +82,19 @@ Owner asked for every applicable fix, AutoMix and audio_service included (2026-1
 | U-507 | `9843149d` | DONE `d6c1a86`: a beat-matched mix seeks the silent next song onto the outgoing beat grid (up to three tries, leading by the previous lag). Test fails without the fix. | C |
 | U-508 | `44c9ba92` | DONE `c29d361`: energy-normalized onsets and 0.01 BPM tempo refinement (Dart and Rust), grid retries on nearby windows, landing verification with fallback to an unstretched crossfade, bounded phase-lock rate corrections, bass handoff for uncertain pulses, no beat matching with speed effects. Upstream tests ported to our inline harness on real time. | C |
 
-Not ported from this range: 36 translation commits (English only); Windows, Linux, macOS and
+| U-509 | `21fd51d6` | DONE `b3f4244`: Learn from listening is on by default (new installs and settings without the key); Reset learning asks for confirmation. Tests ported. | Ledger |
+| U-510 | `6a3e9ab7` | DONE `78cac12`: regression test for opening on a far line taller than the estimate. Our scroll already passes it; the upstream scroll change made extreme cases worse here, so only the test is ported. Separate pre-existing gap: a very tall line at a far index is never reached. | Ledger |
+| U-511 | `4431f25f`, `d99a7a6c` | DONE `eb44a8e`: licence page lists FFmpeg (FFmpegKit, LGPL 2.1 notice with source offer) and the LGPL 3.0 text, Android only; desktop FFmpeg wording excluded. | Ledger |
+| U-512 | `8ff1490d` | DONE `f609257`: Logs pick the level from the shared sheet instead of a dropdown. | Ledger |
+| U-513 | `9b622f94` | DONE `f609257`: shared `BetaBadge` (onSurface text for contrast) on Equalizer, its enable switch, USB bit-perfect and DAP exclusive. Telegram beta link and external-player text N/A. | Ledger |
+| U-514 | `ba737c62` | DONE `f609257`: Listening statistics show a skeleton of the summary, activity and top lists while loading. | Ledger |
+| U-515 | `1cc233bd`, `50368012`, `6b6db4ca`, `3fd15881` | DONE `f609257`: `AppScrollableSheet`/`showAppScrollableBottomSheet` fit short content, grow to 85%/95% and drag with their body; sheet titles take a trailing action; `AppSheetOption.choice` announces selection. Auto-scan, language and Library filter sheets moved (filter keeps Reset in the title). Download/files/metadata/extension pickers N/A. Upstream sheet tests ported. | Ledger |
+| U-516 | `bd0b4a50` | DONE `f609257`: 840dp reading width without the 32dp cap; page titles align to centred content; shorter expanded header in short landscape windows; Library overview (search, rows, artists, album grid at ~160dp) and Listening statistics centred. Material rail, online and extension screens N/A. | Ledger |
+
+Full per-commit ledger for `5a895265..c90ec647` (533 commits, 2026-10-28):
+`reviews/upstream-v5.1.1-v5.2.6-ledger.md`.
+
+Not ported from this range: translation commits (pending the translation import batch); Windows, Linux, macOS and
 desktop commits (`c90ec647`, `d14a2d72`, `e8d0a568`, `5f2a4dae`, `6ab91b45`, `f4a14c46`,
 `0beadb7c`, `d8903fb2`, `2b257c36`, `07bc4c35`, `7a0d6afb`, `8f553c7a`, `91a7f0b6`,
 `26acc723`, `7bbdf03e`, `b8333537`); `9b747632` (media_kit desktop deck); Subsonic/network
