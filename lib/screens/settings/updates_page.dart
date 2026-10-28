@@ -10,7 +10,10 @@ import 'package:sistrum/widgets/settings_group.dart';
 import 'package:sistrum/widgets/update_dialog.dart';
 
 class UpdatesPage extends ConsumerStatefulWidget {
-  const UpdatesPage({super.key});
+  const UpdatesPage({super.key, this.checker});
+
+  /// Test seam: production builds use the default [UpdateChecker].
+  final UpdateChecker? checker;
 
   @override
   ConsumerState<UpdatesPage> createState() => _UpdatesPageState();
@@ -23,9 +26,30 @@ class _UpdatesPageState extends ConsumerState<UpdatesPage> {
     if (_checking) return;
     setState(() => _checking = true);
     final channel = ref.read(settingsProvider).updateChannel;
-    final info = await UpdateChecker().checkForUpdate(channel: channel);
+    UpdateInfo? info;
+    UpdateCheckException? failure;
+    try {
+      info = await (widget.checker ?? UpdateChecker()).checkForUpdate(
+        channel: channel,
+      );
+    } on UpdateCheckException catch (error) {
+      failure = error;
+    } finally {
+      if (mounted) setState(() => _checking = false);
+    }
     if (!mounted) return;
-    setState(() => _checking = false);
+    if (failure != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.updateCheckFailed),
+          action: SnackBarAction(
+            label: context.l10n.retry,
+            onPressed: _checkNow,
+          ),
+        ),
+      );
+      return;
+    }
     if (info == null) {
       ScaffoldMessenger.of(
         context,

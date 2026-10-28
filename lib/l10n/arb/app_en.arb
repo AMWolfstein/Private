@@ -3479,5 +3479,13 @@
   "updateUpToDate": "You're on the latest version",
   "@updateUpToDate": {
     "description": "Snackbar when no newer release was found"
+  },
+  "updateCheckFailed": "Could not check for updates",
+  "@updateCheckFailed": {
+    "description": "Snackbar when the release list could not be fetched or verified"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Snackbar action that repeats the failed operation"
   }
 }

@@ -73,6 +73,21 @@ class UpdateInfo {
            : UpdateInstallKind.releasePage;
 }
 
+/// A failed update check. [checkForUpdate] returns null only when a verified
+/// release list has no newer version, so callers can tell "up to date" from
+/// "could not check".
+class UpdateCheckException implements Exception {
+  const UpdateCheckException(this.message, [this.cause]);
+
+  final String message;
+  final Object? cause;
+
+  @override
+  String toString() => cause == null
+      ? 'UpdateCheckException: $message'
+      : 'UpdateCheckException: $message ($cause)';
+}
+
 class UpdateChecker {
   final http.Client? _client;
   final String _installedVersion;
@@ -171,12 +186,13 @@ class UpdateChecker {
     try {
       final snapshot = await _fetchReleasesBody();
       if (snapshot == null) {
-        return null;
+        throw const UpdateCheckException('Could not fetch the release list');
       }
 
       final releases = _parseReleases(snapshot.body);
       if (releases.isEmpty) {
         _log.i('No releases found');
+        if (!snapshot.verified) _throwUnverified();
         return null;
       }
 
@@ -193,6 +209,7 @@ class UpdateChecker {
       }
       if (releaseData == null) {
         _log.i('No stable release found');
+        if (!snapshot.verified) _throwUnverified();
         return null;
       }
 
@@ -213,16 +230,10 @@ class UpdateChecker {
       }
 
       if (!_isNewerVersion(latestVersion, _installedVersion)) {
-        if (snapshot.verified) {
-          _log.i(
-            'No update available (current: $_installedVersion, latest: $latestVersion, channel: $channel)',
-          );
-        } else {
-          _log.w(
-            'Update availability could not be verified '
-            '(current: $_installedVersion, cached latest: $latestVersion, channel: $channel)',
-          );
-        }
+        if (!snapshot.verified) _throwUnverified();
+        _log.i(
+          'No update available (current: $_installedVersion, latest: $latestVersion, channel: $channel)',
+        );
         return null;
       }
 
@@ -258,10 +269,21 @@ class UpdateChecker {
         isPrerelease: isPrerelease,
         releasesBehind: releasesBehind,
       );
+    } on UpdateCheckException {
+      rethrow;
     } catch (e) {
       _log.e('Error checking for updates: $e');
-      return null;
+      throw UpdateCheckException('Update check failed', e);
     }
+  }
+
+  /// A cached list that could not be revalidated must not be reported as
+  /// "up to date"; the caller offers a retry instead.
+  static Never _throwUnverified() {
+    _log.w('Update availability could not be verified');
+    throw const UpdateCheckException(
+      'Update availability could not be verified',
+    );
   }
 
   static bool _isNewerVersion(String latest, String current) {

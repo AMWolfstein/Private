@@ -150,7 +150,10 @@ void main() {
           return http.Response('{"message":"Invalid response"}', 200);
         }),
       );
-      expect(await checker.checkForUpdate(), isNull);
+      await expectLater(
+        checker.checkForUpdate(),
+        throwsA(isA<UpdateCheckException>()),
+      );
       final messages = LogBuffer().entries
           .map((entry) => entry.message)
           .join('\n');
@@ -161,6 +164,21 @@ void main() {
       expect(prefs.getString('update_checker_releases_etag'), '"cached"');
     });
   }
+
+  test(
+    'an unreachable release list without a cache reports a failure',
+    () async {
+      final checker = UpdateChecker(
+        installedVersion: '5.0.0',
+        isAndroid: true,
+        client: MockClient((_) async => throw http.ClientException('Offline')),
+      );
+      await expectLater(
+        checker.checkForUpdate(),
+        throwsA(isA<UpdateCheckException>()),
+      );
+    },
+  );
 
   test(
     'an offline check can still offer a previously discovered update',

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/updates_page.dart';
+import 'package:sistrum/services/update_checker.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 
 void main() {
+  setUp(() => SharedPreferences.setMockInitialValues({}));
   testWidgets('Updates page checks now and holds the update switches', (
     tester,
   ) async {
@@ -40,5 +45,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(container.read(settingsProvider).checkForUpdates, false);
     expect(find.text('Get preview releases'), findsNothing);
+  });
+
+  testWidgets('a failed update check offers a retry, not an up-to-date claim', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final checker = UpdateChecker(
+      isAndroid: true,
+      client: MockClient((_) async => throw http.ClientException('Offline')),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: SistrumTheme.build(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: UpdatesPage(checker: checker),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Check now'));
+    await tester.pumpAndSettle();
+    expect(find.text('Could not check for updates'), findsOneWidget);
+    expect(find.text("You're on the latest version"), findsNothing);
+
+    // The retry action runs the check again instead of staying disabled.
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle();
+    expect(find.text('Could not check for updates'), findsWidgets);
   });
 }

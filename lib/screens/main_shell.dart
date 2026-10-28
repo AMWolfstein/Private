@@ -101,9 +101,15 @@ class _MainShellState extends ConsumerState<MainShell>
     // The check runs even when the user disabled update prompts: versions
     // that fall forceUpdateThreshold stable releases behind must update, and
     // that enforcement cannot be opted out of.
-    final updateInfo = await UpdateChecker().checkForUpdate(
-      channel: settings.updateChannel,
-    );
+    final UpdateInfo? updateInfo;
+    try {
+      updateInfo = await UpdateChecker().checkForUpdate(
+        channel: settings.updateChannel,
+      );
+    } on UpdateCheckException {
+      // A background check that cannot reach the release list is silent.
+      return;
+    }
     if (updateInfo == null || !mounted) return;
 
     final forced =
