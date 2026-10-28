@@ -354,9 +354,9 @@
     "semantic_hash": ""
   },
   "lib/screens/main_shell.dart": {
-    "mtime": 1793205838.7965858,
-    "seen": 1793209372.9114258,
-    "ast_hash": "33a6a8b3bbcc9fd7eb04259a694875aa",
+    "mtime": 1793210263.4850175,
+    "seen": 1793210946.4066534,
+    "ast_hash": "0eabb358fb04981868a108d51db942a0",
     "semantic_hash": ""
   },
   "lib/screens/now_playing_screen.dart": {
@@ -5916,9 +5916,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793209387.068654,
-    "seen": 1793210202.5878577,
-    "ast_hash": "53dde4e61ae59cba5d0dcecf74bf33a1",
+    "mtime": 1793210209.470256,
+    "seen": 1793210946.4139466,
+    "ast_hash": "36f97f489454d8fe81152db4a8763945",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -8454,9 +8454,9 @@
     "semantic_hash": ""
   },
   "lib/services/update_checker.dart": {
-    "mtime": 1793205838.815586,
-    "seen": 1793209372.9120708,
-    "ast_hash": "7ee367e7e507df0782f482d313a1a7f5",
+    "mtime": 1793210369.1235065,
+    "seen": 1793210946.407393,
+    "ast_hash": "b3659d5f6f328fa0f552fb8b3c46a23d",
     "semantic_hash": ""
   },
   "lib/widgets/update_dialog.dart": {
@@ -8472,9 +8472,9 @@
     "semantic_hash": ""
   },
   "test/update_checker_test.dart": {
-    "mtime": 1793205838.8615868,
-    "seen": 1793209372.9173849,
-    "ast_hash": "03d38b761811d5b7af2e45f2b5f79c4e",
+    "mtime": 1793210271.4851303,
+    "seen": 1793210946.4134362,
+    "ast_hash": "d7dfd13387f5b9b34c41ed56ac6f1ea1",
     "semantic_hash": ""
   },
   "test/update_dialog_test.dart": {
@@ -8484,15 +8484,15 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/updates_page.dart": {
-    "mtime": 1793205838.8035858,
-    "seen": 1793209372.9115665,
-    "ast_hash": "9271755f4338504c389751984de9f059",
+    "mtime": 1793210359.5333712,
+    "seen": 1793210946.4068165,
+    "ast_hash": "0cfa134a962f3be3b33aee53d75cddc8",
     "semantic_hash": ""
   },
   "test/updates_page_test.dart": {
-    "mtime": 1793205838.8625867,
-    "seen": 1793209372.917398,
-    "ast_hash": "86eda8876692ff5dc46452839d812eab",
+    "mtime": 1793210366.4904695,
+    "seen": 1793210946.4134495,
+    "ast_hash": "7d77123fa338653d455d0f7bdb73935f",
     "semantic_hash": ""
   },
   "lib/services/embedded_cover_resolver.dart": {
