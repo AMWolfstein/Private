@@ -52,7 +52,9 @@ and its seven parts moved to `lib/screens/library/`, HomeTab and its two parts t
 directory split into `lib/services/library/` (database/query/schema helpers), `lib/services/playback/` (player, session and AutoMix)
 and `lib/services/ffmpeg/` (FFmpeg operations), with shared infrastructure left at the root. Fifteenth: widgets split into
 `lib/widgets/audio_analysis/` (the analysis library and parts), `lib/widgets/player/` and `lib/widgets/glass/`, with shared app
-controls kept at the root. Analyze and the full `flutter test` pass.
+controls kept at the root. Sixteenth: the SQLite startup tests open a real database through `openAppDatabase` (FFI factory,
+temporary documents directory) and assert the PRAGMA values for fresh and existing schemas, while the trigram tests drive
+`createTrigramFtsIndex` through a recording executor instead of reading source text. Analyze and the full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
