@@ -32,7 +32,9 @@ up to date. Fourth: FFmpeg metadata writes throw `FFmpegMetadataFailure` with a 
 it (`MetadataSaveResult.failed(error)`) instead of dropping it. Fifth: small clarity fixes — profile-save rollback keeps the
 original failure, `saveMetadata` became `buildMetadataTags`, the full player lost its fixed-opacity fade wrapper, the
 storage-permission ternary collapsed, Loved toggling is inlined, and scan preparation no longer keeps the unused
-`resolvedPath` placeholder. Analyze and the full `flutter test` pass.
+`resolvedPath` placeholder. Sixth: full and incremental scans share `_finishScanSuccess` for the completion policy, and
+local-library preferences resolve `SharedPreferences` per operation instead of caching a failed first attempt. Analyze and the
+full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
