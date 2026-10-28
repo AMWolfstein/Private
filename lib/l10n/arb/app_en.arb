@@ -3535,5 +3535,25 @@
   "notifUpdateFailedBody": "Could not download update. Try again later.",
   "@notifUpdateFailedBody": {
     "description": "Notification body when app update download fails"
+  },
+  "settingsUpdates": "Updates",
+  "@settingsUpdates": {
+    "description": "Settings section - app updates"
+  },
+  "settingsUpdatesSubtitle": "Check for new versions",
+  "@settingsUpdatesSubtitle": {
+    "description": "Settings Updates row subtitle"
+  },
+  "updateCheckNow": "Check now",
+  "@updateCheckNow": {
+    "description": "Button that checks for an app update right away"
+  },
+  "updateChecking": "Checking…",
+  "@updateChecking": {
+    "description": "Shown while an update check runs"
+  },
+  "updateUpToDate": "You're on the latest version",
+  "@updateUpToDate": {
+    "description": "Snackbar when no newer release was found"
   }
 }

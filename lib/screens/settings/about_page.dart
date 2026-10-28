@@ -36,11 +36,6 @@ class _AboutPageState extends ConsumerState<AboutPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final updates = ref.watch(
-      settingsProvider.select(
-        (s) => (check: s.checkForUpdates, channel: s.updateChannel),
-      ),
-    );
     final developer = ref.watch(
       settingsProvider.select(
         (s) => (
@@ -86,41 +81,6 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                     showDivider: false,
                     onTap: _onVersionTap,
                   ),
-                ],
-              ),
-            ),
-
-            SliverToBoxAdapter(
-              child: SettingsSectionHeader(
-                title: context.l10n.optionsCheckUpdates,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  SettingsSwitchItem(
-                    key: const ValueKey('check-for-updates'),
-                    icon: Icons.system_update,
-                    title: context.l10n.optionsCheckUpdates,
-                    subtitle: context.l10n.optionsCheckUpdatesSubtitle,
-                    value: updates.check,
-                    showDivider: updates.check,
-                    onChanged: ref
-                        .read(settingsProvider.notifier)
-                        .setCheckForUpdates,
-                  ),
-                  if (updates.check)
-                    SettingsSwitchItem(
-                      key: const ValueKey('update-channel-preview'),
-                      icon: Icons.new_releases_outlined,
-                      title: context.l10n.optionsUpdateChannelPreview,
-                      subtitle: context.l10n.optionsUpdateChannelWarning,
-                      value: updates.channel == 'preview',
-                      showDivider: false,
-                      onChanged: (on) => ref
-                          .read(settingsProvider.notifier)
-                          .setUpdateChannel(on ? 'preview' : 'stable'),
-                    ),
                 ],
               ),
             ),

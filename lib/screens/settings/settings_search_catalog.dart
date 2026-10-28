@@ -414,6 +414,25 @@ class SettingsSearchCatalog {
           keywords: const ['delete logs'],
         ),
       ],
+      updates = [
+        SettingsSearchEntry(
+          icon: Icons.system_update,
+          title: l10n.updateCheckNow,
+          keywords: const ['update', 'new version', 'release'],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.notifications_active_outlined,
+          title: l10n.optionsCheckUpdates,
+          subtitle: l10n.optionsCheckUpdatesSubtitle,
+          keywords: const ['startup', 'prompt'],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.new_releases_outlined,
+          title: l10n.optionsUpdateChannelPreview,
+          subtitle: l10n.optionsUpdateChannelWarning,
+          keywords: const ['beta', 'channel', 'pre-release'],
+        ),
+      ],
       about = [
         SettingsSearchEntry(
           icon: Icons.info_outline,
@@ -429,5 +448,6 @@ class SettingsSearchCatalog {
   final List<SettingsSearchEntry> cache;
   final List<SettingsSearchEntry> backup;
   final List<SettingsSearchEntry> logs;
+  final List<SettingsSearchEntry> updates;
   final List<SettingsSearchEntry> about;
 }

@@ -2809,5 +2809,10 @@
   "notifUpdateReady": "Update Ready",
   "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
   "notifUpdateFailed": "Update Failed",
-  "notifUpdateFailedBody": "Could not download update. Try again later."
+  "notifUpdateFailedBody": "Could not download update. Try again later.",
+  "settingsUpdates": "التحديثات",
+  "settingsUpdatesSubtitle": "ابحث عن إصدارات جديدة",
+  "updateCheckNow": "تحقق الآن",
+  "updateChecking": "جارٍ التحقق…",
+  "updateUpToDate": "أنت على أحدث إصدار"
 }

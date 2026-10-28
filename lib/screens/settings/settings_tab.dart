@@ -8,6 +8,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/profile_settings_page.dart';
 import 'package:sistrum/screens/settings/about_page.dart';
+import 'package:sistrum/screens/settings/updates_page.dart';
 import 'package:sistrum/screens/settings/appearance_settings_page.dart';
 import 'package:sistrum/screens/settings/backup_restore_page.dart';
 import 'package:sistrum/screens/settings/cache_management_page.dart';
@@ -189,6 +190,15 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             pageBuilder: () => const LogScreen(),
           ),
           _Destination(
+            icon: Icons.system_update,
+            iconColor: Colors.green,
+            title: l10n.settingsUpdates,
+            subtitle: l10n.settingsUpdatesSubtitle,
+            keywords: const ['update', 'release', 'version', 'github', 'apk'],
+            searchEntries: searchCatalog.updates,
+            pageBuilder: () => const UpdatesPage(),
+          ),
+          _Destination(
             icon: Icons.info_outline,
             iconColor: Colors.grey,
             title: l10n.settingsAbout,
@@ -216,9 +226,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     final destination = targetLabel == null
         ? page
         : SettingsSearchHighlightScope(targetLabel: targetLabel, child: page);
-    await Navigator.of(
-      context,
-    ).push(slidePageRoute<void>(page: SistrumSettingsTheme(child: destination)));
+    await Navigator.of(context).push(
+      slidePageRoute<void>(page: SistrumSettingsTheme(child: destination)),
+    );
     if (!mounted) return;
 
     // A route's focus scope remembers its previously focused child. Keep the
