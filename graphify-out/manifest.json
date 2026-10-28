@@ -144,9 +144,9 @@
     "semantic_hash": ""
   },
   "lib/app.dart": {
-    "mtime": 1793144047.089764,
-    "seen": 1793144821.1616662,
-    "ast_hash": "082da21075b5c174c8c0fdcc142fa4ea",
+    "mtime": 1793182967.651113,
+    "seen": 1793183024.692701,
+    "ast_hash": "2fa8f01831af6d13ab7b1a01d46c507e",
     "semantic_hash": ""
   },
   "lib/constants/app_info.dart": {
@@ -5472,9 +5472,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793180407.998125,
-    "seen": 1793181553.8912194,
-    "ast_hash": "fe0b0bd84e9baaa4e01c585d26a55e5c",
+    "mtime": 1793181555.8309665,
+    "seen": 1793183024.695896,
+    "ast_hash": "314b2b07de6597106d3e50411eb33a21",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -6030,9 +6030,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793180408.0004852,
-    "seen": 1793181553.8912382,
-    "ast_hash": "493b5768d526a0b7b68e48a2f9300def",
+    "mtime": 1793181555.8325295,
+    "seen": 1793183024.695909,
+    "ast_hash": "cea9ba3f7a66c7fee080fe45b56f2332",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7758,9 +7758,9 @@
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt": {
-    "mtime": 1793144047.0100656,
-    "seen": 1793144821.1615186,
-    "ast_hash": "bcd479feb10b8691afb9d6cdadf01b85",
+    "mtime": 1793182967.648011,
+    "seen": 1793183024.69248,
+    "ast_hash": "a52f82f03da42ca7fe82ba7f4e39e37c",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt": {

@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-28)
 
 ## Corpus Check
-- 1357 files · ~1,453,368 words
+- 1357 files · ~1,453,333 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 125 file(s) not represented in the graph (top: .xml 39, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5ab10d41`
+- Built from commit: `3634df88`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -105,7 +105,7 @@
 - library_browse_provider.dart
 - darwin_usb.c
 - library_native_fixture.dart
-- mornye_chrome.dart
+- sistrum_chrome.dart
 - src/net/sockopt.rs
 - update_checker.dart
 - Pid
@@ -138,7 +138,7 @@
 - history_maintenance_test.dart
 - ConsumerState
 - SafFileOps
-- mornye_chrome.dart
+- sistrum_chrome.dart
 - .mapOf
 - sistrum_player_ground.dart
 - library_collections_hydration.dart
@@ -152,7 +152,7 @@
 - library_collections.dart
 - library_collections_mutation_test.dart
 - sistrum_floating_header.dart
-- mornye_glass_auto_probe.dart
+- sistrum_glass_auto_probe.dart
 - app.dart
 - fd.rs
 - settings_group.dart
@@ -341,7 +341,7 @@
 - flutter
 - backend/library.rs
 - data_jobs.rs
-- mornye_landscape_player.dart
+- sistrum_landscape_player.dart
 - mips32r6.rs
 - sistrum_player_background.dart
 - &str
@@ -484,7 +484,7 @@
 - Verification log
 - libusb.sln
 - RemoteSafPlaybackTest
-- SpotiFLAC Mobile
+- Sistrum
 - benches/mod.rs
 - now_playing_lyrics_transition_test.dart
 - Android dead-code review (N1)
@@ -514,7 +514,7 @@
 - Native metadata/parser allocation and I/O (N2)
 - Collection hydration and backup memory (D2)
 - caller_yield_probe.dart
-- spotiflac_android Package
+- sistrum Package
 - CustomPainter
 - execute
 - duplicate_quality_policy.dart
@@ -565,7 +565,7 @@
 - Repository dead-code inventory reconciliation (R4)
 - MembarrierCommand
 - C++/JNI and Java registration supplement (N4)
-- spotiflac_audio Native Library
+- sistrum_audio Native Library
 - API compatibility audit — transport chunk
 - Concurrency audit — non-engine native-job lifecycle
 - Security audit — channel/file trust boundaries
@@ -630,7 +630,7 @@
 - LibraryCollectionsDatabase
 - timespec
 - AudioAnalysisCard
-- SpotiFLAC Download Waveform App Logo
+- Sistrum Waveform App Logo
 - linux_raw/fs/mod.rs
 - TimerfdClockId
 - opencode.json
@@ -733,11 +733,11 @@
 - 2-file cycle: `rust_backend/vendor/rustix-1.1.5/src/ioctl/mod.rs -> rust_backend/vendor/rustix-1.1.5/src/ioctl/patterns.rs -> rust_backend/vendor/rustix-1.1.5/src/ioctl/mod.rs`
 
 ## Hyperedges (group relationships)
-- **spotiflac_audio native build with Oboe and WavPack** — android_app_src_main_cpp_cmakelists_spotiflac_audio, android_app_src_main_cpp_cmakelists_oboe_dep, android_app_src_main_cpp_cmakelists_wavpack_dep [EXTRACTED 1.00]
+- **sistrum_audio native build with Oboe and WavPack** — android_app_src_main_cpp_cmakelists_sistrum_audio, android_app_src_main_cpp_cmakelists_oboe_dep, android_app_src_main_cpp_cmakelists_wavpack_dep [EXTRACTED 1.00]
 - **Direct USB audio feature group** — rust_backend_crates_mobile_src_usb_audio_readme_direct_usb_audio, rust_backend_crates_mobile_src_usb_audio_readme_hardware_volume, rust_backend_crates_mobile_src_usb_audio_readme_dsd_transport [EXTRACTED 1.00]
 - **xhdpi Media Notification Control Set** — third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_play_arrow_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_pause_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_stop_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_skip_next_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_skip_previous_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_fast_forward_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_audio_service_fast_rewind_image, third_party_audio_service_android_src_main_res_drawable_xhdpi_media_notification_control_set_concept [EXTRACTED 1.00]
 - **xxxhdpi Media Notification Controls Participate In Control Set** — third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_play_arrow_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_pause_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_stop_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_skip_next_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_skip_previous_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_fast_forward_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_audio_service_fast_rewind_image, third_party_audio_service_android_src_main_res_drawable_xxxhdpi_media_notification_control_set_concept [EXTRACTED 1.00]
-- **Flutter UI plus Rust backend plus platform bridges** — readme_flutter_ui, readme_rust_backend, readme_platform_bridges, pubspec_spotiflac_android [INFERRED 0.85]
+- **Flutter UI plus Rust backend plus platform bridges** — readme_flutter_ui, readme_rust_backend, readme_platform_bridges, pubspec_sistrum [INFERRED 0.85]
 - **Decentralized extension ecosystem** — readme_extension_system, readme_extension_repository, contributing_extension_driven_design, changelog_extension_runtime [INFERRED 0.85]
 - **Instrumentation APK synthetic fixture testing** — android_app_src_androidtest_assets_readme_dsd_pattern_wv, android_app_src_androidtest_assets_readme_motion_artwork, android_app_src_main_cpp_cmakelists_wavpack_dep [INFERRED 0.85]
 - **Mdpi media notification controls set** — third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_fast_forward_fast_forward, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_fast_rewind_fast_rewind, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_pause_pause, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_play_arrow_play, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_skip_next_skip_next, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_skip_previous_skip_previous, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_stop_stop, third_party_audio_service_android_src_main_res_drawable_mdpi_audio_service_play_arrow_media_notification_controls_mdpi_set [INFERRED 0.85]
@@ -1107,7 +1107,7 @@ Nodes (75): cancel_control_transfer(), check_alt_setting_and_clear_halt(), darwi
 Cohesion: 0.05
 Nodes (36): durationRanges, groups, identities, pathsByIsrc, readIsrcDuplicateGroups, rows, unsafeGroups, validIsrc (+28 more)
 
-### Community 90 - "mornye_chrome.dart"
+### Community 90 - "sistrum_chrome.dart"
 Cohesion: 0.19
 Nodes (8): fcntl_getpipe_size(), fcntl_setpipe_size(), pipe(), PIPE_BUF, pipe_with(), splice(), tee(), vmsplice()
 
@@ -1239,7 +1239,7 @@ Nodes (7): AudioOutputActivity, nativePlaybackCall(), Permission, UsbDirectPlayb
 Cohesion: 0.13
 Nodes (6): SafDocumentLookupTest, findSafCueAudioSibling(), findSafChild(), findSafChildren(), querySafChildren(), querySafDocumentStat()
 
-### Community 123 - "mornye_chrome.dart"
+### Community 123 - "sistrum_chrome.dart"
 Cohesion: 0.22
 Nodes (7): io_uring_restriction, IoringRestrictionOp, RegisterOp, SqeFlagsAllowed, SqeFlagsRequired, SqeOp, register_or_sqe_op_or_sqe_flags_union
 
@@ -1295,7 +1295,7 @@ Nodes (38): LibraryCollectionsSnapshot, LibraryPlaylistTracksSnapshot, artists, 
 Cohesion: 0.03
 Nodes (109): kLegacyForceBackdropBlurKey, kLegacyGlassClarityKey, kPreviousGlassClarityKey, level, mapLegacyGlassPreferences, SistrumGlassQuality, sistrumGlassQualityFromString, value (+101 more)
 
-### Community 137 - "mornye_glass_auto_probe.dart"
+### Community 137 - "sistrum_glass_auto_probe.dart"
 Cohesion: 0.16
 Nodes (16): color(), COLORS, Cube, DartRandom, distance(), index(), lab(), MAX_PIXELS (+8 more)
 
@@ -2011,7 +2011,7 @@ Nodes (19): bitDepth, bitrate, delays, explicit, extras, fallbackFormat, format,
 Cohesion: 0.44
 Nodes (7): execute(), LocalBackend, NativeDataJobError, Operation, run(), run_native_data_job(), string()
 
-### Community 327 - "mornye_landscape_player.dart"
+### Community 327 - "sistrum_landscape_player.dart"
 Cohesion: 0.08
 Nodes (25): _actionsVisible, artwork, _audioOutputOpen, build, child, controls, controlsHeldOpen, controlsVisible (+17 more)
 
@@ -2377,7 +2377,7 @@ Nodes (5): DsdDecoder, channels, context, rate, samples
 
 ### Community 454 - "audio_service 0.18.19 vendored package"
 Cohesion: 0.25
-Nodes (8): Android RemoteViews home widget with per-widget preferences, App Group shared storage player.json and thumbnails group.com.zarz.spotiflac, iOS WidgetKit with AudioPlaybackIntent and headless Flutter engine, PlayerWidgetService presentation channel sharing playback queue, audio_service 0.18.19 vendored package, AudioHandler background audio abstraction with MediaItem and PlaybackState, audioplayers_android 5.3.0 vendored package, Endorsed Android implementation of audioplayers
+Nodes (8): Android RemoteViews home widget with per-widget preferences, App Group shared storage player.json and thumbnails group.com.amwolfstein.sistrum, iOS WidgetKit with AudioPlaybackIntent and headless Flutter engine, PlayerWidgetService presentation channel sharing playback queue, audio_service 0.18.19 vendored package, AudioHandler background audio abstraction with MediaItem and PlaybackState, audioplayers_android 5.3.0 vendored package, Endorsed Android implementation of audioplayers
 
 ### Community 455 - "vdso.rs"
 Cohesion: 0.23
@@ -2427,7 +2427,7 @@ Nodes (23): 1. Target architecture (what remains), 2. Original findings (depende
 Cohesion: 0.12
 Nodes (15): dpfp, dpfp_threaded, fxload, getopt, hotplugtest, init_context, libusb_dll, libusb_static (+7 more)
 
-### Community 472 - "SpotiFLAC Mobile"
+### Community 472 - "Sistrum"
 Cohesion: 0.13
 Nodes (13): Extension Runtime, Extension Sandbox Security, Enforcement Guidelines, Development Setup, Project Boundaries, Pinned Toolchain, Decentralized Extension Repository, Extension System (+5 more)
 
@@ -2539,9 +2539,9 @@ Nodes (6): Collection hydration and backup memory (D2), Findings, PERF-006 [P2] 
 Cohesion: 0.33
 Nodes (5): completed, observed, pending, probe, value
 
-### Community 515 - "spotiflac_android Package"
+### Community 515 - "sistrum Package"
 Cohesion: 0.22
-Nodes (9): Resilient Backup Format, Audio Playback Stack, dart_smb2 SMB Client, FFmpeg Audio Conversion, flutter_riverpod State Management, go_router Navigation, Localization Stack, spotiflac_android Package (+1 more)
+Nodes (9): Resilient Backup Format, Audio Playback Stack, dart_smb2 SMB Client, FFmpeg Audio Conversion, flutter_riverpod State Management, go_router Navigation, Localization Stack, sistrum Package (+1 more)
 
 ### Community 520 - "CustomPainter"
 Cohesion: 0.20
@@ -2691,9 +2691,9 @@ Nodes (10): MembarrierCommand, Global, GlobalExpedited, PrivateExpedited, Privat
 Cohesion: 0.40
 Nodes (4): C++/JNI and Java registration supplement (N4), Findings, Scope, Verification / limits
 
-### Community 577 - "spotiflac_audio Native Library"
+### Community 577 - "sistrum_audio Native Library"
 Cohesion: 0.29
-Nodes (8): Synthetic DSD Fixture dsd-pattern.wv (WavPack 5.9.0), Synthetic Motion Artwork Fixtures (FFmpeg testsrc2 MP4), Oboe 1.11.0 Dependency, spotiflac_audio Native Library, WavPack 5.9.0 Dependency, Oboe (Apache-2.0), USB Direct Audio Dependencies (MIT libusb1-sys, LGPL-2.1 libusb), WavPack (BSD-3-Clause-like)
+Nodes (8): Synthetic DSD Fixture dsd-pattern.wv (WavPack 5.9.0), Synthetic Motion Artwork Fixtures (FFmpeg testsrc2 MP4), Oboe 1.11.0 Dependency, sistrum_audio Native Library, WavPack 5.9.0 Dependency, Oboe (Apache-2.0), USB Direct Audio Dependencies (MIT libusb1-sys, LGPL-2.1 libusb), WavPack (BSD-3-Clause-like)
 
 ### Community 578 - "API compatibility audit — transport chunk"
 Cohesion: 0.40
@@ -2855,9 +2855,9 @@ Nodes (4): cstr!, macro_hygiene(), test_invalid_cstr(), test_invalid_empty_cstr(
 Cohesion: 0.33
 Nodes (4): cached, empty, fallback, main
 
-### Community 668 - "SpotiFLAC Download Waveform App Logo"
+### Community 668 - "Sistrum Waveform App Logo"
 Cohesion: 1.00
-Nodes (3): SpotiFLAC Download Waveform App Logo, App Logo Asset (logo.png), Transparent Logo Asset (logo-transparent.png)
+Nodes (3): Sistrum Waveform App Logo, App Logo Asset (logo.png), Transparent Logo Asset (logo-transparent.png)
 
 ### Community 672 - "TimerfdClockId"
 Cohesion: 0.33
@@ -2970,7 +2970,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `linux_raw/c.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.031746031746031744 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `file`, `library_fast_scroller.dart`, `Cpuid`, `music_playback_deck.dart`, `ConsumerState`, `ValueStream`, `playback_feedback.dart`, `MediaItemCopyWith`, `package:flutter/cupertino.dart`, `package:flutter_test/flutter_test.dart`, `Widget`, `music_player_runtime_test.dart`, `static final`, `player_widget_service.dart`, `library_cleanup.dart`, `AudioServicePlugin.java`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `app_alert_dialog.dart`, `PlaybackStateCopyWith`, `Future`, `playback_automation.dart`, `package:flutter/material.dart`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `_RatingMessageExtension`, `now_playing_lyrics_transition_test.dart`, `update_checker.dart`, `string`, `AudioService`, `List`, `package:flutter/material.dart`, `sistrum_glass_auto_probe.dart`, `package:flutter/foundation.dart`, `Database`, `shell_navigation_service.dart`, `AndroidPlaybackInfo`, `library_collections_hydration.dart`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.030303030303030304 - nodes in this community are weakly interconnected._
 - **Why does `Resolved` connect `Resolved` to `file`, `Tasks`, `SafScanPolicyTest`, `AudioService`, `MainActivitySafIo.kt`, `android.content.Context`, `.error`, `Progress`, `UsbPcmPlayback`, `.configureFlutterEngine`, `libusb_iso_packet_descriptor`, `json`, `android.os.Bundle`, `&[u8]`, `native_backup/tests.rs`, `MainActivitySafScan.kt`?**
