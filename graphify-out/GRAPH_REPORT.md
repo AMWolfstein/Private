@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-28)
 
 ## Corpus Check
-- 1353 files · ~1,129,631 words
+- 1353 files · ~1,129,590 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 125 file(s) not represented in the graph (top: .xml 39, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9258bfec`
+- Built from commit: `7d4edb00`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3088,7 +3088,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `IoringOp` be split into smaller, more focused modules?**
   _Cohesion score 0.03333333333333333 - nodes in this community are weakly interconnected._
 - **Why does `BorrowedFd` connect `BorrowedFd` to `linux_raw/io/syscalls.rs`, `c`, `PollFd<'fd>`, `libc/net/sockopt.rs`, `ret`, `ret`, `at.rs`, `linux_raw/net/read_sockaddr.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `SendAncillaryMessage`, `Uid`, `libc/process/syscalls.rs`, `copyfile_state_t`, `QueueSelector`, `net/types.rs`, `linux_raw/mm/syscalls.rs`, `.from`, `Opcode`, `Backend`, `setsockopt`, `XdpUmemReg`, `Ipv4PathMtuDiscovery`, `libc/mod.rs`, `Ipv6PathMtuDiscovery`, `libc/io_uring/syscalls.rs`, `linux_raw/termios/syscalls.rs`, `Ipv4Addr`, `Timespec`, `OwnedFd`, `PollFd<'fd>`, `Action`, `to_ipv6mr`, `linux_raw/net/syscalls.rs`, `setns.rs`, `SocketAddrAny`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Should `audio_info_sheet.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.030303030303030304 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `Duration`, `int get`, `file`, `music_playback_deck.dart`, `_`, `package:flutter_riverpod/flutter_riverpod.dart`, `ValueStream`, `app_info.dart`, `MediaItemCopyWith`, `static const`, `now_playing_lyrics_transition_test.dart`, `playback_feedback.dart`, `string`, `Object?`, `static final`, `package:flutter_test/flutter_test.dart`, `map`, `_AndroidVolumeDirectionMessageExtension`, `_HandlerCallbacks`, `music_player_provider.dart`, `PlaybackStateCopyWith`, `Future`, `playback_automation.dart`, `library_search_results.dart`, `@Deprecated`, `_MediaButtonMessageExtension`, `_MediaItemMessageExtension`, `AudioService`, `_RatingMessageExtension`, `Widget`, `AudioHandler`, `now_playing_screen.dart`, `AudioService`, `package:flutter/material.dart`, `system_volume_service.dart`, `List`, `shell_navigation_service.dart`, `system.rs`, `AndroidPlaybackInfo`, `library_collections_hydration.dart`?**
