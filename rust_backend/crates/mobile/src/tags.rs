@@ -1,7 +1,6 @@
 use crate::cancellation::RequestLease;
 use crate::local::{LocalBackend, LocalBackendError};
 use sistrum_core::tags;
-use std::collections::BTreeMap;
 use std::fs::{File, OpenOptions};
 use std::sync::Arc;
 
@@ -212,35 +211,6 @@ impl LocalBackend {
             .map(|result| result.to_string())
             .map_err(LocalBackendError::Operation)
     }
-
-    pub fn write_m4a_freeform_tags(
-        &self,
-        path: String,
-        metadata_json: String,
-        lease: Option<Arc<RequestLease>>,
-    ) -> Result<String, LocalBackendError> {
-        let check = || check_lease(lease.as_deref());
-        check().map_err(LocalBackendError::Operation)?;
-        let fields = decode_fields(&metadata_json).map_err(|error| {
-            LocalBackendError::Operation(format!("invalid metadata JSON: {error}"))
-        })?;
-        self.inner
-            .edit_m4a_freeform(&path, &fields, false, &check)
-            .map_err(|error| {
-                LocalBackendError::Operation(format!("failed to write M4A freeform tags: {error}"))
-            })?;
-        Ok(r#"{"success":true,"method":"native_m4a_freeform"}"#.into())
-    }
-}
-
-fn decode_fields(json: &str) -> Result<BTreeMap<String, String>, String> {
-    let fields: Option<BTreeMap<String, Option<String>>> =
-        serde_json::from_str(json).map_err(|error| error.to_string())?;
-    Ok(fields
-        .unwrap_or_default()
-        .into_iter()
-        .map(|(key, value)| (key, value.unwrap_or_default()))
-        .collect())
 }
 
 /// Complete application metadata. An empty hint is equivalent to the legacy

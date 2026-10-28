@@ -59,9 +59,7 @@ fn execute(
     let operation = string(request, "operation")?;
     match operation {
         "build_m3u" => crate::native_playlists::execute(request, Some(bytes), check),
-        "write_id3v23_lyrics" | "build_metadata_picture" => {
-            crate::native_id3::execute(request, Some(bytes), check)
-        }
+        "build_metadata_picture" => crate::native_id3::execute(request, Some(bytes), check),
         "parse_lyrics" => crate::native_lyrics::execute(request, Some(bytes), check),
         "palette" => {
             let colors = sistrum_core::native_palette::quantize_rgba(bytes, check)?;
