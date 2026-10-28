@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "lib/providers/local_library_provider.dart": {
-    "mtime": 1793211676.256431,
-    "seen": 1793212316.6548598,
-    "ast_hash": "f270425010ac63a2ac7df359dcb0f143",
+    "mtime": 1793212399.6208267,
+    "seen": 1793212923.7988923,
+    "ast_hash": "ab62f4c53fa3af68ff0c0120a40ef9d3",
     "semantic_hash": ""
   },
   "lib/providers/music_player_provider.dart": {
@@ -5916,9 +5916,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793211602.8969204,
-    "seen": 1793212316.662773,
-    "ast_hash": "392f67a42b521e4185a1cf0699d83a42",
+    "mtime": 1793212329.23919,
+    "seen": 1793212923.806362,
+    "ast_hash": "88c334ca477afa7c08c3d3757fd0bd69",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
