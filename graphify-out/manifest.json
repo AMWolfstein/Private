@@ -4692,9 +4692,9 @@
     "semantic_hash": ""
   },
   "test/sqlite_helpers_test.dart": {
-    "mtime": 1793139527.4053562,
-    "seen": 1793209372.9172566,
-    "ast_hash": "f3caac11f37baca8a21860dda976774e",
+    "mtime": 1793224160.6784024,
+    "seen": 1793224752.692214,
+    "ast_hash": "1605d273cba7fed6e40c61412da90395",
     "semantic_hash": ""
   },
   "test/sqlite_native_snapshot_test.dart": {
@@ -5094,9 +5094,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1793205838.8285863,
-    "seen": 1793209372.9129293,
-    "ast_hash": "78559e45026d0141966ce52bb9f9bd79",
+    "mtime": 1793224072.5328996,
+    "seen": 1793224752.6890845,
+    "ast_hash": "59518f6f64bbeb9fe510aec12d9a2378",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -5544,9 +5544,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793223466.146204,
-    "seen": 1793224003.7108207,
-    "ast_hash": "445d65957d1be5e93a40d1060b91306b",
+    "mtime": 1793224009.8270004,
+    "seen": 1793224752.6926615,
+    "ast_hash": "a2ec18f65701e233f3cf7c740719231c",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -8589,6 +8589,12 @@
     "mtime": 1793223486.9915848,
     "seen": 1793224003.705218,
     "ast_hash": "315019f39cf7e5e2098e9dfb4b32fd0a",
+    "semantic_hash": ""
+  },
+  "test/sqlite_fts5_probe_test.dart": {
+    "mtime": 1793224180.2486563,
+    "seen": 1793224752.6922095,
+    "ast_hash": "c9bbb07f711deb556e05a62000b5d7e0",
     "semantic_hash": ""
   }
 }
