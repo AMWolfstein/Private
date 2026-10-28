@@ -2450,6 +2450,8 @@
   "autoplayPersonalization": "Reproducción automática personalizada",
   "autoplayPersonalizationDescription": "Aprende de las canciones que escuchas y saltas, de forma privada en este dispositivo. Al desactivarlo se deja de aprender y vuelve la reproducción automática normal.",
   "autoplayResetLearning": "Restablecer el aprendizaje de recomendaciones",
+  "autoplayResetLearningConfirmTitle": "Restablecer el aprendizaje de recomendaciones?",
+  "autoplayResetLearningConfirm": "Restablecer",
   "profileTitle": "Perfil",
   "profileSetUp": "Configura tu perfil",
   "profileEdit": "Editar nombre y foto",

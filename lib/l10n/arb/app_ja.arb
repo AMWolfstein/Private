@@ -46,7 +46,7 @@
   "appearanceGlassOutlinesSubtitle": "Sistrum のガラスの周りに薄い縁を表示します。オフにしてもガラス自体は変わりません。",
   "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassClear": "消去",
   "appearanceGlassClearPerformance": "透明度を高いガラスは、古い端末では消費電力が増え、動きがなめらかでなく感じられることがあります。必要に応じて透明度を下げてください。",
   "appearanceGlassQuality": "ガラスの品質",
   "appearanceGlassQualityAuto": "自動",
@@ -334,7 +334,7 @@
   "@setupLanguageDescription": {
     "description": "Description for the language selection step in setup"
   },
-  "setupLanguageSystemDefault": "System Default",
+  "setupLanguageSystemDefault": "システムのデフォルト",
   "@setupLanguageSystemDefault": {
     "description": "Option to use the system language"
   },
@@ -807,7 +807,7 @@
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
-  "librarySourceDisabled": "Disabled",
+  "librarySourceDisabled": "無効",
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
@@ -1074,7 +1074,7 @@
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
   },
-  "libraryFilterMetadata": "Metadata",
+  "libraryFilterMetadata": "メタデータ",
   "@libraryFilterMetadata": {
     "description": "Filter section - metadata completeness"
   },
@@ -1327,7 +1327,7 @@
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "プレイリスト",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
@@ -1343,7 +1343,7 @@
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
-  "collectionPlaylistTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "collectionPlaylistTracks": "{count, plural, =1{1 個のトラック} other{{count} 個のトラック}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
     "placeholders": {
@@ -1597,7 +1597,7 @@
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
-  "snackbarError": "Error: {error}",
+  "snackbarError": "エラー: {error}",
   "@snackbarError": {
     "description": "Generic error snackbar with error detail",
     "placeholders": {
@@ -1622,11 +1622,11 @@
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
-  "editMetadataFieldArtist": "Artist",
+  "editMetadataFieldArtist": "アーティスト",
   "@editMetadataFieldArtist": {
     "description": "Chip label for artist field in auto-fill selector"
   },
-  "editMetadataFieldAlbum": "Album",
+  "editMetadataFieldAlbum": "アルバム",
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
@@ -1638,7 +1638,7 @@
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
-  "editMetadataFieldTrackNum": "Track #",
+  "editMetadataFieldTrackNum": "トラック #",
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
@@ -1646,7 +1646,7 @@
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
-  "editMetadataFieldGenre": "Genre",
+  "editMetadataFieldGenre": "ジャンル",
   "@editMetadataFieldGenre": {
     "description": "Chip label for genre field in auto-fill selector"
   },
@@ -1654,11 +1654,11 @@
   "@editMetadataFieldIsrc": {
     "description": "Chip label for ISRC field in auto-fill selector"
   },
-  "editMetadataFieldLabel": "Label",
+  "editMetadataFieldLabel": "レーベル",
   "@editMetadataFieldLabel": {
     "description": "Chip label for label field in auto-fill selector"
   },
-  "editMetadataFieldCopyright": "Copyright",
+  "editMetadataFieldCopyright": "著作権",
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
@@ -1670,7 +1670,7 @@
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
-  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "queueTrackCount": "{count, plural, =1{1 個のトラック} other{{count} 個のトラック}}",
   "@queueTrackCount": {
     "description": "Track count label with plural support",
     "placeholders": {
@@ -1679,7 +1679,7 @@
       }
     }
   },
-  "queueAlbumCount": "{count, plural, =1{1 album} other{{count} albums}}",
+  "queueAlbumCount": "{count, plural, =1{1 個のアルバム} other{{count} 個のアルバム}}",
   "@queueAlbumCount": {
     "description": "Album count label with plural support",
     "placeholders": {
@@ -1755,7 +1755,7 @@
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
-  "audioAnalysisDuration": "Duration",
+  "audioAnalysisDuration": "再生時間",
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
@@ -2027,7 +2027,7 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "歌詞",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
@@ -2162,7 +2162,7 @@
       }
     }
   },
-  "selectionDeleteTracksCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "selectionDeleteTracksCount": "{count} {count, plural, =1{個のトラック} other{個のトラック}}を削除",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
     "placeholders": {
@@ -2201,11 +2201,11 @@
   "a11yPlaybackPosition": "再生位置",
   "a11ySavingTrackDetails": "曲の詳細を保存しています",
   "cacheClearFor": "{target} を消去",
-  "logIssueSummary": "Issue Summary",
+  "logIssueSummary": "問題の概要",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"
   },
-  "logTotalErrors": "Total errors: {count}",
+  "logTotalErrors": "エラーの合計: {count}",
   "@logTotalErrors": {
     "description": "Total error count in log issue analysis",
     "placeholders": {
@@ -2238,11 +2238,11 @@
   "@permissionAudio": {
     "description": "Audio permission type label"
   },
-  "permissionStorage": "Storage",
+  "permissionStorage": "ストレージ",
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "通知",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
@@ -2335,7 +2335,7 @@
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "歌詞",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
@@ -2450,6 +2450,7 @@
   "autoplayPersonalization": "パーソナライズされた自動再生",
   "autoplayPersonalizationDescription": "聴いた曲やスキップした曲から、この端末内だけで学習します。オフにすると学習は止まり、通常の自動再生に戻ります。",
   "autoplayResetLearning": "おすすめの学習をリセット",
+  "autoplayResetLearningConfirm": "リセット",
   "profileTitle": "Profile",
   "profileSetUp": "Set up your profile",
   "profileEdit": "Edit name and photo",

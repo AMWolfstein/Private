@@ -2450,6 +2450,7 @@
   "autoplayPersonalization": "Lecture automatique personnalisée",
   "autoplayPersonalizationDescription": "Apprend des titres que vous écoutez et passez, en privé sur cet appareil. Désactiver cette option arrête l'apprentissage et rétablit la lecture automatique classique.",
   "autoplayResetLearning": "Réinitialiser l'apprentissage des recommandations",
+  "autoplayResetLearningConfirm": "Réinitialiser",
   "profileTitle": "Profil",
   "profileSetUp": "Configurez votre profil",
   "profileEdit": "Modifier le nom et la photo",

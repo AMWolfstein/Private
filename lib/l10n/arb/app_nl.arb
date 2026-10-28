@@ -4,20 +4,20 @@
   "appearancePlayerView": "Spelerweergave",
   "appearancePlayerViewNormal": "Normale weergave",
   "appearancePlayerViewImmersive": "Meeslepende weergave",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
-  "sectionAudioOutput": "Audio output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
+  "settingsPlaybackSubtitle": "Speler, volume, automix en audio uitvoer",
+  "sectionVolumeAndTransitions": "Volume en overgangen",
+  "sectionAudioOutput": "Audio uitvoer",
+  "usbBitPerfect": "Hi-res en bit-perfecte audio",
+  "usbBitPerfectDescription": "Behoud de bron precisie op ondersteunde uitvoeren. Kies direct USB of AAudio hieronder; anders vereist Android USB uitvoer Android 14 of nieuwer. Van toepassing vanaf het volgende nummer, zonder automix of normalisatie. Systeem volume kan mogelijk geen directe USB aanpassen.",
   "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
+  "usbVolumeWarningTitle": "Controleer uw luistervolume",
   "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
-  "usbVolumeAccept": "I understand",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
+  "usbVolumeAccept": "Ik begrijp het",
+  "usbVolumeUnavailable": "Afspelen is gepauzeerd omdat deze DAC geen geverifieerde hardware volumeregeling heeft. Zet het volume van de DAC of amplifier zachter en schakel daarna fixed-volume uitvoer in als dat nodig is, en selecteer het nummer daarna opnieuw.",
+  "usbFixedVolume": "Sta fixed-volume USB uitvoer toe",
   "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
+  "usbFixedVolumeWarning": "De app kan het volume niet verlagen op deze uitvoer. Audio kan starten op het hoogste volume en de volumeregeling van uw telefoon zal niet helpen. Ga alleen verder na het verlagen van uw volume van uw DAC of externe amplifier. Zet dit niet aan voor een headset zonder eigen volumeregelaar.",
+  "dapExclusive": "DAP hi-res (alleen voor AAudio)",
   "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
   "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
   "usbDirect": "Direct USB driver",
@@ -1614,7 +1614,7 @@
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
-  "cacheRefresh": "Refresh",
+  "cacheRefresh": "Verversen",
   "@cacheRefresh": {
     "description": "Tooltip for refresh button on cache management page"
   },
@@ -2331,7 +2331,7 @@
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "Speler",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
@@ -2454,7 +2454,7 @@
   "profileSetUp": "Set up your profile",
   "profileEdit": "Edit name and photo",
   "backupIncludesProfile": "Includes your profile name and photo",
-  "profileName": "Name",
+  "profileName": "Naam",
   "profileNameHint": "Your name",
   "profileChangePhoto": "Choose photo",
   "profileRemovePhoto": "Remove photo",

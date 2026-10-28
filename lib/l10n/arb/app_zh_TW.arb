@@ -310,7 +310,7 @@
     "description": "Button to enable notifications"
   },
   "setupNotificationBackgroundDescription": "允許為本機掃描顯示播放控制與進度通知。",
-  "setupSkipForNow": "Skip for now",
+  "setupSkipForNow": "現在略過",
   "@setupSkipForNow": {
     "description": "Skip button text"
   },
@@ -346,7 +346,7 @@
   "@dialogSave": {
     "description": "Dialog button - save changes"
   },
-  "dialogDelete": "Delete",
+  "dialogDelete": "刪除",
   "@dialogDelete": {
     "description": "Dialog button - delete item"
   },
@@ -536,7 +536,7 @@
   "@searchArtists": {
     "description": "Search result category - artists"
   },
-  "searchAlbums": "Albums",
+  "searchAlbums": "專輯",
   "@searchAlbums": {
     "description": "Search result category - albums"
   },
@@ -572,7 +572,7 @@
   "@searchSortDateNewest": {
     "description": "Sort option - newest release first"
   },
-  "tooltipPlay": "Play",
+  "tooltipPlay": "播放",
   "@tooltipPlay": {
     "description": "Tooltip - play button"
   },
@@ -807,7 +807,7 @@
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
-  "librarySourceDisabled": "Disabled",
+  "librarySourceDisabled": "已停用",
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
@@ -1021,7 +1021,7 @@
   "@libraryCleared": {
     "description": "Snackbar after clearing library"
   },
-  "libraryStorageAccessRequired": "Storage Access Required",
+  "libraryStorageAccessRequired": "需要存取儲存裝置權限",
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
@@ -1029,7 +1029,7 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "libraryFilterAll": "All",
+  "libraryFilterAll": "全部",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },

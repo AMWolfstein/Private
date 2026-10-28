@@ -4,49 +4,49 @@
   "appearancePlayerView": "Oynatıcı görünümü",
   "appearancePlayerViewNormal": "Normal görünüm",
   "appearancePlayerViewImmersive": "Sürükleyici görünüm",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
-  "sectionAudioOutput": "Audio output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
-  "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
+  "settingsPlaybackSubtitle": "Oynatıcı, ses düzeyi, AutoMix ve ses çıkışı",
+  "sectionVolumeAndTransitions": "Ses düzeyi ve geçişler",
+  "sectionAudioOutput": "Ses çıkışı",
+  "usbBitPerfect": "Hi-Res ve bit-perfect ses",
+  "usbBitPerfectDescription": "Uyumlu çıkışlarda kaynağın hassasiyetini korur. Aşağıdan doğrudan USB veya AAudio özel modunu seçin; aksi halde Android USB çıkışı Android 14 veya üstünü gerektirir. AutoMix ve normalizasyon olmadan bir sonraki parçadan itibaren uygulanır. Sistem ses düzeyi doğrudan USB'yi kontrol etmeyebilir.",
+  "usbHardwareVolume": "DAC donanım ses düzeyi",
+  "usbVolumeWarningTitle": "Dinleme ses düzeyinizi kontrol edin",
   "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
-  "usbVolumeAccept": "I understand",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
+  "usbVolumeAccept": "Anladım",
+  "usbVolumeUnavailable": "Bu DAC'te doğrulanmış donanım ses kontrolü olmadığı için oynatma duraklatıldı. DAC veya amplifikatör sesini düşürün, gerekirse sabit ses düzeyli çıkışı etkinleştirin ve parçayı yeniden seçin.",
+  "usbFixedVolume": "Sabit ses düzeyli USB çıkışına izin ver",
+  "usbFixedVolumeDescription": "Uygulamanın erişebildiği ses kontrolü olmayan DAC'ler için. Kendi ses kontrolü olmayan USB kulaklıklarda kapalı bırakın. Bir sonraki parçadan itibaren uygulanır.",
+  "usbFixedVolumeWarning": "Uygulama bu çıkışın sesini düşüremez. Ses tam düzeyde başlayabilir ve telefonun ses kaydırıcısı işe yaramaz. Yalnızca DAC veya harici amplifikatörünüzde sesi düşürdükten sonra devam edin. Kendi ses kontrolü olmayan bir kulaklık için bunu etkinleştirmeyin.",
+  "dapExclusive": "DAP hi-res (AAudio özel)",
+  "dapExclusiveDescription": "FLAC/WAV PCM için parçanın orijinal hızında ve hassasiyetinde Oboe/AAudio kullanır. Android 8.1 veya üstü ve uyumlu donanım gerektirir. Özel erişim kontrol edilir; kullanılamayan formatlar normal oynatmayı kullanır. DSD, doğrudan USB sürücüsü gerektirir. Bir sonraki parçadan itibaren uygulanır.",
+  "dapExclusiveUnavailable": "Bu parça ve mevcut çıkış için AAudio özel erişimi kullanılamıyor. Normal oynatma kullanılıyor. USB DAC için doğrudan USB sürücüsünü deneyin.",
+  "usbDirect": "Doğrudan USB sürücüsü",
+  "usbDirectDescription": "Android USB izniyle FLAC/WAV, DSF/DFF ve WavPack DSD için özel USB sesi kullanır. Yerel DSD, tanınan uyumlu bir DAC gerektirir. Diğer PCM formatları normal oynatmayı kullanır. Bir sonraki parçadan itibaren uygulanır.",
   "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
+  "usbDsdOverPcmDescription": "Yalnızca DAC'iniz DoP'yi açıkça destekliyorsa etkinleştirin. Yerel DSD kullanılamadığında DSF/DFF ve WavPack DSD'yi bir PCM taşıyıcısı içinde gönderir. Uyumsuz bir cihaz gürültü çalabilir; sıradan USB kulaklıklar için kapalı bırakın.",
+  "usbDsdUnsupported": "Bu DSD formatı veya bağlı DAC desteklenmiyor. Oynatma durduruldu.",
+  "usbPermissionDenied": "USB izni verilmedi. Normal oynatma kullanılıyor.",
+  "usbBitPerfectPending": "Sonraki parça ve uyumlu bir USB çıkışı bekleniyor.",
+  "usbBitPerfectNoDevice": "Bağlı USB DAC yok. Normal ses çıkışı kullanılıyor.",
+  "usbBitPerfectFallback": "Bu cihaz veya ses formatı bit-perfect çıkışı desteklemiyor. Normal oynatma kullanılıyor.",
+  "usbBitPerfectRouteChanged": "USB ses yolu değişti. Oynatma duraklatıldı; yeniden bağlanmak için bir parça seçin.",
   "nowPlayingVolume": "Ses",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Red (default)",
+  "appearanceAccentRed": "Kırmızı (varsayılan)",
   "appearanceAccentOrange": "Turuncu",
   "appearanceAccentGreen": "Yeşil",
-  "appearanceAccentTeal": "Teal",
+  "appearanceAccentTeal": "Turkuaz",
   "appearanceAccentBlue": "Mavi",
   "appearanceAccentPurple": "Mor",
   "appearanceAccentPink": "Pembe",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceGlassClarity": "Cam netliği",
   "appearanceGlassOutlines": "Cam çerçeveleri",
   "appearanceGlassOutlinesSubtitle": "Sistrum camının etrafında hafif bir kenar göster. Kapatmak camın kendisini değiştirmez.",
   "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassTinted": "Renkli",
+  "appearanceGlassClear": "Şeffaf",
   "appearanceGlassClearPerformance": "Çok şeffaf cam daha fazla güç tüketebilir ve eski cihazlarda daha az akıcı hissettirebilir. Gerekirse netliği düşürün.",
   "appearanceGlassQuality": "Cam kalitesi",
   "appearanceGlassQualityAuto": "Otomatik",
@@ -65,7 +65,7 @@
   "appearanceGlassAutoMeasured": "Bu cihazda ölçüldü: Otomatik {quality} kullanır.",
   "appearanceGlassClarityAutoFrosted": "Otomatik bu cihazı ölçtü ve Buzlu kullanıyor. Netliği ayarlamak için Hafif veya Tam seçin.",
   "appearanceUseSystemFont": "Sistem yazı tipini kullan",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFontSubtitle": "Uygulama metinleri için cihazınızın varsayılan yazı tipini kullanın.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -92,12 +92,12 @@
   },
   "homeLatestReleases": "Kitaplığınızdaki Son Yayınlar",
   "artistPopular": "Popüler",
-  "libraryRecentlyAdded": "Recently Added",
-  "librarySearchHint": "Search your library",
+  "libraryRecentlyAdded": "Son eklenenler",
+  "librarySearchHint": "Kitaplığınızda ara",
   "homeLibraryDisabled": "Müziğinizi burada görmek için Yerel Kitaplık'ı etkinleştirin.",
   "homeChooseLibraryFolder": "Yerel Kitaplık ayarlarında bir müzik klasörü seçin.",
   "homeLibraryEmpty": "Müziğinizi kitaplık klasörlerinize ekleyin, ardından kitaplığınızı tarayın.",
-  "libraryEmptyCollection": "Your music will appear here",
+  "libraryEmptyCollection": "Müzikleriniz burada görünecek",
   "settingsTitle": "Ayarlar",
   "@settingsTitle": {
     "description": "Settings screen title"
@@ -126,9 +126,9 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "trackRemoveReplayGain": "ReplayGain'i kaldır",
+  "replayGainRemoving": "ReplayGain kaldırılıyor...",
+  "replayGainRemoveConfirmMessage": "{count} parçadan parça ve albüm ReplayGain etiketleri kaldırılsın mı? Ses, kapak resmi ve diğer meta veriler korunur.",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -136,7 +136,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "RG'yi kaldır ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -145,7 +145,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "{total} parçanın {success} tanesinden ReplayGain kaldırıldı",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -165,11 +165,11 @@
       }
     }
   },
-  "replayGainBatchConfirmTitle": "Add ReplayGain",
+  "replayGainBatchConfirmTitle": "ReplayGain ekle",
   "@replayGainBatchConfirmTitle": {
     "description": "Title of the batch ReplayGain confirmation dialog"
   },
-  "replayGainBatchConfirmMessage": "Analyze loudness and write ReplayGain tags to {count} track(s)?",
+  "replayGainBatchConfirmMessage": "Ses yüksekliği analiz edilsin ve {count} parçaya ReplayGain etiketleri yazılsın mı?",
   "@replayGainBatchConfirmMessage": {
     "description": "Message of the batch ReplayGain confirmation dialog",
     "placeholders": {
@@ -178,11 +178,11 @@
       }
     }
   },
-  "replayGainBatchAnalyzing": "Analyzing ReplayGain...",
+  "replayGainBatchAnalyzing": "ReplayGain analiz ediliyor...",
   "@replayGainBatchAnalyzing": {
     "description": "Progress dialog title while batch scanning ReplayGain"
   },
-  "replayGainBatchSuccess": "ReplayGain added to {success} of {total} tracks",
+  "replayGainBatchSuccess": "{total} parçanın {success} tanesine ReplayGain eklendi",
   "@replayGainBatchSuccess": {
     "description": "Snackbar after batch ReplayGain completes",
     "placeholders": {
@@ -194,7 +194,7 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "Bazı parçalar, ses kodekleri ReplayGain çözücüsü tarafından desteklenmediği için analiz edilemedi. Dosyaları değiştirilmedi.",
   "metadataSeparators": "Etiket ayırıcıları",
   "metadataSeparatorsDescription": "Düzenle ile etiketleri kaydettiğinizde virgül veya noktalı virgülle ayrılmış değerlerin nasıl birleştirileceğini seçin. Özel sanatçı ayırıcıları tek bir birleşik etiket yazar. & veya / içeren adlar korunur.",
   "metadataSeparatorSource": "Kaynak biçimini koru",
@@ -383,7 +383,7 @@
   "@collectionExportM3u": {
     "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
   },
-  "collectionExportM3uDone": "Exported {exported} of {total} tracks",
+  "collectionExportM3uDone": "{total} parçanın {exported} tanesi dışa aktarıldı",
   "@collectionExportM3uDone": {
     "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
     "placeholders": {
@@ -396,35 +396,35 @@
     }
   },
   "collectionExportM3uNone": "Dışa aktarılacak yerel ses dosyası yok",
-  "collectionExportM3uFailed": "Export failed",
+  "collectionExportM3uFailed": "Dışa aktarma başarısız oldu",
   "@collectionExportM3uFailed": {
     "description": "Snackbar when writing or sharing the M3U8 export fails"
   },
-  "libraryReviewDuplicates": "Review duplicates",
+  "libraryReviewDuplicates": "Yinelenenleri incele",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
   },
-  "libraryReviewDuplicatesSubtitle": "Find tracks stored more than once",
+  "libraryReviewDuplicatesSubtitle": "Birden fazla kez kayıtlı parçaları bul",
   "@libraryReviewDuplicatesSubtitle": {
     "description": "Subtitle for the duplicate review settings row"
   },
-  "duplicatesTitle": "Duplicates",
+  "duplicatesTitle": "Yinelenenler",
   "@duplicatesTitle": {
     "description": "Title of the duplicate review sheet"
   },
-  "duplicatesEmpty": "No duplicate tracks found.",
+  "duplicatesEmpty": "Yinelenen parça bulunamadı.",
   "@duplicatesEmpty": {
     "description": "Shown when the duplicate review sheet finds nothing"
   },
-  "duplicatesKeepBest": "Keep best",
+  "duplicatesKeepBest": "En iyisini sakla",
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "Tümü için en iyisini sakla",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "{groupCount} {groupCount, plural, =1{parça} other{parça}} için en iyi kopya saklanıp {count} düşük kaliteli {count, plural, =1{kopya} other{kopya}} silinsin mi?\n\nSilinen dosyalar depolamadan kaldırılacak.",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -436,7 +436,7 @@
       }
     }
   },
-  "duplicatesKeepBestMessage": "Delete {count} lower-quality copies of \"{trackName}\"?",
+  "duplicatesKeepBestMessage": "\"{trackName}\" parçasının {count} düşük kaliteli kopyası silinsin mi?",
   "@duplicatesKeepBestMessage": {
     "description": "Confirmation message for the keep-best action",
     "placeholders": {
@@ -448,7 +448,7 @@
       }
     }
   },
-  "duplicatesDeleteCopyMessage": "Delete this copy of \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "\"{trackName}\" parçasının bu kopyası silinsin mi?",
   "@duplicatesDeleteCopyMessage": {
     "description": "Confirmation message for deleting one duplicate copy",
     "placeholders": {
@@ -487,7 +487,7 @@
   "@errorRateLimitedMessage": {
     "description": "Error message - rate limit explanation"
   },
-  "searchEmptyResultSubtitle": "Try another keyword",
+  "searchEmptyResultSubtitle": "Başka bir anahtar kelime deneyin",
   "@searchEmptyResultSubtitle": {
     "description": "Subtitle shown under the empty search result state on the home screen"
   },
@@ -646,8 +646,8 @@
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "lyricsKeepScreenOn": "Şarkı sözlerini görüntülerken ekranı açık tut",
+  "lyricsKeepScreenOnSubtitle": "Oynatma duraklatılmış olsa bile şarkı sözleri açıkken ekranın kapanmasını önler.",
   "sectionColor": "Renk",
   "@sectionColor": {
     "description": "Settings section header"
@@ -711,11 +711,11 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Hero animations",
+  "appearanceHeroAnimations": "Hero animasyonları",
   "@appearanceHeroAnimations": {
     "description": "Toggle for shared-element (Hero) transitions"
   },
-  "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
+  "appearanceHeroAnimationsSubtitle": "Kapaklar ekranlar arasında uçar; örneğin oynatıcı açılırken",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
@@ -795,23 +795,23 @@
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "Kitaplık klasörü ekle",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "Dahili depolama, SD kart, SSD veya başka bir harici sürücü",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "Çevrimdışı. Bu parçaları geri getirmek için depolamayı yeniden bağlayın",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
-  "librarySourceDisabled": "Disabled",
+  "librarySourceDisabled": "Devre dışı",
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "{total} dosyadan {scanned} tanesi tarandı (%{progress})",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -830,7 +830,7 @@
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "Kitaplık klasörünü kaldır",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
@@ -992,7 +992,7 @@
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "Tarama duraklatıldı",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
@@ -1042,7 +1042,7 @@
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
   },
-  "libraryFilterReset": "Reset",
+  "libraryFilterReset": "Sıfırla",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
@@ -1130,7 +1130,7 @@
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
-  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "timeMinutesAgo": "{count, plural, =1{1 dakika önce} other{{count} dakika önce}}",
   "@timeMinutesAgo": {
     "description": "Relative time - minutes ago",
     "placeholders": {
@@ -1139,7 +1139,7 @@
       }
     }
   },
-  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "timeHoursAgo": "{count, plural, =1{1 saat önce} other{{count} saat önce}}",
   "@timeHoursAgo": {
     "description": "Relative time - hours ago",
     "placeholders": {
@@ -1159,11 +1159,11 @@
   },
   "tutorialLibraryDesc": "Taranan müziğiniz şarkılar, sanatçılar, albümler ve çalma listeleri olarak düzenlenir.",
   "tutorialLibraryTip1": "Cihazınızdaki parçalara göz atın ve arayın",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "Yerleşik oynatıcıyla çalmak için bir parçaya dokunun",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "Parçalara, albümlere ve çalma listelerine liste veya ızgara görünümünde göz atın",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
@@ -1199,7 +1199,7 @@
     "description": "Heading for cache summary card"
   },
   "cacheSummarySubtitle": "Önbelleği temizlemek orijinal müzik dosyalarınızı korur.",
-  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "cacheEstimatedTotal": "Tahmini önbellek kullanımı: {size}",
   "@cacheEstimatedTotal": {
     "description": "Total cache size shown in summary",
     "placeholders": {
@@ -1242,28 +1242,28 @@
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "Ses seviyesi normalizasyonu",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "Varsa ReplayGain veya R128 etiketlerini kullanarak parçalar arasındaki ses yüksekliğini eşitleyin",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "Ses analizi önbelleği",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "Kaydedilmiş spektrogramlar ve analiz sonuçları. Sonraki açılışta yeniden analiz edilir.",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
   "cacheCleanupUnusedDesc": "Yerel dosyaları eksik olan kitaplık kayıtlarını kaldırın.",
-  "cacheNoData": "No cached data",
+  "cacheNoData": "Önbelleğe alınmış veri yok",
   "@cacheNoData": {
     "description": "Label when cache category has no data"
   },
-  "cacheSizeWithFiles": "{size} in {count} files",
+  "cacheSizeWithFiles": "{count} dosyada {size}",
   "@cacheSizeWithFiles": {
     "description": "Cache size and file count",
     "placeholders": {
@@ -1275,7 +1275,7 @@
       }
     }
   },
-  "cacheClearSuccess": "Cleared: {target}",
+  "cacheClearSuccess": "Temizlendi: {target}",
   "@cacheClearSuccess": {
     "description": "Snackbar after clearing selected cache",
     "placeholders": {
@@ -1284,30 +1284,30 @@
       }
     }
   },
-  "cacheClearConfirmTitle": "Clear cache?",
+  "cacheClearConfirmTitle": "Önbellek temizlensin mi?",
   "@cacheClearConfirmTitle": {
     "description": "Dialog title before clearing one cache category"
   },
   "cacheClearConfirmMessage": "{target} için önbelleğe alınmış veriler temizlensin mi? Orijinal müzik dosyaları korunur.",
-  "cacheClearAllConfirmTitle": "Clear all cache?",
+  "cacheClearAllConfirmTitle": "Tüm önbellek temizlensin mi?",
   "@cacheClearAllConfirmTitle": {
     "description": "Dialog title before clearing all caches"
   },
   "cacheClearAllConfirmMessage": "Bu sayfadaki tüm önbellek kategorileri temizlensin mi? Orijinal müzik dosyaları korunur.",
-  "cacheClearAll": "Clear all cache",
+  "cacheClearAll": "Tüm önbelleği temizle",
   "@cacheClearAll": {
     "description": "Button label to clear all caches"
   },
-  "cacheCleanupUnused": "Cleanup unused data",
+  "cacheCleanupUnused": "Kullanılmayan verileri temizle",
   "@cacheCleanupUnused": {
     "description": "Action title for cleaning unused entries"
   },
   "cacheCleanupUnusedSubtitle": "Eksik yerel dosyaları kitaplık dizininden kaldırın",
-  "cacheRefreshStats": "Refresh stats",
+  "cacheRefreshStats": "İstatistikleri yenile",
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackEditMetadata": "Edit Metadata",
+  "trackEditMetadata": "Meta verileri düzenle",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
@@ -1370,7 +1370,7 @@
       }
     }
   },
-  "collectionPlaylistNameHint": "Playlist name",
+  "collectionPlaylistNameHint": "Çalma listesi adı",
   "@collectionPlaylistNameHint": {
     "description": "Hint text for playlist name input"
   },
@@ -1415,15 +1415,15 @@
   "@collectionPlaylistEmptySubtitle": {
     "description": "Playlist empty state subtitle"
   },
-  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "collectionRemoveFromPlaylist": "Çalma listesinden kaldır",
   "@collectionRemoveFromPlaylist": {
     "description": "Tooltip for removing track from playlist"
   },
-  "collectionRemoveFromFolder": "Remove from folder",
+  "collectionRemoveFromFolder": "Klasörden kaldır",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
   },
-  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removed from Favorite Artists",
+  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" Favori Sanatçılar'dan kaldırıldı",
   "@collectionRemovedFromFavoriteArtists": {
     "description": "Snackbar after removing artist from favorite artists",
     "placeholders": {
@@ -1432,83 +1432,83 @@
       }
     }
   },
-  "trackOptionAddToLoved": "Add to Loved",
+  "trackOptionAddToLoved": "Sevilen'e ekle",
   "@trackOptionAddToLoved": {
     "description": "Bottom sheet action label - add track to loved folder"
   },
-  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "trackOptionRemoveFromLoved": "Sevilen'den kaldır",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
   },
-  "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
+  "artistOptionRemoveFromFavorites": "Favori Sanatçılar'dan kaldır",
   "@artistOptionRemoveFromFavorites": {
     "description": "Action label - remove artist from favorite artists"
   },
-  "collectionPlaylistChangeCover": "Change cover image",
+  "collectionPlaylistChangeCover": "Kapak resmini değiştir",
   "@collectionPlaylistChangeCover": {
     "description": "Bottom sheet action to pick a custom cover image for a playlist"
   },
-  "collectionPlaylistRemoveCover": "Remove cover image",
+  "collectionPlaylistRemoveCover": "Kapak resmini kaldır",
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "Yedekle ve geri yükle",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "Kitaplığınızı, geçmişinizi ve ayarlarınızı yeni bir cihaza taşıyın",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "Yedekle ve geri yükle",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
-  "backupExportSectionTitle": "Create backup",
+  "backupExportSectionTitle": "Yedek oluştur",
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "Ayarları, yerel profilleri, koleksiyonları ve isteğe bağlı eski kitaplık kayıtlarını bir yedek dosyasına kaydedin.",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "Yedek dosyası oluştur",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "Yedeği geri yükle",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "Verilerinizi geri yüklemek için bir yedek dosyası seçin. Bu, bu cihazdaki mevcut ayarların, geçmişin ve kitaplığın yerini alır.",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "Yedek dosyası seç",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "Yedek oluşturuldu",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "Yedek oluşturulamadı",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "Bu yedek geri yüklemek için çok büyük olur. Daha az kategori ekleyip yeniden deneyin.",
   "backupRestorePartiallyFailed": "Yedek geri yüklenemedi. Zaten geri yüklenenler: {categories}",
   "backupListeningStatisticsExcluded": "Dinleme istatistikleri ve oynatma sayıları dahil edilmez.",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "Bu yedek geri yüklensin mi?",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
-  "backupRestoreConfirmButton": "Restore",
+  "backupRestoreConfirmButton": "Geri yükle",
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "Yedek başarıyla geri yüklendi",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "Yedek geri yüklenemedi",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
@@ -1516,26 +1516,26 @@
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "Tüm değişikliklerin uygulandığından emin olmak için uygulamayı yeniden başlatın.",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "Yedek içeriği",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
-  "backupSettingsOnly": "Settings only",
+  "backupSettingsOnly": "Yalnızca ayarlar",
   "backupSelectHistory": "Eski kitaplık kayıtları",
-  "backupSelectCollections": "Library collections",
+  "backupSelectCollections": "Kitaplık koleksiyonları",
   "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
-  "backupContentsSettings": "App settings",
+  "backupSelectedExportDescription": "Seçilen kategorileri bir yedek dosyasına kaydedin. Ses dosyaları dahil edilmez.",
+  "backupSelectAtLeastOne": "Yedek oluşturmak için en az bir kategori seçin.",
+  "backupSelectedRestoreMessage": "Yalnızca aşağıda listelenen kategoriler geri yüklenir. Bu yedeğe dahil olmayan kategoriler değişmeden kalır. Geri yükleme mevcut verilerin yerini alabilir ve geri alınamaz.",
+  "backupContentsSettings": "Uygulama ayarları",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsHistory": "{count} history {count, plural, =1{item} other{items}}",
+  "backupContentsHistory": "Geçmişte {count} {count, plural, =1{öğe} other{öğe}}",
   "@backupContentsHistory": {
     "description": "Backup contents row for history count",
     "placeholders": {
@@ -1544,7 +1544,7 @@
       }
     }
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "{count} beğenilen {count, plural, =1{parça} other{parça}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1553,7 +1553,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 çalma listesi} other{{count} çalma listesi}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1562,7 +1562,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "{count, plural, =1{1 favori sanatçı} other{{count} favori sanatçı}}",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1610,7 +1610,7 @@
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
   },
-  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "snackbarUnsupportedAudioFormat": "Desteklenmeyen ses formatı",
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
@@ -1638,11 +1638,11 @@
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
-  "editMetadataFieldTrackNum": "Track #",
+  "editMetadataFieldTrackNum": "Parça no",
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
-  "editMetadataFieldDiscNum": "Disc #",
+  "editMetadataFieldDiscNum": "Disk no",
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
@@ -1654,23 +1654,23 @@
   "@editMetadataFieldIsrc": {
     "description": "Chip label for ISRC field in auto-fill selector"
   },
-  "editMetadataFieldLabel": "Label",
+  "editMetadataFieldLabel": "Etiket",
   "@editMetadataFieldLabel": {
     "description": "Chip label for label field in auto-fill selector"
   },
-  "editMetadataFieldCopyright": "Copyright",
+  "editMetadataFieldCopyright": "Telif hakkı",
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "Kapak resmi",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
-  "queueFilteringIndicator": "Filtering...",
+  "queueFilteringIndicator": "Filtreleniyor...",
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
-  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "queueTrackCount": "{count, plural, =1{1 parça} other{{count} parça}}",
   "@queueTrackCount": {
     "description": "Track count label with plural support",
     "placeholders": {
@@ -1679,7 +1679,7 @@
       }
     }
   },
-  "queueAlbumCount": "{count, plural, =1{1 album} other{{count} albums}}",
+  "queueAlbumCount": "{count, plural, =1{1 albüm} other{{count} albüm}}",
   "@queueAlbumCount": {
     "description": "Album count label with plural support",
     "placeholders": {
@@ -1692,7 +1692,7 @@
   "queueEmptyAlbumsSubtitle": "Albüm eklemek için bir müzik klasörü tarayın",
   "queueEmptySingles": "Yerel single yok",
   "queueEmptySinglesSubtitle": "Taranan tekil parçalar burada görünür",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1 çalma listesi} other{{count} çalma listesi}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1701,61 +1701,61 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "Parçalarınızı düzenlemek için bir çalma listesi oluşturun",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
   "queueEmptyHistory": "Yerel parça yok",
   "queueEmptyHistorySubtitle": "Kitaplığınızı doldurmak için bir müzik klasörü tarayın",
-  "selectionAllPlaylistsSelected": "All playlists selected",
+  "selectionAllPlaylistsSelected": "Tüm çalma listeleri seçildi",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
   },
-  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "selectionTapPlaylistsToSelect": "Seçmek için çalma listelerine dokunun",
   "@selectionTapPlaylistsToSelect": {
     "description": "Hint shown in playlist selection mode"
   },
-  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "selectionSelectPlaylistsToDelete": "Silinecek çalma listelerini seçin",
   "@selectionSelectPlaylistsToDelete": {
     "description": "Hint shown when no playlists are selected for deletion"
   },
-  "audioAnalysisTitle": "Audio Quality Analysis",
+  "audioAnalysisTitle": "Ses kalitesi analizi",
   "@audioAnalysisTitle": {
     "description": "Title for audio analysis section"
   },
-  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "audioAnalysisDescription": "Kayıpsız kaliteyi spektrum analiziyle doğrulayın",
   "@audioAnalysisDescription": {
     "description": "Description for audio analysis tap-to-analyze prompt"
   },
-  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "audioAnalysisAnalyzing": "Ses analiz ediliyor...",
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "Örnekleme hızı",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "Kodek",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "Kapsayıcı",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "Çözülen format",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "Bit derinliği",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
-  "audioAnalysisChannels": "Channels",
+  "audioAnalysisChannels": "Kanallar",
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
-  "audioAnalysisDuration": "Duration",
+  "audioAnalysisDuration": "Süre",
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
@@ -1763,15 +1763,15 @@
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
-  "audioAnalysisFileSize": "Size",
+  "audioAnalysisFileSize": "Boyut",
   "@audioAnalysisFileSize": {
     "description": "File size metric label"
   },
-  "audioAnalysisDynamicRange": "Dynamic Range",
+  "audioAnalysisDynamicRange": "Dinamik aralık",
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "Tepe",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -1787,54 +1787,54 @@
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
-  "audioAnalysisClipping": "Clipping",
+  "audioAnalysisClipping": "Kırpılma",
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
-  "audioAnalysisNoClipping": "No clipping",
+  "audioAnalysisNoClipping": "Kırpılma yok",
   "@audioAnalysisNoClipping": {
     "description": "Displayed when no clipped samples were detected"
   },
-  "audioAnalysisSpectralCutoff": "Spectral Cutoff",
+  "audioAnalysisSpectralCutoff": "Spektral kesim",
   "@audioAnalysisSpectralCutoff": {
     "description": "Estimated spectral cutoff metric label"
   },
-  "audioAnalysisCutoffNotDetected": "Not detected",
+  "audioAnalysisCutoffNotDetected": "Algılanamadı",
   "@audioAnalysisCutoffNotDetected": {
     "description": "Displayed when no reliable broadband spectral cutoff can be detected"
   },
-  "audioAnalysisChannelStats": "Per-channel Stats",
+  "audioAnalysisChannelStats": "Kanal başına istatistikler",
   "@audioAnalysisChannelStats": {
     "description": "Per-channel audio analysis section label"
   },
-  "audioAnalysisSamples": "Samples",
+  "audioAnalysisSamples": "Örnekler",
   "@audioAnalysisSamples": {
     "description": "Total samples metric label"
   },
-  "audioAnalysisRescan": "Re-analyze",
+  "audioAnalysisRescan": "Yeniden analiz et",
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
   "audioAnalysisSaveSpectrogram": "Spektrogramı kaydet",
   "audioAnalysisSpectrogramSaved": "Spektrogram {fileName} dosyasına kaydedildi",
   "audioAnalysisSpectrogramSaveFailed": "Spektrogram kaydedilemedi",
-  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "audioAnalysisRescanning": "Ses yeniden analiz ediliyor...",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
   },
-  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "metadataSaveFailedFfmpeg": "Meta veriler FFmpeg ile kaydedilemedi",
   "@metadataSaveFailedFfmpeg": {
     "description": "Snackbar error when FFmpeg fails to write metadata"
   },
-  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "metadataSaveFailedStorage": "Meta veriler depolamaya geri yazılamadı",
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "notifScanningLibrary": "Scanning local library",
+  "notifScanningLibrary": "Yerel kitaplık taranıyor",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
   },
-  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} dosya • %{percentage}",
   "@notifLibraryScanProgressWithTotal": {
     "description": "Notification body for library scan progress when total is known",
     "placeholders": {
@@ -1849,7 +1849,7 @@
       }
     }
   },
-  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "notifLibraryScanProgressNoTotal": "{scanned} dosya tarandı",
   "@notifLibraryScanProgressNoTotal": {
     "description": "Notification body for library scan progress when total is unknown",
     "placeholders": {
@@ -1858,11 +1858,11 @@
       }
     }
   },
-  "notifLibraryScanComplete": "Library scan complete",
+  "notifLibraryScanComplete": "Kitaplık taraması tamamlandı",
   "@notifLibraryScanComplete": {
     "description": "Notification title when library scan finishes"
   },
-  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "notifLibraryScanCompleteBody": "{count} parça dizinlendi",
   "@notifLibraryScanCompleteBody": {
     "description": "Notification body for library scan complete - number of indexed tracks",
     "placeholders": {
@@ -1871,7 +1871,7 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} excluded",
+  "notifLibraryScanExcluded": "{count} hariç tutuldu",
   "@notifLibraryScanExcluded": {
     "description": "Library scan complete suffix - excluded track count",
     "placeholders": {
@@ -1889,24 +1889,24 @@
       }
     }
   },
-  "notifLibraryScanFailed": "Library scan failed",
+  "notifLibraryScanFailed": "Kitaplık taraması başarısız oldu",
   "@notifLibraryScanFailed": {
     "description": "Notification title when library scan fails"
   },
   "notifLibraryScanInterruptedBody": "Önceki kitaplık taraması kesildi. Devam etmek için klasörü yeniden tarayın. Dizinlenmiş parçalarınız hâlâ kullanılabilir.",
-  "notifLibraryScanCancelled": "Library scan cancelled",
+  "notifLibraryScanCancelled": "Kitaplık taraması iptal edildi",
   "@notifLibraryScanCancelled": {
     "description": "Notification title when library scan is cancelled by the user"
   },
-  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "notifLibraryScanStopped": "Tarama tamamlanmadan durduruldu.",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "Kitaplık taraması duraklatıldı",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "{count} dosya tarandı. Buradan devam etmek için Yerel Kitaplık ayarlarından sürdürün.",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1919,15 +1919,15 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "Paste or search...",
+  "tutorialSearchHint": "Yapıştır veya ara...",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },
-  "trackCoverNoEmbeddedArt": "No embedded album art found",
+  "trackCoverNoEmbeddedArt": "Gömülü albüm kapağı bulunamadı",
   "@trackCoverNoEmbeddedArt": {
     "description": "Message shown when a track file has no embedded cover art"
   },
-  "trackCoverReplace": "Replace Cover",
+  "trackCoverReplace": "Kapağı değiştir",
   "@trackCoverReplace": {
     "description": "Button label for replacing selected cover art"
   },
@@ -1935,11 +1935,11 @@
   "@trackCoverPick": {
     "description": "Button label for selecting cover art"
   },
-  "trackCoverClearSelected": "Clear selected cover",
+  "trackCoverClearSelected": "Seçilen kapağı temizle",
   "@trackCoverClearSelected": {
     "description": "Tooltip for clearing the newly selected cover art"
   },
-  "trackCoverCurrent": "Current cover",
+  "trackCoverCurrent": "Geçerli kapak",
   "@trackCoverCurrent": {
     "description": "Label for the currently embedded cover preview"
   },
@@ -1947,51 +1947,51 @@
   "@trackCoverSelected": {
     "description": "Label for the newly selected cover preview"
   },
-  "trackCoverReplaceNotice": "The selected cover will replace the current embedded cover when you tap Save.",
+  "trackCoverReplaceNotice": "Kaydet'e dokunduğunuzda seçilen kapak, geçerli gömülü kapağın yerini alacak.",
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "Cover resolution",
+  "trackCoverResolution": "Kapak çözünürlüğü",
   "@trackCoverResolution": {
     "description": "Label for selecting the embedded cover art resolution"
   },
-  "trackCoverResolutionHint": "Sets the longest edge when saved. Enlarging does not add image detail.",
+  "trackCoverResolutionHint": "Kaydederken en uzun kenarı belirler. Büyütmek görüntü ayrıntısı eklemez.",
   "@trackCoverResolutionHint": {
     "description": "Explanation below the embedded cover art resolution selector"
   },
-  "trackCoverResizeFailed": "The cover image could not be resized. Please try another size or image.",
+  "trackCoverResizeFailed": "Kapak resmi yeniden boyutlandırılamadı. Lütfen başka bir boyut veya resim deneyin.",
   "@trackCoverResizeFailed": {
     "description": "Error shown when resizing cover art before saving metadata fails"
   },
-  "nowPlayingRepeatOff": "Repeat off",
+  "nowPlayingRepeatOff": "Tekrar kapalı",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
   },
-  "nowPlayingRepeatAll": "Repeat all",
+  "nowPlayingRepeatAll": "Tümünü tekrarla",
   "@nowPlayingRepeatAll": {
     "description": "Repeat toggle tooltip when the whole queue repeats"
   },
-  "nowPlayingRepeatOne": "Repeat one",
+  "nowPlayingRepeatOne": "Birini tekrarla",
   "@nowPlayingRepeatOne": {
     "description": "Repeat toggle tooltip when the current track repeats"
   },
-  "logAutoScrollOn": "Auto-scroll ON",
+  "logAutoScrollOn": "Otomatik kaydırma AÇIK",
   "@logAutoScrollOn": {
     "description": "Tooltip when auto-scroll is enabled on the log screen"
   },
-  "logAutoScrollOff": "Auto-scroll OFF",
+  "logAutoScrollOff": "Otomatik kaydırma KAPALI",
   "@logAutoScrollOff": {
     "description": "Tooltip when auto-scroll is disabled on the log screen"
   },
-  "logCopyLogs": "Copy logs",
+  "logCopyLogs": "Günlükleri kopyala",
   "@logCopyLogs": {
     "description": "Tooltip for copying logs"
   },
-  "logClearSearch": "Clear search",
+  "logClearSearch": "Aramayı temizle",
   "@logClearSearch": {
     "description": "Tooltip for clearing the log search field"
   },
-  "clickableInformationUnavailable": "{type} information not available",
+  "clickableInformationUnavailable": "{type} bilgisi mevcut değil",
   "@clickableInformationUnavailable": {
     "description": "Snackbar shown when clickable metadata cannot open a destination",
     "placeholders": {
@@ -2000,7 +2000,7 @@
       }
     }
   },
-  "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
+  "a11yOpenItemCount": "{title} öğesini aç, {count} {count, plural, =1{öğe} other{öğe}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
     "placeholders": {
@@ -2012,7 +2012,7 @@
       }
     }
   },
-  "a11yOpenAlbumByArtistTrackCount": "Open album {albumName} by {artistName}, {trackCount} tracks",
+  "a11yOpenAlbumByArtistTrackCount": "{artistName} sanatçısının {albumName} albümünü aç, {trackCount} parça",
   "@a11yOpenAlbumByArtistTrackCount": {
     "description": "Accessibility label for opening an album item with track count",
     "placeholders": {
@@ -2027,20 +2027,20 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "Şarkı sözleri",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
   "settingsLyricsSubtitle": "Yerel şarkı sözleri, kaydetme modu ve metin boyutu",
-  "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
+  "editMetadataFieldDateHint": "YYYY-AA-GG veya YYYY",
   "@editMetadataFieldDateHint": {
     "description": "Hint text for the edit metadata date field"
   },
-  "editMetadataFieldTrackTotal": "Track Total",
+  "editMetadataFieldTrackTotal": "Toplam parça",
   "@editMetadataFieldTrackTotal": {
     "description": "Label for total tracks field in the edit metadata sheet"
   },
-  "editMetadataFieldDiscTotal": "Disc Total",
+  "editMetadataFieldDiscTotal": "Toplam disk",
   "@editMetadataFieldDiscTotal": {
     "description": "Label for total discs field in the edit metadata sheet"
   },
@@ -2052,11 +2052,11 @@
   "@editMetadataFieldComment": {
     "description": "Label for comment field in the edit metadata sheet"
   },
-  "trackAlbumType": "Release Type",
+  "trackAlbumType": "Sürüm türü",
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "Albüm, single, EP, derleme...",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
@@ -2064,7 +2064,7 @@
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "Bu parçayı explicit içerik olarak işaretle",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
@@ -2072,11 +2072,11 @@
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
-  "editMetadataFieldUpc": "UPC / Barcode",
+  "editMetadataFieldUpc": "UPC / Barkod",
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "Sayısal UPC, EAN veya GTIN",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
@@ -2084,31 +2084,31 @@
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
+  "libraryFilterMetadataMissingTrackNumber": "Parça numarası eksik",
   "@libraryFilterMetadataMissingTrackNumber": {
     "description": "Filter option - items missing track number"
   },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
+  "libraryFilterMetadataMissingDiscNumber": "Disk numarası eksik",
   "@libraryFilterMetadataMissingDiscNumber": {
     "description": "Filter option - items missing disc number"
   },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
+  "libraryFilterMetadataMissingArtist": "Sanatçı eksik",
   "@libraryFilterMetadataMissingArtist": {
     "description": "Filter option - items missing artist"
   },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
+  "libraryFilterMetadataIncorrectIsrcFormat": "Geçersiz ISRC biçimi",
   "@libraryFilterMetadataIncorrectIsrcFormat": {
     "description": "Filter option - items with an invalid ISRC format"
   },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
+  "libraryFilterMetadataMissingIsrc": "ISRC eksik",
   "@libraryFilterMetadataMissingIsrc": {
     "description": "Filter option - items without any ISRC tag"
   },
-  "libraryFilterMetadataMissingLabel": "Missing label",
+  "libraryFilterMetadataMissingLabel": "Etiket eksik",
   "@libraryFilterMetadataMissingLabel": {
     "description": "Filter option - items missing record label"
   },
-  "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
+  "collectionDeletePlaylistsMessage": "{count} {count, plural, =1{çalma listesi} other{çalma listesi}} silinsin mi?",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
     "placeholders": {
@@ -2117,7 +2117,7 @@
       }
     }
   },
-  "collectionPlaylistsDeleted": "{count} {count, plural, =1{playlist} other{playlists}} deleted",
+  "collectionPlaylistsDeleted": "{count} {count, plural, =1{çalma listesi} other{çalma listesi}} silindi",
   "@collectionPlaylistsDeleted": {
     "description": "Snackbar after deleting selected playlists",
     "placeholders": {
@@ -2126,7 +2126,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylist": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName}",
+  "collectionAddedTracksToPlaylist": "{playlistName} listesine {count} {count, plural, =1{parça} other{parça}} eklendi",
   "@collectionAddedTracksToPlaylist": {
     "description": "Snackbar after adding multiple tracks to a playlist",
     "placeholders": {
@@ -2138,7 +2138,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylistWithExisting": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName} ({alreadyCount} already in playlist)",
+  "collectionAddedTracksToPlaylistWithExisting": "{playlistName} listesine {count} {count, plural, =1{parça} other{parça}} eklendi ({alreadyCount} tanesi zaten listedeydi)",
   "@collectionAddedTracksToPlaylistWithExisting": {
     "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
     "placeholders": {
@@ -2153,7 +2153,7 @@
       }
     }
   },
-  "itemCount": "{count} {count, plural, =1{item} other{items}}",
+  "itemCount": "{count} {count, plural, =1{öğe} other{öğe}}",
   "@itemCount": {
     "description": "Generic item count label",
     "placeholders": {
@@ -2162,7 +2162,7 @@
       }
     }
   },
-  "selectionDeleteTracksCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "selectionDeleteTracksCount": "{count} {count, plural, =1{parçayı} other{parçayı}} sil",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
     "placeholders": {
@@ -2171,15 +2171,15 @@
       }
     }
   },
-  "a11ySelectTrack": "Select track",
+  "a11ySelectTrack": "Parçayı seç",
   "@a11ySelectTrack": {
     "description": "Accessibility label for selecting a track"
   },
-  "a11yDeselectTrack": "Deselect track",
+  "a11yDeselectTrack": "Parça seçimini kaldır",
   "@a11yDeselectTrack": {
     "description": "Accessibility label for deselecting a track"
   },
-  "a11yPlayTrackByArtist": "Play {trackName} by {artistName}",
+  "a11yPlayTrackByArtist": "{artistName} sanatçısının {trackName} parçasını çal",
   "@a11yPlayTrackByArtist": {
     "description": "Accessibility label for playing a local library track",
     "placeholders": {
@@ -2201,11 +2201,11 @@
   "a11yPlaybackPosition": "Oynatma konumu",
   "a11ySavingTrackDetails": "Parça ayrıntıları kaydediliyor",
   "cacheClearFor": "{target} temizle",
-  "logIssueSummary": "Issue Summary",
+  "logIssueSummary": "Sorun özeti",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"
   },
-  "logTotalErrors": "Total errors: {count}",
+  "logTotalErrors": "Toplam hata: {count}",
   "@logTotalErrors": {
     "description": "Total error count in log issue analysis",
     "placeholders": {
@@ -2214,11 +2214,11 @@
       }
     }
   },
-  "libraryScanCancelled": "Scan cancelled",
+  "libraryScanCancelled": "Tarama iptal edildi",
   "@libraryScanCancelled": {
     "description": "Library scan status when a scan was cancelled"
   },
-  "libraryScanCancelledSubtitle": "You can retry the scan when ready.",
+  "libraryScanCancelledSubtitle": "Hazır olduğunuzda taramayı yeniden deneyebilirsiniz.",
   "@libraryScanCancelledSubtitle": {
     "description": "Library scan status subtitle after cancellation"
   },
@@ -2230,7 +2230,7 @@
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "unknownArtist": "Unknown Artist",
+  "unknownArtist": "Bilinmeyen sanatçı",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
   },
@@ -2246,24 +2246,24 @@
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "Oynatma",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "Hiçbir şey çalmıyor",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "Küçült",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "Sıradaki",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "Ses çıkışı",
+  "nowPlayingWrittenBy": "Yazan: {writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2271,7 +2271,7 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Lyrics: {provider}",
+  "nowPlayingLyricsProvider": "Şarkı sözleri: {provider}",
   "@nowPlayingLyricsProvider": {
     "placeholders": {
       "provider": {
@@ -2279,24 +2279,24 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "Ses çıkışı ayarları açılamadı.",
+  "nowPlayingPreviousTrack": "Önceki parça",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "Sonraki parça",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
-  "nowPlayingDetails": "Details",
+  "nowPlayingDetails": "Ayrıntılar",
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "Uyku zamanlayıcısı",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "{time} itibarıyla sona erer",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2305,7 +2305,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 dakika} other{{minutes} dakika}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2314,11 +2314,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "Uyku zamanlayıcısını kapat",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "Uyku zamanlayıcısı {duration} için ayarlandı",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2327,55 +2327,55 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "Uyku zamanlayıcısı kapatıldı",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "Oynatıcı",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "Şarkı sözleri",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "Bu dosyada şarkı sözü yok",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
-  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingInstrumental": "Enstrümantal",
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "Şarkı sözü dili seçenekleri",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
-  "nowPlayingShuffleOn": "Shuffle on",
+  "nowPlayingHidePronunciation": "Telaffuzu gizle",
+  "nowPlayingShowPronunciation": "Telaffuzu göster",
+  "nowPlayingHideTranslation": "Çeviriyi gizle",
+  "nowPlayingShowTranslation": "Çeviriyi göster",
+  "nowPlayingShuffleOn": "Karıştırma açık",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
   },
-  "nowPlayingPlayInOrder": "Play in order",
+  "nowPlayingPlayInOrder": "Sırayla çal",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingShuffleLibrary": "Shuffle library",
+  "nowPlayingShuffleLibrary": "Kitaplığı karıştır",
   "@nowPlayingShuffleLibrary": {
     "description": "Button label to shuffle and play the entire local library"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "Kuyruk boş",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "Meta veri yok",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "{count} {count, plural, =1{çalma listesini} other{çalma listesini}} sil",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2384,7 +2384,7 @@
       }
     }
   },
-  "actionShuffle": "Shuffle",
+  "actionShuffle": "Karıştır",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
@@ -2392,23 +2392,23 @@
   "@metadataOriginal": {
     "description": "Label for keeping the original embedded cover resolution"
   },
-  "unknownTitle": "Unknown title",
+  "unknownTitle": "Bilinmeyen başlık",
   "@unknownTitle": {
     "description": "Fallback track title when metadata is missing"
   },
-  "trackPlayNext": "Play next",
+  "trackPlayNext": "Sırada çal",
   "@trackPlayNext": {
     "description": "Menu action to play a track as the next queue item"
   },
-  "trackAddToQueue": "Add to queue",
+  "trackAddToQueue": "Kuyruğa ekle",
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "Ayarlarda ara",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "\"{query}\" ile eşleşen ayar yok",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2417,11 +2417,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "Şarkı sözü eksik",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "ReplayGain eksik",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2440,26 +2440,28 @@
   "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
-  "autoMixOn": "AutoMix on",
-  "autoMixOff": "AutoMix off",
-  "autoplayOn": "Autoplay on",
-  "autoplayOff": "Autoplay off",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoMixDescription": "Şarkıları vuruş eşleştirme ve perdeyi koruyan tempo ayarıyla birbirine karıştırır. Vuruşlar eşleştirilemediğinde çapraz geçiş kullanır.",
+  "autoMixOn": "AutoMix açık",
+  "autoMixOff": "AutoMix kapalı",
+  "autoplayOn": "Otomatik çalma açık",
+  "autoplayOff": "Otomatik çalma kapalı",
+  "autoplayFromLibrary": "Kitaplığınızdan otomatik çal",
   "autoplayDescription": "Sıra bittiğinde kitaplığınızdaki ilgili şarkılarla devam edin.",
   "autoplayPersonalization": "Kişisel otomatik oynatma",
   "autoplayPersonalizationDescription": "Dinleyip atladığınız şarkılardan bu cihazda, özel olarak öğrenin. Bunu kapatmak öğrenmeyi durdurur ve normal otomatik oynatmayı geri getirir.",
   "autoplayResetLearning": "Öneri öğrenmesini sıfırla",
-  "profileTitle": "Profile",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
-  "profileName": "Name",
-  "profileNameHint": "Your name",
-  "profileChangePhoto": "Choose photo",
-  "profileRemovePhoto": "Remove photo",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "autoplayResetLearningConfirmTitle": "Öneri öğrenmesini sıfırla?",
+  "autoplayResetLearningConfirm": "Sıfırla",
+  "profileTitle": "Profil",
+  "profileSetUp": "Profilinizi oluşturun",
+  "profileEdit": "Adı ve fotoğrafı düzenle",
+  "backupIncludesProfile": "Profil adınızı ve fotoğrafınızı içerir",
+  "profileName": "Ad",
+  "profileNameHint": "Adınız",
+  "profileChangePhoto": "Fotoğraf seç",
+  "profileRemovePhoto": "Fotoğrafı kaldır",
+  "profilePhotoError": "20 MB'tan küçük geçerli bir görsel seçin.",
+  "profileSaveError": "Profiliniz kaydedilemedi. Lütfen tekrar deneyin.",
   "motionArtwork": "Hareketli kapak resmi",
   "listeningStats": "Dinleme istatistikleri",
   "listeningStatsRecord": "Dinlemeyi kaydet",
@@ -2571,11 +2573,11 @@
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "Kuyruğa eklendi",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
-  "snackbarPlayingNext": "Playing next",
+  "snackbarPlayingNext": "Sırada çalınacak",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
   },
@@ -2592,7 +2594,7 @@
   "@trackRemoveFromDevice": {
     "description": "Action - delete downloaded file"
   },
-  "trackReplayGain": "Rescan ReplayGain",
+  "trackReplayGain": "ReplayGain'i yeniden tara",
   "@trackReplayGain": {
     "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
   },
@@ -2614,7 +2616,7 @@
   "audioInfoLossless": "Kayıpsız",
   "audioInfoLossy": "Kayıplı",
   "audioInfoFormat": "Biçim",
-  "audioInfoCodec": "Codec",
+  "audioInfoCodec": "Kodek",
   "audioInfoSampleRate": "Örnekleme hızı",
   "audioInfoBitDepth": "Bit derinliği",
   "audioInfoChannels": "Kanallar",

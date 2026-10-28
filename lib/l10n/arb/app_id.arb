@@ -1669,7 +1669,7 @@
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "Foto Cover",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
@@ -1750,7 +1750,7 @@
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "Format Terdekode",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
@@ -1794,7 +1794,7 @@
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
-  "audioAnalysisClipping": "Clipping",
+  "audioAnalysisClipping": "Slipping",
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
@@ -2483,6 +2483,8 @@
   "autoplayPersonalization": "Autoplay personal",
   "autoplayPersonalizationDescription": "Pelajari lagu yang kamu dengarkan dan lewati secara privat di perangkat ini. Mematikannya menghentikan pembelajaran dan mengembalikan autoplay biasa.",
   "autoplayResetLearning": "Reset pembelajaran rekomendasi",
+  "autoplayResetLearningConfirmTitle": "Reset pembelajaran rekomendasi?",
+  "autoplayResetLearningConfirmMessage": "Autoplay akan melupakan apa yang dipelajari dari lagu yang kamu dengar dan lewati. Tindakan ini tidak bisa dibatalkan.",
   "profileTitle": "Profil",
   "profileSetUp": "Atur profil Anda",
   "profileEdit": "Edit nama dan foto",
@@ -2517,7 +2519,7 @@
   "autoMixDuration": "Durasi mix",
   "autoMixEffect": "Efek transisi",
   "autoMixEffectAuto": "Otomatis",
-  "autoMixEffectCrossfade": "Crossfade",
+  "autoMixEffectCrossfade": "Crassfade",
   "autoMixEffectMuffled": "Redam",
   "autoMixEffectEcho": "Gema",
   "autoMixEffectPitch": "Nada",
@@ -2699,11 +2701,11 @@
   "audioInfoBuffer": "Buffer mixer",
   "audioInfoLatency": "Latensi output",
   "audioInfoLowLatency": "Audio latensi rendah",
-  "audioInfoProAudio": "Pro audio",
+  "audioInfoProAudio": "Audio pro",
   "audioInfoSupported": "Didukung",
   "audioInfoNotSupported": "Tidak didukung",
   "audioInfoSpatial": "Audio spasial",
-  "audioInfoHeadTracking": "Head tracking",
+  "audioInfoHeadTracking": "Pelacakan kepala",
   "audioInfoUnavailable": "Tidak tersedia",
   "audioInfoFixedVolume": "Dikontrol oleh perangkat",
   "audioInfoCopy": "Salin laporan",
@@ -2713,7 +2715,7 @@
   "lyricsShareLimit": "Anda dapat membagikan hingga {count} baris",
   "lyricsShareAction": "Bagikan",
   "lyricsShareError": "Gambar lirik tidak dapat dibuat",
-  "lyricsShareBackgroundArtwork": "Artwork",
+  "lyricsShareBackgroundArtwork": "Foto cover",
   "lyricsShareBackgroundColor": "Warna sampul",
   "lyricsShareBackgroundDark": "Gelap",
   "lyricsShareBackgroundLight": "Terang",
@@ -2812,7 +2814,7 @@
   "equalizerEffectivePreamp": "Gain input setelah headroom",
   "equalizerDeletePreset": "Hapus preset",
   "equalizerCustom": "Kustom",
-  "releaseTypeSingle": "Single",
+  "releaseTypeSingle": "SIngle",
   "@@last_modified": "2026-04-28",
   "updateLater": "Nanti",
   "@updateLater": {

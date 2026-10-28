@@ -2246,24 +2246,24 @@
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "Відтворення",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "Нічого не відтворюється",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "Згорнути",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "Далі",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "Аудіовихід",
+  "nowPlayingWrittenBy": "Написано: {writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2271,7 +2271,7 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Lyrics: {provider}",
+  "nowPlayingLyricsProvider": "Текст пісні: {provider}",
   "@nowPlayingLyricsProvider": {
     "placeholders": {
       "provider": {
@@ -2279,24 +2279,24 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "Не вдалося відкрити налаштування аудіовиходу.",
+  "nowPlayingPreviousTrack": "Попередній трек",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "Наступний трек",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
-  "nowPlayingDetails": "Details",
+  "nowPlayingDetails": "Деталі",
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "Таймер сну",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "Вимкнення в {time}",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2305,7 +2305,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 хвилина} other{{minutes} хвилини}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2314,11 +2314,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "Вимкнути Таймер сну",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "Таймер сну встановлено на {duration}",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2327,15 +2327,15 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "Таймер сну вимкнено",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "Програвач",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "Тексти пісень",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
@@ -2450,6 +2450,9 @@
   "autoplayPersonalization": "Персоналізоване автовідтворення",
   "autoplayPersonalizationDescription": "Навчатися на піснях, які ви слухаєте й пропускаєте, приватно на цьому пристрої. Вимкнення зупиняє навчання та повертає звичайне автовідтворення.",
   "autoplayResetLearning": "Скинути навчання рекомендацій",
+  "autoplayResetLearningConfirmTitle": "Скинути налаштування рекомендацій?",
+  "autoplayResetLearningConfirmMessage": "Автовідтворення скидає історію ваших прослуховувань і пропускає треки. Цю дію не можна скасувати.",
+  "autoplayResetLearningConfirm": "Скинути",
   "profileTitle": "Профіль",
   "profileSetUp": "Налаштуйте свій профіль",
   "profileEdit": "Редагувати ім'я та фотографію",
@@ -2688,7 +2691,7 @@
   "musicHapticsDescription": "Вібрувати в такт завантажених і локальних пісень",
   "musicHapticsSensitivity": "Чутливість",
   "musicHapticsStrength": "Сила",
-  "listeningRewind": "Rewind",
+  "listeningRewind": "Перемотати назад",
   "listeningRewindDescription": "Перегляньте найцікавіше за останні тижні та місяці",
   "listeningRewindChoosePeriod": "Оберіть період",
   "listeningRewindLastWeeks": "Останні {weeks} тиж.",

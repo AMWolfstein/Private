@@ -4,49 +4,49 @@
   "appearancePlayerView": "播放器视图",
   "appearancePlayerViewNormal": "普通视图",
   "appearancePlayerViewImmersive": "沉浸视图",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
-  "sectionAudioOutput": "Audio output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
-  "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
+  "settingsPlaybackSubtitle": "播放器、音量、AutoMix和音频输出",
+  "sectionVolumeAndTransitions": "音量和过渡",
+  "sectionAudioOutput": "音频输出",
+  "usbBitPerfect": "高解析和比特完美音频",
+  "usbBitPerfectDescription": "在兼容输出上保持源精度。选择直接USB或AAudio独占；否则Android USB输出需要Android 14及以上。从下一曲目生效，不使用AutoMix或标准化。系统音量可能无法控制直接USB。",
+  "usbHardwareVolume": "DAC硬件音量",
+  "usbVolumeWarningTitle": "检查你的聆听音量",
   "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
-  "usbVolumeAccept": "I understand",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
-  "nowPlayingVolume": "Volume",
+  "usbVolumeAccept": "我知道了",
+  "usbVolumeUnavailable": "播放已暂停，因为此DAC没有经过验证的硬件音量控制。降低DAC或放大器音量，然后在需要时启用固定音量输出并重新选择曲目。",
+  "usbFixedVolume": "允许固定音量USB输出",
+  "usbFixedVolumeDescription": "用于应用无法访问音量控制的DAC。没有自己音量控制的USB耳机请保持关闭。从下一曲目生效。",
+  "usbFixedVolumeWarning": "应用无法降低此输出的音量。音频可能以满电平开始，手机音量滑块无效。仅在降低DAC或外部放大器音量后继续。没有自己音量控制的耳机请勿启用。",
+  "dapExclusive": "DAP高解析（AAudio独占）",
+  "dapExclusiveDescription": "以曲目原始采样率和精度使用Oboe/AAudio播放FLAC/WAV PCM。需要Android 8.1及以上和兼容硬件。将检查独占访问；不可用的格式使用普通播放。DSD需要直接USB驱动。从下一曲目生效。",
+  "dapExclusiveUnavailable": "此曲目和当前输出无法使用AAudio独占访问。使用普通播放。对于USB DAC，请尝试直接USB驱动。",
+  "usbDirect": "直接USB驱动",
+  "usbDirectDescription": "对FLAC/WAV、DSF/DFF和WavPack DSD使用独占USB音频，需要Android USB权限。原生DSD需要识别的兼容DAC。其他PCM格式使用普通播放。从下一曲目生效。",
+  "usbDsdOverPcm": "DSD over PCM（DoP）",
+  "usbDsdOverPcmDescription": "仅当你的DAC明确支持DoP时启用。原生DSD不可用时，在PCM载体中发送DSF/DFF和WavPack DSD。不兼容的设备可能播放噪声；普通USB耳机请保持关闭。",
+  "usbDsdUnsupported": "不支持此DSD格式或连接的DAC。播放已停止。",
+  "usbPermissionDenied": "未授予USB权限。使用普通播放。",
+  "usbBitPerfectPending": "等待下一曲目和兼容的USB输出。",
+  "usbBitPerfectNoDevice": "未连接USB DAC。使用普通音频输出。",
+  "usbBitPerfectFallback": "此设备或音频格式不支持比特完美输出。使用普通播放。",
+  "usbBitPerfectRouteChanged": "USB音频路由已更改。播放已暂停；选择曲目以重新连接。",
+  "nowPlayingVolume": "音量",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Red (default)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Green",
-  "appearanceAccentTeal": "Teal",
-  "appearanceAccentBlue": "Blue",
-  "appearanceAccentPurple": "Purple",
-  "appearanceAccentPink": "Pink",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceAccentRed": "红色（默认）",
+  "appearanceAccentOrange": "橙色",
+  "appearanceAccentGreen": "绿色",
+  "appearanceAccentTeal": "青色",
+  "appearanceAccentBlue": "蓝色",
+  "appearanceAccentPurple": "紫色",
+  "appearanceAccentPink": "粉色",
+  "appearanceGlassClarity": "毛玻璃清晰度",
   "appearanceGlassOutlines": "玻璃描边",
   "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周围显示浅色边框。关闭后，玻璃本身保持不变。",
   "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassTinted": "着色",
+  "appearanceGlassClear": "清晰",
   "appearanceGlassClearPerformance": "非常通透的玻璃可能更耗电，在较旧的设备上也可能不够流畅。如有需要，请降低清晰度。",
   "appearanceGlassQuality": "玻璃质量",
   "appearanceGlassQualityAuto": "自动",
@@ -64,8 +64,8 @@
   "appearanceGlassClarityContrast": "系统已请求增强对比度，因此玻璃保持不透明。如仍要使用玻璃，请选择“轻量”或“完整”；文字对比度会保持不变。",
   "appearanceGlassAutoMeasured": "已在此设备上测量：“自动”使用{quality}。",
   "appearanceGlassClarityAutoFrosted": "“自动”已测量此设备并使用“磨砂”。请选择“轻量”或“完整”以设置清晰度。",
-  "appearanceUseSystemFont": "Use system font",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFont": "使用系统字体",
+  "appearanceUseSystemFontSubtitle": "应用文本使用设备默认字体。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -92,12 +92,12 @@
   },
   "homeLatestReleases": "资料库中的最新发行",
   "artistPopular": "热门",
-  "libraryRecentlyAdded": "Recently Added",
-  "librarySearchHint": "Search your library",
+  "libraryRecentlyAdded": "最近添加",
+  "librarySearchHint": "搜索你的乐库",
   "homeLibraryDisabled": "启用本地资料库以在此显示你的音乐。",
   "homeChooseLibraryFolder": "请在本地资料库设置中选择音乐文件夹。",
   "homeLibraryEmpty": "将音乐添加到资料库文件夹，然后扫描资料库。",
-  "libraryEmptyCollection": "Your music will appear here",
+  "libraryEmptyCollection": "你的音乐将显示在这里",
   "settingsTitle": "设置",
   "@settingsTitle": {
     "description": "Settings screen title"
@@ -126,9 +126,9 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "trackRemoveReplayGain": "移除ReplayGain",
+  "replayGainRemoving": "正在移除ReplayGain…",
+  "replayGainRemoveConfirmMessage": "从 {count} 首曲目中移除曲目和专辑ReplayGain标签？音频、封面和其他元数据保持不变。",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -136,7 +136,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "移除RG（{count}）",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -145,7 +145,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "已从 {total} 首曲目中的 {success} 首移除ReplayGain",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -156,7 +156,7 @@
       }
     }
   },
-  "selectionReplayGainCount": "ReplayGain ({count})",
+  "selectionReplayGainCount": "ReplayGain（{count}）",
   "@selectionReplayGainCount": {
     "description": "Batch selection action button label for ReplayGain",
     "placeholders": {
@@ -194,7 +194,7 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "某些曲目无法分析，因为此设备的音频引擎不支持其编解码器。",
   "metadataSeparators": "标签分隔符",
   "metadataSeparatorsDescription": "选择使用 Edit Metadata 保存标签时，以逗号或分号分隔的值如何合并。自定义艺术家分隔符会写入一个合并后的标签。包含 & 或 / 的名称会被保留。",
   "metadataSeparatorSource": "保留原始格式",
@@ -224,7 +224,7 @@
   "@aboutTitle": {
     "description": "About page title"
   },
-  "aboutApp": "App",
+  "aboutApp": "应用",
   "@aboutApp": {
     "description": "Section for app info"
   },
@@ -379,11 +379,11 @@
       }
     }
   },
-  "collectionExportM3u": "Export as M3U8",
+  "collectionExportM3u": "导出为M3U8",
   "@collectionExportM3u": {
     "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
   },
-  "collectionExportM3uDone": "Exported {exported} of {total} tracks",
+  "collectionExportM3uDone": "已导出 {total} 首中的 {exported} 首",
   "@collectionExportM3uDone": {
     "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
     "placeholders": {
@@ -396,35 +396,35 @@
     }
   },
   "collectionExportM3uNone": "没有可导出的本地音频文件",
-  "collectionExportM3uFailed": "Export failed",
+  "collectionExportM3uFailed": "导出失败",
   "@collectionExportM3uFailed": {
     "description": "Snackbar when writing or sharing the M3U8 export fails"
   },
-  "libraryReviewDuplicates": "Review duplicates",
+  "libraryReviewDuplicates": "检查重复项",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
   },
-  "libraryReviewDuplicatesSubtitle": "Find tracks stored more than once",
+  "libraryReviewDuplicatesSubtitle": "查找存储多次的曲目",
   "@libraryReviewDuplicatesSubtitle": {
     "description": "Subtitle for the duplicate review settings row"
   },
-  "duplicatesTitle": "Duplicates",
+  "duplicatesTitle": "重复曲目",
   "@duplicatesTitle": {
     "description": "Title of the duplicate review sheet"
   },
-  "duplicatesEmpty": "No duplicate tracks found.",
+  "duplicatesEmpty": "未找到重复曲目。",
   "@duplicatesEmpty": {
     "description": "Shown when the duplicate review sheet finds nothing"
   },
-  "duplicatesKeepBest": "Keep best",
+  "duplicatesKeepBest": "保留最佳",
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "全部保留最佳版本",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "保留 {groupCount} 首歌曲的最佳副本，并删除 {count} 个低质量副本？\n\n删除的文件将从存储空间中移除。",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -436,7 +436,7 @@
       }
     }
   },
-  "duplicatesKeepBestMessage": "Delete {count} lower-quality copies of \"{trackName}\"?",
+  "duplicatesKeepBestMessage": "删除「{trackName}」的 {count} 个较低质量副本？",
   "@duplicatesKeepBestMessage": {
     "description": "Confirmation message for the keep-best action",
     "placeholders": {
@@ -448,7 +448,7 @@
       }
     }
   },
-  "duplicatesDeleteCopyMessage": "Delete this copy of \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "删除「{trackName}」的此副本？",
   "@duplicatesDeleteCopyMessage": {
     "description": "Confirmation message for deleting one duplicate copy",
     "placeholders": {
@@ -475,11 +475,11 @@
       }
     }
   },
-  "snackbarFileNotFound": "File not found",
+  "snackbarFileNotFound": "文件未找到",
   "@snackbarFileNotFound": {
     "description": "Snackbar - file doesn't exist"
   },
-  "errorRateLimited": "Rate Limited",
+  "errorRateLimited": "被限流",
   "@errorRateLimited": {
     "description": "Error title - too many requests"
   },
@@ -487,31 +487,31 @@
   "@errorRateLimitedMessage": {
     "description": "Error message - rate limit explanation"
   },
-  "searchEmptyResultSubtitle": "Try another keyword",
+  "searchEmptyResultSubtitle": "尝试其他关键词",
   "@searchEmptyResultSubtitle": {
     "description": "Subtitle shown under the empty search result state on the home screen"
   },
-  "actionPause": "Pause",
+  "actionPause": "暂停",
   "@actionPause": {
     "description": "Action button - pause download"
   },
-  "actionResume": "Resume",
+  "actionResume": "继续",
   "@actionResume": {
     "description": "Action button - resume download"
   },
-  "actionCancel": "Cancel",
+  "actionCancel": "取消",
   "@actionCancel": {
     "description": "Action button - cancel operation"
   },
-  "actionSelectAll": "Select All",
+  "actionSelectAll": "全选",
   "@actionSelectAll": {
     "description": "Action button - select all items"
   },
-  "actionDeselect": "Deselect",
+  "actionDeselect": "取消选择",
   "@actionDeselect": {
     "description": "Action button - deselect all"
   },
-  "selectionSelected": "{count} selected",
+  "selectionSelected": "已选择 {count}",
   "@selectionSelected": {
     "description": "Selection count indicator",
     "placeholders": {
@@ -520,111 +520,111 @@
       }
     }
   },
-  "selectionAllSelected": "All tracks selected",
+  "selectionAllSelected": "已选择所有曲目",
   "@selectionAllSelected": {
     "description": "Status - all items selected"
   },
-  "selectionSelectToDelete": "Select tracks to delete",
+  "selectionSelectToDelete": "选择要删除的曲目",
   "@selectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "searchSongs": "Songs",
+  "searchSongs": "歌曲",
   "@searchSongs": {
     "description": "Search result category - songs"
   },
-  "searchArtists": "Artists",
+  "searchArtists": "艺术家",
   "@searchArtists": {
     "description": "Search result category - artists"
   },
-  "searchAlbums": "Albums",
+  "searchAlbums": "专辑",
   "@searchAlbums": {
     "description": "Search result category - albums"
   },
-  "searchPlaylists": "Playlists",
+  "searchPlaylists": "播放列表",
   "@searchPlaylists": {
     "description": "Search result category - playlists"
   },
-  "searchSortTitle": "Sort Results",
+  "searchSortTitle": "排序结果",
   "@searchSortTitle": {
     "description": "Bottom sheet title for search sort options"
   },
-  "searchSortTitleAZ": "Title (A-Z)",
+  "searchSortTitleAZ": "标题（A-Z）",
   "@searchSortTitleAZ": {
     "description": "Sort option - title ascending"
   },
-  "searchSortTitleZA": "Title (Z-A)",
+  "searchSortTitleZA": "标题（Z-A）",
   "@searchSortTitleZA": {
     "description": "Sort option - title descending"
   },
-  "searchSortArtistAZ": "Artist (A-Z)",
+  "searchSortArtistAZ": "艺术家（A-Z）",
   "@searchSortArtistAZ": {
     "description": "Sort option - artist ascending"
   },
-  "searchSortArtistZA": "Artist (Z-A)",
+  "searchSortArtistZA": "艺术家（Z-A）",
   "@searchSortArtistZA": {
     "description": "Sort option - artist descending"
   },
-  "searchSortDateOldest": "Release Date (Oldest)",
+  "searchSortDateOldest": "发行日期（最旧）",
   "@searchSortDateOldest": {
     "description": "Sort option - oldest release first"
   },
-  "searchSortDateNewest": "Release Date (Newest)",
+  "searchSortDateNewest": "发行日期（最新）",
   "@searchSortDateNewest": {
     "description": "Sort option - newest release first"
   },
-  "tooltipPlay": "Play",
+  "tooltipPlay": "播放",
   "@tooltipPlay": {
     "description": "Tooltip - play button"
   },
-  "logTitle": "Logs",
+  "logTitle": "日志",
   "@logTitle": {
     "description": "Logs screen title"
   },
-  "logCopied": "Logs copied to clipboard",
+  "logCopied": "日志已复制到剪贴板",
   "@logCopied": {
     "description": "Snackbar - logs copied"
   },
-  "logSearchHint": "Search logs...",
+  "logSearchHint": "搜索日志……",
   "@logSearchHint": {
     "description": "Log search placeholder"
   },
-  "logFilterLevel": "Level",
+  "logFilterLevel": "级别",
   "@logFilterLevel": {
     "description": "Filter by log level"
   },
-  "logFilterSection": "Filter",
+  "logFilterSection": "过滤器",
   "@logFilterSection": {
     "description": "Filter section title"
   },
-  "logShareLogs": "Share logs",
+  "logShareLogs": "分享日志",
   "@logShareLogs": {
     "description": "Share button tooltip"
   },
-  "logClearLogs": "Clear logs",
+  "logClearLogs": "清除日志",
   "@logClearLogs": {
     "description": "Clear button tooltip"
   },
-  "logClearLogsTitle": "Clear Logs",
+  "logClearLogsTitle": "清除日志",
   "@logClearLogsTitle": {
     "description": "Clear logs dialog title"
   },
-  "logClearLogsMessage": "Are you sure you want to clear all logs?",
+  "logClearLogsMessage": "确定要清除所有日志吗？",
   "@logClearLogsMessage": {
     "description": "Clear logs confirmation message"
   },
-  "logFilterBySeverity": "Filter logs by severity",
+  "logFilterBySeverity": "按严重程度过滤日志",
   "@logFilterBySeverity": {
     "description": "Filter dialog title"
   },
-  "logNoLogsYet": "No logs yet",
+  "logNoLogsYet": "暂无日志",
   "@logNoLogsYet": {
     "description": "Empty state title"
   },
-  "logNoLogsYetSubtitle": "Logs will appear here as you use the app",
+  "logNoLogsYetSubtitle": "使用应用时日志将显示在这里",
   "@logNoLogsYetSubtitle": {
     "description": "Empty state subtitle"
   },
-  "logEntriesFiltered": "Entries ({count} filtered)",
+  "logEntriesFiltered": "条目（已过滤 {count}）",
   "@logEntriesFiltered": {
     "description": "Log count with filter active",
     "placeholders": {
@@ -633,7 +633,7 @@
       }
     }
   },
-  "logEntries": "Entries ({count})",
+  "logEntries": "条目（{count}）",
   "@logEntries": {
     "description": "Total log count",
     "placeholders": {
@@ -642,41 +642,41 @@
       }
     }
   },
-  "sectionLyrics": "Lyrics",
+  "sectionLyrics": "歌词",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
-  "sectionColor": "Color",
+  "lyricsKeepScreenOn": "查看歌词时保持屏幕常亮",
+  "lyricsKeepScreenOnSubtitle": "歌词打开时防止屏幕超时，包括播放暂停时。",
+  "sectionColor": "颜色",
   "@sectionColor": {
     "description": "Settings section header"
   },
-  "sectionTheme": "Theme",
+  "sectionTheme": "主题",
   "@sectionTheme": {
     "description": "Settings section header"
   },
-  "sectionLanguage": "Language",
+  "sectionLanguage": "语言",
   "@sectionLanguage": {
     "description": "Settings section header for language"
   },
-  "appearanceLanguage": "App Language",
+  "appearanceLanguage": "应用语言",
   "@appearanceLanguage": {
     "description": "Language setting title"
   },
-  "settingsAppearanceSubtitle": "Theme, colors, display",
+  "settingsAppearanceSubtitle": "主题、颜色、显示",
   "@settingsAppearanceSubtitle": {
     "description": "Appearance settings description"
   },
-  "settingsLogsSubtitle": "View app logs for debugging",
+  "settingsLogsSubtitle": "查看应用日志以进行调试",
   "@settingsLogsSubtitle": {
     "description": "Logs settings description"
   },
-  "pressBackAgainToExit": "Press back again to exit",
+  "pressBackAgainToExit": "再按一次返回以退出",
   "@pressBackAgainToExit": {
     "description": "Exit confirmation message"
   },
-  "tracksCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "tracksCount": "{count, plural, =1{1首曲目} other{{count} 首曲目}}",
   "@tracksCount": {
     "description": "Track count display",
     "placeholders": {
@@ -685,24 +685,24 @@
       }
     }
   },
-  "trackMetadata": "Metadata",
+  "trackMetadata": "元数据",
   "@trackMetadata": {
     "description": "Tab title - track metadata"
   },
-  "trackLyrics": "Lyrics",
+  "trackLyrics": "歌词",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
-  "trackAlbum": "Album",
+  "trackAlbum": "专辑",
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Copied to clipboard",
+  "trackCopiedToClipboard": "已复制到剪贴板",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
   },
   "snackbarDeleteTracksFailed": "无法删除 {count} {count, plural, =1{首曲目} other{首曲目}}。请检查存储访问权限后重试。",
-  "dateDaysAgo": "{count} days ago",
+  "dateDaysAgo": "{count} 天前",
   "@dateDaysAgo": {
     "description": "Relative date - days ago",
     "placeholders": {
@@ -711,19 +711,19 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Hero animations",
+  "appearanceHeroAnimations": "Hero动画",
   "@appearanceHeroAnimations": {
     "description": "Toggle for shared-element (Hero) transitions"
   },
-  "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
+  "appearanceHeroAnimationsSubtitle": "打开播放器等页面时，封面会\"嗖\"一下飞过去。",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "Delete Selected",
+  "downloadedAlbumDeleteSelected": "删除所选",
   "@downloadedAlbumDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
+  "downloadedAlbumDeleteMessage": "从此专辑删除 {count} {count, plural, =1{首曲目} other{首曲目}}？\n\n这也将从存储中删除文件。",
   "@downloadedAlbumDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
@@ -732,11 +732,11 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "Tap tracks to select",
+  "downloadedAlbumTapToSelect": "点击曲目以选择",
   "@downloadedAlbumTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "downloadedAlbumDeleteCount": "删除 {count} {count, plural, =1{首曲目} other{首曲目}}",
   "@downloadedAlbumDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
@@ -745,11 +745,11 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "Select tracks to delete",
+  "downloadedAlbumSelectToDelete": "选择要删除的曲目",
   "@downloadedAlbumSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "Disc {discNumber}",
+  "downloadedAlbumDiscHeader": "碟片 {discNumber}",
   "@downloadedAlbumDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
@@ -759,59 +759,59 @@
       }
     }
   },
-  "settingsLocalLibrary": "Local Library",
+  "settingsLocalLibrary": "本地乐库",
   "@settingsLocalLibrary": {
     "description": "Settings menu item - local library"
   },
-  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "settingsLocalLibrarySubtitle": "扫描音乐并检测重复项",
   "@settingsLocalLibrarySubtitle": {
     "description": "Subtitle for local library settings"
   },
-  "settingsCache": "Storage & Cache",
+  "settingsCache": "存储与缓存",
   "@settingsCache": {
     "description": "Settings menu item - cache management"
   },
-  "settingsCacheSubtitle": "View size and clear cached data",
+  "settingsCacheSubtitle": "查看大小并清除缓存数据",
   "@settingsCacheSubtitle": {
     "description": "Subtitle for cache management menu"
   },
-  "libraryTitle": "Local Library",
+  "libraryTitle": "本地乐库",
   "@libraryTitle": {
     "description": "Library settings page title"
   },
-  "libraryScanSettings": "Scan Settings",
+  "libraryScanSettings": "扫描设置",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
   },
-  "libraryEnableLocalLibrary": "Enable Local Library",
+  "libraryEnableLocalLibrary": "启用本地乐库",
   "@libraryEnableLocalLibrary": {
     "description": "Toggle to enable library scanning"
   },
-  "libraryEnableLocalLibrarySubtitle": "Scan and track your existing music",
+  "libraryEnableLocalLibrarySubtitle": "扫描和跟踪你现有的音乐",
   "@libraryEnableLocalLibrarySubtitle": {
     "description": "Subtitle for enable toggle"
   },
-  "libraryFolderHint": "Tap to select folder",
+  "libraryFolderHint": "点击选择文件夹",
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "添加乐库文件夹",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "内部存储、SD卡、SSD或其他外部驱动器",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "离线。重新连接存储以恢复这些曲目",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
-  "librarySourceDisabled": "Disabled",
+  "librarySourceDisabled": "已禁用",
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "已扫描 {total} 个文件中的 {scanned} 个（{progress}%）",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -826,11 +826,11 @@
       }
     }
   },
-  "libraryExternalStorage": "External storage",
+  "libraryExternalStorage": "外部存储",
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "移除乐库文件夹",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
@@ -876,84 +876,84 @@
       }
     }
   },
-  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "libraryShowDuplicateIndicator": "显示重复指示器",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
   },
-  "libraryShowDuplicateIndicatorSubtitle": "Show when searching for existing tracks",
+  "libraryShowDuplicateIndicatorSubtitle": "搜索现有曲目时显示",
   "@libraryShowDuplicateIndicatorSubtitle": {
     "description": "Subtitle for duplicate indicator toggle"
   },
-  "libraryAutoScan": "Auto Scan",
+  "libraryAutoScan": "自动扫描",
   "@libraryAutoScan": {
     "description": "Setting for automatic library scanning"
   },
-  "libraryAutoScanSubtitle": "Automatically scan your library for new files",
+  "libraryAutoScanSubtitle": "每次打开应用自动扫描，不用你手动点。",
   "@libraryAutoScanSubtitle": {
     "description": "Subtitle for auto scan setting"
   },
-  "libraryAutoScanOff": "Off",
+  "libraryAutoScanOff": "关",
   "@libraryAutoScanOff": {
     "description": "Auto scan disabled"
   },
-  "libraryAutoScanOnOpen": "Every app open",
+  "libraryAutoScanOnOpen": "每次打开应用",
   "@libraryAutoScanOnOpen": {
     "description": "Auto scan when app opens"
   },
-  "libraryAutoScanDaily": "Daily",
+  "libraryAutoScanDaily": "每天",
   "@libraryAutoScanDaily": {
     "description": "Auto scan once per day"
   },
-  "libraryAutoScanWeekly": "Weekly",
+  "libraryAutoScanWeekly": "每周",
   "@libraryAutoScanWeekly": {
     "description": "Auto scan once per week"
   },
-  "libraryActions": "Actions",
+  "libraryActions": "操作",
   "@libraryActions": {
     "description": "Section header for library actions"
   },
-  "libraryScan": "Scan Library",
+  "libraryScan": "扫描乐库",
   "@libraryScan": {
     "description": "Button to start library scan"
   },
-  "libraryScanSubtitle": "Scan for audio files",
+  "libraryScanSubtitle": "请先选择要扫描的文件夹。",
   "@libraryScanSubtitle": {
     "description": "Subtitle for scan button"
   },
-  "libraryScanSelectFolderFirst": "Select a folder first",
+  "libraryScanSelectFolderFirst": "请先选择文件夹",
   "@libraryScanSelectFolderFirst": {
     "description": "Message when trying to scan without folder"
   },
-  "libraryCleanupMissingFiles": "Cleanup Missing Files",
+  "libraryCleanupMissingFiles": "清理缺失文件",
   "@libraryCleanupMissingFiles": {
     "description": "Button to remove entries for missing files"
   },
-  "libraryCleanupMissingFilesSubtitle": "Remove entries for files that no longer exist",
+  "libraryCleanupMissingFilesSubtitle": "移除已不存在文件的条目",
   "@libraryCleanupMissingFilesSubtitle": {
     "description": "Subtitle for cleanup button"
   },
-  "libraryClear": "Clear Library",
+  "libraryClear": "清除乐库",
   "@libraryClear": {
     "description": "Button to clear all library entries"
   },
-  "libraryClearSubtitle": "Remove all scanned tracks",
+  "libraryClearSubtitle": "清空所有扫描记录，但不会删除你的本地文件。放心点。",
   "@libraryClearSubtitle": {
     "description": "Subtitle for clear button"
   },
-  "libraryClearConfirmTitle": "Clear Library",
+  "libraryClearConfirmTitle": "清除乐库",
   "@libraryClearConfirmTitle": {
     "description": "Dialog title for clear confirmation"
   },
-  "libraryClearConfirmMessage": "This will remove all scanned tracks from your library. Your actual music files will not be deleted.",
+  "libraryClearConfirmMessage": "这将从乐库中移除所有已扫描曲目。实际音乐文件不会被删除。",
   "@libraryClearConfirmMessage": {
     "description": "Dialog message for clear confirmation"
   },
-  "libraryAbout": "About Local Library",
+  "libraryAbout": "关于本地乐库",
   "@libraryAbout": {
     "description": "Section header for about info"
   },
   "libraryAboutDescription": "扫描你的音乐文件夹，并浏览本地音频文件中存储的标签。支持 FLAC、ALAC、M4A、MP3、Opus、OGG、WAV、AIFF 和 APE。",
-  "libraryTracksUnit": "{count, plural, =1{track} other{tracks}}",
+  "libraryTracksUnit": "{count, plural, =1{首曲目} other{首曲目}}",
   "@libraryTracksUnit": {
     "description": "Unit label for tracks count (without the number itself)",
     "placeholders": {
@@ -962,7 +962,7 @@
       }
     }
   },
-  "libraryFilesUnit": "{count, plural, =1{file} other{files}}",
+  "libraryFilesUnit": "{count, plural, =1{个文件} other{个文件}}",
   "@libraryFilesUnit": {
     "description": "Unit label for files count during library scanning",
     "placeholders": {
@@ -971,7 +971,7 @@
       }
     }
   },
-  "libraryLastScanned": "Last scanned: {time}",
+  "libraryLastScanned": "上次扫描：{time}",
   "@libraryLastScanned": {
     "description": "Last scan time display",
     "placeholders": {
@@ -980,23 +980,23 @@
       }
     }
   },
-  "libraryLastScannedNever": "Never",
+  "libraryLastScannedNever": "从未",
   "@libraryLastScannedNever": {
     "description": "Shown when library has never been scanned"
   },
-  "libraryScanning": "Scanning...",
+  "libraryScanning": "正在扫描…",
   "@libraryScanning": {
     "description": "Status during scan"
   },
-  "libraryScanFinalizing": "Finalizing library...",
+  "libraryScanFinalizing": "正在完成乐库…",
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "扫描已暂停",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
-  "libraryScanProgress": "{progress}% of {total} files",
+  "libraryScanProgress": "{total} 个文件的 {progress}%",
   "@libraryScanProgress": {
     "description": "Scan progress display",
     "placeholders": {
@@ -1008,7 +1008,7 @@
       }
     }
   },
-  "libraryRemovedMissingFiles": "Removed {count} missing files from library",
+  "libraryRemovedMissingFiles": "已从乐库中移除 {count} 个缺失文件",
   "@libraryRemovedMissingFiles": {
     "description": "Snackbar after cleanup",
     "placeholders": {
@@ -1017,11 +1017,11 @@
       }
     }
   },
-  "libraryCleared": "Library cleared",
+  "libraryCleared": "乐库已清除",
   "@libraryCleared": {
     "description": "Snackbar after clearing library"
   },
-  "libraryStorageAccessRequired": "Storage Access Required",
+  "libraryStorageAccessRequired": "需要存储访问权限",
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
@@ -1029,108 +1029,108 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "libraryFilterAll": "All",
+  "libraryFilterAll": "全部",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
   "libraryFilterDownloaded": "本地文件",
-  "libraryFilterLocal": "Local",
+  "libraryFilterLocal": "本地",
   "@libraryFilterLocal": {
     "description": "Filter chip - show only local library items"
   },
-  "libraryFilterTitle": "Filters",
+  "libraryFilterTitle": "过滤器",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
   },
-  "libraryFilterReset": "Reset",
+  "libraryFilterReset": "重置",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
-  "libraryFilterApply": "Apply",
+  "libraryFilterApply": "应用",
   "@libraryFilterApply": {
     "description": "Apply filters button"
   },
-  "libraryFilterSource": "Source",
+  "libraryFilterSource": "来源",
   "@libraryFilterSource": {
     "description": "Filter section - source type"
   },
-  "libraryFilterQuality": "Quality",
+  "libraryFilterQuality": "质量",
   "@libraryFilterQuality": {
     "description": "Filter section - audio quality"
   },
-  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "libraryFilterQualityHiRes": "高解析（24bit）",
   "@libraryFilterQualityHiRes": {
     "description": "Filter option - high resolution audio"
   },
-  "libraryFilterQualityCD": "CD (16bit)",
+  "libraryFilterQualityCD": "CD（16bit）",
   "@libraryFilterQualityCD": {
     "description": "Filter option - CD quality audio"
   },
-  "libraryFilterQualityLossy": "Lossy",
+  "libraryFilterQualityLossy": "有损",
   "@libraryFilterQualityLossy": {
     "description": "Filter option - lossy compressed audio"
   },
-  "libraryFilterFormat": "Format",
+  "libraryFilterFormat": "格式",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
   },
-  "libraryFilterMetadata": "Metadata",
+  "libraryFilterMetadata": "元数据",
   "@libraryFilterMetadata": {
     "description": "Filter section - metadata completeness"
   },
-  "libraryFilterMetadataComplete": "Complete metadata",
+  "libraryFilterMetadataComplete": "完整元数据",
   "@libraryFilterMetadataComplete": {
     "description": "Filter option - items with complete metadata"
   },
-  "libraryFilterMetadataMissingAny": "Missing any metadata",
+  "libraryFilterMetadataMissingAny": "缺少任何元数据",
   "@libraryFilterMetadataMissingAny": {
     "description": "Filter option - items missing any tracked metadata field"
   },
-  "libraryFilterMetadataMissingYear": "Missing year",
+  "libraryFilterMetadataMissingYear": "缺少年份",
   "@libraryFilterMetadataMissingYear": {
     "description": "Filter option - items missing release year/date"
   },
-  "libraryFilterMetadataMissingGenre": "Missing genre",
+  "libraryFilterMetadataMissingGenre": "缺少流派",
   "@libraryFilterMetadataMissingGenre": {
     "description": "Filter option - items missing genre"
   },
-  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
+  "libraryFilterMetadataMissingAlbumArtist": "缺少专辑艺术家",
   "@libraryFilterMetadataMissingAlbumArtist": {
     "description": "Filter option - items missing album artist"
   },
-  "libraryFilterSort": "Sort",
+  "libraryFilterSort": "排序",
   "@libraryFilterSort": {
     "description": "Filter section - sort order"
   },
-  "libraryFilterSortLatest": "Latest",
+  "libraryFilterSortLatest": "最新",
   "@libraryFilterSortLatest": {
     "description": "Sort option - newest first"
   },
-  "libraryFilterSortOldest": "Oldest",
+  "libraryFilterSortOldest": "最旧",
   "@libraryFilterSortOldest": {
     "description": "Sort option - oldest first"
   },
-  "libraryFilterSortAlbumAsc": "Album (A-Z)",
+  "libraryFilterSortAlbumAsc": "专辑（A-Z）",
   "@libraryFilterSortAlbumAsc": {
     "description": "Sort option - album ascending"
   },
-  "libraryFilterSortAlbumDesc": "Album (Z-A)",
+  "libraryFilterSortAlbumDesc": "专辑（Z-A）",
   "@libraryFilterSortAlbumDesc": {
     "description": "Sort option - album descending"
   },
-  "libraryFilterSortGenreAsc": "Genre (A-Z)",
+  "libraryFilterSortGenreAsc": "流派（A-Z）",
   "@libraryFilterSortGenreAsc": {
     "description": "Sort option - genre ascending"
   },
-  "libraryFilterSortGenreDesc": "Genre (Z-A)",
+  "libraryFilterSortGenreDesc": "流派（Z-A）",
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
-  "timeJustNow": "Just now",
+  "timeJustNow": "刚刚",
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
-  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "timeMinutesAgo": "{count, plural, =1{1分钟前} other{{count} 分钟前}}",
   "@timeMinutesAgo": {
     "description": "Relative time - minutes ago",
     "placeholders": {
@@ -1139,7 +1139,7 @@
       }
     }
   },
-  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "timeHoursAgo": "{count, plural, =1{1小时前} other{{count} 小时前}}",
   "@timeHoursAgo": {
     "description": "Relative time - hours ago",
     "placeholders": {
@@ -1148,26 +1148,26 @@
       }
     }
   },
-  "tutorialSearchTitle": "Finding Music",
+  "tutorialSearchTitle": "查找音乐",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
   },
   "tutorialSearchDesc": "扫描资料库后，搜索本地歌曲、艺术家和专辑。",
-  "tutorialLibraryTitle": "Your Library",
+  "tutorialLibraryTitle": "你的乐库",
   "@tutorialLibraryTitle": {
     "description": "Tutorial library page title"
   },
   "tutorialLibraryDesc": "扫描到的音乐会按歌曲、艺术家、专辑和播放列表整理。",
   "tutorialLibraryTip1": "浏览并搜索设备上已有的曲目",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "点击曲目用内置播放器播放",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "在列表或网格视图中浏览曲目、专辑和播放列表",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
-  "tutorialSettingsTitle": "Customize Your Experience",
+  "tutorialSettingsTitle": "自定义你的体验",
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
@@ -1177,29 +1177,29 @@
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
-  "tutorialSettingsTip3": "Customize app theme and appearance",
+  "tutorialSettingsTip3": "自定义应用主题和外观",
   "@tutorialSettingsTip3": {
     "description": "Tutorial settings tip 3"
   },
   "tutorialReadyMessage": "选择音乐文件夹，扫描资料库，开始聆听。",
-  "libraryForceFullScan": "Force Full Scan",
+  "libraryForceFullScan": "强制完整扫描",
   "@libraryForceFullScan": {
     "description": "Button to force a complete rescan of library"
   },
-  "libraryForceFullScanSubtitle": "Rescan all files, ignoring cache",
+  "libraryForceFullScanSubtitle": "忽略缓存，从头再扫一遍，相当于给乐库做个体检",
   "@libraryForceFullScanSubtitle": {
     "description": "Subtitle for force full scan button"
   },
-  "cacheTitle": "Storage & Cache",
+  "cacheTitle": "存储与缓存",
   "@cacheTitle": {
     "description": "Cache management page title"
   },
-  "cacheSummaryTitle": "Cache overview",
+  "cacheSummaryTitle": "缓存概览",
   "@cacheSummaryTitle": {
     "description": "Heading for cache summary card"
   },
   "cacheSummarySubtitle": "清除缓存会保留你的原始音乐文件。",
-  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "cacheEstimatedTotal": "预计缓存使用：{size}",
   "@cacheEstimatedTotal": {
     "description": "Total cache size shown in summary",
     "placeholders": {
@@ -1208,62 +1208,62 @@
       }
     }
   },
-  "cacheSectionStorage": "Cached Data",
+  "cacheSectionStorage": "缓存数据",
   "@cacheSectionStorage": {
     "description": "Section header for cache entries"
   },
-  "cacheSectionMaintenance": "Maintenance",
+  "cacheSectionMaintenance": "维护",
   "@cacheSectionMaintenance": {
     "description": "Section header for cleanup actions"
   },
-  "cacheAppDirectory": "App cache directory",
+  "cacheAppDirectory": "应用缓存目录",
   "@cacheAppDirectory": {
     "description": "Cache item title for app cache directory"
   },
-  "cacheAppDirectoryDesc": "HTTP responses, WebView data, and other temporary app data.",
+  "cacheAppDirectoryDesc": "HTTP响应、WebView数据和其他临时应用数据。",
   "@cacheAppDirectoryDesc": {
     "description": "Description of what app cache directory contains"
   },
-  "cacheTempDirectory": "Temporary directory",
+  "cacheTempDirectory": "临时目录",
   "@cacheTempDirectory": {
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "临时的本地封面和音频处理文件。",
-  "cacheCoverImage": "Cover image cache",
+  "cacheCoverImage": "封面图片缓存",
   "@cacheCoverImage": {
     "description": "Cache item title for persistent cover images"
   },
   "cacheCoverImageDesc": "早期版本遗留的图片缓存。本地封面仍保存在资料库缓存中。",
-  "cacheLibraryCover": "Library cover cache",
+  "cacheLibraryCover": "乐库封面缓存",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
   },
-  "cacheLibraryCoverDesc": "Cover art extracted from local music files. Will re-extract on next scan.",
+  "cacheLibraryCoverDesc": "从本地音乐文件提取的封面。下次扫描时重新提取。",
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "音量标准化",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "使用ReplayGain或R128标签（如果存在）均衡曲目间的响度",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "音频分析缓存",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "保存的频谱图和分析结果。下次打开时将重新分析。",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
   "cacheCleanupUnusedDesc": "移除本地文件已丢失的资料库条目。",
-  "cacheNoData": "No cached data",
+  "cacheNoData": "无缓存数据",
   "@cacheNoData": {
     "description": "Label when cache category has no data"
   },
-  "cacheSizeWithFiles": "{size} in {count} files",
+  "cacheSizeWithFiles": "{size}，共 {count} 个文件",
   "@cacheSizeWithFiles": {
     "description": "Cache size and file count",
     "placeholders": {
@@ -1275,7 +1275,7 @@
       }
     }
   },
-  "cacheClearSuccess": "Cleared: {target}",
+  "cacheClearSuccess": "已清除：{target}",
   "@cacheClearSuccess": {
     "description": "Snackbar after clearing selected cache",
     "placeholders": {
@@ -1284,30 +1284,30 @@
       }
     }
   },
-  "cacheClearConfirmTitle": "Clear cache?",
+  "cacheClearConfirmTitle": "清除缓存？",
   "@cacheClearConfirmTitle": {
     "description": "Dialog title before clearing one cache category"
   },
   "cacheClearConfirmMessage": "清除 {target} 的缓存数据？原始音乐文件将被保留。",
-  "cacheClearAllConfirmTitle": "Clear all cache?",
+  "cacheClearAllConfirmTitle": "清除所有缓存？",
   "@cacheClearAllConfirmTitle": {
     "description": "Dialog title before clearing all caches"
   },
   "cacheClearAllConfirmMessage": "清除此页面上的所有缓存类别？原始音乐文件将被保留。",
-  "cacheClearAll": "Clear all cache",
+  "cacheClearAll": "清除所有缓存",
   "@cacheClearAll": {
     "description": "Button label to clear all caches"
   },
-  "cacheCleanupUnused": "Cleanup unused data",
+  "cacheCleanupUnused": "清理未使用数据",
   "@cacheCleanupUnused": {
     "description": "Action title for cleaning unused entries"
   },
   "cacheCleanupUnusedSubtitle": "从资料库索引中移除丢失的本地文件",
-  "cacheRefreshStats": "Refresh stats",
+  "cacheRefreshStats": "刷新统计",
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackEditMetadata": "Edit Metadata",
+  "trackEditMetadata": "编辑元数据",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
@@ -1315,7 +1315,7 @@
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
-  "actionCreate": "Create",
+  "actionCreate": "创建",
   "@actionCreate": {
     "description": "Generic action button - create"
   },
@@ -1323,27 +1323,27 @@
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
-  "collectionFavoriteArtists": "Favorite Artists",
+  "collectionFavoriteArtists": "收藏艺术家",
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "播放列表",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
-  "collectionAddToPlaylist": "Add to playlist",
+  "collectionAddToPlaylist": "添加到播放列表",
   "@collectionAddToPlaylist": {
     "description": "Action to add a track to user playlist"
   },
-  "collectionCreatePlaylist": "Create playlist",
+  "collectionCreatePlaylist": "创建播放列表",
   "@collectionCreatePlaylist": {
     "description": "Action to create a new playlist"
   },
-  "collectionNoPlaylistsYet": "No playlists yet",
+  "collectionNoPlaylistsYet": "暂无播放列表",
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
-  "collectionPlaylistTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "collectionPlaylistTracks": "{count, plural, =1{1首曲目} other{{count} 首曲目}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
     "placeholders": {
@@ -1352,7 +1352,7 @@
       }
     }
   },
-  "collectionAddedToPlaylist": "Added to \"{playlistName}\"",
+  "collectionAddedToPlaylist": "已添加到「{playlistName}」",
   "@collectionAddedToPlaylist": {
     "description": "Snackbar after adding track to playlist",
     "placeholders": {
@@ -1361,7 +1361,7 @@
       }
     }
   },
-  "collectionAlreadyInPlaylist": "Already in \"{playlistName}\"",
+  "collectionAlreadyInPlaylist": "已在「{playlistName}」中",
   "@collectionAlreadyInPlaylist": {
     "description": "Snackbar when track already exists in playlist",
     "placeholders": {
@@ -1370,23 +1370,23 @@
       }
     }
   },
-  "collectionPlaylistNameHint": "Playlist name",
+  "collectionPlaylistNameHint": "播放列表名称",
   "@collectionPlaylistNameHint": {
     "description": "Hint text for playlist name input"
   },
-  "collectionPlaylistNameRequired": "Playlist name is required",
+  "collectionPlaylistNameRequired": "播放列表名称为必填项",
   "@collectionPlaylistNameRequired": {
     "description": "Validation error for empty playlist name"
   },
-  "collectionRenamePlaylist": "Rename playlist",
+  "collectionRenamePlaylist": "重命名播放列表",
   "@collectionRenamePlaylist": {
     "description": "Action to rename playlist"
   },
-  "collectionDeletePlaylist": "Delete playlist",
+  "collectionDeletePlaylist": "删除播放列表",
   "@collectionDeletePlaylist": {
     "description": "Action to delete playlist"
   },
-  "collectionPlaylistRenamed": "Playlist renamed",
+  "collectionPlaylistRenamed": "播放列表已重命名",
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
@@ -1395,35 +1395,35 @@
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
   },
-  "collectionLovedEmptySubtitle": "Tap love on tracks to keep your favorites",
+  "collectionLovedEmptySubtitle": "在曲目上点击收藏以保存最爱",
   "@collectionLovedEmptySubtitle": {
     "description": "Loved empty state subtitle"
   },
-  "collectionFavoriteArtistsEmptyTitle": "No favorite artists yet",
+  "collectionFavoriteArtistsEmptyTitle": "暂无收藏艺术家",
   "@collectionFavoriteArtistsEmptyTitle": {
     "description": "Favorite artists empty state title"
   },
-  "collectionFavoriteArtistsEmptySubtitle": "Tap the heart on an artist page to keep them here",
+  "collectionFavoriteArtistsEmptySubtitle": "在艺术家页面点击心形图标以收藏",
   "@collectionFavoriteArtistsEmptySubtitle": {
     "description": "Favorite artists empty state subtitle"
   },
-  "collectionPlaylistEmptyTitle": "Playlist is empty",
+  "collectionPlaylistEmptyTitle": "播放列表为空",
   "@collectionPlaylistEmptyTitle": {
     "description": "Playlist empty state title"
   },
-  "collectionPlaylistEmptySubtitle": "Long-press + on any track to add it here",
+  "collectionPlaylistEmptySubtitle": "在任意曲目上长按 + 添加到此处",
   "@collectionPlaylistEmptySubtitle": {
     "description": "Playlist empty state subtitle"
   },
-  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "collectionRemoveFromPlaylist": "从播放列表移除",
   "@collectionRemoveFromPlaylist": {
     "description": "Tooltip for removing track from playlist"
   },
-  "collectionRemoveFromFolder": "Remove from folder",
+  "collectionRemoveFromFolder": "从文件夹移除",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
   },
-  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removed from Favorite Artists",
+  "collectionRemovedFromFavoriteArtists": "「{artistName}」已从收藏艺术家中移除",
   "@collectionRemovedFromFavoriteArtists": {
     "description": "Snackbar after removing artist from favorite artists",
     "placeholders": {
@@ -1432,83 +1432,83 @@
       }
     }
   },
-  "trackOptionAddToLoved": "Add to Loved",
+  "trackOptionAddToLoved": "添加到收藏",
   "@trackOptionAddToLoved": {
     "description": "Bottom sheet action label - add track to loved folder"
   },
-  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "trackOptionRemoveFromLoved": "从收藏移除",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
   },
-  "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
+  "artistOptionRemoveFromFavorites": "从收藏艺术家中移除",
   "@artistOptionRemoveFromFavorites": {
     "description": "Action label - remove artist from favorite artists"
   },
-  "collectionPlaylistChangeCover": "Change cover image",
+  "collectionPlaylistChangeCover": "更改封面图片",
   "@collectionPlaylistChangeCover": {
     "description": "Bottom sheet action to pick a custom cover image for a playlist"
   },
-  "collectionPlaylistRemoveCover": "Remove cover image",
+  "collectionPlaylistRemoveCover": "删除封面图片",
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "备份与恢复",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "将你的乐库、历史和设置转移到新设备",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "备份与恢复",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
-  "backupExportSectionTitle": "Create backup",
+  "backupExportSectionTitle": "创建备份",
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "将设置、本地配置文件、收藏集以及可选的旧版资料库记录保存到备份文件中。",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "创建备份文件",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "恢复备份",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "选择备份文件以恢复你的数据。这将替换此设备上当前的设置、历史和乐库。",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "选择备份文件",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "备份已创建",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "创建备份失败",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "此备份过大，无法恢复。请减少包含的类别后重试。",
   "backupRestorePartiallyFailed": "恢复备份失败。已恢复：{categories}",
   "backupListeningStatisticsExcluded": "不包含收听统计和播放次数。",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "恢复此备份？",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
-  "backupRestoreConfirmButton": "Restore",
+  "backupRestoreConfirmButton": "恢复",
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "备份恢复成功",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "恢复备份失败",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
@@ -1516,26 +1516,26 @@
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "重启应用以确保所有更改生效。",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "备份内容",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
-  "backupSettingsOnly": "Settings only",
+  "backupSettingsOnly": "仅设置",
   "backupSelectHistory": "旧版资料库记录",
-  "backupSelectCollections": "Library collections",
+  "backupSelectCollections": "乐库收藏",
   "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
-  "backupContentsSettings": "App settings",
+  "backupSelectedExportDescription": "将选定的类别保存到备份文件。不包含音频文件。",
+  "backupSelectAtLeastOne": "至少选择一个类别以创建备份。",
+  "backupSelectedRestoreMessage": "仅恢复下面列出的类别。备份中不包含的类别不会被更改。",
+  "backupContentsSettings": "应用设置",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsHistory": "{count} history {count, plural, =1{item} other{items}}",
+  "backupContentsHistory": "{count} 条历史 {count, plural, =1{记录} other{记录}}",
   "@backupContentsHistory": {
     "description": "Backup contents row for history count",
     "placeholders": {
@@ -1544,7 +1544,7 @@
       }
     }
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "{count} 首收藏 {count, plural, =1{曲目} other{曲目}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1553,7 +1553,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1个播放列表} other{{count} 个播放列表}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1562,7 +1562,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "{count, plural, =1{1位收藏艺术家} other{{count} 位收藏艺术家}}",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1571,7 +1571,7 @@
       }
     }
   },
-  "snackbarRemovedTracksFromLoved": "Removed {count} tracks from Loved",
+  "snackbarRemovedTracksFromLoved": "已从收藏中移除 {count} 首曲目",
   "@snackbarRemovedTracksFromLoved": {
     "description": "Snackbar after removing multiple tracks from Loved folder",
     "placeholders": {
@@ -1580,7 +1580,7 @@
       }
     }
   },
-  "snackbarAddedTracksToLoved": "Added {count} tracks to Loved",
+  "snackbarAddedTracksToLoved": "已添加 {count} 首曲目到收藏",
   "@snackbarAddedTracksToLoved": {
     "description": "Snackbar after adding multiple tracks to Loved folder",
     "placeholders": {
@@ -1589,15 +1589,15 @@
       }
     }
   },
-  "homeGoToAlbum": "Go to Album",
+  "homeGoToAlbum": "前往专辑",
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarMetadataSaved": "Metadata saved successfully",
+  "snackbarMetadataSaved": "元数据保存成功",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
-  "snackbarError": "Error: {error}",
+  "snackbarError": "错误：{error}",
   "@snackbarError": {
     "description": "Generic error snackbar with error detail",
     "placeholders": {
@@ -1606,47 +1606,47 @@
       }
     }
   },
-  "noTracksFoundForAlbum": "No tracks found for this album",
+  "noTracksFoundForAlbum": "未找到此专辑的曲目",
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
   },
-  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "snackbarUnsupportedAudioFormat": "不支持的音频格式",
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
-  "cacheRefresh": "Refresh",
+  "cacheRefresh": "刷新",
   "@cacheRefresh": {
     "description": "Tooltip for refresh button on cache management page"
   },
-  "editMetadataFieldTitle": "Title",
+  "editMetadataFieldTitle": "标题",
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
-  "editMetadataFieldArtist": "Artist",
+  "editMetadataFieldArtist": "艺术家",
   "@editMetadataFieldArtist": {
     "description": "Chip label for artist field in auto-fill selector"
   },
-  "editMetadataFieldAlbum": "Album",
+  "editMetadataFieldAlbum": "专辑",
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
-  "editMetadataFieldAlbumArtist": "Album Artist",
+  "editMetadataFieldAlbumArtist": "专辑艺术家",
   "@editMetadataFieldAlbumArtist": {
     "description": "Chip label for album artist field in auto-fill selector"
   },
-  "editMetadataFieldDate": "Date",
+  "editMetadataFieldDate": "日期",
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
-  "editMetadataFieldTrackNum": "Track #",
+  "editMetadataFieldTrackNum": "曲目#",
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
-  "editMetadataFieldDiscNum": "Disc #",
+  "editMetadataFieldDiscNum": "碟片#",
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
-  "editMetadataFieldGenre": "Genre",
+  "editMetadataFieldGenre": "流派",
   "@editMetadataFieldGenre": {
     "description": "Chip label for genre field in auto-fill selector"
   },
@@ -1654,23 +1654,23 @@
   "@editMetadataFieldIsrc": {
     "description": "Chip label for ISRC field in auto-fill selector"
   },
-  "editMetadataFieldLabel": "Label",
+  "editMetadataFieldLabel": "厂牌",
   "@editMetadataFieldLabel": {
     "description": "Chip label for label field in auto-fill selector"
   },
-  "editMetadataFieldCopyright": "Copyright",
+  "editMetadataFieldCopyright": "版权",
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "封面",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
-  "queueFilteringIndicator": "Filtering...",
+  "queueFilteringIndicator": "正在过滤…",
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
-  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "queueTrackCount": "{count, plural, =1{1首曲目} other{{count} 首曲目}}",
   "@queueTrackCount": {
     "description": "Track count label with plural support",
     "placeholders": {
@@ -1679,7 +1679,7 @@
       }
     }
   },
-  "queueAlbumCount": "{count, plural, =1{1 album} other{{count} albums}}",
+  "queueAlbumCount": "{count, plural, =1{1张专辑} other{{count} 张专辑}}",
   "@queueAlbumCount": {
     "description": "Album count label with plural support",
     "placeholders": {
@@ -1692,7 +1692,7 @@
   "queueEmptyAlbumsSubtitle": "扫描音乐文件夹以添加专辑",
   "queueEmptySingles": "没有本地单曲",
   "queueEmptySinglesSubtitle": "扫描到的单曲会显示在这里",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1个播放列表} other{{count} 个播放列表}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1701,77 +1701,77 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "创建播放列表以整理你的曲目",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
   "queueEmptyHistory": "没有本地曲目",
   "queueEmptyHistorySubtitle": "扫描音乐文件夹以填充资料库",
-  "selectionAllPlaylistsSelected": "All playlists selected",
+  "selectionAllPlaylistsSelected": "已选择所有播放列表",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
   },
-  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "selectionTapPlaylistsToSelect": "点击播放列表以选择",
   "@selectionTapPlaylistsToSelect": {
     "description": "Hint shown in playlist selection mode"
   },
-  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "selectionSelectPlaylistsToDelete": "选择要删除的播放列表",
   "@selectionSelectPlaylistsToDelete": {
     "description": "Hint shown when no playlists are selected for deletion"
   },
-  "audioAnalysisTitle": "Audio Quality Analysis",
+  "audioAnalysisTitle": "音频质量分析",
   "@audioAnalysisTitle": {
     "description": "Title for audio analysis section"
   },
-  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "audioAnalysisDescription": "通过频谱分析验证无损质量",
   "@audioAnalysisDescription": {
     "description": "Description for audio analysis tap-to-analyze prompt"
   },
-  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "audioAnalysisAnalyzing": "正在分析音频……",
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "采样率",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "编解码器",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "容器",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "解码格式",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "位深",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
-  "audioAnalysisChannels": "Channels",
+  "audioAnalysisChannels": "声道",
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
-  "audioAnalysisDuration": "Duration",
+  "audioAnalysisDuration": "时长",
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
-  "audioAnalysisNyquist": "Nyquist",
+  "audioAnalysisNyquist": "奈奎斯特",
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
-  "audioAnalysisFileSize": "Size",
+  "audioAnalysisFileSize": "大小",
   "@audioAnalysisFileSize": {
     "description": "File size metric label"
   },
-  "audioAnalysisDynamicRange": "Dynamic Range",
+  "audioAnalysisDynamicRange": "动态范围",
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "峰值",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -1783,58 +1783,58 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "真实峰值",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
-  "audioAnalysisClipping": "Clipping",
+  "audioAnalysisClipping": "削波",
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
-  "audioAnalysisNoClipping": "No clipping",
+  "audioAnalysisNoClipping": "无削波",
   "@audioAnalysisNoClipping": {
     "description": "Displayed when no clipped samples were detected"
   },
-  "audioAnalysisSpectralCutoff": "Spectral Cutoff",
+  "audioAnalysisSpectralCutoff": "频谱截止",
   "@audioAnalysisSpectralCutoff": {
     "description": "Estimated spectral cutoff metric label"
   },
-  "audioAnalysisCutoffNotDetected": "Not detected",
+  "audioAnalysisCutoffNotDetected": "未检测到",
   "@audioAnalysisCutoffNotDetected": {
     "description": "Displayed when no reliable broadband spectral cutoff can be detected"
   },
-  "audioAnalysisChannelStats": "Per-channel Stats",
+  "audioAnalysisChannelStats": "各声道统计",
   "@audioAnalysisChannelStats": {
     "description": "Per-channel audio analysis section label"
   },
-  "audioAnalysisSamples": "Samples",
+  "audioAnalysisSamples": "样本数",
   "@audioAnalysisSamples": {
     "description": "Total samples metric label"
   },
-  "audioAnalysisRescan": "Re-analyze",
+  "audioAnalysisRescan": "重新分析",
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
   "audioAnalysisSaveSpectrogram": "保存频谱图",
   "audioAnalysisSpectrogramSaved": "频谱图已保存至 {fileName}",
   "audioAnalysisSpectrogramSaveFailed": "无法保存频谱图",
-  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "audioAnalysisRescanning": "正在重新分析音频……",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
   },
-  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "metadataSaveFailedFfmpeg": "通过FFmpeg保存元数据失败",
   "@metadataSaveFailedFfmpeg": {
     "description": "Snackbar error when FFmpeg fails to write metadata"
   },
-  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "metadataSaveFailedStorage": "将元数据写回存储失败",
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "notifScanningLibrary": "Scanning local library",
+  "notifScanningLibrary": "正在扫描本地乐库",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
   },
-  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "notifLibraryScanProgressWithTotal": "已扫描 {scanned}/{total} 个文件 · {percentage}%",
   "@notifLibraryScanProgressWithTotal": {
     "description": "Notification body for library scan progress when total is known",
     "placeholders": {
@@ -1849,7 +1849,7 @@
       }
     }
   },
-  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "notifLibraryScanProgressNoTotal": "已扫描 {scanned} 个文件",
   "@notifLibraryScanProgressNoTotal": {
     "description": "Notification body for library scan progress when total is unknown",
     "placeholders": {
@@ -1858,11 +1858,11 @@
       }
     }
   },
-  "notifLibraryScanComplete": "Library scan complete",
+  "notifLibraryScanComplete": "乐库扫描完成",
   "@notifLibraryScanComplete": {
     "description": "Notification title when library scan finishes"
   },
-  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "notifLibraryScanCompleteBody": "已索引 {count} 首曲目",
   "@notifLibraryScanCompleteBody": {
     "description": "Notification body for library scan complete - number of indexed tracks",
     "placeholders": {
@@ -1871,7 +1871,7 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} excluded",
+  "notifLibraryScanExcluded": "{count} 个被排除",
   "@notifLibraryScanExcluded": {
     "description": "Library scan complete suffix - excluded track count",
     "placeholders": {
@@ -1880,7 +1880,7 @@
       }
     }
   },
-  "notifLibraryScanErrors": "{count} errors",
+  "notifLibraryScanErrors": "{count} 个错误",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
     "placeholders": {
@@ -1889,24 +1889,24 @@
       }
     }
   },
-  "notifLibraryScanFailed": "Library scan failed",
+  "notifLibraryScanFailed": "乐库扫描失败",
   "@notifLibraryScanFailed": {
     "description": "Notification title when library scan fails"
   },
   "notifLibraryScanInterruptedBody": "上一次资料库扫描已中断。请重新扫描文件夹以继续。已索引的曲目仍可使用。",
-  "notifLibraryScanCancelled": "Library scan cancelled",
+  "notifLibraryScanCancelled": "乐库扫描已取消",
   "@notifLibraryScanCancelled": {
     "description": "Notification title when library scan is cancelled by the user"
   },
-  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "notifLibraryScanStopped": "扫描在完成前停止。",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "乐库扫描已暂停",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "已扫描 {count} 个文件。在本地乐库设置中恢复以从此处继续。",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1919,79 +1919,79 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "Paste or search...",
+  "tutorialSearchHint": "粘贴或搜索……",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },
-  "trackCoverNoEmbeddedArt": "No embedded album art found",
+  "trackCoverNoEmbeddedArt": "未找到嵌入的专辑封面",
   "@trackCoverNoEmbeddedArt": {
     "description": "Message shown when a track file has no embedded cover art"
   },
-  "trackCoverReplace": "Replace Cover",
+  "trackCoverReplace": "替换封面",
   "@trackCoverReplace": {
     "description": "Button label for replacing selected cover art"
   },
-  "trackCoverPick": "Pick Cover",
+  "trackCoverPick": "选择封面",
   "@trackCoverPick": {
     "description": "Button label for selecting cover art"
   },
-  "trackCoverClearSelected": "Clear selected cover",
+  "trackCoverClearSelected": "清除所选封面",
   "@trackCoverClearSelected": {
     "description": "Tooltip for clearing the newly selected cover art"
   },
-  "trackCoverCurrent": "Current cover",
+  "trackCoverCurrent": "当前封面",
   "@trackCoverCurrent": {
     "description": "Label for the currently embedded cover preview"
   },
-  "trackCoverSelected": "Selected cover",
+  "trackCoverSelected": "已选择封面",
   "@trackCoverSelected": {
     "description": "Label for the newly selected cover preview"
   },
-  "trackCoverReplaceNotice": "The selected cover will replace the current embedded cover when you tap Save.",
+  "trackCoverReplaceNotice": "点击保存时，所选封面将替换当前嵌入封面。",
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "Cover resolution",
+  "trackCoverResolution": "封面分辨率",
   "@trackCoverResolution": {
     "description": "Label for selecting the embedded cover art resolution"
   },
-  "trackCoverResolutionHint": "Sets the longest edge when saved. Enlarging does not add image detail.",
+  "trackCoverResolutionHint": "设置保存时的最长边。放大不会增加图像细节。",
   "@trackCoverResolutionHint": {
     "description": "Explanation below the embedded cover art resolution selector"
   },
-  "trackCoverResizeFailed": "The cover image could not be resized. Please try another size or image.",
+  "trackCoverResizeFailed": "无法调整封面图片大小。请尝试其他大小或图片。",
   "@trackCoverResizeFailed": {
     "description": "Error shown when resizing cover art before saving metadata fails"
   },
-  "nowPlayingRepeatOff": "Repeat off",
+  "nowPlayingRepeatOff": "循环关",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
   },
-  "nowPlayingRepeatAll": "Repeat all",
+  "nowPlayingRepeatAll": "全部循环",
   "@nowPlayingRepeatAll": {
     "description": "Repeat toggle tooltip when the whole queue repeats"
   },
-  "nowPlayingRepeatOne": "Repeat one",
+  "nowPlayingRepeatOne": "单曲循环",
   "@nowPlayingRepeatOne": {
     "description": "Repeat toggle tooltip when the current track repeats"
   },
-  "logAutoScrollOn": "Auto-scroll ON",
+  "logAutoScrollOn": "自动滚动 开",
   "@logAutoScrollOn": {
     "description": "Tooltip when auto-scroll is enabled on the log screen"
   },
-  "logAutoScrollOff": "Auto-scroll OFF",
+  "logAutoScrollOff": "自动滚动 关",
   "@logAutoScrollOff": {
     "description": "Tooltip when auto-scroll is disabled on the log screen"
   },
-  "logCopyLogs": "Copy logs",
+  "logCopyLogs": "复制日志",
   "@logCopyLogs": {
     "description": "Tooltip for copying logs"
   },
-  "logClearSearch": "Clear search",
+  "logClearSearch": "清除搜索",
   "@logClearSearch": {
     "description": "Tooltip for clearing the log search field"
   },
-  "clickableInformationUnavailable": "{type} information not available",
+  "clickableInformationUnavailable": "{type} 信息不可用",
   "@clickableInformationUnavailable": {
     "description": "Snackbar shown when clickable metadata cannot open a destination",
     "placeholders": {
@@ -2000,7 +2000,7 @@
       }
     }
   },
-  "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
+  "a11yOpenItemCount": "打开 {title}，共 {count} {count, plural, =1{项} other{项}}",
   "@a11yOpenItemCount": {
     "description": "Accessibility label for opening a grouped item with count",
     "placeholders": {
@@ -2012,7 +2012,7 @@
       }
     }
   },
-  "a11yOpenAlbumByArtistTrackCount": "Open album {albumName} by {artistName}, {trackCount} tracks",
+  "a11yOpenAlbumByArtistTrackCount": "打开 {artistName} 的专辑 {albumName}，共 {trackCount} 首曲目",
   "@a11yOpenAlbumByArtistTrackCount": {
     "description": "Accessibility label for opening an album item with track count",
     "placeholders": {
@@ -2027,44 +2027,44 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "歌词",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
   "settingsLyricsSubtitle": "本地歌词、保存模式和文字大小",
-  "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
+  "editMetadataFieldDateHint": "YYYY-MM-DD 或 YYYY",
   "@editMetadataFieldDateHint": {
     "description": "Hint text for the edit metadata date field"
   },
-  "editMetadataFieldTrackTotal": "Track Total",
+  "editMetadataFieldTrackTotal": "曲目总数",
   "@editMetadataFieldTrackTotal": {
     "description": "Label for total tracks field in the edit metadata sheet"
   },
-  "editMetadataFieldDiscTotal": "Disc Total",
+  "editMetadataFieldDiscTotal": "碟片总数",
   "@editMetadataFieldDiscTotal": {
     "description": "Label for total discs field in the edit metadata sheet"
   },
-  "editMetadataFieldComposer": "Composer",
+  "editMetadataFieldComposer": "作曲",
   "@editMetadataFieldComposer": {
     "description": "Label for composer field in the edit metadata sheet"
   },
-  "editMetadataFieldComment": "Comment",
+  "editMetadataFieldComment": "评论",
   "@editMetadataFieldComment": {
     "description": "Label for comment field in the edit metadata sheet"
   },
-  "trackAlbumType": "Release Type",
+  "trackAlbumType": "发行类型",
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "专辑、单曲、EP、合辑……",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
-  "editMetadataFieldExplicit": "Explicit",
+  "editMetadataFieldExplicit": " explicit",
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "标记此曲目包含 explicit 内容",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
@@ -2072,43 +2072,43 @@
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
-  "editMetadataFieldUpc": "UPC / Barcode",
+  "editMetadataFieldUpc": "UPC / 条形码",
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "数字UPC、EAN或GTIN",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
-  "editMetadataAdvanced": "Advanced",
+  "editMetadataAdvanced": "高级",
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
+  "libraryFilterMetadataMissingTrackNumber": "缺少曲目编号",
   "@libraryFilterMetadataMissingTrackNumber": {
     "description": "Filter option - items missing track number"
   },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
+  "libraryFilterMetadataMissingDiscNumber": "缺少碟片编号",
   "@libraryFilterMetadataMissingDiscNumber": {
     "description": "Filter option - items missing disc number"
   },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
+  "libraryFilterMetadataMissingArtist": "缺少艺术家",
   "@libraryFilterMetadataMissingArtist": {
     "description": "Filter option - items missing artist"
   },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
+  "libraryFilterMetadataIncorrectIsrcFormat": "ISRC格式不正确",
   "@libraryFilterMetadataIncorrectIsrcFormat": {
     "description": "Filter option - items with an invalid ISRC format"
   },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
+  "libraryFilterMetadataMissingIsrc": "缺少ISRC",
   "@libraryFilterMetadataMissingIsrc": {
     "description": "Filter option - items without any ISRC tag"
   },
-  "libraryFilterMetadataMissingLabel": "Missing label",
+  "libraryFilterMetadataMissingLabel": "缺少厂牌",
   "@libraryFilterMetadataMissingLabel": {
     "description": "Filter option - items missing record label"
   },
-  "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
+  "collectionDeletePlaylistsMessage": "删除 {count} {count, plural, =1{个播放列表} other{个播放列表}}？",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
     "placeholders": {
@@ -2117,7 +2117,7 @@
       }
     }
   },
-  "collectionPlaylistsDeleted": "{count} {count, plural, =1{playlist} other{playlists}} deleted",
+  "collectionPlaylistsDeleted": "已删除 {count} {count, plural, =1{个播放列表} other{个播放列表}}",
   "@collectionPlaylistsDeleted": {
     "description": "Snackbar after deleting selected playlists",
     "placeholders": {
@@ -2126,7 +2126,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylist": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName}",
+  "collectionAddedTracksToPlaylist": "已添加 {count} {count, plural, =1{首曲目} other{首曲目}} 到 {playlistName}",
   "@collectionAddedTracksToPlaylist": {
     "description": "Snackbar after adding multiple tracks to a playlist",
     "placeholders": {
@@ -2138,7 +2138,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylistWithExisting": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName} ({alreadyCount} already in playlist)",
+  "collectionAddedTracksToPlaylistWithExisting": "已添加 {count} {count, plural, =1{首曲目} other{首曲目}} 到 {playlistName}（{alreadyCount} 首已在播放列表中）",
   "@collectionAddedTracksToPlaylistWithExisting": {
     "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
     "placeholders": {
@@ -2153,7 +2153,7 @@
       }
     }
   },
-  "itemCount": "{count} {count, plural, =1{item} other{items}}",
+  "itemCount": "{count} {count, plural, =1{项} other{项}}",
   "@itemCount": {
     "description": "Generic item count label",
     "placeholders": {
@@ -2162,7 +2162,7 @@
       }
     }
   },
-  "selectionDeleteTracksCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "selectionDeleteTracksCount": "删除 {count} {count, plural, =1{首曲目} other{首曲目}}",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
     "placeholders": {
@@ -2171,15 +2171,15 @@
       }
     }
   },
-  "a11ySelectTrack": "Select track",
+  "a11ySelectTrack": "选择曲目",
   "@a11ySelectTrack": {
     "description": "Accessibility label for selecting a track"
   },
-  "a11yDeselectTrack": "Deselect track",
+  "a11yDeselectTrack": "取消选择曲目",
   "@a11yDeselectTrack": {
     "description": "Accessibility label for deselecting a track"
   },
-  "a11yPlayTrackByArtist": "Play {trackName} by {artistName}",
+  "a11yPlayTrackByArtist": "播放 {artistName} 的 {trackName}",
   "@a11yPlayTrackByArtist": {
     "description": "Accessibility label for playing a local library track",
     "placeholders": {
@@ -2201,11 +2201,11 @@
   "a11yPlaybackPosition": "播放位置",
   "a11ySavingTrackDetails": "正在保存曲目详情",
   "cacheClearFor": "清除 {target}",
-  "logIssueSummary": "Issue Summary",
+  "logIssueSummary": "问题摘要",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"
   },
-  "logTotalErrors": "Total errors: {count}",
+  "logTotalErrors": "总错误数：{count}",
   "@logTotalErrors": {
     "description": "Total error count in log issue analysis",
     "placeholders": {
@@ -2214,56 +2214,56 @@
       }
     }
   },
-  "libraryScanCancelled": "Scan cancelled",
+  "libraryScanCancelled": "扫描已取消",
   "@libraryScanCancelled": {
     "description": "Library scan status when a scan was cancelled"
   },
-  "libraryScanCancelledSubtitle": "You can retry the scan when ready.",
+  "libraryScanCancelledSubtitle": "准备好后可以重试扫描。",
   "@libraryScanCancelledSubtitle": {
     "description": "Library scan status subtitle after cancellation"
   },
-  "audioAnalysisStereo": "Stereo",
+  "audioAnalysisStereo": "立体声",
   "@audioAnalysisStereo": {
     "description": "Audio channel layout label - stereo"
   },
-  "audioAnalysisMono": "Mono",
+  "audioAnalysisMono": "单声道",
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "unknownArtist": "Unknown Artist",
+  "unknownArtist": "未知艺术家",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
   },
-  "permissionAudio": "Audio",
+  "permissionAudio": "音频",
   "@permissionAudio": {
     "description": "Audio permission type label"
   },
-  "permissionStorage": "Storage",
+  "permissionStorage": "存储",
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "通知",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "播放",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "未在播放",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "最小化",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "接下来",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "音频输出",
+  "nowPlayingWrittenBy": "作词：{writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2271,7 +2271,7 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Lyrics: {provider}",
+  "nowPlayingLyricsProvider": "歌词：{provider}",
   "@nowPlayingLyricsProvider": {
     "placeholders": {
       "provider": {
@@ -2279,24 +2279,24 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "无法打开音频输出设置。",
+  "nowPlayingPreviousTrack": "上一曲",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "下一曲",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
-  "nowPlayingDetails": "Details",
+  "nowPlayingDetails": "详情",
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "睡眠定时器",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "将于 {time} 结束",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2305,7 +2305,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1分钟} other{{minutes} 分钟}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2314,11 +2314,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "关闭睡眠定时器",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "睡眠定时器已设置 {duration}",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2327,55 +2327,55 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "睡眠定时器已关闭",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "播放器",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "歌词",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "此文件无歌词",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
-  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingInstrumental": "纯音乐",
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "歌词语言选项",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
-  "nowPlayingShuffleOn": "Shuffle on",
+  "nowPlayingHidePronunciation": "隐藏发音",
+  "nowPlayingShowPronunciation": "显示发音",
+  "nowPlayingHideTranslation": "隐藏翻译",
+  "nowPlayingShowTranslation": "显示翻译",
+  "nowPlayingShuffleOn": "随机开",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
   },
-  "nowPlayingPlayInOrder": "Play in order",
+  "nowPlayingPlayInOrder": "按顺序播放",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingShuffleLibrary": "Shuffle library",
+  "nowPlayingShuffleLibrary": "随机播放乐库",
   "@nowPlayingShuffleLibrary": {
     "description": "Button label to shuffle and play the entire local library"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "队列为空",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "无可用元数据",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "删除 {count} {count, plural, =1{个播放列表} other{个播放列表}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2384,7 +2384,7 @@
       }
     }
   },
-  "actionShuffle": "Shuffle",
+  "actionShuffle": "随机播放",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
@@ -2392,23 +2392,23 @@
   "@metadataOriginal": {
     "description": "Label for keeping the original embedded cover resolution"
   },
-  "unknownTitle": "Unknown title",
+  "unknownTitle": "未知标题",
   "@unknownTitle": {
     "description": "Fallback track title when metadata is missing"
   },
-  "trackPlayNext": "Play next",
+  "trackPlayNext": "下一首播放",
   "@trackPlayNext": {
     "description": "Menu action to play a track as the next queue item"
   },
-  "trackAddToQueue": "Add to queue",
+  "trackAddToQueue": "添加到队列",
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "搜索设置",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "没有设置匹配「{query}」",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2417,11 +2417,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "缺少歌词",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "缺少ReplayGain",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2440,26 +2440,29 @@
   "@sistrumFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
-  "autoMixOn": "AutoMix on",
-  "autoMixOff": "AutoMix off",
-  "autoplayOn": "Autoplay on",
-  "autoplayOff": "Autoplay off",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoMixDescription": "通过节拍匹配和保持音高的速度调整混合歌曲。使用交叉淡入淡出、回声、低通和音高效果。",
+  "autoMixOn": "AutoMix 开",
+  "autoMixOff": "AutoMix 关",
+  "autoplayOn": "自动播放 开",
+  "autoplayOff": "自动播放 关",
+  "autoplayFromLibrary": "从你的乐库自动播放",
   "autoplayDescription": "队列结束时，从你的资料库中继续播放相关歌曲。",
   "autoplayPersonalization": "个性化自动播放",
   "autoplayPersonalizationDescription": "在本设备上私下学习你播放和跳过的歌曲。关闭后将停止学习，并恢复普通自动播放。",
   "autoplayResetLearning": "重置推荐学习",
-  "profileTitle": "Profile",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
-  "profileName": "Name",
-  "profileNameHint": "Your name",
-  "profileChangePhoto": "Choose photo",
-  "profileRemovePhoto": "Remove photo",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "autoplayResetLearningConfirmTitle": "重置推荐学习？",
+  "autoplayResetLearningConfirmMessage": "自动播放将忘记从你的收听和跳过中学到的内容。此操作无法撤销。",
+  "autoplayResetLearningConfirm": "重置",
+  "profileTitle": "个人资料",
+  "profileSetUp": "设置你的个人资料",
+  "profileEdit": "编辑名称和照片",
+  "backupIncludesProfile": "包含你的个人资料名称和头像",
+  "profileName": "名称",
+  "profileNameHint": "你的名称",
+  "profileChangePhoto": "选择照片",
+  "profileRemovePhoto": "删除照片",
+  "profilePhotoError": "请选择小于20MB的有效图片。",
+  "profileSaveError": "无法保存你的个人资料，请重试。",
   "motionArtwork": "动态封面",
   "listeningStats": "收听统计",
   "listeningStatsRecord": "记录收听",
@@ -2520,7 +2523,7 @@
   "tutorialPlaybackTip1": "使用内置播放器播放或暂停音乐",
   "tutorialPlaybackTip2": "将本地曲目添加到队列和播放列表",
   "tutorialPlaybackTip3": "聆听时阅读内嵌或附带的歌词",
-  "cueSplitButton": "Split into Tracks",
+  "cueSplitButton": "分轨为单独曲目",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"
   },
@@ -2536,15 +2539,15 @@
       }
     }
   },
-  "cueSplitConfirmTitle": "Split CUE Album",
+  "cueSplitConfirmTitle": "分轨CUE专辑",
   "@cueSplitConfirmTitle": {
     "description": "CUE split confirmation dialog title"
   },
-  "cueSplitFailed": "CUE split failed",
+  "cueSplitFailed": "CUE分轨失败",
   "@cueSplitFailed": {
     "description": "Snackbar when CUE split fails"
   },
-  "cueSplitSplitting": "Splitting CUE sheet... ({current}/{total})",
+  "cueSplitSplitting": "正在分轨CUE表…（{current}/{total}）",
   "@cueSplitSplitting": {
     "description": "Snackbar while splitting CUE",
     "placeholders": {
@@ -2556,7 +2559,7 @@
       }
     }
   },
-  "cueSplitSuccess": "Split into {count} tracks successfully",
+  "cueSplitSuccess": "成功分轨为 {count} 首曲目",
   "@cueSplitSuccess": {
     "description": "Snackbar after successful CUE split",
     "placeholders": {
@@ -2567,28 +2570,28 @@
   },
   "cueSplitPartialSuccess": "已拆分为 {count} 首曲目；{failed} 首无法创建",
   "cueSplitSavedOutsideLibrary": "曲目已保存到音乐资料库之外。请在本地资料库下添加该文件夹以查看它们。",
-  "cueSplitTitle": "Split CUE Sheet",
+  "cueSplitTitle": "分轨CUE表",
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "已添加到队列",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
-  "snackbarPlayingNext": "Playing next",
+  "snackbarPlayingNext": "正在播放下一曲",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
   },
-  "trackCopyFilePath": "Copy file path",
+  "trackCopyFilePath": "复制文件路径",
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
-  "trackDeleteConfirmTitle": "Remove from device?",
+  "trackDeleteConfirmTitle": "从设备移除？",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
   },
-  "trackRemoveFromDevice": "Remove from device",
+  "trackRemoveFromDevice": "从设备移除",
   "@trackRemoveFromDevice": {
     "description": "Action - delete downloaded file"
   },

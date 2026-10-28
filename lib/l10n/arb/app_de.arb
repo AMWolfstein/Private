@@ -1553,7 +1553,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 Playlist} other{{count} Playlists}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1692,7 +1692,7 @@
   "queueEmptyAlbumsSubtitle": "Scanne einen Musikordner, um Alben hinzuzufügen",
   "queueEmptySingles": "Keine lokalen Singles",
   "queueEmptySinglesSubtitle": "Gescannte Single-Titel erscheinen hier",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1 Playlist} other{{count} Playlists}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -2375,7 +2375,7 @@
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "Lösche {count} {count, plural, =1{Playlist} other{Playlists}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2450,6 +2450,7 @@
   "autoplayPersonalization": "Personalisierte Autoplay",
   "autoplayPersonalizationDescription": "Lernt privat auf diesem Gerät aus Songs, die du hörst und überspringst. Ausschalten beendet das Lernen und stellt das normale Autoplay wieder her.",
   "autoplayResetLearning": "Empfehlungslernen zurücksetzen",
+  "autoplayResetLearningConfirm": "Zurücksetzen",
   "profileTitle": "Profil",
   "profileSetUp": "Set up your profile",
   "profileEdit": "Edit name and photo",
@@ -2733,7 +2734,7 @@
   "listeningRewindYearBanner": "Deine Top-Künstler, Songs und Momente des Jahres",
   "listeningRewindYearIntroBody": "Alles, was du dieses Jahr gespielt hast, von deinem ersten Song bis zu deinem stärksten Monat.",
   "listeningRewindNumbersTitle": "Dein Jahr in Zahlen",
-  "listeningRewindSongsLabel": "Songs",
+  "listeningRewindSongsLabel": "Titel",
   "listeningRewindArtistsLabel": "Künstler",
   "listeningRewindAlbumsLabel": "Alben",
   "listeningRewindDaysLabel": "Tage mit Musik",

@@ -41,12 +41,12 @@
   "appearanceAccentBlue": "Синий",
   "appearanceAccentPurple": "Фиолетовый",
   "appearanceAccentPink": "Розовый",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceGlassClarity": "Прозрачность стекла",
   "appearanceGlassOutlines": "Контуры стекла",
   "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Sistrum. Выключение не меняет само стекло.",
   "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassClear": "Очистить",
   "appearanceGlassClearPerformance": "Очень прозрачное стекло может расходовать больше энергии и работать менее плавно на старых устройствах. При необходимости уменьшите прозрачность.",
   "appearanceGlassQuality": "Качество стекла",
   "appearanceGlassQualityAuto": "Авто",
@@ -992,7 +992,7 @@
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "Сканирование приостановлено",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
@@ -1902,7 +1902,7 @@
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "Сканирование библиотеки приостановлено",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
@@ -2421,7 +2421,7 @@
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "Отсутствует ReplayGain",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2450,6 +2450,8 @@
   "autoplayPersonalization": "Персональное автовоспроизведение",
   "autoplayPersonalizationDescription": "Обучаться по песням, которые вы слушаете и пропускаете, приватно на этом устройстве. Выключение прекращает обучение и возвращает обычное автовоспроизведение.",
   "autoplayResetLearning": "Сбросить обучение рекомендаций",
+  "autoplayResetLearningConfirmTitle": "Сбросить обучение рекомендаций?",
+  "autoplayResetLearningConfirm": "Сбросить",
   "profileTitle": "Профиль",
   "profileSetUp": "Настройте свой профиль",
   "profileEdit": "Изменить имя и фото",

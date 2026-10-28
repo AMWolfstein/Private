@@ -46,7 +46,7 @@
   "appearanceGlassOutlinesSubtitle": "إظهار حافة مضيئة حول زجاج Sistrum. إيقافها لا يغيّر الزجاج نفسه.",
   "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
   "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassClear": "محو",
   "appearanceGlassClearPerformance": "قد يستهلك الزجاج الشفاف جدًا طاقة أكبر ويبدو أقل سلاسة على الأجهزة القديمة. خفّض الوضوح إذا لزم الأمر.",
   "appearanceGlassQuality": "جودة الزجاج",
   "appearanceGlassQualityAuto": "تلقائي",
@@ -807,7 +807,7 @@
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
-  "librarySourceDisabled": "Disabled",
+  "librarySourceDisabled": "معطَّل",
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
@@ -1343,7 +1343,7 @@
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
-  "collectionPlaylistTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "collectionPlaylistTracks": "{count, plural, zero {لا توجد أغاني محددة} one {{count} مسارات} two {أغنيتين} few {{count} أغانٍ} many {{count} أغانٍ}=1{أغنية واحدة} other{{count} أغانٍ}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
     "placeholders": {
@@ -1622,11 +1622,11 @@
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
-  "editMetadataFieldArtist": "Artist",
+  "editMetadataFieldArtist": "الفنان",
   "@editMetadataFieldArtist": {
     "description": "Chip label for artist field in auto-fill selector"
   },
-  "editMetadataFieldAlbum": "Album",
+  "editMetadataFieldAlbum": "الألبوم",
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
@@ -1646,7 +1646,7 @@
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
-  "editMetadataFieldGenre": "Genre",
+  "editMetadataFieldGenre": "النوع",
   "@editMetadataFieldGenre": {
     "description": "Chip label for genre field in auto-fill selector"
   },
@@ -1654,11 +1654,11 @@
   "@editMetadataFieldIsrc": {
     "description": "Chip label for ISRC field in auto-fill selector"
   },
-  "editMetadataFieldLabel": "Label",
+  "editMetadataFieldLabel": "تصنيف",
   "@editMetadataFieldLabel": {
     "description": "Chip label for label field in auto-fill selector"
   },
-  "editMetadataFieldCopyright": "Copyright",
+  "editMetadataFieldCopyright": "حقوق الطبع و النشر",
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
@@ -1670,7 +1670,7 @@
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
-  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "queueTrackCount": "{count, plural, zero {لا توجد أغاني محددة} one {{count} مسارات} two {أغنيتين} few {{count} أغانٍ} many {{count} أغانٍ}=1{أغنية واحدة} other{{count} أغانٍ}}",
   "@queueTrackCount": {
     "description": "Track count label with plural support",
     "placeholders": {
@@ -1755,7 +1755,7 @@
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
-  "audioAnalysisDuration": "Duration",
+  "audioAnalysisDuration": "المدة",
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
@@ -2027,7 +2027,7 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "كلمات الأغنية",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
@@ -2162,7 +2162,7 @@
       }
     }
   },
-  "selectionDeleteTracksCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "selectionDeleteTracksCount": "تم حذف {count} {count, plural, zero {} one {أغنيتين} two {أغنيتين} few {أغانٍ} many {أغنية}=1{أغنية} other{أغانٍ}}",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
     "placeholders": {
@@ -2335,7 +2335,7 @@
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "كلمات الأغنية",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
@@ -2450,6 +2450,7 @@
   "autoplayPersonalization": "التشغيل التلقائي المخصص",
   "autoplayPersonalizationDescription": "تعلّم من الأغاني التي تستمع إليها وتتخطاها، بخصوصية على هذا الجهاز. إيقاف هذا الخيار يوقف التعلم ويعيد التشغيل التلقائي العادي.",
   "autoplayResetLearning": "إعادة ضبط تعلّم التوصيات",
+  "autoplayResetLearningConfirm": "إعادة الضبط",
   "profileTitle": "Profile",
   "profileSetUp": "Set up your profile",
   "profileEdit": "Edit name and photo",

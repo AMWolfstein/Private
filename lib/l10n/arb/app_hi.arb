@@ -98,11 +98,11 @@
   "homeChooseLibraryFolder": "स्थानीय लाइब्रेरी सेटिंग्स में एक संगीत फ़ोल्डर चुनें।",
   "homeLibraryEmpty": "अपने लाइब्रेरी फ़ोल्डरों में संगीत जोड़ें, फिर लाइब्रेरी स्कैन करें।",
   "libraryEmptyCollection": "Your music will appear here",
-  "settingsTitle": "Settings",
+  "settingsTitle": "विकल्प",
   "@settingsTitle": {
     "description": "Settings screen title"
   },
-  "settingsAppearance": "Appearance",
+  "settingsAppearance": "दिखावट",
   "@settingsAppearance": {
     "description": "Settings section - visual customization"
   },
