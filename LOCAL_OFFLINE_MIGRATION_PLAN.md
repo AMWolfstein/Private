@@ -22,6 +22,10 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Code-health pass (2026-10-28):** a `desloppify` review queue drives structural fixes, one reviewed finding per change.
+First item: the forwarding `FFmpegService` facade is gone; callers use `FFmpegMetadata`, `FFmpegProbe`, `FFmpegReplayGain`,
+`FFmpegCue` and `ffmpeg_models.dart` directly. Analyze and the full `flutter test` pass.
+
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
 low-end devices, covered routes and a page scrolled past the cover; playlists, Loved and artists are unchanged. Online artwork
