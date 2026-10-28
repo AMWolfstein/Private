@@ -44,7 +44,23 @@ freshness, focus concern, open finding IDs for these files.
 **Focus:** Use a fresh graph plus source references; if stale, disclose it and prove callers
 from source rather than treating absent graph edges as proof. Search across `lib/ test/ android/ rust_backend/crates/ assets/` (include reflection-like uses: channel method strings, JSON keys, arb keys via generated getters, `pubspec` assets). Report removal size and risk.
 
+**Full-repo coverage (explicit whole-repo requests):** do not stop at name-count heuristics.
+- Private members: for every `_name` in Dart, `private` Kotlin members and non-`pub` Rust items, count
+  references inside their own file or class; a declaration with none (or only self-recursion) is dead.
+  Also check unused constructor parameters, fields, enum values, `part` members and unused `@override`-free
+  methods. `flutter analyze` and `cargo check` warnings are a floor, not the whole scan.
+- Second-order dead code: build a reference table (symbol to referencing symbols, per file) from
+  `lib/`, `android/`, `rust_backend/crates/` and `test/`. Treat a symbol referenced only by dead symbols,
+  or only by tests of dead symbols, as dead. Repeat until no new symbol is found, and list each chain.
+- Native and tests: scan `android/app/src/main/cpp` (`.cpp`/`.h`, CMake sources, JNI `Java_*` and
+  `RegisterNatives` names against Kotlin `external fun`), `android/app/src/androidTest`, `android/app/src/test`,
+  `integration_test/`, `test/support` and `scripts/` for unused helpers, fixtures and tests of removed code.
+- Cross-check string keys: channel and method names, JSON keys, preference keys, arb keys, asset paths.
+- State in the report which of these passes ran; never list a pass as a limitation when it was possible.
+
 **Max scope:** One subsystem or the files removed by the commit. Prefer listing candidates over reading bodies.
+For an explicit whole-repo request, cover the whole repo in bounded passes (Dart, Kotlin and C++, Rust, assets
+and dependencies, tests) rather than refusing for size.
 
 **Model:** sonnet; the orchestrator re-runs escalated findings on opus.
 
