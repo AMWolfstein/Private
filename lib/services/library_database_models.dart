@@ -143,8 +143,6 @@ class LocalLibraryItem {
         format: json['format'] as String?,
       );
 
-  String get matchKey =>
-      '${sqlite.normalizeLookupText(trackName)}|${sqlite.normalizeLookupText(artistName)}';
   String get albumKey =>
       '${sqlite.normalizeLookupText(albumName)}|${sqlite.normalizeLookupText(albumArtist ?? artistName)}';
 }
@@ -204,8 +202,6 @@ class LocalLibrarySource {
     );
   }
 }
-
-enum LocalLibrarySortMode { album, title, artist, latest, quality }
 
 class LocalLibraryBatchLookupRequest {
   final String? id;

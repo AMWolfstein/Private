@@ -306,7 +306,7 @@ class _CollectionHydrationAccumulator {
       );
 }
 
-enum _CollectionWorkerMode { snapshot, playlist, export, backupJson }
+enum _CollectionWorkerMode { snapshot, playlist, backupJson }
 
 typedef _CollectionWorkerRequest = ({
   SendPort result,
@@ -418,7 +418,6 @@ Future<T> _runCollectionWorker<T>({
 void _collectionHydrationWorker(_CollectionWorkerRequest request) async {
   final commands = ReceivePort();
   final accumulator = _CollectionHydrationAccumulator();
-  final exporter = _CollectionExportAccumulator();
   final knownKeys = <String>{};
   request.result.send(commands.sendPort);
   await for (final Object? message in commands) {
@@ -431,17 +430,8 @@ void _collectionHydrationWorker(_CollectionWorkerRequest request) async {
     } else if (message case _NativeCollectionRows input) {
       await _readNativeCollectionRows(input, accumulator);
       request.result.send(true);
-    } else if (message case _CollectionExportBatch batch) {
-      exporter.add(batch);
-      request.result.send(true);
-    } else if (message case _PlaylistExportHeader header) {
-      exporter.startPlaylist(header);
-      request.result.send(true);
     } else if (message == null) {
       commands.close();
-      if (request.mode == _CollectionWorkerMode.export) {
-        Isolate.exit(request.result, [exporter.finish()]);
-      }
       if (request.mode == _CollectionWorkerMode.backupJson) {
         Isolate.exit(request.result, [
           jsonEncode(accumulator.finish(completePlaylists: true).toJson()),
@@ -527,36 +517,6 @@ class _CollectionLineSink implements Sink<String> {
   void close() {}
 }
 
-enum _CollectionExportRows { loved, artist, playlistTrack }
-
-typedef _CollectionExportBatch = ({
-  _CollectionExportRows kind,
-  List<Object> entries,
-});
-typedef _PlaylistExportHeader = ({
-  String id,
-  String name,
-  String? cover,
-  DateTime createdAt,
-  DateTime updatedAt,
-});
-
-/// Converts the stable published model snapshot on a worker without cloning
-/// the whole graph in a single send. Playlist headers exclude membership sets
-/// and their tracks are submitted separately in bounded ordered batches.
-Future<Map<String, dynamic>> exportLibraryCollectionsState(
-  LibraryCollectionsState state,
-) async {
-  var count =
-      state.lovedCount + state.favoriteArtistCount + state.playlistCount;
-  for (final playlist in state.playlists) {
-    if (count >= _workerRowThreshold) break;
-    count += playlist.tracks.length;
-  }
-  if (count < _workerRowThreshold) return state.toJson();
-  return _exportLibraryCollectionsInWorker(state, _CollectionWorkerMode.export);
-}
-
 /// Backup writers can embed this trusted JSON fragment directly, avoiding a
 /// second transfer of the large exported map from the UI to another worker.
 Future<String> exportCollectionsBackupSnapshot(
@@ -578,86 +538,4 @@ Future<String> exportCollectionsBackupSnapshot(
       nativeRowsPath: snapshot.nativeRowsPath,
     );
   }
-}
-
-Future<T> _exportLibraryCollectionsInWorker<T>(
-  LibraryCollectionsState state,
-  _CollectionWorkerMode mode,
-) => _runCollectionWorker<T>(
-  mode: mode,
-  feed: (sendBatch) async {
-    Future<void> entries(
-      _CollectionExportRows kind,
-      List<Object> values,
-    ) async {
-      for (var offset = 0; offset < values.length; offset += 256) {
-        await sendBatch((
-          kind: kind,
-          entries: values.sublist(
-            offset,
-            (offset + 256).clamp(0, values.length),
-          ),
-        ));
-      }
-    }
-
-    await entries(_CollectionExportRows.loved, state.loved);
-    for (final playlist in state.playlists) {
-      await sendBatch((
-        id: playlist.id,
-        name: playlist.name,
-        cover: playlist.coverImagePath,
-        createdAt: playlist.createdAt,
-        updatedAt: playlist.updatedAt,
-      ));
-      await entries(_CollectionExportRows.playlistTrack, playlist.tracks);
-    }
-    await entries(_CollectionExportRows.artist, state.favoriteArtists);
-  },
-);
-
-class _CollectionExportAccumulator {
-  final loved = <Map<String, dynamic>>[];
-  final artists = <Map<String, dynamic>>[];
-  final playlists = <Map<String, dynamic>>[];
-  List<Map<String, dynamic>>? playlistTracks;
-
-  void startPlaylist(_PlaylistExportHeader header) {
-    playlistTracks = <Map<String, dynamic>>[];
-    playlists.add({
-      'id': header.id,
-      'name': header.name,
-      if (header.cover != null) 'coverImagePath': header.cover,
-      'createdAt': header.createdAt.toIso8601String(),
-      'updatedAt': header.updatedAt.toIso8601String(),
-      'tracks': playlistTracks,
-    });
-  }
-
-  void add(_CollectionExportBatch batch) {
-    if (batch.kind == _CollectionExportRows.artist) {
-      artists.addAll(
-        batch.entries.map((entry) => (entry as CollectionArtistEntry).toJson()),
-      );
-      return;
-    }
-    final target = switch (batch.kind) {
-      _CollectionExportRows.loved => loved,
-      _CollectionExportRows.playlistTrack =>
-        playlistTracks ??
-            (throw const FormatException('Playlist tracks require a header')),
-      _CollectionExportRows.artist => throw StateError(
-        'Artist target is handled above',
-      ),
-    };
-    target.addAll(
-      batch.entries.map((entry) => (entry as CollectionTrackEntry).toJson()),
-    );
-  }
-
-  Map<String, dynamic> finish() => {
-    'loved': loved,
-    'playlists': playlists,
-    'favoriteArtists': artists,
-  };
 }

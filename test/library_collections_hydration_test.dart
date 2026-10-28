@@ -336,32 +336,6 @@ void main() {
     },
   );
 
-  test(
-    'export worker keeps category/playlist/track order and original snapshot',
-    () async {
-      final base = decodeLibraryCollectionsSnapshot(collectionFixture(20000));
-      final entries = base.loved.take(80).toList();
-      final state = base.copyWith(
-        playlists: [
-          base.playlists.first.copyWith(
-            tracks: entries,
-            coverImagePath: () => '/covers/custom.jpg',
-          ),
-          base.playlists.last.copyWith(tracks: entries.reversed.toList()),
-        ],
-      );
-      final expected = jsonEncode(state.toJson());
-      final pending = probeCallerYield(
-        () => exportLibraryCollectionsState(state),
-      );
-      final newer = state.copyWith(loved: const [], playlists: const []);
-      final result = await pending;
-      expect(result.yieldedBeforeCompletion, isTrue);
-      expect(jsonEncode(result.value), expected);
-      expect(newer.lovedCount, 0);
-    },
-  );
-
   for (final count in [3, 80]) {
     test(
       'collection hydration preserves row order and lazy indices ($count)',

@@ -267,13 +267,9 @@ class PlatformBridge {
   }
 
   static Future<Map<String, dynamic>?> pickSafTree({
-    bool forSetup = false,
     void Function(String message)? onFailure,
   }) async {
-    final result = await _channel.invokeMethod(
-      'pickSafTree',
-      forSetup ? {'for_setup': true} : null,
-    );
+    final result = await _channel.invokeMethod('pickSafTree');
     final decoded = _decodeNullableMapResult(result, 'pickSafTree');
     if (decoded != null && decoded['success'] == false) {
       // The native side could not persist the grant; treat it like a cancel so

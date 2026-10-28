@@ -35,7 +35,6 @@ void main() {
         'collection_hydration': await benchmarkCollectionHydration(),
         'playlist_search': await benchmarkPlaylistSearch(),
         'playlist_metadata_copy': await benchmarkPlaylistMetadataCopy(),
-        'collection_export': await benchmarkCollectionExport(),
       };
       const output = String.fromEnvironment('COLLECTIONS_BENCHMARK_OUTPUT');
       if (output.isNotEmpty) {

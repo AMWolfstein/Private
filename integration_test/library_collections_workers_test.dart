@@ -270,12 +270,4 @@ void main() {
     report['playlist_metadata_copy'] = await benchmarkPlaylistMetadataCopy();
     publish();
   });
-
-  testWidgets(
-    'collection export worker preserves model JSON and caller heartbeat',
-    (tester) async {
-      report['collection_export'] = await benchmarkCollectionExport();
-      publish();
-    },
-  );
 }

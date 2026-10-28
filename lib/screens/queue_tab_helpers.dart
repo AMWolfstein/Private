@@ -9,7 +9,6 @@ class _GroupedLocalAlbum {
   final List<LocalLibraryItem> tracks;
   final int? trackCount;
   final AlbumCompleteness? completeness;
-  final DateTime latestScanned;
   final String searchKey;
 
   _GroupedLocalAlbum({
@@ -21,7 +20,6 @@ class _GroupedLocalAlbum {
     required this.tracks,
     this.trackCount,
     this.completeness,
-    required this.latestScanned,
   }) : searchKey = '${albumName.toLowerCase()}|${artistName.toLowerCase()}';
 
   String get key => albumKey;
@@ -235,8 +233,6 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
         final groupedLocalAlbums = <_GroupedLocalAlbum>[];
         for (final row in rows) {
           if (row['queue_source'] != 'local') continue;
-          final latestMillis = (row['sort_added'] as num?)?.toInt() ?? 0;
-          final latest = DateTime.fromMillisecondsSinceEpoch(latestMillis);
           groupedLocalAlbums.add(
             _GroupedLocalAlbum(
               albumKey: row['album_key'] as String? ?? '',
@@ -247,7 +243,6 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
               tracks: const [],
               trackCount: (row['track_count'] as num?)?.toInt() ?? 0,
               completeness: AlbumCompleteness.fromRow(row),
-              latestScanned: latest,
             ),
           );
         }

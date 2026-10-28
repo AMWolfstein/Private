@@ -1,6 +1,5 @@
 package com.amwolfstein.sistrum
 
-import java.io.File
 
 /** How long a failed read waits before its one retry. A provider that failed
  * under load (FUSE, a busy SD card) usually answers again shortly after. */
@@ -59,18 +58,4 @@ internal fun <T> readSafMetadataWithFallback(
         return null
     }
     return retryDirect()
-}
-
-internal fun <T> readLyricsWithSafCopy(
-    path: String,
-    copyToTemp: (String) -> File?,
-    read: (String) -> T,
-): T? {
-    if (!path.startsWith("content://")) return read(path)
-    val temporary = copyToTemp(path) ?: return null
-    return try {
-        read(temporary.absolutePath)
-    } finally {
-        temporary.delete()
-    }
 }

@@ -296,7 +296,6 @@ class CoverColors {
     required this.bottomTone,
     required this.accentHue,
     required this.accentChroma,
-    required this.dominantColor,
     required this.topLightness,
     required this.seed,
   });
@@ -311,9 +310,6 @@ class CoverColors {
 
   /// Zero when the cover has no usable accent.
   final double accentChroma;
-
-  /// Whole-image colour, e.g. for a lyrics card without a gradient.
-  final Color dominantColor;
 
   /// Mean L* (0..1) of the top band, or null without a cover.
   final double? topLightness;
@@ -465,7 +461,6 @@ CoverColors sistrumCoverColors(CoverAnalysis? analysis) {
     bottomTone: bottom.tone,
     accentHue: accentHue,
     accentChroma: accentChroma,
-    dominantColor: Color(source.dominant),
     topLightness: analysis?.topLightness,
     seed: accentChroma == 0
         ? const Color(0xff808080)

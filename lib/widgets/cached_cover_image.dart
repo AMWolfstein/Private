@@ -19,7 +19,6 @@ class CachedCoverImage extends StatelessWidget {
   final Widget Function(BuildContext, String)? placeholder;
   final BorderRadius? borderRadius;
   final Duration fadeInDuration;
-  final Duration fadeOutDuration;
 
   const CachedCoverImage({
     super.key,
@@ -34,7 +33,6 @@ class CachedCoverImage extends StatelessWidget {
     this.placeholder,
     this.borderRadius,
     this.fadeInDuration = Duration.zero,
-    this.fadeOutDuration = Duration.zero,
   });
 
   @override
@@ -131,7 +129,6 @@ class LocalCoverImage extends StatelessWidget {
   final BorderRadius? borderRadius;
   final int? localCacheWidth;
   final Duration? fadeInDuration;
-  final Duration fadeOutDuration;
   final Widget Function(BuildContext) placeholder;
 
   const LocalCoverImage({
@@ -143,7 +140,6 @@ class LocalCoverImage extends StatelessWidget {
     this.borderRadius,
     this.localCacheWidth,
     this.fadeInDuration,
-    this.fadeOutDuration = Duration.zero,
     required this.placeholder,
   });
 

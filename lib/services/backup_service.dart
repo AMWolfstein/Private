@@ -70,7 +70,6 @@ Future<void> _writeBackupMetadataInBackground(
 /// consumes them.
 class BackupBundle {
   final int formatVersion;
-  final String appVersion;
   final DateTime? createdAt;
   final Map<String, dynamic>? settings;
   final UserProfile? profile;
@@ -80,7 +79,6 @@ class BackupBundle {
 
   const BackupBundle({
     required this.formatVersion,
-    required this.appVersion,
     required this.createdAt,
     required this.settings,
     required this.collections,
@@ -363,7 +361,6 @@ class BackupService {
         final rawProfile = data['profile'] as Map?;
         return BackupBundle(
           formatVersion: root['format_version'] as int,
-          appVersion: root['app_version'] as String? ?? '',
           createdAt: DateTime.tryParse(root['created_at'] as String? ?? ''),
           settings: _mapOrNull(data['settings']),
           profile: rawProfile == null
@@ -487,7 +484,6 @@ class BackupService {
 
       return BackupBundle(
         formatVersion: version as int,
-        appVersion: root['app_version'] as String? ?? '',
         createdAt: DateTime.tryParse(root['created_at'] as String? ?? ''),
         settings: _mapOrNull(data['settings']),
         profile: profile,

@@ -5,7 +5,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertNull
 import org.junit.Test
-import java.io.File
 
 class SafMetadataReadPolicyTest {
     @Test fun exhaustedReadsReportTheFailureOnce() {
@@ -122,54 +121,6 @@ class SafMetadataReadPolicyTest {
         )
         assertEquals(tags, result)
         assertEquals(1, reads)
-    }
-
-    @Test fun lyricsReadUsesSafCopyAndDeletesItAfterSuccessOrFailure() {
-        for (fails in listOf(false, true)) {
-            val temporary = File.createTempFile("lyrics_", ".flac")
-            temporary.writeText("embedded lyrics fixture")
-            try {
-                val result = runCatching {
-                    readLyricsWithSafCopy(
-                        "content://example.documents/track.flac",
-                        copyToTemp = { uri ->
-                            assertEquals("content://example.documents/track.flac", uri)
-                            temporary
-                        },
-                        read = { path ->
-                            assertEquals(temporary.absolutePath, path)
-                            assertEquals("flac", File(path).extension)
-                            assertTrue(File(path).exists())
-                            if (fails) throw IllegalStateException("read failed")
-                            File(path).readText()
-                        },
-                    )
-                }
-                assertEquals(fails, result.isFailure)
-                if (!fails) assertEquals("embedded lyrics fixture", result.getOrThrow())
-                assertFalse(temporary.exists())
-            } finally {
-                temporary.delete()
-            }
-        }
-    }
-
-    @Test fun revokedSafLyricsReadDoesNotFetchOnline() {
-        assertNull(readLyricsWithSafCopy<String>(
-            "content://example.documents/revoked.flac",
-            copyToTemp = { null },
-            read = { error("Unreadable document must not become an online request") },
-        ))
-    }
-
-    @Test fun localAndOnlineLyricsReadsKeepOriginalPath() {
-        for (path in listOf("/example/track.flac", "")) {
-            assertEquals(path, readLyricsWithSafCopy(
-                path,
-                copyToTemp = { error("Unexpected SAF copy") },
-                read = { it },
-            ))
-        }
     }
 
     @Test fun completeMetadataReadErrorUsesTemporaryCopy() {

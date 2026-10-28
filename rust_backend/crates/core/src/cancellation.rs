@@ -8,7 +8,6 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Condvar, Mutex, Weak};
-use std::task::Waker;
 use std::thread::Thread;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -56,7 +55,6 @@ impl State {
 struct Shared {
     state: Mutex<State>,
     changed: Condvar,
-    waker: Option<Waker>,
     threads: Mutex<Vec<Weak<Thread>>>,
 }
 
@@ -74,9 +72,6 @@ impl Shared {
                     false
                 }
             });
-        if let Some(waker) = &self.waker {
-            waker.wake_by_ref();
-        }
     }
 }
 
@@ -88,17 +83,6 @@ impl CancellationRegistry {
     pub fn new() -> Self {
         Self {
             shared: Arc::new(Shared::default()),
-        }
-    }
-
-    /// Wake an external executor after cancellation, release or shutdown.
-    /// The executor must recheck its own request; other IDs may still be active.
-    pub fn with_waker(waker: Waker) -> Self {
-        Self {
-            shared: Arc::new(Shared {
-                waker: Some(waker),
-                ..Shared::default()
-            }),
         }
     }
 
@@ -147,23 +131,6 @@ impl CancellationRegistry {
         Ok(())
     }
 
-    /// Cancel active work only. Idle sentinels remain available to reset/retry.
-    /// IDs are sorted for deterministic native results; Go's ordering is unspecified.
-    pub fn cancel_active(&self) -> Result<Vec<String>, CancellationError> {
-        let state = self.shared.state.lock().expect("cancellation state lock");
-        state.check_open()?;
-        let mut ids = Vec::new();
-        for (id, entry) in &state.entries {
-            if entry.references > 0 {
-                entry.cancelled.store(true, Ordering::Release);
-                ids.push(id.clone());
-            }
-        }
-        drop(state);
-        self.shared.notify();
-        Ok(ids)
-    }
-
     pub fn is_cancelled(&self, id: &str) -> Result<bool, CancellationError> {
         let state = self.shared.state.lock().expect("cancellation state lock");
         state.check_open()?;
@@ -171,30 +138,6 @@ impl CancellationRegistry {
             .entries
             .get(id)
             .is_some_and(|entry| entry.cancelled.load(Ordering::Acquire)))
-    }
-
-    pub fn reset_if_idle(&self, id: &str) -> Result<(), CancellationError> {
-        self.reset_many_if_idle(std::iter::once(id))
-    }
-
-    /// Clear only the selected idle sentinels under one registry lock. Leases
-    /// from a still-unwinding attempt keep their cancellation state intact.
-    pub fn reset_many_if_idle<'a>(
-        &self,
-        ids: impl IntoIterator<Item = &'a str>,
-    ) -> Result<(), CancellationError> {
-        let mut state = self.shared.state.lock().expect("cancellation state lock");
-        state.check_open()?;
-        for id in ids {
-            if state
-                .entries
-                .get(id)
-                .is_some_and(|entry| entry.references == 0)
-            {
-                state.entries.remove(id);
-            }
-        }
-        Ok(())
     }
 
     /// Terminal and idempotent. A new registry is required for subsequent work.
@@ -269,133 +212,33 @@ impl Drop for RequestLease {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::Weak;
-    use std::sync::atomic::AtomicUsize;
-    use std::task::Wake;
 
     #[test]
-    fn batch_reset_preserves_active_leases_and_unselected_cancellation() {
+    fn cancel_many_marks_idle_and_active_ids_without_touching_others() {
         let registry = CancellationRegistry::new();
-        let active = registry.acquire("active").unwrap();
-        let second = registry.acquire("active").unwrap();
-        for id in ["active", "idle", "keep", "音楽"] {
-            registry.cancel(id).unwrap();
-        }
-        registry
-            .reset_many_if_idle(["active", "idle", "idle", "missing", "", "音楽"])
-            .unwrap();
-        assert!(active.is_cancelled().unwrap());
-        assert!(second.is_cancelled().unwrap());
-        assert!(registry.is_cancelled("keep").unwrap());
-        assert!(!registry.is_cancelled("idle").unwrap());
-        assert!(!registry.is_cancelled("音楽").unwrap());
-        active.release();
-        registry.reset_many_if_idle(["active"]).unwrap();
-        assert!(second.is_cancelled().unwrap());
-        second.release();
-        let retry = registry.acquire("active").unwrap();
-        assert!(!retry.is_cancelled().unwrap());
-        drop(active);
-        drop(second);
-        assert!(!retry.is_cancelled().unwrap());
-        registry.cancel("active").unwrap();
-        assert!(retry.is_cancelled().unwrap());
-    }
-
-    #[test]
-    fn batch_reset_matches_individual_resets() {
-        let baseline = CancellationRegistry::new();
-        let batch = CancellationRegistry::new();
-        let ids: Vec<_> = (0..300).map(|i| format!("item-{i}")).collect();
-        let mut held = Vec::new();
-        for (index, id) in ids.iter().enumerate() {
-            if index % 3 == 0 {
-                held.push((baseline.acquire(id).unwrap(), batch.acquire(id).unwrap()));
-            }
-            baseline.cancel(id).unwrap();
-            batch.cancel(id).unwrap();
-        }
-        let selected: Vec<_> = ids.iter().step_by(2).map(String::as_str).collect();
-        for id in &selected {
-            baseline.reset_if_idle(id).unwrap();
-        }
-        batch.reset_many_if_idle(selected).unwrap();
-        for id in ids {
-            assert_eq!(baseline.is_cancelled(&id), batch.is_cancelled(&id));
-        }
-        for (old, new) in held {
-            assert_eq!(old.is_cancelled(), new.is_cancelled());
-        }
-    }
-
-    #[test]
-    fn closed_registry_rejects_batch_including_empty_input() {
-        let registry = CancellationRegistry::new();
-        registry.cancel("keep").unwrap();
-        registry.shutdown();
-        assert_eq!(
-            registry.reset_many_if_idle(["keep"]),
-            Err(CancellationError::RegistryClosed)
-        );
-        assert_eq!(
-            registry.reset_many_if_idle([]),
-            Err(CancellationError::RegistryClosed)
-        );
-        assert!(registry.shared.state.lock().unwrap().entries.is_empty());
-    }
-
-    #[test]
-    fn external_waker_observes_changes_without_holding_the_registry_lock() {
-        #[derive(Default)]
-        struct Observer {
-            shared: Mutex<Weak<Shared>>,
-            calls: AtomicUsize,
-        }
-        impl Wake for Observer {
-            fn wake(self: Arc<Self>) {
-                if let Some(shared) = self.shared.lock().unwrap().upgrade() {
-                    // Executors may synchronously inspect cancellation on wake.
-                    let _state = shared.state.try_lock().expect("wake held registry lock");
-                    self.calls.fetch_add(1, Ordering::Relaxed);
-                }
-            }
-        }
-        let observer = Arc::new(Observer::default());
-        let registry = CancellationRegistry::with_waker(Waker::from(Arc::clone(&observer)));
-        *observer.shared.lock().unwrap() = Arc::downgrade(&registry.shared);
         let first = registry.acquire("first").unwrap();
         let second = registry.acquire("second").unwrap();
-        let anonymous = registry.acquire("").unwrap();
-        registry.cancel("first").unwrap();
-        assert!(first.is_cancelled().unwrap());
-        assert!(!second.is_cancelled().unwrap());
-        assert_eq!(observer.calls.load(Ordering::Relaxed), 1);
-        registry.cancel("").unwrap();
-        assert_eq!(observer.calls.load(Ordering::Relaxed), 1);
         registry
             .cancel_many(["first", "idle", "idle", "", "音楽"])
             .unwrap();
-        assert_eq!(observer.calls.load(Ordering::Relaxed), 2);
+        assert!(first.is_cancelled().unwrap());
+        assert!(!second.is_cancelled().unwrap());
         assert!(registry.acquire("idle").unwrap().is_cancelled().unwrap());
         assert!(registry.is_cancelled("音楽").unwrap());
-        assert!(!second.is_cancelled().unwrap());
-        assert!(!anonymous.is_cancelled().unwrap());
-        // Dropping the temporary idle lease also notifies its release.
-        let before = observer.calls.load(Ordering::Relaxed);
-        assert_eq!(registry.cancel_active().unwrap(), ["first", "second"]);
-        assert!(second.is_cancelled().unwrap());
-        assert!(!anonymous.is_cancelled().unwrap());
-        assert_eq!(observer.calls.load(Ordering::Relaxed), before + 1);
-        second.release();
-        second.release();
-        assert_eq!(second.check_active(), Err(CancellationError::LeaseReleased));
-        assert_eq!(observer.calls.load(Ordering::Relaxed), before + 2);
+    }
+
+    #[test]
+    fn shutdown_closes_leases_and_rejects_new_work() {
+        let registry = CancellationRegistry::new();
+        let lease = registry.acquire("job").unwrap();
+        lease.release();
+        assert_eq!(lease.check_active(), Err(CancellationError::LeaseReleased));
+        let anonymous = registry.acquire("").unwrap();
         registry.shutdown();
         assert_eq!(
             anonymous.check_active(),
             Err(CancellationError::RegistryClosed)
         );
-        assert_eq!(observer.calls.load(Ordering::Relaxed), before + 3);
         assert_eq!(
             registry.cancel_many(["later"]),
             Err(CancellationError::RegistryClosed)
