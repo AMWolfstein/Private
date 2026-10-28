@@ -72,4 +72,67 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets('reaches a very tall line far past the measured rows', (
+    tester,
+  ) async {
+    // Past the measure-everything threshold, so rows beyond the viewport use
+    // the estimated extent until they are built.
+    tester.view.physicalSize = const Size(340, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final playback = StreamController<PlaybackState>.broadcast();
+    final seek = ValueNotifier<Duration?>(null);
+    addTearDown(playback.close);
+    addTearDown(seek.dispose);
+    final theme = SistrumTheme.build(Brightness.dark);
+    const tallIndex = 220;
+    final tallText = List.generate(70, (word) => 'word$word').join(' ');
+    final lyrics = ParsedLyrics(
+      synced: true,
+      wordSynced: false,
+      plainText: '',
+      lines: List.generate(
+        300,
+        (index) => LyricLine(
+          time: Duration(seconds: index * 3),
+          end: Duration(seconds: (index + 1) * 3),
+          text: index == tallIndex ? 'Tall $tallText' : 'Short line $index',
+        ),
+      ),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          playbackStateProvider.overrideWith((ref) => playback.stream),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          home: Scaffold(
+            body: SyncedLyricsView(
+              lyrics: lyrics,
+              seekPreview: seek,
+              colorScheme: theme.colorScheme,
+              isActive: true,
+              showPronunciation: false,
+              showTranslation: false,
+            ),
+          ),
+        ),
+      ),
+    );
+    playback.add(
+      PlaybackState(
+        processingState: AudioProcessingState.ready,
+        updatePosition: const Duration(seconds: tallIndex * 3 + 1),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final line = find.textContaining('Tall word0', findRichText: true);
+    expect(line, findsOneWidget);
+    // Taller than the viewport, so it starts at the upper focus position.
+    expect(tester.getTopLeft(line).dy, inInclusiveRange(16, 200));
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }

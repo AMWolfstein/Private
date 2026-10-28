@@ -687,17 +687,30 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     if (duration == Duration.zero) _stopScrollMotion();
     final extents = _targetLineExtents;
     if (extents != null && row < extents.length) {
-      final position = _scroll.position;
-      final target = extents.offsetForRow(row);
-      final offset = target.clamp(
-        position.minScrollExtent,
-        position.maxScrollExtent,
-      );
-      if (duration == Duration.zero) {
-        _scroll.jumpTo(offset);
-      } else {
-        _startScrollMotion(row, offset - position.pixels);
-        await _scroll.animateTo(offset, duration: duration, curve: curve);
+      // Rows past the viewport are estimated until they are built and
+      // measured, so the first offset can miss a tall line. Re-aim from the
+      // measured geometry a few times, until the offset stops moving.
+      for (var pass = 0; pass < 4; pass++) {
+        final current = _targetLineExtents;
+        if (current == null || row >= current.length || !_scroll.hasClients) {
+          break;
+        }
+        final position = _scroll.position;
+        final offset = current
+            .offsetForRow(row)
+            .clamp(position.minScrollExtent, position.maxScrollExtent);
+        if (pass > 0 && (offset - position.pixels).abs() < 1) break;
+        if (duration == Duration.zero || pass > 0) {
+          _scroll.jumpTo(offset);
+        } else {
+          _startScrollMotion(row, offset - position.pixels);
+          await _scroll.animateTo(offset, duration: duration, curve: curve);
+        }
+        if (duration == Duration.zero) break;
+        await WidgetsBinding.instance.endOfFrame;
+        if (!mounted || !_visible || _userScrolling || _active != _focus) {
+          return;
+        }
       }
       return;
     }
