@@ -618,9 +618,9 @@
     "semantic_hash": ""
   },
   "lib/services/ffmpeg_metadata.dart": {
-    "mtime": 1793139562.6649532,
-    "seen": 1793209372.911754,
-    "ast_hash": "6ee64762a50f58af890e5d469d80234d",
+    "mtime": 1793211013.999596,
+    "seen": 1793211597.5333898,
+    "ast_hash": "c4eb2f77e6d3b418571248ecde280a6a",
     "semantic_hash": ""
   },
   "lib/services/ffmpeg_models.dart": {
@@ -756,9 +756,9 @@
     "semantic_hash": ""
   },
   "lib/services/metadata_persistence_service.dart": {
-    "mtime": 1793207830.4490783,
-    "seen": 1793209372.9119103,
-    "ast_hash": "564228a672a7e2ff596cad9c89a752e4",
+    "mtime": 1793211018.5846608,
+    "seen": 1793211597.5335705,
+    "ast_hash": "c598ae1bdf28754d6c7a324f6af5d0e9",
     "semantic_hash": ""
   },
   "lib/services/music_playback_deck.dart": {
@@ -4758,9 +4758,9 @@
     "semantic_hash": ""
   },
   "test/metadata_persistence_service_test.dart": {
-    "mtime": 1793205838.8515866,
-    "seen": 1793209372.916715,
-    "ast_hash": "0b34b8637eb1bd79188b4901eb958889",
+    "mtime": 1793211032.6798594,
+    "seen": 1793211597.5394893,
+    "ast_hash": "2eaf6879b8e366554621937477177e1c",
     "semantic_hash": ""
   },
   "test/models_and_utils_test.dart": {
@@ -5916,9 +5916,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793210209.470256,
-    "seen": 1793210946.4139466,
-    "ast_hash": "36f97f489454d8fe81152db4a8763945",
+    "mtime": 1793210952.977736,
+    "seen": 1793211597.5408652,
+    "ast_hash": "ee8cabd106ede225c433de7e09338b49",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
