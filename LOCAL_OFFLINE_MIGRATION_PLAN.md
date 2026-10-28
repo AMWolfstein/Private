@@ -37,7 +37,9 @@ local-library preferences resolve `SharedPreferences` per operation instead of c
 metadata edits decode once into `MetadataEditResult` (`completed`/`ffmpegStaged`/`failed`) shared by the persistence and
 ReplayGain paths, the MP3/M4A FFmpeg writers are named `replaceMetadataInMp3`/`replaceMetadataInM4a` and lost their
 unsupported preservation option, and the dispatcher reports unsupported preservation for them instead of running a
-guaranteed-refusing writer. Analyze and the full `flutter test` pass.
+guaranteed-refusing writer. Eighth: `UnifiedLibraryItem` requires its `LocalLibraryItem` and derives every track field from
+it; the one-value source enum, duplicated fields, unused forwarding getters and absent-record conversion branches are gone,
+while the selection and collection keys are unchanged. Analyze and the full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
