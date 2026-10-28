@@ -22,6 +22,12 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Second dead-code pass (2026-10-28):** removed `LocalLibrarySortMode`, `LocalLibraryItem.matchKey`, write-only fields
+(`fadeOutDuration`, `latestScanned`, `CoverColors.dominantColor`, `BackupBundle.appVersion`, `pickSafTree(forSetup)`),
+`readLyricsWithSafCopy` and its tests, the collections state export worker chain (`exportLibraryCollectionsState`), the
+unused `CancellationRegistry` waker, `cancel_active` and reset methods, and the `lifecycle-runtime-ktx` dependency.
+Analyze, full `flutter test` and `cargo test --offline` pass; Gradle and Kotlin checks and device tests are not run.
+
 **Whole-repo dead-code scan removed (2026-10-28):** unused Dart members (`sistrumArrowForward`, three `LibraryDatabase`
 getters, `readPositiveBitrateKbps`, `favoriteActionLabel`, `UpdateChecker.currentVersion`, unused icon-map arms), the
 `concert_calendar` MethodChannel in `MainActivity.kt`, the `claxon` and mobile `sha2` Cargo dependencies, the
