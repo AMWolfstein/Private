@@ -354,9 +354,9 @@
     "semantic_hash": ""
   },
   "lib/screens/listening_statistics_screen.dart": {
-    "mtime": 1793144047.1247513,
-    "seen": 1793144821.1617486,
-    "ast_hash": "6d1c582cf70bc58c26564a5077881ad5",
+    "mtime": 1793145302.13848,
+    "seen": 1793146089.6197803,
+    "ast_hash": "383d4f155f2acf33b62a482a35b67379",
     "semantic_hash": ""
   },
   "lib/screens/local_album_screen.dart": {
@@ -384,9 +384,9 @@
     "semantic_hash": ""
   },
   "lib/screens/queue_tab.dart": {
-    "mtime": 1793144047.1287513,
-    "seen": 1793144821.1617644,
-    "ast_hash": "fa151d5dae37606552d89d631c68d9d1",
+    "mtime": 1793145223.5535338,
+    "seen": 1793146089.6198158,
+    "ast_hash": "940d2d6ab510a3ba7e6b32c9b60f14dd",
     "semantic_hash": ""
   },
   "lib/screens/queue_tab_batch_actions.dart": {
@@ -444,9 +444,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/appearance_settings_page.dart": {
-    "mtime": 1793144047.1327512,
-    "seen": 1793144821.1617794,
-    "ast_hash": "33dab16c442194e4cba585905775c894",
+    "mtime": 1793145045.1784859,
+    "seen": 1793146089.6198475,
+    "ast_hash": "5be734d89dba9e1810c0893ed9f4ea4f",
     "semantic_hash": ""
   },
   "lib/screens/settings/backup_restore_page.dart": {
@@ -462,15 +462,15 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/library_settings_page.dart": {
-    "mtime": 1793144047.1327512,
-    "seen": 1793144821.1617851,
-    "ast_hash": "7463780fc7ad5816e44af0e13dfa3260",
+    "mtime": 1793145045.0061483,
+    "seen": 1793146089.6198552,
+    "ast_hash": "0d74b50f1ef511717a70b4f51f661350",
     "semantic_hash": ""
   },
   "lib/screens/settings/log_screen.dart": {
-    "mtime": 1793144047.1327512,
-    "seen": 1793144821.1617868,
-    "ast_hash": "0399495f6d625ddc752fbfe4c2b8ada1",
+    "mtime": 1793144876.4188383,
+    "seen": 1793146089.6198575,
+    "ast_hash": "bbe3855e31c72a431cb10374e1e88b64",
     "semantic_hash": ""
   },
   "lib/screens/settings/lyrics_settings_page.dart": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/playback_settings_page.dart": {
-    "mtime": 1793144047.5349019,
-    "seen": 1793144821.1617932,
-    "ast_hash": "7f2c317f8a681642264fdf0eb8a966a3",
+    "mtime": 1793144914.9443493,
+    "seen": 1793146089.6198668,
+    "ast_hash": "f873ace2fbc6782e33b66146065c7636",
     "semantic_hash": ""
   },
   "lib/screens/settings/profile_settings_page.dart": {
@@ -948,9 +948,9 @@
     "semantic_hash": ""
   },
   "lib/utils/adaptive_layout.dart": {
-    "mtime": 1792620523.4303417,
-    "seen": 1793144821.1619847,
-    "ast_hash": "3b83ac23b99af47e93e7b8f4a98bf46d",
+    "mtime": 1793145360.1434553,
+    "seen": 1793146089.620119,
+    "ast_hash": "7047eb5f1c258c67466fb56cf1e3b2f9",
     "semantic_hash": ""
   },
   "lib/utils/app_bar_layout.dart": {
@@ -1152,9 +1152,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/app_bottom_sheet.dart": {
-    "mtime": 1793144047.1678483,
-    "seen": 1793144821.1620433,
-    "ast_hash": "b868b89421caef73ff6b0457bca79b11",
+    "mtime": 1793145000.6923163,
+    "seen": 1793146089.6202338,
+    "ast_hash": "35ef29f77e9fd936e99e691966196da8",
     "semantic_hash": ""
   },
   "lib/widgets/app_choice_chip.dart": {
@@ -1182,9 +1182,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/app_sliver_header.dart": {
-    "mtime": 1793144047.168006,
-    "seen": 1793144821.1620514,
-    "ast_hash": "7e072326ccb764cb73e42009fe5f753e",
+    "mtime": 1793145360.14421,
+    "seen": 1793146089.6202452,
+    "ast_hash": "f33b402db2dbf93a8f9cec3e9625b296",
     "semantic_hash": ""
   },
   "lib/widgets/app_snack_bar.dart": {
@@ -4242,15 +4242,15 @@
     "semantic_hash": ""
   },
   "test/adaptive_layout_test.dart": {
-    "mtime": 1793144047.2087512,
-    "seen": 1793144821.163104,
-    "ast_hash": "921096e306612603ca44dd6f3e9ca30c",
+    "mtime": 1793145360.1438441,
+    "seen": 1793146089.6219118,
+    "ast_hash": "c864c0b779dbbebc9b37b3661975038c",
     "semantic_hash": ""
   },
   "test/adaptive_overlay_test.dart": {
-    "mtime": 1793144047.2087512,
-    "seen": 1793144821.1631055,
-    "ast_hash": "8f90bc5b5f3e5817e156c7de4cce5ca0",
+    "mtime": 1793145267.230481,
+    "seen": 1793146089.6219146,
+    "ast_hash": "883a5fa93196150203af230cf0fc7f0e",
     "semantic_hash": ""
   },
   "test/album_completeness_query_test.dart": {
@@ -6708,9 +6708,9 @@
     "semantic_hash": ""
   },
   "lib/screens/equalizer_screen.dart": {
-    "mtime": 1793144047.1247513,
-    "seen": 1793144821.1617355,
-    "ast_hash": "5102c853afaa0c37b3c5de640cdea467",
+    "mtime": 1793144914.9471276,
+    "seen": 1793146089.619746,
+    "ast_hash": "a875385c2d8f66de8c3ffad6165244dc",
     "semantic_hash": ""
   },
   "lib/services/playback_equalizer.dart": {
@@ -8136,9 +8136,9 @@
     "semantic_hash": ""
   },
   "lib/screens/sistrum_library_screen.dart": {
-    "mtime": 1793144047.1367514,
-    "seen": 1793144821.1618023,
-    "ast_hash": "86687c224f61d15f2f0c45d6d874ec55",
+    "mtime": 1793145451.9922297,
+    "seen": 1793146089.61988,
+    "ast_hash": "ab6a3fd540fa80df4eff540bb655518a",
     "semantic_hash": ""
   },
   "lib/services/sistrum_glass_auto_probe.dart": {
@@ -8565,6 +8565,12 @@
     "mtime": 1793144262.2540224,
     "seen": 1793144821.163808,
     "ast_hash": "e6a600fd5e1d9cbde2d983680233ad02",
+    "semantic_hash": ""
+  },
+  "lib/widgets/beta_badge.dart": {
+    "mtime": 1793144910.254489,
+    "seen": 1793146089.6202734,
+    "ast_hash": "de2a22fb9b739427e8a9eca5e37b1751",
     "semantic_hash": ""
   }
 }
