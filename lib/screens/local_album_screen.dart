@@ -41,6 +41,7 @@ import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/local_collection_actions.dart';
 import 'package:sistrum/widgets/local_library_artwork_builder.dart';
 import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/utils/detail_page_route.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;

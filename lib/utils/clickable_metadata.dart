@@ -4,6 +4,7 @@ import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/utils/artist_utils.dart';
 import 'package:sistrum/utils/logger.dart';
 
@@ -99,40 +100,6 @@ Future<void> navigateToAlbum(
   );
 }
 
-/// The detail page a route shows, so a link to the page already on top keeps
-/// it instead of stacking a copy.
-class DetailPage {
-  DetailPage.album(String name, {required String artistName})
-    : kind = 'album',
-      id =
-          '${name.trim().toLowerCase()}\u0000'
-          '${artistName.trim().toLowerCase()}';
-
-  final String kind;
-  final String id;
-
-  bool matches(DetailPage other) => kind == other.kind && id == other.id;
-
-  static final _routes = Expando<DetailPage>('detail page');
-
-  /// Records that the route around [context] shows [page].
-  static void mark(BuildContext context, DetailPage page) {
-    final route = ModalRoute.of(context);
-    if (route != null) _routes[route] = page;
-  }
-
-  static bool _isOnTop(NavigatorState navigator, DetailPage page) {
-    Route<dynamic>? top;
-    // Reads the top route without popping anything.
-    navigator.popUntil((route) {
-      top = route;
-      return true;
-    });
-    final shown = top == null ? null : _routes[top!];
-    return shown != null && shown.matches(page);
-  }
-}
-
 /// Pushes detail pages into the active tab navigator when invoked from a root
 /// modal such as Now Playing. The root modal is dismissed first so the album
 /// is immediately visible instead of being hidden behind it. A [page] that is
@@ -143,7 +110,7 @@ void pushViaPreferredNavigator(
   DetailPage? page,
 }) {
   void push(NavigatorState navigator) {
-    if (page != null && DetailPage._isOnTop(navigator, page)) return;
+    if (page != null && DetailPage.isOnTop(navigator, page)) return;
     navigator.push(MaterialPageRoute<void>(builder: builder));
   }
 

@@ -28,6 +28,7 @@ import 'package:sistrum/services/automix_analysis.dart';
 import 'package:sistrum/services/automix_phase_lock.dart';
 import 'package:sistrum/services/autoplay_personalization.dart';
 import 'package:sistrum/services/automix_analyzer.dart';
+import 'package:sistrum/models/playable_media.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/automix_effect_renderer.dart';
 import 'package:sistrum/services/automix_status.dart';
@@ -35,8 +36,8 @@ import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/utils/string_utils.dart';
 
+export 'package:sistrum/models/playable_media.dart';
 export 'music_player_runtime.dart';
 export 'playback_metadata.dart';
 
@@ -92,122 +93,6 @@ final AudioContext _musicAudioContext = AudioContext(
     stayAwake: true,
   ),
 );
-
-class PlayableMedia {
-  final String id;
-  final String source;
-  final String title;
-  final String artist;
-  final String album;
-  final String? artUri;
-  final Duration? duration;
-  final int? bitDepth;
-  final int? sampleRate;
-  final int? bitrate;
-  final String? format;
-  final bool explicit;
-  final String? genre;
-  final bool autoplay;
-
-  const PlayableMedia({
-    required this.id,
-    required this.source,
-    required this.title,
-    required this.artist,
-    this.album = '',
-    this.artUri,
-    this.duration,
-    this.bitDepth,
-    this.sampleRate,
-    this.bitrate,
-    this.format,
-    this.explicit = false,
-    this.genre,
-    this.autoplay = false,
-  });
-
-  bool get isContentUri => source.startsWith('content://');
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'source': source,
-    'title': title,
-    'artist': artist,
-    'album': album,
-    if (artUri != null && artUri!.isNotEmpty) 'artUri': artUri,
-    if (duration != null) 'durationMs': duration!.inMilliseconds,
-    if (bitDepth != null && bitDepth! > 0) 'bitDepth': bitDepth,
-    if (sampleRate != null && sampleRate! > 0) 'sampleRate': sampleRate,
-    if (bitrate != null && bitrate! > 0) 'bitrate': bitrate,
-    if (format != null && format!.trim().isNotEmpty) 'format': format,
-    if (explicit) 'explicit': true,
-    if (genre != null) 'genre': genre,
-    if (autoplay) 'autoplay': true,
-  };
-
-  static PlayableMedia? fromJson(Map<String, dynamic> json) {
-    final id = json['id'] as String?;
-    final source = json['source'] as String?;
-    if (id == null || id.isEmpty || source == null || source.isEmpty) {
-      return null;
-    }
-    final durationMs = (json['durationMs'] as num?)?.toInt();
-    final artwork = json['artUri'] as String?;
-    return PlayableMedia(
-      id: id,
-      source: source,
-      title: json['title'] as String? ?? '',
-      artist: json['artist'] as String? ?? '',
-      album: json['album'] as String? ?? '',
-      artUri: artwork,
-      duration: (durationMs != null && durationMs > 0)
-          ? Duration(milliseconds: durationMs)
-          : null,
-      bitDepth: readPositiveInt(json['bitDepth']),
-      sampleRate: readPositiveInt(json['sampleRate']),
-      bitrate: readPositiveInt(json['bitrate']),
-      format: json['format']?.toString(),
-      explicit: parseExplicitFlag(json['explicit']) == true,
-      genre: json['genre'] as String?,
-      autoplay: json['autoplay'] == true,
-    );
-  }
-
-  MediaItem toMediaItem({
-    String? resolvedSource,
-    String? resolvedArtwork,
-    String? unknownTitle,
-    String? unknownArtist,
-  }) {
-    final artwork = resolvedArtwork ?? artUri;
-    return MediaItem(
-      id: id,
-      title: title.isEmpty
-          ? unknownTitle ?? musicPlayerRuntime.unknownTitle
-          : title,
-      artist: artist.isEmpty
-          ? unknownArtist ?? musicPlayerRuntime.unknownArtist
-          : artist,
-      album: album.isEmpty ? null : album,
-      duration: duration,
-      artUri: (artwork != null && artwork.isNotEmpty)
-          ? Uri.tryParse(artwork)
-          : null,
-      extras: {
-        'source': source,
-        if (resolvedSource != null && resolvedSource.isNotEmpty)
-          'resolvedSource': resolvedSource,
-        if (bitDepth != null && bitDepth! > 0) 'bit_depth': bitDepth,
-        if (sampleRate != null && sampleRate! > 0) 'sample_rate': sampleRate,
-        if (bitrate != null && bitrate! > 0) 'bitrate': bitrate,
-        if (format != null && format!.trim().isNotEmpty)
-          'format': format!.trim(),
-        if (explicit) 'explicit': true,
-        if (autoplay) 'autoplay': true,
-      },
-    );
-  }
-}
 
 /// Returns a safe source-start position for restored playback. A completed
 /// snapshot starts over instead of immediately completing again on resume.
