@@ -173,37 +173,6 @@ void main() {
     });
   });
 
-  group('strict SAF validation', () {
-    test('returns the native persisted-grant result', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(backendChannel, (call) async {
-            expect(call.method, 'isSafTreeAccessible');
-            expect(
-              (call.arguments as Map)['tree_uri'],
-              'content://tree/missing',
-            );
-            return false;
-          });
-
-      expect(
-        await PlatformBridge.validateSafTreeAccess('content://tree/missing'),
-        isFalse,
-      );
-    });
-
-    test('surfaces bridge errors instead of allowing an unverified write', () {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(backendChannel, (call) async {
-            throw PlatformException(code: 'bridge_failure');
-          });
-
-      expect(
-        PlatformBridge.validateSafTreeAccess('content://tree/missing'),
-        throwsA(isA<PlatformException>()),
-      );
-    });
-  });
-
   test('Android backup policy excludes every app-data domain', () {
     final manifest = File(
       'android/app/src/main/AndroidManifest.xml',

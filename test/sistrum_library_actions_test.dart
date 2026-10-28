@@ -46,7 +46,6 @@ void _mockMetadataFile(WidgetTester tester) {
     channel,
     (call) async => switch (call.method) {
       'safStat' => jsonEncode({'exists': true, 'size': 100}),
-      'readAudioMetadata' ||
       'readFileMetadata' => jsonEncode({'title': 'Track', 'artist': 'Artist'}),
       'getSafFileModTimes' => '{}',
       _ => null,

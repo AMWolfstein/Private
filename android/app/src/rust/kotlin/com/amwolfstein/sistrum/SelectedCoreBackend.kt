@@ -317,8 +317,6 @@ internal object RustCoreBackend : CoreBackend {
         }
     }
 
-    override fun writeM4aFreeformTags(path: String, metadataJson: String): String =
-        withMediaFiles(listOf(path)) { it.writeM4aFreeformTags(mediaPath(path), metadataJson, null) }
 
 
 

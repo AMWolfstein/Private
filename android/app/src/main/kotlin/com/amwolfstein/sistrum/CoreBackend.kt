@@ -29,7 +29,6 @@ internal interface CoreBackend {
     fun editFileMetadata(path: String, metadataJson: String): String
 
     fun extractCoverToFile(audioPath: String, outputPath: String, hint: String = "")
-    fun writeM4aFreeformTags(path: String, metadataJson: String): String
 
 
 

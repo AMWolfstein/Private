@@ -332,29 +332,6 @@ class PlatformBridge {
     }
   }
 
-  /// Whether the persisted SAF grant for [treeUri] is still usable: the
-  /// permission is present in the system's persisted list and the tree
-  /// document still exists and is writable. Returns true on channel errors
-  /// so a bridge problem never raises a false "access lost" alarm.
-  static Future<bool> isSafTreeAccessible(String treeUri) async {
-    try {
-      return await validateSafTreeAccess(treeUri);
-    } catch (e) {
-      _log.w('Failed to check SAF tree accessibility: $e');
-      return true;
-    }
-  }
-
-  /// Strict SAF validation for startup and download preflight. Unlike
-  /// [isSafTreeAccessible], channel failures are surfaced to the caller so a
-  /// write cannot proceed on an unverified destination.
-  static Future<bool> validateSafTreeAccess(String treeUri) async {
-    final result = await _channel.invokeMethod('isSafTreeAccessible', {
-      'tree_uri': treeUri,
-    });
-    return result as bool? ?? false;
-  }
-
   static Future<bool> safDelete(String uri) async {
     final result = await _channel.invokeMethod('safDelete', {'uri': uri});
     return result as bool;
@@ -849,20 +826,6 @@ class PlatformBridge {
       }
     }
     return const <String, dynamic>{};
-  }
-
-  static Future<Map<String, dynamic>?> readAudioMetadata(
-    String filePath,
-  ) async {
-    try {
-      final result = await _channel.invokeMethod('readAudioMetadata', {
-        'file_path': filePath,
-      });
-      return _decodeNullableMapResult(result, 'readAudioMetadata');
-    } catch (e) {
-      _log.w('Failed to read audio metadata: $e');
-      return null;
-    }
   }
 
   static Future<Map<String, dynamic>> parseCueSheet(

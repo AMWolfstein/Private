@@ -50,7 +50,7 @@ void main() {
         channel,
         (call) async => switch (call.method) {
           'safStat' => jsonEncode({'exists': true, 'size': 100}),
-          'readAudioMetadata' || 'readFileMetadata' => '{}',
+          'readFileMetadata' => '{}',
           'getSafFileModTimes' => '{}',
           _ => null,
         },

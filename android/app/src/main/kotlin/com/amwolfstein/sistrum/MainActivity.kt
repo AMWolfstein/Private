@@ -69,7 +69,6 @@ class MainActivity: FlutterFragmentActivity() {
         "getBackendImplementations",
         "ensureInstallMarker",
 
-        "readAudioMetadata",
         "readFileMetadata",
         "editFileMetadata",
 
@@ -91,7 +90,6 @@ class MainActivity: FlutterFragmentActivity() {
 
         "safExists",
         "safExistsBatch",
-        "isSafTreeAccessible",
         "probeSafTreeReadAccess",
         "safDelete",
         "safStat",
@@ -104,7 +102,6 @@ class MainActivity: FlutterFragmentActivity() {
         "writeTempToSaf",
 
         "extractCoverToFile",
-        "writeM4AFreeformTags",
         "releaseMemory",
         "releaseMemoryUnderPressure",
 
@@ -807,27 +804,6 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(readable)
                         }
-                        "isSafTreeAccessible" -> {
-                            val uriStr = call.argument<String>("tree_uri") ?: ""
-                            val accessible = withContext(Dispatchers.IO) {
-                                try {
-                                    val uri = Uri.parse(uriStr)
-                                    val persisted = contentResolver.persistedUriPermissions.any {
-                                        it.uri == uri && it.isReadPermission && it.isWritePermission
-                                    }
-                                    if (!persisted) {
-                                        false
-                                    } else {
-                                        val doc = DocumentFile.fromTreeUri(this@MainActivity, uri)
-                                        doc != null && doc.exists() && doc.canWrite()
-                                    }
-                                } catch (e: Exception) {
-                                    android.util.Log.w("Sistrum", "SAF tree access check failed: ${e.message}")
-                                    false
-                                }
-                            }
-                            result.success(accessible)
-                        }
                         "safDelete" -> {
                             val uriStr = call.argument<String>("uri") ?: ""
                             val deleted = withContext(Dispatchers.IO) {
@@ -970,19 +946,6 @@ class MainActivity: FlutterFragmentActivity() {
                                     }
                                 } catch (e: Exception) {
                                     android.util.Log.e("Sistrum", "editFileMetadata failed: ${e.message}", e)
-                                    """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
-                                }
-                            }
-                            result.success(response)
-                        }
-                        "writeM4AFreeformTags" -> {
-                            val filePath = call.argument<String>("file_path") ?: ""
-                            val metadataJson = call.argument<String>("metadata_json") ?: "{}"
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    coreBackend.writeM4aFreeformTags(filePath, metadataJson)
-                                } catch (e: Exception) {
-                                    android.util.Log.e("Sistrum", "writeM4AFreeformTags failed: ${e.message}", e)
                                     """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
                                 }
                             }
@@ -1195,25 +1158,6 @@ class MainActivity: FlutterFragmentActivity() {
                                 coreBackend.resumeLibraryScan()
                             }
                             result.success(null)
-                        }
-                        "readAudioMetadata" -> {
-                            val filePath = call.argument<String>("file_path") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                try {
-                                    if (filePath.startsWith("content://")) {
-                                        val uri = Uri.parse(filePath)
-                                        val metadata = readAudioMetadataFromUri(uri)
-                                            ?: return@withContext """{"error":"Failed to read SAF audio metadata"}"""
-                                        metadata.put("filePath", filePath)
-                                        metadata.toString()
-                                    } else {
-                                        coreBackend.readAudioMetadata(filePath, "", "")
-                                    }
-                                } catch (e: Exception) {
-                                    """{"error":${org.json.JSONObject.quote(e.message ?: "unknown")}}"""
-                                }
-                            }
-                            result.success(response)
                         }
                         "parseCueSheet" -> {
                             val cuePath = call.argument<String>("cue_path") ?: ""
