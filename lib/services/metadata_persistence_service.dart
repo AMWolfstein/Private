@@ -99,9 +99,15 @@ class MetadataPersistenceService {
       }
 
       final codec = _codec(request.filePath);
-      final output = codec == null
-          ? null
-          : await embed(codec, target, existingCover, tags);
+      if (codec == null) {
+        return const MetadataSaveResult.failed(MetadataSaveFailure.ffmpeg);
+      }
+      final String? output;
+      try {
+        output = await embed(codec, target, existingCover, tags);
+      } on FFmpegMetadataFailure catch (error) {
+        return MetadataSaveResult.failed(MetadataSaveFailure.ffmpeg, error);
+      }
       if (output == null) {
         return const MetadataSaveResult.failed(MetadataSaveFailure.ffmpeg);
       }

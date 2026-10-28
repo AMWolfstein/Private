@@ -13,6 +13,17 @@ import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 
+/// A metadata/artwork write that FFmpeg could not complete. [message] is a
+/// concise cause that survives the writer boundary into the save result.
+class FFmpegMetadataFailure implements Exception {
+  const FFmpegMetadataFailure(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'FFmpegMetadataFailure: $message';
+}
+
 /// Container-specific metadata and artwork operations, independent of encoding.
 abstract final class FFmpegMetadata {
   static List<String> buildCoverResizeArguments({
@@ -96,7 +107,22 @@ abstract final class FFmpegMetadata {
     'comment=Cover (front)',
   ]);
 
-  static Future<String?> _finish(
+  /// Runs one metadata command, turning a platform/execution failure into a
+  /// cause the save result can report.
+  static Future<FFmpegResult> _execute(
+    List<String> arguments,
+    String format, {
+    Future<FFmpegResult> Function(List<String>)? execute,
+  }) async {
+    try {
+      return await (execute ?? FFmpegExecution.arguments)(arguments);
+    } catch (error) {
+      _log.e('$format metadata command failed: $error');
+      throw FFmpegMetadataFailure('$format metadata command failed: $error');
+    }
+  }
+
+  static Future<String> _finish(
     FFmpegResult result,
     String tempOutput,
     String path,
@@ -106,12 +132,14 @@ abstract final class FFmpegMetadata {
     if (!result.success) {
       await FFmpegOutput.cleanup(tempOutput);
       _log.e('$format Metadata/Cover embed failed: ${result.output}');
-      return null;
+      throw FFmpegMetadataFailure(
+        '$format metadata embed failed (exit ${result.returnCode})',
+      );
     }
     if (beforePromote != null && !await beforePromote(tempOutput)) {
       await FFmpegOutput.cleanup(tempOutput);
       _log.e('$format metadata post-processing failed; keeping the original');
-      return null;
+      throw FFmpegMetadataFailure('$format metadata post-processing failed');
     }
     final promoted = await FFmpegOutput.promote(
       tempOutput,
@@ -121,7 +149,9 @@ abstract final class FFmpegMetadata {
       onError: (e) =>
           _log.e('Failed to replace $format file after metadata embed: $e'),
     );
-    if (!promoted) return null;
+    if (!promoted) {
+      throw FFmpegMetadataFailure('Could not replace the $format file');
+    }
     _log.d('$format metadata embedded successfully');
     return path;
   }
@@ -149,7 +179,7 @@ abstract final class FFmpegMetadata {
       preserveMetadata: preserveMetadata,
     );
     final embeddedPath = await _finish(result, tempOutput, mp3Path, 'MP3');
-    if (embeddedPath != null && lyrics != null) {
+    if (lyrics != null) {
       await _ensureMp3UnsyncedLyricsFrame(embeddedPath, lyrics);
     }
     return embeddedPath;
@@ -170,7 +200,7 @@ abstract final class FFmpegMetadata {
       preserveMetadata: preserveMetadata,
     );
     _log.d('Executing FFmpeg MP3 embed command');
-    return FFmpegExecution.arguments(arguments);
+    return _execute(arguments, 'MP3');
   }
 
   /// MP3 edits always stream-copy the audio. Re-encoding a tag-only edit
@@ -281,7 +311,7 @@ abstract final class FFmpegMetadata {
     arguments.addAll([tempOutput, '-y']);
     _log.d('Executing FFmpeg Opus embed command');
     return _finish(
-      await (execute ?? FFmpegExecution.arguments)(arguments),
+      await _execute(arguments, 'Opus', execute: execute),
       tempOutput,
       opusPath,
       'Opus',
@@ -336,7 +366,7 @@ abstract final class FFmpegMetadata {
     }
 
     _log.d('Executing FFmpeg M4A embed command');
-    var result = await FFmpegExecution.arguments(buildArgs(false));
+    var result = await _execute(buildArgs(false), 'M4A');
     // MOV supports some codecs MP4 rejects (for example AC-4). Other
     // failures keep their original error instead of trying MOV, which
     // cannot carry FLAC even with experimental compliance enabled.
@@ -347,7 +377,7 @@ abstract final class FFmpegMetadata {
         '${FFmpegExecution.preview(result.output)}',
       );
       await FFmpegOutput.cleanup(tempOutput);
-      result = await FFmpegExecution.arguments(buildArgs(true));
+      result = await _execute(buildArgs(true), 'M4A');
     }
     final metadataTags = metadata;
     final embedded = await _finish(

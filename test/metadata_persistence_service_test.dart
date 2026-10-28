@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/services/ffmpeg_metadata.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
 import 'package:sistrum/services/metadata_persistence_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
@@ -280,4 +281,19 @@ void main() {
       },
     );
   }
+
+  test('an FFmpeg writer failure keeps its cause in the save result', () async {
+    const failure = FFmpegMetadataFailure(
+      'Opus metadata embed failed (exit 1)',
+    );
+    final service = MetadataPersistenceService(
+      covers: covers,
+      edit: (_, _) async => {'method': 'ffmpeg'},
+      read: (_) async => {},
+      embed: (_, _, _, _) async => throw failure,
+    );
+    final result = await service.save(request(path: 'song.opus'));
+    expect(result.failure, MetadataSaveFailure.ffmpeg);
+    expect(result.error, same(failure));
+  });
 }
