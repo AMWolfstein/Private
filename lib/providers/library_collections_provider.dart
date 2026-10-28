@@ -6,7 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg_probe.dart';
 import 'package:sistrum/services/library_collections_database.dart';
 import 'package:sistrum/services/library_collections_hydration.dart';
 import 'package:sistrum/services/collection_track_batch.dart';
@@ -33,8 +34,8 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     PlaylistCoverResize? resizeCover,
     PlaylistCoverProbe? probeCover,
   }) : _db = database ?? LibraryCollectionsDatabase.instance,
-       _resizeCover = resizeCover ?? FFmpegService.resizeCoverArt,
-       _probeCover = probeCover ?? FFmpegService.probeImageDimensions;
+       _resizeCover = resizeCover ?? FFmpegMetadata.resizeCoverArt,
+       _probeCover = probeCover ?? FFmpegProbe.imageDimensions;
 
   final PlaylistCoverResize _resizeCover;
   final PlaylistCoverProbe _probeCover;

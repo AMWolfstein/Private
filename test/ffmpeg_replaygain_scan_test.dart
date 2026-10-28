@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg_replaygain.dart';
 
 void main() {

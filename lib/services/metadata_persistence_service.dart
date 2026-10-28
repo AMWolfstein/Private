@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/ffmpeg_metadata.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
@@ -210,19 +210,19 @@ class MetadataPersistenceService {
     String? coverPath,
     Map<String, String> metadata,
   ) => switch (codec) {
-    MetadataSaveCodec.mp3 => FFmpegService.embedMetadataToMp3(
+    MetadataSaveCodec.mp3 => FFmpegMetadata.embedMetadataToMp3(
       mp3Path: path,
       coverPath: coverPath,
       metadata: metadata,
       preserveMetadata: true,
     ),
-    MetadataSaveCodec.m4a => FFmpegService.embedMetadataToM4a(
+    MetadataSaveCodec.m4a => FFmpegMetadata.embedMetadataToM4a(
       m4aPath: path,
       coverPath: coverPath,
       metadata: metadata,
       preserveMetadata: true,
     ),
-    MetadataSaveCodec.opus => FFmpegService.embedMetadataToOpus(
+    MetadataSaveCodec.opus => FFmpegMetadata.embedMetadataToOpus(
       opusPath: path,
       coverPath: coverPath,
       metadata: metadata,

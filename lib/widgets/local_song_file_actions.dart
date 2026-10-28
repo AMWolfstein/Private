@@ -9,7 +9,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/deleted_library_files.dart';
-import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/ffmpeg_cue.dart';
+import 'package:sistrum/services/ffmpeg_models.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/services/library_database_models.dart';
 import 'package:sistrum/services/platform_bridge.dart';
@@ -341,7 +342,7 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
     } catch (_) {
       /* A CUE album can be split without artwork. */
     }
-    final result = await FFmpegService.splitCueToTracks(
+    final result = await FFmpegCue.splitCueToTracks(
       audioPath: workingAudio,
       outputDir: staging.path,
       tracks: tracks,

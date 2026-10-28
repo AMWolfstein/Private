@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:sistrum/services/ffmpeg_service.dart';
+import 'package:sistrum/services/ffmpeg_probe.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});
@@ -68,7 +68,7 @@ class MetadataCoverResources {
 
   Future<MetadataCoverDetails?> readDetails(String path) async {
     try {
-      final dimensions = await FFmpegService.probeImageDimensions(path);
+      final dimensions = await FFmpegProbe.imageDimensions(path);
       if (dimensions == null) return null;
       return (
         width: dimensions.width,
