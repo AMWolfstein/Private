@@ -22,6 +22,11 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Legacy removal (2026-10-28):** the download-history database/model, history and extension payloads in backups
+(Dart and Rust), the legacy backup envelope, the downloaded-source filter and excluded-downloads count, dead Track
+fields and Kotlin policy, and old string keys are gone. Backups are `.sbk`, format v3 only; older backups no longer
+restore by owner decision. Rust cancellation has a single request domain.
+
 **Updater restored (2026-10-28):** GitHub-release update check, Settings > Updates page above About (Check now, check and preview-channel switches), update
 dialog with in-app APK download and install, 28 strings in all locales. The release manifest now has INTERNET,
 REQUEST_INSTALL_PACKAGES and a FileProvider. `AppInfo.githubRepo` is `amwolfstein/private` until the public
