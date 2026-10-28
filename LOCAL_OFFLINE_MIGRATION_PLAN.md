@@ -22,6 +22,12 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
+Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
+low-end devices, covered routes and a page scrolled past the cover; playlists, Loved and artists are unchanged. Online artwork
+and lyrics (`docs/ONLINE_SOURCES_PLAN.md`) wait until after the Media3 migration. Analyze and the full `flutter test` pass; the
+look and speed need checking on a device.
+
 **Version reset (2026-10-28):** app version is now 1.0.0 build 1 (`pubspec.yaml` 1.0.0+1, `AppInfo`). Earlier entries below keep their historical 5.1.1 build numbers.
 
 **Second dead-code pass (2026-10-28):** removed `LocalLibrarySortMode`, `LocalLibraryItem.matchKey`, write-only fields

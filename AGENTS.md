@@ -49,6 +49,7 @@ Switch and slider thumbs (AppSwitch, SistrumSlider, horizontal SistrumLevelSlide
 liquid glass only while touched and only when the glass thumb gate allows it; no lens or
 capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
 faders keep their painted controls.
+Sistrum album headers drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. Albums only: playlists, Loved and artist headers stay still. It pauses for reduced motion, glass off or low-end devices, covered routes and a page scrolled past the cover.
 Pinned headers float: transparent toolbars with a glass back circle, IconButton and menu actions in
 one glass capsule and a backing band only once content scrolls under (opaque on flat level or high
 contrast). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons; the
