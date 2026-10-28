@@ -28,7 +28,8 @@ First item: the forwarding `FFmpegService` facade is gone; callers use `FFmpegMe
 restoration no longer imports the player engine) and album route identity (`DetailPage`) moved to
 `lib/utils/detail_page_route.dart`. Third: update checks distinguish a verified "no newer release" (null) from an unreachable or
 unverifiable release list (`UpdateCheckException`), and Settings > Updates offers a retry instead of claiming the app is
-up to date. Analyze and the full `flutter test` pass.
+up to date. Fourth: FFmpeg metadata writes throw `FFmpegMetadataFailure` with a concise cause, and the metadata save result keeps
+it (`MetadataSaveResult.failed(error)`) instead of dropping it. Analyze and the full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
