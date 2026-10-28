@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus;
 import 'package:sistrum/l10n/l10n.dart';
@@ -256,6 +257,31 @@ class _LogScreenState extends ConsumerState<LogScreen> {
     );
   }
 
+  Future<void> _showLevelPicker(BuildContext context) async {
+    final colorScheme = Theme.of(context).colorScheme;
+    final level = await showAppBottomSheet<String>(
+      context: context,
+      title: context.l10n.logFilterLevel,
+      builder: (sheetContext) => Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: SettingsGroup(
+          children: [
+            for (final level in _levels)
+              SettingsItem(
+                title: level,
+                trailing: level == _selectedLevel
+                    ? Icon(Icons.check, color: colorScheme.primary)
+                    : null,
+                showDivider: level != _levels.last,
+                onTap: () => Navigator.pop(sheetContext, level),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (level != null && mounted) setState(() => _selectedLevel = level);
+  }
+
   Color _getLevelColor(String level, ColorScheme colorScheme) {
     switch (level) {
       case 'ERROR':
@@ -442,28 +468,23 @@ class _LogScreenState extends ConsumerState<LogScreen> {
                             ],
                           ),
                         ),
-                        DropdownButton<String>(
-                          value: _selectedLevel,
-                          underline: const SizedBox(),
-                          items: _levels.map((level) {
-                            return DropdownMenuItem(
-                              value: level,
-                              child: Text(
-                                level,
-                                style: TextStyle(
-                                  color: level == 'ALL'
-                                      ? colorScheme.onSurface
-                                      : _getLevelColor(level, colorScheme),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _selectedLevel = value);
-                            }
-                          },
+                        FilledButton.tonalIcon(
+                          onPressed: () => _showLevelPicker(context),
+                          icon: const Icon(Icons.arrow_drop_down, size: 20),
+                          iconAlignment: IconAlignment.end,
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size(0, 40),
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                          ),
+                          label: Text(
+                            _selectedLevel,
+                            style: TextStyle(
+                              color: _selectedLevel == 'ALL'
+                                  ? null
+                                  : _getLevelColor(_selectedLevel, colorScheme),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ],
                     ),

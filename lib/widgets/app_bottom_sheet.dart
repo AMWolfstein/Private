@@ -51,6 +51,7 @@ class AppBottomSheet extends StatelessWidget {
     required this.child,
     this.showHandle = true,
     this.title,
+    this.titleTrailing,
     this.subtitle,
     this.maxHeightFactor,
   });
@@ -61,6 +62,9 @@ class AppBottomSheet extends StatelessWidget {
   /// Leading title row. Rendered with the app's single sheet-title style
   /// instead of the three variants that had accumulated across sheets.
   final String? title;
+
+  /// Optional action beside [title], outside the scrolling body.
+  final Widget? titleTrailing;
 
   /// Secondary line under [title], e.g. the track a sheet is acting on.
   final String? subtitle;
@@ -86,11 +90,21 @@ class AppBottomSheet extends StatelessWidget {
               tokens.gapXl,
               subtitle == null ? tokens.gapSm : tokens.gapXs,
             ),
-            child: Text(
-              title!,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title!,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                if (titleTrailing != null) ...[
+                  SizedBox(width: tokens.gapSm),
+                  titleTrailing!,
+                ],
+              ],
             ),
           ),
         if (subtitle != null)
@@ -168,6 +182,132 @@ Future<T?> showAppBottomSheet<T>({
   );
 }
 
+/// Fits short content and coordinates scrolling/dragging for longer sheets.
+class AppScrollableSheet extends StatefulWidget {
+  const AppScrollableSheet({super.key, required this.builder});
+
+  final ScrollableWidgetBuilder builder;
+
+  @override
+  State<AppScrollableSheet> createState() => _AppScrollableSheetState();
+}
+
+class _AppScrollableSheetState extends State<AppScrollableSheet> {
+  final _contentKey = GlobalKey();
+  final _sheetController = DraggableScrollableController();
+  ScrollController? _scrollController;
+  double _availableHeight = 0;
+  double _initialSize = 0.85;
+  double _maxSize = 0.95;
+  bool _fitScheduled = false;
+
+  void _scheduleFit() {
+    if (_fitScheduled) return;
+    _fitScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fitScheduled = false;
+      if (!mounted || _availableHeight <= 0) return;
+      final box = _contentKey.currentContext?.findRenderObject();
+      final scroll = _scrollController;
+      if (box is! RenderBox || !box.hasSize || scroll == null) return;
+      final overflow = scroll.hasClients && scroll.position.hasContentDimensions
+          ? (scroll.position.maxScrollExtent - scroll.position.minScrollExtent)
+                .clamp(0.0, double.infinity)
+          : 0.0;
+      // Align lets the header/body shrink below the allocated sheet height.
+      // Adding the scroll overflow recovers the full content height without
+      // an intrinsic-layout pass or a second hidden copy of the form.
+      final contentFraction = (box.size.height + overflow) / _availableHeight;
+      final initial = contentFraction.clamp(0.01, 0.85);
+      final maximum = contentFraction.clamp(initial, 0.95);
+      if ((initial - _initialSize).abs() * _availableHeight < 1 &&
+          (maximum - _maxSize).abs() * _availableHeight < 1) {
+        return;
+      }
+      final resize = (initial - _initialSize).abs() * _availableHeight >= 1;
+      setState(() {
+        _initialSize = initial;
+        _maxSize = maximum;
+      });
+      // A field or search result can change after the user has dragged. The
+      // framework otherwise preserves that old extent when content grows.
+      if (resize) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _sheetController.isAttached) {
+            _sheetController.jumpTo(_initialSize);
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _sheetController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      _availableHeight = constraints.maxHeight;
+      _scheduleFit();
+      return NotificationListener<ScrollMetricsNotification>(
+        onNotification: (notification) {
+          if (notification.depth == 0) _scheduleFit();
+          return false;
+        },
+        child: NotificationListener<SizeChangedLayoutNotification>(
+          onNotification: (_) {
+            _scheduleFit();
+            return false;
+          },
+          child: DraggableScrollableSheet(
+            controller: _sheetController,
+            expand: false,
+            initialChildSize: _initialSize,
+            minChildSize: (_initialSize * 0.6).clamp(0.0, 0.5),
+            maxChildSize: _maxSize,
+            snap: true,
+            snapSizes: [_initialSize],
+            builder: (context, controller) {
+              _scrollController = controller;
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: SizeChangedLayoutNotifier(
+                  key: _contentKey,
+                  child: widget.builder(context, controller),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    },
+  );
+}
+
+/// A fixed handle/header above a body that scrolls and drags the same sheet.
+Future<T?> showAppScrollableBottomSheet<T>({
+  required BuildContext context,
+  required ScrollableWidgetBuilder builder,
+  required String title,
+  String? subtitle,
+  Widget? titleTrailing,
+}) => showAppModalBottomSheet<T>(
+  context: context,
+  useRootNavigator: true,
+  isScrollControlled: true,
+  builder: (context) => AppScrollableSheet(
+    builder: (context, controller) => AppBottomSheet(
+      title: title,
+      titleTrailing: titleTrailing,
+      subtitle: subtitle,
+      child: builder(context, controller),
+    ),
+  ),
+);
+
 /// Adaptive surface for sheets which already supply their own header/layout.
 Future<T?> showAppModalBottomSheet<T>({
   required BuildContext context,
@@ -212,7 +352,21 @@ class AppSheetOption extends StatelessWidget {
     this.onTap,
     this.contentPadding,
     this.enabled = true,
-  });
+    this.selected,
+  }) : _isChoice = false;
+
+  /// A choice with the sheet's checkmark and selection semantics.
+  const AppSheetOption.choice({
+    super.key,
+    required this.title,
+    required bool this.selected,
+    required VoidCallback this.onTap,
+    this.subtitle,
+    this.leading,
+  }) : trailing = null,
+       contentPadding = null,
+       enabled = true,
+       _isChoice = true;
 
   final Widget title;
   final Widget? subtitle;
@@ -221,11 +375,29 @@ class AppSheetOption extends StatelessWidget {
   final VoidCallback? onTap;
   final EdgeInsetsGeometry? contentPadding;
   final bool enabled;
+  final bool _isChoice;
+
+  /// Announces a checkmark choice's state to screen readers; null for
+  /// options that are actions rather than choices.
+  final bool? selected;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final trailing = _isChoice
+        ? selected == true
+              ? Icon(Icons.check, color: scheme.primary)
+              : null
+        : this.trailing;
+    // Annotated on the title so it merges into the option's button node.
+    final title = selected == null
+        ? this.title
+        : Semantics(
+            selected: selected,
+            inMutuallyExclusiveGroup: true,
+            child: this.title,
+          );
     Widget adaptedIcon(Widget widget, double size) {
       if (widget case Icon(:final icon?)) {
         return Icon(
@@ -275,7 +447,7 @@ class AppSheetOption extends StatelessWidget {
           ),
           if (trailing != null) ...[
             const SizedBox(width: 12),
-            adaptedIcon(trailing!, 20),
+            adaptedIcon(trailing, 20),
           ],
         ],
       ),

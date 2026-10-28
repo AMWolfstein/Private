@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 /// is reserved for genuinely desktop-width windows; the old 600dp threshold
 /// made an iPad portrait layout look like a shrunken desktop app.
 const double navigationRailBreakpoint = 1440;
-const double defaultWideContentMaxWidth = 960;
-const double maxWideContentInset = 32;
+const double defaultWideContentMaxWidth = 840;
 
 bool useNavigationRailForWidth(double width) =>
     width >= navigationRailBreakpoint;
@@ -87,9 +86,7 @@ class AdaptiveUiScaler extends StatelessWidget {
 double wideInsetForWidth(
   double maxWidth, {
   double contentMaxWidth = defaultWideContentMaxWidth,
-}) => maxWidth > contentMaxWidth
-    ? ((maxWidth - contentMaxWidth) / 2).clamp(0.0, maxWideContentInset)
-    : 0;
+}) => maxWidth > contentMaxWidth ? (maxWidth - contentMaxWidth) / 2 : 0;
 
 /// Horizontal inset that centers full-width list content on tablets/landscape;
 /// zero on phones, so rows stop stretching across the whole screen.

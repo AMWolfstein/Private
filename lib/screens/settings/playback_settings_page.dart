@@ -15,6 +15,7 @@ import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/beta_badge.dart';
 import 'package:sistrum/widgets/sistrum_volume_control.dart';
 import 'package:sistrum/widgets/settings_group.dart';
 import 'package:sistrum/widgets/automix_settings.dart';
@@ -87,6 +88,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
               children: [
                 SettingsItem(
                   title: context.l10n.equalizerTitle,
+                  titleTrailing: const BetaBadge(),
                   subtitle: context.l10n.equalizerDescription,
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => Navigator.of(context).push(
@@ -234,7 +236,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                     builder: (context, status, _) => SettingsSwitchItem(
                       icon: Icons.usb,
                       title: context.l10n.usbBitPerfect,
-                      titleTrailing: const _PlaybackBetaBadge(),
+                      titleTrailing: const BetaBadge(),
                       subtitle: [
                         context.l10n.usbBitPerfectDescription,
                         if (settings.usbBitPerfect)
@@ -360,7 +362,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                     SettingsSwitchItem(
                       icon: Icons.headphones,
                       title: context.l10n.dapExclusive,
-                      titleTrailing: const _PlaybackBetaBadge(),
+                      titleTrailing: const BetaBadge(),
                       subtitle: context.l10n.dapExclusiveDescription,
                       value: settings.dapExclusive,
                       onChanged: (value) => ref
@@ -396,29 +398,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
           const NavBarSliverSpacer(),
         ],
-      ),
-    );
-  }
-}
-
-class _PlaybackBetaBadge extends StatelessWidget {
-  const _PlaybackBetaBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        'Beta',
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: colors.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }

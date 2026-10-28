@@ -15,6 +15,7 @@ import 'package:sistrum/screens/favorite_artists_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/services/album_completeness.dart';
 import 'package:sistrum/services/library_database.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/app_search_field.dart';
@@ -260,6 +261,7 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final searchingLibrary = _overview && _query.isNotEmpty;
+    final listInset = wideListInset(context);
     final result = _overview
         ? const AsyncData(LibraryBrowseState([], hasMore: false))
         : ref.watch(libraryBrowseProvider(_request));
@@ -310,13 +312,22 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           if (_overview)
-            AppSliverHeader.tabRoot(title: title, actions: actions)
+            AppSliverHeader.tabRoot(
+              title: title,
+              actions: actions,
+              alignToContent: true,
+            )
           else
             AppSliverHeader.page(title: title, actions: actions),
           if (_showSearch)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                padding: EdgeInsets.fromLTRB(
+                  24 + listInset,
+                  8,
+                  24 + listInset,
+                  16,
+                ),
                 child: AppSearchField(
                   controller: _search,
                   autofocus: true,
@@ -342,14 +353,25 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
                 ref.watch(
                   settingsProvider.select((s) => s.listeningStatisticsEnabled),
                 ))
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: ListeningRewindBanner(
-                  margin: EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  margin: EdgeInsets.fromLTRB(
+                    24 + listInset,
+                    0,
+                    24 + listInset,
+                    16,
+                  ),
                 ),
               ),
             if (_overview && _query.isEmpty)
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                // Rows center at the reading width on tablets.
+                padding: EdgeInsets.fromLTRB(
+                  24 + listInset,
+                  0,
+                  24 + listInset,
+                  20,
+                ),
                 sliver: SliverList.list(
                   children: [
                     for (final category in [
@@ -440,8 +462,8 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
                     return Column(
                       children: [
                         ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 24,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 24 + listInset,
                             vertical: 8,
                           ),
                           leading: ClipOval(
@@ -464,19 +486,25 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
                             ),
                           ),
                         ),
-                        const Divider(height: 1, indent: 96, endIndent: 24),
+                        Divider(
+                          height: 1,
+                          indent: 96 + listInset,
+                          endIndent: 24 + listInset,
+                        ),
                       ],
                     );
                   },
                 )
               else
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24 + listInset),
                   sliver: SliverLayoutBuilder(
                     builder: (context, constraints) {
-                      final columns = (constraints.crossAxisExtent / 200)
+                      // ~160dp covers: two on phones, more columns rather
+                      // than giant covers on tablets.
+                      final columns = (constraints.crossAxisExtent / 160)
                           .floor()
-                          .clamp(2, 6);
+                          .clamp(2, 8);
                       final width =
                           (constraints.crossAxisExtent - 20 * (columns - 1)) /
                           columns;

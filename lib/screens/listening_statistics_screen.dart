@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/widgets/animation_utils.dart' show SkeletonBox;
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_choice_chip.dart';
-import 'package:sistrum/widgets/app_loading_indicator.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'package:sistrum/widgets/player_artwork.dart';
 import 'package:sistrum/widgets/settings_group.dart';
@@ -86,97 +87,188 @@ class _ListeningStatisticsScreenState
         child: CustomScrollView(
           slivers: [
             AppSliverHeader.page(title: context.l10n.listeningStats),
-            const SliverToBoxAdapter(child: ListeningRewindEntry()),
-            SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  SettingsSwitchItem(
-                    icon: Icons.insights_outlined,
-                    title: context.l10n.listeningStatsRecord,
-                    subtitle: context.l10n.listeningStatsDescription,
-                    value: ref
-                        .watch(settingsProvider)
-                        .listeningStatisticsEnabled,
-                    enabled: !_clearing,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setListeningStatisticsEnabled(value),
-                    showDivider: false,
+            // Centered at the reading width on tablets, under the title.
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
+              sliver: SliverMainAxisGroup(
+                slivers: [
+                  const SliverToBoxAdapter(child: ListeningRewindEntry()),
+                  SliverToBoxAdapter(
+                    child: SettingsGroup(
+                      children: [
+                        SettingsSwitchItem(
+                          icon: Icons.insights_outlined,
+                          title: context.l10n.listeningStatsRecord,
+                          subtitle: context.l10n.listeningStatsDescription,
+                          value: ref
+                              .watch(settingsProvider)
+                              .listeningStatisticsEnabled,
+                          enabled: !_clearing,
+                          onChanged: (value) => ref
+                              .read(settingsProvider.notifier)
+                              .setListeningStatisticsEnabled(value),
+                          showDivider: false,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverToBoxAdapter(
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final days in [7, 30, 0])
+                            AppChoiceChip(
+                              label: Text(
+                                days == 0
+                                    ? '$_year'
+                                    : context.l10n.listeningStatsDays(days),
+                              ),
+                              selected: _days == days,
+                              onSelected: (_) => setState(() => _days = days),
+                            ),
+                          if (_days == 0)
+                            IconButton(
+                              tooltip: context.l10n.listeningStatsPreviousYear,
+                              onPressed: () => setState(() => _year--),
+                              icon: const Icon(Icons.chevron_left),
+                            ),
+                          if (_days == 0)
+                            IconButton(
+                              tooltip: context.l10n.listeningStatsNextYear,
+                              onPressed: _year >= DateTime.now().year
+                                  ? null
+                                  : () => setState(() => _year++),
+                              icon: const Icon(Icons.chevron_right),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  ...summary.when(
+                    loading: () => [
+                      SliverToBoxAdapter(child: _summarySkeleton(context)),
+                    ],
+                    error: (error, _) => [
+                      SliverToBoxAdapter(
+                        child: ListTile(
+                          title: Text(context.l10n.listeningStatsLoadError),
+                          trailing: IconButton(
+                            tooltip: context.l10n.dialogRetry,
+                            icon: const Icon(Icons.refresh),
+                            onPressed: () => ref.invalidate(
+                              listeningSummaryProvider(period),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                    data: (data) => _summarySlivers(context, data),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 48),
+                      child: TextButton.icon(
+                        onPressed: _clearing ? null : _clear,
+                        icon: Icon(Icons.delete_outline, color: colors.error),
+                        label: Text(
+                          context.l10n.listeningStatsClear,
+                          style: TextStyle(color: colors.error),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverToBoxAdapter(
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _summarySkeleton(BuildContext context) {
+    return ExcludeSemantics(
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (final days in [7, 30, 0])
-                      AppChoiceChip(
-                        label: Text(
-                          days == 0
-                              ? '$_year'
-                              : context.l10n.listeningStatsDays(days),
-                        ),
-                        selected: _days == days,
-                        onSelected: (_) => setState(() => _days = days),
-                      ),
-                    if (_days == 0)
-                      IconButton(
-                        tooltip: context.l10n.listeningStatsPreviousYear,
-                        onPressed: () => setState(() => _year--),
-                        icon: const Icon(Icons.chevron_left),
-                      ),
-                    if (_days == 0)
-                      IconButton(
-                        tooltip: context.l10n.listeningStatsNextYear,
-                        onPressed: _year >= DateTime.now().year
-                            ? null
-                            : () => setState(() => _year++),
-                        icon: const Icon(Icons.chevron_right),
-                      ),
+                    SkeletonBox(width: 180, height: 44),
+                    SizedBox(height: 8),
+                    SkeletonBox(width: double.infinity, height: 20),
                   ],
                 ),
               ),
             ),
-            ...summary.when(
-              loading: () => [
-                const SliverToBoxAdapter(
-                  child: Center(child: AppLoadingIndicator()),
-                ),
-              ],
-              error: (error, _) => [
-                SliverToBoxAdapter(
-                  child: ListTile(
-                    title: Text(context.l10n.listeningStatsLoadError),
-                    trailing: IconButton(
-                      tooltip: context.l10n.dialogRetry,
-                      icon: const Icon(Icons.refresh),
-                      onPressed: () =>
-                          ref.invalidate(listeningSummaryProvider(period)),
+          ),
+          SettingsSectionHeader(title: context.l10n.listeningStatsActivity),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                for (var index = 0; index < 7; index++)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        SkeletonBox(width: 68, height: 20),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: SkeletonBox(
+                            width: double.infinity,
+                            height: 12,
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        SkeletonBox(width: 24, height: 16),
+                      ],
                     ),
                   ),
-                ),
               ],
-              data: (data) => _summarySlivers(context, data),
             ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 48),
-                child: TextButton.icon(
-                  onPressed: _clearing ? null : _clear,
-                  icon: Icon(Icons.delete_outline, color: colors.error),
-                  label: Text(
-                    context.l10n.listeningStatsClear,
-                    style: TextStyle(color: colors.error),
+          ),
+          for (final artists in [true, false]) ...[
+            SettingsSectionHeader(
+              title: artists
+                  ? context.l10n.listeningStatsTopArtists
+                  : context.l10n.listeningStatsTopTracks,
+            ),
+            for (var index = 0; index < 3; index++)
+              ListTile(
+                leading: artists
+                    ? const ClipOval(
+                        child: SkeletonBox(
+                          width: 48,
+                          height: 48,
+                          borderRadius: 0,
+                        ),
+                      )
+                    : const SkeletonBox(width: 48, height: 48),
+                title: const Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: SkeletonBox(width: 160, height: 16),
+                ),
+                subtitle: const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: SkeletonBox(width: 88, height: 12),
                   ),
                 ),
+                trailing: artists
+                    ? null
+                    : const SkeletonBox(width: 40, height: 12),
               ),
-            ),
           ],
-        ),
+        ],
       ),
     );
   }

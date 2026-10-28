@@ -17,10 +17,10 @@ void main() {
   });
 
   group('wide content', () {
-    test('uses the full tablet width before applying a small gutter', () {
-      expect(wideInsetForWidth(853), 0);
-      expect(wideInsetForWidth(1024), 32);
-      expect(wideInsetForWidth(1366), maxWideContentInset);
+    test('fills compact widths and centers at the reading width', () {
+      expect(wideInsetForWidth(640), 0);
+      expect(wideInsetForWidth(defaultWideContentMaxWidth), 0);
+      expect(wideInsetForWidth(1040), 100);
     });
   });
 

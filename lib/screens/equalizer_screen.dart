@@ -13,6 +13,7 @@ import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/app_choice_chip.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/beta_badge.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/services/equalizer_preset_io.dart';
 import 'package:sistrum/widgets/sistrum_level_slider.dart';
@@ -198,6 +199,7 @@ class EqualizerScreen extends ConsumerWidget {
                     children: [
                       SettingsSwitchItem(
                         title: l10n.equalizerEnable,
+                        titleTrailing: const BetaBadge(),
                         value: settings.enabled,
                         onChanged: (value) =>
                             control.update(settings.copyWith(enabled: value)),
