@@ -91,7 +91,14 @@ class UserProfileStore {
       }
       return updated;
     } catch (_) {
-      if (created != null && await created.exists()) await created.delete();
+      if (created != null) {
+        try {
+          if (await created.exists()) await created.delete();
+        } on FileSystemException {
+          // The primary save failure is what the caller must see; a leftover
+          // avatar file is harmless and is ignored by the profile reader.
+        }
+      }
       rethrow;
     }
   }

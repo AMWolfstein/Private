@@ -946,12 +946,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
       _startProgressPolling();
 
-      String? resolvedPath;
-
       if (!ref.mounted || _scanCancelRequested) return;
-      final effectiveFolderPath = resolvedPath ?? folderPath;
-
-      final isSaf = effectiveFolderPath.startsWith('content://');
+      final isSaf = folderPath.startsWith('content://');
 
       final useStreamingFullScan =
           forceFullScan || await _db.getSourceCount(activeSourceId) == 0;
@@ -963,7 +959,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         }
         final scanResult = await _replaceFromFullScanStream(
           sourceId: activeSourceId,
-          folderPath: effectiveFolderPath,
+          folderPath: folderPath,
           isSaf: isSaf,
           forceFullScan: forceFullScan,
         );
@@ -1063,7 +1059,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           if (nativeIngestion) {
             result = await _db.scanIncrementalNative(
               activeSourceId,
-              effectiveFolderPath,
+              folderPath,
               snapshotPath!,
               isSaf: isSaf,
               requestId: _nativeLibraryRequestId!,
@@ -1072,21 +1068,21 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           } else if (isSaf) {
             result = useSnapshotBridge && snapshotPath != null
                 ? await PlatformBridge.scanSafTreeIncrementalFromSnapshot(
-                    effectiveFolderPath,
+                    folderPath,
                     snapshotPath,
                   )
                 : await PlatformBridge.scanSafTreeIncremental(
-                    effectiveFolderPath,
+                    folderPath,
                     existingFiles,
                   );
           } else {
             result = useSnapshotBridge && snapshotPath != null
                 ? await PlatformBridge.scanLibraryFolderIncrementalFromSnapshot(
-                    effectiveFolderPath,
+                    folderPath,
                     snapshotPath,
                   )
                 : await PlatformBridge.scanLibraryFolderIncremental(
-                    effectiveFolderPath,
+                    folderPath,
                     existingFiles,
                   );
           }

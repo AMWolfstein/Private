@@ -94,7 +94,7 @@ class MetadataEditorController {
     return filled;
   }
 
-  Map<String, String> saveMetadata({
+  Map<String, String> buildMetadataTags({
     MetadataSeparators separators = const MetadataSeparators(),
     bool onlyChanged = false,
   }) {

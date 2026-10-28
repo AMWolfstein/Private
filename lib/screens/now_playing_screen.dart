@@ -44,22 +44,6 @@ export 'package:sistrum/routes/now_playing_route.dart';
 
 final _log = AppLogger('NowPlaying');
 
-/// AppBar wrapper that fades with the route transition (see contentOpacity
-/// in [_NowPlayingScreenState.build]).
-class _FadingAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Animation<double> opacity;
-  final AppBar child;
-
-  const _FadingAppBar({required this.opacity, required this.child});
-
-  @override
-  Size get preferredSize => child.preferredSize;
-
-  @override
-  Widget build(BuildContext context) =>
-      FadeTransition(opacity: opacity, child: child);
-}
-
 class NowPlayingScreen extends ConsumerStatefulWidget {
   const NowPlayingScreen({super.key, this.metadataControllerFactory});
 
@@ -234,7 +218,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           ),
           fullBleed: immersive && _currentPage == 0,
           child: Theme(
-            data: SistrumTheme.fromContext(context, brightness: Brightness.dark),
+            data: SistrumTheme.fromContext(
+              context,
+              brightness: Brightness.dark,
+            ),
             child: key == _compactArtworkKey || immersive
                 ? PlayerArtwork(
                     artUri: mediaItem.artUri?.toString(),
@@ -246,147 +233,139 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         );
       };
     }
-    final contentOpacity = kAlwaysCompleteAnimation;
-
     final player = Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: _FadingAppBar(
-        opacity: contentOpacity,
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          foregroundColor: colorScheme.onSurface,
-          surfaceTintColor: Colors.transparent,
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-          toolbarHeight:
-              (MediaQuery.orientationOf(context) == Orientation.landscape
-              ? 0
-              : 48),
-          automaticallyImplyLeading: false,
-          title: MediaQuery.orientationOf(context) == Orientation.landscape
-              ? null
-              : IconButton(
-                  tooltip: context.l10n.nowPlayingMinimize,
-                  onPressed: () => Navigator.of(context).maybePop(),
-                  icon: Container(
-                    width: 36,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: colorScheme.onSurface,
+        surfaceTintColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        toolbarHeight:
+            (MediaQuery.orientationOf(context) == Orientation.landscape
+            ? 0
+            : 48),
+        automaticallyImplyLeading: false,
+        title: MediaQuery.orientationOf(context) == Orientation.landscape
+            ? null
+            : IconButton(
+                tooltip: context.l10n.nowPlayingMinimize,
+                onPressed: () => Navigator.of(context).maybePop(),
+                icon: Container(
+                  width: 36,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(3),
                   ),
                 ),
-          centerTitle: true,
-          leading: null,
-          actions: null,
-        ),
+              ),
+        centerTitle: true,
+        leading: null,
+        actions: null,
       ),
-      body: FadeTransition(
-        opacity: contentOpacity,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: NotificationListener<ScrollUpdateNotification>(
-                  onNotification: _onLyricsScroll,
-                  child: SistrumPlayerLayout(
-                    mediaItem: mediaItem,
-                    metadata: _trackMetadata,
-                    seekPreview: _seekPreview,
-                    colorScheme: colorScheme,
-                    page: _currentPage,
-                    motionArtwork: artwork(),
-                    insetArtwork: !immersive,
-                    artworkAspectRatio: artworkRatio,
-                    artworkTopInset: MediaQuery.paddingOf(context).top + 48,
-                    artworkKeys: (
-                      header: _artworkHeaderKey,
-                      controls: _artworkControlsKey,
-                      volume: _artworkVolumeKey,
-                      expanded: _expandedArtworkKey,
-                      compact: _compactArtworkKey,
-                    ),
-                    artworkForeground: _artworkForeground,
-                    lyricsControlsHidden: _lyricsControlsHidden,
-                    lyricsOptionsOpen: _lyricsOptionsOpen,
-                    lyricsBuilder: (showOptions) => _lyricsSection(
-                      colorScheme,
-                      isActive: _currentPage == 1,
-                      showOptions: showOptions,
-                    ),
-                    lyricsOptions: _lyricsOptionsButton(colorScheme),
-                    onPageChanged: _setSistrumPage,
-                    onTrackNavigation: _showTrackNavigationMenu,
-                    onMoreActions: (buttonContext, item, anchor) =>
-                        _showMoreActions(
-                          context: buttonContext,
-                          mediaItem: item,
-                          source: item.extras?['source']?.toString() ?? '',
-                          colorScheme: colorScheme,
-                          anchor: anchor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: NotificationListener<ScrollUpdateNotification>(
+                onNotification: _onLyricsScroll,
+                child: SistrumPlayerLayout(
+                  mediaItem: mediaItem,
+                  metadata: _trackMetadata,
+                  seekPreview: _seekPreview,
+                  colorScheme: colorScheme,
+                  page: _currentPage,
+                  motionArtwork: artwork(),
+                  insetArtwork: !immersive,
+                  artworkAspectRatio: artworkRatio,
+                  artworkTopInset: MediaQuery.paddingOf(context).top + 48,
+                  artworkKeys: (
+                    header: _artworkHeaderKey,
+                    controls: _artworkControlsKey,
+                    volume: _artworkVolumeKey,
+                    expanded: _expandedArtworkKey,
+                    compact: _compactArtworkKey,
+                  ),
+                  artworkForeground: _artworkForeground,
+                  lyricsControlsHidden: _lyricsControlsHidden,
+                  lyricsOptionsOpen: _lyricsOptionsOpen,
+                  lyricsBuilder: (showOptions) => _lyricsSection(
+                    colorScheme,
+                    isActive: _currentPage == 1,
+                    showOptions: showOptions,
+                  ),
+                  lyricsOptions: _lyricsOptionsButton(colorScheme),
+                  onPageChanged: _setSistrumPage,
+                  onTrackNavigation: _showTrackNavigationMenu,
+                  onMoreActions: (buttonContext, item, anchor) =>
+                      _showMoreActions(
+                        context: buttonContext,
+                        mediaItem: item,
+                        source: item.extras?['source']?.toString() ?? '',
+                        colorScheme: colorScheme,
+                        anchor: anchor,
+                      ),
+                ),
+              ),
+            ),
+            _autoHidingLyricsControls(
+              PlayerQueueSwipeRegion(
+                onOpenQueue: () => _showQueueSheet(colorScheme),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!_landscape)
+                      FractionallySizedBox(
+                        widthFactor: 0.72,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              tooltip: _currentPage == 1
+                                  ? context.l10n.nowPlayingTabPlayer
+                                  : context.l10n.nowPlayingTabLyrics,
+                              isSelected: _currentPage == 1,
+                              color: Colors.white,
+                              style: IconButton.styleFrom(
+                                backgroundColor: _currentPage == 1
+                                    ? Colors.white.withValues(alpha: 0.16)
+                                    : Colors.transparent,
+                              ),
+                              icon: const Icon(CupertinoIcons.quote_bubble),
+                              onPressed: _toggleSistrumLyrics,
+                            ),
+                            AudioOutputButton(
+                              color: Colors.white,
+                              onPickerChanged: (open) {
+                                if (!mounted) return;
+                                setState(() => _audioOutputOpen = open);
+                                _scheduleLyricsControlsHide();
+                              },
+                            ),
+                            IconButton(
+                              tooltip: context.l10n.nowPlayingUpNext,
+                              color: Colors.white,
+                              isSelected: _currentPage == 2,
+                              style: IconButton.styleFrom(
+                                backgroundColor: _currentPage == 2
+                                    ? Colors.white.withValues(alpha: 0.16)
+                                    : Colors.transparent,
+                              ),
+                              icon: const Icon(CupertinoIcons.list_bullet),
+                              onPressed: () =>
+                                  _setSistrumPage(_currentPage == 2 ? 0 : 2),
+                            ),
+                          ],
                         ),
-                  ),
+                      )
+                    else
+                      ...[],
+                    if (!_landscape) const SizedBox(height: 8),
+                  ],
                 ),
               ),
-              _autoHidingLyricsControls(
-                PlayerQueueSwipeRegion(
-                  onOpenQueue: () => _showQueueSheet(colorScheme),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (!_landscape)
-                        FractionallySizedBox(
-                          widthFactor: 0.72,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                tooltip: _currentPage == 1
-                                    ? context.l10n.nowPlayingTabPlayer
-                                    : context.l10n.nowPlayingTabLyrics,
-                                isSelected: _currentPage == 1,
-                                color: Colors.white,
-                                style: IconButton.styleFrom(
-                                  backgroundColor: _currentPage == 1
-                                      ? Colors.white.withValues(alpha: 0.16)
-                                      : Colors.transparent,
-                                ),
-                                icon: const Icon(CupertinoIcons.quote_bubble),
-                                onPressed: _toggleSistrumLyrics,
-                              ),
-                              AudioOutputButton(
-                                color: Colors.white,
-                                onPickerChanged: (open) {
-                                  if (!mounted) return;
-                                  setState(() => _audioOutputOpen = open);
-                                  _scheduleLyricsControlsHide();
-                                },
-                              ),
-                              IconButton(
-                                tooltip: context.l10n.nowPlayingUpNext,
-                                color: Colors.white,
-                                isSelected: _currentPage == 2,
-                                style: IconButton.styleFrom(
-                                  backgroundColor: _currentPage == 2
-                                      ? Colors.white.withValues(alpha: 0.16)
-                                      : Colors.transparent,
-                                ),
-                                icon: const Icon(CupertinoIcons.list_bullet),
-                                onPressed: () =>
-                                    _setSistrumPage(_currentPage == 2 ? 0 : 2),
-                              ),
-                            ],
-                          ),
-                        )
-                      else
-                        ...[],
-                      if (!_landscape) const SizedBox(height: 8),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

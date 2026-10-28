@@ -208,7 +208,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
       final result = await _persistence.save(
         MetadataSaveRequest(
           filePath: widget.filePath,
-          metadata: _form.saveMetadata(
+          metadata: _form.buildMetadataTags(
             separators: widget.metadataSeparators,
             onlyChanged: true,
           ),

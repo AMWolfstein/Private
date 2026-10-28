@@ -175,29 +175,15 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     return true;
   }
 
-  Future<bool> _toggleTrackEntry(
-    Track track, {
-    required bool Function(String key) contains,
-    required List<CollectionTrackEntry> Function(LibraryCollectionsState state)
-    select,
-    required LibraryCollectionsState Function(List<CollectionTrackEntry> list)
-    withList,
-    required Future<void> Function(String key) dbDelete,
-    required Future<void> Function({
-      required String trackKey,
-      required String trackJson,
-      required String addedAt,
-    })
-    dbUpsert,
-  }) => _mutate(() async {
+  Future<bool> toggleLoved(Track track) => _mutate(() async {
     final key = trackCollectionKey(track);
-    if (contains(key)) {
-      await dbDelete(key);
+    if (state.containsLovedKey(key)) {
+      await _db.deleteLovedEntry(key);
       if (!ref.mounted) return false;
-      state = withList(
-        select(
-          state,
-        ).where((entry) => entry.key != key).toList(growable: false),
+      state = state.copyWith(
+        loved: state.loved
+            .where((entry) => entry.key != key)
+            .toList(growable: false),
       );
       return false;
     }
@@ -207,23 +193,16 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       track: track,
       addedAt: DateTime.now(),
     );
-    await dbUpsert(
+    await _db.upsertLovedEntry(
       trackKey: key,
       trackJson: jsonEncode(track.toJson()),
       addedAt: entry.addedAt.toIso8601String(),
     );
-    if (ref.mounted) state = withList([entry, ...select(state)]);
+    if (ref.mounted) {
+      state = state.copyWith(loved: [entry, ...state.loved]);
+    }
     return true;
   });
-
-  Future<bool> toggleLoved(Track track) => _toggleTrackEntry(
-    track,
-    contains: (key) => state.containsLovedKey(key),
-    select: (state) => state.loved,
-    withList: (list) => state.copyWith(loved: list),
-    dbDelete: _db.deleteLovedEntry,
-    dbUpsert: _db.upsertLovedEntry,
-  );
 
   /// One selection is one mutation: mixed selections add only missing tracks,
   /// fully loved selections remove them, and observers see one committed state.

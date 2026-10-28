@@ -66,7 +66,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       if (mounted) {
         setState(() {
           _androidSdkVersion = sdkVersion;
-          _hasStoragePermission = sdkVersion >= 29 ? true : false;
+          _hasStoragePermission = sdkVersion >= 29;
         });
         if (sdkVersion < 29) {
           final hasPermission = await Permission.storage.isGranted;
