@@ -17,7 +17,14 @@ class _Library extends Fake implements LibraryDatabase {
     List<LocalLibraryBatchLookupRequest> requests,
   ) async => [
     for (var index = 0; index < requests.length; index++)
-      {'filePath': pathForIndex(index)},
+      {
+        'id': '${requests[index].id ?? index}',
+        'trackName': requests[index].trackName,
+        'artistName': requests[index].artistName,
+        'albumName': 'Album',
+        'filePath': pathForIndex(index),
+        'scannedAt': DateTime(2026).toIso8601String(),
+      },
   ];
 }
 

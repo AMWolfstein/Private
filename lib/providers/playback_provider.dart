@@ -29,17 +29,6 @@ class PlaybackController extends Notifier<PlaybackState> {
     }
   }
 
-  String? _normalizeArtUri(String cover) {
-    final value = cover.trim();
-    if (value.isEmpty) return null;
-    if (value.startsWith('http') ||
-        value.startsWith('content://') ||
-        value.startsWith('file://')) {
-      return value;
-    }
-    return Uri.file(value).toString();
-  }
-
   /// Plays a local-library album/list starting at [startItem], queuing the rest
   /// so playback continues to the next track automatically.
   Future<void> playLocalLibraryQueue(
@@ -79,37 +68,25 @@ class PlaybackController extends Notifier<PlaybackState> {
     if (tracks.isEmpty) return;
 
     final safeStart = startIndex.clamp(0, tracks.length - 1);
-    final resolvedPaths = await resolveTrackFilePaths(tracks);
+    final resolved = await resolveLocalTracks(tracks);
 
     await _ensureInternalPlayer();
     final queue = <PlayableMedia>[];
     int? initialIndex;
     var skippedCueVirtualTrack = false;
     for (var index = 0; index < tracks.length; index++) {
-      final track = tracks[index];
-      final resolvedPath = resolvedPaths[index];
-      if (resolvedPath == null) continue;
-      if (isCueVirtualPath(resolvedPath)) {
+      final item = resolved[index];
+      if (item == null) continue;
+      if (isCueVirtualPath(item.filePath)) {
         skippedCueVirtualTrack = true;
         continue;
       }
       // Keep the playlist's original order so Previous can reach earlier
       // tracks and reaching its end still respects the player's repeat mode.
       if (index >= safeStart) initialIndex ??= queue.length;
-      queue.add(
-        PlayableMedia(
-          id: resolvedPath,
-          source: resolvedPath,
-          title: track.name,
-          artist: track.artistName,
-          album: track.albumName,
-          artUri: _normalizeArtUri(track.coverUrl ?? ''),
-          duration: track.duration > 0
-              ? Duration(seconds: track.duration)
-              : null,
-          explicit: track.isExplicit,
-        ),
-      );
+      // The resolved row, not a bare path, is the playback identity: it keeps
+      // the library ID, audio facts and local-only artwork.
+      queue.add(playableFromLocal(item));
     }
 
     if (queue.isNotEmpty) {
@@ -125,12 +102,17 @@ class PlaybackController extends Notifier<PlaybackState> {
     throw Exception('No local audio file is available to play.');
   }
 
-  /// Public wrapper so non-playback features (e.g. M3U export) reuse the
-  /// same local-library file resolution.
-  Future<List<String?>> resolveTrackFilePaths(List<Track> tracks) =>
-      _resolveTrackPaths(tracks);
+  /// Resolves playlist tracks to the local-library rows they refer to, keeping
+  /// the requested order. Missing and unreadable files stay null.
+  Future<List<LocalLibraryItem?>> resolveLocalTracks(List<Track> tracks) =>
+      _resolveLocalTracks(tracks);
 
-  Future<List<String?>> _resolveTrackPaths(List<Track> tracks) async {
+  /// Path-only projection of [resolveLocalTracks] for export callers.
+  Future<List<String?>> resolveTrackFilePaths(List<Track> tracks) async => [
+    for (final item in await resolveLocalTracks(tracks)) item?.filePath,
+  ];
+
+  Future<List<LocalLibraryItem?>> _resolveLocalTracks(List<Track> tracks) async {
     if (tracks.isEmpty) return const [];
     final localFuture = _library.findExistingBatch([
       for (final track in tracks)
@@ -143,7 +125,7 @@ class PlaybackController extends Notifier<PlaybackState> {
     ]);
     final localMatches = await localFuture;
 
-    final results = List<String?>.filled(tracks.length, null);
+    final results = List<LocalLibraryItem?>.filled(tracks.length, null);
     final existsChecks = <String, Future<bool>>{};
     final unknownSafPaths = <String>{};
     final safPaths = <String>{
@@ -185,9 +167,10 @@ class PlaybackController extends Notifier<PlaybackState> {
       while (true) {
         final index = next++;
         if (index >= tracks.length) return;
-        final localPath = localMatches[index]?['filePath']?.toString() ?? '';
+        final row = localMatches[index];
+        final localPath = row?['filePath']?.toString() ?? '';
         if (localPath.isNotEmpty && await pathExists(localPath)) {
-          results[index] = localPath;
+          results[index] = LocalLibraryItem.fromJson(row!);
         }
       }
     }

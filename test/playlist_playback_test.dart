@@ -13,6 +13,7 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/services/music_player_service.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
@@ -69,9 +70,27 @@ class _Playback extends PlaybackController {
   };
 
   @override
-  Future<List<String?>> resolveTrackFilePaths(List<Track> tracks) async {
+  Future<List<LocalLibraryItem?>> resolveLocalTracks(List<Track> tracks) async {
     resolvedRequests.add(tracks.map((track) => track.id).toList());
-    return [for (final track in tracks) paths[track.id]];
+    return [for (final track in tracks) _item(track)];
+  }
+
+  LocalLibraryItem? _item(Track track) {
+    final path = paths[track.id];
+    if (path == null) return null;
+    return LocalLibraryItem(
+      id: track.id,
+      trackName: track.name,
+      artistName: track.artistName,
+      albumName: track.albumName,
+      filePath: path,
+      scannedAt: DateTime(2026),
+      bitDepth: 24,
+      sampleRate: 96000,
+      bitrate: 1411,
+      format: 'flac',
+      genre: 'Jazz',
+    );
   }
 }
 
@@ -532,6 +551,31 @@ void main() {
         .read(playbackProvider.notifier)
         .playTrackList(_tracks, startIndex: 1);
     expect(player.queue[player.index!].title, 'Selected');
+  });
+
+  test('library playback keeps the resolved row identity and audio facts', () async {
+    const track = Track(
+      id: 'Selected',
+      name: 'Selected',
+      artistName: 'Artist',
+      albumName: 'Album',
+      coverUrl: 'https://remote.example/cover.jpg',
+      duration: 180,
+    );
+    await container
+        .read(playbackProvider.notifier)
+        .playTrackList([track], startIndex: 0);
+
+    final media = player.queue.single;
+    expect(media.id, 'Selected');
+    expect(media.source, 'content://library/selected');
+    expect(media.bitDepth, 24);
+    expect(media.sampleRate, 96000);
+    expect(media.bitrate, 1411);
+    expect(media.format, 'flac');
+    expect(media.genre, 'Jazz');
+    // Remote artwork is never adopted as local playback artwork.
+    expect(media.artUri, isNull);
   });
 
   test('empty playlist leaves existing playback alone', () async {
