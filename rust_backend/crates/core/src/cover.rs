@@ -1,4 +1,4 @@
-//! Provider artwork sizing. Resolution selection remains extension-owned.
+//! Library artwork sizing and content addressing.
 
 use image::{DynamicImage, ImageFormat, ImageReader};
 use std::borrow::Cow;

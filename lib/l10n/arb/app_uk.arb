@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "Усі",
-  "@historyFilterAll": {
+  "libraryKindAll": "Усі",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "Сингли",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "Сингли",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "Нові релізи у вашій медіатеці",
   "artistPopular": "Популярне",
   "libraryRecentlyAdded": "Нещодавно додані",
-  "librarySearchHint": "Пошук у вашій бібліотеці",
   "homeLibraryDisabled": "Увімкніть локальну медіатеку, щоб показати тут вашу музику.",
   "homeChooseLibraryFolder": "Оберіть папку з музикою в налаштуваннях локальної медіатеки.",
   "homeLibraryEmpty": "Додайте музику до папок медіатеки, а потім відскануйте її.",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "Вимкнені",
-  "@extensionsDisabled": {
+  "settingDisabled": "Вимкнені",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "Про нас",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "Увімкнути сповіщення",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "Вибрати теку",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "Увімкнути сповіщення",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "Видалити вибране",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "Видалити вибране",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "Видалити {count} {count, plural, =1{трек} other{треків}} з цього альбому?\n\nЦе також призведе до видалення файлів зі сховища.",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "Видалити {count} {count, plural, =1{трек} other{треків}} з цього альбому?\n\nЦе також призведе до видалення файлів зі сховища.",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "Натисніть на треки, щоб вибрати",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "Натисніть на треки, щоб вибрати",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "Видалити {count} {count, plural, =1{трек} other{треків}}",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "Видалити {count} {count, plural, =1{трек} other{треків}}",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "Виберіть треки для видалення",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "Виберіть треки для видалення",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "Диск {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "Диск {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "Локальні файли",
-  "libraryFilterLocal": "Локальні",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "Фільтри",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "Застосувати",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "Джерело",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "Якість",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Тільки налаштування",
-  "backupSelectHistory": "Застарілі записи медіатеки",
   "backupSelectCollections": "Колекції бібліотек",
   "backupSelectCollectionsDescription": "Вподобані треки, улюблені виконавці, списки відтворення та обкладинки списку треків.",
   "backupSelectedExportDescription": "Зберегти вибрані категорії в файл резервної копії. Аудіофайли не включені.",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "Налаштування додатку",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} історію {count, plural, =1{елемент} other{елементи}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} вподобали {count, plural, =1{трек} other{треків}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "Немає локальних треків",
-  "queueEmptyHistorySubtitle": "Скануйте папку з музикою, щоб заповнити медіатеку",
+  "libraryEmpty": "Немає локальних треків",
+  "libraryEmptySubtitle": "Скануйте папку з музикою, щоб заповнити медіатеку",
   "selectionAllPlaylistsSelected": "Вибрано всі списки відтворення",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} Виключені",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} Помилок",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "Відтворити {title}, {count} {count, plural, =1{item} other{items}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Текст пісні: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "Текст пісні: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2787,8 +2742,6 @@
   },
   "optionsCheckUpdates": "Перевірити наявність оновлень",
   "optionsCheckUpdatesSubtitle": "Повідомити, коли буде доступна нова версія",
-  "optionsUpdateChannel": "Канал оновлень",
-  "optionsUpdateChannelStable": "Тільки стабільні релізи",
   "optionsUpdateChannelPreview": "Отримати попередні релізи",
   "optionsUpdateChannelWarning": "Тестовий реліз може містити помилки або неповні функції",
   "updateAvailable": "Доступне оновлення",

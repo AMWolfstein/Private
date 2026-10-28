@@ -5,7 +5,7 @@ use tempfile::TempDir;
 fn metadata(version: u64, data: Value) -> Vec<u8> {
     serde_json::to_vec(&json!({
         "magic": "sistrum-backup", "format_version": version,
-        "app_version": "5.1.0", "history_count": 1, "data": data,
+        "app_version": "5.1.0", "data": data,
     }))
     .unwrap()
 }
@@ -31,66 +31,60 @@ fn fixture(entries: &[(&str, &[u8])]) -> (TempDir, Value) {
 
 #[test]
 fn native_archive_round_trip_preserves_payloads_and_selective_categories() {
-    for version in [2, 3] {
-        for history in [false, true] {
-            let dir = tempfile::tempdir().unwrap();
-            let root = dir.path();
-            fs::write(
-                root.join("metadata.json"),
-                metadata(
-                    version,
-                    json!({
-                        "settings": {"theme": "sistrum"},
-                        "collections": {"playlists": [{"id": "a", "name": "音楽"}]},
-                        "playlist_covers": {"a": {"file": "covers/a.jpg", "ext": ".jpg"}},
-                        "profile": {"name": "Listener", "photo": PHOTO_ENTRY},
-                        "extensions": {"items": [{"id": "provider"}]},
-                    }),
-                ),
-            )
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path();
+    fs::write(
+        root.join("metadata.json"),
+        metadata(
+            3,
+            json!({
+                "settings": {"theme": "sistrum"},
+                "collections": {"playlists": [{"id": "a", "name": "音楽"}]},
+                "playlist_covers": {"a": {"file": "covers/a.jpg", "ext": ".jpg"}},
+                "profile": {"name": "Listener", "photo": PHOTO_ENTRY},
+            }),
+        ),
+    )
+    .unwrap();
+    let payload = vec![71; BUFFER_SIZE + 17];
+    fs::write(root.join("a.jpg"), &payload).unwrap();
+    fs::write(root.join("avatar.png"), b"photo bytes").unwrap();
+    let files = vec![
+        json!({"name": "metadata.json", "path": root.join("metadata.json")}),
+        json!({"name": "covers/a.jpg", "path": root.join("a.jpg"), "store": true}),
+        json!({"name": PHOTO_ENTRY, "path": root.join("avatar.png"), "store": true}),
+    ];
+    let output = root.join("output.sbk");
+    assert_eq!(
+        write(&json!({"output_path": output, "files": files}), &|| Ok(())).unwrap()["published"],
+        true
+    );
+    let request = json!({"input_path": output, "temporary_directory": root});
+    let result = read(&request, &|| Ok(())).unwrap();
+    assert_eq!(
+        fs::read(result["playlist_covers"]["a"]["path"].as_str().unwrap()).unwrap(),
+        payload
+    );
+    assert_eq!(
+        fs::read(result["profile_photo_path"].as_str().unwrap()).unwrap(),
+        b"photo bytes"
+    );
+    let envelope: Value =
+        serde_json::from_slice(&fs::read(result["metadata_path"].as_str().unwrap()).unwrap())
             .unwrap();
-            let payload = vec![71; BUFFER_SIZE + 17];
-            fs::write(root.join("history.ndjson"), b"{\"id\":\"track\"}\n").unwrap();
-            fs::write(root.join("a.jpg"), &payload).unwrap();
-            fs::write(root.join("avatar.png"), b"photo bytes").unwrap();
-            let mut files = vec![
-                json!({"name": "metadata.json", "path": root.join("metadata.json")}),
-                json!({"name": "covers/a.jpg", "path": root.join("a.jpg"), "store": true}),
-                json!({"name": PHOTO_ENTRY, "path": root.join("avatar.png"), "store": true}),
-            ];
-            if history {
-                files.push(json!({"name": "history.ndjson", "path": root.join("history.ndjson")}));
-            }
-            let output = root.join("output.sflb");
-            assert_eq!(
-                write(&json!({"output_path": output, "files": files}), &|| Ok(())).unwrap()["published"],
-                true
-            );
-            let request = json!({"input_path": output, "temporary_directory": root});
-            if version == 2 && !history {
-                assert!(read(&request, &|| Ok(())).is_err());
-                continue;
-            }
-            let result = read(&request, &|| Ok(())).unwrap();
-            assert_eq!(
-                fs::read(result["playlist_covers"]["a"]["path"].as_str().unwrap()).unwrap(),
-                payload
-            );
-            assert_eq!(
-                fs::read(result["profile_photo_path"].as_str().unwrap()).unwrap(),
-                b"photo bytes"
-            );
-            assert_eq!(result["history_path"].is_string(), history);
-            let envelope: Value = serde_json::from_slice(
-                &fs::read(result["metadata_path"].as_str().unwrap()).unwrap(),
-            )
-            .unwrap();
-            assert_eq!(
-                envelope["data"]["collections"]["playlists"][0]["name"],
-                "音楽"
-            );
-            fs::remove_dir_all(result["temporary_directory_path"].as_str().unwrap()).unwrap();
-        }
+    assert_eq!(
+        envelope["data"]["collections"]["playlists"][0]["name"],
+        "音楽"
+    );
+    fs::remove_dir_all(result["temporary_directory_path"].as_str().unwrap()).unwrap();
+}
+
+#[test]
+fn only_format_version_three_is_read() {
+    for version in [2, 4] {
+        let meta = metadata(version, json!({}));
+        let (_dir, request) = fixture(&[("metadata.json", &meta)]);
+        assert!(read(&request, &|| Ok(())).is_err());
     }
 }
 
@@ -110,7 +104,7 @@ fn cancelled_write_removes_only_its_partial_output() {
         }
     };
     let request =
-        json!({"output_path": output, "files": [{"name": "history.ndjson", "path": input}]});
+        json!({"output_path": output, "files": [{"name": "covers/payload", "path": input}]});
     assert!(write(&request, &check).is_err());
     assert!(!output.exists());
     assert!(input.exists());
@@ -121,13 +115,16 @@ fn cancelled_write_removes_only_its_partial_output() {
 
 #[test]
 fn cancelled_extraction_discards_the_entire_staging_directory() {
-    let meta = metadata(3, json!({}));
-    let history = vec![7; BUFFER_SIZE * 4];
-    let (_dir, request) = fixture(&[("metadata.json", &meta), ("history.ndjson", &history)]);
+    let meta = metadata(
+        3,
+        json!({"profile": {"name": "Listener", "photo": PHOTO_ENTRY}}),
+    );
+    let photo = vec![7; BUFFER_SIZE * 4];
+    let (_dir, request) = fixture(&[("metadata.json", &meta), (PHOTO_ENTRY, &photo)]);
     let calls = Cell::new(0);
     let check = || {
         calls.set(calls.get() + 1);
-        if calls.get() >= 4 {
+        if calls.get() >= 5 {
             Err("cancelled".into())
         } else {
             Ok(())
@@ -193,15 +190,15 @@ fn unreferenced_and_foreign_entries_are_never_extracted() {
 
 #[test]
 fn corrupt_compressed_payload_is_rejected_and_cleaned_up() {
-    let meta = metadata(3, json!({}));
-    let history = b"unique-history-payload";
-    let (_dir, request) = fixture(&[("metadata.json", &meta), ("history.ndjson", history)]);
+    let meta = metadata(
+        3,
+        json!({"profile": {"name": "Listener", "photo": PHOTO_ENTRY}}),
+    );
+    let photo = b"unique-photo-payload";
+    let (_dir, request) = fixture(&[("metadata.json", &meta), (PHOTO_ENTRY, photo)]);
     let path = request["input_path"].as_str().unwrap();
     let mut bytes = fs::read(path).unwrap();
-    let position = bytes
-        .windows(history.len())
-        .position(|v| v == history)
-        .unwrap();
+    let position = bytes.windows(photo.len()).position(|v| v == photo).unwrap();
     bytes[position] ^= 1;
     fs::write(path, bytes).unwrap();
     assert!(read(&request, &|| Ok(())).is_err());
@@ -214,9 +211,12 @@ fn corrupt_compressed_payload_is_rejected_and_cleaned_up() {
 }
 
 #[test]
-fn oversize_declared_history_is_rejected_before_extraction() {
-    let meta = metadata(3, json!({}));
-    let (_dir, request) = fixture(&[("metadata.json", &meta), ("history.ndjson", b"history")]);
+fn oversize_declared_photo_is_rejected_before_extraction() {
+    let meta = metadata(
+        3,
+        json!({"profile": {"name": "Listener", "photo": PHOTO_ENTRY}}),
+    );
+    let (_dir, request) = fixture(&[("metadata.json", &meta), (PHOTO_ENTRY, b"photo")]);
     let path = request["input_path"].as_str().unwrap();
     let mut bytes = fs::read(path).unwrap();
     let positions = bytes
@@ -225,7 +225,7 @@ fn oversize_declared_history_is_rejected_before_extraction() {
         .filter_map(|(i, v)| (v == b"PK\x01\x02").then_some(i))
         .collect::<Vec<_>>();
     bytes[positions[1] + 24..positions[1] + 28]
-        .copy_from_slice(&((MAX_HISTORY_BYTES + 1) as u32).to_le_bytes());
+        .copy_from_slice(&((MAX_PHOTO_BYTES + 1) as u32).to_le_bytes());
     fs::write(path, bytes).unwrap();
     assert!(read(&request, &|| Ok(())).is_err());
     assert_eq!(
@@ -285,13 +285,13 @@ fn unsafe_or_missing_write_entry_cannot_publish_partial_archive() {
     // Files produced by Rust are standard ZIPs, with ordinary deflate/store.
     let output = dir.path().join("valid");
     write(
-        &json!({"output_path": output, "files": [{"name": "history.ndjson", "path": source}]}),
+        &json!({"output_path": output, "files": [{"name": "covers/a.bin", "path": source}]}),
         &|| Ok(()),
     )
     .unwrap();
     let mut zip = ZipArchive::new(Cursor::new(fs::read(output).unwrap())).unwrap();
     assert_eq!(
-        zip.by_name("history.ndjson").unwrap().compression(),
+        zip.by_name("covers/a.bin").unwrap().compression(),
         CompressionMethod::Deflated
     );
 }

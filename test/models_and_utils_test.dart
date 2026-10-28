@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/models/download_history.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/models/track.dart';
@@ -146,34 +145,6 @@ void main() {
       },
     );
 
-    test('history round-trip preserves known absence after removing gain', () {
-      final item = DownloadHistoryItem(
-        id: 'gain',
-        trackName: 'Track',
-        artistName: 'Artist',
-        albumName: 'Album',
-        filePath: '/music/track.flac',
-        service: 'test',
-        downloadedAt: DateTime.utc(2026),
-        hasReplayGain: true,
-        replayGainMetadataScanVersion: 1,
-      );
-      final tagged = DownloadHistoryItem.fromJson(item.toJson());
-      expect(tagged.hasReplayGain, isTrue);
-      final removed = DownloadHistoryItem.fromJson(
-        tagged.copyWith(hasReplayGain: false).toJson(),
-      );
-      expect(removed.hasReplayGain, isFalse);
-      expect(removed.replayGainMetadataScanVersion, 1);
-      final legacy = item.toJson()
-        ..remove('hasReplayGain')
-        ..remove('replayGainMetadataScanVersion');
-      expect(
-        DownloadHistoryItem.fromJson(legacy).replayGainMetadataScanVersion,
-        0,
-      );
-    });
-
     test('local scan flags survive serialization', () {
       final item = LocalLibraryItem.fromJson({
         'id': 'local-gain',
@@ -307,128 +278,13 @@ void main() {
   });
 
   group('Track', () {
-    test('preserves a generic extension explicit flag', () {
-      final track = Track.fromBackendMap({
-        'id': 'extension-track-1',
-        'name': 'Explicit Song',
-        'artists': 'Artist',
-        'album_name': 'Album',
-        'duration_ms': 180000,
-        'provider_id': 'extension.example',
-        'explicit': true,
-      });
-
-      expect(track.source, 'extension.example');
-      expect(track.explicit, isTrue);
-      expect(track.isExplicit, isTrue);
-    });
-
-    test('preserves extension tagging metadata', () {
-      final track = Track.fromBackendMap({
-        'id': 'extension-track-1',
-        'name': 'Song',
-        'artists': 'Artist',
-        'album_name': 'Album',
-        'duration_ms': 180000,
-        'genre': 'Pop',
-        'label': 'Label',
-        'copyright': 'Copyright',
-        'composer': 'Composer',
-        'comment': 'https://example.test/album/1',
-        'explicit': true,
-        'album_type': 'compilation',
-        'upc': '0012345678901',
-      });
-
-      expect(track.genre, 'Pop');
-      expect(track.label, 'Label');
-      expect(track.copyright, 'Copyright');
-      expect(track.composer, 'Composer');
-      expect(track.comment, 'https://example.test/album/1');
-      expect(track.toJson()['comment'], 'https://example.test/album/1');
-      expect(track.explicit, isTrue);
-      expect(track.albumType, 'compilation');
-      expect(track.upc, '0012345678901');
-      expect(track.toJson()['upc'], '0012345678901');
-    });
-
-    test('does not treat a playlist container name as a track album', () {
-      final playlistTrack = Track.fromBackendMap({
-        'id': 'playlist-track-1',
-        'name': 'Song',
-        'artists': 'Artist',
-        'album_name': ' Road Trip ',
-        'duration_ms': 180000,
-      }, playlistName: 'road trip');
-      final releaseTrack = Track.fromBackendMap({
-        'id': 'playlist-track-2',
-        'name': 'Song',
-        'artists': 'Artist',
-        'album_name': 'Real Album',
-        'duration_ms': 180000,
-      }, playlistName: 'Road Trip');
-
-      expect(playlistTrack.albumName, isEmpty);
-      expect(releaseTrack.albumName, 'Real Album');
-    });
-
-    test('exposes collection, source, and quality flags', () {
-      const album = Track(
-        id: 'album-1',
-        name: 'Album',
-        artistName: 'Artist',
-        albumName: 'Album',
-        duration: 0,
-        itemType: 'album',
-        source: 'extension.example',
-        audioQuality: 'FLAC 1411kbps',
-      );
-
-      expect(album.isAlbumItem, isTrue);
-      expect(album.isPlaylistItem, isFalse);
-      expect(album.isArtistItem, isFalse);
-      expect(album.isCollection, isTrue);
-    });
-
-    test('detects singles and eps case-insensitively', () {
-      const single = Track(
-        id: 'track-1',
-        name: 'Song',
-        artistName: 'Artist',
-        albumName: 'Single',
-        duration: 210000,
-        albumType: 'SINGLE',
-      );
-      const ep = Track(
-        id: 'track-2',
-        name: 'Song 2',
-        artistName: 'Artist',
-        albumName: 'EP',
-        duration: 180000,
-        albumType: 'ep',
-      );
-      const album = Track(
-        id: 'track-3',
-        name: 'Song 3',
-        artistName: 'Artist',
-        albumName: 'Album',
-        duration: 240000,
-        albumType: 'album',
-      );
-
-      expect(single.isSingle, isTrue);
-      expect(ep.isSingle, isTrue);
-      expect(album.isSingle, isFalse);
-    });
-
-    test('round-trips json with service availability', () {
+    test('round-trips json', () {
       final track = Track.fromJson({
         'id': 'source-track-1',
         'name': 'Song',
         'artistName': 'Artist',
         'albumName': 'Album',
         'duration': 123456,
-        'availability': {'tidal': true, 'deezer': true, 'deezerId': '31337'},
       });
 
       expect(track.toJson()['id'], 'source-track-1');
@@ -475,11 +331,11 @@ void main() {
         'libraryQualityLabelMode': 'bit_depth',
         'localLibraryEnabled': true,
         'localLibraryPath': '/music',
-        'historyFilterMode': 'singles',
+        'libraryFilterMode': 'singles',
       });
       expect(settings.localLibraryEnabled, isTrue);
       expect(settings.localLibraryPath, '/music');
-      expect(settings.historyFilterMode, 'singles');
+      expect(settings.libraryFilterMode, 'singles');
       expect(settings.toJson(), isNot(contains('defaultLibraryView')));
       expect(settings.toJson(), isNot(contains('libraryQualityLabelMode')));
     },
@@ -687,11 +543,6 @@ void main() {
         '/storage/music/a.jpg',
       );
       expect(normalizeCoverReference('relative/a.jpg'), isNull);
-      expect(normalizeRemoteHttpUrl('file:///tmp/a.jpg'), isNull);
-      expect(
-        normalizeRemoteHttpUrl('http://example.test/a.jpg'),
-        'http://example.test/a.jpg',
-      );
     });
 
     test('formats display audio quality from strongest available source', () {

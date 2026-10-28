@@ -27,8 +27,8 @@ class DestructiveSelectionButton extends StatelessWidget {
         icon: const Icon(Icons.delete_outline),
         label: Text(
           count > 0
-              ? context.l10n.downloadedAlbumDeleteCount(count)
-              : context.l10n.downloadedAlbumSelectToDelete,
+              ? context.l10n.collectionDeleteCount(count)
+              : context.l10n.collectionSelectToDelete,
         ),
         style: FilledButton.styleFrom(
           backgroundColor: count > 0

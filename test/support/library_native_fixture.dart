@@ -25,22 +25,10 @@ Map<String, dynamic> nativeLibraryTrack(
   'sampleRate': 96000,
 };
 
-Future<void> createNativeLibraryFixture(
-  Database db, {
-  String historyPath = ':memory:',
-}) async {
+Future<void> createNativeLibraryFixture(Database db) async {
   await LibrarySchema.create(db, LibrarySchema.version);
   await db.execute('PRAGMA user_version = ${LibrarySchema.version}');
   await db.execute('PRAGMA recursive_triggers = ON');
-  await db.execute('ATTACH DATABASE ? AS history_db', [historyPath]);
-  await db.execute(
-    'CREATE TABLE history_db.history_path_keys('
-    'item_id TEXT NOT NULL,path_key TEXT NOT NULL,PRIMARY KEY(item_id,path_key))',
-  );
-  await db.execute(
-    'CREATE INDEX history_db.history_key_index '
-    'ON history_path_keys(path_key)',
-  );
   for (final source in ['source', 'other']) {
     await db.insert('library_sources', {
       'id': source,
@@ -71,17 +59,6 @@ Future<void> addNativeLibraryTrack(
     'library_path_keys',
     track['id'] as String,
     track['filePath'] as String,
-  );
-  await batch.commit(noResult: true);
-}
-
-Future<void> addNativeLibraryDownload(DatabaseExecutor db, String path) async {
-  final batch = db.batch();
-  sqlite.putPathKeysInBatch(
-    batch,
-    'history_db.history_path_keys',
-    'download-$path',
-    path,
   );
   await batch.commit(noResult: true);
 }

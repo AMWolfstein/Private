@@ -1,8 +1,8 @@
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
-/// Audio format/quality helpers shared by the download queue and history
-/// providers.
+/// Audio format/quality helpers shared by the library scan and metadata
+/// readers.
 Map<String, dynamic> normalizeScannedAudioMetadata(
   Map<String, dynamic> metadata,
 ) {

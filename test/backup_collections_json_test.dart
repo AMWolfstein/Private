@@ -4,22 +4,6 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/backup_service.dart';
-import 'package:sistrum/services/history_database.dart';
-
-class _AtomicHistory implements HistoryDatabase {
-  List<Map<String, dynamic>> rows = [
-    {'id': 'old'},
-  ];
-  @override
-  Future<void> replaceAll(Stream<Map<String, dynamic>> items) async {
-    final prepared = await items.toList();
-    rows = prepared;
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw StateError('non-atomic method called: ${invocation.memberName}');
-}
 
 void main() {
   late Directory directory;
@@ -29,138 +13,6 @@ void main() {
     );
   });
   tearDown(() => directory.delete(recursive: true));
-
-  test('fallback history restore delegates one atomic replacement', () async {
-    final history = _AtomicHistory();
-    final bundle = BackupBundle(
-      formatVersion: 1,
-      appVersion: 'old',
-      createdAt: null,
-      settings: null,
-      history: [
-        {'id': 'new'},
-      ],
-      collections: const {},
-      playlistCovers: const {},
-      extensions: const {},
-    );
-    await BackupService.restoreHistory(bundle, historyDatabase: history);
-    expect(history.rows, [
-      {'id': 'new'},
-    ]);
-    final corrupt = File('${directory.path}/history.ndjson');
-    await corrupt.writeAsString('{"id":"partial"}\ninvalid JSON');
-    final broken = BackupBundle(
-      formatVersion: 2,
-      appVersion: 'old',
-      createdAt: null,
-      settings: null,
-      history: const [],
-      collections: const {},
-      playlistCovers: const {},
-      extensions: const {},
-      historyNdjsonPath: corrupt.path,
-    );
-    await expectLater(
-      BackupService.restoreHistory(broken, historyDatabase: history),
-      throwsFormatException,
-    );
-    expect(history.rows, [
-      {'id': 'new'},
-    ]);
-  });
-
-  // Historical wire identifiers stay distinct from current exports.
-  for (final (producer, magic) in [
-    (
-      '\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043 Mobile',
-      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-backup',
-    ),
-    ('Sistrum', 'sistrum-backup'),
-  ]) {
-    for (final version in [1, 2, 3]) {
-      test('$producer v$version backup still restores history', () async {
-        final metadata = {
-          'magic': magic,
-          'format_version': version,
-          'app': producer,
-          'app_version': '5.1.0',
-          'history_count': 1,
-          'data': {
-            'settings': {'theme': 'dark', 'locale': 'id'},
-            'collections': {
-              'loved': [
-                {'key': 'local:legacy-song'},
-              ],
-            },
-            if (version == 1)
-              'history': [
-                {'id': 'legacy-song', 'title': 'Still here'},
-              ],
-          },
-        };
-        final path =
-            '${directory.path}/sistrum_mobile_backup_old.'
-            '${version == 1 ? 'json' : 'sflb'}';
-        if (version == 1) {
-          await File(path).writeAsString(jsonEncode(metadata));
-        } else {
-          final metadataBytes = utf8.encode(jsonEncode(metadata));
-          final historyBytes = utf8.encode(
-            '${jsonEncode({'id': 'legacy-song', 'title': 'Still here'})}\n',
-          );
-          final archive = Archive()
-            ..addFile(
-              ArchiveFile('metadata.json', metadataBytes.length, metadataBytes),
-            )
-            ..addFile(
-              ArchiveFile('history.ndjson', historyBytes.length, historyBytes),
-            );
-          await File(path).writeAsBytes(ZipEncoder().encode(archive));
-        }
-
-        final bundle = await BackupService.parseFile(
-          path,
-          temporaryDirectory: directory,
-        );
-        expect(bundle, isNotNull);
-        addTearDown(bundle!.cleanup);
-        expect(bundle.settings, {'theme': 'dark', 'locale': 'id'});
-        expect(bundle.likedCount, 1);
-        expect(bundle.collections['loved'], [
-          {'key': 'local:legacy-song'},
-        ]);
-        final history = _AtomicHistory();
-        await BackupService.restoreHistory(bundle, historyDatabase: history);
-        expect(history.rows, [
-          {'id': 'legacy-song', 'title': 'Still here'},
-        ]);
-      });
-    }
-  }
-
-  test('legacy JSON cannot select a local cover source path', () {
-    final bundle = BackupService.parse(
-      jsonEncode({
-        'magic': BackupService.magic,
-        'data': {
-          'playlist_covers': {
-            'unsafe': {'path': '/dev/zero', 'ext': '.jpg'},
-            'embedded': {
-              'data': 'Y292ZXI=',
-              'path': '/private/avatar.png',
-              'ext': '.jpg',
-            },
-          },
-        },
-      }),
-    );
-    expect(bundle!.playlistCovers['unsafe'], {'ext': '.jpg'});
-    expect(bundle.playlistCovers['embedded'], {
-      'data': 'Y292ZXI=',
-      'ext': '.jpg',
-    });
-  });
 
   test(
     'direct collections JSON keeps exact metadata bytes for v2 and v3',
@@ -189,14 +41,13 @@ void main() {
         'favoriteArtists': <dynamic>[],
         'unknown"key': {'collections': '__raw_collections__', 'nested': null},
       };
-      for (final version in [2, 3]) {
+      for (final version in [3]) {
         final metadata = <String, dynamic>{
           'magic': BackupService.magic,
           'format_version': version,
-          'app': '\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043 Mobile',
+          'app': 'Sistrum',
           'app_version': '5.1.0',
           'created_at': '2026-10-07T00:00:00.000Z',
-          'history_count': 0,
           'unknown_root': {'preserved': true},
           'data': <String, dynamic>{
             'settings': {
@@ -208,7 +59,6 @@ void main() {
             'profile': {'name': '日本語 🎵'},
             'collections': collections,
             'playlist_covers': <String, dynamic>{},
-            'extensions': {'items': <dynamic>[], 'nil': null},
             'unknown_data': {'preserved': true},
           },
         };
@@ -226,10 +76,6 @@ void main() {
           collectionsJson: jsonEncode(collections),
         );
         expect(await File(path).readAsBytes(), utf8.encode(original));
-        final parsed = BackupService.parse(await File(path).readAsString());
-        expect(parsed, isNotNull);
-        expect(parsed!.formatVersion, version);
-        expect(parsed.collections, collections);
       }
     },
   );
@@ -251,9 +97,6 @@ void main() {
           collections: const {},
           collectionsJson: jsonEncode(collections),
           playlistCoverFiles: const {},
-          extensions: const {},
-          loadHistoryPage: (_, _) async => [],
-          includeHistory: false,
           outputDirectory: directory,
           temporaryDirectory: directory,
         );
@@ -291,9 +134,6 @@ void main() {
         collections: const {},
         collectionsJson: jsonEncode({'padding': 'x' * (32 << 20)}),
         playlistCoverFiles: const {},
-        extensions: const {},
-        loadHistoryPage: (_, _) async => [],
-        includeHistory: false,
         outputDirectory: directory,
         temporaryDirectory: directory,
       ),
@@ -302,16 +142,13 @@ void main() {
     expect(await directory.list().toList(), isEmpty);
   });
 
-  test('collections above the former 8 MiB cap still round trip', () async {
+  test('collections above 8 MiB still round trip', () async {
     final collections = {'padding': 'x' * ((8 << 20) + 1024)};
     final archiveFile = await BackupService.writeBackupArchive(
       settings: null,
       collections: const {},
       collectionsJson: jsonEncode(collections),
       playlistCoverFiles: const {},
-      extensions: const {},
-      loadHistoryPage: (_, _) async => [],
-      includeHistory: false,
       outputDirectory: directory,
       temporaryDirectory: directory,
     );
@@ -331,9 +168,6 @@ void main() {
         collections: {'loved': <dynamic>[]},
         collectionsJson: '{}',
         playlistCoverFiles: const {},
-        extensions: const {},
-        loadHistoryPage: (_, _) async => [],
-        includeHistory: false,
         outputDirectory: directory,
         temporaryDirectory: directory,
       ),

@@ -28,7 +28,8 @@ Future<void> pumpGlassControl(
     ProviderScope(
       key: UniqueKey(),
       overrides: [
-        if (glass) sistrumShaderFiltersSupportedProvider.overrideWithValue(true),
+        if (glass)
+          sistrumShaderFiltersSupportedProvider.overrideWithValue(true),
         sistrumGlassLevelProvider.overrideWithValue(
           level ?? (liquid ? SistrumGlassLevel.liquid : SistrumGlassLevel.flat),
         ),

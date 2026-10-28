@@ -1,5 +1,5 @@
 import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sistrum/utils/duplicate_quality_policy.dart';
 
@@ -13,7 +13,7 @@ Future<int> deleteReviewedDuplicateCopies({
 }) async {
   var deleted = 0;
   for (final entry in entries) {
-    final path = DownloadedEmbeddedCoverResolver.cleanFilePath(entry.filePath);
+    final path = EmbeddedCoverResolver.cleanFilePath(entry.filePath);
     if (isPhysicalFileRetained(
       path,
       retainedEntries.map((entry) => entry.filePath),

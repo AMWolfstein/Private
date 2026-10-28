@@ -17,7 +17,6 @@ import 'package:sistrum/screens/queue_tab.dart';
 import 'package:sistrum/widgets/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/library_selection_playback_actions.dart';
-import 'package:sistrum/services/history_database.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'support/material_test_theme.dart';
 
@@ -41,16 +40,12 @@ import json, sqlite3, sys
 data = json.loads(sys.argv[1])
 db = sqlite3.connect(':memory:')
 db.row_factory = sqlite3.Row
-db.execute("ATTACH DATABASE ':memory:' AS history_db")
-db.execute(data['history'].replace('CREATE TABLE history', 'CREATE TABLE history_db.history', 1))
 db.execute(data['library'])
 db.execute('CREATE TABLE library_sources (id TEXT PRIMARY KEY, enabled INTEGER, available INTEGER)')
 db.execute("INSERT INTO library_sources VALUES ('internal',1,1)")
 db.execute('CREATE VIEW library_visible AS SELECT * FROM library')
-for table in ['library_path_keys', 'history_db.history_path_keys']:
-    db.execute('CREATE TABLE '+table+' (item_id TEXT, path_key TEXT)')
-def add(local, id, album, number, total, depth=16):
-    table = 'library' if local else 'history_db.history'
+db.execute('CREATE TABLE library_path_keys (item_id TEXT, path_key TEXT)')
+def add(id, album, number, total, depth=16):
     fields = dict(id=id, track_name='Song '+str(number), artist_name='Artist',
       album_name=album, album_artist='Artist', album_key=album+'|artist',
       file_path='/'+id+'.flac', track_number=number, total_tracks=total,
@@ -59,23 +54,19 @@ def add(local, id, album, number, total, depth=16):
       sort_genre='', sort_release='', sort_added=1)
     fields.update(dict(scanned_at='2026-01-01', source_id='internal',
                        track_name_norm='song '+str(number), artist_name_norm='artist', album_name_norm=album,
-                       album_artist_norm='artist') if local else
-                  dict(downloaded_at='2026-01-01', service='example-provider',
-                       sort_track='song '+str(number), sort_artist='artist', sort_album=album,
-                       sort_album_artist='artist'))
-    db.execute('INSERT INTO '+table+' ('+','.join(fields)+') VALUES ('+','.join('?' for _ in fields)+')', list(fields.values()))
-    keys = 'library_path_keys' if local else 'history_db.history_path_keys'
-    db.execute('INSERT INTO '+keys+' VALUES (?,?)', (id, fields['file_path']))
-add(True, 'missing1', 'missing', 1, 4, depth=24)
-add(True, 'missing2', 'missing', 2, 4)
-add(True, 'complete1', 'complete', 1, 2, depth=24)
-add(True, 'complete2', 'complete', 2, 2)
-add(True, 'unknown1', 'unknown', 1, None)
-add(True, 'one1', 'one-track', 1, 12)
-add(True, 'mixed1', 'mixed', 1, 2)
-add(True, 'mixed2', 'mixed', 2, 2)
-add(True, 'local1', 'local-only', 1, 3)
-add(True, 'local3', 'local-only', 3, 3)
+                       album_artist_norm='artist'))
+    db.execute('INSERT INTO library ('+','.join(fields)+') VALUES ('+','.join('?' for _ in fields)+')', list(fields.values()))
+    db.execute('INSERT INTO library_path_keys VALUES (?,?)', (id, fields['file_path']))
+add('missing1', 'missing', 1, 4, depth=24)
+add('missing2', 'missing', 2, 4)
+add('complete1', 'complete', 1, 2, depth=24)
+add('complete2', 'complete', 2, 2)
+add('unknown1', 'unknown', 1, None)
+add('one1', 'one-track', 1, 12)
+add('mixed1', 'mixed', 1, 2)
+add('mixed2', 'mixed', 2, 2)
+add('local1', 'local-only', 1, 3)
+add('local3', 'local-only', 3, 3)
 if data['visibleIds'] is not None:
     keep = data['visibleIds']
     if keep:
@@ -85,7 +76,6 @@ if data['visibleIds'] is not None:
 print(json.dumps([dict(row) for row in db.execute(data['sql'], data['args'])]))
 ''',
       jsonEncode({
-        'history': _definition('lib/services/history_database.dart', 'history'),
         'library': _definition('lib/services/library_schema.dart', 'library'),
         'sql': sql,
         'visibleIds': _visibleTrackIds?.toList(),
@@ -106,8 +96,8 @@ class _Settings extends SettingsNotifier {
   AppSettings build() => const AppSettings(localLibraryEnabled: true);
 
   @override
-  void setHistoryFilterMode(String mode) {
-    state = state.copyWith(historyFilterMode: mode);
+  void setLibraryFilterMode(String mode) {
+    state = state.copyWith(libraryFilterMode: mode);
   }
 }
 
@@ -167,9 +157,7 @@ void main() {
       final args = (call.arguments as Map?) ?? {};
       if (call.method == 'openDatabase') {
         final id = versions.length + 1;
-        versions[id] = (args['path'] as String).endsWith('history.db')
-            ? HistoryDatabase.schemaVersion
-            : LibraryDatabase.schemaVersion;
+        versions[id] = LibraryDatabase.schemaVersion;
         return {'id': id};
       }
       final sql = args['sql'] as String? ?? '';

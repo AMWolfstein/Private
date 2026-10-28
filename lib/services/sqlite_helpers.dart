@@ -70,7 +70,7 @@ Future<Database> openAppDatabase(
       if (foreignKeys) {
         await db.execute('PRAGMA foreign_keys = ON');
       }
-      // History/library use INSERT OR REPLACE extensively. SQLite only fires
+      // The library uses INSERT OR REPLACE extensively. SQLite only fires
       // delete triggers for REPLACE when recursive_triggers is enabled; the
       // FTS external-content delete trigger needs that event to remove the old
       // rowid instead of accumulating unreachable index entries.
@@ -115,8 +115,7 @@ String normalizeGenreTags(String? value) =>
     (value ?? '').split(RegExp(r'[;\r\n]')).map(normalizeSearchText).join(';');
 
 /// Retry only lock contention while acquiring BEGIN, before the callback runs.
-/// History download writers can also lock transactions on an attached Library
-/// connection. Never replay a body or COMMIT failure: it may have side effects
+/// Never replay a body or COMMIT failure: it may have side effects
 /// or an already durable result. Persistent locks still surface after 3 attempts.
 Future<T> transactionWithBusyRetry<T>(
   Database db,
@@ -169,7 +168,7 @@ bool isTrigramFts5UnavailableError(Object error) {
 /// compile-time modules can vary by device. A real temporary virtual table is
 /// more reliable than PRAGMA compile_options because it also verifies that the
 /// trigram tokenizer is registered. All app databases use the same sqflite
-/// runtime, so subsequent history/library initialization can reuse the result.
+/// runtime, so subsequent library initialization can reuse the result.
 Future<bool> _supportsTrigramFts5(DatabaseExecutor db) {
   return _trigramFts5Capability ??= _probeTrigramFts5(db);
 }
@@ -468,7 +467,7 @@ void putPathKeysInBatch(
   }
 }
 
-/// Keep IDs already referenced by playlists/history when a rescan starts using
+/// Keep IDs already referenced by playlists when a rescan starts using
 /// collision-resistant v2 IDs. New paths keep their new IDs. No eager rewrite
 /// of user databases or collection keys is needed.
 Future<void> preserveLibraryScanIds(

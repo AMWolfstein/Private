@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "Todo",
-  "@historyFilterAll": {
+  "libraryKindAll": "Todo",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "Pistas",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "Pistas",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "Últimos lanzamientos de tu biblioteca",
   "artistPopular": "Populares",
   "libraryRecentlyAdded": "Agregados recientemente",
-  "librarySearchHint": "Busca en tu biblioteca",
   "homeLibraryDisabled": "Activa la biblioteca local para mostrar tu música aquí.",
   "homeChooseLibraryFolder": "Elige una carpeta de música en los ajustes de la biblioteca local.",
   "homeLibraryEmpty": "Añade música a las carpetas de tu biblioteca y, después, analiza la biblioteca.",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "Desactivado",
-  "@extensionsDisabled": {
+  "settingDisabled": "Desactivado",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "Acerca de",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "Activar notificaciones",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "Seleccionar Carpeta",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "Activar notificaciones",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "Borrar seleccionados",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "Borrar seleccionados",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "¿Eliminar {count} {count, plural, =1{pista} other{pistas}} del historial?\n\nEsto también eliminará los archivos del almacenamiento.",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "¿Eliminar {count} {count, plural, =1{pista} other{pistas}} del historial?\n\nEsto también eliminará los archivos del almacenamiento.",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "Toca las pistas para seleccionar",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "Toca las pistas para seleccionar",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "¡Eliminar {count} {count, plural, =1{pista} other{pistas}}",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "¡Eliminar {count} {count, plural, =1{pista} other{pistas}}",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "Seleccionar pistas a eliminar",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "Seleccionar pistas a eliminar",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "Disco {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "Disco {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "Archivos locales",
-  "libraryFilterLocal": "En el dispositivo",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "Filtros",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "Aplicar",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "Fuente",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "Calidad",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Solo configuraciones",
-  "backupSelectHistory": "Registros heredados de la biblioteca",
   "backupSelectCollections": "Colecciones de la biblioteca",
   "backupSelectCollectionsDescription": "Canciones que te gustaron, artistas favoritos, listas de reproducción y portadas de listas de reproducción.",
   "backupSelectedExportDescription": "Guarda las categorías seleccionadas en un archivo de respaldo. No se incluyen los archivos de audio.",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "Configuración de la aplicación",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} historial {count, plural, =1{item} other{items}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} {count, plural, =1{pista con «Me gusta»} other{pistas con «Me gusta»}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "No hay pistas locales",
-  "queueEmptyHistorySubtitle": "Analiza una carpeta de música para llenar tu biblioteca",
+  "libraryEmpty": "No hay pistas locales",
+  "libraryEmptySubtitle": "Analiza una carpeta de música para llenar tu biblioteca",
   "selectionAllPlaylistsSelected": "Todas las listas seleccionadas",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} excluido",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} errores",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "Abrir {title}, {count} {count, plural, =1{objeto} other{objetos}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Letra: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "Letra: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2786,8 +2741,6 @@
   },
   "optionsCheckUpdates": "Buscar actualizaciones",
   "optionsCheckUpdatesSubtitle": "Notificar cuando una nueva versión esté disponible",
-  "optionsUpdateChannel": "Tipo de actualizaciones",
-  "optionsUpdateChannelStable": "Solo versiones estables",
   "optionsUpdateChannelPreview": "Obtener versiones preliminares",
   "optionsUpdateChannelWarning": "La versión preliminar puede contener errores o funciones incompletas",
   "updateAvailable": "Actualización Disponible",

@@ -304,7 +304,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.all(24),
-                      child: Text(context.l10n.queueEmptyHistory),
+                      child: Text(context.l10n.libraryEmpty),
                     ),
                   ),
                 if (tracks != null && tracks.items.isNotEmpty)
@@ -426,7 +426,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     SliverToBoxAdapter(
                       child: _albumSection(
                         context,
-                        context.l10n.historyFilterSingles,
+                        context.l10n.libraryKindSingles,
                         albums.entries
                             .where((release) => release.isSingleRelease)
                             .toList(),

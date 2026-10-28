@@ -32,7 +32,7 @@ class _Database implements LibraryDatabase {
   bool failLookup = false;
   bool failScanErrorWrite = false;
   int? countOverride;
-  Future<({int inserted, int skipped})> Function()? fullReplacement;
+  Future<({int inserted})> Function()? fullReplacement;
   int clearCalls = 0;
 
   @override
@@ -57,7 +57,7 @@ class _Database implements LibraryDatabase {
       sources.where((source) => source.enabled && source.available).length;
 
   @override
-  Future<({int inserted, int skipped})> replaceSourceScanFile(
+  Future<({int inserted})> replaceSourceScanFile(
     String sourceId,
     LibraryScanNDJSONFile scan, {
     required String requestId,
@@ -76,9 +76,6 @@ class _Database implements LibraryDatabase {
   Future<void> removeSource(String sourceId) async {
     sources.removeWhere((source) => source.id == sourceId);
   }
-
-  @override
-  Future<int> deleteDownloadedRowsForSource(String sourceId) async => 0;
 
   @override
   Future<void> updateSourceState(
@@ -610,7 +607,7 @@ void main() {
       await library.startSourceScan('reconnect');
       expect(scans, hasLength(1));
       database.countOverride = 7;
-      scans.single.$2.complete(jsonEncode({'committed': true, 'skipped': 0}));
+      scans.single.$2.complete(jsonEncode({'committed': true}));
       await active;
       await clearing;
       await Future<void>.delayed(Duration.zero);
@@ -688,12 +685,11 @@ void main() {
       await _waitFor(() => scans.length == 1);
       await library.cancelScan();
       database.countOverride = 7;
-      scans.single.$2.complete(jsonEncode({'committed': true, 'skipped': 2}));
+      scans.single.$2.complete(jsonEncode({'committed': true}));
       await active;
       final state = container.read(localLibraryProvider);
       expect(state.totalCount, 7);
       expect(state.loadedIndexVersion, greaterThan(version));
-      expect(state.excludedDownloadedCount, 2);
       expect(state.scanWasCancelled, isTrue);
       expect(state.isScanning, isFalse);
     },
@@ -706,7 +702,7 @@ void main() {
       entered.complete();
       await release.future;
       database.countOverride = 7;
-      return (inserted: 7, skipped: 2);
+      return (inserted: 7);
     };
     messenger.setMockMethodCallHandler(backend, (call) async {
       if (call.method == 'scanLibraryFolderToNDJSONFile') {
@@ -725,7 +721,6 @@ void main() {
     final state = container.read(localLibraryProvider);
     expect(state.totalCount, 7);
     expect(state.loadedIndexVersion, greaterThan(version));
-    expect(state.excludedDownloadedCount, 2);
     expect(state.scanWasCancelled, isTrue);
     expect(state.isScanning, isFalse);
   });

@@ -1429,7 +1429,7 @@ class LyricsCredits extends StatelessWidget {
 
   String _text(BuildContext context) => [
     if (writers != null) context.l10n.nowPlayingWrittenBy(writers!),
-    if (provider != null) context.l10n.nowPlayingLyricsProvider(provider!),
+    if (provider != null) context.l10n.nowPlayingLyricsSource(provider!),
   ].join('\n');
 
   TextStyle _style(BuildContext context) =>

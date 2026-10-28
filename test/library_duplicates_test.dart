@@ -12,19 +12,12 @@ void main() {
   setUp(() async {
     db = await SqliteProcessDatabase.open();
     await LibrarySchema.create(db, LibrarySchema.version);
-    await db.execute("ATTACH DATABASE ':memory:' AS history_db");
-    await db.execute('''CREATE TABLE history_db.history (
-      id TEXT PRIMARY KEY, track_name TEXT, artist_name TEXT, album_name TEXT,
-      file_path TEXT, isrc TEXT, bit_depth INTEGER, sample_rate INTEGER,
-      bitrate INTEGER, format TEXT, duration INTEGER
-    )''');
   });
   tearDown(() => db.close());
 
   Future<void> add(
     String id,
     String path, {
-    bool history = false,
     String? sourceId,
     String isrc = 'USABC2600001',
     String title = 'Track',
@@ -33,7 +26,7 @@ void main() {
     int? bitrate = 1000,
     int sampleRate = 44100,
   }) => db
-      .insert(history ? 'history_db.history' : 'library', {
+      .insert('library', {
         'id': id,
         'track_name': title,
         'artist_name': 'Artist',
@@ -45,10 +38,8 @@ void main() {
         'bitrate': bitrate,
         'bit_depth': 16,
         'sample_rate': sampleRate,
-        if (!history) ...{
-          'scanned_at': '2026-10-10',
-          'source_id': sourceId ?? LocalLibraryItem.legacySourceId,
-        },
+        'scanned_at': '2026-10-10',
+        'source_id': sourceId ?? LocalLibraryItem.legacySourceId,
       })
       .then((_) {});
 
@@ -56,24 +47,16 @@ void main() {
     'rescans and alternate SAF tree URIs do not duplicate one physical file',
     () async {
       const document = 'remote%3AAlbum%2FTrack.flac';
-      await add(
-        'download',
-        'content://rsaf/tree/root/document/$document',
-        history: true,
-      );
+      await add('first', 'content://rsaf/tree/root/document/$document');
       await add('scan', 'content://rsaf/tree/album/document/$document');
-      await add(
-        'old-history',
-        'content://rsaf/document/$document',
-        history: true,
-      );
+      await add('third', 'content://rsaf/document/$document');
       expect(await readIsrcDuplicateGroups(db), isEmpty);
     },
   );
 
   test('actual copies and different formats remain selectable', () async {
-    await add('download', '/music/Track.flac', history: true);
-    await add('indexed-download', 'file:///music/Track.flac');
+    await add('first', '/music/Track.flac');
+    await add('second', 'file:///music/Track.flac');
     await add('conversion', '/music/Track.opus');
     await add('copy', '/playlist/Track.flac');
     final group = (await readIsrcDuplicateGroups(db)).single;

@@ -13,11 +13,8 @@ String _tableDefinition(String path, String table) {
 
 void main() {
   test(
-    'ReplayGain filter includes unindexed candidates and follows tag add/remove in both databases',
+    'ReplayGain filter includes unindexed candidates and follows tag add/remove',
     () async {
-      final historyPredicate = missingReplayGainSqlPredicate(
-        hasReplayGainExpr: 'has_replaygain',
-      );
       final localPredicate = missingReplayGainSqlPredicate(
         hasReplayGainExpr: 'has_replaygain',
       );
@@ -29,17 +26,15 @@ void main() {
 import json, sqlite3, sys
 data = json.loads(sys.argv[1])
 db = sqlite3.connect(':memory:')
-db.execute(data['history'])
 db.execute(data['library'])
 for table, version, known, predicate in [
-    ('history', 'replaygain_metadata_scan_version', 1, data['historyPredicate']),
     ('library', 'audio_metadata_scan_version', data['scanVersion'], data['localPredicate']),
 ]:
     for name, gain, scanned in [('unknown', 0, 0), ('legacy', 0, known - 1),
                                 ('tagged', 1, known), ('missing', 0, known),
                                 ('legacy-tagged', 1, 0)]:
         db.execute(f'INSERT INTO {table} (id, track_name, artist_name, album_name, file_path, '
-                   + ('downloaded_at, service' if table == 'history' else 'scanned_at, source_id')
+                   + 'scanned_at, source_id'
                    + f', has_replaygain, {version}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                    (name, 'Track', 'Artist', 'Album', '/'+name+'.flac', '2026-01-01', 'test', gain, scanned))
     def matches():
@@ -52,24 +47,19 @@ for table, version, known, predicate in [
     # An entirely unindexed collection without ReplayGain must not look empty.
     db.execute(f'UPDATE {table} SET has_replaygain = 0, {version} = 0')
     assert len(matches()) == 5, (table, matches())
-print('both databases passed')
+print('library passed')
 ''',
         jsonEncode({
-          'history': _tableDefinition(
-            'lib/services/history_database.dart',
-            'history',
-          ),
           'library': _tableDefinition(
             'lib/services/library_schema.dart',
             'library',
           ),
-          'historyPredicate': historyPredicate,
           'localPredicate': localPredicate,
           'scanVersion': LibraryDatabase.audioMetadataScanVersion,
         }),
       ]);
       expect(result.exitCode, 0, reason: '${result.stderr}');
-      expect(result.stdout, contains('both databases passed'));
+      expect(result.stdout, contains('library passed'));
     },
   );
 }

@@ -17,7 +17,6 @@ import 'package:sistrum/utils/progress_stream_poller.dart';
 
 final _log = AppLogger('LocalLibrary');
 
-const _excludedDownloadedCountKey = 'local_library_excluded_downloaded_count';
 final _prefs = SharedPreferences.getInstance();
 
 class LocalLibraryState {
@@ -37,7 +36,6 @@ class LocalLibraryState {
   final DateTime? lastScannedAt;
   final List<LocalLibrarySource> sources;
   final String? scanningSourceId;
-  final int excludedDownloadedCount;
 
   /// Files the last scan of each source could not read, by source ID.
   final Map<String, LibraryScanFailures> scanFailures;
@@ -58,7 +56,6 @@ class LocalLibraryState {
     this.lastScannedAt,
     this.sources = const <LocalLibrarySource>[],
     this.scanningSourceId,
-    this.excludedDownloadedCount = 0,
     this.scanFailures = const {},
   });
 
@@ -81,7 +78,6 @@ class LocalLibraryState {
     List<LocalLibrarySource>? sources,
     String? scanningSourceId,
     bool clearScanningSourceId = false,
-    int? excludedDownloadedCount,
     Map<String, LibraryScanFailures>? scanFailures,
   }) {
     return LocalLibraryState(
@@ -105,8 +101,6 @@ class LocalLibraryState {
       scanningSourceId: clearScanningSourceId
           ? null
           : scanningSourceId ?? this.scanningSourceId,
-      excludedDownloadedCount:
-          excludedDownloadedCount ?? this.excludedDownloadedCount,
       scanFailures: scanFailures ?? this.scanFailures,
     );
   }
@@ -256,13 +250,10 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         final count = await _db.getCount();
 
         DateTime? lastScannedAt;
-        var excludedDownloadedCount = 0;
         var scanFailures = const <String, LibraryScanFailures>{};
         try {
           final prefs = await _prefs;
           lastScannedAt = readLocalLibraryLastScannedAt(prefs);
-          excludedDownloadedCount =
-              prefs.getInt(_excludedDownloadedCountKey) ?? 0;
           scanFailures = readLocalLibraryScanFailures(prefs);
         } catch (e) {
           _log.w('Failed to load lastScannedAt: $e');
@@ -277,13 +268,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           totalCount: count,
           loadedIndexVersion: state.loadedIndexVersion + 1,
           lastScannedAt: lastScannedAt,
-          excludedDownloadedCount: excludedDownloadedCount,
           scanFailures: scanFailures,
           sources: sources,
         );
         _log.i(
           'Loaded local library summary: $count items, lastScannedAt: '
-          '$lastScannedAt, excludedDownloadedCount: $excludedDownloadedCount',
+          '$lastScannedAt',
         );
         _hasLoadedFromDatabase = true;
         break;
@@ -571,10 +561,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     }
   }
 
-  Future<void> _refreshSummaryFromStorage({
-    DateTime? lastScannedAt,
-    int? excludedDownloadedCount,
-  }) async {
+  Future<void> _refreshSummaryFromStorage({DateTime? lastScannedAt}) async {
     final sourceVersion = ++_sourceVersion;
     final sources = await _db.getSources();
     if (!ref.mounted || sourceVersion != _sourceVersion) return;
@@ -594,7 +581,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       totalCount: count,
       loadedIndexVersion: state.loadedIndexVersion + 1,
       lastScannedAt: lastScannedAt ?? latestSourceScan,
-      excludedDownloadedCount: excludedDownloadedCount,
       sources: sources,
     );
     _hasLoadedFromDatabase = true;
@@ -802,7 +788,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     }
   }
 
-  Future<({int inserted, int skipped})?> _replaceFromFullScanStream({
+  Future<({int inserted})?> _replaceFromFullScanStream({
     required String sourceId,
     required String folderPath,
     required bool isSaf,
@@ -843,8 +829,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         isCancelled: () => _scanCancelRequested || !ref.mounted,
       );
       _log.i(
-        'Stream-ingested ${result.inserted}/${scanFile.expectedCount} scan rows '
-        '(${result.skipped} downloads excluded)',
+        'Stream-ingested ${result.inserted}/${scanFile.expectedCount} scan rows',
       );
       ingested = true;
       return result;
@@ -1025,9 +1010,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         if (!ref.mounted) return;
         if (scanResult == null || _scanCancelRequested) {
           if (scanResult != null) {
-            await _refreshSummaryFromStorage(
-              excludedDownloadedCount: scanResult.skipped,
-            );
+            await _refreshSummaryFromStorage();
           }
           if (!ref.mounted) return;
           state = state.copyWith(
@@ -1045,12 +1028,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           scanCurrentFile: null,
         );
 
-        final skippedDownloads = scanResult.skipped;
-
-        if (skippedDownloads > 0) {
-          _log.i('Skipped $skippedDownloads files already in download history');
-        }
-
         await _recordScanFailures(activeSourceId);
         if (!ref.mounted) return;
         final now = DateTime.now();
@@ -1065,16 +1042,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         try {
           final prefs = await SharedPreferences.getInstance();
           await writeLocalLibraryLastScannedAt(prefs, now);
-          await prefs.setInt(_excludedDownloadedCountKey, skippedDownloads);
           _log.d('Saved lastScannedAt: $now');
         } catch (e) {
           _log.w('Failed to save lastScannedAt: $e');
         }
 
-        await _refreshSummaryFromStorage(
-          lastScannedAt: now,
-          excludedDownloadedCount: skippedDownloads,
-        );
+        await _refreshSummaryFromStorage(lastScannedAt: now);
         if (!ref.mounted) return;
         state = state.copyWith(
           isScanning: false,
@@ -1082,13 +1055,11 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           scanProgress: 100,
           lastScannedAt: now,
           scanWasCancelled: false,
-          excludedDownloadedCount: skippedDownloads,
         );
         await _pruneLibraryCoverCache();
 
         final summary =
             'Full scan complete: ${state.totalCount} tracks found, '
-            '$skippedDownloads already in downloads, '
             '${state.scanErrorCount} errors';
         if (state.scanErrorCount > 0) {
           _log.e(summary);
@@ -1097,7 +1068,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         }
         await _showScanCompleteNotification(
           totalTracks: state.totalCount,
-          excludedDownloadedCount: skippedDownloads,
           errorCount: state.scanErrorCount,
         );
       } else {
@@ -1180,9 +1150,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         if (!ref.mounted) return;
         if (_scanCancelRequested || result['cancelled'] == true) {
           if (result['committed'] == true) {
-            await _refreshSummaryFromStorage(
-              excludedDownloadedCount: (result['skipped'] as num?)?.toInt(),
-            );
+            await _refreshSummaryFromStorage();
           }
           if (!ref.mounted) return;
           state = state.copyWith(
@@ -1230,20 +1198,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           '$skippedCount skipped, $deletedCount deleted, $totalFiles total',
         );
 
-        final removedDownloaded = nativeIngestion
-            ? 0
-            : await _db.deleteDownloadedRowsForSource(activeSourceId);
-        if (removedDownloaded > 0) {
-          _log.i(
-            'Removed $removedDownloaded downloaded tracks already present in '
-            'the local Library index',
-          );
-        }
-
         final updatedItems = <LocalLibraryItem>[];
-        var skippedDownloads = nativeIngestion
-            ? (result['skipped'] as num).toInt()
-            : removedDownloaded;
         if (!nativeIngestion && scannedList.isNotEmpty) {
           for (final json in scannedList) {
             final map = json as Map<String, dynamic>;
@@ -1251,17 +1206,11 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
             updatedItems.add(item);
           }
           if (updatedItems.isNotEmpty) {
-            final upsertResult = await _db.upsertBatchExcludingHistory(
+            await _db.upsertBatch(
               updatedItems.map((e) => e.toJson()).toList(),
               sourceId: activeSourceId,
             );
-            skippedDownloads += upsertResult.skipped;
-            _log.i('Upserted ${upsertResult.upserted} items');
-          }
-          if (skippedDownloads > 0) {
-            _log.i(
-              'Skipped $skippedDownloads files already in download history',
-            );
+            _log.i('Upserted ${updatedItems.length} items');
           }
         }
 
@@ -1284,16 +1233,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         try {
           final prefs = await SharedPreferences.getInstance();
           await writeLocalLibraryLastScannedAt(prefs, now);
-          await prefs.setInt(_excludedDownloadedCountKey, skippedDownloads);
           _log.d('Saved lastScannedAt: $now');
         } catch (e) {
           _log.w('Failed to save lastScannedAt: $e');
         }
 
-        await _refreshSummaryFromStorage(
-          lastScannedAt: now,
-          excludedDownloadedCount: skippedDownloads,
-        );
+        await _refreshSummaryFromStorage(lastScannedAt: now);
         if (!ref.mounted) return;
         state = state.copyWith(
           isScanning: false,
@@ -1301,13 +1246,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           scanProgress: 100,
           lastScannedAt: now,
           scanWasCancelled: false,
-          excludedDownloadedCount: skippedDownloads,
         );
 
         final summary =
             'Incremental scan complete: ${state.totalCount} total tracks '
             '($scannedCount new/updated, $skippedCount unchanged, '
-            '$deletedCount removed, $skippedDownloads already in downloads, '
+            '$deletedCount removed, '
             '${state.scanErrorCount} errors)';
         if (state.scanErrorCount > 0) {
           _log.e(summary);
@@ -1316,7 +1260,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         }
         await _showScanCompleteNotification(
           totalTracks: state.totalCount,
-          excludedDownloadedCount: skippedDownloads,
           errorCount: state.scanErrorCount,
         );
       }
@@ -1671,14 +1614,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
   Future<void> _showScanCompleteNotification({
     required int totalTracks,
-    required int excludedDownloadedCount,
     required int errorCount,
   }) async {
     try {
       await _queueScanNotification(
         () => _notificationService.showLibraryScanComplete(
           totalTracks: totalTracks,
-          excludedDownloadedCount: excludedDownloadedCount,
           errorCount: errorCount,
         ),
       );
@@ -1784,7 +1725,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       try {
         final prefs = await SharedPreferences.getInstance();
         await clearLocalLibraryLastScannedAt(prefs);
-        await prefs.remove(_excludedDownloadedCountKey);
         await writeLocalLibraryScanFailures(prefs, const {});
       } catch (e) {
         _log.w('Failed to clear lastScannedAt: $e');

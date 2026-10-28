@@ -115,7 +115,7 @@ class LibraryQueueStore {
     final parts = <String>[];
     final args = <Object?>[];
 
-    if (request.includeLocal && request.source != 'downloaded') {
+    if (request.includeLocal) {
       final where = <String>[];
       _appendQueueLocalFilters(where, args, request);
       parts.add('''
@@ -170,13 +170,9 @@ class LibraryQueueStore {
         request.metadata != null) {
       return null;
     }
-    final source = request.source;
-    if (source != null && source != 'downloaded' && source != 'local') {
-      return null;
-    }
 
     final parts = <String>[];
-    if (request.includeLocal && source != 'downloaded') {
+    if (request.includeLocal) {
       parts.add('''
         SELECT
           COALESCE(SUM(track_count), 0) AS all_count,
@@ -245,7 +241,7 @@ class LibraryQueueStore {
   Future<List<Map<String, dynamic>>> artistPage(
     QueueLibraryDbQuery request,
   ) async {
-    if (!request.includeLocal || request.source == 'downloaded') {
+    if (!request.includeLocal) {
       return const [];
     }
     final search = sqlite.normalizeLookupText(request.searchQuery);
@@ -289,7 +285,7 @@ class LibraryQueueStore {
     required bool usesCursor,
   }) {
     final parts = <String>[];
-    if (request.includeLocal && request.source != 'downloaded') {
+    if (request.includeLocal) {
       final where = <String>[];
       _appendQueueLocalFilters(where, args, request);
       if (request.filterMode == 'singles') {
@@ -316,15 +312,7 @@ class LibraryQueueStore {
           l.album_artist,
           NULL AS cover_url,
           l.file_path,
-          NULL AS storage_mode,
-          NULL AS download_tree_uri,
-          NULL AS saf_relative_dir,
-          NULL AS saf_file_name,
-          0 AS saf_repaired,
-          'local' AS service,
-          NULL AS downloaded_at,
           l.isrc,
-          NULL AS spotify_id,
           l.track_number,
           l.total_tracks,
           l.disc_number,
@@ -382,15 +370,7 @@ class LibraryQueueStore {
           NULL AS album_artist,
           NULL AS cover_url,
           NULL AS file_path,
-          NULL AS storage_mode,
-          NULL AS download_tree_uri,
-          NULL AS saf_relative_dir,
-          NULL AS saf_file_name,
-          NULL AS saf_repaired,
-          NULL AS service,
-          NULL AS downloaded_at,
           NULL AS isrc,
-          NULL AS spotify_id,
           NULL AS track_number,
           NULL AS total_tracks,
           NULL AS disc_number,
@@ -451,7 +431,7 @@ class LibraryQueueStore {
         ? 'ac.album_completeness, ac.album_present_tracks, ac.album_expected_tracks,'
         : 'NULL AS album_completeness, NULL AS album_present_tracks, NULL AS album_expected_tracks,';
     final parts = <String>[];
-    if (request.includeLocal && request.source != 'downloaded') {
+    if (request.includeLocal) {
       final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
       final where = <String>[];
       _appendQueueLocalFilters(
@@ -1004,22 +984,10 @@ class LibraryQueueStore {
       'composer': row['composer'],
       'label': row['label'],
       'copyright': row['copyright'],
-      // Download-era keys stay present (null for local rows) so screens can
-      // drop them in parallel without any read path crashing.
       'coverUrl': row['cover_url'],
       'coverPath': row['cover_path'],
       'scannedAt': row['scanned_at'],
       'fileModTime': row['file_mod_time'],
-      'storageMode': row['storage_mode'],
-      'downloadTreeUri': row['download_tree_uri'],
-      'safRelativeDir': row['saf_relative_dir'],
-      'safFileName': row['saf_file_name'],
-      'safRepaired': row['saf_repaired'] == 1 || row['saf_repaired'] == true,
-      'service': row['service'],
-      // Downloaded rows kept this key; local rows fall back to the scan-time
-      // added timestamp until screens stop reading it.
-      'downloadedAt': row['downloaded_at'] ?? row['sort_added'],
-      'spotifyId': row['spotify_id'],
       'quality': row['quality'],
       'replayGainMetadataScanVersion':
           row['replaygain_metadata_scan_version'] ?? 0,

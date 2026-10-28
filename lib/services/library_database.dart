@@ -74,7 +74,7 @@ class LibraryDatabase {
 
   /// Keeps native scan output native through parsing, indexing and the atomic
   /// source swap. The stream implementation remains the desktop/test adapter.
-  Future<({int inserted, int skipped})> replaceSourceScanFile(
+  Future<({int inserted})> replaceSourceScanFile(
     String sourceId,
     LibraryScanNDJSONFile scan, {
     required String requestId,
@@ -90,10 +90,7 @@ class LibraryDatabase {
         requestId: requestId,
         isCancelled: isCancelled,
       );
-      return (
-        inserted: (result['inserted'] as num).toInt(),
-        skipped: (result['skipped'] as num).toInt(),
-      );
+      return (inserted: (result['inserted'] as num).toInt());
     }
     Stream<Map<String, dynamic>> validatedRows() async* {
       var count = 0;
@@ -233,33 +230,6 @@ class LibraryDatabase {
     _log.i('Batch inserted ${items.length} items');
   }
 
-  /// Phase 6 (PD2) removed the download-history dedupe lane: scans and
-  /// upserts no longer exclude rows whose paths also exist in download
-  /// History. Kept as a no-op until callers outside this service drop the
-  /// call, then delete.
-  Future<int> deleteDownloadedRowsForSource(String sourceId) async {
-    return 0;
-  }
-
-  /// Upserts incremental scan rows. The History path-key exclusion was
-  /// removed in Phase 6 (PD2); the Dart-side scan now upserts every row.
-  /// The method name is kept so existing callers still compile until they
-  /// finish dropping the lane, then it can become `upsertBatch`.
-  Future<({int upserted, int skipped})> upsertBatchExcludingHistory(
-    List<Map<String, dynamic>> items, {
-    required String sourceId,
-  }) async {
-    if (items.isEmpty) return (upserted: 0, skipped: 0);
-    for (final json in items) {
-      final id = json['id'] as String?;
-      if (id == null || id.trim().isEmpty) {
-        throw const FormatException('Library scan row has no valid id');
-      }
-    }
-    await upsertBatch(items, sourceId: sourceId);
-    return (upserted: items.length, skipped: 0);
-  }
-
   Future<void> replaceAll(List<Map<String, dynamic>> items) async {
     final db = await database;
     await sqlite.transactionWithBusyRetry(db, (txn) async {
@@ -289,7 +259,7 @@ class LibraryDatabase {
 
   /// Stages scan rows in bounded, independently committed batches, then swaps
   /// only this source in one short transaction.
-  Future<({int inserted, int skipped})> replaceSourceStream(
+  Future<({int inserted})> replaceSourceStream(
     String sourceId,
     Stream<Map<String, dynamic>> items, {
     int batchSize = 300,
@@ -408,7 +378,7 @@ class LibraryDatabase {
         '$inserted into Library source '
         '$sourceId',
       );
-      return (inserted: inserted, skipped: 0);
+      return (inserted: inserted);
     } finally {
       await db.execute('DROP TABLE IF EXISTS $_scanStagePathKeysTable');
       await db.execute('DROP TABLE IF EXISTS $_scanStageTable');
@@ -623,8 +593,7 @@ class LibraryDatabase {
     final db = await database;
     if (request != null &&
         isLibrarySizeSort(request.sortMode) &&
-        request.includeLocal &&
-        request.source != 'downloaded') {
+        request.includeLocal) {
       await (_fileSizes ??= LibraryFileSizes(db)).refresh();
     }
     return LibraryQueueStore(db, localFts: searchFtsAvailable);
@@ -642,7 +611,7 @@ class LibraryDatabase {
     QueueLibraryDbQuery request,
   ) async => (await _queueStore(request)).albumPage(request);
 
-  /// Album artists across downloaded and scanned music, excluding duplicate paths.
+  /// Album artists across scanned music, excluding duplicate paths.
   Future<List<Map<String, dynamic>>> getQueueArtistPage(
     QueueLibraryDbQuery request,
   ) async => (await _queueStore()).artistPage(request);

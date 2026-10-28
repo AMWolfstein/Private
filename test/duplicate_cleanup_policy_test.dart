@@ -5,7 +5,6 @@ import 'package:sistrum/utils/duplicate_cleanup_policy.dart';
 IsrcDuplicateEntry _entry(String id) {
   return IsrcDuplicateEntry(
     id: id,
-    source: 'local',
     trackName: 'Track $id',
     artistName: 'Artist',
     albumName: 'Album',
@@ -47,7 +46,6 @@ void main() {
       final copy = _entry('same');
       final retained = IsrcDuplicateEntry(
         id: 'other-index',
-        source: 'downloaded',
         trackName: 'Track',
         artistName: 'Artist',
         albumName: 'Album',
@@ -108,7 +106,6 @@ void main() {
   test('keep-best ranks lossy bitrate ahead of a larger sample rate', () {
     final low = IsrcDuplicateEntry(
       id: 'low',
-      source: 'local',
       trackName: 'Track',
       artistName: 'Artist',
       albumName: 'Album',
@@ -119,7 +116,6 @@ void main() {
     );
     final high = IsrcDuplicateEntry(
       id: 'high',
-      source: 'local',
       trackName: 'Track',
       artistName: 'Artist',
       albumName: 'Album',
@@ -140,7 +136,6 @@ void main() {
     () {
       final unknown = IsrcDuplicateEntry(
         id: 'unknown',
-        source: 'local',
         trackName: 'Track',
         artistName: 'Artist',
         albumName: 'Album',

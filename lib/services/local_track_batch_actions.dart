@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/services/deleted_library_files.dart';
 import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
 import 'package:sistrum/utils/file_access.dart';
 
 /// Confirms, then deletes the files behind [selected] and removes their
-/// history or local-index rows. Files that cannot be deleted keep their rows.
+/// local-index rows. Files that cannot be deleted keep their rows.
 Future<void> deleteLibraryTracks(
   BuildContext context,
   WidgetRef ref,
@@ -60,9 +60,7 @@ Future<void> deleteLibraryTracks(
       deletedCount++;
       continue;
     }
-    final cleanPath = DownloadedEmbeddedCoverResolver.cleanFilePath(
-      item.filePath,
-    );
+    final cleanPath = EmbeddedCoverResolver.cleanFilePath(item.filePath);
     if (!await deleteFile(cleanPath)) continue;
     deletedPaths.add(cleanPath);
     deletedCount++;

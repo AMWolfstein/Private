@@ -314,14 +314,10 @@ fn spilled_incremental_json_is_consumed_without_deleting_adapter_file() {
 }
 
 #[test]
-fn full_swap_ignores_legacy_downloads_and_preserves_other_source_and_fts() {
+fn full_swap_preserves_other_source_and_fts() {
     let fixture = Fixture::new();
     fixture.add("old", "/music/old.flac", "source");
     fixture.add("other", "/other/track.flac", "other");
-    let history = Connection::open(fixture.directory.path().join("history.db")).unwrap();
-    history
-        .execute_batch("CREATE TABLE history_path_keys(item_id TEXT,path_key TEXT); INSERT INTO history_path_keys VALUES('downloaded','/music/downloaded')")
-        .unwrap();
     let result = fixture
         .scan(
             &[
@@ -334,7 +330,6 @@ fn full_swap_ignores_legacy_downloads_and_preserves_other_source_and_fts() {
         )
         .unwrap();
     assert_eq!(result["inserted"], 2);
-    assert_eq!(result["skipped"], 0);
     assert_eq!(fixture.ids(), ["downloaded", "new", "other"]);
     assert_eq!(
         fixture
@@ -500,21 +495,16 @@ fn concurrent_source_edit_aborts_native_swap_without_overwriting_other_writer() 
 }
 
 #[test]
-fn incremental_deletes_only_its_source_and_keeps_legacy_downloads() {
+fn incremental_deletes_only_its_source() {
     let fixture = Fixture::new();
     fixture.add("old", "/music/old.flac", "source");
     fixture.add("download", "/music/download.flac", "source");
     fixture.add("other", "/other/track.flac", "other");
-    let history = Connection::open(fixture.directory.path().join("history.db")).unwrap();
-    history
-        .execute_batch("CREATE TABLE history_path_keys(item_id TEXT,path_key TEXT); INSERT INTO history_path_keys VALUES('h','/music/download')")
-        .unwrap();
     let mut request = fixture.request.clone();
     request["operation"] = "library_incremental_import".into();
     request["delta"] = json!({"scanned":[track("new","/music/new.flac")],"deletedPaths":["/music/old.flac","/other/track.flac"],"skippedCount":10,"totalFiles":11});
     let result = execute(&request, &|| Ok(())).unwrap();
     assert_eq!(fixture.ids(), ["download", "new", "other"]);
-    assert_eq!(result["skipped"], 0);
     assert_eq!(result["deleted_count"], 1);
 }
 

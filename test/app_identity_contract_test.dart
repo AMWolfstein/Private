@@ -29,7 +29,7 @@ void main() {
     'new backups and notification actions use the canonical identity',
     () {
       expect(BackupService.magic, 'sistrum-backup');
-      expect(BackupService.fileExtension, 'sflb');
+      expect(BackupService.fileExtension, 'sbk');
       expect(PlaybackNotification.favoriteAction, 'sistrum.favorite');
       expect(PlaybackNotification.shuffleAction, 'sistrum.shuffle');
     },

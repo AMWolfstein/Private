@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ void main() {
     persistentCacheDirectory = await Directory.systemTemp.createTemp(
       'embedded_cover_persistent_test_',
     );
-    DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
+    EmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
       persistentCacheDirectory,
     );
   });
@@ -35,10 +35,10 @@ void main() {
   }
 
   tearDown(() async {
-    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting(
+    await EmbeddedCoverResolver.resetMemoryStateForTesting(
       preservePersistentFiles: false,
     );
-    DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(null);
+    EmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(backendChannel, null);
     sourcePaths.clear();
@@ -61,7 +61,7 @@ void main() {
             ? 'content://example.documents/tree/nas/document/song.flac'
             : await createAudioFixture('temporarily-unavailable');
         var now = DateTime(2026, 10, 3);
-        DownloadedEmbeddedCoverResolver.setValidationClockForTesting(() => now);
+        EmbeddedCoverResolver.setValidationClockForTesting(() => now);
         var extractions = 0;
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(backendChannel, (call) async {
@@ -81,27 +81,17 @@ void main() {
               ).writeAsBytes([4, 5, 6]);
               return jsonEncode({'success': true});
             });
-        expect(
-          await DownloadedEmbeddedCoverResolver.resolveOrExtract(source),
-          isNull,
-        );
+        expect(await EmbeddedCoverResolver.resolveOrExtract(source), isNull);
         for (var i = 0; i < 5; i++) {
-          expect(
-            await DownloadedEmbeddedCoverResolver.resolveOrExtract(source),
-            isNull,
-          );
+          expect(await EmbeddedCoverResolver.resolveOrExtract(source), isNull);
         }
         expect(extractions, 1);
         now = now.add(const Duration(seconds: 31));
-        final recovered =
-            await DownloadedEmbeddedCoverResolver.resolveOrExtract(source);
+        final recovered = await EmbeddedCoverResolver.resolveOrExtract(source);
         expect(recovered, isNotNull);
         expect(await File(recovered!).readAsBytes(), [4, 5, 6]);
         expect(extractions, 2);
-        expect(
-          await DownloadedEmbeddedCoverResolver.resolveOrExtract(source),
-          recovered,
-        );
+        expect(await EmbeddedCoverResolver.resolveOrExtract(source), recovered);
         expect(extractions, 2);
       },
     );
@@ -124,7 +114,7 @@ void main() {
             return jsonEncode({'success': true});
           });
 
-      final initial = DownloadedEmbeddedCoverResolver.resolve(
+      final initial = EmbeddedCoverResolver.resolve(
         sourcePath,
         onChanged: () {
           if (!changed.isCompleted) changed.complete();
@@ -133,14 +123,11 @@ void main() {
 
       expect(initial, isNull);
       await changed.future.timeout(const Duration(seconds: 2));
-      final cached = DownloadedEmbeddedCoverResolver.resolve(sourcePath);
+      final cached = EmbeddedCoverResolver.resolve(sourcePath);
       expect(extractionCalls, 1);
       expect(cached, isNotNull);
       expect(await File(cached!).exists(), isTrue);
-      expect(
-        DownloadedEmbeddedCoverResolver.isManagedPreviewPath(cached),
-        isTrue,
-      );
+      expect(EmbeddedCoverResolver.isManagedPreviewPath(cached), isTrue);
     },
   );
 
@@ -161,15 +148,15 @@ void main() {
         });
 
     final results = await Future.wait([
-      DownloadedEmbeddedCoverResolver.resolveOrExtract(
+      EmbeddedCoverResolver.resolveOrExtract(
         sourcePath,
         onChanged: () => callbacks++,
       ),
-      DownloadedEmbeddedCoverResolver.resolveOrExtract(
+      EmbeddedCoverResolver.resolveOrExtract(
         sourcePath,
         onChanged: () => callbacks++,
       ),
-      DownloadedEmbeddedCoverResolver.resolveOrExtract(
+      EmbeddedCoverResolver.resolveOrExtract(
         sourcePath,
         onChanged: () => callbacks++,
       ),
@@ -230,7 +217,7 @@ void main() {
 
       for (final path in paths) {
         expect(
-          DownloadedEmbeddedCoverResolver.resolve(path, onChanged: onChanged),
+          EmbeddedCoverResolver.resolve(path, onChanged: onChanged),
           isNull,
         );
       }
@@ -251,7 +238,7 @@ void main() {
     'validation shares callbacks and detects external changes after interval',
     () async {
       var now = DateTime.utc(2026);
-      DownloadedEmbeddedCoverResolver.setValidationClockForTesting(() => now);
+      EmbeddedCoverResolver.setValidationClockForTesting(() => now);
       const path = 'content://covers/document/external';
       var modTime = 1234;
       var extractions = 0;
@@ -269,26 +256,20 @@ void main() {
             ).writeAsBytes([1, 2, 3]);
             return jsonEncode({'success': true});
           });
-      await DownloadedEmbeddedCoverResolver.resolveOrExtract(path);
-      DownloadedEmbeddedCoverResolver.resolve(path);
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
+      await EmbeddedCoverResolver.resolveOrExtract(path);
+      EmbeddedCoverResolver.resolve(path);
+      await EmbeddedCoverResolver.waitForPreviewValidationForTesting();
       modTime = 5678;
-      DownloadedEmbeddedCoverResolver.resolve(path);
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
+      EmbeddedCoverResolver.resolve(path);
+      await EmbeddedCoverResolver.waitForPreviewValidationForTesting();
       expect(extractions, 1);
       expect(modTimeCalls, 2);
       now = now.add(const Duration(seconds: 5));
       var firstNotified = 0;
       var secondNotified = 0;
-      DownloadedEmbeddedCoverResolver.resolve(
-        path,
-        onChanged: () => firstNotified++,
-      );
-      DownloadedEmbeddedCoverResolver.resolve(
-        path,
-        onChanged: () => secondNotified++,
-      );
-      await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
+      EmbeddedCoverResolver.resolve(path, onChanged: () => firstNotified++);
+      EmbeddedCoverResolver.resolve(path, onChanged: () => secondNotified++);
+      await EmbeddedCoverResolver.waitForPreviewValidationForTesting();
       expect(extractions, 2);
       expect(firstNotified, 1);
       expect(secondNotified, 1);
@@ -343,15 +324,13 @@ void main() {
       }
     }
 
-    DownloadedEmbeddedCoverResolver.resolve(paths[0], onChanged: onChanged);
-    DownloadedEmbeddedCoverResolver.resolve(paths[1], onChanged: onChanged);
+    EmbeddedCoverResolver.resolve(paths[0], onChanged: onChanged);
+    EmbeddedCoverResolver.resolve(paths[1], onChanged: onChanged);
     await firstTwoStarted.future.timeout(const Duration(seconds: 2));
 
-    DownloadedEmbeddedCoverResolver.resolve(paths[2], onChanged: onChanged);
-    DownloadedEmbeddedCoverResolver.resolve(paths[3], onChanged: onChanged);
-    final foreground = DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      paths[3],
-    );
+    EmbeddedCoverResolver.resolve(paths[2], onChanged: onChanged);
+    EmbeddedCoverResolver.resolve(paths[3], onChanged: onChanged);
+    final foreground = EmbeddedCoverResolver.resolveOrExtract(paths[3]);
 
     releaseFirst.complete();
     await thirdStarted.future.timeout(const Duration(seconds: 2));
@@ -379,20 +358,13 @@ void main() {
             return jsonEncode({'success': true});
           });
 
-      final first = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-        sourcePath,
-      );
+      final first = await EmbeddedCoverResolver.resolveOrExtract(sourcePath);
       expect(first, isNotNull);
       expect(extractionCalls, 1);
 
-      await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
-      expect(
-        DownloadedEmbeddedCoverResolver.isManagedPreviewPath(first),
-        isTrue,
-      );
-      final reused = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-        sourcePath,
-      );
+      await EmbeddedCoverResolver.resetMemoryStateForTesting();
+      expect(EmbeddedCoverResolver.isManagedPreviewPath(first), isTrue);
+      final reused = await EmbeddedCoverResolver.resolveOrExtract(sourcePath);
       expect(reused, first);
       expect(extractionCalls, 1);
 
@@ -400,9 +372,9 @@ void main() {
       await File(
         sourcePath,
       ).setLastModified(DateTime.now().add(const Duration(seconds: 2)));
-      await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
+      await EmbeddedCoverResolver.resetMemoryStateForTesting();
 
-      final refreshed = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
+      final refreshed = await EmbeddedCoverResolver.resolveOrExtract(
         sourcePath,
       );
       expect(extractionCalls, 2);
@@ -425,53 +397,48 @@ void main() {
           ).writeAsBytes([0xff, 0xd8, 0xff, 0xe0]);
           return jsonEncode({'success': true});
         });
-    final preview = (await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      sourcePath,
-    ))!;
+    final preview = (await EmbeddedCoverResolver.resolveOrExtract(sourcePath))!;
     await File(preview).writeAsBytes([0, 0xff, 0xd8, 0xff, 0xe0]);
-    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
-    final refreshed = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      sourcePath,
-    );
+    await EmbeddedCoverResolver.resetMemoryStateForTesting();
+    final refreshed = await EmbeddedCoverResolver.resolveOrExtract(sourcePath);
     expect(extractions, 2);
     expect(await File(refreshed!).readAsBytes(), [0xff, 0xd8, 0xff, 0xe0]);
   });
 
-  test('legacy SAF thumbnails are replaced without changing the audio', () async {
-    const source = 'content://covers/document/original-artwork.flac';
-    sourcePaths.add(source);
-    var extractions = 0;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(backendChannel, (call) async {
-          if (call.method == 'getSafFileModTimes') {
-            return jsonEncode({source: 1234});
-          }
-          expect(call.method, 'extractCoverToFile');
-          extractions++;
-          await File(
-            (call.arguments as Map)['output_path'] as String,
-          ).writeAsBytes([1, 2, 3]);
-          return jsonEncode({'success': true});
-        });
-    final preview = (await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      source,
-    ))!;
-    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
-    final legacy = preview.replaceFirst('v2_', 'v1_');
-    expect(legacy, isNot(preview));
-    await File(preview).rename(legacy);
-    await File('$preview.source').rename('$legacy.source');
-    await File(legacy).writeAsBytes([8, 0, 0]);
+  test(
+    'legacy SAF thumbnails are replaced without changing the audio',
+    () async {
+      const source = 'content://covers/document/original-artwork.flac';
+      sourcePaths.add(source);
+      var extractions = 0;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(backendChannel, (call) async {
+            if (call.method == 'getSafFileModTimes') {
+              return jsonEncode({source: 1234});
+            }
+            expect(call.method, 'extractCoverToFile');
+            extractions++;
+            await File(
+              (call.arguments as Map)['output_path'] as String,
+            ).writeAsBytes([1, 2, 3]);
+            return jsonEncode({'success': true});
+          });
+      final preview = (await EmbeddedCoverResolver.resolveOrExtract(source))!;
+      await EmbeddedCoverResolver.resetMemoryStateForTesting();
+      final legacy = preview.replaceFirst('v2_', 'v1_');
+      expect(legacy, isNot(preview));
+      await File(preview).rename(legacy);
+      await File('$preview.source').rename('$legacy.source');
+      await File(legacy).writeAsBytes([8, 0, 0]);
 
-    final refreshed = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-      source,
-    );
-    expect(extractions, 2);
-    expect(await File(refreshed!).readAsBytes(), [1, 2, 3]);
-    await DownloadedEmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting();
-    expect(await File(legacy).exists(), isFalse);
-    expect(await File('$legacy.source').exists(), isFalse);
-  });
+      final refreshed = await EmbeddedCoverResolver.resolveOrExtract(source);
+      expect(extractions, 2);
+      expect(await File(refreshed!).readAsBytes(), [1, 2, 3]);
+      await EmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting();
+      expect(await File(legacy).exists(), isFalse);
+      expect(await File('$legacy.source').exists(), isFalse);
+    },
+  );
 
   test('persistent maintenance enforces entry and byte caps', () async {
     final paths = await Future.wait([
@@ -489,16 +456,14 @@ void main() {
 
     final previews = <String>[];
     for (final path in paths) {
-      previews.add(
-        (await DownloadedEmbeddedCoverResolver.resolveOrExtract(path))!,
-      );
+      previews.add((await EmbeddedCoverResolver.resolveOrExtract(path))!);
     }
-    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
+    await EmbeddedCoverResolver.resetMemoryStateForTesting();
     for (var index = 0; index < previews.length; index++) {
       await File(previews[index]).setLastModified(DateTime(2024, 1, index + 1));
     }
 
-    await DownloadedEmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting(
+    await EmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting(
       maxEntries: 2,
       maxBytes: 100,
       targetBytes: 100,
@@ -506,12 +471,9 @@ void main() {
     expect(await File(previews[0]).exists(), isFalse);
     expect(await File(previews[1]).exists(), isTrue);
     expect(await File(previews[2]).exists(), isTrue);
-    expect(
-      DownloadedEmbeddedCoverResolver.isManagedPreviewPath(previews[1]),
-      isTrue,
-    );
+    expect(EmbeddedCoverResolver.isManagedPreviewPath(previews[1]), isTrue);
 
-    await DownloadedEmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting(
+    await EmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting(
       maxEntries: 10,
       maxBytes: 5,
       targetBytes: 4,
@@ -542,12 +504,10 @@ void main() {
             return jsonEncode({'success': true});
           });
 
-      final resolution = DownloadedEmbeddedCoverResolver.resolveOrExtract(
-        sourcePath,
-      );
+      final resolution = EmbeddedCoverResolver.resolveOrExtract(sourcePath);
       await started.future.timeout(const Duration(seconds: 2));
       var clearCompleted = false;
-      final clear = DownloadedEmbeddedCoverResolver.clearPersistentCache().then(
+      final clear = EmbeddedCoverResolver.clearPersistentCache().then(
         (_) => clearCompleted = true,
       );
       await Future<void>.delayed(const Duration(milliseconds: 10));

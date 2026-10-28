@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/utils/duplicate_cleanup_policy.dart';
 import 'package:sistrum/utils/file_access.dart';
@@ -69,9 +69,7 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
     var format = entry.format?.trim().toUpperCase() ?? '';
     if (format.isEmpty) {
       format = p
-          .extension(
-            DownloadedEmbeddedCoverResolver.cleanFilePath(entry.filePath),
-          )
+          .extension(EmbeddedCoverResolver.cleanFilePath(entry.filePath))
           .replaceFirst('.', '')
           .toUpperCase();
     }
@@ -92,7 +90,7 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
   }
 
   String _displayPath(String path) {
-    final cleaned = DownloadedEmbeddedCoverResolver.cleanFilePath(path);
+    final cleaned = EmbeddedCoverResolver.cleanFilePath(path);
     try {
       return Uri.decodeFull(cleaned);
     } on FormatException {
@@ -210,10 +208,7 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
       message: context.l10n.duplicatesDeleteCopyMessage(entry.trackName),
       entries: [entry],
       retainedEntries: group.entries
-          .where(
-            (candidate) =>
-                candidate.source != entry.source || candidate.id != entry.id,
-          )
+          .where((candidate) => candidate.id != entry.id)
           .toList(growable: false),
     );
   }

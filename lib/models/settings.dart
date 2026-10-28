@@ -76,7 +76,7 @@ class AppSettings {
   final bool autoplayPersonalization;
   final bool isFirstLaunch;
 
-  final String historyFilterMode;
+  final String libraryFilterMode;
 
   final bool enableLogging;
   final bool heroAnimationsEnabled;
@@ -151,7 +151,7 @@ class AppSettings {
     this.autoplayPersonalization = true,
     this.isFirstLaunch = true,
 
-    this.historyFilterMode = 'all',
+    this.libraryFilterMode = 'all',
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
     this.checkForUpdates = true,
@@ -201,7 +201,7 @@ class AppSettings {
     bool? autoplayPersonalization,
     bool? isFirstLaunch,
 
-    String? historyFilterMode,
+    String? libraryFilterMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
     bool? checkForUpdates,
@@ -256,7 +256,7 @@ class AppSettings {
           autoplayPersonalization ?? this.autoplayPersonalization,
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
 
-      historyFilterMode: historyFilterMode ?? this.historyFilterMode,
+      libraryFilterMode: libraryFilterMode ?? this.libraryFilterMode,
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,

@@ -1,6 +1,6 @@
 //! Request cancellation with Go-compatible sentinels and reference counting.
 //!
-//! Each registry owns one domain. Leases release their reference on drop; an
+//! Leases release their reference on drop; an
 //! explicit release also wakes a pending wait. Shutdown closes the instance and
 //! wakes all leases, including untracked requests with an empty ID.
 
@@ -12,15 +12,8 @@ use std::task::Waker;
 use std::thread::Thread;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum CancellationDomain {
-    Download,
-    ExtensionRequest,
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CancellationError {
-    DownloadCancelled,
-    ExtensionRequestCancelled,
+    RequestCancelled,
     RegistryClosed,
     LeaseReleased,
 }
@@ -28,8 +21,7 @@ pub enum CancellationError {
 impl fmt::Display for CancellationError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
-            Self::DownloadCancelled => "download cancelled",
-            Self::ExtensionRequestCancelled => "extension request cancelled",
+            Self::RequestCancelled => "request cancelled",
             Self::RegistryClosed => "cancellation registry closed",
             Self::LeaseReleased => "request lease released",
         })
@@ -90,26 +82,23 @@ impl Shared {
 
 pub struct CancellationRegistry {
     shared: Arc<Shared>,
-    domain: CancellationDomain,
 }
 
 impl CancellationRegistry {
-    pub fn new(domain: CancellationDomain) -> Self {
+    pub fn new() -> Self {
         Self {
             shared: Arc::new(Shared::default()),
-            domain,
         }
     }
 
     /// Wake an external executor after cancellation, release or shutdown.
     /// The executor must recheck its own request; other IDs may still be active.
-    pub fn with_waker(domain: CancellationDomain, waker: Waker) -> Self {
+    pub fn with_waker(waker: Waker) -> Self {
         Self {
             shared: Arc::new(Shared {
                 waker: Some(waker),
                 ..Shared::default()
             }),
-            domain,
         }
     }
 
@@ -126,7 +115,6 @@ impl CancellationRegistry {
         Ok(RequestLease {
             shared: Arc::clone(&self.shared),
             id: id.to_owned(),
-            domain: self.domain,
             cancelled,
             released: AtomicBool::new(false),
         })
@@ -228,16 +216,11 @@ impl Drop for CancellationRegistry {
 pub struct RequestLease {
     shared: Arc<Shared>,
     id: String,
-    domain: CancellationDomain,
     cancelled: Arc<AtomicBool>,
     released: AtomicBool,
 }
 
 impl RequestLease {
-    pub fn domain(&self) -> CancellationDomain {
-        self.domain
-    }
-
     fn check_live(&self, state: &State) -> Result<(), CancellationError> {
         state.check_open()?;
         if self.released.load(Ordering::Acquire) {
@@ -252,15 +235,9 @@ impl RequestLease {
         Ok(self.cancelled.load(Ordering::Acquire))
     }
 
-    /// Preserve the exact existing download/extension cancellation messages.
     pub fn check_active(&self) -> Result<(), CancellationError> {
         if self.is_cancelled()? {
-            return Err(match self.domain {
-                CancellationDomain::Download => CancellationError::DownloadCancelled,
-                CancellationDomain::ExtensionRequest => {
-                    CancellationError::ExtensionRequestCancelled
-                }
-            });
+            return Err(CancellationError::RequestCancelled);
         }
         Ok(())
     }
@@ -298,7 +275,7 @@ mod tests {
 
     #[test]
     fn batch_reset_preserves_active_leases_and_unselected_cancellation() {
-        let registry = CancellationRegistry::new(CancellationDomain::Download);
+        let registry = CancellationRegistry::new();
         let active = registry.acquire("active").unwrap();
         let second = registry.acquire("active").unwrap();
         for id in ["active", "idle", "keep", "音楽"] {
@@ -327,8 +304,8 @@ mod tests {
 
     #[test]
     fn batch_reset_matches_individual_resets() {
-        let baseline = CancellationRegistry::new(CancellationDomain::Download);
-        let batch = CancellationRegistry::new(CancellationDomain::Download);
+        let baseline = CancellationRegistry::new();
+        let batch = CancellationRegistry::new();
         let ids: Vec<_> = (0..300).map(|i| format!("item-{i}")).collect();
         let mut held = Vec::new();
         for (index, id) in ids.iter().enumerate() {
@@ -353,7 +330,7 @@ mod tests {
 
     #[test]
     fn closed_registry_rejects_batch_including_empty_input() {
-        let registry = CancellationRegistry::new(CancellationDomain::Download);
+        let registry = CancellationRegistry::new();
         registry.cancel("keep").unwrap();
         registry.shutdown();
         assert_eq!(
@@ -384,10 +361,7 @@ mod tests {
             }
         }
         let observer = Arc::new(Observer::default());
-        let registry = CancellationRegistry::with_waker(
-            CancellationDomain::Download,
-            Waker::from(Arc::clone(&observer)),
-        );
+        let registry = CancellationRegistry::with_waker(Waker::from(Arc::clone(&observer)));
         *observer.shared.lock().unwrap() = Arc::downgrade(&registry.shared);
         let first = registry.acquire("first").unwrap();
         let second = registry.acquire("second").unwrap();

@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:sistrum/services/backup_service.dart';
 
 class _UnreadableArchiveFile extends ArchiveFile {
-  _UnreadableArchiveFile(this.failure) : super('history.ndjson', 0, <int>[]);
+  _UnreadableArchiveFile(this.failure) : super('covers/cover.bin', 0, <int>[]);
 
   final FormatException failure;
 
@@ -22,7 +22,7 @@ void main() {
   test('archive output closes when reading its payload throws', () async {
     final root = await Directory.systemTemp.createTemp('unreadable-backup-');
     addTearDown(() => root.delete(recursive: true));
-    final path = p.join(root.path, 'history.ndjson');
+    final path = p.join(root.path, 'cover.bin');
     final output = OutputFileStream(path);
     const failure = FormatException('Invalid compressed archive payload');
 
@@ -38,73 +38,72 @@ void main() {
     expect(await File(path).readAsBytes(), [1, 2, 3]);
   });
 
-  test(
-    'ZIP backup pages history and streams cover files during restore',
-    () async {
-      final root = await Directory.systemTemp.createTemp(
-        'sistrum-backup-test-',
-      );
-      addTearDown(() async {
-        if (await root.exists()) await root.delete(recursive: true);
-      });
-      final output = await Directory(p.join(root.path, 'output')).create();
-      final temporary = await Directory(
-        p.join(root.path, 'temporary'),
-      ).create();
-      final cover = File(p.join(root.path, 'cover.jpg'));
-      await cover.writeAsBytes([0xff, 0xd8, 0xff, 0xd9]);
-      final history = List.generate(
-        1203,
-        (index) => <String, dynamic>{'id': 'item-$index', 'value': index},
-      );
-      final offsets = <int>[];
+  test('ZIP backup streams cover files during restore', () async {
+    final root = await Directory.systemTemp.createTemp('sistrum-backup-test-');
+    addTearDown(() async {
+      if (await root.exists()) await root.delete(recursive: true);
+    });
+    final output = await Directory(p.join(root.path, 'output')).create();
+    final temporary = await Directory(p.join(root.path, 'temporary')).create();
+    final cover = File(p.join(root.path, 'cover.jpg'));
+    await cover.writeAsBytes([0xff, 0xd8, 0xff, 0xd9]);
 
-      final file = await BackupService.writeBackupArchive(
-        settings: const {'theme': 'dark'},
-        loadHistoryPage: (limit, offset) async {
-          offsets.add(offset);
-          if (offset >= history.length) {
-            return const <Map<String, dynamic>>[];
-          }
-          final end = (offset + limit).clamp(0, history.length);
-          return history.sublist(offset, end);
-        },
-        collections: const {'loved': <dynamic>[], 'playlists': <dynamic>[]},
-        playlistCoverFiles: {
-          'playlist-1': {'ext': '.jpg', 'path': cover.path},
-        },
-        extensions: const {'items': <dynamic>[]},
-        outputDirectory: output,
-        temporaryDirectory: temporary,
-      );
+    final file = await BackupService.writeBackupArchive(
+      settings: const {'theme': 'dark'},
+      collections: const {'loved': <dynamic>[], 'playlists': <dynamic>[]},
+      playlistCoverFiles: {
+        'playlist-1': {'ext': '.jpg', 'path': cover.path},
+      },
+      outputDirectory: output,
+      temporaryDirectory: temporary,
+    );
 
-      expect(file.path, endsWith('.${BackupService.fileExtension}'));
-      expect(offsets, [0, 500, 1000]);
-      final bundle = await BackupService.parseFile(
-        file.path,
-        temporaryDirectory: temporary,
-      );
-      expect(bundle, isNotNull);
-      expect(bundle!.formatVersion, 3);
-      expect(bundle.historyCount, history.length);
-      final restoredHistory = await bundle.streamHistory().toList();
-      expect(restoredHistory, hasLength(history.length));
-      expect(restoredHistory.last['id'], 'item-1202');
-      final restoredCover = bundle.playlistCovers['playlist-1'];
-      expect(restoredCover, isA<Map<String, dynamic>>());
-      final restoredCoverPath =
-          (restoredCover as Map<String, dynamic>)['path'] as String;
-      expect(await File(restoredCoverPath).readAsBytes(), [
-        0xff,
-        0xd8,
-        0xff,
-        0xd9,
-      ]);
+    expect(file.path, endsWith('.${BackupService.fileExtension}'));
+    final bundle = await BackupService.parseFile(
+      file.path,
+      temporaryDirectory: temporary,
+    );
+    expect(bundle, isNotNull);
+    expect(bundle!.formatVersion, 3);
+    final restoredCover = bundle.playlistCovers['playlist-1'];
+    expect(restoredCover, isA<Map<String, dynamic>>());
+    final restoredCoverPath =
+        (restoredCover as Map<String, dynamic>)['path'] as String;
+    expect(await File(restoredCoverPath).readAsBytes(), [
+      0xff,
+      0xd8,
+      0xff,
+      0xd9,
+    ]);
 
-      await bundle.cleanup();
-      expect(await File(restoredCoverPath).exists(), isFalse);
-    },
-  );
+    await bundle.cleanup();
+    expect(await File(restoredCoverPath).exists(), isFalse);
+  });
+
+  test('older or foreign backup envelopes are rejected', () async {
+    final root = await Directory.systemTemp.createTemp('old-backup-');
+    addTearDown(() => root.delete(recursive: true));
+    for (final (magic, version) in [
+      (BackupService.magic, 2),
+      ('other-backup', BackupService.formatVersion),
+    ]) {
+      final metadata = utf8.encode(
+        jsonEncode({
+          'magic': magic,
+          'format_version': version,
+          'data': <String, dynamic>{},
+        }),
+      );
+      final archive = Archive()
+        ..addFile(ArchiveFile('metadata.json', metadata.length, metadata));
+      final file = File(p.join(root.path, 'old.sbk'));
+      await file.writeAsBytes(ZipEncoder().encode(archive));
+      expect(
+        await BackupService.parseFile(file.path, temporaryDirectory: root),
+        isNull,
+      );
+    }
+  });
 
   test('profile archive rejects foreign paths and missing photos', () async {
     final root = await Directory.systemTemp.createTemp('profile-backup-');
@@ -121,7 +120,7 @@ void main() {
       );
       final archive = Archive()
         ..addFile(ArchiveFile('metadata.json', metadata.length, metadata));
-      final file = File(p.join(root.path, 'invalid.sflb'));
+      final file = File(p.join(root.path, 'invalid.sbk'));
       await file.writeAsBytes(ZipEncoder().encode(archive));
       expect(
         await BackupService.parseFile(file.path, temporaryDirectory: root),

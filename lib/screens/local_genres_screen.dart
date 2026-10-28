@@ -160,7 +160,7 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
           if (!_loading && !current.hasError && entries.isEmpty)
             SliverFillRemaining(
               hasScrollBody: false,
-              child: Center(child: Text(context.l10n.queueEmptyHistory)),
+              child: Center(child: Text(context.l10n.libraryEmpty)),
             ),
           const NavBarSliverSpacer(),
         ],

@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "모두",
-  "@historyFilterAll": {
+  "libraryKindAll": "모두",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "싱글",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "싱글",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "내 라이브러리의 최신 릴리스",
   "artistPopular": "인기곡",
   "libraryRecentlyAdded": "최근 추가됨",
-  "librarySearchHint": "라이브러리 검색",
   "homeLibraryDisabled": "내 음악을 여기에 표시하려면 로컬 라이브러리를 켜세요.",
   "homeChooseLibraryFolder": "로컬 라이브러리 설정에서 음악 폴더를 선택하세요.",
   "homeLibraryEmpty": "라이브러리 폴더에 음악을 추가한 뒤 라이브러리를 스캔하세요.",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "비활성화됨",
-  "@extensionsDisabled": {
+  "settingDisabled": "비활성화됨",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "정보",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "알림 활성화",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "폴더 선택",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "알림 활성화",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "선택 항목 삭제",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "선택 항목 삭제",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "앨범에서 {count} 개의 {count, plural, =1{트랙} other{트랙}}을 삭제하시겠습니까?\n\n저장소에서도 파일이 삭제됩니다",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "앨범에서 {count} 개의 {count, plural, =1{트랙} other{트랙}}을 삭제하시겠습니까?\n\n저장소에서도 파일이 삭제됩니다",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "트랙을 탭하여 선택하세요",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "트랙을 탭하여 선택하세요",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "{count} 개의 {count, plural, =1{트랙} other{트랙}} 삭제",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "{count} 개의 {count, plural, =1{트랙} other{트랙}} 삭제",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "삭제할 트랙 선택",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "삭제할 트랙 선택",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "디스크 {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "디스크 {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "로컬 파일",
-  "libraryFilterLocal": "로컬",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "필터",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "적용",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "출처",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "음질",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "설정 만",
-  "backupSelectHistory": "이전 라이브러리 기록",
   "backupSelectCollections": "라이브러리 컬렉션",
   "backupSelectCollectionsDescription": "좋아요 표시한 음악, 즐겨찾는 아티스트, 재생목록 및 재생목록 커버",
   "backupSelectedExportDescription": "선택한 카테고리를 백업 파일에 저장합니다. 오디오 파일은 포함되지 않습니다",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "앱 설정",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} 개의 기록 {count, plural, =1{항목} other{항목}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} 개의 좋아요 표시한 {count, plural, =1{음악} other{음악}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "로컬 트랙이 없습니다",
-  "queueEmptyHistorySubtitle": "라이브러리를 채우려면 음악 폴더를 스캔하세요",
+  "libraryEmpty": "로컬 트랙이 없습니다",
+  "libraryEmptySubtitle": "라이브러리를 채우려면 음악 폴더를 스캔하세요",
   "selectionAllPlaylistsSelected": "모든 재생목록이 선택됨",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} 개가 제외됨",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} 개의 오류",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "{title}, {count} 개의 {count, plural, =1{항목} other{항목}} 열기",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "가사: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "가사: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2787,8 +2742,6 @@
   },
   "optionsCheckUpdates": "업데이트 확인",
   "optionsCheckUpdatesSubtitle": "새 버전이 출시되면 알림",
-  "optionsUpdateChannel": "업데이트 채널",
-  "optionsUpdateChannelStable": "안정 버전만 받기",
   "optionsUpdateChannelPreview": "베타 버전을 받기",
   "optionsUpdateChannelWarning": "베타 버전은 불안정할 수 있습니다",
   "updateAvailable": "업데이트 사용 가능",

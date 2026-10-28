@@ -17,11 +17,9 @@ import 'package:audio_session/audio_session.dart'
         AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/services/listening_statistics.dart'
-    show ListeningTrack;
+import 'package:sistrum/services/listening_statistics.dart' show ListeningTrack;
 import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/sqlite_helpers.dart'
-    show normalizeLookupText;
+import 'package:sistrum/services/sqlite_helpers.dart' show normalizeLookupText;
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/playback_normalization.dart';
 import 'package:sistrum/services/playback_automation.dart';
@@ -40,7 +38,7 @@ import 'package:sistrum/services/automix_status.dart';
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/ios_container_paths.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
@@ -1728,8 +1726,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     final artwork = await resolveEmbeddedArtworkUri(
       media.source,
       media.artUri,
-      extract: (source) =>
-          DownloadedEmbeddedCoverResolver.resolveOrExtract(source),
+      extract: (source) => EmbeddedCoverResolver.resolveOrExtract(source),
     );
     if (artwork == null || !_isCurrentPlayRequest(generation, media)) return;
     final current = mediaItem.value;

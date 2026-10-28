@@ -113,21 +113,6 @@ internal fun MainActivity.loadExistingFilesFromSnapshot(snapshotPath: String): M
 
 
 
-private data class SafFileInspectionRequest(
-    val key: String,
-    val treeUri: String,
-    val relativeDir: String,
-    val currentUri: String,
-    val fileNames: List<String>,
-)
-
-/**
- * Inspects many SAF history entries while walking each document tree at most
- * once. The old per-file resolver could repeat a 20k-document breadth-first
- * search for every missing history row and every conversion filename variant.
- */
-
-
 private fun safScanCheckpointPath(outputPath: String): String = "$outputPath.state"
 
 private fun loadSafScanCheckpoint(path: String): MutableMap<String, Long> {

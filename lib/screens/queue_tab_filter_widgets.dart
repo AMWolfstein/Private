@@ -408,8 +408,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         icon = Icons.queue_music;
         break;
       default:
-        message = context.l10n.queueEmptyHistory;
-        subtitle = context.l10n.queueEmptyHistorySubtitle;
+        message = context.l10n.libraryEmpty;
+        subtitle = context.l10n.libraryEmptySubtitle;
         icon = Icons.history;
     }
 
@@ -425,8 +425,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
               icon: const Icon(Icons.add),
               label: Text(context.l10n.collectionCreatePlaylist),
             )
-          // Every other empty branch means "you have not downloaded anything of
-          // this kind yet", so the way forward is always search.
+          // Every other empty branch means the library has nothing of this kind
+          // yet, so the way forward is always search.
           : FilledButton.icon(
               onPressed: () => ShellNavigationService.requestTab(ShellTab.home),
               icon: const Icon(Icons.search),

@@ -226,7 +226,6 @@ class LocalLibraryBatchLookupRequest {
 
 class IsrcDuplicateEntry {
   final String id;
-  final String source; // 'downloaded' (history row) or 'local' (library row)
   final String trackName;
   final String artistName;
   final String albumName;
@@ -238,7 +237,6 @@ class IsrcDuplicateEntry {
 
   const IsrcDuplicateEntry({
     required this.id,
-    required this.source,
     required this.trackName,
     required this.artistName,
     required this.albumName,
@@ -264,7 +262,6 @@ class QueueLibraryDbQuery {
   final int offset;
   final String filterMode;
   final String? searchQuery;
-  final String? source;
   final String? quality;
   final String? format;
   final String? metadata;
@@ -279,7 +276,6 @@ class QueueLibraryDbQuery {
     this.offset = 0,
     this.filterMode = 'all',
     this.searchQuery,
-    this.source,
     this.quality,
     this.format,
     this.metadata,

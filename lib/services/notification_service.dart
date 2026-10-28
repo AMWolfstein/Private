@@ -276,18 +276,11 @@ class NotificationService {
 
   Future<void> showLibraryScanComplete({
     required int totalTracks,
-    int excludedDownloadedCount = 0,
     int errorCount = 0,
   }) async {
     if (!_isInitialized) await initialize();
 
     final extras = <String>[];
-    if (excludedDownloadedCount > 0) {
-      extras.add(
-        _l10n?.notifLibraryScanExcluded(excludedDownloadedCount) ??
-            '$excludedDownloadedCount excluded',
-      );
-    }
     if (errorCount > 0) {
       extras.add(
         _l10n?.notifLibraryScanErrors(errorCount) ?? '$errorCount errors',

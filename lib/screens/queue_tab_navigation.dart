@@ -5,8 +5,7 @@ extension _QueueTabNavigation on _QueueTabState {
     return item.localItem?.id ?? item.id;
   }
 
-  /// Plays [item] and queues the rest of the merged library (downloaded + local
-  /// in display order) so playback continues to the next track. Honors player
+  /// Plays [item] and queues the rest of the library (in display order) so playback continues to the next track. Honors player
   /// mode and shuffle.
   Future<void> _playLibraryItem(
     UnifiedLibraryItem item,

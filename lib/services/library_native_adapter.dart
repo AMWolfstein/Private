@@ -325,7 +325,6 @@ class LibraryNativeAdapter {
         'durable': true,
         'inserted': staged,
         'upserted': staged,
-        'skipped': 0,
         'deleted_count': deleted,
       };
     }, exclusive: true);

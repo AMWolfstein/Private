@@ -41,14 +41,16 @@ void main() {
       final encoded = BackupService.encode({
         'magic': BackupService.magic,
         'data': {
-          'history': [
-            {'id': 'one'},
-          ],
+          'collections': {
+            'loved': [
+              {'id': 'one'},
+            ],
+          },
         },
       });
 
       expect(encoded, contains('\n  "magic"'));
-      expect(encoded, contains('\n    "history"'));
+      expect(encoded, contains('\n    "collections"'));
       expect(jsonDecode(encoded), isA<Map<String, dynamic>>());
     });
   });

@@ -13,27 +13,6 @@ Future<LibraryQueueStore> createLibraryPagingFixture(
   String cover = '',
 }) async {
   await LibrarySchema.create(db, LibrarySchema.version);
-  await db.execute("ATTACH DATABASE ':memory:' AS history_db");
-  await db.execute('''
-    CREATE TABLE history_db.history AS
-    SELECT *, track_name_norm AS sort_track, artist_name_norm AS sort_artist,
-      album_name_norm AS sort_album, album_artist_norm AS sort_album_artist,
-      NULL AS cover_url, NULL AS downloaded_at, NULL AS service
-    FROM library WHERE 0
-  ''');
-  await db.execute(
-    'CREATE INDEX history_db.idx_history_album_key ON history(album_key)',
-  );
-  await db.execute('''
-    CREATE TABLE history_db.history_path_keys (
-      item_id TEXT NOT NULL, path_key TEXT NOT NULL,
-      PRIMARY KEY (item_id, path_key)
-    )
-  ''');
-  await db.execute('''
-    CREATE INDEX history_db.idx_history_path_key
-    ON history_path_keys(path_key, item_id)
-  ''');
   await db.insert('library_sources', {
     'id': 'offline',
     'path': '/fixture/offline',
@@ -41,18 +20,12 @@ Future<LibraryQueueStore> createLibraryPagingFixture(
     'available': 0,
   });
   final batch = db.batch();
-  void add(int index, int number, {required bool local, bool mirror = false}) {
+  void add(int index, int number) {
     final suffix = index.toString().padLeft(4, '0');
     final album = 'Album $suffix';
     final artist = 'Artist $suffix';
-    final id =
-        '${mirror
-            ? 'mirror'
-            : local
-            ? 'local'
-            : 'download'}-$index-$number';
-    final path =
-        '/fixture/${local && !mirror ? 'local' : 'download'}-$index-$number.flac';
+    final id = 'local-$index-$number';
+    final path = '/fixture/local-$index-$number.flac';
     final fields = <String, Object?>{
       'id': id,
       'track_name': 'Song $number',
@@ -74,35 +47,21 @@ Future<LibraryQueueStore> createLibraryPagingFixture(
       'search_text': '$album $artist song $number'.toLowerCase(),
       'sort_genre': '',
       'sort_release': '2026',
-      if (local) ...{
-        'source_id': 'legacy',
-        'scanned_at': '2026-10-07T00:00:00Z',
-        'track_name_norm': 'song $number',
-        'artist_name_norm': artist.toLowerCase(),
-        'album_artist_norm': artist.toLowerCase(),
-        'album_name_norm': album.toLowerCase(),
-        'cover_path': cover,
-      } else ...{
-        'sort_track': 'song $number',
-        'sort_artist': artist.toLowerCase(),
-        'sort_album_artist': artist.toLowerCase(),
-        'sort_album': album.toLowerCase(),
-        'cover_url': cover,
-        'downloaded_at': '2026-10-07T00:00:00Z',
-        'service': 'example-provider',
-      },
+      'source_id': 'legacy',
+      'scanned_at': '2026-10-07T00:00:00Z',
+      'track_name_norm': 'song $number',
+      'artist_name_norm': artist.toLowerCase(),
+      'album_artist_norm': artist.toLowerCase(),
+      'album_name_norm': album.toLowerCase(),
+      'cover_path': cover,
     };
-    batch.insert(local ? 'library' : 'history_db.history', fields);
-    batch.insert(local ? 'library_path_keys' : 'history_db.history_path_keys', {
-      'item_id': id,
-      'path_key': path,
-    });
+    batch.insert('library', fields);
+    batch.insert('library_path_keys', {'item_id': id, 'path_key': path});
   }
 
   for (var index = 0; index < albumsPerSource; index++) {
     for (var number = 1; number <= 2; number++) {
-      add(index, number, local: false);
-      add(index, number, local: true);
+      add(index, number);
     }
   }
   batch.insert('library', {

@@ -31,7 +31,7 @@ void setAutoplayEnabled(bool enabled, {bool includeLocal = true}) =>
     );
 
 /// Bounded database pages keep recommendation work independent of Library
-/// size. Both downloaded tracks and enabled scanned sources are local files.
+/// size. Enabled scanned sources are local files.
 Future<List<PlayableMedia>> _loadAutoplayLibrary(
   PlayableMedia seed,
   MusicPlayerRuntime runtime,

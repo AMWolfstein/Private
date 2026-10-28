@@ -535,7 +535,7 @@ fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Va
         .map_err(|e| error("begin Library swap", e))?;
     source_current(&transaction, request)?;
     // Rescans adopt v2 IDs only for new paths. Existing IDs remain stable for
-    // collections/history, including databases created by the 32-bit writer.
+    // collections, including databases created by the 32-bit writer.
     transaction.execute_batch("CREATE TEMP TABLE native_library_id_remap(original_id TEXT PRIMARY KEY,retained_id TEXT);")
         .map_err(|e| error("stage retained Library IDs", e))?;
     transaction.execute("INSERT INTO native_library_id_remap SELECT s.id,l.id FROM native_library_stage s JOIN library l ON l.file_path=s.file_path AND l.source_id=? WHERE substr(s.id,1,7)='lib_v2_' AND s.id!=l.id", [source])
@@ -612,7 +612,7 @@ fn import(request: &Value, delta: Option<&Value>, check: Check<'_>) -> Result<Va
         .commit()
         .map_err(|e| error("commit Library swap", e))?;
     Ok(
-        json!({"committed":true,"inserted":staged,"upserted":staged,"skipped":0,"scanned_count":streamed,"invalid_rows":invalid,"invalid_row_error":first_invalid,"invalid_row_paths":invalid_paths,"deleted_count":deleted,"skippedCount":delta.map(|d|d["skippedCount"].clone()).unwrap_or(json!(0)),"totalFiles":delta.map(|d|d["totalFiles"].clone()).unwrap_or(json!(streamed))}),
+        json!({"committed":true,"inserted":staged,"upserted":staged,"scanned_count":streamed,"invalid_rows":invalid,"invalid_row_error":first_invalid,"invalid_row_paths":invalid_paths,"deleted_count":deleted,"skippedCount":delta.map(|d|d["skippedCount"].clone()).unwrap_or(json!(0)),"totalFiles":delta.map(|d|d["totalFiles"].clone()).unwrap_or(json!(streamed))}),
     )
 }
 

@@ -172,8 +172,7 @@ class _StartupBenchmark {
     );
   }
 
-  // The extension registry used to gate this benchmark on extension readiness.
-  // The registry is gone; the local-app services init now closes the boundary.
+  // Startup services init closes the benchmark boundary.
   void appReady(AppSettings settings) {
     final ready = _watch.elapsedMicroseconds;
     unawaited(_report(settings, ready));
@@ -206,7 +205,7 @@ class _StartupBenchmark {
           'ready_boundary': 'local app services initialized',
           'cache': 'fresh process; warm filesystem',
           'first_frame_us': firstFrame,
-          'extensions_ready_us': ready,
+          'app_ready_us': ready,
           'settings_sha256': sha256
               .convert(utf8.encode(jsonEncode(settings.toJson())))
               .toString(),

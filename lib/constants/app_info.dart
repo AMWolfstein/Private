@@ -11,6 +11,7 @@ class AppInfo {
   static String get displayVersion => kDebugMode ? 'Internal' : version;
 
   static const String appName = 'Sistrum';
+
   /// GitHub repository whose releases the updater reads (`owner/name`).
   static const String githubRepo = 'amwolfstein/private';
 

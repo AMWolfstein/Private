@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "全部",
-  "@historyFilterAll": {
+  "libraryKindAll": "全部",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "单曲",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "单曲",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "资料库中的最新发行",
   "artistPopular": "热门",
   "libraryRecentlyAdded": "最近添加",
-  "librarySearchHint": "搜索你的乐库",
   "homeLibraryDisabled": "启用本地资料库以在此显示你的音乐。",
   "homeChooseLibraryFolder": "请在本地资料库设置中选择音乐文件夹。",
   "homeLibraryEmpty": "将音乐添加到资料库文件夹，然后扫描资料库。",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "禁用",
-  "@extensionsDisabled": {
+  "settingDisabled": "禁用",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "关于",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "启用通知",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "选择文件夹",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "启用通知",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "删除所选",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "删除所选",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "从此专辑删除 {count} {count, plural, =1{首曲目} other{首曲目}}？\n\n这也将从存储中删除文件。",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "从此专辑删除 {count} {count, plural, =1{首曲目} other{首曲目}}？\n\n这也将从存储中删除文件。",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "点击曲目以选择",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "点击曲目以选择",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "删除 {count} {count, plural, =1{首曲目} other{首曲目}}",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "删除 {count} {count, plural, =1{首曲目} other{首曲目}}",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "选择要删除的曲目",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "选择要删除的曲目",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "碟片 {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "碟片 {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "本地文件",
-  "libraryFilterLocal": "本地",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "过滤器",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "应用",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "来源",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "质量",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "仅设置",
-  "backupSelectHistory": "旧版资料库记录",
   "backupSelectCollections": "乐库收藏",
   "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
   "backupSelectedExportDescription": "将选定的类别保存到备份文件。不包含音频文件。",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "应用设置",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} 条历史 {count, plural, =1{记录} other{记录}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} 首收藏 {count, plural, =1{曲目} other{曲目}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "没有本地曲目",
-  "queueEmptyHistorySubtitle": "扫描音乐文件夹以填充资料库",
+  "libraryEmpty": "没有本地曲目",
+  "libraryEmptySubtitle": "扫描音乐文件夹以填充资料库",
   "selectionAllPlaylistsSelected": "已选择所有播放列表",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} 个被排除",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} 个错误",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "打开 {title}，共 {count} {count, plural, =1{项} other{项}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "歌词：{provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "歌词：{provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2787,8 +2742,6 @@
   },
   "optionsCheckUpdates": "检查更新",
   "optionsCheckUpdatesSubtitle": "当有新版本可用时通知",
-  "optionsUpdateChannel": "更新频道",
-  "optionsUpdateChannelStable": "仅稳定版本",
   "optionsUpdateChannelPreview": "获取预览版本",
   "optionsUpdateChannelWarning": "预览版本可能包含错误或者尚未完善的功能",
   "updateAvailable": "有可用更新",

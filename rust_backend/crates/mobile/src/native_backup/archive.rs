@@ -1,9 +1,6 @@
-//! The v2/v3 Flutter archive contract, with bounded streaming payloads. Only
+//! The v3 Flutter archive contract, with bounded streaming payloads. Only
 //! generated filenames are written, and incomplete staging is always removed.
-use super::{
-    Check, MAX_HISTORY_BYTES, MAX_METADATA_BYTES, err, is_accepted_backup_magic, output_path,
-    required,
-};
+use super::{Check, MAX_METADATA_BYTES, err, is_accepted_backup_magic, output_path, required};
 use serde::{Deserialize, de::MapAccess};
 use serde_json::{Map, Value, json, value::RawValue};
 use std::{
@@ -96,12 +93,11 @@ pub(super) fn write(request: &Value, check: Check<'_>) -> Result<Value, String> 
                 .map_err(|e| err("start backup entry", e))?;
             let limit = match name {
                 "metadata.json" => MAX_METADATA_BYTES,
-                "history.ndjson" => MAX_HISTORY_BYTES,
                 PHOTO_ENTRY => MAX_PHOTO_BYTES,
                 _ => MAX_COVER_BYTES,
             };
             let size = copy_checked(&mut input, &mut archive, limit, check)?;
-            if name != "metadata.json" && name != "history.ndjson" && name != PHOTO_ENTRY {
+            if name != "metadata.json" && name != PHOTO_ENTRY {
                 covers_size += size;
                 if covers_size > MAX_ALL_COVERS_BYTES {
                     return Err("Backup covers exceed size limit".into());
@@ -235,15 +231,9 @@ pub(super) fn read(request: &Value, check: Check<'_>) -> Result<Value, String> {
     let root: Value =
         serde_json::from_slice(&metadata).map_err(|e| err("backup metadata JSON", e))?;
     let version = root["format_version"].as_u64();
-    if !is_accepted_backup_magic(&root["magic"])
-        || !matches!(version, Some(2 | 3))
-        || !root["data"].is_object()
+    if !is_accepted_backup_magic(&root["magic"]) || version != Some(3) || !root["data"].is_object()
     {
         return Err("Invalid or unsupported backup metadata".into());
-    }
-    let has_history = archive.index_for_name("history.ndjson").is_some();
-    if version == Some(2) && !has_history {
-        return Err("Version 2 backup requires history".into());
     }
     let temporary = output_path(request, "temporary_directory")?;
     let staging = tempfile::Builder::new()
@@ -252,19 +242,6 @@ pub(super) fn read(request: &Value, check: Check<'_>) -> Result<Value, String> {
         .map_err(|e| err("create backup staging", e))?;
     let metadata_path = staging.path().join("metadata.json");
     std::fs::write(&metadata_path, &metadata).map_err(|e| err("stage backup metadata", e))?;
-    let history_path = if has_history {
-        let path = staging.path().join("history.ndjson");
-        extract(
-            &mut archive,
-            "history.ndjson",
-            &path,
-            MAX_HISTORY_BYTES,
-            check,
-        )?;
-        Some(path)
-    } else {
-        None
-    };
     let mut covers = Map::new();
     let mut cover_bytes = 0;
     for (key, cover) in ordered_covers(&metadata)? {
@@ -312,7 +289,6 @@ pub(super) fn read(request: &Value, check: Check<'_>) -> Result<Value, String> {
         // is cancelled. Flutter needs that path to dispose the published files.
         "committed": true,
         "metadata_path": metadata_path,
-        "history_path": history_path,
         "playlist_covers": covers,
         "profile_photo_path": profile_photo_path,
         "temporary_directory_path": staging.keep(),

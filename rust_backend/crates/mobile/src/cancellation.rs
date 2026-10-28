@@ -15,8 +15,7 @@ pub enum CancellationError {
 impl From<core::CancellationError> for CancellationError {
     fn from(error: core::CancellationError) -> Self {
         match error {
-            core::CancellationError::DownloadCancelled => Self::LocalRequestCancelled,
-            core::CancellationError::ExtensionRequestCancelled => Self::LocalRequestCancelled,
+            core::CancellationError::RequestCancelled => Self::LocalRequestCancelled,
             core::CancellationError::RegistryClosed => Self::RegistryClosed,
             core::CancellationError::LeaseReleased => Self::LeaseReleased,
         }
@@ -33,7 +32,7 @@ impl CancellationRegistry {
     #[uniffi::constructor]
     pub fn new() -> Self {
         Self {
-            inner: core::CancellationRegistry::new(core::CancellationDomain::ExtensionRequest),
+            inner: core::CancellationRegistry::new(),
         }
     }
 

@@ -6,7 +6,7 @@ import 'package:sistrum/widgets/animation_utils.dart';
 /// How a [TrackCard] paints its container.
 enum TrackCardStyle {
   /// Filled card surface. Used where rows are discrete objects the user acts
-  /// on individually: the download queue, history, the local library.
+  /// on individually: the local library.
   filled,
 
   /// Transparent container. Used inside a collection that already has its own

@@ -335,7 +335,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
               for (final kind in [null, ...LibrarySearchKind.values])
                 AppChoiceChip(
                   label: Text(
-                    kind == null ? context.l10n.historyFilterAll : _label(kind),
+                    kind == null ? context.l10n.libraryKindAll : _label(kind),
                   ),
                   selected: _kind == kind,
                   singleChoice: true,

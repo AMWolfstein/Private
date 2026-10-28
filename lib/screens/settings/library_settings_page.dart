@@ -425,7 +425,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                 final libraryState = ref.watch(localLibraryProvider);
                 return _LibraryHeroCard(
                   itemCount: libraryState.totalCount,
-                  excludedDownloadedCount: libraryState.excludedDownloadedCount,
                   isScanning: libraryState.isScanning,
                   scanIsFinalizing: libraryState.scanIsFinalizing,
                   scanIsPaused: libraryState.scanIsPaused,
@@ -489,7 +488,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   title: context.l10n.libraryEnableLocalLibrary,
                   subtitle: settings.localLibraryEnabled
                       ? context.l10n.libraryEnableLocalLibrarySubtitle
-                      : context.l10n.extensionsDisabled,
+                      : context.l10n.settingDisabled,
                   value: settings.localLibraryEnabled,
                   onChanged: (value) => ref
                       .read(settingsProvider.notifier)
@@ -554,7 +553,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   title: context.l10n.libraryShowDuplicateIndicator,
                   subtitle: settings.localLibraryShowDuplicates
                       ? context.l10n.libraryShowDuplicateIndicatorSubtitle
-                      : context.l10n.extensionsDisabled,
+                      : context.l10n.settingDisabled,
                   value: settings.localLibraryShowDuplicates,
                   enabled: settings.localLibraryEnabled,
                   onChanged: (value) => ref
@@ -1047,7 +1046,6 @@ class _AnimatedScanCount extends StatelessWidget {
 
 class _LibraryHeroCard extends StatelessWidget {
   final int itemCount;
-  final int excludedDownloadedCount;
   final bool isScanning;
   final bool scanIsFinalizing;
   final bool scanIsPaused;
@@ -1059,7 +1057,6 @@ class _LibraryHeroCard extends StatelessWidget {
 
   const _LibraryHeroCard({
     required this.itemCount,
-    required this.excludedDownloadedCount,
     required this.isScanning,
     required this.scanIsFinalizing,
     required this.scanIsPaused,
@@ -1093,9 +1090,7 @@ class _LibraryHeroCard extends StatelessWidget {
         (scanIsFinalizing ||
             scanTotalFiles <= 0 ||
             (scannedFiles <= 0 && scanProgress <= 0));
-    final displayCount = isScanning
-        ? scannedFiles
-        : itemCount + excludedDownloadedCount;
+    final displayCount = isScanning ? scannedFiles : itemCount;
 
     return Container(
       margin: EdgeInsets.symmetric(

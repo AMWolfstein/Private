@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "Semua",
-  "@historyFilterAll": {
+  "libraryKindAll": "Semua",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "Single",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "Single",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "Rilisan Terbaru di Pustaka Anda",
   "artistPopular": "Populer",
   "libraryRecentlyAdded": "Baru Ditambahkan",
-  "librarySearchHint": "Telusuri koleksi Anda",
   "homeLibraryDisabled": "Aktifkan Pustaka Lokal untuk menampilkan musik Anda di sini.",
   "homeChooseLibraryFolder": "Pilih folder musik di pengaturan Pustaka Lokal.",
   "homeLibraryEmpty": "Tambahkan musik ke folder pustaka Anda, lalu pindai pustaka.",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "Mati",
-  "@extensionsDisabled": {
+  "settingDisabled": "Mati",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "Tentang",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "Aktifkan Akses Notifikasi",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "Pilih Folder",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "Aktifkan Akses Notifikasi",
   "@setupEnableNotifications": {
@@ -726,12 +721,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "Hapus yang Dipilih",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "Hapus yang Dipilih",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "Hapus {count} {count, plural, =1{lagu} other{lagu}} dari album ini?\n\nIni juga akan menghapus file dari penyimpanan.",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "Hapus {count} {count, plural, =1{lagu} other{lagu}} dari album ini?\n\nIni juga akan menghapus file dari penyimpanan.",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -739,12 +734,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "Ketuk lagu untuk memilih",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "Ketuk lagu untuk memilih",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "Hapus {count} {count, plural, =1{lagu} other{lagu}}",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "Hapus {count} {count, plural, =1{lagu} other{lagu}}",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -752,12 +747,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "Pilih lagu untuk dihapus",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "Pilih lagu untuk dihapus",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "Disk {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "Disk {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1040,11 +1035,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "File lokal",
-  "libraryFilterLocal": "Lokal",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "Filter",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1056,10 +1046,6 @@
   "libraryFilterApply": "Terapkan",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "Sumber",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "Kualitas",
   "@libraryFilterQuality": {
@@ -1532,7 +1518,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Setelan saja",
-  "backupSelectHistory": "Rekaman pustaka lama",
   "backupSelectCollections": "Koleksi saya",
   "backupSelectCollectionsDescription": "Lagu, artis favorit, playlist, dan cover playlist yang disukai.",
   "backupSelectedExportDescription": "Buat file cadangan dari kategori terpilih. Tidak termasuk file audio.",
@@ -1541,15 +1526,6 @@
   "backupContentsSettings": "Setelan aplikasi",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} {count, plural, =1{histori} other{histori}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} lagu {count, plural, =1{disukai} other{disukai}}",
   "@backupContentsLiked": {
@@ -1712,8 +1688,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "Tidak ada lagu lokal",
-  "queueEmptyHistorySubtitle": "Pindai folder musik untuk mengisi pustaka Anda",
+  "libraryEmpty": "Tidak ada lagu lokal",
+  "libraryEmptySubtitle": "Pindai folder musik untuk mengisi pustaka Anda",
   "selectionAllPlaylistsSelected": "Semua playlist terpilih",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1878,15 +1854,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} dikecualikan",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} eror",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1995,18 +1962,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "Buka {title}, {count} {count, plural, =1{item} other{item}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2269,8 +2224,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Lirik: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "Lirik: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2819,8 +2774,6 @@
   },
   "optionsCheckUpdates": "Periksa Update",
   "optionsCheckUpdatesSubtitle": "Beritahu saat versi baru tersedia",
-  "optionsUpdateChannel": "Channel Update",
-  "optionsUpdateChannelStable": "Versi Stabil",
   "optionsUpdateChannelPreview": "Versi Preview",
   "optionsUpdateChannelWarning": "Mungkin ada bug atau fitur belum selesai di versi Preview",
   "updateAvailable": "Update Tersedia",

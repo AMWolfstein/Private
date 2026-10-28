@@ -4,15 +4,11 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/models/download_history.dart';
 import 'package:sistrum/services/automix_analysis.dart';
-import 'package:sistrum/services/backup_service.dart';
-import 'package:sistrum/services/history_database.dart';
 import 'package:sistrum/services/id3v23_lyrics.dart';
 import 'package:sistrum/services/library_row_mapper.dart';
 import 'package:sistrum/services/library_schema.dart';
@@ -403,16 +399,7 @@ void main() {
           await LibrarySchema.create(db, version);
         },
       );
-      final history = await openDatabase('${root.path}/history.db');
       addTearDown(db.close);
-      addTearDown(history.close);
-      await history.execute(
-        'CREATE TABLE history_path_keys(item_id TEXT, path_key TEXT, PRIMARY KEY(item_id,path_key))',
-      );
-      await history.insert('history_path_keys', {
-        'item_id': 'download',
-        'path_key': downloadedPath,
-      });
       await db.insert('library_sources', {
         'id': 'test-source',
         'path': media.path,
@@ -422,7 +409,6 @@ void main() {
       });
       final common = {
         'library_path': db.path,
-        'history_path': history.path,
         'source_id': 'test-source',
         'expected_source_path': media.path,
         'platform': Platform.isAndroid ? 'android' : 'ios',
@@ -451,7 +437,6 @@ void main() {
         'error_count': 0,
       });
       expect(full['inserted'], 2);
-      expect(full['skipped'], 0);
       expect(
         (await db.query('library', where: 'id=?', whereArgs: ['first'])).single,
         LibraryRowMapper.encode(firstRow, sourceId: 'test-source'),
@@ -502,139 +487,6 @@ void main() {
       expect(rows, hasLength(1));
       expect(rows.single['file_path'], second.path);
       expect(rows.single['track_name'], 'Second native song');
-    },
-  );
-
-  testWidgets(
-    'native backup history uses the complete app schema and stages legacy JSON',
-    (tester) async {
-      // Read the initialized production schema, then create an isolated fixture.
-      // History rows in the running app are never replaced by this test.
-      final source = await HistoryDatabase.instance.database;
-      final schema = await source.rawQuery('''
-      SELECT sql FROM sqlite_master
-      WHERE sql IS NOT NULL
-        AND tbl_name IN ('history','history_path_keys','history_search_fts')
-      ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'index' THEN 1 ELSE 2 END
-    ''');
-      final database = await openDatabase(
-        '${root.path}/history.db',
-        version: HistoryDatabase.schemaVersion,
-        onConfigure: (db) async {
-          await db.rawQuery('PRAGMA journal_mode=WAL');
-          await db.execute('PRAGMA recursive_triggers=ON');
-        },
-        onCreate: (db, _) async {
-          for (final row in schema) {
-            await db.execute(row['sql'] as String);
-          }
-        },
-      );
-      addTearDown(database.close);
-      final track = DownloadHistoryItem(
-        id: 'complete',
-        trackName: '  CAFÉ İ ΑΣ ß  ',
-        artistName: ' Artist ',
-        albumName: ' Album ',
-        albumArtist: ' Album Artist ',
-        coverUrl: 'https://example.test/cover.jpg',
-        filePath: 'content://nas.provider/tree/root/document/Ab%252FC.flac',
-        storageMode: 'saf',
-        downloadTreeUri: 'content://nas.provider/tree/root',
-        safRelativeDir: 'Album',
-        safFileName: 'Track.flac',
-        safRepaired: true,
-        service: 'provider',
-        downloadedAt: DateTime.utc(2026, 10, 6, 12, 0, 0, 123, 456),
-        isrc: ' us-aa-a26 00001 ',
-        spotifyId: ' Spotify:Track:ABC ',
-        trackNumber: 3,
-        totalTracks: 10,
-        discNumber: 2,
-        totalDiscs: 3,
-        duration: 240,
-        releaseDate: ' 2026-10-01 ',
-        quality: 'lossless',
-        bitDepth: 24,
-        sampleRate: 96000,
-        bitrate: 3456,
-        format: 'flac',
-        genre: ' Rock ',
-        composer: 'Composer',
-        label: 'Label',
-        copyright: 'Copyright',
-        explicit: true,
-        hasLyrics: true,
-        lyricsMetadataScanVersion: 2,
-        hasReplayGain: true,
-        replayGainMetadataScanVersion: 1,
-      ).toJson();
-      final input = await File(
-        '${root.path}/history-input.ndjson',
-      ).writeAsString('${jsonEncode(track)}\n');
-      final common = {
-        'history_path': database.path,
-        'platform': Platform.isAndroid ? 'android' : 'ios',
-      };
-      expect(
-        (await _job('backup_history_import', {
-          ...common,
-          'ndjson_path': input.path,
-          'expected_count': 1,
-        }))['committed'],
-        true,
-      );
-      final stored = (await database.query('history')).single;
-      expect(stored.keys, hasLength(48));
-      expect(stored['isrc_norm'], 'USAAA2600001');
-      expect(stored['sort_track'], 'café i ασ ß');
-      expect((await database.query('history_path_keys')).isNotEmpty, true);
-      final output = '${root.path}/history-export.ndjson';
-      expect(
-        (await _job('backup_history_export', {
-          ...common,
-          'ndjson_path': output,
-        }))['published'],
-        true,
-      );
-      expect(jsonDecode((await File(output).readAsLines()).single), track);
-      await expectLater(
-        _job('backup_history_import', {
-          ...common,
-          'ndjson_path': input.path,
-          'expected_count': 2,
-        }),
-        throwsA(isA<PlatformException>()),
-      );
-      expect((await database.query('history')).single, stored);
-
-      final legacy = await File('${root.path}/legacy.json').writeAsString(
-        jsonEncode({
-          'magic': '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-backup',
-          'format_version': 1,
-          'app_version': '5.0.7',
-          'data': {
-            'settings': {'theme': 'light'},
-            'history': [track, 42],
-            'collections': {
-              'loved': ['complete'],
-            },
-          },
-        }),
-      );
-      final bundle = await BackupService.parseFile(
-        legacy.path,
-        temporaryDirectory: root,
-      );
-      expect(bundle, isNotNull);
-      expect(bundle!.historyCount, 1);
-      expect(bundle.history, isEmpty);
-      expect(bundle.settings, {'theme': 'light'});
-      expect(bundle.collections, {
-        'loved': ['complete'],
-      });
-      expect(await bundle.streamHistory().single, track);
-      await bundle.cleanup();
     },
   );
 }

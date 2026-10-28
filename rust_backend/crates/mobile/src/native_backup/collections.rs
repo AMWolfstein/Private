@@ -1,6 +1,6 @@
 //! Dart prepares its exact JSON/date codec on a worker. SQLite stages ordered
 //! commands locally, then publishes all collections in one short transaction.
-use super::{Check, MAX_HISTORY_BYTES, MAX_ROW_BYTES, err, required};
+use super::{Check, MAX_PAYLOAD_BYTES, MAX_ROW_BYTES, err, required};
 use rusqlite::{Connection, OpenFlags, TransactionBehavior, params_from_iter};
 use serde_json::{Value, json};
 use std::{
@@ -137,7 +137,7 @@ pub(super) fn import(request: &Value, check: Check<'_>) -> Result<Value, String>
     let metadata = input
         .metadata()
         .map_err(|e| err("inspect collection commands", e))?;
-    if !metadata.is_file() || metadata.len() > MAX_HISTORY_BYTES {
+    if !metadata.is_file() || metadata.len() > MAX_PAYLOAD_BYTES {
         return Err("Collection commands exceed size limit or are not a file".into());
     }
     let expected = request["expected_count"]

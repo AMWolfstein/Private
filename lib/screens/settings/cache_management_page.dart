@@ -10,7 +10,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/cover_cache_manager.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/settings_group.dart';
@@ -165,7 +165,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
   }
 
   Future<void> _clearAppCache() async {
-    await DownloadedEmbeddedCoverResolver.clearPersistentCache();
+    await EmbeddedCoverResolver.clearPersistentCache();
     final cacheDir = await getApplicationCacheDirectory();
     await _clearDirectoryContents(cacheDir.path);
   }

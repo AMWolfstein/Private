@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "الكل",
-  "@historyFilterAll": {
+  "libraryKindAll": "الكل",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "الأغاني",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "الأغاني",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "أحدث الإصدارات في مكتبتك",
   "artistPopular": "الأكثر شيوعًا",
   "libraryRecentlyAdded": "Recently Added",
-  "librarySearchHint": "Search your library",
   "homeLibraryDisabled": "فعّل المكتبة المحلية لعرض موسيقاك هنا.",
   "homeChooseLibraryFolder": "اختر مجلد موسيقى في إعدادات المكتبة المحلية.",
   "homeLibraryEmpty": "أضف موسيقى إلى مجلدات مكتبتك، ثم افحص مكتبتك.",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "معطَّل",
-  "@extensionsDisabled": {
+  "settingDisabled": "معطَّل",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "حول",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "تمكين الإشعارات",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "حدد الملف",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "تمكين الإشعارات",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "حذف المحدد",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "حذف المحدد",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "حذف {count} {count, plural, zero {} one {أغنية} two {أغنيتين} few {أغانٍ} many {أغنية} other{الأغاني}} من التاريخ؟\n\nسيؤدي هذا أيضا إلى حذف الملفات من وحدة التخزين.",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "حذف {count} {count, plural, zero {} one {أغنية} two {أغنيتين} few {أغانٍ} many {أغنية} other{الأغاني}} من التاريخ؟\n\nسيؤدي هذا أيضا إلى حذف الملفات من وحدة التخزين.",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "اضغط على المسارات لتحديد",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "اضغط على المسارات لتحديد",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "تم حذف {count} {count, plural, zero {} one {أغنية} two {أغنيتين} few {أغانٍ} many {أغنية} other{أغانٍ}}",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "تم حذف {count} {count, plural, zero {} one {أغنية} two {أغنيتين} few {أغانٍ} many {أغنية} other{أغانٍ}}",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "حدد الأغاني المراد حذفها",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "حدد الأغاني المراد حذفها",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "قرص {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "قرص {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "الملفات المحلية",
-  "libraryFilterLocal": "محلي",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "المرشحات",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "تطبيق",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "المصدر",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "الجودة",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Settings only",
-  "backupSelectHistory": "سجلات المكتبة القديمة",
   "backupSelectCollections": "Library collections",
   "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
   "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "App settings",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} history {count, plural, =1{item} other{items}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "لا توجد مقاطع محلية",
-  "queueEmptyHistorySubtitle": "افحص مجلد موسيقى لملء مكتبتك",
+  "libraryEmpty": "لا توجد مقاطع محلية",
+  "libraryEmptySubtitle": "افحص مجلد موسيقى لملء مكتبتك",
   "selectionAllPlaylistsSelected": "All playlists selected",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} excluded",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} errors",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Lyrics: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2785,8 +2740,6 @@
   },
   "optionsCheckUpdates": "التحقق من وجود تحديثات",
   "optionsCheckUpdatesSubtitle": "إعلام عند توفر إصدار جديد",
-  "optionsUpdateChannel": "قناة التحديث",
-  "optionsUpdateChannelStable": "الإصدارات المستقرة فقط",
   "optionsUpdateChannelPreview": "الحصول على إصدارات تجريبية",
   "optionsUpdateChannelWarning": "قد تحتوي الإصدارات التجريبية أخطاءً أو ميزات غير مكتملة",
   "updateAvailable": "هناك تحديث متاح",

@@ -49,7 +49,7 @@ fn custom_separators_round_trip_all_tag_writers_without_touching_audio() {
 }
 
 #[test]
-fn download_embed_honors_separators_and_primary_artist_mode() {
+fn embed_honors_separators_and_primary_artist_mode() {
     for mode in ["joined", "split_vorbis", "primary"] {
         let fields = BTreeMap::from([
             ("ARTIST".into(), "A, B".into()),
@@ -188,7 +188,7 @@ fn primary_mode_keeps_only_the_first_artist_in_every_native_writer() {
 }
 
 #[test]
-fn primary_mode_applies_to_flac_download_embedding() {
+fn primary_mode_applies_to_flac_embedding() {
     let fields = BTreeMap::from([
         ("TITLE".into(), "Example".into()),
         ("ARTIST".into(), "Calle 24, Chino Pacas".into()),

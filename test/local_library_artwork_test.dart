@@ -13,7 +13,7 @@ import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/sistrum_library_screen.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
@@ -43,10 +43,10 @@ void main() {
     directory = await Directory.systemTemp.createTemp('local_album_artwork_');
     audio = await File('${directory.path}/song.flac').writeAsBytes([0, 1]);
     scannedCover = File('${directory.path}/missing.jpg');
-    DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
+    EmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
       Directory('${directory.path}/previews'),
     );
-    DownloadedEmbeddedCoverResolver.setValidationClockForTesting(
+    EmbeddedCoverResolver.setValidationClockForTesting(
       () => DateTime(2026),
     );
     extractions = 0;
@@ -62,10 +62,10 @@ void main() {
   });
 
   tearDown(() async {
-    await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting(
+    await EmbeddedCoverResolver.resetMemoryStateForTesting(
       preservePersistentFiles: false,
     );
-    DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(null);
+    EmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(null);
     messenger.setMockMethodCallHandler(channel, null);
     await directory.delete(recursive: true);
   });
@@ -93,11 +93,11 @@ void main() {
   Future<String?> playerPreview(
     WidgetTester tester,
   ) => tester.runAsync<String?>(() async {
-    final preview = await DownloadedEmbeddedCoverResolver.resolveOrExtract(
+    final preview = await EmbeddedCoverResolver.resolveOrExtract(
       audio.path,
     );
-    await DownloadedEmbeddedCoverResolver.resolveOrExtract(audio.path);
-    await DownloadedEmbeddedCoverResolver.waitForPreviewValidationForTesting();
+    await EmbeddedCoverResolver.resolveOrExtract(audio.path);
+    await EmbeddedCoverResolver.waitForPreviewValidationForTesting();
     return preview;
   });
 

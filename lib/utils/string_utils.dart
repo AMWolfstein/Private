@@ -46,15 +46,6 @@ String? normalizeCoverReference(String? value) {
   return null;
 }
 
-String? normalizeRemoteHttpUrl(String? value) {
-  final normalized = normalizeCoverReference(value);
-  if (normalized == null) return null;
-  if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
-    return normalized;
-  }
-  return null;
-}
-
 /// Human-readable byte size: "512 B", "3.4 KB", "12.0 MB", "1.25 GB".
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes B';

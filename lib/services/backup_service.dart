@@ -6,16 +6,10 @@ import 'package:archive/archive_io.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/constants/app_info.dart';
-import 'package:sistrum/services/history_database.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/services/sqlite_native_snapshot.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/utils/logger.dart';
-
-typedef BackupHistoryPageLoader =
-    Future<List<Map<String, dynamic>>> Function(int limit, int offset);
 
 Future<void> _writeBackupMetadataInBackground(
   String path,
@@ -72,21 +66,16 @@ Future<void> _writeBackupMetadataInBackground(
   }
 });
 
-/// Parsed contents of a backup file. ZIP backups keep large history and cover
-/// payloads on disk until restore consumes them.
+/// Parsed contents of a backup file. Cover payloads stay on disk until restore
+/// consumes them.
 class BackupBundle {
   final int formatVersion;
   final String appVersion;
   final DateTime? createdAt;
   final Map<String, dynamic>? settings;
   final UserProfile? profile;
-  final List<Map<String, dynamic>> history;
   final Map<String, dynamic> collections;
   final Map<String, dynamic> playlistCovers;
-  final Map<String, dynamic> extensions;
-  final bool hasHistory;
-  final String? _historyNdjsonPath;
-  final int? _historyCount;
   final String? _temporaryDirectoryPath;
 
   const BackupBundle({
@@ -94,37 +83,14 @@ class BackupBundle {
     required this.appVersion,
     required this.createdAt,
     required this.settings,
-    required this.history,
     required this.collections,
     required this.playlistCovers,
-    required this.extensions,
     this.profile,
-    this.hasHistory = true,
-    String? historyNdjsonPath,
-    int? historyCount,
     String? temporaryDirectoryPath,
-  }) : _historyNdjsonPath = historyNdjsonPath,
-       _historyCount = historyCount,
-       _temporaryDirectoryPath = temporaryDirectoryPath;
+  }) : _temporaryDirectoryPath = temporaryDirectoryPath;
 
   bool get hasSettings => settings != null && settings!.isNotEmpty;
   bool get hasCollections => collections.isNotEmpty;
-  int get historyCount => _historyCount ?? history.length;
-
-  Stream<Map<String, dynamic>> streamHistory() async* {
-    if (_historyNdjsonPath == null) {
-      yield* Stream.fromIterable(history);
-      return;
-    }
-    await for (final line in File(
-      _historyNdjsonPath,
-    ).openRead().transform(utf8.decoder).transform(const LineSplitter())) {
-      if (line.trim().isEmpty) continue;
-      final decoded = jsonDecode(line);
-      if (decoded is Map) yield Map<String, dynamic>.from(decoded);
-    }
-  }
-
   Future<void> cleanup() async {
     final path = _temporaryDirectoryPath;
     if (path == null || path.isEmpty) return;
@@ -143,19 +109,12 @@ class BackupBundle {
   int get playlistCount => _collectionListCount('playlists');
   int get favoriteArtistCount => _collectionListCount('favoriteArtists');
 
-  int get extensionCount {
-    final items = extensions['items'];
-    return items is List ? items.length : 0;
-  }
-
   bool get isEmpty =>
       !hasSettings &&
       profile == null &&
-      historyCount == 0 &&
       likedCount == 0 &&
       playlistCount == 0 &&
-      favoriteArtistCount == 0 &&
-      extensionCount == 0;
+      favoriteArtistCount == 0;
 }
 
 /// The export would exceed a limit the importer enforces, so it is refused
@@ -173,21 +132,11 @@ class BackupService {
   static final _log = AppLogger('BackupService');
 
   static const String magic = 'sistrum-backup';
-  // Read backups written before the identity change; exports use [magic].
-  static const String _legacyMagic =
-      '\u0073\u0070\u006f\u0074\u0069\u0066\u006c\u0061\u0063-backup';
-
-  static bool _supportsMagic(Object? value) =>
-      value == magic || value == _legacyMagic;
-  // V3 permits omitted categories. Older readers reject it instead of treating
-  // an omitted history as an empty history and clearing existing downloads.
   static const int formatVersion = 3;
-  static const String fileExtension = 'sflb';
-  static const int _historyPageSize = 500;
+  static const String fileExtension = 'sbk';
   // Restore decodes metadata.json in memory; keep in sync with the native
   // archive reader.
   static const int _maxMetadataBytes = 32 << 20;
-  static const int _maxHistoryBytes = 512 << 20;
   static const int _maxCoverBytes = 20 << 20;
   static const int _maxAllCoversBytes = 256 << 20;
   static const int _maxProfilePhotoBytes = 2 << 20;
@@ -198,14 +147,11 @@ class BackupService {
 
   static Future<File> writeBackupArchive({
     required Map<String, dynamic>? settings,
-    required BackupHistoryPageLoader loadHistoryPage,
     required Map<String, dynamic> collections,
     String? collectionsJson,
     required Map<String, Map<String, String>> playlistCoverFiles,
-    required Map<String, dynamic> extensions,
     Directory? outputDirectory,
     Directory? temporaryDirectory,
-    bool includeHistory = true,
     UserProfile? profile,
   }) async {
     if (collectionsJson != null && collections.isNotEmpty) {
@@ -219,35 +165,10 @@ class BackupService {
         'sistrum_backup_${DateTime.now().microsecondsSinceEpoch}',
       ),
     ).create(recursive: true);
-    final historyFile = File(p.join(staging.path, 'history.ndjson'));
     final metadataFile = File(p.join(staging.path, 'metadata.json'));
     final partFile = File('${output.path}.part');
 
     try {
-      var historyCount = 0;
-      if (includeHistory && PlatformBridge.supportsCoreBackend) {
-        final database = await HistoryDatabase.instance.database;
-        historyCount = await exportNativeHistory(database, historyFile.path);
-      } else {
-        var offset = 0;
-        final historySink = historyFile.openWrite();
-        try {
-          while (includeHistory) {
-            final page = await loadHistoryPage(_historyPageSize, offset);
-            for (final item in page) {
-              historySink.writeln(jsonEncode(item));
-            }
-            await historySink.flush();
-            historyCount += page.length;
-            offset += page.length;
-            if (page.length < _historyPageSize) break;
-          }
-          await historySink.flush();
-        } finally {
-          await historySink.close();
-        }
-      }
-
       final coverManifest = <String, Map<String, String>>{};
       var coverIndex = 0;
       for (final entry in playlistCoverFiles.entries) {
@@ -271,7 +192,6 @@ class BackupService {
         'app': AppInfo.appName,
         'app_version': AppInfo.displayVersion,
         'created_at': DateTime.now().toIso8601String(),
-        'history_count': historyCount,
         'data': {
           'settings': ?settings,
           if (profile != null)
@@ -282,7 +202,6 @@ class BackupService {
           if (collectionsJson != null || collections.isNotEmpty)
             'collections': collections,
           if (coverManifest.isNotEmpty) 'playlist_covers': coverManifest,
-          if (extensions.isNotEmpty) 'extensions': extensions,
         },
       };
       await writeBackupMetadata(
@@ -294,11 +213,6 @@ class BackupService {
       if (await metadataFile.length() > _maxMetadataBytes) {
         throw const BackupTooLargeException(
           'Backup collections exceed the supported metadata limit',
-        );
-      }
-      if (includeHistory && await historyFile.length() > _maxHistoryBytes) {
-        throw const BackupTooLargeException(
-          'Backup history exceeds the supported limit',
         );
       }
       var coverBytes = 0;
@@ -314,8 +228,6 @@ class BackupService {
       if (await partFile.exists()) await partFile.delete();
       final archiveFiles = <({String path, String name, bool store})>[
         (path: metadataFile.path, name: 'metadata.json', store: false),
-        if (includeHistory)
-          (path: historyFile.path, name: 'history.ndjson', store: false),
         if (photoPath != null)
           (path: photoPath, name: _profilePhotoEntry, store: true),
       ];
@@ -359,8 +271,7 @@ class BackupService {
   }
 
   // archive's file-backed encoder still performs compression and writes
-  // synchronously. Pass only paths to the worker; database/plugin callbacks
-  // and the paged history loader stay on their owning isolate.
+  // synchronously. Pass only paths to the worker.
   static Future<void> _encodeArchiveInBackground(
     String outputPath,
     List<({String path, String name, bool store})> files,
@@ -400,10 +311,10 @@ class BackupService {
   }) async {
     final tempRoot = temporaryDirectory ?? await getTemporaryDirectory();
     final BackupBundle? bundle;
-    if (PlatformBridge.supportsCoreBackend) {
-      bundle = await _hasZipHeader(File(path))
-          ? await _parseArchiveNative(path, tempRoot)
-          : await _parseLegacyNative(path, tempRoot);
+    if (!await _hasZipHeader(File(path))) {
+      bundle = null;
+    } else if (PlatformBridge.supportsCoreBackend) {
+      bundle = await _parseArchiveNative(path, tempRoot);
     } else {
       bundle = await _parseFileInBackground(path, tempRoot.path);
     }
@@ -411,117 +322,6 @@ class BackupService {
       _log.w('Backup file could not be read: invalid or unsupported contents');
     }
     return bundle;
-  }
-
-  /// Called inside the history notifier's write queue. Native work uses a
-  /// private database; the live SQLite owner publishes the complete result.
-  static Future<void> restoreHistory(
-    BackupBundle bundle, {
-    HistoryDatabase? historyDatabase,
-  }) async {
-    if (!bundle.hasHistory) return;
-    final history = historyDatabase ?? HistoryDatabase.instance;
-    if (PlatformBridge.supportsCoreBackend &&
-        bundle._historyNdjsonPath != null) {
-      await restoreNativeHistory(await history.database, bundle);
-      return;
-    }
-    await history.replaceAll(bundle.streamHistory());
-  }
-
-  @visibleForTesting
-  static Future<int> exportNativeHistory(Database database, String path) async {
-    final staging = await Directory.systemTemp.createTemp('history-export-');
-    var detached = true;
-    try {
-      final snapshotPath = p.join(staging.path, 'history.db');
-      await createNativeSqliteSnapshot(
-        database,
-        snapshotPath,
-        tables: const ['history'],
-        version: HistoryDatabase.schemaVersion,
-      );
-      final result = await PlatformBridge.runNativeDataJob({
-        'operation': 'backup_history_export',
-        'history_path': snapshotPath,
-        'ndjson_path': path,
-        'platform': Platform.isAndroid ? 'android' : 'ios',
-        if (Platform.isIOS)
-          'documents_path': (await getApplicationDocumentsDirectory()).path,
-      });
-      if (result['published'] != true || result['count'] is! int) {
-        throw const FormatException('Incomplete native history backup');
-      }
-      return result['count'] as int;
-    } on NativeSqliteSnapshotDetachException {
-      detached = false;
-      _log.w('Retaining history export staging after a failed database detach');
-      rethrow;
-    } finally {
-      if (detached) {
-        try {
-          await staging.delete(recursive: true);
-        } on FileSystemException catch (error) {
-          _log.w('Could not remove history export staging: $error');
-        }
-      }
-    }
-  }
-
-  @visibleForTesting
-  static Future<void> restoreNativeHistory(
-    Database database,
-    BackupBundle bundle,
-  ) async {
-    final staging = await Directory.systemTemp.createTemp('history-restore-');
-    var detached = true;
-    try {
-      final snapshotPath = p.join(staging.path, 'history.db');
-      await createNativeSqliteSnapshot(
-        database,
-        snapshotPath,
-        tables: const ['history', 'history_path_keys'],
-        version: HistoryDatabase.schemaVersion,
-        copyRows: false,
-      );
-      final result = await PlatformBridge.runNativeDataJob({
-        'operation': 'backup_history_import',
-        'history_path': snapshotPath,
-        'ndjson_path': bundle._historyNdjsonPath,
-        if (bundle._historyCount != null)
-          'expected_count': bundle._historyCount,
-        'platform': Platform.isAndroid ? 'android' : 'ios',
-        'mode': 'replace',
-      });
-      if (result['committed'] != true) {
-        throw const FormatException('Incomplete native history restore');
-      }
-      detached = await replaceTablesFromNativeSnapshot(
-        database,
-        snapshotPath,
-        tables: const ['history', 'history_path_keys'],
-        deleteOrder: const ['history_path_keys', 'history'],
-      );
-      if (!detached) {
-        _log.w(
-          'History restored; retaining staging after a failed database detach',
-        );
-      }
-    } on NativeSqliteSnapshotDetachException {
-      detached = false;
-      _log.w(
-        'Retaining history restore staging after a failed database detach',
-      );
-      rethrow;
-    } finally {
-      if (detached) {
-        try {
-          await staging.delete(recursive: true);
-        } on FileSystemException catch (error) {
-          _log.w('Could not remove history restore staging: $error');
-        }
-      }
-    }
   }
 
   static Future<bool> _hasZipHeader(File file) async {
@@ -533,50 +333,6 @@ class BackupService {
         header[1] == 0x4b &&
         header[2] == 0x03 &&
         header[3] == 0x04;
-  }
-
-  static Future<BackupBundle?> _parseLegacyNative(
-    String path,
-    Directory temporary,
-  ) async {
-    await temporary.create(recursive: true);
-    final staging = await temporary.createTemp('sistrum_legacy_backup_');
-    try {
-      final historyPath = p.join(staging.path, 'history.ndjson');
-      final metadataPath = p.join(staging.path, 'metadata.json');
-      final result = await PlatformBridge.runNativeDataJob({
-        'operation': 'backup_split_legacy',
-        'input_path': path,
-        'ndjson_path': historyPath,
-        'metadata_path': metadataPath,
-      });
-      if (result['published'] != true || result['count'] is! int) {
-        throw const FormatException('Incomplete legacy backup staging');
-      }
-      final parsed = await Isolate.run(
-        () => parse(File(metadataPath).readAsStringSync()),
-      );
-      if (parsed == null) throw const FormatException('Invalid backup');
-      return BackupBundle(
-        formatVersion: parsed.formatVersion,
-        appVersion: parsed.appVersion,
-        createdAt: parsed.createdAt,
-        settings: parsed.settings,
-        profile: parsed.profile,
-        history: const [],
-        hasHistory: parsed.hasHistory,
-        historyCount: result['count'] as int,
-        historyNdjsonPath: parsed.hasHistory ? historyPath : null,
-        collections: parsed.collections,
-        playlistCovers: parsed.playlistCovers,
-        extensions: parsed.extensions,
-        temporaryDirectoryPath: staging.path,
-      );
-    } catch (error) {
-      await staging.delete(recursive: true);
-      _log.w('Legacy backup native parse failed: $error');
-      return null;
-    }
   }
 
   static Future<BackupBundle?> _parseArchiveNative(
@@ -605,7 +361,6 @@ class BackupService {
                 as Map;
         final data = root['data'] as Map;
         final rawProfile = data['profile'] as Map?;
-        final historyPath = result['history_path'] as String?;
         return BackupBundle(
           formatVersion: root['format_version'] as int,
           appVersion: root['app_version'] as String? ?? '',
@@ -617,13 +372,8 @@ class BackupService {
                   name: rawProfile['name'] as String,
                   photoPath: result['profile_photo_path'] as String?,
                 ),
-          history: const [],
-          hasHistory: historyPath != null,
-          historyNdjsonPath: historyPath,
-          historyCount: (root['history_count'] as num?)?.toInt(),
           collections: _mapOrEmpty(data['collections']),
           playlistCovers: _mapOrEmpty(result['playlist_covers']),
-          extensions: _mapOrEmpty(data['extensions']),
           temporaryDirectoryPath: stagingPath,
         );
       });
@@ -643,16 +393,8 @@ class BackupService {
     String temporaryPath,
   ) => Isolate.run(() => _parseFile(path, temporaryPath));
 
-  static Future<BackupBundle?> _parseFile(
-    String path,
-    String temporaryPath,
-  ) async {
-    final file = File(path);
-    final isZip = await _hasZipHeader(file);
-    return isZip
-        ? _parseArchive(file, temporaryDirectory: Directory(temporaryPath))
-        : parse(await file.readAsString());
-  }
+  static Future<BackupBundle?> _parseFile(String path, String temporaryPath) =>
+      _parseArchive(File(path), temporaryDirectory: Directory(temporaryPath));
 
   static Future<BackupBundle?> _parseArchive(
     File file, {
@@ -665,21 +407,14 @@ class BackupService {
       input = InputFileStream(file.path);
       archive = ZipDecoder().decodeStream(input);
       final metadataEntry = archive.find('metadata.json');
-      final historyEntry = archive.find('history.ndjson');
-      if (metadataEntry == null ||
-          metadataEntry.size > _maxMetadataBytes ||
-          (historyEntry != null && historyEntry.size > _maxHistoryBytes)) {
+      if (metadataEntry == null || metadataEntry.size > _maxMetadataBytes) {
         return null;
       }
       final rootRaw = jsonDecode(utf8.decode(metadataEntry.content));
       if (rootRaw is! Map) return null;
       final root = Map<String, dynamic>.from(rootRaw);
       final version = root['format_version'];
-      if (!_supportsMagic(root['magic']) ||
-          (version != 2 && version != formatVersion)) {
-        return null;
-      }
-      if (version == 2 && historyEntry == null) {
+      if (root['magic'] != magic || version != formatVersion) {
         return null;
       }
       final dataRaw = root['data'];
@@ -692,12 +427,6 @@ class BackupService {
           'sistrum_restore_${DateTime.now().microsecondsSinceEpoch}',
         ),
       ).create(recursive: true);
-      String? historyPath;
-      if (historyEntry != null) {
-        historyPath = p.join(extractionDir.path, 'history.ndjson');
-        writeArchiveEntry(historyEntry, OutputFileStream(historyPath));
-      }
-
       final restoredCovers = <String, dynamic>{};
       final coverManifest = data['playlist_covers'];
       if (coverManifest is Map) {
@@ -762,13 +491,8 @@ class BackupService {
         createdAt: DateTime.tryParse(root['created_at'] as String? ?? ''),
         settings: _mapOrNull(data['settings']),
         profile: profile,
-        history: const [],
-        hasHistory: historyEntry != null,
-        historyNdjsonPath: historyPath,
-        historyCount: (root['history_count'] as num?)?.toInt(),
         collections: _mapOrEmpty(data['collections']),
         playlistCovers: restoredCovers,
-        extensions: _mapOrEmpty(data['extensions']),
         temporaryDirectoryPath: extractionDir.path,
       );
     } catch (e) {
@@ -802,42 +526,6 @@ class BackupService {
     Map<String, dynamic> metadata, {
     String? collectionsJson,
   }) => _writeBackupMetadataInBackground(path, metadata, collectionsJson);
-
-  static BackupBundle? parse(String content) {
-    dynamic decoded;
-    try {
-      decoded = jsonDecode(content);
-    } catch (e) {
-      _log.w('Backup parse failed: not valid JSON ($e)');
-      return null;
-    }
-    if (decoded is! Map) return null;
-    final root = Map<String, dynamic>.from(decoded);
-    if (!_supportsMagic(root['magic']) || root['data'] is! Map) return null;
-    final data = Map<String, dynamic>.from(root['data'] as Map);
-    final history = <Map<String, dynamic>>[];
-    if (data['history'] is List) {
-      for (final item in data['history'] as List) {
-        if (item is Map) history.add(Map<String, dynamic>.from(item));
-      }
-    }
-    return BackupBundle(
-      formatVersion: (root['format_version'] as num?)?.toInt() ?? 1,
-      appVersion: root['app_version'] as String? ?? '',
-      createdAt: DateTime.tryParse(root['created_at'] as String? ?? ''),
-      settings: _mapOrNull(data['settings']),
-      history: history,
-      hasHistory: data['history'] is List,
-      collections: _mapOrEmpty(data['collections']),
-      playlistCovers: {
-        for (final entry in _mapOrEmpty(data['playlist_covers']).entries)
-          if (entry.value is Map)
-            entry.key: (Map<String, dynamic>.from(entry.value as Map)
-              ..remove('path')),
-      },
-      extensions: _mapOrEmpty(data['extensions']),
-    );
-  }
 
   static Map<String, dynamic>? _mapOrNull(dynamic value) =>
       value is Map ? Map<String, dynamic>.from(value) : null;

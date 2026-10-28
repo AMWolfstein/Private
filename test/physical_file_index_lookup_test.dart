@@ -81,7 +81,7 @@ void main() {
   const root = 'content://example.nas/tree/music';
   const album = 'content://example.nas/tree/music%2Falbum';
   const document = '/document/music%2Falbum%2Fsong.flac';
-  for (final table in ['history', 'library']) {
+  for (final table in ['library']) {
     test(
       '$table finds every alias without removing other audio files',
       () async {

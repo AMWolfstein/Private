@@ -4,7 +4,7 @@ import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/selection_bottom_bar.dart';
 
 /// Shared shell for every track-collection screen: album, playlist, local
-/// album, downloaded album and library folders.
+/// album and library folders.
 ///
 /// * back gesture exits selection mode instead of popping the route,
 /// * the selection bar is mounted in the root overlay so it floats above the

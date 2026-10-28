@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
@@ -10,7 +8,6 @@ import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/services/backup_service.dart';
-import 'package:sistrum/services/history_database.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/settings_group.dart';
@@ -32,12 +29,10 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
   // a second Import tap cannot start a competing restore.
   bool _restoring = false;
   bool _includeSettings = true;
-  bool _includeHistory = true;
   bool _includeCollections = true;
 
   bool get _isBusy => _isExporting || _isImporting || _restoring;
-  bool get _hasSelection =>
-      _includeSettings || _includeHistory || _includeCollections;
+  bool get _hasSelection => _includeSettings || _includeCollections;
 
   Future<void> _createBackup() async {
     if (_isBusy || !_hasSelection) return;
@@ -60,13 +55,9 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
         profile: _includeSettings
             ? await ref.read(userProfileProvider.future)
             : null,
-        includeHistory: _includeHistory,
-        loadHistoryPage: (limit, offset) =>
-            HistoryDatabase.instance.getAll(limit: limit, offset: offset),
         collections: const {},
         collectionsJson: collectionsJson,
         playlistCoverFiles: covers,
-        extensions: const {},
       );
 
       messenger.showSnackBar(SnackBar(content: Text(l10n.backupCreated)));
@@ -106,15 +97,13 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
 
     BackupBundle? bundle;
     try {
-      // Android resolves custom extensions to MIME types. It recognizes JSON
-      // but not SFLB, so mixing them hides our own backups. Validate contents
+      // Android may not know our custom extension's MIME type, so filtering
+      // by extension would hide our own backups. Validate contents
       // with BackupService after selection instead of filtering by extension.
       final picked = await FilePicker.pickFile(type: FileType.any);
       if (picked == null) return;
       final path = picked.path;
-      bundle = path != null
-          ? await BackupService.parseFile(path)
-          : BackupService.parse(utf8.decode(await picked.readAsBytes()));
+      bundle = path != null ? await BackupService.parseFile(path) : null;
     } catch (e) {
       _log.e('Failed to read backup file: $e');
       messenger.showSnackBar(SnackBar(content: Text(l10n.backupInvalidFile)));
@@ -150,10 +139,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
             .read(settingsProvider.notifier)
             .restoreFromBackup(bundle.settings!);
         applied.add(l10n.backupContentsSettings);
-      }
-      if (bundle.hasHistory) {
-        await BackupService.restoreHistory(bundle);
-        applied.add(l10n.backupContentsHistory(bundle.historyCount));
       }
       if (bundle.hasCollections) {
         await ref
@@ -225,11 +210,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                   icon: Icons.person_outline,
                   label: l10n.profileTitle,
                 ),
-              if (bundle.hasHistory)
-                _ContentRow(
-                  icon: Icons.history,
-                  label: l10n.backupContentsHistory(bundle.historyCount),
-                ),
               if (bundle.hasCollections)
                 _ContentRow(
                   icon: Icons.favorite_outline,
@@ -286,7 +266,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                       ? null
                       : () => setState(() {
                           _includeSettings = true;
-                          _includeHistory = false;
                           _includeCollections = false;
                         }),
                 ),
@@ -298,15 +277,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                   onChanged: _isBusy
                       ? null
                       : (value) => setState(() => _includeSettings = value),
-                ),
-                SettingsSwitchItem(
-                  icon: Icons.history,
-                  title: l10n.backupSelectHistory,
-                  subtitle: l10n.backupListeningStatisticsExcluded,
-                  value: _includeHistory,
-                  onChanged: _isBusy
-                      ? null
-                      : (value) => setState(() => _includeHistory = value),
                 ),
                 SettingsSwitchItem(
                   icon: Icons.library_music_outlined,

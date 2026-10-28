@@ -14,8 +14,8 @@ import 'package:sistrum/widgets/sistrum_chrome.dart';
 import 'package:sistrum/widgets/sistrum_floating_header.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
-/// Collapsing album-detail header shared by the album, local-album, and
-/// downloaded-album screens: full-bleed [background] (optionally blurred and
+/// Collapsing album-detail header shared by the album and local-album
+/// screens: full-bleed [background] (optionally blurred and
 /// scrimmed), bottom gradient, centered square cover, title, optional
 /// subtitle/meta/actions rows, and a circular back button. Content fades out
 /// below 30% expansion; the [title] fades into the toolbar instead.

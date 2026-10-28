@@ -119,7 +119,7 @@ void main() {
     expect(db.maxBatchSize, lessThanOrEqualTo(500 * newKeysPerTrack));
   });
 
-  for (final table in ['library', 'history']) {
+  for (final table in ['library']) {
     test(
       '$table migration preserves valid aliases and removes stale keys',
       () async {

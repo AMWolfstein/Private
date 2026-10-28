@@ -118,11 +118,8 @@ void main() {
       final file = await BackupService.writeBackupArchive(
         settings: {'theme': 'dark'},
         profile: source,
-        includeHistory: false,
-        loadHistoryPage: (_, _) async => [],
         collections: {},
         playlistCoverFiles: {},
-        extensions: {},
         outputDirectory: directory,
         temporaryDirectory: directory,
       );

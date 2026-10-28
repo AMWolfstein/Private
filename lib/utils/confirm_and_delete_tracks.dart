@@ -29,8 +29,8 @@ Future<int?> confirmAndDeleteTracks({
   final confirmed = await showAppDialog<bool>(
     context: context,
     builder: (ctx) => AppAlertDialog(
-      title: Text(context.l10n.downloadedAlbumDeleteSelected),
-      content: Text(context.l10n.downloadedAlbumDeleteMessage(ids.length)),
+      title: Text(context.l10n.collectionDeleteSelected),
+      content: Text(context.l10n.collectionDeleteMessage(ids.length)),
       actions: [
         AppDialogAction(
           isDefault: true,

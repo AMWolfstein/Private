@@ -64,7 +64,7 @@ class _PendingEmbeddedCoverExtraction {
 /// The in-memory LRU is backed by a source-versioned persistent cache, while
 /// all misses still pass through the bounded, foreground-prioritized scheduler
 /// so Library scrolling cannot fan out native I/O.
-class DownloadedEmbeddedCoverResolver {
+class EmbeddedCoverResolver {
   static const int _maxCacheEntries = 180;
   static const int _maxFailedExtractEntries = 360;
   static const int _maxConcurrentExtractions = 2;

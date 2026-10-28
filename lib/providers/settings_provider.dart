@@ -96,7 +96,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
     return ref.read(initialSettingsProvider);
   }
 
-  /// Startup and extension actions share loading, including preference migrations.
+  /// Startup actions share loading, including preference migrations.
   Future<void> ensureLoaded() {
     return _loadSettingsFuture ??= _loadSettings().catchError((
       Object error,
@@ -414,8 +414,8 @@ class SettingsNotifier extends Notifier<AppSettings> {
     }
   }
 
-  void setHistoryFilterMode(String mode) {
-    state = state.copyWith(historyFilterMode: mode);
+  void setLibraryFilterMode(String mode) {
+    state = state.copyWith(libraryFilterMode: mode);
     _saveSettings();
   }
 

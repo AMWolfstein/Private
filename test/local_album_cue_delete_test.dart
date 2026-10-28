@@ -118,7 +118,7 @@ void main() {
     await tester.tap(
       find.descendant(
         of: find.byType(DestructiveSelectionButton),
-        matching: find.text(l10n.downloadedAlbumDeleteCount(1)),
+        matching: find.text(l10n.collectionDeleteCount(1)),
       ),
     );
     await tester.pumpAndSettle();
@@ -200,7 +200,7 @@ void main() {
     await tester.tap(
       find.descendant(
         of: find.byType(DestructiveSelectionButton),
-        matching: find.text(l10n.downloadedAlbumDeleteCount(1)),
+        matching: find.text(l10n.collectionDeleteCount(1)),
       ),
     );
     await tester.pumpAndSettle();

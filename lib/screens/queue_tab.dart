@@ -92,8 +92,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       SelectionOverlayController();
   List<UserPlaylistCollection> _playlistSelectionOverlayItems = const [];
   double _playlistSelectionOverlayBottomPadding = 0;
-
-  String? _filterSource;
   String? _filterQuality;
   String? _filterFormat;
   String? _filterMetadata;
@@ -147,7 +145,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         final page = await LibraryDatabase.instance.getQueueTrackPageResult(
           QueueLibraryDbQuery(
             limit: 500,
-            source: _filterSource,
             quality: _filterQuality,
             format: _filterFormat,
             metadata: _filterMetadata,
@@ -332,7 +329,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   ) {
     return a.filterMode == b.filterMode &&
         a.limit == b.limit &&
-        a.filterSource == b.filterSource &&
         a.filterQuality == b.filterQuality &&
         a.filterFormat == b.filterFormat &&
         a.filterMetadata == b.filterMetadata &&
@@ -396,7 +392,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   int get _activeFilterCount {
     int count = 0;
-    if (_filterSource != null) count++;
     if (_filterQuality != null) count++;
     if (_filterFormat != null) count++;
     if (_filterMetadata != null) count++;
@@ -405,7 +400,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   void _resetFilters() {
     setState(() {
-      _filterSource = null;
       _filterQuality = null;
       _filterFormat = null;
       _filterMetadata = null;
@@ -415,7 +409,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   }
 
   void _showFilterSheet(BuildContext context) {
-    String? tempSource = _filterSource;
     String? tempQuality = _filterQuality;
     String? tempFormat = _filterFormat;
     String? tempMetadata = _filterMetadata;
@@ -433,7 +426,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
               titleTrailing: TextButton(
                 onPressed: () {
                   setSheetState(() {
-                    tempSource = null;
                     tempQuality = null;
                     tempFormat = null;
                     tempMetadata = null;
@@ -449,38 +441,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      context.l10n.libraryFilterSource,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterAll),
-                          selected: tempSource == null,
-                          onSelected: (_) =>
-                              setSheetState(() => tempSource = null),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterDownloaded),
-                          selected: tempSource == 'downloaded',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSource = 'downloaded'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterLocal),
-                          selected: tempSource == 'local',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSource = 'local'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
                     Text(
                       context.l10n.libraryFilterQuality,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -834,7 +794,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         filled: true,
                         onPressed: () {
                           setState(() {
-                            _filterSource = tempSource;
                             _filterQuality = tempQuality;
                             _filterFormat = tempFormat;
                             _filterMetadata = tempMetadata;
@@ -905,12 +864,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       ),
     );
     final collectionState = ref.read(libraryCollectionsProvider);
-    final String historyFilterMode =
+    final String libraryFilterMode =
         widget.librarySection ??
-        ref.watch<String>(settingsProvider.select((s) => s.historyFilterMode));
+        ref.watch<String>(settingsProvider.select((s) => s.libraryFilterMode));
     final colorScheme = Theme.of(context).colorScheme;
     final countsRequest = _QueueLibraryCountsRequest(
-      filterSource: _filterSource,
       filterQuality: _filterQuality,
       filterFormat: _filterFormat,
       filterMetadata: _filterMetadata,
@@ -925,7 +883,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         filterMode: filterMode,
         limit: _libraryPageSize,
         offset: offset,
-        filterSource: _filterSource,
         filterQuality: _filterQuality,
         filterFormat: _filterFormat,
         filterMetadata: _filterMetadata,
@@ -941,7 +898,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         filterMode: baseRequest.filterMode,
         limit: baseRequest.limit,
         offset: baseRequest.offset,
-        filterSource: baseRequest.filterSource,
         filterQuality: baseRequest.filterQuality,
         filterFormat: baseRequest.filterFormat,
         filterMetadata: baseRequest.filterMetadata,
@@ -951,17 +907,17 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       );
     }
 
-    final activePageRequest = pageRequest(historyFilterMode);
+    final activePageRequest = pageRequest(libraryFilterMode);
     final activePageValue = ref.watch(
       _queueLibraryPageProvider(activePageRequest),
     );
 
     _QueueLibraryPageData pageData(String filterMode) {
-      final request = filterMode == historyFilterMode
+      final request = filterMode == libraryFilterMode
           ? activePageRequest
           : pageRequest(filterMode);
       return _resolveQueueLibraryPageData(
-        filterMode == historyFilterMode ? activePageValue : null,
+        filterMode == libraryFilterMode ? activePageValue : null,
         request,
       );
     }
@@ -979,11 +935,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       );
     }
 
-    final currentPageData = pageData(historyFilterMode);
-    final currentLoadedCount = historyFilterMode == 'albums'
+    final currentPageData = pageData(libraryFilterMode);
+    final currentLoadedCount = libraryFilterMode == 'albums'
         ? currentPageData.groupedLocalAlbums.length
         : currentPageData.items.length;
-    final currentTotalCount = switch (historyFilterMode) {
+    final currentTotalCount = switch (libraryFilterMode) {
       'albums' => queueCounts.albumCount,
       'singles' => queueCounts.singleTrackCount,
       'playlists' => 0,
@@ -1005,7 +961,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     // mode; other builds must not copy and regroup it.
     if (_isSelectionMode || _isPlaylistSelectionMode) {
       final selectionItems = getFilterData(
-        historyFilterMode,
+        libraryFilterMode,
       ).filteredUnifiedItems;
       final bottomPadding = MediaQuery.paddingOf(context).bottom;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1071,8 +1027,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
               body: _buildFilterContent(
                 context: context,
                 colorScheme: colorScheme,
-                filterMode: historyFilterMode,
-                filterData: getFilterData(historyFilterMode),
+                filterMode: libraryFilterMode,
+                filterData: getFilterData(libraryFilterMode),
                 collectionState: collectionState,
                 hasMoreLibrary: hasMoreLibrary,
                 isPageLoading: isLibraryPageLoading,

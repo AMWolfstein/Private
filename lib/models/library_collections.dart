@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/models/track.dart';
 
-/// Shared identity for catalog, downloaded, and local playlist entries.
+/// Shared identity for local playlist entries.
 String libraryTrackCollectionKey({
   required String id,
   String? source,

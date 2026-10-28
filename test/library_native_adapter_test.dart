@@ -99,7 +99,6 @@ class _NativeHarness {
     return {
       'committed': true,
       'inserted': count,
-      'skipped': 0,
       'scanned_count': count,
       'totalFiles': count + 3,
       'skippedCount': 3,
@@ -224,53 +223,45 @@ void main() {
       (await live.rawQuery(
         'PRAGMA database_list',
       )).map((r) => r['name']).where((name) => name != 'temp'),
-      ['main', 'history_db'],
+      ['main'],
     );
     expect(await live.rawQuery('PRAGMA integrity_check'), [
       {'integrity_check': 'ok'},
     ]);
   }
 
-  test(
-    'full private staging publishes all local rows despite legacy History entries',
-    () async {
-      final rows = [nativeLibraryTrack('new'), nativeLibraryTrack('download')];
-      native.afterStage = () =>
-          addNativeLibraryDownload(live, '/music/download.flac');
-      final result = await adapter.importScanFile(
-        'source',
-        await scan(rows),
-        requestId: 'full',
-        isCancelled: () => false,
-      );
-      expect(result, containsPair('durable', true));
-      expect(result['inserted'], 2);
-      expect(result['skipped'], 0);
-      expect(
-        await live.query(
-          'library',
-          where: 'source_id = ?',
-          whereArgs: ['source'],
-        ),
-        rows
-            .map((row) => LibraryRowMapper.encode(row, sourceId: 'source'))
-            .toList(),
-      );
-      expect(
-        (await live.query(
-          'library_path_keys',
-        )).map((r) => r['item_id']).toSet(),
-        {'new', 'download', 'other'},
-      );
-      expect(
-        await live.rawQuery(
-          "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%'",
-        ),
-        isEmpty,
-      );
-      await cleaned();
-    },
-  );
+  test('full private staging publishes all local rows', () async {
+    final rows = [nativeLibraryTrack('new'), nativeLibraryTrack('download')];
+    final result = await adapter.importScanFile(
+      'source',
+      await scan(rows),
+      requestId: 'full',
+      isCancelled: () => false,
+    );
+    expect(result, containsPair('durable', true));
+    expect(result['inserted'], 2);
+    expect(
+      await live.query(
+        'library',
+        where: 'source_id = ?',
+        whereArgs: ['source'],
+      ),
+      rows
+          .map((row) => LibraryRowMapper.encode(row, sourceId: 'source'))
+          .toList(),
+    );
+    expect(
+      (await live.query('library_path_keys')).map((r) => r['item_id']).toSet(),
+      {'new', 'download', 'other'},
+    );
+    expect(
+      await live.rawQuery(
+        "SELECT name FROM sqlite_master WHERE name LIKE '%lookup%'",
+      ),
+      isEmpty,
+    );
+    await cleaned();
+  });
 
   test(
     'partial and empty scans preserve missing rows only for partial scans',
@@ -323,10 +314,6 @@ void main() {
         '/music/old.flac',
         '/other/other.flac',
       ];
-      native.afterStage = () async {
-        await addNativeLibraryDownload(live, '/music/unchanged.flac');
-        await addNativeLibraryDownload(live, '/music/download.flac');
-      };
       final result = await adapter.scanIncremental(
         'source',
         '/music',
@@ -336,7 +323,6 @@ void main() {
         isCancelled: () => false,
       );
       expect(result['inserted'], 2);
-      expect(result['skipped'], 0);
       expect(result['deleted_count'], 1);
       expect(result['skippedCount'], 3);
       expect(result['scanned_count'], 2);

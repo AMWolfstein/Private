@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -50,10 +49,7 @@ void main() {
         await db.execute('PRAGMA recursive_triggers=ON');
       },
     );
-    await createNativeLibraryFixture(
-      database,
-      historyPath: '${root.path}/history.db',
-    );
+    await createNativeLibraryFixture(database);
     privatePaths.clear();
     afterStage = null;
     adapter = LibraryNativeAdapter(
@@ -71,7 +67,6 @@ void main() {
           ),
           isEmpty,
         );
-        expect(request, isNot(contains('history_path')));
         privatePaths.add(private);
         final result = await PlatformBridge.runNativeDataJob(
           request,
@@ -140,127 +135,6 @@ void main() {
   }
 
   testWidgets(
-    'scan preparation and publication retry transient download History locks',
-    (tester) async {
-      final historyPath = '${root.path}/history.db';
-      await database.rawQuery('PRAGMA busy_timeout=0');
-      await database.rawQuery('PRAGMA history_db.journal_mode=WAL');
-      final writer = await openDatabase(historyPath, singleInstance: false);
-      final releases = <Completer<void>>[];
-      final writes = <Future<void>>[];
-      Future<void> blockHistoryWriter({bool reproduce = false}) async {
-        final locked = Completer<void>();
-        final release = Completer<void>();
-        final index = writes.length;
-        releases.add(release);
-        final writing = writer.transaction((txn) async {
-          await txn.execute('INSERT INTO history_path_keys VALUES (?, ?)', [
-            'history-$index',
-            '/music/pending-$index.flac',
-          ]);
-          locked.complete();
-          await release.future;
-        });
-        writes.add(writing);
-        unawaited(
-          writing.catchError((Object error, StackTrace stack) {
-            if (!locked.isCompleted) locked.completeError(error, stack);
-          }),
-        );
-        await locked.future;
-        if (reproduce) {
-          // The previous plain BEGIN fails against the same attachment and
-          // writer. Only transaction admission is retried by the new helper.
-          await expectLater(
-            database.transaction((txn) async {}),
-            throwsA(
-              isA<DatabaseException>().having(
-                (error) => error.toString(),
-                'message',
-                contains('database is locked'),
-              ),
-            ),
-          );
-        }
-        Timer(const Duration(milliseconds: 150), () {
-          if (!release.isCompleted) release.complete();
-        });
-      }
-
-      try {
-        await blockHistoryWriter(reproduce: true);
-        afterStage = (_, _) => blockHistoryWriter();
-        final full = await adapter.importScanFile(
-          'source',
-          await scan([nativeLibraryTrack('full')]),
-          requestId: 'history-writer-full',
-          isCancelled: () => false,
-        );
-        expect(full['durable'], isTrue);
-        expect(full['inserted'], 1);
-
-        final music = await Directory('${root.path}/music').create();
-
-        await database.update(
-          'library_sources',
-          {'path': music.path},
-          where: 'id = ?',
-          whereArgs: ['source'],
-        );
-        final track = await _wav('${music.path}/new.wav');
-        final snapshot = await adapter.writeFileModTimesSnapshot(
-          'source',
-          requestId: 'history-writer-snapshot',
-          isCancelled: () => false,
-        );
-        try {
-          final delta = await adapter.scanIncremental(
-            'source',
-            music.path,
-            snapshot,
-            isSaf: false,
-            requestId: 'history-writer-incremental',
-            isCancelled: () => false,
-          );
-          expect(delta['durable'], isTrue);
-          expect(
-            await database.query(
-              'library',
-              columns: ['file_path'],
-              where: 'source_id = ? AND file_path = ?',
-              whereArgs: ['source', track.path],
-            ),
-            [
-              {'file_path': track.path},
-            ],
-          );
-        } finally {
-          await File(snapshot).delete();
-        }
-      } finally {
-        for (final release in releases) {
-          if (!release.isCompleted) release.complete();
-        }
-        try {
-          await Future.wait(writes);
-        } finally {
-          await writer.close();
-        }
-      }
-      expect(
-        await database.rawQuery(
-          'SELECT item_id FROM history_db.history_path_keys ORDER BY item_id',
-        ),
-        [
-          for (var i = 0; i < writes.length; i++) {'item_id': 'history-$i'},
-        ],
-        reason: 'committed downloads remain visible after scan retries',
-      );
-      await cleanAndHealthy();
-    },
-  );
-
-  testWidgets(
     'production full scan repeatedly publishes exact rows, empty and partial states through owner SQLite',
     (tester) async {
       final timings = <int>[];
@@ -268,9 +142,6 @@ void main() {
         final rows = [
           for (var i = 0; i < count; i++) nativeLibraryTrack('scan-$i'),
         ];
-        afterStage = count == 3
-            ? (_, _) => addNativeLibraryDownload(database, '/music/scan-2.flac')
-            : null;
         final input = await scan(rows);
         final stopwatch = Stopwatch()..start();
         final result = await adapter.importScanFile(
@@ -284,7 +155,6 @@ void main() {
         expect(result['committed'], isTrue);
         expect(result['durable'], isTrue);
         expect(result['inserted'], accepted.length);
-        expect(result['skipped'], 0);
         expect(
           await database.query(
             'library',
@@ -518,7 +388,6 @@ void main() {
         } finally {
           await private.close();
         }
-        await addNativeLibraryDownload(database, unchanged.path);
       };
       final watch = Stopwatch()..start();
       final result = await adapter.scanIncremental(
@@ -533,7 +402,6 @@ void main() {
       expect(result['durable'], isTrue);
       expect(result['inserted'], 1);
       expect(result['scanned_count'], 1);
-      expect(result['skipped'], 0);
       expect(result['deleted_count'], 1);
       expect(result['skippedCount'], 1);
       expect(result['totalFiles'], 2);

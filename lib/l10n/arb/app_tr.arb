@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "Tümü",
-  "@historyFilterAll": {
+  "libraryKindAll": "Tümü",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "Single'lar",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "Single'lar",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "Kitaplığınızdaki Son Yayınlar",
   "artistPopular": "Popüler",
   "libraryRecentlyAdded": "Son eklenenler",
-  "librarySearchHint": "Kitaplığınızda ara",
   "homeLibraryDisabled": "Müziğinizi burada görmek için Yerel Kitaplık'ı etkinleştirin.",
   "homeChooseLibraryFolder": "Yerel Kitaplık ayarlarında bir müzik klasörü seçin.",
   "homeLibraryEmpty": "Müziğinizi kitaplık klasörlerinize ekleyin, ardından kitaplığınızı tarayın.",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "Devre Dışı",
-  "@extensionsDisabled": {
+  "settingDisabled": "Devre Dışı",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "Hakkında",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "Bildirimleri Etkinleştir",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "Klasör Seç",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "Bildirimleri Etkinleştir",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "Seçilenleri Sil",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "Seçilenleri Sil",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "Bu albümden {count} {count, plural, =1{parça} other{parça}} parça silinsin mi?\n\nBu işlem dosyaları depolama alanından da kalıcı olarak silecektir.",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "Bu albümden {count} {count, plural, =1{parça} other{parça}} parça silinsin mi?\n\nBu işlem dosyaları depolama alanından da kalıcı olarak silecektir.",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "Seçmek için parçalara dokunun",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "Seçmek için parçalara dokunun",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "{count} {count, plural, =1{parçayı} other{parçayı}} sil",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "{count} {count, plural, =1{parçayı} other{parçayı}} sil",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "Silinecek parçaları seçin",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "Silinecek parçaları seçin",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "Disk {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "Disk {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "Yerel dosyalar",
-  "libraryFilterLocal": "Yerel",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "Filtreler",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "Uygula",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "Kaynak",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "Kalite",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Yalnızca ayarlar",
-  "backupSelectHistory": "Eski kitaplık kayıtları",
   "backupSelectCollections": "Kitaplık koleksiyonları",
   "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
   "backupSelectedExportDescription": "Seçilen kategorileri bir yedek dosyasına kaydedin. Ses dosyaları dahil edilmez.",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "Uygulama ayarları",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "Geçmişte {count} {count, plural, =1{öğe} other{öğe}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} beğenilen {count, plural, =1{parça} other{parça}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "Yerel parça yok",
-  "queueEmptyHistorySubtitle": "Kitaplığınızı doldurmak için bir müzik klasörü tarayın",
+  "libraryEmpty": "Yerel parça yok",
+  "libraryEmptySubtitle": "Kitaplığınızı doldurmak için bir müzik klasörü tarayın",
   "selectionAllPlaylistsSelected": "Tüm çalma listeleri seçildi",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} hariç tutuldu",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} hata",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "{title} öğesini aç, {count} {count, plural, =1{öğe} other{öğe}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Şarkı sözleri: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "Şarkı sözleri: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2786,8 +2741,6 @@
   },
   "optionsCheckUpdates": "Güncelleştirmeleri Denetle",
   "optionsCheckUpdatesSubtitle": "Yeni sürüm çıktığında bildir",
-  "optionsUpdateChannel": "Güncelleme Kanalı",
-  "optionsUpdateChannelStable": "Sadece stabil sürümler",
   "optionsUpdateChannelPreview": "Önizleme sürümlerini al",
   "optionsUpdateChannelWarning": "Önizleme sürümleri hatalar veya tamamlanmamış özellikler içerebilir",
   "updateAvailable": "Güncelleme Mevcut",

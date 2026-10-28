@@ -56,7 +56,6 @@ class _QueueLibraryPageRequest {
   final String filterMode;
   final int limit;
   final int offset;
-  final String? filterSource;
   final String? filterQuality;
   final String? filterFormat;
   final String? filterMetadata;
@@ -68,7 +67,6 @@ class _QueueLibraryPageRequest {
     required this.filterMode,
     required this.limit,
     required this.offset,
-    required this.filterSource,
     required this.filterQuality,
     required this.filterFormat,
     required this.filterMetadata,
@@ -81,7 +79,6 @@ class _QueueLibraryPageRequest {
     limit: limit,
     offset: offset,
     filterMode: filterMode,
-    source: filterSource,
     quality: filterQuality,
     format: filterFormat,
     metadata: filterMetadata,
@@ -97,7 +94,6 @@ class _QueueLibraryPageRequest {
           filterMode == other.filterMode &&
           limit == other.limit &&
           offset == other.offset &&
-          filterSource == other.filterSource &&
           filterQuality == other.filterQuality &&
           filterFormat == other.filterFormat &&
           filterMetadata == other.filterMetadata &&
@@ -110,7 +106,6 @@ class _QueueLibraryPageRequest {
     filterMode,
     limit,
     offset,
-    filterSource,
     filterQuality,
     filterFormat,
     filterMetadata,
@@ -121,14 +116,12 @@ class _QueueLibraryPageRequest {
 }
 
 class _QueueLibraryCountsRequest {
-  final String? filterSource;
   final String? filterQuality;
   final String? filterFormat;
   final String? filterMetadata;
   final bool localLibraryEnabled;
 
   const _QueueLibraryCountsRequest({
-    required this.filterSource,
     required this.filterQuality,
     required this.filterFormat,
     required this.filterMetadata,
@@ -136,7 +129,6 @@ class _QueueLibraryCountsRequest {
   });
 
   QueueLibraryDbQuery toDbQuery() => QueueLibraryDbQuery(
-    source: filterSource,
     quality: filterQuality,
     format: filterFormat,
     metadata: filterMetadata,
@@ -147,7 +139,6 @@ class _QueueLibraryCountsRequest {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is _QueueLibraryCountsRequest &&
-          filterSource == other.filterSource &&
           filterQuality == other.filterQuality &&
           filterFormat == other.filterFormat &&
           filterMetadata == other.filterMetadata &&
@@ -155,7 +146,6 @@ class _QueueLibraryCountsRequest {
 
   @override
   int get hashCode => Object.hash(
-    filterSource,
     filterQuality,
     filterFormat,
     filterMetadata,

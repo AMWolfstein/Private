@@ -12,13 +12,7 @@ Future<List<IsrcDuplicateGroup>> readIsrcDuplicateGroups(
 ) async {
   final rows = await db.rawQuery('''
     WITH merged AS (
-      SELECT h.id, 'downloaded' AS source, h.track_name, h.artist_name,
-             h.album_name, h.file_path, UPPER(TRIM(h.isrc)) AS isrc_key,
-             h.bit_depth, h.sample_rate, h.bitrate, h.format, h.duration
-      FROM history_db.history h
-      WHERE h.isrc IS NOT NULL AND TRIM(h.isrc) != ''
-      UNION ALL
-      SELECT l.id, 'local' AS source, l.track_name, l.artist_name,
+      SELECT l.id, l.track_name, l.artist_name,
              l.album_name, l.file_path, UPPER(TRIM(l.isrc)) AS isrc_key,
              l.bit_depth, l.sample_rate, l.bitrate, l.format, l.duration
       FROM ${LibrarySchema.visibleView} l
@@ -28,7 +22,7 @@ Future<List<IsrcDuplicateGroup>> readIsrcDuplicateGroups(
     WHERE isrc_key IN (
       SELECT isrc_key FROM merged GROUP BY isrc_key HAVING COUNT(*) > 1
     )
-    ORDER BY isrc_key, bit_depth DESC, sample_rate DESC, bitrate DESC, source, id
+    ORDER BY isrc_key, bit_depth DESC, sample_rate DESC, bitrate DESC, id
   ''');
 
   final groups = <String, List<IsrcDuplicateEntry>>{};
@@ -70,7 +64,6 @@ Future<List<IsrcDuplicateGroup>> readIsrcDuplicateGroups(
         .add(
           IsrcDuplicateEntry(
             id: row['id'] as String,
-            source: row['source'] as String,
             trackName: row['track_name'] as String? ?? '',
             artistName: row['artist_name'] as String? ?? '',
             albumName: row['album_name'] as String? ?? '',

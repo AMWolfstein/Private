@@ -15,7 +15,7 @@ class DiscSeparatorChip extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
         child: Text(
-          context.l10n.downloadedAlbumDiscHeader(discNumber),
+          context.l10n.collectionDiscHeader(discNumber),
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w600,

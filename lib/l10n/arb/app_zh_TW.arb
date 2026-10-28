@@ -82,18 +82,17 @@
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "historyFilterAll": "全部",
-  "@historyFilterAll": {
+  "libraryKindAll": "全部",
+  "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
-  "historyFilterSingles": "單曲",
-  "@historyFilterSingles": {
+  "libraryKindSingles": "單曲",
+  "@libraryKindSingles": {
     "description": "Filter chip - show singles only"
   },
   "homeLatestReleases": "你的音樂庫中的最新發行",
   "artistPopular": "熱門",
   "libraryRecentlyAdded": "Recently Added",
-  "librarySearchHint": "Search your library",
   "homeLibraryDisabled": "啟用本機音樂庫以在此顯示你的音樂。",
   "homeChooseLibraryFolder": "請在本機音樂庫設定中選擇音樂資料夾。",
   "homeLibraryEmpty": "將音樂加入音樂庫資料夾，然後掃描音樂庫。",
@@ -216,8 +215,8 @@
   "@optionsDetailedLoggingOff": {
     "description": "Status when logging disabled"
   },
-  "extensionsDisabled": "已停用",
-  "@extensionsDisabled": {
+  "settingDisabled": "已停用",
+  "@settingDisabled": {
     "description": "Extension status - inactive"
   },
   "aboutTitle": "關於",
@@ -300,10 +299,6 @@
   "setupNotificationEnable": "Enable Notifications",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
-  },
-  "setupSelectFolder": "Select Folder",
-  "@setupSelectFolder": {
-    "description": "Button to select folder"
   },
   "setupEnableNotifications": "Enable Notifications",
   "@setupEnableNotifications": {
@@ -719,12 +714,12 @@
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "downloadedAlbumDeleteSelected": "Delete Selected",
-  "@downloadedAlbumDeleteSelected": {
+  "collectionDeleteSelected": "Delete Selected",
+  "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "downloadedAlbumDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
-  "@downloadedAlbumDeleteMessage": {
+  "collectionDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
+  "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
       "count": {
@@ -732,12 +727,12 @@
       }
     }
   },
-  "downloadedAlbumTapToSelect": "Tap tracks to select",
-  "@downloadedAlbumTapToSelect": {
+  "collectionTapToSelect": "Tap tracks to select",
+  "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "downloadedAlbumDeleteCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
-  "@downloadedAlbumDeleteCount": {
+  "collectionDeleteCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
       "count": {
@@ -745,12 +740,12 @@
       }
     }
   },
-  "downloadedAlbumSelectToDelete": "Select tracks to delete",
-  "@downloadedAlbumSelectToDelete": {
+  "collectionSelectToDelete": "Select tracks to delete",
+  "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "downloadedAlbumDiscHeader": "Disc {discNumber}",
-  "@downloadedAlbumDiscHeader": {
+  "collectionDiscHeader": "Disc {discNumber}",
+  "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
       "discNumber": {
@@ -1033,11 +1028,6 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterDownloaded": "本機檔案",
-  "libraryFilterLocal": "Local",
-  "@libraryFilterLocal": {
-    "description": "Filter chip - show only local library items"
-  },
   "libraryFilterTitle": "Filters",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
@@ -1049,10 +1039,6 @@
   "libraryFilterApply": "Apply",
   "@libraryFilterApply": {
     "description": "Apply filters button"
-  },
-  "libraryFilterSource": "Source",
-  "@libraryFilterSource": {
-    "description": "Filter section - source type"
   },
   "libraryFilterQuality": "Quality",
   "@libraryFilterQuality": {
@@ -1525,7 +1511,6 @@
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Settings only",
-  "backupSelectHistory": "舊版音樂庫紀錄",
   "backupSelectCollections": "Library collections",
   "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
   "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
@@ -1534,15 +1519,6 @@
   "backupContentsSettings": "App settings",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
-  },
-  "backupContentsHistory": "{count} history {count, plural, =1{item} other{items}}",
-  "@backupContentsHistory": {
-    "description": "Backup contents row for history count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
   "@backupContentsLiked": {
@@ -1705,8 +1681,8 @@
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
-  "queueEmptyHistory": "沒有本機歌曲",
-  "queueEmptyHistorySubtitle": "掃描音樂資料夾以填入你的音樂庫",
+  "libraryEmpty": "沒有本機歌曲",
+  "libraryEmptySubtitle": "掃描音樂資料夾以填入你的音樂庫",
   "selectionAllPlaylistsSelected": "All playlists selected",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
@@ -1871,15 +1847,6 @@
       }
     }
   },
-  "notifLibraryScanExcluded": "{count} excluded",
-  "@notifLibraryScanExcluded": {
-    "description": "Library scan complete suffix - excluded track count",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "notifLibraryScanErrors": "{count} errors",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
@@ -1985,18 +1952,6 @@
     "placeholders": {
       "type": {
         "type": "String"
-      }
-    }
-  },
-  "a11yOpenItemCount": "Open {title}, {count} {count, plural, =1{item} other{items}}",
-  "@a11yOpenItemCount": {
-    "description": "Accessibility label for opening a grouped item with count",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -2259,8 +2214,8 @@
       }
     }
   },
-  "nowPlayingLyricsProvider": "Lyrics: {provider}",
-  "@nowPlayingLyricsProvider": {
+  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
         "type": "String"
@@ -2784,8 +2739,6 @@
   },
   "optionsCheckUpdates": "檢查更新",
   "optionsCheckUpdatesSubtitle": "當有新版本可用時通知",
-  "optionsUpdateChannel": "選擇更新版本",
-  "optionsUpdateChannelStable": "僅取得正式版更新",
   "optionsUpdateChannelPreview": "取得預覽版更新",
   "optionsUpdateChannelWarning": "預覽版本可能包含錯誤或未完成的功能",
   "updateAvailable": "Update Available",

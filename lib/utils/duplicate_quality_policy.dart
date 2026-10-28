@@ -75,6 +75,5 @@ int compareDuplicateQuality(IsrcDuplicateEntry a, IsrcDuplicateEntry b) {
     final order = (right ?? 0).compareTo(left ?? 0);
     if (order != 0) return order;
   }
-  final sourceOrder = a.source.compareTo(b.source);
-  return sourceOrder != 0 ? sourceOrder : a.id.compareTo(b.id);
+  return a.id.compareTo(b.id);
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:sistrum/services/downloaded_embedded_cover_resolver.dart';
+import 'package:sistrum/services/embedded_cover_resolver.dart';
 
 /// Keeps a scanned thumbnail when available, recovering missing artwork from
 /// the audio through the same bounded extraction cache used by the player.
@@ -72,7 +72,7 @@ class _LocalLibraryArtworkBuilderState
   Widget build(BuildContext context) {
     final cover =
         _coverPath ??
-        DownloadedEmbeddedCoverResolver.resolve(
+        EmbeddedCoverResolver.resolve(
           widget.filePath,
           onChanged: _onCoverChanged,
         );

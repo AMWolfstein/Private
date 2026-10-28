@@ -280,7 +280,7 @@ class SelectionBottomBar extends StatelessWidget {
                   allSelected
                       ? allSelectedLabel ?? context.l10n.selectionAllSelected
                       : tapToSelectLabel ??
-                            context.l10n.downloadedAlbumTapToSelect,
+                            context.l10n.collectionTapToSelect,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
