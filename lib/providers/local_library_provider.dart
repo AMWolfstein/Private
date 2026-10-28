@@ -17,7 +17,9 @@ import 'package:sistrum/utils/progress_stream_poller.dart';
 
 final _log = AppLogger('LocalLibrary');
 
-final _prefs = SharedPreferences.getInstance();
+/// Resolves preferences per operation: SharedPreferences caches a successful
+/// instance itself, so a failed first attempt is not retained for the process.
+Future<SharedPreferences> _preferences() => SharedPreferences.getInstance();
 
 class LocalLibraryState {
   final bool isLoading;
@@ -250,7 +252,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         DateTime? lastScannedAt;
         var scanFailures = const <String, LibraryScanFailures>{};
         try {
-          final prefs = await _prefs;
+          final prefs = await _preferences();
           lastScannedAt = readLocalLibraryLastScannedAt(prefs);
           scanFailures = readLocalLibraryScanFailures(prefs);
         } catch (e) {
@@ -715,7 +717,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
 
   Future<void> _recoverPreviousScan() async {
     try {
-      final prefs = await _prefs;
+      final prefs = await _preferences();
       final sourceId = prefs.getString(localLibraryActiveScanSourceKey);
       if (!ref.mounted || sourceId == null || sourceId.trim().isEmpty) return;
       final startedAfter =
@@ -891,7 +893,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       // native scan forever; clear it before the pause control becomes visible.
       await _releaseNativeScanPause();
       try {
-        final prefs = await _prefs;
+        final prefs = await _preferences();
         await prefs.setInt(
           localLibraryActiveScanStartedAtKey,
           DateTime.now().millisecondsSinceEpoch,
@@ -984,34 +986,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           scanCurrentFile: null,
         );
 
-        await _recordScanFailures(activeSourceId);
-        if (!ref.mounted) return;
-        final now = DateTime.now();
-        _sourceVersion++;
-        await _db.updateSourceState(
-          activeSourceId,
-          available: true,
-          lastSeenAt: now,
-          lastScannedAt: now,
-          clearLastScanError: true,
-        );
-        try {
-          final prefs = await SharedPreferences.getInstance();
-          await writeLocalLibraryLastScannedAt(prefs, now);
-          _log.d('Saved lastScannedAt: $now');
-        } catch (e) {
-          _log.w('Failed to save lastScannedAt: $e');
-        }
-
-        await _refreshSummaryFromStorage(lastScannedAt: now);
-        if (!ref.mounted) return;
-        state = state.copyWith(
-          isScanning: false,
-          scanIsFinalizing: false,
-          scanProgress: 100,
-          lastScannedAt: now,
-          scanWasCancelled: false,
-        );
+        if (!await _finishScanSuccess(activeSourceId)) return;
         await _pruneLibraryCoverCache();
 
         final summary =
@@ -1166,34 +1141,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           _log.i('Deleted $deleteCount items from database');
         }
 
-        await _recordScanFailures(activeSourceId);
-        if (!ref.mounted) return;
-        final now = DateTime.now();
-        _sourceVersion++;
-        await _db.updateSourceState(
-          activeSourceId,
-          available: true,
-          lastSeenAt: now,
-          lastScannedAt: now,
-          clearLastScanError: true,
-        );
-        try {
-          final prefs = await SharedPreferences.getInstance();
-          await writeLocalLibraryLastScannedAt(prefs, now);
-          _log.d('Saved lastScannedAt: $now');
-        } catch (e) {
-          _log.w('Failed to save lastScannedAt: $e');
-        }
-
-        await _refreshSummaryFromStorage(lastScannedAt: now);
-        if (!ref.mounted) return;
-        state = state.copyWith(
-          isScanning: false,
-          scanIsFinalizing: false,
-          scanProgress: 100,
-          lastScannedAt: now,
-          scanWasCancelled: false,
-        );
+        if (!await _finishScanSuccess(activeSourceId)) return;
 
         final summary =
             'Incremental scan complete: ${state.totalCount} total tracks '
@@ -1263,7 +1211,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         await _releaseNativeScanPause();
       }
       try {
-        final prefs = await _prefs;
+        final prefs = await _preferences();
         if (prefs.getString(localLibraryActiveScanSourceKey) ==
             activeSourceId) {
           await prefs.remove(localLibraryActiveScanSourceKey);
@@ -1274,6 +1222,42 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         _log.w('Failed to clear active library scan marker: $e');
       }
     }
+  }
+
+  /// Shared success tail for full and incremental scans: failure bookkeeping,
+  /// source timestamps, summary refresh and the terminal state. Branch-specific
+  /// work (cover pruning, summary text) stays with the caller. Returns false
+  /// when the provider unmounted before the terminal state was published.
+  Future<bool> _finishScanSuccess(String sourceId) async {
+    await _recordScanFailures(sourceId);
+    if (!ref.mounted) return false;
+    final now = DateTime.now();
+    _sourceVersion++;
+    await _db.updateSourceState(
+      sourceId,
+      available: true,
+      lastSeenAt: now,
+      lastScannedAt: now,
+      clearLastScanError: true,
+    );
+    try {
+      final prefs = await _preferences();
+      await writeLocalLibraryLastScannedAt(prefs, now);
+      _log.d('Saved lastScannedAt: $now');
+    } catch (e) {
+      _log.w('Failed to save lastScannedAt: $e');
+    }
+
+    await _refreshSummaryFromStorage(lastScannedAt: now);
+    if (!ref.mounted) return false;
+    state = state.copyWith(
+      isScanning: false,
+      scanIsFinalizing: false,
+      scanProgress: 100,
+      lastScannedAt: now,
+      scanWasCancelled: false,
+    );
+    return true;
   }
 
   /// Keeps the files a finished scan could not read, per source; a clean
@@ -1316,7 +1300,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     }
     state = state.copyWith(scanFailures: next);
     try {
-      await writeLocalLibraryScanFailures(await _prefs, next);
+      await writeLocalLibraryScanFailures(await _preferences(), next);
     } catch (e) {
       _log.w('Failed to save library scan failures: $e');
     }
