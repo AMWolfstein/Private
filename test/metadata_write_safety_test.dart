@@ -53,36 +53,6 @@ void main() {
     },
   );
 
-  test('MP3 tag edits stream-copy audio and never re-encode', () {
-    final arguments = FFmpegMetadata.buildMp3EmbedArguments(
-      mp3Path: '/music/song.mp3',
-      tempOutput: '/tmp/out.mp3',
-      metadata: const {'TITLE': 'Song'},
-    );
-    expect(arguments, containsAllInOrder(['-c:a', 'copy']));
-    expect(arguments, isNot(contains('libmp3lame')));
-    expect(arguments, isNot(contains('-b:a')));
-  });
-
-  test(
-    'M4A freeform failure is reported before the file is promoted',
-    () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (call) async {
-            if (call.method == 'acquireMediaDirectory') return 'scope';
-            if (call.method == 'releaseMediaDirectory') return null;
-            expect(call.method, 'writeM4AFreeformTags');
-            return jsonEncode({'error': 'atom write failed'});
-          });
-      expect(
-        await FFmpegMetadata.writeM4AFreeformTags('/tmp/song.m4a', const {
-          'ISRC': 'US1234567890',
-        }),
-        isFalse,
-      );
-    },
-  );
-
   test('M4A/MP4 ReplayGain never uses the lossy stream-copy fallback', () {
     for (final path in [
       'track.m4a',

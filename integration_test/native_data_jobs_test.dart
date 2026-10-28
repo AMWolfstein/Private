@@ -9,7 +9,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/playback/automix_analysis.dart';
-import 'package:sistrum/services/id3v23_lyrics.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/platform_bridge.dart';
@@ -339,48 +338,6 @@ void main() {
         await File(output).readAsString(),
         '#EXTM3U\n#EXTINF:180,Artist - Song\nfolder/a.flac\n#EXTINF:-1,Unknown length\nb.flac\n',
       );
-    },
-  );
-
-  testWidgets(
-    'ID3 native writer preserves tag frames and audio bytes exactly',
-    (tester) async {
-      final titleFrame = [84, 73, 84, 50, 0, 0, 0, 2, 0, 0, 0, 65];
-      final original = Uint8List.fromList([
-        73,
-        68,
-        51,
-        3,
-        0,
-        0,
-        0,
-        0,
-        0,
-        titleFrame.length,
-        ...titleFrame,
-        ...List.generate(200000, (i) => i % 251),
-      ]);
-      final file = await File('${root.path}/id3.mp3').writeAsBytes(original);
-      const lyrics = '[00:01.00]A😀\n[00:02.00]音';
-      final expected = Id3v23Lyrics.writeUnsyncedLyrics(original, lyrics)!;
-      expect(
-        (await _job('write_id3v23_lyrics', {
-          'file_path': file.path,
-          'lyrics': lyrics,
-        }))['updated'],
-        true,
-      );
-      expect(await file.readAsBytes(), expected);
-      final unsupported = Uint8List.fromList(expected)..[3] = 4;
-      await file.writeAsBytes(unsupported);
-      expect(
-        (await _job('write_id3v23_lyrics', {
-          'file_path': file.path,
-          'lyrics': 'Other',
-        }))['updated'],
-        false,
-      );
-      expect(await file.readAsBytes(), unsupported);
     },
   );
 

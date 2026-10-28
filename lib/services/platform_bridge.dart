@@ -490,22 +490,6 @@ class PlatformBridge {
     }
   }
 
-  /// Writes ISRC and label into an M4A/MP4 file as iTunes freeform atoms.
-  /// FFmpeg's MP4 muxer drops these keys, so they must be written natively
-  /// after the FFmpeg metadata pass. [filePath] must be a local file path.
-  /// Only the keys present in [fields] are touched; an empty value clears it.
-  static Future<Map<String, dynamic>> writeM4AFreeformTags(
-    String filePath,
-    Map<String, String> fields,
-  ) {
-    return _withMediaFileAccess([filePath], () {
-      return _invokeMap('writeM4AFreeformTags', {
-        'file_path': filePath,
-        'metadata_json': jsonEncode(fields),
-      });
-    });
-  }
-
   static Future<bool> writeTempToSaf(String tempPath, String safUri) async {
     return (await writeTempToSafDetailed(tempPath, safUri)).success;
   }

@@ -73,14 +73,6 @@ void main() {
         ['C, D'],
       );
       expect(entries.any((entry) => entry.key.endsWith('_separator')), isFalse);
-      expect(
-        AudioMetadataMapper.convertToId3Tags(fields),
-        isNot(contains('artist_separator')),
-      );
-      expect(
-        AudioMetadataMapper.convertToM4aTags(fields),
-        isNot(contains('artist_separator')),
-      );
     },
   );
 }

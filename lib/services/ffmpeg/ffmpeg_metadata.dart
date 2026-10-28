@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:sistrum/services/audio_metadata_mapper.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
-import 'package:sistrum/services/id3v23_lyrics.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 
@@ -90,23 +89,6 @@ abstract final class FFmpegMetadata {
     return false;
   }
 
-  static void appendCoverInputArguments(
-    List<String> arguments, {
-    String map = '1:v',
-    String disposition = '-disposition:v:0',
-  }) => arguments.addAll([
-    '-map',
-    map,
-    '-c:v',
-    'copy',
-    disposition,
-    'attached_pic',
-    '-metadata:s:v',
-    'title=Album cover',
-    '-metadata:s:v',
-    'comment=Cover (front)',
-  ]);
-
   /// Runs one metadata command, turning a platform/execution failure into a
   /// cause the save result can report.
   static Future<FFmpegResult> _execute(
@@ -154,98 +136,6 @@ abstract final class FFmpegMetadata {
     }
     _log.d('$format metadata embedded successfully');
     return path;
-  }
-
-  /// Replaces the MP3 tag set through a stream-copy remux. This writer cannot
-  /// preserve unknown ID3 frames, so tag-preserving edits must go through the
-  /// native writer instead.
-  static Future<String?> replaceMetadataInMp3({
-    required String mp3Path,
-    String? coverPath,
-    Map<String, String>? metadata,
-  }) async {
-    final tempOutput = await FFmpegOutput.tempPath('.mp3');
-    final lyrics = AudioMetadataMapper.extractLyricsForId3(metadata);
-    final result = await _runMp3Embed(
-      mp3Path: mp3Path,
-      tempOutput: tempOutput,
-      coverPath: coverPath,
-      metadata: metadata,
-    );
-    final embeddedPath = await _finish(result, tempOutput, mp3Path, 'MP3');
-    if (lyrics != null) {
-      await _ensureMp3UnsyncedLyricsFrame(embeddedPath, lyrics);
-    }
-    return embeddedPath;
-  }
-
-  static Future<FFmpegResult> _runMp3Embed({
-    required String mp3Path,
-    required String tempOutput,
-    String? coverPath,
-    Map<String, String>? metadata,
-  }) async {
-    final arguments = buildMp3EmbedArguments(
-      mp3Path: mp3Path,
-      tempOutput: tempOutput,
-      coverPath: coverPath,
-      metadata: metadata,
-    );
-    _log.d('Executing FFmpeg MP3 embed command');
-    return _execute(arguments, 'MP3');
-  }
-
-  /// MP3 edits always stream-copy the audio. Re-encoding a tag-only edit
-  /// silently replaced the user's file with a lossy 192 kbps copy.
-  static List<String> buildMp3EmbedArguments({
-    required String mp3Path,
-    required String tempOutput,
-    String? coverPath,
-    Map<String, String>? metadata,
-  }) {
-    final arguments = <String>['-v', 'error', '-hide_banner', '-i', mp3Path];
-    if (coverPath != null) arguments.addAll(['-i', coverPath]);
-    arguments.addAll(['-map', '0:a', '-map_metadata', '-1']);
-    if (coverPath != null) {
-      arguments.addAll([
-        '-map',
-        '1:0',
-        '-c:v:0',
-        'copy',
-        '-id3v2_version',
-        '3',
-        '-metadata:s:v',
-        'title=Album cover',
-        '-metadata:s:v',
-        'comment=Cover (front)',
-      ]);
-    }
-    arguments.addAll(['-c:a', 'copy']);
-    if (metadata != null) {
-      AudioMetadataMapper.appendMappedMetadataArguments(
-        arguments,
-        AudioMetadataMapper.convertToId3Tags(metadata),
-      );
-    }
-    arguments.addAll(['-id3v2_version', '3', tempOutput, '-y']);
-    return arguments;
-  }
-
-  static Future<void> _ensureMp3UnsyncedLyricsFrame(
-    String path,
-    String lyrics,
-  ) async {
-    try {
-      final file = File(path);
-      if (!await file.exists()) return;
-      if (!await Id3v23Lyrics.writeUnsyncedLyricsToFile(file, lyrics)) {
-        _log.w('Skipping MP3 USLT lyrics frame update: unsupported ID3 tag');
-        return;
-      }
-      _log.d('MP3 USLT lyrics frame written (${lyrics.length} chars)');
-    } catch (e) {
-      _log.w('Failed to write MP3 USLT lyrics frame: $e');
-    }
   }
 
   static Future<String?> embedMetadataToOpus({
@@ -304,73 +194,6 @@ abstract final class FFmpegMetadata {
     );
   }
 
-  /// Replaces the M4A tag set through a stream-copy remux. This writer cannot
-  /// preserve unknown freeform atoms, so tag-preserving edits must go through
-  /// the native writer instead.
-  static Future<String?> replaceMetadataInM4a({
-    required String m4aPath,
-    String? coverPath,
-    Map<String, String>? metadata,
-  }) async {
-    final tempOutput = await FFmpegOutput.tempPath('.m4a');
-    final normalizedCoverPath = coverPath?.trim();
-    final hasCover =
-        normalizedCoverPath != null &&
-        normalizedCoverPath.isNotEmpty &&
-        await File(normalizedCoverPath).exists();
-    List<String> buildArgs(bool forceMov) {
-      final arguments = <String>['-v', 'error', '-hide_banner', '-i', m4aPath];
-      if (hasCover) arguments.addAll(['-i', normalizedCoverPath]);
-      arguments.addAll(['-map', '0:a', '-c:a', 'copy']);
-      arguments.addAll(['-map_metadata', '-1']);
-      if (hasCover) appendCoverInputArguments(arguments);
-      if (metadata != null) {
-        AudioMetadataMapper.appendMappedMetadataArguments(
-          arguments,
-          AudioMetadataMapper.convertToM4aTags(metadata),
-        );
-      }
-      // The default .m4a (ipod) muxer rejects FLAC. MP4 supports FLAC and
-      // writes artwork as covr atoms, including artwork copied from the input.
-      if (forceMov) {
-        arguments.addAll(['-f', 'mov']);
-      } else {
-        // Older FFmpeg builds require experimental compliance for FLAC in MP4.
-        arguments.addAll(['-f', 'mp4', '-strict', 'experimental']);
-      }
-      return arguments..addAll([tempOutput, '-y']);
-    }
-
-    _log.d('Executing FFmpeg M4A embed command');
-    var result = await _execute(buildArgs(false), 'M4A');
-    // MOV supports some codecs MP4 rejects (for example AC-4). Other
-    // failures keep their original error instead of trying MOV, which
-    // cannot carry FLAC even with experimental compliance enabled.
-    if (!result.success &&
-        result.output.contains('codec not currently supported in container')) {
-      _log.w(
-        'M4A embed codec rejected by MP4, retrying with mov muxer: '
-        '${FFmpegExecution.preview(result.output)}',
-      );
-      await FFmpegOutput.cleanup(tempOutput);
-      result = await _execute(buildArgs(true), 'M4A');
-    }
-    final metadataTags = metadata;
-    final embedded = await _finish(
-      result,
-      tempOutput,
-      m4aPath,
-      'M4A',
-      beforePromote: metadataTags == null
-          ? null
-          : (temp) async {
-              if (!await writeM4AFreeformTags(temp, metadataTags)) return false;
-              return writeM4AReleaseIdentityTags(temp, metadataTags);
-            },
-    );
-    return embedded;
-  }
-
   static Future<String?> _createMetadataBlockPicture(String imagePath) async {
     try {
       final result = await PlatformBridge.runNativeDataJob({
@@ -426,56 +249,6 @@ abstract final class FFmpegMetadata {
     } catch (e) {
       _log.e('Error creating METADATA_BLOCK_PICTURE: $e');
       return null;
-    }
-  }
-
-  static Future<bool> writeM4AFreeformTags(
-    String path,
-    Map<String, String> metadata,
-  ) async {
-    final fields = <String, String>{};
-    for (final entry in metadata.entries) {
-      final key = entry.key.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
-      switch (key) {
-        case 'ISRC':
-          fields['isrc'] = entry.value;
-          break;
-        case 'LABEL':
-        case 'ORGANIZATION':
-          fields['label'] = entry.value;
-          break;
-      }
-    }
-    if (fields.isEmpty) return true;
-    try {
-      final result = await PlatformBridge.writeM4AFreeformTags(path, fields);
-      if (result['error'] != null) {
-        _log.w('writeM4AFreeformTags was not completed for $path');
-        return false;
-      }
-      return true;
-    } catch (e) {
-      _log.w('writeM4AFreeformTags failed for $path: $e');
-      return false;
-    }
-  }
-
-  static Future<bool> writeM4AReleaseIdentityTags(
-    String path,
-    Map<String, String> metadata,
-  ) async {
-    final fields = AudioMetadataMapper.m4aReleaseIdentityFields(metadata);
-    if (fields.isEmpty) return true;
-    try {
-      final result = await PlatformBridge.editFileMetadata(path, fields);
-      if (result['error'] != null || result['method'] != 'native_m4a') {
-        _log.w('Native M4A release identity write was not completed for $path');
-        return false;
-      }
-      return true;
-    } catch (e) {
-      _log.w('M4A release identity write failed for $path: $e');
-      return false;
     }
   }
 }
