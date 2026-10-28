@@ -50,14 +50,14 @@ void main() {
   group('persistence', () {
     test('a result is kept for its build only', () async {
       const result = SistrumGlassAutoResult(
-        build: '5.1.1+168',
+        build: '1.0.0+1',
         step: SistrumGlassAutoStep.lite,
         done: true,
         p90: 15.5,
       );
       await saveGlassAutoResult(result);
       final prefs = await SharedPreferences.getInstance();
-      expect(loadGlassAutoResult(prefs, build: '5.1.1+168'), result);
+      expect(loadGlassAutoResult(prefs, build: '1.0.0+1'), result);
       // An app update measures again.
       expect(loadGlassAutoResult(prefs, build: '5.1.2+169'), isNull);
       await saveGlassAutoResult(null);
