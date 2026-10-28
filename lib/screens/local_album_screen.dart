@@ -36,6 +36,7 @@ import 'package:sistrum/widgets/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/disc_separator_chip.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/album_ken_burns.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/local_collection_actions.dart';
 import 'package:sistrum/widgets/local_library_artwork_builder.dart';
@@ -374,7 +375,9 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       squareArtwork: true,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
-      background: background,
+      background: context.isSistrum && coverPath != null
+          ? AlbumKenBurns(child: background)
+          : background,
       paletteSource: coverPath,
       blurAndScrimBackground: coverPath != null,
       coverBuilder: (context, coverSize) => coverPath != null

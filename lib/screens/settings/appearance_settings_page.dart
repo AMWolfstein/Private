@@ -120,6 +120,15 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         .read(settingsProvider.notifier)
                         .setHeroAnimationsEnabled(value),
                   ),
+                  SettingsSwitchItem(
+                    icon: Icons.slow_motion_video_outlined,
+                    title: context.l10n.motionArtwork,
+                    subtitle: context.l10n.motionArtworkSubtitle,
+                    value: settings.animatedAlbumArtwork,
+                    onChanged: (value) => ref
+                        .read(settingsProvider.notifier)
+                        .setAnimatedAlbumArtwork(value),
+                  ),
                   SettingsSearchTarget(
                     label: context.l10n.appearanceCustomFont,
                     child: const CustomFontSetting(),

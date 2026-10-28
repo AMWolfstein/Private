@@ -381,6 +381,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
+  void setAnimatedAlbumArtwork(bool enabled) {
+    state = state.copyWith(animatedAlbumArtwork: enabled);
+    _saveSettings();
+  }
+
   void setCheckForUpdates(bool enabled) {
     state = state.copyWith(checkForUpdates: enabled);
     _saveSettings();

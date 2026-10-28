@@ -2685,6 +2685,7 @@
   "profilePhotoError": "Choose a valid image smaller than 20 MB.",
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Animated artwork",
+  "motionArtworkSubtitle": "Slowly drift album covers on album pages",
   "listeningStats": "Listening statistics",
   "listeningStatsRecord": "Record listening",
   "listeningStatsDescription": "Stored only on this device, starting now. Records the built-in player only; pauses, buffering and seeking add no listening time. A play counts after 30 seconds.",

@@ -76,6 +76,9 @@ class AppSettings {
   final bool enableLogging;
   final bool heroAnimationsEnabled;
 
+  /// Slow Ken Burns drift on album cover headers.
+  final bool animatedAlbumArtwork;
+
   /// Offer new GitHub releases at startup. Versions far behind still prompt.
   final bool checkForUpdates;
 
@@ -145,6 +148,7 @@ class AppSettings {
     this.libraryFilterMode = 'all',
     this.enableLogging = false,
     this.heroAnimationsEnabled = true,
+    this.animatedAlbumArtwork = true,
     this.checkForUpdates = true,
     this.updateChannel = 'stable',
     this.developerOptionsUnlocked = false,
@@ -192,6 +196,7 @@ class AppSettings {
     String? libraryFilterMode,
     bool? enableLogging,
     bool? heroAnimationsEnabled,
+    bool? animatedAlbumArtwork,
     bool? checkForUpdates,
     String? updateChannel,
     bool? developerOptionsUnlocked,
@@ -245,6 +250,7 @@ class AppSettings {
       enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
+      animatedAlbumArtwork: animatedAlbumArtwork ?? this.animatedAlbumArtwork,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,
       updateChannel: updateChannel ?? this.updateChannel,
       developerOptionsUnlocked:

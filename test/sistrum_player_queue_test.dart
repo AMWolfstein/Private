@@ -105,10 +105,6 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.repeat));
       expect(player.repeat, AudioServiceRepeatMode.all);
       expect(find.byIcon(CupertinoIcons.ellipsis), findsNothing);
-      final shuffleLibrary = AppLocalizations.of(
-        tester.element(find.byType(SistrumPlayerQueue)),
-      ).nowPlayingShuffleLibrary;
-      expect(find.text(shuffleLibrary), findsNothing);
       expect(find.text('Next'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },

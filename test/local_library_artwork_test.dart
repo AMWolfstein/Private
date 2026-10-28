@@ -21,8 +21,9 @@ import 'package:sistrum/widgets/local_library_artwork_builder.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
+  // The cover drift repeats forever and would keep pumpAndSettle waiting.
   @override
-  AppSettings build() => const AppSettings();
+  AppSettings build() => const AppSettings(animatedAlbumArtwork: false);
 }
 
 void main() {
