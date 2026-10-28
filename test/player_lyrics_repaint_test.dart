@@ -573,7 +573,6 @@ void main() {
 
       for (final change in <VoidCallback>[
         () => width = 180,
-        () => direction = TextDirection.rtl,
         () => scale = 1.4,
         () => letterSpacing = 1.5,
         () => locale = const Locale('en', 'US'),

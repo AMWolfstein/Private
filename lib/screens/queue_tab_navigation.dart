@@ -59,8 +59,7 @@ extension _QueueTabNavigation on _QueueTabState {
   }
 
   void _navigateWithUnfocus(Route<dynamic> route) {
-    _searchFocusNode.unfocus();
-    Navigator.of(context).push(route).then((_) => _searchFocusNode.unfocus());
+    Navigator.of(context).push(route);
   }
 
   void _navigateToLocalAlbum(_GroupedLocalAlbum album) {

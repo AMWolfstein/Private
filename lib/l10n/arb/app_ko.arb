@@ -1951,18 +1951,6 @@
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "커버 해상도",
-  "@trackCoverResolution": {
-    "description": "Label for selecting the embedded cover art resolution"
-  },
-  "trackCoverResolutionHint": "저장할 때 이미지의 긴 변 길이를 설정합니다. 확대해도 이미지의 세부 정보는 늘어나지 않습니다",
-  "@trackCoverResolutionHint": {
-    "description": "Explanation below the embedded cover art resolution selector"
-  },
-  "trackCoverResizeFailed": "앨범 커버를 원하는 크기로 조정할 수 없습니다. 다른 크기나 이미지를 사용해 보세요",
-  "@trackCoverResizeFailed": {
-    "description": "Error shown when resizing cover art before saving metadata fails"
-  },
   "nowPlayingRepeatOff": "반복 끄기",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
@@ -2387,10 +2375,6 @@
   "actionShuffle": "셔플",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
-  },
-  "metadataOriginal": "원본",
-  "@metadataOriginal": {
-    "description": "Label for keeping the original embedded cover resolution"
   },
   "unknownTitle": "알 수 없는 제목",
   "@unknownTitle": {

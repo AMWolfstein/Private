@@ -16,6 +16,7 @@ import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/utils/lyrics_timeline.dart';
+import 'package:sistrum/utils/lyric_text_direction.dart';
 import 'package:sistrum/utils/synced_lyrics_scroll.dart';
 import 'package:sistrum/widgets/aligned_lyric_pronunciation.dart';
 import 'package:sistrum/widgets/lyric_supplement_transition.dart';
@@ -538,6 +539,9 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
         _measurementRevision++;
         return;
       }
+      // Rows lay out in their own direction; measure them the same way.
+      final lineDirection = lyricLineDirection(line.text, direction);
+      painter.textDirection = lineDirection;
       painter.text = TextSpan(
         text: line.text,
         style: _sistrumLyricStyle(context, background: line.isBackground),
@@ -567,7 +571,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
             pronunciationStyle: style,
             maxWidth: width,
             textScaler: scaler,
-            textDirection: direction,
+            textDirection: lineDirection,
             locale: locale,
           );
           if (aligned != null) {
@@ -970,6 +974,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               final line = lines[index];
               final leadIndex = _displayLayout.leadForLine[index];
               final textAlign = _lyricTextAlign(context, lines[leadIndex]);
+              final lineDirection = lyricLineDirection(
+                line.text,
+                Directionality.of(context),
+              );
               final reveal = rowVisibility[index];
               if (reveal == 0) return SizedBox.shrink(key: _lineKeys[index]);
               final isActive = _activeLines.contains(index);
@@ -1129,38 +1137,42 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 enabled: !isActive,
                 child: content,
               );
-              return _revealRow(
-                index,
-                reveal,
-                textAlign,
-                Padding(
-                  padding: _linePadding(index),
-                  child: GestureDetector(
-                    onTap: () =>
-                        ref.read(musicPlayerControllerProvider).seek(line.time),
-                    onLongPress: widget.onLongPressLine == null
-                        ? null
-                        : () {
-                            HapticFeedback.mediumImpact();
-                            widget.onLongPressLine!(line);
-                          },
-                    child: AnimatedScale(
-                      scale: isActive ? 1.0 : 0.96,
-                      alignment: !sistrum
-                          ? Alignment.center
-                          : (textAlign == TextAlign.end
-                                    ? AlignmentDirectional.centerEnd
-                                    : AlignmentDirectional.centerStart)
-                                .resolve(Directionality.of(context)),
-                      duration: motion,
-                      curve: Curves.easeOutCubic,
-                      child: AnimatedOpacity(
-                        opacity: sistrum
-                            ? (isActive || highContrast ? 1 : 0.48)
-                            : (isActive ? 1.0 : (isPast ? 0.55 : 0.85)),
+              return Directionality(
+                textDirection: lineDirection,
+                child: _revealRow(
+                  index,
+                  reveal,
+                  textAlign,
+                  Padding(
+                    padding: _linePadding(index),
+                    child: GestureDetector(
+                      onTap: () => ref
+                          .read(musicPlayerControllerProvider)
+                          .seek(line.time),
+                      onLongPress: widget.onLongPressLine == null
+                          ? null
+                          : () {
+                              HapticFeedback.mediumImpact();
+                              widget.onLongPressLine!(line);
+                            },
+                      child: AnimatedScale(
+                        scale: isActive ? 1.0 : 0.96,
+                        alignment: !sistrum
+                            ? Alignment.center
+                            : (textAlign == TextAlign.end
+                                      ? AlignmentDirectional.centerEnd
+                                      : AlignmentDirectional.centerStart)
+                                  .resolve(lineDirection),
                         duration: motion,
-                        curve: Curves.easeInOutCubic,
-                        child: content,
+                        curve: Curves.easeOutCubic,
+                        child: AnimatedOpacity(
+                          opacity: sistrum
+                              ? (isActive || highContrast ? 1 : 0.48)
+                              : (isActive ? 1.0 : (isPast ? 0.55 : 0.85)),
+                          duration: motion,
+                          curve: Curves.easeInOutCubic,
+                          child: content,
+                        ),
                       ),
                     ),
                   ),

@@ -311,19 +311,8 @@ void main() {
     );
     await _waitFor(tester, find.text('1/12'));
 
-    await tester.enterText(find.byType(TextField), 'one-track');
-    await tester.pump(const Duration(milliseconds: 400));
-    await _waitFor(tester, find.text('1 album'));
-    expect(find.text('1/12'), findsOneWidget);
-    expect(find.text('2/4'), findsNothing);
     // Even an empty matching result must retain the filter controls.
-    await tester.enterText(find.byType(TextField), 'no-such-album');
-    await tester.pump(const Duration(milliseconds: 400));
-    await _waitFor(tester, find.text('No local albums'));
     expect(find.text('Filters').hitTestable(), findsOneWidget);
-    await tester.enterText(find.byType(TextField), '');
-    await tester.pump(const Duration(milliseconds: 400));
-    await _waitFor(tester, find.text('1/12'));
     await tester.tap(find.text('Filters').hitTestable());
     await tester.pump(const Duration(milliseconds: 400));
     await _waitFor(tester, find.text('Reset').hitTestable());
@@ -426,12 +415,6 @@ void main() {
       'complete2',
     );
 
-    // Search is reachable while selecting. A changed query ends selection,
-    // so hidden rows cannot reappear in a later selection's counts/actions.
-    await tester.enterText(find.byType(TextField).first, 'new query');
-    await tester.pump(const Duration(milliseconds: 400));
-    await tester.pump(const Duration(milliseconds: 400));
-    expect(find.byType(LibraryTrackSelectionBar), findsNothing);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
     for (var attempt = 0; attempt < 10; attempt++) {

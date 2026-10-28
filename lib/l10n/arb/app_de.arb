@@ -1951,18 +1951,6 @@
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "Cover resolution",
-  "@trackCoverResolution": {
-    "description": "Label for selecting the embedded cover art resolution"
-  },
-  "trackCoverResolutionHint": "Sets the longest edge when saved. Enlarging does not add image detail.",
-  "@trackCoverResolutionHint": {
-    "description": "Explanation below the embedded cover art resolution selector"
-  },
-  "trackCoverResizeFailed": "The cover image could not be resized. Please try another size or image.",
-  "@trackCoverResizeFailed": {
-    "description": "Error shown when resizing cover art before saving metadata fails"
-  },
   "nowPlayingRepeatOff": "Wiederholen deaktivieren",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
@@ -2387,10 +2375,6 @@
   "actionShuffle": "Shuffle",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
-  },
-  "metadataOriginal": "Original",
-  "@metadataOriginal": {
-    "description": "Label for keeping the original embedded cover resolution"
   },
   "unknownTitle": "Unbekannter Titel",
   "@unknownTitle": {

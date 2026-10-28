@@ -338,7 +338,10 @@ class EqualizerScreen extends ConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 8),
-                                    Text(label, textAlign: TextAlign.center),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Text(label),
+                                    ),
                                   ],
                                 ),
                               ),

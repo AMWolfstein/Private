@@ -73,8 +73,10 @@ class SistrumPlayerActionsSheet extends ConsumerWidget {
           _action(
             context,
             'favorite',
-            loved ? context.l10n.sistrumFavorited : context.l10n.sistrumFavorite,
-            CupertinoIcons.star_fill,
+            loved
+                ? context.l10n.sistrumFavorited
+                : context.l10n.sistrumFavorite,
+            loved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
             selected: loved,
           ),
           _action(

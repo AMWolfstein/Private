@@ -66,7 +66,7 @@ class _SistrumPlayerFavoriteButtonState
     return Semantics(
       toggled: loved,
       child: SistrumPlaybackButton(
-        icon: loved ? CupertinoIcons.star_fill : CupertinoIcons.star,
+        icon: loved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
         tooltip: loved
             ? context.l10n.trackOptionRemoveFromLoved
             : context.l10n.trackOptionAddToLoved,

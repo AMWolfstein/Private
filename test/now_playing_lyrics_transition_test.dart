@@ -1531,7 +1531,7 @@ void main() {
   );
 
   testWidgets(
-    'Sistrum star shares Library favorites across tracks and compact headers',
+    'Sistrum heart shares Library favorites across tracks and compact headers',
     (tester) async {
       await pumpNowPlaying(
         tester,
@@ -1543,12 +1543,12 @@ void main() {
       final container = ProviderScope.containerOf(
         tester.element(find.byType(NowPlayingScreen)),
       );
-      final star = find.byIcon(CupertinoIcons.star).hitTestable();
-      expect(star, findsOneWidget);
-      await tester.tap(star);
+      final heart = find.byIcon(CupertinoIcons.heart).hitTestable();
+      expect(heart, findsOneWidget);
+      await tester.tap(heart);
       await settlePlayer(tester);
       expect(
-        find.byIcon(CupertinoIcons.star_fill).hitTestable(),
+        find.byIcon(CupertinoIcons.heart_fill).hitTestable(),
         findsOneWidget,
       );
       expect(
@@ -1560,7 +1560,7 @@ void main() {
       await tester.tap(find.text('Favorited'));
       await settlePlayer(tester);
       expect(container.read(libraryCollectionsProvider).loved, isEmpty);
-      expect(star, findsOneWidget);
+      expect(heart, findsOneWidget);
       await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
       await settlePlayer(tester);
       await tester.tap(find.text('Favorite'));
@@ -1572,16 +1572,16 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.list_bullet));
       await settlePlayer(tester);
       expect(
-        find.byIcon(CupertinoIcons.star_fill).hitTestable(),
+        find.byIcon(CupertinoIcons.heart_fill).hitTestable(),
         findsOneWidget,
       );
       mediaItems.add(item('second'));
       await settlePlayer(tester);
-      expect(find.byIcon(CupertinoIcons.star).hitTestable(), findsOneWidget);
+      expect(find.byIcon(CupertinoIcons.heart).hitTestable(), findsOneWidget);
       mediaItems.add(item('first'));
       await settlePlayer(tester);
       expect(
-        find.byIcon(CupertinoIcons.star_fill).hitTestable(),
+        find.byIcon(CupertinoIcons.heart_fill).hitTestable(),
         findsOneWidget,
       );
 
@@ -1595,7 +1595,7 @@ void main() {
           .read(libraryCollectionsProvider.notifier)
           .toggleLoved(track);
       await settlePlayer(tester);
-      expect(find.byIcon(CupertinoIcons.star).hitTestable(), findsOneWidget);
+      expect(find.byIcon(CupertinoIcons.heart).hitTestable(), findsOneWidget);
       expect(
         find.byType(SistrumPlayerFavoriteButton).hitTestable(),
         findsOneWidget,

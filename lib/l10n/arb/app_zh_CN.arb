@@ -1951,18 +1951,6 @@
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "封面分辨率",
-  "@trackCoverResolution": {
-    "description": "Label for selecting the embedded cover art resolution"
-  },
-  "trackCoverResolutionHint": "设置保存时的最长边。放大不会增加图像细节。",
-  "@trackCoverResolutionHint": {
-    "description": "Explanation below the embedded cover art resolution selector"
-  },
-  "trackCoverResizeFailed": "无法调整封面图片大小。请尝试其他大小或图片。",
-  "@trackCoverResizeFailed": {
-    "description": "Error shown when resizing cover art before saving metadata fails"
-  },
   "nowPlayingRepeatOff": "循环关",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
@@ -2387,10 +2375,6 @@
   "actionShuffle": "随机播放",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
-  },
-  "metadataOriginal": "Original",
-  "@metadataOriginal": {
-    "description": "Label for keeping the original embedded cover resolution"
   },
   "unknownTitle": "未知标题",
   "@unknownTitle": {

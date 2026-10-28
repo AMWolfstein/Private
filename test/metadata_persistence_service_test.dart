@@ -9,21 +9,11 @@ import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/artist_utils.dart';
 
 class _Covers extends MetadataCoverResources {
-  bool failResize = false;
   bool extractCover = false;
-  MetadataCoverPreview? resized;
   MetadataCoverPreview? extracted;
 
   Future<MetadataCoverPreview> create() =>
       copyPicked(extension: 'png', bytes: Uint8List.fromList([1, 2, 3]));
-
-  @override
-  Future<MetadataCoverPreview> resize(String source, int maxDimension) async {
-    expect(await File(source).exists(), isTrue);
-    expect(maxDimension, 500);
-    if (failResize) throw StateError('Resize failed');
-    return resized = await create();
-  }
 
   @override
   Future<MetadataCoverPreview?> extract(String filePath) async =>
@@ -40,13 +30,11 @@ void main() {
     Map<String, String> tags = const {},
     String? selectedCover,
     String? currentCover,
-    int? dimension,
   }) => MetadataSaveRequest(
     filePath: path,
     metadata: tags,
     selectedCoverPath: selectedCover,
     currentCoverPath: currentCover,
-    coverMaxDimension: dimension,
   );
 
   test(
@@ -223,52 +211,6 @@ void main() {
         },
       );
       expect((await service.save(request(tags: tags))).failure, isNull);
-    },
-  );
-
-  test(
-    'resized artwork replaces the cover and is released after saving',
-    () async {
-      final original = await covers.create();
-      final service = MetadataPersistenceService(
-        covers: covers,
-        edit: (_, metadata) async {
-          expect(metadata['cover_path'], covers.resized!.path);
-          expect(await File(covers.resized!.path).exists(), isTrue);
-          return {'method': 'native'};
-        },
-      );
-      expect(
-        (await service.save(
-          request(currentCover: original.path, dimension: 500),
-        )).failure,
-        isNull,
-      );
-      expect(await File(original.path).exists(), isTrue);
-      expect(await Directory(covers.resized!.tempDir).exists(), isFalse);
-    },
-  );
-
-  test(
-    'missing artwork and resize failures return typed failures before editing',
-    () async {
-      final service = MetadataPersistenceService(
-        covers: covers,
-        edit: (_, _) async => throw StateError('Must not edit'),
-      );
-      expect(
-        (await service.save(request(dimension: 500))).failure,
-        MetadataSaveFailure.noCover,
-      );
-      covers.failResize = true;
-      final original = await covers.create();
-      expect(
-        (await service.save(
-          request(selectedCover: original.path, dimension: 500),
-        )).failure,
-        MetadataSaveFailure.resize,
-      );
-      expect(await File(original.path).exists(), isTrue);
     },
   );
 

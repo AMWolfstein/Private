@@ -1,8 +1,13 @@
 import 'package:flutter/widgets.dart';
 
-enum ShellTab { home, library, settings, search }
+enum ShellTab { home, stats, library, settings, search }
 
 class ShellNavigationService {
+  static const int homeTabIndex = 0;
+  static const int statsTabIndex = 1;
+  static const int libraryTabIndex = 2;
+  static const int searchTabIndex = 3;
+
   static final searchRequests = ValueNotifier<int>(0);
   static final chromeBrightness = ValueNotifier<Brightness?>(null);
   static final chromeSurface = ValueNotifier<Color?>(null);
@@ -75,7 +80,8 @@ class ShellNavigationService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (generation != _searchGeneration ||
           !identical(owner, _tabSelectionOwner) ||
-          _currentTabIndex != (_showSearchTab ? 2 : 0)) {
+          _currentTabIndex !=
+              (_showSearchTab ? searchTabIndex : homeTabIndex)) {
         return;
       }
       final navigatorKey = _showSearchTab
@@ -91,6 +97,8 @@ class ShellNavigationService {
   }
 
   static final GlobalKey<NavigatorState> homeTabNavigatorKey =
+      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> statsTabNavigatorKey =
       GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> libraryTabNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -123,6 +131,7 @@ class ShellNavigationService {
   static bool isTabNavigator(NavigatorState? navigator) =>
       navigator != null &&
       (identical(navigator, homeTabNavigatorKey.currentState) ||
+          identical(navigator, statsTabNavigatorKey.currentState) ||
           identical(navigator, libraryTabNavigatorKey.currentState) ||
           identical(navigator, searchTabNavigatorKey.currentState));
 
@@ -147,9 +156,10 @@ class ShellNavigationService {
   }
 
   static GlobalKey<NavigatorState>? _activeTabNavigatorKey() {
-    if (_currentTabIndex == 0) return homeTabNavigatorKey;
-    if (_currentTabIndex == 1) return libraryTabNavigatorKey;
-    if (_showSearchTab && _currentTabIndex == 2) {
+    if (_currentTabIndex == homeTabIndex) return homeTabNavigatorKey;
+    if (_currentTabIndex == statsTabIndex) return statsTabNavigatorKey;
+    if (_currentTabIndex == libraryTabIndex) return libraryTabNavigatorKey;
+    if (_showSearchTab && _currentTabIndex == searchTabIndex) {
       return searchTabNavigatorKey;
     }
     return null;

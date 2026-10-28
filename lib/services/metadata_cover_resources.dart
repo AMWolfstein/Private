@@ -143,15 +143,4 @@ class MetadataCoverResources {
       }
     }, probe: false);
   }
-
-  Future<MetadataCoverPreview> resize(String source, int maxDimension) {
-    return _create('metadata_resized_cover_', 'cover.jpg', (path) async {
-      final resized = await FFmpegService.resizeCoverArt(
-        inputPath: source,
-        outputPath: path,
-        maxDimension: maxDimension,
-      );
-      if (!resized) throw StateError('Cover resize failed');
-    }, probe: false);
-  }
 }

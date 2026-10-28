@@ -56,7 +56,6 @@ class _QueueLibraryPageRequest {
   final String filterMode;
   final int limit;
   final int offset;
-  final String searchQuery;
   final String? filterSource;
   final String? filterQuality;
   final String? filterFormat;
@@ -69,7 +68,6 @@ class _QueueLibraryPageRequest {
     required this.filterMode,
     required this.limit,
     required this.offset,
-    required this.searchQuery,
     required this.filterSource,
     required this.filterQuality,
     required this.filterFormat,
@@ -83,7 +81,6 @@ class _QueueLibraryPageRequest {
     limit: limit,
     offset: offset,
     filterMode: filterMode,
-    searchQuery: searchQuery,
     source: filterSource,
     quality: filterQuality,
     format: filterFormat,
@@ -100,7 +97,6 @@ class _QueueLibraryPageRequest {
           filterMode == other.filterMode &&
           limit == other.limit &&
           offset == other.offset &&
-          searchQuery == other.searchQuery &&
           filterSource == other.filterSource &&
           filterQuality == other.filterQuality &&
           filterFormat == other.filterFormat &&
@@ -114,7 +110,6 @@ class _QueueLibraryPageRequest {
     filterMode,
     limit,
     offset,
-    searchQuery,
     filterSource,
     filterQuality,
     filterFormat,
@@ -126,7 +121,6 @@ class _QueueLibraryPageRequest {
 }
 
 class _QueueLibraryCountsRequest {
-  final String searchQuery;
   final String? filterSource;
   final String? filterQuality;
   final String? filterFormat;
@@ -134,7 +128,6 @@ class _QueueLibraryCountsRequest {
   final bool localLibraryEnabled;
 
   const _QueueLibraryCountsRequest({
-    required this.searchQuery,
     required this.filterSource,
     required this.filterQuality,
     required this.filterFormat,
@@ -143,7 +136,6 @@ class _QueueLibraryCountsRequest {
   });
 
   QueueLibraryDbQuery toDbQuery() => QueueLibraryDbQuery(
-    searchQuery: searchQuery,
     source: filterSource,
     quality: filterQuality,
     format: filterFormat,
@@ -155,7 +147,6 @@ class _QueueLibraryCountsRequest {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is _QueueLibraryCountsRequest &&
-          searchQuery == other.searchQuery &&
           filterSource == other.filterSource &&
           filterQuality == other.filterQuality &&
           filterFormat == other.filterFormat &&
@@ -164,7 +155,6 @@ class _QueueLibraryCountsRequest {
 
   @override
   int get hashCode => Object.hash(
-    searchQuery,
     filterSource,
     filterQuality,
     filterFormat,
@@ -231,8 +221,7 @@ class _QueueLibraryPageData {
     } else {
       filteredItems = items
           .where(
-            (item) =>
-                !collectionState.isTrackInAnyPlaylist(item.collectionKey),
+            (item) => !collectionState.isTrackInAnyPlaylist(item.collectionKey),
           )
           .toList(growable: false);
       _filteredFrom = collectionState;

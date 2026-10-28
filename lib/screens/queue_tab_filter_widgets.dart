@@ -62,16 +62,11 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       _ => null,
     };
 
-    // Indexes into collectionState.playlists, name-filtered by the search
-    // query, for the 'playlists' view.
+    // Indexes into collectionState.playlists for the 'playlists' view.
     final playlistIndexes = <int>[];
     if (filterMode == 'playlists') {
-      final query = _searchQuery.trim().toLowerCase();
       for (var i = 0; i < collectionState.playlists.length; i++) {
-        if (query.isEmpty ||
-            collectionState.playlists[i].name.toLowerCase().contains(query)) {
-          playlistIndexes.add(i);
-        }
+        playlistIndexes.add(i);
       }
       playlistIndexes.sort((a, b) {
         final first = collectionState.playlists[a];

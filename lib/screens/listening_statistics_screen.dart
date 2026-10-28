@@ -6,6 +6,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation_utils.dart' show SkeletonBox;
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_choice_chip.dart';
@@ -26,7 +27,10 @@ final listeningSummaryProvider = FutureProvider.autoDispose
     });
 
 class ListeningStatisticsScreen extends ConsumerStatefulWidget {
-  const ListeningStatisticsScreen({super.key});
+  const ListeningStatisticsScreen({super.key, this.asTab = false});
+
+  /// Shown as a navigation tab: no back button, and room for the floating bar.
+  final bool asTab;
 
   @override
   ConsumerState<ListeningStatisticsScreen> createState() =>
@@ -86,7 +90,10 @@ class _ListeningStatisticsScreenState
         onRefresh: () => ref.refresh(listeningSummaryProvider(period).future),
         child: CustomScrollView(
           slivers: [
-            AppSliverHeader.page(title: context.l10n.listeningStats),
+            if (widget.asTab)
+              AppSliverHeader.tabRoot(title: context.l10n.listeningStats)
+            else
+              AppSliverHeader.page(title: context.l10n.listeningStats),
             // Centered at the reading width on tablets, under the title.
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
@@ -180,6 +187,7 @@ class _ListeningStatisticsScreenState
                       ),
                     ),
                   ),
+                  if (widget.asTab) const NavBarSliverSpacer(),
                 ],
               ),
             ),

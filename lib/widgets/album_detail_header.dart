@@ -213,7 +213,10 @@ class AlbumDetailHeader extends StatelessWidget {
       ];
       // The header controls' ground: the cover under this gradient.
       final artwork = SistrumGroundAnchor(
-        layout: SistrumGroundLayout(stops: const [0, 0.48, 1], colors: gradient),
+        layout: SistrumGroundLayout(
+          stops: const [0, 0.48, 1],
+          colors: gradient,
+        ),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -762,8 +765,6 @@ class HeaderCircleButton extends ConsumerWidget {
     required this.onPressed,
     this.iconColor,
     this.tonal = false,
-    this.glassTintColor,
-    this.glassTintOpacity,
     this.buttonSize,
     this.iconSize = 22,
   });
@@ -778,9 +779,6 @@ class HeaderCircleButton extends ConsumerWidget {
   /// Uses the same translucent fill as the local album's Play/Shuffle pills.
   final bool tonal;
 
-  /// Optional tint for controls floating over artwork-colored surfaces.
-  final Color? glassTintColor;
-  final double? glassTintOpacity;
   final double? buttonSize;
   final double iconSize;
 
@@ -827,14 +825,10 @@ class HeaderCircleButton extends ConsumerWidget {
         widthFactor: 1,
         child: SistrumGlass.navigation(
           radius: (buttonSize ?? kSistrumHeaderControlSize) / 2,
-          tintColor:
-              glassTintColor ??
-              (scheme.brightness == Brightness.dark
-                  ? Colors.black
-                  : Colors.white),
-          tintOpacity:
-              glassTintOpacity ??
-              (scheme.brightness == Brightness.dark ? 0.45 : 0.55),
+          tintColor: scheme.brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
+          tintOpacity: scheme.brightness == Brightness.dark ? 0.45 : 0.55,
           blurEnabled: blurEnabled,
           allowLens: sistrumLiquidChromeEnabled(context, ref),
           child: button,

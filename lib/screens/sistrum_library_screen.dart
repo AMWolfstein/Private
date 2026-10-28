@@ -18,11 +18,9 @@ import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/app_search_field.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/local_library_artwork_builder.dart';
-import 'package:sistrum/widgets/library_search_results.dart';
 
 enum SistrumLibraryPage { overview, albums, artists }
 
@@ -45,11 +43,7 @@ class SistrumLibraryScreen extends ConsumerStatefulWidget {
 
 class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
   final _scroll = ScrollController();
-  final _search = TextEditingController();
-  Timer? _debounce;
-  bool _showSearch = false;
   String? _completeness;
-  String _query = '';
   late String _sort;
   List<LibraryBrowseEntry> _rows = const [];
   bool _loading = true;
@@ -59,7 +53,7 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
   LibraryBrowseRequest get _request => (
     artists: _artists,
     artist: widget.artist,
-    search: _query,
+    search: '',
     sort: _sort,
     limit: 40,
     completeness: _completeness,
@@ -73,7 +67,6 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
       if (!_overview &&
           _scroll.position.extentAfter < 500 &&
           !_loading &&
-          !(_overview && _query.isNotEmpty) &&
           // A failed page must not be retried on every scroll tick; the
           // error row exposes an explicit Retry instead.
           ref.read(libraryBrowseProvider(_request)).value?.loadMoreError ==
@@ -87,9 +80,7 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
 
   @override
   void dispose() {
-    _debounce?.cancel();
     _scroll.dispose();
-    _search.dispose();
     super.dispose();
   }
 
@@ -112,17 +103,6 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
       return;
     }
     ref.invalidate(provider);
-  }
-
-  void _searchChanged(String value) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (!mounted || _query == value.trim()) return;
-      setState(() {
-        _query = value.trim();
-        _rows = const [];
-      });
-    });
   }
 
   void _openPage(SistrumLibraryPage page, {String? artist}) {
@@ -260,7 +240,6 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final searchingLibrary = _overview && _query.isNotEmpty;
     final listInset = wideListInset(context);
     final result = _overview
         ? const AsyncData(LibraryBrowseState([], hasMore: false))
@@ -275,20 +254,6 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
             ? context.l10n.searchArtists
             : context.l10n.searchAlbums);
     final actions = <Widget>[
-      IconButton(
-        tooltip: context.l10n.librarySearchHint,
-        icon: const Icon(Icons.search),
-        onPressed: () => setState(() {
-          _showSearch = !_showSearch;
-          if (_showSearch) return;
-          // Hiding the field must also drop its query, or the overview keeps
-          // showing results with no field or clear control left.
-          _debounce?.cancel();
-          _search.clear();
-          _query = '';
-          _rows = const [];
-        }),
-      ),
       if (!_overview && !_artists) ...[
         IconButton(
           tooltip: context.l10n.searchSortTitle,
@@ -319,37 +284,8 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
             )
           else
             AppSliverHeader.page(title: title, actions: actions),
-          if (_showSearch)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  24 + listInset,
-                  8,
-                  24 + listInset,
-                  16,
-                ),
-                child: AppSearchField(
-                  controller: _search,
-                  autofocus: true,
-                  hintText: context.l10n.librarySearchHint,
-                  clearTooltip: context.l10n.dialogClear,
-                  onChanged: _searchChanged,
-                  onClear: () {
-                    _search.clear();
-                    _searchChanged('');
-                  },
-                ),
-              ),
-            ),
-          if (searchingLibrary)
-            LibrarySearchResults(
-              query: _query,
-              onOpenArtist: (artist) =>
-                  _openPage(SistrumLibraryPage.albums, artist: artist),
-            ),
-          if (!searchingLibrary) ...[
+          ...[
             if (_overview &&
-                _query.isEmpty &&
                 ref.watch(
                   settingsProvider.select((s) => s.listeningStatisticsEnabled),
                 ))
@@ -363,7 +299,7 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
                   ),
                 ),
               ),
-            if (_overview && _query.isEmpty)
+            if (_overview)
               SliverPadding(
                 // Rows center at the reading width on tablets.
                 padding: EdgeInsets.fromLTRB(

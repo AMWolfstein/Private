@@ -93,12 +93,7 @@ void main() {
       expect(requests.last.completeness, incompleteAlbumFilter);
       expect(find.text('8/12'), findsOneWidget);
       expect(find.byTooltip('8/12 tracks · 4 missing'), findsOneWidget);
-      await tester.tap(find.byTooltip('Search your library'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), 'My album');
-      await tester.pump(const Duration(milliseconds: 350));
-      await tester.pumpAndSettle();
-      expect(requests.last.search, 'My album');
+      expect(requests.last.search, isEmpty);
       expect(requests.last.completeness, incompleteAlbumFilter);
       await tester.tap(find.byTooltip('Filters'));
       await tester.pumpAndSettle();
@@ -198,16 +193,8 @@ void main() {
         await tester.tap(find.text('Playlists'));
         expect(opened, ['all', 'playlists']);
 
-        await tester.tap(find.byTooltip('Search your library'));
-        await tester.pumpAndSettle();
-        await tester.enterText(find.byType(TextField), 'green lilac');
-        await tester.pump(const Duration(milliseconds: 350));
-        await tester.pumpAndSettle();
-        expect(searches, hasLength(4));
-        expect(find.byType(TextField), findsOneWidget);
-        await tester.tap(find.byTooltip('Clear'));
-        await tester.pump(const Duration(milliseconds: 350));
-        await tester.pumpAndSettle();
+        expect(find.byType(TextField), findsNothing);
+        expect(find.byTooltip('Search your library'), findsNothing);
 
         await tester.tap(find.text('Artists'));
         await tester.pumpAndSettle();
@@ -221,7 +208,7 @@ void main() {
     );
   }
 
-  testWidgets('Library search is local and album pages load on scroll', (
+  testWidgets('Library has no search and album pages load on scroll', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -271,19 +258,6 @@ void main() {
       80,
     );
     scroll.controller!.jumpTo(0);
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Search your library'));
-    await tester.pumpAndSettle();
-    expect(tester.testTextInput.isVisible, isTrue);
-    await tester.enterText(find.byType(TextField), 'My album');
-    await tester.pump(const Duration(milliseconds: 350));
-    await tester.pumpAndSettle();
-    expect(requests.last.search, 'My album');
-    expect(requests.last.limit, 40);
-    expect(offsets.last, 0);
-    // Hiding the field drops its query, so the section cannot stay filtered
-    // with no visible field or clear control.
-    await tester.tap(find.byTooltip('Search your library'));
     await tester.pumpAndSettle();
     expect(find.byType(TextField), findsNothing);
     expect(requests.last.search, isEmpty);

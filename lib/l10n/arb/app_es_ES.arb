@@ -1951,18 +1951,6 @@
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "Resolución de la portada",
-  "@trackCoverResolution": {
-    "description": "Label for selecting the embedded cover art resolution"
-  },
-  "trackCoverResolutionHint": "Establece el lado más largo al guardar. Al ampliar la imagen no se añaden detalles.",
-  "@trackCoverResolutionHint": {
-    "description": "Explanation below the embedded cover art resolution selector"
-  },
-  "trackCoverResizeFailed": "No se pudo ajustar el tamaño de la imagen de portada. Intenta con otro tamaño o con otra imagen.",
-  "@trackCoverResizeFailed": {
-    "description": "Error shown when resizing cover art before saving metadata fails"
-  },
   "nowPlayingRepeatOff": "Repetir hasta que se apague",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
@@ -2387,10 +2375,6 @@
   "actionShuffle": "Reproducción aleatoria",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
-  },
-  "metadataOriginal": "Original",
-  "@metadataOriginal": {
-    "description": "Label for keeping the original embedded cover resolution"
   },
   "unknownTitle": "Título desconocido",
   "@unknownTitle": {

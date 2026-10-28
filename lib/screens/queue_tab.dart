@@ -1,8 +1,8 @@
 import 'package:sistrum/widgets/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library_section_list.dart';
-import 'package:sistrum/screens/local_artist_screen.dart';
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' show Random;
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
@@ -13,9 +13,8 @@ import 'package:sistrum/widgets/error_card.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
-import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/album_detail_header.dart' show AlbumPlayActions;
 import 'package:sistrum/widgets/app_snack_bar.dart';
-import 'package:sistrum/widgets/library_search_results.dart';
 import 'package:sistrum/widgets/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/library_selection_playback_actions.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +25,7 @@ import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/library_format_filters.dart';
 import 'package:sistrum/utils/ordered_range_selection.dart';
+import 'package:sistrum/models/track.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
@@ -93,10 +93,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   List<UserPlaylistCollection> _playlistSelectionOverlayItems = const [];
   double _playlistSelectionOverlayBottomPadding = 0;
 
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode();
-  String _searchQuery = '';
-  Timer? _searchDebounce;
   String? _filterSource;
   String? _filterQuality;
   String? _filterFormat;
@@ -137,32 +133,46 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     _libraryGridExtentNotifier.dispose();
     _hideSelectionOverlay();
     _hidePlaylistSelectionOverlay();
-
-    _searchController.dispose();
-    _searchFocusNode.dispose();
-    _searchDebounce?.cancel();
     super.dispose();
   }
 
-  void _onSearchChanged(String value) {
-    _searchDebounce?.cancel();
-    final normalized = value.trim().toLowerCase();
-    _searchDebounce = Timer(const Duration(milliseconds: 350), () {
-      if (!mounted || _searchQuery == normalized) return;
-      setState(() {
-        _searchQuery = normalized;
-        _resetLibraryPaging();
-      });
-    });
-  }
-
-  void _clearSearch() {
-    _searchDebounce?.cancel();
-    if (_searchQuery.isEmpty) return;
-    setState(() {
-      _searchQuery = '';
-      _resetLibraryPaging();
-    });
+  /// Plays every song matching the current filters and sort, in order or
+  /// shuffled, paging through the library with the cursor the list uses.
+  Future<void> _playAllSongs({bool shuffle = false}) async {
+    final includeLocal = ref.read(settingsProvider).localLibraryEnabled;
+    final tracks = <Track>[];
+    QueueLibraryDbCursor? cursor;
+    try {
+      do {
+        final page = await LibraryDatabase.instance.getQueueTrackPageResult(
+          QueueLibraryDbQuery(
+            limit: 500,
+            source: _filterSource,
+            quality: _filterQuality,
+            format: _filterFormat,
+            metadata: _filterMetadata,
+            sortMode: _sortMode,
+            includeLocal: includeLocal,
+            cursor: cursor,
+          ),
+        );
+        for (final row in page.rows) {
+          if (row['source'] != 'local') continue;
+          final item = LocalLibraryItem.fromJson(
+            Map<String, dynamic>.from(row['item'] as Map),
+          );
+          if (isCueVirtualPath(item.filePath)) continue;
+          tracks.add(UnifiedLibraryItem.fromLocalLibrary(item).toTrack());
+        }
+        cursor = page.nextCursor;
+      } while (cursor != null);
+      if (tracks.isEmpty || !mounted) return;
+      if (shuffle) tracks.shuffle(Random());
+      await ref.read(musicPlayerControllerProvider).setShuffle(shuffle);
+      await ref.read(playbackProvider.notifier).playTrackList(tracks);
+    } catch (e) {
+      if (mounted) showCannotOpenFileSnackBar(context, e);
+    }
   }
 
   int _libraryPageOffsetFor(String filterMode) =>
@@ -322,7 +332,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   ) {
     return a.filterMode == b.filterMode &&
         a.limit == b.limit &&
-        a.searchQuery == b.searchQuery &&
         a.filterSource == b.filterSource &&
         a.filterQuality == b.filterQuality &&
         a.filterFormat == b.filterFormat &&
@@ -901,27 +910,13 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         ref.watch<String>(settingsProvider.select((s) => s.historyFilterMode));
     final colorScheme = Theme.of(context).colorScheme;
     final countsRequest = _QueueLibraryCountsRequest(
-      searchQuery: _searchQuery,
       filterSource: _filterSource,
       filterQuality: _filterQuality,
       filterFormat: _filterFormat,
       filterMetadata: _filterMetadata,
       localLibraryEnabled: localLibraryEnabled,
     );
-    final searchingLibrary =
-        _searchQuery.isNotEmpty &&
-        !isAlbumCompletenessFilter(_filterMetadata) &&
-        !_isSelectionMode &&
-        !_isPlaylistSelectionMode;
-    final countsValue = searchingLibrary
-        ? const AsyncData(
-            QueueLibraryCounts(
-              allTrackCount: 0,
-              albumCount: 0,
-              singleTrackCount: 0,
-            ),
-          )
-        : ref.watch(_queueLibraryCountsProvider(countsRequest));
+    final countsValue = ref.watch(_queueLibraryCountsProvider(countsRequest));
     final queueCounts = _resolveQueueLibraryCounts(countsValue, countsRequest);
 
     _QueueLibraryPageRequest pageRequest(String filterMode) {
@@ -930,7 +925,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         filterMode: filterMode,
         limit: _libraryPageSize,
         offset: offset,
-        searchQuery: _searchQuery,
         filterSource: _filterSource,
         filterQuality: _filterQuality,
         filterFormat: _filterFormat,
@@ -947,7 +941,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         filterMode: baseRequest.filterMode,
         limit: baseRequest.limit,
         offset: baseRequest.offset,
-        searchQuery: baseRequest.searchQuery,
         filterSource: baseRequest.filterSource,
         filterQuality: baseRequest.filterQuality,
         filterFormat: baseRequest.filterFormat,
@@ -959,9 +952,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     }
 
     final activePageRequest = pageRequest(historyFilterMode);
-    final activePageValue = searchingLibrary
-        ? AsyncData(_QueueLibraryPageData())
-        : ref.watch(_queueLibraryPageProvider(activePageRequest));
+    final activePageValue = ref.watch(
+      _queueLibraryPageProvider(activePageRequest),
+    );
 
     _QueueLibraryPageData pageData(String filterMode) {
       final request = filterMode == historyFilterMode
@@ -1002,16 +995,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     final hasAnyLibraryItems =
         queueCounts.allTrackCount > 0 || queueCounts.albumCount > 0;
     final hasLibraryContent = localLibraryEnabled && localLibraryTotalCount > 0;
-    final hasActiveSearch =
-        _searchQuery.isNotEmpty || _searchController.text.trim().isNotEmpty;
     final libraryError = countsValue.hasError
         ? countsValue.error
         : activePageValue.error;
     final shouldShowLibraryControls =
-        hasLibraryContent ||
-        hasAnyLibraryItems ||
-        hasActiveSearch ||
-        libraryError != null;
+        hasLibraryContent || hasAnyLibraryItems || libraryError != null;
 
     // PERF-201: the active filter's page data is only needed in selection
     // mode; other builds must not copy and regroup it.
@@ -1064,66 +1052,37 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                       : context.l10n.searchSongs,
                 ),
 
-                if (shouldShowLibraryControls)
+                if (shouldShowLibraryControls &&
+                    widget.librarySection != 'playlists')
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: AppSearchField(
-                          controller: _searchController,
-                          // Scrolls over the plain page: tint, no backdrop.
-                          samplesBackdrop: false,
-                          focusNode: _searchFocusNode,
-                          hintText: context.l10n.librarySearchHint,
-                          clearTooltip: context.l10n.dialogClear,
-                          onChanged: _onSearchChanged,
-                          onClear: () {
-                            _clearSearch();
-                            FocusScope.of(context).unfocus();
-                          },
-                        ),
+                      child: AlbumPlayActions(
+                        playLabel: context.l10n.tooltipPlay,
+                        shuffleTooltip: context.l10n.actionShuffle,
+                        onPlay: _playAllSongs,
+                        onShuffle: () => _playAllSongs(shuffle: true),
                       ),
                     ),
                   ),
 
                 ...[],
               ],
-              body: searchingLibrary
-                  ? CustomScrollView(
-                      key: const ValueKey('library-search-results'),
-                      slivers: [
-                        LibrarySearchResults(
-                          query: _searchQuery,
-                          onOpenArtist: (artist) => Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (_) =>
-                                  LocalArtistScreen(artistName: artist),
-                            ),
-                          ),
-                        ),
-                        const NavBarSliverSpacer(),
-                      ],
-                    )
-                  : _buildFilterContent(
-                      context: context,
-                      colorScheme: colorScheme,
-                      filterMode: historyFilterMode,
-                      filterData: getFilterData(historyFilterMode),
-                      collectionState: collectionState,
-                      hasMoreLibrary: hasMoreLibrary,
-                      isPageLoading: isLibraryPageLoading,
-                      error: libraryError,
-                      onRetry: () {
-                        _resetLibraryOffsets();
-                        ref.invalidate(
-                          _queueLibraryCountsProvider(countsRequest),
-                        );
-                        ref.invalidate(
-                          _queueLibraryPageProvider(activePageRequest),
-                        );
-                      },
-                    ),
+              body: _buildFilterContent(
+                context: context,
+                colorScheme: colorScheme,
+                filterMode: historyFilterMode,
+                filterData: getFilterData(historyFilterMode),
+                collectionState: collectionState,
+                hasMoreLibrary: hasMoreLibrary,
+                isPageLoading: isLibraryPageLoading,
+                error: libraryError,
+                onRetry: () {
+                  _resetLibraryOffsets();
+                  ref.invalidate(_queueLibraryCountsProvider(countsRequest));
+                  ref.invalidate(_queueLibraryPageProvider(activePageRequest));
+                },
+              ),
             ),
           ), // ScrollConfiguration
         ],

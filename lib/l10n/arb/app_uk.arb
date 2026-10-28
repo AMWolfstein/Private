@@ -1951,18 +1951,6 @@
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "trackCoverResolution": "Розмір обкладинки",
-  "@trackCoverResolution": {
-    "description": "Label for selecting the embedded cover art resolution"
-  },
-  "trackCoverResolutionHint": "Визначає розмір найдовшого краю під час збереження. Збільшення не додає зображенню деталей.",
-  "@trackCoverResolutionHint": {
-    "description": "Explanation below the embedded cover art resolution selector"
-  },
-  "trackCoverResizeFailed": "Не вдалося змінити розмір зображення обкладинки. Будь ласка, спробуйте інший розмір або зображення.",
-  "@trackCoverResizeFailed": {
-    "description": "Error shown when resizing cover art before saving metadata fails"
-  },
   "nowPlayingRepeatOff": "Повторення вимкнено",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
@@ -2387,10 +2375,6 @@
   "actionShuffle": "Перемішати",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
-  },
-  "metadataOriginal": "Оригінал",
-  "@metadataOriginal": {
-    "description": "Label for keeping the original embedded cover resolution"
   },
   "unknownTitle": "Невідома назва",
   "@unknownTitle": {

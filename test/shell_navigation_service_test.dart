@@ -150,7 +150,9 @@ class _SearchShellState extends State<_SearchShell> {
   GlobalKey<NavigatorState> get _navigatorKey => widget.separateSearch
       ? ShellNavigationService.searchTabNavigatorKey
       : ShellNavigationService.homeTabNavigatorKey;
-  int get _searchIndex => widget.separateSearch ? 2 : 0;
+  int get _searchIndex => widget.separateSearch
+      ? ShellNavigationService.searchTabIndex
+      : ShellNavigationService.homeTabIndex;
   late final _observer = ShellChromeObserver(_navigatorKey);
 
   @override

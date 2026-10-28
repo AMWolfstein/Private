@@ -9,6 +9,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/playback_notification_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/screens/home_tab.dart';
+import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/screens/queue_tab.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/platform_bridge.dart';
@@ -48,6 +49,8 @@ class _MainShellState extends ConsumerState<MainShell>
   DateTime? _lastBackPress;
   final GlobalKey<NavigatorState> _homeTabNavigatorKey =
       ShellNavigationService.homeTabNavigatorKey;
+  final GlobalKey<NavigatorState> _statsTabNavigatorKey =
+      ShellNavigationService.statsTabNavigatorKey;
   final GlobalKey<NavigatorState> _libraryTabNavigatorKey =
       ShellNavigationService.libraryTabNavigatorKey;
   final GlobalKey<NavigatorState> _searchTabNavigatorKey =
@@ -154,10 +157,11 @@ class _MainShellState extends ConsumerState<MainShell>
       return;
     }
     final index = switch (tab) {
-      ShellTab.home => 0,
-      ShellTab.search => 2,
-      ShellTab.library => 1,
-      ShellTab.settings => 2,
+      ShellTab.home => ShellNavigationService.homeTabIndex,
+      ShellTab.stats => ShellNavigationService.statsTabIndex,
+      ShellTab.library => ShellNavigationService.libraryTabIndex,
+      ShellTab.search => ShellNavigationService.searchTabIndex,
+      ShellTab.settings => ShellNavigationService.searchTabIndex,
     };
     _onNavTap(index, resetHome: tab != ShellTab.search);
   }
@@ -222,7 +226,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
     if (!mounted) return;
 
-    final isSearchTab = _currentIndex == (2);
+    final isSearchTab = _currentIndex == ShellNavigationService.searchTabIndex;
 
     final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
@@ -255,12 +259,16 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   NavigatorState? _navigatorForTab(int index) {
-    if (index == 0) return _homeTabNavigatorKey.currentState;
-    if (index == 1) return _libraryTabNavigatorKey.currentState;
-    if (index == 2) {
-      return _searchTabNavigatorKey.currentState;
-    }
-    return null;
+    return switch (index) {
+      ShellNavigationService.homeTabIndex => _homeTabNavigatorKey.currentState,
+      ShellNavigationService.statsTabIndex =>
+        _statsTabNavigatorKey.currentState,
+      ShellNavigationService.libraryTabIndex =>
+        _libraryTabNavigatorKey.currentState,
+      ShellNavigationService.searchTabIndex =>
+        _searchTabNavigatorKey.currentState,
+      _ => null,
+    };
   }
 
   @override
@@ -301,6 +309,12 @@ class _MainShellState extends ConsumerState<MainShell>
         ),
       ),
       _TabNavigator(
+        key: const ValueKey('tab-stats'),
+        navigatorKey: _statsTabNavigatorKey,
+        heroAnimationsEnabled: heroAnimationsEnabled,
+        child: const ListeningStatisticsScreen(asTab: true),
+      ),
+      _TabNavigator(
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
@@ -321,6 +335,11 @@ class _MainShellState extends ConsumerState<MainShell>
         icon: Icon(CupertinoIcons.house_fill),
         selectedIcon: const Icon(CupertinoIcons.house_fill),
         label: l10n.navHome,
+      ),
+      NavigationDestination(
+        icon: const Icon(CupertinoIcons.chart_bar_alt_fill),
+        selectedIcon: const Icon(CupertinoIcons.chart_bar_alt_fill),
+        label: l10n.listeningStats,
       ),
       NavigationDestination(
         icon: const SistrumNavigationIcon(

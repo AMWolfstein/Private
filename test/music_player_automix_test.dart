@@ -1338,7 +1338,7 @@ void main() {
       MediaAction.skipToNext,
       MediaAction.custom,
     ]);
-    expect(state.controls.first.androidIcon, contains('star_filled'));
+    expect(state.controls.first.androidIcon, contains('heart_filled'));
     expect(
       state.controls.last.customAction?.name,
       PlaybackNotification.shuffleAction,
@@ -1619,7 +1619,7 @@ void main() {
       await first;
       expect(
         handler.playbackState.value.controls.first.androidIcon,
-        endsWith('ic_notification_star'),
+        endsWith('ic_notification_heart'),
         reason:
             'Completing a favorite for the old track must not star the next one',
       );
@@ -1627,7 +1627,7 @@ void main() {
       expect(selected, ['one', 'three']);
       expect(
         handler.playbackState.value.controls.first.androidIcon,
-        endsWith('ic_notification_star_filled'),
+        endsWith('ic_notification_heart_filled'),
       );
     },
   );
@@ -1651,7 +1651,7 @@ void main() {
     await handler.customAction(PlaybackNotification.favoriteAction);
     expect(
       handler.playbackState.value.controls.first.androidIcon,
-      endsWith('ic_notification_star_filled'),
+      endsWith('ic_notification_heart_filled'),
     );
     expect(
       handler.playbackState.value.controls.first.label,
@@ -1665,7 +1665,7 @@ void main() {
     await handler.customAction(PlaybackNotification.favoriteAction);
     expect(
       handler.playbackState.value.controls.first.androidIcon,
-      endsWith('ic_notification_star'),
+      endsWith('ic_notification_heart'),
     );
     expect(handler.playbackState.value.controls.first.label, 'Add to Loved');
     expect(native.resumedSources, isEmpty);
@@ -1680,7 +1680,7 @@ void main() {
     await handler.customAction(PlaybackNotification.favoriteAction);
     expect(
       handler.playbackState.value.controls.first.androidIcon,
-      endsWith('ic_notification_star'),
+      endsWith('ic_notification_heart'),
     );
   });
 

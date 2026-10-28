@@ -42,8 +42,6 @@ class EditMetadataSheet extends StatefulWidget {
 }
 
 class _EditMetadataSheetState extends State<EditMetadataSheet> {
-  static const _coverResizeDimensions = <int>[500, 1000, 1500, 2000, 3000];
-
   bool _saving = false;
   final _covers = MetadataCoverResources();
   late final _persistence = MetadataPersistenceService(covers: _covers);
@@ -54,109 +52,10 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
   String? _currentCoverPath;
   String? _currentCoverTempDir;
   bool _loadingCurrentCover = false;
-  int? _coverMaxDimension;
   final Map<String, ({int width, int height, int bytes})> _coverDetails = {};
   final Set<String> _coverDetailLoads = {};
   final GlobalKey<ScaffoldMessengerState> _sheetMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
-
-  Future<void> _showCoverResolutionPicker() async {
-    FocusScope.of(context).unfocus();
-    final currentValue = _coverMaxDimension ?? 0;
-    final selectedValue = await showModalBottomSheet<int>(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      showDragHandle: true,
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-      builder: (sheetContext) {
-        final cs = Theme.of(sheetContext).colorScheme;
-        final options = <({int value, String label})>[
-          (
-            value: 0,
-            label: _originalCoverResolutionLabel(
-              sheetContext.l10n.metadataOriginal,
-            ),
-          ),
-          for (final dimension in _coverResizeDimensions)
-            (value: dimension, label: '$dimension px'),
-        ];
-        return SafeArea(
-          top: false,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.72,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-                  child: Text(
-                    sheetContext.l10n.trackCoverResolution,
-                    style: Theme.of(sheetContext).textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Flexible(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _editorOptions(
-                      children: [
-                        for (var index = 0; index < options.length; index++)
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 4,
-                                ),
-                                leading: Icon(
-                                  CupertinoIcons.photo,
-                                  color: options[index].value == currentValue
-                                      ? cs.primary
-                                      : cs.onSurfaceVariant,
-                                ),
-                                title: Text(options[index].label),
-                                selected: options[index].value == currentValue,
-                                selectedColor: cs.primary,
-                                trailing: options[index].value == currentValue
-                                    ? Icon(CupertinoIcons.checkmark)
-                                    : null,
-                                onTap: () => Navigator.pop(
-                                  sheetContext,
-                                  options[index].value,
-                                ),
-                              ),
-                              if (index != options.length - 1)
-                                Divider(
-                                  height: 1,
-                                  indent: 60,
-                                  endIndent: 20,
-                                  color: cs.outlineVariant.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-
-    if (!mounted || selectedValue == null) return;
-    setState(() {
-      _coverMaxDimension = selectedValue == 0 ? null : selectedValue;
-    });
-  }
 
   void _showSheetSnackBar(String message) {
     final snackBar = SnackBar(content: Text(message));
@@ -173,14 +72,6 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
   late final MetadataEditorController _form;
 
   bool _hasValue(String? value) => value != null && value.trim().isNotEmpty;
-
-  String _originalCoverResolutionLabel(String originalLabel) {
-    final sourcePath = _selectedCoverPath ?? _currentCoverPath;
-    final details = sourcePath == null ? null : _coverDetails[sourcePath];
-    if (details == null) return originalLabel;
-    return '$originalLabel · ${details.width} × ${details.height} px · '
-        '${_formatCoverBytes(details.bytes)}';
-  }
 
   String _formatCoverBytes(int bytes) {
     return '${(bytes / 1024).toStringAsFixed(1)} KB';
@@ -323,7 +214,6 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
           ),
           selectedCoverPath: _selectedCoverPath,
           currentCoverPath: _currentCoverPath,
-          coverMaxDimension: _coverMaxDimension,
         ),
       );
       if (!mounted) return;
@@ -341,12 +231,6 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
         MetadataSaveFailure.storage => context.friendlyError(
           result.error,
           fallback: l10n.metadataSaveFailedStorage,
-        ),
-        MetadataSaveFailure.noCover => l10n.snackbarError(
-          l10n.trackCoverNoEmbeddedArt,
-        ),
-        MetadataSaveFailure.resize => l10n.snackbarError(
-          l10n.trackCoverResizeFailed,
         ),
         MetadataSaveFailure.unexpected => l10n.snackbarError(
           context.friendlyError(result.error),
@@ -607,18 +491,6 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
     );
   }
 
-  Widget _editorOptions({required List<Widget> children}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Material(
-        color: SistrumTheme.controlFill(context),
-        borderRadius: BorderRadius.circular(28),
-        clipBehavior: Clip.antiAlias,
-        child: Column(mainAxisSize: MainAxisSize.min, children: children),
-      ),
-    );
-  }
-
   Widget _buildCoverEditor(ColorScheme cs) {
     final hasSelectedCover = _hasValue(_selectedCoverPath);
     final hasCurrentCover = _hasValue(_currentCoverPath);
@@ -712,21 +584,6 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
               ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
             ),
           ],
-          const SizedBox(height: 12),
-          _selectionField(
-            label: context.l10n.trackCoverResolution,
-            value: _coverMaxDimension == null
-                ? _originalCoverResolutionLabel(context.l10n.metadataOriginal)
-                : '${_coverMaxDimension!} px',
-            enabled: !_saving,
-            onTap: _showCoverResolutionPicker,
-          ),
-          Text(
-            context.l10n.trackCoverResolutionHint,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-          ),
         ],
         const SizedBox(height: 8),
       ],
@@ -848,62 +705,6 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
         ],
       ),
     );
-  }
-
-  Widget _selectionField({
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-    bool enabled = true,
-  }) {
-    final cs = widget.colorScheme;
-    {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 6),
-              child: Text(
-                label,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-              ),
-            ),
-            CupertinoButton(
-              color: metadataEditorFieldFill(context, cs),
-              disabledColor: Colors.transparent,
-              borderRadius: BorderRadius.circular(16),
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
-              onPressed: enabled ? onTap : null,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      value,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: enabled ? cs.onSurface : cs.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Icon(
-                    CupertinoIcons.chevron_up_chevron_down,
-                    size: 16,
-                    color: cs.primary,
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 0.5),
-          ],
-        ),
-      );
-    }
   }
 
   /// Titled section card. When [onHeaderTap] is set the header is a full-width

@@ -76,4 +76,46 @@ void main() {
       },
     );
   }
+
+  testWidgets('Sistrum EQ band names start-align under their faders', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    playbackEqualizer.value = const EqualizerSettings(enabled: true);
+    tester.view.physicalSize = const Size(400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: SistrumTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const EqualizerScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final label = find.textContaining(RegExp(r'\d (k?Hz)$')).first;
+    await tester.ensureVisible(label);
+    await tester.pumpAndSettle();
+    final column = find
+        .ancestor(
+          of: label,
+          matching: find.byWidgetPredicate(
+            (widget) => widget is SizedBox && widget.width == 66,
+          ),
+        )
+        .first;
+    // The column pads its contents by 8; a centred name would sit further in.
+    expect(
+      tester.getTopLeft(label).dx,
+      closeTo(tester.getTopLeft(column).dx + 8, 0.5),
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }

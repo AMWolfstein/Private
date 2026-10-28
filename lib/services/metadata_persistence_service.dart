@@ -6,14 +6,7 @@ import 'package:sistrum/services/metadata_cover_resources.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/artist_utils.dart';
 
-enum MetadataSaveFailure {
-  backend,
-  ffmpeg,
-  storage,
-  noCover,
-  resize,
-  unexpected,
-}
+enum MetadataSaveFailure { backend, ffmpeg, storage, unexpected }
 
 class MetadataSaveResult {
   final MetadataSaveFailure? failure;
@@ -31,14 +24,12 @@ class MetadataSaveRequest {
   final Map<String, String> metadata;
   final String? selectedCoverPath;
   final String? currentCoverPath;
-  final int? coverMaxDimension;
 
   MetadataSaveRequest({
     required this.filePath,
     required Map<String, String> metadata,
     this.selectedCoverPath,
     this.currentCoverPath,
-    this.coverMaxDimension,
   }) : metadata = Map.unmodifiable(metadata);
 }
 
@@ -70,24 +61,10 @@ class MetadataPersistenceService {
 
   Future<MetadataSaveResult> save(MetadataSaveRequest request) async {
     final releaseLease = covers.retain();
-    String? resizedCoverDir;
     String? extractedCoverDir;
     String? stagedPath;
     try {
-      var coverPath = request.selectedCoverPath;
-      if (request.coverMaxDimension case final dimension?) {
-        final source = coverPath ?? request.currentCoverPath;
-        if (source == null || source.trim().isEmpty) {
-          return const MetadataSaveResult.failed(MetadataSaveFailure.noCover);
-        }
-        try {
-          final resized = await covers.resize(source, dimension);
-          resizedCoverDir = resized.tempDir;
-          coverPath = resized.path;
-        } catch (error) {
-          return MetadataSaveResult.failed(MetadataSaveFailure.resize, error);
-        }
-      }
+      final coverPath = request.selectedCoverPath;
 
       final metadata = {
         ...request.metadata,
@@ -154,7 +131,6 @@ class MetadataPersistenceService {
         } catch (_) {}
       }
       await covers.release(extractedCoverDir);
-      await covers.release(resizedCoverDir);
       await releaseLease();
     }
   }

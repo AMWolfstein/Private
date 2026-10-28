@@ -195,8 +195,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       buttonSize: 50,
                       iconSize: 24,
                       iconColor: colors.primary,
-                      glassTintColor: Colors.white,
-                      glassTintOpacity: .10,
+                      tonal: true,
                       tooltip: favorite
                           ? context.l10n.artistOptionRemoveFromFavorites
                           : context.l10n.sistrumFavorite,
@@ -257,8 +256,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       buttonSize: 50,
                       iconSize: 24,
                       iconColor: colors.primary,
-                      glassTintColor: Colors.white,
-                      glassTintOpacity: .10,
+                      tonal: true,
                       tooltip: context.l10n.actionShuffle,
                       onPressed:
                           tracks?.items.isNotEmpty == true && !_startingPlayback
