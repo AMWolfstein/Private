@@ -156,19 +156,14 @@ abstract final class FFmpegMetadata {
     return path;
   }
 
-  static Future<String?> embedMetadataToMp3({
+  /// Replaces the MP3 tag set through a stream-copy remux. This writer cannot
+  /// preserve unknown ID3 frames, so tag-preserving edits must go through the
+  /// native writer instead.
+  static Future<String?> replaceMetadataInMp3({
     required String mp3Path,
     String? coverPath,
     Map<String, String>? metadata,
-    bool preserveMetadata = false,
   }) async {
-    // ID3 keeps one artist frame: only primary mode changes its value.
-    if (preserveMetadata) {
-      // A remux cannot round-trip unknown ID3 frames after the native writer
-      // refuses them. Keep the source rather than bypassing that safety check.
-      _log.e('MP3 metadata preservation requires the native tag writer');
-      return null;
-    }
     final tempOutput = await FFmpegOutput.tempPath('.mp3');
     final lyrics = AudioMetadataMapper.extractLyricsForId3(metadata);
     final result = await _runMp3Embed(
@@ -176,7 +171,6 @@ abstract final class FFmpegMetadata {
       tempOutput: tempOutput,
       coverPath: coverPath,
       metadata: metadata,
-      preserveMetadata: preserveMetadata,
     );
     final embeddedPath = await _finish(result, tempOutput, mp3Path, 'MP3');
     if (lyrics != null) {
@@ -190,14 +184,12 @@ abstract final class FFmpegMetadata {
     required String tempOutput,
     String? coverPath,
     Map<String, String>? metadata,
-    required bool preserveMetadata,
   }) async {
     final arguments = buildMp3EmbedArguments(
       mp3Path: mp3Path,
       tempOutput: tempOutput,
       coverPath: coverPath,
       metadata: metadata,
-      preserveMetadata: preserveMetadata,
     );
     _log.d('Executing FFmpeg MP3 embed command');
     return _execute(arguments, 'MP3');
@@ -210,16 +202,10 @@ abstract final class FFmpegMetadata {
     required String tempOutput,
     String? coverPath,
     Map<String, String>? metadata,
-    required bool preserveMetadata,
   }) {
     final arguments = <String>['-v', 'error', '-hide_banner', '-i', mp3Path];
     if (coverPath != null) arguments.addAll(['-i', coverPath]);
-    arguments.addAll([
-      '-map',
-      '0:a',
-      '-map_metadata',
-      preserveMetadata ? '0' : '-1',
-    ]);
+    arguments.addAll(['-map', '0:a', '-map_metadata', '-1']);
     if (coverPath != null) {
       arguments.addAll([
         '-map',
@@ -318,35 +304,25 @@ abstract final class FFmpegMetadata {
     );
   }
 
-  static Future<String?> embedMetadataToM4a({
+  /// Replaces the M4A tag set through a stream-copy remux. This writer cannot
+  /// preserve unknown freeform atoms, so tag-preserving edits must go through
+  /// the native writer instead.
+  static Future<String?> replaceMetadataInM4a({
     required String m4aPath,
     String? coverPath,
     Map<String, String>? metadata,
-    bool preserveMetadata = true,
   }) async {
-    if (preserveMetadata) {
-      // FFmpeg drops unknown freeform atoms even with metadata copying. Local
-      // edits must keep the original if the atom-preserving native edit fails.
-      _log.e('M4A metadata preservation requires the native tag writer');
-      return null;
-    }
     final tempOutput = await FFmpegOutput.tempPath('.m4a');
     final normalizedCoverPath = coverPath?.trim();
     final hasCover =
         normalizedCoverPath != null &&
         normalizedCoverPath.isNotEmpty &&
         await File(normalizedCoverPath).exists();
-    final preserveExistingStreams = preserveMetadata && !hasCover;
     List<String> buildArgs(bool forceMov) {
       final arguments = <String>['-v', 'error', '-hide_banner', '-i', m4aPath];
       if (hasCover) arguments.addAll(['-i', normalizedCoverPath]);
-      // Preserve attached artwork when no replacement cover is supplied.
-      arguments.addAll(
-        preserveExistingStreams
-            ? ['-map', '0', '-c', 'copy']
-            : ['-map', '0:a', '-c:a', 'copy'],
-      );
-      arguments.addAll(['-map_metadata', preserveMetadata ? '0' : '-1']);
+      arguments.addAll(['-map', '0:a', '-c:a', 'copy']);
+      arguments.addAll(['-map_metadata', '-1']);
       if (hasCover) appendCoverInputArguments(arguments);
       if (metadata != null) {
         AudioMetadataMapper.appendMappedMetadataArguments(

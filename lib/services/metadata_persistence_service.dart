@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/services/ffmpeg_metadata.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
+import 'package:sistrum/services/metadata_edit_result.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 enum MetadataSaveFailure { backend, ffmpeg, storage, unexpected }
@@ -66,12 +67,17 @@ class MetadataPersistenceService {
       final coverPath = request.selectedCoverPath;
 
       final metadata = {...request.metadata, 'cover_path': coverPath ?? ''};
-      final result = await edit(request.filePath, metadata);
-      stagedPath = result['temp_path'] as String?;
-      if (result['error'] case final error?) {
-        return MetadataSaveResult.failed(MetadataSaveFailure.backend, error);
+      final edit = MetadataEditResult.decode(
+        await this.edit(request.filePath, metadata),
+      );
+      stagedPath = edit.tempPath;
+      if (edit.outcome == MetadataEditOutcome.failed) {
+        return MetadataSaveResult.failed(
+          MetadataSaveFailure.backend,
+          edit.error,
+        );
       }
-      if (result['method'] != 'ffmpeg') {
+      if (edit.outcome == MetadataEditOutcome.completed) {
         return const MetadataSaveResult.saved();
       }
 
@@ -111,7 +117,7 @@ class MetadataPersistenceService {
       if (output == null) {
         return const MetadataSaveResult.failed(MetadataSaveFailure.ffmpeg);
       }
-      final safUri = result['saf_uri'] as String?;
+      final safUri = edit.safUri;
       if (stagedPath != null && safUri != null) {
         final written = await writeBack(output, safUri);
         if (!written.success) {
@@ -216,17 +222,13 @@ class MetadataPersistenceService {
     String? coverPath,
     Map<String, String> metadata,
   ) => switch (codec) {
-    MetadataSaveCodec.mp3 => FFmpegMetadata.embedMetadataToMp3(
-      mp3Path: path,
-      coverPath: coverPath,
-      metadata: metadata,
-      preserveMetadata: true,
-    ),
-    MetadataSaveCodec.m4a => FFmpegMetadata.embedMetadataToM4a(
-      m4aPath: path,
-      coverPath: coverPath,
-      metadata: metadata,
-      preserveMetadata: true,
+    // A metadata edit preserves the tags it does not change. Only the Opus
+    // remux can do that; the MP3 and M4A remux writers replace the whole tag
+    // set, so report the unsupported preservation instead of running them.
+    MetadataSaveCodec.mp3 ||
+    MetadataSaveCodec.m4a => throw FFmpegMetadataFailure(
+      '${codec.name.toUpperCase()} metadata preservation requires the '
+      'native tag writer',
     ),
     MetadataSaveCodec.opus => FFmpegMetadata.embedMetadataToOpus(
       opusPath: path,

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sistrum/services/metadata_edit_result.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('PlatformBridge');
@@ -454,6 +455,13 @@ class PlatformBridge {
       });
     });
   }
+
+  /// Typed variant of [editFileMetadata] for callers that act on the outcome.
+  static Future<MetadataEditResult> editFileMetadataResult(
+    String filePath,
+    Map<String, String> metadata,
+  ) async =>
+      MetadataEditResult.decode(await editFileMetadata(filePath, metadata));
 
   static Future<T> _withMediaFileAccess<T>(
     Iterable<String> paths,

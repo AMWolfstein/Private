@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/services/ffmpeg_replaygain.dart';
 import 'package:sistrum/services/ffmpeg_models.dart';
+import 'package:sistrum/services/metadata_edit_result.dart';
 import 'package:sistrum/services/music_player_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
@@ -107,30 +108,28 @@ class ReplayGainService {
 
   /// Removes track/album tags, including Opus R128 and M4A Sound Check tags.
   /// Native editors copy the audio payload unchanged and publish atomically.
-  static Future<bool> removeFromFile(String filePath) =>
-      _updateFile(filePath, (path) async {
-        if (!_isNativeWritableFormat(path)) return false;
-        const fields = {
-          'replaygain_track_gain': '',
-          'replaygain_track_peak': '',
-          'replaygain_album_gain': '',
-          'replaygain_album_peak': '',
-        };
-        final result = await PlatformBridge.editFileMetadata(path, fields);
-        final method = result['method'];
-        if (result['success'] != true ||
-            result['error'] != null ||
-            method is! String ||
-            !(method == 'native' || method.startsWith('native_'))) {
-          return false;
-        }
-        final metadata = await PlatformBridge.readFileMetadata(path);
-        return metadata['error'] == null &&
-            metadata['audio_codec'] != null &&
-            fields.keys.every(
-              (key) => (metadata[key]?.toString() ?? '').trim().isEmpty,
-            );
-      });
+  static Future<bool> removeFromFile(String filePath) => _updateFile(filePath, (
+    path,
+  ) async {
+    if (!_isNativeWritableFormat(path)) return false;
+    const fields = {
+      'replaygain_track_gain': '',
+      'replaygain_track_peak': '',
+      'replaygain_album_gain': '',
+      'replaygain_album_peak': '',
+    };
+    final result = await PlatformBridge.editFileMetadataResult(path, fields);
+    if (result.outcome != MetadataEditOutcome.completed ||
+        !result.isNativeMethod) {
+      return false;
+    }
+    final metadata = await PlatformBridge.readFileMetadata(path);
+    return metadata['error'] == null &&
+        metadata['audio_codec'] != null &&
+        fields.keys.every(
+          (key) => (metadata[key]?.toString() ?? '').trim().isEmpty,
+        );
+  });
 
   static Future<bool> _writeLocalTags(
     String path,
@@ -141,16 +140,13 @@ class ReplayGainService {
     final scope = album ? 'album' : 'track';
     var written = false;
     if (_isNativeWritableFormat(path)) {
-      final result = await PlatformBridge.editFileMetadata(path, {
+      final result = await PlatformBridge.editFileMetadataResult(path, {
         'replaygain_${scope}_gain': gain,
         'replaygain_${scope}_peak': peak,
       });
       written =
-          result['success'] == true &&
-          result['error'] == null &&
-          result['method'] is String &&
-          (result['method'] == 'native' ||
-              (result['method'] as String).startsWith('native_'));
+          result.outcome == MetadataEditOutcome.completed &&
+          result.isNativeMethod;
       if (!written) {
         _log.w('Native $scope ReplayGain write did not complete: $result');
       }

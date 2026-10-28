@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/metadata_cover_resources.dart';
+import 'package:sistrum/services/metadata_persistence_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 void main() {
@@ -25,26 +27,29 @@ void main() {
           .setMockMethodCallHandler(channel, (call) async {
             fail('Preserving fallback invoked platform method ${call.method}');
           });
-      final file = File('${directory.path}/song.m4a');
+      final covers = MetadataCoverResources();
+      addTearDown(covers.dispose);
+      final m4a = File('${directory.path}/song.m4a');
+      final mp3 = File('${directory.path}/song.mp3');
       final original = [1, 2, 3, 4, 5];
-      await file.writeAsBytes(original);
-      expect(
-        await FFmpegMetadata.embedMetadataToM4a(
-          m4aPath: file.path,
-          metadata: const {'TITLE': 'new'},
-        ),
-        isNull,
-      );
-      expect(
-        await FFmpegMetadata.embedMetadataToMp3(
-          mp3Path: file.path,
-          preserveMetadata: true,
-          metadata: const {'TITLE': 'new'},
-        ),
-        isNull,
-      );
-      expect(await file.readAsBytes(), original);
-      expect(await directory.list().length, 1);
+      await m4a.writeAsBytes(original);
+      await mp3.writeAsBytes(original);
+
+      for (final path in [m4a.path, mp3.path]) {
+        final service = MetadataPersistenceService(
+          covers: covers,
+          edit: (_, _) async => {'success': true, 'method': 'ffmpeg'},
+          read: (_) async => {},
+        );
+        final result = await service.save(
+          MetadataSaveRequest(filePath: path, metadata: const {'title': 'new'}),
+        );
+        expect(result.failure, MetadataSaveFailure.ffmpeg);
+        expect(result.error, isA<FFmpegMetadataFailure>());
+      }
+      expect(await m4a.readAsBytes(), original);
+      expect(await mp3.readAsBytes(), original);
+      expect(await directory.list().length, 2);
     },
   );
 
@@ -53,7 +58,6 @@ void main() {
       mp3Path: '/music/song.mp3',
       tempOutput: '/tmp/out.mp3',
       metadata: const {'TITLE': 'Song'},
-      preserveMetadata: true,
     );
     expect(arguments, containsAllInOrder(['-c:a', 'copy']));
     expect(arguments, isNot(contains('libmp3lame')));
