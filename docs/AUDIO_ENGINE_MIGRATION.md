@@ -45,14 +45,14 @@ Each item blocks part of the work. The recommendation is given, but none of thes
 
 | Layer | Code | Notes |
 |---|---|---|
-| Dart player service | `lib/services/music_player_service.dart` (2263 lines), `music_player_runtime.dart`, `music_player_automix.dart`, `music_player_autoplay.dart`, `playback_*.dart` | Owns the queue, session restore, history, normalization, sleep timer, AutoMix and headphone handling. |
-| Dart deck | `lib/services/music_playback_deck.dart` | Wraps one `audioplayers` `AudioPlayer` plus the native USB/hi-res route (`com.amwolfstein.sistrum/usb_pcm`). There are two decks for AutoMix. |
+| Dart player service | `lib/services/playback/music_player_service.dart` (2263 lines), `music_player_runtime.dart`, `music_player_automix.dart`, `music_player_autoplay.dart`, `playback_*.dart` | Owns the queue, session restore, history, normalization, sleep timer, AutoMix and headphone handling. |
+| Dart deck | `lib/services/playback/music_playback_deck.dart` | Wraps one `audioplayers` `AudioPlayer` plus the native USB/hi-res route (`com.amwolfstein.sistrum/usb_pcm`). There are two decks for AutoMix. |
 | Ordinary engine | `audioplayers` 6.8.1 with a vendored `third_party/audioplayers_android` | Android **MediaPlayer**. Local patches: `/proc/self/fd` SAF leases, output-error handling and a `DynamicsProcessing` EQ (`PlaybackEqualizer.kt`). **No gapless playback.** |
 | Session | vendored `third_party/audio_service` 0.18.19, `audio_session` 0.2.4 | Framework MediaSession, notification, Android Auto browse, focus and noisy events. |
 | Hi-res / bit-perfect | `UsbBitPerfectPlugin.kt` (AudioTrack and Android 14 preferred mixer), `HiResPlayback.kt` (Oboe AAudio), `UsbDirectPlayback.kt` and Rust `mobile/src/usb_audio/*` (libusb), `UsbPcmSource.kt`, `BitPerfectPcm.kt`, `DsdFile.kt`, `DsdSource.kt` | The USB route decodes with MediaExtractor/MediaCodec, **libFLAC** (`flac_pcm_source.cpp`) and **WavPack** (C). DSD goes through DoP or native USB only. |
 | C++ library | `android/app/src/main/cpp/` (CMake, `libsistrum_audio.so`): Oboe 1.11, libFLAC 1.5.0, WavPack 5.9.0 | Exports 18 JNI functions (`native_audio.map`). |
 | Rust | `rust_backend` (UniFFI and JNA, `libsistrum_mobile.so`) | Tags (read and write), CUE parsing, scan, covers, palette, backup, collections DB (`rusqlite` bundled), USB driver, and analysis maths for AutoMix and spectral cutoff on PCM that FFmpeg decoded. |
-| FFmpeg | `ffmpeg_kit_flutter_new_audio` 2.5.7, wrappers `lib/services/ffmpeg_*.dart` (1190 lines) | Decodes for analysis, measures loudness, renders effects, splits CUE and resizes covers. It is a tag-writing **fallback only**. It is never used for playback. |
+| FFmpeg | `ffmpeg_kit_flutter_new_audio` 2.5.7, wrappers `lib/services/ffmpeg/ffmpeg_*.dart` (1190 lines) | Decodes for analysis, measures loudness, renders effects, splits CUE and resizes covers. It is a tag-writing **fallback only**. It is never used for playback. |
 
 ---
 
@@ -310,7 +310,7 @@ Each step: tests first where the step is risky, one analyze and full test run pe
 12. **USB paths:** remove Direct USB (D3). Feed the Android 14+ bit-perfect path from the Kotlin decoders or claxon. Remove libFLAC and WavPack C. Remove Oboe and `HiResPlayback` (decision D4).
 13. **Remove:**
     - `audioplayers` and `third_party/audioplayers_android`;
-    - `ffmpeg_kit_flutter_new_audio` and `lib/services/ffmpeg_*.dart`;
+    - `ffmpeg_kit_flutter_new_audio` and `lib/services/ffmpeg/ffmpeg_*.dart`;
     - `android/app/src/main/cpp/`, `externalNativeBuild` and the `cmake` blocks;
     - `assets/licenses/{oboe,flac,wavpack}.txt`, the FFmpeg ProGuard comment and the FFmpeg test dependency;
     - the developer engine switch.

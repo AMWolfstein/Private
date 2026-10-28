@@ -48,8 +48,10 @@ selection exit and snackbar. Eleventh: `MetadataIndexReconciler` owns the post-s
 returns indexed-or-stale, so the song menu only opens the editor, reloads the provider and reports the outcome. Twelfth: track-list
 playback resolves the matched `LocalLibraryItem` rows and builds its queue through `playableFromLocal`, keeping the library ID,
 audio facts and local-only artwork, while `resolveTrackFilePaths` stays a path-only projection for M3U export. Thirteenth: QueueTab
-and its seven parts moved to `lib/screens/library/`, HomeTab and its two parts to `lib/screens/home/`. Analyze and the full
-`flutter test` pass.
+and its seven parts moved to `lib/screens/library/`, HomeTab and its two parts to `lib/screens/home/`. Fourteenth: the flat services
+directory split into `lib/services/library/` (database/query/schema helpers), `lib/services/playback/` (player, session and AutoMix)
+and `lib/services/ffmpeg/` (FFmpeg operations), with shared infrastructure left at the root. Analyze and the full `flutter test`
+pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
