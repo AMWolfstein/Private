@@ -1,4 +1,4 @@
-//! Physical/converted path identities shared with Dart's path_match_keys.dart.
+//! Physical path identities shared with Dart's path_match_keys.dart.
 //! Opaque SAF document identities decode once and preserve case and extension.
 use base64::{Engine, engine::general_purpose::URL_SAFE};
 use std::collections::{BTreeSet, VecDeque};
@@ -10,9 +10,6 @@ const ALIASES: &[&str] = &[
     "/storage/self/primary",
     "/sdcard",
     "/mnt/sdcard",
-];
-const EXTENSIONS: &[&str] = &[
-    ".flac", ".m4a", ".mp3", ".opus", ".ogg", ".wav", ".aiff", ".aif", ".aac",
 ];
 
 pub(crate) fn dart_trim(value: &str) -> &str {
@@ -196,8 +193,7 @@ fn windows_drive_path(value: &str) -> bool {
 }
 
 pub(crate) fn build(path: &str, android: bool) -> Result<BTreeSet<String>, String> {
-    let path = dart_trim(path);
-    let cleaned = path.strip_prefix("EXISTS:").map(dart_trim).unwrap_or(path);
+    let cleaned = dart_trim(path);
     if cleaned.is_empty() {
         return Ok(BTreeSet::new());
     }
@@ -281,18 +277,6 @@ pub(crate) fn build(path: &str, android: bool) -> Result<BTreeSet<String>, Strin
             pending.extend(android_aliases(trimmed));
         }
     }
-    let extensionless = keys
-        .iter()
-        .filter_map(|key| {
-            let lower = dart_lower(key);
-            EXTENSIONS
-                .iter()
-                .find(|extension| lower.ends_with(**extension))
-                .map(|extension| key[..key.len() - extension.len()].to_string())
-                .filter(|stripped| !stripped.is_empty())
-        })
-        .collect::<Vec<_>>();
-    keys.extend(extensionless);
     Ok(keys)
 }
 
@@ -333,15 +317,11 @@ mod tests {
     }
 
     #[test]
-    fn android_storage_and_converted_paths_share_keys() {
+    fn android_storage_aliases_share_keys_but_extensions_stay_distinct() {
         let direct = build("/sdcard/Music/Café.flac", true).unwrap();
         let converted = build("/storage/emulated/0/Music/Café.opus", true).unwrap();
         let saf = build("content://com.android.externalstorage.documents/tree/primary%3AMusic/document/primary%3AMusic%2FCaf%C3%A9.flac",true).unwrap();
-        assert!(
-            direct
-                .intersection(&converted)
-                .any(|key| key == "/storage/emulated/0/Music/Café")
-        );
+        assert!(direct.intersection(&converted).next().is_none());
         assert!(
             direct
                 .intersection(&saf)

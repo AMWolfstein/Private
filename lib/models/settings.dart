@@ -107,9 +107,6 @@ class AppSettings {
   final bool keepScreenOnLyrics;
   final bool listeningStatisticsEnabled;
 
-  final String localLibraryPath;
-  final String
-  localLibraryBookmark; // Base64-encoded iOS security-scoped bookmark
   final bool localLibraryShowDuplicates;
   final String
   localLibraryAutoScan; // Auto-scan mode: 'off', 'on_open', 'daily', 'weekly'
@@ -159,8 +156,6 @@ class AppSettings {
     this.locale = 'system',
     this.keepScreenOnLyrics = true,
     this.listeningStatisticsEnabled = true,
-    this.localLibraryPath = '',
-    this.localLibraryBookmark = '',
     this.localLibraryShowDuplicates = true,
     this.localLibraryAutoScan = 'off',
     this.hasCompletedTutorial = false,
@@ -208,8 +203,6 @@ class AppSettings {
     String? locale,
     bool? keepScreenOnLyrics,
     bool? listeningStatisticsEnabled,
-    String? localLibraryPath,
-    String? localLibraryBookmark,
     bool? localLibraryShowDuplicates,
     String? localLibraryAutoScan,
     bool? hasCompletedTutorial,
@@ -267,8 +260,6 @@ class AppSettings {
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       listeningStatisticsEnabled:
           listeningStatisticsEnabled ?? this.listeningStatisticsEnabled,
-      localLibraryPath: localLibraryPath ?? this.localLibraryPath,
-      localLibraryBookmark: localLibraryBookmark ?? this.localLibraryBookmark,
       localLibraryShowDuplicates:
           localLibraryShowDuplicates ?? this.localLibraryShowDuplicates,
       localLibraryAutoScan: localLibraryAutoScan ?? this.localLibraryAutoScan,

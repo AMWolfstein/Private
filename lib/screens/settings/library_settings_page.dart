@@ -320,12 +320,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       );
       return;
     }
-    final settings = ref.read(settingsProvider);
-    if (settings.localLibraryPath == source.path) {
-      ref
-          .read(settingsProvider.notifier)
-          .setLocalLibraryPathAndBookmark('', '');
-    }
   }
 
   String _getAutoScanLabel(BuildContext context, String mode) {

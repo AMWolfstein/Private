@@ -291,21 +291,6 @@ Future<bool> createTrigramFtsIndex(
   }
 }
 
-Future<void> addColumnIfMissing(
-  Database db,
-  String table,
-  String column,
-  String type,
-) async {
-  final columns = await db.rawQuery('PRAGMA table_info($table)');
-  final exists = columns.any(
-    (row) => (row['name']?.toString().toLowerCase() ?? '') == column,
-  );
-  if (!exists) {
-    await db.execute('ALTER TABLE $table ADD COLUMN $column $type');
-  }
-}
-
 /// Loads rows whose [column] matches any of [rawValues] (chunked IN clauses)
 /// into [destination], keeping the first row seen per value.
 Future<void> loadRowsByColumn(
@@ -357,9 +342,7 @@ Future<List<String>> findPhysicalFileRowIds(
   String table,
   Iterable<String> filePaths,
 ) async {
-  final keys = {
-    for (final path in filePaths) ...buildPhysicalPathMatchKeys(path),
-  };
+  final keys = {for (final path in filePaths) ...buildPathMatchKeys(path)};
   final values = keys.toList();
   final ids = <String>{};
   const chunkSize = 450;
@@ -376,75 +359,12 @@ Future<List<String>> findPhysicalFileRowIds(
       WHERE keys.path_key IN ($placeholders)
     ''', chunk);
     for (final row in rows) {
-      if (buildPhysicalPathMatchKeys(
-        row['file_path'] as String?,
-      ).any(keys.contains)) {
+      if (buildPathMatchKeys(row['file_path'] as String?).any(keys.contains)) {
         ids.add(row['id'] as String);
       }
     }
   }
   return ids.toList();
-}
-
-Future<void> backfillPathKeys(
-  Database db,
-  String sourceTable,
-  String keyTable,
-) async {
-  // One SAF path can expand into dozens of aliases. A library-wide batch
-  // duplicates all of them in Dart and the platform channel during upgrades.
-  // Keep reads/writes bounded and leave correct keys untouched to avoid
-  // rewriting the entire index (and its WAL) just to add a new alias.
-  const pageSize = 250;
-  String? lastId;
-  while (true) {
-    final rows = await db.query(
-      sourceTable,
-      columns: ['id', 'file_path'],
-      where: lastId == null ? null : 'id > ?',
-      whereArgs: lastId == null ? null : [lastId],
-      orderBy: 'id',
-      limit: pageSize,
-    );
-    if (rows.isEmpty) break;
-    final missingKeys = {
-      for (final row in rows)
-        row['id'] as String: buildPathMatchKeys(
-          row['file_path'] as String?,
-        ).toSet(),
-    };
-    final ids = missingKeys.keys.toList(growable: false);
-    final existingKeys = await db.query(
-      keyTable,
-      columns: ['item_id', 'path_key'],
-      where: 'item_id IN (${List.filled(ids.length, '?').join(',')})',
-      whereArgs: ids,
-    );
-    Batch? batch;
-    for (final key in existingKeys) {
-      final id = key['item_id'] as String;
-      final pathKey = key['path_key'] as String;
-      if (!missingKeys[id]!.remove(pathKey)) {
-        (batch ??= db.batch()).delete(
-          keyTable,
-          where: 'item_id = ? AND path_key = ?',
-          whereArgs: [id, pathKey],
-        );
-      }
-    }
-    for (final entry in missingKeys.entries) {
-      for (final key in entry.value) {
-        (batch ??= db.batch()).insert(keyTable, {
-          'item_id': entry.key,
-          'path_key': key,
-        }, conflictAlgorithm: ConflictAlgorithm.ignore);
-      }
-    }
-    // onUpgrade owns the transaction; page commits must not open an
-    // independent transaction or publish a partially migrated database.
-    await batch?.commit(noResult: true);
-    lastId = rows.last['id'] as String;
-  }
 }
 
 /// [replaceExisting] may be false when the caller knows [table] holds no keys

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/sqlite_helpers.dart';
-import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -62,22 +61,6 @@ print(json.dumps([dict(row) for row in db.execute(sql, args)]))
 }
 
 void main() {
-  test(
-    'legacy history markers delete the actual file before index cleanup',
-    () async {
-      final directory = await Directory.systemTemp.createTemp(
-        'library-delete-',
-      );
-      addTearDown(() => directory.delete(recursive: true));
-      final file = await File(
-        '${directory.path}/song.flac',
-      ).writeAsString('audio');
-      expect(await deleteFile('EXISTS:${file.path}'), isTrue);
-      expect(await file.exists(), isFalse);
-      expect(await deleteFile('EXISTS:'), isFalse);
-    },
-  );
-
   const root = 'content://example.nas/tree/music';
   const album = 'content://example.nas/tree/music%2Falbum';
   const document = '/document/music%2Falbum%2Fsong.flac';
@@ -92,9 +75,7 @@ void main() {
           'another-folder': '$root/document/music%2Fother%2Fsong.flac',
           'another-server': 'content://other.nas/tree/music$document',
         });
-        final ids = await findPhysicalFileRowIds(db, table, [
-          'EXISTS:$root$document',
-        ]);
+        final ids = await findPhysicalFileRowIds(db, table, ['$root$document']);
         expect(ids.toSet(), {'download', 'scan'});
         expect(db.queries, 1);
       },

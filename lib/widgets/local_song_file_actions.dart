@@ -111,11 +111,11 @@ LocalLibrarySource? cueSplitDestinationSource(
   List<LocalLibrarySource> sources,
   String tree,
 ) {
-  final treeKeys = buildPhysicalPathMatchKeys(tree);
+  final treeKeys = buildPathMatchKeys(tree);
   final treeLocation = _storageVolumeLocation(tree);
   for (final source in sources) {
     if (source.path.isEmpty) continue;
-    final matchedByKey = buildPhysicalPathMatchKeys(source.path).any(
+    final matchedByKey = buildPathMatchKeys(source.path).any(
       (sourceKey) => treeKeys.any(
         (treeKey) =>
             treeKey == sourceKey ||

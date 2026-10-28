@@ -375,7 +375,9 @@ class LibraryNativeAdapter {
             'CREATE INDEX $alias.native_library_snapshot_id '
             'ON library(source_id, id)',
           );
-          await txn.execute('PRAGMA $alias.user_version = ${LibrarySchema.version}');
+          await txn.execute(
+            'PRAGMA $alias.user_version = ${LibrarySchema.version}',
+          );
         });
       });
       _check(isCancelled);

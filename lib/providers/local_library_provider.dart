@@ -106,8 +106,7 @@ class LocalLibraryState {
   }
 }
 
-typedef LocalLibraryAvailabilityProbe =
-    Future<bool?> Function(String path, {String? bookmark});
+typedef LocalLibraryAvailabilityProbe = Future<bool?> Function(String path);
 
 class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   LocalLibraryNotifier({
@@ -239,7 +238,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       if (!ref.mounted) return;
       state = state.copyWith(sources: configuredSources);
       await ref.read(settingsProvider.notifier).ensureLoaded();
-      await _migrateLegacySource();
       final reconnectedSources = await _refreshSourceAvailabilityInDatabase();
       while (ref.mounted) {
         final sourceVersion = _sourceVersion;
@@ -318,7 +316,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<LocalLibrarySource> addSource({
     required String path,
     required String displayName,
-    String? bookmark,
     String? volumeId,
     bool isRemovable = false,
   }) async {
@@ -349,7 +346,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       displayName: displayName.trim().isEmpty
           ? _displayNameForPath(trimmedPath)
           : displayName.trim(),
-      bookmark: bookmark?.trim().isEmpty == true ? null : bookmark,
       volumeId: volumeId?.trim().isEmpty == true ? null : volumeId,
       isRemovable: isRemovable || _looksLikeRemovablePath(trimmedPath),
       enabled: true,
@@ -515,7 +511,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       await startScan(
         source.path,
         forceFullScan: forceFullScan,
-        iosBookmark: source.bookmark,
         sourceId: source.id,
       );
       return;
@@ -587,31 +582,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     _isLoaded = true;
   }
 
-  Future<void> _migrateLegacySource() async {
-    final settings = ref.read(settingsProvider);
-    final path = settings.localLibraryPath.trim();
-    if (path.isEmpty) return;
-    if (await _db.getSourceByPath(path) != null) return;
-    DateTime? legacyLastScannedAt;
-    try {
-      legacyLastScannedAt = readLocalLibraryLastScannedAt(await _prefs);
-    } catch (_) {}
-    _sourceVersion++;
-    await _db.migrateLegacySource(
-      path: path,
-      displayName: _displayNameForPath(path),
-      bookmark: settings.localLibraryBookmark.trim().isEmpty
-          ? null
-          : settings.localLibraryBookmark,
-      isRemovable: _looksLikeRemovablePath(path),
-      available: await _isPathAvailable(
-        path,
-        bookmark: settings.localLibraryBookmark,
-      ),
-      lastScannedAt: legacyLastScannedAt,
-    );
-  }
-
   String _displayNameForPath(String path) {
     if (path.startsWith('content://')) {
       try {
@@ -649,14 +619,14 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         !normalized.startsWith('/storage/emulated/');
   }
 
-  Future<bool> _isPathAvailable(String path, {String? bookmark}) async {
-    return await _probePathAvailability(path, bookmark: bookmark) ?? true;
+  Future<bool> _isPathAvailable(String path) async {
+    return await _probePathAvailability(path) ?? true;
   }
 
-  Future<bool?> _probePathAvailability(String path, {String? bookmark}) async {
+  Future<bool?> _probePathAvailability(String path) async {
     try {
       if (_availabilityProbe != null) {
-        return await _availabilityProbe(path, bookmark: bookmark);
+        return await _availabilityProbe(path);
       }
       if (Platform.isAndroid && path.startsWith('content://')) {
         return await PlatformBridge.probeSafTreeReadAccess(path);
@@ -686,10 +656,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       final sources = await _db.getSources();
       var inconclusive = false;
       for (final source in sources) {
-        final available = await _probePathAvailability(
-          source.path,
-          bookmark: source.bookmark,
-        );
+        final available = await _probePathAvailability(source.path);
         if (!ref.mounted ||
             sourceVersion != _sourceVersion ||
             requestVersion != _availabilityRequestVersion) {
@@ -843,7 +810,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<void> startScan(
     String folderPath, {
     bool forceFullScan = false,
-    String? iosBookmark,
     String? sourceId,
   }) async {
     final epoch = _scanEpoch;
@@ -868,7 +834,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       await _runScan(
         folderPath,
         forceFullScan: forceFullScan,
-        iosBookmark: iosBookmark,
         sourceId: sourceId,
       );
     } finally {
@@ -890,7 +855,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<void> _runScan(
     String folderPath, {
     required bool forceFullScan,
-    required String? iosBookmark,
     required String? sourceId,
   }) async {
     var activeSourceId = sourceId;
@@ -903,17 +867,13 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           final source = await addSource(
             path: folderPath,
             displayName: _displayNameForPath(folderPath),
-            bookmark: iosBookmark,
             isRemovable: _looksLikeRemovablePath(folderPath),
           );
           activeSourceId = source.id;
         }
       }
 
-      final available = await _isPathAvailable(
-        folderPath,
-        bookmark: iosBookmark,
-      );
+      final available = await _isPathAvailable(folderPath);
       if (!ref.mounted || _scanCancelRequested) return;
       if (!available) {
         _sourceVersion++;
@@ -1664,7 +1624,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     return decoded;
   }
 
-  Future<int> cleanupMissingFiles({String? iosBookmark}) async {
+  Future<int> cleanupMissingFiles() async {
     await refreshSourceAvailability();
     var removed = 0;
     for (final source in state.sources) {

@@ -153,7 +153,6 @@ class LocalLibrarySource {
   final String id;
   final String path;
   final String displayName;
-  final String? bookmark;
   final String? volumeId;
   final bool isRemovable;
   final bool enabled;
@@ -167,7 +166,6 @@ class LocalLibrarySource {
     required this.id,
     required this.path,
     required this.displayName,
-    this.bookmark,
     this.volumeId,
     this.isRemovable = false,
     this.enabled = true,
@@ -193,7 +191,6 @@ class LocalLibrarySource {
       id: id,
       path: path,
       displayName: displayName,
-      bookmark: bookmark,
       volumeId: volumeId,
       isRemovable: isRemovable,
       enabled: enabled ?? this.enabled,

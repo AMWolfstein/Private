@@ -54,7 +54,7 @@ Future<List<IsrcDuplicateGroup>> readIsrcDuplicateGroups(
         maximum - minimum > 2) {
       unsafeGroups.add(isrc);
     }
-    final keys = buildPhysicalPathMatchKeys(path);
+    final keys = buildPathMatchKeys(path);
     final seen = pathsByIsrc.putIfAbsent(isrc, () => {});
     final alreadySeen = keys.any(seen.contains);
     seen.addAll(keys);

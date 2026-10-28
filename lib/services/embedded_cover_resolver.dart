@@ -106,11 +106,7 @@ class EmbeddedCoverResolver {
   static int _stagingSequence = 0;
 
   static String cleanFilePath(String? filePath) {
-    if (filePath == null) return '';
-    if (filePath.startsWith('EXISTS:')) {
-      return filePath.substring(7);
-    }
-    return filePath;
+    return filePath ?? '';
   }
 
   static Future<int?> readFileModTimeMillis(String? filePath) async {
@@ -593,9 +589,7 @@ class EmbeddedCoverResolver {
           '${DateTime.now().microsecondsSinceEpoch}_${_stagingSequence++}.jpg',
         );
       } else {
-        final tempDir = await Directory.systemTemp.createTemp(
-          'cover_preview_',
-        );
+        final tempDir = await Directory.systemTemp.createTemp('cover_preview_');
         outputPath = p.join(tempDir.path, 'cover_preview.jpg');
       }
 

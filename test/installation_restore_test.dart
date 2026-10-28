@@ -115,8 +115,6 @@ void main() {
       keepScreenOnLyrics: false,
       locale: 'id',
       isFirstLaunch: false,
-      localLibraryPath: 'content://tree/library',
-      localLibraryBookmark: 'library-bookmark',
       localLibraryAutoScan: 'daily',
       hasCompletedTutorial: true,
     );
@@ -127,8 +125,6 @@ void main() {
       expect(sanitized.isFirstLaunch, isTrue);
       expect(sanitized.hasCompletedTutorial, isFalse);
 
-      expect(sanitized.localLibraryPath, isEmpty);
-      expect(sanitized.localLibraryBookmark, isEmpty);
       expect(sanitized.localLibraryAutoScan, 'off');
       expect(sanitized.locale, restored.locale);
     });

@@ -20,7 +20,7 @@ void main() {
 
   test('one provider document matches through different selected trees', () {
     expect(
-      buildPhysicalPathMatchKeys(parent),
+      buildPathMatchKeys(parent),
       contains('saf-document:b3JnLmV4YW1wbGUuZG9jdW1lbnRz:$documentId'),
     );
     expect(physicalFilePathsMatch(parent, album), isTrue);

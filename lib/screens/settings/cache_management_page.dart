@@ -8,7 +8,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/string_utils.dart';
@@ -290,12 +289,9 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
 
   Future<void> _cleanupUnusedData() async {
     await _runAction('cleanup_unused', () async {
-      final iosBookmark = ref.read(settingsProvider).localLibraryBookmark;
       final missingLibraryEntries = await ref
           .read(localLibraryProvider.notifier)
-          .cleanupMissingFiles(
-            iosBookmark: iosBookmark.isNotEmpty ? iosBookmark : null,
-          );
+          .cleanupMissingFiles();
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

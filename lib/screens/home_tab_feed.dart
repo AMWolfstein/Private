@@ -166,11 +166,9 @@ extension _LocalHomeFeedUI on _HomeTabState {
   }
 
   Widget _feedEmpty() {
-    final hasFolder =
-        ref.watch(localLibraryProvider.select((s) => s.sources.isNotEmpty)) ||
-        ref.watch(
-          settingsProvider.select((s) => s.localLibraryPath.isNotEmpty),
-        );
+    final hasFolder = ref.watch(
+      localLibraryProvider.select((s) => s.sources.isNotEmpty),
+    );
     return Padding(
       padding: const EdgeInsets.all(32),
       child: Column(

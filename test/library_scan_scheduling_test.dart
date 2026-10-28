@@ -183,8 +183,7 @@ void main() {
         localLibraryProvider.overrideWith(
           () => LocalLibraryNotifier(
             database: database,
-            availabilityProbe: (path, {bookmark}) =>
-                probe(path, bookmark: bookmark),
+            availabilityProbe: (path) => probe(path),
           ),
         ),
       ],
@@ -219,7 +218,7 @@ void main() {
         localLibraryProvider.overrideWith(
           () => LocalLibraryNotifier(
             database: database,
-            availabilityProbe: probe,
+            availabilityProbe: (path) => probe(path),
           ),
         ),
       ],
@@ -288,7 +287,7 @@ void main() {
             localLibraryProvider.overrideWith(
               () => LocalLibraryNotifier(
                 database: database,
-                availabilityProbe: probe,
+                availabilityProbe: (path) => probe(path),
               ),
             ),
           ],

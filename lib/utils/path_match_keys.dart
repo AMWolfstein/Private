@@ -9,22 +9,6 @@ const _androidStoragePathAliases = <String>[
   '/mnt/sdcard',
 ];
 
-/// Audio file extensions that the app commonly produces or converts between.
-/// Used to generate extension-stripped match keys so that a file converted from
-/// one format to another (e.g. .flac → .opus) is still recognised as the same
-/// track.
-const _audioExtensions = <String>[
-  '.flac',
-  '.m4a',
-  '.mp3',
-  '.opus',
-  '.ogg',
-  '.wav',
-  '.aiff',
-  '.aif',
-  '.aac',
-];
-
 const _maxPathMatchKeyCacheSize = 6000;
 final Map<String, Set<String>> _pathMatchKeyCache = <String, Set<String>>{};
 
@@ -36,33 +20,29 @@ final _windowsDrivePath = RegExp(r'^[A-Za-z]:[\\/]');
 
 bool _isCaseInsensitivePath(String value) => _windowsDrivePath.hasMatch(value);
 
-String? _stripAudioExtension(String path) {
-  final lower = path.toLowerCase();
-  for (final ext in _audioExtensions) {
-    if (lower.endsWith(ext)) {
-      return path.substring(0, path.length - ext.length);
-    }
+/// Path aliases that refer to the same physical file. The audio extension is
+/// part of the identity: two files that differ only by extension are
+/// different files.
+Set<String> buildPathMatchKeys(String? filePath) {
+  final cleaned = filePath?.trim() ?? '';
+  if (cleaned.isEmpty) return const {};
+  final cached = _pathMatchKeyCache.remove(cleaned);
+  if (cached != null) {
+    _pathMatchKeyCache[cleaned] = cached;
+    return cached;
   }
-  return null;
+  final result = Set<String>.unmodifiable(_computePathMatchKeys(cleaned));
+  _pathMatchKeyCache[cleaned] = result;
+  while (_pathMatchKeyCache.length > _maxPathMatchKeyCacheSize) {
+    _pathMatchKeyCache.remove(_pathMatchKeyCache.keys.first);
+  }
+  return result;
 }
 
-/// Path aliases that refer to the same physical file.
-///
-/// Unlike [buildPathMatchKeys], this deliberately keeps the audio extension.
-/// A converted `.flac` and `.opus` can coexist on disk and must not be treated
-/// as the same physical file by destructive operations.
-Set<String> buildPhysicalPathMatchKeys(String? filePath) =>
-    _buildPathMatchKeys(filePath, includeExtensionless: false);
-
-Set<String> buildPathMatchKeys(String? filePath) =>
-    _buildPathMatchKeys(filePath, includeExtensionless: true);
-
 bool physicalFilePathsMatch(String? first, String? second) {
-  final firstKeys = buildPhysicalPathMatchKeys(first);
+  final firstKeys = buildPathMatchKeys(first);
   if (firstKeys.isEmpty) return false;
-  return buildPhysicalPathMatchKeys(
-    second,
-  ).any((key) => firstKeys.contains(key));
+  return buildPathMatchKeys(second).any((key) => firstKeys.contains(key));
 }
 
 bool isPhysicalFileRetained(
@@ -72,23 +52,7 @@ bool isPhysicalFileRetained(
   (retainedPath) => physicalFilePathsMatch(candidatePath, retainedPath),
 );
 
-Set<String> _buildPathMatchKeys(
-  String? filePath, {
-  required bool includeExtensionless,
-}) {
-  final raw = filePath?.trim() ?? '';
-  if (raw.isEmpty) return const {};
-
-  final cleaned = raw.startsWith('EXISTS:') ? raw.substring(7).trim() : raw;
-  if (cleaned.isEmpty) return const {};
-  final cacheKey =
-      '${includeExtensionless ? 'track' : 'physical'}\u0000$cleaned';
-  final cached = _pathMatchKeyCache.remove(cacheKey);
-  if (cached != null) {
-    _pathMatchKeyCache[cacheKey] = cached;
-    return cached;
-  }
-
+Set<String> _computePathMatchKeys(String cleaned) {
   final keys = <String>{};
   final visited = <String>{};
 
@@ -167,23 +131,7 @@ Set<String> _buildPathMatchKeys(
 
   addNormalized(cleaned);
 
-  if (includeExtensionless) {
-    final extensionStrippedKeys = <String>{};
-    for (final key in keys) {
-      final stripped = _stripAudioExtension(key);
-      if (stripped != null && stripped.isNotEmpty) {
-        extensionStrippedKeys.add(stripped);
-      }
-    }
-    keys.addAll(extensionStrippedKeys);
-  }
-
-  final result = Set<String>.unmodifiable(keys);
-  _pathMatchKeyCache[cacheKey] = result;
-  while (_pathMatchKeyCache.length > _maxPathMatchKeyCacheSize) {
-    _pathMatchKeyCache.remove(_pathMatchKeyCache.keys.first);
-  }
-  return result;
+  return keys;
 }
 
 String? _androidDocumentMatchKey(Uri? uri) {
@@ -199,7 +147,7 @@ String? _androidDocumentMatchKey(Uri? uri) {
       segments[2] == 'document';
   if ((!isDirect && !isTreeDocument) || segments.last.isEmpty) return null;
   // Encode only the authority so the separator cannot be ambiguous. The ID
-  // stays verbatim and keeps its extension for track/conversion match keys.
+  // stays verbatim, extension included.
   final authority = base64Url.encode(utf8.encode(uri.authority.toLowerCase()));
   final fragment = uri.fragment;
   final suffix = fragment.isEmpty ? '' : '#$fragment';

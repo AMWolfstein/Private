@@ -36,44 +36,9 @@ void main() {
     expect(normalizeLookupText(' E\u0301LECTRO '), 'e\u0301lectro');
   });
 
-  test(
-    'v17 search backfill crosses bounded pages without dropping rows',
-    () async {
-      final db = await SqliteProcessDatabase.open();
-      addTearDown(db.close);
-      await LibrarySchema.create(db, LibrarySchema.version);
-      for (final column in ['search_track', 'search_album', 'search_artist']) {
-        await db.execute('ALTER TABLE library DROP COLUMN $column');
-      }
-      final batch = db.batch();
-      for (var i = 0; i < 305; i++) {
-        final encoded =
-            LibraryRowMapper.encode({
-              ..._unicodeTrack(),
-              'id': 'unicode-$i',
-              'filePath': '/music/unicode-$i.flac',
-            })..removeWhere(
-              (key, _) => const {
-                'search_track',
-                'search_album',
-                'search_artist',
-              }.contains(key),
-            );
-        encoded['search_text'] = 'cafe\u0301';
-        batch.insert('library', encoded);
-      }
-      await batch.commit(noResult: true);
-      await LibrarySchema.upgrade(db, 17, LibrarySchema.version);
-      final rows = await db.query('library', columns: ['id', 'search_track']);
-      expect(rows, hasLength(305));
-      expect(rows.every((row) => row['search_track'] == 'café'), isTrue);
-      expect(rows.map((row) => row['id']).toSet(), hasLength(305));
-    },
-  );
-
-  for (final migrate in [false, true]) {
+  {
     test(
-      'canonical search works after ${migrate ? 'v17 migration' : 'new writes'} with stable identities',
+      'canonical search works after new writes with stable identities',
       () async {
         final db = await SqliteProcessDatabase.open();
         addTearDown(db.close);
@@ -81,23 +46,7 @@ void main() {
         final encoded = LibraryRowMapper.encode(_unicodeTrack());
         final albumKey = encoded['album_key'];
         final matchKey = encoded['match_key'];
-        if (migrate) {
-          for (final column in [
-            'search_track',
-            'search_album',
-            'search_artist',
-          ]) {
-            await db.execute('ALTER TABLE library DROP COLUMN $column');
-            encoded.remove(column);
-          }
-          encoded['search_text'] =
-              'cafe\u0301 e\u0301lise e\u0301te\u0301 e\u0301lise';
-          encoded['sort_genre'] = 'e\u0301lectro; rock';
-        }
         await db.insert('library', encoded);
-        if (migrate) {
-          await LibrarySchema.upgrade(db, 17, LibrarySchema.version);
-        }
 
         final stored = (await db.query('library')).single;
         expect(stored['id'], 'unicode');

@@ -118,10 +118,6 @@ Future<bool> deleteFile(
   SourceDeletionEvents? deletionEvents,
 }) async {
   if (path == null || path.isEmpty) return false;
-  if (path.startsWith('EXISTS:')) {
-    path = path.substring(7).trim();
-    if (path.isEmpty) return false;
-  }
   // CUE virtual paths should NOT be deleted through this function —
   // deleting album.cue would remove ALL tracks. Callers should handle
   // CUE deletion specially (e.g. only delete when all tracks are removed).

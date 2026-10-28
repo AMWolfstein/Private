@@ -32,11 +32,12 @@ void main() {
       });
       events.subscribe((source) async => reactions.add(source));
       var finished = false;
-      final deletion = deleteFile('EXISTS:${file.path}', deletionEvents: events)
-          .then((result) {
-            finished = true;
-            return result;
-          });
+      final deletion = deleteFile(file.path, deletionEvents: events).then((
+        result,
+      ) {
+        finished = true;
+        return result;
+      });
       await entered.future;
       expect(finished, isFalse);
       cleaned.complete();
@@ -123,7 +124,7 @@ void main() {
     final events = SourceDeletionEvents();
     final reactions = <String>[];
     events.subscribe((source) async => reactions.add(source));
-    for (final path in [null, '', 'EXISTS:', '${cue.path}#track01']) {
+    for (final path in [null, '', '${cue.path}#track01']) {
       expect(await deleteFile(path, deletionEvents: events), isFalse);
     }
     expect(reactions, isEmpty);

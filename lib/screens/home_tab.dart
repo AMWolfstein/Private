@@ -18,7 +18,6 @@ import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library_search_results.dart';
 
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/screens/settings/library_settings_page.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';

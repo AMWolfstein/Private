@@ -37,13 +37,6 @@ void main() {
       row['name']! as String,
   ];
 
-  Future<List<Object?>> ftsTriggers() async => [
-    for (final row in await db.rawQuery(
-      "SELECT name FROM sqlite_master WHERE type='trigger' AND name LIKE 'library_search_fts_%' ORDER BY name",
-    ))
-      row['name'],
-  ];
-
   test(
     'fresh schema has no lookup summary and keeps replace, move and delete behaviour',
     () async {
@@ -88,121 +81,6 @@ void main() {
     },
   );
 
-  test(
-    'v1 upgrade preserves tracks and backfills current search and path identities',
-    () async {
-      await db.execute('''CREATE TABLE library (
-      id TEXT PRIMARY KEY, track_name TEXT NOT NULL, artist_name TEXT NOT NULL,
-      album_name TEXT NOT NULL, album_artist TEXT, file_path TEXT NOT NULL UNIQUE,
-      scanned_at TEXT NOT NULL, isrc TEXT, track_number INTEGER, disc_number INTEGER,
-      duration INTEGER, release_date TEXT, bit_depth INTEGER, sample_rate INTEGER,
-      genre TEXT, format TEXT
-    )''');
-      await db.insert('library', {
-        'id': 'old',
-        'track_name': ' Song ',
-        'artist_name': 'ARTIST',
-        'album_name': 'Album',
-        'file_path':
-            'content://example.documents/document/nas%3AMusic%2FSong.flac',
-        'scanned_at': '2026-01-01T00:00:00.000Z',
-        'isrc': 'legacy-isrc',
-        'genre': ' Pop ',
-      });
-      await LibrarySchema.upgrade(db, 1, LibrarySchema.version);
-      final row = (await db.query('library')).single;
-      expect(row['source_id'], LocalLibraryItem.legacySourceId);
-      expect(row['search_text'], 'song artist album artist');
-      expect(row['match_key'], 'song|artist');
-      expect(row['sort_genre'], 'pop');
-      expect(row['audio_metadata_scan_version'], 0);
-      expect(row['has_lyrics'], 0);
-      expect(row['has_replaygain'], 0);
-      expect(
-        (await db.query(
-          'library_path_keys',
-        )).every((key) => key['item_id'] == 'old'),
-        isTrue,
-      );
-      expect(await db.query('library_path_keys'), isNotEmpty);
-      expect((await db.query(LibrarySchema.visibleView)).single['id'], 'old');
-      expect(await lookupObjects(), isEmpty);
-    },
-  );
-
-  test(
-    'v19 upgrade removes the legacy lookup summary and keeps rows, FTS and writes working',
-    () async {
-      await LibrarySchema.create(db, 19);
-      // create() no longer builds the retired objects, so install them as a
-      // real v19 database had them: table, index and all six triggers.
-      await db.execute('''
-        CREATE TABLE library_lookup_summary (
-          source_id TEXT NOT NULL, kind TEXT NOT NULL,
-          value TEXT NOT NULL, ref_count INTEGER NOT NULL,
-          PRIMARY KEY (source_id, kind, value)
-        )
-      ''');
-      await db.execute(
-        'CREATE INDEX idx_library_lookup_summary_value ON library_lookup_summary(kind, value)',
-      );
-      for (final kind in ['isrc', 'match']) {
-        final column = kind == 'isrc' ? 'isrc' : 'match_key';
-        await db.execute(
-          'CREATE TRIGGER library_lookup_insert_$kind AFTER INSERT ON library '
-          'BEGIN UPDATE library_lookup_summary SET ref_count = ref_count + 1 '
-          'WHERE value = NEW.$column; END',
-        );
-        await db.execute(
-          'CREATE TRIGGER library_lookup_delete_$kind AFTER DELETE ON library '
-          'BEGIN UPDATE library_lookup_summary SET ref_count = ref_count - 1 '
-          'WHERE value = OLD.$column; END',
-        );
-        await db.execute(
-          'CREATE TRIGGER library_lookup_update_$kind AFTER UPDATE OF source_id, $column ON library '
-          'BEGIN UPDATE library_lookup_summary SET ref_count = ref_count + 1 '
-          'WHERE value = NEW.$column; END',
-        );
-      }
-      // Table, its primary-key auto-index, the value index and six triggers.
-      expect(await lookupObjects(), hasLength(9));
-      for (final id in ['a', 'b']) {
-        await db.insert(
-          'library',
-          LibraryRowMapper.encode(_track(id)),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-      }
-      final before = await db.query('library', orderBy: 'id');
-      // FTS exists only when the host SQLite supports trigram; either way the
-      // upgrade must leave exactly the same FTS triggers behind.
-      final ftsBefore = await ftsTriggers();
-
-      await LibrarySchema.upgrade(db, 19, LibrarySchema.version);
-
-      expect(await lookupObjects(), isEmpty);
-      expect(await db.query('library', orderBy: 'id'), before);
-      expect(await ftsTriggers(), ftsBefore);
-      await db.insert(
-        'library',
-        LibraryRowMapper.encode(_track('a', isrc: 'new')),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      await db.update(
-        'library',
-        {'isrc': 'moved'},
-        where: 'id = ?',
-        whereArgs: ['b'],
-      );
-      await db.delete('library', where: 'id = ?', whereArgs: ['a']);
-      expect((await db.query('library')).single['id'], 'b');
-
-      // Re-running the cleanup on an already clean database is harmless.
-      await LibrarySchema.upgrade(db, 19, LibrarySchema.version);
-      expect(await lookupObjects(), isEmpty);
-    },
-  );
-
   test('row mapping round-trips metadata and preserves unknown scan flags', () {
     final track = _track('full');
     expect(LibraryRowMapper.decode(LibraryRowMapper.encode(track)), track);
@@ -244,27 +122,4 @@ void main() {
       expect(detail, contains('idx_library_album_artist_norm'));
     },
   );
-
-  test('v18 to v19 upgrade adds the missing album_artist_norm index', () async {
-    await LibrarySchema.create(db, 18);
-    // A real v18 database never created this index.
-    await db.execute('DROP INDEX IF EXISTS idx_library_album_artist_norm');
-    expect(
-      await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='index' "
-        "AND name='idx_library_album_artist_norm'",
-      ),
-      isEmpty,
-    );
-
-    await LibrarySchema.upgrade(db, 18, LibrarySchema.version);
-
-    expect(
-      await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='index' "
-        "AND name='idx_library_album_artist_norm'",
-      ),
-      hasLength(1),
-    );
-  });
 }

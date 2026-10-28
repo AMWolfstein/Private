@@ -258,20 +258,20 @@ void main() {
     test('copyWith updates values and retains untouched settings', () {
       const settings = AppSettings();
 
-      final updated = settings.copyWith(localLibraryPath: '/music');
-      expect(updated.localLibraryPath, '/music');
+      final updated = settings.copyWith(localLibraryAutoScan: 'daily');
+      expect(updated.localLibraryAutoScan, 'daily');
       expect(updated.glassQuality, settings.glassQuality);
     });
 
     test('round-trips json including local library settings', () {
       const settings = AppSettings(
-        localLibraryPath: '/music',
+        localLibraryAutoScan: 'daily',
         hasCompletedTutorial: true,
       );
 
       final decoded = AppSettings.fromJson(settings.toJson());
 
-      expect(decoded.localLibraryPath, '/music');
+      expect(decoded.localLibraryAutoScan, 'daily');
       expect(decoded.hasCompletedTutorial, isTrue);
     });
   });
@@ -282,10 +282,8 @@ void main() {
       final settings = AppSettings.fromJson({
         'defaultLibraryView': 'albums',
         'libraryQualityLabelMode': 'bit_depth',
-        'localLibraryPath': '/music',
         'libraryFilterMode': 'singles',
       });
-      expect(settings.localLibraryPath, '/music');
       expect(settings.libraryFilterMode, 'singles');
       expect(settings.toJson(), isNot(contains('defaultLibraryView')));
       expect(settings.toJson(), isNot(contains('libraryQualityLabelMode')));
@@ -460,7 +458,7 @@ void main() {
 
   group('path match keys', () {
     test('builds normalized variants for local paths and file uris', () {
-      final keys = buildPathMatchKeys('EXISTS: /Music/A%20Song.FLAC ');
+      final keys = buildPathMatchKeys(' /Music/A%20Song.FLAC ');
 
       expect(keys, contains('/Music/A%20Song.FLAC'));
       expect(keys, contains('/Music/A Song.FLAC'));
@@ -468,7 +466,6 @@ void main() {
       // POSIX paths are case-sensitive: lowercasing would collide A.flac/a.flac.
       expect(keys, isNot(contains('/music/a%20song.flac')));
       expect(keys, isNot(contains('/music/a song.flac')));
-      expect(keys, contains('/Music/A%20Song'));
       expect(
         identical(buildPathMatchKeys('/Music/A%20Song.FLAC'), keys),
         isTrue,
@@ -482,7 +479,6 @@ void main() {
       expect(keys, contains(r'C:\Music\Song.mp3'));
       expect(keys, contains('C:/Music/Song.mp3'));
       expect(keys, contains('c:/music/song.mp3'));
-      expect(keys, contains('C:/Music/Song'));
     });
 
     test('only windows drive paths fold case', () {
@@ -508,12 +504,12 @@ void main() {
       expect(physicalFilePathsMatch('$cue#track1', '$cue#track2'), isFalse);
       expect(physicalFilePathsMatch('$cue#track1', '$cue#track1'), isTrue);
       // A fragmented SAF URI is a virtual track, not the backing document.
-      final trackKeys = buildPhysicalPathMatchKeys('$cue#track1');
+      final trackKeys = buildPathMatchKeys('$cue#track1');
       expect(trackKeys.any((key) => key.endsWith('Album.cue#track1')), isTrue);
       expect(trackKeys, isNot(contains('/storage/emulated/0/Music/Album.cue')));
       // The same document without a fragment still maps to its raw path.
       expect(
-        buildPhysicalPathMatchKeys(cue),
+        buildPathMatchKeys(cue),
         contains('/storage/emulated/0/Music/Album.cue'),
       );
     });
@@ -526,17 +522,13 @@ void main() {
       const rawPath = '/storage/emulated/0/Music/Flac Songs/Adore You.m4a';
 
       expect(physicalFilePathsMatch(safUri, rawPath), isTrue);
-      expect(buildPhysicalPathMatchKeys(safUri), contains(rawPath));
+      expect(buildPathMatchKeys(safUri), contains(rawPath));
     });
 
     test('physical matching keeps coexisting audio formats distinct', () {
       const flac = '/storage/emulated/0/Music/Song.flac';
       const opus = '/storage/emulated/0/Music/Song.opus';
 
-      expect(
-        buildPathMatchKeys(flac),
-        contains('/storage/emulated/0/Music/Song'),
-      );
       expect(physicalFilePathsMatch(flac, opus), isFalse);
       expect(isPhysicalFileRetained(opus, [flac]), isFalse);
     });

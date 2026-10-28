@@ -131,26 +131,16 @@ class LibraryCollectionsDatabase {
     );
   }
 
-  /// Upgrades the app-owned schema without rewriting retained collections.
+  /// Rust pins the collections schema at v4. Databases older than that are not
+  /// upgraded.
   static Future<void> upgradeDatabaseSchema(
     Database db,
     int oldVersion,
     int newVersion,
   ) async {
-    _log.i('Upgrading collections database from v$oldVersion to v$newVersion');
-    if (oldVersion < 2) {
-      await _createFavoriteArtistsTable(db);
-    }
-    if (oldVersion < 3) {
-      await db.execute('DROP TABLE IF EXISTS wishlist_tracks');
-    }
-    if (oldVersion < 4) {
-      // OPT-PERF-003: the picker's per-500-key membership counts filtered by
-      // track_key scanned the whole membership table without this index.
-      await db.execute(
-        'CREATE INDEX IF NOT EXISTS idx_${_tablePlaylistTracks}_track_key ON $_tablePlaylistTracks(track_key, playlist_id)',
-      );
-    }
+    _log.i(
+      'Collections database v$oldVersion needs no upgrade to v$newVersion',
+    );
   }
 
   static Future<void> _createFavoriteArtistsTable(Database db) async {

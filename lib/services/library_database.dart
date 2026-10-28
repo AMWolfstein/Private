@@ -416,7 +416,6 @@ class LibraryDatabase {
       id: row['id'] as String,
       path: row['path'] as String,
       displayName: row['display_name'] as String,
-      bookmark: row['bookmark'] as String?,
       volumeId: row['volume_id'] as String?,
       isRemovable: (row['is_removable'] as num?)?.toInt() == 1,
       enabled: (row['enabled'] as num?)?.toInt() != 0,
@@ -433,7 +432,6 @@ class LibraryDatabase {
     final values = <String, Object?>{
       'path': source.path,
       'display_name': source.displayName,
-      'bookmark': source.bookmark,
       'volume_id': source.volumeId,
       'is_removable': source.isRemovable ? 1 : 0,
       'enabled': source.enabled ? 1 : 0,
@@ -481,33 +479,6 @@ class LibraryDatabase {
       values,
       where: 'id = ?',
       whereArgs: [sourceId],
-    );
-  }
-
-  Future<void> migrateLegacySource({
-    required String path,
-    required String displayName,
-    String? bookmark,
-    String? volumeId,
-    bool isRemovable = false,
-    bool available = true,
-    DateTime? lastScannedAt,
-  }) async {
-    if (path.trim().isEmpty) return;
-    final db = await database;
-    await persistLegacyLibrarySource(
-      db,
-      LocalLibrarySource(
-        id: legacySourceId,
-        path: path,
-        displayName: displayName,
-        bookmark: bookmark,
-        volumeId: volumeId,
-        isRemovable: isRemovable,
-        available: available,
-        lastScannedAt: lastScannedAt,
-        lastSeenAt: available ? DateTime.now() : null,
-      ),
     );
   }
 
@@ -1005,37 +976,4 @@ class LibraryDatabase {
     }
     return totalDeleted;
   }
-}
-
-/// Migrates the pre-multiple-folder setting even when its placeholder row is
-/// absent. Do not REPLACE an existing source or change the IDs of its tracks.
-Future<void> persistLegacyLibrarySource(
-  Database db,
-  LocalLibrarySource source,
-) async {
-  final values = <String, Object?>{
-    'path': source.path,
-    'display_name': source.displayName,
-    'bookmark': source.bookmark,
-    'volume_id': source.volumeId,
-    'is_removable': source.isRemovable ? 1 : 0,
-    'available': source.available ? 1 : 0,
-    'last_scanned_at': source.lastScannedAt?.toIso8601String(),
-    'last_seen_at': source.lastSeenAt?.toIso8601String(),
-  };
-  await sqlite.transactionWithBusyRetry(db, (txn) async {
-    final updated = await txn.update(
-      'library_sources',
-      values,
-      where: 'id = ?',
-      whereArgs: [source.id],
-    );
-    if (updated == 0) {
-      await txn.insert('library_sources', {
-        'id': source.id,
-        'enabled': source.enabled ? 1 : 0,
-        ...values,
-      });
-    }
-  });
 }

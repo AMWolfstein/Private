@@ -12,21 +12,8 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library_database.dart';
 
 class _Settings extends SettingsNotifier {
-  _Settings({Future<void>? ready, String path = ''})
-    : _ready = ready,
-      _path = path;
-
-  final Future<void>? _ready;
-  final String _path;
-
   @override
   AppSettings build() => const AppSettings();
-
-  @override
-  Future<void> ensureLoaded() async {
-    await _ready;
-    state = state.copyWith(localLibraryPath: _path);
-  }
 }
 
 class _LibraryDatabase implements LibraryDatabase {
@@ -69,27 +56,6 @@ class _LibraryDatabase implements LibraryDatabase {
   @override
   Future<LocalLibrarySource?> getSourceByPath(String path) async =>
       sources.where((source) => source.path == path).firstOrNull;
-
-  @override
-  Future<void> migrateLegacySource({
-    required String path,
-    required String displayName,
-    String? bookmark,
-    String? volumeId,
-    bool isRemovable = false,
-    bool available = true,
-    DateTime? lastScannedAt,
-  }) async {
-    sources = [
-      ...sources,
-      LocalLibrarySource(
-        id: LibraryDatabase.legacySourceId,
-        path: path,
-        displayName: displayName,
-        available: available,
-      ),
-    ];
-  }
 
   @override
   Future<void> updateSourceState(
@@ -170,7 +136,7 @@ void main() {
         trackCount: 2,
       ),
     ]);
-    probe = (path, {bookmark}) => Directory(path).exists();
+    probe = (path) => Directory(path).exists();
     collections = _Collections();
     container = ProviderContainer(
       overrides: [
@@ -179,7 +145,7 @@ void main() {
         localLibraryProvider.overrideWith(
           () => library = _Library(
             database,
-            (path, {bookmark}) => probe(path, bookmark: bookmark),
+            (path) => probe(path),
           ),
         ),
       ],
@@ -190,39 +156,6 @@ void main() {
     container.dispose();
     await music.delete(recursive: true);
   });
-
-  test(
-    'upgrade waits for saved settings before migrating the old folder',
-    () async {
-      final ready = Completer<void>();
-      container.dispose();
-      database.sources = [];
-      container = ProviderContainer(
-        overrides: [
-          settingsProvider.overrideWith(
-            () => _Settings(ready: ready.future, path: music.path),
-          ),
-          localLibraryProvider.overrideWith(
-            () => LocalLibraryNotifier(database: database),
-          ),
-        ],
-      );
-      container.read(localLibraryProvider);
-      await Future<void>.delayed(Duration.zero);
-      expect(container.read(localLibraryProvider).isLoading, isTrue);
-      ready.complete();
-      await _waitFor(() => !container.read(localLibraryProvider).isLoading);
-      expect(container.read(localLibraryProvider).loadFailed, isFalse);
-      expect(
-        container.read(localLibraryProvider).sources.single.path,
-        music.path,
-      );
-      expect(
-        container.read(localLibraryProvider).sources.single.id,
-        LibraryDatabase.legacySourceId,
-      );
-    },
-  );
 
   test(
     'saved folders appear while a large track count is still loading',
@@ -410,7 +343,7 @@ void main() {
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
     final version = container.read(localLibraryProvider).loadedIndexVersion;
     final countReads = database.countReads;
-    probe = (path, {bookmark}) async => false;
+    probe = (path) async => false;
     await library.refreshSourceAvailability();
     expect(
       container.read(localLibraryProvider).sources.single.available,
@@ -422,7 +355,7 @@ void main() {
       version + 1,
     );
 
-    probe = (path, {bookmark}) async => true;
+    probe = (path) async => true;
     await Future.wait([
       library.refreshSourceAvailability(),
       library.refreshSourceAvailability(scanReconnected: true),
@@ -445,7 +378,7 @@ void main() {
       await _waitFor(() => !container.read(localLibraryProvider).isLoading);
       final countReads = database.countReads;
       final version = container.read(localLibraryProvider).loadedIndexVersion;
-      probe = (path, {bookmark}) async => null;
+      probe = (path) async => null;
       await library.refreshSourceAvailability();
       expect(
         container.read(localLibraryProvider).sources.single.available,
@@ -461,7 +394,7 @@ void main() {
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
     final pending = Completer<bool?>();
     var probes = 0;
-    probe = (path, {bookmark}) =>
+    probe = (path) =>
         ++probes == 1 ? pending.future : Future<bool?>.value(true);
     final countReads = database.countReads;
     final refresh = library.refreshSourceAvailability();
@@ -483,7 +416,7 @@ void main() {
         await _waitFor(() => !container.read(localLibraryProvider).isLoading);
         final pending = Completer<bool?>();
         var probes = 0;
-        probe = (path, {bookmark}) =>
+        probe = (path) =>
             ++probes == 1 ? pending.future : Future<bool?>.value(true);
         final refresh = library.refreshSourceAvailability();
         await _waitFor(() => probes == 1);
@@ -518,7 +451,7 @@ void main() {
     await _waitFor(() => !container.read(localLibraryProvider).isLoading);
     final pending = Completer<int>();
     database.count = () => pending.future;
-    probe = (path, {bookmark}) async => false;
+    probe = (path) async => false;
     final countReads = database.countReads;
     final refresh = library.refreshSourceAvailability();
     await _waitFor(() => database.countReads > countReads);

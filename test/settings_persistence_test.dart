@@ -51,8 +51,6 @@ class _ConfiguredSettings extends _Settings {
   AppSettings build() => const AppSettings(
     isFirstLaunch: false,
     hasCompletedTutorial: true,
-    localLibraryPath: '/current',
-    localLibraryBookmark: 'current-bookmark',
     localLibraryAutoScan: 'weekly',
   );
 }
@@ -72,8 +70,6 @@ void main() {
       final restore = notifier.restoreFromBackup({
         'isFirstLaunch': true,
         'hasCompletedTutorial': false,
-        'localLibraryPath': '/foreign',
-        'localLibraryBookmark': 'foreign',
         'localLibraryAutoScan': 'daily',
         'glassQuality': 'off',
       });
@@ -81,12 +77,11 @@ void main() {
       await prefs.whenStarted(0);
       expect(prefs.writes.single['isFirstLaunch'], isFalse);
       expect(prefs.writes.single['hasCompletedTutorial'], isTrue);
-      expect(prefs.writes.single['localLibraryPath'], '/current');
       expect(prefs.writes.single['localLibraryAutoScan'], 'weekly');
       prefs.release(0).complete(false);
       await failed;
       expect(container.read(settingsProvider).glassQuality, 'auto');
-      expect(container.read(settingsProvider).localLibraryPath, '/current');
+      expect(container.read(settingsProvider).localLibraryAutoScan, 'weekly');
     },
   );
 
@@ -101,17 +96,14 @@ void main() {
       );
       addTearDown(container.dispose);
       final notifier = container.read(settingsProvider.notifier);
-      notifier.setLocalLibraryPathAndBookmark('content://test/tree/music', '');
+      notifier.setLocale('de');
       final finish = notifier.setFirstLaunchComplete();
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       preferences.release(0).complete(true);
       await preferences.whenStarted(1);
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
       expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
-      expect(
-        preferences.writes.last['localLibraryPath'],
-        'content://test/tree/music',
-      );
+      expect(preferences.writes.last['locale'], 'de');
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       preferences.release(1).complete(true);
       await finish;
@@ -148,24 +140,18 @@ void main() {
       final notifier = container.read(settingsProvider.notifier);
       final finish = notifier.setFirstLaunchComplete();
       await preferences.whenStarted(0);
-      notifier.setLocalLibraryPathAndBookmark('content://test/tree/latest', '');
+      notifier.setLocale('fr');
       preferences.release(0).complete(true);
       await preferences.whenStarted(1);
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
       expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
-      expect(
-        preferences.writes.last['localLibraryPath'],
-        'content://test/tree/latest',
-      );
+      expect(preferences.writes.last['locale'], 'fr');
       preferences.release(1).complete(true);
       await finish;
       expect(container.read(settingsProvider).isFirstLaunch, isFalse);
       expect(container.read(settingsProvider).hasCompletedTutorial, isTrue);
-      expect(
-        container.read(settingsProvider).localLibraryPath,
-        'content://test/tree/latest',
-      );
+      expect(container.read(settingsProvider).locale, 'fr');
     },
   );
 
