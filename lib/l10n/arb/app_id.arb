@@ -250,11 +250,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "Akses Penyimpanan Diperlukan",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "Android 11+ memerlukan akses penyimpanan untuk memindai dan mengedit musik di folder yang Anda pilih.",
   "setupOpenSettings": "Buka Setelan",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -315,10 +310,6 @@
   "setupGetStarted": "Mulai",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Harap aktifkan \"Izinkan akses untuk mengelola semua file\" di layar berikutnya.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Pilih Bahasa",
   "@setupLanguageTitle": {
@@ -2172,10 +2163,6 @@
   "unknownArtist": "Artis Tak Dikenal",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "Audio",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "Penyimpanan",
   "@permissionStorage": {

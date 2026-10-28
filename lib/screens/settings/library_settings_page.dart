@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -11,7 +10,7 @@ import 'package:sistrum/models/library_scan_failure.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library_database.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/library_folder_selection.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/widgets/duplicate_review_sheet.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
@@ -34,22 +33,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
   int _androidSdkVersion = 0;
   bool _hasStoragePermission = false;
   bool _isCleaningMissingFiles = false;
-
-  String _getDisplayPath(String path) {
-    if (!path.startsWith('content://')) return path;
-    try {
-      final uri = Uri.parse(path);
-      // `pathSegments` already percent-decodes; a second pass would rewrite a
-      // literal `%XX` in the folder name.
-      final decoded = uri.pathSegments.last;
-      if (decoded.startsWith('primary:')) {
-        return '/storage/emulated/0/${decoded.substring('primary:'.length)}';
-      }
-      return decoded;
-    } catch (_) {
-      return path;
-    }
-  }
 
   @override
   void initState() {
@@ -134,51 +117,23 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
   }
 
   Future<void> _pickLibraryFolderInternal() async {
-    if (Platform.isAndroid && _androidSdkVersion >= 29) {
-      // Use SAF tree picker - no MANAGE_EXTERNAL_STORAGE needed
-      final messenger = ScaffoldMessenger.of(context);
-      final result = await PlatformBridge.pickSafTree(
-        onFailure: (message) {
-          if (mounted) {
-            messenger.showSnackBar(SnackBar(content: Text(message)));
-          }
-        },
-      );
-      if (result != null) {
-        final treeUri = result['tree_uri'] as String? ?? '';
-        if (treeUri.isNotEmpty) {
-          final source = await ref
-              .read(localLibraryProvider.notifier)
-              .addSource(
-                path: treeUri,
-                displayName:
-                    result['display_name'] as String? ??
-                    _getDisplayPath(treeUri),
-                volumeId: result['volume_id'] as String?,
-                isRemovable: result['is_removable'] == true,
-              );
-          await ref
-              .read(localLibraryProvider.notifier)
-              .startSourceScan(source.id);
-        }
-      }
-    } else {
-      // Older Android needs storage permission; iOS chooses internal or Files.
-      if (!_hasStoragePermission) {
-        final granted = await _requestStoragePermission();
-        if (!granted) return;
-      }
-
-      final result = await FilePicker.getDirectoryPath();
-      if (result != null) {
-        final source = await ref
-            .read(localLibraryProvider.notifier)
-            .addSource(path: result, displayName: result);
-        await ref
-            .read(localLibraryProvider.notifier)
-            .startSourceScan(source.id);
-      }
+    // Older Android needs storage permission; Android 10+ and iOS pick a
+    // folder through the scoped picker.
+    if (!_hasStoragePermission) {
+      final granted = await _requestStoragePermission();
+      if (!granted || !mounted) return;
     }
+    final messenger = ScaffoldMessenger.of(context);
+    await selectLibraryFolder(
+      context,
+      ref,
+      androidSdkVersion: _androidSdkVersion,
+      onFailure: (message) {
+        if (mounted) {
+          messenger.showSnackBar(SnackBar(content: Text(message)));
+        }
+      },
+    );
   }
 
   Future<void> _startScan({bool forceFullScan = false}) async {

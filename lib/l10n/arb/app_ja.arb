@@ -250,11 +250,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "ストレージアクセスが必要です",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "Android 11 以降では、選択したフォルダの音楽をスキャン・編集するためにストレージへのアクセスが必要です。",
   "setupOpenSettings": "設定を開く",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -315,10 +310,6 @@
   "setupGetStarted": "Get Started",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Please enable \"Allow access to manage all files\" in the next screen.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Choose Language",
   "@setupLanguageTitle": {
@@ -2162,10 +2153,6 @@
   "unknownArtist": "Unknown Artist",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "Audio",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "ストレージ",
   "@permissionStorage": {

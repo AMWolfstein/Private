@@ -250,11 +250,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "Speicherzugriff erforderlich",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "Android 11+ benötigt Speicherzugriff, um Musik in deinem gewählten Ordner zu scannen und zu bearbeiten.",
   "setupOpenSettings": "Einstellungen öffnen",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -315,10 +310,6 @@
   "setupGetStarted": "Los geht‘s",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Bitte aktiviere \"Zugriff auf alle Dateien erlauben\" auf dem nächsten Bildschirm.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Sprache auswählen",
   "@setupLanguageTitle": {
@@ -2162,10 +2153,6 @@
   "unknownArtist": "Unbekannter Künstler",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "Audio",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "Speicher",
   "@permissionStorage": {

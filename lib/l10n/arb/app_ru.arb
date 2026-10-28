@@ -250,11 +250,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "Требуется доступ к хранилищу",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "Android 11+ требует доступа к хранилищу, чтобы сканировать и редактировать музыку в выбранной папке.",
   "setupOpenSettings": "Открыть настройки",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -315,10 +310,6 @@
   "setupGetStarted": "Приступить к работе",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Пожалуйста, включите \"Разрешить доступ для управления всеми файлами\" на следующем экране.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Выберите язык",
   "@setupLanguageTitle": {
@@ -2162,10 +2153,6 @@
   "unknownArtist": "Неизвестный исполнитель",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "Аудио",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "Хранилище",
   "@permissionStorage": {

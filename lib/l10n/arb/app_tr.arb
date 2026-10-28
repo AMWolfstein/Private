@@ -250,11 +250,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "Depolama Erişimi Gerekli",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "Android 11+ sürümünde seçtiğiniz klasördeki müziği taramak ve düzenlemek için depolama erişimi gerekir.",
   "setupOpenSettings": "Ayarları Aç",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -315,10 +310,6 @@
   "setupGetStarted": "Başla",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Lütfen bir sonraki ekranda \"Bütün dosyalara eriş\" iznini sağlayın.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Dil Seçin",
   "@setupLanguageTitle": {
@@ -2162,10 +2153,6 @@
   "unknownArtist": "Bilinmeyen sanatçı",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "Ses",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "Depolama",
   "@permissionStorage": {

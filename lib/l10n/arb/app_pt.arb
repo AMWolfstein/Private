@@ -189,11 +189,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "Storage Access Required",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "O Android 11+ exige acesso ao armazenamento para analisar e editar música na pasta escolhida.",
   "setupOpenSettings": "Open Settings",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -254,10 +249,6 @@
   "setupGetStarted": "Get Started",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Please enable \"Allow access to manage all files\" in the next screen.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Escolha o idioma",
   "setupLanguageDescription": "Selecione o idioma preferido para a app. Pode alterá-lo mais tarde nas Definições.",
@@ -1592,7 +1583,6 @@
   "audioAnalysisStereo": "Estéreo",
   "audioAnalysisMono": "Mono",
   "unknownArtist": "Artista desconhecido",
-  "permissionAudio": "Áudio",
   "permissionStorage": "Armazenamento",
   "permissionNotification": "Notificação",
   "libraryPlayback": "Reprodução",

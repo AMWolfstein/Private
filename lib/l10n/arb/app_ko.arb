@@ -250,11 +250,6 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "저장소 접근 권한 필요",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
-  },
-  "setupStorageAccessMessageAndroid11": "Android 11 이상에서는 선택한 폴더의 음악을 스캔하고 편집하려면 저장소 접근 권한이 필요합니다.",
   "setupOpenSettings": "설정 열기",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
@@ -315,10 +310,6 @@
   "setupGetStarted": "시작하기",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "다음 화면에서 '모든 파일 관리 권한 허용'을 활성화해 주세요",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "언어 선택",
   "@setupLanguageTitle": {
@@ -2162,10 +2153,6 @@
   "unknownArtist": "알 수 없는 아티스트",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "오디오",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "저장소",
   "@permissionStorage": {

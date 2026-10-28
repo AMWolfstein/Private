@@ -142,6 +142,22 @@ void main() {
     },
   );
 
+  testWidgets('the storage step opens the scoped folder picker', (
+    tester,
+  ) async {
+    await prefs.setString('setup_progress_v1', '{"step":2}');
+    await tester.pumpWidget(_setup());
+    await tester.pumpAndSettle();
+    expect(find.text('Choose Music Folder'), findsOneWidget);
+    await tester.tap(find.text('Choose Music Folder'));
+    await tester.pumpAndSettle();
+    // The picker is the only storage action; no broad permission is requested.
+    expect(pickerCalls, 1);
+    expect(permissionRequests, 0);
+    expect(find.text('8/9'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   for (final sdk in [32, 33]) {
     testWidgets(
       'one guide finishes on permissions without choosing an output folder (SDK $sdk)',
@@ -171,7 +187,12 @@ void main() {
           expect(find.text('Select Folder'), findsNothing);
           expect(find.text('Choose music folder'), findsNothing);
         }
-        expect(find.text('Storage Permission Granted!'), findsOneWidget);
+        // Android 10+ storage access is the scoped folder step: no broad
+        // permission is requested and setup can continue without a folder.
+        expect(find.text('Choose Music Folder'), findsOneWidget);
+        expect(find.text('Storage Permission Granted!'), findsNothing);
+        await tester.tap(find.text('Skip for now'));
+        await tester.pumpAndSettle();
         if (sdk >= 33) {
           await next(tester);
           expect(find.text('Notification Permission Granted!'), findsOneWidget);
@@ -270,18 +291,25 @@ void main() {
     'resume rechecks permissions and retains the unified guide step',
     (tester) async {
       await prefs.setString('setup_progress_v1', '{"step":2}');
-      audioGranted = false;
+      notificationsGranted = false;
       await tester.pumpWidget(_setup());
       await tester.pumpAndSettle();
-      expect(find.text('Grant Permission'), findsOneWidget);
+      // Storage access is the scoped folder step, not a permission request.
+      expect(find.text('Choose Music Folder'), findsOneWidget);
+      expect(find.text('Grant Permission'), findsNothing);
       expect(find.text('8/9'), findsOneWidget);
+      await tester.tap(find.text('Skip for now'));
+      await tester.pumpAndSettle();
+      await next(tester);
+      expect(find.text('Enable Notifications'), findsWidgets);
+      expect(find.text('9/9'), findsOneWidget);
       binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-      audioGranted = true;
+      notificationsGranted = true;
       binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await tester.pumpAndSettle();
-      expect(find.text('Storage Permission Granted!'), findsOneWidget);
+      expect(find.text('Notification Permission Granted!'), findsOneWidget);
       expect(permissionRequests, 0);
-      expect(find.text('8/9'), findsOneWidget);
+      expect(find.text('9/9'), findsOneWidget);
     },
   );
 

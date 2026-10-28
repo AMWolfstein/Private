@@ -352,13 +352,13 @@
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupStorageAccessRequired": "Storage Access Required",
-  "@setupStorageAccessRequired": {
-    "description": "Title when storage access needed"
+  "setupChooseMusicFolder": "Choose Music Folder",
+  "@setupChooseMusicFolder": {
+    "description": "Button on the setup storage step that opens the scoped folder picker"
   },
-  "setupStorageAccessMessageAndroid11": "Android 11+ requires storage access to scan and edit music in your chosen folder.",
-  "@setupStorageAccessMessageAndroid11": {
-    "description": "Android 11+ specific explanation"
+  "setupLibraryFolderDescription": "Choose the folder that holds your music. Sistrum reads it through scoped folder access, so no all-files permission is needed.",
+  "@setupLibraryFolderDescription": {
+    "description": "Storage step explanation on Android 10 and later"
   },
   "setupOpenSettings": "Open Settings",
   "@setupOpenSettings": {
@@ -426,10 +426,6 @@
   "setupGetStarted": "Get Started",
   "@setupGetStarted": {
     "description": "Final setup button"
-  },
-  "setupAllowAccessToManageFiles": "Please enable \"Allow access to manage all files\" in the next screen.",
-  "@setupAllowAccessToManageFiles": {
-    "description": "Instruction for file access permission"
   },
   "setupLanguageTitle": "Choose Language",
   "@setupLanguageTitle": {
@@ -2430,10 +2426,6 @@
   "unknownArtist": "Unknown Artist",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
-  },
-  "permissionAudio": "Audio",
-  "@permissionAudio": {
-    "description": "Audio permission type label"
   },
   "permissionStorage": "Storage",
   "@permissionStorage": {

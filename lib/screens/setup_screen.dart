@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/local_guide_pages.dart';
+import 'package:sistrum/services/library_folder_selection.dart';
 import 'package:sistrum/constants/language_choices.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/widgets/scroll_edge_fade.dart';
@@ -44,6 +45,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   bool _storagePermissionGranted = false;
   bool _notificationPermissionGranted = false;
   bool _notificationPermissionSkipped = false;
+  bool _storageSkipped = false;
   bool _isLoading = false;
   int _androidSdkVersion = 0;
 
@@ -90,6 +92,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
           if (version == 3 && savedStep >= 1) savedStep += 1;
           _currentStep = savedStep.clamp(0, _totalSteps - 1);
           _notificationPermissionSkipped = draft['skipNotifications'] == true;
+          _storageSkipped = draft['skipStorage'] == true;
         } catch (error) {
           await prefs.remove(_progressKey);
           _log.w('Discarding malformed setup progress: $error');
@@ -128,6 +131,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       'step': step ?? _currentStep,
       'version': 2,
       'skipNotifications': _notificationPermissionSkipped,
+      'skipStorage': _storageSkipped,
     });
     if (!await (await _prefs).setString(_progressKey, draft)) {
       throw StateError('Could not save setup progress');
@@ -138,13 +142,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     if (_platform == TargetPlatform.android) {
       bool storageGranted = false;
 
-      if (_androidSdkVersion >= 33) {
-        final audioStatus = await Permission.audio.status;
-        storageGranted = audioStatus.isGranted;
-      } else if (_androidSdkVersion >= 30) {
-        final manageStatus = await Permission.manageExternalStorage.status;
-        storageGranted = manageStatus.isGranted;
-      } else {
+      if (_androidSdkVersion < 29) {
+        // Android 10 and later read music through a scoped SAF folder, which
+        // the storage step asks for instead of a broad permission.
         final storageStatus = await Permission.storage.status;
         storageGranted = storageStatus.isGranted;
       }
@@ -170,49 +170,40 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
 
   Future<void> _requestStoragePermission() async {
     if (_isLoading) return;
-    final permissionAudio = context.l10n.permissionAudio;
-    final permissionStorage = context.l10n.permissionStorage;
     setState(() => _isLoading = true);
     try {
       await _saveProgress();
       if (!mounted) return;
-      if (_platform == TargetPlatform.android) {
-        bool allGranted = false;
-
-        if (_androidSdkVersion >= 33) {
-          var audioStatus = await Permission.audio.status;
-          if (!audioStatus.isGranted) {
-            audioStatus = await Permission.audio.request();
-          }
-          allGranted = audioStatus.isGranted;
-
-          if (audioStatus.isPermanentlyDenied) {
-            await _showPermissionDeniedDialog(permissionAudio);
-            return;
-          }
-        } else if (_androidSdkVersion >= 30) {
-          var manageStatus = await Permission.manageExternalStorage.status;
-          if (!manageStatus.isGranted) {
-            final shouldOpen = await _showAndroid11StorageDialog();
-            if (shouldOpen == true) {
-              await Permission.manageExternalStorage.request();
-              await Future<void>.delayed(const Duration(milliseconds: 500));
-              manageStatus = await Permission.manageExternalStorage.status;
+      if (_platform == TargetPlatform.android && _androidSdkVersion >= 29) {
+        // Scoped folder access: the user picks a music folder instead of
+        // granting all-files access.
+        final added = await selectLibraryFolder(
+          context,
+          ref,
+          androidSdkVersion: _androidSdkVersion,
+          onFailure: (message) {
+            if (mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(message)));
             }
-          }
-          allGranted = manageStatus.isGranted;
-        } else {
-          final status = await Permission.storage.request();
-          allGranted = status.isGranted;
-          if (status.isPermanentlyDenied) {
-            await _showPermissionDeniedDialog(permissionStorage);
-            return;
-          }
-        }
-
+          },
+        );
         if (!mounted) return;
-        setState(() => _storagePermissionGranted = allGranted);
-        if (!allGranted && mounted) {
+        setState(() => _storagePermissionGranted = added);
+        return;
+      }
+
+      if (_platform == TargetPlatform.android) {
+        final permissionStorage = context.l10n.permissionStorage;
+        final status = await Permission.storage.request();
+        if (!mounted) return;
+        setState(() => _storagePermissionGranted = status.isGranted);
+        if (status.isPermanentlyDenied) {
+          await _showPermissionDeniedDialog(permissionStorage);
+          return;
+        }
+        if (!status.isGranted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(context.l10n.setupPermissionDeniedMessage)),
           );
@@ -220,35 +211,11 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       } else {
         setState(() => _storagePermissionGranted = true);
       }
-    } catch (e) {
-      debugPrint('Permission error: $e');
+    } catch (e, stack) {
+      _log.e('Storage access request failed', e, stack);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  Future<bool?> _showAndroid11StorageDialog() {
-    return showAppDialog<bool>(
-      context: context,
-      builder: (context) => AppAlertDialog(
-        title: Text(context.l10n.setupStorageAccessRequired),
-        content: Text(
-          '${context.l10n.setupStorageAccessMessageAndroid11}\n\n'
-          '${context.l10n.setupAllowAccessToManageFiles}',
-        ),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(context.l10n.setupOpenSettings),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -369,7 +336,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
 
   bool _isStepCompleted(int step) {
     if (step < _storageStep) return true;
-    if (step == _storageStep) return _storagePermissionGranted;
+    if (step == _storageStep) {
+      return _storagePermissionGranted || _storageSkipped;
+    }
     return _notificationPermissionGranted || _notificationPermissionSkipped;
   }
 
@@ -718,25 +687,45 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   }
 
   Widget _buildStorageStep(ColorScheme colorScheme) {
+    final scopedFolder =
+        _platform == TargetPlatform.android && _androidSdkVersion >= 29;
     return _StepLayout(
       title: context.l10n.setupStorageRequired,
-      description: context.l10n.setupStorageDescription,
+      description: scopedFolder
+          ? context.l10n.setupLibraryFolderDescription
+          : context.l10n.setupStorageDescription,
       icon: Icons.folder,
       child: _storagePermissionGranted
           ? _SuccessCard(
               text: context.l10n.setupStorageGranted,
               colorScheme: colorScheme,
             )
-          : FilledButton.tonalIcon(
-              onPressed: _requestStoragePermission,
-              icon: const Icon(Icons.folder_open),
-              label: Text(context.l10n.setupGrantPermission),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
+          : Column(
+              children: [
+                FilledButton.tonalIcon(
+                  onPressed: _requestStoragePermission,
+                  icon: const Icon(Icons.folder_open),
+                  label: Text(
+                    scopedFolder
+                        ? context.l10n.setupChooseMusicFolder
+                        : context.l10n.setupGrantPermission,
+                  ),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                  ),
                 ),
-              ),
+                if (scopedFolder)
+                  TextButton(
+                    onPressed: () async {
+                      setState(() => _storageSkipped = true);
+                      await _saveProgress();
+                    },
+                    child: Text(context.l10n.setupSkipForNow),
+                  ),
+              ],
             ),
     );
   }
