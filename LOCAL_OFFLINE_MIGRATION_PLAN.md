@@ -33,8 +33,11 @@ it (`MetadataSaveResult.failed(error)`) instead of dropping it. Fifth: small cla
 original failure, `saveMetadata` became `buildMetadataTags`, the full player lost its fixed-opacity fade wrapper, the
 storage-permission ternary collapsed, Loved toggling is inlined, and scan preparation no longer keeps the unused
 `resolvedPath` placeholder. Sixth: full and incremental scans share `_finishScanSuccess` for the completion policy, and
-local-library preferences resolve `SharedPreferences` per operation instead of caching a failed first attempt. Analyze and the
-full `flutter test` pass.
+local-library preferences resolve `SharedPreferences` per operation instead of caching a failed first attempt. Seventh: native
+metadata edits decode once into `MetadataEditResult` (`completed`/`ffmpegStaged`/`failed`) shared by the persistence and
+ReplayGain paths, the MP3/M4A FFmpeg writers are named `replaceMetadataInMp3`/`replaceMetadataInM4a` and lost their
+unsupported preservation option, and the dispatcher reports unsupported preservation for them instead of running a
+guaranteed-refusing writer. Analyze and the full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
