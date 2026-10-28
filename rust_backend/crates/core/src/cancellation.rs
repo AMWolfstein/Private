@@ -150,6 +150,12 @@ impl CancellationRegistry {
     }
 }
 
+impl Default for CancellationRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Drop for CancellationRegistry {
     fn drop(&mut self) {
         self.shutdown();
