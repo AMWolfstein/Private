@@ -15,7 +15,7 @@ import 'support/sqlite_process_database.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 }
 
 class _Local extends LocalLibraryNotifier {
@@ -131,7 +131,6 @@ void main() {
             ),
             offset: 0,
             cursor: null,
-            includeLocal: true,
           ));
           expect(
             libraryPagingIdentities(actual),

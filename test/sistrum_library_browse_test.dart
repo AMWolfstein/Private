@@ -5,6 +5,9 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
+import 'package:sistrum/providers/local_artist_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/library_database_models.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/sistrum_library_screen.dart';
 import 'package:sistrum/screens/library_tracks_folder_screen.dart';
@@ -16,7 +19,12 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: false);
+  AppSettings build() => const AppSettings();
+}
+
+class _Local extends LocalLibraryNotifier {
+  @override
+  LocalLibraryState build() => LocalLibraryState();
 }
 
 class _Collections extends LibraryCollectionsNotifier {
@@ -45,6 +53,7 @@ void main() {
         ProviderScope(
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
+            localLibraryProvider.overrideWith(_Local.new),
             libraryCollectionsProvider.overrideWith(_Collections.new),
             libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
               final request = page.browse;
@@ -126,12 +135,22 @@ void main() {
           ProviderScope(
             overrides: [
               settingsProvider.overrideWith(_Settings.new),
+              localLibraryProvider.overrideWith(_Local.new),
               libraryCollectionsProvider.overrideWith(_Collections.new),
               libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
                 final request = page.browse;
                 requests.add(request);
                 return LibraryBrowsePage([_album(0), _album(1)]);
               }),
+              genrePageLoaderProvider.overrideWithValue((_) async => []),
+              localArtistTrackLoaderProvider.overrideWithValue(
+                (_) async =>
+                    const QueueLibraryDbPage(rows: [], nextCursor: null),
+              ),
+              listeningFlushProvider.overrideWithValue(() async {}),
+              localArtistPlayCountsLoaderProvider.overrideWithValue(
+                (_) async => const {},
+              ),
               librarySearchProvider.overrideWith((ref, request) async {
                 searches.add(request);
                 return [];
@@ -220,6 +239,7 @@ void main() {
       ProviderScope(
         overrides: [
           settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(_Local.new),
           libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
             final request = page.browse;
             requests.add(request);
@@ -276,6 +296,7 @@ void main() {
       ProviderScope(
         overrides: [
           settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(_Local.new),
           libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
             offsets.add(page.offset);
             if (page.offset > 0 && failNextPage) {

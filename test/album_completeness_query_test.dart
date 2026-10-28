@@ -93,7 +93,7 @@ print(json.dumps([dict(row) for row in db.execute(data['sql'], data['args'])]))
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 
   @override
   void setLibraryFilterMode(String mode) {

@@ -23,7 +23,6 @@ void main() {
     expect(tags['disc_total'], '2');
     expect(tags['compilation'], '1');
     expect(tags['explicit'], '1');
-    expect(tags['artist_tag_mode'], 'joined');
     expect(tags.containsKey('total_tracks'), isFalse);
     expect(tags.containsKey('total_discs'), isFalse);
   });
@@ -57,7 +56,6 @@ void main() {
     expect(tags.containsKey('album_type'), isFalse);
     expect(tags.containsKey('upc'), isFalse);
     expect(tags.containsKey('artist'), isFalse);
-    expect(tags['artist_tag_mode'], 'joined');
     editor.dispose();
   });
 

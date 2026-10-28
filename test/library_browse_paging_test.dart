@@ -10,10 +10,7 @@ import 'package:sistrum/services/library_database.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
-
-  void includeLocal(bool value) =>
-      state = state.copyWith(localLibraryEnabled: value);
+  AppSettings build() => const AppSettings();
 }
 
 class _Local extends LocalLibraryNotifier {
@@ -152,19 +149,6 @@ void main() {
       result = await container.read(provider.future);
       expect(result.entries, hasLength(80));
       expect(requests.map((page) => page.offset), [0, 40, 0, 40, 0, 40]);
-      (container.read(settingsProvider.notifier) as _Settings).includeLocal(
-        false,
-      );
-      await container.read(provider.future);
-      expect(requests.last.includeLocal, false);
-      final reads = requests.length;
-      (container.read(localLibraryProvider.notifier) as _Local).revise();
-      await container.pump();
-      expect(
-        requests,
-        hasLength(reads),
-        reason: 'disabled local index is not watched',
-      );
     },
   );
 

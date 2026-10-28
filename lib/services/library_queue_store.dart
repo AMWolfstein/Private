@@ -115,10 +115,9 @@ class LibraryQueueStore {
     final parts = <String>[];
     final args = <Object?>[];
 
-    if (request.includeLocal) {
-      final where = <String>[];
-      _appendQueueLocalFilters(where, args, request);
-      parts.add('''
+    final where = <String>[];
+    _appendQueueLocalFilters(where, args, request);
+    parts.add('''
         SELECT
           COUNT(*) AS all_count,
           COUNT(DISTINCT CASE WHEN ${isAlbumCompletenessFilter(request.metadata) ? '1' : 'grouped.album_total_tracks != 1'} THEN l.album_key END) AS album_count,
@@ -131,15 +130,6 @@ class LibraryQueueStore {
         ) grouped ON grouped.album_key = l.album_key
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
       ''');
-    }
-
-    if (parts.isEmpty) {
-      return const QueueLibraryCounts(
-        allTrackCount: 0,
-        albumCount: 0,
-        singleTrackCount: 0,
-      );
-    }
 
     final rows = await _db.rawQuery('''
       SELECT
@@ -172,8 +162,7 @@ class LibraryQueueStore {
     }
 
     final parts = <String>[];
-    if (request.includeLocal) {
-      parts.add('''
+    parts.add('''
         SELECT
           COALESCE(SUM(track_count), 0) AS all_count,
           COALESCE(SUM(CASE WHEN album_total_tracks != 1 THEN 1 ELSE 0 END), 0) AS album_count,
@@ -185,14 +174,6 @@ class LibraryQueueStore {
           GROUP BY l.album_key
         )
       ''');
-    }
-    if (parts.isEmpty) {
-      return const QueueLibraryCounts(
-        allTrackCount: 0,
-        albumCount: 0,
-        singleTrackCount: 0,
-      );
-    }
 
     final rows = await _db.rawQuery('''
       SELECT
@@ -241,9 +222,6 @@ class LibraryQueueStore {
   Future<List<Map<String, dynamic>>> artistPage(
     QueueLibraryDbQuery request,
   ) async {
-    if (!request.includeLocal) {
-      return const [];
-    }
     final search = sqlite.normalizeLookupText(request.searchQuery);
     return _db.rawQuery(
       '''
@@ -285,11 +263,10 @@ class LibraryQueueStore {
     required bool usesCursor,
   }) {
     final parts = <String>[];
-    if (request.includeLocal) {
-      final where = <String>[];
-      _appendQueueLocalFilters(where, args, request);
-      if (request.filterMode == 'singles') {
-        where.add('''
+    final where = <String>[];
+    _appendQueueLocalFilters(where, args, request);
+    if (request.filterMode == 'singles') {
+      where.add('''
           l.album_key IN (
             SELECT album_key
             FROM ${LibrarySchema.visibleView} candidate
@@ -297,9 +274,9 @@ class LibraryQueueStore {
             HAVING MAX(COALESCE(total_tracks, 0)) = 1
           )
           ''');
-      }
-      final selectSql =
-          '''
+    }
+    final selectSql =
+        '''
         SELECT
           'local' AS queue_source,
           'local_' || l.id AS unified_id,
@@ -345,62 +322,16 @@ class LibraryQueueStore {
         ${_sizeJoin(request.sortMode, 'l')}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         ''';
-      parts.add(
-        _boundedQueuePart(
-          selectSql,
-          request,
-          args,
-          orderTerms,
-          usesCursor: usesCursor,
-        ),
-      );
-    }
+    parts.add(
+      _boundedQueuePart(
+        selectSql,
+        request,
+        args,
+        orderTerms,
+        usesCursor: usesCursor,
+      ),
+    );
 
-    if (parts.isEmpty) {
-      return '''
-        SELECT
-          NULL AS queue_source,
-          NULL AS unified_id,
-          NULL AS id,
-          NULL AS source_id,
-          NULL AS explicit,
-          NULL AS track_name,
-          NULL AS artist_name,
-          NULL AS album_name,
-          NULL AS album_artist,
-          NULL AS cover_url,
-          NULL AS file_path,
-          NULL AS isrc,
-          NULL AS track_number,
-          NULL AS total_tracks,
-          NULL AS disc_number,
-          NULL AS total_discs,
-          NULL AS duration,
-          NULL AS release_date,
-          NULL AS quality,
-          NULL AS bit_depth,
-          NULL AS sample_rate,
-          NULL AS genre,
-          NULL AS composer,
-          NULL AS label,
-          NULL AS copyright,
-          NULL AS cover_path,
-          NULL AS scanned_at,
-          NULL AS file_mod_time,
-          NULL AS bitrate,
-          NULL AS format,
-          NULL AS has_replaygain,
-          NULL AS replaygain_metadata_scan_version,
-          NULL AS sort_track,
-          NULL AS sort_artist,
-          NULL AS sort_album,
-          NULL AS sort_genre,
-          NULL AS sort_release,
-          NULL AS sort_added
-          ${isLibrarySizeSort(request.sortMode) ? ', NULL AS file_size_bytes, 1 AS sort_size_unknown, 0 AS sort_size' : ''}
-        WHERE 0
-      ''';
-    }
     return parts.join(' UNION ALL ');
   }
 
@@ -431,17 +362,16 @@ class LibraryQueueStore {
         ? 'ac.album_completeness, ac.album_present_tracks, ac.album_expected_tracks,'
         : 'NULL AS album_completeness, NULL AS album_present_tracks, NULL AS album_expected_tracks,';
     final parts = <String>[];
-    if (request.includeLocal) {
-      final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
-      final where = <String>[];
-      _appendQueueLocalFilters(
-        where,
-        args,
-        request,
-        hasCompletenessJoin: assessesCompleteness,
-      );
-      final selectSql =
-          '''
+    final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
+    final where = <String>[];
+    _appendQueueLocalFilters(
+      where,
+      args,
+      request,
+      hasCompletenessJoin: assessesCompleteness,
+    );
+    final selectSql =
+        '''
         SELECT
           'local' AS queue_source,
           $albumKey AS album_key,
@@ -478,42 +408,16 @@ class LibraryQueueStore {
         ${unfiltered ? 'HAVING $albumKey IS NOT NULL ${includeSingles ? '' : 'AND MAX(COALESCE(l.total_tracks, 0)) != 1'}' : 'HAVING 1'}
         ${releaseDatedOnly ? "AND MAX($releaseOrder) != ''" : ''}
         ''';
-      parts.add(
-        _boundedQueuePart(
-          selectSql,
-          request,
-          args,
-          orderTerms,
-          usesCursor: usesCursor,
-        ),
-      );
-    }
+    parts.add(
+      _boundedQueuePart(
+        selectSql,
+        request,
+        args,
+        orderTerms,
+        usesCursor: usesCursor,
+      ),
+    );
 
-    if (parts.isEmpty) {
-      return '''
-        SELECT
-          NULL AS queue_source,
-          NULL AS album_key,
-          NULL AS album_name,
-          NULL AS artist_name,
-          NULL AS cover_url,
-          NULL AS cover_path,
-          NULL AS sample_file_path,
-          NULL AS track_count,
-          NULL AS album_total_tracks,
-          NULL AS album_total_discs,
-          NULL AS album_completeness,
-          NULL AS album_present_tracks,
-          NULL AS album_expected_tracks,
-          NULL AS sort_added,
-          NULL AS sort_album,
-          NULL AS sort_artist,
-          NULL AS sort_release,
-          NULL AS sort_genre
-          ${isLibrarySizeSort(request.sortMode) ? ', 1 AS sort_size_unknown, 0 AS sort_size' : ''}
-        WHERE 0
-      ''';
-    }
     return parts.join(' UNION ALL ');
   }
 

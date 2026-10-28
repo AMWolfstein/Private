@@ -4,7 +4,6 @@ import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/services/ffmpeg_service.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/utils/artist_utils.dart';
 
 enum MetadataSaveFailure { backend, ffmpeg, storage, unexpected }
 
@@ -66,11 +65,7 @@ class MetadataPersistenceService {
     try {
       final coverPath = request.selectedCoverPath;
 
-      final metadata = {
-        ...request.metadata,
-        'artist_tag_mode': artistTagModeJoined,
-        'cover_path': coverPath ?? '',
-      };
+      final metadata = {...request.metadata, 'cover_path': coverPath ?? ''};
       final result = await edit(request.filePath, metadata);
       stagedPath = result['temp_path'] as String?;
       if (result['error'] case final error?) {

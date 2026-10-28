@@ -10,7 +10,7 @@ import 'package:sistrum/services/library_search.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: false);
+  AppSettings build() => const AppSettings();
 }
 
 class _UnusedLibrary extends LocalLibraryNotifier {
@@ -37,34 +37,6 @@ class _Collections extends LibraryCollectionsNotifier {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
-
-  for (final kind in [
-    LibrarySearchKind.songs,
-    LibrarySearchKind.albums,
-    LibrarySearchKind.artists,
-  ]) {
-    test(
-      'disabled local library excludes ${kind.name} without database access',
-      () async {
-        final container = ProviderContainer(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            localLibraryProvider.overrideWith(_UnusedLibrary.new),
-          ],
-        );
-        addTearDown(container.dispose);
-        final provider = librarySearchProvider((
-          query: 'Local',
-          kind: kind,
-          limit: 6,
-          offset: 0,
-        ));
-        container.listen(provider, (_, _) {});
-        // No platform database is installed: reaching it would fail this test.
-        expect(await container.read(provider.future), isEmpty);
-      },
-    );
-  }
 
   test('disabled local library still searches user playlists', () async {
     final container = ProviderContainer(

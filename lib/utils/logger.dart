@@ -342,15 +342,6 @@ class LogBuffer extends ChangeNotifier {
         buffer.writeln('Product: ${android.product}');
         buffer.writeln('Supported ABIs: ${android.supportedAbis.join(', ')}');
         buffer.writeln('Is Physical Device: ${android.isPhysicalDevice}');
-      } else if (Platform.isIOS) {
-        final ios = await deviceInfo.iosInfo;
-        buffer.writeln('Platform: iOS');
-        buffer.writeln('Device: ${ios.utsname.machine}');
-        buffer.writeln('Model: ${ios.model}');
-        buffer.writeln('System Name: ${ios.systemName}');
-        buffer.writeln('System Version: ${ios.systemVersion}');
-        buffer.writeln('Device Name: ${ios.name}');
-        buffer.writeln('Is Physical Device: ${ios.isPhysicalDevice}');
       }
     } catch (e) {
       buffer.writeln('Failed to get device info: $e');

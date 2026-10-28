@@ -131,7 +131,7 @@ void main() {
           ),
         ),
       );
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (Platform.isAndroid) {
         unawaited(
           PlayerWidgetService.instance.initialize((command) async {
             await restorePersistedPlaybackSession();
@@ -355,7 +355,6 @@ class EagerInitialization extends ConsumerStatefulWidget {
 
 class _EagerInitializationState extends ConsumerState<EagerInitialization>
     with WidgetsBindingObserver {
-  ProviderSubscription<bool>? _localLibraryEnabledSub;
   Timer? _localLibraryWarmupTimer;
   bool _localLibraryWarmupScheduled = false;
   bool _autoScanTriggeredOnLaunch = false;
@@ -374,7 +373,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _localLibraryEnabledSub?.close();
     _localLibraryWarmupTimer?.cancel();
     super.dispose();
   }
@@ -407,20 +405,7 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
   }
 
   void _initializeDeferredProviders() {
-    _maybeScheduleLocalLibraryWarmup(
-      ref.read(
-        settingsProvider.select((settings) => settings.localLibraryEnabled),
-      ),
-    );
-
-    _localLibraryEnabledSub = ref.listenManual<bool>(
-      settingsProvider.select((settings) => settings.localLibraryEnabled),
-      (previous, next) {
-        if (next == true) {
-          _maybeScheduleLocalLibraryWarmup(true);
-        }
-      },
-    );
+    _scheduleLocalLibraryWarmup();
   }
 
   Timer _scheduleProviderWarmup(Duration delay, VoidCallback action) {
@@ -430,16 +415,12 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
     });
   }
 
-  void _maybeScheduleLocalLibraryWarmup(bool enabled) {
-    if (!enabled || _localLibraryWarmupScheduled) return;
+  void _scheduleLocalLibraryWarmup() {
+    if (_localLibraryWarmupScheduled) return;
     _localLibraryWarmupScheduled = true;
     _localLibraryWarmupTimer = _scheduleProviderWarmup(
       const Duration(milliseconds: 1600),
       () {
-        if (!ref.read(settingsProvider).localLibraryEnabled) {
-          _localLibraryWarmupScheduled = false;
-          return;
-        }
         ref.read(localLibraryProvider);
         if (!_autoScanTriggeredOnLaunch) {
           _autoScanTriggeredOnLaunch = true;
@@ -455,7 +436,6 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
     if (!mounted) return;
 
     final settings = ref.read(settingsProvider);
-    if (!settings.localLibraryEnabled) return;
     if (settings.localLibraryAutoScan == 'off') return;
 
     final libraryState = ref.read(localLibraryProvider);

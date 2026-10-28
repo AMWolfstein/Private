@@ -1,9 +1,8 @@
-use sistrum_core::tags::{embed_flac_metadata, read_audio_tags, rewrite_audio_tags};
+use sistrum_core::tags::{read_audio_tags, rewrite_audio_tags};
 use std::collections::BTreeMap;
 use std::io::Cursor;
 
 const PAYLOAD: &[u8] = b"\xff\xf8\x12\x34unchanged audio payload";
-const CREDITS: &str = "Artist A, Artist B & Artist C";
 
 #[test]
 fn custom_separators_round_trip_all_tag_writers_without_touching_audio() {
@@ -14,7 +13,6 @@ fn custom_separators_round_trip_all_tag_writers_without_touching_audio() {
             ("album_artist".into(), "C; D".into()),
             ("composer".into(), "E, F".into()),
             ("genre".into(), "Rock, Pop".into()),
-            ("artist_tag_mode".into(), "split_vorbis".into()),
             ("artist_separator".into(), " / ".into()),
             ("album_artist_separator".into(), "; ".into()),
             ("composer_separator".into(), " | ".into()),
@@ -40,40 +38,6 @@ fn custom_separators_round_trip_all_tag_writers_without_touching_audio() {
             output.windows(PAYLOAD.len()).any(|chunk| chunk == PAYLOAD),
             "{format}"
         );
-        assert!(
-            !output
-                .windows(b"_separator".len())
-                .any(|chunk| chunk == b"_separator")
-        );
-    }
-}
-
-#[test]
-fn embed_honors_separators_and_primary_artist_mode() {
-    for mode in ["joined", "split_vorbis", "primary"] {
-        let fields = BTreeMap::from([
-            ("ARTIST".into(), "A, B".into()),
-            ("COMPOSER".into(), "C, D".into()),
-            ("artist_separator".into(), " / ".into()),
-            ("composer_separator".into(), "; ".into()),
-        ]);
-        let mut output = Vec::new();
-        embed_flac_metadata(
-            &mut Cursor::new(source("flac")),
-            &mut output,
-            &fields,
-            mode,
-            None,
-            &|| Ok(()),
-        )
-        .unwrap();
-        let metadata = read_audio_tags(&mut Cursor::new(&output), "flac", &|| Ok(())).unwrap();
-        assert_eq!(
-            metadata.artist,
-            if mode == "primary" { "A" } else { "A / B" }
-        );
-        assert_eq!(metadata.composer, "C; D");
-        assert!(output.ends_with(PAYLOAD));
         assert!(
             !output
                 .windows(b"_separator".len())
@@ -146,72 +110,4 @@ fn source(format: &str) -> Vec<u8> {
         }
         _ => unreachable!(),
     }
-}
-
-fn tagged(format: &str, mode: &str) -> (String, String) {
-    let fields = BTreeMap::from([
-        ("title".into(), "Example".into()),
-        ("artist".into(), CREDITS.into()),
-        ("album_artist".into(), CREDITS.into()),
-        ("artist_tag_mode".into(), mode.into()),
-    ]);
-    let mut output = Vec::new();
-    rewrite_audio_tags(
-        &mut Cursor::new(source(format)),
-        &mut output,
-        format,
-        &fields,
-        None,
-        &|| Ok(()),
-    )
-    .unwrap();
-    let tags = read_audio_tags(&mut Cursor::new(&output), format, &|| Ok(())).unwrap();
-    (tags.artist, tags.album_artist)
-}
-
-#[test]
-fn primary_mode_keeps_only_the_first_artist_in_every_native_writer() {
-    for format in ["flac", "mp3", "m4a", "opus", "ape", "wav", "aiff"] {
-        assert_eq!(
-            tagged(format, "primary"),
-            ("Artist A".into(), "Artist A".into()),
-            "{format}"
-        );
-        // Mode values are matched like split_vorbis: trimmed, any case.
-        assert_eq!(tagged(format, " Primary ").0, "Artist A", "{format}");
-        assert_eq!(
-            tagged(format, "joined"),
-            (CREDITS.into(), CREDITS.into()),
-            "{format}"
-        );
-    }
-}
-
-#[test]
-fn primary_mode_applies_to_flac_embedding() {
-    let fields = BTreeMap::from([
-        ("TITLE".into(), "Example".into()),
-        ("ARTIST".into(), "Calle 24, Chino Pacas".into()),
-        ("ALBUMARTIST".into(), "Calle 24 feat. Chino Pacas".into()),
-    ]);
-    let mut output = Vec::new();
-    embed_flac_metadata(
-        &mut Cursor::new(source("flac")),
-        &mut output,
-        &fields,
-        "primary",
-        None,
-        &|| Ok(()),
-    )
-    .unwrap();
-    let tags = read_audio_tags(&mut Cursor::new(&output), "flac", &|| Ok(())).unwrap();
-    assert_eq!(tags.artist, "Calle 24");
-    assert_eq!(tags.album_artist, "Calle 24");
-    assert!(output.ends_with(PAYLOAD));
-    let comments = String::from_utf8_lossy(&output);
-    assert_eq!(
-        comments.matches("ARTIST=").count(),
-        2,
-        "one ARTIST, one ALBUMARTIST"
-    );
 }

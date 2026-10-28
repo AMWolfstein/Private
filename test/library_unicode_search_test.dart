@@ -116,7 +116,6 @@ void main() {
             final hits = await search.search(
               query: query,
               kind: LibrarySearchKind.songs,
-              includeLocal: true,
             );
             expect(hits.single.id, 'unicode');
             final queue = LibraryQueueStore(db, localFts: fts);
@@ -129,13 +128,11 @@ void main() {
           final albums = await search.search(
             query: 'ÉTÉ',
             kind: LibrarySearchKind.albums,
-            includeLocal: true,
           );
           expect(albums.single.id, albumKey);
           final artists = await search.search(
             query: 'ÉLISE',
             kind: LibrarySearchKind.artists,
-            includeLocal: true,
           );
           expect(artists.single.id, 'e\u0301lise');
         }

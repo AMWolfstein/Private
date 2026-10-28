@@ -93,7 +93,6 @@
   "homeLatestReleases": "Rilisan Terbaru di Pustaka Anda",
   "artistPopular": "Populer",
   "libraryRecentlyAdded": "Baru Ditambahkan",
-  "homeLibraryDisabled": "Aktifkan Pustaka Lokal untuk menampilkan musik Anda di sini.",
   "homeChooseLibraryFolder": "Pilih folder musik di pengaturan Pustaka Lokal.",
   "homeLibraryEmpty": "Tambahkan musik ke folder pustaka Anda, lalu pindai pustaka.",
   "libraryEmptyCollection": "Musik Anda akan muncul di sini",
@@ -784,14 +783,6 @@
   "libraryScanSettings": "Setelan Pemindaian",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Hidupkan Koleksi Lokal",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Pindai seluruh musik di perangkat Anda",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Ketuk untuk memilih folder",
   "@libraryFolderHint": {
@@ -2315,10 +2306,6 @@
   "nowPlayingPlayInOrder": "Putar berurutan",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Acak koleksi",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "Antrean kosong",
   "@nowPlayingQueueEmpty": {

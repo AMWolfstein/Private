@@ -20,9 +20,7 @@ pub use library::{
 pub use separators::format_metadata_tag_value;
 use serde::Serialize;
 use std::io::{self, BufReader, Read, Seek, SeekFrom};
-pub use write::{
-    embed_flac_metadata, rewrite_audio_tags, rewrite_flac_tags_if_changed, rewrite_m4a_freeform,
-};
+pub use write::{rewrite_audio_tags, rewrite_flac_tags_if_changed, rewrite_m4a_freeform};
 
 #[derive(Clone, Debug)]
 pub struct CoverArt {

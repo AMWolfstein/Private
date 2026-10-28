@@ -90,7 +90,6 @@
   "homeLatestReleases": "Últimos lanzamientos de tu biblioteca",
   "artistPopular": "Populares",
   "libraryRecentlyAdded": "Añadido recientemente",
-  "homeLibraryDisabled": "Activa la biblioteca local para mostrar tu música aquí.",
   "homeChooseLibraryFolder": "Elige una carpeta de música en los ajustes de la biblioteca local.",
   "homeLibraryEmpty": "Añade música a las carpetas de tu biblioteca y, después, analiza la biblioteca.",
   "libraryEmptyCollection": "Tu música aparecerá aquí",
@@ -633,14 +632,6 @@
   "libraryScanSettings": "Scan Settings",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Enable Local Library",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Scan and track your existing music",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Tap to select folder",
   "@libraryFolderHint": {
@@ -1637,7 +1628,6 @@
   "nowPlayingShowTranslation": "Mostrar traducción",
   "nowPlayingShuffleOn": "Aleatorio activado",
   "nowPlayingPlayInOrder": "Reproducir en orden",
-  "nowPlayingShuffleLibrary": "Mezclar biblioteca",
   "nowPlayingQueueEmpty": "La cola está vacía",
   "nowPlayingNoMetadata": "No hay metadatos disponibles",
   "selectionDeletePlaylistsCount": "Eliminar {count} {count, plural, =1{lista de reproducción} other{listas de reproducción}}",

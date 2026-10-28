@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library_database.dart';
 
 const localHomeShelfLimit = 12;
@@ -23,9 +22,6 @@ final localHomeTracksProvider = FutureProvider<List<LocalLibraryItem>>((
   ref,
 ) async {
   ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
-  if (!ref.watch(settingsProvider.select((s) => s.localLibraryEnabled))) {
-    return const [];
-  }
   final page = await ref.watch(localHomeTrackLoaderProvider)();
   return page.rows
       .map(

@@ -6,8 +6,6 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
-import 'package:flutter/widgets.dart'
-    show AppLifecycleState, WidgetsBinding, WidgetsBindingObserver;
 import 'package:sistrum/services/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show
@@ -16,7 +14,6 @@ import 'package:audio_session/audio_session.dart'
         AudioSessionConfiguration,
         AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/listening_statistics.dart' show ListeningTrack;
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/services/sqlite_helpers.dart' show normalizeLookupText;
@@ -36,7 +33,6 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/automix_effect_renderer.dart';
 import 'package:sistrum/services/automix_status.dart';
 import 'package:sistrum/utils/int_utils.dart';
-import 'package:sistrum/utils/ios_container_paths.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -188,29 +184,14 @@ class PlayableMedia {
     if (autoplay) 'autoplay': true,
   };
 
-  static PlayableMedia? fromJson(
-    Map<String, dynamic> json, {
-    String? iosDocumentsPath,
-  }) {
+  static PlayableMedia? fromJson(Map<String, dynamic> json) {
     final id = json['id'] as String?;
     final source = json['source'] as String?;
     if (id == null || id.isEmpty || source == null || source.isEmpty) {
       return null;
     }
     final durationMs = (json['durationMs'] as num?)?.toInt();
-    var artwork = json['artUri'] as String?;
-    if (artwork != null && iosDocumentsPath != null) {
-      final uri = Uri.tryParse(artwork);
-      if (uri != null && uri.scheme == 'file' && uri.host.isEmpty) {
-        try {
-          final path = uri.toFilePath();
-          final rebased = rebaseIosSandboxPath(path, iosDocumentsPath);
-          if (rebased != path) artwork = Uri.file(rebased).toString();
-        } on UnsupportedError {
-          // Leave malformed or non-local artwork URIs to the image fallback.
-        }
-      }
-    }
+    final artwork = json['artUri'] as String?;
     return PlayableMedia(
       id: id,
       source: source,
@@ -281,7 +262,7 @@ Duration normalizedPlaybackResumePosition(
 }
 
 class MusicPlayerHandler extends BaseAudioHandler
-    with QueueHandler, SeekHandler, WidgetsBindingObserver {
+    with QueueHandler, SeekHandler {
   final MusicPlayerRuntime _runtime;
   PlaybackDependencies get _dependencies => _runtime.dependencies;
   AppSettings get _settings => _runtime.settings;
@@ -377,8 +358,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       _updateHaptics();
     }
     if (previous.autoplay != settings.autoplay ||
-        previous.autoplayPersonalization != settings.autoplayPersonalization ||
-        previous.localLibraryEnabled != settings.localLibraryEnabled) {
+        previous.autoplayPersonalization != settings.autoplayPersonalization) {
       _autoplay.updateMode();
     }
   }
@@ -522,20 +502,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     _refreshPlaybackAutomation();
 
     _listenToPlayer(_player);
-    if (_dependencies.isIOS) WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
-      unawaited(_runtime.personalization.flush());
-    }
-    if (state == AppLifecycleState.resumed ||
-        state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
-      unawaited(restoreIosNowPlaying());
-    }
   }
 
   /// Haptics follow only decodable local files; streams have no full copy.
@@ -572,32 +538,6 @@ class MusicPlayerHandler extends BaseAudioHandler
             state.playing &&
             state.processingState == AudioProcessingState.ready,
       );
-    }
-  }
-
-  /// Recover system controls without reloading, seeking or restarting audio.
-  /// Never reclaim audio focus for a paused/interrupted/stopped player.
-  Future<void> restoreIosNowPlaying() async {
-    final generation = _playRequestGeneration;
-    bool canRestore() =>
-        _dependencies.isIOS &&
-        !_disposed &&
-        generation == _playRequestGeneration &&
-        !_interruptionActive &&
-        !_userPaused &&
-        playbackState.value.playing &&
-        playbackState.value.processingState == AudioProcessingState.ready &&
-        mediaItem.value != null;
-    if (!canRestore()) return;
-    try {
-      final session = _audioSession ?? await _dependencies.audioSession();
-      if (!canRestore()) return;
-      await session.configure(const AudioSessionConfiguration.music());
-      if (!canRestore()) return;
-      if (!await session.setActive(true) || !canRestore()) return;
-      await AudioService.refreshNowPlayingInfo();
-    } catch (error) {
-      _log.w('Could not restore iOS playback controls: $error');
     }
   }
 
@@ -869,11 +809,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     try {
       final session = _audioSession ?? await _dependencies.audioSession();
       _audioSession = session;
-      // Other media plugins can change the process-wide iOS category/options
-      // after initialization. Mixing makes us ineligible for Now Playing.
-      if (_dependencies.isIOS) {
-        await session.configure(const AudioSessionConfiguration.music());
-      }
       final granted = await session.setActive(true);
       if (!granted) {
         _log.w('Audio focus request was not granted');
@@ -2180,7 +2115,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     _disposed = true;
     _runtime.personalization.finish();
     await _runtime.personalization.flush();
-    if (_dependencies.isIOS) WidgetsBinding.instance.removeObserver(this);
     if (identical(musicPlayerRuntime.handler, this)) {
       autoMixStatus.value = AutoMixStatus.idle;
     }
@@ -2230,12 +2164,8 @@ Future<void> restorePlaybackSession(MusicPlayerRuntime runtime) async {
       return;
     }
 
-    final iosDocumentsPath = runtime.dependencies.isIOS
-        ? (await getApplicationDocumentsDirectory()).path
-        : null;
     final prepared = await prepareRestoredPlaybackMedia(
       rawMedia,
-      iosDocumentsPath: iosDocumentsPath,
       loadLibraryCoverPath: (media) async {
         final database = runtime.dependencies.libraryDatabase;
         final row = await database.getById(media.id);

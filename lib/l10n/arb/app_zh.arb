@@ -90,7 +90,6 @@
   "homeLatestReleases": "资料库中的最新发行",
   "artistPopular": "热门",
   "libraryRecentlyAdded": "最近添加",
-  "homeLibraryDisabled": "启用本地资料库以在此显示你的音乐。",
   "homeChooseLibraryFolder": "请在本地资料库设置中选择音乐文件夹。",
   "homeLibraryEmpty": "将音乐添加到资料库文件夹，然后扫描资料库。",
   "libraryEmptyCollection": "你的音乐将显示在这里",
@@ -735,14 +734,6 @@
   "libraryScanSettings": "Scan Settings",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Enable Local Library",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Scan and track your existing music",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Tap to select folder",
   "@libraryFolderHint": {
@@ -2196,10 +2187,6 @@
   "nowPlayingPlayInOrder": "Play in order",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Shuffle library",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "Queue is empty",
   "@nowPlayingQueueEmpty": {

@@ -130,8 +130,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         if (filteredGroupedLocalAlbums.isEmpty &&
             filterMode == 'albums' &&
             (_activeFilterCount > 0 ||
-                (ref.read(settingsProvider).localLibraryEnabled &&
-                    ref.read(localLibraryProvider).totalCount > 0)))
+                ref.read(localLibraryProvider).totalCount > 0))
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),

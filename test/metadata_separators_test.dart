@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/audio_metadata_mapper.dart';
-import 'package:sistrum/utils/artist_utils.dart';
 
 void main() {
   test(
@@ -68,10 +67,7 @@ void main() {
         'COMPOSER': 'E | F',
         'artist_separator': '; ',
       };
-      final entries = AudioMetadataMapper.buildVorbisMetadataEntries(
-        fields,
-        artistTagMode: artistTagModeSplitVorbis,
-      );
+      final entries = AudioMetadataMapper.buildVorbisMetadataEntries(fields);
       expect(
         entries
             .where((entry) => entry.key == 'ARTIST')
@@ -82,7 +78,7 @@ void main() {
         entries
             .where((entry) => entry.key == 'ALBUMARTIST')
             .map((entry) => entry.value),
-        ['C', 'D'],
+        ['C, D'],
       );
       expect(entries.any((entry) => entry.key.endsWith('_separator')), isFalse);
       expect(

@@ -16,7 +16,7 @@ import 'package:sistrum/widgets/settings_group.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 }
 
 class _Library extends LocalLibraryNotifier {
@@ -283,7 +283,9 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('cleanup cannot race an active scan ($sistrum)', (tester) async {
+    testWidgets('cleanup cannot race an active scan ($sistrum)', (
+      tester,
+    ) async {
       var localCalls = 0;
       final library = _Library(LocalLibraryState(totalCount: 1), () async {
         localCalls++;

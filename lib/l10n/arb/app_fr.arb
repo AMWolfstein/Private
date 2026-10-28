@@ -93,7 +93,6 @@
   "homeLatestReleases": "Dernières sorties de votre bibliothèque",
   "artistPopular": "Populaires",
   "libraryRecentlyAdded": "Ajouts récents",
-  "homeLibraryDisabled": "Activez la bibliothèque locale pour afficher votre musique ici.",
   "homeChooseLibraryFolder": "Choisissez un dossier musical dans les paramètres de la bibliothèque locale.",
   "homeLibraryEmpty": "Ajoutez de la musique à vos dossiers de bibliothèque, puis analysez votre bibliothèque.",
   "libraryEmptyCollection": "Votre musique apparaîtra ici",
@@ -777,14 +776,6 @@
   "libraryScanSettings": "Paramètres de numérisation",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Activer la bibliothèque locale",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Analysez et gérez votre bibliothèque musicale",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Appuyez pour sélectionner un dossier",
   "@libraryFolderHint": {
@@ -2305,10 +2296,6 @@
   "nowPlayingPlayInOrder": "Lire dans l'ordre",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Lecture aléatoire de la bibliothèque",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "La file d'attente est vide",
   "@nowPlayingQueueEmpty": {

@@ -27,9 +27,6 @@ extension _LocalHomeFeedUI on _HomeTabState {
     final artistData = ref.watch(artists);
     final newestData = ref.watch(newest);
     final tracks = ref.watch(localHomeTracksProvider);
-    final enabled = ref.watch(
-      settingsProvider.select((s) => s.localLibraryEnabled),
-    );
     final empty =
         ref.watch(libraryCollectionsProvider.select((s) => s.isLoaded)) &&
         [
@@ -41,14 +38,12 @@ extension _LocalHomeFeedUI on _HomeTabState {
         !tracks.hasError &&
         tracks.value!.isEmpty &&
         playlists.isEmpty;
-    if (!enabled || empty) {
+    if (empty) {
       final scanning = ref.watch(
         localLibraryProvider.select((s) => s.isLoading || s.isScanning),
       );
       return [
-        SliverToBoxAdapter(
-          child: enabled && scanning ? _feedSkeleton() : _feedEmpty(enabled),
-        ),
+        SliverToBoxAdapter(child: scanning ? _feedSkeleton() : _feedEmpty()),
       ];
     }
     return [
@@ -170,7 +165,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
     ]);
   }
 
-  Widget _feedEmpty(bool enabled) {
+  Widget _feedEmpty() {
     final hasFolder =
         ref.watch(localLibraryProvider.select((s) => s.sources.isNotEmpty)) ||
         ref.watch(
@@ -188,9 +183,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
           ),
           const SizedBox(height: 8),
           Text(
-            !enabled
-                ? context.l10n.homeLibraryDisabled
-                : !hasFolder
+            !hasFolder
                 ? context.l10n.homeChooseLibraryFolder
                 : context.l10n.homeLibraryEmpty,
             textAlign: TextAlign.center,

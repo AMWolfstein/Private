@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/services.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/app_state_database.dart';
 import 'package:sistrum/services/autoplay_personalization.dart';
@@ -34,17 +33,12 @@ class PlaybackDependencies {
     ListeningRecorder? recorder,
     SourceDeletionEvents? sourceDeletionEvents,
     Stream<double>? volumeChanges,
-    bool? isIOS,
     bool? isAndroid,
-    this.notificationChannel = const MethodChannel(
-      'com.amwolfstein.sistrum/playback_notification',
-    ),
   }) : _sessionDatabase = sessionDatabase,
        _libraryDatabase = libraryDatabase,
        _recorder = recorder,
        _sourceDeletionEvents = sourceDeletionEvents,
        _volumeChanges = volumeChanges,
-       _isIOS = isIOS,
        _isAndroid = isAndroid;
 
   final MusicPlaybackDeck Function(String playerId) createDeck;
@@ -53,14 +47,13 @@ class PlaybackDependencies {
   readMetadata;
   final Future<MusicPlayerHandler> Function(MusicPlayerHandler Function())
   initializeHandler;
-  final MethodChannel notificationChannel;
   final AutoplayPersonalization Function() createPersonalization;
   final AppStateDatabase? _sessionDatabase;
   final LibraryDatabase? _libraryDatabase;
   final ListeningRecorder? _recorder;
   final SourceDeletionEvents? _sourceDeletionEvents;
   final Stream<double>? _volumeChanges;
-  final bool? _isIOS, _isAndroid;
+  final bool? _isAndroid;
 
   AppStateDatabase get sessionDatabase =>
       _sessionDatabase ?? AppStateDatabase.instance;
@@ -71,7 +64,6 @@ class PlaybackDependencies {
       _sourceDeletionEvents ?? SourceDeletionEvents.instance;
   Stream<double> get volumeChanges =>
       _volumeChanges ?? SystemVolumeService.instance.changes;
-  bool get isIOS => _isIOS ?? Platform.isIOS;
   bool get isAndroid => _isAndroid ?? Platform.isAndroid;
 
   static MusicPlaybackDeck _createDeck(String playerId) =>
@@ -151,14 +143,6 @@ class MusicPlayerRuntime {
     _notification = presentation;
     _toggleFavorite = toggleFavorite;
     _handler?.refreshNotificationControls();
-    if (dependencies.isIOS) {
-      dependencies.notificationChannel.setMethodCallHandler((call) async {
-        if (call.method == 'favorite') {
-          await _handler?.customAction(PlaybackNotification.favoriteAction);
-        }
-      });
-      unawaited(_publishNotificationFavorite());
-    }
   }
 
   Future<bool?> toggleFavorite(MediaItem item) async =>
@@ -167,21 +151,6 @@ class MusicPlayerRuntime {
   void updateFavorite(MediaItem item, bool loved) {
     _notification = _notification.withFavorite(item, loved);
     _handler?.refreshNotificationControls();
-    if (dependencies.isIOS) unawaited(_publishNotificationFavorite());
-  }
-
-  Future<void> _publishNotificationFavorite() async {
-    try {
-      await dependencies.notificationChannel.invokeMethod<void>('update', {
-        'enabled': _notification.sistrum && _notification.mediaId != null,
-        'loved': _notification.loved,
-        'label': _notification.favoriteActionLabel,
-      });
-    } on MissingPluginException {
-      // Tests do not install the iOS remote-command bridge.
-    } on PlatformException catch (error) {
-      _log.w('Could not update the system favorite action: ${error.code}');
-    }
   }
 
   void attach(MusicPlayerHandler handler) {
@@ -236,7 +205,7 @@ class MusicPlayerRuntime {
       }
       _initializing = false;
       _handlers.add(handler);
-      if (dependencies.isAndroid || dependencies.isIOS) {
+      if (dependencies.isAndroid) {
         PlayerWidgetService.instance.bind(handler);
       }
       return handler;

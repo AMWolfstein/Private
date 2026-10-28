@@ -22,13 +22,9 @@ AutoplayLearningTrack _learningTrack(PlayableMedia media) =>
       duration: media.duration,
     );
 
-void setAutoplayEnabled(bool enabled, {bool includeLocal = true}) =>
-    musicPlayerRuntime.configure(
-      musicPlayerRuntime.settings.copyWith(
-        autoplay: enabled,
-        localLibraryEnabled: includeLocal,
-      ),
-    );
+void setAutoplayEnabled(bool enabled) => musicPlayerRuntime.configure(
+  musicPlayerRuntime.settings.copyWith(autoplay: enabled),
+);
 
 /// Bounded database pages keep recommendation work independent of Library
 /// size. Enabled scanned sources are local files.
@@ -37,25 +33,16 @@ Future<List<PlayableMedia>> _loadAutoplayLibrary(
   MusicPlayerRuntime runtime,
 ) async {
   final database = runtime.dependencies.libraryDatabase;
-  final includeLocal = runtime.settings.localLibraryEnabled;
-  final query = QueueLibraryDbQuery(includeLocal: includeLocal);
+  const query = QueueLibraryDbQuery();
   final count = (await database.getQueueCounts(query)).allTrackCount;
   final offset = count > 256 ? Random().nextInt(count - 255) : 0;
   final rows = [
     if (seed.artist.trim().isNotEmpty)
       ...await database.getQueueTrackPage(
-        QueueLibraryDbQuery(
-          includeLocal: includeLocal,
-          searchQuery: seed.artist,
-          limit: 128,
-        ),
+        QueueLibraryDbQuery(searchQuery: seed.artist, limit: 128),
       ),
     ...await database.getQueueTrackPage(
-      QueueLibraryDbQuery(
-        includeLocal: includeLocal,
-        offset: offset,
-        limit: 256,
-      ),
+      QueueLibraryDbQuery(offset: offset, limit: 256),
     ),
   ];
   final result = <PlayableMedia>[];

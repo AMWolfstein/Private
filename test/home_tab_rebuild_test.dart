@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
@@ -14,6 +15,11 @@ import 'package:sistrum/widgets/library_search_results.dart';
 /// PERF-603: a Loved toggle or playlist edit must not rebuild the whole Home
 /// feed. The dirty-rebuild log names every rebuilt widget, so HomeTab should
 /// be absent after an unrelated collection change.
+class _Local extends LocalLibraryNotifier {
+  @override
+  LocalLibraryState build() => LocalLibraryState();
+}
+
 void main() {
   testWidgets('a Loved toggle does not rebuild HomeTab', (tester) async {
     tester.view.physicalSize = const Size(360, 900);
@@ -23,6 +29,7 @@ void main() {
       ProviderScope(
         overrides: [
           libraryCollectionsProvider.overrideWith(_Collections.new),
+          localLibraryProvider.overrideWith(_Local.new),
           localHomeTracksProvider.overrideWith((ref) async => const []),
           libraryBrowsePageLoaderProvider.overrideWithValue(
             (request) async => const LibraryBrowsePage([]),

@@ -32,10 +32,7 @@ final _tracks = [
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(
-    localLibraryEnabled: true,
-    localLibraryShowDuplicates: true,
-  );
+  AppSettings build() => const AppSettings(localLibraryShowDuplicates: true);
 }
 
 class _Handler extends Fake implements MusicPlayerHandler {}

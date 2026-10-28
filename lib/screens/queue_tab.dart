@@ -137,7 +137,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   /// Plays every song matching the current filters and sort, in order or
   /// shuffled, paging through the library with the cursor the list uses.
   Future<void> _playAllSongs({bool shuffle = false}) async {
-    final includeLocal = ref.read(settingsProvider).localLibraryEnabled;
     final tracks = <Track>[];
     QueueLibraryDbCursor? cursor;
     try {
@@ -149,7 +148,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             format: _filterFormat,
             metadata: _filterMetadata,
             sortMode: _sortMode,
-            includeLocal: includeLocal,
             cursor: cursor,
           ),
         );
@@ -332,8 +330,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         a.filterQuality == b.filterQuality &&
         a.filterFormat == b.filterFormat &&
         a.filterMetadata == b.filterMetadata &&
-        a.sortMode == b.sortMode &&
-        a.localLibraryEnabled == b.localLibraryEnabled;
+        a.sortMode == b.sortMode;
   }
 
   _QueueLibraryPageData? _cachedQueueLibraryPageAt(
@@ -827,25 +824,19 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       );
     }
 
-    final localLibraryEnabled = ref.watch(
-      settingsProvider.select((s) => s.localLibraryEnabled),
+    ref.listen<int>(
+      localLibraryProvider.select((state) => state.loadedIndexVersion),
+      (previous, next) {
+        if (previous == null || previous == next) return;
+        // Keep stale rows visible until the refreshed query replaces them.
+        _resetLibraryOffsets();
+        if (mounted) setState(() {});
+      },
     );
 
-    if (localLibraryEnabled) {
-      ref.listen<int>(
-        localLibraryProvider.select((state) => state.loadedIndexVersion),
-        (previous, next) {
-          if (previous == null || previous == next) return;
-          // Keep stale rows visible until the refreshed query replaces them.
-          _resetLibraryOffsets();
-          if (mounted) setState(() {});
-        },
-      );
-    }
-
-    final localLibraryTotalCount = localLibraryEnabled
-        ? ref.watch(localLibraryProvider.select((state) => state.totalCount))
-        : 0;
+    final localLibraryTotalCount = ref.watch(
+      localLibraryProvider.select((state) => state.totalCount),
+    );
     // Watch with selector on key fields to reduce unnecessary rebuilds.
     // LibraryCollectionsState doesn't implement == so watching without
     // selector rebuilds on every provider notification.
@@ -872,7 +863,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       filterQuality: _filterQuality,
       filterFormat: _filterFormat,
       filterMetadata: _filterMetadata,
-      localLibraryEnabled: localLibraryEnabled,
     );
     final countsValue = ref.watch(_queueLibraryCountsProvider(countsRequest));
     final queueCounts = _resolveQueueLibraryCounts(countsValue, countsRequest);
@@ -887,7 +877,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         filterFormat: _filterFormat,
         filterMetadata: _filterMetadata,
         sortMode: _sortMode,
-        localLibraryEnabled: localLibraryEnabled,
       );
       if (offset == 0) return baseRequest;
       final previousPage = _cachedQueueLibraryPageAt(
@@ -902,7 +891,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         filterFormat: baseRequest.filterFormat,
         filterMetadata: baseRequest.filterMetadata,
         sortMode: baseRequest.sortMode,
-        localLibraryEnabled: baseRequest.localLibraryEnabled,
         cursor: previousPage?.nextCursor,
       );
     }
@@ -950,7 +938,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         countsValue.isLoading || activePageValue.isLoading;
     final hasAnyLibraryItems =
         queueCounts.allTrackCount > 0 || queueCounts.albumCount > 0;
-    final hasLibraryContent = localLibraryEnabled && localLibraryTotalCount > 0;
+    final hasLibraryContent = localLibraryTotalCount > 0;
     final libraryError = countsValue.hasError
         ? countsValue.error
         : activePageValue.error;

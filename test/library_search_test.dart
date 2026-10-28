@@ -82,16 +82,10 @@ void main() {
       Future<List<LibrarySearchHit>> search(
         String query, {
         LibrarySearchKind kind = LibrarySearchKind.songs,
-        bool includeLocal = true,
         int limit = 40,
         int offset = 0,
-      }) => store.search(
-        query: query,
-        kind: kind,
-        includeLocal: includeLocal,
-        limit: limit,
-        offset: offset,
-      );
+      }) =>
+          store.search(query: query, kind: kind, limit: limit, offset: offset);
 
       test(
         'matches unordered words across title and artist, including partial words',
@@ -115,7 +109,6 @@ void main() {
           'local',
           '3',
         ]);
-        expect(await search('lilac', includeLocal: false), isEmpty);
       });
       test('SAF tree paths remain searchable local results', () async {
         const provider = 'org.example.documents';
@@ -152,7 +145,6 @@ void main() {
         final hits = await treeStore.search(
           query: 'Tree Song',
           kind: LibrarySearchKind.songs,
-          includeLocal: true,
         );
         expect(hits.map((hit) => hit.id), ['tree-other', 'tree-scan']);
       });

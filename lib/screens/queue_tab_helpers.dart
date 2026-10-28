@@ -60,7 +60,6 @@ class _QueueLibraryPageRequest {
   final String? filterFormat;
   final String? filterMetadata;
   final String sortMode;
-  final bool localLibraryEnabled;
   final QueueLibraryDbCursor? cursor;
 
   const _QueueLibraryPageRequest({
@@ -71,7 +70,6 @@ class _QueueLibraryPageRequest {
     required this.filterFormat,
     required this.filterMetadata,
     required this.sortMode,
-    required this.localLibraryEnabled,
     this.cursor,
   });
 
@@ -83,7 +81,6 @@ class _QueueLibraryPageRequest {
     format: filterFormat,
     metadata: filterMetadata,
     sortMode: sortMode,
-    includeLocal: localLibraryEnabled,
     cursor: cursor,
   );
 
@@ -98,7 +95,6 @@ class _QueueLibraryPageRequest {
           filterFormat == other.filterFormat &&
           filterMetadata == other.filterMetadata &&
           sortMode == other.sortMode &&
-          localLibraryEnabled == other.localLibraryEnabled &&
           cursor == other.cursor;
 
   @override
@@ -110,7 +106,6 @@ class _QueueLibraryPageRequest {
     filterFormat,
     filterMetadata,
     sortMode,
-    localLibraryEnabled,
     cursor,
   );
 }
@@ -119,20 +114,17 @@ class _QueueLibraryCountsRequest {
   final String? filterQuality;
   final String? filterFormat;
   final String? filterMetadata;
-  final bool localLibraryEnabled;
 
   const _QueueLibraryCountsRequest({
     required this.filterQuality,
     required this.filterFormat,
     required this.filterMetadata,
-    required this.localLibraryEnabled,
   });
 
   QueueLibraryDbQuery toDbQuery() => QueueLibraryDbQuery(
     quality: filterQuality,
     format: filterFormat,
     metadata: filterMetadata,
-    includeLocal: localLibraryEnabled,
   );
 
   @override
@@ -141,16 +133,10 @@ class _QueueLibraryCountsRequest {
       other is _QueueLibraryCountsRequest &&
           filterQuality == other.filterQuality &&
           filterFormat == other.filterFormat &&
-          filterMetadata == other.filterMetadata &&
-          localLibraryEnabled == other.localLibraryEnabled;
+          filterMetadata == other.filterMetadata;
 
   @override
-  int get hashCode => Object.hash(
-    filterQuality,
-    filterFormat,
-    filterMetadata,
-    localLibraryEnabled,
-  );
+  int get hashCode => Object.hash(filterQuality, filterFormat, filterMetadata);
 }
 
 class _QueueLibraryPageData {
@@ -233,11 +219,9 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
       ref,
       request,
     ) async {
-      if (request.localLibraryEnabled) {
-        ref.watch(
-          localLibraryProvider.select((state) => state.loadedIndexVersion),
-        );
-      }
+      ref.watch(
+        localLibraryProvider.select((state) => state.loadedIndexVersion),
+      );
       // Playlists render from libraryCollectionsProvider, not the DB.
       if (request.filterMode == 'playlists') {
         return _QueueLibraryPageData();
@@ -298,10 +282,8 @@ final _queueLibraryCountsProvider = FutureProvider.autoDispose
       ref,
       request,
     ) async {
-      if (request.localLibraryEnabled) {
-        ref.watch(
-          localLibraryProvider.select((state) => state.loadedIndexVersion),
-        );
-      }
+      ref.watch(
+        localLibraryProvider.select((state) => state.loadedIndexVersion),
+      );
       return LibraryDatabase.instance.getQueueCounts(request.toDbQuery());
     });

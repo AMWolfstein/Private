@@ -22,7 +22,7 @@ import 'package:sistrum/widgets/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: false);
+  AppSettings build() => const AppSettings();
 }
 
 void main() {
@@ -46,9 +46,7 @@ void main() {
     EmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
       Directory('${directory.path}/previews'),
     );
-    EmbeddedCoverResolver.setValidationClockForTesting(
-      () => DateTime(2026),
-    );
+    EmbeddedCoverResolver.setValidationClockForTesting(() => DateTime(2026));
     extractions = 0;
     messenger.setMockMethodCallHandler(channel, (call) async {
       if (call.method == 'extractCoverToFile') {
@@ -90,16 +88,15 @@ void main() {
     expect(ready(), isTrue);
   }
 
-  Future<String?> playerPreview(
-    WidgetTester tester,
-  ) => tester.runAsync<String?>(() async {
-    final preview = await EmbeddedCoverResolver.resolveOrExtract(
-      audio.path,
-    );
-    await EmbeddedCoverResolver.resolveOrExtract(audio.path);
-    await EmbeddedCoverResolver.waitForPreviewValidationForTesting();
-    return preview;
-  });
+  Future<String?> playerPreview(WidgetTester tester) =>
+      tester.runAsync<String?>(() async {
+        final preview = await EmbeddedCoverResolver.resolveOrExtract(
+          audio.path,
+        );
+        await EmbeddedCoverResolver.resolveOrExtract(audio.path);
+        await EmbeddedCoverResolver.waitForPreviewValidationForTesting();
+        return preview;
+      });
 
   for (final missing in [true, false]) {
     testWidgets('builder recovers ${missing ? 'missing' : 'empty'} thumbnail', (
@@ -269,7 +266,9 @@ void main() {
           tester,
           () =>
               tester
-                  .widget<SistrumArtistSurface>(find.byType(SistrumArtistSurface))
+                  .widget<SistrumArtistSurface>(
+                    find.byType(SistrumArtistSurface),
+                  )
                   .imageSource ==
               preview,
         );

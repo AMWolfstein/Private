@@ -93,7 +93,6 @@
   "homeLatestReleases": "ライブラリの最新リリース",
   "artistPopular": "人気",
   "libraryRecentlyAdded": "Recently Added",
-  "homeLibraryDisabled": "ローカルライブラリを有効にすると、ここに音楽が表示されます。",
   "homeChooseLibraryFolder": "ローカルライブラリの設定で音楽フォルダを選択してください。",
   "homeLibraryEmpty": "ライブラリのフォルダに音楽を追加してから、ライブラリをスキャンしてください。",
   "libraryEmptyCollection": "Your music will appear here",
@@ -777,14 +776,6 @@
   "libraryScanSettings": "スキャン設定",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "ローカルライブラリを有効",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Scan and track your existing music",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "タップでフォルダを選択",
   "@libraryFolderHint": {
@@ -2305,10 +2296,6 @@
   "nowPlayingPlayInOrder": "Play in order",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Shuffle library",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "Queue is empty",
   "@nowPlayingQueueEmpty": {

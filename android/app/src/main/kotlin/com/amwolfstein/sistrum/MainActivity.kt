@@ -99,7 +99,6 @@ class MainActivity: FlutterFragmentActivity() {
         "safCopyToTemp",
         "safOpenPlaybackLease",
         "safClosePlaybackLease",
-        "openContentUri",
         "shareContentUri",
         "getSafFileModTimes",
         "safCreateFromPath",
@@ -923,20 +922,6 @@ class MainActivity: FlutterFragmentActivity() {
 
 
 
-                        "openContentUri" -> {
-                            val uriStr = call.argument<String>("uri") ?: ""
-                            val mimeType = call.argument<String>("mime_type") ?: ""
-                            try {
-                                val uri = Uri.parse(uriStr)
-                                val type = if (mimeType.isNotBlank()) mimeType else contentResolver.getType(uri) ?: "*/*"
-                                val intent = Intent(Intent.ACTION_VIEW).setDataAndType(uri, type)
-                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                startActivity(intent)
-                                result.success(null)
-                            } catch (e: Exception) {
-                                result.error("open_failed", e.message, null)
-                            }
-                        }
                         "shareContentUri" -> {
                             val uriStr = call.argument<String>("uri") ?: ""
                             val title = call.argument<String>("title") ?: ""

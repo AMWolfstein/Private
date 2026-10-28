@@ -483,17 +483,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
           SliverToBoxAdapter(
             child: SettingsGroup(
               children: [
-                SettingsSwitchItem(
-                  icon: Icons.library_music_outlined,
-                  title: context.l10n.libraryEnableLocalLibrary,
-                  subtitle: settings.localLibraryEnabled
-                      ? context.l10n.libraryEnableLocalLibrarySubtitle
-                      : context.l10n.settingDisabled,
-                  value: settings.localLibraryEnabled,
-                  onChanged: (value) => ref
-                      .read(settingsProvider.notifier)
-                      .setLocalLibraryEnabled(value),
-                ),
                 for (final source in librarySources)
                   Consumer(
                     key: ValueKey(source.id),
@@ -521,7 +510,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                         scannedFiles: scan.scanned,
                         totalFiles: scan.total,
                         progress: scan.progress,
-                        enabled: settings.localLibraryEnabled,
                         onEnabledChanged: (value) => ref
                             .read(localLibraryProvider.notifier)
                             .setSourceEnabled(source.id, value),
@@ -535,18 +523,13 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                       );
                     },
                   ),
-                Opacity(
-                  opacity: settings.localLibraryEnabled ? 1.0 : 0.5,
-                  child: SettingsItem(
-                    icon: Icons.create_new_folder_outlined,
-                    title: context.l10n.libraryAddFolder,
-                    subtitle: librarySources.isEmpty
-                        ? context.l10n.libraryFolderHint
-                        : context.l10n.libraryAddFolderSubtitle,
-                    onTap: settings.localLibraryEnabled
-                        ? _pickLibraryFolder
-                        : null,
-                  ),
+                SettingsItem(
+                  icon: Icons.create_new_folder_outlined,
+                  title: context.l10n.libraryAddFolder,
+                  subtitle: librarySources.isEmpty
+                      ? context.l10n.libraryFolderHint
+                      : context.l10n.libraryAddFolderSubtitle,
+                  onTap: _pickLibraryFolder,
                 ),
                 SettingsSwitchItem(
                   icon: Icons.content_copy_outlined,
@@ -555,7 +538,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                       ? context.l10n.libraryShowDuplicateIndicatorSubtitle
                       : context.l10n.settingDisabled,
                   value: settings.localLibraryShowDuplicates,
-                  enabled: settings.localLibraryEnabled,
                   onChanged: (value) => ref
                       .read(settingsProvider.notifier)
                       .setLocalLibraryShowDuplicates(value),
@@ -566,21 +548,16 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   subtitle: context.l10n.libraryReviewDuplicatesSubtitle,
                   onTap: () => DuplicateReviewSheet.show(context),
                 ),
-                Opacity(
-                  opacity: settings.localLibraryEnabled ? 1.0 : 0.5,
-                  child: SettingsItem(
-                    icon: Icons.autorenew_rounded,
-                    title: context.l10n.libraryAutoScan,
-                    subtitle: _getAutoScanLabel(
-                      context,
-                      settings.localLibraryAutoScan,
-                    ),
-                    onTap: settings.localLibraryEnabled
-                        ? () => _showAutoScanPicker(
-                            context,
-                            settings.localLibraryAutoScan,
-                          )
-                        : null,
+                SettingsItem(
+                  icon: Icons.autorenew_rounded,
+                  title: context.l10n.libraryAutoScan,
+                  subtitle: _getAutoScanLabel(
+                    context,
+                    settings.localLibraryAutoScan,
+                  ),
+                  onTap: () => _showAutoScanPicker(
+                    context,
+                    settings.localLibraryAutoScan,
                   ),
                 ),
                 SettingsItem(
@@ -599,151 +576,142 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
             ),
           ),
 
-          if (settings.localLibraryEnabled) ...[
+          SliverToBoxAdapter(
+            child: SettingsSectionHeader(title: context.l10n.libraryActions),
+          ),
+          if (ref.watch(localLibraryProvider.select((s) => s.scanWasCancelled)))
             SliverToBoxAdapter(
-              child: SettingsSectionHeader(title: context.l10n.libraryActions),
-            ),
-            if (ref.watch(
-              localLibraryProvider.select((s) => s.scanWasCancelled),
-            ))
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: colorScheme.tertiaryContainer.withValues(
-                        alpha: 0.6,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colorScheme.tertiaryContainer.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.warning_amber_outlined,
+                        color: colorScheme.onTertiaryContainer,
                       ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.warning_amber_outlined,
-                          color: colorScheme.onTertiaryContainer,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.libraryScanCancelled,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.onTertiaryContainer,
+                                  ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              context.l10n.libraryScanCancelledSubtitle,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: colorScheme.onTertiaryContainer
+                                        .withValues(alpha: 0.8),
+                                  ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                context.l10n.libraryScanCancelled,
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onTertiaryContainer,
-                                    ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                context.l10n.libraryScanCancelledSubtitle,
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: colorScheme.onTertiaryContainer
-                                          .withValues(alpha: 0.8),
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: _startScan,
-                          child: Text(context.l10n.dialogRetry),
-                        ),
-                      ],
-                    ),
+                      ),
+                      TextButton(
+                        onPressed: _startScan,
+                        child: Text(context.l10n.dialogRetry),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            SliverToBoxAdapter(
-              child: Consumer(
-                builder: (context, ref, _) {
-                  final libraryState = ref.watch(localLibraryProvider);
-                  final canCleanup =
-                      !_isCleaningMissingFiles &&
-                      !libraryState.isScanning &&
-                      (libraryState.totalCount > 0 ||
-                          librarySources.isNotEmpty);
-                  return SettingsGroup(
-                    children: [
-                      if (libraryState.isScanning)
-                        _ScanProgressTile(
-                          isFinalizing: libraryState.scanIsFinalizing,
-                          isPaused: libraryState.scanIsPaused,
-                          progress: libraryState.scanProgress,
-                          currentFile: libraryState.scanCurrentFile,
-                          scannedFiles: libraryState.scannedFiles,
-                          totalFiles: libraryState.scanTotalFiles,
-                          onPause: _pauseScan,
-                          onResume: _resumeScan,
-                          onCancel: _cancelScan,
-                        )
-                      else ...[
-                        Opacity(
-                          opacity: librarySources.isNotEmpty ? 1.0 : 0.5,
-                          child: SettingsItem(
-                            icon: Icons.refresh,
-                            title: context.l10n.libraryScan,
-                            subtitle: librarySources.isEmpty
-                                ? context.l10n.libraryScanSelectFolderFirst
-                                : context.l10n.libraryScanSubtitle,
-                            onTap: librarySources.isNotEmpty
-                                ? _startScan
-                                : null,
-                          ),
-                        ),
-                        Opacity(
-                          opacity: librarySources.isNotEmpty ? 1.0 : 0.5,
-                          child: SettingsItem(
-                            icon: Icons.sync,
-                            title: context.l10n.libraryForceFullScan,
-                            subtitle: context.l10n.libraryForceFullScanSubtitle,
-                            onTap: librarySources.isNotEmpty
-                                ? () => _startScan(forceFullScan: true)
-                                : null,
-                          ),
-                        ),
-                      ],
+            ),
+          SliverToBoxAdapter(
+            child: Consumer(
+              builder: (context, ref, _) {
+                final libraryState = ref.watch(localLibraryProvider);
+                final canCleanup =
+                    !_isCleaningMissingFiles &&
+                    !libraryState.isScanning &&
+                    (libraryState.totalCount > 0 || librarySources.isNotEmpty);
+                return SettingsGroup(
+                  children: [
+                    if (libraryState.isScanning)
+                      _ScanProgressTile(
+                        isFinalizing: libraryState.scanIsFinalizing,
+                        isPaused: libraryState.scanIsPaused,
+                        progress: libraryState.scanProgress,
+                        currentFile: libraryState.scanCurrentFile,
+                        scannedFiles: libraryState.scannedFiles,
+                        totalFiles: libraryState.scanTotalFiles,
+                        onPause: _pauseScan,
+                        onResume: _resumeScan,
+                        onCancel: _cancelScan,
+                      )
+                    else ...[
                       Opacity(
-                        opacity: canCleanup || _isCleaningMissingFiles
-                            ? 1.0
-                            : 0.5,
+                        opacity: librarySources.isNotEmpty ? 1.0 : 0.5,
                         child: SettingsItem(
-                          icon: Icons.cleaning_services_outlined,
-                          title: context.l10n.libraryCleanupMissingFiles,
-                          subtitle:
-                              context.l10n.libraryCleanupMissingFilesSubtitle,
-                          trailing: _isCleaningMissingFiles
-                              ? const SizedBox.square(
-                                  dimension: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : null,
-                          onTap: canCleanup ? _cleanupMissingFiles : null,
+                          icon: Icons.refresh,
+                          title: context.l10n.libraryScan,
+                          subtitle: librarySources.isEmpty
+                              ? context.l10n.libraryScanSelectFolderFirst
+                              : context.l10n.libraryScanSubtitle,
+                          onTap: librarySources.isNotEmpty ? _startScan : null,
                         ),
                       ),
                       Opacity(
-                        opacity: libraryState.totalCount > 0 ? 1.0 : 0.5,
+                        opacity: librarySources.isNotEmpty ? 1.0 : 0.5,
                         child: SettingsItem(
-                          icon: Icons.delete_outline,
-                          title: context.l10n.libraryClear,
-                          subtitle: context.l10n.libraryClearSubtitle,
-                          onTap: libraryState.totalCount > 0
-                              ? _clearLibrary
+                          icon: Icons.sync,
+                          title: context.l10n.libraryForceFullScan,
+                          subtitle: context.l10n.libraryForceFullScanSubtitle,
+                          onTap: librarySources.isNotEmpty
+                              ? () => _startScan(forceFullScan: true)
                               : null,
-                          showDivider: false,
                         ),
                       ),
                     ],
-                  );
-                },
-              ),
+                    Opacity(
+                      opacity: canCleanup || _isCleaningMissingFiles
+                          ? 1.0
+                          : 0.5,
+                      child: SettingsItem(
+                        icon: Icons.cleaning_services_outlined,
+                        title: context.l10n.libraryCleanupMissingFiles,
+                        subtitle:
+                            context.l10n.libraryCleanupMissingFilesSubtitle,
+                        trailing: _isCleaningMissingFiles
+                            ? const SizedBox.square(
+                                dimension: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : null,
+                        onTap: canCleanup ? _cleanupMissingFiles : null,
+                      ),
+                    ),
+                    Opacity(
+                      opacity: libraryState.totalCount > 0 ? 1.0 : 0.5,
+                      child: SettingsItem(
+                        icon: Icons.delete_outline,
+                        title: context.l10n.libraryClear,
+                        subtitle: context.l10n.libraryClearSubtitle,
+                        onTap: libraryState.totalCount > 0
+                            ? _clearLibrary
+                            : null,
+                        showDivider: false,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-          ],
+          ),
 
           SliverToBoxAdapter(
             child: SettingsInfoCard(
@@ -774,7 +742,6 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
   final int scannedFiles;
   final int totalFiles;
   final double progress;
-  final bool enabled;
   final ValueChanged<bool> onEnabledChanged;
   final VoidCallback onScan;
   final VoidCallback onFullScan;
@@ -789,7 +756,6 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
     required this.scannedFiles,
     required this.totalFiles,
     required this.progress,
-    required this.enabled,
     required this.onEnabledChanged,
     required this.onScan,
     required this.onFullScan,
@@ -817,8 +783,7 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
   }
 
   Future<void> _showActions(BuildContext context) async {
-    final canScan =
-        enabled && source.enabled && source.available && !isScanning;
+    final canScan = source.enabled && source.available && !isScanning;
     final hasFailures = !isScanning && failures?.files.isNotEmpty == true;
     final action = await showAppBottomSheet<String>(
       context: context,
@@ -953,46 +918,43 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
       context.l10n.libraryLastScanned(_lastScanned(context)),
     ].join(' · ');
 
-    return Opacity(
-      opacity: enabled ? 1 : 0.5,
-      child: SettingsItem(
-        icon: source.isRemovable ? Icons.usb_rounded : Icons.folder_outlined,
-        title: title,
-        titleTrailing: source.isRemovable
-            ? Tooltip(
-                message: context.l10n.libraryExternalStorage,
-                child: const Icon(Icons.sd_storage_outlined, size: 16),
-              )
-            : null,
-        subtitle: [
-          ?pathLine,
-          details,
-          if (!isScanning && source.lastScanError?.trim().isNotEmpty == true)
-            context.friendlyError(source.lastScanError!)
-          else if (!isScanning && failures != null)
-            context.l10n.libraryUnreadableFiles(failures!.count),
-        ].join('\n'),
-        onTap: () => _showActions(context),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isScanning)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: _AnimatedScanCount(
-                  count: scannedFiles,
-                  progress: progress,
-                  determinate: totalFiles > 0 && !isFinalizing,
-                ),
+    return SettingsItem(
+      icon: source.isRemovable ? Icons.usb_rounded : Icons.folder_outlined,
+      title: title,
+      titleTrailing: source.isRemovable
+          ? Tooltip(
+              message: context.l10n.libraryExternalStorage,
+              child: const Icon(Icons.sd_storage_outlined, size: 16),
+            )
+          : null,
+      subtitle: [
+        ?pathLine,
+        details,
+        if (!isScanning && source.lastScanError?.trim().isNotEmpty == true)
+          context.friendlyError(source.lastScanError!)
+        else if (!isScanning && failures != null)
+          context.l10n.libraryUnreadableFiles(failures!.count),
+      ].join('\n'),
+      onTap: () => _showActions(context),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isScanning)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _AnimatedScanCount(
+                count: scannedFiles,
+                progress: progress,
+                determinate: totalFiles > 0 && !isFinalizing,
               ),
-            AppSwitch(
-              adaptive: true,
-              semanticLabel: title,
-              value: source.enabled,
-              onChanged: enabled ? onEnabledChanged : null,
             ),
-          ],
-        ),
+          AppSwitch(
+            adaptive: true,
+            semanticLabel: title,
+            value: source.enabled,
+            onChanged: onEnabledChanged,
+          ),
+        ],
       ),
     );
   }

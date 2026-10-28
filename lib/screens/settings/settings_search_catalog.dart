@@ -136,13 +136,6 @@ class SettingsSearchCatalog {
       ],
       library = [
         SettingsSearchEntry(
-          icon: Icons.library_music_outlined,
-          title: l10n.libraryEnableLocalLibrary,
-          subtitle: l10n.libraryEnableLocalLibrarySubtitle,
-          keywords: const ['local music'],
-        ),
-
-        SettingsSearchEntry(
           icon: Icons.content_copy_outlined,
           title: l10n.libraryShowDuplicateIndicator,
           subtitle: l10n.libraryShowDuplicateIndicatorSubtitle,

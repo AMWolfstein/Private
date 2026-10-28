@@ -266,7 +266,6 @@ class QueueLibraryDbQuery {
   final String? format;
   final String? metadata;
   final String sortMode;
-  final bool includeLocal;
   final QueueLibraryDbCursor? cursor;
 
   const QueueLibraryDbQuery({
@@ -280,7 +279,6 @@ class QueueLibraryDbQuery {
     this.format,
     this.metadata,
     this.sortMode = 'latest',
-    this.includeLocal = true,
     this.cursor,
   });
 }

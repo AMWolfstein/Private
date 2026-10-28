@@ -75,7 +75,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
   listeningStatisticsEnabled:
       json['listeningStatisticsEnabled'] as bool? ?? true,
-  localLibraryEnabled: json['localLibraryEnabled'] as bool? ?? false,
   localLibraryPath: json['localLibraryPath'] as String? ?? '',
   localLibraryBookmark: json['localLibraryBookmark'] as String? ?? '',
   localLibraryShowDuplicates:
@@ -126,7 +125,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'locale': instance.locale,
       'keepScreenOnLyrics': instance.keepScreenOnLyrics,
       'listeningStatisticsEnabled': instance.listeningStatisticsEnabled,
-      'localLibraryEnabled': instance.localLibraryEnabled,
       'localLibraryPath': instance.localLibraryPath,
       'localLibraryBookmark': instance.localLibraryBookmark,
       'localLibraryShowDuplicates': instance.localLibraryShowDuplicates,

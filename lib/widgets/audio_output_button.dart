@@ -20,44 +20,7 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
   static const _androidChannel = MethodChannel(
     'com.amwolfstein.sistrum/audio_output',
   );
-  MethodChannel? _viewChannel;
   bool _opening = false;
-
-  Map<String, Object> get _appearance => {
-    'color': (widget.color ?? Theme.of(context).colorScheme.onSurface)
-        .toARGB32(),
-    'label': context.l10n.nowPlayingAudioOutput,
-  };
-
-  @override
-  void didUpdateWidget(AudioOutputButton oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _updateAppearance();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _updateAppearance();
-  }
-
-  void _updateAppearance() {
-    final channel = _viewChannel;
-    if (channel != null) {
-      unawaited(channel.invokeMethod<void>('update', _appearance));
-    }
-  }
-
-  void _attachView(int id) {
-    _viewChannel?.setMethodCallHandler(null);
-    _viewChannel = MethodChannel('com.amwolfstein.sistrum/audio_output/$id')
-      ..setMethodCallHandler((call) async {
-        if (mounted && call.method == 'pickerChanged') {
-          widget.onPickerChanged?.call(call.arguments == true);
-        }
-      });
-    _updateAppearance();
-  }
 
   Future<void> _showAndroidPicker() async {
     if (_opening) return;
@@ -82,25 +45,9 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
   }
 
   @override
-  void dispose() {
-    _viewChannel?.setMethodCallHandler(null);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (kIsWeb) return const SizedBox.shrink();
     switch (defaultTargetPlatform) {
-      case TargetPlatform.iOS:
-        return SizedBox.square(
-          dimension: 48,
-          child: UiKitView(
-            viewType: 'com.amwolfstein.sistrum/audio_output',
-            creationParams: _appearance,
-            creationParamsCodec: const StandardMessageCodec(),
-            onPlatformViewCreated: _attachView,
-          ),
-        );
       case TargetPlatform.android:
         return IconButton(
           tooltip: context.l10n.nowPlayingAudioOutput,

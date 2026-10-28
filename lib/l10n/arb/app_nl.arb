@@ -93,7 +93,6 @@
   "homeLatestReleases": "Nieuwste releases in je bibliotheek",
   "artistPopular": "Populair",
   "libraryRecentlyAdded": "Recently Added",
-  "homeLibraryDisabled": "Schakel de lokale bibliotheek in om je muziek hier te tonen.",
   "homeChooseLibraryFolder": "Kies een muziekmap in de instellingen van de lokale bibliotheek.",
   "homeLibraryEmpty": "Voeg muziek toe aan je bibliotheekmappen en scan daarna je bibliotheek.",
   "libraryEmptyCollection": "Your music will appear here",
@@ -777,14 +776,6 @@
   "libraryScanSettings": "Scan Settings",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Enable Local Library",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Scan and track your existing music",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Tap to select folder",
   "@libraryFolderHint": {
@@ -2305,10 +2296,6 @@
   "nowPlayingPlayInOrder": "Play in order",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Shuffle library",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "Queue is empty",
   "@nowPlayingQueueEmpty": {

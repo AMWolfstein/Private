@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library_database.dart';
 import 'package:sistrum/services/library_playlist_search.dart';
 import 'package:sistrum/services/library_search.dart';
@@ -43,15 +42,10 @@ final librarySearchProvider = FutureProvider.autoDispose
           offset: request.offset,
         );
       }
-      final includeLocal = ref.watch(
-        settingsProvider.select((s) => s.localLibraryEnabled),
-      );
-      if (!includeLocal) return const [];
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
       return LibraryDatabase.instance.searchLibrary(
         query: request.query,
         kind: request.kind,
-        includeLocal: includeLocal,
         limit: request.limit,
         offset: request.offset,
       );

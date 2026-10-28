@@ -9,9 +9,7 @@ import 'package:sistrum/services/library_database.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
-  void enabled(bool value) =>
-      state = state.copyWith(localLibraryEnabled: value);
+  AppSettings build() => const AppSettings();
 }
 
 class _Library extends LocalLibraryNotifier {
@@ -75,28 +73,6 @@ void main() {
       expect(requests.map((r) => r.offset), [0, 40]);
     },
   );
-
-  test('disabled local library does not read artist tracks', () async {
-    var reads = 0;
-    final container = ProviderContainer(
-      overrides: [
-        settingsProvider.overrideWith(_Settings.new),
-        localLibraryProvider.overrideWith(_Library.new),
-        localArtistTrackLoaderProvider.overrideWithValue((request) async {
-          reads++;
-          return page(0, 1);
-        }),
-      ],
-    );
-    addTearDown(container.dispose);
-    (container.read(settingsProvider.notifier) as _Settings).enabled(false);
-    final provider = localArtistTracksProvider('Artist');
-    final sub = container.listen(provider, (_, _) {});
-    addTearDown(sub.close);
-    expect((await container.read(provider.future)).items, isEmpty);
-    expect(await container.read(provider.notifier).playbackQueue(), isEmpty);
-    expect(reads, 0);
-  });
 
   test(
     'closing artist while loading more does not publish a late page',

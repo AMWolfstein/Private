@@ -51,7 +51,6 @@ class _ConfiguredSettings extends _Settings {
   AppSettings build() => const AppSettings(
     isFirstLaunch: false,
     hasCompletedTutorial: true,
-    localLibraryEnabled: true,
     localLibraryPath: '/current',
     localLibraryBookmark: 'current-bookmark',
     localLibraryAutoScan: 'weekly',
@@ -74,7 +73,6 @@ void main() {
         'isFirstLaunch': true,
         'hasCompletedTutorial': false,
         'localLibraryPath': '/foreign',
-        'localLibraryEnabled': false,
         'localLibraryBookmark': 'foreign',
         'localLibraryAutoScan': 'daily',
         'glassQuality': 'off',
@@ -103,15 +101,11 @@ void main() {
       );
       addTearDown(container.dispose);
       final notifier = container.read(settingsProvider.notifier);
-      notifier.setLocalLibraryEnabled(true);
-      await preferences.whenStarted(0);
       notifier.setLocalLibraryPathAndBookmark('content://test/tree/music', '');
       final finish = notifier.setFirstLaunchComplete();
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
       preferences.release(0).complete(true);
       await preferences.whenStarted(1);
-      preferences.release(1).complete(true);
-      await preferences.whenStarted(2);
       expect(preferences.writes.last['isFirstLaunch'], isFalse);
       expect(preferences.writes.last['hasCompletedTutorial'], isTrue);
       expect(
@@ -119,7 +113,7 @@ void main() {
         'content://test/tree/music',
       );
       expect(container.read(settingsProvider).isFirstLaunch, isTrue);
-      preferences.release(2).complete(true);
+      preferences.release(1).complete(true);
       await finish;
       expect(container.read(settingsProvider).isFirstLaunch, isFalse);
       expect(container.read(settingsProvider).hasCompletedTutorial, isTrue);

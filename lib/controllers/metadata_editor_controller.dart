@@ -103,7 +103,6 @@ class MetadataEditorController {
     tags['disc_total'] = tags.remove('total_discs')!;
     tags['compilation'] =
         tags['album_type']!.trim().toLowerCase() == 'compilation' ? '1' : '0';
-    tags['artist_tag_mode'] = 'joined';
     tags.addAll(separators.writerFields);
     if (!onlyChanged) return tags;
     final changedKeys = {..._changed};
@@ -136,7 +135,6 @@ class MetadataEditorController {
       changed['compilation'] = tags['compilation']!;
     }
     if (explicit != _initialExplicit) changed['explicit'] = tags['explicit']!;
-    changed['artist_tag_mode'] = tags['artist_tag_mode']!;
     changed.addAll(separators.writerFields);
     return changed;
   }

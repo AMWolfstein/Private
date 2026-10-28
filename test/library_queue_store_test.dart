@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library_database_models.dart';
@@ -317,35 +316,32 @@ void main() {
       await addLocal('disabled1', 1, source: 'disabled');
       await addLocal('disabled2', 2, source: 'disabled');
       {
-        for (final includeLocal in [false, true]) {
-          for (final singles in [false, true]) {
-            for (final sort in [
-              'latest',
-              'oldest',
-              'album-asc',
-              'album-desc',
-              'artist-asc',
-              'release-newest',
-            ]) {
-              for (final offset in [0, 1]) {
-                Future<QueueLibraryDbPage> page(String? quality) =>
-                    store.albumPage(
-                      QueueLibraryDbQuery(
-                        includeLocal: includeLocal,
-                        includeSingleTrackAlbums: singles,
-                        sortMode: sort,
-                        offset: offset,
-                        limit: 1,
-                        searchQuery: '  ',
-                        quality: quality,
-                      ),
-                    );
-                // Unknown quality adds no predicate but uses the original join.
-                final original = await page('unrecognized');
-                final fast = await page(null);
-                expect(fast.rows, original.rows);
-                expect(fast.nextCursor, original.nextCursor);
-              }
+        for (final singles in [false, true]) {
+          for (final sort in [
+            'latest',
+            'oldest',
+            'album-asc',
+            'album-desc',
+            'artist-asc',
+            'release-newest',
+          ]) {
+            for (final offset in [0, 1]) {
+              Future<QueueLibraryDbPage> page(String? quality) =>
+                  store.albumPage(
+                    QueueLibraryDbQuery(
+                      includeSingleTrackAlbums: singles,
+                      sortMode: sort,
+                      offset: offset,
+                      limit: 1,
+                      searchQuery: '  ',
+                      quality: quality,
+                    ),
+                  );
+              // Unknown quality adds no predicate but uses the original join.
+              final original = await page('unrecognized');
+              final fast = await page(null);
+              expect(fast.rows, original.rows);
+              expect(fast.nextCursor, original.nextCursor);
             }
           }
         }
@@ -602,10 +598,6 @@ void main() {
       final artists = await store.artistPage(const QueueLibraryDbQuery());
       expect(artists.map((row) => row['artist_name']), ['Artist']);
       expect(artists.map((row) => row['track_count']), [3]);
-      final downloaded = await store.artistPage(
-        const QueueLibraryDbQuery(includeLocal: false),
-      );
-      expect(downloaded.map((row) => row['track_count']), isEmpty);
     },
   );
 }

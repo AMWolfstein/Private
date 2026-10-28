@@ -29,7 +29,7 @@ const _request = (
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 }
 
 class _Local extends LocalLibraryNotifier {
@@ -57,7 +57,6 @@ class _PrefixBrowse extends LibraryBrowseNotifier {
       ),
       offset: 0,
       cursor: null,
-      includeLocal: true,
     ));
     return LibraryBrowseState(
       page.entries,
@@ -290,7 +289,6 @@ void main() {
         ),
         offset: 0,
         cursor: null,
-        includeLocal: true,
       ));
       expect(
         libraryPagingIdentities(entries),

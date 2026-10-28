@@ -93,7 +93,6 @@
   "homeLatestReleases": "Новые релизы в вашей медиатеке",
   "artistPopular": "Популярное",
   "libraryRecentlyAdded": "Недавно добавленные",
-  "homeLibraryDisabled": "Включите локальную медиатеку, чтобы показывать здесь вашу музыку.",
   "homeChooseLibraryFolder": "Выберите папку с музыкой в настройках локальной медиатеки.",
   "homeLibraryEmpty": "Добавьте музыку в папки медиатеки, затем просканируйте её.",
   "libraryEmptyCollection": "Ваша музыка появится здесь",
@@ -777,14 +776,6 @@
   "libraryScanSettings": "Настройки сканирования",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Включить локальную медиатеку",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Сканировать и отслеживать вашу существующую музыку",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Нажмите, чтобы выбрать папку",
   "@libraryFolderHint": {
@@ -2305,10 +2296,6 @@
   "nowPlayingPlayInOrder": "Играть в очереди",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Перемешать медиатеку",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "Очередь пуста",
   "@nowPlayingQueueEmpty": {

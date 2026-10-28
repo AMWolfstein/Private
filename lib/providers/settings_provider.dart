@@ -48,7 +48,6 @@ AppSettings loadBootstrapSettings(SharedPreferences prefs) {
 AppSettings resetInstallationBoundSettings(AppSettings settings) {
   return settings.copyWith(
     isFirstLaunch: true,
-    localLibraryEnabled: false,
     localLibraryPath: '',
     localLibraryBookmark: '',
     localLibraryAutoScan: 'off',
@@ -227,7 +226,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     final candidate = restored.copyWith(
       isFirstLaunch: current.isFirstLaunch,
       hasCompletedTutorial: current.hasCompletedTutorial,
-      localLibraryEnabled: current.localLibraryEnabled,
       localLibraryPath: current.localLibraryPath,
       localLibraryBookmark: current.localLibraryBookmark,
       localLibraryAutoScan: current.localLibraryAutoScan,
@@ -482,11 +480,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setLocale(String locale) {
     state = state.copyWith(locale: locale);
-    _saveSettings();
-  }
-
-  void setLocalLibraryEnabled(bool enabled) {
-    state = state.copyWith(localLibraryEnabled: enabled);
     _saveSettings();
   }
 

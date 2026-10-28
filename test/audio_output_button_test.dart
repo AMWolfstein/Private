@@ -20,52 +20,7 @@ void main() {
 
   tearDown(() {
     messenger.setMockMethodCallHandler(channel, null);
-    messenger.setMockMethodCallHandler(SystemChannels.platform_views, null);
   });
-
-  testWidgets(
-    'iOS embeds the native audio route control and forwards its presentation',
-    (tester) async {
-      int? viewId;
-      final visibility = <bool>[];
-      final updates = <MethodCall>[];
-      MethodChannel? viewChannel;
-      messenger.setMockMethodCallHandler(SystemChannels.platform_views, (
-        call,
-      ) async {
-        if (call.method == 'create') {
-          final args = call.arguments as Map<Object?, Object?>;
-          expect(args['viewType'], 'com.amwolfstein.sistrum/audio_output');
-          viewId = args['id'] as int;
-          viewChannel = MethodChannel(
-            'com.amwolfstein.sistrum/audio_output/$viewId',
-          );
-          messenger.setMockMethodCallHandler(
-            viewChannel!,
-            (call) async => updates.add(call),
-          );
-        }
-        return null;
-      });
-      await tester.pumpWidget(app(onChanged: visibility.add));
-      await tester.pumpAndSettle();
-      expect(viewId, isNotNull);
-      expect(updates.last.arguments, containsPair('label', 'Audio Output'));
-      for (final open in [true, false]) {
-        await messenger.handlePlatformMessage(
-          viewChannel!.name,
-          const StandardMethodCodec().encodeMethodCall(
-            MethodCall('pickerChanged', open),
-          ),
-          (_) {},
-        );
-      }
-      expect(visibility, [true, false]);
-      await tester.pumpWidget(const SizedBox());
-      messenger.setMockMethodCallHandler(viewChannel!, null);
-    },
-    variant: TargetPlatformVariant.only(TargetPlatform.iOS),
-  );
 
   testWidgets('opens native output picker once and reports failure visibly', (
     tester,

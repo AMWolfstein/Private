@@ -93,7 +93,6 @@
   "homeLatestReleases": "Kitaplığınızdaki Son Yayınlar",
   "artistPopular": "Popüler",
   "libraryRecentlyAdded": "Son eklenenler",
-  "homeLibraryDisabled": "Müziğinizi burada görmek için Yerel Kitaplık'ı etkinleştirin.",
   "homeChooseLibraryFolder": "Yerel Kitaplık ayarlarında bir müzik klasörü seçin.",
   "homeLibraryEmpty": "Müziğinizi kitaplık klasörlerinize ekleyin, ardından kitaplığınızı tarayın.",
   "libraryEmptyCollection": "Müzikleriniz burada görünecek",
@@ -777,14 +776,6 @@
   "libraryScanSettings": "Tarama Ayarları",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
-  },
-  "libraryEnableLocalLibrary": "Yerel Kitaplığı Etkinleştir",
-  "@libraryEnableLocalLibrary": {
-    "description": "Toggle to enable library scanning"
-  },
-  "libraryEnableLocalLibrarySubtitle": "Mevcut müziğinizi tarayın ve takip edin",
-  "@libraryEnableLocalLibrarySubtitle": {
-    "description": "Subtitle for enable toggle"
   },
   "libraryFolderHint": "Klasör seçmek için dokunun",
   "@libraryFolderHint": {
@@ -2305,10 +2296,6 @@
   "nowPlayingPlayInOrder": "Sırayla çal",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
-  },
-  "nowPlayingShuffleLibrary": "Kitaplığı karıştır",
-  "@nowPlayingShuffleLibrary": {
-    "description": "Button label to shuffle and play the entire local library"
   },
   "nowPlayingQueueEmpty": "Kuyruk boş",
   "@nowPlayingQueueEmpty": {

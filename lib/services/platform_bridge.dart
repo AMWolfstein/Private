@@ -180,10 +180,7 @@ class PlatformBridge {
   }
 
   static Future<void> setScreenAwake(bool enabled) async {
-    if (defaultTargetPlatform != TargetPlatform.android &&
-        defaultTargetPlatform != TargetPlatform.iOS) {
-      return;
-    }
+    if (defaultTargetPlatform != TargetPlatform.android) return;
     await _channel.invokeMethod<void>('setScreenAwake', {'enabled': enabled});
   }
 
@@ -420,13 +417,6 @@ class PlatformBridge {
     return result as String?;
   }
 
-  static Future<void> openContentUri(String uri, {String mimeType = ''}) async {
-    await _channel.invokeMethod('openContentUri', {
-      'uri': uri,
-      'mime_type': mimeType,
-    });
-  }
-
   static Future<bool> shareContentUri(String uri, {String title = ''}) async {
     final result = await _channel.invokeMethod('shareContentUri', {
       'uri': uri,
@@ -533,9 +523,8 @@ class PlatformBridge {
     );
   }
 
-  /// Keeps user-started work of [kind] alive with the screen off: an Android
-  /// foreground service, or an iOS background-task grace period. Returns
-  /// whether the platform accepted it.
+  /// Keeps user-started work of [kind] alive with the screen off through an
+  /// Android foreground service. Returns whether the platform accepted it.
   static Future<bool> startBackgroundWork(
     String kind, {
     required String title,

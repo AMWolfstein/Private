@@ -14,7 +14,6 @@ Future<
 >
 prepareRestoredPlaybackMedia(
   List<Object?> rawMedia, {
-  String? iosDocumentsPath,
   required Future<String?> Function(PlayableMedia) loadLibraryCoverPath,
   Future<bool> Function(String)? fileExists,
 }) async {
@@ -31,10 +30,7 @@ prepareRestoredPlaybackMedia(
   Future<(PlayableMedia, int, bool)?> resolve(int index) async {
     final entry = rawMedia[index];
     if (entry is! Map) return null;
-    final media = PlayableMedia.fromJson(
-      Map<String, dynamic>.from(entry),
-      iosDocumentsPath: iosDocumentsPath,
-    );
+    final media = PlayableMedia.fromJson(Map<String, dynamic>.from(entry));
     if (media == null) return null;
     if (!media.isContentUri && !await exists(media.source)) {
       return null;

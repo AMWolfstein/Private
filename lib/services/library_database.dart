@@ -57,7 +57,6 @@ class LibraryDatabase {
           _searchFtsAvailable = await LibrarySchema.create(db, version);
         },
         onUpgrade: LibrarySchema.upgrade,
-        onOpen: LibrarySchema.migrateIosContainerPaths,
       );
       // Library upserts use INSERT OR REPLACE. Recursive triggers ensure the
       // implicit delete also fires the external-content FTS delete trigger.
@@ -155,18 +154,14 @@ class LibraryDatabase {
   Future<List<LibrarySearchHit>> searchLibrary({
     required String query,
     required LibrarySearchKind kind,
-    required bool includeLocal,
     int limit = 40,
     int offset = 0,
   }) async {
     final db = await database;
-    return LibrarySearchStore(db, localFts: searchFtsAvailable).search(
-      query: query,
-      kind: kind,
-      includeLocal: includeLocal,
-      limit: limit,
-      offset: offset,
-    );
+    return LibrarySearchStore(
+      db,
+      localFts: searchFtsAvailable,
+    ).search(query: query, kind: kind, limit: limit, offset: offset);
   }
 
   void _putPathKeysInBatch(Batch batch, String id, String? filePath) =>
@@ -591,9 +586,7 @@ class LibraryDatabase {
 
   Future<LibraryQueueStore> _queueStore([QueueLibraryDbQuery? request]) async {
     final db = await database;
-    if (request != null &&
-        isLibrarySizeSort(request.sortMode) &&
-        request.includeLocal) {
+    if (request != null && isLibrarySizeSort(request.sortMode)) {
       await (_fileSizes ??= LibraryFileSizes(db)).refresh();
     }
     return LibraryQueueStore(db, localFts: searchFtsAvailable);

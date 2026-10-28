@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
 import 'package:sistrum/services/metadata_persistence_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/utils/artist_utils.dart';
 
 class _Covers extends MetadataCoverResources {
   bool extractCover = false;
@@ -53,7 +52,6 @@ void main() {
           expect(metadata, {
             'title': 'Song',
             'lyrics': '',
-            'artist_tag_mode': artistTagModeJoined,
             'cover_path': cover.path,
           });
           entered.complete();

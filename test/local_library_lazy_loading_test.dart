@@ -7,7 +7,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
@@ -20,36 +19,18 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings();
-
-  @override
-  void setLocalLibraryEnabled(bool enabled) {
-    state = state.copyWith(localLibraryEnabled: enabled);
-  }
 }
 
 class _Local extends LocalLibraryNotifier {
-  int _builds = 0;
-  int _reloads = 0;
-
   @override
-  LocalLibraryState build() {
-    _builds++;
-    return LocalLibraryState();
-  }
+  LocalLibraryState build() => LocalLibraryState();
 
   void publishIndexChange() {
     state = state.copyWith(loadedIndexVersion: state.loadedIndexVersion + 1);
   }
 
   @override
-  Future<void> reloadFromStorage() async {
-    _reloads++;
-  }
-}
-
-class _Collections extends LibraryCollectionsNotifier {
-  @override
-  LibraryCollectionsState build() => LibraryCollectionsState(isLoaded: true);
+  Future<void> reloadFromStorage() async {}
 }
 
 class _SelectionCollections extends LibraryCollectionsNotifier {
@@ -178,13 +159,11 @@ class _EmptyCollections extends LibraryCollectionsNotifier {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _Local local;
-  late int queries;
   var returnSong = false;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     local = _Local();
-    queries = 0;
     returnSong = false;
     final previousFactory = databaseFactoryOrNull;
     databaseFactory = databaseFactorySqflitePlugin;
@@ -216,7 +195,6 @@ void main() {
           ],
         };
       }
-      queries++;
       if (returnSong && sql.contains('SUM(all_count)')) {
         return {
           'columns': ['all_count', 'single_count', 'album_count'],
@@ -260,64 +238,65 @@ void main() {
   });
 
   for (final sistrum in [true]) {
-    testWidgets('playlist selection confirms one deletion (Sistrum: $sistrum)', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final calls = <List<String>>[];
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            localLibraryProvider.overrideWith(() => local),
-            libraryCollectionsProvider.overrideWith(
-              () => _SelectionCollections(calls.add),
+    testWidgets(
+      'playlist selection confirms one deletion (Sistrum: $sistrum)',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        final calls = <List<String>>[];
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              settingsProvider.overrideWith(_Settings.new),
+              localLibraryProvider.overrideWith(() => local),
+              libraryCollectionsProvider.overrideWith(
+                () => _SelectionCollections(calls.add),
+              ),
+            ],
+            child: MaterialApp(
+              theme: sistrum
+                  ? SistrumTheme.build(Brightness.dark)
+                  : AppTheme.light(),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
             ),
-          ],
-          child: MaterialApp(
-            theme: sistrum
-                ? SistrumTheme.build(Brightness.dark)
-                : AppTheme.light(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
-      await tester.ensureVisible(find.text('First'));
-      await tester.longPress(find.text('First'));
-      await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Second'));
-      await tester.tap(find.text('Second'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
-      await tester.pumpAndSettle();
-      expect(
-        find.text(l10n.collectionDeletePlaylistsMessage(2)),
-        findsOneWidget,
-      );
-      await tester.tap(find.text(l10n.dialogCancel));
-      await tester.pumpAndSettle();
-      expect(calls, isEmpty);
-      expect(find.text('First'), findsOneWidget);
-      await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(l10n.dialogDelete));
-      await tester.pumpAndSettle();
-      expect(calls, [
-        ['First', 'Second'],
-      ]);
-      expect(find.text('First'), findsNothing);
-      expect(find.text('Second'), findsNothing);
-      expect(find.text('Keep'), findsOneWidget);
-      expect(find.text(l10n.selectionDeletePlaylistsCount(2)), findsNothing);
-      expect(find.text(l10n.collectionPlaylistsDeleted(2)), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
+        );
+        await tester.pumpAndSettle();
+        final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+        await tester.ensureVisible(find.text('First'));
+        await tester.longPress(find.text('First'));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('Second'));
+        await tester.tap(find.text('Second'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
+        await tester.pumpAndSettle();
+        expect(
+          find.text(l10n.collectionDeletePlaylistsMessage(2)),
+          findsOneWidget,
+        );
+        await tester.tap(find.text(l10n.dialogCancel));
+        await tester.pumpAndSettle();
+        expect(calls, isEmpty);
+        expect(find.text('First'), findsOneWidget);
+        await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(l10n.dialogDelete));
+        await tester.pumpAndSettle();
+        expect(calls, [
+          ['First', 'Second'],
+        ]);
+        expect(find.text('First'), findsNothing);
+        expect(find.text('Second'), findsNothing);
+        expect(find.text('Keep'), findsOneWidget);
+        expect(find.text(l10n.selectionDeletePlaylistsCount(2)), findsNothing);
+        expect(find.text(l10n.collectionPlaylistsDeleted(2)), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 
   testWidgets('playlist rows show renames without changing the count', (
@@ -385,43 +364,6 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  test('browse observes the local index only while enabled', () async {
-    final container = ProviderContainer(
-      overrides: [
-        settingsProvider.overrideWith(_Settings.new),
-        localLibraryProvider.overrideWith(() => local),
-      ],
-    );
-    addTearDown(container.dispose);
-    final browse = libraryBrowseProvider((
-      artists: false,
-      artist: null,
-      search: '',
-      sort: 'latest',
-      limit: 40,
-      completeness: null,
-    ));
-    container.listen(browse, (_, _) {});
-    Future<void> settle() => container.read(browse.future);
-
-    await settle();
-    expect(local._builds, 0);
-    container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
-    await settle();
-    expect(local._builds, 1);
-    final enabledQueries = queries;
-    local.publishIndexChange();
-    await settle();
-    expect(queries, greaterThan(enabledQueries));
-
-    container.read(settingsProvider.notifier).setLocalLibraryEnabled(false);
-    await settle();
-    final disabledQueries = queries;
-    local.publishIndexChange();
-    await container.pump();
-    expect(queries, disabledQueries);
-  });
-
   testWidgets('Songs contains playlist-member songs without collection rows', (
     tester,
   ) async {
@@ -441,10 +383,6 @@ void main() {
         ),
       ),
     );
-    final container = ProviderScope.containerOf(
-      tester.element(find.byType(QueueTab)),
-    );
-    container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
     await tester.pumpAndSettle();
     expect(find.text('Song in playlist'), findsOneWidget);
     expect(find.text('Loved Songs'), findsNothing);
@@ -481,10 +419,6 @@ void main() {
         ),
       ),
     );
-    final container = ProviderScope.containerOf(
-      tester.element(find.byType(QueueTab)),
-    );
-    container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
     await tester.pumpAndSettle();
     final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
     final create = find.widgetWithText(
@@ -498,42 +432,4 @@ void main() {
     expect(rect.height, greaterThanOrEqualTo(48));
     expect(tester.takeException(), isNull);
   });
-
-  for (final section in ['all', 'albums']) {
-    testWidgets(
-      'Queue $section stays lazy until the local library is enabled',
-      (tester) async {
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              settingsProvider.overrideWith(_Settings.new),
-              localLibraryProvider.overrideWith(() => local),
-              libraryCollectionsProvider.overrideWith(_Collections.new),
-            ],
-            child: MaterialApp(
-              theme: AppTheme.light(),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: Scaffold(body: QueueTab(librarySection: section)),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        expect(local._builds, 0);
-        expect(local._reloads, 0);
-        final container = ProviderScope.containerOf(
-          tester.element(find.byType(QueueTab)),
-        );
-        container.read(settingsProvider.notifier).setLocalLibraryEnabled(true);
-        await tester.pumpAndSettle();
-        expect(local._builds, 1);
-        container.read(settingsProvider.notifier).setLocalLibraryEnabled(false);
-        await tester.pumpAndSettle();
-        final disabledQueries = queries;
-        local.publishIndexChange();
-        await tester.pumpAndSettle();
-        expect(queries, disabledQueries);
-      },
-    );
-  }
 }

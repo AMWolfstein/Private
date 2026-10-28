@@ -10,10 +10,6 @@ void main() {
 
   test('Sistrum playback uses the matching native identity and small icon', () {
     expect(AppInfo.appName, 'Sistrum');
-    expect(
-      const PlaybackDependencies().notificationChannel.name,
-      'com.amwolfstein.sistrum/playback_notification',
-    );
     const config = PlaybackDependencies.notificationConfig;
     expect(
       config.androidNotificationChannelId,
@@ -25,15 +21,12 @@ void main() {
     expect(config.androidStopForegroundOnPause, isTrue);
   });
 
-  test(
-    'new backups and notification actions use the canonical identity',
-    () {
-      expect(BackupService.magic, 'sistrum-backup');
-      expect(BackupService.fileExtension, 'sbk');
-      expect(PlaybackNotification.favoriteAction, 'sistrum.favorite');
-      expect(PlaybackNotification.shuffleAction, 'sistrum.shuffle');
-    },
-  );
+  test('new backups and notification actions use the canonical identity', () {
+    expect(BackupService.magic, 'sistrum-backup');
+    expect(BackupService.fileExtension, 'sbk');
+    expect(PlaybackNotification.favoriteAction, 'sistrum.favorite');
+    expect(PlaybackNotification.shuffleAction, 'sistrum.shuffle');
+  });
 
   for (final locale in AppLocalizations.supportedLocales) {
     test(
@@ -49,7 +42,14 @@ void main() {
           strings.audioInfoPlayerValue,
         ]) {
           expect(text, contains('Sistrum'));
-          expect(text, isNot(contains('\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043')));
+          expect(
+            text,
+            isNot(
+              contains(
+                '\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043',
+              ),
+            ),
+          );
         }
       },
     );

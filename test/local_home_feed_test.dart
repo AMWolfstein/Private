@@ -19,8 +19,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
-  void disable() => state = state.copyWith(localLibraryEnabled: false);
+  AppSettings build() => const AppSettings();
 }
 
 class _Library extends LocalLibraryNotifier {
@@ -96,9 +95,6 @@ void main() {
       (container.read(localLibraryProvider.notifier) as _Library)
           .scanFinished();
       expect((await container.read(localHomeTracksProvider.future)).length, 1);
-      expect(reads, 2);
-      (container.read(settingsProvider.notifier) as _Settings).disable();
-      expect(await container.read(localHomeTracksProvider.future), isEmpty);
       expect(reads, 2);
       for (final request in [
         localHomeBrowseRequest(),
@@ -228,10 +224,7 @@ void main() {
           requests.map((r) => r.browse.sort),
           containsAll(['release-date-newest', 'latest', 'a-z']),
         );
-        expect(
-          requests.every((r) => r.browse.limit == 12 && r.includeLocal),
-          isTrue,
-        );
+        expect(requests.every((r) => r.browse.limit == 12), isTrue);
         await tester.scrollUntilVisible(
           find.text('My mix'),
           400,

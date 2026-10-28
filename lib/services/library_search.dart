@@ -117,13 +117,11 @@ class LibrarySearchStore {
   Future<List<LibrarySearchHit>> search({
     required String query,
     required LibrarySearchKind kind,
-    required bool includeLocal,
     int limit = 40,
     int offset = 0,
   }) async {
     final search = LibrarySearchQuery(query);
     if (search.terms.isEmpty || kind == LibrarySearchKind.playlists) return [];
-    if (!includeLocal) return [];
     final args = <Object?>[];
     const alias = 'l';
     const table = 'library_visible';

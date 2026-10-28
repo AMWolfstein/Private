@@ -1,5 +1,3 @@
-import 'package:sistrum/utils/artist_utils.dart';
-
 /// Pure metadata-key conversion used by the different audio containers.
 ///
 /// Keeping these mappings independent from FFmpeg execution makes the tag
@@ -195,13 +193,9 @@ class AudioMetadataMapper {
 
   static void appendVorbisMetadataArguments(
     List<String> arguments,
-    Map<String, String> metadata, {
-    String artistTagMode = artistTagModeJoined,
-  }) {
-    for (final entry in buildVorbisMetadataEntries(
-      metadata,
-      artistTagMode: artistTagMode,
-    )) {
+    Map<String, String> metadata,
+  ) {
+    for (final entry in buildVorbisMetadataEntries(metadata)) {
       arguments
         ..add('-metadata')
         ..add('${entry.key}=${entry.value}');
@@ -220,9 +214,8 @@ class AudioMetadataMapper {
   }
 
   static List<MapEntry<String, String>> buildVorbisMetadataEntries(
-    Map<String, String> metadata, {
-    String artistTagMode = artistTagModeJoined,
-  }) {
+    Map<String, String> metadata,
+  ) {
     final vorbis = normalizeToVorbisComments(metadata);
     final entries = <MapEntry<String, String>>[];
 
@@ -233,22 +226,8 @@ class AudioMetadataMapper {
       entries.add(entry);
     }
 
-    _appendVorbisArtistEntries(
-      entries,
-      'ARTIST',
-      vorbis['ARTIST'],
-      artistTagMode: (metadata['artist_separator'] ?? '').isEmpty
-          ? artistTagMode
-          : artistTagModeJoined,
-    );
-    _appendVorbisArtistEntries(
-      entries,
-      'ALBUMARTIST',
-      vorbis['ALBUMARTIST'],
-      artistTagMode: (metadata['album_artist_separator'] ?? '').isEmpty
-          ? artistTagMode
-          : artistTagModeJoined,
-    );
+    _appendVorbisArtistEntries(entries, 'ARTIST', vorbis['ARTIST']);
+    _appendVorbisArtistEntries(entries, 'ALBUMARTIST', vorbis['ALBUMARTIST']);
 
     return entries;
   }
@@ -400,25 +379,12 @@ class AudioMetadataMapper {
   static void _appendVorbisArtistEntries(
     List<MapEntry<String, String>> entries,
     String key,
-    String? rawValue, {
-    String artistTagMode = artistTagModeJoined,
-  }) {
+    String? rawValue,
+  ) {
     if (rawValue == null) return;
     final value = rawValue.trim();
-    if (value.isEmpty) {
-      // Preserve an empty entry so FFmpeg clears an existing tag.
-      entries.add(MapEntry(key, ''));
-      return;
-    }
-
-    if (!shouldSplitVorbisArtistTags(artistTagMode)) {
-      entries.add(MapEntry(key, artistTagValueForMode(value, artistTagMode)));
-      return;
-    }
-
-    for (final artist in splitArtistTagValues(value)) {
-      entries.add(MapEntry(key, artist));
-    }
+    // An empty entry is preserved so FFmpeg clears an existing tag.
+    entries.add(MapEntry(key, value));
   }
 
   static String _normalizeKey(String key) =>

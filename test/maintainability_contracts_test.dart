@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/audio_metadata_mapper.dart';
 import 'package:sistrum/services/id3v23_lyrics.dart';
-import 'package:sistrum/utils/artist_utils.dart';
 
 void main() {
   group('home search logic', () {});
@@ -70,34 +69,19 @@ void main() {
       expect(native, isNot(contains('bit_depth')));
     });
 
-    test('builds split Vorbis artist entries without losing other tags', () {
+    test('builds Vorbis artist entries without losing other tags', () {
       final entries = AudioMetadataMapper.buildVorbisMetadataEntries({
         'ARTIST': 'First & Second',
         'TITLE': 'Track',
-      }, artistTagMode: artistTagModeSplitVorbis);
+      });
 
       expect(
         entries.where((entry) => entry.key == 'ARTIST').map((e) => e.value),
-        ['First', 'Second'],
+        ['First & Second'],
       );
       expect(
         entries.where((entry) => entry.key == 'TITLE').single.value,
         'Track',
-      );
-      final primary = AudioMetadataMapper.buildVorbisMetadataEntries({
-        'ARTIST': 'First & Second',
-        'ALBUMARTIST': 'First, Second',
-        'TITLE': 'Track',
-      }, artistTagMode: artistTagModePrimary);
-      expect(
-        primary.where((entry) => entry.key == 'ARTIST').map((e) => e.value),
-        ['First'],
-      );
-      expect(
-        primary
-            .where((entry) => entry.key == 'ALBUMARTIST')
-            .map((e) => e.value),
-        ['First'],
       );
       final advisory = AudioMetadataMapper.buildVorbisMetadataEntries({
         'EXPLICIT': 'true',

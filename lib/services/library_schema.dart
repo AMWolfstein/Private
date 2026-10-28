@@ -1,11 +1,7 @@
-import 'dart:io';
-
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library_database_models.dart';
 import 'package:sistrum/services/library_row_mapper.dart';
 import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
-import 'package:sistrum/utils/ios_container_paths.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('LibraryDatabase');
@@ -366,61 +362,5 @@ abstract final class LibrarySchema {
       }
     }
     await db.execute('DROP TABLE IF EXISTS $lookupSummaryTable');
-  }
-
-  static Future<void> migrateIosContainerPaths(Database db) async {
-    if (!Platform.isIOS) return;
-    final documents = await getApplicationDocumentsDirectory();
-    await db.transaction((txn) async {
-      final sources = await txn.query(
-        'library_sources',
-        columns: ['id', 'path'],
-        where: "bookmark IS NULL OR bookmark = ''",
-      );
-      final localSourceIds = sources.map((source) => source['id']).toSet();
-      final rows = await txn.query(
-        'library',
-        columns: ['id', 'source_id', 'file_path', 'cover_path'],
-      );
-      final batch = txn.batch();
-      for (final row in rows) {
-        final updates = <String, Object?>{};
-        for (final column in ['file_path', 'cover_path']) {
-          // External audio paths remain bookmark-owned. Extracted covers
-          // always belong to our sandbox, including bookmarked sources.
-          if (column == 'file_path' &&
-              !localSourceIds.contains(row['source_id'])) {
-            continue;
-          }
-          final previous = row[column] as String?;
-          if (previous == null) continue;
-          final current = rebaseIosSandboxPath(previous, documents.path);
-          if (current != previous) updates[column] = current;
-        }
-        if (updates.isEmpty) continue;
-        final id = row['id'] as String;
-        batch.update('library', updates, where: 'id = ?', whereArgs: [id]);
-        if (updates.containsKey('file_path')) {
-          sqlite.putPathKeysInBatch(
-            batch,
-            'library_path_keys',
-            id,
-            updates['file_path'] as String,
-          );
-        }
-      }
-      for (final source in sources) {
-        final previous = source['path'] as String;
-        final current = rebaseIosSandboxPath(previous, documents.path);
-        if (current == previous) continue;
-        batch.update(
-          'library_sources',
-          {'path': current},
-          where: 'id = ?',
-          whereArgs: [source['id']],
-        );
-      }
-      await batch.commit(noResult: true);
-    });
   }
 }

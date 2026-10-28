@@ -11,7 +11,7 @@ import 'support/sqlite_process_database.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 }
 
 class _Library extends LocalLibraryNotifier {
@@ -50,47 +50,50 @@ LocalLibraryItem item(int i) => LocalLibraryItem(
 );
 
 void main() {
-  test('flushing listening stats happens once per selection (PERF-601)', () async {
-    var flushes = 0;
-    final events = <String>[];
-    final container = ProviderContainer(
-      overrides: [
-        settingsProvider.overrideWith(_Settings.new),
-        localLibraryProvider.overrideWith(_Library.new),
-        listeningFlushProvider.overrideWithValue(() async {
-          flushes++;
-          events.add('flush');
-        }),
-        localArtistTrackLoaderProvider.overrideWithValue((request) async {
-          return QueueLibraryDbPage(
-            rows: [
-              for (
-                var i = request.offset;
-                i < min(request.offset + 40, 81);
-                i++
-              )
-                {'source': 'local', 'item': item(i).toJson()},
-            ],
-            nextCursor: QueueLibraryDbCursor([request.offset + 40]),
-          );
-        }),
-        localArtistPlayCountsLoaderProvider.overrideWithValue((keys) async {
-          events.add('counts');
-          return {};
-        }),
-      ],
-    );
-    addTearDown(container.dispose);
-    final provider = localArtistPopularProvider('Artist');
-    container.listen(provider, (_, _) {});
-    final result = await container.read(provider.future);
-    expect(result.items.length, 20);
-    expect(flushes, 1);
-    // PERF-601: the single flush must precede every play-count read, not run
-    // after the paging loop.
-    expect(events.first, 'flush');
-    expect(events.indexOf('counts'), greaterThan(0));
-  });
+  test(
+    'flushing listening stats happens once per selection (PERF-601)',
+    () async {
+      var flushes = 0;
+      final events = <String>[];
+      final container = ProviderContainer(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(_Library.new),
+          listeningFlushProvider.overrideWithValue(() async {
+            flushes++;
+            events.add('flush');
+          }),
+          localArtistTrackLoaderProvider.overrideWithValue((request) async {
+            return QueueLibraryDbPage(
+              rows: [
+                for (
+                  var i = request.offset;
+                  i < min(request.offset + 40, 81);
+                  i++
+                )
+                  {'source': 'local', 'item': item(i).toJson()},
+              ],
+              nextCursor: QueueLibraryDbCursor([request.offset + 40]),
+            );
+          }),
+          localArtistPlayCountsLoaderProvider.overrideWithValue((keys) async {
+            events.add('counts');
+            return {};
+          }),
+        ],
+      );
+      addTearDown(container.dispose);
+      final provider = localArtistPopularProvider('Artist');
+      container.listen(provider, (_, _) {});
+      final result = await container.read(provider.future);
+      expect(result.items.length, 20);
+      expect(flushes, 1);
+      // PERF-601: the single flush must precede every play-count read, not run
+      // after the paging loop.
+      expect(events.first, 'flush');
+      expect(events.indexOf('counts'), greaterThan(0));
+    },
+  );
   for (final history in [false, true]) {
     test(
       'popular scans all bounded pages and caps at 20 (history=$history)',

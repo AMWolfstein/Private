@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/services/platform_bridge.dart';
@@ -18,7 +16,6 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
   Future<void>? _initialization;
-  bool _notificationPermissionRequested = false;
   AppLocalizations? _l10n;
 
   /// Call this from the widget tree (e.g. didChangeDependencies) whenever the
@@ -39,9 +36,9 @@ class NotificationService {
   final Set<String> _serviceNotificationKinds = {};
 
   /// Keeps user-started work running when the screen turns off (Android
-  /// foreground service, iOS background task). Pair with [endBackgroundWork].
+  /// foreground service). Pair with [endBackgroundWork].
   Future<void> beginBackgroundWork(String kind, {required String title}) async {
-    if (!Platform.isAndroid && !Platform.isIOS) return;
+    if (!Platform.isAndroid) return;
     try {
       final started = await PlatformBridge.startBackgroundWork(
         kind,
@@ -54,7 +51,7 @@ class NotificationService {
   }
 
   Future<void> endBackgroundWork(String kind) async {
-    if (!Platform.isAndroid && !Platform.isIOS) return;
+    if (!Platform.isAndroid) return;
     _serviceNotificationKinds.remove(kind);
     try {
       await PlatformBridge.stopBackgroundWork(kind);
@@ -115,16 +112,7 @@ class NotificationService {
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
-    const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+    const initSettings = InitializationSettings(android: androidSettings);
 
     await _notifications.initialize(settings: initSettings);
 
@@ -149,23 +137,6 @@ class NotificationService {
     _isInitialized = true;
   }
 
-  Future<bool> _ensureNotificationPermission() async {
-    if (!Platform.isIOS) return true;
-
-    final status = await Permission.notification.status;
-    if (status.isGranted || status.isProvisional) return true;
-
-    if (_notificationPermissionRequested ||
-        status.isPermanentlyDenied ||
-        status.isRestricted) {
-      return false;
-    }
-
-    _notificationPermissionRequested = true;
-    final requested = await Permission.notification.request();
-    return requested.isGranted || requested.isProvisional;
-  }
-
   Future<void> _showSafely({
     required int id,
     required String title,
@@ -173,31 +144,13 @@ class NotificationService {
     required NotificationDetails details,
     String? payload,
   }) async {
-    if (!await _ensureNotificationPermission()) return;
-
-    try {
-      await _notifications.show(
-        id: id,
-        title: title,
-        body: body,
-        notificationDetails: details,
-        payload: payload,
-      );
-    } on PlatformException catch (e) {
-      final isNotificationsNotAllowed =
-          Platform.isIOS &&
-          (e.code == 'Error 1' ||
-              (e.message?.contains('UNErrorDomain error 1') ?? false) ||
-              e.toString().contains('UNErrorDomain error 1'));
-
-      if (isNotificationsNotAllowed) {
-        debugPrint(
-          'iOS notifications not allowed; skipping local notification',
-        );
-        return;
-      }
-      rethrow;
-    }
+    await _notifications.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: details,
+      payload: payload,
+    );
   }
 
   /// Builds [NotificationDetails]. A non-null [progress] switches to the

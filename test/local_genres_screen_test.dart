@@ -12,7 +12,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 }
 
 class _Local extends LocalLibraryNotifier {

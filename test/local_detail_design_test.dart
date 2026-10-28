@@ -25,7 +25,7 @@ import 'package:sistrum/widgets/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
-  AppSettings build() => const AppSettings(localLibraryEnabled: true);
+  AppSettings build() => const AppSettings();
 }
 
 class _Library extends LocalLibraryNotifier {

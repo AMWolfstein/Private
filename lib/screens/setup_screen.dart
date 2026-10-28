@@ -135,16 +135,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   }
 
   Future<void> _checkInitialPermissions() async {
-    if (_platform == TargetPlatform.iOS) {
-      final notificationStatus = await Permission.notification.status;
-      if (mounted) {
-        setState(() {
-          _storagePermissionGranted = true;
-          _notificationPermissionGranted =
-              notificationStatus.isGranted || notificationStatus.isProvisional;
-        });
-      }
-    } else if (_platform == TargetPlatform.android) {
+    if (_platform == TargetPlatform.android) {
       bool storageGranted = false;
 
       if (_androidSdkVersion >= 33) {
@@ -185,9 +176,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     try {
       await _saveProgress();
       if (!mounted) return;
-      if (_platform == TargetPlatform.iOS) {
-        setState(() => _storagePermissionGranted = true);
-      } else if (_platform == TargetPlatform.android) {
+      if (_platform == TargetPlatform.android) {
         bool allGranted = false;
 
         if (_androidSdkVersion >= 33) {
@@ -269,15 +258,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     try {
       await _saveProgress();
       if (!mounted) return;
-      if (_platform == TargetPlatform.iOS) {
-        final status = await Permission.notification.request();
-        if (!mounted) return;
-        if (status.isGranted || status.isProvisional) {
-          setState(() => _notificationPermissionGranted = true);
-        } else if (status.isPermanentlyDenied) {
-          await _showPermissionDeniedDialog(permissionNotification);
-        }
-      } else if (_androidSdkVersion >= 33) {
+      if (_androidSdkVersion >= 33) {
         final status = await Permission.notification.request();
         if (!mounted) return;
         if (status.isGranted) {

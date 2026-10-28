@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library_database.dart';
 
 typedef ArtistTrackRequest = ({
@@ -55,9 +54,6 @@ class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
   Future<LocalArtistTracks> build() async {
     ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
     final generation = ++_generation;
-    if (!ref.watch(settingsProvider.select((s) => s.localLibraryEnabled))) {
-      return const LocalArtistTracks([], hasMore: false);
-    }
     final page = await ref.watch(localArtistTrackLoaderProvider)((
       artist: artist,
       offset: 0,
@@ -105,7 +101,6 @@ class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
 
   /// Playback includes every artist track, even when the UI has loaded one page.
   Future<List<LocalLibraryItem>> playbackQueue() async {
-    if (!ref.read(settingsProvider).localLibraryEnabled) return const [];
     final generation = _generation;
     final load = ref.read(localArtistTrackLoaderProvider);
     final result = <LocalLibraryItem>[];
@@ -159,9 +154,6 @@ final localArtistPopularProvider = FutureProvider.autoDispose
         _localArtistPopularPrioritiesProvider(artist),
       );
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
-      if (!ref.watch(settingsProvider.select((s) => s.localLibraryEnabled))) {
-        return const LocalArtistTracks([], hasMore: false);
-      }
       final load = ref.watch(localArtistTrackLoaderProvider);
       final counts = ref.watch(localArtistPlayCountsLoaderProvider);
       final random = ref.watch(localArtistPopularRandomProvider);

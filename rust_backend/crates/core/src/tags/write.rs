@@ -10,10 +10,10 @@ mod riff;
 pub(super) use id3::cover as embedded_cover;
 
 use super::{CheckedReader, bytes, exact, pair, seek};
-use crate::matching::{lowercase, uppercase};
+use crate::matching::uppercase;
 use regex::Regex;
 use std::borrow::Cow;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 use std::io::{BufReader, Cursor, Read, Seek, SeekFrom, Write};
 use std::sync::LazyLock;
 
@@ -51,7 +51,7 @@ pub fn rewrite_audio_tags(
 ) -> Result<(), String> {
     check()?;
     validate_fields(fields)?;
-    let fields = &*artist_mode_fields(fields);
+    let fields = &*separated_fields(fields);
     let mut source = BufReader::new(CheckedReader {
         reader: source,
         check,
@@ -74,7 +74,7 @@ pub fn rewrite_audio_tags(
         return write_sections(&mut source, output, sections, check);
     }
     let section = match format {
-        "flac" => flac_header(&mut source, fields, cover, None, check)?,
+        "flac" => flac_header(&mut source, fields, cover, check)?,
         "mp3" => {
             let (data, end) = id3::header(&mut source, fields, cover, check)?;
             Section {
@@ -99,7 +99,7 @@ pub fn rewrite_flac_tags_if_changed(
 ) -> Result<bool, String> {
     check()?;
     validate_fields(fields)?;
-    let fields = &*artist_mode_fields(fields);
+    let fields = &*separated_fields(fields);
     // Read only metadata and the frame sync needed for validation. A buffered
     // reader here would also pull audio into memory on the no-op path.
     let mut source = CheckedReader {
@@ -111,7 +111,6 @@ pub fn rewrite_flac_tags_if_changed(
         &mut source,
         fields,
         cover.filter(|bytes| !bytes.is_empty()),
-        None,
         check,
     )?;
     if section.data.len() as u64 == section.end - section.start {
@@ -132,33 +131,6 @@ pub fn rewrite_flac_tags_if_changed(
     }
     write_sections(&mut source, output, vec![section], check)?;
     Ok(true)
-}
-
-/// Embed canonical Vorbis keys without clearing empty values or removing
-/// legacy aliases. This is the enrichment contract, distinct from the editor.
-pub fn embed_flac_metadata(
-    source: &mut (impl Read + Seek),
-    output: &mut impl Write,
-    fields: &Fields,
-    artist_tag_mode: &str,
-    cover: Option<&[u8]>,
-    check: &dyn Fn() -> Result<(), String>,
-) -> Result<(), String> {
-    check()?;
-    validate_fields(fields)?;
-    let mut source = BufReader::new(CheckedReader {
-        reader: source,
-        check,
-    });
-    seek(&mut source, SeekFrom::Start(0))?;
-    let section = flac_header(
-        &mut source,
-        fields,
-        cover.filter(|data| !data.is_empty()),
-        Some(artist_tag_mode),
-        check,
-    )?;
-    write_sections(&mut source, output, vec![section], check)
 }
 
 fn validate_fields(fields: &Fields) -> Result<(), String> {
@@ -269,7 +241,6 @@ fn flac_header(
     source: &mut (impl Read + Seek),
     fields: &Fields,
     cover: Option<&[u8]>,
-    embed_mode: Option<&str>,
     check: &dyn Fn() -> Result<(), String>,
 ) -> Result<Section, String> {
     let start = super::containers::flac_start(source)?;
@@ -311,38 +282,7 @@ fn flac_header(
     } else {
         (b"Sistrum".to_vec(), Vec::new())
     };
-    if let Some(mode) = embed_mode {
-        for (key, value) in fields.iter().filter(|(_, value)| !value.is_empty()) {
-            if key.ends_with("_separator") {
-                continue;
-            }
-            let separator = tag_separator(fields, key);
-            if matches!(key.as_str(), "ARTIST" | "ALBUMARTIST") {
-                let values =
-                    if mode.trim().eq_ignore_ascii_case("split_vorbis") && separator.is_empty() {
-                        split_artists(value)
-                    } else if primary_artist_mode(mode) {
-                        vec![primary_artist(value)]
-                    } else {
-                        vec![super::format_metadata_tag_value(value, separator)]
-                    };
-                if !values.is_empty() {
-                    set_comment(&mut comments, key, "");
-                    for value in values.iter().filter(|value| !value.trim().is_empty()) {
-                        comments.push(format!("{key}={value}").into_bytes());
-                    }
-                }
-            } else {
-                set_comment(
-                    &mut comments,
-                    key,
-                    &super::format_metadata_tag_value(value, separator),
-                );
-            }
-        }
-    } else {
-        edit_comments(&mut comments, fields);
-    }
+    edit_comments(&mut comments, fields);
     let mut data = Vec::new();
     put_string(&mut data, &vendor);
     data.extend((comments.len() as u32).to_le_bytes());
@@ -492,19 +432,8 @@ fn edit_comments(comments: &mut Vec<Vec<u8>>, fields: &Fields) {
     for (field, key) in [("artist", "ARTIST"), ("album_artist", "ALBUMARTIST")] {
         if let Some(value) = fields.get(field) {
             set_comment(comments, key, "");
-            let values = if fields
-                .get("artist_tag_mode")
-                .is_some_and(|mode| mode.trim().eq_ignore_ascii_case("split_vorbis"))
-                && tag_separator(fields, field).is_empty()
-            {
-                split_artists(value)
-            } else {
-                vec![value.clone()]
-            };
-            for value in values {
-                if !value.trim().is_empty() {
-                    comments.push(format!("{key}={value}").into_bytes());
-                }
+            if !value.trim().is_empty() {
+                comments.push(format!("{key}={value}").into_bytes());
             }
             if field == "album_artist" {
                 for alias in ["ALBUM ARTIST", "ALBUM_ARTIST"] {
@@ -607,37 +536,12 @@ fn metadata_fields(metadata: &super::AudioMetadata, fields: &Fields) -> Fields {
     result
 }
 
-fn primary_artist_mode(mode: &str) -> bool {
-    mode.trim().eq_ignore_ascii_case("primary")
-}
-
-/// The first credited artist, or the trimmed value when nothing separates it.
-/// Dart and Kotlin share this exact separator set so every writer agrees;
-/// Vorbis split mode also recognizes these featured-credit variants.
-fn primary_artist(value: &str) -> String {
-    static SEPARATOR: LazyLock<Regex> = LazyLock::new(|| {
-        Regex::new(r"(?i)\s*[,;&]\s*|\s+x\s+|\s+(?:feat(?:uring|ured|ure)?|ft|with)\.?(?:\s+|$)")
-            .unwrap()
-    });
-    let value = value.trim();
-    SEPARATOR
-        .split(value)
-        .map(str::trim)
-        .find(|part| !part.is_empty())
-        .unwrap_or(value)
-        .to_owned()
-}
-
-/// Applies the "primary" artist tag mode to editor fields before any format
-/// writer runs, so ID3, MP4, APE, RIFF and Vorbis all store the same name.
-fn artist_mode_fields(fields: &Fields) -> Cow<'_, Fields> {
-    let primary = fields
-        .get("artist_tag_mode")
-        .is_some_and(|mode| primary_artist_mode(mode));
-    if !primary
-        && ["artist", "album_artist", "composer", "genre"]
-            .iter()
-            .all(|key| tag_separator(fields, key).is_empty())
+/// Applies the per-field tag separators to editor fields before any format
+/// writer runs, so ID3, MP4, APE, RIFF and Vorbis all store the same text.
+fn separated_fields(fields: &Fields) -> Cow<'_, Fields> {
+    if ["artist", "album_artist", "composer", "genre"]
+        .iter()
+        .all(|key| tag_separator(fields, key).is_empty())
     {
         return Cow::Borrowed(fields);
     }
@@ -645,9 +549,6 @@ fn artist_mode_fields(fields: &Fields) -> Cow<'_, Fields> {
     for key in ["artist", "album_artist", "composer", "genre"] {
         let separator = tag_separator(&fields, key).to_owned();
         if let Some(value) = fields.get_mut(key) {
-            if primary && matches!(key, "artist" | "album_artist") && !value.trim().is_empty() {
-                *value = primary_artist(value);
-            }
             *value = super::format_metadata_tag_value(value, &separator);
         }
     }
@@ -667,31 +568,6 @@ fn tag_separator<'a>(fields: &'a Fields, key: &str) -> &'a str {
         .filter(|value| super::separators::valid_separator(value))
         .map(String::as_str)
         .unwrap_or_default()
-}
-
-fn split_artists(value: &str) -> Vec<String> {
-    static SPLIT: LazyLock<Regex> = LazyLock::new(|| {
-        Regex::new(
-            r"(?i)\s*(?:,|;|&|\bx\b)\s*|\s+\b(?:feat(?:uring|ured|ure)?|ft|with)\.?(?:\s+|$)",
-        )
-        .unwrap()
-    });
-    let value = value.trim();
-    if value.is_empty() {
-        return Vec::new();
-    }
-    let mut seen = BTreeSet::new();
-    let mut result: Vec<String> = SPLIT
-        .split(value)
-        .map(str::trim)
-        .filter(|part| !part.is_empty())
-        .filter(|part| seen.insert(lowercase(part)))
-        .map(str::to_owned)
-        .collect();
-    if result.is_empty() {
-        result.push(value.into());
-    }
-    result
 }
 
 fn cover_mime(data: &[u8]) -> &'static str {
@@ -818,51 +694,6 @@ mod tests {
     impl Seek for CountingReader {
         fn seek(&mut self, offset: SeekFrom) -> io::Result<u64> {
             self.data.seek(offset)
-        }
-    }
-
-    /// Shared with the Dart and Kotlin primary-artist tests; keep in sync.
-    #[test]
-    fn split_artist_credits_recognize_variants_without_splitting_band_words() {
-        assert_eq!(
-            split_artists("One Featured Two; Three"),
-            vec!["One", "Two", "Three"]
-        );
-        assert_eq!(split_artists("One feature Two"), vec!["One", "Two"]);
-        assert_eq!(
-            split_artists("Florence and the Machine"),
-            vec!["Florence and the Machine"]
-        );
-        assert_eq!(
-            split_artists("Artist Without Fear"),
-            vec!["Artist Without Fear"]
-        );
-    }
-
-    #[test]
-    fn primary_artist_uses_the_shared_separator_set() {
-        for (input, expected) in [
-            ("Calle 24, Chino Pacas", "Calle 24"),
-            ("Calle 24 & Chino Pacas", "Calle 24"),
-            ("Artist A; Artist B", "Artist A"),
-            ("Artist A feat. Artist B", "Artist A"),
-            ("Artist A Feat Artist B", "Artist A"),
-            ("Artist A ft. Artist B", "Artist A"),
-            ("Artist A featuring Artist B", "Artist A"),
-            ("Artist A featured Artist B", "Artist A"),
-            ("Artist A feature Artist B", "Artist A"),
-            ("Artist A with Artist B", "Artist A"),
-            ("Artist A x Artist B", "Artist A"),
-            ("Artist A X Artist B", "Artist A"),
-            (" , Artist A, Artist B", "Artist A"),
-            ("Malcolm X", "Malcolm X"),
-            ("Artist Without Fear", "Artist Without Fear"),
-            ("Maxx", "Maxx"),
-            ("AC/DC", "AC/DC"),
-            ("  Various Artists  ", "Various Artists"),
-            ("", ""),
-        ] {
-            assert_eq!(primary_artist(input), expected, "{input:?}");
         }
     }
 
@@ -1015,47 +846,30 @@ mod tests {
         let (input, audio_start) = flac_with_pictures(&[131_073, 262_145]);
         let (without_pictures, _) = flac_with_pictures(&[]);
         let cover = Some(b"replacement artwork".as_slice());
-        for embed in [false, true] {
-            let fields = Fields::from([(
-                if embed { "TITLE" } else { "title" }.into(),
-                "Changed title".into(),
-            )]);
-            let rewrite = |data: &[u8], cover| {
-                let mut output = Vec::new();
-                if embed {
-                    embed_flac_metadata(
-                        &mut Cursor::new(data),
-                        &mut output,
-                        &fields,
-                        "",
-                        cover,
-                        &|| Ok(()),
-                    )
-                    .unwrap();
-                } else {
-                    rewrite_audio_tags(
-                        &mut Cursor::new(data),
-                        &mut output,
-                        "flac",
-                        &fields,
-                        cover,
-                        &|| Ok(()),
-                    )
-                    .unwrap();
-                }
-                output
-            };
-            let output = rewrite(&input, cover);
-            assert_eq!(output, rewrite(&without_pictures, cover));
-            assert!(output.ends_with(&input[audio_start..]));
-            let retained = rewrite(&input, None);
-            assert!(
-                retained
-                    .windows(131_073)
-                    .any(|bytes| bytes == [0x55; 131_073])
-            );
-            assert!(retained.ends_with(&input[audio_start..]));
-        }
+        let fields = Fields::from([("title".into(), "Changed title".into())]);
+        let rewrite = |data: &[u8], cover| {
+            let mut output = Vec::new();
+            rewrite_audio_tags(
+                &mut Cursor::new(data),
+                &mut output,
+                "flac",
+                &fields,
+                cover,
+                &|| Ok(()),
+            )
+            .unwrap();
+            output
+        };
+        let output = rewrite(&input, cover);
+        assert_eq!(output, rewrite(&without_pictures, cover));
+        assert!(output.ends_with(&input[audio_start..]));
+        let retained = rewrite(&input, None);
+        assert!(
+            retained
+                .windows(131_073)
+                .any(|bytes| bytes == [0x55; 131_073])
+        );
+        assert!(retained.ends_with(&input[audio_start..]));
     }
 
     #[test]
@@ -1226,7 +1040,7 @@ mod tests {
         for (version, footer) in [(2, false), (3, false), (4, false), (4, true)] {
             let prefix = flac_id3_prefix(version, footer, 131);
             let input = [&prefix[..], &flac].concat();
-            for writer in ["edit", "rewrite", "embed"] {
+            for writer in ["edit", "rewrite"] {
                 for cover in [None, Some(b"replacement cover".as_slice())] {
                     let fields = Fields::from([
                         ("title".into(), "Changed title".into()),
@@ -1249,7 +1063,7 @@ mod tests {
                                     .unwrap()
                                 );
                             }
-                            "rewrite" => rewrite_audio_tags(
+                            _ => rewrite_audio_tags(
                                 &mut source,
                                 &mut output,
                                 "flac",
@@ -1258,21 +1072,6 @@ mod tests {
                                 &|| Ok(()),
                             )
                             .unwrap(),
-                            _ => {
-                                let canonical = fields
-                                    .iter()
-                                    .map(|(key, value)| (key.to_uppercase(), value.clone()))
-                                    .collect();
-                                embed_flac_metadata(
-                                    &mut source,
-                                    &mut output,
-                                    &canonical,
-                                    "",
-                                    cover,
-                                    &|| Ok(()),
-                                )
-                                .unwrap();
-                            }
                         }
                         output
                     };

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/album_completeness.dart';
 import 'package:sistrum/services/library_database.dart';
 
@@ -75,7 +74,6 @@ typedef LibraryBrowsePageRequest = ({
   LibraryBrowseRequest browse,
   int offset,
   QueueLibraryDbCursor? cursor,
-  bool includeLocal,
 });
 
 class LibraryBrowsePage {
@@ -119,7 +117,6 @@ QueueLibraryDbQuery libraryBrowseQuery(LibraryBrowsePageRequest request) =>
       albumArtist: request.browse.artist,
       searchQuery: request.browse.search,
       sortMode: request.browse.sort,
-      includeLocal: request.includeLocal,
       metadata: request.browse.completeness,
     );
 
@@ -158,7 +155,6 @@ class LibraryBrowseNotifier extends AsyncNotifier<LibraryBrowseState> {
   QueueLibraryDbCursor? _cursor;
   bool _hasMore = false;
   bool _loadingMore = false;
-  bool _includeLocal = true;
   int _generation = 0;
 
   LibraryBrowsePageRequest _pageRequest(
@@ -168,18 +164,12 @@ class LibraryBrowseNotifier extends AsyncNotifier<LibraryBrowseState> {
     browse: request,
     offset: offset,
     cursor: request.artists ? null : cursor,
-    includeLocal: _includeLocal,
   );
 
   @override
   Future<LibraryBrowseState> build() async {
     assert(request.limit > 0);
-    _includeLocal = ref.watch(
-      settingsProvider.select((s) => s.localLibraryEnabled),
-    );
-    if (_includeLocal) {
-      ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
-    }
+    ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
     final loadPage = ref.watch(libraryBrowsePageLoaderProvider);
     final generation = ++_generation;
     _loadingMore = false;
