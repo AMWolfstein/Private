@@ -22,6 +22,12 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Old-app leftovers removed (2026-10-28):** iOS container/now-playing/notification/audio-output code, the local-library
+on/off setting and `includeLocal` query flags (the library is always on), Artist Tag Mode plumbing in Dart and the Rust tag
+writer (including the embed-only FLAC path), the unused `openContentUri` bridge and four orphaned l10n keys. Kept on
+purpose: the non-native Dart fallbacks (they are the host-test seams) and the shared Apple-style theme branches.
+Device validation is still the owner's.
+
 **Legacy removal (2026-10-28):** the download-history database/model, history and extension payloads in backups
 (Dart and Rust), the legacy backup envelope, the downloaded-source filter and excluded-downloads count, dead Track
 fields and Kotlin policy, and old string keys are gone. Backups are `.sbk`, format v3 only; older backups no longer

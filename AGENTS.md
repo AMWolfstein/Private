@@ -4,7 +4,7 @@ This repo is being converted to a local/offline Android-only music player.
 **Read `LOCAL_OFFLINE_MIGRATION_PLAN.md` (esp. `## Progress`) and `git log --oneline -10`
 before continuing any migration work.**
 
-The app targets Android and local files only. Sistrum is its sole production theme; keep
+The app targets Android and local files only: no iOS code paths and no on/off switch for the local library (it is always on). Sistrum is its sole production theme; keep
 light/dark modes and local storage, playback, lyrics, backup and USB support. Do not
 reintroduce providers, downloads, extension credentials or remote artwork loading.
 
@@ -35,7 +35,7 @@ Settings no longer include the obsolete output-folder Files & Folders page or th
 download-era Metadata page. Music scanning stays under Local Library; local per-file tag
 editing remains supported. Per-field tag separators (artist, album artist, composer, genre;
 empty keeps the tag) live under Local Library settings as Tag separators and apply when local
-tags are saved; do not restore Artist Tag Mode UI. Local Library settings have no Default view or Audio quality
+tags are saved; Artist Tag Mode is removed entirely (UI, preferences and writer plumbing: do not restore it). Local Library settings have no Default view or Audio quality
 label-mode options: do not restore their preferences, pickers, search entries or tab-reset
 behavior. Library badges use the standard measured/stored bitrate policy, with codec
 fallback for legacy lossy files. Audio playback uses only the built-in player, including on old
@@ -90,7 +90,7 @@ Artwork probing and FFmpeg processing for those retained features remain support
 
 Tag separators (artist, album artist, composer, genre) live under Local Library settings and
 apply only when local tags are saved via Edit Metadata; do not restore the download-era
-Metadata page or Artist Tag Mode UI for them.
+Metadata page or Artist Tag Mode for them.
 
 Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
 view (the existing full-bleed portrait artwork). Persist the choice across restarts; lyrics,
