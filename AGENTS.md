@@ -106,7 +106,7 @@ Library pages have no search field (search lives in the bottom Search tab). Song
 player favorite is a heart, Listening statistics is the tab after Home, Edit Metadata has no cover resizer, and each
 lyric line takes its direction from its first strong letter.
 
-The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.githubRepo`, About holds the
+The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.githubRepo`, Settings > Updates (above About) holds Check now and the
 Check-for-updates and preview-release switches, and `UpdateDialog` downloads the APK (HTTPS, resumable, SHA-256
 checked) and hands it to the system installer. The release manifest therefore allows INTERNET (and
 REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the network.

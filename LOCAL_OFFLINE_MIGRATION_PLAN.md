@@ -22,7 +22,7 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
-**Updater restored (2026-10-28):** GitHub-release update check, About switches (check, preview channel), update
+**Updater restored (2026-10-28):** GitHub-release update check, Settings > Updates page above About (Check now, check and preview-channel switches), update
 dialog with in-app APK download and install, 28 strings in all locales. The release manifest now has INTERNET,
 REQUEST_INSTALL_PACKAGES and a FileProvider. `AppInfo.githubRepo` is `amwolfstein/private` until the public
 repository exists (a private repo yields no updates). Install on device is the owner's to test.
