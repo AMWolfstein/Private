@@ -1,0 +1,6 @@
+# Findings from find_dead_code.py that are kept on purpose.
+# One ID per line, exactly as `find_dead_code.py --check` prints it, with a
+# reason after `#`. Examples:
+#   decl:lib/services/foo.dart::Foo.bar   # called reflectively by X
+#   channel:someMethod                    # called from the widget process
+#   l10n:someKey                          # read by the Android widget
