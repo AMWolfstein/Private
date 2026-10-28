@@ -12,7 +12,7 @@ import 'package:sistrum/widgets/app_action_button.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 
 final _log = AppLogger('PlaylistPicker');
 

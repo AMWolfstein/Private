@@ -9,8 +9,8 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
-import 'package:sistrum/widgets/playback_feedback.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/player/playback_feedback.dart';
 
 void main() {
   for (final sistrum in [true]) {

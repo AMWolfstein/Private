@@ -9,7 +9,7 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
-import 'package:sistrum/widgets/player_lyrics.dart';
+import 'package:sistrum/widgets/player/player_lyrics.dart';
 
 import 'performance_probe.dart';
 

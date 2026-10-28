@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
 
 /// A bounded package lens without a captured-screen view or a touch ticker.
 class SistrumLiquidBackdrop extends ConsumerWidget {

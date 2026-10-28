@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/app_switch.dart';
-import 'package:sistrum/widgets/sistrum_glass_thumb.dart';
+import 'package:sistrum/widgets/glass/sistrum_glass_thumb.dart';
 
 import 'support/glass_controls.dart';
 

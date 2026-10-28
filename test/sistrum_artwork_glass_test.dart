@@ -7,12 +7,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/sistrum_context_menu.dart';
-import 'package:sistrum/widgets/sistrum_floating_header.dart';
-import 'package:sistrum/widgets/sistrum_player_ground.dart';
+import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
+import 'package:sistrum/widgets/player/sistrum_player_ground.dart';
 
 final _cover = File('test/fixtures/covers/qamar.png').absolute.path;
 final _otherCover = File('test/fixtures/covers/saturated.png').absolute.path;

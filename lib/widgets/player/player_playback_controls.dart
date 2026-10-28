@@ -9,10 +9,10 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/automix_status_badge.dart';
-import 'package:sistrum/widgets/sistrum_playback_button.dart';
-import 'package:sistrum/widgets/sistrum_playback_time.dart';
-import 'package:sistrum/widgets/sistrum_player_slider.dart';
-import 'package:sistrum/widgets/playback_seek_slider.dart';
+import 'package:sistrum/widgets/player/sistrum_playback_button.dart';
+import 'package:sistrum/widgets/player/sistrum_playback_time.dart';
+import 'package:sistrum/widgets/player/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/player/playback_seek_slider.dart';
 
 const _sistrumTimelinePadding = 28.0;
 

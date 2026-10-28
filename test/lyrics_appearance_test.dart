@@ -9,7 +9,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/lyrics_size_setting.dart';
 import 'package:sistrum/widgets/lyrics_text_scale.dart';
-import 'package:sistrum/widgets/player_lyrics.dart';
+import 'package:sistrum/widgets/player/player_lyrics.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));

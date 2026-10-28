@@ -6,7 +6,7 @@ import 'package:sistrum/widgets/app_switch.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
 /// Background fill for grouped cards, matching the Settings group look. Blends a

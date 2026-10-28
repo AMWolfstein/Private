@@ -8,7 +8,7 @@ import 'package:sistrum/screens/equalizer_screen.dart';
 import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'package:sistrum/models/equalizer_settings.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_level_slider.dart';
+import 'package:sistrum/widgets/glass/sistrum_level_slider.dart';
 
 void main() {
   for (final brightness in Brightness.values) {

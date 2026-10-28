@@ -16,7 +16,7 @@ import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'package:sistrum/widgets/beta_badge.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/services/equalizer_preset_io.dart';
-import 'package:sistrum/widgets/sistrum_level_slider.dart';
+import 'package:sistrum/widgets/glass/sistrum_level_slider.dart';
 import 'package:sistrum/widgets/settings_group.dart';
 
 /// The retained Sistrum Settings surfaces around the upstream per-player DSP.

@@ -9,7 +9,7 @@ import 'package:sistrum/models/sistrum_glass.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_landscape_player.dart';
+import 'package:sistrum/widgets/player/sistrum_landscape_player.dart';
 
 void main() {
   Future<void> pumpPlayer(

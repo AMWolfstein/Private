@@ -7,7 +7,7 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/local_song_row.dart';
-import 'package:sistrum/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
 void main() {
   for (final numbered in [false, true]) {

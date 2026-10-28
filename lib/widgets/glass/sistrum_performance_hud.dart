@@ -10,9 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/models/sistrum_glass.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_floating_header.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
 
 /// Build and raster statistics over a window of frames.
 @immutable

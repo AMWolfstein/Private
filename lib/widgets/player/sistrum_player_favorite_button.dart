@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/widgets/sistrum_playback_button.dart';
+import 'package:sistrum/widgets/player/sistrum_playback_button.dart';
 
 class SistrumPlayerFavoriteButton extends ConsumerStatefulWidget {
   const SistrumPlayerFavoriteButton({

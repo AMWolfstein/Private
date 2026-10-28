@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/widgets/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/player/sistrum_player_slider.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';

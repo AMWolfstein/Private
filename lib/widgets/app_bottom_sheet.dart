@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoDynamicColor, kCupertinoModalBarrierColor;
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
 
 /// The drag handle shown at the top of every modal sheet.

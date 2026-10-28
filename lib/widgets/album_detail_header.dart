@@ -8,10 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/cover_palette.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
-import 'package:sistrum/widgets/sistrum_floating_header.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
 /// Collapsing album-detail header shared by the album and local-album

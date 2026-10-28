@@ -8,8 +8,8 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/sistrum_player_background.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/player/sistrum_player_background.dart';
 
 /// The cover at [source] (a file path or URL) as an image provider.
 ImageProvider? sistrumCoverProvider(String? source) {

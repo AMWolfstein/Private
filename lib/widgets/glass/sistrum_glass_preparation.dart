@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/sistrum_glass_warmup.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 
 /// Starts the one-time preparation when the full glass theme is enabled,
 /// including switching to Sistrum or enabling blur after the app has started.

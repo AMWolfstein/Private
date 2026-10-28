@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
-import 'package:sistrum/widgets/playback_seek_slider.dart';
+import 'package:sistrum/widgets/player/playback_seek_slider.dart';
 
 void main() {
   testWidgets('scrubbing previews locally and commits only the final target', (

@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/models/sistrum_glass.dart';
-import 'package:sistrum/widgets/sistrum_selection_pill.dart';
+import 'package:sistrum/widgets/glass/sistrum_selection_pill.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
@@ -17,11 +17,11 @@ import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
-import 'package:sistrum/widgets/mini_player.dart';
-import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/player/mini_player.dart';
+import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/sistrum_bottom_bar.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 
 void main() {
   late SistrumChromeController chrome;

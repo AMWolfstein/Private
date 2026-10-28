@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/player_queue_dismissible.dart';
+import 'package:sistrum/widgets/player/player_queue_dismissible.dart';
 
 void main() {
   for (final brightness in Brightness.values) {

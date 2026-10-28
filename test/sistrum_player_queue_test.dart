@@ -8,7 +8,7 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_player_queue.dart';
+import 'package:sistrum/widgets/player/sistrum_player_queue.dart';
 
 class _Player extends MusicPlayerController {
   int? jumpedTo;

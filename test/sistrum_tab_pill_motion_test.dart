@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
-import 'package:sistrum/widgets/sistrum_selection_pill.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_selection_pill.dart';
 
 void main() {
   Future<List<int>> pumpBar(WidgetTester tester, {bool glass = true}) async {

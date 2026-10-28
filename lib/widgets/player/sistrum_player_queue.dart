@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/player_artwork.dart';
-import 'package:sistrum/widgets/player_queue_dismissible.dart';
+import 'package:sistrum/widgets/player/player_artwork.dart';
+import 'package:sistrum/widgets/player/player_queue_dismissible.dart';
 
 /// Upcoming tracks share the player's artwork backdrop and transport controls.
 class SistrumPlayerQueue extends ConsumerWidget {

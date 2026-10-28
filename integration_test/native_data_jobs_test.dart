@@ -15,7 +15,7 @@ import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
-import 'package:sistrum/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
 // Run on a real Android/iOS host. These tests intentionally use the actual
 // channel and native workers; missing bindings must fail, never use a fallback.

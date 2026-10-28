@@ -17,10 +17,10 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/mini_player.dart';
+import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/sistrum_bottom_bar.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
-import 'package:sistrum/widgets/sistrum_liquid_backdrop.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_liquid_backdrop.dart';
 
 import 'performance_probe.dart';
 

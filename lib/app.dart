@@ -13,12 +13,12 @@ import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_glass_auto_probe_host.dart';
-import 'package:sistrum/widgets/sistrum_performance_hud.dart';
+import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe_host.dart';
+import 'package:sistrum/widgets/glass/sistrum_performance_hud.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
-import 'package:sistrum/widgets/sistrum_glass_preparation.dart';
-import 'package:sistrum/widgets/playback_feedback.dart';
+import 'package:sistrum/widgets/glass/sistrum_glass_preparation.dart';
+import 'package:sistrum/widgets/player/playback_feedback.dart';
 
 String initialLocationForAppState({
   required bool isFirstLaunch,

@@ -11,7 +11,7 @@ import 'package:sistrum/widgets/animation_utils.dart' show SkeletonBox;
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/app_choice_chip.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
-import 'package:sistrum/widgets/player_artwork.dart';
+import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/settings_group.dart';
 
 final listeningSummaryProvider = FutureProvider.autoDispose

@@ -12,8 +12,8 @@ import 'package:sistrum/screens/now_playing_screen.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/audio_quality_badges.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
-import 'package:sistrum/widgets/player_artwork.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/player/player_artwork.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});

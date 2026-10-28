@@ -20,7 +20,7 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/string_utils.dart';
-import 'package:sistrum/widgets/audio_analysis_widget.dart';
+import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 import 'package:sistrum/widgets/sistrum_context_menu.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
 

@@ -11,7 +11,7 @@ import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/settings_group.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
 import 'package:sistrum/widgets/custom_font_setting.dart';

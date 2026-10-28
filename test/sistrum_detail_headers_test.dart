@@ -10,7 +10,7 @@ import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 
 void main() {
   testWidgets(

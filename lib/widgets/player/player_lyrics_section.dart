@@ -7,7 +7,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/widgets/app_loading_indicator.dart';
-import 'package:sistrum/widgets/player_lyrics.dart';
+import 'package:sistrum/widgets/player/player_lyrics.dart';
 import 'package:sistrum/widgets/lyrics_text_scale.dart';
 
 class PlayerLyricsSection extends ConsumerWidget {

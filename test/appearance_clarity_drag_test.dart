@@ -13,7 +13,7 @@ import 'package:sistrum/screens/settings/appearance_settings_page.dart';
 import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 
 final _levelCalls = <(int, bool)>[];
 var _outsideBuilds = 0;

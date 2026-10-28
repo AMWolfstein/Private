@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 
 /// Bounds of the tapped control or row, in the root overlay's coordinates.
 Rect? sistrumMenuAnchor(BuildContext context) {

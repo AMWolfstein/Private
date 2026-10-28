@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_selection_pill.dart';
+import 'package:sistrum/widgets/glass/sistrum_selection_pill.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_liquid_backdrop.dart';
-import 'package:sistrum/widgets/sistrum_squircle_border.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/sistrum_liquid_backdrop.dart';
+import 'package:sistrum/widgets/glass/sistrum_squircle_border.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 
 class SistrumSegmentedControl extends ConsumerWidget {

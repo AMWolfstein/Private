@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/widgets/sistrum_playback_time.dart';
+import 'package:sistrum/widgets/player/sistrum_playback_time.dart';
 
 Widget _app(int seconds, {bool remaining = false, bool reduceMotion = false}) =>
     MaterialApp(

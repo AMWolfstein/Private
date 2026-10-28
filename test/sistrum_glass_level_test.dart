@@ -10,10 +10,10 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_liquid_backdrop.dart';
+import 'package:sistrum/widgets/glass/sistrum_liquid_backdrop.dart';
 import 'package:sistrum/widgets/app_switch.dart';
-import 'package:sistrum/widgets/sistrum_chrome.dart';
-import 'package:sistrum/widgets/sistrum_selection_pill.dart';
+import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/sistrum_selection_pill.dart';
 
 class _Settings extends SettingsNotifier {
   @override

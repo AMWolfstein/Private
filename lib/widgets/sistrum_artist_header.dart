@@ -7,9 +7,9 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
-import 'package:sistrum/widgets/sistrum_floating_header.dart';
-import 'package:sistrum/widgets/sistrum_player_ground.dart';
-import 'package:sistrum/widgets/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
+import 'package:sistrum/widgets/player/sistrum_player_ground.dart';
+import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 
 /// Share the same artwork-derived dark surface while loading and after the

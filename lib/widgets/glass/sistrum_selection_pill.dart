@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/sistrum_liquid_backdrop.dart';
+import 'package:sistrum/widgets/glass/sistrum_liquid_backdrop.dart';
 
 Future<ui.FragmentProgram>? _selectionMaskProgram;
 ui.FragmentProgram? _loadedSelectionMaskProgram;

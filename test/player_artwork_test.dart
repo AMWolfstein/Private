@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/widgets/player_artwork.dart';
+import 'package:sistrum/widgets/player/player_artwork.dart';
 
 void main() {
   testWidgets('a legacy remote artwork URL falls back to the placeholder', (

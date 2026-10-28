@@ -22,7 +22,7 @@ import 'package:sistrum/widgets/aligned_lyric_pronunciation.dart';
 import 'package:sistrum/widgets/lyric_supplement_transition.dart';
 import 'package:sistrum/widgets/lyric_scroll_motion.dart';
 import 'package:sistrum/widgets/lyric_gap_indicator.dart';
-import 'package:sistrum/widgets/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/player/sistrum_player_slider.dart';
 import 'package:sistrum/widgets/lyrics_text_scale.dart';
 
 const _sistrumLyricFontSize = 34.0;
