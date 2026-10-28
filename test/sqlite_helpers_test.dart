@@ -1,8 +1,45 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sistrum/services/sqlite_helpers.dart';
+
+class _RecordingExecutor extends Fake implements DatabaseExecutor {
+  final statements = <String>[];
+  final inserts = <String>[];
+
+  @override
+  Future<void> execute(String sql, [List<Object?>? arguments]) async {
+    statements.add(sql.trim());
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> rawQuery(
+    String sql, [
+    List<Object?>? arguments,
+  ]) async {
+    statements.add(sql.trim());
+    return const [];
+  }
+
+  @override
+  Future<int> rawInsert(String sql, [List<Object?>? arguments]) async {
+    inserts.add(sql.trim());
+    return 1;
+  }
+}
+
+class _FailingIndexExecutor extends _RecordingExecutor {
+  @override
+  Future<void> execute(String sql, [List<Object?>? arguments]) async {
+    if (sql.contains('CREATE VIRTUAL TABLE IF NOT EXISTS')) {
+      throw Exception('disk I/O error');
+    }
+    await super.execute(sql, arguments);
+  }
+}
 
 void main() {
   group('SingleFlightInitializer', () {
@@ -58,38 +95,80 @@ void main() {
   });
 
   group('SQLite startup configuration', () {
-    final source = File('lib/services/sqlite_helpers.dart').readAsStringSync();
+    late Directory documents;
 
-    test('waits for transient locks before configuring the connection', () {
-      final configureIndex = source.indexOf('onConfigure:');
-      final busyTimeoutIndex = source.indexOf('PRAGMA busy_timeout');
-      final journalModeIndex = source.indexOf('PRAGMA journal_mode');
-
-      expect(configureIndex, greaterThanOrEqualTo(0));
-      expect(busyTimeoutIndex, greaterThan(configureIndex));
-      expect(busyTimeoutIndex, lessThan(journalModeIndex));
+    setUpAll(() {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+      documents = Directory.systemTemp.createTempSync('sistrum-sqlite-test');
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            const MethodChannel('plugins.flutter.io/path_provider'),
+            (call) async => call.method == 'getApplicationDocumentsDirectory'
+                ? documents.path
+                : null,
+          );
     });
 
-    test('sets incremental auto-vacuum only before app tables exist', () {
-      final schemaCheckIndex = source.indexOf('FROM sqlite_master');
-      final emptySchemaGuardIndex = source.indexOf('if (tables.isEmpty)');
-      final autoVacuumMatches = RegExp(
-        r"PRAGMA auto_vacuum = INCREMENTAL",
-      ).allMatches(source).toList();
-      final onCreateIndex = source.indexOf('onCreate:');
+    tearDownAll(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            const MethodChannel('plugins.flutter.io/path_provider'),
+            null,
+          );
+      documents.deleteSync(recursive: true);
+    });
 
-      expect(autoVacuumMatches, hasLength(1));
-      expect(schemaCheckIndex, greaterThanOrEqualTo(0));
-      expect(emptySchemaGuardIndex, greaterThan(schemaCheckIndex));
-      expect(
-        autoVacuumMatches.single.start,
-        greaterThan(emptySchemaGuardIndex),
+    Future<void> createTable(Database db, int version) => db.execute(
+      'CREATE TABLE tracks (id INTEGER PRIMARY KEY, search_text TEXT)',
+    );
+
+    Future<Object?> pragma(Database db, String name) async {
+      final rows = await db.rawQuery('PRAGMA $name');
+      return rows.single.values.single;
+    }
+
+    test('a fresh database gets the startup pragmas', () async {
+      final db = await openAppDatabase(
+        'fresh.db',
+        version: 1,
+        onCreate: createTable,
+        onUpgrade: (_, _, _) async {},
       );
-      expect(autoVacuumMatches.single.start, lessThan(onCreateIndex));
+      addTearDown(db.close);
+
+      expect(await pragma(db, 'busy_timeout'), 5000);
+      expect(await pragma(db, 'journal_mode'), 'wal');
+      expect(await pragma(db, 'synchronous'), 1);
+      expect(await pragma(db, 'recursive_triggers'), 1);
+      expect(await pragma(db, 'auto_vacuum'), 2);
+      expect(await pragma(db, 'foreign_keys'), 0);
     });
 
-    test('enables delete triggers for replace-backed FTS synchronization', () {
-      expect(source, contains('PRAGMA recursive_triggers = ON'));
+    test('an existing schema keeps auto-vacuum and follows foreign keys', () async {
+      final first = await openAppDatabase(
+        'existing.db',
+        version: 1,
+        onCreate: createTable,
+        onUpgrade: (_, _, _) async {},
+        incrementalAutoVacuum: false,
+      );
+      expect(await pragma(first, 'auto_vacuum'), 0);
+      await first.close();
+
+      final reopened = await openAppDatabase(
+        'existing.db',
+        version: 1,
+        onCreate: createTable,
+        onUpgrade: (_, _, _) async {},
+        foreignKeys: true,
+      );
+      addTearDown(reopened.close);
+
+      expect(await pragma(reopened, 'auto_vacuum'), 0);
+      expect(await pragma(reopened, 'foreign_keys'), 1);
+      expect(await pragma(reopened, 'journal_mode'), 'wal');
     });
   });
 
@@ -122,16 +201,61 @@ void main() {
         isFalse,
       );
     });
+  });
 
-    test('probes the runtime with a temporary trigram FTS5 table', () {
-      final source = File(
-        'lib/services/sqlite_helpers.dart',
-      ).readAsStringSync();
+  group('trigram FTS5 index', () {
+    test('probes the runtime, builds the index and drops its probe table', () async {
+      final db = _RecordingExecutor();
 
-      expect(source, contains('CREATE VIRTUAL TABLE temp.'));
-      expect(source, contains("tokenize='trigram'"));
-      expect(source, contains('DROP TABLE IF EXISTS temp.'));
-      expect(source, contains('_trigramFts5Capability ??='));
+      final created = await createTrigramFtsIndex(
+        db,
+        ftsTable: 'library_fts',
+        contentTable: 'library',
+        triggerPrefix: 'library_fts',
+      );
+
+      expect(created, isTrue);
+      expect(
+        db.statements.any(
+          (sql) =>
+              sql.contains('CREATE VIRTUAL TABLE temp.') &&
+              sql.contains("tokenize='trigram'"),
+        ),
+        isTrue,
+      );
+      expect(
+        db.statements.any((sql) => sql.contains('DROP TABLE IF EXISTS temp.')),
+        isTrue,
+      );
+      expect(
+        db.statements.where((sql) => sql.startsWith('CREATE TRIGGER')).length,
+        3,
+      );
+      expect(db.inserts.single, contains('VALUES (?)'));
+      expect(db.inserts.single, contains('library_fts'));
+    });
+
+    test('a failed index creation removes every partial object', () async {
+      final db = _FailingIndexExecutor();
+
+      final created = await createTrigramFtsIndex(
+        db,
+        ftsTable: 'library_fts',
+        contentTable: 'library',
+        triggerPrefix: 'library_fts',
+      );
+
+      expect(created, isFalse);
+      expect(
+        db.statements.where((sql) => sql.startsWith('DROP TRIGGER IF EXISTS')).length,
+        3,
+      );
+      expect(
+        db.statements.any(
+          (sql) => sql == 'DROP TABLE IF EXISTS library_fts',
+        ),
+        isTrue,
+      );
     });
   });
 }
