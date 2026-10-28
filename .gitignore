@@ -21,6 +21,9 @@ android/app/.cxx/
 rust_backend/target/
 target/
 
+# Local code-quality scanner state
+.desloppify/
+
 # Python bytecode
 __pycache__/
 *.py[cod]
