@@ -395,9 +395,8 @@ class MainActivity: FlutterFragmentActivity() {
         SafScanProgressStream.stop()
     }
 
-    // Disable Flutter's built-in deep linking so that incoming ACTION_VIEW URLs
-    // (Spotify, Deezer, Tidal, YouTube Music) are NOT forwarded to GoRouter.
-    // We handle these URLs ourselves via receive_sharing_intent + ShareIntentService.
+    // Disable Flutter's built-in deep linking so incoming ACTION_VIEW URLs are
+    // not forwarded to GoRouter; the app only opens local files.
     override fun shouldHandleDeeplinking(): Boolean = false
 
     // Bridge spill files and SAF temp copies are deleted after use on the
@@ -479,12 +478,6 @@ class MainActivity: FlutterFragmentActivity() {
 
         PlayerWidgetBridge.handleIntent(intent)
     }
-
-    /**
-     * Deliver Spotify (or other) OAuth authorization code to the extension runtime
-     * and run its token exchange (e.g. completeSpotifyLogin). State is a one-time
-     * host nonce resolved to the owning extension by the backend.
-     */
 
     internal fun reportLibraryScanError(path: String, operation: String, message: String) {
         android.util.Log.e("Sistrum", "Library scan: $operation [$path]: $message")

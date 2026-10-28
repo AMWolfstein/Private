@@ -51,8 +51,8 @@ final _routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/', builder: (context, state) => const MainShell()),
       GoRoute(path: '/setup', builder: (context, state) => const SetupScreen()),
     ],
-    // Safety net: if a deep link URL (e.g. Spotify/Deezer) somehow reaches
-    // GoRouter, redirect to home instead of showing "Page Not Found".
+    // Safety net: if an unknown deep link somehow reaches GoRouter, redirect
+    // to home instead of showing "Page Not Found".
     errorBuilder: (context, state) => const MainShell(),
   );
 });
