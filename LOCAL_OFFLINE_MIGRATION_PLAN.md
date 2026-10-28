@@ -44,7 +44,9 @@ storage step picks a music folder through the same SAF helper as Local Library s
 folder satisfies it, so `MANAGE_EXTERNAL_STORAGE`, `READ_MEDIA_AUDIO` and the Android 11 dialog are gone from setup. Tenth:
 `deleteLocalLibraryTracks` owns the whole local deletion policy (CUE protection, one physical delete per path, index cleanup,
 partial success), and the song menu, batch service and album screen all route through it while keeping their own confirmation,
-selection exit and snackbar. Analyze and the full `flutter test` pass.
+selection exit and snackbar. Eleventh: `MetadataIndexReconciler` owns the post-save reread/map/artwork/upsert sequence and
+returns indexed-or-stale, so the song menu only opens the editor, reloads the provider and reports the outcome. Analyze and the
+full `flutter test` pass.
 
 **Album Ken Burns (2026-10-28):** Sistrum album headers drift slowly (`AlbumKenBurns`, 28 s cycle, zoom 1.04-1.10). Appearance >
 Animated artwork (`animatedAlbumArtwork`, default on, in backups) switches it off. It stops for reduced motion, glass off or
