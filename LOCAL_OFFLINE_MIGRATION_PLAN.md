@@ -22,6 +22,14 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Old-install migrations removed (2026-10-28):** theme/glass/locale/equalizer key fallbacks, legacy notification and widget
+actions, the old playback-channel cleanup, the retired cover cache, the download queue table (app-state DB v6), the
+SharedPreferences collections import, dead download-filename/tag helpers, iOS picker/notification options and the legacy
+mod-time backfill. Kept: library DB v20 and collections DB v4 upgrade code (Rust pins those versions), path-key and lyrics
+provider parsing (persisted data and Rust parity), the `legacy` source id and single-folder source migration, the iOS
+bookmark plumbing on library sources, and the non-native Dart fallbacks. The Kotlin changes were not run through
+`scripts/check_android.sh` (no Gradle wrapper in this checkout).
+
 **Old-app leftovers removed (2026-10-28):** iOS container/now-playing/notification/audio-output code, the local-library
 on/off setting and `includeLocal` query flags (the library is always on), Artist Tag Mode plumbing in Dart and the Rust tag
 writer (including the embed-only FLAC path), the unused `openContentUri` bridge and four orphaned l10n keys. Kept on
