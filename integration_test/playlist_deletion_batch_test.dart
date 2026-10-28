@@ -46,61 +46,51 @@ void main() {
     testWidgets('delete $count playlists with 20 shared tracks each', (
       tester,
     ) async {
-      final samples = <String, List<Map<String, int>>>{
-        'single': [],
-        'batch': [],
-      };
+      final samples = <String, List<Map<String, int>>>{'batch': []};
       final ids = [for (var i = 0; i < count; i++) 'playlist-$i'];
       for (var pair = 0; pair < 5; pair++) {
-        for (final bulk in pair.isEven ? [false, true] : [true, false]) {
-          final initial = await seedPlaylistDeletion(db, count);
-          final before = await playlistDeletionSnapshot(db);
-          final container = scope(initial);
-          try {
-            final notifier = container.read(
-              libraryCollectionsProvider.notifier,
-            );
-            var publications = 0;
-            container.listen(
-              libraryCollectionsProvider,
-              (_, _) => publications++,
-            );
-            final result = await measureCollectionOperation<int>(() async {
-              if (bulk) return notifier.deletePlaylists(ids);
-              for (final id in ids) {
-                await notifier.deletePlaylist(id);
-              }
-              return count;
-            });
-            expect(result.value, count);
-            expect(publications, bulk ? 1 : count);
-            final state = container.read(libraryCollectionsProvider);
-            expect(state.playlists.single, same(initial.playlists.last));
-            expect(state.playlists.single.tracksLoaded, false);
-            expect(state.playlists.single.trackCount, 20);
-            expect(state.loved, initial.loved);
-            final after = await playlistDeletionSnapshot(db);
-            expect(
-              after['playlists'],
-              before['playlists']!.where((p) => p['id'] == "keep'quoted"),
-            );
-            expect(
-              after['playlist_tracks'],
-              before['playlist_tracks']!.where(
-                (p) => p['playlist_id'] == "keep'quoted",
-              ),
-            );
-            for (final table in ['loved_tracks']) {
-              expect(after[table], before[table]);
-            }
-            expect(await db.rawQuery('PRAGMA foreign_key_check'), isEmpty);
-            samples[bulk ? 'batch' : 'single']!.add({
-              ...result.timing,
-              'publications': publications,
-            });
-          } finally {
-            container.dispose();
+        final initial = await seedPlaylistDeletion(db, count);
+        final before = await playlistDeletionSnapshot(db);
+        final container = scope(initial);
+        try {
+          final notifier = container.read(libraryCollectionsProvider.notifier);
+          var publications = 0;
+          container.listen(
+            libraryCollectionsProvider,
+            (_, _) => publications++,
+          );
+          final result = await measureCollectionOperation<int>(() async {
+            await notifier.deletePlaylists(ids);
+            return count;
+          });
+          expect(result.value, count);
+          expect(publications, 1);
+          final state = container.read(libraryCollectionsProvider);
+          expect(state.playlists.single, same(initial.playlists.last));
+          expect(state.playlists.single.tracksLoaded, false);
+          expect(state.playlists.single.trackCount, 20);
+          expect(state.loved, initial.loved);
+          final after = await playlistDeletionSnapshot(db);
+          expect(
+            after['playlists'],
+            before['playlists']!.where((p) => p['id'] == "keep'quoted"),
+          );
+          expect(
+            after['playlist_tracks'],
+            before['playlist_tracks']!.where(
+              (p) => p['playlist_id'] == "keep'quoted",
+            ),
+          );
+          for (final table in ['loved_tracks']) {
+            expect(after[table], before[table]);
           }
+          expect(await db.rawQuery('PRAGMA foreign_key_check'), isEmpty);
+          samples['batch']!.add({
+            ...result.timing,
+            'publications': publications,
+          });
+        } finally {
+          container.dispose();
         }
       }
       report['playlists_$count'] = samples;

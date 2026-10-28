@@ -4,3 +4,4 @@
 #   decl:lib/services/foo.dart::Foo.bar   # called reflectively by X
 #   channel:someMethod                    # called from the widget process
 #   l10n:someKey                          # read by the Android widget
+decl:lib/widgets/glass/sistrum_artwork_glass.dart::RenderSistrumArtworkGlass.refracts  # product rule: tests assert Level 1 and off never refract (AGENTS.md glass levels)

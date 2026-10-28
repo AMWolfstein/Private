@@ -1,8 +1,6 @@
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/utils/audio_quality_badge_policy.dart';
-import 'package:sistrum/utils/string_utils.dart';
 
 /// A local-library track in the shape shared by library lists, selection and
 /// batch actions. The scan record is the single source of track metadata; only
@@ -31,34 +29,6 @@ class UnifiedLibraryItem {
   DateTime get addedAt => localItem.fileModTime != null
       ? DateTime.fromMillisecondsSinceEpoch(localItem.fileModTime!)
       : localItem.scannedAt;
-
-  String? get displayQuality => buildLibraryAudioQualityLabel(
-    format: localItem.format,
-    filePath: localItem.filePath,
-    bitrateKbps: localItem.bitrate,
-    storedQuality: _measuredQuality,
-  );
-
-  /// The label derived from the scan record's own specs, which legacy lossy
-  /// rows may know before a bitrate is stored.
-  String? get _measuredQuality {
-    final bitrate = localItem.bitrate;
-    if (bitrate != null && bitrate > 0) {
-      return buildDisplayAudioQuality(
-        bitrateKbps: bitrate,
-        format: localItem.format,
-      );
-    }
-    final bitDepth = localItem.bitDepth;
-    final sampleRate = localItem.sampleRate;
-    if (bitDepth != null && bitDepth > 0 && sampleRate != null) {
-      return buildDisplayAudioQuality(
-        bitDepth: bitDepth,
-        sampleRate: sampleRate,
-      );
-    }
-    return null;
-  }
 
   String get albumKey =>
       '${albumName.toLowerCase()}|${artistName.toLowerCase()}';

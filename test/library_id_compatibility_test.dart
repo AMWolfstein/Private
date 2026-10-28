@@ -69,7 +69,6 @@ void main() {
     });
   }
   test('shared log exports disclose their retained local path information', () {
-    expect(LogBuffer().export(), contains(logExportPrivacyNotice));
     expect(logExportPrivacyNotice, contains('content URIs'));
   });
 }

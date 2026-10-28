@@ -171,17 +171,6 @@ class EmbeddedCoverResolver {
     return _ensureCover(cleanPath, onChanged: onChanged, isForeground: true);
   }
 
-  /// Whether [previewPath] belongs to this resolver. Persistent previews stay
-  /// owned even after memory-LRU eviction, so borrowers must never delete a
-  /// file or recursively delete its shared parent directory.
-  static bool isManagedPreviewPath(String? previewPath) {
-    if (previewPath == null || previewPath.isEmpty) return false;
-    if (_cache.values.any((entry) => entry.previewPath == previewPath)) {
-      return true;
-    }
-    return _isPathInsidePersistentRoot(previewPath);
-  }
-
   /// Clears resolver state together with its App Cache-backed disk entries.
   /// Running native work is generation-cancelled and awaited before the disk
   /// directory is wiped, so a completed clear leaves no late staging output.

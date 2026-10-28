@@ -327,8 +327,6 @@ class CoverColors {
   /// Below this ceiling a cover is treated as neutral.
   static const neutralChroma = 6.0;
 
-  bool get neutral => chroma == 0;
-
   /// The base colour at [tone] (L*, 0..100).
   Color tone(double tone) => Color(Hct.from(hue, chroma, tone).toInt());
 

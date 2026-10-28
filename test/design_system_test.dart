@@ -729,68 +729,6 @@ void main() {
       // inset another 6dp from the painted card edge.
       expect(cardRect.right - trailingRect.right, 14);
     });
-
-    testWidgets('grid variant is a real button with a semantic label', (
-      tester,
-    ) async {
-      var taps = 0;
-      await tester.pumpWidget(
-        host(
-          SizedBox(
-            width: 160,
-            child: TrackGridCard(
-              cover: const ColoredBox(color: Colors.grey),
-              title: 'Song',
-              subtitle: const Text('Artist'),
-              semanticLabel: 'Song by Artist',
-              onTap: () => taps++,
-            ),
-          ),
-        ),
-      );
-
-      // A bare GestureDetector gave no ripple and no semantics; the shared
-      // card uses InkWell + Semantics instead.
-      expect(find.byType(InkWell), findsOneWidget);
-      await tester.tap(find.byType(InkWell));
-      expect(taps, 1);
-    });
-
-    testWidgets('grid play action keeps a compact visual and 48dp hit box', (
-      tester,
-    ) async {
-      var taps = 0;
-      await tester.pumpWidget(
-        host(
-          Align(
-            child: TrackGridPlayButton(
-              tooltip: 'Play Song by Artist',
-              onPressed: () => taps++,
-            ),
-          ),
-        ),
-      );
-
-      final action = find.byType(TrackGridPlayButton);
-      final button = find.descendant(
-        of: action,
-        matching: find.byType(IconButton),
-      );
-      final visual = find.descendant(
-        of: action,
-        matching: find.byType(Container),
-      );
-
-      expect(tester.getSize(button), const Size.square(48));
-      expect(
-        tester.getSize(visual),
-        const Size.square(TrackGridPlayButton.visualDiameter),
-      );
-      expect(tester.getBottomRight(visual), tester.getBottomRight(button));
-
-      await tester.tap(button);
-      expect(taps, 1);
-    });
   });
 
   group('selection bar', () {

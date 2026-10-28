@@ -679,11 +679,6 @@ class LibraryCollectionsDatabase {
     );
   }
 
-  Future<void> deletePlaylist(String playlistId) async {
-    final db = await database;
-    await db.delete(_tablePlaylists, where: 'id = ?', whereArgs: [playlistId]);
-  }
-
   Future<void> deletePlaylists(List<String> playlistIds) async {
     if (playlistIds.isEmpty) return;
     await deleteDatabasePlaylists(await database, playlistIds);

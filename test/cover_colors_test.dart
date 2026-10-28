@@ -79,7 +79,7 @@ void main() {
           lessThanOrEqualTo(analysis.bottomChroma + 0.5),
           reason: reason,
         );
-        if (colors.neutral) {
+        if (colors.chroma == 0) {
           // Pure gray (HCT reads gray as chroma ~2 under its viewing
           // conditions).
           expect(color.r, color.g, reason: reason);
@@ -125,7 +125,7 @@ void main() {
       final colors = sistrumCoverColors(analysis);
       if (!colors.hasAccent) continue;
       final references = [
-        if (!colors.neutral) colors.hue,
+        if (colors.chroma != 0) colors.hue,
         if (Hct.fromInt(analysis.dominant).chroma >= CoverColors.chromaFloor)
           Hct.fromInt(analysis.dominant).hue,
       ];
@@ -153,8 +153,8 @@ void main() {
     expect(qamar.chroma, lessThan(16));
     expect(qamar.chroma, greaterThan(0));
     // A small vivid logo does not tint a neutral cover.
-    expect(of('neutral_logo').neutral, isTrue);
-    expect(of('black_white').neutral, isTrue);
+    expect(of('neutral_logo').chroma == 0, isTrue);
+    expect(of('black_white').chroma == 0, isTrue);
     expect(of('black_white').hasAccent, isFalse);
     // A red cover stays red, below the background cap.
     final red = of('saturated');
@@ -163,7 +163,7 @@ void main() {
     // The pale strip on black shows in the accent; the black bottom edge
     // keeps the background neutral.
     final strip = of('dark_strip');
-    expect(strip.neutral, isTrue);
+    expect(strip.chroma == 0, isTrue);
     expect(strip.hasAccent, isTrue);
     expect(
       hueDistance(strip.accentHue, Hct.fromInt(0xffd4ddac).hue),
@@ -173,7 +173,7 @@ void main() {
 
   test('no cover or an unreadable one stays neutral gray', () {
     final colors = sistrumCoverColors(null);
-    expect(colors.neutral, isTrue);
+    expect(colors.chroma == 0, isTrue);
     expect(colors.hasAccent, isFalse);
     expect(colors.accent, Colors.white);
     final surface = colors.surface;

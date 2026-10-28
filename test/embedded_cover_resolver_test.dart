@@ -127,7 +127,6 @@ void main() {
       expect(extractionCalls, 1);
       expect(cached, isNotNull);
       expect(await File(cached!).exists(), isTrue);
-      expect(EmbeddedCoverResolver.isManagedPreviewPath(cached), isTrue);
     },
   );
 
@@ -363,7 +362,6 @@ void main() {
       expect(extractionCalls, 1);
 
       await EmbeddedCoverResolver.resetMemoryStateForTesting();
-      expect(EmbeddedCoverResolver.isManagedPreviewPath(first), isTrue);
       final reused = await EmbeddedCoverResolver.resolveOrExtract(sourcePath);
       expect(reused, first);
       expect(extractionCalls, 1);
@@ -471,7 +469,6 @@ void main() {
     expect(await File(previews[0]).exists(), isFalse);
     expect(await File(previews[1]).exists(), isTrue);
     expect(await File(previews[2]).exists(), isTrue);
-    expect(EmbeddedCoverResolver.isManagedPreviewPath(previews[1]), isTrue);
 
     await EmbeddedCoverResolver.runPersistentCacheMaintenanceForTesting(
       maxEntries: 10,

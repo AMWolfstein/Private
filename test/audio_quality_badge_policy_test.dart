@@ -1,23 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/audio_quality_badge_policy.dart';
 
 void main() {
-  test('Library local cards retain labels for legacy Opus rows', () {
-    final local = UnifiedLibraryItem.fromLocalLibrary(
-      LocalLibraryItem(
-        id: 'local-song',
-        trackName: 'Song',
-        artistName: 'Artist',
-        albumName: 'Album',
-        filePath: '/music/Song.opus',
-        scannedAt: DateTime(2026),
-      ),
-    );
-    expect(local.displayQuality, 'OPUS');
-  });
-
   group('standard Library audio quality labels', () {
     test('uses measured bitrate instead of stale stored metadata', () {
       expect(

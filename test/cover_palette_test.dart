@@ -144,7 +144,7 @@ void main() {
         );
         // The navy-black half has no visible hue: the colours stay gray.
         final colors = CoverPalette.colors(file.path);
-        expect(colors.neutral, isTrue);
+        expect(colors.chroma == 0, isTrue);
         expect(colors.surface.r, colors.surface.g);
         expect(colors.surface.g, colors.surface.b);
       } finally {

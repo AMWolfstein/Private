@@ -122,39 +122,3 @@ class ExplicitTrackTitle extends StatelessWidget {
     );
   }
 }
-
-/// Keeps artist text and optional track badges responsive on narrow rows.
-///
-/// A [Row] with a flexible artist still overflows when the badges themselves
-/// need more room than remains. [Wrap] moves whole badges to another run while
-/// keeping the artist constrained and ellipsized when it alone is too long.
-class TrackMetadataBadgesLine extends StatelessWidget {
-  const TrackMetadataBadgesLine({
-    super.key,
-    required this.primary,
-    this.badges = const [],
-  });
-
-  final Widget primary;
-  final List<Widget> badges;
-
-  @override
-  Widget build(BuildContext context) {
-    if (badges.isEmpty) return primary;
-
-    return LayoutBuilder(
-      builder: (context, constraints) => Wrap(
-        spacing: 6,
-        runSpacing: 4,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: constraints.maxWidth),
-            child: primary,
-          ),
-          ...badges,
-        ],
-      ),
-    );
-  }
-}
