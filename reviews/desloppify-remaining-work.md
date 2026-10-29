@@ -128,3 +128,15 @@ Still open after this pass: 54 items in the queue. Of these, the larger groups a
 package moves, the playback cycles, updater and backup error handling, the library row decoding and
 the `supportsCoreBackend` test seam. The widget-test additions (shared icons, player slider, content
 card, main shell) and the timing waits in widget tests are next on the list.
+
+## Widget tests pass
+
+Added direct tests for `sistrum_icons.dart`, `AppContentCard` and `SistrumPlayerSlider`. Resolved in the
+queue: test_strategy::shared_icons_no_direct_tests and test_strategy::player_slider_and_content_card_untested.
+
+Still open from the test list:
+- test_strategy::main_shell_no_direct_test: `MainShell` builds the native playback runtime, so a test
+  needs platform-channel fakes first.
+- test_strategy::timing_polling_waits_in_widget_tests: widget tests still wait on wall-clock time.
+
+Queue after this pass: 52 items.
