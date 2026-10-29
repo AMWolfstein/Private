@@ -58,13 +58,17 @@ abstract final class FFmpegMetadata {
     ];
   }
 
-  static Future<bool> resizeCoverArt({
+  /// Throws [FFmpegMetadataFailure] when no resized cover was produced.
+  static Future<void> resizeCoverArt({
     required String inputPath,
     required String outputPath,
     required int maxDimension,
   }) async {
+    String cause;
     try {
-      if (!await File(inputPath).exists()) return false;
+      if (!await File(inputPath).exists()) {
+        throw FFmpegMetadataFailure('Cover input is missing');
+      }
       final result = await FFmpegExecution.arguments(
         buildCoverResizeArguments(
           inputPath: inputPath,
@@ -76,17 +80,22 @@ abstract final class FFmpegMetadata {
       if (result.success &&
           await output.exists() &&
           await output.length() > 0) {
-        return true;
+        return;
       }
       _log.w(
         'Cover resize failed (${result.returnCode}): '
         '${FFmpegExecution.preview(result.output)}',
       );
+      cause = 'FFmpeg exited with ${result.returnCode}';
+    } on FFmpegMetadataFailure catch (error) {
+      await FFmpegOutput.cleanup(outputPath);
+      throw FFmpegMetadataFailure(error.message);
     } catch (e) {
       _log.w('Cover resize failed: $e');
+      cause = '$e';
     }
     await FFmpegOutput.cleanup(outputPath);
-    return false;
+    throw FFmpegMetadataFailure('Cover resize failed: $cause');
   }
 
   /// Runs one metadata command, turning a platform/execution failure into a

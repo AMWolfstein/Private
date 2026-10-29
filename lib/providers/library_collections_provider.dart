@@ -21,7 +21,7 @@ const _playlistCoverMaxStoredBytes = 2 * 1024 * 1024;
 final _log = AppLogger('LibraryCollections');
 
 typedef PlaylistCoverResize =
-    Future<bool> Function({
+    Future<void> Function({
       required String inputPath,
       required String outputPath,
       required int maxDimension,
@@ -728,14 +728,11 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
           .clamp(64, _playlistCoverMaxDimension)
           .toInt();
       while (true) {
-        final resized = await _resizeCover(
+        await _resizeCover(
           inputPath: sourceFilePath,
           outputPath: tempPath,
           maxDimension: targetDimension,
         );
-        if (!resized) {
-          throw StateError('Unable to normalize playlist cover');
-        }
         if (await File(tempPath).length() <= _playlistCoverMaxStoredBytes) {
           break;
         }

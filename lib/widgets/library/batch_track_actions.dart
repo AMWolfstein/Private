@@ -99,13 +99,13 @@ Future<bool> runBatchReplayGain(
     final item = items[i];
     BatchProgressDialog.update(current: i + 1, detail: item.trackName);
     try {
-      final ok = remove
+      final result = remove
           ? await ReplayGainService.removeFromFile(item.filePath)
           : await ReplayGainService.applyToFile(
               item.filePath,
               onUnsupportedDecoder: () => unsupportedDecoder = true,
             );
-      if (ok) {
+      if (result.isWritten) {
         successCount++;
         try {
           await LibraryDatabase.instance.updateAudioMetadata(

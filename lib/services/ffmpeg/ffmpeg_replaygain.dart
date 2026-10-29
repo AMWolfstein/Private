@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -112,13 +113,15 @@ abstract final class FFmpegReplayGain {
     );
   }
 
-  static Future<bool> writeAlbumTags(
+  /// Throws [FFmpegMetadataFailure] when the tags are not written.
+  static Future<void> writeAlbumTags(
     String filePath,
     String gain,
     String peak,
   ) => _writeTags(filePath, 'Album', gain, peak);
 
-  static Future<bool> writeTrackTags(
+  /// Throws [FFmpegMetadataFailure] when the tags are not written.
+  static Future<void> writeTrackTags(
     String filePath,
     String gain,
     String peak,
@@ -132,7 +135,7 @@ abstract final class FFmpegReplayGain {
     return const ['.opus', '.ogg', '.m4a', '.mp4', '.m4b'].any(lower.endsWith);
   }
 
-  static Future<bool> _writeTags(
+  static Future<void> _writeTags(
     String filePath,
     String scope,
     String gain,
@@ -142,7 +145,9 @@ abstract final class FFmpegReplayGain {
       _log.e(
         '${filePath.split('.').last} ReplayGain requires the native tag writer',
       );
-      return false;
+      throw FFmpegMetadataFailure(
+        '${filePath.split('.').last} ReplayGain requires the native tag writer',
+      );
     }
     final ext = filePath.contains('.')
         ? '.${filePath.split('.').last.toLowerCase()}'
@@ -181,9 +186,9 @@ abstract final class FFmpegReplayGain {
       ),
     )) {
       _log.d('$scope ReplayGain tags written successfully');
-      return true;
+      return;
     }
     await FFmpegOutput.cleanup(tempOutput);
-    return false;
+    throw FFmpegMetadataFailure('$scope ReplayGain tags were not written');
   }
 }

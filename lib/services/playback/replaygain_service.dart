@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
 import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/replaygain_write_result.dart';
 import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -45,51 +47,32 @@ class ReplayGainService {
   }
 
   /// Scans [filePath] for loudness and writes track ReplayGain tags in place.
-  ///
-  /// Returns `true` when tags were successfully written, `false` otherwise
-  /// (scan failed, write failed, or SAF write-back failed).
-  static Future<bool> applyToFile(
+  static Future<ReplayGainWriteResult> applyToFile(
     String filePath, {
     @visibleForTesting Future<ReplayGainResult?> Function(String)? scan,
     void Function()? onUnsupportedDecoder,
-  }) async =>
-      await scanAndApplyToFile(
-        filePath,
-        scan: scan,
-        onUnsupportedDecoder: onUnsupportedDecoder,
-      ) !=
-      null;
-
-  /// Returns the scan for album aggregation only after a verified save.
-  static Future<ReplayGainResult?> scanAndApplyToFile(
-    String filePath, {
-    @visibleForTesting Future<ReplayGainResult?> Function(String)? scan,
-    void Function()? onUnsupportedDecoder,
-  }) async {
-    ReplayGainResult? scanned;
-    final written = await _updateFile(filePath, (workingPath) async {
-      final rg = scan != null
-          ? await scan(workingPath)
-          : await FFmpegReplayGain.scan(
-              workingPath,
-              onUnsupportedDecoder: onUnsupportedDecoder,
-            );
-      if (rg == null) {
-        _log.w('ReplayGain scan returned no result for $workingPath');
-        return false;
-      }
-      scanned = rg;
-      return _writeLocalTags(
-        workingPath,
-        rg.trackGain,
-        rg.trackPeak,
-        album: false,
+  }) => _updateFile(filePath, (workingPath) async {
+    final rg = scan != null
+        ? await scan(workingPath)
+        : await FFmpegReplayGain.scan(
+            workingPath,
+            onUnsupportedDecoder: onUnsupportedDecoder,
+          );
+    if (rg == null) {
+      _log.w('ReplayGain scan returned no result for $workingPath');
+      return const ReplayGainWriteResult.failed(
+        ReplayGainWriteFailure.scanFailed,
       );
-    });
-    return written ? scanned : null;
-  }
+    }
+    return _writeLocalTags(
+      workingPath,
+      rg.trackGain,
+      rg.trackPeak,
+      album: false,
+    );
+  });
 
-  static Future<bool> writeTrackTags(
+  static Future<ReplayGainWriteResult> writeTrackTags(
     String filePath,
     String gain,
     String peak,
@@ -98,7 +81,7 @@ class ReplayGainService {
     (path) => _writeLocalTags(path, gain, peak, album: false),
   );
 
-  static Future<bool> writeAlbumTags(
+  static Future<ReplayGainWriteResult> writeAlbumTags(
     String filePath,
     String gain,
     String peak,
@@ -109,30 +92,42 @@ class ReplayGainService {
 
   /// Removes track/album tags, including Opus R128 and M4A Sound Check tags.
   /// Native editors copy the audio payload unchanged and publish atomically.
-  static Future<bool> removeFromFile(String filePath) => _updateFile(filePath, (
-    path,
-  ) async {
-    if (!_isNativeWritableFormat(path)) return false;
-    const fields = {
-      'replaygain_track_gain': '',
-      'replaygain_track_peak': '',
-      'replaygain_album_gain': '',
-      'replaygain_album_peak': '',
-    };
-    final result = await MediaFileBridge.editFileMetadata(path, fields);
-    if (result.outcome != MetadataEditOutcome.completed ||
-        !result.isNativeMethod) {
-      return false;
-    }
-    final metadata = await MediaFileBridge.readFileMetadata(path);
-    return metadata['error'] == null &&
-        metadata['audio_codec'] != null &&
-        fields.keys.every(
-          (key) => (metadata[key]?.toString() ?? '').trim().isEmpty,
-        );
-  });
+  static Future<ReplayGainWriteResult> removeFromFile(String filePath) =>
+      _updateFile(filePath, (path) async {
+        if (!_isNativeWritableFormat(path)) {
+          return const ReplayGainWriteResult.failed(
+            ReplayGainWriteFailure.unsupportedFormat,
+          );
+        }
+        const fields = {
+          'replaygain_track_gain': '',
+          'replaygain_track_peak': '',
+          'replaygain_album_gain': '',
+          'replaygain_album_peak': '',
+        };
+        final result = await MediaFileBridge.editFileMetadata(path, fields);
+        if (result.outcome != MetadataEditOutcome.completed ||
+            !result.isNativeMethod) {
+          return ReplayGainWriteResult.failed(
+            ReplayGainWriteFailure.writeFailed,
+            error: result,
+          );
+        }
+        final metadata = await MediaFileBridge.readFileMetadata(path);
+        final cleared =
+            metadata['error'] == null &&
+            metadata['audio_codec'] != null &&
+            fields.keys.every(
+              (key) => (metadata[key]?.toString() ?? '').trim().isEmpty,
+            );
+        return cleared
+            ? const ReplayGainWriteResult.written()
+            : const ReplayGainWriteResult.failed(
+                ReplayGainWriteFailure.verificationFailed,
+              );
+      });
 
-  static Future<bool> _writeLocalTags(
+  static Future<ReplayGainWriteResult> _writeLocalTags(
     String path,
     String gain,
     String peak, {
@@ -158,12 +153,24 @@ class ReplayGainService {
       // would discard it. M4A freeform tags do not survive this copy muxer
       // either. Keep the original if its native editor cannot handle the file,
       // rather than silently losing artwork or reporting a no-op.
-      if (FFmpegReplayGain.requiresNativeWriter(path)) return false;
-      written = album
-          ? await FFmpegReplayGain.writeAlbumTags(path, gain, peak)
-          : await FFmpegReplayGain.writeTrackTags(path, gain, peak);
+      if (FFmpegReplayGain.requiresNativeWriter(path)) {
+        return const ReplayGainWriteResult.failed(
+          ReplayGainWriteFailure.unsupportedFormat,
+        );
+      }
+      try {
+        if (album) {
+          await FFmpegReplayGain.writeAlbumTags(path, gain, peak);
+        } else {
+          await FFmpegReplayGain.writeTrackTags(path, gain, peak);
+        }
+      } on FFmpegMetadataFailure catch (error) {
+        return ReplayGainWriteResult.failed(
+          ReplayGainWriteFailure.writeFailed,
+          error: error,
+        );
+      }
     }
-    if (!written) return false;
 
     final metadata = await MediaFileBridge.readFileMetadata(path);
     final expectedGain = _gainDb(gain);
@@ -184,20 +191,26 @@ class ReplayGainService {
                 (actualPeak - expectedPeak).abs() <= 0.000001));
     if (!verified) {
       _log.w('$scope ReplayGain verification failed after writing $path');
-      return false;
+      return const ReplayGainWriteResult.failed(
+        ReplayGainWriteFailure.verificationFailed,
+      );
     }
-    return true;
+    return const ReplayGainWriteResult.written();
   }
 
   static double? _gainDb(Object? value) => double.tryParse(
     (value?.toString() ?? '').replaceFirst(RegExp(r'\s*dB\s*$'), '').trim(),
   );
 
-  static Future<bool> _updateFile(
+  static Future<ReplayGainWriteResult> _updateFile(
     String filePath,
-    Future<bool> Function(String) update,
+    Future<ReplayGainWriteResult> Function(String) update,
   ) async {
-    if (filePath.isEmpty) return false;
+    if (filePath.isEmpty) {
+      return const ReplayGainWriteResult.failed(
+        ReplayGainWriteFailure.storageFailed,
+      );
+    }
 
     final isSaf = isContentUri(filePath);
     var workingPath = filePath;
@@ -208,12 +221,15 @@ class ReplayGainService {
         safTempPath = await MediaFileBridge.copyContentUriToTemp(filePath);
         if (safTempPath == null || safTempPath.isEmpty) {
           _log.w('Failed to copy SAF file to temp for ReplayGain update');
-          return false;
+          return const ReplayGainWriteResult.failed(
+            ReplayGainWriteFailure.storageFailed,
+          );
         }
         workingPath = safTempPath;
       }
 
-      if (!await update(workingPath)) return false;
+      final updated = await update(workingPath);
+      if (!updated.isWritten) return updated;
 
       if (isSaf) {
         final written = await MediaFileBridge.writeTempToSafDetailed(
@@ -225,16 +241,22 @@ class ReplayGainService {
             'Failed to write ReplayGain temp file back to SAF document: '
             '${written.error ?? 'unknown error'}',
           );
-          return false;
+          return ReplayGainWriteResult.failed(
+            ReplayGainWriteFailure.storageFailed,
+            error: written.error,
+          );
         }
       }
 
       refreshPlaybackNormalization(filePath);
       _log.i('ReplayGain tags updated and verified: $filePath');
-      return true;
+      return const ReplayGainWriteResult.written();
     } catch (e) {
       _log.e('Failed to update ReplayGain', e);
-      return false;
+      return ReplayGainWriteResult.failed(
+        ReplayGainWriteFailure.writeFailed,
+        error: e,
+      );
     } finally {
       if (safTempPath != null) {
         await deleteBestEffort(File(safTempPath));

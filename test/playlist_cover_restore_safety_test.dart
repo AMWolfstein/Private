@@ -81,7 +81,6 @@ void main() {
                       await File(
                         outputPath,
                       ).writeAsBytes(await File(inputPath).readAsBytes());
-                      return true;
                     },
               ),
             ),

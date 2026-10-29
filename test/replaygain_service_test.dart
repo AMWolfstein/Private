@@ -5,6 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/playback/replaygain_service.dart';
+import 'package:sistrum/services/playback/replaygain_write_result.dart';
+
+Matcher written() => isA<ReplayGainWriteResult>().having(
+  (result) => result.isWritten,
+  'isWritten',
+  isTrue,
+);
+
+Matcher rejected() => isA<ReplayGainWriteResult>().having(
+  (result) => result.isWritten,
+  'isWritten',
+  isFalse,
+);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -88,7 +101,7 @@ void main() {
           );
         },
       );
-      expect(result, isTrue);
+      expect(result, written());
       expect(calls, [
         'safCopyToTemp',
         'scan',
@@ -110,7 +123,7 @@ void main() {
           '-10.00 dB',
           '1.300000',
         ),
-        isTrue,
+        written(),
       );
       expect(editedFields, {
         'replaygain_album_gain': '-10.00 dB',
@@ -131,7 +144,7 @@ void main() {
         '-12.20 dB',
         '1.258925',
       ),
-      isFalse,
+      rejected(),
     );
     expect(calls, ['safCopyToTemp', 'editFileMetadata']);
     expect(await File(tempPath).exists(), isFalse);
@@ -145,7 +158,7 @@ void main() {
         '-12.20 dB',
         '1.258925',
       ),
-      isFalse,
+      rejected(),
     );
     expect(calls, ['safCopyToTemp', 'editFileMetadata', 'readFileMetadata']);
     expect(await File(tempPath).exists(), isFalse);
@@ -161,7 +174,7 @@ void main() {
           '-12.20 dB',
           '1.258925',
         ),
-        isFalse,
+        rejected(),
       );
       expect(calls.last, 'writeTempToSaf');
       expect(await File(tempPath).exists(), isFalse);
@@ -176,7 +189,7 @@ void main() {
           'content://music/document/42',
           scan: (_) async => null,
         ),
-        isFalse,
+        rejected(),
       );
       expect(calls, ['safCopyToTemp']);
       expect(await File(tempPath).exists(), isFalse);
@@ -192,7 +205,7 @@ void main() {
         '-12.20 dB',
         '1.258925',
       ),
-      isTrue,
+      written(),
     );
     expect(metadata['replaygain_track_peak'], '1.258925');
     expect(calls, ['editFileMetadata', 'readFileMetadata']);
@@ -202,7 +215,7 @@ void main() {
     metadata['title'] = 'Preserved title';
     expect(
       await ReplayGainService.removeFromFile('content://music/document/42'),
-      isTrue,
+      written(),
     );
     expect(editedFields, {
       'replaygain_track_gain': '',
@@ -224,7 +237,7 @@ void main() {
     applyEdits = false;
     expect(
       await ReplayGainService.removeFromFile('content://music/document/42'),
-      isFalse,
+      rejected(),
     );
     expect(calls, ['safCopyToTemp', 'editFileMetadata', 'readFileMetadata']);
     expect(await File(tempPath).exists(), isFalse);
@@ -234,7 +247,7 @@ void main() {
     method = 'ffmpeg';
     expect(
       await ReplayGainService.removeFromFile('content://music/document/42'),
-      isFalse,
+      rejected(),
     );
     expect(calls, ['safCopyToTemp', 'editFileMetadata']);
     expect(await File(tempPath).exists(), isFalse);
@@ -246,7 +259,7 @@ void main() {
       saveSaf = false;
       expect(
         await ReplayGainService.removeFromFile('content://music/document/42'),
-        isFalse,
+        rejected(),
       );
       expect(calls.last, 'writeTempToSaf');
       expect(await File(tempPath).exists(), isFalse);
@@ -257,7 +270,7 @@ void main() {
     metadata = {};
     expect(
       await ReplayGainService.removeFromFile('content://music/document/42'),
-      isFalse,
+      rejected(),
     );
     expect(calls, ['safCopyToTemp', 'editFileMetadata', 'readFileMetadata']);
   });
@@ -267,7 +280,7 @@ void main() {
     metadata = {'audio_codec': 'flac'};
     expect(
       await ReplayGainService.removeFromFile('${directory.path}/song.flac'),
-      isTrue,
+      written(),
     );
     expect(calls, ['editFileMetadata', 'readFileMetadata']);
   });
