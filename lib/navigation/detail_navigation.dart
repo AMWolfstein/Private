@@ -10,6 +10,7 @@ import 'package:sistrum/utils/logger.dart';
 
 Future<void> navigateToArtistCredits(
   BuildContext context, {
+  required LibraryDatabase database,
   required String artistNames,
   String? artistIds,
 }) async {
@@ -23,7 +24,7 @@ Future<void> navigateToArtistCredits(
     // A comma can belong to the name ("Tyler, The Creator"). Keep the whole
     // credit when the scanned library knows it as one artist.
     try {
-      final rows = await LibraryDatabase.instance.getBrowseArtistRows(
+      final rows = await database.getBrowseArtistRows(
         LibraryBrowseDbQuery(searchQuery: raw, limit: 20),
       );
       for (final row in rows) {
@@ -58,6 +59,7 @@ Future<void> navigateToArtist(
 
 Future<void> navigateToAlbum(
   BuildContext context, {
+  required LibraryDatabase database,
   required String albumName,
   String? albumId,
   String? artistName,
@@ -67,7 +69,7 @@ Future<void> navigateToAlbum(
 
   List<Map<String, dynamic>> rows = const [];
   try {
-    rows = await LibraryDatabase.instance.getBrowseLocalAlbumRows(
+    rows = await database.getBrowseLocalAlbumRows(
       albumName,
       (artistName ?? '').trim(),
     );

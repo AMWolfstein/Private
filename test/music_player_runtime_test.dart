@@ -20,6 +20,7 @@ import 'package:sistrum/services/library/source_deletion_events.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 class _Deck implements MusicPlaybackDeck {
   @override
@@ -237,6 +238,7 @@ MusicPlayerRuntime _runtime({
     dependencies: PlaybackDependencies(
       createHandler: createMusicPlayerHandler,
       restoreSession: restorePlaybackSession,
+      libraryDatabase: LibraryDatabase.instance,
       createPersonalization:
           createPersonalization ?? AutoplayPersonalization.new,
       createDeck:

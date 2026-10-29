@@ -17,7 +17,6 @@ import 'package:sistrum/utils/audio_quality_badge_policy.dart';
 import 'package:sistrum/widgets/selection/confirm_and_delete_tracks.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/image_cache_utils.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/models/album_track_order.dart';
 import 'package:sistrum/models/unified_library_item.dart';
@@ -44,6 +43,7 @@ import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -206,7 +206,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         !mounted) {
       return;
     }
-    final row = await LibraryDatabase.instance.getById(track.id);
+    final row = await ref.read(libraryDatabaseProvider).getById(track.id);
     if (!mounted) return;
     setState(() {
       _loadedTracks = [
@@ -635,6 +635,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
                       ? () => runBatchReplayGain(
                           this.context,
                           _selectedUnifiedItems(tracks),
+                          database: ref.read(libraryDatabaseProvider),
                           onExitSelectionMode: exitSelectionMode,
                           remove: remove,
                         )

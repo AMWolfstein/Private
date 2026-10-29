@@ -10,7 +10,6 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_search.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
@@ -19,6 +18,7 @@ import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 
 /// Slivers shared by Material's Library and Sistrum's Library/Songs screens.
 /// Only the current query's provider families are watched; late results from
@@ -189,6 +189,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       onReplayGain: ({required remove}) => runBatchReplayGain(
         context,
         items,
+        database: ref.read(libraryDatabaseProvider),
         remove: remove,
         onExitSelectionMode: _exitSelection,
         onConfirmOpen: _hideSelectionBar,
@@ -245,7 +246,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
             ),
           );
         case LibrarySearchKind.albums:
-          final rows = await LibraryDatabase.instance
+          final rows = await ref.read(libraryDatabaseProvider)
               .getBrowseLocalAlbumRowsByKey(hit.id);
           if (!mounted) return;
           await Navigator.of(context).push(

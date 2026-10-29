@@ -7,9 +7,11 @@ import 'package:sistrum/models/library_scan_failure.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/services/library/library_cleanup.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_mutation_ports.dart';
+import 'package:sistrum/services/library/library_scan_progress.dart';
 import 'package:sistrum/services/library/library_scan_notifications.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
@@ -19,7 +21,6 @@ import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/local_library_scan_prefs.dart';
-import 'package:sistrum/utils/progress_stream_poller.dart';
 
 final _log = AppLogger('LocalLibrary');
 
@@ -121,35 +122,23 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
   LocalLibraryNotifier({
     LibraryDatabase? database,
     LocalLibraryAvailabilityProbe? availabilityProbe,
-  }) : _db = database ?? LibraryDatabase.instance,
+  }) : _injectedDb = database,
        _availabilityProbe = availabilityProbe;
 
-  final LibraryDatabase _db;
+  final LibraryDatabase? _injectedDb;
+  LibraryDatabase get _db => _injectedDb ?? ref.read(libraryDatabaseProvider);
   final LocalLibraryAvailabilityProbe? _availabilityProbe;
   final NotificationService _notificationService = NotificationService();
-  static const _progressPollingInterval = Duration(milliseconds: 350);
   late final LibraryScanNotifications _scanNotifications =
       LibraryScanNotifications(
         service: _notificationService,
         progressVisible: () =>
             ref.mounted && state.isScanning && !state.scanIsPaused,
       );
-  static const _progressStreamBootstrapTimeout = Duration(milliseconds: 900);
-  late final ProgressStreamPoller<Map<String, dynamic>> _progressPoller =
-      ProgressStreamPoller<Map<String, dynamic>>(
-        streamProvider: LibraryScanBridge.libraryScanProgressStream,
-        pollProvider: LibraryScanBridge.getLibraryScanProgress,
+  late final LibraryScanProgressPolling _progressPolling =
+      LibraryScanProgressPolling(
         onProgress: _handleLibraryScanProgress,
-        pollingInterval: _progressPollingInterval,
-        bootstrapTimeout: _progressStreamBootstrapTimeout,
-        onStreamProcessingError: (e) =>
-            _log.w('Library scan progress stream processing failed: $e'),
-        onStreamFailed: (error) => _log.w(
-          'Library scan progress stream failed, fallback to polling: $error',
-        ),
-        onStreamTimeout: () =>
-            _log.w('Library scan progress stream timeout, fallback to polling'),
-        onPollError: (e) => _log.w('Library scan progress polling failed: $e'),
+        onWarning: _log.w,
       );
   bool _isLoaded = false;
   bool _hasLoadedFromDatabase = false;
@@ -199,7 +188,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
           }),
         );
       }
-      _progressPoller.stop();
+      _progressPolling.stop();
       _storageEventsSubscription?.cancel();
       _storageEventDebounce?.cancel();
       _availabilityRetry?.cancel();
@@ -1237,55 +1226,32 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
     }
   }
 
-  void _startProgressPolling() {
-    final useStream = Platform.isAndroid;
-    _progressPoller.start(useStream: useStream);
-    if (useStream) {
-      Future<void>.microtask(
-        () => _progressPoller.pollOnce(
-          (e) => _log.w('Initial library scan progress fetch failed: $e'),
-        ),
-      );
-    }
-  }
+  void _startProgressPolling() => _progressPolling.start(
+    useStream: Platform.isAndroid,
+  );
 
   Future<void> _handleLibraryScanProgress(Map<String, dynamic> progress) async {
-    // A newly subscribed native stream may still contain the previous scan's
-    // terminal snapshot (including the initial idle snapshot). Only the scan
-    // method's result can start finalization; never stop polling on that replay.
-    if (_scanCancelRequested ||
-        !state.isScanning ||
-        state.scanIsFinalizing ||
-        progress['is_complete'] == true) {
-      return;
-    }
-    final nextProgress = (progress['progress_pct'] as num?)?.toDouble() ?? 0;
-    final normalizedProgress = ((nextProgress * 10).round() / 10).clamp(
-      0.0,
-      100.0,
+    final sample = readLibraryScanProgress(
+      cancelRequested: _scanCancelRequested,
+      isScanning: state.isScanning,
+      isFinalizing: state.scanIsFinalizing,
+      progress: progress,
     );
-    final displayProgress = normalizedProgress >= 100.0
-        ? 99.0
-        : normalizedProgress;
-    final currentFile = progress['current_file'] as String?;
-    final totalFiles = (progress['total_files'] as num?)?.toInt() ?? 0;
-    final scannedFiles = (progress['scanned_files'] as num?)?.toInt() ?? 0;
-    final errorCount = (progress['error_count'] as num?)?.toInt() ?? 0;
+    if (sample == null) return;
 
     final shouldUpdateState =
-        state.scanProgress != displayProgress ||
-        state.scanCurrentFile != currentFile ||
-        state.scanTotalFiles != totalFiles ||
-        state.scannedFiles != scannedFiles ||
-        state.scanErrorCount != errorCount;
-
+        state.scanProgress != sample.displayProgress ||
+        state.scanCurrentFile != sample.currentFile ||
+        state.scanTotalFiles != sample.totalFiles ||
+        state.scannedFiles != sample.scannedFiles ||
+        state.scanErrorCount != sample.errorCount;
     if (shouldUpdateState) {
       state = state.copyWith(
-        scanProgress: displayProgress,
-        scanCurrentFile: currentFile,
-        scanTotalFiles: totalFiles,
-        scannedFiles: scannedFiles,
-        scanErrorCount: errorCount,
+        scanProgress: sample.displayProgress,
+        scanCurrentFile: sample.currentFile,
+        scanTotalFiles: sample.totalFiles,
+        scannedFiles: sample.scannedFiles,
+        scanErrorCount: sample.errorCount,
       );
     }
 
@@ -1293,21 +1259,21 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
     // keep the paused notice instead of reposting progress.
     if (!state.scanIsPaused &&
         _scanNotifications.shouldShowProgress(
-          progress: normalizedProgress,
-          totalFiles: totalFiles,
+          progress: sample.progress,
+          totalFiles: sample.totalFiles,
           isComplete: false,
         )) {
       await _scanNotifications.showProgress(
-        progress: normalizedProgress,
-        scannedFiles: scannedFiles,
-        totalFiles: totalFiles,
-        currentFile: currentFile,
+        progress: sample.progress,
+        scannedFiles: sample.scannedFiles,
+        totalFiles: sample.totalFiles,
+        currentFile: sample.currentFile,
       );
     }
   }
 
   void _stopProgressPolling() {
-    _progressPoller.stop();
+    _progressPolling.stop();
     _scanNotifications.reset();
   }
 

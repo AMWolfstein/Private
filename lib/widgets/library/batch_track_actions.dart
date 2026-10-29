@@ -23,6 +23,7 @@ final _batchActionsLog = AppLogger('BatchActions');
 Future<bool> runBatchReplayGain(
   BuildContext sourceContext,
   List<UnifiedLibraryItem> selectedItems, {
+  required LibraryDatabase database,
   required VoidCallback onExitSelectionMode,
   bool remove = false,
   VoidCallback? onConfirmOpen,
@@ -108,7 +109,7 @@ Future<bool> runBatchReplayGain(
       if (result.isWritten) {
         successCount++;
         try {
-          await LibraryDatabase.instance.updateAudioMetadata(
+          await database.updateAudioMetadata(
             item.localItem.id,
             hasReplayGain: !remove,
           );

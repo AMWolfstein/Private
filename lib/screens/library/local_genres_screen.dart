@@ -4,12 +4,12 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_genres.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 
 typedef GenrePageRequest = ({String? genre, int offset});
 final genrePageLoaderProvider =
@@ -24,7 +24,7 @@ final genrePageLoaderProvider =
       );
       return (request) async =>
           LibraryGenres(
-            await LibraryDatabase.instance.database,
+            await ref.read(libraryDatabaseProvider).database,
             tagCache: tagCache,
           ).page(
             genre: request.genre,

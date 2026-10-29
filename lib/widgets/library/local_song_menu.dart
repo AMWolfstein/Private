@@ -18,7 +18,7 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
@@ -37,7 +37,7 @@ final localSongLookupProvider = FutureProvider.autoDispose
       // lookup alive until its one-shot caller receives the result.
       final lease = ref.keepAlive();
       try {
-        final db = LibraryDatabase.instance;
+        final db = ref.read(libraryDatabaseProvider);
         final row =
             await db.getById(request.id) ??
             await db.findExisting(
@@ -154,10 +154,15 @@ Future<bool> showLocalSongMenu(
       case 'copy':
         await copyLocalSongPath(context, item);
       case 'artist':
-        await navigateToArtistCredits(context, artistNames: item.artistName);
+        await navigateToArtistCredits(
+          context,
+          database: ref.read(libraryDatabaseProvider),
+          artistNames: item.artistName,
+        );
       case 'album':
         await navigateToAlbum(
           context,
+          database: ref.read(libraryDatabaseProvider),
           albumName: item.albumName,
           artistName: item.albumArtist ?? item.artistName,
           coverUrl: item.coverPath,
@@ -179,6 +184,7 @@ Future<bool> showLocalSongMenu(
         return await runBatchReplayGain(
           context,
           [UnifiedLibraryItem.fromLocalLibrary(item)],
+          database: ref.read(libraryDatabaseProvider),
           onExitSelectionMode: () {},
           remove: action == 'removeGain',
         );
@@ -291,7 +297,9 @@ Future<bool> editLocalSongMetadata(
     ),
   );
   if (saved != true) return false;
-  final index = await const MetadataIndexReconciler().reconcile(item);
+  final index = await MetadataIndexReconciler(
+    upsert: ref.read(libraryDatabaseProvider).upsert,
+  ).reconcile(item);
   var refreshed = index.indexed;
   try {
     await library.reloadFromStorage();

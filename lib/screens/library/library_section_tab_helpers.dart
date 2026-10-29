@@ -225,7 +225,7 @@ final _browseLibraryPageProvider = FutureProvider.autoDispose
       }
       final dbQuery = request.toDbQuery();
       if (request.filterMode == 'albums') {
-        final page = await LibraryDatabase.instance.getBrowseAlbumPage(dbQuery);
+        final page = await ref.read(libraryDatabaseProvider).getBrowseAlbumPage(dbQuery);
         final rows = page.rows;
         final groupedLocalAlbums = <_GroupedLocalAlbum>[];
         for (final row in rows) {
@@ -249,7 +249,7 @@ final _browseLibraryPageProvider = FutureProvider.autoDispose
         );
       }
 
-      final page = await LibraryDatabase.instance.getBrowseTrackPage(dbQuery);
+      final page = await ref.read(libraryDatabaseProvider).getBrowseTrackPage(dbQuery);
       final rows = page.rows;
       final items = <UnifiedLibraryItem>[];
       final localItems = <LocalLibraryItem>[];
@@ -274,5 +274,5 @@ final _browseLibraryCountsProvider = FutureProvider.autoDispose
       ref.watch(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
       );
-      return LibraryDatabase.instance.getQueueCounts(request.toDbQuery());
+      return ref.read(libraryDatabaseProvider).getQueueCounts(request.toDbQuery());
     });

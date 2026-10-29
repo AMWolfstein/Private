@@ -49,6 +49,7 @@ import 'package:sistrum/screens/library/library_browse_refresh_policy.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 
 part 'library_section_tab_helpers.dart';
 part 'library_section_tab_selection.dart';
@@ -143,7 +144,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
     LibraryBrowseDbCursor? cursor;
     try {
       do {
-        final page = await LibraryDatabase.instance.getBrowseTrackPage(
+        final page = await ref.read(libraryDatabaseProvider).getBrowseTrackPage(
           LibraryBrowseDbQuery(
             limit: 500,
             quality: _filterQuality,

@@ -39,7 +39,7 @@ class PlaybackDependencies {
     this.initializeHandler = _initializeAudioHandler,
     this.createPersonalization = AutoplayPersonalization.new,
     AppStateDatabase? sessionDatabase,
-    LibraryDatabase? libraryDatabase,
+    required LibraryDatabase libraryDatabase,
     ListeningRecorder? recorder,
     SourceDeletionEvents? sourceDeletionEvents,
     Stream<double>? volumeChanges,
@@ -61,7 +61,7 @@ class PlaybackDependencies {
   initializeHandler;
   final AutoplayPersonalization Function() createPersonalization;
   final AppStateDatabase? _sessionDatabase;
-  final LibraryDatabase? _libraryDatabase;
+  final LibraryDatabase _libraryDatabase;
   final ListeningRecorder? _recorder;
   final SourceDeletionEvents? _sourceDeletionEvents;
   final Stream<double>? _volumeChanges;
@@ -69,8 +69,7 @@ class PlaybackDependencies {
 
   AppStateDatabase get sessionDatabase =>
       _sessionDatabase ?? AppStateDatabase.instance;
-  LibraryDatabase get libraryDatabase =>
-      _libraryDatabase ?? LibraryDatabase.instance;
+  LibraryDatabase get libraryDatabase => _libraryDatabase;
   ListeningRecorder get recorder => _recorder ?? listeningRecorder;
   SourceDeletionEvents get sourceDeletionEvents =>
       _sourceDeletionEvents ?? SourceDeletionEvents.instance;

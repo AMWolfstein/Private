@@ -17,8 +17,8 @@ abstract class CoverAnalysisStore {
 /// A derived table in the library database, created on first use like the
 /// search index, so no schema version is needed. Bounded to [maxRows].
 class LibraryCoverAnalysisStore implements CoverAnalysisStore {
-  LibraryCoverAnalysisStore({LibraryDatabase? database})
-    : _database = database ?? LibraryDatabase.instance;
+  LibraryCoverAnalysisStore({required LibraryDatabase database})
+    : _database = database;
 
   static const table = 'cover_analysis';
   static const maxRows = 4000;

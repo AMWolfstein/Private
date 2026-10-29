@@ -8,6 +8,7 @@ extension _LibrarySectionTabBatchActions on _LibrarySectionTabState {
     return runBatchReplayGain(
       context,
       _selectedItemsFromAll(allItems),
+      database: ref.read(libraryDatabaseProvider),
       onExitSelectionMode: _exitSelectionMode,
       remove: remove,
       onConfirmOpen: () {

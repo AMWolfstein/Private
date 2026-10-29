@@ -17,6 +17,7 @@ import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/selection/destructive_selection_button.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 Widget _app(
   Widget child, {
@@ -141,6 +142,7 @@ void main() {
                     ),
                   ),
                 ],
+                database: LibraryDatabase.instance,
                 onExitSelectionMode: () => exitedSelection = true,
                 onConfirmClosed: (value) async => confirmed = value,
               ),

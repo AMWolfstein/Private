@@ -12,6 +12,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/selection/batch_progress_dialog.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 UnifiedLibraryItem _item(String path) => UnifiedLibraryItem(
   LocalLibraryItem(
@@ -76,6 +77,7 @@ void main() {
         ],
         remove: remove,
         onConfirmOpen: () => opened = true,
+        database: LibraryDatabase.instance,
         onExitSelectionMode: () => exited = true,
       );
       expect(changed, isFalse);
@@ -121,6 +123,7 @@ void main() {
         _item('physical#track1.flac'),
       ],
       remove: true,
+      database: LibraryDatabase.instance,
       onExitSelectionMode: () {},
     );
     await tester.pumpAndSettle();
@@ -177,6 +180,7 @@ void main() {
         pageContext,
         [_item('first.flac'), _item('second.flac')],
         remove: true,
+        database: LibraryDatabase.instance,
         onExitSelectionMode: () {},
       );
       await confirmRemoval(tester);

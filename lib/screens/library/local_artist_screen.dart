@@ -23,6 +23,7 @@ import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 
 /// Sistrum's former artist detail composition, backed entirely by local music.
 class LocalArtistScreen extends ConsumerStatefulWidget {
@@ -104,7 +105,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
           artistName: album.artist,
           coverPath: album.cover,
           loadTracks: () async =>
-              (await LibraryDatabase.instance.getBrowseLocalAlbumRowsByKey(
+              (await ref.read(libraryDatabaseProvider).getBrowseLocalAlbumRowsByKey(
                 album.key,
               )).map(LocalLibraryItem.fromJson).toList(),
         ),

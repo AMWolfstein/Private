@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
@@ -959,6 +960,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     if (!mounted) return;
     await navigateToAlbum(
       context,
+      database: ref.read(libraryDatabaseProvider),
       albumName: albumName,
       artistName: mediaItem.artist,
       coverUrl: mediaItem.artUri?.toString(),

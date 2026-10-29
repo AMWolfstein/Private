@@ -12,6 +12,7 @@ import 'package:sistrum/services/playback/automix_analyzer.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/library/library_database.dart';
 
 Uint8List _drumWav(double bpm, {bool silent = false}) {
   const sampleRate = 44100;
@@ -122,6 +123,7 @@ void main() {
           dependencies: PlaybackDependencies(
             createHandler: createMusicPlayerHandler,
             restoreSession: restorePlaybackSession,
+            libraryDatabase: LibraryDatabase.instance,
             createDeck: (id) {
               final deck = MusicPlaybackDeck(playerId: id);
               decks[id] = deck;

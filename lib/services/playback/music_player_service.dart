@@ -29,6 +29,7 @@ import 'package:sistrum/services/playback/automix_effect_renderer.dart';
 import 'package:sistrum/services/playback/automix_status.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
 import 'package:sistrum/services/library/embedded_cover_resolver.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/logger.dart';
 
 export 'package:sistrum/models/playable_media.dart';
@@ -2040,10 +2041,13 @@ MusicPlayerHandler? _concreteHandler(MusicPlayerRuntime runtime) =>
 PlaybackHandler createMusicPlayerHandler(MusicPlayerRuntime runtime) =>
     MusicPlayerHandler(runtime: runtime);
 
-/// Process wiring for [MusicPlayerRuntime]. Tests build their own dependencies.
-const defaultPlaybackDependencies = PlaybackDependencies(
+/// Process wiring for [MusicPlayerRuntime]. The background audio service runs
+/// outside the widget tree, so it takes the library database here, once.
+/// Tests build their own dependencies.
+final defaultPlaybackDependencies = PlaybackDependencies(
   createHandler: createMusicPlayerHandler,
   restoreSession: restorePlaybackSession,
+  libraryDatabase: LibraryDatabase.instance,
 );
 
 final musicPlayerRuntime = MusicPlayerRuntime(

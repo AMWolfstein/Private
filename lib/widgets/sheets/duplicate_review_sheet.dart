@@ -14,6 +14,7 @@ import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 
 /// Bottom sheet listing tracks that exist more than once (same ISRC) across
 /// download history and the local library, with keep-best and per-copy
@@ -48,7 +49,7 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
   void initState() {
     super.initState();
     _localLibraryNotifier = ref.read(localLibraryProvider.notifier);
-    _groupsFuture = LibraryDatabase.instance.findIsrcDuplicateGroups();
+    _groupsFuture = ref.read(libraryDatabaseProvider).findIsrcDuplicateGroups();
   }
 
   @override
@@ -61,7 +62,7 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
 
   void _reload() {
     setState(() {
-      _groupsFuture = LibraryDatabase.instance.findIsrcDuplicateGroups();
+      _groupsFuture = ref.read(libraryDatabaseProvider).findIsrcDuplicateGroups();
     });
   }
 
@@ -139,7 +140,7 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
         await _localLibraryNotifier.removePhysicalFiles([path]);
       },
       removeIndexEntry: (entry) async {
-        await LibraryDatabase.instance.deleteByPath(entry.filePath);
+        await ref.read(libraryDatabaseProvider).deleteByPath(entry.filePath);
         _deletedLocalRows = true;
       },
     );

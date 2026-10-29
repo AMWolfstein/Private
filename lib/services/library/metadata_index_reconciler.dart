@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_edited_metadata.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -44,13 +43,8 @@ class MetadataIndexReconciler {
     this.read = MediaFileBridge.readFileMetadata,
     this.extractCover = MediaFileBridge.extractCoverToFile,
     this.supportDirectory = getApplicationSupportDirectory,
-    this.upsert = _upsert,
+    required this.upsert,
   });
-
-  static Future<void> _upsert(
-    Map<String, dynamic> json, {
-    required String sourceId,
-  }) => LibraryDatabase.instance.upsert(json, sourceId: sourceId);
 
   Future<MetadataIndexResult> reconcile(LocalLibraryItem item) async {
     final Map<String, dynamic> fresh;
