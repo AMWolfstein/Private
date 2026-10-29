@@ -574,3 +574,15 @@ intermittent, order-dependent failure to investigate separately.
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
 (1878 tests, exit 0). Groups B (larger single-use files) and C (large-file splits) remain.
+
+## Not-worth-it items, group B (user decision: fix all 52)
+
+- Inlined eight single-use files into their sole importers: apk_downloader (update dialog),
+  metadata_persistence_service (track metadata edit sheet), replaygain_service (batch track
+  actions), lyrics_timeline (player lyrics), app_level_slider (equalizer screen), automix_settings
+  (playback settings), local_artist_provider (local artist screen), local_home_feed_provider (home tab).
+- `scripts/review_scope.py` drops the `replaygain_service.dart` metadata-category name check, since
+  the file no longer exists. ReplayGain code is now classified with its importer.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
+(1878 tests, exit 0). Group C (the 30 large-file splits) remains.
