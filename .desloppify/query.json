@@ -1,9 +1,3847 @@
 {
   "command": "show",
-  "query": "review",
+  "query": "*",
   "status_filter": "open",
-  "total": 0,
-  "issues": [],
+  "total": 213,
+  "summary": {
+    "by_tier": {
+      "T2": 5,
+      "T3": 208
+    },
+    "by_detector": {
+      "structural": 57,
+      "dupes": 45,
+      "signature": 44,
+      "test_coverage": 38,
+      "single_use": 23,
+      "flat_dirs": 6
+    },
+    "files": 152
+  },
+  "by_file": {
+    "lib/screens/equalizer_screen.dart": [
+      {
+        "id": "signature::lib/screens/equalizer_screen.dart::signature_variance::Expanded",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'Expanded' has 5 different signatures across 6 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/equalizer_screen.dart::signature_variance::SizedBox",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'SizedBox' has 4 different signatures across 6 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/equalizer_screen.dart::signature_variance::AppDialogAction",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'AppDialogAction' has 3 different signatures across 18 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsSwitchItem",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'SettingsSwitchItem' has 3 different signatures across 6 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsItem",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'SettingsItem' has 2 different signatures across 5 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/screens/equalizer_screen.dart::slider::lib/screens/equalizer_screen.dart::slider",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (4 functions, 96% similar): slider (lib/screens/equalizer_screen.dart:365), slider (lib/screens/equalizer_screen.dart:373), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+            "name": "slider",
+            "line": 365,
+            "loc": 107
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+            "name": "slider",
+            "line": 373,
+            "loc": 99
+          },
+          "similarity": 0.961,
+          "kind": "near-duplicate",
+          "cluster_size": 4,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsGroup",
+              "line": 355,
+              "loc": 117
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "slider",
+              "line": 365,
+              "loc": 107
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "slider",
+              "line": 373,
+              "loc": 99
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "slider",
+              "line": 381,
+              "loc": 91
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/equalizer_screen.dart::SettingsSwitchItem::lib/screens/equalizer_screen.dart::SettingsSwitchItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (4 functions, 94% similar): SettingsSwitchItem (lib/screens/equalizer_screen.dart:409), SettingsSwitchItem (lib/screens/equalizer_screen.dart:416), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+            "name": "SettingsSwitchItem",
+            "line": 409,
+            "loc": 63
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+            "name": "SettingsSwitchItem",
+            "line": 416,
+            "loc": 56
+          },
+          "similarity": 0.941,
+          "kind": "near-duplicate",
+          "cluster_size": 4,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsGroup",
+              "line": 399,
+              "loc": 73
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsSwitchItem",
+              "line": 409,
+              "loc": 63
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsSwitchItem",
+              "line": 416,
+              "loc": 56
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "slider",
+              "line": 425,
+              "loc": 47
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/equalizer_screen.dart::SettingsItem::lib/screens/equalizer_screen.dart::SettingsItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (4 functions, 94% similar): SettingsItem (lib/screens/equalizer_screen.dart:235), SettingsItem (lib/screens/equalizer_screen.dart:239), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+            "name": "SettingsItem",
+            "line": 235,
+            "loc": 33
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+            "name": "SettingsItem",
+            "line": 239,
+            "loc": 29
+          },
+          "similarity": 0.935,
+          "kind": "near-duplicate",
+          "cluster_size": 4,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsGroup",
+              "line": 228,
+              "loc": 40
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsItem",
+              "line": 235,
+              "loc": 33
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsItem",
+              "line": 239,
+              "loc": 29
+            },
+            {
+              "file": "/home/user/Private/lib/screens/equalizer_screen.dart",
+              "name": "SettingsItem",
+              "line": 243,
+              "loc": 25
+            }
+          ]
+        }
+      }
+    ],
+    "lib/providers/library_collections_provider.dart": [
+      {
+        "id": "structural::lib/providers/library_collections_provider.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (924 LOC) / complexity score 82",
+        "detail": {
+          "loc": 924,
+          "complexity_score": 82,
+          "complexity_signals": [
+            "107 control flow"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/providers/library_collections_provider.dart::signature_variance::matches",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'matches' has 6 different signatures across 6 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/providers/library_collections_provider.dart::signature_variance::restoreFromBackup",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'restoreFromBackup' has 3 different signatures across 3 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeLocalLibraryTracks",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: removeLocalLibraryTracks (lib/providers/library_collections_provider.dart:371) <-> _mutate (lib/providers/library_collections_provider.dart:379) [93%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+            "name": "removeLocalLibraryTracks",
+            "line": 371,
+            "loc": 77
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+            "name": "_mutate",
+            "line": 379,
+            "loc": 68
+          },
+          "similarity": 0.934,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+              "name": "removeLocalLibraryTracks",
+              "line": 371,
+              "loc": 77
+            },
+            {
+              "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+              "name": "_mutate",
+              "line": 379,
+              "loc": 68
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::deletePlaylists",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: deletePlaylists (lib/providers/library_collections_provider.dart:493) <-> _mutate (lib/providers/library_collections_provider.dart:496) [91%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+            "name": "deletePlaylists",
+            "line": 493,
+            "loc": 20
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+            "name": "_mutate",
+            "line": 496,
+            "loc": 16
+          },
+          "similarity": 0.914,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+              "name": "deletePlaylists",
+              "line": 493,
+              "loc": 20
+            },
+            {
+              "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+              "name": "_mutate",
+              "line": 496,
+              "loc": 16
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeTracksFromPlaylist",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: removeTracksFromPlaylist (lib/providers/library_collections_provider.dart:613) <-> _mutate (lib/providers/library_collections_provider.dart:619) [91%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+            "name": "removeTracksFromPlaylist",
+            "line": 613,
+            "loc": 37
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+            "name": "_mutate",
+            "line": 619,
+            "loc": 30
+          },
+          "similarity": 0.906,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+              "name": "removeTracksFromPlaylist",
+              "line": 613,
+              "loc": 37
+            },
+            {
+              "file": "/home/user/Private/lib/providers/library_collections_provider.dart",
+              "name": "_mutate",
+              "line": 619,
+              "loc": 30
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/setup_screen.dart": [
+      {
+        "id": "structural::lib/screens/setup_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (887 LOC) / complexity score 33",
+        "detail": {
+          "loc": 887,
+          "complexity_score": 33,
+          "complexity_signals": [
+            "58 control flow"
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/setup_screen.dart::LayoutBuilder::lib/screens/setup_screen.dart::_buildWelcomeStep",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _buildWelcomeStep (lib/screens/setup_screen.dart:472) <-> LayoutBuilder (lib/screens/setup_screen.dart:474) [98%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/setup_screen.dart",
+            "name": "_buildWelcomeStep",
+            "line": 472,
+            "loc": 63
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/setup_screen.dart",
+            "name": "LayoutBuilder",
+            "line": 474,
+            "loc": 59
+          },
+          "similarity": 0.975,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/setup_screen.dart",
+              "name": "_buildWelcomeStep",
+              "line": 472,
+              "loc": 63
+            },
+            {
+              "file": "/home/user/Private/lib/screens/setup_screen.dart",
+              "name": "LayoutBuilder",
+              "line": 474,
+              "loc": 59
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/setup_screen.dart::LayoutBuilder::lib/screens/setup_screen.dart::_buildLanguageStep",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _buildLanguageStep (lib/screens/setup_screen.dart:540) <-> LayoutBuilder (lib/screens/setup_screen.dart:543) [97%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/setup_screen.dart",
+            "name": "_buildLanguageStep",
+            "line": 540,
+            "loc": 72
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/setup_screen.dart",
+            "name": "LayoutBuilder",
+            "line": 543,
+            "loc": 67
+          },
+          "similarity": 0.97,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/setup_screen.dart",
+              "name": "_buildLanguageStep",
+              "line": 540,
+              "loc": 72
+            },
+            {
+              "file": "/home/user/Private/lib/screens/setup_screen.dart",
+              "name": "LayoutBuilder",
+              "line": 543,
+              "loc": 67
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/setup_screen.dart::LayoutBuilder::lib/screens/setup_screen.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/screens/setup_screen.dart:783) <-> LayoutBuilder (lib/screens/setup_screen.dart:785) [97%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/setup_screen.dart",
+            "name": "build",
+            "line": 783,
+            "loc": 68
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/setup_screen.dart",
+            "name": "LayoutBuilder",
+            "line": 785,
+            "loc": 64
+          },
+          "similarity": 0.968,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/setup_screen.dart",
+              "name": "build",
+              "line": 783,
+              "loc": 68
+            },
+            {
+              "file": "/home/user/Private/lib/screens/setup_screen.dart",
+              "name": "LayoutBuilder",
+              "line": 785,
+              "loc": 64
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab.dart": [
+      {
+        "id": "structural::lib/screens/library/library_section_tab.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1156 LOC) / complexity score 69",
+        "detail": {
+          "loc": 1156,
+          "complexity_score": 69,
+          "complexity_signals": [
+            "58 imports",
+            "56 control flow"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/screens/library/library_section_tab.dart::signature_variance::AnimatedBuilder",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'AnimatedBuilder' has 10 different signatures across 11 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/library/library_section_tab.dart::signature_variance::PopScope",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'PopScope' has 4 different signatures across 6 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/screens/library/library_section_tab.dart::setSheetState::lib/screens/library/library_section_tab.dart::setSheetState",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (10 functions, 97% similar): setSheetState (lib/screens/library/library_section_tab.dart:699), setSheetState (lib/screens/library/library_section_tab.dart:705), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+            "name": "setSheetState",
+            "line": 699,
+            "loc": 100
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+            "name": "setSheetState",
+            "line": 705,
+            "loc": 94
+          },
+          "similarity": 0.968,
+          "kind": "near-duplicate",
+          "cluster_size": 10,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 699,
+              "loc": 100
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 705,
+              "loc": 94
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 715,
+              "loc": 84
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 723,
+              "loc": 76
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 730,
+              "loc": 69
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 736,
+              "loc": 63
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 742,
+              "loc": 57
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 748,
+              "loc": 51
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 754,
+              "loc": 45
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab.dart",
+              "name": "setSheetState",
+              "line": 760,
+              "loc": 39
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/library/library_collection_tracks_screen.dart": [
+      {
+        "id": "structural::lib/screens/library/library_collection_tracks_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (967 LOC) / complexity score 48",
+        "detail": {
+          "loc": 967,
+          "complexity_score": 48,
+          "complexity_signals": [
+            "38 imports",
+            "55 control flow"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/screens/library/library_collection_tracks_screen.dart::signature_variance::LocalCoverImage",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'LocalCoverImage' has 3 different signatures across 3 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/library/library_collection_tracks_screen.dart::signature_variance::SelectionBottomBar",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'SelectionBottomBar' has 2 different signatures across 3 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/library/library_collection_tracks_screen.dart::signature_variance::selectAll",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'selectAll' has 2 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/screens/settings/library_settings_page.dart": [
+      {
+        "id": "structural::lib/screens/settings/library_settings_page.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1362 LOC) / complexity score 39",
+        "detail": {
+          "loc": 1362,
+          "complexity_score": 39,
+          "complexity_signals": [
+            "22 imports",
+            "58 control flow",
+            "7 classes"
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/settings/library_settings_page.dart::SettingsItem::lib/screens/settings/library_settings_page.dart::SettingsSwitchItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: SettingsSwitchItem (lib/screens/settings/library_settings_page.dart:482) <-> SettingsItem (lib/screens/settings/library_settings_page.dart:493) [94%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 482,
+            "loc": 102
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+            "name": "SettingsItem",
+            "line": 493,
+            "loc": 91
+          },
+          "similarity": 0.942,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 482,
+              "loc": 102
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+              "name": "SettingsItem",
+              "line": 493,
+              "loc": 91
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/settings/library_settings_page.dart::AppDialogAction::lib/screens/settings/library_settings_page.dart::AppDialogAction",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: AppDialogAction (lib/screens/settings/library_settings_page.dart:181) <-> AppDialogAction (lib/screens/settings/library_settings_page.dart:246) [94%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+            "name": "AppDialogAction",
+            "line": 181,
+            "loc": 17
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+            "name": "AppDialogAction",
+            "line": 246,
+            "loc": 17
+          },
+          "similarity": 0.941,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+              "name": "AppDialogAction",
+              "line": 181,
+              "loc": 17
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/library_settings_page.dart",
+              "name": "AppDialogAction",
+              "line": 246,
+              "loc": 17
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/animation_utils.dart": [
+      {
+        "id": "structural::lib/widgets/animation_utils.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (547 LOC)",
+        "detail": {
+          "loc": 547
+        }
+      },
+      {
+        "id": "signature::lib/widgets/animation_utils.dart::signature_variance::Stack",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'Stack' has 2 different signatures across 3 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/widgets/animation_utils.dart::LayoutBuilder::lib/widgets/animation_utils.dart::Stack",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (3 functions, 98% similar): LayoutBuilder (lib/widgets/animation_utils.dart:277), Stack (lib/widgets/animation_utils.dart:280), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/animation_utils.dart",
+            "name": "LayoutBuilder",
+            "line": 277,
+            "loc": 81
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/animation_utils.dart",
+            "name": "Stack",
+            "line": 280,
+            "loc": 77
+          },
+          "similarity": 0.975,
+          "kind": "near-duplicate",
+          "cluster_size": 3,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/animation_utils.dart",
+              "name": "build",
+              "line": 275,
+              "loc": 86
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/animation_utils.dart",
+              "name": "LayoutBuilder",
+              "line": 277,
+              "loc": 81
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/animation_utils.dart",
+              "name": "Stack",
+              "line": 280,
+              "loc": 77
+            }
+          ]
+        }
+      }
+    ],
+    "lib/services/library/library_collections_hydration.dart": [
+      {
+        "id": "structural::lib/services/library/library_collections_hydration.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (542 LOC) / complexity score 31",
+        "detail": {
+          "loc": 542,
+          "complexity_score": 31,
+          "complexity_signals": [
+            "56 control flow"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/services/library/library_collections_hydration.dart::signature_variance::add",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'add' has 7 different signatures across 6 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/services/library/library_collections_hydration.dart::signature_variance::finish",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'finish' has 3 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/main.dart": [
+      {
+        "id": "signature::lib/main.dart::signature_variance::unawaited",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'unawaited' has 4 different signatures across 5 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/main.dart::main::lib/main.dart::runZonedGuarded",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: main (lib/main.dart:37) <-> runZonedGuarded (lib/main.dart:44) [96%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/main.dart",
+            "name": "main",
+            "line": 37,
+            "loc": 130
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/main.dart",
+            "name": "runZonedGuarded",
+            "line": 44,
+            "loc": 118
+          },
+          "similarity": 0.96,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/main.dart",
+              "name": "main",
+              "line": 37,
+              "loc": 130
+            },
+            {
+              "file": "/home/user/Private/lib/main.dart",
+              "name": "runZonedGuarded",
+              "line": 44,
+              "loc": 118
+            }
+          ]
+        }
+      },
+      {
+        "id": "test_coverage::lib/main.dart::untested_critical",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Untested critical module (494 LOC, 0 importers) \u2014 high blast radius",
+        "detail": {
+          "kind": "untested_critical",
+          "loc": 494,
+          "importer_count": 0,
+          "loc_weight": 22.22611077089287,
+          "complexity_score": 23
+        }
+      }
+    ],
+    "lib/screens/listening_statistics_screen.dart": [
+      {
+        "id": "signature::lib/screens/listening_statistics_screen.dart::signature_variance::IconButton",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'IconButton' has 2 different signatures across 3 files",
+        "detail": {}
+      },
+      {
+        "id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (492 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 492,
+          "importer_count": 2,
+          "loc_weight": 22.181073012818835
+        }
+      },
+      {
+        "id": "dupes::lib/screens/listening_statistics_screen.dart::Scaffold::lib/screens/listening_statistics_screen.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/screens/listening_statistics_screen.dart:84) <-> Scaffold (lib/screens/listening_statistics_screen.dart:88) [98%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/listening_statistics_screen.dart",
+            "name": "build",
+            "line": 84,
+            "loc": 115
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/listening_statistics_screen.dart",
+            "name": "Scaffold",
+            "line": 88,
+            "loc": 110
+          },
+          "similarity": 0.978,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/listening_statistics_screen.dart",
+              "name": "build",
+              "line": 84,
+              "loc": 115
+            },
+            {
+              "file": "/home/user/Private/lib/screens/listening_statistics_screen.dart",
+              "name": "Scaffold",
+              "line": 88,
+              "loc": 110
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/library/track_metadata_edit_sheet.dart": [
+      {
+        "id": "structural::lib/widgets/library/track_metadata_edit_sheet.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (807 LOC)",
+        "detail": {
+          "loc": 807
+        }
+      },
+      {
+        "id": "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_sectionCard::lib/widgets/library/track_metadata_edit_sheet.dart::setState",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _sectionCard (lib/widgets/library/track_metadata_edit_sheet.dart:424) <-> setState (lib/widgets/library/track_metadata_edit_sheet.dart:428) [97%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+            "name": "_sectionCard",
+            "line": 424,
+            "loc": 68
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+            "name": "setState",
+            "line": 428,
+            "loc": 64
+          },
+          "similarity": 0.97,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+              "name": "_sectionCard",
+              "line": 424,
+              "loc": 68
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+              "name": "setState",
+              "line": 428,
+              "loc": 64
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_switchField::lib/widgets/library/track_metadata_edit_sheet.dart::setState",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _switchField (lib/widgets/library/track_metadata_edit_sheet.dart:454) <-> setState (lib/widgets/library/track_metadata_edit_sheet.dart:460) [91%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+            "name": "_switchField",
+            "line": 454,
+            "loc": 38
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+            "name": "setState",
+            "line": 460,
+            "loc": 32
+          },
+          "similarity": 0.914,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+              "name": "_switchField",
+              "line": 454,
+              "loc": 38
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/library/track_metadata_edit_sheet.dart",
+              "name": "setState",
+              "line": 460,
+              "loc": 32
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/library/local_album_screen.dart": [
+      {
+        "id": "structural::lib/screens/library/local_album_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (668 LOC) / complexity score 42",
+        "detail": {
+          "loc": 668,
+          "complexity_score": 42,
+          "complexity_signals": [
+            "46 imports",
+            "41 control flow"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/screens/library/local_album_screen.dart::signature_variance::Consumer",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'Consumer' has 3 different signatures across 4 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/screens/library/local_album_screen.dart::Consumer::lib/screens/library/local_album_screen.dart::_buildTrackItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _buildTrackItem (lib/screens/library/local_album_screen.dart:533) <-> Consumer (lib/screens/library/local_album_screen.dart:539) [90%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/library/local_album_screen.dart",
+            "name": "_buildTrackItem",
+            "line": 533,
+            "loc": 40
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/library/local_album_screen.dart",
+            "name": "Consumer",
+            "line": 539,
+            "loc": 32
+          },
+          "similarity": 0.901,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/library/local_album_screen.dart",
+              "name": "_buildTrackItem",
+              "line": 533,
+              "loc": 40
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/local_album_screen.dart",
+              "name": "Consumer",
+              "line": 539,
+              "loc": 32
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_filter_widgets.dart": [
+      {
+        "id": "structural::lib/screens/library/library_section_tab_filter_widgets.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (598 LOC)",
+        "detail": {
+          "loc": 598
+        }
+      },
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (598 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 598,
+          "importer_count": 0,
+          "loc_weight": 24.454038521274967
+        }
+      },
+      {
+        "id": "dupes::lib/screens/library/library_section_tab_filter_widgets.dart::LocalLibraryArtworkBuilder::lib/screens/library/library_section_tab_filter_widgets.dart::_buildLocalAlbumGridItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _buildLocalAlbumGridItem (lib/screens/library/library_section_tab_filter_widgets.dart:436) <-> LocalLibraryArtworkBuilder (lib/screens/library/library_section_tab_filter_widgets.dart:442) [90%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/library/library_section_tab_filter_widgets.dart",
+            "name": "_buildLocalAlbumGridItem",
+            "line": 436,
+            "loc": 35
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/library/library_section_tab_filter_widgets.dart",
+            "name": "LocalLibraryArtworkBuilder",
+            "line": 442,
+            "loc": 28
+          },
+          "similarity": 0.903,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab_filter_widgets.dart",
+              "name": "_buildLocalAlbumGridItem",
+              "line": 436,
+              "loc": 35
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab_filter_widgets.dart",
+              "name": "LocalLibraryArtworkBuilder",
+              "line": 442,
+              "loc": 28
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/glass/app_artwork_glass.dart": [
+      {
+        "id": "structural::lib/widgets/glass/app_artwork_glass.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1264 LOC) / complexity score 68",
+        "detail": {
+          "loc": 1264,
+          "complexity_score": 68,
+          "complexity_signals": [
+            "73 control flow",
+            "15 classes"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/widgets/glass/app_artwork_glass.dart::signature_variance::show",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'show' has 5 different signatures across 4 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/widgets/glass/app_artwork_glass.dart::signature_variance::performLayout",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'performLayout' has 2 different signatures across 4 files",
+        "detail": {}
+      }
+    ],
+    "lib/screens/library/app_library_screen.dart": [
+      {
+        "id": "structural::lib/screens/library/app_library_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (585 LOC)",
+        "detail": {
+          "loc": 585
+        }
+      },
+      {
+        "id": "signature::lib/screens/library/app_library_screen.dart::signature_variance::Semantics",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'Semantics' has 5 different signatures across 5 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/screens/library/app_library_screen.dart::signature_variance::LocalLibraryArtworkBuilder",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'LocalLibraryArtworkBuilder' has 2 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/l10n/app_localizations.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (5820 LOC) / complexity score 526",
+        "detail": {
+          "loc": 5820,
+          "complexity_score": 526,
+          "complexity_signals": [
+            "21 imports",
+            "550 control flow"
+          ]
+        }
+      },
+      {
+        "id": "signature::lib/l10n/app_localizations.dart::signature_variance::load",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'load' has 4 different signatures across 4 files",
+        "detail": {}
+      }
+    ],
+    "lib/widgets/player/player_lyrics.dart": [
+      {
+        "id": "structural::lib/widgets/player/player_lyrics.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (2278 LOC) / complexity score 161",
+        "detail": {
+          "loc": 2278,
+          "complexity_score": 161,
+          "complexity_signals": [
+            "24 imports",
+            "168 control flow",
+            "12 classes"
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/widgets/player/player_lyrics.dart::LayoutBuilder::lib/widgets/player/player_lyrics.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/widgets/player/player_lyrics.dart:2047) <-> LayoutBuilder (lib/widgets/player/player_lyrics.dart:2053) [90%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/player/player_lyrics.dart",
+            "name": "build",
+            "line": 2047,
+            "loc": 48
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/player/player_lyrics.dart",
+            "name": "LayoutBuilder",
+            "line": 2053,
+            "loc": 40
+          },
+          "similarity": 0.905,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/player/player_lyrics.dart",
+              "name": "build",
+              "line": 2047,
+              "loc": 48
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/player/player_lyrics.dart",
+              "name": "LayoutBuilder",
+              "line": 2053,
+              "loc": 40
+            }
+          ]
+        }
+      }
+    ],
+    "lib/services/playback/music_player_service.dart": [
+      {
+        "id": "structural::lib/services/playback/music_player_service.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (2185 LOC) / complexity score 235",
+        "detail": {
+          "loc": 2185,
+          "complexity_score": 235,
+          "complexity_signals": [
+            "32 imports",
+            "248 control flow"
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/services/playback/music_player_service.dart::reapplyNormalization::lib/services/playback/music_player_service.dart::unawaited",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: reapplyNormalization (lib/services/playback/music_player_service.dart:782) <-> unawaited (lib/services/playback/music_player_service.dart:787) [94%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/services/playback/music_player_service.dart",
+            "name": "reapplyNormalization",
+            "line": 782,
+            "loc": 49
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/services/playback/music_player_service.dart",
+            "name": "unawaited",
+            "line": 787,
+            "loc": 43
+          },
+          "similarity": 0.935,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/services/playback/music_player_service.dart",
+              "name": "reapplyNormalization",
+              "line": 782,
+              "loc": 49
+            },
+            {
+              "file": "/home/user/Private/lib/services/playback/music_player_service.dart",
+              "name": "unawaited",
+              "line": 787,
+              "loc": 43
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/settings/cache_management_page.dart": [
+      {
+        "id": "structural::lib/screens/settings/cache_management_page.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (637 LOC)",
+        "detail": {
+          "loc": 637
+        }
+      },
+      {
+        "id": "dupes::lib/screens/settings/cache_management_page.dart::AppDialogAction::lib/screens/settings/cache_management_page.dart::AppDialogAction",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Exact dupe: AppDialogAction (lib/screens/settings/cache_management_page.dart:201) <-> AppDialogAction (lib/screens/settings/cache_management_page.dart:225) [100%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/cache_management_page.dart",
+            "name": "AppDialogAction",
+            "line": 201,
+            "loc": 14
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/cache_management_page.dart",
+            "name": "AppDialogAction",
+            "line": 225,
+            "loc": 14
+          },
+          "similarity": 1.0,
+          "kind": "exact",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/cache_management_page.dart",
+              "name": "AppDialogAction",
+              "line": 201,
+              "loc": 14
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/cache_management_page.dart",
+              "name": "AppDialogAction",
+              "line": 225,
+              "loc": 14
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/settings/appearance_settings_page.dart": [
+      {
+        "id": "structural::lib/screens/settings/appearance_settings_page.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (619 LOC)",
+        "detail": {
+          "loc": 619
+        }
+      },
+      {
+        "id": "dupes::lib/screens/settings/appearance_settings_page.dart::SettingsSwitchItem::lib/screens/settings/appearance_settings_page.dart::SettingsSwitchItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: SettingsSwitchItem (lib/screens/settings/appearance_settings_page.dart:114) <-> SettingsSwitchItem (lib/screens/settings/appearance_settings_page.dart:123) [92%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/appearance_settings_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 114,
+            "loc": 63
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/appearance_settings_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 123,
+            "loc": 54
+          },
+          "similarity": 0.919,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/appearance_settings_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 114,
+              "loc": 63
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/appearance_settings_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 123,
+              "loc": 54
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/home/home_tab.dart": [
+      {
+        "id": "signature::lib/screens/home/home_tab.dart::signature_variance::SliverToBoxAdapter",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'SliverToBoxAdapter' has 5 different signatures across 9 files",
+        "detail": {}
+      },
+      {
+        "id": "dupes::lib/screens/home/home_tab.dart::SliverToBoxAdapter::lib/screens/home/home_tab.dart::_buildRecentlyAdded",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _buildRecentlyAdded (lib/screens/home/home_tab.dart:227) <-> SliverToBoxAdapter (lib/screens/home/home_tab.dart:229) [94%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/home/home_tab.dart",
+            "name": "_buildRecentlyAdded",
+            "line": 227,
+            "loc": 38
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/home/home_tab.dart",
+            "name": "SliverToBoxAdapter",
+            "line": 229,
+            "loc": 33
+          },
+          "similarity": 0.943,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/home/home_tab.dart",
+              "name": "_buildRecentlyAdded",
+              "line": 227,
+              "loc": 38
+            },
+            {
+              "file": "/home/user/Private/lib/screens/home/home_tab.dart",
+              "name": "SliverToBoxAdapter",
+              "line": 229,
+              "loc": 33
+            }
+          ]
+        }
+      }
+    ],
+    "lib/providers/music_player_provider.dart": [
+      {
+        "id": "signature::lib/providers/music_player_provider.dart::signature_variance::updateShouldNotify",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'updateShouldNotify' has 2 different signatures across 9 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/providers/music_player_provider.dart::signature_variance::stop",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'stop' has 2 different signatures across 6 files",
+        "detail": {}
+      }
+    ],
+    "lib/screens/local_guide_pages.dart": [
+      {
+        "id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (424 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 424,
+          "importer_count": 1,
+          "loc_weight": 20.591260281974
+        }
+      },
+      {
+        "id": "dupes::lib/screens/local_guide_pages.dart::LayoutBuilder::lib/screens/local_guide_pages.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/screens/local_guide_pages.dart:320) <-> LayoutBuilder (lib/screens/local_guide_pages.dart:329) [95%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/local_guide_pages.dart",
+            "name": "build",
+            "line": 320,
+            "loc": 104
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/local_guide_pages.dart",
+            "name": "LayoutBuilder",
+            "line": 329,
+            "loc": 93
+          },
+          "similarity": 0.946,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/local_guide_pages.dart",
+              "name": "build",
+              "line": 320,
+              "loc": 104
+            },
+            {
+              "file": "/home/user/Private/lib/screens/local_guide_pages.dart",
+              "name": "LayoutBuilder",
+              "line": 329,
+              "loc": 93
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/settings/playback_settings_page.dart": [
+      {
+        "id": "dupes::lib/screens/settings/playback_settings_page.dart::SettingsSwitchItem::lib/screens/settings/playback_settings_page.dart::SettingsSwitchItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (3 functions, 96% similar): SettingsSwitchItem (lib/screens/settings/playback_settings_page.dart:125), SettingsSwitchItem (lib/screens/settings/playback_settings_page.dart:136), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 125,
+            "loc": 148
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 136,
+            "loc": 137
+          },
+          "similarity": 0.961,
+          "kind": "near-duplicate",
+          "cluster_size": 3,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+              "name": "SliverToBoxAdapter",
+              "line": 108,
+              "loc": 165
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 125,
+              "loc": 148
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 136,
+              "loc": 137
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/settings/playback_settings_page.dart::SettingsSwitchItem::lib/screens/settings/playback_settings_page.dart::SliverToBoxAdapter",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: SliverToBoxAdapter (lib/screens/settings/playback_settings_page.dart:198) <-> SettingsSwitchItem (lib/screens/settings/playback_settings_page.dart:210) [91%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+            "name": "SliverToBoxAdapter",
+            "line": 198,
+            "loc": 75
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 210,
+            "loc": 63
+          },
+          "similarity": 0.913,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+              "name": "SliverToBoxAdapter",
+              "line": 198,
+              "loc": 75
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/playback_settings_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 210,
+              "loc": 63
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/settings/settings_tab.dart": [
+      {
+        "id": "dupes::lib/screens/settings/settings_tab.dart::_Group::lib/screens/settings/settings_tab.dart::_groups",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _groups (lib/screens/settings/settings_tab.dart:97) <-> _Group (lib/screens/settings/settings_tab.dart:108) [94%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+            "name": "_groups",
+            "line": 97,
+            "loc": 120
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+            "name": "_Group",
+            "line": 108,
+            "loc": 105
+          },
+          "similarity": 0.938,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+              "name": "_groups",
+              "line": 97,
+              "loc": 120
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+              "name": "_Group",
+              "line": 108,
+              "loc": 105
+            }
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/screens/settings/settings_tab.dart::_Destination::lib/screens/settings/settings_tab.dart::_Destination",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (4 functions, 94% similar): _Destination (lib/screens/settings/settings_tab.dart:139), _Destination (lib/screens/settings/settings_tab.dart:148), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+            "name": "_Destination",
+            "line": 139,
+            "loc": 74
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+            "name": "_Destination",
+            "line": 148,
+            "loc": 65
+          },
+          "similarity": 0.935,
+          "kind": "near-duplicate",
+          "cluster_size": 4,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+              "name": "_Group",
+              "line": 128,
+              "loc": 85
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+              "name": "_Destination",
+              "line": 139,
+              "loc": 74
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+              "name": "_Destination",
+              "line": 148,
+              "loc": 65
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/settings_tab.dart",
+              "name": "_Group",
+              "line": 159,
+              "loc": 54
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/library/local_artist_screen.dart": [
+      {
+        "id": "structural::lib/screens/library/local_artist_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (753 LOC)",
+        "detail": {
+          "loc": 753
+        }
+      },
+      {
+        "id": "dupes::lib/screens/library/local_artist_screen.dart::AppArtistSurface::lib/screens/library/local_artist_screen.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/screens/library/local_artist_screen.dart:139) <-> AppArtistSurface (lib/screens/library/local_artist_screen.dart:175) [94%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/library/local_artist_screen.dart",
+            "name": "build",
+            "line": 139,
+            "loc": 322
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/library/local_artist_screen.dart",
+            "name": "AppArtistSurface",
+            "line": 175,
+            "loc": 283
+          },
+          "similarity": 0.936,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/library/local_artist_screen.dart",
+              "name": "build",
+              "line": 139,
+              "loc": 322
+            },
+            {
+              "file": "/home/user/Private/lib/screens/library/local_artist_screen.dart",
+              "name": "AppArtistSurface",
+              "line": 175,
+              "loc": 283
+            }
+          ]
+        }
+      }
+    ],
+    "lib/services/audio_analysis/audio_analysis_parsing.dart": [
+      {
+        "id": "structural::lib/services/audio_analysis/audio_analysis_parsing.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (741 LOC) / complexity score 34",
+        "detail": {
+          "loc": 741,
+          "complexity_score": 34,
+          "complexity_signals": [
+            "59 control flow"
+          ]
+        }
+      },
+      {
+        "id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+        "tier": 2,
+        "confidence": "medium",
+        "summary": "No direct tests (741 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 741,
+          "importer_count": 1,
+          "loc_weight": 27.2213151776324,
+          "complexity_score": 34
+        }
+      }
+    ],
+    "lib/widgets/settings/settings_group.dart": [
+      {
+        "id": "structural::lib/widgets/settings/settings_group.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (732 LOC) / complexity score 16",
+        "detail": {
+          "loc": 732,
+          "complexity_score": 16,
+          "complexity_signals": [
+            "13 classes"
+          ]
+        }
+      },
+      {
+        "id": "dupes::lib/widgets/settings/settings_group.dart::Opacity::lib/widgets/settings/settings_group.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/widgets/settings/settings_group.dart:410) <-> Opacity (lib/widgets/settings/settings_group.dart:418) [95%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/settings/settings_group.dart",
+            "name": "build",
+            "line": 410,
+            "loc": 94
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/settings/settings_group.dart",
+            "name": "Opacity",
+            "line": 418,
+            "loc": 84
+          },
+          "similarity": 0.949,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/settings/settings_group.dart",
+              "name": "build",
+              "line": 410,
+              "loc": 94
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/settings/settings_group.dart",
+              "name": "Opacity",
+              "line": 418,
+              "loc": 84
+            }
+          ]
+        }
+      }
+    ],
+    "lib/app.dart": [
+      {
+        "id": "single_use::lib/app.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (258 LOC): only imported by lib/main.dart",
+        "detail": {
+          "loc": 258,
+          "sole_importer": "lib/main.dart"
+        }
+      },
+      {
+        "id": "signature::lib/app.dart::signature_variance::build",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'build' has 5 different signatures across 154 files",
+        "detail": {}
+      }
+    ],
+    "lib/widgets/status/disc_separator_chip.dart": [
+      {
+        "id": "single_use::lib/widgets/status/disc_separator_chip.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (27 LOC): only imported by lib/screens/library/local_album_screen.dart",
+        "detail": {
+          "loc": 27,
+          "sole_importer": "lib/screens/library/local_album_screen.dart"
+        }
+      },
+      {
+        "id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (27 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 27,
+          "importer_count": 1,
+          "loc_weight": 5.196152422706632
+        }
+      }
+    ],
+    "lib/widgets/audio_analysis/audio_analysis_spectrogram.dart": [
+      {
+        "id": "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::paint",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'paint' has 4 different signatures across 11 files",
+        "detail": {}
+      },
+      {
+        "id": "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::shouldRepaint",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'shouldRepaint' has 2 different signatures across 6 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/library/library_scan_progress.dart": [
+      {
+        "id": "signature::lib/services/library/library_scan_progress.dart::signature_variance::start",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'start' has 2 different signatures across 3 files",
+        "detail": {}
+      },
+      {
+        "id": "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (101 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 101,
+          "importer_count": 1,
+          "loc_weight": 10.04987562112089
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_selection.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (288 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 288,
+          "importer_count": 0,
+          "loc_weight": 16.97056274847714
+        }
+      },
+      {
+        "id": "dupes::lib/screens/library/library_section_tab_selection.dart::AppDialogAction::lib/widgets/sheets/duplicate_review_sheet.dart::AppDialogAction",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: AppDialogAction (lib/screens/library/library_section_tab_selection.dart:195) <-> AppDialogAction (lib/widgets/sheets/duplicate_review_sheet.dart:109) [91%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/library/library_section_tab_selection.dart",
+            "name": "AppDialogAction",
+            "line": 195,
+            "loc": 17
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/sheets/duplicate_review_sheet.dart",
+            "name": "AppDialogAction",
+            "line": 109,
+            "loc": 16
+          },
+          "similarity": 0.909,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/library/library_section_tab_selection.dart",
+              "name": "AppDialogAction",
+              "line": 195,
+              "loc": 17
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/sheets/duplicate_review_sheet.dart",
+              "name": "AppDialogAction",
+              "line": 109,
+              "loc": 16
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/shell/scroll_edge_fade.dart": [
+      {
+        "id": "test_coverage::lib/widgets/shell/scroll_edge_fade.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (77 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 77,
+          "importer_count": 2,
+          "loc_weight": 8.774964387392123
+        }
+      },
+      {
+        "id": "dupes::lib/widgets/shell/scroll_edge_fade.dart::Stack::lib/widgets/shell/scroll_edge_fade.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/widgets/shell/scroll_edge_fade.dart:35) <-> Stack (lib/widgets/shell/scroll_edge_fade.dart:38) [95%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/shell/scroll_edge_fade.dart",
+            "name": "build",
+            "line": 35,
+            "loc": 42
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/shell/scroll_edge_fade.dart",
+            "name": "Stack",
+            "line": 38,
+            "loc": 38
+          },
+          "similarity": 0.95,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/shell/scroll_edge_fade.dart",
+              "name": "build",
+              "line": 35,
+              "loc": 42
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/shell/scroll_edge_fade.dart",
+              "name": "Stack",
+              "line": 38,
+              "loc": 38
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/player/app_player_layout.dart": [
+      {
+        "id": "structural::lib/widgets/player/app_player_layout.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (700 LOC)",
+        "detail": {
+          "loc": 700
+        }
+      },
+      {
+        "id": "dupes::lib/widgets/player/app_player_layout.dart::Builder::lib/widgets/player/app_player_layout.dart::Expanded",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (3 functions, 98% similar): Builder (lib/widgets/player/app_player_layout.dart:489), Expanded (lib/widgets/player/app_player_layout.dart:492), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/player/app_player_layout.dart",
+            "name": "Builder",
+            "line": 489,
+            "loc": 79
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/player/app_player_layout.dart",
+            "name": "Expanded",
+            "line": 492,
+            "loc": 76
+          },
+          "similarity": 0.981,
+          "kind": "near-duplicate",
+          "cluster_size": 3,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/player/app_player_layout.dart",
+              "name": "_trackHeader",
+              "line": 478,
+              "loc": 91
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/player/app_player_layout.dart",
+              "name": "Builder",
+              "line": 489,
+              "loc": 79
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/player/app_player_layout.dart",
+              "name": "Expanded",
+              "line": 492,
+              "loc": 76
+            }
+          ]
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_zh.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_zh.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (9991 LOC)",
+        "detail": {
+          "loc": 9991
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_es.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_es.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (6910 LOC)",
+        "detail": {
+          "loc": 6910
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_pt.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_pt.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (6858 LOC)",
+        "detail": {
+          "loc": 6858
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_ru.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_ru.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3561 LOC)",
+        "detail": {
+          "loc": 3561
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_fr.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_fr.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3513 LOC)",
+        "detail": {
+          "loc": 3513
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_ar.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_ar.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3494 LOC)",
+        "detail": {
+          "loc": 3494
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_uk.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_uk.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3489 LOC)",
+        "detail": {
+          "loc": 3489
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_de.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_de.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3485 LOC)",
+        "detail": {
+          "loc": 3485
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_tr.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_tr.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3469 LOC)",
+        "detail": {
+          "loc": 3469
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_it.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_it.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3468 LOC)",
+        "detail": {
+          "loc": 3468
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_nl.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_nl.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3465 LOC)",
+        "detail": {
+          "loc": 3465
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_hi.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_hi.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3460 LOC)",
+        "detail": {
+          "loc": 3460
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_en.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_en.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3458 LOC)",
+        "detail": {
+          "loc": 3458
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_id.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_id.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3443 LOC)",
+        "detail": {
+          "loc": 3443
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_ja.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_ja.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3418 LOC)",
+        "detail": {
+          "loc": 3418
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_ko.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_ko.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3384 LOC)",
+        "detail": {
+          "loc": 3384
+        }
+      }
+    ],
+    "lib/widgets/audio_analysis/audio_analysis_widget.dart": [
+      {
+        "id": "structural::lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1245 LOC) / complexity score 88",
+        "detail": {
+          "loc": 1245,
+          "complexity_score": 88,
+          "complexity_signals": [
+            "33 imports",
+            "100 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/screens/listening_rewind_screen.dart": [
+      {
+        "id": "structural::lib/screens/listening_rewind_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1844 LOC) / complexity score 98",
+        "detail": {
+          "loc": 1844,
+          "complexity_score": 98,
+          "complexity_signals": [
+            "24 imports",
+            "73 control flow",
+            "28 classes"
+          ]
+        }
+      }
+    ],
+    "lib/providers/local_library_provider.dart": [
+      {
+        "id": "structural::lib/providers/local_library_provider.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1503 LOC) / complexity score 157",
+        "detail": {
+          "loc": 1503,
+          "complexity_score": 157,
+          "complexity_signals": [
+            "23 imports",
+            "179 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/services/library/library_collections_database.dart": [
+      {
+        "id": "structural::lib/services/library/library_collections_database.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (1056 LOC) / complexity score 31",
+        "detail": {
+          "loc": 1056,
+          "complexity_score": 31,
+          "complexity_signals": [
+            "56 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/utils/lyrics_parser.dart": [
+      {
+        "id": "structural::lib/utils/lyrics_parser.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (982 LOC) / complexity score 74",
+        "detail": {
+          "loc": 982,
+          "complexity_score": 74,
+          "complexity_signals": [
+            "97 control flow",
+            "6 classes"
+          ]
+        }
+      }
+    ],
+    "lib/screens/now_playing_screen.dart": [
+      {
+        "id": "structural::lib/screens/now_playing_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (976 LOC) / complexity score 63",
+        "detail": {
+          "loc": 976,
+          "complexity_score": 63,
+          "complexity_signals": [
+            "42 imports",
+            "66 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/services/library/library_database.dart": [
+      {
+        "id": "structural::lib/services/library/library_database.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (686 LOC) / complexity score 17",
+        "detail": {
+          "loc": 686,
+          "complexity_score": 17,
+          "complexity_signals": [
+            "42 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/screens/lyrics_share_screen.dart": [
+      {
+        "id": "structural::lib/screens/lyrics_share_screen.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (896 LOC)",
+        "detail": {
+          "loc": 896
+        }
+      }
+    ],
+    "lib/services/playback/music_player_automix.dart": [
+      {
+        "id": "structural::lib/services/playback/music_player_automix.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (708 LOC) / complexity score 74",
+        "detail": {
+          "loc": 708,
+          "complexity_score": 74,
+          "complexity_signals": [
+            "99 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/screens/main_shell.dart": [
+      {
+        "id": "structural::lib/screens/main_shell.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (655 LOC) / complexity score 20",
+        "detail": {
+          "loc": 655,
+          "complexity_score": 20,
+          "complexity_signals": [
+            "32 imports",
+            "33 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/utils/logger.dart": [
+      {
+        "id": "structural::lib/utils/logger.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (540 LOC) / complexity score 16",
+        "detail": {
+          "loc": 540,
+          "complexity_score": 16,
+          "complexity_signals": [
+            "41 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/widgets": [
+      {
+        "id": "flat_dirs::lib/widgets",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 6 files, 12 child dirs (combined 42) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 6,
+          "child_dir_count": 12,
+          "combined_score": 42,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        }
+      }
+    ],
+    "lib/utils": [
+      {
+        "id": "flat_dirs::lib/utils",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 33 files, 0 child dirs (combined 33) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 33,
+          "child_dir_count": 0,
+          "combined_score": 33,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        }
+      }
+    ],
+    "lib/widgets/player": [
+      {
+        "id": "flat_dirs::lib/widgets/player",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 25 files, 0 child dirs (combined 25) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 25,
+          "child_dir_count": 0,
+          "combined_score": 25,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        }
+      }
+    ],
+    "lib/services/playback": [
+      {
+        "id": "flat_dirs::lib/services/playback",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 32 files, 0 child dirs (combined 32) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 32,
+          "child_dir_count": 0,
+          "combined_score": 32,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        }
+      }
+    ],
+    "lib/models/equalizer_settings.dart": [
+      {
+        "id": "signature::lib/models/equalizer_settings.dart::signature_variance::copyWith",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'copyWith' has 9 different signatures across 9 files",
+        "detail": {}
+      }
+    ],
+    "lib/providers/equalizer_provider.dart": [
+      {
+        "id": "signature::lib/providers/equalizer_provider.dart::signature_variance::update",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'update' has 8 different signatures across 8 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/library/library_row_mapper.dart": [
+      {
+        "id": "signature::lib/services/library/library_row_mapper.dart::signature_variance::decode",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'decode' has 3 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/providers/user_profile_provider.dart": [
+      {
+        "id": "signature::lib/providers/user_profile_provider.dart::signature_variance::save",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'save' has 2 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/utils/image_cache_utils.dart": [
+      {
+        "id": "test_coverage::lib/utils/image_cache_utils.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (12 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 12,
+          "importer_count": 1,
+          "loc_weight": 3.4641016151377544
+        }
+      }
+    ],
+    "lib/utils/app_bar_layout.dart": [
+      {
+        "id": "test_coverage::lib/utils/app_bar_layout.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (12 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 12,
+          "importer_count": 1,
+          "loc_weight": 3.4641016151377544
+        }
+      }
+    ],
+    "lib/widgets/player/player_lyrics_controls.dart": [
+      {
+        "id": "test_coverage::lib/widgets/player/player_lyrics_controls.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (29 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 29,
+          "importer_count": 2,
+          "loc_weight": 5.385164807134504
+        }
+      }
+    ],
+    "lib/providers/playback_notification_provider.dart": [
+      {
+        "id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (57 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 57,
+          "importer_count": 1,
+          "loc_weight": 7.54983443527075
+        }
+      }
+    ],
+    "lib/screens/home/home_tab_feed.dart": [
+      {
+        "id": "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (423 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 423,
+          "importer_count": 0,
+          "loc_weight": 20.566963801203133
+        }
+      }
+    ],
+    "lib/utils/detail_page_route.dart": [
+      {
+        "id": "test_coverage::lib/utils/detail_page_route.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (40 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 40,
+          "importer_count": 2,
+          "loc_weight": 6.324555320336759
+        }
+      }
+    ],
+    "lib/widgets/player/player_metadata_title.dart": [
+      {
+        "id": "test_coverage::lib/widgets/player/player_metadata_title.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (45 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 45,
+          "importer_count": 1,
+          "loc_weight": 6.708203932499369
+        }
+      }
+    ],
+    "lib/screens/settings/profile_settings_page.dart": [
+      {
+        "id": "test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (180 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 180,
+          "importer_count": 1,
+          "loc_weight": 13.416407864998739
+        }
+      }
+    ],
+    "lib/screens/settings/lyrics_settings_page.dart": [
+      {
+        "id": "test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (55 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 55,
+          "importer_count": 1,
+          "loc_weight": 7.416198487095663
+        }
+      }
+    ],
+    "lib/widgets/player/player_playback_controls.dart": [
+      {
+        "id": "test_coverage::lib/widgets/player/player_playback_controls.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (250 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 250,
+          "importer_count": 1,
+          "loc_weight": 15.811388300841896
+        }
+      }
+    ],
+    "lib/widgets/player/player_lyrics_section.dart": [
+      {
+        "id": "test_coverage::lib/widgets/player/player_lyrics_section.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (153 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 153,
+          "importer_count": 1,
+          "loc_weight": 12.36931687685298
+        }
+      }
+    ],
+    "lib/widgets/audio_analysis/audio_analysis_models.dart": [
+      {
+        "id": "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (183 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 183,
+          "importer_count": 0,
+          "loc_weight": 13.527749258468683
+        }
+      }
+    ],
+    "lib/screens/home/home_tab_widgets.dart": [
+      {
+        "id": "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (49 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 49,
+          "importer_count": 0,
+          "loc_weight": 7.0
+        }
+      }
+    ],
+    "lib/utils/path_match_keys.dart": [
+      {
+        "id": "dupes::lib/utils/path_match_keys.dart::_computePathMatchKeys::lib/utils/path_match_keys.dart::addNormalized",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _computePathMatchKeys (lib/utils/path_match_keys.dart:54) <-> addNormalized (lib/utils/path_match_keys.dart:66) [93%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/utils/path_match_keys.dart",
+            "name": "_computePathMatchKeys",
+            "line": 54,
+            "loc": 82
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/utils/path_match_keys.dart",
+            "name": "addNormalized",
+            "line": 66,
+            "loc": 65
+          },
+          "similarity": 0.93,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/utils/path_match_keys.dart",
+              "name": "_computePathMatchKeys",
+              "line": 54,
+              "loc": 82
+            },
+            {
+              "file": "/home/user/Private/lib/utils/path_match_keys.dart",
+              "name": "addNormalized",
+              "line": 66,
+              "loc": 65
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/settings/backup_restore_page.dart": [
+      {
+        "id": "dupes::lib/screens/settings/backup_restore_page.dart::SettingsSwitchItem::lib/screens/settings/backup_restore_page.dart::SettingsSwitchItem",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: SettingsSwitchItem (lib/screens/settings/backup_restore_page.dart:284) <-> SettingsSwitchItem (lib/screens/settings/backup_restore_page.dart:293) [93%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/backup_restore_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 284,
+            "loc": 65
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/backup_restore_page.dart",
+            "name": "SettingsSwitchItem",
+            "line": 293,
+            "loc": 56
+          },
+          "similarity": 0.926,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/backup_restore_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 284,
+              "loc": 65
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/backup_restore_page.dart",
+              "name": "SettingsSwitchItem",
+              "line": 293,
+              "loc": 56
+            }
+          ]
+        }
+      }
+    ],
+    "lib/screens/settings/about_page.dart": [
+      {
+        "id": "dupes::lib/screens/settings/about_page.dart::LayoutBuilder::lib/screens/settings/about_page.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/screens/settings/about_page.dart:178) <-> LayoutBuilder (lib/screens/settings/about_page.dart:188) [92%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/screens/settings/about_page.dart",
+            "name": "build",
+            "line": 178,
+            "loc": 82
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/screens/settings/about_page.dart",
+            "name": "LayoutBuilder",
+            "line": 188,
+            "loc": 70
+          },
+          "similarity": 0.925,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/screens/settings/about_page.dart",
+              "name": "build",
+              "line": 178,
+              "loc": 82
+            },
+            {
+              "file": "/home/user/Private/lib/screens/settings/about_page.dart",
+              "name": "LayoutBuilder",
+              "line": 188,
+              "loc": 70
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/player/player_track_swipe.dart": [
+      {
+        "id": "dupes::lib/widgets/player/player_track_swipe.dart::PlayerTrackSwipeRegion::lib/widgets/player/player_track_swipe.dart::build",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: build (lib/widgets/player/player_track_swipe.dart:165) <-> PlayerTrackSwipeRegion (lib/widgets/player/player_track_swipe.dart:170) [92%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/player/player_track_swipe.dart",
+            "name": "build",
+            "line": 165,
+            "loc": 55
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/player/player_track_swipe.dart",
+            "name": "PlayerTrackSwipeRegion",
+            "line": 170,
+            "loc": 47
+          },
+          "similarity": 0.922,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/player/player_track_swipe.dart",
+              "name": "build",
+              "line": 165,
+              "loc": 55
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/player/player_track_swipe.dart",
+              "name": "PlayerTrackSwipeRegion",
+              "line": 170,
+              "loc": 47
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/cached_cover_image.dart": [
+      {
+        "id": "dupes::lib/widgets/cached_cover_image.dart::decode::lib/widgets/cached_cover_image.dart::loadImage",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: loadImage (lib/widgets/cached_cover_image.dart:244) <-> decode (lib/widgets/cached_cover_image.dart:246) [92%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/cached_cover_image.dart",
+            "name": "loadImage",
+            "line": 244,
+            "loc": 34
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/cached_cover_image.dart",
+            "name": "decode",
+            "line": 246,
+            "loc": 29
+          },
+          "similarity": 0.915,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/cached_cover_image.dart",
+              "name": "loadImage",
+              "line": 244,
+              "loc": 34
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/cached_cover_image.dart",
+              "name": "decode",
+              "line": 246,
+              "loc": 29
+            }
+          ]
+        }
+      }
+    ],
+    "lib/services/library/embedded_cover_resolver.dart": [
+      {
+        "id": "structural::lib/services/library/embedded_cover_resolver.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (997 LOC) / complexity score 115",
+        "detail": {
+          "loc": 997,
+          "complexity_score": 115,
+          "complexity_signals": [
+            "140 control flow"
+          ]
+        }
+      }
+    ],
+    "lib/services/library/library_browse_store.dart": [
+      {
+        "id": "structural::lib/services/library/library_browse_store.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (901 LOC)",
+        "detail": {
+          "loc": 901
+        }
+      }
+    ],
+    "lib/screens/settings/log_page.dart": [
+      {
+        "id": "structural::lib/screens/settings/log_page.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (786 LOC)",
+        "detail": {
+          "loc": 786
+        }
+      }
+    ],
+    "lib/widgets/header/album_detail_header.dart": [
+      {
+        "id": "structural::lib/widgets/header/album_detail_header.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (714 LOC)",
+        "detail": {
+          "loc": 714
+        }
+      }
+    ],
+    "lib/widgets/sheets/audio_info_sheet.dart": [
+      {
+        "id": "structural::lib/widgets/sheets/audio_info_sheet.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (653 LOC) / complexity score 56",
+        "detail": {
+          "loc": 653,
+          "complexity_score": 56,
+          "complexity_signals": [
+            "21 imports",
+            "76 control flow",
+            "7 classes"
+          ]
+        }
+      }
+    ],
+    "lib/widgets/selection/selection_bottom_bar.dart": [
+      {
+        "id": "structural::lib/widgets/selection/selection_bottom_bar.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (607 LOC)",
+        "detail": {
+          "loc": 607
+        }
+      }
+    ],
+    "lib/widgets/sheets/playlist_picker_sheet.dart": [
+      {
+        "id": "structural::lib/widgets/sheets/playlist_picker_sheet.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (607 LOC)",
+        "detail": {
+          "loc": 607
+        }
+      }
+    ],
+    "lib/services/library": [
+      {
+        "id": "flat_dirs::lib/services/library",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 36 files, 0 child dirs (combined 36) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 36,
+          "child_dir_count": 0,
+          "combined_score": 36,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        }
+      }
+    ],
+    "lib/providers": [
+      {
+        "id": "flat_dirs::lib/providers",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 20 files, 0 child dirs (combined 20) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 20,
+          "child_dir_count": 0,
+          "combined_score": 20,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        }
+      }
+    ],
+    "lib/utils/lyrics_timeline.dart": [
+      {
+        "id": "single_use::lib/utils/lyrics_timeline.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (275 LOC): only imported by lib/widgets/player/player_lyrics.dart",
+        "detail": {
+          "loc": 275,
+          "sole_importer": "lib/widgets/player/player_lyrics.dart"
+        }
+      }
+    ],
+    "lib/services/playback/replaygain_service.dart": [
+      {
+        "id": "single_use::lib/services/playback/replaygain_service.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (266 LOC): only imported by lib/widgets/library/batch_track_actions.dart",
+        "detail": {
+          "loc": 266,
+          "sole_importer": "lib/widgets/library/batch_track_actions.dart"
+        }
+      }
+    ],
+    "lib/services/apk_downloader.dart": [
+      {
+        "id": "single_use::lib/services/apk_downloader.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (263 LOC): only imported by lib/widgets/sheets/update_dialog.dart",
+        "detail": {
+          "loc": 263,
+          "sole_importer": "lib/widgets/sheets/update_dialog.dart"
+        }
+      }
+    ],
+    "lib/services/library/metadata_persistence_service.dart": [
+      {
+        "id": "single_use::lib/services/library/metadata_persistence_service.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (237 LOC): only imported by lib/widgets/library/track_metadata_edit_sheet.dart",
+        "detail": {
+          "loc": 237,
+          "sole_importer": "lib/widgets/library/track_metadata_edit_sheet.dart"
+        }
+      }
+    ],
+    "lib/providers/local_artist_provider.dart": [
+      {
+        "id": "single_use::lib/providers/local_artist_provider.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (234 LOC): only imported by lib/screens/library/local_artist_screen.dart",
+        "detail": {
+          "loc": 234,
+          "sole_importer": "lib/screens/library/local_artist_screen.dart"
+        }
+      }
+    ],
+    "lib/widgets/settings/automix_settings.dart": [
+      {
+        "id": "single_use::lib/widgets/settings/automix_settings.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (207 LOC): only imported by lib/screens/settings/playback_settings_page.dart",
+        "detail": {
+          "loc": 207,
+          "sole_importer": "lib/screens/settings/playback_settings_page.dart"
+        }
+      }
+    ],
+    "lib/services/native/native_installation.dart": [
+      {
+        "id": "single_use::lib/services/native/native_installation.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (48 LOC): only imported by lib/main.dart",
+        "detail": {
+          "loc": 48,
+          "sole_importer": "lib/main.dart"
+        }
+      }
+    ],
+    "lib/widgets/selection/destructive_selection_button.dart": [
+      {
+        "id": "single_use::lib/widgets/selection/destructive_selection_button.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (48 LOC): only imported by lib/screens/library/local_album_screen.dart",
+        "detail": {
+          "loc": 48,
+          "sole_importer": "lib/screens/library/local_album_screen.dart"
+        }
+      }
+    ],
+    "lib/providers/local_home_feed_provider.dart": [
+      {
+        "id": "single_use::lib/providers/local_home_feed_provider.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (46 LOC): only imported by lib/screens/home/home_tab.dart",
+        "detail": {
+          "loc": 46,
+          "sole_importer": "lib/screens/home/home_tab.dart"
+        }
+      }
+    ],
+    "lib/screens/app_screens.dart": [
+      {
+        "id": "single_use::lib/screens/app_screens.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (39 LOC): only imported by lib/main.dart",
+        "detail": {
+          "loc": 39,
+          "sole_importer": "lib/main.dart"
+        }
+      }
+    ],
+    "lib/models/album_track_order.dart": [
+      {
+        "id": "single_use::lib/models/album_track_order.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (38 LOC): only imported by lib/screens/library/local_album_screen.dart",
+        "detail": {
+          "loc": 38,
+          "sole_importer": "lib/screens/library/local_album_screen.dart"
+        }
+      }
+    ],
+    "lib/services/native_log_source.dart": [
+      {
+        "id": "single_use::lib/services/native_log_source.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (32 LOC): only imported by lib/utils/logger.dart",
+        "detail": {
+          "loc": 32,
+          "sole_importer": "lib/utils/logger.dart"
+        }
+      }
+    ],
+    "lib/services/playback/activity_attachment.dart": [
+      {
+        "id": "single_use::lib/services/playback/activity_attachment.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (32 LOC): only imported by lib/main.dart",
+        "detail": {
+          "loc": 32,
+          "sole_importer": "lib/main.dart"
+        }
+      }
+    ],
+    "lib/utils/lyric_text_direction.dart": [
+      {
+        "id": "single_use::lib/utils/lyric_text_direction.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (29 LOC): only imported by lib/widgets/player/player_lyrics.dart",
+        "detail": {
+          "loc": 29,
+          "sole_importer": "lib/widgets/player/player_lyrics.dart"
+        }
+      }
+    ],
+    "lib/utils/artist_utils.dart": [
+      {
+        "id": "single_use::lib/utils/artist_utils.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (28 LOC): only imported by lib/navigation/detail_navigation.dart",
+        "detail": {
+          "loc": 28,
+          "sole_importer": "lib/navigation/detail_navigation.dart"
+        }
+      }
+    ],
+    "lib/utils/mime_utils.dart": [
+      {
+        "id": "single_use::lib/utils/mime_utils.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (28 LOC): only imported by lib/widgets/library/local_song_file_actions.dart",
+        "detail": {
+          "loc": 28,
+          "sole_importer": "lib/widgets/library/local_song_file_actions.dart"
+        }
+      }
+    ],
+    "lib/utils/isrc_utils.dart": [
+      {
+        "id": "single_use::lib/utils/isrc_utils.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (27 LOC): only imported by lib/widgets/player/player_details_sheet.dart",
+        "detail": {
+          "loc": 27,
+          "sole_importer": "lib/widgets/player/player_details_sheet.dart"
+        }
+      }
+    ],
+    "lib/services/playback/equalizer_preset_io.dart": [
+      {
+        "id": "single_use::lib/services/playback/equalizer_preset_io.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (21 LOC): only imported by lib/screens/equalizer_screen.dart",
+        "detail": {
+          "loc": 21,
+          "sole_importer": "lib/screens/equalizer_screen.dart"
+        }
+      }
+    ],
+    "lib/services/library/cover_palette.dart": [
+      {
+        "id": "signature::lib/services/library/cover_palette.dart::signature_variance::resolve",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'resolve' has 4 different signatures across 4 files",
+        "detail": {}
+      }
+    ],
+    "lib/navigation/detail_navigation.dart": [
+      {
+        "id": "signature::lib/navigation/detail_navigation.dart::signature_variance::GestureDetector",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'GestureDetector' has 3 different signatures across 7 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/playback/autoplay_personalization.dart": [
+      {
+        "id": "signature::lib/services/playback/autoplay_personalization.dart::signature_variance::begin",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'begin' has 3 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/backup/backup_service.dart": [
+      {
+        "id": "signature::lib/services/backup/backup_service.dart::signature_variance::encode",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'encode' has 3 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/audio_analysis/audio_analysis_jobs.dart": [
+      {
+        "id": "signature::lib/services/audio_analysis/audio_analysis_jobs.dart::signature_variance::invalidate",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'invalidate' has 3 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/native/native_data_jobs.dart": [
+      {
+        "id": "signature::lib/services/native/native_data_jobs.dart::signature_variance::cancel",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'cancel' has 2 different signatures across 7 files",
+        "detail": {}
+      }
+    ],
+    "lib/navigation/shell_navigation.dart": [
+      {
+        "id": "signature::lib/navigation/shell_navigation.dart::signature_variance::detach",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'detach' has 2 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/services/library/metadata_cover_resources.dart": [
+      {
+        "id": "signature::lib/services/library/metadata_cover_resources.dart::signature_variance::release",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'release' has 2 different signatures across 4 files",
+        "detail": {}
+      }
+    ],
+    "lib/navigation/now_playing_route.dart": [
+      {
+        "id": "signature::lib/navigation/now_playing_route.dart::signature_variance::didPop",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'didPop' has 2 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/providers/metadata_editor_controller.dart": [
+      {
+        "id": "signature::lib/providers/metadata_editor_controller.dart::signature_variance::isCurrent",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'isCurrent' has 2 different signatures across 3 files",
+        "detail": {}
+      }
+    ],
+    "lib/screens/library/collapsing_header_scroll_mixin.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/collapsing_header_scroll_mixin.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (36 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 36,
+          "importer_count": 2,
+          "loc_weight": 6.0
+        }
+      }
+    ],
+    "lib/widgets/settings/music_haptics_settings.dart": [
+      {
+        "id": "test_coverage::lib/widgets/settings/music_haptics_settings.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (81 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 81,
+          "importer_count": 1,
+          "loc_weight": 9.0
+        }
+      }
+    ],
+    "lib/utils/best_effort_delete.dart": [
+      {
+        "id": "test_coverage::lib/utils/best_effort_delete.dart::transitive_only",
+        "tier": 2,
+        "confidence": "medium",
+        "summary": "No direct tests (12 LOC, 12 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 12,
+          "importer_count": 12,
+          "loc_weight": 3.4641016151377544
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_collection_items.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (94 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 94,
+          "importer_count": 0,
+          "loc_weight": 9.695359714832659
+        }
+      }
+    ],
+    "lib/services/native/cue_sheet_bridge.dart": [
+      {
+        "id": "test_coverage::lib/services/native/cue_sheet_bridge.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (18 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 18,
+          "importer_count": 1,
+          "loc_weight": 4.242640687119285
+        }
+      }
+    ],
+    "lib/services/library/library_scan_notifications.dart": [
+      {
+        "id": "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (139 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 139,
+          "importer_count": 1,
+          "loc_weight": 11.789826122551595
+        }
+      }
+    ],
+    "lib/widgets/lyrics/lyric_supplement_transition.dart": [
+      {
+        "id": "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (65 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 65,
+          "importer_count": 2,
+          "loc_weight": 8.06225774829855
+        }
+      }
+    ],
+    "lib/widgets/sheets/duplicate_review_sheet.dart": [
+      {
+        "id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (378 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 378,
+          "importer_count": 1,
+          "loc_weight": 19.44222209522358
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_navigation.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (298 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 298,
+          "importer_count": 0,
+          "loc_weight": 17.26267650163207
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_item_widgets.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (135 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 135,
+          "importer_count": 0,
+          "loc_weight": 11.61895003862225
+        }
+      }
+    ],
+    "lib/screens/library/selection_mode_mixin.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (60 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 60,
+          "importer_count": 2,
+          "loc_weight": 7.745966692414834
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_batch_actions.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (37 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 37,
+          "importer_count": 0,
+          "loc_weight": 6.082762530298219
+        }
+      }
+    ],
+    "lib/widgets/status/beta_badge.dart": [
+      {
+        "id": "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (26 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 26,
+          "importer_count": 2,
+          "loc_weight": 5.0990195135927845
+        }
+      }
+    ],
+    "lib/widgets/settings/custom_font_setting.dart": [
+      {
+        "id": "test_coverage::lib/widgets/settings/custom_font_setting.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (76 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 76,
+          "importer_count": 1,
+          "loc_weight": 8.717797887081348
+        }
+      }
+    ],
+    "lib/screens/library/library_section_tab_helpers.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (278 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 278,
+          "importer_count": 0,
+          "loc_weight": 16.673332000533065
+        }
+      }
+    ],
+    "lib/widgets/library/local_track_batch_actions.dart": [
+      {
+        "id": "dupes::lib/widgets/library/local_track_batch_actions.dart::AppDialogAction::lib/widgets/selection/confirm_and_delete_tracks.dart::AppDialogAction",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Exact dupe: AppDialogAction (lib/widgets/library/local_track_batch_actions.dart:31) <-> AppDialogAction (lib/widgets/selection/confirm_and_delete_tracks.dart:40) [100%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/library/local_track_batch_actions.dart",
+            "name": "AppDialogAction",
+            "line": 31,
+            "loc": 12
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/selection/confirm_and_delete_tracks.dart",
+            "name": "AppDialogAction",
+            "line": 40,
+            "loc": 12
+          },
+          "similarity": 1.0,
+          "kind": "exact",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/library/local_track_batch_actions.dart",
+              "name": "AppDialogAction",
+              "line": 31,
+              "loc": 12
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/selection/confirm_and_delete_tracks.dart",
+              "name": "AppDialogAction",
+              "line": 40,
+              "loc": 12
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/lyrics/aligned_lyric_pronunciation.dart": [
+      {
+        "id": "dupes::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::SizedBox::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::_buildGroup",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: _buildGroup (lib/widgets/lyrics/aligned_lyric_pronunciation.dart:223) <-> SizedBox (lib/widgets/lyrics/aligned_lyric_pronunciation.dart:225) [99%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/lyrics/aligned_lyric_pronunciation.dart",
+            "name": "_buildGroup",
+            "line": 223,
+            "loc": 38
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/lyrics/aligned_lyric_pronunciation.dart",
+            "name": "SizedBox",
+            "line": 225,
+            "loc": 36
+          },
+          "similarity": 0.986,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/lyrics/aligned_lyric_pronunciation.dart",
+              "name": "_buildGroup",
+              "line": 223,
+              "loc": 38
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/lyrics/aligned_lyric_pronunciation.dart",
+              "name": "SizedBox",
+              "line": 225,
+              "loc": 36
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/library/library_fast_scroller.dart": [
+      {
+        "id": "dupes::lib/widgets/library/library_fast_scroller.dart::PositionedDirectional::lib/widgets/library/library_fast_scroller.dart::Stack",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: PositionedDirectional (lib/widgets/library/library_fast_scroller.dart:248) <-> Stack (lib/widgets/library/library_fast_scroller.dart:258) [92%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/library/library_fast_scroller.dart",
+            "name": "PositionedDirectional",
+            "line": 248,
+            "loc": 80
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/library/library_fast_scroller.dart",
+            "name": "Stack",
+            "line": 258,
+            "loc": 69
+          },
+          "similarity": 0.924,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/library/library_fast_scroller.dart",
+              "name": "PositionedDirectional",
+              "line": 248,
+              "loc": 80
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/library/library_fast_scroller.dart",
+              "name": "Stack",
+              "line": 258,
+              "loc": 69
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/glass/app_chrome.dart": [
+      {
+        "id": "structural::lib/widgets/glass/app_chrome.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (732 LOC)",
+        "detail": {
+          "loc": 732
+        }
+      }
+    ],
+    "lib/widgets/glass/app_selection_pill.dart": [
+      {
+        "id": "structural::lib/widgets/glass/app_selection_pill.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (721 LOC)",
+        "detail": {
+          "loc": 721
+        }
+      }
+    ],
+    "lib/widgets/glass/app_level_slider.dart": [
+      {
+        "id": "single_use::lib/widgets/glass/app_level_slider.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (252 LOC): only imported by lib/screens/equalizer_screen.dart",
+        "detail": {
+          "loc": 252,
+          "sole_importer": "lib/screens/equalizer_screen.dart"
+        }
+      }
+    ],
+    "lib/widgets/glass/app_glass_preparation.dart": [
+      {
+        "id": "single_use::lib/widgets/glass/app_glass_preparation.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (41 LOC): only imported by lib/app.dart",
+        "detail": {
+          "loc": 41,
+          "sole_importer": "lib/app.dart"
+        }
+      }
+    ],
+    "lib/widgets/shell/app_theme_wrapper.dart": [
+      {
+        "id": "single_use::lib/widgets/shell/app_theme_wrapper.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Single-use (40 LOC): only imported by lib/app.dart",
+        "detail": {
+          "loc": 40,
+          "sole_importer": "lib/app.dart"
+        }
+      }
+    ],
+    "lib/widgets/glass/app_glass_warmup.dart": [
+      {
+        "id": "test_coverage::lib/widgets/glass/app_glass_warmup.dart::transitive_only",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "No direct tests (132 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+        "detail": {
+          "kind": "transitive_only",
+          "loc": 132,
+          "importer_count": 1,
+          "loc_weight": 11.489125293076057
+        }
+      }
+    ],
+    "lib/widgets/header/app_artist_header.dart": [
+      {
+        "id": "dupes::lib/widgets/header/app_artist_header.dart::SliverLayoutBuilder::lib/widgets/header/app_artist_header.dart::buildSlivers",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: buildSlivers (lib/widgets/header/app_artist_header.dart:151) <-> SliverLayoutBuilder (lib/widgets/header/app_artist_header.dart:157) [95%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/header/app_artist_header.dart",
+            "name": "buildSlivers",
+            "line": 151,
+            "loc": 69
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/header/app_artist_header.dart",
+            "name": "SliverLayoutBuilder",
+            "line": 157,
+            "loc": 60
+          },
+          "similarity": 0.952,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/header/app_artist_header.dart",
+              "name": "buildSlivers",
+              "line": 151,
+              "loc": 69
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/header/app_artist_header.dart",
+              "name": "SliverLayoutBuilder",
+              "line": 157,
+              "loc": 60
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/player/app_player_queue.dart": [
+      {
+        "id": "dupes::lib/widgets/player/app_player_queue.dart::modeButton::lib/widgets/player/app_player_queue.dart::modeButton",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe cluster (3 functions, 94% similar): modeButton (lib/widgets/player/app_player_queue.dart:101), modeButton (lib/widgets/player/app_player_queue.dart:110), ...",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/player/app_player_queue.dart",
+            "name": "modeButton",
+            "line": 101,
+            "loc": 85
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/player/app_player_queue.dart",
+            "name": "modeButton",
+            "line": 110,
+            "loc": 76
+          },
+          "similarity": 0.944,
+          "kind": "near-duplicate",
+          "cluster_size": 3,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/player/app_player_queue.dart",
+              "name": "Row",
+              "line": 88,
+              "loc": 98
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/player/app_player_queue.dart",
+              "name": "modeButton",
+              "line": 101,
+              "loc": 85
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/player/app_player_queue.dart",
+              "name": "modeButton",
+              "line": 110,
+              "loc": 76
+            }
+          ]
+        }
+      }
+    ],
+    "lib/widgets/shell/app_bottom_bar.dart": [
+      {
+        "id": "dupes::lib/widgets/shell/app_bottom_bar.dart::AnimatedBuilder::lib/widgets/shell/app_bottom_bar.dart::LayoutBuilder",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "Near dupe: LayoutBuilder (lib/widgets/shell/app_bottom_bar.dart:200) <-> AnimatedBuilder (lib/widgets/shell/app_bottom_bar.dart:225) [91%]",
+        "detail": {
+          "fn_a": {
+            "file": "/home/user/Private/lib/widgets/shell/app_bottom_bar.dart",
+            "name": "LayoutBuilder",
+            "line": 200,
+            "loc": 167
+          },
+          "fn_b": {
+            "file": "/home/user/Private/lib/widgets/shell/app_bottom_bar.dart",
+            "name": "AnimatedBuilder",
+            "line": 225,
+            "loc": 140
+          },
+          "similarity": 0.913,
+          "kind": "near-duplicate",
+          "cluster_size": 2,
+          "cluster": [
+            {
+              "file": "/home/user/Private/lib/widgets/shell/app_bottom_bar.dart",
+              "name": "LayoutBuilder",
+              "line": 200,
+              "loc": 167
+            },
+            {
+              "file": "/home/user/Private/lib/widgets/shell/app_bottom_bar.dart",
+              "name": "AnimatedBuilder",
+              "line": 225,
+              "loc": 140
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "total_matching": 213,
+  "noise_budget": 0,
+  "noise_global_budget": 0,
   "narrative": {
     "phase": "middle_grind",
     "headline": "All T1 items cleared!",
