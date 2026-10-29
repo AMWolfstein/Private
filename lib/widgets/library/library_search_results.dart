@@ -1,3 +1,4 @@
+import 'package:sistrum/models/library_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +7,7 @@ import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_search.dart';
@@ -237,7 +237,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
         case LibrarySearchKind.playlists:
           await Navigator.of(context).push(
             MaterialPageRoute<void>(
-              builder: (_) => LibraryCollectionTracksScreen(
+              builder: (_) => appScreensOf(context).collectionTracks(
                 mode: LibraryCollectionMode.playlist,
                 playlistId: hit.id,
               ),
@@ -249,7 +249,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           if (!mounted) return;
           await Navigator.of(context).push(
             MaterialPageRoute<void>(
-              builder: (_) => LocalAlbumScreen(
+              builder: (_) => appScreensOf(context).album(
                 albumName: hit.title,
                 artistName: hit.artist,
                 coverPath: hit.cover,

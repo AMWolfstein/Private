@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/screens/library/local_artist_screen.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
-import 'package:sistrum/utils/detail_page_route.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/artist_utils.dart';
+import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/utils/logger.dart';
 
 Future<void> navigateToArtistCredits(
@@ -49,10 +48,10 @@ Future<void> navigateToArtist(
   String? coverUrl,
 }) => Future.sync(() {
   if (artistName.isEmpty) return;
+  final screens = appScreensOf(context);
   pushViaPreferredNavigator(
     context,
-    (_) =>
-        LocalArtistScreen(artistName: artistName.trim(), coverPath: coverUrl),
+    (_) => screens.artist(artistName: artistName.trim(), coverPath: coverUrl),
   );
 });
 
@@ -87,9 +86,10 @@ Future<void> navigateToAlbum(
   final first = tracks.first;
   final albumArtist = (first.albumArtist ?? '').trim();
   final pageArtist = albumArtist.isNotEmpty ? albumArtist : first.artistName;
+  final screens = appScreensOf(context);
   pushViaPreferredNavigator(
     context,
-    (_) => LocalAlbumScreen(
+    (_) => screens.album(
       albumName: first.albumName,
       artistName: pageArtist,
       coverPath: first.coverPath,

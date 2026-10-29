@@ -455,3 +455,6 @@ class PlaylistAddBatchResult {
     required this.alreadyInPlaylistCount,
   });
 }
+
+/// Which fixed collection a track list shows: Loved or one playlist.
+enum LibraryCollectionMode { loved, playlist }

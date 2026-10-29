@@ -964,5 +964,3 @@ class _EmptyFolderState extends StatelessWidget {
     );
   }
 }
-
-enum LibraryCollectionMode { loved, playlist }

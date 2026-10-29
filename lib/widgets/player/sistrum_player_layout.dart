@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/screens/now_playing_route.dart';
+import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'package:sistrum/widgets/player/sistrum_landscape_player.dart';

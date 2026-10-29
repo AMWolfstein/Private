@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/screens/now_playing_route.dart';
+import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/widgets/player/player_track_swipe.dart';
 
 /// The footer opens the queue upwards and dismisses the route downwards.

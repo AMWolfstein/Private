@@ -44,7 +44,7 @@ import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/sistrum_library_screen.dart';
 import 'package:sistrum/screens/queue_library_refresh_policy.dart';
-import 'package:sistrum/screens/detail_navigation.dart';
+import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/selection_bottom_bar.dart';
 

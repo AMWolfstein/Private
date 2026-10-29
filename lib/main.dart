@@ -9,6 +9,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistrum/navigation/app_screens.dart';
+import 'package:sistrum/screens/app_screens.dart';
 import 'package:sistrum/app.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
@@ -107,6 +109,7 @@ void main() {
       runApp(
         ProviderScope(
           overrides: [
+            appScreensProvider.overrideWithValue(const AppScreenBuilders()),
             lowEndDeviceProvider.overrideWithValue(
               runtimeProfile.disableOverscrollEffects,
             ),

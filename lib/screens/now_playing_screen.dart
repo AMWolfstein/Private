@@ -16,10 +16,10 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/theme_settings.dart';
-import 'package:sistrum/screens/now_playing_route.dart';
+import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/screens/detail_navigation.dart';
+import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
@@ -40,7 +40,7 @@ import 'package:sistrum/widgets/glass/sistrum_artwork_contrast.dart';
 import 'package:sistrum/widgets/player/sistrum_player_actions_sheet.dart';
 import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 
-export 'package:sistrum/screens/now_playing_route.dart';
+export 'package:sistrum/navigation/now_playing_route.dart';
 
 final _log = AppLogger('NowPlaying');
 

@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sistrum/navigation/app_screens.dart';
+import 'package:sistrum/navigation/detail_navigation.dart';
+import 'package:sistrum/screens/app_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,7 +21,6 @@ import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/screens/detail_navigation.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
@@ -116,6 +118,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
+              appScreensProvider.overrideWithValue(const AppScreenBuilders()),
               settingsProvider.overrideWith(_Settings.new),
               localLibraryProvider.overrideWith(_Library.new),
               libraryCollectionsProvider.overrideWith(_Collections.new),
@@ -251,6 +254,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
+              appScreensProvider.overrideWithValue(const AppScreenBuilders()),
               libraryCollectionsProvider.overrideWith(() => collections),
               localLibraryProvider.overrideWith(_Library.new),
               settingsProvider.overrideWith(_Settings.new),

@@ -8,7 +8,8 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/navigation/app_screens.dart';
+import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/audio_quality_badges.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
@@ -48,7 +49,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
   void _openNowPlaying() {
     Navigator.of(context, rootNavigator: true).push(
       NowPlayingRoute(
-        child: const NowPlayingScreen(),
+        child: appScreensOf(context).nowPlaying(),
         miniPlayerGeometry: () {
           if (!mounted) return null;
           final surface = _bounds(_surfaceKey);

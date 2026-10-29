@@ -39,7 +39,7 @@ import 'package:sistrum/widgets/album_ken_burns.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
-import 'package:sistrum/screens/detail_navigation.dart';
+import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/widgets/header_controls.dart';
 import 'package:sistrum/providers/local_library_provider.dart';

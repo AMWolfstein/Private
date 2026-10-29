@@ -1,3 +1,5 @@
+import 'package:sistrum/navigation/app_screens.dart';
+import 'package:sistrum/screens/app_screens.dart';
 import 'package:sistrum/screens/lyrics_share_screen.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -165,6 +167,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          appScreensProvider.overrideWithValue(const AppScreenBuilders()),
           initialThemeSettingsProvider.overrideWithValue(
             ThemeSettings(playerView: playerView),
           ),
