@@ -63,7 +63,8 @@ void main() {
       },
     );
 
-    expect(downloaded, finalPath);
+    expect(downloaded, isA<ApkDownloaded>());
+    expect((downloaded as ApkDownloaded).path, finalPath);
     expect(await File(finalPath).readAsBytes(), payload);
     expect(lastReceived, payload.length);
     expect(lastTotal, payload.length);
@@ -87,7 +88,14 @@ void main() {
       client: client,
       downloadDirectory: directory,
     );
-    expect(rejected, isNull);
+    expect(
+      rejected,
+      isA<ApkDownloadFailed>().having(
+        (failed) => failed.reason,
+        'reason',
+        ApkDownloadFailure.digestMismatch,
+      ),
+    );
     expect(
       await File('${directory.path}/Sistrum-mismatch.apk').exists(),
       false,
@@ -104,7 +112,11 @@ void main() {
         url: 'http://updates.example.test/update.apk',
         version: '1',
       ),
-      isNull,
+      isA<ApkDownloadFailed>().having(
+        (failed) => failed.reason,
+        'reason',
+        ApkDownloadFailure.invalidUrl,
+      ),
     );
   });
 }

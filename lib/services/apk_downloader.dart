@@ -12,13 +12,44 @@ final _log = AppLogger('ApkDownloader');
 
 typedef ProgressCallback = void Function(int received, int total);
 
+/// Why an update download stopped; each reason has its own message.
+enum ApkDownloadFailure {
+  invalidUrl,
+  storageUnavailable,
+  server,
+  transfer,
+  incompleteDownload,
+  invalidPayload,
+  invalidDigest,
+  digestMismatch,
+}
+
+sealed class ApkDownloadResult {
+  const ApkDownloadResult();
+}
+
+final class ApkDownloaded extends ApkDownloadResult {
+  const ApkDownloaded(this.path);
+
+  final String path;
+}
+
+final class ApkDownloadFailed extends ApkDownloadResult {
+  const ApkDownloadFailed(this.reason);
+
+  final ApkDownloadFailure reason;
+}
+
+/// Whether the system installer opened for a downloaded APK.
+enum ApkInstallOutcome { opened, noInstaller, failed }
+
 Future<String> _hashApkInBackground(String path) async =>
     (await sha256.bind(File(path).openRead()).first).toString();
 
 class ApkDownloader {
   static const _streamIdleTimeout = Duration(seconds: 60);
 
-  static Future<String?> downloadApk({
+  static Future<ApkDownloadResult> downloadApk({
     required String url,
     required String version,
     String? expectedSha256,
@@ -29,7 +60,7 @@ class ApkDownloader {
     final uri = Uri.tryParse(url);
     if (uri == null || uri.scheme != 'https') {
       _log.e('Refusing to download from invalid or non-HTTPS URL');
-      return null;
+      return const ApkDownloadFailed(ApkDownloadFailure.invalidUrl);
     }
 
     final ownedClient = client == null;
@@ -40,7 +71,7 @@ class ApkDownloader {
       final dir = downloadDirectory ?? await getExternalStorageDirectory();
       if (dir == null) {
         _log.e('Could not get storage directory');
-        return null;
+        return const ApkDownloadFailed(ApkDownloadFailure.storageUnavailable);
       }
       await dir.create(recursive: true);
 
@@ -75,16 +106,16 @@ class ApkDownloader {
           !_contentRangeStartsAt(response, resumeOffset)) {
         _log.w('Server returned an invalid Content-Range; clearing partial');
         await _discardPartial(partFile, metadataFile);
-        return null;
+        return const ApkDownloadFailed(ApkDownloadFailure.server);
       }
       if (response.statusCode == 416) {
         _log.w('Server rejected the saved download range; clearing partial');
         await _discardPartial(partFile, metadataFile);
-        return null;
+        return const ApkDownloadFailed(ApkDownloadFailure.server);
       }
       if (response.statusCode != 200 && response.statusCode != 206) {
         _log.e('Failed to download: ${response.statusCode}');
-        return null;
+        return const ApkDownloadFailed(ApkDownloadFailure.server);
       }
 
       if (!isResume) resumeOffset = 0;
@@ -114,12 +145,12 @@ class ApkDownloader {
 
       if (total > 0 && received != total) {
         _log.w('Incomplete APK download: $received/$total bytes');
-        return null;
+        return const ApkDownloadFailed(ApkDownloadFailure.incompleteDownload);
       }
       if (!await _looksLikeApk(partFile)) {
         _log.e('Downloaded update is not a valid APK/ZIP payload');
         await _discardPartial(partFile, metadataFile);
-        return null;
+        return const ApkDownloadFailed(ApkDownloadFailure.invalidPayload);
       }
 
       final expected = expectedSha256?.trim().toLowerCase() ?? '';
@@ -127,13 +158,13 @@ class ApkDownloader {
         if (!RegExp(r'^[a-f0-9]{64}$').hasMatch(expected)) {
           _log.e('Release supplied an invalid SHA-256 digest');
           await _discardPartial(partFile, metadataFile);
-          return null;
+          return const ApkDownloadFailed(ApkDownloadFailure.invalidDigest);
         }
         final actual = await _hashApk(partFile);
         if (actual != expected) {
           _log.e('APK SHA-256 verification failed');
           await _discardPartial(partFile, metadataFile);
-          return null;
+          return const ApkDownloadFailed(ApkDownloadFailure.digestMismatch);
         }
       }
 
@@ -144,10 +175,10 @@ class ApkDownloader {
         'Downloaded verified update to ${finalFile.path}'
         '${expected.isEmpty ? ' (release digest unavailable)' : ''}',
       );
-      return finalFile.path;
+      return ApkDownloaded(finalFile.path);
     } catch (e) {
       _log.e('Update download paused after error: $e');
-      return null;
+      return const ApkDownloadFailed(ApkDownloadFailure.transfer);
     } finally {
       try {
         await sink?.close();
@@ -215,12 +246,18 @@ class ApkDownloader {
     if (await metadata.exists()) await metadata.delete();
   }
 
-  static Future<void> installApk(String filePath) async {
+  static Future<ApkInstallOutcome> installApk(String filePath) async {
     try {
       final result = await OpenFilex.open(filePath);
       _log.i('Open result: ${result.type} - ${result.message}');
+      return switch (result.type) {
+        ResultType.done => ApkInstallOutcome.opened,
+        ResultType.noAppToOpen => ApkInstallOutcome.noInstaller,
+        _ => ApkInstallOutcome.failed,
+      };
     } catch (e) {
       _log.e('Install error: $e');
+      return ApkInstallOutcome.failed;
     }
   }
 }

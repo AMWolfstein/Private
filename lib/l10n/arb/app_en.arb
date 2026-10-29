@@ -3358,6 +3358,18 @@
   "@updateDownloadFailed": {
     "description": "Update error title"
   },
+  "updateDownloadIntegrityFailed": "The downloaded update failed verification. Try again later.",
+  "@updateDownloadIntegrityFailed": {
+    "description": "Shown when a downloaded update does not match its release checksum or is not a valid package."
+  },
+  "updateDownloadNetworkFailed": "The update could not be downloaded. Check your connection and try again.",
+  "@updateDownloadNetworkFailed": {
+    "description": "Shown when an update download is interrupted or the server responds with an error."
+  },
+  "updateInstallFailed": "Could not open the update installer.",
+  "@updateInstallFailed": {
+    "description": "Shown when the system cannot open the downloaded update for installation."
+  },
   "updateFailedMessage": "Failed to download update",
   "@updateFailedMessage": {
     "description": "Update error message"

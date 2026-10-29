@@ -58,6 +58,20 @@ class _UpdateDialogState extends State<UpdateDialog> {
     if (mounted && !widget.forced) Navigator.pop(context);
   }
 
+  static String _failureMessage(BuildContext context, ApkDownloadFailure reason) {
+    final l10n = context.l10n;
+    return switch (reason) {
+      ApkDownloadFailure.invalidDigest ||
+      ApkDownloadFailure.digestMismatch ||
+      ApkDownloadFailure.invalidPayload => l10n.updateDownloadIntegrityFailed,
+      ApkDownloadFailure.transfer ||
+      ApkDownloadFailure.incompleteDownload ||
+      ApkDownloadFailure.server => l10n.updateDownloadNetworkFailed,
+      ApkDownloadFailure.invalidUrl ||
+      ApkDownloadFailure.storageUnavailable => l10n.updateDownloadFailed,
+    };
+  }
+
   Future<void> _downloadAndInstall() async {
     if (_opensReleasePage) {
       await _openReleasePage();
@@ -78,9 +92,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
     await notificationService.beginUpdateDownloadWork(
       version: widget.updateInfo.version,
     );
-    final String? filePath;
+    final ApkDownloadResult result;
     try {
-      filePath = await ApkDownloader.downloadApk(
+      result = await ApkDownloader.downloadApk(
         url: apkUrl,
         version: widget.updateInfo.version,
         expectedSha256: widget.updateInfo.apkSha256,
@@ -106,7 +120,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
       );
     }
 
-    if (filePath != null) {
+    if (result case ApkDownloaded(:final path)) {
       await notificationService.cancelUpdateNotification();
 
       await notificationService.showUpdateDownloadComplete(
@@ -126,8 +140,13 @@ class _UpdateDialogState extends State<UpdateDialog> {
         }
       }
 
-      await ApkDownloader.installApk(filePath);
-    } else {
+      final outcome = await ApkDownloader.installApk(path);
+      if (outcome != ApkInstallOutcome.opened && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.updateInstallFailed)),
+        );
+      }
+    } else if (result case ApkDownloadFailed(:final reason)) {
       await notificationService.cancelUpdateNotification();
 
       await notificationService.showUpdateDownloadFailed();
@@ -135,7 +154,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
       if (mounted) {
         setState(() {
           _isDownloading = false;
-          _statusText = context.l10n.updateDownloadFailed;
+          _statusText = _failureMessage(context, reason);
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
