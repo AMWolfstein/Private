@@ -14,7 +14,7 @@ import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/header/album_detail_header.dart'
+import 'package:sistrum/widgets/header/album_play_actions.dart'
     show AlbumPlayActions;
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
@@ -48,6 +48,7 @@ import 'package:sistrum/screens/library/app_library_screen.dart';
 import 'package:sistrum/screens/library/library_browse_refresh_policy.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_indicators.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 

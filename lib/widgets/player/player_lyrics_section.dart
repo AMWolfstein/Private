@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart' show HapticFeedback;
-import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyric_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';

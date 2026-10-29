@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
+import 'package:sistrum/widgets/glass/app_artwork_page_ground.dart';
 
 /// PERF-605: collapsing the artist header shrinks the ground anchor's box on
 /// every frame. The page ground must be built once for the expanded size and

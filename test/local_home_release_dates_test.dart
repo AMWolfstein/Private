@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/services/library/library_browse_store.dart';
+import 'package:sistrum/services/library/library_browse_filters.dart';
 
 import 'support/library_paging_fixture.dart';
 import 'support/sqlite_process_database.dart';

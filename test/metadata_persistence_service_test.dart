@@ -7,7 +7,7 @@ import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
+import 'package:sistrum/widgets/library/track_metadata_persistence.dart';
 
 class _Covers extends MetadataCoverResources {
   bool extractCover = false;

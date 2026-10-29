@@ -1,6 +1,6 @@
 import 'package:sistrum/screens/equalizer_screen.dart';
 import 'package:sistrum/screens/lyrics_share_screen.dart';
-import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyric_models.dart';
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
@@ -35,6 +35,7 @@ import 'package:sistrum/widgets/player/player_lyrics_controls.dart';
 import 'package:sistrum/widgets/player/player_lyrics_section.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/player/app_player_background.dart';
 import 'package:sistrum/widgets/player/app_player_ground.dart';
 import 'package:sistrum/widgets/glass/app_artwork_contrast.dart';

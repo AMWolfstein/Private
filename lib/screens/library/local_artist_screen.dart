@@ -16,7 +16,7 @@ import 'package:sistrum/screens/library/local_artist_providers.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/release_date_display.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_skeletons.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';

@@ -1,9 +1,9 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
 import 'package:sistrum/widgets/player/app_player_details_sheet.dart';
 
 Future<void> showPlayerDetailsSheet(

@@ -6,6 +6,7 @@ import 'package:sistrum/services/playback/playback_metadata.dart';
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyric_models.dart';
 
 final _log = AppLogger('PlayerMetadata');
 

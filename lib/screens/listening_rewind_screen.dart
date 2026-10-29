@@ -22,6 +22,7 @@ import 'package:sistrum/widgets/primitives/app_content_card.dart';
 import 'package:sistrum/widgets/primitives/app_loading_indicator.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 final listeningRewindProvider = FutureProvider.autoDispose

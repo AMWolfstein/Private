@@ -7,10 +7,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/models/app_glass.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/app_floating_header.dart';
 

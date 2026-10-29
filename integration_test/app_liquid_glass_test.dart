@@ -9,7 +9,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/widgets/glass/app_liquid_backdrop.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/app_selection_pill.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';

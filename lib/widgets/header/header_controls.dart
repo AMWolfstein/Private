@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/theme/app_icons.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_glass_surface.dart';
 import 'package:sistrum/widgets/glass/app_floating_header.dart';
 
 class HeaderFilledButton extends StatelessWidget {

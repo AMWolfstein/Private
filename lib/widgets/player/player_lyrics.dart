@@ -15,6 +15,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyric_models.dart';
 import 'package:sistrum/utils/synced_lyrics_scroll.dart';
 import 'package:sistrum/widgets/lyrics/aligned_lyric_pronunciation.dart';
 import 'package:sistrum/widgets/lyrics/lyric_gap_indicator.dart';

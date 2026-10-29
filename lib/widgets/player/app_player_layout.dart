@@ -11,20 +11,17 @@ import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/widgets/player/app_landscape_player.dart';
 import 'package:sistrum/widgets/player/app_player_favorite_button.dart';
+import 'package:sistrum/widgets/player/app_player_header_layout.dart';
+import 'package:sistrum/widgets/player/app_player_lyrics_viewport.dart';
 import 'package:sistrum/widgets/player/app_player_queue.dart';
 import 'package:sistrum/widgets/player/app_volume_control.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/player/player_gesture_regions.dart';
-import 'package:sistrum/widgets/player/player_lyrics.dart';
 import 'package:sistrum/widgets/player/player_lyrics_controls.dart';
 import 'package:sistrum/widgets/player/player_metadata_title.dart';
 import 'package:sistrum/widgets/player/player_playback_controls.dart';
 import 'package:sistrum/widgets/player/player_track_swipe.dart';
-
-const _appContentInset = appLyricsContentInset;
-const _appHeaderButtonSize = 48.0;
-const _appCompactIconSize = 28.0;
 
 /// Keys stay owned by the surface that measures contrast and route dismissal.
 typedef AppPlayerArtworkKeys = ({
@@ -206,12 +203,12 @@ class AppPlayerLayout extends ConsumerWidget {
                             ? KeyedSubtree(
                                 key: ValueKey(page),
                                 child: showQueue
-                                    ? AppPlayerQueue(
-                                        colorScheme: colorScheme,
-                                      )
-                                    : _appLyricsViewport(
+                                    ? AppPlayerQueue(colorScheme: colorScheme)
+                                    : appLyricsViewport(
                                         context,
                                         lyricsBuilder(false),
+                                        lyricsControlsHidden:
+                                            lyricsControlsHidden,
                                         visibleHeight:
                                             stage.minHeight -
                                             (8 + compactHeaderHeight + 16),
@@ -249,7 +246,7 @@ class AppPlayerLayout extends ConsumerWidget {
                               fullBleed ? motionHeight : artHeight * scale,
                             ),
                             const Rect.fromLTWH(
-                              _appContentInset,
+                              kAppPlayerContentInset,
                               8,
                               compactCoverSize,
                               compactCoverSize,
@@ -399,19 +396,19 @@ class AppPlayerLayout extends ConsumerWidget {
           duration: motion,
           curve: Curves.easeInOutCubic,
           builder: (context, progress, controls) => CustomMultiChildLayout(
-            delegate: _PlayerHeaderLayout(
+            delegate: AppPlayerHeaderLayout(
               progress: progress,
               compactHeight: compactHeaderHeight,
-              compactLeft: _appContentInset + compactCoverSize + 12,
+              compactLeft: kAppPlayerContentInset + compactCoverSize + 12,
               expandLyrics: showLyrics,
             ),
             children: [
               LayoutId(
-                id: _PlayerHeaderSlot.stage,
+                id: AppPlayerHeaderSlot.stage,
                 child: stage(progress: progress),
               ),
               LayoutId(
-                id: _PlayerHeaderSlot.header,
+                id: AppPlayerHeaderSlot.header,
                 child: KeyedSubtree(
                   key: const ValueKey('player-track-header'),
                   child: AnimatedBuilder(
@@ -425,10 +422,10 @@ class AppPlayerLayout extends ConsumerWidget {
                   ),
                 ),
               ),
-              LayoutId(id: _PlayerHeaderSlot.controls, child: controls!),
+              LayoutId(id: AppPlayerHeaderSlot.controls, child: controls!),
               if (options != null)
                 LayoutId(
-                  id: _PlayerHeaderSlot.lyricsOptions,
+                  id: AppPlayerHeaderSlot.lyricsOptions,
                   child: hideControls(options),
                 ),
             ],
@@ -484,8 +481,8 @@ class AppPlayerLayout extends ConsumerWidget {
   }) {
     final progress = compactProgress ?? (compact ? 1.0 : 0.0);
     final actionSize = compactProgress == null
-        ? (page == 0 ? 24.0 : _appCompactIconSize)
-        : 24 + (_appCompactIconSize - 24) * progress;
+        ? (page == 0 ? 24.0 : kAppPlayerCompactIconSize)
+        : 24 + (kAppPlayerCompactIconSize - 24) * progress;
     return Builder(
       builder: (context) => Row(
         children: [
@@ -548,7 +545,7 @@ class AppPlayerLayout extends ConsumerWidget {
           ),
           Builder(
             builder: (buttonContext) => SizedBox.square(
-              dimension: _appHeaderButtonSize,
+              dimension: kAppPlayerHeaderButtonSize,
               child: IconButton(
                 tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
                 color: colorScheme.onSurface,
@@ -566,135 +563,4 @@ class AppPlayerLayout extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _appLyricsViewport(
-    BuildContext context,
-    Widget child, {
-    required double visibleHeight,
-  }) => TweenAnimationBuilder<double>(
-    tween: Tween(begin: 0, end: lyricsControlsHidden ? 1 : 0),
-    duration: MediaQuery.disableAnimationsOf(context)
-        ? Duration.zero
-        : const Duration(milliseconds: 220),
-    curve: Curves.easeOutCubic,
-    builder: (context, reveal, child) => ShaderMask(
-      blendMode: BlendMode.dstIn,
-      shaderCallback: (bounds) {
-        final height = bounds.height.clamp(1.0, double.infinity);
-        final end = visibleHeight.clamp(0.0, height);
-        final start = (end - 24).clamp(0.0, end);
-        return LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0, start / height, end / height, 1],
-          colors: [
-            Colors.white,
-            Colors.white,
-            Colors.white.withValues(alpha: reveal),
-            Colors.white.withValues(alpha: reveal),
-          ],
-        ).createShader(bounds);
-      },
-      child: LayoutBuilder(
-        builder: (context, constraints) => LyricsCoveredBottom(
-          height: constraints.hasBoundedHeight
-              ? (constraints.maxHeight - visibleHeight).clamp(
-                      0.0,
-                      double.infinity,
-                    ) *
-                    (1 - reveal)
-              : 0,
-          child: child!,
-        ),
-      ),
-    ),
-    child: child,
-  );
-}
-
-enum _PlayerHeaderSlot { stage, header, controls, lyricsOptions }
-
-/// Keep one live header throughout the cover/lyrics/queue transition. Measuring
-/// it at its current width also accommodates accessibility text sizes without
-/// moving the transport controls below this layout.
-class _PlayerHeaderLayout extends MultiChildLayoutDelegate {
-  _PlayerHeaderLayout({
-    required this.progress,
-    required this.compactHeight,
-    required this.compactLeft,
-    required this.expandLyrics,
-  });
-
-  final double progress;
-  final double compactHeight;
-  final double compactLeft;
-  final bool expandLyrics;
-
-  @override
-  void performLayout(Size size) {
-    final controls = layoutChild(
-      _PlayerHeaderSlot.controls,
-      BoxConstraints.tightFor(width: size.width),
-    );
-    final contentHeight = (size.height - controls.height).clamp(
-      0.0,
-      size.height,
-    );
-    positionChild(_PlayerHeaderSlot.controls, Offset(0, contentHeight));
-    final left = 28 + (compactLeft - 28) * progress;
-    // Align the visible ellipsis with the timeline while leaving its touch
-    // target wider than the glyph and interpolating the same live header.
-    const compactRight =
-        _appContentInset -
-        (_appHeaderButtonSize - _appCompactIconSize) / 2;
-    final right = 28 + (compactRight - 28) * progress;
-    final header = layoutChild(
-      _PlayerHeaderSlot.header,
-      BoxConstraints(
-        minWidth: size.width - left - right,
-        maxWidth: size.width - left - right,
-        minHeight: compactHeight * progress,
-      ),
-    );
-    final stageHeight = (contentHeight - (header.height + 20) * (1 - progress))
-        .clamp(0.0, contentHeight);
-    layoutChild(
-      _PlayerHeaderSlot.stage,
-      // Lyrics always extend behind controls. The minimum height marks their
-      // unobscured area for the paint mask; hiding controls never changes either
-      // constraint, scroll padding or the Scrollable's identity.
-      BoxConstraints(
-        minWidth: size.width,
-        maxWidth: size.width,
-        minHeight: stageHeight,
-        maxHeight:
-            stageHeight + (expandLyrics ? controls.height * progress : 0),
-      ),
-    );
-    positionChild(_PlayerHeaderSlot.stage, Offset.zero);
-    positionChild(
-      _PlayerHeaderSlot.header,
-      Offset(
-        left,
-        (contentHeight - header.height - 8) * (1 - progress) + 8 * progress,
-      ),
-    );
-    if (hasChild(_PlayerHeaderSlot.lyricsOptions)) {
-      final options = layoutChild(
-        _PlayerHeaderSlot.lyricsOptions,
-        BoxConstraints.loose(size),
-      );
-      positionChild(
-        _PlayerHeaderSlot.lyricsOptions,
-        Offset(_appContentInset, contentHeight - options.height - 8),
-      );
-    }
-  }
-
-  @override
-  bool shouldRelayout(_PlayerHeaderLayout oldDelegate) =>
-      progress != oldDelegate.progress ||
-      compactHeight != oldDelegate.compactHeight ||
-      compactLeft != oldDelegate.compactLeft ||
-      expandLyrics != oldDelegate.expandLyrics;
 }

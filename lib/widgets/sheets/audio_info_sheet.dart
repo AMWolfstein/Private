@@ -1,25 +1,21 @@
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'dart:io';
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart' show CupertinoButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/playback/audio_route_info.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/int_utils.dart';
-import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
-import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
+import 'package:sistrum/widgets/sheets/app_audio_info_fact_rows.dart';
+import 'package:sistrum/widgets/sheets/audio_info_facts.dart';
 
 /// Technical details of the playing track, from the file through the
 /// processing chain to the output device.
@@ -109,7 +105,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
       playbackEqualizerError,
     ]),
     builder: (context, _) {
-      final facts = _AudioFacts(
+      final facts = AudioInfoFacts(
         l10n: context.l10n,
         metadata: widget.metadata.metadata ?? const {},
         path: widget.metadata.filePath,
@@ -134,10 +130,10 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
           children: [
             for (final section in sections) ...[
               SettingsSectionHeader(title: section.title),
-              _FactGroup(
+              AppAudioInfoFactGroup(
                 children: [
                   for (final (index, fact) in section.facts.indexed)
-                    _FactRow(
+                    AppAudioInfoFactRow(
                       fact: fact,
                       last: index == section.facts.length - 1,
                     ),
@@ -156,7 +152,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
               ),
             ],
             SizedBox(height: context.tokens.gapLg),
-            _FactGroup(
+            AppAudioInfoFactGroup(
               children: [
                 CupertinoButton(
                   minimumSize: Size.square(context.tokens.minTouchTarget),
@@ -172,7 +168,10 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
     },
   );
 
-  Future<void> _copy(BuildContext context, List<_Section> sections) async {
+  Future<void> _copy(
+    BuildContext context,
+    List<AudioInfoSection> sections,
+  ) async {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final copied = context.l10n.audioInfoCopied;
     final report = StringBuffer(widget.metadata.qualityLabel ?? '');
@@ -188,466 +187,4 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
     await Clipboard.setData(ClipboardData(text: report.toString().trim()));
     messenger?.showSnackBar(SnackBar(content: Text(copied)));
   }
-}
-
-/// Sistrum sheets are glass, so a settings cell color would vanish into them;
-/// rows use the translucent control fill, like the track details page.
-class _FactGroup extends StatelessWidget {
-  const _FactGroup({required this.children});
-
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Material(
-        color: AppTheme.controlFill(context),
-        borderRadius: BorderRadius.circular(28),
-        clipBehavior: Clip.antiAlias,
-        child: Column(mainAxisSize: MainAxisSize.min, children: children),
-      ),
-    );
-  }
-}
-
-class _FactRow extends StatelessWidget {
-  const _FactRow({required this.fact, required this.last});
-
-  final _Fact fact;
-  final bool last;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-    final tokens = context.tokens;
-
-    // Sistrum rows line up with the section header, as in iOS inset lists.
-    final inset = 16.0;
-    final valueStyle = (theme.textTheme.bodyLarge)?.copyWith(
-      color: fact.emphasis ? colors.primary : colors.onSurfaceVariant,
-      fontWeight: fact.emphasis ? FontWeight.w600 : null,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
-    return MergeSemantics(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(minHeight: tokens.minTouchTarget),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: inset,
-                vertical: tokens.rowPaddingVCompact,
-              ),
-              child: LayoutBuilder(
-                // The value keeps its natural width up to just over half the
-                // row, so short values never squeeze long labels onto two lines.
-                builder: (context, constraints) => Row(
-                  children: [
-                    Expanded(
-                      child: Text(fact.label, style: theme.textTheme.bodyLarge),
-                    ),
-                    SizedBox(width: tokens.gapMd),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: constraints.maxWidth * 0.55,
-                      ),
-                      child: Text(
-                        fact.value,
-                        textAlign: TextAlign.end,
-                        style: valueStyle,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          if (!last)
-            Divider(
-              height: 1,
-              indent: inset,
-              endIndent: 0,
-              color: AppTheme.metadataDividerColor(context),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Section {
-  const _Section(this.title, this.facts);
-
-  final String title;
-  final List<_Fact> facts;
-}
-
-class _Fact {
-  const _Fact(this.label, this.value, {this.emphasis = false});
-
-  final String label;
-  final String value;
-  final bool emphasis;
-}
-
-const _losslessFormats = {'flac', 'alac', 'wav', 'aiff', 'ape', 'wv', 'pcm'};
-
-/// Derives the displayed facts; kept separate from widgets so the copied
-/// report matches the sheet exactly.
-class _AudioFacts {
-  _AudioFacts({
-    required this.l10n,
-    required this.metadata,
-    required this.path,
-    required this.fileSize,
-    required this.route,
-    required this.usb,
-    required this.processing,
-    required this.settings,
-  });
-
-  final AppLocalizations l10n;
-  final Map<String, dynamic> metadata;
-  final String? path;
-  final int? fileSize;
-  final AudioRouteInfo? route;
-  final UsbAudioStatus usb;
-  final PlaybackProcessing? processing;
-  final AppSettings settings;
-
-  late final String format = (metadata['format'] ?? '').toString().trim();
-  late final String codec = (metadata['audio_codec'] ?? '').toString().trim();
-  late final int? sampleRate =
-      readPositiveInt(metadata['sample_rate']) ?? route?.stream?.sampleRate;
-  late final int? bitDepth =
-      readPositiveInt(metadata['bit_depth']) ?? route?.stream?.pcmBits;
-  late final int? channels =
-      route?.stream?.channels ?? readPositiveInt(metadata['channels']);
-  late final int? bitrateKbps =
-      readPositiveInt(metadata['bitrate']) ??
-      ((route?.stream?.bitrate ?? 0) > 0
-          ? (route!.stream!.bitrate! / 1000).round()
-          : null);
-  late final int? durationSeconds = readPositiveInt(metadata['duration']);
-  late final bool lossless =
-      _losslessFormats.contains(format.toLowerCase()) ||
-      _losslessFormats.contains(codec.toLowerCase());
-  late final bool direct =
-      (processing?.direct ?? false) && usb.reason == 'active';
-
-  List<_Section> sections() => [
-    _Section(l10n.audioInfoSource, _source()),
-    if (_signal().isNotEmpty) _Section(l10n.audioInfoSignal, _signal()),
-    _Section(l10n.audioInfoLoudness, _loudness()),
-    _Section(l10n.audioInfoProcessing, _processing()),
-    if (_output().isNotEmpty) _Section(l10n.audioInfoOutput, _output()),
-  ];
-
-  List<_Fact> _source() {
-    final hiRes =
-        lossless && ((bitDepth ?? 0) > 16 || (sampleRate ?? 0) > 48000);
-    return [
-      _Fact(
-        l10n.audioInfoQuality,
-        hiRes
-            ? l10n.audioInfoHiResLossless
-            : lossless
-            ? l10n.audioInfoLossless
-            : l10n.audioInfoLossy,
-        emphasis: true,
-      ),
-      if (format.isNotEmpty) _Fact(l10n.audioInfoFormat, format.toUpperCase()),
-      if (codec.isNotEmpty || route?.stream?.mime != null)
-        _Fact(
-          l10n.audioInfoCodec,
-          [
-            if (codec.isNotEmpty) codec.toUpperCase(),
-            ?route?.stream?.mime,
-          ].join(' · '),
-        ),
-      if (sampleRate != null)
-        _Fact(l10n.audioInfoSampleRate, _khz(sampleRate!)),
-      if (bitDepth != null) _Fact(l10n.audioInfoBitDepth, '$bitDepth-bit'),
-      if (channels != null)
-        _Fact(l10n.audioInfoChannels, l10n.audioInfoChannelCount(channels!)),
-      if (bitrateKbps != null)
-        _Fact(l10n.audioInfoBitrate, '${_thousands(bitrateKbps!)} kbps'),
-      if (durationSeconds != null)
-        _Fact(l10n.audioInfoDuration, formatClock(durationSeconds!)),
-      if (fileSize != null)
-        _Fact(l10n.audioInfoFileSize, formatBytes(fileSize!)),
-      if (_pcmKbps case final pcm? when bitrateKbps != null)
-        _Fact(
-          l10n.audioInfoCompression,
-          l10n.audioInfoCompressionValue(
-            (bitrateKbps! / pcm * 100).toStringAsFixed(lossless ? 0 : 1),
-          ),
-        ),
-      if (_location case final location?)
-        _Fact(l10n.audioInfoLocation, location),
-    ];
-  }
-
-  double? get _pcmKbps {
-    final rate = sampleRate, bits = lossless ? bitDepth : 16, ch = channels;
-    if (rate == null || bits == null || ch == null) return null;
-    return rate * bits * ch / 1000;
-  }
-
-  String? get _location {
-    final path = this.path;
-    if (path == null || path.isEmpty) return null;
-    if (path.startsWith('content://')) return l10n.audioInfoLocationShared;
-    if (path.startsWith('/')) return l10n.audioInfoLocationLocal;
-    return null;
-  }
-
-  List<_Fact> _signal() => [
-    if (_pcmKbps case final pcm? when lossless)
-      _Fact(l10n.audioInfoPcmRate, '${_thousands(pcm.round())} kbps'),
-    if (sampleRate != null)
-      _Fact(
-        l10n.audioInfoFrequencyRange,
-        l10n.audioInfoFrequencyRangeValue(_khz(sampleRate! ~/ 2)),
-      ),
-    if (bitDepth case final bits? when lossless)
-      _Fact(l10n.audioInfoDynamicRange, '${(6.02 * bits).round()} dB'),
-  ];
-
-  List<_Fact> _loudness() {
-    final tags = [
-      (l10n.audioInfoTrackGain, metadata['replaygain_track_gain'], false),
-      (l10n.audioInfoTrackPeak, metadata['replaygain_track_peak'], true),
-      (l10n.audioInfoAlbumGain, metadata['replaygain_album_gain'], false),
-      (l10n.audioInfoAlbumPeak, metadata['replaygain_album_peak'], true),
-    ];
-    final facts = [
-      for (final (label, raw, peak) in tags)
-        if (_number(raw) case final value?)
-          _Fact(label, peak ? _peak(value) : _db(value)),
-    ];
-    final gain = processing?.normalizationGain ?? 1;
-    final String normalization;
-    if (!settings.playbackNormalization) {
-      normalization = l10n.audioInfoOff;
-    } else if (direct || settings.usbBitPerfect) {
-      normalization = l10n.audioInfoBypassed;
-    } else if (gain > 0 && gain != 1) {
-      normalization = l10n.audioInfoApplied(
-        _db(20 * math.log(gain) / math.ln10),
-      );
-    } else {
-      normalization = l10n.audioInfoOn;
-    }
-    return [
-      if (facts.isEmpty)
-        _Fact(l10n.audioInfoTrackGain, l10n.audioInfoNoGainTags),
-      ...facts,
-      _Fact(l10n.libraryPlaybackNormalization, normalization),
-    ];
-  }
-
-  List<_Fact> _processing() {
-    final route = this.route;
-    final String signalPath;
-    if (direct && usb.driver == 'usb_direct') {
-      signalPath = l10n.audioInfoPathDirect;
-    } else if (direct && usb.driver == 'aaudio_exclusive') {
-      signalPath = l10n.audioInfoPathExclusive;
-    } else {
-      signalPath = l10n.audioInfoPathSystem;
-    }
-    final equalizer = playbackEqualizer.value;
-    final eq = !equalizer.enabled
-        ? l10n.audioInfoOff
-        : direct
-        ? l10n.audioInfoBypassed
-        : playbackEqualizerError.value != null
-        ? playbackEqualizerError.value!
-        : [
-            l10n.audioInfoOn,
-            l10n.audioInfoBands(equalizer.gains.length),
-            if (equalizer.inputGain != 0)
-              '${l10n.equalizerPreamp} ${_db(equalizer.inputGain)}',
-            if (equalizer.compressor) l10n.equalizerCompressor,
-          ].join(' · ');
-    final rate = processing?.autoMixRate ?? 1;
-    final decoder = route?.stream?.decoder;
-    return [
-      _Fact(l10n.audioInfoPlayer, l10n.audioInfoPlayerValue),
-      _Fact(l10n.audioInfoSignalPath, signalPath),
-      _Fact(l10n.equalizerTitle, eq),
-      if (!direct && decoder != null)
-        _Fact(
-          l10n.audioInfoDecoder,
-          [
-            decoder,
-            if (route?.stream?.hardwareDecoder case final hardware?)
-              hardware ? l10n.audioInfoHardware : l10n.audioInfoSoftware,
-          ].join(' · '),
-        ),
-      _Fact(
-        'AutoMix',
-        settings.autoMix && !settings.usbBitPerfect
-            ? l10n.audioInfoOn
-            : l10n.audioInfoOff,
-      ),
-      if ((rate - 1).abs() > 0.001)
-        _Fact(l10n.audioInfoTempo, '${rate.toStringAsFixed(3)}×'),
-      if (_resampling case final value?) _Fact(l10n.audioInfoResampling, value),
-      _Fact(
-        l10n.audioInfoBitPerfect,
-        _bitPerfect
-            ? l10n.audioInfoBitPerfectActive
-            : l10n.audioInfoBitPerfectNo,
-        emphasis: _bitPerfect,
-      ),
-    ];
-  }
-
-  // A preferred mixer format is configuration, not proof of active playback.
-  bool get _bitPerfect => direct;
-
-  int? get _outputRate {
-    if (direct) return usb.sampleRate;
-    return route?.device?.mixerSampleRate ?? route?.mixerSampleRate;
-  }
-
-  String? get _resampling {
-    final source = sampleRate, output = _outputRate;
-    if (source == null || output == null) return null;
-    if (_bitPerfect || source == output) return l10n.audioInfoResamplingNone;
-    return '${_khz(source)} → ${_khz(output)}';
-  }
-
-  List<_Fact> _output() {
-    final route = this.route;
-    final device = route?.device;
-    final bufferMs = route?.bufferMs;
-    final volume = route?.volume;
-    return [
-      if (device != null)
-        _Fact(
-          l10n.audioInfoDevice,
-          [
-            l10n.audioInfoDeviceType(device.type),
-            if (direct && usb.device?.isNotEmpty == true)
-              usb.device!
-            else if (device.name.isNotEmpty)
-              device.name,
-          ].join(' · '),
-        ),
-      if (_outputRate case final rate?)
-        _Fact(l10n.audioInfoOutputRate, _khz(rate)),
-      if (direct && usb.bitDepth != null)
-        _Fact(
-          l10n.audioInfoOutputFormat,
-          [
-            '${usb.bitDepth}-bit',
-            if (usb.transport != 'pcm') usb.transport.toUpperCase(),
-          ].join(' · '),
-        )
-      else if (device?.mixerBitDepth case final bits?)
-        _Fact(l10n.audioInfoOutputFormat, '$bits-bit'),
-      if (device != null && route?.platform == 'android')
-        _Fact(
-          l10n.audioInfoDeviceRates,
-          device.sampleRates.isEmpty
-              ? l10n.audioInfoAnyRate
-              : device.sampleRates.map(_khz).join(', '),
-        ),
-      if (device != null && (device.bitDepths.isNotEmpty || device.floatOutput))
-        _Fact(
-          l10n.audioInfoDeviceFormats,
-          [
-            for (final bits in device.bitDepths)
-              if (bits != 32 || !device.floatOutput) '$bits-bit',
-            if (device.floatOutput) '32-bit float',
-          ].join(', '),
-        ),
-      if (route?.outputChannels case final count?)
-        _Fact(l10n.audioInfoChannels, l10n.audioInfoChannelCount(count)),
-      if (bufferMs != null)
-        _Fact(
-          l10n.audioInfoBuffer,
-          [
-            '${bufferMs.toStringAsFixed(1)} ms',
-            if (route?.framesPerBuffer case final frames?) '$frames frames',
-          ].join(' · '),
-        ),
-      if (route?.outputLatencyMs case final latency?)
-        _Fact(l10n.audioInfoLatency, '${latency.toStringAsFixed(1)} ms'),
-      if (route?.lowLatency case final supported?)
-        _Fact(l10n.audioInfoLowLatency, _supported(supported)),
-      if (route?.proAudio case final supported?)
-        _Fact(l10n.audioInfoProAudio, _supported(supported)),
-      if (route?.spatialAvailable != null || route?.spatialEnabled != null)
-        _Fact(
-          l10n.audioInfoSpatial,
-          route?.spatialAvailable == false
-              ? l10n.audioInfoUnavailable
-              : route?.spatialEnabled == true
-              ? l10n.audioInfoOn
-              : l10n.audioInfoOff,
-        ),
-      if (route?.headTracking == true)
-        _Fact(l10n.audioInfoHeadTracking, l10n.audioInfoSupported),
-      if (route?.fixedVolume == true || direct)
-        _Fact(l10n.nowPlayingVolume, l10n.audioInfoFixedVolume)
-      else if (volume != null)
-        _Fact(
-          l10n.nowPlayingVolume,
-          route?.maxVolume != null
-              ? '${volume.round()} / ${route!.maxVolume}'
-              : '${(volume * 100).round()}%',
-        ),
-    ];
-  }
-
-  String _supported(bool value) =>
-      value ? l10n.audioInfoSupported : l10n.audioInfoNotSupported;
-}
-
-String _khz(int hz) {
-  final khz = hz / 1000;
-  final text = khz == khz.roundToDouble()
-      ? khz.toStringAsFixed(0)
-      : khz.toStringAsFixed(khz * 10 == (khz * 10).roundToDouble() ? 1 : 2);
-  return '$text kHz';
-}
-
-String _thousands(int value) {
-  final digits = value.toString();
-  final buffer = StringBuffer();
-  for (var i = 0; i < digits.length; i++) {
-    if (i > 0 && (digits.length - i) % 3 == 0) buffer.write(',');
-    buffer.write(digits[i]);
-  }
-  return buffer.toString();
-}
-
-/// Signed decibels with a true minus sign.
-String _db(double value) {
-  final text = value.abs().toStringAsFixed(2);
-  if (value.abs() < 0.005) return '0.00 dB';
-  return '${value < 0 ? '−' : '+'}$text dB';
-}
-
-/// A linear sample peak with its level in dBFS.
-String _peak(double value) {
-  if (value <= 0) return value.toStringAsFixed(6);
-  final dbfs = 20 * math.log(value) / math.ln10;
-  return '${value.toStringAsFixed(6)} · ${_db(dbfs).replaceFirst(' dB', ' dBFS')}';
-}
-
-/// Reads tag values such as "-6.52 dB" or "0.988831".
-final _numberPattern = RegExp(r'[-+]?\d+(?:\.\d+)?');
-
-double? _number(Object? raw) {
-  if (raw is num) return raw.toDouble();
-  final match = _numberPattern.firstMatch(raw?.toString() ?? '');
-  return match == null ? null : double.tryParse(match[0]!);
 }

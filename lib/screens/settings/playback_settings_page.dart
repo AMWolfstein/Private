@@ -20,6 +20,7 @@ import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/music_haptics_settings.dart';
 import 'package:sistrum/widgets/settings/playback_normalization_settings.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/status/beta_badge.dart';
 
 class PlaybackSettingsPage extends ConsumerStatefulWidget {

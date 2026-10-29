@@ -15,6 +15,7 @@ import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyric_models.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
 // Run on a real Android/iOS host. These tests intentionally use the actual

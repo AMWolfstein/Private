@@ -8,6 +8,7 @@ import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_content_card.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 /// Per-field separators applied when local tags are saved from Edit Metadata.
 class MetadataSeparatorSettingsPage extends ConsumerWidget {

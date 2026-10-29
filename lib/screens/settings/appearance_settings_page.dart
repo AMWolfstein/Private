@@ -6,6 +6,8 @@ import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/custom_font_setting.dart';
 import 'package:sistrum/screens/settings/appearance_glass_clarity_slider.dart';

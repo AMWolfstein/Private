@@ -17,7 +17,7 @@ import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 export 'library_database_models.dart';
 
-export 'library_browse_store.dart'
+export 'library_browse_filters.dart'
     show confirmedMissingLyricsSqlPredicate, missingReplayGainSqlPredicate;
 
 final _log = AppLogger('LibraryDatabase');

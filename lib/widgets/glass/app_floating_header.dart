@@ -6,9 +6,9 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_glass_surface.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
 
 /// Every pinned header control (back circle, action capsule, profile photo)

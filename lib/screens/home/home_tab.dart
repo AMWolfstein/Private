@@ -18,7 +18,7 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/release_date_display.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_skeletons.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/library_search_results.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';

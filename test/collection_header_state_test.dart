@@ -15,7 +15,7 @@ import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_skeletons.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';

@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/utils/cover_file_image.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
 import 'package:sistrum/widgets/player/app_player_background.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// The cover at [source] (a file path or URL) as an image provider.
 ImageProvider? appCoverProvider(String? source) {

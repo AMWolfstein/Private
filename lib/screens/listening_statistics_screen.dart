@@ -7,12 +7,13 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/animation_utils.dart' show SkeletonBox;
+import 'package:sistrum/widgets/animation_skeletons.dart' show SkeletonBox;
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 final listeningSummaryProvider = FutureProvider.autoDispose
     .family<ListeningSummary, ({int days, int year})>((ref, period) async {

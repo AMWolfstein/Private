@@ -21,7 +21,7 @@ import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/shell/app_bottom_bar.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 
 void main() {
   late AppChromeController chrome;

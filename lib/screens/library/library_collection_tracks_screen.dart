@@ -1,4 +1,4 @@
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_skeletons.dart';
 import 'dart:math';
 import 'dart:io';
 

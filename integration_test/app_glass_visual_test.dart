@@ -20,7 +20,8 @@ import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/shell/app_bottom_bar.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/app_liquid_backdrop.dart';
 
 class _Settings extends SettingsNotifier {

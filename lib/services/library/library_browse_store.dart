@@ -1,59 +1,12 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/library/library_file_sizes.dart';
 import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/library_browse_filters.dart';
+import 'package:sistrum/services/library/library_browse_order.dart';
+import 'package:sistrum/services/library/library_browse_rows.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
-import 'package:sistrum/utils/library_format_filters.dart';
-
-// SQL builders for the queue tab's local-library queries.
-
-String confirmedMissingLyricsSqlPredicate({
-  required String hasLyricsExpr,
-  required String lyricsKnownExpr,
-}) => '($lyricsKnownExpr) AND COALESCE($hasLyricsExpr, 0) = 0';
-
-String missingReplayGainSqlPredicate({required String hasReplayGainExpr}) =>
-    'COALESCE($hasReplayGainExpr, 0) = 0';
-
-/// Normalize supported audio-tag dates for chronology, without consulting scan dates.
-/// Accept year, year-month, ISO date/timestamp, slash dates and compact YYYYMMDD.
-/// Invalid/undated tags have no release order and stay out of Latest Releases.
-String metadataReleaseDateSql(String column) {
-  final raw = "REPLACE(TRIM(COALESCE($column, '')), '/', '-')";
-  final year = '[0-9][0-9][0-9][0-9]';
-  final pair = '[0-9][0-9]';
-  final candidate =
-      """(CASE
-    WHEN $raw GLOB '$year' THEN $raw || '-01-01'
-    WHEN $raw GLOB '$year-$pair' THEN $raw || '-01'
-    WHEN SUBSTR($raw,1,10) GLOB '$year-$pair-$pair' THEN SUBSTR($raw,1,10)
-    WHEN $raw GLOB '$year$pair$pair' THEN
-      SUBSTR($raw,1,4) || '-' || SUBSTR($raw,5,2) || '-' || SUBSTR($raw,7,2)
-    ELSE NULL END)""";
-  return "COALESCE(CASE WHEN STRFTIME('%Y-%m-%d', $candidate, '+0 days') = $candidate "
-      "THEN $candidate END, '')";
-}
-
-/// Album inventory for completeness assessment over scanned local tracks.
-/// Retained rows on disconnected sources still make the assessment unknown.
-String localAlbumInventorySql() {
-  return '''
-    SELECT l.album_key, LOWER(TRIM(l.track_name)) AS title,
-      l.track_number, l.total_tracks, l.disc_number, l.total_discs,
-      CASE WHEN source.available = 0 THEN 1 ELSE 0 END AS unavailable
-    FROM library l LEFT JOIN library_sources source ON source.id = l.source_id
-    WHERE COALESCE(source.enabled, 1) = 1
-  ''';
-}
-
-class _QueueOrderTerm {
-  final String column;
-  final bool descending;
-
-  const _QueueOrderTerm(this.column, {this.descending = false});
-}
 
 /// Queue reads against an already opened local library.
 class LibraryBrowseStore {
@@ -84,7 +37,7 @@ class LibraryBrowseStore {
 
   Future<LibraryBrowseDbPage> trackPage(LibraryBrowseDbQuery request) async {
     final args = <Object?>[];
-    final orderTerms = _queueTrackOrderTerms(request.sortMode);
+    final orderTerms = queueTrackOrderTerms(request.sortMode);
     final usesCursor =
         request.cursor != null &&
         request.cursor!.values.length == orderTerms.length;
@@ -98,14 +51,14 @@ class LibraryBrowseStore {
       '''
       SELECT *
       FROM ($unionSql)
-      ORDER BY ${_queueOrderBy(orderTerms)}
+      ORDER BY ${queueOrderBy(orderTerms)}
       LIMIT ? ${usesCursor ? '' : 'OFFSET ?'}
       ''',
       [...args, request.limit, if (!usesCursor) request.offset],
     );
     return LibraryBrowseDbPage(
-      rows: rows.map(_queueTrackRowToJson).toList(growable: false),
-      nextCursor: _queueCursorFromRow(rows.lastOrNull, orderTerms),
+      rows: rows.map(queueTrackRowToJson).toList(growable: false),
+      nextCursor: queueCursorFromRow(rows.lastOrNull, orderTerms),
     );
   }
 
@@ -192,7 +145,7 @@ class LibraryBrowseStore {
 
   Future<LibraryBrowseDbPage> albumPage(LibraryBrowseDbQuery request) async {
     final args = <Object?>[];
-    final orderTerms = _queueAlbumOrderTerms(request.sortMode);
+    final orderTerms = queueAlbumOrderTerms(request.sortMode);
     final usesCursor =
         request.cursor != null &&
         request.cursor!.values.length == orderTerms.length;
@@ -206,14 +159,14 @@ class LibraryBrowseStore {
       '''
       SELECT *
       FROM ($unionSql)
-      ORDER BY ${_queueOrderBy(orderTerms)}
+      ORDER BY ${queueOrderBy(orderTerms)}
       LIMIT ? ${usesCursor ? '' : 'OFFSET ?'}
       ''',
       [...args, request.limit, if (!usesCursor) request.offset],
     );
     return LibraryBrowseDbPage(
       rows: rows.toList(growable: false),
-      nextCursor: _queueCursorFromRow(rows.lastOrNull, orderTerms),
+      nextCursor: queueCursorFromRow(rows.lastOrNull, orderTerms),
     );
   }
 
@@ -242,24 +195,17 @@ class LibraryBrowseStore {
       LIMIT ? OFFSET ?
     ''',
       [
-        if (search.isNotEmpty) '%${_escapeLikePattern(search)}%',
+        if (search.isNotEmpty) '%${escapeLikePattern(search)}%',
         request.limit,
         request.offset,
       ],
     );
   }
 
-  String _escapeLikePattern(String value) {
-    return value
-        .replaceAll('\\', r'\\')
-        .replaceAll('%', r'\%')
-        .replaceAll('_', r'\_');
-  }
-
   String _queueTrackUnionSql(
     LibraryBrowseDbQuery request,
     List<Object?> args, {
-    required List<_QueueOrderTerm> orderTerms,
+    required List<QueueOrderTerm> orderTerms,
     required bool usesCursor,
   }) {
     final parts = <String>[];
@@ -317,9 +263,9 @@ class LibraryBrowseStore {
           l.sort_genre,
           l.sort_release,
           l.sort_added
-          ${_trackSizeColumns(request.sortMode)}
+          ${trackSizeColumns(request.sortMode)}
         FROM ${LibrarySchema.visibleView} l
-        ${_sizeJoin(request.sortMode, 'l')}
+        ${sizeJoin(request.sortMode, 'l')}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         ''';
     parts.add(
@@ -338,7 +284,7 @@ class LibraryBrowseStore {
   String _queueAlbumUnionSql(
     LibraryBrowseDbQuery request,
     List<Object?> args, {
-    required List<_QueueOrderTerm> orderTerms,
+    required List<QueueOrderTerm> orderTerms,
     required bool usesCursor,
   }) {
     final unfiltered =
@@ -390,9 +336,9 @@ class LibraryBrowseStore {
           ${releaseDatedOnly ? "SUBSTR(MAX(CASE WHEN $releaseOrder != '' THEN $releaseOrder || TRIM(l.release_date) END), 11) AS metadata_release_date," : ''}
           COALESCE(MAX($releaseOrder), '') AS sort_release,
           COALESCE(MAX(l.sort_genre), '') AS sort_genre
-          ${_albumSizeColumns(request.sortMode)}
+          ${albumSizeColumns(request.sortMode)}
         FROM ${LibrarySchema.visibleView} l
-        ${_sizeJoin(request.sortMode, 'l')}
+        ${sizeJoin(request.sortMode, 'l')}
         ${unfiltered ? '' : '''JOIN (
           SELECT
             album_key,
@@ -427,7 +373,7 @@ class LibraryBrowseStore {
     LibraryBrowseDbQuery request, {
     bool hasCompletenessJoin = false,
   }) {
-    _appendAlbumCompletenessFilter(
+    appendAlbumCompletenessFilter(
       where,
       request,
       albumKey: 'l.album_key',
@@ -452,12 +398,12 @@ class LibraryBrowseStore {
           ''');
         args.add(ftsQuery);
       } else {
-        final like = '%${_escapeLikePattern(query)}%';
+        final like = '%${escapeLikePattern(query)}%';
         where.add("l.search_text LIKE ? ESCAPE '\\'");
         args.add(like);
       }
     }
-    _appendQueueCommonFilters(
+    appendQueueCommonFilters(
       where,
       args,
       request,
@@ -480,167 +426,15 @@ class LibraryBrowseStore {
     );
   }
 
-  void _appendAlbumCompletenessFilter(
-    List<String> where,
-    LibraryBrowseDbQuery request, {
-    required String albumKey,
-    required bool hasJoin,
-  }) {
-    if (!isAlbumCompletenessFilter(request.metadata)) return;
-    final status = request.metadata == incompleteAlbumFilter
-        ? 'incomplete'
-        : 'unknown';
-    if (hasJoin) {
-      where.add("ac.album_completeness = '$status'");
-      return;
-    }
-    final assessment = albumCompletenessSql(localAlbumInventorySql());
-    where.add(
-      "$albumKey IN (SELECT album_key FROM ($assessment) WHERE album_completeness = '$status')",
-    );
-  }
-
-  void _appendQueueCommonFilters(
-    List<String> where,
-    List<Object?> args,
-    LibraryBrowseDbQuery request, {
-    required String filePathExpr,
-    required String? formatExpr,
-    required String qualityExpr,
-    required String bitDepthExpr,
-    required String artistExpr,
-    required String albumArtistExpr,
-    required String releaseDateExpr,
-    required String genreExpr,
-    required String trackNumberExpr,
-    required String discNumberExpr,
-    required String isrcExpr,
-    required String labelExpr,
-    required String hasLyricsExpr,
-    required String lyricsKnownExpr,
-    required String hasReplayGainExpr,
-  }) {
-    final quality = request.quality?.trim().toLowerCase();
-    if (quality != null && quality.isNotEmpty) {
-      final isHiRes =
-          '(COALESCE($bitDepthExpr, 0) >= 24 OR LOWER(COALESCE($qualityExpr, \'\')) LIKE \'24%\')';
-      final isCd =
-          '(COALESCE($bitDepthExpr, 0) = 16 OR LOWER(COALESCE($qualityExpr, \'\')) LIKE \'16%\')';
-      switch (quality) {
-        case LibraryQualityFilter.hiRes:
-          where.add(isHiRes);
-          break;
-        case LibraryQualityFilter.cd:
-          where.add(isCd);
-          break;
-        case LibraryQualityFilter.lossy:
-          where.add('NOT ($isHiRes OR $isCd)');
-          break;
-      }
-    }
-
-    final format = request.format?.trim().toLowerCase();
-    if (format != null && format.isNotEmpty) {
-      final aliases = libraryFormatFilterAliases[format] ?? [format];
-      final matches = <String>[];
-      if (formatExpr != null) {
-        matches.add(
-          'LOWER(REPLACE(TRIM(COALESCE($formatExpr, \'\')), \'-\', \'_\')) '
-          'IN (${List.filled(aliases.length, '?').join(', ')})',
-        );
-        args.addAll(aliases);
-      }
-      for (final alias in aliases) {
-        matches.add("LOWER($filePathExpr) LIKE ? ESCAPE '\\'");
-        args.add('%.${_escapeLikePattern(alias)}');
-      }
-      where.add('(${matches.join(' OR ')})');
-    }
-
-    final metadata = request.metadata?.trim();
-    if (metadata == null || metadata.isEmpty) return;
-    final hasArtist = 'TRIM(COALESCE($artistExpr, \'\')) != \'\'';
-    final hasAlbumArtist = 'TRIM(COALESCE($albumArtistExpr, \'\')) != \'\'';
-    final hasReleaseDate =
-        'TRIM(COALESCE($releaseDateExpr, \'\')) GLOB \'*[0-9][0-9][0-9][0-9]*\'';
-    final hasGenre = 'TRIM(COALESCE($genreExpr, \'\')) != \'\'';
-    final hasTrackNumber = 'COALESCE($trackNumberExpr, 0) > 0';
-    final hasDiscNumber = 'COALESCE($discNumberExpr, 0) > 0';
-    final hasLabel = 'TRIM(COALESCE($labelExpr, \'\')) != \'\'';
-    final normalizedIsrc =
-        'REPLACE(REPLACE(UPPER(TRIM(COALESCE($isrcExpr, \'\'))), \'-\', \'\'), \' \', \'\')';
-    final hasIncorrectIsrc =
-        'TRIM(COALESCE($isrcExpr, \'\')) != \'\' AND LENGTH($normalizedIsrc) != 12';
-    final isComplete =
-        '($hasArtist AND $hasAlbumArtist AND $hasReleaseDate AND $hasGenre AND $hasTrackNumber AND $hasDiscNumber AND $hasLabel AND NOT ($hasIncorrectIsrc))';
-
-    switch (metadata) {
-      case 'complete':
-        where.add(isComplete);
-        break;
-      case 'missing-any':
-        where.add('NOT $isComplete');
-        break;
-      case 'missing-year':
-        where.add('NOT ($hasReleaseDate)');
-        break;
-      case 'missing-genre':
-        where.add('NOT ($hasGenre)');
-        break;
-      case 'missing-album-artist':
-        where.add('NOT ($hasAlbumArtist)');
-        break;
-      case 'missing-track-number':
-        where.add('NOT ($hasTrackNumber)');
-        break;
-      case 'missing-disc-number':
-        where.add('NOT ($hasDiscNumber)');
-        break;
-      case 'missing-artist':
-        where.add('NOT ($hasArtist)');
-        break;
-      case 'incorrect-isrc-format':
-        where.add('($hasIncorrectIsrc)');
-        break;
-      case 'missing-isrc':
-        where.add('TRIM(COALESCE($isrcExpr, \'\')) = \'\'');
-        break;
-      case 'missing-label':
-        where.add('NOT ($hasLabel)');
-        break;
-      case 'missing-lyrics':
-        // A default false value on legacy rows means "not scanned yet", not
-        // "confirmed missing". Only show files whose lyrics probe completed.
-        where.add(
-          confirmedMissingLyricsSqlPredicate(
-            hasLyricsExpr: hasLyricsExpr,
-            lyricsKnownExpr: lyricsKnownExpr,
-          ),
-        );
-        break;
-      case 'has-replaygain':
-        where.add('COALESCE($hasReplayGainExpr, 0) != 0');
-        break;
-      case 'missing-replaygain':
-        // Include legacy rows without indexed ReplayGain as candidates until
-        // a metadata refresh confirms their tags. Requiring a new scan version
-        // hides the entire older collection before it has been rescanned.
-        where.add(
-          missingReplayGainSqlPredicate(hasReplayGainExpr: hasReplayGainExpr),
-        );
-        break;
-    }
-  }
-
   String _boundedQueuePart(
     String selectSql,
     LibraryBrowseDbQuery request,
     List<Object?> args,
-    List<_QueueOrderTerm> orderTerms, {
+    List<QueueOrderTerm> orderTerms, {
     required bool usesCursor,
   }) {
     final cursorPredicate = usesCursor
-        ? _queueCursorPredicate(request.cursor, orderTerms, args)
+        ? queueCursorPredicate(request.cursor, orderTerms, args)
         : '';
     final branchLimit = usesCursor
         ? request.limit
@@ -654,248 +448,9 @@ class LibraryBrowseStore {
         SELECT *
         FROM ($selectSql)
         ${cursorPredicate.isEmpty ? '' : 'WHERE $cursorPredicate'}
-        ORDER BY ${_queueOrderBy(branchOrder)}
+        ORDER BY ${queueOrderBy(branchOrder)}
         LIMIT ?
       )
     ''';
-  }
-
-  String _sizeJoin(String sortMode, String alias) => isLibrarySizeSort(sortMode)
-      ? 'LEFT JOIN track_file_sizes file_sizes ON file_sizes.item_id = $alias.id'
-      : '';
-
-  String _trackSizeColumns(String sortMode) => isLibrarySizeSort(sortMode)
-      ? ', file_sizes.size_bytes AS file_size_bytes, '
-            '(file_sizes.size_bytes IS NULL) AS sort_size_unknown, '
-            'COALESCE(file_sizes.size_bytes, 0) AS sort_size'
-      : '';
-
-  String _albumSizeColumns(String sortMode) => isLibrarySizeSort(sortMode)
-      ? ', (COUNT(file_sizes.size_bytes) < COUNT(*)) AS sort_size_unknown, '
-            'COALESCE(SUM(file_sizes.size_bytes), 0) AS sort_size'
-      : '';
-
-  List<_QueueOrderTerm> _queueTrackOrderTerms(String sortMode) {
-    return switch (sortMode) {
-      'size-asc' || 'size-desc' => [
-        const _QueueOrderTerm('sort_size_unknown'),
-        _QueueOrderTerm('sort_size', descending: sortMode == 'size-desc'),
-        const _QueueOrderTerm('sort_track'),
-        const _QueueOrderTerm('id'),
-      ],
-      'oldest' => const [
-        _QueueOrderTerm('sort_added'),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'a-z' => const [
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('sort_artist'),
-        _QueueOrderTerm('id'),
-      ],
-      'z-a' => const [
-        _QueueOrderTerm('sort_track', descending: true),
-        _QueueOrderTerm('sort_artist', descending: true),
-        _QueueOrderTerm('id'),
-      ],
-      'artist-asc' => const [
-        _QueueOrderTerm('sort_artist'),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'artist-desc' => const [
-        _QueueOrderTerm('sort_artist', descending: true),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'album-asc' => const [
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'album-desc' => const [
-        _QueueOrderTerm('sort_album', descending: true),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'release-oldest' => const [
-        _QueueOrderTerm('sort_release'),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'release-newest' => const [
-        _QueueOrderTerm('sort_release', descending: true),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'genre-asc' => const [
-        _QueueOrderTerm('sort_genre'),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      'genre-desc' => const [
-        _QueueOrderTerm('sort_genre', descending: true),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-      _ => const [
-        _QueueOrderTerm('sort_added', descending: true),
-        _QueueOrderTerm('sort_track'),
-        _QueueOrderTerm('id'),
-      ],
-    };
-  }
-
-  List<_QueueOrderTerm> _queueAlbumOrderTerms(String sortMode) {
-    return switch (sortMode) {
-      'size-asc' || 'size-desc' => [
-        const _QueueOrderTerm('sort_size_unknown'),
-        _QueueOrderTerm('sort_size', descending: sortMode == 'size-desc'),
-        const _QueueOrderTerm('sort_album'),
-        const _QueueOrderTerm('album_key'),
-      ],
-      'release-date-newest' => const [
-        _QueueOrderTerm('sort_release', descending: true),
-        _QueueOrderTerm('album_key'),
-      ],
-      'artist-releases-newest' => const [
-        _QueueOrderTerm('sort_release', descending: true),
-        _QueueOrderTerm('sort_added', descending: true),
-        _QueueOrderTerm('album_key'),
-      ],
-      'oldest' => const [
-        _QueueOrderTerm('sort_added'),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'a-z' || 'album-asc' => const [
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('sort_artist'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'z-a' || 'album-desc' => const [
-        _QueueOrderTerm('sort_album', descending: true),
-        _QueueOrderTerm('sort_artist', descending: true),
-        _QueueOrderTerm('album_key'),
-      ],
-      'artist-asc' => const [
-        _QueueOrderTerm('sort_artist'),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'artist-desc' => const [
-        _QueueOrderTerm('sort_artist', descending: true),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'release-oldest' => const [
-        _QueueOrderTerm('sort_release'),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'release-newest' => const [
-        _QueueOrderTerm('sort_release', descending: true),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'genre-asc' => const [
-        _QueueOrderTerm('sort_genre'),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      'genre-desc' => const [
-        _QueueOrderTerm('sort_genre', descending: true),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-      _ => const [
-        _QueueOrderTerm('sort_added', descending: true),
-        _QueueOrderTerm('sort_album'),
-        _QueueOrderTerm('album_key'),
-      ],
-    };
-  }
-
-  String _queueOrderBy(List<_QueueOrderTerm> terms) => terms
-      .map((term) => '${term.column} ${term.descending ? 'DESC' : 'ASC'}')
-      .join(', ');
-
-  String _queueCursorPredicate(
-    LibraryBrowseDbCursor? cursor,
-    List<_QueueOrderTerm> terms,
-    List<Object?> args,
-  ) {
-    if (cursor == null || cursor.values.length != terms.length) return '';
-    final clauses = <String>[];
-    final first = terms.first;
-    final coarseOperator = first.descending ? '<=' : '>=';
-    args.add(cursor.values.first);
-    for (var i = 0; i < terms.length; i++) {
-      final comparisons = <String>[];
-      for (var j = 0; j < i; j++) {
-        comparisons.add('${terms[j].column} = ?');
-        args.add(cursor.values[j]);
-      }
-      comparisons.add(
-        '${terms[i].column} ${terms[i].descending ? '<' : '>'} ?',
-      );
-      args.add(cursor.values[i]);
-      clauses.add('(${comparisons.join(' AND ')})');
-    }
-    return '(${first.column} $coarseOperator ?) AND (${clauses.join(' OR ')})';
-  }
-
-  LibraryBrowseDbCursor? _queueCursorFromRow(
-    Map<String, dynamic>? row,
-    List<_QueueOrderTerm> terms,
-  ) {
-    if (row == null) return null;
-    final values = <Object>[];
-    for (final term in terms) {
-      final value = row[term.column];
-      if (value is! Object) return null;
-      values.add(value);
-    }
-    return LibraryBrowseDbCursor(List<Object>.unmodifiable(values));
-  }
-
-  Map<String, dynamic> _queueTrackRowToJson(Map<String, dynamic> row) {
-    final source = row['queue_source'] as String? ?? 'local';
-    final item = <String, dynamic>{
-      'id': row['id'],
-      'sourceId': row['source_id'],
-      'explicit': row['explicit'] == 1 || row['explicit'] == true,
-      'trackName': row['track_name'],
-      'artistName': row['artist_name'],
-      'albumName': row['album_name'],
-      'albumArtist': row['album_artist'],
-      'filePath': row['file_path'],
-      'fileSize': row['file_size_bytes'],
-      'isrc': row['isrc'],
-      'trackNumber': row['track_number'],
-      'totalTracks': row['total_tracks'],
-      'discNumber': row['disc_number'],
-      'totalDiscs': row['total_discs'],
-      'duration': row['duration'],
-      'releaseDate': row['release_date'],
-      'bitDepth': row['bit_depth'],
-      'sampleRate': row['sample_rate'],
-      'bitrate': row['bitrate'],
-      'format': row['format'],
-      'hasReplayGain':
-          row['has_replaygain'] == 1 || row['has_replaygain'] == true,
-      'genre': row['genre'],
-      'composer': row['composer'],
-      'label': row['label'],
-      'copyright': row['copyright'],
-      'coverUrl': row['cover_url'],
-      'coverPath': row['cover_path'],
-      'scannedAt': row['scanned_at'],
-      'fileModTime': row['file_mod_time'],
-      'quality': row['quality'],
-      'replayGainMetadataScanVersion':
-          row['replaygain_metadata_scan_version'] ?? 0,
-    };
-    return {'source': source, 'item': item};
   }
 }

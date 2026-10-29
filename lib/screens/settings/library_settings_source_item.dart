@@ -5,6 +5,7 @@ import 'package:sistrum/models/library_scan_failure.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 class LibrarySourceSettingsItem extends StatelessWidget {
   final LocalLibrarySource source;

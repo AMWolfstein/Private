@@ -19,7 +19,7 @@ import 'package:sistrum/services/playback/music_player_service.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
-import 'package:sistrum/widgets/header/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_play_actions.dart';
 
 final _tracks = [
   for (final name in ['First', 'Unavailable', 'Selected', 'Last'])

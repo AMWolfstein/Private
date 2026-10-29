@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation_skeletons.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 
 void main() {

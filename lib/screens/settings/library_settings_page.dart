@@ -12,6 +12,8 @@ import 'package:sistrum/services/library/library_folder_selection.dart';
 import 'package:sistrum/widgets/sheets/duplicate_review_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
+import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
 import 'package:sistrum/theme/app_theme.dart';

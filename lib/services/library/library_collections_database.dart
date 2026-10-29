@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,57 +6,18 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/services/library/collection_restore_codec.dart';
-import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
+import 'package:sistrum/services/library/library_collections_models.dart';
+import 'package:sistrum/services/library/library_collections_read.dart';
+import 'package:sistrum/services/library/library_collections_schema.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/services/library/sqlite_native_snapshot.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/logger.dart';
 
+export 'library_collections_models.dart';
+
 final _log = AppLogger('LibraryCollectionsDb');
-
-const _dbFileName = 'library_collections.db';
-const _dbVersion = 4;
-
-const _tableLoved = 'loved_tracks';
-const _tablePlaylists = 'playlists';
-const _tablePlaylistTracks = 'playlist_tracks';
-const _tableFavoriteArtists = 'favorite_artists';
-
-class LibraryCollectionsSnapshot {
-  final List<Map<String, dynamic>> lovedRows;
-  final List<Map<String, dynamic>> playlistRows;
-  final List<Map<String, dynamic>> playlistTrackRows;
-  final List<Map<String, dynamic>> favoriteArtistRows;
-  final String? nativeRowsPath;
-  final String? nativeRowsDirectory;
-  final int? nativeRowCount;
-
-  const LibraryCollectionsSnapshot({
-    required this.lovedRows,
-    required this.playlistRows,
-    required this.playlistTrackRows,
-    required this.favoriteArtistRows,
-    this.nativeRowsPath,
-    this.nativeRowsDirectory,
-    this.nativeRowCount,
-  });
-}
-
-class LibraryPlaylistTracksSnapshot {
-  const LibraryPlaylistTracksSnapshot({
-    this.rows = const [],
-    this.nativeRowsPath,
-    this.nativeRowsDirectory,
-    this.nativeRowCount,
-  });
-  final List<Map<String, dynamic>> rows;
-  final String? nativeRowsPath;
-  final String? nativeRowsDirectory;
-  final int? nativeRowCount;
-}
-
-typedef NativeCollectionsJobRunner =
-    Future<Map<String, dynamic>> Function(Map<String, dynamic> request);
 
 class LibraryCollectionsDatabase {
   static int _restoreAttachmentSequence = 0;
@@ -71,64 +31,12 @@ class LibraryCollectionsDatabase {
   Future<Database> get database {
     return _database.getOrCreate(
       () => sqlite.openAppDatabase(
-        _dbFileName,
-        version: _dbVersion,
+        dbFileName,
+        version: dbVersion,
         foreignKeys: true,
-        onCreate: _createDb,
+        onCreate: createCollectionsSchema,
         onUpgrade: upgradeDatabaseSchema,
       ),
-    );
-  }
-
-  Future<void> _createDb(Database db, int version) async {
-    _log.i('Creating collections database schema v$version');
-
-    await db.execute('''
-      CREATE TABLE $_tableLoved (
-        track_key TEXT PRIMARY KEY,
-        track_json TEXT NOT NULL,
-        added_at TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE $_tablePlaylists (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        cover_image_path TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE $_tablePlaylistTracks (
-        playlist_id TEXT NOT NULL,
-        track_key TEXT NOT NULL,
-        track_json TEXT NOT NULL,
-        added_at TEXT NOT NULL,
-        PRIMARY KEY (playlist_id, track_key),
-        FOREIGN KEY (playlist_id) REFERENCES $_tablePlaylists(id) ON DELETE CASCADE
-      )
-    ''');
-
-    await _createFavoriteArtistsTable(db);
-
-    await db.execute(
-      'CREATE INDEX idx_${_tableLoved}_added_at ON $_tableLoved(added_at DESC)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_${_tablePlaylists}_created_at ON $_tablePlaylists(created_at DESC)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_${_tablePlaylistTracks}_playlist_id ON $_tablePlaylistTracks(playlist_id)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_${_tablePlaylistTracks}_added_at ON $_tablePlaylistTracks(added_at DESC)',
-    );
-    // OPT-PERF-003: the playlist picker filters memberships by track_key.
-    await db.execute(
-      'CREATE INDEX IF NOT EXISTS idx_${_tablePlaylistTracks}_track_key ON $_tablePlaylistTracks(track_key, playlist_id)',
     );
   }
 
@@ -141,19 +49,6 @@ class LibraryCollectionsDatabase {
   ) async {
     _log.i(
       'Collections database v$oldVersion needs no upgrade to v$newVersion',
-    );
-  }
-
-  static Future<void> _createFavoriteArtistsTable(Database db) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS $_tableFavoriteArtists (
-        artist_key TEXT PRIMARY KEY,
-        artist_json TEXT NOT NULL,
-        added_at TEXT NOT NULL
-      )
-    ''');
-    await db.execute(
-      'CREATE INDEX IF NOT EXISTS idx_${_tableFavoriteArtists}_added_at ON $_tableFavoriteArtists(added_at DESC)',
     );
   }
 
@@ -175,10 +70,10 @@ class LibraryCollectionsDatabase {
     try {
       await db.transaction((txn) async {
         for (final (table, kind, date, ascending) in [
-          (_tableLoved, 'loved', 'added_at', false),
-          (_tablePlaylists, 'playlist', 'created_at', false),
-          (_tableFavoriteArtists, 'artist', 'added_at', false),
-          (_tablePlaylistTracks, 'backup_track', 'added_at', true),
+          (tableLoved, 'loved', 'added_at', false),
+          (tablePlaylists, 'playlist', 'created_at', false),
+          (tableFavoriteArtists, 'artist', 'added_at', false),
+          (tablePlaylistTracks, 'backup_track', 'added_at', true),
         ]) {
           Object? lastDate;
           int? lastRow;
@@ -230,19 +125,19 @@ class LibraryCollectionsDatabase {
     Directory? temporaryDirectory,
   }) async {
     final probe = await db.rawQuery('''
-      SELECT 1 FROM $_tableLoved
-      UNION ALL SELECT 1 FROM $_tablePlaylists
-      UNION ALL SELECT 1 FROM $_tablePlaylistTracks
-      UNION ALL SELECT 1 FROM $_tableFavoriteArtists LIMIT 64
+      SELECT 1 FROM $tableLoved
+      UNION ALL SELECT 1 FROM $tablePlaylists
+      UNION ALL SELECT 1 FROM $tablePlaylistTracks
+      UNION ALL SELECT 1 FROM $tableFavoriteArtists LIMIT 64
     ''');
     if (probe.length == 64) {
-      return _readNativeRows(
+      return readNativeRows(
         db,
         nativeJobRunner: nativeJobRunner,
         temporaryDirectory: temporaryDirectory,
       );
     }
-    return _readDartSnapshot(db);
+    return readDartSnapshot(db);
   }
 
   /// Pins the Dart reader for tests; production uses it below the native row
@@ -250,59 +145,7 @@ class LibraryCollectionsDatabase {
   @visibleForTesting
   static Future<LibraryCollectionsSnapshot> readDartSnapshotForTesting(
     Database db,
-  ) => _readDartSnapshot(db);
-
-  static Future<LibraryCollectionsSnapshot> _readDartSnapshot(Database db) {
-    return db.transaction((txn) async {
-      final lovedRows = await _readDateOrderedRows(
-        txn,
-        _tableLoved,
-        'added_at',
-      );
-      final playlistRows = await _readDateOrderedRows(
-        txn,
-        _tablePlaylists,
-        'created_at',
-        projection:
-            '''p.*,
-        CASE WHEN p.cover_image_path IS NULL OR p.cover_image_path = '' THEN (
-          SELECT pt.track_json
-          FROM $_tablePlaylistTracks pt
-          WHERE pt.playlist_id = p.id
-          ORDER BY pt.added_at ASC, pt.rowid ASC
-          LIMIT 1
-        ) END AS preview_track_json''',
-        alias: 'p',
-      );
-      final playlistTrackRows = <Map<String, dynamic>>[];
-      Object? lastId;
-      int? lastRowId;
-      while (true) {
-        final page = await txn.rawQuery('''
-          SELECT rowid AS __collection_rowid, playlist_id, track_key
-          FROM $_tablePlaylistTracks
-          ${lastRowId == null ? '' : 'WHERE playlist_id>? OR (playlist_id=? AND rowid>?)'}
-          ORDER BY playlist_id ASC,rowid ASC LIMIT 256
-        ''', lastRowId == null ? const [] : [lastId, lastId, lastRowId]);
-        if (page.isEmpty) break;
-        lastId = page.last['playlist_id'];
-        lastRowId = page.last['__collection_rowid'] as int;
-        playlistTrackRows.addAll(page.map(_withoutRowCursor));
-        if (page.length < 256) break;
-      }
-      final favoriteArtistRows = await _readDateOrderedRows(
-        txn,
-        _tableFavoriteArtists,
-        'added_at',
-      );
-      return LibraryCollectionsSnapshot(
-        lovedRows: lovedRows,
-        playlistRows: playlistRows,
-        playlistTrackRows: playlistTrackRows,
-        favoriteArtistRows: favoriteArtistRows,
-      );
-    });
-  }
+  ) => readDartSnapshot(db);
 
   Future<LibraryPlaylistTracksSnapshot> loadPlaylistTracksSnapshot(
     String playlistId,
@@ -315,11 +158,11 @@ class LibraryCollectionsDatabase {
     Directory? temporaryDirectory,
   }) async {
     final probe = await db.rawQuery(
-      'SELECT 1 FROM $_tablePlaylistTracks WHERE playlist_id=? LIMIT 64',
+      'SELECT 1 FROM $tablePlaylistTracks WHERE playlist_id=? LIMIT 64',
       [playlistId],
     );
     if (probe.length == 64) {
-      final snapshot = await _readNativeRows(
+      final snapshot = await readNativeRows(
         db,
         playlistId: playlistId,
         nativeJobRunner: nativeJobRunner,
@@ -331,7 +174,7 @@ class LibraryCollectionsDatabase {
         nativeRowCount: snapshot.nativeRowCount,
       );
     }
-    return _readDartPlaylistTracks(db, playlistId);
+    return readDartPlaylistTracks(db, playlistId);
   }
 
   /// Pins the Dart playlist-track reader for tests (see
@@ -340,194 +183,7 @@ class LibraryCollectionsDatabase {
   static Future<LibraryPlaylistTracksSnapshot> readDartPlaylistTracksForTesting(
     Database db,
     String playlistId,
-  ) => _readDartPlaylistTracks(db, playlistId);
-
-  static Future<LibraryPlaylistTracksSnapshot> _readDartPlaylistTracks(
-    Database db,
-    String playlistId,
-  ) async {
-    final rows = await db.transaction(
-      (txn) => _readDateOrderedRows(
-        txn,
-        _tablePlaylistTracks,
-        'added_at',
-        ascending: true,
-        where: 'playlist_id=?',
-        whereArgs: [playlistId],
-      ),
-    );
-    return LibraryPlaylistTracksSnapshot(rows: rows);
-  }
-
-  static Map<String, dynamic> _withoutRowCursor(Map<String, Object?> row) =>
-      Map<String, dynamic>.from(row)..remove('__collection_rowid');
-
-  static Future<List<Map<String, dynamic>>> _readDateOrderedRows(
-    DatabaseExecutor db,
-    String table,
-    String dateColumn, {
-    bool ascending = false,
-    String projection = '*',
-    String? alias,
-    String? where,
-    List<Object?> whereArgs = const [],
-  }) async {
-    final rows = <Map<String, dynamic>>[];
-    final qualifier = alias == null ? '' : '$alias.';
-    final comparison = ascending ? '>' : '<';
-    final direction = ascending ? 'ASC' : 'DESC';
-    Object? lastDate;
-    int? lastRowId;
-    while (true) {
-      final predicates = [
-        if (where != null) '($where)',
-        if (lastRowId != null)
-          '($qualifier$dateColumn$comparison? OR ($qualifier$dateColumn=? AND ${qualifier}rowid$comparison?))',
-      ];
-      final page = await db.rawQuery(
-        '''
-        SELECT ${qualifier}rowid AS __collection_rowid, $projection
-        FROM $table ${alias ?? ''}
-        ${predicates.isEmpty ? '' : 'WHERE ${predicates.join(' AND ')}'}
-        ORDER BY $qualifier$dateColumn $direction,${qualifier}rowid $direction LIMIT 256
-      ''',
-        [
-          ...whereArgs,
-          if (lastRowId != null) ...[lastDate, lastDate, lastRowId],
-        ],
-      );
-      if (page.isEmpty) break;
-      lastDate = page.last[dateColumn];
-      lastRowId = page.last['__collection_rowid'] as int;
-      rows.addAll(page.map(_withoutRowCursor));
-      if (page.length < 256) break;
-    }
-    return rows;
-  }
-
-  static Future<LibraryCollectionsSnapshot> _readNativeRows(
-    Database db, {
-    String? playlistId,
-    NativeCollectionsJobRunner? nativeJobRunner,
-    Directory? temporaryDirectory,
-  }) async {
-    final temporary =
-        await (temporaryDirectory ?? await getTemporaryDirectory()).createTemp(
-          'collection-read-',
-        );
-    final path = '${temporary.path}/rows.ndjson';
-    try {
-      final snapshotPath = '${temporary.path}/$_dbFileName';
-      await _projectCollectionReadDatabase(
-        db,
-        snapshotPath,
-        playlistId: playlistId,
-      );
-      final request = <String, dynamic>{
-        'operation': 'collections_snapshot',
-        'collections_path': snapshotPath,
-        'output_path': path,
-        'playlist_id': ?playlistId,
-      };
-      final result = await (nativeJobRunner ?? NativeDataJobs.run)(
-        request,
-      );
-      final counts = result['counts'];
-      if (result['published'] != true ||
-          result['rows_path'] != path ||
-          counts is! Map) {
-        throw const FormatException('Invalid native collection snapshot');
-      }
-      var total = 0;
-      for (final count in counts.values) {
-        if (count is! int || count < 0) {
-          throw const FormatException('Invalid native collection row count');
-        }
-        total += count;
-      }
-      return LibraryCollectionsSnapshot(
-        lovedRows: const [],
-        playlistRows: const [],
-        playlistTrackRows: const [],
-        favoriteArtistRows: const [],
-        nativeRowsPath: path,
-        nativeRowsDirectory: temporary.path,
-        nativeRowCount: total,
-      );
-    } on NativeSqliteSnapshotDetachException {
-      _log.w(
-        'Retaining collection read staging after a failed database detach',
-      );
-      rethrow;
-    } catch (_) {
-      await temporary.delete(recursive: true);
-      rethrow;
-    }
-  }
-
-  static final _collectionProjectionQueue = Expando<Future<void>>();
-  static var _collectionProjectionSequence = 0;
-
-  /// Both the live database and this projection are owned by the same SQLite
-  /// engine during copying. DETACH closes its private file before Rust opens
-  /// it; independent SQLite copies must never share a live app database.
-  static Future<void> _projectCollectionReadDatabase(
-    Database db,
-    String outputPath, {
-    String? playlistId,
-  }) async {
-    final previous = _collectionProjectionQueue[db];
-    final finished = Completer<void>();
-    _collectionProjectionQueue[db] = finished.future;
-    if (previous != null) await previous;
-    final alias = 'collection_read_${_collectionProjectionSequence++}';
-    var attached = false;
-    try {
-      await db.execute('ATTACH DATABASE ? AS $alias', [outputPath]);
-      attached = true;
-      await db.transaction((txn) async {
-        for (final table in [
-          _tableLoved,
-          _tableFavoriteArtists,
-          _tablePlaylists,
-          _tablePlaylistTracks,
-        ]) {
-          final where = playlistId == null
-              ? ''
-              : table == _tablePlaylists
-              ? 'WHERE id=?'
-              : table == _tablePlaylistTracks
-              ? 'WHERE playlist_id=?'
-              : 'WHERE 0';
-          // CTAS copies every original column and value. Inserting in original
-          // rowid order preserves all date-tie and membership ordering without
-          // transferring any collection rows through the platform channel.
-          await txn.execute(
-            'CREATE TABLE $alias.$table AS '
-            'SELECT * FROM main.$table $where ORDER BY rowid ASC',
-            where.contains('?') ? [playlistId] : const [],
-          );
-        }
-        await txn.execute('PRAGMA $alias.user_version=$_dbVersion');
-        await txn.execute(
-          'CREATE INDEX $alias.collection_read_members '
-          'ON $_tablePlaylistTracks(playlist_id)',
-        );
-        await txn.execute(
-          'CREATE INDEX $alias.collection_read_preview '
-          'ON $_tablePlaylistTracks(playlist_id,added_at)',
-        );
-      });
-    } finally {
-      try {
-        if (attached) {
-          await detachNativeSqliteSnapshot(db, alias, outputPath);
-        }
-      } finally {
-        finished.complete();
-      }
-    }
-  }
+  ) => readDartPlaylistTracks(db, playlistId);
 
   Future<List<PlaylistPickerSummary>> loadPlaylistPickerSummaries(
     List<String> requestedTrackKeys,
@@ -558,7 +214,7 @@ class LibraryCollectionsDatabase {
     required String trackJson,
     required String addedAt,
   }) => _upsertEntry(
-    _tableLoved,
+    tableLoved,
     'track',
     key: trackKey,
     json: trackJson,
@@ -566,7 +222,7 @@ class LibraryCollectionsDatabase {
   );
 
   Future<void> deleteLovedEntry(String trackKey) =>
-      _deleteEntry(_tableLoved, 'track', trackKey);
+      _deleteEntry(tableLoved, 'track', trackKey);
 
   Future<void> upsertLovedTracksBatch(List<Map<String, String>> tracks) async {
     if (tracks.isEmpty) return;
@@ -583,7 +239,7 @@ class LibraryCollectionsDatabase {
         final batch = txn.batch();
         for (final row in tracks.skip(start).take(128)) {
           batch.insert(
-            _tableLoved,
+            tableLoved,
             row,
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
@@ -616,7 +272,7 @@ class LibraryCollectionsDatabase {
     if (keys.isEmpty) return;
     await sqlite.transactionWithBusyRetry(
       db,
-      (txn) => _deleteTrackKeys(txn, _tableLoved, keys),
+      (txn) => _deleteTrackKeys(txn, tableLoved, keys),
     );
   }
 
@@ -643,7 +299,7 @@ class LibraryCollectionsDatabase {
     required String artistJson,
     required String addedAt,
   }) => _upsertEntry(
-    _tableFavoriteArtists,
+    tableFavoriteArtists,
     'artist',
     key: artistKey,
     json: artistJson,
@@ -651,7 +307,7 @@ class LibraryCollectionsDatabase {
   );
 
   Future<void> deleteFavoriteArtistEntry(String artistKey) =>
-      _deleteEntry(_tableFavoriteArtists, 'artist', artistKey);
+      _deleteEntry(tableFavoriteArtists, 'artist', artistKey);
 
   Future<void> upsertPlaylist({
     required String id,
@@ -661,7 +317,7 @@ class LibraryCollectionsDatabase {
     String? coverImagePath,
   }) async {
     final db = await database;
-    await db.insert(_tablePlaylists, {
+    await db.insert(tablePlaylists, {
       'id': id,
       'name': name,
       'cover_image_path': coverImagePath,
@@ -677,7 +333,7 @@ class LibraryCollectionsDatabase {
   }) async {
     final db = await database;
     await db.update(
-      _tablePlaylists,
+      tablePlaylists,
       {'name': name, 'updated_at': updatedAt},
       where: 'id = ?',
       whereArgs: [playlistId],
@@ -691,7 +347,7 @@ class LibraryCollectionsDatabase {
   }) async {
     final db = await database;
     await db.update(
-      _tablePlaylists,
+      tablePlaylists,
       {'cover_image_path': coverImagePath, 'updated_at': updatedAt},
       where: 'id = ?',
       whereArgs: [playlistId],
@@ -717,7 +373,7 @@ class LibraryCollectionsDatabase {
             : playlistIds.length;
         final ids = playlistIds.sublist(start, end);
         await txn.delete(
-          _tablePlaylists,
+          tablePlaylists,
           where: 'id IN (${List.filled(ids.length, '?').join(',')})',
           whereArgs: ids,
         );
@@ -734,14 +390,14 @@ class LibraryCollectionsDatabase {
   }) async {
     final db = await database;
     await db.transaction((txn) async {
-      await txn.insert(_tablePlaylistTracks, {
+      await txn.insert(tablePlaylistTracks, {
         'playlist_id': playlistId,
         'track_key': trackKey,
         'track_json': trackJson,
         'added_at': addedAt,
       }, conflictAlgorithm: ConflictAlgorithm.replace);
       await txn.update(
-        _tablePlaylists,
+        tablePlaylists,
         {'updated_at': playlistUpdatedAt},
         where: 'id = ?',
         whereArgs: [playlistId],
@@ -774,7 +430,7 @@ class LibraryCollectionsDatabase {
       var batch = txn.batch();
       var pending = 0;
       for (final track in tracks) {
-        batch.insert(_tablePlaylistTracks, {
+        batch.insert(tablePlaylistTracks, {
           'playlist_id': playlistId,
           'track_key': track['track_key'],
           'track_json': track['track_json'],
@@ -787,7 +443,7 @@ class LibraryCollectionsDatabase {
         }
       }
       batch.update(
-        _tablePlaylists,
+        tablePlaylists,
         {'updated_at': playlistUpdatedAt},
         where: 'id = ?',
         whereArgs: [playlistId],
@@ -833,12 +489,12 @@ class LibraryCollectionsDatabase {
     await sqlite.transactionWithBusyRetry(db, (txn) async {
       await _deleteTrackKeys(
         txn,
-        _tablePlaylistTracks,
+        tablePlaylistTracks,
         trackKeys,
         playlistId: playlistId,
       );
       await txn.update(
-        _tablePlaylists,
+        tablePlaylists,
         {'updated_at': playlistUpdatedAt},
         where: 'id = ?',
         whereArgs: [playlistId],
@@ -885,12 +541,12 @@ class LibraryCollectionsDatabase {
       // The native backend bundles its own SQLite. Give it a private file
       // after sqflite closes that file; only the database owner publishes
       // into the live database, preserving its WAL and connection caches.
-      final stagedPath = '${temporary.path}/$_dbFileName';
+      final stagedPath = '${temporary.path}/$dbFileName';
       final stagedDatabase = await openDatabase(
         stagedPath,
-        version: _dbVersion,
+        version: dbVersion,
         onConfigure: (staged) => staged.execute('PRAGMA foreign_keys=ON'),
-        onCreate: instance._createDb,
+        onCreate: createCollectionsSchema,
       );
       detached = false;
       await stagedDatabase.close();
@@ -910,24 +566,18 @@ class LibraryCollectionsDatabase {
       try {
         await db.transaction((txn) async {
           for (final table in [
-            _tablePlaylistTracks,
-            _tablePlaylists,
-            _tableLoved,
-            _tableFavoriteArtists,
+            tablePlaylistTracks,
+            tablePlaylists,
+            tableLoved,
+            tableFavoriteArtists,
           ]) {
             await txn.delete(table);
           }
           for (final (table, columns) in [
-            (_tableLoved, 'track_key,track_json,added_at'),
-            (_tableFavoriteArtists, 'artist_key,artist_json,added_at'),
-            (
-              _tablePlaylists,
-              'id,name,cover_image_path,created_at,updated_at',
-            ),
-            (
-              _tablePlaylistTracks,
-              'playlist_id,track_key,track_json,added_at',
-            ),
+            (tableLoved, 'track_key,track_json,added_at'),
+            (tableFavoriteArtists, 'artist_key,artist_json,added_at'),
+            (tablePlaylists, 'id,name,cover_image_path,created_at,updated_at'),
+            (tablePlaylistTracks, 'playlist_id,track_key,track_json,added_at'),
           ]) {
             await txn.execute(
               'INSERT INTO main.$table($columns) '
@@ -986,13 +636,13 @@ Future<List<PlaylistPickerSummary>> readPlaylistPickerSummaries(
         COUNT(pt.track_key) AS track_count,
         CASE WHEN p.cover_image_path IS NULL OR p.cover_image_path = '' THEN (
           SELECT preview.track_json
-          FROM $_tablePlaylistTracks preview
+          FROM $tablePlaylistTracks preview
           WHERE preview.playlist_id = p.id
           ORDER BY preview.added_at ASC, preview.rowid ASC
           LIMIT 1
         ) END AS preview_track_json
-      FROM $_tablePlaylists p
-      LEFT JOIN $_tablePlaylistTracks pt ON pt.playlist_id = p.id
+      FROM $tablePlaylists p
+      LEFT JOIN $tablePlaylistTracks pt ON pt.playlist_id = p.id
       GROUP BY p.id
       ORDER BY p.created_at DESC, p.rowid DESC
     ''');
@@ -1007,7 +657,7 @@ Future<List<PlaylistPickerSummary>> readPlaylistPickerSummaries(
     final placeholders = List.filled(chunk.length, '?').join(', ');
     final matchedRows = await db.rawQuery('''
           SELECT playlist_id, COUNT(*) AS matched_count
-          FROM $_tablePlaylistTracks
+          FROM $tablePlaylistTracks
           WHERE track_key IN ($placeholders)
           GROUP BY playlist_id
         ''', chunk);

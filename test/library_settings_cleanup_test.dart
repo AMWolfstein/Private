@@ -12,7 +12,7 @@ import 'package:sistrum/screens/settings/library_settings_page.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 class _Settings extends SettingsNotifier {
   @override

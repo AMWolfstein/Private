@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderProxySliver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/services/library/cover_palette.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/widgets/glass/app_artwork_page_ground.dart';
 import 'package:sistrum/widgets/glass/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Collapsing album-detail header shared by the album and local-album
 /// screens: full-bleed [background] (optionally blurred and
@@ -647,66 +647,6 @@ class _RenderAlbumOverlayToolbar extends RenderProxySliver {
       layoutExtent: 0,
       cacheExtent: 0,
     );
-  }
-}
-
-/// Centered Play/Shuffle pills with optional outer Loved and playlist controls.
-/// Colours and translucent fills follow the existing detail-header design.
-class AlbumPlayActions extends StatelessWidget {
-  const AlbumPlayActions({
-    super.key,
-    required this.playLabel,
-    required this.shuffleTooltip,
-    required this.onPlay,
-    required this.onShuffle,
-    this.isPlaying = false,
-    this.leadingAction,
-    this.trailingAction,
-  });
-
-  final String playLabel;
-  final String shuffleTooltip;
-  final VoidCallback onPlay;
-  final VoidCallback onShuffle;
-  final bool isPlaying;
-  final Widget? leadingAction;
-  final Widget? trailingAction;
-
-  @override
-  Widget build(BuildContext context) {
-    {
-      final compact = leadingAction != null || trailingAction != null;
-      final gap = compact ? 6.0 : 12.0;
-      return Row(
-        textDirection: TextDirection.ltr,
-        children: [
-          if (leadingAction != null) ...[leadingAction!, SizedBox(width: gap)],
-          Expanded(
-            child: HeaderFilledButton(
-              icon: isPlaying
-                  ? CupertinoIcons.pause_fill
-                  : CupertinoIcons.play_fill,
-              label: playLabel,
-              compact: compact,
-              onPressed: onPlay,
-            ),
-          ),
-          SizedBox(width: gap),
-          Expanded(
-            child: AppHeaderButton(
-              icon: CupertinoIcons.shuffle,
-              label: shuffleTooltip,
-              compact: compact,
-              onPressed: onShuffle,
-            ),
-          ),
-          if (trailingAction != null) ...[
-            SizedBox(width: gap),
-            trailingAction!,
-          ],
-        ],
-      );
-    }
   }
 }
 

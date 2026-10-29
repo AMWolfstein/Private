@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/app_selection_pill.dart';
 
 void _maskCullingTests() {

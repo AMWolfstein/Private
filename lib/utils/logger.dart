@@ -6,117 +6,10 @@ import 'package:logger/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/services/native_log_source.dart';
+import 'package:sistrum/utils/log_entry.dart';
+import 'package:sistrum/utils/log_redaction.dart';
 
-const int _maxLogMessageLength = 500;
 const int _maxBufferedLogMessageLength = 4000;
-const String _redactedValue = '[REDACTED]';
-
-final RegExp _authorizationBearerPattern = RegExp(
-  r'\bAuthorization\b\s*[:=]\s*Bearer\s+[A-Za-z0-9._~+/\-]+=*',
-  caseSensitive: false,
-);
-
-final RegExp _genericSensitiveKeyValuePattern = RegExp(
-  r'("?(?:access[_\s-]?token|refresh[_\s-]?token|id[_\s-]?token|client[_\s-]?secret|authorization|password|api[_\s-]?key|session[_\s-]?secret|decryption[_\s-]?key|cookie|set-cookie)"?)(\s*[:=]\s*)("(?:\\.|[^"\\])*"|[^\s,;}\]]+)',
-  caseSensitive: false,
-);
-
-final RegExp _sensitiveQueryPattern = RegExp(
-  r'([?&](?:access_token|refresh_token|id_token|token|client_secret|api_key|apikey|password|code|grant|sig|signature|x-amz-signature|x-amz-credential|x-amz-security-token|awsaccesskeyid|googleaccessid|policy|key-pair-id)=)[^&\s]+',
-  caseSensitive: false,
-);
-
-final RegExp _bearerTokenPattern = RegExp(
-  r'\bBearer\s+[A-Za-z0-9._~+/\-]+=*',
-  caseSensitive: false,
-);
-
-final RegExp _decryptionKeyFlagPattern = RegExp(
-  r'(-decryption_key\s+)[^\s]+',
-  caseSensitive: false,
-);
-
-String _truncateLogText(String value, {int maxLength = _maxLogMessageLength}) {
-  if (value.length <= maxLength) {
-    return value;
-  }
-  return '${value.substring(0, maxLength)}...[truncated]';
-}
-
-String _redactSensitiveText(String value) {
-  var redacted = value;
-
-  redacted = redacted.replaceAllMapped(_authorizationBearerPattern, (_) {
-    return 'Authorization: Bearer $_redactedValue';
-  });
-
-  redacted = redacted.replaceAllMapped(_genericSensitiveKeyValuePattern, (
-    match,
-  ) {
-    final key = match.group(1) ?? '';
-    final delimiter = match.group(2) ?? '=';
-    return '$key$delimiter$_redactedValue';
-  });
-
-  redacted = redacted.replaceAllMapped(_sensitiveQueryPattern, (match) {
-    final prefix = match.group(1) ?? '';
-    return '$prefix$_redactedValue';
-  });
-
-  redacted = redacted.replaceAllMapped(_bearerTokenPattern, (_) {
-    return 'Bearer $_redactedValue';
-  });
-
-  redacted = redacted.replaceAllMapped(_decryptionKeyFlagPattern, (match) {
-    return '${match.group(1) ?? '-decryption_key '}$_redactedValue';
-  });
-
-  return redacted;
-}
-
-class LogEntry {
-  final DateTime timestamp;
-  final String level;
-  final String tag;
-  final String message;
-  final String? error;
-  final bool isFromGo;
-
-  LogEntry({
-    required this.timestamp,
-    required this.level,
-    required this.tag,
-    required this.message,
-    this.error,
-    this.isFromGo = false,
-  });
-
-  String get formattedTime {
-    final h = timestamp.hour.toString().padLeft(2, '0');
-    final m = timestamp.minute.toString().padLeft(2, '0');
-    final s = timestamp.second.toString().padLeft(2, '0');
-    final ms = timestamp.millisecond.toString().padLeft(3, '0');
-    return '$h:$m:$s.$ms';
-  }
-
-  String get previewMessage => _truncateLogText(message);
-
-  String? get previewError => error == null ? null : _truncateLogText(error!);
-
-  @override
-  String toString() {
-    final errorPart = error != null ? ' | $error' : '';
-    final nativePart = isFromGo ? ' [Native]' : '';
-    return '[$formattedTime] [$level]$nativePart [$tag] $message$errorPart';
-  }
-}
-
-String formatLogEntries(Iterable<LogEntry> entries) {
-  return entries.map((entry) => entry.toString()).join('\n');
-}
-
-const logExportPrivacyNotice =
-    'Logs may include local file paths, folder names and content URIs. Review before sharing.';
 
 class LogBuffer extends ChangeNotifier {
   static final LogBuffer _instance = LogBuffer._internal();
@@ -161,13 +54,13 @@ class LogBuffer extends ChangeNotifier {
       return false;
     }
 
-    final sanitizedMessage = _truncateLogText(
-      _redactSensitiveText(entry.message),
+    final sanitizedMessage = truncateLogText(
+      redactSensitiveText(entry.message),
       maxLength: _maxBufferedLogMessageLength,
     );
     final sanitizedError = entry.error != null
-        ? _truncateLogText(
-            _redactSensitiveText(entry.error!),
+        ? truncateLogText(
+            redactSensitiveText(entry.error!),
             maxLength: _maxBufferedLogMessageLength,
           )
         : null;
@@ -415,12 +308,12 @@ class BufferedOutput extends LogOutput {
             event.level == Level.error ||
             event.level == Level.fatal)) {
       for (final line in event.lines) {
-        debugPrint(_truncateLogText(_redactSensitiveText(line)));
+        debugPrint(truncateLogText(redactSensitiveText(line)));
       }
     }
 
     final level = _levelToString(event.level);
-    final message = _redactSensitiveText(event.lines.join('\n'));
+    final message = redactSensitiveText(event.lines.join('\n'));
 
     LogBuffer().add(
       LogEntry(
@@ -523,7 +416,7 @@ class AppLogger {
       _addToBuffer('ERROR', message, error: error.toString());
       if (kDebugMode) {
         debugPrint(
-          '[$_tag] ERROR: ${_truncateLogText(_redactSensitiveText(message))} | ${_truncateLogText(_redactSensitiveText(error.toString()))}',
+          '[$_tag] ERROR: ${truncateLogText(redactSensitiveText(message))} | ${truncateLogText(redactSensitiveText(error.toString()))}',
         );
         if (stackTrace != null) {
           debugPrint(stackTrace.toString());

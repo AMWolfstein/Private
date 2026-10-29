@@ -9,10 +9,11 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_play_actions.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 const _track = Track(

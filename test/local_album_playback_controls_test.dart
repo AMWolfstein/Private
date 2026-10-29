@@ -13,7 +13,7 @@ import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/header/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_play_actions.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
 
 class _Playing extends Notifier<bool> {

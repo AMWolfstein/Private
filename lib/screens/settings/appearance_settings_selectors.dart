@@ -8,8 +8,9 @@ import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
-import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
+import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
+import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
 
 /// Auto / Lite / Full / Off, in the same control as System / Light / Dark.
 class GlassQualitySelector extends ConsumerWidget {

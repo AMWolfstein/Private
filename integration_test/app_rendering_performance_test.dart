@@ -19,7 +19,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/shell/app_bottom_bar.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/app_liquid_backdrop.dart';
 
 import 'performance_probe.dart';

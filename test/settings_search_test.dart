@@ -7,7 +7,8 @@ import 'package:sistrum/screens/settings/about_page.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 void main() {
   setUp(() {

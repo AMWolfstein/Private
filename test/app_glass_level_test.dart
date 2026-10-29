@@ -12,7 +12,8 @@ import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/app_liquid_backdrop.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/app_selection_pill.dart';
 
 class _Settings extends SettingsNotifier {
