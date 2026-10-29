@@ -244,3 +244,26 @@ The rule is in AGENTS.md under "Shared widget names". Classification of the 15 p
 No files were renamed. `app_switch`, `app_alert_dialog` and `app_bottom_sheet` read Sistrum theme
 values, which the rule treats as styling, not as a reason for the Sistrum prefix. `app_sliver_header`
 is the header every tab and settings page uses, and `app_content_card` is a plain surface.
+
+## Playback pass
+
+Resolved in the queue (commits d64dac6, the bridge commit and the graph refresh):
+- abstraction_fitness::playback_part_file_handler_leak: AutoMix works through `AutoMixHost`, and
+  Autoplay through `AutoplayQueueView`. The handler's private state is reached only by the adapters.
+  Autoplay has fake-queue tests.
+- cross_module_architecture::playback_runtime_service_export_cycle and
+  dependency_health::playback_runtime_service_import_cycle: the runtime imports no service file. The
+  handler type it uses is the abstract `PlaybackHandler`, and the concrete handler, the restore function
+  and the process runtime are injected through `PlaybackDependencies` from the service library.
+- design_coherence::playback_handler_mixed_responsibilities: the sleep timer, play history, audio focus
+  and volume/headphone inputs moved into `playback_policies.dart` with unit tests. Session persistence
+  still composes in the handler on top of `PlaybackSessionWriter`, and transport and queue stay in the
+  handler.
+- initialization_coupling::music_playback_deck_shared_native_channel_state: `UsbPcmBridge` holds the
+  channel, the shared event stream and the ticket sequence, and each deck receives it.
+- low_level_elegance::load_index_guard_and_lease_sprawl: `_loadIndex` is split into announce, lease,
+  output and publish steps, with one lease release path.
+
+Not in this pass:
+- initialization_coupling::platform_bridge_static_event_state: `PlatformBridge` is the app-wide native
+  bridge for SAF, scanning and metadata, not a playback class. It needs its own pass.
