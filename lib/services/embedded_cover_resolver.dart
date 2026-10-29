@@ -882,12 +882,13 @@ class EmbeddedCoverResolver {
       final stat = stats[file.path]!;
       try {
         await file.delete();
-        await _deleteFileIfPresent(
-          File(_persistentSourceSidecarPath(file.path)),
-        );
-        remainingEntries--;
-        totalSize -= stat.size;
-      } catch (_) {}
+      } catch (_) {
+        // A file that cannot be deleted keeps its budget entry.
+        continue;
+      }
+      await _deleteFileIfPresent(File(_persistentSourceSidecarPath(file.path)));
+      remainingEntries--;
+      totalSize -= stat.size;
     }
   }
 

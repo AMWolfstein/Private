@@ -73,12 +73,9 @@ Future<void> showCollectionSongMenu(
       return;
     }
     await showLocalSongMenu(context, ref, item, anchor: anchor);
-  } catch (_) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.snackbarFileNotFound)),
-      );
-    }
+  } catch (error) {
+    // Only a missing row means "not found"; a failed lookup reports its cause.
+    if (context.mounted) showCannotOpenFileSnackBar(context, error);
   }
 }
 

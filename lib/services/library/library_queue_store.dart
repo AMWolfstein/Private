@@ -527,13 +527,13 @@ class LibraryQueueStore {
       final isCd =
           '(COALESCE($bitDepthExpr, 0) = 16 OR LOWER(COALESCE($qualityExpr, \'\')) LIKE \'16%\')';
       switch (quality) {
-        case 'hires':
+        case LibraryQualityFilter.hiRes:
           where.add(isHiRes);
           break;
-        case 'cd':
+        case LibraryQualityFilter.cd:
           where.add(isCd);
           break;
-        case 'lossy':
+        case LibraryQualityFilter.lossy:
           where.add('NOT ($isHiRes OR $isCd)');
           break;
       }

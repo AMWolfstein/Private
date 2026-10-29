@@ -248,6 +248,15 @@ class IsrcDuplicateGroup {
   const IsrcDuplicateGroup({required this.isrc, required this.entries});
 }
 
+/// Values for the library quality filter. The database query keeps them as
+/// strings at its boundary, so every caller uses these names instead of
+/// repeating the literals.
+abstract final class LibraryQualityFilter {
+  static const hiRes = 'hires';
+  static const cd = 'cd';
+  static const lossy = 'lossy';
+}
+
 class QueueLibraryDbQuery {
   final bool includeSingleTrackAlbums;
   final String? albumArtist;
@@ -255,6 +264,8 @@ class QueueLibraryDbQuery {
   final int offset;
   final String filterMode;
   final String? searchQuery;
+
+  /// One of [LibraryQualityFilter]'s values; unknown strings do not filter.
   final String? quality;
   final String? format;
   final String? metadata;

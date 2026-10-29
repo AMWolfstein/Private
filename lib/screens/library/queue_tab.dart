@@ -456,21 +456,24 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         ),
                         AppChoiceChip(
                           label: Text(context.l10n.libraryFilterQualityHiRes),
-                          selected: tempQuality == 'hires',
-                          onSelected: (_) =>
-                              setSheetState(() => tempQuality = 'hires'),
+                          selected: tempQuality == LibraryQualityFilter.hiRes,
+                          onSelected: (_) => setSheetState(
+                            () => tempQuality = LibraryQualityFilter.hiRes,
+                          ),
                         ),
                         AppChoiceChip(
                           label: Text(context.l10n.libraryFilterQualityCD),
-                          selected: tempQuality == 'cd',
-                          onSelected: (_) =>
-                              setSheetState(() => tempQuality = 'cd'),
+                          selected: tempQuality == LibraryQualityFilter.cd,
+                          onSelected: (_) => setSheetState(
+                            () => tempQuality = LibraryQualityFilter.cd,
+                          ),
                         ),
                         AppChoiceChip(
                           label: Text(context.l10n.libraryFilterQualityLossy),
-                          selected: tempQuality == 'lossy',
-                          onSelected: (_) =>
-                              setSheetState(() => tempQuality = 'lossy'),
+                          selected: tempQuality == LibraryQualityFilter.lossy,
+                          onSelected: (_) => setSheetState(
+                            () => tempQuality = LibraryQualityFilter.lossy,
+                          ),
                         ),
                       ],
                     ),
