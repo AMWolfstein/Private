@@ -10,6 +10,7 @@ import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/app_selection_pill.dart';
+import 'package:sistrum/widgets/glass/app_selection_foreground.dart';
 
 void _maskCullingTests() {
   for (final direction in TextDirection.values) {

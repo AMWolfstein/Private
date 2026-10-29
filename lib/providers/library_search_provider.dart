@@ -4,6 +4,7 @@ import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_playlist_search.dart';
 import 'package:sistrum/services/library/library_search.dart';
 

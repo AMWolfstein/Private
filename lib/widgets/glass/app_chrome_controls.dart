@@ -7,6 +7,7 @@ import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/animation_indicators.dart';
 import 'package:sistrum/widgets/glass/app_glass_surface.dart';
 import 'package:sistrum/widgets/glass/app_selection_pill.dart';
+import 'package:sistrum/widgets/glass/app_selection_foreground.dart';
 
 class AppSegmentedControl extends ConsumerWidget {
   const AppSegmentedControl({

@@ -161,7 +161,7 @@ void main() {
     stopwatch.stop();
     final mountedRows = find
         .byWidgetPredicate(
-          (widget) => widget.runtimeType.toString() == '_LogEntryTile',
+          (widget) => widget.runtimeType.toString() == 'LogEntryTile',
         )
         .evaluate()
         .length;

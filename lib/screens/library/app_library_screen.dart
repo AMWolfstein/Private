@@ -1,5 +1,6 @@
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';

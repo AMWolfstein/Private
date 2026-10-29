@@ -1,4 +1,5 @@
 import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/theme/app_icons.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
