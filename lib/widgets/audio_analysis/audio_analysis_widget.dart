@@ -739,8 +739,8 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
             cutoffFrequencyHz = (result['cutoff'] as num?)?.toDouble();
           } on MissingPluginException {
             cutoffFrequencyHz = await compute(
-              _estimateEffectiveSpectralCutoffFileInIsolate,
-              _SpectralCutoffFileParams(
+              estimateEffectiveSpectralCutoffFileInIsolate,
+              SpectralCutoffFileParams(
                 path: cutoffPath,
                 width: audioSpectralAnalysisWidth,
                 height: audioSpectrogramHeight,
@@ -942,7 +942,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
         containerBitrate ??
         (duration > 0 && fileSize > 0 ? (fileSize * 8 / duration).round() : 0);
 
-    final canReportStoredBitDepth = _codecHasStoredBitDepth(codecName);
+    final canReportStoredBitDepth = audioCodecHasStoredBitDepth(codecName);
 
     int bitsPerSample = 0;
     if (canReportStoredBitDepth) {
@@ -972,8 +972,8 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     return _MediaInfo(
       fileSize: fileSize,
       codecName: codecName,
-      codec: _formatCodecLabel(codecName, codecLongName),
-      container: _formatContainerLabel(formatName, formatLongName),
+      codec: formatAudioCodecLabel(codecName, codecLongName),
+      container: formatAudioContainerLabel(formatName, formatLongName),
       decodedSampleFormat: decodedSampleFormat,
       sampleRate: sampleRate,
       channels: channels,
@@ -981,7 +981,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       bitsPerSample: bitsPerSample,
       duration: duration,
       bitrate: bitrate,
-      totalSamples: _estimateTotalSamples(
+      totalSamples: estimateAudioTotalSamples(
         props: props,
         duration: duration,
         sampleRate: sampleRate,
@@ -990,72 +990,10 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     );
   }
 
-  String _formatCodecLabel(String codecName, String codecLongName) {
-    final name = codecName.trim();
-    final longName = _normalizeAnalysisLabel(codecLongName);
-    if (name.isEmpty) return longName;
-    if (longName.isEmpty || longName.toLowerCase() == name.toLowerCase()) {
-      return name.toUpperCase();
-    }
-    return '${name.toUpperCase()} ($longName)';
-  }
 
-  String _formatContainerLabel(String formatName, String formatLongName) {
-    final longName = _normalizeAnalysisLabel(formatLongName);
-    if (longName.isNotEmpty) return longName;
-    final name = formatName.trim();
-    return name.isEmpty ? '' : name.toUpperCase();
-  }
 
-  String _normalizeAnalysisLabel(String value) {
-    final trimmed = value.trim();
-    final lower = trimmed.toLowerCase();
-    if (lower.isEmpty || lower == 'unknown' || lower == 'n/a') return '';
-    return trimmed;
-  }
 
-  int _estimateTotalSamples({
-    required Map<dynamic, dynamic> props,
-    required double duration,
-    required int sampleRate,
-    required int channels,
-  }) {
-    final nbSamples = int.tryParse(props['nb_samples']?.toString() ?? '');
-    if (nbSamples != null && nbSamples > 0) {
-      return nbSamples;
-    }
 
-    final durationTs = int.tryParse(props['duration_ts']?.toString() ?? '');
-    final timeBase = props['time_base']?.toString() ?? '';
-    if (durationTs != null && durationTs > 0 && timeBase.contains('/')) {
-      final parts = timeBase.split('/');
-      final numerator = double.tryParse(parts[0]);
-      final denominator = double.tryParse(parts[1]);
-      if (numerator != null &&
-          numerator > 0 &&
-          denominator != null &&
-          denominator > 0 &&
-          sampleRate > 0) {
-        final seconds = durationTs * numerator / denominator;
-        return (seconds * sampleRate).round();
-      }
-    }
-
-    if (duration > 0 && sampleRate > 0) {
-      return (duration * sampleRate).round();
-    }
-    return 0;
-  }
-
-  bool _codecHasStoredBitDepth(String codecName) {
-    if (codecName.isEmpty) return false;
-    return codecName == 'flac' ||
-        codecName == 'alac' ||
-        codecName == 'wavpack' ||
-        codecName == 'ape' ||
-        codecName == 'tta' ||
-        codecName.startsWith('pcm_');
-  }
 
   Future<_LevelMetrics?> _runFullStreamLevelAnalysis(
     String inputPath, {
@@ -1093,7 +1031,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       if (summary == null) return null;
       final channelStats = metadataSummary?.channelStats.isNotEmpty == true
           ? metadataSummary!.channelStats
-          : _parseChannelStats(logs);
+          : parseAudioAnalysisChannelStats(logs);
       final clippingSamples = channelStats.fold<int>(0, (sum, stats) {
         if (stats.peakDb == null || stats.peakDb! < -0.1) return sum;
         return sum + stats.peakCount;
@@ -1111,53 +1049,8 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     }
   }
 
-  List<ChannelAnalysisStats> _parseChannelStats(String logs) {
-    final stats = <ChannelAnalysisStats>[];
-    final channelMatches = RegExp(
-      r'Channel:\s*(\d+)([\s\S]*?)(?=Channel:\s*\d+|Overall|$)',
-      caseSensitive: false,
-    ).allMatches(logs);
 
-    for (final match in channelMatches) {
-      final channel = int.tryParse(match.group(1) ?? '') ?? 0;
-      final section = match.group(2) ?? '';
-      if (channel <= 0 || section.trim().isEmpty) continue;
-      final peakDb = _parseLastAstatsValue(section, 'Peak level dB');
-      final rmsDb = _parseLastAstatsValue(section, 'RMS level dB');
-      stats.add(
-        ChannelAnalysisStats(
-          channel: channel,
-          peakDb: peakDb,
-          rmsDb: rmsDb,
-          dynamicRangeDb: peakDb != null && rmsDb != null
-              ? peakDb - rmsDb
-              : null,
-          peakCount:
-              _parseLastAstatsInt(section, 'Peak count') ??
-              _parseLastAstatsInt(section, 'Peak count ch') ??
-              0,
-        ),
-      );
-    }
 
-    return stats;
-  }
-
-  double? _parseLastAstatsValue(String text, String label) {
-    return parseLastAudioAstatsValue(text, label);
-  }
-
-  int? _parseLastAstatsInt(String text, String label) {
-    final matches = RegExp(
-      '${RegExp.escape(label)}:\\s*(\\d+)',
-      caseSensitive: false,
-    ).allMatches(text);
-    int? value;
-    for (final match in matches) {
-      value = int.tryParse(match.group(1) ?? '') ?? value;
-    }
-    return value;
-  }
 
   @override
   Widget build(BuildContext context) {

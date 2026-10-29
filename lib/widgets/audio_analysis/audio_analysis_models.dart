@@ -134,36 +134,6 @@ class _AudioAnalysisRunResult {
   });
 }
 
-class _SpectralCutoffFileParams {
-  final String path;
-  final int width;
-  final int height;
-  final double maxFrequencyHz;
-
-  const _SpectralCutoffFileParams({
-    required this.path,
-    required this.width,
-    required this.height,
-    required this.maxFrequencyHz,
-  });
-}
-
-double? _estimateEffectiveSpectralCutoffFileInIsolate(
-  _SpectralCutoffFileParams params,
-) {
-  final expected = params.width * params.height;
-  final file = File(params.path);
-  if (file.lengthSync() != expected) {
-    throw const FormatException('Incomplete spectral cutoff output');
-  }
-  return estimateEffectiveSpectralCutoffHz(
-    intensity: file.readAsBytesSync(),
-    width: params.width,
-    height: params.height,
-    maxFrequencyHz: params.maxFrequencyHz,
-  );
-}
-
 class _MediaInfo {
   final int fileSize;
   final String codecName;
