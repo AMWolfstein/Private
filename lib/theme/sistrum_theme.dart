@@ -211,27 +211,20 @@ class SistrumTheme extends ThemeExtension<SistrumTheme> {
               : const Color(0xffc6c6c8),
           surfaceTint: Colors.transparent,
         );
-    // Cupertino's font proxies resolve to SF on Apple and the platform fallback
-    // elsewhere. Inter remains the default on other platforms unless opted out.
-    final apple =
-        defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS;
+    // Inter is the default font unless the user opts into the system font.
     final type = CupertinoThemeData(brightness: brightness).textTheme;
     final text = type.textStyle.copyWith(
       inherit: true,
       color: foreground,
       fontFamily:
-          fontFamily ??
-          (apple || useSystemFont ? type.textStyle.fontFamily : 'Inter'),
+          fontFamily ?? (useSystemFont ? type.textStyle.fontFamily : 'Inter'),
     );
     final display = type.navLargeTitleTextStyle.copyWith(
       inherit: true,
       color: foreground,
       fontFamily:
           fontFamily ??
-          (apple || useSystemFont
-              ? type.navLargeTitleTextStyle.fontFamily
-              : 'Inter'),
+          (useSystemFont ? type.navLargeTitleTextStyle.fontFamily : 'Inter'),
     );
     // Supply complete styles: replacing a Material role with a bare TextStyle
     // loses its system family and retains Material tracking in other roles.

@@ -14,7 +14,6 @@ import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/app_search_field.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/app_sliver_header.dart';
@@ -92,32 +91,23 @@ void main() {
       );
     });
 
-    testWidgets(
-      'Sistrum keeps a font family and Cupertino tracking in text roles',
-      (tester) async {
-        final theme = SistrumTheme.build(Brightness.light);
-        final apple = theme.platform == TargetPlatform.iOS;
-        for (final role in [
-          theme.textTheme.bodyLarge,
-          theme.textTheme.bodyMedium,
-          theme.textTheme.titleMedium,
-          theme.textTheme.titleSmall,
-          theme.textTheme.labelLarge,
-          theme.textTheme.labelSmall,
-        ]) {
-          expect(role?.fontFamily, apple ? 'CupertinoSystemText' : 'Inter');
-          expect(role?.letterSpacing, lessThan(0));
-        }
-        expect(
-          theme.textTheme.headlineLarge?.fontFamily,
-          apple ? 'CupertinoSystemDisplay' : 'Inter',
-        );
-      },
-      variant: const TargetPlatformVariant({
-        TargetPlatform.iOS,
-        TargetPlatform.android,
-      }),
-    );
+    testWidgets('Sistrum keeps a font family and tracking in text roles', (
+      tester,
+    ) async {
+      final theme = SistrumTheme.build(Brightness.light);
+      for (final role in [
+        theme.textTheme.bodyLarge,
+        theme.textTheme.bodyMedium,
+        theme.textTheme.titleMedium,
+        theme.textTheme.titleSmall,
+        theme.textTheme.labelLarge,
+        theme.textTheme.labelSmall,
+      ]) {
+        expect(role?.fontFamily, 'Inter');
+        expect(role?.letterSpacing, lessThan(0));
+      }
+      expect(theme.textTheme.headlineLarge?.fontFamily, 'Inter');
+    });
 
     testWidgets('context.tokens falls back to the standard scale', (
       tester,
@@ -394,42 +384,6 @@ void main() {
 
       expect(source, contains('showAppBottomSheet<String>'));
       expect(source, isNot(contains('PopupMenuButton')));
-    });
-  });
-
-  group('AlbumDetailHeader', () {
-    testWidgets('keeps iOS toolbar controls clear of the screen edge', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: AppTheme.light().copyWith(platform: TargetPlatform.iOS),
-            home: Scaffold(
-              body: CustomScrollView(
-                slivers: const [
-                  AlbumDetailHeader(
-                    title: 'Album',
-                    expandedHeight: 500,
-                    showTitleInAppBar: false,
-                    background: ColoredBox(color: Colors.orange),
-                    appBarActions: [SizedBox.square(dimension: 48)],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      final appBar = tester.widget<SliverAppBar>(find.byType(SliverAppBar));
-      expect(appBar.leadingWidth, kToolbarHeight + 12);
-      expect(appBar.actionsPadding, const EdgeInsetsDirectional.only(end: 12));
-      final leadingPadding = appBar.leading! as Padding;
-      expect(
-        leadingPadding.padding,
-        const EdgeInsetsDirectional.only(start: 12),
-      );
     });
   });
 

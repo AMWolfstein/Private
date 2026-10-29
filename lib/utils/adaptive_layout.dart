@@ -9,16 +9,6 @@ const double defaultWideContentMaxWidth = 840;
 bool useNavigationRailForWidth(double width) =>
     width >= navigationRailBreakpoint;
 
-/// Explicit horizontal safe spacing for controls drawn in full-bleed detail
-/// headers. iOS reports no left/right safe-area inset in portrait, so toolbar
-/// buttons otherwise land only a few pixels from the device edge.
-double detailHeaderEdgeInset(BuildContext context) {
-  final platform = Theme.of(context).platform;
-  return platform == TargetPlatform.iOS || platform == TargetPlatform.macOS
-      ? 12
-      : 0;
-}
-
 /// Visual scale for touch-first tablet surfaces. Large iPads have enough
 /// pixels to make an unscaled phone density feel miniature, especially when
 /// Simulator shrinks the whole device to fit a desktop display.

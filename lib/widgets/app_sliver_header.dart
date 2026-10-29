@@ -68,7 +68,6 @@ class AppSliverHeader extends ConsumerWidget {
         ? tokens.headerExpandedHeight - 24
         : tokens.headerExpandedHeight;
     final maxHeight = expandedHeight + topPadding;
-    final edgeInset = detailHeaderEdgeInset(context);
 
     final opaque =
         sistrumHeaderMaterial(context, ref) == SistrumHeaderMaterial.opaque;
@@ -84,28 +83,23 @@ class AppSliverHeader extends ConsumerWidget {
       scrolledUnderElevation: 0,
       systemOverlayStyle: sistrumHeaderOverlayStyle(colorScheme.brightness),
       automaticallyImplyLeading: false,
-      leadingWidth: _showLeading ? kToolbarHeight + edgeInset : null,
+      leadingWidth: _showLeading ? kToolbarHeight : null,
       leading: _showLeading
-          ? Padding(
-              padding: EdgeInsetsDirectional.only(start: edgeInset),
-              child: leading is IconButton
-                  ? SistrumHeaderCircle(child: leading)
-                  : SistrumHeaderControls(
-                      child:
-                          leading ??
-                          HeaderCircleButton(
-                            icon: CupertinoIcons.back,
-                            tooltip: MaterialLocalizations.of(
-                              context,
-                            ).backButtonTooltip,
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                    ),
-            )
+          ? (leading is IconButton
+                ? SistrumHeaderCircle(child: leading)
+                : SistrumHeaderControls(
+                    child:
+                        leading ??
+                        HeaderCircleButton(
+                          icon: CupertinoIcons.back,
+                          tooltip: MaterialLocalizations.of(
+                            context,
+                          ).backButtonTooltip,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                  ))
           : null,
-      actionsPadding: EdgeInsetsDirectional.only(
-        end: edgeInset + kSistrumHeaderEdgeGap,
-      ),
+      actionsPadding: EdgeInsetsDirectional.only(end: kSistrumHeaderEdgeGap),
       actions: [SistrumHeaderActions(actions: actions ?? const [])],
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
@@ -127,9 +121,8 @@ class AppSliverHeader extends ConsumerWidget {
           final contentMargin =
               _contentMargin + (alignToContent ? wideListInset(context) : 0);
           final leftPadding = _showLeading
-              ? (_leadingClearance + edgeInset) -
-                    (((_leadingClearance + edgeInset) - contentMargin) *
-                        expandRatio)
+              ? _leadingClearance -
+                    ((_leadingClearance - contentMargin) * expandRatio)
               : contentMargin;
           final fontSize =
               tokens.headerCollapsedTitleSize +

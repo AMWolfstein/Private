@@ -12,7 +12,6 @@ import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
 
 /// Collapsing album-detail header shared by the album and local-album
 /// screens: full-bleed [background] (optionally blurred and
@@ -122,7 +121,6 @@ class AlbumDetailHeader extends StatelessWidget {
       return [this];
     }
     final scheme = Theme.of(context).colorScheme;
-    final edgeInset = detailHeaderEdgeInset(context);
     final screenSize = MediaQuery.sizeOf(context);
     final artworkSize = math.min(
       screenSize.width.clamp(0.0, 440.0),
@@ -178,23 +176,20 @@ class AlbumDetailHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              leadingWidth: kToolbarHeight + edgeInset,
-              leading: Padding(
-                padding: EdgeInsetsDirectional.only(start: edgeInset),
-                child: SistrumHeaderControls(
-                  child:
-                      leading ??
-                      HeaderCircleButton(
-                        icon: CupertinoIcons.back,
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).backButtonTooltip,
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                ),
+              leadingWidth: kToolbarHeight,
+              leading: SistrumHeaderControls(
+                child:
+                    leading ??
+                    HeaderCircleButton(
+                      icon: CupertinoIcons.back,
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).backButtonTooltip,
+                      onPressed: () => Navigator.pop(context),
+                    ),
               ),
               actionsPadding: EdgeInsetsDirectional.only(
-                end: edgeInset + kSistrumHeaderEdgeGap,
+                end: kSistrumHeaderEdgeGap,
               ),
               actions: [
                 SistrumHeaderActions(actions: appBarActions ?? const []),
@@ -341,11 +336,6 @@ class AlbumDetailHeader extends StatelessWidget {
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
     final plainArtworkHeader = coverBuilder != null;
-    // iOS does not add horizontal safe-area padding in portrait. Give toolbar
-    // controls and header content an explicit inset so circular actions do not
-    // sit against the glass edge on either iPhone or iPad. Android retains its
-    // existing spacing.
-    final iosEdgeInset = detailHeaderEdgeInset(context);
     // Scrim and gradient are drawn from the palette surface instead of black,
     // so a light theme gets a light header with dark text and a dark theme
     // keeps the familiar dark treatment — both tinted by the artwork.
@@ -415,8 +405,8 @@ class AlbumDetailHeader extends StatelessWidget {
                     ),
                   ),
                 Positioned(
-                  left: 20 + iosEdgeInset,
-                  right: 20 + iosEdgeInset,
+                  left: 20,
+                  right: 20,
                   bottom: 40,
                   child: AnimatedOpacity(
                     duration: tokens.motionFast,
@@ -514,25 +504,21 @@ class AlbumDetailHeader extends StatelessWidget {
           );
         },
       ),
-      leadingWidth: kToolbarHeight + iosEdgeInset,
-      leading: Padding(
-        padding: EdgeInsetsDirectional.only(start: iosEdgeInset),
-        child:
-            leading ??
-            IconButton.filledTonal(
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              icon: Icon(Icons.chevron_left),
-              style: IconButton.styleFrom(
-                minimumSize: Size.square(tokens.minTouchTarget),
-                backgroundColor: headerScheme.surfaceContainerHigh.withValues(
-                  alpha: 0.75,
-                ),
-                foregroundColor: headerScheme.onSurfaceVariant,
+      leadingWidth: kToolbarHeight,
+      leading:
+          leading ??
+          IconButton.filledTonal(
+            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+            icon: Icon(Icons.chevron_left),
+            style: IconButton.styleFrom(
+              minimumSize: Size.square(tokens.minTouchTarget),
+              backgroundColor: headerScheme.surfaceContainerHigh.withValues(
+                alpha: 0.75,
               ),
-              onPressed: () => Navigator.pop(context),
+              foregroundColor: headerScheme.onSurfaceVariant,
             ),
-      ),
-      actionsPadding: EdgeInsetsDirectional.only(end: iosEdgeInset),
+            onPressed: () => Navigator.pop(context),
+          ),
       actions: appBarActions,
     );
   }

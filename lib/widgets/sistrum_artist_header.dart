@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
@@ -230,17 +229,12 @@ class SistrumArtistHeader extends StatelessWidget {
     surfaceTintColor: Colors.transparent,
     scrolledUnderElevation: 0,
     systemOverlayStyle: sistrumHeaderOverlayStyle(Theme.of(context).brightness),
-    leadingWidth: kToolbarHeight + detailHeaderEdgeInset(context),
-    leading: Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: detailHeaderEdgeInset(context),
-      ),
-      child: SistrumHeaderControls(
-        child: HeaderCircleButton(
-          icon: CupertinoIcons.back,
-          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          onPressed: () => Navigator.pop(context),
-        ),
+    leadingWidth: kToolbarHeight,
+    leading: SistrumHeaderControls(
+      child: HeaderCircleButton(
+        icon: CupertinoIcons.back,
+        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+        onPressed: () => Navigator.pop(context),
       ),
     ),
     title: AnimatedOpacity(
@@ -253,9 +247,7 @@ class SistrumArtistHeader extends StatelessWidget {
         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
       ),
     ),
-    actionsPadding: EdgeInsetsDirectional.only(
-      end: detailHeaderEdgeInset(context) + kSistrumHeaderEdgeGap,
-    ),
+    actionsPadding: EdgeInsetsDirectional.only(end: kSistrumHeaderEdgeGap),
     actions: const [SistrumHeaderActions()],
     flexibleSpace: flexibleSpace,
   );
