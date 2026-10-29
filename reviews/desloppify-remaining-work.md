@@ -546,3 +546,19 @@ passed (exit 0).
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (exit 0).
+
+## Naming: app_ and App prefixes
+
+- Every UI identifier now uses the `app_` file prefix and `App` class prefix: the theme is
+  `AppTheme` (`lib/theme/app_theme.dart`), and the glass, chrome, slider, context-menu and player
+  widgets follow the same scheme. The test-only helper formerly named `AppTheme` is
+  `MaterialTestTheme`.
+- Kept on purpose: `SistrumApp`, the `sistrum` package and Android package, the displayed app name,
+  and persisted or external values (preference keys such as `sistrum_accent`, backup and export file
+  prefixes, PNG names, channel names, performance suite labels).
+
+Verification: `flutter analyze` reports "No issues found!". The full serial `flutter test` passed
+(1878 tests, exit 0) in the expanded-reporter run. An earlier full run reported one failure
+(`lyrics_screen_awake_test.dart` / `local_album_playback_controls_test.dart`, shown as `-1`) that
+does not reproduce when those files run alone or in the later full run; it is recorded as an
+intermittent, order-dependent failure to investigate separately.
