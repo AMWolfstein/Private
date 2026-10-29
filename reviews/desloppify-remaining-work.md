@@ -140,3 +140,21 @@ Still open from the test list:
 - test_strategy::timing_polling_waits_in_widget_tests: widget tests still wait on wall-clock time.
 
 Queue after this pass: 52 items.
+
+## MainShell test attempt (not committed)
+
+A smoke test that mounts `MainShell` under `MaterialApp.router` with a real `MusicPlayerRuntime`
+(restore skipped) does not pass yet:
+
+- Without advancing the fake clock, the test ends with a pending zero-delay timer from
+  `_LazyTabViewState._schedulePreload` (the Search tab preload is an idle scheduler task that
+  only runs when frames run).
+- Advancing the clock at all (`pump(Duration)`, `pump(Duration.zero)`) runs that preload, and the
+  Search tab then takes minutes to build under the test renderer. Flutter reports the run as "did not
+  complete".
+
+Fix options, none taken yet: allow the preload to be disabled for tests (a constructor flag or a
+provider that `LazyTabView` reads), or give the shell a fake Search tab. Either is a small app-side
+seam, so it needs a decision before it is added.
+
+`main_shell_test.dart` was removed, not committed.
