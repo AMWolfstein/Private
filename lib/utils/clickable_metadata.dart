@@ -46,7 +46,6 @@ Future<void> navigateToArtistCredits(
 Future<void> navigateToArtist(
   BuildContext context, {
   required String artistName,
-  String? artistId,
   String? coverUrl,
 }) async {
   if (artistName.isEmpty) return;
@@ -150,7 +149,6 @@ void _showUnavailable(BuildContext context, String type) {
 
 class ClickableArtistName extends StatelessWidget {
   final String artistName;
-  final String? artistId;
   final String? coverUrl;
   final TextStyle? style;
   final int? maxLines;
@@ -160,7 +158,6 @@ class ClickableArtistName extends StatelessWidget {
   const ClickableArtistName({
     super.key,
     required this.artistName,
-    this.artistId,
     this.coverUrl,
     this.style,
     this.maxLines,
@@ -171,12 +168,8 @@ class ClickableArtistName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => navigateToArtist(
-        context,
-        artistName: artistName,
-        artistId: artistId,
-        coverUrl: coverUrl,
-      ),
+      onTap: () =>
+          navigateToArtist(context, artistName: artistName, coverUrl: coverUrl),
       child: Text(
         artistName,
         style: style,

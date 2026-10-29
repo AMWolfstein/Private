@@ -764,12 +764,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   }
 
   Future<void> _goToCurrentArtist(MediaItem mediaItem) async {
-    final track = ref.read(playerCollectionTrackProvider(mediaItem)).value;
-    await navigateToArtist(
-      context,
-      artistName: mediaItem.artist ?? '',
-      artistId: track?.artistId,
-    );
+    await navigateToArtist(context, artistName: mediaItem.artist ?? '');
   }
 
   Future<void> _updatePlayerCollection(

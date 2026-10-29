@@ -20,7 +20,7 @@ Future<void> showAddTrackToPlaylistSheet(
   BuildContext context,
   WidgetRef ref,
   Track track,
-) async {
+) {
   return showAddTracksToPlaylistSheet(context, ref, [track]);
 }
 

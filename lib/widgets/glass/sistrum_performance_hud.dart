@@ -188,6 +188,8 @@ class _SistrumPerformanceHudState extends ConsumerState<SistrumPerformanceHud> {
   int _reads() {
     var reads = 0;
     for (final view in RendererBinding.instance.renderViews) {
+      // The layer tree is protected API; this debug HUD only reads the
+      // composited backdrop counter and never mutates the layer.
       // ignore: invalid_use_of_protected_member
       reads += sistrumCountBackdropReads(view.layer).total;
     }

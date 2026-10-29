@@ -309,9 +309,7 @@ class UpdateChecker {
       final latestHasSuffix = latest.contains('-');
       final currentHasSuffix = current.contains('-');
 
-      if (!latestHasSuffix && currentHasSuffix) return true;
-
-      return false;
+      return !latestHasSuffix && currentHasSuffix;
     } catch (e) {
       _log.e('Error comparing versions: $e');
       return false;

@@ -9,7 +9,6 @@ class _GroupedLocalAlbum {
   final List<LocalLibraryItem> tracks;
   final int? trackCount;
   final AlbumCompleteness? completeness;
-  final String searchKey;
 
   _GroupedLocalAlbum({
     required this.albumKey,
@@ -20,7 +19,7 @@ class _GroupedLocalAlbum {
     required this.tracks,
     this.trackCount,
     this.completeness,
-  }) : searchKey = '${albumName.toLowerCase()}|${artistName.toLowerCase()}';
+  });
 
   String get key => albumKey;
 

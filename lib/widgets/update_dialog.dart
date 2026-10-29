@@ -418,7 +418,7 @@ Future<void> showUpdateDialog(
   required UpdateInfo updateInfo,
   required VoidCallback onDisableUpdates,
   bool forced = false,
-}) async {
+}) {
   return showAppDialog<void>(
     context: context,
     barrierDismissible: !forced,

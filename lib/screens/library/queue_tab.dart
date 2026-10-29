@@ -1060,10 +1060,10 @@ class _AnimatedLibrarySliverGrid extends StatefulWidget {
 
   @override
   State<_AnimatedLibrarySliverGrid> createState() =>
-      __AnimatedLibrarySliverGridState();
+      _AnimatedLibrarySliverGridState();
 }
 
-class __AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>
+class _AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final CurvedAnimation _curve;
