@@ -7572,9 +7572,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/audio_analysis/audio_analysis_models.dart": {
-    "mtime": 1793278730.1534617,
-    "seen": 1793279534.5120127,
-    "ast_hash": "236d3adfd12510c4442c27fd6572066e",
+    "mtime": 1793287915.448099,
+    "seen": 1793288515.2026174,
+    "ast_hash": "bbbc7f49460b1e3695fff329401f99ea",
     "semantic_hash": ""
   },
   "lib/widgets/audio_analysis/audio_analysis_spectrogram.dart": {
@@ -7584,9 +7584,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/audio_analysis/audio_analysis_widget.dart": {
-    "mtime": 1793284468.5951712,
-    "seen": 1793286030.9871008,
-    "ast_hash": "cffe344418259a8774c40c9b1cd8cb7f",
+    "mtime": 1793287915.4496677,
+    "seen": 1793288515.2026565,
+    "ast_hash": "210d4359f84d4bc990fd386977c0f71c",
     "semantic_hash": ""
   },
   "lib/widgets/glass/sistrum_artwork_contrast.dart": {
@@ -8004,9 +8004,9 @@
     "semantic_hash": ""
   },
   "reviews/desloppify-remaining-work.md": {
-    "mtime": 1793286051.2360342,
-    "seen": 1793286790.5798576,
-    "ast_hash": "a43bbe7482acbba70086b9783249aabc",
+    "mtime": 1793287789.8600638,
+    "seen": 1793288515.2486844,
+    "ast_hash": "abd568717775fb3dd831e9037745c13c",
     "semantic_hash": ""
   },
   "scripts/dead_code_allowlist.txt": {
@@ -8862,9 +8862,9 @@
     "semantic_hash": ""
   },
   "lib/services/audio_analysis/audio_analysis_parsing.dart": {
-    "mtime": 1793275967.7910423,
-    "seen": 1793277684.5786333,
-    "ast_hash": "0f61543348850dd84c9a203349a333e4",
+    "mtime": 1793287931.346698,
+    "seen": 1793288515.1980243,
+    "ast_hash": "f2077b20924d69b53e77dfcbdf45de41",
     "semantic_hash": ""
   },
   "lib/services/cover_palette.dart": {
