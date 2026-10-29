@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 
 MediaItem _item(

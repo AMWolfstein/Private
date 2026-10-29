@@ -5,7 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart' show CupertinoButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/audio_route_info.dart';

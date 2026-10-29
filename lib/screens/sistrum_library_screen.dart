@@ -123,7 +123,7 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
 
   Future<void> _openAlbum(LibraryBrowseEntry entry) async {
     Future<List<LocalLibraryItem>> loadTracks() async {
-      final rows = await LibraryDatabase.instance.getQueueLocalAlbumTracksByKey(
+      final rows = await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
         entry.key,
       );
       return rows.map(LocalLibraryItem.fromJson).toList(growable: false);

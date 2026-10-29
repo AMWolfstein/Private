@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/controllers/metadata_editor_controller.dart';
+import 'package:sistrum/providers/metadata_editor_controller.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 
 void main() {

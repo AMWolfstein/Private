@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
@@ -227,10 +228,8 @@ class LibraryCollectionsDatabase {
     Database db, {
     NativeCollectionsJobRunner? nativeJobRunner,
     Directory? temporaryDirectory,
-    bool forceLegacy = false,
   }) async {
-    if (!forceLegacy &&
-        (nativeJobRunner != null || PlatformBridge.supportsCoreBackend)) {
+    if (nativeJobRunner != null || PlatformBridge.supportsCoreBackend) {
       final probe = await db.rawQuery('''
         SELECT 1 FROM $_tableLoved
         UNION ALL SELECT 1 FROM $_tablePlaylists
@@ -245,6 +244,17 @@ class LibraryCollectionsDatabase {
         );
       }
     }
+    return _readDartSnapshot(db);
+  }
+
+  /// Pins the Dart reader for tests; production picks it through
+  /// [readDatabaseSnapshot] when the native backend is unavailable.
+  @visibleForTesting
+  static Future<LibraryCollectionsSnapshot> readDartSnapshotForTesting(
+    Database db,
+  ) => _readDartSnapshot(db);
+
+  static Future<LibraryCollectionsSnapshot> _readDartSnapshot(Database db) {
     return db.transaction((txn) async {
       final lovedRows = await _readDateOrderedRows(
         txn,
@@ -305,10 +315,8 @@ class LibraryCollectionsDatabase {
     String playlistId, {
     NativeCollectionsJobRunner? nativeJobRunner,
     Directory? temporaryDirectory,
-    bool forceLegacy = false,
   }) async {
-    if (!forceLegacy &&
-        (nativeJobRunner != null || PlatformBridge.supportsCoreBackend)) {
+    if (nativeJobRunner != null || PlatformBridge.supportsCoreBackend) {
       final probe = await db.rawQuery(
         'SELECT 1 FROM $_tablePlaylistTracks WHERE playlist_id=? LIMIT 64',
         [playlistId],
@@ -327,6 +335,21 @@ class LibraryCollectionsDatabase {
         );
       }
     }
+    return _readDartPlaylistTracks(db, playlistId);
+  }
+
+  /// Pins the Dart playlist-track reader for tests (see
+  /// [readDartSnapshotForTesting]).
+  @visibleForTesting
+  static Future<LibraryPlaylistTracksSnapshot> readDartPlaylistTracksForTesting(
+    Database db,
+    String playlistId,
+  ) => _readDartPlaylistTracks(db, playlistId);
+
+  static Future<LibraryPlaylistTracksSnapshot> _readDartPlaylistTracks(
+    Database db,
+    String playlistId,
+  ) async {
     final rows = await db.transaction(
       (txn) => _readDateOrderedRows(
         txn,

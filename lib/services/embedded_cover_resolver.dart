@@ -154,10 +154,12 @@ class EmbeddedCoverResolver {
   /// needed. Navigation uses this to start its Hero and blurred backdrop from
   /// the same file artwork instead of swapping from a placeholder after
   /// the route is already visible.
+  /// Cache hits answer synchronously and misses await extraction. Any synchronous
+  /// failure is still delivered as this Future's error, via [Future.sync].
   static Future<String?> resolveOrExtract(
     String? filePath, {
     VoidCallback? onChanged,
-  }) async {
+  }) => Future.sync(() {
     final cleanPath = cleanFilePath(filePath);
     if (cleanPath.isEmpty) return null;
 
@@ -169,7 +171,7 @@ class EmbeddedCoverResolver {
     }
 
     return _ensureCover(cleanPath, onChanged: onChanged, isForeground: true);
-  }
+  });
 
   /// Clears resolver state together with its App Cache-backed disk entries.
   /// Running native work is generation-cancelled and awaited before the disk

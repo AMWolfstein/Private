@@ -148,10 +148,8 @@ void main() {
     'keyset pages preserve all original query rows and tied-date ordering',
     () async {
       final db = await _fixture('${root.path}/library_collections.db', 1200);
-      final actual = await LibraryCollectionsDatabase.readDatabaseSnapshot(
-        db,
-        forceLegacy: true,
-      );
+      final actual =
+          await LibraryCollectionsDatabase.readDartSnapshotForTesting(db);
       expect(db.pageSizes.every((size) => size <= 256), isTrue);
       final expected = await _legacy(db);
       expect(actual.lovedRows, expected.lovedRows);
@@ -160,10 +158,9 @@ void main() {
       expect(actual.playlistTrackRows, expected.playlistTrackRows);
       db.pageSizes.clear();
       final tracks =
-          await LibraryCollectionsDatabase.readDatabasePlaylistTracks(
+          await LibraryCollectionsDatabase.readDartPlaylistTracksForTesting(
             db,
             '1',
-            forceLegacy: true,
           );
       expect(db.pageSizes.every((size) => size <= 256), isTrue);
       expect(
@@ -354,9 +351,8 @@ void main() {
         {'integrity_check': 'ok'},
       ]);
       db.failProjection = false;
-      final rows = await LibraryCollectionsDatabase.readDatabaseSnapshot(
+      final rows = await LibraryCollectionsDatabase.readDartSnapshotForTesting(
         db,
-        forceLegacy: true,
       );
       expect(rows.lovedRows, hasLength(80));
     },

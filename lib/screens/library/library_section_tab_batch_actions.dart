@@ -1,6 +1,6 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
-extension _QueueTabBatchActions on _QueueTabState {
+extension _LibrarySectionTabBatchActions on _LibrarySectionTabState {
   Future<void> _runBatchReplayGain(
     List<UnifiedLibraryItem> allItems, {
     bool remove = false,

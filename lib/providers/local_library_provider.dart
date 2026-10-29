@@ -1015,13 +1015,13 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         final useSnapshotBridge =
             Platform.isAndroid && existingFiles.isNotEmpty;
         final snapshotPath = nativeIngestion
-            ? await _db.writeNativeFileModTimesSnapshot(
+            ? await _db.exportNativeFileModTimesSnapshot(
                 activeSourceId,
                 requestId: _nativeLibraryRequestId!,
                 isCancelled: () => _scanCancelRequested || !ref.mounted,
               )
             : useSnapshotBridge
-            ? await _db.writeFileModTimesSnapshot(existingFiles)
+            ? await _db.writeFileModTimesTsv(existingFiles)
             : null;
 
         Map<String, dynamic> result;

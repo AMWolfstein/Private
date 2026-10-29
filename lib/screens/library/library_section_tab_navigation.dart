@@ -1,6 +1,6 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
-extension _QueueTabNavigation on _QueueTabState {
+extension _LibrarySectionTabNavigation on _LibrarySectionTabState {
   String _libraryPlaybackMediaId(UnifiedLibraryItem item) => item.localItem.id;
 
   /// Plays [item] and queues the rest of the library (in display order) so playback continues to the next track. Honors player
@@ -41,15 +41,15 @@ extension _QueueTabNavigation on _QueueTabState {
   void _navigateToLocalAlbum(_GroupedLocalAlbum album) {
     Future<List<LocalLibraryItem>> loadTracks() async {
       var rows = album.albumKey.isNotEmpty
-          ? await LibraryDatabase.instance.getQueueLocalAlbumTracksByKey(
+          ? await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
               album.albumKey,
             )
-          : await LibraryDatabase.instance.getQueueLocalAlbumTracks(
+          : await LibraryDatabase.instance.getQueueLocalAlbumRows(
               album.albumName,
               album.artistName,
             );
       if (rows.isEmpty && album.albumKey.isNotEmpty) {
-        rows = await LibraryDatabase.instance.getQueueLocalAlbumTracks(
+        rows = await LibraryDatabase.instance.getQueueLocalAlbumRows(
           album.albumName,
           album.artistName,
         );

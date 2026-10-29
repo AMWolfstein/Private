@@ -48,24 +48,24 @@ import 'package:sistrum/utils/clickable_metadata.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/selection_bottom_bar.dart';
 
-part 'queue_tab_helpers.dart';
-part 'queue_tab_selection.dart';
-part 'queue_tab_navigation.dart';
-part 'queue_tab_collection_items.dart';
-part 'queue_tab_filter_widgets.dart';
-part 'queue_tab_batch_actions.dart';
-part 'queue_tab_item_widgets.dart';
+part 'library_section_tab_helpers.dart';
+part 'library_section_tab_selection.dart';
+part 'library_section_tab_navigation.dart';
+part 'library_section_tab_collection_items.dart';
+part 'library_section_tab_filter_widgets.dart';
+part 'library_section_tab_batch_actions.dart';
+part 'library_section_tab_item_widgets.dart';
 
-class QueueTab extends ConsumerStatefulWidget {
+class LibrarySectionTab extends ConsumerStatefulWidget {
   final String? librarySection;
 
-  const QueueTab({super.key, this.librarySection});
+  const LibrarySectionTab({super.key, this.librarySection});
 
   @override
-  ConsumerState<QueueTab> createState() => _QueueTabState();
+  ConsumerState<LibrarySectionTab> createState() => _LibrarySectionTabState();
 }
 
-class _QueueTabState extends ConsumerState<QueueTab> {
+class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
   static const int _libraryPageSize = 300;
 
   static const double _libraryGridDefaultExtent = 126;
@@ -141,7 +141,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     QueueLibraryDbCursor? cursor;
     try {
       do {
-        final page = await LibraryDatabase.instance.getQueueTrackPageResult(
+        final page = await LibraryDatabase.instance.getQueueTrackPage(
           QueueLibraryDbQuery(
             limit: 500,
             quality: _filterQuality,
@@ -821,7 +821,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       return SistrumLibraryScreen(
         onOpenSection: (section) => Navigator.of(context).push(
           MaterialPageRoute<void>(
-            builder: (_) => Scaffold(body: QueueTab(librarySection: section)),
+            builder: (_) =>
+                Scaffold(body: LibrarySectionTab(librarySection: section)),
           ),
         ),
       );

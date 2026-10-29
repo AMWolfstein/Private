@@ -10,14 +10,17 @@ typedef ArtistTrackRequest = ({
   QueueLibraryDbCursor? cursor,
 });
 
+/// Tracks per bounded page read from the library database.
+const _artistPageSize = 40;
+
 /// Bounded local reads shared by the artist page and its complete playback queue.
 final localArtistTrackLoaderProvider =
     Provider<Future<QueueLibraryDbPage> Function(ArtistTrackRequest)>(
       (ref) =>
-          (request) => LibraryDatabase.instance.getQueueTrackPageResult(
+          (request) => LibraryDatabase.instance.getQueueTrackPage(
             QueueLibraryDbQuery(
               albumArtist: request.artist,
-              limit: 40,
+              limit: _artistPageSize,
               offset: request.offset,
               cursor: request.cursor,
               sortMode: 'a-z',
@@ -62,7 +65,7 @@ class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
     if (ref.mounted && generation == _generation) _cursor = page.nextCursor;
     return LocalArtistTracks(
       page.rows.map(_decodeArtistTrack).toList(),
-      hasMore: page.rows.length == 40,
+      hasMore: page.rows.length == _artistPageSize,
     );
   }
 
@@ -88,7 +91,7 @@ class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
           ...page.rows
               .map(_decodeArtistTrack)
               .where((item) => seen.add(item.id)),
-        ], hasMore: page.rows.length == 40),
+        ], hasMore: page.rows.length == _artistPageSize),
       );
     } catch (error) {
       if (ref.mounted && generation == _generation) {
@@ -102,29 +105,46 @@ class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
   /// Playback includes every artist track, even when the UI has loaded one page.
   Future<List<LocalLibraryItem>> playbackQueue() async {
     final generation = _generation;
-    final load = ref.read(localArtistTrackLoaderProvider);
     final result = <LocalLibraryItem>[];
-    final seen = <String>{};
-    QueueLibraryDbCursor? cursor;
-    var offset = 0;
-    while (ref.mounted) {
-      final page = await load((artist: artist, offset: offset, cursor: cursor));
-      if (!ref.mounted || generation != _generation) return const [];
-      final added = page.rows
-          .map(_decodeArtistTrack)
-          .where((item) => seen.add(item.id))
-          .toList();
-      result.addAll(added);
-      if (page.rows.length < 40 || added.isEmpty) break;
-      offset += page.rows.length;
-      cursor = page.nextCursor;
+    await for (final items in _artistTrackPages(
+      ref.read(localArtistTrackLoaderProvider),
+      artist,
+      () => ref.mounted && generation == _generation,
+    )) {
+      result.addAll(items);
     }
-    return result;
+    return ref.mounted && generation == _generation ? result : const [];
   }
 }
 
 LocalLibraryItem _decodeArtistTrack(Map<String, dynamic> row) =>
     LocalLibraryItem.fromJson(Map<String, dynamic>.from(row["item"] as Map));
+
+/// Walks every page of [artist]'s tracks in order, yielding each page's rows
+/// that are new to the walk. Stops at a short page, at an all-duplicate page,
+/// or once [keepGoing] turns false.
+Stream<List<LocalLibraryItem>> _artistTrackPages(
+  Future<QueueLibraryDbPage> Function(ArtistTrackRequest) load,
+  String artist,
+  bool Function() keepGoing,
+) async* {
+  final seen = <String>{};
+  QueueLibraryDbCursor? cursor;
+  var offset = 0;
+  while (keepGoing()) {
+    final page = await load((artist: artist, offset: offset, cursor: cursor));
+    if (!keepGoing()) return;
+    final items = page.rows
+        .map(_decodeArtistTrack)
+        .where((item) => seen.add(item.id))
+        .toList();
+    if (items.isEmpty) return;
+    yield items;
+    if (page.rows.length < _artistPageSize) return;
+    offset += page.rows.length;
+    cursor = page.nextCursor;
+  }
+}
 
 final localArtistPlayCountsLoaderProvider =
     Provider<Future<Map<String, int>> Function(List<String>)>(
@@ -155,9 +175,8 @@ class _ArtistPopularTieBreaks {
 // when the artist page's last listener leaves.
 final _localArtistPopularTieBreaksProvider = Provider.autoDispose
     .family<_ArtistPopularTieBreaks, String>(
-      (ref, artist) => _ArtistPopularTieBreaks(
-        ref.watch(localArtistPopularRandomProvider),
-      ),
+      (ref, artist) =>
+          _ArtistPopularTieBreaks(ref.watch(localArtistPopularRandomProvider)),
     );
 
 /// Recorded plays for a track. Play counts are stored under the file path and,
@@ -179,21 +198,11 @@ final localArtistPopularProvider = FutureProvider.autoDispose
       // flushing once before the loop is free when nothing is buffered.
       await ref.watch(listeningFlushProvider)();
       var selected = <({LocalLibraryItem item, int plays, double tie})>[];
-      final seen = <String>{};
-      QueueLibraryDbCursor? cursor;
-      var offset = 0;
-      while (ref.mounted) {
-        final page = await load((
-          artist: artist,
-          offset: offset,
-          cursor: cursor,
-        ));
-        if (!ref.mounted) return const LocalArtistTracks([], hasMore: false);
-        final items = page.rows
-            .map(_decodeArtistTrack)
-            .where((item) => seen.add(item.id))
-            .toList();
-        if (items.isEmpty) break;
+      await for (final items in _artistTrackPages(
+        load,
+        artist,
+        () => ref.mounted,
+      )) {
         final keys = {
           for (final item in items) ...[item.filePath, item.id],
         }..remove('');
@@ -213,9 +222,6 @@ final localArtistPopularProvider = FutureProvider.autoDispose
           return rank != 0 ? rank : b.tie.compareTo(a.tie);
         });
         selected = selected.take(20).toList();
-        if (page.rows.length < 40) break;
-        offset += page.rows.length;
-        cursor = page.nextCursor;
       }
       return LocalArtistTracks(
         selected.map((row) => row.item).toList(),

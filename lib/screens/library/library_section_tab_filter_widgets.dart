@@ -1,6 +1,6 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
-extension _QueueTabFilterWidgets on _QueueTabState {
+extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
   /// Count and independently wrapping actions keep their full text and targets.
   Widget _countHeaderRow(
     BuildContext context,

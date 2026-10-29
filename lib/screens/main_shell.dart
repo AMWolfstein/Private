@@ -10,7 +10,7 @@ import 'package:sistrum/providers/playback_notification_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/screens/listening_statistics_screen.dart';
-import 'package:sistrum/screens/library/queue_tab.dart';
+import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/shell_navigation_service.dart';
@@ -646,6 +646,6 @@ class _LibraryTabRoot extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const QueueTab();
+    return const LibrarySectionTab();
   }
 }

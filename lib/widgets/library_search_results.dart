@@ -245,7 +245,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           );
         case LibrarySearchKind.albums:
           final rows = await LibraryDatabase.instance
-              .getQueueLocalAlbumTracksByKey(hit.id);
+              .getQueueLocalAlbumRowsByKey(hit.id);
           if (!mounted) return;
           await Navigator.of(context).push(
             MaterialPageRoute<void>(

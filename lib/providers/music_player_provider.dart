@@ -4,6 +4,7 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/utils/logger.dart';
 
 final musicPlayerRuntimeProvider = Provider<MusicPlayerRuntime>(
   (ref) => musicPlayerRuntime,
@@ -33,8 +34,12 @@ class CurrentMediaItemNotifier extends StreamNotifier<MediaItem?> {
   }
 }
 
+final _log = AppLogger('PlayerCollectionTrack');
+
 /// Use the Library's identity for favorites, including restored queues and
-/// playback started from a file path rather than a Library row ID.
+/// playback started from a file path rather than a Library row ID. A track
+/// missing from the library falls back to the media item's own fields; that is
+/// logged so favorite and identity problems can be traced to it.
 final playerCollectionTrackProvider = FutureProvider.autoDispose
     .family<Track, MediaItem>((ref, item) async {
       final source = item.extras?['source']?.toString() ?? '';
@@ -60,6 +65,7 @@ final playerCollectionTrackProvider = FutureProvider.autoDispose
           }
         }
       }
+      _log.d('No library row for ${item.id}; using the playback item fields');
       return Track(
         id: item.id,
         name: item.title,
@@ -171,7 +177,7 @@ class MusicPlayerController {
     final row = await database.getById(mediaId);
     if (row == null) return null;
     final item = LocalLibraryItem.fromJson(row);
-    final rows = await database.getQueueLocalAlbumTracksByKey(item.albumKey);
+    final rows = await database.getQueueLocalAlbumRowsByKey(item.albumKey);
     final tracks = rows.map(LocalLibraryItem.fromJson).toList(growable: false);
     return tracks.isEmpty ? null : (item: item, tracks: tracks);
   }

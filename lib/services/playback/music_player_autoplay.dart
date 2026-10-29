@@ -34,12 +34,12 @@ Future<List<PlayableMedia>> _loadAutoplayLibrary(
   final offset = count > 256 ? Random().nextInt(count - 255) : 0;
   final rows = [
     if (seed.artist.trim().isNotEmpty)
-      ...await database.getQueueTrackPage(
+      ...(await database.getQueueTrackPage(
         QueueLibraryDbQuery(searchQuery: seed.artist, limit: 128),
-      ),
-    ...await database.getQueueTrackPage(
+      )).rows,
+    ...(await database.getQueueTrackPage(
       QueueLibraryDbQuery(offset: offset, limit: 256),
-    ),
+    )).rows,
   ];
   final result = <PlayableMedia>[];
   for (final row in rows) {

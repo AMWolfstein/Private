@@ -10,7 +10,7 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library/queue_tab.dart';
+import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'support/material_test_theme.dart';
@@ -257,12 +257,16 @@ void main() {
                   : AppTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
+              home: const Scaffold(
+                body: LibrarySectionTab(librarySection: 'playlists'),
+              ),
             ),
           ),
         );
         await tester.pumpAndSettle();
-        final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+        final l10n = AppLocalizations.of(
+          tester.element(find.byType(LibrarySectionTab)),
+        );
         await tester.ensureVisible(find.text('First'));
         await tester.longPress(find.text('First'));
         await tester.pumpAndSettle();
@@ -314,7 +318,9 @@ void main() {
           theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
+          home: const Scaffold(
+            body: LibrarySectionTab(librarySection: 'playlists'),
+          ),
         ),
       ),
     );
@@ -349,7 +355,9 @@ void main() {
           theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
+          home: const Scaffold(
+            body: LibrarySectionTab(librarySection: 'playlists'),
+          ),
         ),
       ),
     );
@@ -376,7 +384,7 @@ void main() {
           theme: SistrumTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const Scaffold(body: QueueTab(librarySection: 'all')),
+          home: const Scaffold(body: LibrarySectionTab(librarySection: 'all')),
         ),
       ),
     );
@@ -412,12 +420,14 @@ void main() {
             ).copyWith(textScaler: const TextScaler.linear(2)),
             child: child!,
           ),
-          home: const Scaffold(body: QueueTab(librarySection: 'all')),
+          home: const Scaffold(body: LibrarySectionTab(librarySection: 'all')),
         ),
       ),
     );
     await tester.pumpAndSettle();
-    final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(LibrarySectionTab)),
+    );
     final create = find.widgetWithText(
       TextButton,
       l10n.collectionCreatePlaylist,

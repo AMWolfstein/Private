@@ -9,14 +9,14 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/theme_settings.dart';
-import 'package:sistrum/routes/now_playing_route.dart';
+import 'package:sistrum/screens/now_playing_route.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/clickable_metadata.dart';
@@ -40,7 +40,7 @@ import 'package:sistrum/widgets/glass/sistrum_artwork_contrast.dart';
 import 'package:sistrum/widgets/player/sistrum_player_actions_sheet.dart';
 import 'package:sistrum/widgets/sistrum_context_menu.dart';
 
-export 'package:sistrum/routes/now_playing_route.dart';
+export 'package:sistrum/screens/now_playing_route.dart';
 
 final _log = AppLogger('NowPlaying');
 

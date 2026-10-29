@@ -9,7 +9,7 @@ const localHomeShelfLimit = 12;
 final localHomeTrackLoaderProvider =
     Provider<Future<QueueLibraryDbPage> Function()>(
       (ref) =>
-          () => LibraryDatabase.instance.getQueueTrackPageResult(
+          () => LibraryDatabase.instance.getQueueTrackPage(
             const QueueLibraryDbQuery(
               limit: localHomeShelfLimit,
               sortMode: 'latest',

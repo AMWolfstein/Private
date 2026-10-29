@@ -103,7 +103,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
           artistName: album.artist,
           coverPath: album.cover,
           loadTracks: () async =>
-              (await LibraryDatabase.instance.getQueueLocalAlbumTracksByKey(
+              (await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
                 album.key,
               )).map(LocalLibraryItem.fromJson).toList(),
         ),

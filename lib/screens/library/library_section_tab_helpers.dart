@@ -1,4 +1,4 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
 class _GroupedLocalAlbum {
   final String albumKey;
@@ -225,9 +225,7 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
       }
       final dbQuery = request.toDbQuery();
       if (request.filterMode == 'albums') {
-        final page = await LibraryDatabase.instance.getQueueAlbumPageResult(
-          dbQuery,
-        );
+        final page = await LibraryDatabase.instance.getQueueAlbumPage(dbQuery);
         final rows = page.rows;
         final groupedLocalAlbums = <_GroupedLocalAlbum>[];
         for (final row in rows) {
@@ -251,9 +249,7 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
         );
       }
 
-      final page = await LibraryDatabase.instance.getQueueTrackPageResult(
-        dbQuery,
-      );
+      final page = await LibraryDatabase.instance.getQueueTrackPage(dbQuery);
       final rows = page.rows;
       final items = <UnifiedLibraryItem>[];
       final localItems = <LocalLibraryItem>[];

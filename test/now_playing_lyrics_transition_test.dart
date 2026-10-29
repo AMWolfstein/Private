@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/controllers/player_metadata_controller.dart';
+import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/models/settings.dart';
@@ -363,7 +363,9 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(sistrum ? Brightness.dark : Brightness.light),
+          theme: SistrumTheme.build(
+            sistrum ? Brightness.dark : Brightness.light,
+          ),
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
             updatePosition: const Duration(seconds: 30),
@@ -407,54 +409,57 @@ void main() {
 
   for (final view in PlayerView.values) {
     for (final page in ['player', 'lyrics', 'queue']) {
-      testWidgets('cover swipe changes the track in the Sistrum $page ($view)', (
-        tester,
-      ) async {
-        final queue = [item('first'), item('second')];
-        final controller = _QueueController(
-          (index) => mediaItems.add(queue[index]),
-        );
-        await pumpNowPlaying(
-          tester,
-          theme: SistrumTheme.build(Brightness.dark),
-          size: const Size(393, 852),
-          playerView: view,
-          queue: queue,
-          controller: controller,
-          playback: PlaybackState(queueIndex: 0),
-        );
-        mediaItems.add(queue.first);
-        await settlePlayer(tester);
-        if (page != 'player') {
-          await tester.tap(
-            find.byIcon(
-              page == 'lyrics'
-                  ? CupertinoIcons.quote_bubble
-                  : CupertinoIcons.list_bullet,
+      testWidgets(
+        'cover swipe changes the track in the Sistrum $page ($view)',
+        (tester) async {
+          final queue = [item('first'), item('second')];
+          final controller = _QueueController(
+            (index) => mediaItems.add(queue[index]),
+          );
+          await pumpNowPlaying(
+            tester,
+            theme: SistrumTheme.build(Brightness.dark),
+            size: const Size(393, 852),
+            playerView: view,
+            queue: queue,
+            controller: controller,
+            playback: PlaybackState(queueIndex: 0),
+          );
+          mediaItems.add(queue.first);
+          await settlePlayer(tester);
+          if (page != 'player') {
+            await tester.tap(
+              find.byIcon(
+                page == 'lyrics'
+                    ? CupertinoIcons.quote_bubble
+                    : CupertinoIcons.list_bullet,
+              ),
+            );
+            await settlePlayer(tester);
+          }
+          final cover = find.byKey(
+            ValueKey(
+              page == 'player'
+                  ? 'full-player-artwork'
+                  : 'compact-player-artwork',
             ),
           );
+          final rect = tester.getRect(cover);
+          final gesture = await tester.startGesture(rect.center);
+          await gesture.moveBy(const Offset(-110, 0));
+          await tester.pump();
+          expect(tester.getRect(cover), rect);
+          await gesture.up();
           await settlePlayer(tester);
-        }
-        final cover = find.byKey(
-          ValueKey(
-            page == 'player' ? 'full-player-artwork' : 'compact-player-artwork',
-          ),
-        );
-        final rect = tester.getRect(cover);
-        final gesture = await tester.startGesture(rect.center);
-        await gesture.moveBy(const Offset(-110, 0));
-        await tester.pump();
-        expect(tester.getRect(cover), rect);
-        await gesture.up();
-        await settlePlayer(tester);
-        expect(controller.selected, [1]);
-        expect(find.text('Second').hitTestable(), findsOneWidget);
-        await tester.drag(cover, const Offset(110, 0));
-        await settlePlayer(tester);
-        expect(controller.selected, [1, 0]);
-        expect(find.text('First').hitTestable(), findsOneWidget);
-        expect(tester.takeException(), isNull);
-      });
+          expect(controller.selected, [1]);
+          expect(find.text('Second').hitTestable(), findsOneWidget);
+          await tester.drag(cover, const Offset(110, 0));
+          await settlePlayer(tester);
+          expect(controller.selected, [1, 0]);
+          expect(find.text('First').hitTestable(), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        },
+      );
     }
   }
 
@@ -607,58 +612,63 @@ void main() {
     );
   }
 
-  testWidgets('Sistrum lyrics keep wrapped, first and last lines at upper focus', (
-    tester,
-  ) async {
-    final lyrics = List.generate(100, (index) {
-      final seconds = index * 2;
-      final time =
-          '${(seconds ~/ 60).toString().padLeft(2, '0')}:'
-          '${(seconds % 60).toString().padLeft(2, '0')}.00';
-      return '[$time]Line $index with enough words to wrap across several rows';
-    }).join('\n');
-    metadataOverrides = {'lyrics': lyrics};
-    final playback = StreamController<PlaybackState>();
-    addTearDown(playback.close);
-    await pumpNowPlaying(
-      tester,
-      theme: SistrumTheme.build(Brightness.dark),
-      size: const Size(393, 780),
-      playbackEvents: playback.stream,
-    );
-    mediaItems.add(item('many'));
-    playback.add(PlaybackState(updatePosition: const Duration(seconds: 140)));
-    await settlePlayer(tester);
-    await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
-    await settlePlayer(tester);
-    final current = find.text(
-      'Line 70 with enough words to wrap across several rows',
-    );
-    expect(current, findsOneWidget);
-    final list = find.byType(ListView);
-    void expectUpperFocus(Finder line) {
-      final bounds = tester.getRect(line);
-      final viewport = tester.getRect(list);
-      expect(bounds.top, closeTo(viewport.top + 16 + 780 * 0.06, 2));
-    }
-
-    expectUpperFocus(current);
-    await tester.drag(list, const Offset(0, 200));
-    await settlePlayer(tester);
-    await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
-    await settlePlayer(tester);
-    await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
-    await settlePlayer(tester);
-    expectUpperFocus(current);
-    for (final index in [99, 0]) {
-      playback.add(PlaybackState(updatePosition: Duration(seconds: index * 2)));
-      await settlePlayer(tester);
-      expectUpperFocus(
-        find.text('Line $index with enough words to wrap across several rows'),
+  testWidgets(
+    'Sistrum lyrics keep wrapped, first and last lines at upper focus',
+    (tester) async {
+      final lyrics = List.generate(100, (index) {
+        final seconds = index * 2;
+        final time =
+            '${(seconds ~/ 60).toString().padLeft(2, '0')}:'
+            '${(seconds % 60).toString().padLeft(2, '0')}.00';
+        return '[$time]Line $index with enough words to wrap across several rows';
+      }).join('\n');
+      metadataOverrides = {'lyrics': lyrics};
+      final playback = StreamController<PlaybackState>();
+      addTearDown(playback.close);
+      await pumpNowPlaying(
+        tester,
+        theme: SistrumTheme.build(Brightness.dark),
+        size: const Size(393, 780),
+        playbackEvents: playback.stream,
       );
-    }
-    expect(tester.takeException(), isNull);
-  });
+      mediaItems.add(item('many'));
+      playback.add(PlaybackState(updatePosition: const Duration(seconds: 140)));
+      await settlePlayer(tester);
+      await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
+      await settlePlayer(tester);
+      final current = find.text(
+        'Line 70 with enough words to wrap across several rows',
+      );
+      expect(current, findsOneWidget);
+      final list = find.byType(ListView);
+      void expectUpperFocus(Finder line) {
+        final bounds = tester.getRect(line);
+        final viewport = tester.getRect(list);
+        expect(bounds.top, closeTo(viewport.top + 16 + 780 * 0.06, 2));
+      }
+
+      expectUpperFocus(current);
+      await tester.drag(list, const Offset(0, 200));
+      await settlePlayer(tester);
+      await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
+      await settlePlayer(tester);
+      await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
+      await settlePlayer(tester);
+      expectUpperFocus(current);
+      for (final index in [99, 0]) {
+        playback.add(
+          PlaybackState(updatePosition: Duration(seconds: index * 2)),
+        );
+        await settlePlayer(tester);
+        expectUpperFocus(
+          find.text(
+            'Line $index with enough words to wrap across several rows',
+          ),
+        );
+      }
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   for (final width in [393.0, 768.0]) {
     testWidgets('Sistrum lyrics fit the timeline without rewrapping ($width)', (
@@ -956,22 +966,23 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Sistrum landscape has no top handle or reserved toolbar height', (
-    tester,
-  ) async {
-    await pumpNowPlaying(
-      tester,
-      theme: SistrumTheme.build(
-        Brightness.dark,
-      ).copyWith(platform: TargetPlatform.android),
-      size: const Size(900, 420),
-    );
-    mediaItems.add(item('first'));
-    await settlePlayer(tester);
-    final bar = tester.widget<AppBar>(find.byType(AppBar));
-    expect(bar.toolbarHeight, 0);
-    expect(bar.title, isNull);
-  });
+  testWidgets(
+    'Sistrum landscape has no top handle or reserved toolbar height',
+    (tester) async {
+      await pumpNowPlaying(
+        tester,
+        theme: SistrumTheme.build(
+          Brightness.dark,
+        ).copyWith(platform: TargetPlatform.android),
+        size: const Size(900, 420),
+      );
+      mediaItems.add(item('first'));
+      await settlePlayer(tester);
+      final bar = tester.widget<AppBar>(find.byType(AppBar));
+      expect(bar.toolbarHeight, 0);
+      expect(bar.title, isNull);
+    },
+  );
 
   for (final height in [780.0, 520.0]) {
     testWidgets(
@@ -1618,7 +1629,9 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: layout == 'material' ? null : SistrumTheme.build(Brightness.dark),
+        theme: layout == 'material'
+            ? null
+            : SistrumTheme.build(Brightness.dark),
         size: layout == 'landscape'
             ? const Size(852, 393)
             : const Size(393, 852),

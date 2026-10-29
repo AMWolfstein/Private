@@ -23,7 +23,7 @@ Future<void> navigateToArtistCredits(
     // A comma can belong to the name ("Tyler, The Creator"). Keep the whole
     // credit when the scanned library knows it as one artist.
     try {
-      final rows = await LibraryDatabase.instance.getQueueArtistPage(
+      final rows = await LibraryDatabase.instance.getQueueArtistRows(
         QueueLibraryDbQuery(searchQuery: raw, limit: 20),
       );
       for (final row in rows) {
@@ -67,7 +67,7 @@ Future<void> navigateToAlbum(
 
   List<Map<String, dynamic>> rows = const [];
   try {
-    rows = await LibraryDatabase.instance.getQueueLocalAlbumTracks(
+    rows = await LibraryDatabase.instance.getQueueLocalAlbumRows(
       albumName,
       (artistName ?? '').trim(),
     );

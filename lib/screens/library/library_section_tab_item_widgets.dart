@@ -1,6 +1,6 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
-extension _QueueTabItemWidgets on _QueueTabState {
+extension _LibrarySectionTabItemWidgets on _LibrarySectionTabState {
   Widget _buildSelectionBottomBar(
     BuildContext context,
     ColorScheme colorScheme,

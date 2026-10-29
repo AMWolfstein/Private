@@ -117,7 +117,7 @@ class LibraryDatabase {
 
   /// Exports timestamps directly from the DB on the worker. Android's adapter
   /// backfills zero SAF timestamps in bounded ContentResolver batches first.
-  Future<String> writeNativeFileModTimesSnapshot(
+  Future<String> exportNativeFileModTimesSnapshot(
     String sourceId, {
     required String requestId,
     required bool Function() isCancelled,
@@ -523,12 +523,6 @@ class LibraryDatabase {
     });
   }
 
-  Future<List<Map<String, dynamic>>> getQueueTrackPage(
-    QueueLibraryDbQuery request,
-  ) async {
-    return (await getQueueTrackPageResult(request)).rows;
-  }
-
   Future<LibraryQueueStore> _queueStore([QueueLibraryDbQuery? request]) async {
     final db = await database;
     if (request != null && isLibrarySizeSort(request.sortMode)) {
@@ -537,7 +531,7 @@ class LibraryDatabase {
     return LibraryQueueStore(db, localFts: searchFtsAvailable);
   }
 
-  Future<QueueLibraryDbPage> getQueueTrackPageResult(
+  Future<QueueLibraryDbPage> getQueueTrackPage(
     QueueLibraryDbQuery request,
   ) async => (await _queueStore(request)).trackPage(request);
 
@@ -545,21 +539,21 @@ class LibraryDatabase {
     QueueLibraryDbQuery request,
   ) async => (await _queueStore()).counts(request);
 
-  Future<QueueLibraryDbPage> getQueueAlbumPageResult(
+  Future<QueueLibraryDbPage> getQueueAlbumPage(
     QueueLibraryDbQuery request,
   ) async => (await _queueStore(request)).albumPage(request);
 
   /// Album artists across scanned music, excluding duplicate paths.
-  Future<List<Map<String, dynamic>>> getQueueArtistPage(
+  Future<List<Map<String, dynamic>>> getQueueArtistRows(
     QueueLibraryDbQuery request,
   ) async => (await _queueStore()).artistPage(request);
 
-  Future<List<Map<String, dynamic>>> getQueueLocalAlbumTracks(
+  Future<List<Map<String, dynamic>>> getQueueLocalAlbumRows(
     String albumName,
     String artistName,
   ) async => (await _queueStore()).localAlbumTracks(albumName, artistName);
 
-  Future<List<Map<String, dynamic>>> getQueueLocalAlbumTracksByKey(
+  Future<List<Map<String, dynamic>>> getQueueLocalAlbumRowsByKey(
     String albumKey,
   ) async => (await _queueStore()).localAlbumTracksByKey(albumKey);
 
@@ -839,9 +833,7 @@ class LibraryDatabase {
 
   /// Uses the already normalized, backfilled timestamps from the scan caller.
   /// Bounded writes avoid a second query and a library-sized StringBuffer.
-  Future<String> writeFileModTimesSnapshot(
-    Map<String, int> fileModTimes,
-  ) async {
+  Future<String> writeFileModTimesTsv(Map<String, int> fileModTimes) async {
     final tempDir = await getTemporaryDirectory();
     final file = File(
       join(

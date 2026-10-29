@@ -73,9 +73,10 @@ class UpdateInfo {
            : UpdateInstallKind.releasePage;
 }
 
-/// A failed update check. [checkForUpdate] returns null only when a verified
-/// release list has no newer version, so callers can tell "up to date" from
-/// "could not check".
+/// A failed update check. [checkForUpdate] returns null when a verified release
+/// list has no newer version, or when the host is not Android (the APK
+/// updater does not apply there). Callers can tell "up to date" from "could not
+/// check" by the thrown [UpdateCheckException].
 class UpdateCheckException implements Exception {
   const UpdateCheckException(this.message, [this.cause]);
 
@@ -178,6 +179,8 @@ class UpdateChecker {
     return decoded.cast<Map<String, dynamic>>();
   }
 
+  /// Returns null on non-Android hosts, where no APK update applies. Otherwise
+  /// throws [UpdateCheckException] when the release list cannot be verified.
   Future<UpdateInfo?> checkForUpdate({String channel = 'stable'}) async {
     if (!_isAndroid) {
       return null;

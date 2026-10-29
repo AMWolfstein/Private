@@ -1,6 +1,6 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
-extension _QueueTabSelectionActions on _QueueTabState {
+extension _LibrarySectionTabSelectionActions on _LibrarySectionTabState {
   void _enterSelectionMode(String itemId) {
     HapticFeedback.mediumImpact();
     _setState(() {

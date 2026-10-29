@@ -1,6 +1,6 @@
-part of 'queue_tab.dart';
+part of 'library_section_tab.dart';
 
-extension _QueueTabCollectionItemWidgets on _QueueTabState {
+extension _LibrarySectionTabCollectionItemWidgets on _LibrarySectionTabState {
   /// Dedicated Library sections use rows, so Playlists lists its cover, name
   /// and track count in a list tile instead of an album-style grid card.
   Widget _buildPlaylistCollectionRow({

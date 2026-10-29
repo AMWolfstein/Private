@@ -13,7 +13,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library/queue_tab.dart';
+import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/widgets/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
 import 'package:sistrum/widgets/library_selection_playback_actions.dart';
@@ -76,7 +76,10 @@ if data['visibleIds'] is not None:
 print(json.dumps([dict(row) for row in db.execute(data['sql'], data['args'])]))
 ''',
       jsonEncode({
-        'library': _definition('lib/services/library/library_schema.dart', 'library'),
+        'library': _definition(
+          'lib/services/library/library_schema.dart',
+          'library',
+        ),
         'sql': sql,
         'visibleIds': _visibleTrackIds?.toList(),
         'args': arguments ?? [],
@@ -209,7 +212,7 @@ void main() {
             builder: (_, active, _) => Scaffold(
               body: TickerMode(
                 enabled: active,
-                child: const QueueTab(librarySection: 'albums'),
+                child: const LibrarySectionTab(librarySection: 'albums'),
               ),
             ),
           ),
@@ -268,13 +271,17 @@ void main() {
     expect(find.text('complete'), findsNothing);
     expect(find.byTooltip('2/4 tracks · 2 missing'), findsOneWidget);
     expect(
-      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      tester
+          .widget<LibrarySectionTab>(find.byType(LibrarySectionTab))
+          .librarySection,
       'albums',
     );
 
     // Pushing an album/detail route disables the underlying route's ticker.
     // Popping it must retain the current Albums section.
-    final navigator = Navigator.of(tester.element(find.byType(QueueTab)));
+    final navigator = Navigator.of(
+      tester.element(find.byType(LibrarySectionTab)),
+    );
     unawaited(
       navigator.push<void>(
         MaterialPageRoute<void>(
@@ -289,7 +296,9 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
     expect(
-      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      tester
+          .widget<LibrarySectionTab>(find.byType(LibrarySectionTab))
+          .librarySection,
       'albums',
     );
     await _waitFor(tester, find.text('1/12'));
@@ -307,7 +316,9 @@ void main() {
     await _waitFor(tester, find.text('complete'));
     expect(find.text('1/12'), findsNothing);
     expect(
-      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      tester
+          .widget<LibrarySectionTab>(find.byType(LibrarySectionTab))
+          .librarySection,
       'albums',
     );
     // Switching tabs also retains the current section; there is no default-view reset.
@@ -317,7 +328,9 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
     expect(
-      tester.widget<QueueTab>(find.byType(QueueTab)).librarySection,
+      tester
+          .widget<LibrarySectionTab>(find.byType(LibrarySectionTab))
+          .librarySection,
       'albums',
     );
     expect(tester.takeException(), isNull);
@@ -352,7 +365,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const Scaffold(body: QueueTab(librarySection: 'all')),
+          home: const Scaffold(body: LibrarySectionTab(librarySection: 'all')),
         ),
       ),
     );
@@ -429,7 +442,9 @@ void main() {
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const Scaffold(body: QueueTab(librarySection: 'all')),
+            home: const Scaffold(
+              body: LibrarySectionTab(librarySection: 'all'),
+            ),
           ),
         ),
       );
@@ -462,7 +477,9 @@ void main() {
       expect(find.text('Song 1'), findsNothing);
       expect(find.text('Song 2'), findsOneWidget);
       expect(find.byType(AppAlertDialog), findsOneWidget);
-      final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+      final l10n = AppLocalizations.of(
+        tester.element(find.byType(LibrarySectionTab)),
+      );
       await tester.tap(find.widgetWithText(AppDialogAction, l10n.dialogCancel));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));

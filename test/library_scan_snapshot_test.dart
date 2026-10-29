@@ -24,7 +24,7 @@ void main() {
         '/music/legacy.flac': -1,
         '/music/backfilled.flac': 1720000000000,
       };
-      final path = await LibraryDatabase.instance.writeFileModTimesSnapshot(
+      final path = await LibraryDatabase.instance.writeFileModTimesTsv(
         timestamps,
       );
       final lines = await File(path).readAsLines();

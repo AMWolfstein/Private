@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
-import 'package:sistrum/controllers/metadata_editor_controller.dart';
+import 'package:sistrum/providers/metadata_editor_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';

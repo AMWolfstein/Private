@@ -127,13 +127,11 @@ final libraryBrowsePageLoaderProvider =
         final query = libraryBrowseQuery(request);
         if (request.browse.artists) {
           return LibraryBrowsePage.fromRows(
-            await LibraryDatabase.instance.getQueueArtistPage(query),
+            await LibraryDatabase.instance.getQueueArtistRows(query),
             artists: true,
           );
         }
-        final page = await LibraryDatabase.instance.getQueueAlbumPageResult(
-          query,
-        );
+        final page = await LibraryDatabase.instance.getQueueAlbumPage(query);
         return LibraryBrowsePage.fromRows(
           page.rows,
           artists: false,
