@@ -108,3 +108,23 @@ function's return type from an async body, so it was left for a separate change.
 - **Dart `part` files are flagged as orphaned and untested by desloppify.** Suppressed locally with
   attestations; the finder should read `part` directives.
 - **`supportsCoreBackend` is false in host tests**, which is the root of the blocked item above.
+
+## Second pass (commit 9907c7b)
+
+Fixed and resolved in the queue:
+- api_surface_coherence::delete_by_path_return_contract_mismatch: `deleteByPath` now delegates to
+  `deleteByPaths` and returns the deleted count.
+- convention_outlier::log_screen_suffix_island: `LogScreen` renamed to `LogPage` (file `log_page.dart`).
+- logic_clarity::async_callback_no_await_post_frame: `main_shell.dart` post-frame callback drops `async`.
+- logic_clarity::async_no_await_hydrate_playlist_tracks: `Future.sync` keeps decode errors on the future.
+- logic_clarity::navigate_to_artist_unused_param_and_async: `Future.sync` now; parameter removed earlier.
+- mid_level_elegance::ad_hoc_play_count_keying: `_playsFor` helper for the artist ranking.
+
+Deliberately not changed:
+- logic_clarity::async_no_await_resolve_or_extract: stays `async`. Its cache-hit path can throw;
+  removing `async` would turn a future error into a synchronous throw for callers.
+
+Still open after this pass: 54 items in the queue. Of these, the larger groups are the layer and
+package moves, the playback cycles, updater and backup error handling, the library row decoding and
+the `supportsCoreBackend` test seam. The widget-test additions (shared icons, player slider, content
+card, main shell) and the timing waits in widget tests are next on the list.
