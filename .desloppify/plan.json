@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T20:25:19+00:00",
+  "updated": "2026-10-29T20:31:23+00:00",
   "queue_order": [
     "workflow::create-plan",
     "triage::strategize",
@@ -9,8 +9,6 @@
     "triage::enrich",
     "triage::sense-check",
     "triage::commit",
-    "strategy::test-health-decline",
-    "strategy::file-health-and-code-quality-decline",
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
     "subjective::api_surface_coherence",
@@ -29,7 +27,9 @@
     "subjective::naming_quality",
     "subjective::package_organization",
     "subjective::test_strategy",
-    "subjective::type_safety"
+    "subjective::type_safety",
+    "strategy::test-health-decline",
+    "strategy::file-health-and-code-quality-decline"
   ],
   "deferred": [],
   "skipped": {},
@@ -446,8 +446,8 @@
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T20:31:23+00:00"
     },
     "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
@@ -687,7 +687,6 @@
         "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
         "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
         "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
-        "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
         "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
         "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
         "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only",
@@ -1181,19 +1180,24 @@
       "superseded_at": "2026-10-29T15:54:00+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/status/disc_separator_chip.dart",
+      "original_summary": "No direct tests (27 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T20:31:23+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 76.3,
-    "overall": 77.0,
-    "objective": 94.8,
-    "verified": 94.8
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 8,
+    "postflight_scan_completed_at_scan_count": 9,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -4102,6 +4106,42 @@
       "note": null,
       "detail": {
         "attestation": "I have actually read the reflect report's cluster blueprint and checked its file references and skip reasons against the repo; the blueprint names specific clusters, files and reasons, and I am not gaming the score by confirming without reading."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:31:23+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 1,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:31:23+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T20:31:23+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 9
       }
     }
   ],
