@@ -599,3 +599,22 @@ Verification: `flutter analyze` reports "No issues found!"; the full serial `flu
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
 (1878 tests, exit 0). Batches 3 to 6 remain.
+
+## Group C, batches 3 to 6: structural splits
+
+- Batch 3 (library data): library_browse_store, library_collections_database,
+  library_collections_hydration and audio_analysis_parsing split into focused modules.
+  Skipped: library_database.dart. Its members are instance methods that tests override, and moving
+  them into extensions would break those overrides.
+- Batch 4 (glass and widgets): app_artwork_glass, app_chrome and animation_utils split.
+  Skipped: app_selection_pill.dart, because its foreground helpers share private state with the
+  pill state. Partial: album_detail_header.dart (AlbumPlayActions moved; the rest needs part files).
+- Batch 5 (sheets and panels): track_metadata_edit_sheet, app_player_layout, selection_bottom_bar,
+  settings_group and audio_info_sheet split. The sheet's cover code is a part file that shares
+  private state with the State.
+- Batch 6 (screens and utils): setup_screen, lyrics_parser, logger, local_album_screen and
+  playlist_picker_sheet split. Skipped: log_page.dart, because a test asserts on the private
+  `_LogEntryTile` name.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
+(1878 tests, exit 0).
