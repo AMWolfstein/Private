@@ -186,3 +186,47 @@ Left open with reasons:
   audio-analysis files for no behaviour change, so it is not pursued in this pass.
 
 Queue after this pass: 47 items.
+
+## Fifth pass
+
+Fixed and resolved in the queue (commits dc17c94 and the test-helper commit):
+- api_surface_coherence::queue_paging_return_shape_drift: `…Page` names return pages, `…Rows` names
+  bare lists; the list-only track wrapper is gone.
+- api_surface_coherence::snapshot_writer_overload_by_name: `exportNativeFileModTimesSnapshot` (DB
+  export) and `writeFileModTimesTsv` (Dart map).
+- contract_coherence::update_check_unverified_null_non_android: the contract names the non-Android null.
+  Behaviour is unchanged.
+- test_strategy::timing_polling_waits_in_widget_tests: `test/support/pump_until.dart` replaces four
+  hand-rolled loops, keeping each test's delay and pump step.
+- mid_level_elegance::duplicated_paging_loops: the artist playback queue and Popular selection share one
+  page generator and one page size.
+- logic_clarity::async_no_await_resolve_or_extract: no `async`; `Future.sync` keeps synchronous failures
+  on the returned Future.
+- mid_level_elegance::silent_synthetic_track_fallback: the fallback is logged at debug level.
+- incomplete_migration::collections_forcelegacy_test_seam: production readers no longer take
+  `forceLegacy`; tests call the `…ForTesting` Dart readers.
+- high_level_elegance::library_folder_holds_queue_tab and state_and_route_homes_split_at_top_level:
+  `QueueTab` is `LibrarySectionTab` (files `library_section_tab*`), controllers are in providers and the
+  route file is in screens.
+- convention_outlier::library_tab_selection_protocol: documented, not migrated. The tab needs range
+  anchors, a playlist selection mode and an overlay before the mixin can take it.
+
+Left open with reasons:
+- naming_quality::queue_name_for_library_browser: `QueueTab` is renamed, but `QueryLibraryDb*` and the
+  browser naming still need a decision on the new names.
+- ai_generated_debt::repeated_inline_best_effort_delete (and the earlier note): a shared helper would touch
+  dozens of sites for no behaviour change.
+- convention_outlier::shared_widget_prefix_split: `app_` and `sistrum_` widgets are both theme-bound, so
+  no prefix rule is accurate yet. The owner should choose the rule.
+- convention_outlier::part_file_split_style_mixed: needs a convention decision before it is recorded.
+- error_consistency::* (APK downloader, backup parsing, failure signalling): these change what the user
+  sees and need new localized messages, so they need product decisions first.
+- cross_module_architecture, dependency_health, design_coherence, package_organization and the
+  player-runtime cycles: these need the layer and package moves approved (see the earlier notes).
+- low_level / initialization items (CoverPalette store, PlatformBridge statics, MusicPlaybackDeck state,
+  load index sprawl): they need lifecycle designs, not mechanical edits.
+- mid_level_elegance::scattered_row_decoding and two_db_access_paths: about twenty row-decoding sites
+  and two database access paths. They need one repository boundary decided first.
+- main_shell_no_direct_test: blocked as recorded above.
+
+Queue after this pass: 36 items.
