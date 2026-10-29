@@ -345,3 +345,55 @@ extraction, the local library notifier and PlatformBridge splits, the failure-co
 supportsCoreBackend fallbacks, the library DB row decoding and database access paths, the
 QueryLibraryDb naming, `unified_library_item` importing `library_database_models`, the main-shell
 test, and the services and widgets root-file reorganisation.
+
+## Code-health queue pass (commit 343d940)
+
+Queue at the start of this pass: 26 open items (`uvx desloppify plan`). The snapshot
+(501f373) was taken before several earlier passes, so some items were already fixed in code
+and were verified by import or type checks rather than by changing files.
+
+Resolved in code (verified, 19 items):
+- cross_module_architecture: album/artist/clickable-metadata cycle and lower layers importing
+  screens (only `lib/app.dart` and `lib/main.dart` import screens now).
+- dependency_health: clickable_metadata -> screens cycle (the file moved to `navigation/`).
+- design_coherence: audio-analysis parsing moved to `services/audio_analysis/audio_analysis_parsing.dart`
+  (the widget re-exports it); `LocalLibraryNotifier` scan notices extracted to
+  `services/library/library_scan_notifications.dart`; `PlatformBridge` split into
+  `MediaFileBridge`, `LibraryScanBridge` and `CueSheetBridge` over `services/native/native_channel.dart`.
+- error_consistency: APK download and install outcomes and backup parse failures were typed in an
+  earlier pass; verified.
+- high_level_elegance / cross_module: theme no longer imports widgets or providers (cover maths to
+  `utils/`, cover palette to `services/`, theme wrapper to `widgets/`); services root regrouped
+  (library and playback files moved into their folders); widgets root reduced to six shared files.
+- initialization_coupling: cover palette cache is an instance (earlier pass, verified).
+- mid_level_elegance: library browser providers read `libraryDatabaseProvider`, so the process
+  singleton has one seam in providers (`two_db_access_paths`). Constructor defaults still use
+  `LibraryDatabase.instance`.
+- model_depends_on_persistence: `LocalLibraryItem` moved to `models/`.
+- naming_quality: library browser names use `LibraryBrowse*` / `getBrowse*` (no `Queue` prefix).
+- package_organization: no service imports providers, widgets or screens; library screens sit in
+  `screens/library/`; widgets are grouped into `header/`, `shell/`, `selection/`, `sheets/`, `status/`.
+
+Partly done (left open in the queue):
+- initialization_coupling::platform_bridge_static_event_state: the event stream and handler flag
+  moved to `NativeBackendEvents`; the data-job map is still a static in `PlatformBridge`.
+- mid_level_elegance::scattered_row_decoding: `LocalLibraryItem.fromEnvelope` covers four
+  `{source, item}` sites. `music_player_autoplay.dart` and several other decoders are unchanged.
+- ai_generated_debt::repeated_inline_best_effort_delete: `deleteBestEffort` replaces the 19 exact
+  `try { if (exists) delete } catch (_) {}` idioms. Other catch shapes stay, since they log or
+  act differently.
+
+Open, with reasons:
+- convention_outlier::part_file_split_style_mixed: needs an agreed rule (part files vs library
+  modules). Not decided in this pass.
+- mid_level_elegance::mixed_null_bool_exception_failure_signalling: needs one convention for
+  service failures. The APK and backup paths already use typed results; the rest is not migrated.
+- incomplete_migration::supports_core_backend_dart_fallbacks: the Dart branches are what the host
+  tests run (`supportsCoreBackend` is `Platform.isAndroid`). Removing them needs native channel
+  doubles for the data-job, scan, collection and backup paths.
+- test_strategy::main_shell_no_direct_test: `MainShell` builds the native playback runtime and
+  the lazy Search-tab preload. A test needs platform fakes and a preload switch first.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (1888 tests, exit 0). The desloppify scan was not re-run: `.desloppify/` state is
+tracked and was not updated, so the queue in that state is unchanged.
