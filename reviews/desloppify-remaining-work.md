@@ -562,3 +562,15 @@ Verification: `flutter analyze` reports "No issues found!". The full serial `flu
 (`lyrics_screen_awake_test.dart` / `local_album_playback_controls_test.dart`, shown as `-1`) that
 does not reproduce when those files run alone or in the later full run; it is recorded as an
 intermittent, order-dependent failure to investigate separately.
+
+## Not-worth-it items, group A (user decision: fix all 52)
+
+- Inlined eleven single-use files into their sole importers: album_track_order, artist_utils,
+  isrc_utils, lyric_text_direction, mime_utils, equalizer_preset_io, native_installation,
+  app_glass_preparation, app_theme_wrapper, destructive_selection_button, disc_separator_chip.
+- Shared the destructive Cancel and Delete pairs through `appDestructiveConfirmActions`
+  (duplicate review sheet, library section selection, library settings clear and remove-folder).
+- Not converted: the storage-permission dialog pair in library settings (not destructive).
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
+(1878 tests, exit 0). Groups B (larger single-use files) and C (large-file splits) remain.
