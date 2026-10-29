@@ -13,6 +13,7 @@ import 'package:sistrum/services/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:sistrum/services/source_deletion_events.dart';
@@ -220,8 +221,7 @@ class _Recorder extends ListeningRecorder {
 
 MusicPlayerRuntime _runtime({
   AppSettings settings = const AppSettings(pauseOnMute: false),
-  Future<MusicPlayerHandler> Function(MusicPlayerHandler Function())?
-  initialize,
+  Future<PlaybackHandler> Function(PlaybackHandler Function())? initialize,
   List<_Deck>? decks,
   MusicPlaybackDeck Function(String)? createDeck,
   Stream<double> volumeChanges = const Stream.empty(),
@@ -235,6 +235,8 @@ MusicPlayerRuntime _runtime({
   final runtime = MusicPlayerRuntime(
     settings: settings,
     dependencies: PlaybackDependencies(
+      createHandler: createMusicPlayerHandler,
+      restoreSession: restorePlaybackSession,
       createPersonalization:
           createPersonalization ?? AutoplayPersonalization.new,
       createDeck:
@@ -1143,11 +1145,11 @@ void main() {
   test(
     'pending init is deduplicated and uses the latest live configuration',
     () async {
-      final ready = Completer<MusicPlayerHandler>();
+      final ready = Completer<PlaybackHandler>();
       final volume = StreamController<double>.broadcast();
       addTearDown(volume.close);
       var calls = 0;
-      late MusicPlayerHandler created;
+      late PlaybackHandler created;
       final runtime = _runtime(
         volumeChanges: volume.stream,
         initialize: (builder) {
@@ -1254,9 +1256,9 @@ void main() {
   test(
     'runtime disposal retires a pending handler and closes its events',
     () async {
-      final ready = Completer<MusicPlayerHandler>();
+      final ready = Completer<PlaybackHandler>();
       final decks = <_Deck>[];
-      late MusicPlayerHandler created;
+      late PlaybackHandler created;
       final runtime = _runtime(
         decks: decks,
         initialize: (builder) {

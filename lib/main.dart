@@ -27,7 +27,6 @@ import 'package:sistrum/services/playback/player_widget_service.dart';
 import 'package:sistrum/screens/now_playing_screen.dart';
 import 'package:sistrum/utils/local_library_scan_prefs.dart';
 import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/services/playback/music_player_runtime.dart';
 
 final _log = AppLogger('Main');
 _StartupBenchmark? _startupBenchmark;

@@ -11,6 +11,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/audio_route_info.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
@@ -19,7 +20,6 @@ import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 import 'package:sistrum/widgets/settings_group.dart';
-import 'package:sistrum/services/playback/music_player_runtime.dart';
 
 /// Technical details of the playing track, from the file through the
 /// processing chain to the output device.

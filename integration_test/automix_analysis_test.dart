@@ -120,6 +120,8 @@ void main() {
             pauseOnMute: false,
           ),
           dependencies: PlaybackDependencies(
+            createHandler: createMusicPlayerHandler,
+            restoreSession: restorePlaybackSession,
             createDeck: (id) {
               final deck = MusicPlaybackDeck(playerId: id);
               decks[id] = deck;

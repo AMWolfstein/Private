@@ -1,11 +1,126 @@
 part of 'music_player_service.dart';
 
-/// Owns only the extra deck and transition work. The ordinary player remains
-/// the sole transport when AutoMix is disabled or a transition cannot be made.
-class _MusicAutoMix {
-  _MusicAutoMix(this.handler, this.analyzer, this.renderer);
+/// What AutoMix needs from the handler: the live queue, the playing deck and the
+/// transition commit. [_HandlerAutoMixHost] supplies it, so AutoMix does not
+/// reach the handler's private state itself.
+abstract interface class AutoMixHost {
+  AppSettings get settings;
+  bool get isDisposed;
+  bool get sourceReady;
+  bool get userPaused;
+  bool get interruptionActive;
+  bool get isLiveHandler;
+  AudioServiceRepeatMode get repeatMode;
+  int get mediaCount;
+  PlayableMedia mediaAt(int index);
+  int get index;
+  int get playRequestGeneration;
+  int get sessionQueueRevision;
+  double get normalizationVolume;
+  MusicPlaybackDeck get player;
+  Duration? get currentDuration;
+  Future<String?> resolveSource(PlayableMedia media);
+  Future<double> normalizationVolumeFor(String path, {String? cacheKey});
+  MusicPlaybackDeck createDeck(String playerId);
+  void listenToPlayer(MusicPlaybackDeck deck);
+  Future<void> disposeDeck(MusicPlaybackDeck deck);
+  Future<void> cleanupPendingResolvedPaths();
+  void broadcastState({PlayerState? playerState});
+  void broadcastPosition(Duration position, {bool force = false});
+  void commitTransition({
+    required MusicPlaybackDeck incoming,
+    required int index,
+    required PlayableMedia next,
+    required String? nextPath,
+    required Duration? nextDuration,
+    required double normalizationVolume,
+    required Duration audiblePosition,
+  });
+}
 
-  final MusicPlayerHandler handler;
+/// The only place AutoMix's reads and writes meet the handler's private state.
+class _HandlerAutoMixHost implements AutoMixHost {
+  _HandlerAutoMixHost(this._handler);
+
+  final MusicPlayerHandler _handler;
+
+  @override
+  AppSettings get settings => _handler._settings;
+  @override
+  bool get isDisposed => _handler._disposed;
+  @override
+  bool get sourceReady => _handler._sourceReady;
+  @override
+  bool get userPaused => _handler._userPaused;
+  @override
+  bool get interruptionActive => _handler._focus.active;
+  @override
+  bool get isLiveHandler => identical(musicPlayerRuntime.handler, _handler);
+  @override
+  AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
+  @override
+  int get mediaCount => _handler._media.length;
+  @override
+  PlayableMedia mediaAt(int index) => _handler._media[index];
+  @override
+  int get index => _handler._index;
+  @override
+  int get playRequestGeneration => _handler._playRequestGeneration;
+  @override
+  int get sessionQueueRevision => _handler._sessionQueueRevision;
+  @override
+  double get normalizationVolume => _handler._normalizationVolume;
+  @override
+  MusicPlaybackDeck get player => _handler._player;
+  @override
+  Duration? get currentDuration => _handler.mediaItem.value?.duration;
+  @override
+  Future<String?> resolveSource(PlayableMedia media) =>
+      _handler._resolveSource(media);
+  @override
+  Future<double> normalizationVolumeFor(String path, {String? cacheKey}) =>
+      _handler._normalizationVolumeFor(path, cacheKey: cacheKey);
+  @override
+  MusicPlaybackDeck createDeck(String playerId) =>
+      _handler._dependencies.createDeck(playerId);
+  @override
+  void listenToPlayer(MusicPlaybackDeck deck) => _handler._listenToPlayer(deck);
+  @override
+  Future<void> disposeDeck(MusicPlaybackDeck deck) =>
+      _handler._disposeDeck(deck);
+  @override
+  Future<void> cleanupPendingResolvedPaths() =>
+      _handler._cleanupPendingResolvedPaths();
+  @override
+  void broadcastState({PlayerState? playerState}) =>
+      _handler._broadcastState(playerState: playerState);
+  @override
+  void broadcastPosition(Duration position, {bool force = false}) =>
+      _handler._broadcastPosition(position, force: force);
+  @override
+  void commitTransition({
+    required MusicPlaybackDeck incoming,
+    required int index,
+    required PlayableMedia next,
+    required String? nextPath,
+    required Duration? nextDuration,
+    required double normalizationVolume,
+    required Duration audiblePosition,
+  }) => _handler._commitAutoMixTransition(
+    incoming: incoming,
+    index: index,
+    next: next,
+    nextPath: nextPath,
+    nextDuration: nextDuration,
+    normalizationVolume: normalizationVolume,
+    audiblePosition: audiblePosition,
+  );
+}
+
+class _MusicAutoMix {
+  _MusicAutoMix(this.host, this.analyzer, this.renderer);
+
+  final AutoMixHost host;
   final AutoMixAnalyzer analyzer;
   final AutoMixEffectRenderer renderer;
   final _preparationPins = <int, Set<String>>{};
@@ -35,7 +150,7 @@ class _MusicAutoMix {
   bool _writing = false;
 
   void _setStatus(AutoMixStatus status) {
-    if (identical(musicPlayerRuntime.handler, handler)) {
+    if (host.isLiveHandler) {
       autoMixStatus.value = status;
     }
   }
@@ -50,22 +165,22 @@ class _MusicAutoMix {
   };
 
   bool get _canMix =>
-      handler._settings.autoMix &&
-      !handler._settings.usbBitPerfect &&
-      !handler._player.isDirect &&
-      !handler._disposed &&
-      handler._sourceReady &&
-      !handler._userPaused &&
-      !handler._interruptionActive &&
-      handler._player.state == PlayerState.playing &&
-      handler._repeatMode != AudioServiceRepeatMode.one &&
-      handler._media.length > 1;
+      host.settings.autoMix &&
+      !host.settings.usbBitPerfect &&
+      !host.player.isDirect &&
+      !host.isDisposed &&
+      host.sourceReady &&
+      !host.userPaused &&
+      !host.interruptionActive &&
+      host.player.state == PlayerState.playing &&
+      host.repeatMode != AudioServiceRepeatMode.one &&
+      host.mediaCount > 1;
 
   bool _current(int generation) =>
       generation == _generation &&
       _canMix &&
-      _playGeneration == handler._playRequestGeneration &&
-      _queueRevision == handler._sessionQueueRevision;
+      _playGeneration == host.playRequestGeneration &&
+      _queueRevision == host.sessionQueueRevision;
 
   void onPosition(Duration position) {
     if (!_canMix || _cancelling > 0 || _starting || _fadeTimer != null) return;
@@ -84,10 +199,9 @@ class _MusicAutoMix {
       return;
     }
     if (_preparing) return;
-    final duration = handler.mediaItem.value?.duration;
+    final duration = host.currentDuration;
     if (duration == null || duration < const Duration(seconds: 20)) return;
-    final key =
-        '${handler._playRequestGeneration}:${handler._sessionQueueRevision}';
+    final key = '${host.playRequestGeneration}:${host.sessionQueueRevision}';
     if (_attempt == key) return;
     _attempt = key;
     unawaited(_prepare(duration));
@@ -96,12 +210,12 @@ class _MusicAutoMix {
   Future<void> _prepare(Duration duration) async {
     _preparing = true;
     final generation = ++_generation;
-    _playGeneration = handler._playRequestGeneration;
-    _queueRevision = handler._sessionQueueRevision;
-    final index = handler._index;
-    final nextIndex = index + 1 < handler._media.length
+    _playGeneration = host.playRequestGeneration;
+    _queueRevision = host.sessionQueueRevision;
+    final index = host.index;
+    final nextIndex = index + 1 < host.mediaCount
         ? index + 1
-        : handler._repeatMode == AudioServiceRepeatMode.all
+        : host.repeatMode == AudioServiceRepeatMode.all
         ? 0
         : -1;
     final pins = <String>{};
@@ -109,21 +223,21 @@ class _MusicAutoMix {
     MusicPlaybackDeck? deck;
     MusicPlaybackDeck? effectDeck;
     RenderedMixTail? effectTail;
-    final options = handler._settings.autoMixOptions;
+    final options = host.settings.autoMixOptions;
     try {
       if (nextIndex < 0 || nextIndex == index || index < 0) return;
-      final current = handler._media[index];
-      final next = handler._media[nextIndex];
-      final currentPath = await handler._resolveSource(current);
+      final current = host.mediaAt(index);
+      final next = host.mediaAt(nextIndex);
+      final currentPath = await host.resolveSource(current);
       if (currentPath == null || !_current(generation)) return;
       pins.add(currentPath);
-      final nextPath = await handler._resolveSource(next);
+      final nextPath = await host.resolveSource(next);
       if (nextPath == null || !_current(generation)) return;
       pins.add(nextPath);
-      deck = handler._dependencies.createDeck(
+      deck = host.createDeck(
         'music-mix-$generation-${DateTime.now().microsecondsSinceEpoch}',
       );
-      handler._listenToPlayer(deck);
+      host.listenToPlayer(deck);
       await deck.setReleaseMode(ReleaseMode.stop);
       await deck.setAudioContext(_musicAudioContext);
       await deck.setVolume(0);
@@ -154,7 +268,7 @@ class _MusicAutoMix {
       if (plan == null) return;
       await deck.seek(plan.incomingStart);
       await deck.setPlaybackRate(plan.rate);
-      final volume = await handler._normalizationVolumeFor(
+      final volume = await host.normalizationVolumeFor(
         nextPath,
         cacheKey: next.isContentUri ? next.source : null,
       );
@@ -169,10 +283,10 @@ class _MusicAutoMix {
         );
         if (!_current(generation)) return;
         if (effectTail != null) {
-          effectDeck = handler._dependencies.createDeck(
+          effectDeck = host.createDeck(
             'music-effect-$generation-${DateTime.now().microsecondsSinceEpoch}',
           );
-          handler._listenToPlayer(effectDeck);
+          host.listenToPlayer(effectDeck);
           try {
             await effectDeck.setReleaseMode(ReleaseMode.stop);
             await effectDeck.setAudioContext(_musicAudioContext);
@@ -180,7 +294,7 @@ class _MusicAutoMix {
             await effectDeck.setSource(DeviceFileSource(effectTail.path));
           } catch (error) {
             _log.w('AutoMix effect preparation fallback: $error');
-            await handler._disposeDeck(effectDeck);
+            await host.disposeDeck(effectDeck);
             await effectTail.dispose();
             effectDeck = null;
             effectTail = null;
@@ -208,17 +322,17 @@ class _MusicAutoMix {
         'assisted=${plan.assisted}, '
         'outro=${_beatSummary(outro)}, intro=${_beatSummary(intro)})',
       );
-      final position = await handler._player.getCurrentPosition();
+      final position = await host.player.getCurrentPosition();
       if (position != null && _current(generation)) onPosition(position);
     } catch (error) {
       _log.w('AutoMix preparation skipped: $error');
     } finally {
-      if (deck != null) await handler._disposeDeck(deck);
-      if (effectDeck != null) await handler._disposeDeck(effectDeck);
+      if (deck != null) await host.disposeDeck(deck);
+      if (effectDeck != null) await host.disposeDeck(effectDeck);
       if (effectTail != null) await effectTail.dispose();
       _preparationPins.remove(generation);
       if (generation == _generation) _preparing = false;
-      await handler._cleanupPendingResolvedPaths();
+      await host.cleanupPendingResolvedPaths();
     }
   }
 
@@ -232,13 +346,13 @@ class _MusicAutoMix {
         !_current(generation)) {
       return;
     }
-    if (_nextIndex >= handler._media.length ||
-        !identical(handler._media[_nextIndex], next)) {
+    if (_nextIndex >= host.mediaCount ||
+        !identical(host.mediaAt(_nextIndex), next)) {
       return;
     }
     _starting = true;
     try {
-      final position = await handler._player.getCurrentPosition();
+      final position = await host.player.getCurrentPosition();
       if (!_current(generation) || position == null) return;
       final delta = position - plan.start;
       if (delta < const Duration(milliseconds: -40)) {
@@ -246,8 +360,7 @@ class _MusicAutoMix {
         onPosition(position);
         return;
       }
-      final outgoingEnd =
-          handler.mediaItem.value?.duration ?? plan.start + plan.duration;
+      final outgoingEnd = host.currentDuration ?? plan.start + plan.duration;
       if (outgoingEnd - position <= const Duration(milliseconds: 500)) {
         await _abandonStart(generation);
         return;
@@ -263,7 +376,7 @@ class _MusicAutoMix {
       if (audiblePosition != null && plan.beatMatched) {
         final alignment = await _alignIncoming(
           incoming,
-          handler._player,
+          host.player,
           plan,
           audiblePosition,
           generation,
@@ -284,8 +397,8 @@ class _MusicAutoMix {
         await _abandonStart(generation);
         return;
       }
-      final original = handler._player;
-      final outgoingVolume = handler._normalizationVolume;
+      final original = host.player;
+      final outgoingVolume = host.normalizationVolume;
       var outgoing = original;
       final effectDeck = _effectPrepared;
       if (effectDeck != null) {
@@ -323,7 +436,7 @@ class _MusicAutoMix {
         } catch (error) {
           if (!_current(generation)) return;
           _log.w('AutoMix effect fallback: $error');
-          await handler._disposeDeck(effectDeck);
+          await host.disposeDeck(effectDeck);
           await _effectTail?.dispose();
           _effectTail = null;
         }
@@ -343,29 +456,19 @@ class _MusicAutoMix {
       _outgoing = outgoing;
       _prepared = null;
       _plan = null;
-      handler._player = incoming;
+      rate = plan.rate;
+      host.commitTransition(
+        incoming: incoming,
+        index: _nextIndex,
+        next: next,
+        nextPath: _nextPath,
+        nextDuration: _nextDuration,
+        normalizationVolume: _incomingVolume,
+        audiblePosition: audiblePosition,
+      );
       _setStatus(
         plan.beatMatched ? AutoMixStatus.mixing : AutoMixStatus.crossfading,
       );
-      handler._index = _nextIndex;
-      handler._playRequestGeneration++;
-      handler._recordPlayHistory(_nextIndex);
-      handler._normalizationVolume = _incomingVolume;
-      handler._activeResolvedPath = next.isContentUri ? _nextPath : null;
-      handler._pendingRestorePosition = null;
-      rate = plan.rate;
-      handler._runtime.personalization.begin(_learningTrack(next));
-      handler.mediaItem.add(
-        handler
-            ._toMediaItem(
-              next,
-              resolvedSource: next.isContentUri ? _nextPath : null,
-            )
-            .copyWith(duration: _nextDuration),
-      );
-      handler._broadcastPosition(audiblePosition, force: true);
-      handler._broadcastState(playerState: PlayerState.playing);
-      unawaited(handler._persistSession(position: audiblePosition));
       final clock = Stopwatch()..start();
       final transition = plan;
       final phaseLock = plan.beatMatched
@@ -442,12 +545,12 @@ class _MusicAutoMix {
             if (generation != _generation) return;
             if (dry != null && progress >= 1) {
               _effectDry = null;
-              await handler._disposeDeck(dry);
+              await host.disposeDeck(dry);
               if (generation != _generation) return;
             }
             if (clock.elapsed >= fadeDuration && _outgoing != null) {
               _outgoing = null;
-              await handler._disposeDeck(outgoing);
+              await host.disposeDeck(outgoing);
               final tail = _effectTail;
               _effectTail = null;
               await tail?.dispose();
@@ -458,8 +561,8 @@ class _MusicAutoMix {
               _fadeTimer = null;
               rate = 1;
               _mixPins.clear();
-              await handler._cleanupPendingResolvedPaths();
-              handler._broadcastState();
+              await host.cleanupPendingResolvedPaths();
+              host.broadcastState();
             }
           } catch (error) {
             _log.w('AutoMix transition ended early: $error');
@@ -643,18 +746,18 @@ class _MusicAutoMix {
     _attempt = null;
     try {
       await _fadeWrite;
-      if (prepared != null) await handler._disposeDeck(prepared);
-      if (outgoing != null) await handler._disposeDeck(outgoing);
-      if (effectDry != null) await handler._disposeDeck(effectDry);
-      if (effectPrepared != null) await handler._disposeDeck(effectPrepared);
+      if (prepared != null) await host.disposeDeck(prepared);
+      if (outgoing != null) await host.disposeDeck(outgoing);
+      if (effectDry != null) await host.disposeDeck(effectDry);
+      if (effectPrepared != null) await host.disposeDeck(effectPrepared);
       await effectTail?.dispose();
-      if (restore && !handler._disposed) {
-        await handler._player.setPlaybackRate(1);
-        await handler._player.setVolume(handler._normalizationVolume);
+      if (restore && !host.isDisposed) {
+        await host.player.setPlaybackRate(1);
+        await host.player.setVolume(host.normalizationVolume);
       }
       rate = 1;
       _mixPins.clear();
-      await handler._cleanupPendingResolvedPaths();
+      await host.cleanupPendingResolvedPaths();
     } catch (error) {
       _log.w('AutoMix cleanup: $error');
     } finally {

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
@@ -18,7 +19,9 @@ void main() {
       tester,
     ) async {
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      final runtime = MusicPlayerRuntime();
+      final runtime = MusicPlayerRuntime(
+        dependencies: defaultPlaybackDependencies,
+      );
       addTearDown(runtime.dispose);
       final states = StreamController<PlaybackState>();
       addTearDown(states.close);
@@ -70,7 +73,9 @@ void main() {
           AppLifecycleState.resumed,
         ),
       );
-      final runtime = MusicPlayerRuntime();
+      final runtime = MusicPlayerRuntime(
+        dependencies: defaultPlaybackDependencies,
+      );
       addTearDown(runtime.dispose);
       // Notices emitted before the shell mounts must not be replayed.
       runtime.notifyMutedPlayback();

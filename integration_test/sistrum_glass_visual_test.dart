@@ -14,6 +14,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
@@ -36,7 +37,9 @@ void main() {
     expect(ui.ImageFilter.isShaderFilterSupported, isTrue);
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
     final directory = (await tester.runAsync(() async {
-      return (await getTemporaryDirectory()).createTemp('sistrum-glass-visual-');
+      return (await getTemporaryDirectory()).createTemp(
+        'sistrum-glass-visual-',
+      );
     }))!;
     final cover = File('${directory.path}/cover.png');
     await tester.runAsync(() async {
@@ -54,7 +57,9 @@ void main() {
     });
     final chrome = SistrumChromeController();
     final selected = ValueNotifier(0);
-    final runtime = MusicPlayerRuntime();
+    final runtime = MusicPlayerRuntime(
+      dependencies: defaultPlaybackDependencies,
+    );
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await runtime.dispose();
@@ -171,7 +176,9 @@ void main() {
             musicPlayerControllerProvider.overrideWithValue(
               MusicPlayerController(runtime: runtime),
             ),
-            sistrumGlassLevelProvider.overrideWithValue(SistrumGlassLevel.liquid),
+            sistrumGlassLevelProvider.overrideWithValue(
+              SistrumGlassLevel.liquid,
+            ),
             sistrumGlassClarityLevelProvider.overrideWithValue(level),
             sistrumGlassOutlinesProvider.overrideWithValue(outlines),
           ],
@@ -333,7 +340,8 @@ void main() {
           find.descendant(
             of: find.byType(SistrumTabBar),
             matching: find.byWidgetPredicate(
-              (widget) => widget is SistrumLiquidBackdrop && !widget.interaction,
+              (widget) =>
+                  widget is SistrumLiquidBackdrop && !widget.interaction,
             ),
           ),
         );

@@ -8,11 +8,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
 import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
-    show
-        AudioDevice,
-        AudioSession,
-        AudioSessionConfiguration,
-        AudioInterruptionType;
+    show AudioSession, AudioSessionConfiguration, AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:sistrum/services/listening_statistics.dart' show ListeningTrack;
 import 'package:sistrum/services/library/library_database.dart';
@@ -23,6 +19,8 @@ import 'package:sistrum/services/playback/playback_automation.dart';
 import 'package:sistrum/services/playback/playback_session_writer.dart';
 import 'package:sistrum/services/playback/content_uri_playback_cache.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/playback/playback_handler.dart';
+import 'package:sistrum/services/playback/playback_policies.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/automix_analysis.dart';
 import 'package:sistrum/services/playback/automix_phase_lock.dart';
@@ -45,28 +43,10 @@ part 'music_player_autoplay.dart';
 
 final _log = AppLogger('MusicPlayer');
 
-/// Gain and rate the player applies to the current track.
-class PlaybackProcessing {
-  const PlaybackProcessing({
-    required this.normalizationGain,
-    required this.direct,
-    required this.autoMixRate,
-  });
-
-  /// Linear volume from ReplayGain normalization; 1 when none applies.
-  final double normalizationGain;
-
-  /// A direct USB or exclusive path that bypasses the system mixer and DSP.
-  final bool direct;
-
-  /// AutoMix tempo matching; 1 outside a transition.
-  final double autoMixRate;
-}
-
 /// Refreshes gain tags after a successful file update, including SAF copies.
 void refreshPlaybackNormalization(String source) {
   final handler = musicPlayerRuntime.handler;
-  if (handler != null) unawaited(handler._refreshNormalizationSource(source));
+  if (handler != null) unawaited(handler.refreshNormalizationSource(source));
 }
 
 List<int> buildShuffledQueueOrder({
@@ -106,14 +86,13 @@ Duration normalizedPlaybackResumePosition(
   return position;
 }
 
-class MusicPlayerHandler extends BaseAudioHandler
-    with QueueHandler, SeekHandler {
+class MusicPlayerHandler extends PlaybackHandler {
   final MusicPlayerRuntime _runtime;
   PlaybackDependencies get _dependencies => _runtime.dependencies;
   AppSettings get _settings => _runtime.settings;
   late MusicPlaybackDeck _player;
   late final _MusicAutoMix _autoMix;
-  late final _MusicAutoplay _autoplay;
+  late final MusicAutoplay _autoplay;
   late final MusicHaptics _haptics;
   bool _completing = false;
   double _normalizationVolume = 1;
@@ -121,10 +100,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       <MusicPlaybackDeck, List<StreamSubscription<dynamic>>>{};
   AudioSession? _audioSession;
   late final PlaybackAutomation _playbackAutomation;
-  StreamSubscription<double>? _automationVolumeSubscription;
-  StreamSubscription<Set<AudioDevice>>? _automationDevicesSubscription;
-  bool _headphoneMonitoringRequested = false;
-  int _headphoneMonitoringRevision = 0;
+  late final AutomationInputs _automationInputs;
   final List<PlayableMedia> _media = [];
   final List<MediaItem> _queueItems = [];
   late final ContentUriPlaybackCache _sourceCache;
@@ -140,20 +116,18 @@ class MusicPlayerHandler extends BaseAudioHandler
   Future<void>? _activePlayOperation;
   int? _activePlayGeneration;
   Future<void> _sourceChangeTail = Future<void>.value();
-  Timer? _sleepTimer;
+  final _sleep = SleepTimer();
   Timer? _listeningTimer;
-  DateTime? _sleepTimerEndsAt;
 
   bool _shuffle = false;
   List<MediaItem>? _originalQueueOrder;
   int _shuffleRequestGeneration = 0;
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
   final Random _random = Random();
-  final List<int> _playHistory = [];
+  final _playHistory = PlayHistory();
 
   // True when playback was paused because another app took audio focus.
-  bool _pausedByInterruption = false;
-  bool _interruptionActive = false;
+  final _focus = AudioInterruptionPolicy();
   bool _userPaused = false;
   // Position saved with the restored session; applied on the first play().
   Duration? _pendingRestorePosition;
@@ -169,10 +143,13 @@ class MusicPlayerHandler extends BaseAudioHandler
   );
   static const Duration _positionPersistInterval = Duration(seconds: 10);
 
-  DateTime? get sleepTimerEndsAt => _sleepTimerEndsAt;
+  @override
+  DateTime? get sleepTimerEndsAt => _sleep.endsAt;
+  @override
   bool get isDisposed => _disposed;
 
   /// Reconcile only the playback fields affected by the new settings snapshot.
+  @override
   void applySettings(AppSettings previous) {
     final settings = _settings;
     if (previous.autoplayPersonalization != settings.autoplayPersonalization) {
@@ -246,22 +223,25 @@ class MusicPlayerHandler extends BaseAudioHandler
       isPlaying: () =>
           _player.state == PlayerState.playing || playbackState.value.playing,
       canResume: () =>
-          !_disposed &&
-          !_interruptionActive &&
-          _index >= 0 &&
-          _index < _media.length,
+          !_disposed && !_focus.active && _index >= 0 && _index < _media.length,
       pause: _pausePlayback,
       play: play,
       onError: (error) => _log.w('Automatic playback failed: $error'),
       onMutedPause: _runtime.notifyMutedPlayback,
     );
+    _automationInputs = AutomationInputs(
+      automation: _playbackAutomation,
+      volumeChanges: () => _dependencies.volumeChanges,
+      isDisposed: () => _disposed,
+      log: _log,
+    );
     _autoMix = _MusicAutoMix(
-      this,
+      _HandlerAutoMixHost(this),
       autoMixAnalyzer ?? AutoMixAnalyzer(),
       autoMixEffectRenderer ?? AutoMixEffectRenderer(),
     );
-    _autoplay = _MusicAutoplay(
-      this,
+    _autoplay = MusicAutoplay(
+      _HandlerAutoplayQueue(this),
       autoplayLibraryLoader ?? (seed) => _loadAutoplayLibrary(seed, _runtime),
     );
     try {
@@ -400,7 +380,7 @@ class MusicPlayerHandler extends BaseAudioHandler
           if (!identical(player, _player)) return;
           if (state == PlayerState.paused && player.needsSourceReload) {
             _userPaused = true;
-            _pausedByInterruption = false;
+            _focus.clearPending();
             _playbackAutomation.cancelPendingActions();
           }
           if (_switchingGeneration != 0 &&
@@ -410,7 +390,7 @@ class MusicPlayerHandler extends BaseAudioHandler
             return;
           }
           if (state == PlayerState.completed && _shouldIgnoreComplete) {
-            if (_userPaused || _interruptionActive) {
+            if (_userPaused || _focus.active) {
               _broadcastState(playerState: PlayerState.paused);
             }
             return;
@@ -466,7 +446,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     _sourceReady = false;
     _playbackError = error;
     _userPaused = true;
-    _pausedByInterruption = false;
+    _focus.clearPending();
     _playbackAutomation.cancelPendingActions();
     _log.e('Playback failed for ${mediaItem.value?.title}', error, stackTrace);
     _broadcastState(playerState: PlayerState.stopped);
@@ -511,33 +491,26 @@ class MusicPlayerHandler extends BaseAudioHandler
             'type=${event.type} player=${_player.state} '
             'playing=${playbackState.value.playing}',
           );
+          final isDuck = event.type == AudioInterruptionType.duck;
           if (event.begin) {
-            if (event.type == AudioInterruptionType.duck) {
-              return;
-            }
-
             // Another app took focus or a transient interruption began.
-            _interruptionActive = true;
-            _pausedByInterruption =
-                _player.state == PlayerState.playing ||
-                playbackState.value.playing;
-            unawaited(_pauseForFocusLoss(reason: 'audio interruption'));
+            final shouldPause = _focus.begin(
+              isDuck: isDuck,
+              wasPlaying:
+                  _player.state == PlayerState.playing ||
+                  playbackState.value.playing,
+            );
+            if (shouldPause) {
+              unawaited(_pauseForFocusLoss(reason: 'audio interruption'));
+            }
           } else {
-            if (event.type == AudioInterruptionType.duck) {
-              return;
-            }
-
-            // Focus returned; resume only if we paused due to a transient
-            // (duck/pause) interruption.
-            _interruptionActive = false;
-            if (_pausedByInterruption &&
-                event.type == AudioInterruptionType.pause &&
-                !_playbackAutomation.blocksPlayback) {
-              _pausedByInterruption = false;
-              _runPlaybackCallback(play);
-            } else {
-              _pausedByInterruption = false;
-            }
+            // Focus returned; resume only after a transient pause.
+            final shouldResume = _focus.end(
+              isDuck: isDuck,
+              isPause: event.type == AudioInterruptionType.pause,
+              blocksPlayback: _playbackAutomation.blocksPlayback,
+            );
+            if (shouldResume) _runPlaybackCallback(play);
           }
         }),
       );
@@ -545,7 +518,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       _subscriptions.add(
         session.becomingNoisyEventStream.listen((_) {
           // Headphones unplugged / output route lost.
-          _pausedByInterruption = false;
+          _focus.clearPending();
           unawaited(_pauseForFocusLoss(reason: 'becoming noisy'));
         }),
       );
@@ -556,67 +529,16 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   void _refreshPlaybackAutomation() {
     if (_disposed) return;
-    final pauseOnMute = _settings.pauseOnMute && !_settings.usbBitPerfect;
-    final playOnHeadphonesConnected = _settings.playOnHeadphonesConnected;
-    unawaited(
-      _playbackAutomation.configure(
-        pauseOnMute: pauseOnMute,
-        playOnHeadphonesConnected: playOnHeadphonesConnected,
-      ),
+    _automationInputs.refresh(
+      pauseOnMute: _settings.pauseOnMute && !_settings.usbBitPerfect,
+      playOnHeadphones: _settings.playOnHeadphonesConnected,
+      session: _audioSession,
     );
-    if (pauseOnMute && _automationVolumeSubscription == null) {
-      _automationVolumeSubscription = _dependencies.volumeChanges.listen(
-        (volume) => unawaited(_playbackAutomation.volumeChanged(volume)),
-        onError: (Object error) =>
-            _log.w('Could not monitor media volume: $error'),
-      );
-    } else if (!pauseOnMute) {
-      final subscription = _automationVolumeSubscription;
-      _automationVolumeSubscription = null;
-      if (subscription != null) unawaited(subscription.cancel());
-    }
-    final session = _audioSession;
-    if (playOnHeadphonesConnected &&
-        session != null &&
-        !_headphoneMonitoringRequested) {
-      _headphoneMonitoringRequested = true;
-      unawaited(
-        _startHeadphoneMonitoring(session, ++_headphoneMonitoringRevision),
-      );
-    } else if (!playOnHeadphonesConnected) {
-      _headphoneMonitoringRequested = false;
-      _headphoneMonitoringRevision++;
-      final subscription = _automationDevicesSubscription;
-      _automationDevicesSubscription = null;
-      if (subscription != null) unawaited(subscription.cancel());
-    }
-  }
-
-  Future<void> _startHeadphoneMonitoring(
-    AudioSession session,
-    int revision,
-  ) async {
-    try {
-      // Query a fresh baseline. devicesStream can replay an old inventory
-      // after monitoring was disabled, which would look like a new connection.
-      final devices = await session.getDevices();
-      if (_disposed || revision != _headphoneMonitoringRevision) return;
-      unawaited(_playbackAutomation.devicesChanged(devices));
-      _automationDevicesSubscription = session.devicesChangedEventStream
-          .asyncMap((_) => session.getDevices())
-          .listen(
-            (devices) => unawaited(_playbackAutomation.devicesChanged(devices)),
-            onError: (Object error) =>
-                _log.w('Could not monitor headphone connections: $error'),
-          );
-    } catch (error) {
-      _log.w('Could not monitor headphone connections: $error');
-    }
   }
 
   bool get _shouldIgnoreComplete =>
       _switchingGeneration != 0 ||
-      _interruptionActive ||
+      _focus.active ||
       _userPaused ||
       _playbackError != null;
 
@@ -631,24 +553,15 @@ class MusicPlayerHandler extends BaseAudioHandler
     }
   }
 
-  void setSleepTimer(Duration duration) {
-    if (duration <= Duration.zero) return;
-    _sleepTimer?.cancel();
-    _sleepTimerEndsAt = DateTime.now().add(duration);
-    _sleepTimer = Timer(duration, () {
-      _sleepTimer = null;
-      _sleepTimerEndsAt = null;
-      if (_disposed) return;
-      _log.i('Sleep timer elapsed; pausing playback');
-      _runPlaybackCallback(pause);
-    });
-  }
+  @override
+  void setSleepTimer(Duration duration) => _sleep.start(duration, () {
+    if (_disposed) return;
+    _log.i('Sleep timer elapsed; pausing playback');
+    _runPlaybackCallback(pause);
+  });
 
-  void cancelSleepTimer() {
-    _sleepTimer?.cancel();
-    _sleepTimer = null;
-    _sleepTimerEndsAt = null;
-  }
+  @override
+  void cancelSleepTimer() => _sleep.cancel();
 
   Future<void> _activateAudioSession() async {
     try {
@@ -726,6 +639,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     );
   }
 
+  @override
   void refreshNotificationControls() {
     if (_disposed) return;
     final state = playbackState.value;
@@ -838,7 +752,8 @@ class MusicPlayerHandler extends BaseAudioHandler
   late final PlaybackNormalizationCache _normalizationCache;
   int _normalizationGeneration = 0;
 
-  Future<void> _refreshNormalizationSource(String source) async {
+  @override
+  Future<void> refreshNormalizationSource(String source) async {
     _normalizationGeneration++;
     _normalizationCache.invalidate(source);
     await _sourceCache.invalidate(source, waitForPending: true);
@@ -871,6 +786,7 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   /// What the active output path applies to the playing track, for the
   /// audio information sheet.
+  @override
   PlaybackProcessing get processing => PlaybackProcessing(
     normalizationGain: _normalizationVolume,
     direct: _player.isDirect,
@@ -937,6 +853,48 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   void _markSessionQueueChanged() => _sessionWriter.queueChanged();
 
+  /// Makes an AutoMix incoming deck the playing one. The old deck is handled by
+  /// AutoMix, so only the handler's own state changes here.
+  void _commitAutoMixTransition({
+    required MusicPlaybackDeck incoming,
+    required int index,
+    required PlayableMedia next,
+    required String? nextPath,
+    required Duration? nextDuration,
+    required double normalizationVolume,
+    required Duration audiblePosition,
+  }) {
+    final resolvedSource = next.isContentUri ? nextPath : null;
+    _player = incoming;
+    _index = index;
+    _playRequestGeneration++;
+    _playHistory.record(index);
+    _normalizationVolume = normalizationVolume;
+    _activeResolvedPath = resolvedSource;
+    _pendingRestorePosition = null;
+    _runtime.personalization.begin(_learningTrack(next));
+    mediaItem.add(
+      _toMediaItem(
+        next,
+        resolvedSource: resolvedSource,
+      ).copyWith(duration: nextDuration),
+    );
+    _broadcastPosition(audiblePosition, force: true);
+    _broadcastState(playerState: PlayerState.playing);
+    unawaited(_persistSession(position: audiblePosition));
+  }
+
+  /// Appends Autoplay suggestions and publishes the new queue in one step.
+  void _appendAutoplayTracks(List<PlayableMedia> additions) {
+    final queueItems = additions.map(_toMediaItem).toList();
+    _media.addAll(additions);
+    _queueItems.addAll(queueItems);
+    _originalQueueOrder?.addAll(queueItems);
+    _markSessionQueueChanged();
+    queue.add(List.unmodifiable(_queueItems));
+    unawaited(_persistSession(position: playbackState.value.position));
+  }
+
   List<Map<String, dynamic>> _sessionMedia() {
     final original = _originalQueueOrder;
     final ranks = Map<MediaItem, int>.identity();
@@ -972,7 +930,7 @@ class MusicPlayerHandler extends BaseAudioHandler
         ? -1
         : order.indexWhere((item) => identical(item, current));
     _playHistory.clear();
-    if (_index >= 0) _playHistory.add(_index);
+    if (_index >= 0) _playHistory.record(_index);
   }
 
   void _shuffleQueue() {
@@ -1044,6 +1002,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   /// Flushes the live engine position and every older queued session write.
   /// Called when the app leaves the foreground so a normal restart resumes at
   /// the latest audible point rather than the beginning of the track.
+  @override
   Future<void> persistCurrentSession() async {
     if (_media.isEmpty || _index < 0 || _index >= _media.length) return;
     final position = await _currentPositionForPersist();
@@ -1054,6 +1013,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   /// Restores a persisted session paused: queue and current track become
   /// visible (mini player included) without loading any source; the first
   /// play() prepares the source directly at the saved position.
+  @override
   Future<void> restoreSession({
     required List<PlayableMedia> items,
     required int index,
@@ -1114,6 +1074,7 @@ class MusicPlayerHandler extends BaseAudioHandler
         _media[_index].source == media.source;
   }
 
+  @override
   Future<void> setQueueAndPlay(
     List<PlayableMedia> items, {
     int initialIndex = 0,
@@ -1136,6 +1097,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     await _playIndex(_index);
   }
 
+  @override
   Future<void> enqueue(PlayableMedia item, {bool playNext = false}) async {
     if (_media.isEmpty || _index < 0) {
       await setQueueAndPlay([item]);
@@ -1150,15 +1112,14 @@ class MusicPlayerHandler extends BaseAudioHandler
     _rememberEnqueued([queueItem], playNext: playNext);
     _markSessionQueueChanged();
 
-    for (var i = 0; i < _playHistory.length; i++) {
-      if (_playHistory[i] >= insertAt) _playHistory[i]++;
-    }
+    _playHistory.makeRoomAt(insertAt);
 
     queue.add(List<MediaItem>.unmodifiable(_queueItems));
     _broadcastState();
     unawaited(_persistSession(position: playbackState.value.position));
   }
 
+  @override
   Future<void> enqueueAll(
     List<PlayableMedia> items, {
     bool playNext = false,
@@ -1177,9 +1138,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       final queueItem = _toMediaItem(item);
       _queueItems.insert(at, queueItem);
       queued.add(queueItem);
-      for (var i = 0; i < _playHistory.length; i++) {
-        if (_playHistory[i] >= at) _playHistory[i]++;
-      }
+      _playHistory.makeRoomAt(at);
       at++;
     }
     _rememberEnqueued(queued, playNext: playNext);
@@ -1189,6 +1148,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     unawaited(_persistSession(position: playbackState.value.position));
   }
 
+  @override
   void moveQueueItem(int oldIndex, int newIndex) {
     if (oldIndex < 0 ||
         oldIndex >= _media.length ||
@@ -1222,6 +1182,7 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   /// Removes one queued occurrence, including when the same song is queued
   /// twice. The current source is protected if playback advances mid-gesture.
+  @override
   void removeQueuedItem(MediaItem item) {
     final at = _queueItems.indexWhere((entry) => identical(entry, item));
     if (_disposed || at < 0 || at == _index) return;
@@ -1230,13 +1191,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     _media.removeAt(at);
     _originalQueueOrder?.removeWhere((entry) => identical(entry, item));
     if (at < _index) _index--;
-    final history = [
-      for (final index in _playHistory)
-        if (index != at) index > at ? index - 1 : index,
-    ];
-    _playHistory
-      ..clear()
-      ..addAll(history);
+    _playHistory.dropQueueEntry(at);
     _markSessionQueueChanged();
     unawaited(_autoMix.cancel());
     queue.add(List<MediaItem>.unmodifiable(_queueItems));
@@ -1341,11 +1296,10 @@ class MusicPlayerHandler extends BaseAudioHandler
     required bool recordHistory,
     required Duration startPosition,
   }) async {
-    _pausedByInterruption = false;
-    _interruptionActive = false;
+    _focus.reset();
     _userPaused = false;
 
-    if (recordHistory) _recordPlayHistory(_index);
+    if (recordHistory) _playHistory.record(_index);
 
     final effectiveStartPosition = normalizedPlaybackResumePosition(
       _pendingRestorePosition ?? startPosition,
@@ -1553,11 +1507,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     }
   }
 
-  void _recordPlayHistory(int index) {
-    _playHistory.add(index);
-    if (_playHistory.length > 200) _playHistory.removeAt(0);
-  }
-
   Future<void> _onComplete() async {
     if (_repeatMode == AudioServiceRepeatMode.one &&
         _index >= 0 &&
@@ -1587,7 +1536,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   Future<void> _handlePlayerComplete() async {
     if (_completing) return;
     if (_shouldIgnoreComplete) {
-      if (_userPaused || _interruptionActive) {
+      if (_userPaused || _focus.active) {
         _broadcastState(playerState: PlayerState.paused);
       }
       return;
@@ -1626,8 +1575,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   }
 
   Future<void> _playInternal() async {
-    _pausedByInterruption = false;
-    _interruptionActive = false;
+    _focus.reset();
     _userPaused = false;
     if (_player.needsSourceReload) {
       final generation = _playRequestGeneration;
@@ -1698,7 +1646,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   @override
   Future<void> pause() async {
     _playbackAutomation.cancelPendingActions();
-    _pausedByInterruption = false;
+    _focus.clearPending();
     await _pausePlayback();
   }
 
@@ -1807,8 +1755,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     await _cleanupPendingResolvedPaths();
     if (generation != _playRequestGeneration || _disposed) return;
     _index = -1;
-    _pausedByInterruption = false;
-    _interruptionActive = false;
+    _focus.reset();
     _userPaused = false;
     _playHistory.clear();
     _pendingRestorePosition = null;
@@ -1891,6 +1838,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   /// Called when a file is deleted from disk. Removes it from the queue and, if
   /// it is the track currently playing, stops or advances so a deleted song can
   /// no longer be played.
+  @override
   Future<void> onSourceDeleted(String source) async {
     final target = source.trim();
     if (_disposed || target.isEmpty) return;
@@ -1951,6 +1899,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     }
   }
 
+  @override
   Future<void> dispose() => _disposeFuture ??= _dispose();
 
   Future<void> _dispose() async {
@@ -1967,9 +1916,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     _dependencies.recorder.update(null, playing: false, ended: true);
     await _dependencies.recorder.flush();
     _playRequestGeneration++;
-    _headphoneMonitoringRevision++;
-    await _automationVolumeSubscription?.cancel();
-    await _automationDevicesSubscription?.cancel();
+    await _automationInputs.dispose();
     await _playbackAutomation.dispose();
     await _sourceChangeTail;
     await _autoMix.dispose();
@@ -1987,7 +1934,7 @@ class MusicPlayerHandler extends BaseAudioHandler
   }
 }
 
-Future<MusicPlayerHandler> initMusicPlayer() => musicPlayerRuntime.initialize();
+Future<PlaybackHandler> initMusicPlayer() => musicPlayerRuntime.initialize();
 
 /// Restores the last persisted playback session (if any) into a freshly
 /// initialized handler, paused. Entries whose plain file paths no longer
@@ -2069,3 +2016,22 @@ Future<void> restorePlaybackSession(MusicPlayerRuntime runtime) async {
     _log.w('Failed to restore playback session: $e');
   }
 }
+
+/// The concrete handler behind [runtime], for library code that reaches its
+/// private state. Only [createMusicPlayerHandler] builds handlers for it.
+MusicPlayerHandler? _concreteHandler(MusicPlayerRuntime runtime) =>
+    runtime.handler as MusicPlayerHandler?;
+
+/// The handler the process runtime builds.
+PlaybackHandler createMusicPlayerHandler(MusicPlayerRuntime runtime) =>
+    MusicPlayerHandler(runtime: runtime);
+
+/// Process wiring for [MusicPlayerRuntime]. Tests build their own dependencies.
+const defaultPlaybackDependencies = PlaybackDependencies(
+  createHandler: createMusicPlayerHandler,
+  restoreSession: restorePlaybackSession,
+);
+
+final musicPlayerRuntime = MusicPlayerRuntime(
+  dependencies: defaultPlaybackDependencies,
+);

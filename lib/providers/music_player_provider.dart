@@ -6,6 +6,7 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/playback/playback_handler.dart';
 
 final musicPlayerRuntimeProvider = Provider<MusicPlayerRuntime>(
   (ref) => musicPlayerRuntime,
@@ -140,11 +141,11 @@ class MusicPlayerController {
 
   final MusicPlayerRuntime _runtime;
 
-  MusicPlayerHandler? get _handler => _runtime.handler;
+  PlaybackHandler? get _handler => _runtime.handler;
 
   DateTime? get sleepTimerEndsAt => _handler?.sleepTimerEndsAt;
 
-  Future<MusicPlayerHandler?> ensureInitialized() async {
+  Future<PlaybackHandler?> ensureInitialized() async {
     try {
       return await _runtime.initialize();
     } catch (_) {

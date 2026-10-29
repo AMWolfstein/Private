@@ -6,7 +6,7 @@ typedef AutoplayLibraryLoader =
 Future<void> resetAutoplayLearning({MusicPlayerRuntime? runtime}) async {
   final target = runtime ?? musicPlayerRuntime;
   await target.personalization.reset();
-  final handler = target.handler;
+  final handler = _concreteHandler(target);
   if (handler == null || handler.isDisposed) return;
   handler._configurePersonalization();
   handler._autoplay.updateMode();
@@ -156,10 +156,72 @@ List<PlayableMedia> selectAutoplayTracks({
   return selected;
 }
 
-class _MusicAutoplay {
-  _MusicAutoplay(this.handler, this.loadLibrary);
+/// The queue, session and settings view that Autoplay reads and extends. The
+/// handler supplies it through [_HandlerAutoplayQueue], so Autoplay itself never
+/// reaches the handler's private state.
+abstract interface class AutoplayQueueView {
+  bool get autoplaySetting;
+  bool get isDisposed;
+  AudioServiceRepeatMode get repeatMode;
+  int get index;
+  int get mediaCount;
+  PlayableMedia mediaAt(int i);
+  MediaItem queueItemAt(int i);
+  List<PlayableMedia> upcoming();
+  List<PlayableMedia> recentlyPlayed();
+  AutoplayPreferenceModel? get preferenceModel;
+  Random get random;
+  int get sessionQueueRevision;
+  void appendAutoplayTracks(List<PlayableMedia> additions);
+  void removeQueuedItem(MediaItem item);
+}
 
-  final MusicPlayerHandler handler;
+/// The only place Autoplay's reads and writes meet the handler's private state.
+class _HandlerAutoplayQueue implements AutoplayQueueView {
+  _HandlerAutoplayQueue(this._handler);
+
+  final MusicPlayerHandler _handler;
+
+  @override
+  bool get autoplaySetting => _handler._settings.autoplay;
+  @override
+  bool get isDisposed => _handler._disposed;
+  @override
+  AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
+  @override
+  int get index => _handler._index;
+  @override
+  int get mediaCount => _handler._media.length;
+  @override
+  PlayableMedia mediaAt(int i) => _handler._media[i];
+  @override
+  MediaItem queueItemAt(int i) => _handler._queueItems[i];
+  @override
+  List<PlayableMedia> upcoming() =>
+      _handler._media.skip(_handler._index + 1).toList();
+  @override
+  List<PlayableMedia> recentlyPlayed() => _handler._playHistory.entries
+      .where((i) => i >= 0 && i < _handler._media.length)
+      .map((i) => _handler._media[i])
+      .toList();
+  @override
+  AutoplayPreferenceModel? get preferenceModel =>
+      _handler._runtime.personalization.rankingSnapshot;
+  @override
+  Random get random => _handler._random;
+  @override
+  int get sessionQueueRevision => _handler._sessionQueueRevision;
+  @override
+  void appendAutoplayTracks(List<PlayableMedia> additions) =>
+      _handler._appendAutoplayTracks(additions);
+  @override
+  void removeQueuedItem(MediaItem item) => _handler.removeQueuedItem(item);
+}
+
+class MusicAutoplay {
+  MusicAutoplay(this.view, this.loadLibrary);
+
+  final AutoplayQueueView view;
   final AutoplayLibraryLoader loadLibrary;
   final Set<String> _dismissed = {};
   Future<void>? _pending;
@@ -167,14 +229,13 @@ class _MusicAutoplay {
   (String, int)? _attempt;
 
   bool get enabled =>
-      handler._settings.autoplay &&
-      handler._repeatMode == AudioServiceRepeatMode.none;
+      view.autoplaySetting && view.repeatMode == AudioServiceRepeatMode.none;
 
   int get manualInsertIndex {
-    for (var i = handler._index + 1; i < handler._media.length; i++) {
-      if (handler._media[i].autoplay) return i;
+    for (var i = view.index + 1; i < view.mediaCount; i++) {
+      if (view.mediaAt(i).autoplay) return i;
     }
-    return handler._media.length;
+    return view.mediaCount;
   }
 
   void reset() {
@@ -190,9 +251,9 @@ class _MusicAutoplay {
     reset();
     // Never remove the song already playing or a manually queued song.
     // Refresh suggestions when the enabled Library sources change too.
-    for (var i = handler._media.length - 1; i > handler._index; i--) {
-      if (handler._media[i].autoplay) {
-        handler.removeQueuedItem(handler._queueItems[i]);
+    for (var i = view.mediaCount - 1; i > view.index; i--) {
+      if (view.mediaAt(i).autoplay) {
+        view.removeQueuedItem(view.queueItemAt(i));
       }
     }
     _dismissed.clear();
@@ -201,16 +262,16 @@ class _MusicAutoplay {
 
   Future<void> fill() async {
     if (!enabled ||
-        handler._disposed ||
-        handler._index < 0 ||
-        handler._index >= handler._media.length) {
+        view.isDisposed ||
+        view.index < 0 ||
+        view.index >= view.mediaCount) {
       return;
     }
-    if (handler._media.length - handler._index - 1 >= 3) return;
+    if (view.mediaCount - view.index - 1 >= 3) return;
     final pending = _pending;
     if (pending != null) return pending;
-    final seed = handler._media[handler._index];
-    final attempt = (seed.source, handler._sessionQueueRevision);
+    final seed = view.mediaAt(view.index);
+    final attempt = (seed.source, view.sessionQueueRevision);
     if (_attempt == attempt) return;
     _attempt = attempt;
     final operation = _fill(seed, _generation);
@@ -226,29 +287,27 @@ class _MusicAutoplay {
     try {
       final candidates = await loadLibrary(seed);
       if (!enabled ||
-          handler._disposed ||
+          view.isDisposed ||
           generation != _generation ||
-          handler._index < 0) {
+          view.index < 0) {
         return;
       }
       // Re-check the live queue after I/O: quick skips and manual additions
       // must not duplicate entries or replace the user's selected track.
-      final current = handler._media[handler._index];
-      final upcoming = handler._media.skip(handler._index + 1).toList();
+      final current = view.mediaAt(view.index);
+      final upcoming = view.upcoming();
       if (upcoming.length >= 3) return;
-      final recent = handler._playHistory
-          .where((i) => i >= 0 && i < handler._media.length)
-          .map((i) => handler._media[i])
-          .toList();
-      final model = handler._runtime.personalization.rankingSnapshot;
-      final revision = handler._sessionQueueRevision;
+      final recent = view.recentlyPlayed();
+      final model = view.preferenceModel;
+      final revision = view.sessionQueueRevision;
+      final random = view.random;
       List<PlayableMedia> ordinaryRanking() => selectAutoplayTracks(
         seed: current,
         candidates: candidates,
         upcoming: upcoming,
         recent: recent,
         dismissedSources: _dismissed,
-        random: handler._random,
+        random: random,
         limit: 6 - upcoming.length,
       );
       List<PlayableMedia> selected;
@@ -263,7 +322,7 @@ class _MusicAutoplay {
             recent,
             Set<String>.of(_dismissed),
             model,
-            handler._random.nextInt(1 << 31),
+            random.nextInt(1 << 31),
             DateTime.now(),
             6 - upcoming.length,
           ), debugLabel: 'autoplay-ranking');
@@ -276,28 +335,19 @@ class _MusicAutoplay {
       }
       // The worker must not publish suggestions for an obsolete queue/seed.
       if (!enabled ||
-          handler._disposed ||
+          view.isDisposed ||
           generation != _generation ||
-          revision != handler._sessionQueueRevision ||
-          handler._index < 0 ||
-          handler._index >= handler._media.length ||
-          handler._media[handler._index].source != current.source) {
+          revision != view.sessionQueueRevision ||
+          view.index < 0 ||
+          view.index >= view.mediaCount ||
+          view.mediaAt(view.index).source != current.source) {
         return;
       }
       if (selected.isEmpty) return;
-      final additions = [
+      view.appendAutoplayTracks([
         for (final item in selected)
           PlayableMedia.fromJson({...item.toJson(), 'autoplay': true})!,
-      ];
-      final queueItems = additions.map(handler._toMediaItem).toList();
-      handler._media.addAll(additions);
-      handler._queueItems.addAll(queueItems);
-      handler._originalQueueOrder?.addAll(queueItems);
-      handler._markSessionQueueChanged();
-      handler.queue.add(List.unmodifiable(handler._queueItems));
-      unawaited(
-        handler._persistSession(position: handler.playbackState.value.position),
-      );
+      ]);
     } catch (error) {
       _log.w('Could not prepare Library Autoplay: $error');
     }

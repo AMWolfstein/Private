@@ -9,7 +9,7 @@ import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:sistrum/services/playback/player_widget_service.dart';
@@ -19,10 +19,20 @@ import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('MusicPlayerRuntime');
 
+/// Builds the concrete handler for a runtime. The service library supplies it,
+/// so this file does not depend on the handler's implementation.
+typedef PlaybackHandlerFactory =
+    PlaybackHandler Function(MusicPlayerRuntime runtime);
+
+/// Restores the persisted session into a runtime. The service library supplies it.
+typedef PlaybackRestore = Future<void> Function(MusicPlayerRuntime runtime);
+
 /// The process services used by a player. Tests can replace effects without
 /// changing the queue, transport, interruption or automation algorithms.
 class PlaybackDependencies {
   const PlaybackDependencies({
+    required this.createHandler,
+    required this.restoreSession,
     this.createDeck = _createDeck,
     this.audioSession = _getAudioSession,
     this.readMetadata = PlatformBridge.readFileMetadata,
@@ -41,11 +51,13 @@ class PlaybackDependencies {
        _volumeChanges = volumeChanges,
        _isAndroid = isAndroid;
 
+  final PlaybackHandlerFactory createHandler;
+  final PlaybackRestore restoreSession;
   final MusicPlaybackDeck Function(String playerId) createDeck;
   final Future<AudioSession> Function() audioSession;
   final Future<Map<String, dynamic>> Function(String, {String? displayName})
   readMetadata;
-  final Future<MusicPlayerHandler> Function(MusicPlayerHandler Function())
+  final Future<PlaybackHandler> Function(PlaybackHandler Function())
   initializeHandler;
   final AutoplayPersonalization Function() createPersonalization;
   final AppStateDatabase? _sessionDatabase;
@@ -77,8 +89,8 @@ class PlaybackDependencies {
     androidStopForegroundOnPause: true,
   );
 
-  static Future<MusicPlayerHandler> _initializeAudioHandler(
-    MusicPlayerHandler Function() builder,
+  static Future<PlaybackHandler> _initializeAudioHandler(
+    PlaybackHandler Function() builder,
   ) => AudioService.init(builder: builder, config: notificationConfig);
 }
 
@@ -87,7 +99,7 @@ class PlaybackDependencies {
 class MusicPlayerRuntime {
   MusicPlayerRuntime({
     AppSettings settings = const AppSettings(),
-    this.dependencies = const PlaybackDependencies(),
+    required this.dependencies,
   }) : _settings = settings;
 
   final PlaybackDependencies dependencies;
@@ -95,11 +107,11 @@ class MusicPlayerRuntime {
   AutoplayPersonalization get personalization =>
       _personalization ??= dependencies.createPersonalization();
   AppSettings _settings;
-  MusicPlayerHandler? _handler;
+  PlaybackHandler? _handler;
   void Function()? _unsubscribeSourceDeletion;
-  Future<MusicPlayerHandler>? _initFuture;
+  Future<PlaybackHandler>? _initFuture;
   Future<void>? _restoreFuture;
-  final _handlers = StreamController<MusicPlayerHandler?>.broadcast(sync: true);
+  final _handlers = StreamController<PlaybackHandler?>.broadcast(sync: true);
   final _mutedPlaybackEvents = StreamController<void>.broadcast();
   bool _initializing = false;
   bool _disposed = false;
@@ -110,7 +122,7 @@ class MusicPlayerRuntime {
   Future<void> Function()? exclusiveAudioHook;
 
   AppSettings get settings => _settings;
-  MusicPlayerHandler? get handler => _initializing ? null : _handler;
+  PlaybackHandler? get handler => _initializing ? null : _handler;
   String get unknownTitle => _unknownTitle;
   String get unknownArtist => _unknownArtist;
   PlaybackNotification get notification => _notification;
@@ -153,7 +165,7 @@ class MusicPlayerRuntime {
     _handler?.refreshNotificationControls();
   }
 
-  void attach(MusicPlayerHandler handler) {
+  void attach(PlaybackHandler handler) {
     if (_disposed) throw StateError('This playback runtime was disposed');
     final existing = _handler;
     if (existing != null && !identical(existing, handler)) {
@@ -168,7 +180,7 @@ class MusicPlayerRuntime {
     if (!_initializing && !identical(existing, handler)) _handlers.add(handler);
   }
 
-  void detach(MusicPlayerHandler handler) {
+  void detach(PlaybackHandler handler) {
     if (!identical(_handler, handler)) return;
     _unsubscribeSourceDeletion?.call();
     _unsubscribeSourceDeletion = null;
@@ -177,7 +189,7 @@ class MusicPlayerRuntime {
     if (!_handlers.isClosed) _handlers.add(null);
   }
 
-  Future<MusicPlayerHandler> initialize() {
+  Future<PlaybackHandler> initialize() {
     if (_disposed) {
       return Future.error(StateError('This playback runtime was disposed'));
     }
@@ -188,15 +200,15 @@ class MusicPlayerRuntime {
     return _initFuture = _initialize();
   }
 
-  Future<MusicPlayerHandler> _initialize() async {
+  Future<PlaybackHandler> _initialize() async {
     _initializing = true;
-    MusicPlayerHandler? created;
+    PlaybackHandler? created;
     try {
       // Defer even a synchronous test initializer until _initFuture is stored.
       await Future<void>.value();
       final handler = await dependencies.initializeHandler(() {
         if (_disposed) throw StateError('This playback runtime was disposed');
-        return created = MusicPlayerHandler(runtime: this);
+        return created = dependencies.createHandler(this);
       });
       if (_disposed || handler.isDisposed || !identical(_handler, handler)) {
         throw StateError(
@@ -220,7 +232,7 @@ class MusicPlayerRuntime {
   }
 
   Future<void> restoreSession() =>
-      _restoreFuture ??= restorePlaybackSession(this);
+      _restoreFuture ??= dependencies.restoreSession(this);
 
   /// The default runtime lives for the app lifetime. Scoped runtimes close
   /// subscriptions and reject new initialization when their owner disposes.
@@ -242,12 +254,12 @@ class MusicPlayerRuntime {
   }
 
   Stream<T> _events<T>(
-    Stream<T> Function(MusicPlayerHandler) select, {
+    Stream<T> Function(PlaybackHandler) select, {
     List<T> initial = const [],
   }) => Stream<T>.multi((listener) {
     StreamSubscription<T>? events;
     var revision = 0;
-    void selectHandler(MusicPlayerHandler? handler) {
+    void selectHandler(PlaybackHandler? handler) {
       final selectedRevision = ++revision;
       unawaited(events?.cancel());
       events = null;
@@ -283,5 +295,3 @@ class MusicPlayerRuntime {
   Stream<List<MediaItem>> queueEvents() =>
       _events((handler) => handler.queue, initial: [const []]);
 }
-
-final musicPlayerRuntime = MusicPlayerRuntime();
