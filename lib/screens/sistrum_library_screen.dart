@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/favorite_artists_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/services/album_completeness.dart';
@@ -345,8 +345,8 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
                         context.l10n.collectionLoved,
                         () => Navigator.of(context).push(
                           MaterialPageRoute<void>(
-                            builder: (_) => const LibraryTracksFolderScreen(
-                              mode: LibraryTracksFolderMode.loved,
+                            builder: (_) => const LibraryCollectionTracksScreen(
+                              mode: LibraryCollectionMode.loved,
                             ),
                           ),
                         ),

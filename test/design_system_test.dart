@@ -837,7 +837,7 @@ void main() {
     test('every collection screen goes through the shared shell', () {
       const screens = [
         'local_album_screen.dart',
-        'library_tracks_folder_screen.dart',
+        'library_collection_tracks_screen.dart',
       ];
       final offenders = <String>[];
       for (final name in screens) {

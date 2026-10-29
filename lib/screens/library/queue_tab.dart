@@ -40,7 +40,7 @@ import 'package:sistrum/widgets/local_song_row.dart';
 import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/local_library_artwork_builder.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/sistrum_library_screen.dart';
 import 'package:sistrum/screens/queue_library_refresh_policy.dart';

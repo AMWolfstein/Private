@@ -46,26 +46,26 @@ String? _resolveRawCoverUrl(Track track) {
   return null;
 }
 
-class LibraryTracksFolderScreen extends ConsumerStatefulWidget {
-  final LibraryTracksFolderMode mode;
+class LibraryCollectionTracksScreen extends ConsumerStatefulWidget {
+  final LibraryCollectionMode mode;
   final String? playlistId;
 
-  const LibraryTracksFolderScreen({
+  const LibraryCollectionTracksScreen({
     super.key,
     required this.mode,
     this.playlistId,
   });
 
   @override
-  ConsumerState<LibraryTracksFolderScreen> createState() =>
-      _LibraryTracksFolderScreenState();
+  ConsumerState<LibraryCollectionTracksScreen> createState() =>
+      _LibraryCollectionTracksScreenState();
 }
 
-class _LibraryTracksFolderScreenState
-    extends ConsumerState<LibraryTracksFolderScreen>
+class _LibraryCollectionTracksScreenState
+    extends ConsumerState<LibraryCollectionTracksScreen>
     with
-        SelectionModeMixin<LibraryTracksFolderScreen>,
-        CollapsingHeaderScrollMixin<LibraryTracksFolderScreen> {
+        SelectionModeMixin<LibraryCollectionTracksScreen>,
+        CollapsingHeaderScrollMixin<LibraryCollectionTracksScreen> {
   UserPlaylistCollection? playlist;
   final _folderData = LibraryTracksFolderData();
 
@@ -73,7 +73,7 @@ class _LibraryTracksFolderScreenState
   void initState() {
     super.initState();
     final playlistId = widget.playlistId;
-    if (widget.mode == LibraryTracksFolderMode.playlist && playlistId != null) {
+    if (widget.mode == LibraryCollectionMode.playlist && playlistId != null) {
       Future.microtask(
         () => ref
             .read(libraryCollectionsProvider.notifier)
@@ -137,8 +137,8 @@ class _LibraryTracksFolderScreenState
 
   IconData _modeIcon() {
     return switch (widget.mode) {
-      LibraryTracksFolderMode.loved => Icons.favorite,
-      LibraryTracksFolderMode.playlist => Icons.queue_music,
+      LibraryCollectionMode.loved => Icons.favorite,
+      LibraryCollectionMode.playlist => Icons.queue_music,
     };
   }
 
@@ -162,10 +162,10 @@ class _LibraryTracksFolderScreenState
 
     try {
       switch (widget.mode) {
-        case LibraryTracksFolderMode.loved:
+        case LibraryCollectionMode.loved:
           await notifier.removeLovedTracks(keysToRemove);
           break;
-        case LibraryTracksFolderMode.playlist:
+        case LibraryCollectionMode.playlist:
           if (widget.playlistId != null) {
             await notifier.removeTracksFromPlaylist(
               widget.playlistId!,
@@ -225,7 +225,7 @@ class _LibraryTracksFolderScreenState
     // PERF-202: only the cover inputs are read here; the collection state is
     // selected in slices so an unrelated collection edit does not rebuild
     // this screen.
-    final loved = widget.mode == LibraryTracksFolderMode.loved;
+    final loved = widget.mode == LibraryCollectionMode.loved;
     final playlist = loved
         ? null
         : ref.watch(
@@ -271,13 +271,13 @@ class _LibraryTracksFolderScreenState
     final List<CollectionTrackEntry> entries;
 
     switch (widget.mode) {
-      case LibraryTracksFolderMode.loved:
+      case LibraryCollectionMode.loved:
         playlist = null;
         entries = ref.watch(
           libraryCollectionsProvider.select((state) => state.loved),
         );
         break;
-      case LibraryTracksFolderMode.playlist:
+      case LibraryCollectionMode.playlist:
         final playlistId = widget.playlistId;
         playlist = playlistId == null
             ? null
@@ -294,21 +294,20 @@ class _LibraryTracksFolderScreenState
     pruneSelection(_folderData.keys);
 
     final title = switch (widget.mode) {
-      LibraryTracksFolderMode.loved => context.l10n.collectionLoved,
-      LibraryTracksFolderMode.playlist =>
+      LibraryCollectionMode.loved => context.l10n.collectionLoved,
+      LibraryCollectionMode.playlist =>
         playlist?.name ?? context.l10n.collectionPlaylist,
     };
 
     final emptyTitle = switch (widget.mode) {
-      LibraryTracksFolderMode.loved => context.l10n.collectionLovedEmptyTitle,
-      LibraryTracksFolderMode.playlist =>
+      LibraryCollectionMode.loved => context.l10n.collectionLovedEmptyTitle,
+      LibraryCollectionMode.playlist =>
         context.l10n.collectionPlaylistEmptyTitle,
     };
 
     final emptySubtitle = switch (widget.mode) {
-      LibraryTracksFolderMode.loved =>
-        context.l10n.collectionLovedEmptySubtitle,
-      LibraryTracksFolderMode.playlist =>
+      LibraryCollectionMode.loved => context.l10n.collectionLovedEmptySubtitle,
+      LibraryCollectionMode.playlist =>
         context.l10n.collectionPlaylistEmptySubtitle,
     };
     final folderTracks = _folderData.tracks;
@@ -316,7 +315,7 @@ class _LibraryTracksFolderScreenState
         !ref.watch(
           libraryCollectionsProvider.select((state) => state.isLoaded),
         ) ||
-        (widget.mode == LibraryTracksFolderMode.playlist &&
+        (widget.mode == LibraryCollectionMode.playlist &&
             playlist?.tracksLoaded == false);
 
     final bottomPadding = isSelectionMode
@@ -442,8 +441,8 @@ class _LibraryTracksFolderScreenState
             icon: const Icon(Icons.remove_circle_outline),
             label: Text(
               selectedCount > 0
-                  ? '${widget.mode == LibraryTracksFolderMode.playlist ? context.l10n.collectionRemoveFromPlaylist : context.l10n.collectionRemoveFromFolder} ($selectedCount)'
-                  : widget.mode == LibraryTracksFolderMode.playlist
+                  ? '${widget.mode == LibraryCollectionMode.playlist ? context.l10n.collectionRemoveFromPlaylist : context.l10n.collectionRemoveFromFolder} ($selectedCount)'
+                  : widget.mode == LibraryCollectionMode.playlist
                   ? context.l10n.collectionRemoveFromPlaylist
                   : context.l10n.collectionRemoveFromFolder,
             ),
@@ -538,7 +537,7 @@ class _LibraryTracksFolderScreenState
   ) {
     final expandedHeight = calculateExpandedHeight(context);
     final customCoverPath = playlist?.coverImagePath;
-    final isPlaylistMode = widget.mode == LibraryTracksFolderMode.playlist;
+    final isPlaylistMode = widget.mode == LibraryCollectionMode.playlist;
     final coverUrl = coverSource;
     final hasCustomCover =
         customCoverPath != null && customCoverPath.isNotEmpty;
@@ -830,7 +829,7 @@ class _LibraryTracksFolderScreenState
 
 class _CollectionTrackTile extends ConsumerWidget {
   final CollectionTrackEntry entry;
-  final LibraryTracksFolderMode mode;
+  final LibraryCollectionMode mode;
   final String? playlistId;
   final List<Track> folderTracks;
   final int trackIndex;
@@ -965,4 +964,4 @@ class _EmptyFolderState extends StatelessWidget {
   }
 }
 
-enum LibraryTracksFolderMode { loved, playlist }
+enum LibraryCollectionMode { loved, playlist }

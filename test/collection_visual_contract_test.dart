@@ -6,7 +6,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
@@ -127,10 +127,10 @@ void main() {
         (tester) async {
           await tester.pumpWidget(
             host(
-              LibraryTracksFolderScreen(
+              LibraryCollectionTracksScreen(
                 mode: playlist
-                    ? LibraryTracksFolderMode.playlist
-                    : LibraryTracksFolderMode.loved,
+                    ? LibraryCollectionMode.playlist
+                    : LibraryCollectionMode.loved,
                 playlistId: playlist ? 'mix' : null,
               ),
             ),

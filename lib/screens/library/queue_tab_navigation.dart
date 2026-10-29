@@ -75,8 +75,8 @@ extension _QueueTabNavigation on _QueueTabState {
   void _openPlaylistById(String playlistId) {
     _navigateWithUnfocus(
       MaterialPageRoute(
-        builder: (_) => LibraryTracksFolderScreen(
-          mode: LibraryTracksFolderMode.playlist,
+        builder: (_) => LibraryCollectionTracksScreen(
+          mode: LibraryCollectionMode.playlist,
           playlistId: playlistId,
         ),
       ),

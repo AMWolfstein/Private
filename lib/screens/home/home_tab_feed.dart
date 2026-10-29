@@ -101,8 +101,8 @@ extension _LocalHomeFeedUI on _HomeTabState {
                     colors: colors,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (_) => LibraryTracksFolderScreen(
-                          mode: LibraryTracksFolderMode.playlist,
+                        builder: (_) => LibraryCollectionTracksScreen(
+                          mode: LibraryCollectionMode.playlist,
                           playlistId: playlist.id,
                         ),
                       ),

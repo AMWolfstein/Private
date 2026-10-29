@@ -15,7 +15,7 @@ import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/screens/local_artist_screen.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/clickable_metadata.dart';
@@ -268,8 +268,8 @@ void main() {
                 child: child!,
               ),
               home: playlist
-                  ? const LibraryTracksFolderScreen(
-                      mode: LibraryTracksFolderMode.playlist,
+                  ? const LibraryCollectionTracksScreen(
+                      mode: LibraryCollectionMode.playlist,
                       playlistId: 'mix',
                     )
                   : LocalAlbumScreen(

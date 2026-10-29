@@ -12,7 +12,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'support/material_test_theme.dart';
@@ -243,8 +243,8 @@ void main() {
                         body: TextButton(
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute<void>(
-                              builder: (_) => const LibraryTracksFolderScreen(
-                                mode: LibraryTracksFolderMode.loved,
+                              builder: (_) => const LibraryCollectionTracksScreen(
+                                mode: LibraryCollectionMode.loved,
                               ),
                             ),
                           ),
@@ -254,8 +254,8 @@ void main() {
                     )
                   : TickerMode(
                       enabled: tickersEnabled,
-                      child: const LibraryTracksFolderScreen(
-                        mode: LibraryTracksFolderMode.loved,
+                      child: const LibraryCollectionTracksScreen(
+                        mode: LibraryCollectionMode.loved,
                       ),
                     ),
             ),
@@ -302,7 +302,7 @@ void main() {
     );
   }
 
-  for (final mode in LibraryTracksFolderMode.values) {
+  for (final mode in LibraryCollectionMode.values) {
     for (final sistrum in [true]) {
       testWidgets(
         'selection dispatches one ${mode.name} removal (Sistrum: $sistrum)',
@@ -333,9 +333,9 @@ void main() {
                     : AppTheme.light(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
-                home: LibraryTracksFolderScreen(
+                home: LibraryCollectionTracksScreen(
                   mode: mode,
-                  playlistId: mode == LibraryTracksFolderMode.playlist
+                  playlistId: mode == LibraryCollectionMode.playlist
                       ? 'playlist'
                       : null,
                 ),
@@ -362,7 +362,7 @@ void main() {
           expect(find.text('Unavailable'), findsNothing);
           expect(find.byIcon(Icons.remove_circle_outline), findsNothing);
           final l10n = AppLocalizations.of(
-            tester.element(find.byType(LibraryTracksFolderScreen)),
+            tester.element(find.byType(LibraryCollectionTracksScreen)),
           );
           expect(find.text(l10n.collectionRemovedTracks(2)), findsOneWidget);
           expect(tester.takeException(), isNull);
@@ -392,8 +392,8 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const LibraryTracksFolderScreen(
-            mode: LibraryTracksFolderMode.playlist,
+          home: const LibraryCollectionTracksScreen(
+            mode: LibraryCollectionMode.playlist,
             playlistId: 'playlist',
           ),
         ),
@@ -405,7 +405,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.remove_circle_outline));
     await tester.pumpAndSettle();
-    final context = tester.element(find.byType(LibraryTracksFolderScreen));
+    final context = tester.element(find.byType(LibraryCollectionTracksScreen));
     expect(find.text(context.friendlyError(collections.error)), findsOneWidget);
     // The row stays, but the bar closes so it cannot cover the error message.
     expect(find.text('First'), findsOneWidget);
@@ -439,8 +439,8 @@ void main() {
                 : AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const LibraryTracksFolderScreen(
-              mode: LibraryTracksFolderMode.playlist,
+            home: const LibraryCollectionTracksScreen(
+              mode: LibraryCollectionMode.playlist,
               playlistId: 'playlist',
             ),
           ),

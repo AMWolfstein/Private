@@ -9,7 +9,7 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
@@ -130,8 +130,8 @@ void main() {
         final collections = _Collections(loaded: false, withSong: false);
         await tester.pumpWidget(
           host(
-            const LibraryTracksFolderScreen(
-              mode: LibraryTracksFolderMode.loved,
+            const LibraryCollectionTracksScreen(
+              mode: LibraryCollectionMode.loved,
             ),
             collections: collections,
           ),
@@ -153,8 +153,8 @@ void main() {
         final player = _Player();
         await tester.pumpWidget(
           host(
-            const LibraryTracksFolderScreen(
-              mode: LibraryTracksFolderMode.loved,
+            const LibraryCollectionTracksScreen(
+              mode: LibraryCollectionMode.loved,
             ),
             overrides: [
               currentMediaItemProvider.overrideWithBuild(

@@ -10,7 +10,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/sistrum_library_screen.dart';
-import 'package:sistrum/screens/library_tracks_folder_screen.dart';
+import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/favorite_artists_screen.dart';
 import 'package:sistrum/screens/local_genres_screen.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
@@ -199,7 +199,7 @@ void main() {
         await tester.ensureVisible(find.text('Loved Songs'));
         await tester.tap(find.text('Loved Songs'));
         await tester.pumpAndSettle();
-        expect(find.byType(LibraryTracksFolderScreen), findsOneWidget);
+        expect(find.byType(LibraryCollectionTracksScreen), findsOneWidget);
         await tester.tap(find.byTooltip('Back'));
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.text('Favorite Artists'));
