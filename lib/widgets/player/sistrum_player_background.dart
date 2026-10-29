@@ -53,7 +53,7 @@ class SistrumPlayerBackground extends StatelessWidget {
         builder: (context, _) {
           // Continue the artwork's bottom edge; lyrics and the queue use a
           // deeper two-tone gradient of the same colour.
-          final colors = CoverPalette.colors(source);
+          final colors = coverPalette.colors(source);
           final motion = MediaQuery.disableAnimationsOf(context)
               ? Duration.zero
               : const Duration(milliseconds: 380);

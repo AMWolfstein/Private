@@ -263,7 +263,7 @@ void main() {
       image.dispose();
       picture.dispose();
       await cover.writeAsBytes(bytes!.buffer.asUint8List());
-      expect(await CoverPalette.topLightness(cover.path), lessThan(0.2));
+      expect(await coverPalette.topLightness(cover.path), lessThan(0.2));
     });
     final controller = ScrollController();
     addTearDown(controller.dispose);

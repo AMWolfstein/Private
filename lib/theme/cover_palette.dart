@@ -48,36 +48,33 @@ Map<String, Object> _analyzeInIsolate(_Sample sample) => analyzeCover(
 ///
 /// Screens read colours only through [colors] (see [sistrumCoverColors]);
 /// [resolve] and [peek] keep supplying generated schemes for headers.
-class CoverPalette {
-  const CoverPalette._();
+class CoverPaletteCache {
+  CoverPaletteCache({CoverAnalysisStore? store}) : _store = store;
 
   /// Analyses survive the app in the library database; this bounded map
   /// keeps the recent ones in memory.
-  static final Map<String, CoverAnalysis?> _analyses = {};
-  static final Map<String, ColorScheme> _schemes = {};
-  static final Map<String, Future<CoverAnalysis?>> _pending = {};
-  static final Map<String, String> _sourceKeys = {};
+  final Map<String, CoverAnalysis?> _analyses = {};
+  final Map<String, ColorScheme> _schemes = {};
+  final Map<String, Future<CoverAnalysis?>> _pending = {};
+  final Map<String, String> _sourceKeys = {};
   static const int _maxEntries = 32;
   static const sampleSize = 112;
 
   /// Where analyses persist; null keeps them in memory only.
-  @visibleForTesting
-  static CoverAnalysisStore? store = Platform.isAndroid
-      ? LibraryCoverAnalysisStore()
-      : null;
+  final CoverAnalysisStore? _store;
 
   /// Forgets analyses held in memory, as a new app session would.
   @visibleForTesting
-  static void debugClearMemory() {
+  void debugClearMemory() {
     _analyses.clear();
     _schemes.clear();
     _sourceKeys.clear();
   }
 
-  static bool _isNetworkSource(String source) =>
+  bool _isNetworkSource(String source) =>
       source.startsWith('http://') || source.startsWith('https://');
 
-  static Future<String> _versionKey(String source) async {
+  Future<String> _versionKey(String source) async {
     if (_isNetworkSource(source)) return source;
     try {
       final stat = await File(source).stat();
@@ -92,23 +89,23 @@ class CoverPalette {
 
   /// The last analysis for [source], possibly of a previous file version;
   /// null before the first resolution or when the cover is unreadable.
-  static CoverAnalysis? peekAnalysis(String source) =>
+  CoverAnalysis? peekAnalysis(String source) =>
       _analyses[_sourceKeys[source]];
 
   /// Sistrum's colours for [source]; neutral gray while unknown or without a
   /// cover.
-  static CoverColors colors(String? source) =>
+  CoverColors colors(String? source) =>
       sistrumCoverColors(source == null ? null : peekAnalysis(source));
 
   /// Cached scheme for [source], or null when it has not been resolved yet.
-  static ColorScheme? peek(String source, Brightness brightness) {
+  ColorScheme? peek(String source, Brightness brightness) {
     final key = _sourceKeys[source];
     final analysis = _analyses[key];
     if (key == null || analysis == null) return null;
     return _schemeFor(key, analysis, brightness);
   }
 
-  static ColorScheme _schemeFor(
+  ColorScheme _schemeFor(
     String key,
     CoverAnalysis analysis,
     Brightness brightness,
@@ -125,7 +122,7 @@ class CoverPalette {
 
   /// Resolves the scheme for [source] (a network URL or a local file path).
   /// Returns null when the image cannot be decoded.
-  static Future<ColorScheme?> resolve(
+  Future<ColorScheme?> resolve(
     String source,
     Brightness brightness,
   ) async {
@@ -136,21 +133,21 @@ class CoverPalette {
   }
 
   /// Resolves [source]'s colours; neutral when it cannot be read.
-  static Future<CoverColors> resolveColors(String? source) async =>
+  Future<CoverColors> resolveColors(String? source) async =>
       sistrumCoverColors(source == null ? null : await resolveAnalysis(source));
 
   /// Mean perceptual lightness (CIE L*, 0..1) of the artwork's top quarter:
   /// what a transparent header floats over. Null when unreadable.
-  static Future<double?> topLightness(String source) async =>
+  Future<double?> topLightness(String source) async =>
       (await resolveAnalysis(source))?.topLightness;
 
   /// Last known [topLightness] for [source], possibly from a previous file
   /// version; null before the first resolution.
-  static double? peekTopLightness(String source) =>
+  double? peekTopLightness(String source) =>
       peekAnalysis(source)?.topLightness;
 
   /// One analysis per cover version, shared by every caller.
-  static Future<CoverAnalysis?> resolveAnalysis(String source) {
+  Future<CoverAnalysis?> resolveAnalysis(String source) {
     return _pending.putIfAbsent(
       source,
       () =>
@@ -185,14 +182,14 @@ class CoverPalette {
     );
   }
 
-  static ResizeImage _sampleOf(ImageProvider provider) => ResizeImage(
+  ResizeImage _sampleOf(ImageProvider provider) => ResizeImage(
     provider,
     width: sampleSize,
     height: sampleSize,
     policy: ResizeImagePolicy.fit,
   );
 
-  static Future<void> _evictDecodedImage(ImageProvider provider) async {
+  Future<void> _evictDecodedImage(ImageProvider provider) async {
     final key = await provider.obtainKey(ImageConfiguration.empty);
     // A first palette request can overlap the header's initial precache. Do
     // not cancel that pending decode while removing an older retained bitmap.
@@ -201,7 +198,7 @@ class CoverPalette {
     }
   }
 
-  static Future<CoverAnalysis?> _analyze(String source, String key) async {
+  Future<CoverAnalysis?> _analyze(String source, String key) async {
     final task = TimelineTask()..start('Sistrum cover analysis');
     try {
       return await _analyzeUntimed(source, key);
@@ -210,11 +207,11 @@ class CoverPalette {
     }
   }
 
-  static Future<CoverAnalysis?> _analyzeUntimed(
+  Future<CoverAnalysis?> _analyzeUntimed(
     String source,
     String key,
   ) async {
-    final store = CoverPalette.store;
+    final store = _store;
     if (store != null && !_isNetworkSource(source)) {
       final stored = await store.read(key);
       if (stored != null) return stored;
@@ -263,7 +260,7 @@ class CoverPalette {
   }
 
   /// Premultiplied RGBA of the bounded sample, read back once.
-  static Future<(Uint8List, int, int)> _readSample(ImageProvider provider) {
+  Future<(Uint8List, int, int)> _readSample(ImageProvider provider) {
     final result = Completer<(Uint8List, int, int)>();
     final stream = provider.resolve(
       const ImageConfiguration(size: Size(112, 112)),
@@ -344,7 +341,12 @@ class HeaderPalette extends InheritedWidget {
 }
 
 /// Resolves [imageSource] into a [ColorScheme] and rebuilds when it arrives.
-/// The builder reads the same cover's [CoverPalette.colors] for surfaces.
+/// The app's cover palette cache, shared by every screen and background.
+final coverPalette = CoverPaletteCache(
+  store: Platform.isAndroid ? LibraryCoverAnalysisStore() : null,
+);
+
+/// The builder reads the same cover's [coverPalette.colors] for surfaces.
 class CoverPaletteBuilder extends StatefulWidget {
   const CoverPaletteBuilder({
     super.key,
@@ -395,10 +397,10 @@ class _CoverPaletteBuilderState extends State<CoverPaletteBuilder> {
     if (_resolvedSource != source || _resolvedBrightness != brightness) {
       _resolvedSource = source;
       _resolvedBrightness = brightness;
-      _scheme = CoverPalette.peek(source, brightness);
+      _scheme = coverPalette.peek(source, brightness);
     }
 
-    CoverPalette.resolve(source, brightness).then((scheme) {
+    coverPalette.resolve(source, brightness).then((scheme) {
       if (!mounted) return;
       if (_resolveGeneration != requestGeneration) {
         return;

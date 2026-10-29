@@ -274,7 +274,7 @@ class PlayerWidgetService {
         );
         if (png == null) return null;
         // The widget shares the player's and detail pages' cover colour.
-        final background = (await CoverPalette.resolveColors(
+        final background = (await coverPalette.resolveColors(
           file.path,
         )).surface;
         return PlayerWidgetArtwork(

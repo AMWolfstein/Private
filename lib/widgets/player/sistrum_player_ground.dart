@@ -143,7 +143,7 @@ class _SistrumPlayerGroundState extends ConsumerState<SistrumPlayerGround>
     _builtSource = source;
     final generation = ++_generation;
     // The background's own colours, from the one cover analysis.
-    final colors = await CoverPalette.resolveColors(source);
+    final colors = await coverPalette.resolveColors(source);
     if (!mounted || generation != _generation) return;
     final screen = MediaQuery.sizeOf(context);
     final image = await SistrumGroundBuilder.build(

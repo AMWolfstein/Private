@@ -241,7 +241,7 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
                               artUri: widget.mediaItem.artUri?.toString(),
                               lines: _quoted,
                               background: _background,
-                              coverColors: CoverPalette.colors(source),
+                              coverColors: coverPalette.colors(source),
                               placeholder: l10n.lyricsShareSelectHint(
                                 lyricsShareMaxLines,
                               ),
@@ -859,7 +859,7 @@ class LyricsShareCard extends StatelessWidget {
           ],
         );
       case LyricsCardBackground.color:
-        final colors = coverColors ?? CoverPalette.colors(null);
+        final colors = coverColors ?? coverPalette.colors(null);
         return DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(

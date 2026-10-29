@@ -178,7 +178,7 @@ class _SistrumPlayerMenuSurface extends StatelessWidget {
     return CoverPaletteBuilder(
       imageSource: source,
       builder: (context, _) {
-        final surface = CoverPalette.colors(source).menuSurface;
+        final surface = coverPalette.colors(source).menuSurface;
         return Theme(
           data: SistrumTheme.fromContext(
             context,

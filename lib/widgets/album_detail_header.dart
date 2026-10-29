@@ -615,11 +615,11 @@ class _ArtworkBrightnessState extends State<_ArtworkBrightness> {
     if (source == null) return widget.builder(context, null);
     if (source != _source) {
       _source = source;
-      _lightness = CoverPalette.topLightness(source);
+      _lightness = coverPalette.topLightness(source);
     }
     return FutureBuilder<double?>(
       future: _lightness,
-      initialData: CoverPalette.peekTopLightness(source),
+      initialData: coverPalette.peekTopLightness(source),
       builder: (context, snapshot) =>
           widget.builder(context, sistrumArtworkBrightness(snapshot.data)),
     );

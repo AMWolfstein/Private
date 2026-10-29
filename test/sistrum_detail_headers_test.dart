@@ -36,7 +36,7 @@ void main() {
         image.dispose();
         picture.dispose();
         await cover.writeAsBytes(bytes!.buffer.asUint8List());
-        await CoverPalette.resolve(cover.path, Brightness.dark);
+        await coverPalette.resolve(cover.path, Brightness.dark);
       });
       for (final online in [false, true]) {
         final label = online ? 'Download' : 'Play';

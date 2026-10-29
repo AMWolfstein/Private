@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 
 void main() {
+  final palette = CoverPaletteCache();
   testWidgets(
     'same-path cover replacement refreshes palette and decoded image',
     (tester) async {
@@ -30,28 +31,28 @@ void main() {
 
         try {
           await write(Colors.blue);
-          final first = await CoverPalette.resolve(file.path, Brightness.light);
+          final first = await palette.resolve(file.path, Brightness.light);
           expect(first, isNotNull);
           // The small source-key lookup may evict a file while Flutter still
           // retains its decoded image. A later edit must stay fresh too.
           for (var index = 0; index < 33; index++) {
-            await CoverPalette.resolve(
+            await palette.resolve(
               '${directory.path}/missing-$index.png',
               Brightness.light,
             );
           }
-          expect(CoverPalette.peek(file.path, Brightness.light), isNull);
+          expect(palette.peek(file.path, Brightness.light), isNull);
           await write(Colors.red);
           await file.setLastModified(
             DateTime.now().add(const Duration(seconds: 1)),
           );
-          final second = await CoverPalette.resolve(
+          final second = await palette.resolve(
             file.path,
             Brightness.light,
           );
           expect(second, isNot(same(first)));
           expect(
-            CoverPalette.peekAnalysis(file.path)?.dominant,
+            palette.peekAnalysis(file.path)?.dominant,
             Colors.red.toARGB32(),
           );
         } finally {
@@ -88,22 +89,22 @@ void main() {
         // Concurrent requests share one analysis (and one decode).
         expect(
           identical(
-            CoverPalette.resolveAnalysis(file.path),
-            CoverPalette.resolveAnalysis(file.path),
+            palette.resolveAnalysis(file.path),
+            palette.resolveAnalysis(file.path),
           ),
           isTrue,
         );
-        final scheme = await CoverPalette.resolve(file.path, Brightness.light);
+        final scheme = await palette.resolve(file.path, Brightness.light);
         expect(scheme, isNotNull);
         expect(
-          CoverPalette.peekAnalysis(file.path)?.dominant,
+          palette.peekAnalysis(file.path)?.dominant,
           Colors.blue.toARGB32(),
         );
         // The original is 512 x 256. Its cached decode fits inside 112 x 112
         // while preserving the 2:1 aspect ratio, instead of retaining 512 KiB.
         expect(cache.currentSizeBytes, 112 * 56 * 4);
         expect(
-          await CoverPalette.resolve(file.path, Brightness.light),
+          await palette.resolve(file.path, Brightness.light),
           same(scheme),
         );
       } finally {
@@ -139,11 +140,11 @@ void main() {
         await file.writeAsBytes(bytes!.buffer.asUint8List());
 
         expect(
-          await CoverPalette.resolve(file.path, Brightness.dark),
+          await palette.resolve(file.path, Brightness.dark),
           isNotNull,
         );
         // The navy-black half has no visible hue: the colours stay gray.
-        final colors = CoverPalette.colors(file.path);
+        final colors = palette.colors(file.path);
         expect(colors.chroma == 0, isTrue);
         expect(colors.surface.r, colors.surface.g);
         expect(colors.surface.g, colors.surface.b);

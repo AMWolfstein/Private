@@ -55,7 +55,7 @@ class _SistrumArtistSurfaceState extends State<SistrumArtistSurface> {
         builder: (context, _) {
           // Album and artist pages share the cover's base colour; only the
           // accent differs (white controls on albums and neutral covers).
-          final colors = CoverPalette.colors(widget.imageSource);
+          final colors = coverPalette.colors(widget.imageSource);
           final surface = colors.surface;
           final route = ModalRoute.of(context);
           if (route != null) {

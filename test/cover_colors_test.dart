@@ -52,7 +52,7 @@ void main() {
     await binding.runAsync(() async {
       for (final name in fixtures) {
         final path = File('test/fixtures/covers/$name.png').absolute.path;
-        analyses[name] = (await CoverPalette.resolveAnalysis(path))!;
+        analyses[name] = (await coverPalette.resolveAnalysis(path))!;
       }
     });
   });
@@ -196,23 +196,24 @@ void main() {
   ) async {
     await tester.runAsync(() async {
       final directory = await Directory.systemTemp.createTemp('cover-store-');
-      final previous = CoverPalette.store;
       final store = _MemoryStore();
-      CoverPalette.store = store;
       try {
         final file = File('${directory.path}/cover.png');
         await File('test/fixtures/covers/qamar.png').copy(file.path);
-        final first = await CoverPalette.resolveAnalysis(file.path);
+        final first = await CoverPaletteCache(
+          store: store,
+        ).resolveAnalysis(file.path);
         expect(store.rows.values.single, first);
-        // A later session: memory is empty, the stored row answers for the
-        // same file version.
-        CoverPalette.debugClearMemory();
+        // A later session: a new cache has no memory, and the stored row
+        // answers for the same file version.
         final reads = store.reads;
-        expect(await CoverPalette.resolveAnalysis(file.path), first);
+        expect(
+          await CoverPaletteCache(store: store).resolveAnalysis(file.path),
+          first,
+        );
         expect(store.reads, reads + 1);
         expect(store.rows, hasLength(1));
       } finally {
-        CoverPalette.store = previous;
         await directory.delete(recursive: true);
       }
     });
