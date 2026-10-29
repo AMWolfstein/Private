@@ -240,3 +240,19 @@ Rust changes require `bash scripts/check_rust_backend.sh`; Android native change
 compilation is separate from device execution; never report compilation as a device pass.
 
 Run Flutter test commands and APK builds serially in this checkout: both regenerate Android plugin registrants, and a test can add a dev-only plugin while release Java compilation excludes it.
+
+## Part files
+
+Use `part of` only to split one library's private implementation across files, such as a
+`State` class or a widget whose helpers share private members with it. Everything else is a
+library module that imports what it needs. A part file never adds its own imports. Generated
+`*.g.dart` files are exempt.
+
+## Failure signalling in services
+
+- A lookup that may find nothing returns `T?`, and null means only "not found".
+- An operation the user can see fail returns a typed result (`MetadataEditResult`,
+  `SafWriteBackResult`, `ApkDownloadResult`, `BackupParseException`) or throws a typed exception.
+  Do not add a bare `bool` or a map whose failure is a key to check.
+- Best-effort cleanup uses `deleteBestEffort` or a logged catch, and says so in its name or comment.
+- A wrapper that only forwards a typed result's `success` is removed; callers use the typed result.

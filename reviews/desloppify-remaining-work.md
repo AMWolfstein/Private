@@ -397,3 +397,25 @@ Open, with reasons:
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (1888 tests, exit 0). The desloppify scan was not re-run: `.desloppify/` state is
 tracked and was not updated, so the queue in that state is unchanged.
+
+## Open-items pass (commits d5528a1, 2a2b106)
+
+The four items still open after the code-health pass:
+- test_strategy::main_shell_no_direct_test: resolved. `MainShell` takes `preloadTabs`, so a test
+  can skip the idle Search preload. `test/main_shell_test.dart` mounts the shell under a router
+  with the app's localizations and settings, and checks it settles without exceptions.
+- convention_outlier::part_file_split_style_mixed: rule written in AGENTS.md ("Part files").
+  Twelve hand-written part files remain. Each shares private members with its owning library
+  (a `State` class, or the audio-analysis widget internals), so each stays a part. Converting the
+  audio-analysis models was tried and reverted: the file also holds private widget helpers.
+- mid_level_elegance::mixed_null_bool_exception_failure_signalling: convention written in
+  AGENTS.md ("Failure signalling in services"). `MediaFileBridge.editFileMetadata` now returns the
+  typed `MetadataEditResult`, and `writeTempToSaf` is removed in favour of
+  `writeTempToSafDetailed`. Cover embedding and ReplayGain report failed edits instead of ignoring
+  them. Other service APIs are not migrated yet.
+- incomplete_migration::supports_core_backend_dart_fallbacks: still open. Removing the Dart
+  branches needs native channel doubles for the data-job, scan, collection and backup paths in
+  the host tests. That is a separate piece of work.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (1889 tests, exit 0).
