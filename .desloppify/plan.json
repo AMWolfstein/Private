@@ -1,14 +1,28 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T15:42:06+00:00",
+  "updated": "2026-10-29T15:54:23+00:00",
   "queue_order": [
-    "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
-    "review::.::holistic::mid_level_elegance::scattered_row_decoding",
-    "review::.::holistic::naming_quality::queue_name_for_library_browser",
-    "review::.::holistic::package_organization::library_screens_split_across_folders",
-    "review::.::holistic::package_organization::services_root_stragglers",
-    "review::.::holistic::package_organization::widgets_flat_overload"
+    "workflow::create-plan",
+    "subjective::abstraction_fitness",
+    "subjective::ai_generated_debt",
+    "subjective::api_surface_coherence",
+    "subjective::contract_coherence",
+    "subjective::convention_outlier",
+    "subjective::cross_module_architecture",
+    "subjective::dependency_health",
+    "subjective::design_coherence",
+    "subjective::error_consistency",
+    "subjective::high_level_elegance",
+    "subjective::incomplete_migration",
+    "subjective::initialization_coupling",
+    "subjective::logic_clarity",
+    "subjective::low_level_elegance",
+    "subjective::mid_level_elegance",
+    "subjective::naming_quality",
+    "subjective::package_organization",
+    "subjective::test_strategy",
+    "subjective::type_safety"
   ],
   "deferred": [],
   "skipped": {},
@@ -53,8 +67,8 @@
     "test_coverage::lib/main.dart::untested_module": {
       "issue_id": "test_coverage::lib/main.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/l10n/app_localizations_ru.dart::untested_module": {
       "issue_id": "test_coverage::lib/l10n/app_localizations_ru.dart::untested_module",
@@ -77,14 +91,14 @@
     "test_coverage::lib/screens/library/queue_tab_helpers.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_helpers.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/library/queue_tab_navigation.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_navigation.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/l10n/app_localizations_it.dart::untested_module": {
       "issue_id": "test_coverage::lib/l10n/app_localizations_it.dart::untested_module",
@@ -95,8 +109,8 @@
     "test_coverage::lib/screens/library/queue_tab_collection_items.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_collection_items.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
@@ -113,8 +127,8 @@
     "test_coverage::lib/screens/library/queue_tab_selection.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_selection.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/l10n/app_localizations_zh.dart::untested_module": {
       "issue_id": "test_coverage::lib/l10n/app_localizations_zh.dart::untested_module",
@@ -131,8 +145,8 @@
     "test_coverage::lib/screens/library/queue_tab_batch_actions.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_batch_actions.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/l10n/app_localizations_uk.dart::untested_module": {
       "issue_id": "test_coverage::lib/l10n/app_localizations_uk.dart::untested_module",
@@ -161,14 +175,14 @@
     "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/library/queue_tab_item_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_item_widgets.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/l10n/app_localizations_pt.dart::untested_module": {
       "issue_id": "test_coverage::lib/l10n/app_localizations_pt.dart::untested_module",
@@ -179,8 +193,8 @@
     "test_coverage::lib/theme/sistrum_icons.dart::transitive_only": {
       "issue_id": "test_coverage::lib/theme/sistrum_icons.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/utils/image_cache_utils.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/image_cache_utils.dart::transitive_only",
@@ -197,8 +211,8 @@
     "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/local_guide_pages.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
@@ -209,20 +223,20 @@
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/lyric_supplement_transition.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/lyric_supplement_transition.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/beta_badge.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/beta_badge.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/player/player_lyrics_controls.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/player_lyrics_controls.dart::transitive_only",
@@ -233,14 +247,14 @@
     "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/duplicate_review_sheet.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
@@ -263,8 +277,8 @@
     "test_coverage::lib/widgets/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/disc_separator_chip.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/models/playable_media.dart::transitive_only": {
       "issue_id": "test_coverage::lib/models/playable_media.dart::transitive_only",
@@ -293,8 +307,8 @@
     "test_coverage::lib/screens/main_shell.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/main_shell.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/player/player_metadata_title.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/player_metadata_title.dart::transitive_only",
@@ -305,8 +319,8 @@
     "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only",
@@ -317,8 +331,8 @@
     "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only",
@@ -329,8 +343,8 @@
     "test_coverage::lib/widgets/app_content_card.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/app_content_card.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/player/player_playback_controls.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/player_playback_controls.dart::transitive_only",
@@ -353,14 +367,14 @@
     "test_coverage::lib/widgets/player/sistrum_player_slider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/sistrum_player_slider.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/widgets/custom_font_setting.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/custom_font_setting.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T06:26:47+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T15:54:00+00:00"
     },
     "test_coverage::lib/utils/duplicate_quality_policy.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/duplicate_quality_policy.dart::transitive_only",
@@ -374,17 +388,9 @@
       "name": "auto/test_coverage-untested_module",
       "description": "Fix 11 test coverage issues",
       "issue_ids": [
-        "test_coverage::lib/main.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_helpers.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_navigation.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_collection_items.dart::untested_module",
         "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_selection.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_batch_actions.dart::untested_module",
         "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module",
-        "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module",
-        "test_coverage::lib/screens/library/queue_tab_item_widgets.dart::untested_module"
+        "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module"
       ],
       "created_at": "2026-10-29T06:01:52+00:00",
       "updated_at": "2026-10-29T06:09:41+00:00",
@@ -400,32 +406,18 @@
       "name": "auto/test_coverage-transitive_only",
       "description": "Fix 26 test coverage issues",
       "issue_ids": [
-        "test_coverage::lib/theme/sistrum_icons.dart::transitive_only",
         "test_coverage::lib/utils/image_cache_utils.dart::transitive_only",
         "test_coverage::lib/utils/app_bar_layout.dart::transitive_only",
-        "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only",
         "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
-        "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
-        "test_coverage::lib/widgets/lyric_supplement_transition.dart::transitive_only",
-        "test_coverage::lib/widgets/beta_badge.dart::transitive_only",
         "test_coverage::lib/widgets/player/player_lyrics_controls.dart::transitive_only",
-        "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only",
-        "test_coverage::lib/widgets/duplicate_review_sheet.dart::transitive_only",
         "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
         "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
-        "test_coverage::lib/widgets/disc_separator_chip.dart::transitive_only",
         "test_coverage::lib/utils/detail_page_route.dart::transitive_only",
-        "test_coverage::lib/screens/main_shell.dart::transitive_only",
         "test_coverage::lib/widgets/player/player_metadata_title.dart::transitive_only",
-        "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only",
         "test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only",
-        "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only",
         "test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only",
-        "test_coverage::lib/widgets/app_content_card.dart::transitive_only",
         "test_coverage::lib/widgets/player/player_playback_controls.dart::transitive_only",
-        "test_coverage::lib/widgets/player/player_lyrics_section.dart::transitive_only",
-        "test_coverage::lib/widgets/player/sistrum_player_slider.dart::transitive_only",
-        "test_coverage::lib/widgets/custom_font_setting.dart::transitive_only"
+        "test_coverage::lib/widgets/player/player_lyrics_section.dart::transitive_only"
       ],
       "created_at": "2026-10-29T06:01:52+00:00",
       "updated_at": "2026-10-29T06:26:47+00:00",
@@ -672,19 +664,236 @@
       "superseded_at": "2026-10-29T06:26:47+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "test_coverage::lib/main.dart::untested_module": {
+      "original_id": "test_coverage::lib/main.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/main.dart",
+      "original_summary": "Untested module (486 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": [
+        "test_coverage::lib/main.dart::untested_critical"
+      ]
+    },
+    "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only": {
+      "original_id": "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/collapsing_header_scroll_mixin.dart",
+      "original_summary": "No direct tests (36 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_batch_actions.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_batch_actions.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_batch_actions.dart",
+      "original_summary": "Untested module (36 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_collection_items.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_collection_items.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_collection_items.dart",
+      "original_summary": "Untested module (94 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_filter_widgets.dart",
+      "original_summary": "Untested module (598 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_helpers.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_helpers.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_helpers.dart",
+      "original_summary": "Untested module (284 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_item_widgets.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_item_widgets.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_item_widgets.dart",
+      "original_summary": "Untested module (135 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_navigation.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_navigation.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_navigation.dart",
+      "original_summary": "Untested module (298 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/queue_tab_selection.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/queue_tab_selection.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/queue_tab_selection.dart",
+      "original_summary": "Untested module (288 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/main_shell.dart::transitive_only": {
+      "original_id": "test_coverage::lib/screens/main_shell.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/main_shell.dart",
+      "original_summary": "No direct tests (651 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only": {
+      "original_id": "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/selection_mode_mixin.dart",
+      "original_summary": "No direct tests (56 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only": {
+      "original_id": "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/sistrum_glass_warmup.dart",
+      "original_summary": "No direct tests (132 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/theme/sistrum_icons.dart::transitive_only": {
+      "original_id": "test_coverage::lib/theme/sistrum_icons.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/theme/sistrum_icons.dart",
+      "original_summary": "No direct tests (99 LOC, 8 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/app_content_card.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/app_content_card.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/app_content_card.dart",
+      "original_summary": "No direct tests (37 LOC, 3 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/beta_badge.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/beta_badge.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/beta_badge.dart",
+      "original_summary": "No direct tests (26 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/custom_font_setting.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/custom_font_setting.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/custom_font_setting.dart",
+      "original_summary": "No direct tests (76 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/disc_separator_chip.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/disc_separator_chip.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/disc_separator_chip.dart",
+      "original_summary": "No direct tests (27 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/duplicate_review_sheet.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/duplicate_review_sheet.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/duplicate_review_sheet.dart",
+      "original_summary": "No direct tests (377 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/lyric_supplement_transition.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/lyric_supplement_transition.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/lyric_supplement_transition.dart",
+      "original_summary": "No direct tests (65 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/music_haptics_settings.dart",
+      "original_summary": "No direct tests (81 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/sistrum_player_slider.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/player/sistrum_player_slider.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/sistrum_player_slider.dart",
+      "original_summary": "No direct tests (50 LOC, 4 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/scroll_edge_fade.dart",
+      "original_summary": "No direct tests (77 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T15:54:00+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 23.7,
-    "overall": 23.7,
-    "objective": 94.8,
-    "verified": 94.8
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 4,
+    "postflight_scan_completed_at_scan_count": 7,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -3069,73 +3278,504 @@
         "status": "fixed",
         "attestation": "I have actually made this change and I am not gaming the score."
       }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:17+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:17+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/services has 95 files in subfolders and 7 at the root, all app-level. No glass rendering or navigation state remains under lib/services (grep).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:53:18+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/services has 95 files in subfolders and 7 at the root, all app-level. No glass rendering or navigation state remains under lib/services (grep).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:18+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::scattered_row_decoding"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:19+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::scattered_row_decoding"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "The {source, item} envelope key is read in one place, LocalLibraryItem.envelopeItem; fromEnvelope and autoplay use it. The remaining fromJson calls decode bare rows.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:53:19+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::scattered_row_decoding"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "The {source, item} envelope key is read in one place, LocalLibraryItem.envelopeItem; fromEnvelope and autoplay use it. The remaining fromJson calls decode bare rows.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:20+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::queue_name_for_library_browser"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:21+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::queue_name_for_library_browser"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No QueueTab or queue_tab identifiers remain in lib or test (grep); the Library browser uses LibraryBrowse names.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:53:22+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::queue_name_for_library_browser"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No QueueTab or queue_tab identifiers remain in lib or test (grep); the Library browser uses LibraryBrowse names.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:22+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::package_organization::library_screens_split_across_folders"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:23+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::library_screens_split_across_folders"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Library section and collection screens live in lib/screens/library (18 files); lib/screens root holds app-level screens only.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:53:23+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::package_organization::library_screens_split_across_folders"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Library section and collection screens live in lib/screens/library (18 files); lib/screens root holds app-level screens only.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:24+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_root_stragglers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:25+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_root_stragglers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Library cover palette moved to services/library, backup to services/backup, equalizer presets to services/playback. Seven app-level files remain at the root.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:53:25+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_root_stragglers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Library cover palette moved to services/library, backup to services/backup, equalizer presets to services/playback. Seven app-level files remain at the root.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:26+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::package_organization::widgets_flat_overload"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:27+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::widgets_flat_overload"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/widgets has 6 top-level files; the rest sit in header, shell, selection, sheets, status, glass and similar subfolders.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:53:27+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::package_organization::widgets_flat_overload"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/widgets has 6 top-level files; the rest sit in header, shell, selection, sheets, status, glass and similar subfolders.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:27+00:00",
+      "action": "sync_subjective",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:27+00:00",
+      "action": "sync_communicate_score",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "auto_resolved": true
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:53:27+00:00",
+      "action": "sync_create_plan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "injected": true
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:54:00+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/main.dart::untested_module",
+        "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only",
+        "test_coverage::lib/screens/library/queue_tab_batch_actions.dart::untested_module",
+        "test_coverage::lib/screens/library/queue_tab_collection_items.dart::untested_module",
+        "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module",
+        "test_coverage::lib/screens/library/queue_tab_helpers.dart::untested_module",
+        "test_coverage::lib/screens/library/queue_tab_item_widgets.dart::untested_module",
+        "test_coverage::lib/screens/library/queue_tab_navigation.dart::untested_module",
+        "test_coverage::lib/screens/library/queue_tab_selection.dart::untested_module",
+        "test_coverage::lib/screens/main_shell.dart::transitive_only",
+        "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only",
+        "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only",
+        "test_coverage::lib/theme/sistrum_icons.dart::transitive_only",
+        "test_coverage::lib/widgets/app_content_card.dart::transitive_only",
+        "test_coverage::lib/widgets/beta_badge.dart::transitive_only",
+        "test_coverage::lib/widgets/custom_font_setting.dart::transitive_only",
+        "test_coverage::lib/widgets/disc_separator_chip.dart::transitive_only",
+        "test_coverage::lib/widgets/duplicate_review_sheet.dart::transitive_only",
+        "test_coverage::lib/widgets/lyric_supplement_transition.dart::transitive_only",
+        "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only",
+        "test_coverage::lib/widgets/player/sistrum_player_slider.dart::transitive_only",
+        "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 22,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:54:00+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:54:00+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 7
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:54:23+00:00",
+      "action": "commit_record",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::double_underscore_state_class",
+        "review::.::holistic::naming_quality::unused_search_key_field",
+        "review::.::holistic::logic_clarity::async_wrapper_playlist_picker",
+        "review::.::holistic::logic_clarity::async_wrapper_update_dialog",
+        "review::.::holistic::logic_clarity::bool_tail_collapse_update_checker",
+        "review::.::holistic::type_safety::ignore_without_explanation_hud_protected_member",
+        "review::.::holistic::ai_generated_debt::scan_notification_wrapper_boilerplate",
+        "review::.::holistic::api_surface_coherence::delete_by_path_return_contract_mismatch",
+        "review::.::holistic::convention_outlier::log_screen_suffix_island",
+        "review::.::holistic::logic_clarity::async_callback_no_await_post_frame",
+        "review::.::holistic::logic_clarity::async_no_await_hydrate_playlist_tracks",
+        "review::.::holistic::logic_clarity::navigate_to_artist_unused_param_and_async",
+        "review::.::holistic::mid_level_elegance::ad_hoc_play_count_keying",
+        "review::.::holistic::test_strategy::player_slider_and_content_card_untested",
+        "review::.::holistic::test_strategy::shared_icons_no_direct_tests",
+        "review::.::holistic::mid_level_elegance::lookup_catch_all_missing_file",
+        "review::.::holistic::low_level_elegance::redundant_nested_silent_cover_cleanup",
+        "review::.::holistic::type_safety::quality_filter_string_literals",
+        "review::.::holistic::naming_quality::folder_name_for_playlist_screen",
+        "review::.::holistic::mid_level_elegance::shared_mutable_priority_map",
+        "review::.::holistic::api_surface_coherence::queue_paging_return_shape_drift",
+        "review::.::holistic::api_surface_coherence::snapshot_writer_overload_by_name",
+        "review::.::holistic::contract_coherence::update_check_unverified_null_non_android",
+        "review::.::holistic::high_level_elegance::library_folder_holds_queue_tab",
+        "review::.::holistic::incomplete_migration::collections_forcelegacy_test_seam",
+        "review::.::holistic::logic_clarity::async_no_await_resolve_or_extract",
+        "review::.::holistic::mid_level_elegance::duplicated_paging_loops",
+        "review::.::holistic::mid_level_elegance::silent_synthetic_track_fallback",
+        "review::.::holistic::test_strategy::timing_polling_waits_in_widget_tests",
+        "review::.::holistic::convention_outlier::library_tab_selection_protocol",
+        "review::.::holistic::high_level_elegance::state_and_route_homes_split_at_top_level",
+        "review::.::holistic::convention_outlier::shared_widget_prefix_split",
+        "review::.::holistic::design_coherence::playback_runtime_service_cycle",
+        "review::.::holistic::abstraction_fitness::playback_part_file_handler_leak",
+        "review::.::holistic::cross_module_architecture::playback_runtime_service_export_cycle",
+        "review::.::holistic::dependency_health::playback_runtime_service_import_cycle",
+        "review::.::holistic::design_coherence::playback_handler_mixed_responsibilities",
+        "review::.::holistic::initialization_coupling::music_playback_deck_shared_native_channel_state",
+        "review::.::holistic::low_level_elegance::load_index_guard_and_lease_sprawl",
+        "review::.::holistic::design_coherence::shared_header_primitives_in_album_file",
+        "review::.::holistic::package_organization::utils_upward_dependency",
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks",
+        "review::.::holistic::test_strategy::main_shell_no_direct_test",
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle",
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens",
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle",
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward",
+        "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
+        "review::.::holistic::package_organization::model_depends_on_persistence",
+        "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
+        "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason",
+        "review::.::holistic::error_consistency::apk_install_error_swallowed",
+        "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
+        "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
+        "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
+        "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
+        "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
+        "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
+        "review::.::holistic::mid_level_elegance::two_db_access_paths",
+        "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
+        "review::.::holistic::convention_outlier::part_file_split_style_mixed",
+        "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
+        "review::.::holistic::mid_level_elegance::scattered_row_decoding",
+        "review::.::holistic::naming_quality::queue_name_for_library_browser",
+        "review::.::holistic::package_organization::library_screens_split_across_folders",
+        "review::.::holistic::package_organization::services_root_stragglers",
+        "review::.::holistic::package_organization::widgets_flat_overload"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Task 1 to task 4: failure signalling, bridges and palette provider, library data access, audio analysis parsing, services and screen layout.",
+      "detail": {
+        "sha": "55af2a388d86",
+        "branch": "desloppify/code-health"
+      }
     }
   ],
   "epic_triage_meta": {},
-  "commit_log": [],
-  "uncommitted_issues": [
-    "review::.::holistic::naming_quality::double_underscore_state_class",
-    "review::.::holistic::naming_quality::unused_search_key_field",
-    "review::.::holistic::logic_clarity::async_wrapper_playlist_picker",
-    "review::.::holistic::logic_clarity::async_wrapper_update_dialog",
-    "review::.::holistic::logic_clarity::bool_tail_collapse_update_checker",
-    "review::.::holistic::type_safety::ignore_without_explanation_hud_protected_member",
-    "review::.::holistic::ai_generated_debt::scan_notification_wrapper_boilerplate",
-    "review::.::holistic::api_surface_coherence::delete_by_path_return_contract_mismatch",
-    "review::.::holistic::convention_outlier::log_screen_suffix_island",
-    "review::.::holistic::logic_clarity::async_callback_no_await_post_frame",
-    "review::.::holistic::logic_clarity::async_no_await_hydrate_playlist_tracks",
-    "review::.::holistic::logic_clarity::navigate_to_artist_unused_param_and_async",
-    "review::.::holistic::mid_level_elegance::ad_hoc_play_count_keying",
-    "review::.::holistic::test_strategy::player_slider_and_content_card_untested",
-    "review::.::holistic::test_strategy::shared_icons_no_direct_tests",
-    "review::.::holistic::mid_level_elegance::lookup_catch_all_missing_file",
-    "review::.::holistic::low_level_elegance::redundant_nested_silent_cover_cleanup",
-    "review::.::holistic::type_safety::quality_filter_string_literals",
-    "review::.::holistic::naming_quality::folder_name_for_playlist_screen",
-    "review::.::holistic::mid_level_elegance::shared_mutable_priority_map",
-    "review::.::holistic::api_surface_coherence::queue_paging_return_shape_drift",
-    "review::.::holistic::api_surface_coherence::snapshot_writer_overload_by_name",
-    "review::.::holistic::contract_coherence::update_check_unverified_null_non_android",
-    "review::.::holistic::high_level_elegance::library_folder_holds_queue_tab",
-    "review::.::holistic::incomplete_migration::collections_forcelegacy_test_seam",
-    "review::.::holistic::logic_clarity::async_no_await_resolve_or_extract",
-    "review::.::holistic::mid_level_elegance::duplicated_paging_loops",
-    "review::.::holistic::mid_level_elegance::silent_synthetic_track_fallback",
-    "review::.::holistic::test_strategy::timing_polling_waits_in_widget_tests",
-    "review::.::holistic::convention_outlier::library_tab_selection_protocol",
-    "review::.::holistic::high_level_elegance::state_and_route_homes_split_at_top_level",
-    "review::.::holistic::convention_outlier::shared_widget_prefix_split",
-    "review::.::holistic::design_coherence::playback_runtime_service_cycle",
-    "review::.::holistic::abstraction_fitness::playback_part_file_handler_leak",
-    "review::.::holistic::cross_module_architecture::playback_runtime_service_export_cycle",
-    "review::.::holistic::dependency_health::playback_runtime_service_import_cycle",
-    "review::.::holistic::design_coherence::playback_handler_mixed_responsibilities",
-    "review::.::holistic::initialization_coupling::music_playback_deck_shared_native_channel_state",
-    "review::.::holistic::low_level_elegance::load_index_guard_and_lease_sprawl",
-    "review::.::holistic::design_coherence::shared_header_primitives_in_album_file",
-    "review::.::holistic::package_organization::utils_upward_dependency",
-    "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks",
-    "review::.::holistic::test_strategy::main_shell_no_direct_test",
-    "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle",
-    "review::.::holistic::cross_module_architecture::lower_layers_import_screens",
-    "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle",
-    "review::.::holistic::high_level_elegance::lower_layers_import_upward",
-    "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
-    "review::.::holistic::package_organization::model_depends_on_persistence",
-    "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
-    "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason",
-    "review::.::holistic::error_consistency::apk_install_error_swallowed",
-    "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
-    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
-    "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
-    "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
-    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
-    "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
-    "review::.::holistic::mid_level_elegance::two_db_access_paths",
-    "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
-    "review::.::holistic::convention_outlier::part_file_split_style_mixed"
+  "commit_log": [
+    {
+      "sha": "55af2a388d86",
+      "branch": "desloppify/code-health",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::double_underscore_state_class",
+        "review::.::holistic::naming_quality::unused_search_key_field",
+        "review::.::holistic::logic_clarity::async_wrapper_playlist_picker",
+        "review::.::holistic::logic_clarity::async_wrapper_update_dialog",
+        "review::.::holistic::logic_clarity::bool_tail_collapse_update_checker",
+        "review::.::holistic::type_safety::ignore_without_explanation_hud_protected_member",
+        "review::.::holistic::ai_generated_debt::scan_notification_wrapper_boilerplate",
+        "review::.::holistic::api_surface_coherence::delete_by_path_return_contract_mismatch",
+        "review::.::holistic::convention_outlier::log_screen_suffix_island",
+        "review::.::holistic::logic_clarity::async_callback_no_await_post_frame",
+        "review::.::holistic::logic_clarity::async_no_await_hydrate_playlist_tracks",
+        "review::.::holistic::logic_clarity::navigate_to_artist_unused_param_and_async",
+        "review::.::holistic::mid_level_elegance::ad_hoc_play_count_keying",
+        "review::.::holistic::test_strategy::player_slider_and_content_card_untested",
+        "review::.::holistic::test_strategy::shared_icons_no_direct_tests",
+        "review::.::holistic::mid_level_elegance::lookup_catch_all_missing_file",
+        "review::.::holistic::low_level_elegance::redundant_nested_silent_cover_cleanup",
+        "review::.::holistic::type_safety::quality_filter_string_literals",
+        "review::.::holistic::naming_quality::folder_name_for_playlist_screen",
+        "review::.::holistic::mid_level_elegance::shared_mutable_priority_map",
+        "review::.::holistic::api_surface_coherence::queue_paging_return_shape_drift",
+        "review::.::holistic::api_surface_coherence::snapshot_writer_overload_by_name",
+        "review::.::holistic::contract_coherence::update_check_unverified_null_non_android",
+        "review::.::holistic::high_level_elegance::library_folder_holds_queue_tab",
+        "review::.::holistic::incomplete_migration::collections_forcelegacy_test_seam",
+        "review::.::holistic::logic_clarity::async_no_await_resolve_or_extract",
+        "review::.::holistic::mid_level_elegance::duplicated_paging_loops",
+        "review::.::holistic::mid_level_elegance::silent_synthetic_track_fallback",
+        "review::.::holistic::test_strategy::timing_polling_waits_in_widget_tests",
+        "review::.::holistic::convention_outlier::library_tab_selection_protocol",
+        "review::.::holistic::high_level_elegance::state_and_route_homes_split_at_top_level",
+        "review::.::holistic::convention_outlier::shared_widget_prefix_split",
+        "review::.::holistic::design_coherence::playback_runtime_service_cycle",
+        "review::.::holistic::abstraction_fitness::playback_part_file_handler_leak",
+        "review::.::holistic::cross_module_architecture::playback_runtime_service_export_cycle",
+        "review::.::holistic::dependency_health::playback_runtime_service_import_cycle",
+        "review::.::holistic::design_coherence::playback_handler_mixed_responsibilities",
+        "review::.::holistic::initialization_coupling::music_playback_deck_shared_native_channel_state",
+        "review::.::holistic::low_level_elegance::load_index_guard_and_lease_sprawl",
+        "review::.::holistic::design_coherence::shared_header_primitives_in_album_file",
+        "review::.::holistic::package_organization::utils_upward_dependency",
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks",
+        "review::.::holistic::test_strategy::main_shell_no_direct_test",
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle",
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens",
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle",
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward",
+        "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
+        "review::.::holistic::package_organization::model_depends_on_persistence",
+        "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
+        "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason",
+        "review::.::holistic::error_consistency::apk_install_error_swallowed",
+        "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
+        "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
+        "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
+        "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
+        "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
+        "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
+        "review::.::holistic::mid_level_elegance::two_db_access_paths",
+        "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
+        "review::.::holistic::convention_outlier::part_file_split_style_mixed",
+        "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
+        "review::.::holistic::mid_level_elegance::scattered_row_decoding",
+        "review::.::holistic::naming_quality::queue_name_for_library_browser",
+        "review::.::holistic::package_organization::library_screens_split_across_folders",
+        "review::.::holistic::package_organization::services_root_stragglers",
+        "review::.::holistic::package_organization::widgets_flat_overload"
+      ],
+      "recorded_at": "2026-10-29T15:54:23+00:00",
+      "note": "Task 1 to task 4: failure signalling, bridges and palette provider, library data access, audio analysis parsing, services and screen layout.",
+      "cluster_name": null
+    }
   ],
+  "uncommitted_issues": [],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 5
+  "scan_count_at_plan_start": 5,
+  "previous_plan_start_scores": {
+    "strict": 23.7,
+    "overall": 23.7,
+    "objective": 94.8,
+    "verified": 94.8
+  }
 }

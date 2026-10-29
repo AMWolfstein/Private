@@ -528,3 +528,21 @@ passed (exit 0).
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (exit 0).
+
+## Task 4: layout and naming (commits 929721c, 55af2a3)
+
+- package_organization::services_root_stragglers: the Library cover palette moved to
+  `services/library`, the backup service to `services/backup`, and the equalizer preset I/O to
+  `services/playback`. Seven app-level files remain at the root.
+- high_level_elegance::services_flat_catch_all_with_ui_glass: no glass rendering or navigation
+  state remains under `lib/services` (checked by grep). The folder holds 95 files in subfolders.
+- naming_quality::queue_name_for_library_browser: no `QueueTab` or `queue_tab` identifiers remain.
+- package_organization::library_screens_split_across_folders: library section and collection screens
+  live in `lib/screens/library`. The screens root holds app-level screens only.
+- package_organization::widgets_flat_overload: `lib/widgets` has six top-level files; the rest are
+  in subfolders.
+- mid_level_elegance::scattered_row_decoding: the `{source, item}` envelope key is read in one
+  place, `LocalLibraryItem.envelopeItem`.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0).
