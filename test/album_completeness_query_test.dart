@@ -204,7 +204,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_Collections.new),
         ],
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: MaterialTestTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: ValueListenableBuilder<bool>(
@@ -362,7 +362,7 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: MaterialTestTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: LibrarySectionTab(librarySection: 'all')),
@@ -439,7 +439,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(

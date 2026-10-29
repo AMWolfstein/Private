@@ -52,12 +52,12 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
         widget.onRemove();
         return false;
       },
-      background: _buildSistrumBackground(context),
+      background: _buildAppBackground(context),
       child: widget.child,
     ),
   );
 
-  Widget _buildSistrumBackground(BuildContext context) => DecoratedBox(
+  Widget _buildAppBackground(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
       color: CupertinoColors.systemRed.resolveFrom(context),
       borderRadius: BorderRadius.circular(16),

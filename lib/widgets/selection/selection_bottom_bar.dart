@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/l10n/l10n.dart';
 
@@ -248,7 +248,7 @@ class SelectionBottomBar extends StatelessWidget {
           Tooltip(
             message: MaterialLocalizations.of(context).closeButtonTooltip,
             child: CupertinoButton(
-              color: SistrumTheme.controlFill(context),
+              color: AppTheme.controlFill(context),
               borderRadius: BorderRadius.circular(28),
               padding: const EdgeInsets.all(12),
               onPressed: onClose,
@@ -313,7 +313,7 @@ class SelectionBottomBar extends StatelessWidget {
       children: children,
       surfaceBuilder: (content) {
         {
-          return SistrumGlassPanel.overlay(child: content);
+          return AppGlassPanel.overlay(child: content);
         }
       },
     );

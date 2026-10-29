@@ -70,7 +70,7 @@ class _AlbumKenBurnsState extends ConsumerState<AlbumKenBurns>
       settingsProvider.select((s) => s.animatedAlbumArtwork),
     );
     final glass =
-        ref.watch(sistrumGlassLevelProvider) != SistrumGlassLevel.flat;
+        ref.watch(appGlassLevelProvider) != AppGlassLevel.flat;
     _allowed = enabled && glass && !MediaQuery.disableAnimationsOf(context);
     return LayoutBuilder(
       builder: (context, constraints) {

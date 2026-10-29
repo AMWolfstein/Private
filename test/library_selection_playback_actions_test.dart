@@ -5,7 +5,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 
@@ -64,7 +64,7 @@ void main() {
               ],
               child: MaterialApp(
                 theme: sistrum
-                    ? SistrumTheme.build(Brightness.dark)
+                    ? AppTheme.build(Brightness.dark)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

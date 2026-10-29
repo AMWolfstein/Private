@@ -2,11 +2,11 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
@@ -296,13 +296,13 @@ void main() {
                   (ref) => const Stream.empty(),
                 ),
                 lowEndDeviceProvider.overrideWithValue(true),
-                sistrumGlassQualityProvider.overrideWithValue(
-                  SistrumGlassQuality.auto,
+                appGlassQualityProvider.overrideWithValue(
+                  AppGlassQuality.auto,
                 ),
               ],
               child: MaterialApp(
                 theme: sistrum
-                    ? SistrumTheme.build(Brightness.light)
+                    ? AppTheme.build(Brightness.light)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

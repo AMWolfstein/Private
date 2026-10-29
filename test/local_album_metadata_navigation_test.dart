@@ -7,7 +7,7 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
 
 class _Playback extends PlaybackController {
@@ -49,8 +49,8 @@ void main() {
           child: MaterialApp(
             navigatorKey: navigator,
             theme: sistrum
-                ? SistrumTheme.build(Brightness.light)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.light)
+                : MaterialTestTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: LocalAlbumScreen(

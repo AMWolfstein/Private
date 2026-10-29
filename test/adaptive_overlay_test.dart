@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 Widget _app(ThemeData theme, Widget home) => ProviderScope(
   child: MaterialApp(
@@ -21,7 +21,7 @@ void main() {
   for (final sistrum in [true]) {
     for (final brightness in Brightness.values) {
       final theme = sistrum
-          ? SistrumTheme.build(brightness)
+          ? AppTheme.build(brightness)
           : ThemeData(brightness: brightness);
       final variant = 'Sistrum: $sistrum, $brightness';
 
@@ -321,7 +321,7 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(SistrumGlassPanel),
+          find.byType(AppGlassPanel),
           sistrum ? findsOneWidget : findsNothing,
         );
         await tester.tap(find.text('Unavailable'));
@@ -380,7 +380,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(nestedNavigator.currentState!.canPop(), isTrue);
         expect(
-          find.byType(SistrumGlassPanel),
+          find.byType(AppGlassPanel),
           sistrum ? findsOneWidget : findsNothing,
         );
         expect(

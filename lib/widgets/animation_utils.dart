@@ -217,7 +217,7 @@ class TrackListSkeleton extends StatelessWidget {
               if (showCoverHeader)
                 const _CollectionHeaderSkeleton(showSubtitle: false),
               for (var index = 0; index < itemCount; index++)
-                _SistrumTrackSkeleton(
+                _AppTrackSkeleton(
                   numbered: false,
                   index: index,
                   showPreview: true,
@@ -251,7 +251,7 @@ class AlbumTrackListSkeleton extends StatelessWidget {
             children: [
               if (showCoverHeader) const _CollectionHeaderSkeleton(),
               for (var index = 0; index < itemCount; index++)
-                _SistrumTrackSkeleton(
+                _AppTrackSkeleton(
                   numbered: true,
                   index: index,
                   showPreview: true,
@@ -360,8 +360,8 @@ class _CollectionHeaderSkeleton extends StatelessWidget {
   }
 }
 
-class _SistrumTrackSkeleton extends StatelessWidget {
-  const _SistrumTrackSkeleton({
+class _AppTrackSkeleton extends StatelessWidget {
+  const _AppTrackSkeleton({
     required this.numbered,
     required this.index,
     this.showPreview = false,

@@ -11,8 +11,8 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
-import 'package:sistrum/widgets/player/sistrum_player_layout.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/player/app_player_layout.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/player_details_sheet.dart';
 import 'package:sistrum/widgets/player/player_gesture_regions.dart';
 
@@ -79,12 +79,12 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
-              body: SistrumPlayerLayout(
+              body: AppPlayerLayout(
                 mediaItem: item,
                 metadata: metadata,
                 seekPreview: seekPreview,

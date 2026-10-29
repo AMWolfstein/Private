@@ -14,7 +14,7 @@ import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
@@ -202,7 +202,7 @@ class _FactGroup extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: SistrumTheme.controlFill(context),
+        color: AppTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
@@ -270,7 +270,7 @@ class _FactRow extends StatelessWidget {
               height: 1,
               indent: inset,
               endIndent: 0,
-              color: SistrumTheme.metadataDividerColor(context),
+              color: AppTheme.metadataDividerColor(context),
             ),
         ],
       ),

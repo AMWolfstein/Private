@@ -13,7 +13,7 @@ void main() {
         late StateSetter update;
         await tester.pumpWidget(
           MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             home: StatefulBuilder(
               builder: (context, setState) {
                 update = setState;

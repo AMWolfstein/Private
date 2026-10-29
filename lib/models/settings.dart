@@ -99,7 +99,7 @@ class AppSettings {
   final bool headerBandBlurDisabled;
 
   /// Sistrum glass renderer: `auto` (the device decides), `lite`, `full` or
-  /// `off`. See [SistrumGlassQuality].
+  /// `off`. See [AppGlassQuality].
   final String glassQuality;
 
   /// Sistrum glass clarity level, 1 (Frosted) to 5 (Crystal).

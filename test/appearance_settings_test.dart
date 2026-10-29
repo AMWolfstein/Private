@@ -6,14 +6,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/constants/language_choices.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/screens/settings/appearance_settings_page.dart';
-import 'package:sistrum/widgets/shell/sistrum_theme_wrapper.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/widgets/shell/app_theme_wrapper.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 void main() {
   test('locale settings fall back to the system language', () {
@@ -45,11 +45,11 @@ void main() {
   test(
     'old themes retain outlines and new themes serialize the preference',
     () {
-      expect(ThemeSettings.fromJson({}).sistrumGlassOutlines, isTrue);
-      const settings = ThemeSettings(sistrumGlassOutlines: false);
+      expect(ThemeSettings.fromJson({}).appGlassOutlines, isTrue);
+      const settings = ThemeSettings(appGlassOutlines: false);
       expect(ThemeSettings.fromJson(settings.toJson()), settings);
       expect(
-        settings.copyWith(useSystemFont: true).sistrumGlassOutlines,
+        settings.copyWith(useSystemFont: true).appGlassOutlines,
         isFalse,
       );
       expect(settings, isNot(const ThemeSettings()));
@@ -74,8 +74,8 @@ void main() {
         expected,
       );
     }
-    expect(sistrumGlassQualityFromString('lite'), SistrumGlassQuality.lite);
-    expect(sistrumGlassQualityFromString('fancy'), SistrumGlassQuality.auto);
+    expect(appGlassQualityFromString('lite'), AppGlassQuality.lite);
+    expect(appGlassQualityFromString('fancy'), AppGlassQuality.auto);
     expect(AppSettings().toJson().containsKey('forceBackdropBlur'), isFalse);
   });
   test('custom accents keep text readable in both appearances', () {
@@ -86,10 +86,10 @@ void main() {
     }
 
     for (final brightness in Brightness.values) {
-      for (final accent in SistrumAccent.values.where(
-        (accent) => accent != SistrumAccent.red,
+      for (final accent in AppAccent.values.where(
+        (accent) => accent != AppAccent.red,
       )) {
-        final scheme = SistrumTheme.build(
+        final scheme = AppTheme.build(
           brightness,
           accent: accent,
         ).colorScheme;
@@ -127,14 +127,14 @@ void main() {
           // Low-end Android on auto renders flat, opaque glass.
           if (lowEnd) lowEndDeviceProvider.overrideWithValue(true),
         ],
-        child: SistrumThemeWrapper(
+        child: AppThemeWrapper(
           builder: (light, dark, mode) => MaterialApp(
             theme: light,
             darkTheme: dark,
             themeMode: mode,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const SistrumSettingsTheme(child: AppearanceSettingsPage()),
+            home: const AppSettingsTheme(child: AppearanceSettingsPage()),
           ),
         ),
       ),
@@ -192,24 +192,24 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
-        expect(prefs.getBool(kSistrumGlassOutlinesKey), isFalse);
+        expect(prefs.getBool(kAppGlassOutlinesKey), isFalse);
         final context = tester.element(toggle);
         final container = ProviderScope.containerOf(context);
-        expect(container.read(sistrumGlassOutlinesProvider), isFalse);
-        expect(container.read(sistrumGlassClarityLevelProvider), 3);
+        expect(container.read(appGlassOutlinesProvider), isFalse);
+        expect(container.read(appGlassClarityLevelProvider), 3);
         await tester.pumpWidget(const SizedBox());
         await openSettings(tester, prefs);
         expect(
           ProviderScope.containerOf(
             tester.element(toggle),
-          ).read(sistrumGlassOutlinesProvider),
+          ).read(appGlassOutlinesProvider),
           isFalse,
         );
         await tester.ensureVisible(toggle);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
-        expect(prefs.getBool(kSistrumGlassOutlinesKey), isTrue);
+        expect(prefs.getBool(kAppGlassOutlinesKey), isTrue);
         expect(tester.takeException(), isNull);
       },
     );
@@ -238,7 +238,7 @@ void main() {
       expect(
         ProviderScope.containerOf(
           context,
-        ).read(sistrumGlassClarityLevelProvider),
+        ).read(appGlassClarityLevelProvider),
         5,
       );
       // Crystal on full glass is the one costly combination.
@@ -430,7 +430,7 @@ void main() {
       final initial = Theme.of(tester.element(page));
       expect(
         initial.colorScheme.primary,
-        SistrumTheme.accentColor(SistrumAccent.red, initial.brightness),
+        AppTheme.accentColor(AppAccent.red, initial.brightness),
       );
 
       final blue = find.byTooltip('Blue');
@@ -440,18 +440,18 @@ void main() {
       final theme = Theme.of(tester.element(page));
       expect(
         theme.colorScheme.primary,
-        SistrumTheme.accentColor(SistrumAccent.blue, theme.brightness),
+        AppTheme.accentColor(AppAccent.blue, theme.brightness),
       );
-      expect(prefs.getString(kSistrumAccentKey), 'blue');
+      expect(prefs.getString(kAppAccentKey), 'blue');
       expect(prefs.getInt('seed_color'), 0xff123456);
-      final overlay = SistrumTheme.fromContext(
+      final overlay = AppTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
       );
-      expect(overlay.extension<SistrumTheme>()!.accent, SistrumAccent.blue);
+      expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
       expect(
         overlay.colorScheme.primary,
-        SistrumTheme.accentColor(SistrumAccent.blue, Brightness.dark),
+        AppTheme.accentColor(AppAccent.blue, Brightness.dark),
       );
 
       await tester.pumpWidget(const SizedBox());
@@ -477,7 +477,7 @@ void main() {
       (tester) async {
         SharedPreferences.setMockInitialValues({
           'theme_style': style,
-          kSistrumAccentKey: 'blue',
+          kAppAccentKey: 'blue',
           'use_dynamic_color': false,
         });
         final prefs = await SharedPreferences.getInstance();
@@ -500,12 +500,12 @@ void main() {
         expect(systemFamily, isNot('Inter'));
         expect(prefs.getBool(kUseSystemFontKey), isTrue);
         if (style == 'sistrum') {
-          final overlay = SistrumTheme.fromContext(
+          final overlay = AppTheme.fromContext(
             tester.element(page),
             brightness: Brightness.dark,
           );
-          expect(overlay.extension<SistrumTheme>()!.useSystemFont, isTrue);
-          expect(overlay.extension<SistrumTheme>()!.accent, SistrumAccent.blue);
+          expect(overlay.extension<AppTheme>()!.useSystemFont, isTrue);
+          expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
           expect(overlay.textTheme.bodyLarge!.fontFamily, systemFamily);
         }
         await tester.pumpWidget(const SizedBox());

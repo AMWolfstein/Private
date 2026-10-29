@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_content_card.dart';
 
 Future<void> _pump(WidgetTester tester, Widget card) => tester.pumpWidget(
   MaterialApp(
-    theme: SistrumTheme.build(Brightness.light),
+    theme: AppTheme.build(Brightness.light),
     home: Scaffold(body: Center(child: card)),
   ),
 );
@@ -33,10 +33,10 @@ void main() {
     late Color expectedFill;
     await tester.pumpWidget(
       MaterialApp(
-        theme: SistrumTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         home: Builder(
           builder: (context) {
-            expectedFill = SistrumTheme.controlFill(context);
+            expectedFill = AppTheme.controlFill(context);
             return const Scaffold(
               body: AppContentCard(color: Colors.red, child: SizedBox()),
             );
@@ -71,7 +71,7 @@ void main() {
     final probe = tester.state<_DividerProbeState>(find.byType(_DividerProbe));
     expect(
       probe.dividerColor,
-      SistrumTheme.metadataDividerColor(probe.context),
+      AppTheme.metadataDividerColor(probe.context),
     );
   });
 }

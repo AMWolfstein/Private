@@ -6,16 +6,16 @@ import 'package:sistrum/constants/language_choices.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/models/sistrum_glass.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/models/app_glass.dart';
+import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/models/theme_settings.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/custom_font_setting.dart';
-import 'package:sistrum/widgets/primitives/sistrum_slider.dart';
+import 'package:sistrum/widgets/primitives/app_slider.dart';
 
 class AppearanceSettingsPage extends ConsumerWidget {
   const AppearanceSettingsPage({super.key});
@@ -26,8 +26,8 @@ class AppearanceSettingsPage extends ConsumerWidget {
     final themeSettings = ref.watch(
       themeProvider.select(
         (s) => (
-          sistrumAccent: s.sistrumAccent,
-          sistrumGlassOutlines: s.sistrumGlassOutlines,
+          appAccent: s.appAccent,
+          appGlassOutlines: s.appGlassOutlines,
           themeMode: s.themeMode,
           useSystemFont: s.useSystemFont,
           playerView: s.playerView,
@@ -50,14 +50,14 @@ class AppearanceSettingsPage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: SettingsGroup(
                   children: [
-                    _SistrumAccentPicker(
-                      selected: themeSettings.sistrumAccent,
+                    _AppAccentPicker(
+                      selected: themeSettings.appAccent,
                       onChanged: ref
                           .read(themeProvider.notifier)
-                          .setSistrumAccent,
+                          .setAppAccent,
                     ),
                     _GlassQualitySelector(
-                      current: sistrumGlassQualityFromString(
+                      current: appGlassQualityFromString(
                         settings.glassQuality,
                       ),
                       onChanged: ref
@@ -66,17 +66,17 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     ),
                     SettingsSearchTarget(
                       label: context.l10n.appearanceGlassClarity,
-                      child: const _SistrumGlassClaritySlider(),
+                      child: const _AppGlassClaritySlider(),
                     ),
                     SettingsSwitchItem(
                       key: const ValueKey('sistrum-glass-outlines'),
                       icon: Icons.rounded_corner,
                       title: context.l10n.appearanceGlassOutlines,
                       subtitle: context.l10n.appearanceGlassOutlinesSubtitle,
-                      value: themeSettings.sistrumGlassOutlines,
+                      value: themeSettings.appGlassOutlines,
                       onChanged: ref
                           .read(themeProvider.notifier)
-                          .setSistrumGlassOutlines,
+                          .setAppGlassOutlines,
                       showDivider: false,
                     ),
                   ],
@@ -177,16 +177,16 @@ class AppearanceSettingsPage extends ConsumerWidget {
   }
 }
 
-class _SistrumGlassClaritySlider extends ConsumerStatefulWidget {
-  const _SistrumGlassClaritySlider();
+class _AppGlassClaritySlider extends ConsumerStatefulWidget {
+  const _AppGlassClaritySlider();
 
   @override
-  ConsumerState<_SistrumGlassClaritySlider> createState() =>
-      _SistrumGlassClaritySliderState();
+  ConsumerState<_AppGlassClaritySlider> createState() =>
+      _AppGlassClaritySliderState();
 }
 
-class _SistrumGlassClaritySliderState
-    extends ConsumerState<_SistrumGlassClaritySlider> {
+class _AppGlassClaritySliderState
+    extends ConsumerState<_AppGlassClaritySlider> {
   /// Only the preview follows a drag; the rest of the app updates on release.
   int? _dragLevel;
 
@@ -201,18 +201,18 @@ class _SistrumGlassClaritySliderState
     final l10n = context.l10n;
     // Match the renderer's policy without changing the stored clarity value.
     final contrastBlocked = ref.watch(
-      sistrumGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
+      appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
-    final quality = ref.watch(sistrumGlassQualityProvider);
+    final quality = ref.watch(appGlassQualityProvider);
     // Auto measured that this device needs Level 1.
     final autoFrosted =
-        quality == SistrumGlassQuality.auto &&
-        ref.watch(sistrumGlassClarityLevelProvider) == 1 &&
-        ref.watch(sistrumGlassAutoStepProvider) ==
-            SistrumGlassAutoStep.liteFrosted;
+        quality == AppGlassQuality.auto &&
+        ref.watch(appGlassClarityLevelProvider) == 1 &&
+        ref.watch(appGlassAutoStepProvider) ==
+            AppGlassAutoStep.liteFrosted;
     final adjustable =
         !contrastBlocked &&
-        ref.watch(sistrumBlurEnabledProvider) &&
+        ref.watch(appBlurEnabledProvider) &&
         !autoFrosted;
     final levelNames = [
       l10n.appearanceGlassLevelFrosted,
@@ -239,7 +239,7 @@ class _SistrumGlassClaritySliderState
                   ? l10n.appearanceGlassClarityContrast
                   : autoFrosted
                   ? l10n.appearanceGlassClarityAutoFrosted
-                  : quality == SistrumGlassQuality.off
+                  : quality == AppGlassQuality.off
                   ? l10n.appearanceGlassClarityOff
                   : l10n.appearanceGlassClarityDeviceOpaque,
               key: const ValueKey('sistrum-glass-clarity-unavailable'),
@@ -274,7 +274,7 @@ class _SistrumGlassClaritySliderState
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(18),
-                    child: SistrumGlassPanel(
+                    child: AppGlassPanel(
                       radius: 22,
                       clarityLevel: level,
                       child: Padding(
@@ -305,7 +305,7 @@ class _SistrumGlassClaritySliderState
           RepaintBoundary(
             child: Semantics(
               label: l10n.appearanceGlassClarity,
-              child: SistrumSlider(
+              child: AppSlider(
                 key: const ValueKey('sistrum-glass-clarity'),
                 value: level.toDouble(),
                 min: 1,
@@ -340,8 +340,8 @@ class _SistrumGlassClaritySliderState
           // Only full Crystal glass costs noticeably more to render.
           if (adjustable &&
               level == 5 &&
-              ref.watch(sistrumGlassLevelProvider) ==
-                  SistrumGlassLevel.liquid) ...[
+              ref.watch(appGlassLevelProvider) ==
+                  AppGlassLevel.liquid) ...[
             const SizedBox(height: 8),
             Text(
               l10n.appearanceGlassClearPerformance,
@@ -361,8 +361,8 @@ class _SistrumGlassClaritySliderState
 class _GlassQualitySelector extends ConsumerWidget {
   const _GlassQualitySelector({required this.current, required this.onChanged});
 
-  final SistrumGlassQuality current;
-  final ValueChanged<SistrumGlassQuality> onChanged;
+  final AppGlassQuality current;
+  final ValueChanged<AppGlassQuality> onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -370,24 +370,24 @@ class _GlassQualitySelector extends ConsumerWidget {
     final theme = Theme.of(context);
     final measured =
         ref.watch(
-          sistrumGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
+          appGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
         ) ==
-        SistrumGlassAutoStatus.measured;
-    final measuredQuality = switch (ref.watch(sistrumGlassAutoStepProvider)) {
-      SistrumGlassAutoStep.full =>
-        ref.watch(sistrumGlassLevelProvider) == SistrumGlassLevel.liquid
+        AppGlassAutoStatus.measured;
+    final measuredQuality = switch (ref.watch(appGlassAutoStepProvider)) {
+      AppGlassAutoStep.full =>
+        ref.watch(appGlassLevelProvider) == AppGlassLevel.liquid
             ? l10n.appearanceGlassQualityFull
             : l10n.appearanceGlassQualityLite,
-      SistrumGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
-      SistrumGlassAutoStep.liteFrosted =>
+      AppGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
+      AppGlassAutoStep.liteFrosted =>
         '${l10n.appearanceGlassQualityLite} · '
             '${l10n.appearanceGlassLevelFrosted}',
     };
     final labels = {
-      SistrumGlassQuality.auto: l10n.appearanceGlassQualityAuto,
-      SistrumGlassQuality.lite: l10n.appearanceGlassQualityLite,
-      SistrumGlassQuality.full: l10n.appearanceGlassQualityFull,
-      SistrumGlassQuality.off: l10n.appearanceGlassQualityOff,
+      AppGlassQuality.auto: l10n.appearanceGlassQualityAuto,
+      AppGlassQuality.lite: l10n.appearanceGlassQualityLite,
+      AppGlassQuality.full: l10n.appearanceGlassQualityFull,
+      AppGlassQuality.off: l10n.appearanceGlassQualityOff,
     };
     return SettingsSearchTarget(
       label: l10n.appearanceGlassQuality,
@@ -406,7 +406,7 @@ class _GlassQualitySelector extends ConsumerWidget {
               l10n.appearanceGlassQualitySubtitle,
               style: theme.textTheme.bodySmall,
             ),
-            SistrumSegmentedControl(
+            AppSegmentedControl(
               labels: labels.values.toList(),
               selectedIndex: labels.keys.toList().indexOf(current),
               onChanged: (index) => onChanged(labels.keys.elementAt(index)),
@@ -426,23 +426,23 @@ class _GlassQualitySelector extends ConsumerWidget {
   }
 }
 
-class _SistrumAccentPicker extends StatelessWidget {
-  const _SistrumAccentPicker({required this.selected, required this.onChanged});
+class _AppAccentPicker extends StatelessWidget {
+  const _AppAccentPicker({required this.selected, required this.onChanged});
 
-  final SistrumAccent selected;
-  final ValueChanged<SistrumAccent> onChanged;
+  final AppAccent selected;
+  final ValueChanged<AppAccent> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final labels = {
-      SistrumAccent.red: l10n.appearanceAccentRed,
-      SistrumAccent.orange: l10n.appearanceAccentOrange,
-      SistrumAccent.green: l10n.appearanceAccentGreen,
-      SistrumAccent.teal: l10n.appearanceAccentTeal,
-      SistrumAccent.blue: l10n.appearanceAccentBlue,
-      SistrumAccent.purple: l10n.appearanceAccentPurple,
-      SistrumAccent.pink: l10n.appearanceAccentPink,
+      AppAccent.red: l10n.appearanceAccentRed,
+      AppAccent.orange: l10n.appearanceAccentOrange,
+      AppAccent.green: l10n.appearanceAccentGreen,
+      AppAccent.teal: l10n.appearanceAccentTeal,
+      AppAccent.blue: l10n.appearanceAccentBlue,
+      AppAccent.purple: l10n.appearanceAccentPurple,
+      AppAccent.pink: l10n.appearanceAccentPink,
     };
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -450,10 +450,10 @@ class _SistrumAccentPicker extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          for (final accent in SistrumAccent.values)
+          for (final accent in AppAccent.values)
             Builder(
               builder: (context) {
-                final color = SistrumTheme.accentColor(
+                final color = AppTheme.accentColor(
                   accent,
                   Theme.of(context).brightness,
                 );
@@ -503,7 +503,7 @@ class _ThemeModeSelector extends StatelessWidget {
       };
       return Padding(
         padding: const EdgeInsets.all(12),
-        child: SistrumSegmentedControl(
+        child: AppSegmentedControl(
           labels: labels.values.toList(),
           selectedIndex: labels.keys.toList().indexOf(currentMode),
           onChanged: (index) => onChanged(labels.keys.elementAt(index)),

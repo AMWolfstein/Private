@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/services/library/cover_palette.dart';
-import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
+import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 
@@ -127,11 +127,11 @@ class AlbumDetailHeader extends StatelessWidget {
       screenSize.width.clamp(0.0, 440.0),
       math.max(240.0, screenSize.height * 0.55),
     );
-    final details = _buildSistrumDetails(context);
+    final details = _buildAppDetails(context);
     Widget toolbar({bool collapsed = true}) => Consumer(
       builder: (context, ref, _) {
         final opaque =
-            sistrumHeaderMaterial(context, ref) == SistrumHeaderMaterial.opaque;
+            appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
         final titleVisible =
             showTitleInAppBar ||
             appBarTitle != null ||
@@ -139,7 +139,7 @@ class AlbumDetailHeader extends StatelessWidget {
         final overArtwork = immersive && !collapsed;
         return _ArtworkBrightness(
           source: overArtwork ? paletteSource : null,
-          builder: (context, artwork) => SistrumHeaderBrightness(
+          builder: (context, artwork) => AppHeaderBrightness(
             brightness: artwork,
             child: SliverAppBar(
               pinned: true,
@@ -150,12 +150,12 @@ class AlbumDetailHeader extends StatelessWidget {
               scrolledUnderElevation: 0,
               // Without artwork data the transparent toolbar keeps the light
               // status icons it always had over the cover.
-              systemOverlayStyle: sistrumHeaderOverlayStyle(
+              systemOverlayStyle: appHeaderOverlayStyle(
                 artwork ?? (overArtwork ? Brightness.dark : scheme.brightness),
               ),
               flexibleSpace: opaque
                   ? null
-                  : SistrumHeaderBacking(
+                  : AppHeaderBacking(
                       visible: immersive ? titleVisible : null,
                     ),
               title: AnimatedOpacity(
@@ -178,7 +178,7 @@ class AlbumDetailHeader extends StatelessWidget {
                 ),
               ),
               leadingWidth: kToolbarHeight,
-              leading: SistrumHeaderControls(
+              leading: AppHeaderControls(
                 child:
                     leading ??
                     HeaderCircleButton(
@@ -190,10 +190,10 @@ class AlbumDetailHeader extends StatelessWidget {
                     ),
               ),
               actionsPadding: EdgeInsetsDirectional.only(
-                end: kSistrumHeaderEdgeGap,
+                end: kAppHeaderEdgeGap,
               ),
               actions: [
-                SistrumHeaderActions(actions: appBarActions ?? const []),
+                AppHeaderActions(actions: appBarActions ?? const []),
               ],
             ),
           ),
@@ -208,8 +208,8 @@ class AlbumDetailHeader extends StatelessWidget {
         scheme.surface,
       ];
       // The header controls' ground: the cover under this gradient.
-      final artwork = SistrumGroundAnchor(
-        layout: SistrumGroundLayout(
+      final artwork = AppGroundAnchor(
+        layout: AppGroundLayout(
           stops: const [0, 0.48, 1],
           colors: gradient,
         ),
@@ -278,7 +278,7 @@ class AlbumDetailHeader extends StatelessWidget {
     ];
   }
 
-  Widget _buildSistrumDetails(BuildContext context) => Padding(
+  Widget _buildAppDetails(BuildContext context) => Padding(
     padding: EdgeInsets.fromLTRB(20, immersive ? 0 : 20, 20, 28),
     child: Column(
       children: [
@@ -299,8 +299,8 @@ class AlbumDetailHeader extends StatelessWidget {
                   ],
                 ),
                 // The cover scrolls under the header controls' glass.
-                child: SistrumGroundAnchor(
-                  layout: const SistrumGroundLayout(radius: 14),
+                child: AppGroundAnchor(
+                  layout: const AppGroundLayout(radius: 14),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),
                     child: LayoutBuilder(
@@ -536,7 +536,7 @@ class _AlbumScrollVeil extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (MediaQuery.disableAnimationsOf(context) ||
-        !ref.watch(sistrumLiquidGlassProvider)) {
+        !ref.watch(appLiquidGlassProvider)) {
       return const SizedBox.shrink();
     }
     // Read here, not by the header: an inset change rebuilds only the veil.
@@ -548,7 +548,7 @@ class _AlbumScrollVeil extends ConsumerWidget {
       builder: (context, _) {
         final scrolled = position.hasPixels ? position.pixels : 0.0;
         final progress = extent > 0 ? (scrolled / extent).clamp(0.0, 1.0) : 0.0;
-        return SistrumGroundVeil(opacity: Curves.easeOut.transform(progress));
+        return AppGroundVeil(opacity: Curves.easeOut.transform(progress));
       },
     );
   }
@@ -623,7 +623,7 @@ class _ArtworkBrightnessState extends State<_ArtworkBrightness> {
       future: _lightness,
       initialData: paletteOf(context).peekTopLightness(source),
       builder: (context, snapshot) =>
-          widget.builder(context, sistrumArtworkBrightness(snapshot.data)),
+          widget.builder(context, appArtworkBrightness(snapshot.data)),
     );
   }
 }
@@ -693,7 +693,7 @@ class AlbumPlayActions extends StatelessWidget {
           ),
           SizedBox(width: gap),
           Expanded(
-            child: SistrumHeaderButton(
+            child: AppHeaderButton(
               icon: CupertinoIcons.shuffle,
               label: shuffleTooltip,
               compact: compact,

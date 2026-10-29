@@ -7,12 +7,12 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
-import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/header/app_artist_header.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 const _track = Track(
@@ -71,14 +71,14 @@ void main() {
         localLibraryProvider.overrideWith(_Library.new),
       ],
       child: MaterialApp(
-        theme: SistrumTheme.build(brightness),
+        theme: AppTheme.build(brightness),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       ),
     );
     test('Sistrum primary content retains readable contrast ($brightness)', () {
-      final scheme = SistrumTheme.build(brightness).colorScheme;
+      final scheme = AppTheme.build(brightness).colorScheme;
       final first = scheme.primary.computeLuminance();
       final second = scheme.onPrimary.computeLuminance();
       final contrast =
@@ -110,7 +110,7 @@ void main() {
         expect(playlist.tonal, isTrue);
         expect(
           loved.iconColor,
-          SistrumTheme.build(brightness).colorScheme.error,
+          AppTheme.build(brightness).colorScheme.error,
         );
         final l10n = tester.element(find.byType(LocalCollectionActions)).l10n;
         await tester.tap(find.byTooltip(l10n.trackOptionRemoveFromLoved));
@@ -137,8 +137,8 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
-          final surface = tester.widget<SistrumArtistSurface>(
-            find.byType(SistrumArtistSurface),
+          final surface = tester.widget<AppArtistSurface>(
+            find.byType(AppArtistSurface),
           );
           final header =
               tester
@@ -166,7 +166,7 @@ void main() {
                 ).copyWith(textScaler: const TextScaler.linear(.5)),
                 child: Scaffold(
                   body: Center(
-                    child: SistrumSegmentedControl(
+                    child: AppSegmentedControl(
                       labels: const ['One', 'Two'],
                       selectedIndex: 0,
                       onChanged: (_) {},

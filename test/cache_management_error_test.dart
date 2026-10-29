@@ -11,7 +11,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/cache_management_page.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 
@@ -99,10 +99,10 @@ void main() {
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
             lowEndDeviceProvider.overrideWithValue(true),
-            sistrumLiquidGlassProvider.overrideWithValue(false),
+            appLiquidGlassProvider.overrideWithValue(false),
           ],
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.light),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const CacheManagementPage(),

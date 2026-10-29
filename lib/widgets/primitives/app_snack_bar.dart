@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 /// Applies the same transient-message policy to existing snackbar call sites.
 /// A new message replaces the old one instead of building a stale FIFO queue.
@@ -106,12 +106,12 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
 
   final theme = Theme.of(context);
   final reduceMotion = MediaQuery.disableAnimationsOf(context);
-  final snackBar = _SistrumSnackBar(
+  final snackBar = _AppSnackBar(
     duration: duration,
     reduceMotion: reduceMotion,
     content: Theme(
       data: theme,
-      child: SistrumGlassPanel.overlay(
+      child: AppGlassPanel.overlay(
         radius: 24,
         // Messages have no modal scrim; let more of the page show through.
         tintOpacity: 0.48,
@@ -163,8 +163,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   return messenger.showSnackBar(snackBar);
 }
 
-class _SistrumSnackBar extends SnackBar {
-  const _SistrumSnackBar({
+class _AppSnackBar extends SnackBar {
+  const _AppSnackBar({
     required super.content,
     required super.duration,
     required this.reduceMotion,

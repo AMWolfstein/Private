@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/models/sistrum_glass.dart';
+import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/automix_options.dart';
@@ -425,7 +425,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setGlassQuality(SistrumGlassQuality quality) {
+  void setGlassQuality(AppGlassQuality quality) {
     state = state.copyWith(glassQuality: quality.name);
     _saveSettings();
   }

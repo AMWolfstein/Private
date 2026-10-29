@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
@@ -114,7 +114,7 @@ class LocalSongRow extends StatelessWidget {
         Builder(
           builder: (buttonContext) => IconButton(
             tooltip: context.l10n.a11yMoreOptionsFor(title),
-            onPressed: () => onMenu(sistrumMenuAnchor(buttonContext)),
+            onPressed: () => onMenu(appMenuAnchor(buttonContext)),
             icon: const Icon(Icons.more_horiz),
           ),
         ),

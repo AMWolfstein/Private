@@ -2,10 +2,10 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/isrc_utils.dart';
-import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/player/sistrum_player_details_sheet.dart';
+import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/player/app_player_details_sheet.dart';
 
 Future<void> showPlayerDetailsSheet(
   BuildContext context,
@@ -13,18 +13,18 @@ Future<void> showPlayerDetailsSheet(
   required PlayerMetadataController metadata,
   required MediaItem? mediaItem,
 }) {
-  final sistrum = context.isSistrum;
+  final sistrum = context.isAppTheme;
   final fallback = metadata.detailsSnapshot(mediaItem);
   final metadataFuture = metadata.readDetails(mediaItem);
   // The sheet's glass draws from the player's artwork.
-  final ground = SistrumArtworkGroundScope.forOverlays(context);
+  final ground = AppArtworkGroundScope.forOverlays(context);
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useRootNavigator: sistrum,
     showDragHandle: !sistrum,
     backgroundColor: Colors.transparent,
-    builder: (context) => SistrumArtworkGroundScope.wrapOverlay(
+    builder: (context) => AppArtworkGroundScope.wrapOverlay(
       ground,
       DraggableScrollableSheet(
         expand: false,
@@ -93,7 +93,7 @@ class _MetadataList extends StatelessWidget {
     ].where((r) => r.$2.trim().isNotEmpty && r.$2 != '0').toList();
 
     {
-      return SistrumPlayerDetailsSheet(
+      return AppPlayerDetailsSheet(
         rows: rows,
         scrollController: scrollController,
         mediaItem: mediaItem,

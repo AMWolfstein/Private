@@ -9,7 +9,7 @@ import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/library_search_results.dart';
 
 /// PERF-603: a Loved toggle or playlist edit must not rebuild the whole Home
@@ -36,7 +36,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const HomeTab(mode: HomeTabMode.browse),
@@ -92,7 +92,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const HomeTab(mode: HomeTabMode.search),

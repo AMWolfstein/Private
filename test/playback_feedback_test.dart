@@ -8,9 +8,9 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/player/playback_feedback.dart';
 
 void main() {
@@ -34,7 +34,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: SistrumTheme.build(
+            theme: AppTheme.build(
               sistrum ? Brightness.dark : Brightness.light,
             ),
             builder: (_, child) =>
@@ -55,7 +55,7 @@ void main() {
         find.text('Cannot open file: Audio output failed'),
         findsOneWidget,
       );
-      expect(find.byType(SistrumGlassPanel), findsOneWidget);
+      expect(find.byType(AppGlassPanel), findsOneWidget);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
       states.add(failed.copyWith(updatePosition: const Duration(seconds: 1)));
@@ -89,7 +89,7 @@ void main() {
             locale: Locale(sistrum ? 'id' : 'en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? AppTheme.build(Brightness.dark) : ThemeData(),
             builder: (_, child) =>
                 AppScaffoldMessenger(child: PlaybackFeedback(child: child!)),
             home: const Scaffold(body: SizedBox.expand()),
@@ -102,7 +102,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text(message), findsOneWidget);
       expect(
-        find.byType(SistrumGlassPanel),
+        find.byType(AppGlassPanel),
         sistrum ? findsOneWidget : findsNothing,
       );
       await tester.pump(const Duration(seconds: 4));

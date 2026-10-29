@@ -5,16 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/status/automix_status_badge.dart';
-import 'package:sistrum/widgets/player/sistrum_playback_button.dart';
-import 'package:sistrum/widgets/player/sistrum_playback_time.dart';
-import 'package:sistrum/widgets/player/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/player/app_playback_button.dart';
+import 'package:sistrum/widgets/player/app_playback_time.dart';
+import 'package:sistrum/widgets/player/app_player_slider.dart';
 import 'package:sistrum/widgets/player/playback_seek_slider.dart';
 
-const _sistrumTimelinePadding = 28.0;
+const _appTimelinePadding = 28.0;
 
 class PlayerPlaybackControls extends ConsumerWidget {
   final String mediaId;
@@ -39,7 +39,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(musicPlayerControllerProvider);
-    final sistrum = context.isSistrum;
+    final sistrum = context.isAppTheme;
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
     final playPauseSize = compact
@@ -63,7 +63,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                 final elapsedSeconds = (preview ?? position).inSeconds;
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: sistrum ? _sistrumTimelinePadding : 16,
+                    horizontal: sistrum ? _appTimelinePadding : 16,
                   ),
                   child: Column(
                     children: [
@@ -101,13 +101,13 @@ class PlayerPlaybackControls extends ConsumerWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: sistrum
-                              ? SistrumPlayerSlider.horizontalInset
+                              ? AppPlayerSlider.horizontalInset
                               : 12,
                         ),
                         child: Row(
                           children: [
                             if (sistrum)
-                              SistrumPlaybackTime(
+                              AppPlaybackTime(
                                 key: ValueKey('elapsed:$mediaId'),
                                 seconds: elapsedSeconds,
                                 style: timeStyle,
@@ -119,7 +119,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                               ),
                             Expanded(child: Center(child: quality)),
                             if (sistrum)
-                              SistrumPlaybackTime(
+                              AppPlaybackTime(
                                 key: ValueKey('remaining:$mediaId'),
                                 // Subtract whole seconds so both labels roll together,
                                 // even when the track duration includes milliseconds.
@@ -156,13 +156,13 @@ class PlayerPlaybackControls extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ...[],
-                SistrumPlaybackButton(
+                AppPlaybackButton(
                   icon: CupertinoIcons.backward_fill,
                   color: colorScheme.onSurface,
                   tooltip: context.l10n.nowPlayingPreviousTrack,
                   onPressed: controller.previous,
                 ),
-                SistrumPlaybackButton(
+                AppPlaybackButton(
                   icon: isPlaying
                       ? CupertinoIcons.pause_fill
                       : CupertinoIcons.play_fill,
@@ -175,7 +175,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                   loading: isLoading,
                   onPressed: () => controller.togglePlayPause(isPlaying),
                 ),
-                SistrumPlaybackButton(
+                AppPlaybackButton(
                   icon: CupertinoIcons.forward_fill,
                   color: colorScheme.onSurface,
                   tooltip: context.l10n.nowPlayingNextTrack,

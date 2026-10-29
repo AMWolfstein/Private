@@ -3,7 +3,7 @@ import 'package:sistrum/utils/release_date_display.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
@@ -172,7 +172,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
         )
         .firstOrNull;
     final favorite = favoriteEntry != null;
-    return SistrumArtistSurface(
+    return AppArtistSurface(
       imageSource: cover,
       child: Builder(
         builder: (context) {
@@ -181,7 +181,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
             body: CustomScrollView(
               controller: _scroll,
               slivers: [
-                ...SistrumArtistHeader(
+                ...AppArtistHeader(
                   name: widget.artistName,
                   artwork: _artwork(
                     cover,
@@ -200,7 +200,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       tonal: true,
                       tooltip: favorite
                           ? context.l10n.artistOptionRemoveFromFavorites
-                          : context.l10n.sistrumFavorite,
+                          : context.l10n.appFavorite,
                       onPressed: () async {
                         try {
                           if (favoriteEntry != null) {
@@ -388,7 +388,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                                           context,
                                           ref,
                                           track,
-                                          anchor: sistrumMenuAnchor(
+                                          anchor: appMenuAnchor(
                                             buttonContext,
                                           ),
                                         ),

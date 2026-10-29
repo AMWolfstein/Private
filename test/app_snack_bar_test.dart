@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -21,7 +21,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: SistrumTheme.build(brightness),
+            theme: AppTheme.build(brightness),
             builder: (_, child) => RepaintBoundary(
               key: capture,
               child: AppScaffoldMessenger(child: child!),
@@ -58,7 +58,7 @@ void main() {
       await tester.pump();
       for (final elapsed in [16, 80, 250]) {
         await tester.pump(Duration(milliseconds: elapsed));
-        final rect = tester.getRect(find.byType(SistrumGlassPanel));
+        final rect = tester.getRect(find.byType(AppGlassPanel));
         final colors = await tester.runAsync(() async {
           final boundary = tester.renderObject<RenderRepaintBoundary>(
             find.byKey(capture),
@@ -88,7 +88,7 @@ void main() {
         // backdrop hues must remain visibly distinct throughout the transition.
         expect(colors![0].b - colors[0].r, greaterThan(0.16));
         expect(colors[1].r - colors[1].b, greaterThan(0.16));
-        final foreground = SistrumTheme.build(brightness).colorScheme.onSurface;
+        final foreground = AppTheme.build(brightness).colorScheme.onSurface;
         for (final background in colors) {
           final luminances = [
             foreground.computeLuminance(),
@@ -112,7 +112,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
+              theme: sistrum ? AppTheme.build(Brightness.dark) : ThemeData(),
               builder: (_, child) => AppScaffoldMessenger(child: child!),
               home: Builder(
                 builder: (context) {

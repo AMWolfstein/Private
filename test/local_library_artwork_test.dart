@@ -13,12 +13,12 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/screens/library/sistrum_library_screen.dart';
+import 'package:sistrum/screens/library/app_library_screen.dart';
 import 'package:sistrum/services/library/embedded_cover_resolver.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
-import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/app_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   // The cover drift repeats forever and would keep pumpAndSettle waiting.
@@ -72,7 +72,7 @@ void main() {
   Widget app(Widget home, {bool sistrum = false}) => ProviderScope(
     overrides: [settingsProvider.overrideWith(_Settings.new)],
     child: MaterialApp(
-      theme: SistrumTheme.build(sistrum ? Brightness.dark : Brightness.light),
+      theme: AppTheme.build(sistrum ? Brightness.dark : Brightness.light),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: home,
@@ -221,7 +221,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester
-            .widget<SistrumArtistSurface>(find.byType(SistrumArtistSurface))
+            .widget<AppArtistSurface>(find.byType(AppArtistSurface))
             .imageSource,
         scannedCover.path,
       );
@@ -267,8 +267,8 @@ void main() {
           tester,
           () =>
               tester
-                  .widget<SistrumArtistSurface>(
-                    find.byType(SistrumArtistSurface),
+                  .widget<AppArtistSurface>(
+                    find.byType(AppArtistSurface),
                   )
                   .imageSource ==
               preview,
@@ -301,12 +301,12 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.light),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
-              body: SistrumLibraryScreen(
-                page: SistrumLibraryPage.albums,
+              body: AppLibraryScreen(
+                page: AppLibraryPage.albums,
                 onOpenSection: (_) {},
               ),
             ),

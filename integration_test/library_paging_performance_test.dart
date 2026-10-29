@@ -12,8 +12,8 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library/sistrum_library_screen.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/screens/library/app_library_screen.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 import '../test/support/library_paging_fixture.dart';
 import 'performance_probe.dart';
@@ -156,7 +156,7 @@ void main() {
     }
 
     ProviderContainer container() => ProviderScope.containerOf(
-      tester.element(find.byType(SistrumLibraryScreen)),
+      tester.element(find.byType(AppLibraryScreen)),
     );
     LibraryBrowseState? current() =>
         container().read(libraryBrowseProvider(_request)).value;
@@ -199,13 +199,13 @@ void main() {
                   ),
               ],
               child: MaterialApp(
-                theme: SistrumTheme.build(brightness),
+                theme: AppTheme.build(brightness),
                 locale: const Locale('en'),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(
-                  body: SistrumLibraryScreen(
-                    page: SistrumLibraryPage.albums,
+                  body: AppLibraryScreen(
+                    page: AppLibraryPage.albums,
                     onOpenSection: (_) {},
                   ),
                 ),
@@ -326,7 +326,7 @@ void main() {
             '(plus mirrored history rows) and one unavailable source; shared '
             'decoded 384px PNG, no network.',
         'baseline':
-            'Previous growing-prefix reads through production SQL; same SistrumLibraryScreen.',
+            'Previous growing-prefix reads through production SQL; same AppLibraryScreen.',
         'paging':
             'Production AsyncNotifier and bounded page adapter; same SQL/store and UI.',
         'runs': runCounters,

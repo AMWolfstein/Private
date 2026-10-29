@@ -283,7 +283,7 @@ void main() {
     test('serializes, deserializes, copies, and compares values', () {
       const settings = ThemeSettings(
         themeMode: ThemeMode.dark,
-        sistrumAccent: SistrumAccent.blue,
+        appAccent: AppAccent.blue,
         useSystemFont: true,
       );
 
@@ -293,15 +293,15 @@ void main() {
       expect(decoded, settings);
       expect(decoded.hashCode, settings.hashCode);
       expect(copied.themeMode, ThemeMode.light);
-      expect(decoded.sistrumAccent, SistrumAccent.blue);
-      expect(copied.sistrumAccent, SistrumAccent.blue);
+      expect(decoded.appAccent, AppAccent.blue);
+      expect(copied.appAccent, AppAccent.blue);
       expect(decoded.useSystemFont, isTrue);
       expect(copied.useSystemFont, isTrue);
       expect(ThemeSettings.fromJson({}).useSystemFont, isFalse);
-      expect(ThemeSettings.fromJson({}).sistrumAccent, SistrumAccent.red);
+      expect(ThemeSettings.fromJson({}).appAccent, AppAccent.red);
       expect(
-        ThemeSettings.fromJson({kSistrumAccentKey: 'unknown'}).sistrumAccent,
-        SistrumAccent.red,
+        ThemeSettings.fromJson({kAppAccentKey: 'unknown'}).appAccent,
+        AppAccent.red,
       );
       expect(
         ThemeSettings.fromJson({'theme_mode': 'invalid'}).themeMode,

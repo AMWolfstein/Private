@@ -168,7 +168,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
             slivers: [
               AppSliverHeader.tabRoot(
                 title: widget.mode == HomeTabMode.search
-                    ? l10n.sistrumSearch
+                    ? l10n.appSearch
                     : l10n.homeTitle,
               ),
 

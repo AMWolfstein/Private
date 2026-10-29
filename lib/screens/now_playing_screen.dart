@@ -19,7 +19,7 @@ import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -30,16 +30,16 @@ import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/player/player_track_swipe.dart';
 import 'package:sistrum/widgets/player/player_gesture_regions.dart';
 import 'package:sistrum/widgets/player/player_details_sheet.dart';
-import 'package:sistrum/widgets/player/sistrum_player_layout.dart';
+import 'package:sistrum/widgets/player/app_player_layout.dart';
 import 'package:sistrum/widgets/player/player_lyrics_controls.dart';
 import 'package:sistrum/widgets/player/player_lyrics_section.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
-import 'package:sistrum/widgets/player/sistrum_player_background.dart';
-import 'package:sistrum/widgets/player/sistrum_player_ground.dart';
-import 'package:sistrum/widgets/glass/sistrum_artwork_contrast.dart';
-import 'package:sistrum/widgets/player/sistrum_player_actions_sheet.dart';
-import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/player/app_player_background.dart';
+import 'package:sistrum/widgets/player/app_player_ground.dart';
+import 'package:sistrum/widgets/glass/app_artwork_contrast.dart';
+import 'package:sistrum/widgets/player/app_player_actions_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 
 export 'package:sistrum/navigation/now_playing_route.dart';
 
@@ -151,7 +151,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             (settings) => settings.playerView == PlayerView.immersive,
           ),
         );
-    final colorScheme = SistrumTheme.fromContext(
+    final colorScheme = AppTheme.fromContext(
       context,
       brightness: Brightness.dark,
     ).colorScheme;
@@ -219,7 +219,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           ),
           fullBleed: immersive && _currentPage == 0,
           child: Theme(
-            data: SistrumTheme.fromContext(
+            data: AppTheme.fromContext(
               context,
               brightness: Brightness.dark,
             ),
@@ -270,7 +270,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             Expanded(
               child: NotificationListener<ScrollUpdateNotification>(
                 onNotification: _onLyricsScroll,
-                child: SistrumPlayerLayout(
+                child: AppPlayerLayout(
                   mediaItem: mediaItem,
                   metadata: _trackMetadata,
                   seekPreview: _seekPreview,
@@ -296,7 +296,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     showOptions: showOptions,
                   ),
                   lyricsOptions: _lyricsOptionsButton(colorScheme),
-                  onPageChanged: _setSistrumPage,
+                  onPageChanged: _setAppPage,
                   onTrackNavigation: _showTrackNavigationMenu,
                   onMoreActions: (buttonContext, item, anchor) =>
                       _showMoreActions(
@@ -333,7 +333,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                     : Colors.transparent,
                               ),
                               icon: const Icon(CupertinoIcons.quote_bubble),
-                              onPressed: _toggleSistrumLyrics,
+                              onPressed: _toggleAppLyrics,
                             ),
                             AudioOutputButton(
                               color: Colors.white,
@@ -354,7 +354,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                               ),
                               icon: const Icon(CupertinoIcons.list_bullet),
                               onPressed: () =>
-                                  _setSistrumPage(_currentPage == 2 ? 0 : 2),
+                                  _setAppPage(_currentPage == 2 ? 0 : 2),
                             ),
                           ],
                         ),
@@ -398,9 +398,9 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         // exposing a detached rectangle. Keep Sistrum artwork inside its panel.
         enabled: false,
         child: Theme(
-          data: SistrumTheme.fromContext(context, brightness: Brightness.dark),
+          data: AppTheme.fromContext(context, brightness: Brightness.dark),
           // The player's menus and sheets draw their glass from this ground.
-          child: SistrumPlayerGround(
+          child: AppPlayerGround(
             source: _coverSource(mediaItem),
             immersive: immersive,
             showArtwork: _currentPage == 0,
@@ -410,7 +410,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                SistrumArtworkContrast(
+                AppArtworkContrast(
                   enabled: false,
                   targets: {
                     'header': _artworkHeaderKey,
@@ -421,7 +421,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     if (!mounted) return;
                     _artworkForeground.value = colors;
                   },
-                  child: SistrumPlayerBackground(
+                  child: AppPlayerBackground(
                     artUri: mediaItem.artUri,
                     squareArtwork: !immersive,
                     artworkAspectRatio: artworkRatio,
@@ -480,11 +480,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     return art?.scheme == 'file' ? art!.toFilePath() : art?.toString();
   }
 
-  void _toggleSistrumLyrics() {
-    _setSistrumPage(_currentPage == 1 ? 0 : 1);
+  void _toggleAppLyrics() {
+    _setAppPage(_currentPage == 1 ? 0 : 1);
   }
 
-  void _setSistrumPage(int page) {
+  void _setAppPage(int page) {
     setState(() {
       _currentPage = page;
       _lyricsControlsHidden = false;
@@ -696,7 +696,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     _lyricsIdleTimer?.cancel();
     setState(() => _lyricsOptionsOpen = true);
     try {
-      final anchor = sistrumMenuAnchor(buttonContext);
+      final anchor = appMenuAnchor(buttonContext);
       var menuWidth = 240.0;
       for (final (_, label, _) in actions) {
         final painter = TextPainter(
@@ -712,17 +712,17 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         if (painter.width + 80 > menuWidth) menuWidth = painter.width + 80;
         painter.dispose();
       }
-      final action = await showSistrumContextMenu<String>(
+      final action = await showAppContextMenu<String>(
         context: buttonContext,
         anchor: anchor,
         preferAbove: true,
         maxWidth: menuWidth,
-        builder: (menuContext) => SistrumContextMenu(
+        builder: (menuContext) => AppContextMenu(
           dense: true,
           groups: [
             [
               for (final (value, label, icon) in actions)
-                SistrumMenuAction(
+                AppMenuAction(
                   icon: icon,
                   label: label,
                   onPressed: () => Navigator.of(menuContext).pop(value),
@@ -750,11 +750,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     BuildContext titleContext,
     MediaItem mediaItem,
   ) async {
-    final action = await showSistrumContextMenu<String>(
+    final action = await showAppContextMenu<String>(
       context: titleContext,
       preferAbove: true,
       maxWidth: 280,
-      builder: (_) => SistrumPlayerNavigationMenu(mediaItem: mediaItem),
+      builder: (_) => AppPlayerNavigationMenu(mediaItem: mediaItem),
     );
     if (!mounted) return;
     if (action == 'album') {
@@ -810,12 +810,12 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
               context,
             ).formatTimeOfDay(TimeOfDay.fromDateTime(sleepTimerEndsAt)),
           );
-    final action = await showSistrumContextMenu<String>(
+    final action = await showAppContextMenu<String>(
       context: context,
       anchor: anchor,
       preferAbove: true,
       maxWidth: 280,
-      builder: (_) => SistrumPlayerActionsSheet(
+      builder: (_) => AppPlayerActionsSheet(
         mediaItem: mediaItem,
         sleepTimerSubtitle: sleepTimerSubtitle,
       ),
@@ -969,7 +969,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
 
   void _showQueueSheet(ColorScheme colorScheme) {
     {
-      _setSistrumPage(2);
+      _setAppPage(2);
       return;
     }
   }

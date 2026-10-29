@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "Неповні альбоми",
   "libraryAlbumCompletenessUnknown": "Повнота альбому невідома",
   "libraryAlbumMissingTracks": "{present}/{expected} треків · відсутні: {missing}",
-  "sistrumSearch": "Пошук",
-  "sistrumContinuePlaying": "Продовжити відтворювання",
-  "sistrumFavorite": "Обране",
-  "@sistrumFavorite": {
+  "appSearch": "Пошук",
+  "appContinuePlaying": "Продовжити відтворювання",
+  "appFavorite": "Обране",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Перейти до виконавця",
-  "sistrumFavorited": "Додано до обраного",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Перейти до виконавця",
+  "appFavorited": "Додано до обраного",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Поєднуйте композиції за допомогою синхронізації ритму та зміни темпу зі збереженням висоти тону. Використовує плавний перехід crossfade, якщо синхронізація ритму неможлива.",

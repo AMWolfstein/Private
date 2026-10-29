@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_size_setting.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';
@@ -66,7 +66,7 @@ void main() {
       (tester) async {
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 1));
         addTearDown(preview.dispose);
-        final theme = SistrumTheme.build(Brightness.dark);
+        final theme = AppTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(

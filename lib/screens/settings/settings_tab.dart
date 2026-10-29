@@ -18,7 +18,7 @@ import 'package:sistrum/screens/settings/lyrics_settings_page.dart';
 import 'package:sistrum/screens/settings/playback_settings_page.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
@@ -227,7 +227,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
         ? page
         : SettingsSearchHighlightScope(targetLabel: targetLabel, child: page);
     await Navigator.of(context).push(
-      slidePageRoute<void>(page: SistrumSettingsTheme(child: destination)),
+      slidePageRoute<void>(page: AppSettingsTheme(child: destination)),
     );
     if (!mounted) return;
 
@@ -350,7 +350,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             ];
     }
 
-    return SistrumSettingsTheme(
+    return AppSettingsTheme(
       child: CustomScrollView(
         slivers: [
           if (widget.asPage)

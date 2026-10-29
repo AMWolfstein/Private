@@ -106,8 +106,8 @@ flutter:
   generate: true
 
   shaders:
-    - assets/shaders/sistrum_selection_mask.frag
-    - assets/shaders/sistrum_artwork_glass.frag
+    - assets/shaders/app_selection_mask.frag
+    - assets/shaders/app_artwork_glass.frag
 
   assets:
     - assets/images/

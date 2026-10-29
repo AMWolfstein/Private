@@ -17,7 +17,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 
@@ -235,7 +235,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: SistrumTheme.build(Brightness.dark),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: withArtwork && tickersEnabled
@@ -331,8 +331,8 @@ void main() {
               ],
               child: MaterialApp(
                 theme: sistrum
-                    ? SistrumTheme.build(Brightness.dark)
-                    : AppTheme.light(),
+                    ? AppTheme.build(Brightness.dark)
+                    : MaterialTestTheme.light(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: LibraryCollectionTracksScreen(
@@ -391,7 +391,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: MaterialTestTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const LibraryCollectionTracksScreen(
@@ -437,8 +437,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: sistrum
-                ? SistrumTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : MaterialTestTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryCollectionTracksScreen(

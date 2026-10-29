@@ -1,6 +1,6 @@
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/theme/app_icons.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sistrum/providers/playback_provider.dart';
@@ -22,7 +22,7 @@ import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
-import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 
 final localSongLookupProvider = FutureProvider.autoDispose
@@ -87,24 +87,24 @@ Future<bool> showLocalSongMenu(
   Rect? anchor,
 }) async {
   final cue = isCueSong(item);
-  final action = await showSistrumContextMenu<String>(
+  final action = await showAppContextMenu<String>(
     context: context,
     anchor: anchor,
     fitToAnchorSpace: true,
     builder: (menuContext) {
       final l10n = context.l10n;
-      SistrumMenuAction option(
+      AppMenuAction option(
         String id,
         IconData icon,
         String label, {
         bool destructive = false,
-      }) => SistrumMenuAction(
-        icon: sistrumIconFor(icon),
+      }) => AppMenuAction(
+        icon: appIconFor(icon),
         label: label,
         destructive: destructive,
         onPressed: () => Navigator.of(menuContext).pop(id),
       );
-      return SistrumContextMenu(
+      return AppContextMenu(
         quickActions: [
           option('play', CupertinoIcons.play_fill, l10n.tooltipPlay),
           option('share', CupertinoIcons.share_solid, l10n.trackMetadataShare),
@@ -116,7 +116,7 @@ Future<bool> showLocalSongMenu(
             if (item.albumName.trim().isNotEmpty)
               option('album', Icons.album_outlined, l10n.homeGoToAlbum),
             if (item.artistName.trim().isNotEmpty)
-              option('artist', Icons.person_outline, l10n.sistrumGoToArtist),
+              option('artist', Icons.person_outline, l10n.appGoToArtist),
           ],
           [
             if (!cue) ...[

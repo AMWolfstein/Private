@@ -5,7 +5,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';
 import 'package:sistrum/services/playback/listening_rewind.dart';
 import 'package:sistrum/services/playback/listening_statistics.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 import 'support/sqlite_process_database.dart';
 
@@ -278,7 +278,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? AppTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             // Reduced motion: no auto-advance, so the story waits for taps.
@@ -466,7 +466,7 @@ void main() {
             listeningRewindProvider.overrideWith((ref, period) async => rewind),
           ],
           child: MaterialApp(
-            theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
+            theme: sistrum ? AppTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (context, child) => MediaQuery(
@@ -550,7 +550,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => MediaQuery(
@@ -589,7 +589,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ListeningRewindScreen(

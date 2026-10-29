@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 
 void main() {
@@ -21,7 +21,7 @@ void main() {
       Future<void> pumpPage({required bool explicitInset}) async {
         await tester.pumpWidget(
           MaterialApp(
-            theme: SistrumTheme.build(brightness),
+            theme: AppTheme.build(brightness),
             home: ValueListenableBuilder<double>(
               valueListenable: inset,
               builder: (context, value, child) => MediaQuery(

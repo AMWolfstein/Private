@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 /// Dialog presentation follows the selected design, including on Android.
 Future<T?> showAppDialog<T>({
@@ -14,7 +14,7 @@ Future<T?> showAppDialog<T>({
     final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
     final themes = InheritedTheme.capture(from: context, to: navigator.context);
     return navigator.push<T>(
-      _SistrumDialogRoute<T>(
+      _AppDialogRoute<T>(
         context: context,
         builder: (context) => themes.wrap(Builder(builder: builder)),
         barrierDismissible: barrierDismissible,
@@ -23,8 +23,8 @@ Future<T?> showAppDialog<T>({
   }
 }
 
-class _SistrumDialogRoute<T> extends RawDialogRoute<T> {
-  _SistrumDialogRoute({
+class _AppDialogRoute<T> extends RawDialogRoute<T> {
+  _AppDialogRoute({
     required BuildContext context,
     required WidgetBuilder builder,
     required super.barrierDismissible,
@@ -117,7 +117,7 @@ class AppAlertDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 320),
-        child: SistrumGlassPanel.overlay(
+        child: AppGlassPanel.overlay(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -207,8 +207,8 @@ class AppDialogAction extends StatelessWidget {
           : scheme.onSurface;
       return CupertinoButton(
         onPressed: onPressed,
-        color: SistrumTheme.controlFill(context),
-        disabledColor: SistrumTheme.controlFill(context, enabled: false),
+        color: AppTheme.controlFill(context),
+        disabledColor: AppTheme.controlFill(context, enabled: false),
         borderRadius: BorderRadius.circular(28),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: DefaultTextStyle(

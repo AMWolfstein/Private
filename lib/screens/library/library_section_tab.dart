@@ -44,7 +44,7 @@ import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/screens/library/sistrum_library_screen.dart';
+import 'package:sistrum/screens/library/app_library_screen.dart';
 import 'package:sistrum/screens/library/library_browse_refresh_policy.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
@@ -819,7 +819,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
   @override
   Widget build(BuildContext context) {
     if (widget.librarySection == null) {
-      return SistrumLibraryScreen(
+      return AppLibraryScreen(
         onOpenSection: (section) => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) =>

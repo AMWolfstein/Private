@@ -287,7 +287,7 @@ double _hueDistance(double a, double b) {
 }
 
 /// Every colour Sistrum derives from one cover. Build it only through
-/// [sistrumCoverColors]: screens differ by tone, never by hue or chroma.
+/// [appCoverColors]: screens differ by tone, never by hue or chroma.
 @immutable
 class CoverColors {
   const CoverColors._({
@@ -424,7 +424,7 @@ const _neutralAnalysis = CoverAnalysis(
 
 /// The one place cover colours are derived. Every screen and the artwork
 /// glass grounds use it, so one cover looks the same everywhere.
-CoverColors sistrumCoverColors(CoverAnalysis? analysis) {
+CoverColors appCoverColors(CoverAnalysis? analysis) {
   final source = analysis ?? _neutralAnalysis;
   final bottom = Hct.fromInt(source.bottomEdge);
   final dominant = Hct.fromInt(source.dominant);

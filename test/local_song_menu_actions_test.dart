@@ -16,10 +16,10 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
-import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'support/pump_until.dart';
 
 class _Settings extends SettingsNotifier {
@@ -94,7 +94,7 @@ void main() {
           musicPlayerControllerProvider.overrideWithValue(player),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Directionality(
@@ -199,7 +199,7 @@ void main() {
           ),
         );
         await openMenu(tester);
-        final panel = tester.getRect(find.byType(SistrumContextMenu));
+        final panel = tester.getRect(find.byType(AppContextMenu));
         expect(panel.left, greaterThanOrEqualTo(16));
         expect(panel.right, lessThanOrEqualTo(374));
         if (top < 400) {
@@ -226,7 +226,7 @@ void main() {
       ),
     );
     await openMenu(tester);
-    final panel = tester.getRect(find.byType(SistrumContextMenu));
+    final panel = tester.getRect(find.byType(AppContextMenu));
     expect(panel.height, lessThanOrEqualTo(button.top - 24 + 0.5));
     expect(find.text('Remove from device').hitTestable(), findsNothing);
     await tester.ensureVisible(find.text('Remove from device'));
@@ -566,7 +566,7 @@ void main() {
     );
 
     await openMenu(tester);
-    await tester.tap(find.text(l10n.sistrumGoToArtist));
+    await tester.tap(find.text(l10n.appGoToArtist));
     await pumpUntil(tester, find.byType(LocalArtistScreen));
     expect(find.byType(LocalArtistScreen), findsOneWidget);
   });
@@ -585,9 +585,9 @@ void main() {
     );
     final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
     await openMenu(tester);
-    await tester.ensureVisible(find.text(l10n.sistrumGoToArtist));
+    await tester.ensureVisible(find.text(l10n.appGoToArtist));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(l10n.sistrumGoToArtist));
+    await tester.tap(find.text(l10n.appGoToArtist));
     await pumpUntil(tester, find.byType(LocalArtistScreen));
     // A featured credit navigates to the primary artist, not the whole credit.
     expect(

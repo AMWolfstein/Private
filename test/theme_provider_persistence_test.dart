@@ -14,14 +14,14 @@ void main() {
     'theme settings round-trip through json and bootstrap preferences',
     () async {
       final values = <String, Object>{
-        kSistrumAccentKey: 'green',
-        kSistrumGlassOutlinesKey: false,
+        kAppAccentKey: 'green',
+        kAppGlassOutlinesKey: false,
       };
       final restored = ThemeSettings.fromJson(values);
-      expect(restored.sistrumAccent, SistrumAccent.green);
-      expect(restored.sistrumGlassOutlines, isFalse);
-      expect(restored.toJson()[kSistrumAccentKey], 'green');
-      expect(restored.toJson()[kSistrumGlassOutlinesKey], isFalse);
+      expect(restored.appAccent, AppAccent.green);
+      expect(restored.appGlassOutlines, isFalse);
+      expect(restored.toJson()[kAppAccentKey], 'green');
+      expect(restored.toJson()[kAppGlassOutlinesKey], isFalse);
 
       SharedPreferences.setMockInitialValues(values);
       final prefs = await SharedPreferences.getInstance();
@@ -36,11 +36,11 @@ void main() {
       addTearDown(container.dispose);
       await container.read(themeProvider.notifier).setLyricsTextScale(1.1);
       expect(
-        container.read(themeProvider).sistrumAccent,
-        restored.sistrumAccent,
+        container.read(themeProvider).appAccent,
+        restored.appAccent,
       );
-      expect(prefs.getString(kSistrumAccentKey), 'green');
-      expect(prefs.getBool(kSistrumGlassOutlinesKey), isFalse);
+      expect(prefs.getString(kAppAccentKey), 'green');
+      expect(prefs.getBool(kAppGlassOutlinesKey), isFalse);
     },
   );
 
@@ -54,7 +54,7 @@ void main() {
         'use_dynamic_color': false,
         'use_amoled': true,
         kUseSystemFontKey: true,
-        kSistrumAccentKey: 'blue',
+        kAppAccentKey: 'blue',
         kPlayerViewKey: 'immersive',
         kLyricsTextScaleKey: 0.9,
       });
@@ -71,7 +71,7 @@ void main() {
       final notifier = container.read(themeProvider.notifier);
       // An explicit edit equal to the bootstrap default still owns this field.
       final savingMode = notifier.setThemeMode(ThemeMode.system);
-      final savingAccent = notifier.setSistrumAccent(SistrumAccent.red);
+      final savingAccent = notifier.setAppAccent(AppAccent.red);
       await notifier.setLyricsTextScale(1.2, persist: false);
       var saved = false;
       unawaited(savingAccent.then((_) => saved = true));
@@ -84,7 +84,7 @@ void main() {
       await Future.wait([savingMode, savingAccent]);
       final state = container.read(themeProvider);
       expect(state.themeMode, ThemeMode.system);
-      expect(state.sistrumAccent, SistrumAccent.red);
+      expect(state.appAccent, AppAccent.red);
       expect(state.lyricsTextScale, 1.2);
       expect(state.playerView, PlayerView.immersive);
       expect(state.useSystemFont, isTrue);
@@ -95,7 +95,7 @@ void main() {
   test('early preview remains immediate without writing preferences', () async {
     SharedPreferences.setMockInitialValues({
       kLyricsTextScaleKey: 0.9,
-      kSistrumAccentKey: 'blue',
+      kAppAccentKey: 'blue',
     });
     final prefs = await SharedPreferences.getInstance();
     final releaseLoad = Completer<SharedPreferences>();
@@ -109,7 +109,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.listen(themeProvider, (_, next) {
-      if (next.sistrumAccent == SistrumAccent.blue) loaded.complete();
+      if (next.appAccent == AppAccent.blue) loaded.complete();
     });
     await container
         .read(themeProvider.notifier)

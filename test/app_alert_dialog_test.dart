@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -15,7 +15,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: SistrumTheme.build(brightness),
+                theme: AppTheme.build(brightness),
                 builder: (context, child) => MediaQuery(
                   data: MediaQuery.of(
                     context,
@@ -70,7 +70,7 @@ void main() {
               Theme.of(bodyContext).colorScheme.onSurface,
             );
           }
-          final panel = find.byType(SistrumGlassPanel);
+          final panel = find.byType(AppGlassPanel);
           final openWidth = tester.getRect(panel).width;
           await tester.tap(find.text('Cancel'));
           await tester.pump();
@@ -97,7 +97,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
+              theme: sistrum ? AppTheme.build(Brightness.dark) : ThemeData(),
               home: Builder(
                 builder: (context) => Scaffold(
                   body: TextButton(
@@ -134,7 +134,7 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(SistrumGlassPanel),
+          find.byType(AppGlassPanel),
           sistrum ? findsOneWidget : findsNothing,
         );
         expect(
@@ -153,7 +153,7 @@ void main() {
             DefaultTextStyle.of(
               tester.element(find.text('Remove')),
             ).style.color,
-            SistrumTheme.build(Brightness.dark).colorScheme.primary,
+            AppTheme.build(Brightness.dark).colorScheme.primary,
           );
           expect(find.byType(CupertinoAlertDialog), findsNothing);
           expect(find.byType(FilledButton), findsNothing);
@@ -188,7 +188,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           home: MediaQuery(
             data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
             child: AppAlertDialog(

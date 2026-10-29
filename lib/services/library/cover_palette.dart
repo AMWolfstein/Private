@@ -17,7 +17,7 @@ export 'package:sistrum/utils/cover_colors.dart'
         CoverAnalysis,
         CoverColors,
         analyzeCover,
-        sistrumCoverColors,
+        appCoverColors,
         paletteSeedFromColorCounts;
 
 Future<List<List<int>>> _quantizePaletteInIsolate(Uint8List bytes) async {
@@ -46,7 +46,7 @@ Map<String, Object> _analyzeInIsolate(_Sample sample) => analyzeCover(
 
 /// Cover colours: one analysis per cover version, from one small decode.
 ///
-/// Screens read colours only through [colors] (see [sistrumCoverColors]);
+/// Screens read colours only through [colors] (see [appCoverColors]);
 /// [resolve] and [peek] keep supplying generated schemes for headers.
 class CoverPaletteCache {
   CoverPaletteCache({CoverAnalysisStore? store}) : _store = store;
@@ -94,7 +94,7 @@ class CoverPaletteCache {
   /// Sistrum's colours for [source]; neutral gray while unknown or without a
   /// cover.
   CoverColors colors(String? source) =>
-      sistrumCoverColors(source == null ? null : peekAnalysis(source));
+      appCoverColors(source == null ? null : peekAnalysis(source));
 
   /// Cached scheme for [source], or null when it has not been resolved yet.
   ColorScheme? peek(String source, Brightness brightness) {
@@ -110,7 +110,7 @@ class CoverPaletteCache {
     Brightness brightness,
   ) {
     final schemeKey = '$key|${brightness.name}';
-    final scheme = _schemes[schemeKey] ??= sistrumCoverColors(
+    final scheme = _schemes[schemeKey] ??= appCoverColors(
       analysis,
     ).scheme(brightness);
     while (_schemes.length > _maxEntries * 2) {
@@ -130,7 +130,7 @@ class CoverPaletteCache {
 
   /// Resolves [source]'s colours; neutral when it cannot be read.
   Future<CoverColors> resolveColors(String? source) async =>
-      sistrumCoverColors(source == null ? null : await resolveAnalysis(source));
+      appCoverColors(source == null ? null : await resolveAnalysis(source));
 
   /// Mean perceptual lightness (CIE L*, 0..1) of the artwork's top quarter:
   /// what a transparent header floats over. Null when unreadable.

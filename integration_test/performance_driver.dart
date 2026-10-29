@@ -7,7 +7,7 @@ import 'package:integration_test/integration_test_driver.dart';
 /// uninstalls the app when it finishes. Use --profile on Android and --debug on
 /// iOS simulators. SISTRUM_PERFORMANCE_REPORT selects the host JSON output;
 /// screenshots are PNGs beside that report. The aggregate target is
-/// integration_test/sistrum_performance_test.dart.
+/// integration_test/app_performance_test.dart.
 Future<void> main() => integrationDriver(
   responseDataCallback: (data) async {
     final output = File(

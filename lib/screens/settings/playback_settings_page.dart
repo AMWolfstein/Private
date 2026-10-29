@@ -16,7 +16,7 @@ import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/status/beta_badge.dart';
-import 'package:sistrum/widgets/player/sistrum_volume_control.dart';
+import 'package:sistrum/widgets/player/app_volume_control.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/automix_settings.dart';
 
@@ -351,7 +351,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                                     : context.l10n.usbVolumeUnavailable,
                               ),
                               if (volume?.available == true)
-                                SistrumVolumeControl(
+                                AppVolumeControl(
                                   foreground: colorScheme.onSurface,
                                 ),
                             ],

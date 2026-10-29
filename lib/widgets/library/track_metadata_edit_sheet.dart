@@ -11,8 +11,8 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/services/library/metadata_persistence_service.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/theme/app_icons.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
@@ -792,13 +792,13 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: SistrumTheme.controlFill(context),
+        color: AppTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: DividerTheme(
           data: DividerTheme.of(
             context,
-          ).copyWith(color: SistrumTheme.metadataDividerColor(context)),
+          ).copyWith(color: AppTheme.metadataDividerColor(context)),
           child: content,
         ),
       ),

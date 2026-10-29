@@ -8,7 +8,7 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/updates_page.dart';
 import 'package:sistrum/services/update_checker.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -21,7 +21,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const UpdatesPage(),
@@ -60,7 +60,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: UpdatesPage(checker: checker),

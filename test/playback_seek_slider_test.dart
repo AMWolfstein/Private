@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/widgets/player/playback_seek_slider.dart';
 
@@ -123,7 +123,7 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
 
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         home: Scaffold(
           body: PlaybackSeekSlider(
             preview: preview,

@@ -2645,15 +2645,15 @@
       }
     }
   },
-  "sistrumSearch": "Search",
-  "sistrumContinuePlaying": "Continue Playing",
-  "sistrumFavorite": "Favorite",
-  "sistrumGoToArtist": "Go to Artist",
-  "@sistrumFavorite": {
+  "appSearch": "Search",
+  "appContinuePlaying": "Continue Playing",
+  "appFavorite": "Favorite",
+  "appGoToArtist": "Go to Artist",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumFavorited": "Favorited",
-  "@sistrumFavorited": {
+  "appFavorited": "Favorited",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

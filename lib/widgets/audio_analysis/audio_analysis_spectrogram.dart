@@ -169,7 +169,7 @@ class _SpectrogramView extends StatelessWidget {
     // The plot stays black in both appearances; its controls need matching
     // contrast even when the surrounding Sistrum page uses the light theme.
     return Theme(
-      data: SistrumTheme.fromContext(context, brightness: Brightness.dark),
+      data: AppTheme.fromContext(context, brightness: Brightness.dark),
       child: card,
     );
   }

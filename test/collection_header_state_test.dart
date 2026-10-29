@@ -12,7 +12,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
@@ -75,7 +75,7 @@ void main() {
         ...overrides,
       ],
       child: MaterialApp(
-        theme: SistrumTheme.build(brightness),
+        theme: AppTheme.build(brightness),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: page,

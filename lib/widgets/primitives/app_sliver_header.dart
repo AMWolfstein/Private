@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/app_bar_layout.dart';
-import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
+import 'package:sistrum/widgets/glass/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
@@ -69,7 +69,7 @@ class AppSliverHeader extends ConsumerWidget {
     final maxHeight = expandedHeight + topPadding;
 
     final opaque =
-        sistrumHeaderMaterial(context, ref) == SistrumHeaderMaterial.opaque;
+        appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
     final leading = this.leading;
 
     return SliverAppBar(
@@ -80,13 +80,13 @@ class AppSliverHeader extends ConsumerWidget {
       backgroundColor: opaque ? colorScheme.surface : Colors.transparent,
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
-      systemOverlayStyle: sistrumHeaderOverlayStyle(colorScheme.brightness),
+      systemOverlayStyle: appHeaderOverlayStyle(colorScheme.brightness),
       automaticallyImplyLeading: false,
       leadingWidth: _showLeading ? kToolbarHeight : null,
       leading: _showLeading
           ? (leading is IconButton
-                ? SistrumHeaderCircle(child: leading)
-                : SistrumHeaderControls(
+                ? AppHeaderCircle(child: leading)
+                : AppHeaderControls(
                     child:
                         leading ??
                         HeaderCircleButton(
@@ -98,8 +98,8 @@ class AppSliverHeader extends ConsumerWidget {
                         ),
                   ))
           : null,
-      actionsPadding: EdgeInsetsDirectional.only(end: kSistrumHeaderEdgeGap),
-      actions: [SistrumHeaderActions(actions: actions ?? const [])],
+      actionsPadding: EdgeInsetsDirectional.only(end: kAppHeaderEdgeGap),
+      actions: [AppHeaderActions(actions: actions ?? const [])],
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
           // SliverAppBar adds the platform's actual top safe-area inset to its
@@ -154,7 +154,7 @@ class AppSliverHeader extends ConsumerWidget {
           if (opaque) return bar;
           return Stack(
             fit: StackFit.expand,
-            children: [const SistrumHeaderBacking(), bar],
+            children: [const AppHeaderBacking(), bar],
           );
         },
       ),

@@ -18,7 +18,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/services/native/native_installation.dart';
@@ -122,7 +122,7 @@ void main() {
             initialSettingsProvider.overrideWithValue(bootstrapSettings),
             initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
             initialGlassAutoResultProvider.overrideWithValue(
-              loadGlassAutoResult(prefs, build: sistrumGlassAutoBuild()),
+              loadGlassAutoResult(prefs, build: appGlassAutoBuild()),
             ),
         ],
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 /// A single tonal selection inside a sheet, without a second glass layer.
 class AppChoiceChip extends StatelessWidget {
@@ -46,8 +46,8 @@ class AppChoiceChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         color: selected
             ? scheme.primary.withValues(alpha: 0.12)
-            : SistrumTheme.controlFill(context),
-        disabledColor: SistrumTheme.controlFill(context, enabled: false),
+            : AppTheme.controlFill(context),
+        disabledColor: AppTheme.controlFill(context, enabled: false),
         onPressed: onSelected == null ? null : () => onSelected!(!selected),
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(

@@ -9,7 +9,7 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/services/custom_font_service.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +67,7 @@ void main() {
   testWidgets(
     'custom typography survives Sistrum local surface reconstruction',
     (tester) async {
-      final theme = SistrumTheme.build(
+      final theme = AppTheme.build(
         Brightness.dark,
         fontFamily: 'ImportedFont_test',
       );
@@ -76,7 +76,7 @@ void main() {
           theme: theme,
           home: Builder(
             builder: (context) {
-              final surface = SistrumTheme.fromContext(
+              final surface = AppTheme.fromContext(
                 context,
                 chromeSurface: Colors.red,
               );
@@ -94,19 +94,19 @@ void main() {
         ),
       );
       expect(
-        AppTheme.light(
+        MaterialTestTheme.light(
           fontFamily: 'ImportedFont_test',
         ).textTheme.bodyMedium!.fontFamily,
         'ImportedFont_test',
       );
       expect(
-        AppTheme.dark(
+        MaterialTestTheme.dark(
           fontFamily: 'ImportedFont_test',
         ).textTheme.bodyMedium!.fontFamily,
         'ImportedFont_test',
       );
       expect(
-        SistrumTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
+        AppTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
         isNot('ImportedFont_test'),
       );
     },

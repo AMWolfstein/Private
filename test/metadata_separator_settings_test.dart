@@ -6,7 +6,7 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
@@ -33,7 +33,7 @@ void main() {
             UncontrolledProviderScope(
               container: container,
               child: MaterialApp(
-                theme: ThemeData(extensions: [if (sistrum) const SistrumTheme()]),
+                theme: ThemeData(extensions: [if (sistrum) const AppTheme()]),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: const MetadataSeparatorSettingsPage(),

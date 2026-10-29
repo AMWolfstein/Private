@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/player/player_lyrics.dart';
 
@@ -73,7 +73,7 @@ void main() {
       (tester) async {
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 2));
         addTearDown(preview.dispose);
-        final theme = SistrumTheme.build(Brightness.dark);
+        final theme = AppTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
@@ -138,7 +138,7 @@ void main() {
         addTearDown(playback.close);
         addTearDown(preview.dispose);
         final theme = sistrum
-            ? SistrumTheme.build(Brightness.dark)
+            ? AppTheme.build(Brightness.dark)
             : ThemeData.dark();
         await tester.pumpWidget(
           ProviderScope(
@@ -304,7 +304,7 @@ void main() {
             ),
           ],
         );
-        final theme = SistrumTheme.build(Brightness.dark);
+        final theme = AppTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
@@ -398,7 +398,7 @@ void main() {
       );
       final preview = ValueNotifier<Duration?>(const Duration(seconds: focus));
       addTearDown(preview.dispose);
-      final theme = SistrumTheme.build(Brightness.dark);
+      final theme = AppTheme.build(Brightness.dark);
       var width = 420.0;
       Future<void> pumpView() => tester.pumpWidget(
         ProviderScope(

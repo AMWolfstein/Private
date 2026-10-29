@@ -9,15 +9,15 @@ import 'package:sistrum/screens/setup_screen.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/navigation/app_navigation.dart';
 import 'package:sistrum/services/app_orientation.dart';
-import 'package:sistrum/widgets/shell/sistrum_theme_wrapper.dart';
+import 'package:sistrum/widgets/shell/app_theme_wrapper.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe_host.dart';
-import 'package:sistrum/widgets/glass/sistrum_performance_hud.dart';
+import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/app_glass_auto_probe_host.dart';
+import 'package:sistrum/widgets/glass/app_performance_hud.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_preparation.dart';
+import 'package:sistrum/widgets/glass/app_glass_preparation.dart';
 import 'package:sistrum/widgets/player/playback_feedback.dart';
 
 String initialLocationForAppState({
@@ -188,7 +188,7 @@ class SistrumApp extends ConsumerWidget {
       }
     }
 
-    return SistrumThemeWrapper(
+    return AppThemeWrapper(
       builder: (lightTheme, darkTheme, themeMode) {
         return MaterialApp.router(
           title: AppInfo.appName,
@@ -208,7 +208,7 @@ class SistrumApp extends ConsumerWidget {
                 child: PlaybackFeedback(
                   // Header controls on pages outside the tabs (Settings and
                   // what it opens) share one backdrop read, like the shell's.
-                  child: SistrumChromeBatch(
+                  child: AppChromeBatch(
                     child: child ?? const SizedBox.shrink(),
                   ),
                 ),
@@ -220,9 +220,9 @@ class SistrumApp extends ConsumerWidget {
               // level it sits above the router's Navigator, so the controller
               // never encounters it while collecting heroes. Removing the
               // inherited controller disables flights on the root Navigator.
-              child: SistrumGlassPreparation(
-                child: SistrumGlassAutoProbeHost(
-                  child: SistrumPerformanceHudHost(
+              child: AppGlassPreparation(
+                child: AppGlassAutoProbeHost(
+                  child: AppPerformanceHudHost(
                     child: AdaptiveUiScaler(
                       child: heroAnimationsEnabled
                           ? appContent

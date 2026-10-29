@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/theme/app_icons.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
 class AppActionButton extends StatelessWidget {
@@ -46,12 +46,12 @@ class AppActionButton extends StatelessWidget {
       color: prominent
           ? scheme.primary
           : tonal
-          ? SistrumTheme.controlFill(context)
+          ? AppTheme.controlFill(context)
           : Colors.transparent,
       disabledColor: !prominent && !tonal && !glass
           ? Colors.transparent
           : tonal && !prominent
-          ? SistrumTheme.controlFill(context, enabled: false)
+          ? AppTheme.controlFill(context, enabled: false)
           : scheme.surfaceContainerHighest,
       onPressed: onPressed,
       child: DefaultTextStyle(
@@ -67,7 +67,7 @@ class AppActionButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon case Icon(:final icon?))
-                Icon(sistrumIconFor(icon), size: 20)
+                Icon(appIconFor(icon), size: 20)
               else
                 icon,
               const SizedBox(width: 8),
@@ -80,6 +80,6 @@ class AppActionButton extends StatelessWidget {
     // These buttons sit inside glass sheets/groups; avoid another blur pass.
     return prominent || tonal || !glass
         ? action
-        : SistrumGlass.navigation(radius: 28, blurEnabled: false, child: action);
+        : AppGlass.navigation(radius: 28, blurEnabled: false, child: action);
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 
-class AppTheme {
+class MaterialTestTheme {
   static const Color defaultSeedColor = Color(0xFF1DB954);
 
   /// Shared surfaces use one radius scale; actions use round Material shapes.

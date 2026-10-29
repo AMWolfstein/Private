@@ -7,14 +7,14 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});
@@ -111,7 +111,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     // skip keeping a paused video decoder for the full player's motion cover,
     // and stop the title marquee after a few passes: every marquee frame
     // re-filters the blurred chrome around it.
-    final fullEffects = ref.watch(sistrumLiquidGlassProvider);
+    final fullEffects = ref.watch(appLiquidGlassProvider);
     final marqueeCycles = fullEffects ? null : 2;
 
     final player = Dismissible(
@@ -256,10 +256,10 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     );
     return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
-      child: SistrumGlass.navigation(
+      child: AppGlass.navigation(
         strongTint: true,
-        tintOpacity: SistrumTheme.chromeOpacity(context),
-        blurEnabled: ref.watch(sistrumBlurEnabledProvider),
+        tintOpacity: AppTheme.chromeOpacity(context),
+        blurEnabled: ref.watch(appBlurEnabledProvider),
         child: dismissible,
       ),
     );

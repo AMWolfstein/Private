@@ -17,7 +17,7 @@ import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 
@@ -513,7 +513,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   title: context.l10n.metadataSeparators,
                   onTap: () => Navigator.of(context).push(
                     slidePageRoute<void>(
-                      page: const SistrumSettingsTheme(
+                      page: const AppSettingsTheme(
                         child: MetadataSeparatorSettingsPage(),
                       ),
                     ),

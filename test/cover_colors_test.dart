@@ -61,7 +61,7 @@ void main() {
   test('every screen takes its colour from one base, by tone only', () {
     for (final name in fixtures) {
       final analysis = analyses[name]!;
-      final colors = sistrumCoverColors(analysis);
+      final colors = appCoverColors(analysis);
       final roles = {
         'surface (album and artist)': colors.surface,
         'player top': colors.playerStops[0],
@@ -99,7 +99,7 @@ void main() {
 
   test('text, icons and accents meet WCAG AA on their backgrounds', () {
     for (final name in fixtures) {
-      final colors = sistrumCoverColors(analyses[name]);
+      final colors = appCoverColors(analyses[name]);
       void aa(Color fg, Color bg, double ratio, String what) => expect(
         contrast(fg, bg),
         greaterThanOrEqualTo(ratio),
@@ -123,7 +123,7 @@ void main() {
   test('the accent stays in harmony with the background', () {
     for (final name in fixtures) {
       final analysis = analyses[name]!;
-      final colors = sistrumCoverColors(analysis);
+      final colors = appCoverColors(analysis);
       if (!colors.hasAccent) continue;
       final references = [
         if (colors.chroma != 0) colors.hue,
@@ -148,7 +148,7 @@ void main() {
   });
 
   test('covers keep their character', () {
-    CoverColors of(String name) => sistrumCoverColors(analyses[name]);
+    CoverColors of(String name) => appCoverColors(analyses[name]);
     // The report's cover: a warm gray continuation, not deep rust.
     final qamar = of('qamar');
     expect(qamar.chroma, lessThan(16));
@@ -173,7 +173,7 @@ void main() {
   });
 
   test('no cover or an unreadable one stays neutral gray', () {
-    final colors = sistrumCoverColors(null);
+    final colors = appCoverColors(null);
     expect(colors.chroma == 0, isTrue);
     expect(colors.hasAccent, isFalse);
     expect(colors.accent, Colors.white);

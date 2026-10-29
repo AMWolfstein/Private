@@ -12,10 +12,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_search_field.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';
@@ -66,7 +66,7 @@ class _IconButtonTooltipVisitor extends RecursiveAstVisitor<void> {
 Widget _hostSliver(Widget sliver) {
   return ProviderScope(
     child: MaterialApp(
-      theme: AppTheme.light(),
+      theme: MaterialTestTheme.light(),
       home: Scaffold(body: CustomScrollView(slivers: [sliver])),
     ),
   );
@@ -75,26 +75,26 @@ Widget _hostSliver(Widget sliver) {
 void main() {
   group('AppTokens', () {
     test('is registered on both themes', () {
-      expect(AppTheme.light().extension<AppTokens>(), AppTokens.standard);
-      expect(AppTheme.dark().extension<AppTokens>(), AppTokens.standard);
+      expect(MaterialTestTheme.light().extension<AppTokens>(), AppTokens.standard);
+      expect(MaterialTestTheme.dark().extension<AppTokens>(), AppTokens.standard);
       expect(
-        AppTheme.dark(isAmoled: true).extension<AppTokens>(),
+        MaterialTestTheme.dark(isAmoled: true).extension<AppTokens>(),
         AppTokens.standard,
       );
       expect(
-        SistrumTheme.build(Brightness.light).extension<AppTokens>(),
-        SistrumTheme.tokens,
+        AppTheme.build(Brightness.light).extension<AppTokens>(),
+        AppTheme.tokens,
       );
       expect(
-        SistrumTheme.build(Brightness.dark).colorScheme.primary,
-        SistrumTheme.darkAccent,
+        AppTheme.build(Brightness.dark).colorScheme.primary,
+        AppTheme.darkAccent,
       );
     });
 
     testWidgets('Sistrum keeps a font family and tracking in text roles', (
       tester,
     ) async {
-      final theme = SistrumTheme.build(Brightness.light);
+      final theme = AppTheme.build(Brightness.light);
       for (final role in [
         theme.textTheme.bodyLarge,
         theme.textTheme.bodyMedium,
@@ -183,14 +183,14 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: AppTheme.light(),
+              theme: MaterialTestTheme.light(),
               home: Scaffold(
                 body: Center(
                   child: SelectionActionButton(
                     icon: Icons.delete,
                     label: 'Delete selected tracks',
                     onPressed: null,
-                    colorScheme: AppTheme.light().colorScheme,
+                    colorScheme: MaterialTestTheme.light().colorScheme,
                   ),
                 ),
               ),
@@ -226,12 +226,12 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: SistrumTheme.build(Brightness.light),
+                theme: AppTheme.build(Brightness.light),
                 home: Scaffold(
                   body: Directionality(
                     textDirection: direction,
                     child: StatefulBuilder(
-                      builder: (context, setState) => SistrumSegmentedControl(
+                      builder: (context, setState) => AppSegmentedControl(
                         labels: const ['System', 'Light', 'Dark'],
                         selectedIndex: selected,
                         onChanged: (index) => setState(() => selected = index),
@@ -265,12 +265,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: MediaQuery(
               data: const MediaQueryData(disableAnimations: true),
               child: Scaffold(
                 body: StatefulBuilder(
-                  builder: (context, setState) => SistrumSegmentedControl(
+                  builder: (context, setState) => AppSegmentedControl(
                     labels: const ['System', 'Light', 'Dark'],
                     selectedIndex: selected,
                     onChanged: (index) => setState(() => selected = index),
@@ -308,7 +308,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: Scaffold(
               body: AppSearchField(
                 controller: controller,
@@ -323,7 +323,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(SistrumGlass), findsOneWidget);
+      expect(find.byType(AppGlass), findsOneWidget);
       await tester.tap(find.byType(TextField));
       await tester.enterText(find.byType(TextField), 'Album');
       await tester.testTextInput.receiveAction(TextInputAction.search);
@@ -347,7 +347,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             home: Scaffold(
               body: AppSearchField(
                 controller: controller,
@@ -405,7 +405,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             home: Scaffold(
               body: Builder(
                 builder: (context) => ElevatedButton(
@@ -455,7 +455,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: AppTheme.light().copyWith(platform: platform),
+                theme: MaterialTestTheme.light().copyWith(platform: platform),
                 home: MediaQuery(
                   data: MediaQueryData(
                     size: const Size(430, 932),
@@ -517,7 +517,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             home: Scaffold(
               body: Builder(
                 builder: (context) => ElevatedButton(
@@ -546,7 +546,7 @@ void main() {
 
     testWidgets('sheet shape comes from the token scale', (tester) async {
       final shape =
-          AppTheme.light().bottomSheetTheme.shape! as RoundedRectangleBorder;
+          MaterialTestTheme.light().bottomSheetTheme.shape! as RoundedRectangleBorder;
       final radius = shape.borderRadius.resolve(TextDirection.ltr).topLeft.x;
 
       expect(radius, AppTokens.standard.radiusSheet);
@@ -599,7 +599,7 @@ void main() {
   group('TrackCard', () {
     Widget host(Widget child) => ProviderScope(
       child: MaterialApp(
-        theme: AppTheme.light(),
+        theme: MaterialTestTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(body: child),
@@ -781,7 +781,7 @@ void main() {
     ) async {
       Widget host({required bool selecting}) => ProviderScope(
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: MaterialTestTheme.light(),
           home: CollectionScaffold(
             scrollController: ScrollController(),
             isSelectionMode: selecting,
@@ -812,7 +812,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             home: CollectionScaffold(
               scrollController: ScrollController(),
               isSelectionMode: true,
@@ -865,7 +865,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: MaterialTestTheme.light(),
             home: Scaffold(
               body: Row(
                 children: [

@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "불완전한 앨범",
   "libraryAlbumCompletenessUnknown": "앨범 완성도 알 수 없음",
   "libraryAlbumMissingTracks": "{present}/{expected}곡 · {missing}곡 누락",
-  "sistrumSearch": "검색",
-  "sistrumContinuePlaying": "계속 재생",
-  "sistrumFavorite": "즐겨찾기",
-  "@sistrumFavorite": {
+  "appSearch": "검색",
+  "appContinuePlaying": "계속 재생",
+  "appFavorite": "즐겨찾기",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "아티스트로 이동",
-  "sistrumFavorited": "즐겨추가에 추가됨",
-  "@sistrumFavorited": {
+  "appGoToArtist": "아티스트로 이동",
+  "appFavorited": "즐겨추가에 추가됨",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "곡을 비트에 맞춰 믹싱하고, 음정은 유지한 채 템포를 조절합니다. 비트를 맞출 수 없는 경우에는 크로스페이드를 사용합니다",

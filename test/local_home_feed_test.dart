@@ -16,7 +16,7 @@ import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -136,7 +136,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const HomeTab(mode: HomeTabMode.browse),
@@ -202,7 +202,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: SistrumTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(

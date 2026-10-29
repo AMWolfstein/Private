@@ -1,0 +1,408 @@
+import 'dart:developer' show TimelineTask;
+import 'dart:math' as math;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/theme/app_glass_levels.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
+
+/// Bounds of the tapped control or row, in the root overlay's coordinates.
+Rect? appMenuAnchor(BuildContext context) {
+  final box = context.findRenderObject();
+  if (box is! RenderBox || !box.hasSize) return null;
+  if (box.size.height > MediaQuery.sizeOf(context).height * 0.65) return null;
+  final overlay = Overlay.maybeOf(
+    context,
+    rootOverlay: true,
+  )?.context.findRenderObject();
+  return box.localToGlobal(Offset.zero, ancestor: overlay) & box.size;
+}
+
+Future<T?> showAppContextMenu<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  Rect? anchor,
+  bool preferAbove = false,
+  double maxWidth = 320,
+  bool fitToAnchorSpace = false,
+}) {
+  final navigator = Navigator.of(context, rootNavigator: true);
+  final themes = InheritedTheme.capture(from: context, to: navigator.context);
+  // Menus over the player draw from its artwork, not the screen.
+  final ground = AppArtworkGroundScope.forOverlays(context);
+  final target = anchor ?? appMenuAnchor(context);
+  // From the tap to the menu's first frame, for profile traces.
+  final opening = TimelineTask()..start('Sistrum menu: open to first frame');
+  SchedulerBinding.instance.addPostFrameCallback((_) => opening.finish());
+  return navigator.push<T>(
+    RawDialogRoute<T>(
+      barrierColor: Colors.black.withValues(alpha: 0.12),
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      transitionDuration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 320),
+      // Opacity layers isolate a BackdropFilter from the underlying artwork.
+      transitionBuilder: (_, _, _, child) => child,
+      pageBuilder: (context, animation, _) {
+        final media = MediaQuery.of(context);
+        return Semantics(
+          scopesRoute: true,
+          namesRoute: true,
+          label: MaterialLocalizations.of(context).popupMenuLabel,
+          explicitChildNodes: true,
+          child: AnimatedBuilder(
+            animation: animation,
+            child: AppArtworkGroundScope.wrapOverlay(
+              ground,
+              themes.wrap(Builder(builder: builder)),
+            ),
+            builder: (context, child) {
+              final motion = const Interval(
+                0,
+                0.62,
+                curve: Curves.easeOutCubic,
+              ).transform(animation.value);
+              return CustomSingleChildLayout(
+                delegate: _MenuLayout(
+                  anchor: target,
+                  preferAbove: preferAbove,
+                  maxWidth: maxWidth,
+                  fitToAnchorSpace: fitToAnchorSpace,
+                  padding: media.padding.copyWith(
+                    bottom: math.max(
+                      media.padding.bottom,
+                      media.viewInsets.bottom,
+                    ),
+                  ),
+                  progress: motion,
+                ),
+                child: Transform.scale(
+                  scale: 0.16 + 0.84 * motion,
+                  child: IgnorePointer(
+                    ignoring:
+                        motion < 1 ||
+                        animation.status == AnimationStatus.reverse,
+                    // One material from the first frame to the last: no
+                    // staged blur-to-glass reveal, over artwork or a page.
+                    child: child!,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    ),
+  );
+}
+
+class _MenuLayout extends SingleChildLayoutDelegate {
+  const _MenuLayout({
+    required this.anchor,
+    required this.padding,
+    required this.preferAbove,
+    required this.maxWidth,
+    required this.progress,
+    required this.fitToAnchorSpace,
+  });
+
+  final Rect? anchor;
+  final EdgeInsets padding;
+  final bool preferAbove;
+  final bool fitToAnchorSpace;
+  final double maxWidth;
+  final double progress;
+  static const double _margin = 16;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    final width = math.min(
+      maxWidth,
+      math.max(0.0, constraints.maxWidth - padding.horizontal - _margin * 2),
+    );
+    var height = math.max(
+      0.0,
+      constraints.maxHeight - padding.vertical - _margin * 2,
+    );
+    final above = (anchor?.top ?? 0) - padding.top - _margin - 8;
+    if (fitToAnchorSpace && anchor != null) {
+      final below =
+          constraints.maxHeight - padding.bottom - _margin - anchor!.bottom - 8;
+      final available = math.max(above, below);
+      if (available >= 160) height = math.min(height, available);
+    }
+    if (preferAbove && above >= 160) height = math.min(height, above);
+    return BoxConstraints(minWidth: width, maxWidth: width, maxHeight: height);
+  }
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final left = padding.left + _margin;
+    final top = padding.top + _margin;
+    final right = math.max(
+      left,
+      size.width - padding.right - _margin - childSize.width,
+    );
+    final bottom = math.max(
+      top,
+      size.height - padding.bottom - _margin - childSize.height,
+    );
+    final x = anchor == null
+        ? (size.width - childSize.width) / 2
+        : anchor!.right - childSize.width;
+    var y = size.height * 0.18;
+    if (anchor != null) {
+      final above = anchor!.top - childSize.height - 8;
+      final below = anchor!.bottom + 8;
+      if (preferAbove) {
+        y = above >= top
+            ? above
+            : below <= bottom
+            ? below
+            : top;
+      } else {
+        y = below <= bottom
+            ? below
+            : above >= top
+            ? above
+            : bottom;
+      }
+    }
+    final resting = Offset(x.clamp(left, right), y.clamp(top, bottom));
+    final origin = anchor?.center;
+    return origin == null
+        ? resting
+        : Offset.lerp(
+            origin - childSize.center(Offset.zero),
+            resting,
+            progress,
+          )!;
+  }
+
+  @override
+  bool shouldRelayout(_MenuLayout oldDelegate) =>
+      fitToAnchorSpace != oldDelegate.fitToAnchorSpace ||
+      anchor != oldDelegate.anchor ||
+      padding != oldDelegate.padding ||
+      maxWidth != oldDelegate.maxWidth ||
+      progress != oldDelegate.progress ||
+      preferAbove != oldDelegate.preferAbove;
+}
+
+/// The menu's glass panel.
+class _MenuSurface extends ConsumerWidget {
+  const _MenuSurface({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    return AppGlassPanel.overlay(
+      radius: 28,
+      smoothCorners: true,
+      highlightBorder: true,
+      highlightIntensity: 0.4,
+      tintColor: theme.extension<AppTheme>()?.chromeSurface != null
+          ? null
+          : dark
+          ? const Color(0xff414141)
+          : Colors.white,
+      tintOpacity: dark
+          ? appGlassClarity(
+              ref.watch(appGlassClarityLevelProvider),
+            ).menuOpacity
+          : 0.80,
+      child: child,
+    );
+  }
+}
+
+class AppMenuAction {
+  const AppMenuAction({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.subtitle,
+    this.selected = false,
+    this.destructive = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final String? subtitle;
+  final VoidCallback? onPressed;
+  final bool selected;
+  final bool destructive;
+}
+
+/// One frosted popover, with compact shortcuts and separated action groups.
+class AppContextMenu extends StatelessWidget {
+  const AppContextMenu({
+    super.key,
+    this.quickActions = const [],
+    required this.groups,
+    this.inheritSurface = false,
+    this.dense = false,
+  });
+
+  final List<AppMenuAction> quickActions;
+  final List<List<AppMenuAction>> groups;
+  final bool inheritSurface;
+  final bool dense;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = inheritSurface
+        ? Theme.of(context)
+        : AppTheme.fromContext(context);
+    final dark = theme.brightness == Brightness.dark;
+    final visibleGroups = groups.where((group) => group.isNotEmpty).toList();
+    final shortcuts = quickActions.isEmpty
+        ? null
+        : Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final action in quickActions)
+                  Expanded(child: _action(theme, action, compact: true)),
+              ],
+            ),
+          );
+    final actions = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < visibleGroups.length; i++) ...[
+            if (i > 0 || quickActions.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: i == 0
+                      ? 0
+                      : dense
+                      ? 4
+                      : 8,
+                ),
+                child: Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  indent: 16,
+                  endIndent: 16,
+                  color: theme.colorScheme.onSurface.withValues(
+                    alpha: dark ? 0.18 : 0.12,
+                  ),
+                ),
+              ),
+            for (final action in visibleGroups[i]) _action(theme, action),
+          ],
+        ],
+      ),
+    );
+    return Theme(
+      data: theme,
+      child: _MenuSurface(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Let the entire menu scroll when pinning the shortcuts would
+            // leave too little room for a row in landscape or large text.
+            if (constraints.maxHeight < 360 ||
+                MediaQuery.textScalerOf(context).scale(17) > 28) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [?shortcuts, actions],
+                ),
+              );
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ?shortcuts,
+                Flexible(child: SingleChildScrollView(child: actions)),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _action(
+    ThemeData theme,
+    AppMenuAction action, {
+    bool compact = false,
+  }) {
+    final color = action.onPressed == null
+        ? theme.colorScheme.onSurfaceVariant
+        : action.destructive || action.selected
+        ? theme.colorScheme.primary
+        : theme.colorScheme.onSurface;
+    final icon = Icon(action.icon, size: compact ? 24 : 22, color: color);
+    final label = Text(
+      action.label,
+      textAlign: compact ? TextAlign.center : TextAlign.start,
+      style: theme.textTheme.bodyLarge?.copyWith(
+        color: color,
+        fontSize: compact
+            ? 14
+            : dense
+            ? 16
+            : 17,
+        fontWeight: compact ? FontWeight.w600 : FontWeight.w400,
+      ),
+    );
+    return Semantics(
+      selected: action.selected,
+      child: CupertinoButton(
+        minimumSize: const Size(48, 48),
+        padding: compact
+            ? EdgeInsets.symmetric(horizontal: 4, vertical: dense ? 6 : 10)
+            : EdgeInsets.symmetric(horizontal: 16, vertical: dense ? 8 : 14),
+        onPressed: action.onPressed,
+        child: compact
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  icon,
+                  SizedBox(height: dense ? 4 : 7),
+                  label,
+                ],
+              )
+            : Row(
+                children: [
+                  icon,
+                  SizedBox(width: dense ? 12 : 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        label,
+                        if (action.subtitle != null) ...[
+                          const SizedBox(height: 3),
+                          Text(
+                            action.subtitle!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 14,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.96,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}

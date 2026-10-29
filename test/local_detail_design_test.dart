@@ -21,10 +21,10 @@ import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
-import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/app_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -161,7 +161,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: SistrumTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(
@@ -174,10 +174,10 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(LocalArtistScreen), findsOneWidget);
         expect(
-          find.byType(SistrumArtistHeader),
+          find.byType(AppArtistHeader),
           findsNothing,
         ); // Slivers are composed directly.
-        expect(find.byType(SistrumArtistSurface), findsOneWidget);
+        expect(find.byType(AppArtistSurface), findsOneWidget);
         expect(find.text('Album'), findsWidgets);
         expect(find.byIcon(CupertinoIcons.star), findsOneWidget);
         expect(
@@ -263,7 +263,7 @@ void main() {
               playbackProvider.overrideWith(_Playback.new),
             ],
             child: MaterialApp(
-              theme: SistrumTheme.build(Brightness.light),
+              theme: AppTheme.build(Brightness.light),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
@@ -293,7 +293,7 @@ void main() {
                 as AlbumDetailHeader;
         expect(header.immersive, true);
         expect(header.squareArtwork, true);
-        expect(find.byType(SistrumArtistSurface), findsOneWidget);
+        expect(find.byType(AppArtistSurface), findsOneWidget);
         await tester.ensureVisible(find.byTooltip('Add to Loved'));
         await tester.tap(find.byTooltip('Add to Loved'));
         await tester.pumpAndSettle();

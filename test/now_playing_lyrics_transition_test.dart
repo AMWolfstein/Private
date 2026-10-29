@@ -25,20 +25,20 @@ import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/now_playing_screen.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
-import 'package:sistrum/widgets/player/sistrum_volume_control.dart';
+import 'package:sistrum/widgets/player/app_volume_control.dart';
 import 'package:sistrum/widgets/lyrics/lyric_gap_indicator.dart';
-import 'package:sistrum/widgets/player/sistrum_player_queue.dart';
-import 'package:sistrum/widgets/player/sistrum_playback_button.dart';
-import 'package:sistrum/widgets/player/sistrum_playback_time.dart';
-import 'package:sistrum/widgets/player/sistrum_player_actions_sheet.dart';
-import 'package:sistrum/widgets/player/sistrum_player_favorite_button.dart';
-import 'package:sistrum/widgets/player/sistrum_player_details_sheet.dart';
-import 'package:sistrum/widgets/sistrum_metadata_row.dart';
-import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/player/sistrum_player_background.dart';
+import 'package:sistrum/widgets/player/app_player_queue.dart';
+import 'package:sistrum/widgets/player/app_playback_button.dart';
+import 'package:sistrum/widgets/player/app_playback_time.dart';
+import 'package:sistrum/widgets/player/app_player_actions_sheet.dart';
+import 'package:sistrum/widgets/player/app_player_favorite_button.dart';
+import 'package:sistrum/widgets/player/app_player_details_sheet.dart';
+import 'package:sistrum/widgets/app_metadata_row.dart';
+import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/player/app_player_background.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/player/playback_seek_slider.dart';
 
@@ -261,7 +261,7 @@ void main() {
         '(Sistrum: $brightness)', (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(brightness),
+        theme: AppTheme.build(brightness),
         size: const Size(393, 852),
         // Paused, so the Material progress bar lets the frames settle.
         wrapPlayer: (_) => const Scaffold(
@@ -324,7 +324,7 @@ void main() {
   testWidgets('sharing reads document lyrics before opening the lyrics page', (
     tester,
   ) async {
-    await pumpNowPlaying(tester, theme: SistrumTheme.build(Brightness.dark));
+    await pumpNowPlaying(tester, theme: AppTheme.build(Brightness.dark));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
     expect(metadataReads, isEmpty);
@@ -341,7 +341,7 @@ void main() {
   });
 
   testWidgets('a track change cancels a pending lyrics share', (tester) async {
-    await pumpNowPlaying(tester, theme: SistrumTheme.build(Brightness.dark));
+    await pumpNowPlaying(tester, theme: AppTheme.build(Brightness.dark));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
@@ -366,7 +366,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(
+          theme: AppTheme.build(
             sistrum ? Brightness.dark : Brightness.light,
           ),
           playback: PlaybackState(
@@ -421,7 +421,7 @@ void main() {
           );
           await pumpNowPlaying(
             tester,
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             size: const Size(393, 852),
             playerView: view,
             queue: queue,
@@ -478,7 +478,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       glassLevel: 2,
       size: const Size(393, 852),
       playbackEvents: playback.stream,
@@ -499,7 +499,7 @@ void main() {
     final scroll = tester.widget<ListView>(list).controller!;
     final initial = scroll.offset;
     final pause = find.widgetWithIcon(
-      SistrumPlaybackButton,
+      AppPlaybackButton,
       CupertinoIcons.pause_fill,
     );
     final touch = await tester.startGesture(
@@ -551,7 +551,7 @@ void main() {
         addTearDown(playbackEvents.close);
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playbackEvents: playbackEvents.stream,
           wrapPlayer: (player) => Builder(
@@ -575,14 +575,14 @@ void main() {
             .hitTestable(at: Alignment.centerLeft)
             .first;
         final title = tester.getRect(titleFinder);
-        final volume = tester.getRect(find.byType(SistrumVolumeControl));
+        final volume = tester.getRect(find.byType(AppVolumeControl));
         expect(playingCover.width, playingCover.height);
         expect(playingCover.width, greaterThanOrEqualTo(393 * 0.84));
         expect(playingCover.left, greaterThan(0));
         expect(playingCover.bottom, lessThan(title.top));
         expect(
           find.descendant(
-            of: find.byType(SistrumPlayerBackground),
+            of: find.byType(AppPlayerBackground),
             matching: cover,
           ),
           findsNothing,
@@ -604,7 +604,7 @@ void main() {
         expect(pausedCover.center.dx, closeTo(playingCover.center.dx, 0.01));
         expect(pausedCover.center.dy, closeTo(playingCover.center.dy, 0.01));
         expect(tester.getRect(titleFinder), title);
-        expect(tester.getRect(find.byType(SistrumVolumeControl)), volume);
+        expect(tester.getRect(find.byType(AppVolumeControl)), volume);
 
         playbackEvents.add(PlaybackState(playing: true));
         await settlePlayer(tester);
@@ -630,7 +630,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 780),
         playbackEvents: playback.stream,
       );
@@ -688,7 +688,7 @@ void main() {
           '[00:01.000]$original\n[00:15.000]Next line';
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: Size(width, 1024),
         playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
       );
@@ -745,7 +745,7 @@ void main() {
           final controller = _SeekController();
           await pumpNowPlaying(
             tester,
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             size: size,
             playbackEvents: playback.stream,
             controller: controller,
@@ -787,7 +787,7 @@ void main() {
               tester.getTopLeft(line).dy,
               closeTo(tester.getTopLeft(list).dy + focus + 16, 2),
             );
-            final label = tester.widget<SistrumPlaybackTime>(
+            final label = tester.widget<AppPlaybackTime>(
               find.byKey(const ValueKey('elapsed:first')),
             );
             expect(label.seconds, seconds.floor());
@@ -860,7 +860,7 @@ void main() {
     final controller = _SeekController();
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       playbackEvents: playback.stream,
       controller: controller,
@@ -974,7 +974,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(
+        theme: AppTheme.build(
           Brightness.dark,
         ).copyWith(platform: TargetPlatform.android),
         size: const Size(900, 420),
@@ -998,7 +998,7 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: Size(393, height),
           playback: PlaybackState(updatePosition: const Duration(seconds: 30)),
           glassLevel: 2,
@@ -1023,7 +1023,7 @@ void main() {
         final headerTop = tester.getTopLeft(find.text('Second')).dy;
         final transport = find.byWidgetPredicate(
           (widget) =>
-              widget is SistrumPlaybackButton &&
+              widget is AppPlaybackButton &&
               const [
                 CupertinoIcons.play_fill,
                 CupertinoIcons.backward_fill,
@@ -1117,7 +1117,7 @@ void main() {
         metadataOverrides['lyrics'] = '[00:00.00]$lyric\n[01:00.00]Second line';
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -1134,10 +1134,10 @@ void main() {
         final lyricsButton = find.byIcon(CupertinoIcons.quote_bubble);
         final queueButton = find.byIcon(CupertinoIcons.list_bullet);
         final play = find.widgetWithIcon(
-          SistrumPlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.pause_fill,
         );
-        final volume = find.byType(SistrumVolumeControl);
+        final volume = find.byType(AppVolumeControl);
         await tester.tap(lyricsButton);
         await tester.pump();
         await completeLyrics(tester);
@@ -1218,7 +1218,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playbackEvents: playback.stream,
         );
@@ -1274,7 +1274,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playback: PlaybackState(playing: true),
         wrapPlayer: (player) => Builder(
@@ -1289,7 +1289,7 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       await settlePlayer(tester);
       await tester.pump(const Duration(seconds: 6));
-      expect(find.byType(SistrumVolumeControl).hitTestable(), findsOneWidget);
+      expect(find.byType(AppVolumeControl).hitTestable(), findsOneWidget);
       expect(
         find.byIcon(CupertinoIcons.quote_bubble).hitTestable(),
         findsOneWidget,
@@ -1306,7 +1306,7 @@ void main() {
     final capture = GlobalKey();
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.light),
+      theme: AppTheme.build(Brightness.light),
       size: const Size(393, 780),
       wrapPlayer: (player) => RepaintBoundary(
         key: capture,
@@ -1352,7 +1352,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1362,7 +1362,7 @@ void main() {
       await tester.tap(moreButton);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 40));
-      final panel = find.byType(SistrumPlayerActionsSheet);
+      final panel = find.byType(AppPlayerActionsSheet);
       final enteringWidth = tester.getSize(panel).width;
       await settlePlayer(tester);
       expect(tester.getSize(panel).width, enteringWidth);
@@ -1403,7 +1403,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1414,21 +1414,21 @@ void main() {
       expect(find.text('Go to Album'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(SistrumPlayerNavigationMenu),
+          of: find.byType(AppPlayerNavigationMenu),
           matching: find.text('Artist'),
         ),
         findsOneWidget,
       );
       expect(
         find.descendant(
-          of: find.byType(SistrumPlayerNavigationMenu),
+          of: find.byType(AppPlayerNavigationMenu),
           matching: find.text('Album'),
         ),
         findsOneWidget,
       );
       await tester.tapAt(const Offset(5, 770));
       await settlePlayer(tester);
-      expect(find.byType(SistrumPlayerNavigationMenu), findsNothing);
+      expect(find.byType(AppPlayerNavigationMenu), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );
@@ -1445,7 +1445,7 @@ void main() {
     };
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(
+      theme: AppTheme.build(
         Brightness.dark,
       ).copyWith(platform: TargetPlatform.android),
       size: const Size(393, 852),
@@ -1460,8 +1460,8 @@ void main() {
     await settlePlayer(tester);
 
     expect(metadataReads, ['content://library/first.flac']);
-    final details = tester.widget<SistrumPlayerDetailsSheet>(
-      find.byType(SistrumPlayerDetailsSheet),
+    final details = tester.widget<AppPlayerDetailsSheet>(
+      find.byType(AppPlayerDetailsSheet),
     );
     expect(
       details.rows,
@@ -1496,7 +1496,7 @@ void main() {
       };
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(
@@ -1507,7 +1507,7 @@ void main() {
       await settlePlayer(tester);
       await tester.tap(find.text('Details'));
       await settlePlayer(tester);
-      final sheet = find.byType(SistrumPlayerDetailsSheet);
+      final sheet = find.byType(AppPlayerDetailsSheet);
       expect(sheet, findsOneWidget);
       expect(Theme.of(tester.element(sheet)).brightness, Brightness.dark);
       expect(
@@ -1515,10 +1515,10 @@ void main() {
         findsNothing,
       );
       expect(
-        find.descendant(of: sheet, matching: find.byType(SistrumGlass)),
+        find.descendant(of: sheet, matching: find.byType(AppGlass)),
         findsOneWidget,
       );
-      final titleRow = find.widgetWithText(SistrumMetadataRow, 'Title');
+      final titleRow = find.widgetWithText(AppMetadataRow, 'Title');
       expect(
         tester
             .getTopLeft(
@@ -1549,7 +1549,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1611,7 +1611,7 @@ void main() {
       await settlePlayer(tester);
       expect(find.byIcon(CupertinoIcons.heart).hitTestable(), findsOneWidget);
       expect(
-        find.byType(SistrumPlayerFavoriteButton).hitTestable(),
+        find.byType(AppPlayerFavoriteButton).hitTestable(),
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);
@@ -1634,7 +1634,7 @@ void main() {
         tester,
         theme: layout == 'material'
             ? null
-            : SistrumTheme.build(Brightness.dark),
+            : AppTheme.build(Brightness.dark),
         size: layout == 'landscape'
             ? const Size(852, 393)
             : const Size(393, 852),
@@ -1794,7 +1794,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playback.stream,
     );
@@ -1879,7 +1879,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
         playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
       );
@@ -1919,7 +1919,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1927,23 +1927,23 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
       await settlePlayer(tester, const Duration(milliseconds: 16));
       expect(find.text('First lyric').hitTestable(), findsOneWidget);
-      final volume = tester.getRect(find.byType(SistrumVolumeControl));
+      final volume = tester.getRect(find.byType(AppVolumeControl));
       await tester.tap(find.byIcon(CupertinoIcons.list_bullet));
       await settlePlayer(tester, const Duration(milliseconds: 16));
-      expect(find.byType(SistrumPlayerQueue), findsOneWidget);
+      expect(find.byType(AppPlayerQueue), findsOneWidget);
       expect(find.byType(BottomSheet), findsNothing);
-      expect(tester.getRect(find.byType(SistrumVolumeControl)), volume);
+      expect(tester.getRect(find.byType(AppVolumeControl)), volume);
       expect(tester.takeException(), isNull);
       await tester.tap(find.byIcon(CupertinoIcons.list_bullet));
       await tester.pump();
       expect(find.text('First lyric'), findsNothing);
       await tester.pump(const Duration(milliseconds: 120));
       expect(find.text('First lyric'), findsNothing);
-      expect(find.byType(SistrumPlayerQueue), findsOneWidget);
-      expect(find.byType(SistrumPlayerQueue).hitTestable(), findsNothing);
+      expect(find.byType(AppPlayerQueue), findsOneWidget);
+      expect(find.byType(AppPlayerQueue).hitTestable(), findsNothing);
       await settlePlayer(tester, const Duration(milliseconds: 16));
-      expect(find.byType(SistrumPlayerQueue), findsNothing);
-      expect(tester.getRect(find.byType(SistrumVolumeControl)), volume);
+      expect(find.byType(AppPlayerQueue), findsNothing);
+      expect(tester.getRect(find.byType(AppVolumeControl)), volume);
     },
   );
 
@@ -1955,7 +1955,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playbackEvents: playback.stream,
         );
@@ -1963,7 +1963,7 @@ void main() {
         mediaItems.add(item('first'));
         await settlePlayer(tester);
         final pause = find.widgetWithIcon(
-          SistrumPlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.pause_fill,
         );
         final pauseBounds = tester.getRect(pause);
@@ -1974,12 +1974,12 @@ void main() {
         final next = find.byIcon(CupertinoIcons.forward_fill);
         final previousBounds = tester.getRect(previous);
         final nextBounds = tester.getRect(next);
-        final volumeBounds = tester.getRect(find.byType(SistrumVolumeControl));
+        final volumeBounds = tester.getRect(find.byType(AppVolumeControl));
 
         playback.add(PlaybackState(playing: false));
         await settlePlayer(tester);
         final play = find.widgetWithIcon(
-          SistrumPlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.play_fill,
         );
         final playSize = tester.getSize(find.byIcon(CupertinoIcons.play_fill));
@@ -1988,7 +1988,7 @@ void main() {
         expect(tester.getRect(play), pauseBounds);
         expect(tester.getRect(previous), previousBounds);
         expect(tester.getRect(next), nextBounds);
-        expect(tester.getRect(find.byType(SistrumVolumeControl)), volumeBounds);
+        expect(tester.getRect(find.byType(AppVolumeControl)), volumeBounds);
 
         playback.add(PlaybackState(playing: true));
         await settlePlayer(tester);
@@ -2005,18 +2005,18 @@ void main() {
   testWidgets('Sistrum player renders Apple-style transport controls', (
     tester,
   ) async {
-    await pumpNowPlaying(tester, theme: SistrumTheme.build(Brightness.light));
+    await pumpNowPlaying(tester, theme: AppTheme.build(Brightness.light));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
     expect(find.byIcon(CupertinoIcons.play_fill), findsOneWidget);
     expect(find.byIcon(CupertinoIcons.backward_fill), findsOneWidget);
     expect(find.byIcon(CupertinoIcons.forward_fill), findsOneWidget);
-    expect(find.byType(SistrumVolumeControl), findsOneWidget);
+    expect(find.byType(AppVolumeControl), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     final nextButton = find.widgetWithIcon(
-      SistrumPlaybackButton,
+      AppPlaybackButton,
       CupertinoIcons.forward_fill,
     );
     final nextState = tester.state(nextButton);
@@ -2032,7 +2032,7 @@ void main() {
     addTearDown(playbackEvents.close);
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playbackEvents.stream,
     );
@@ -2058,11 +2058,11 @@ void main() {
     final remaining = find.byKey(const ValueKey('remaining:first'));
     void expectTimes(int elapsedSeconds, int remainingSeconds) {
       expect(
-        tester.widget<SistrumPlaybackTime>(elapsed).seconds,
+        tester.widget<AppPlaybackTime>(elapsed).seconds,
         elapsedSeconds,
       );
       expect(
-        tester.widget<SistrumPlaybackTime>(remaining).seconds,
+        tester.widget<AppPlaybackTime>(remaining).seconds,
         remainingSeconds,
       );
     }
@@ -2071,12 +2071,12 @@ void main() {
     await settlePlayer(tester);
     expectTimes(34, 146);
     final transport = tester
-        .widgetList<SistrumPlaybackButton>(find.byType(SistrumPlaybackButton))
+        .widgetList<AppPlaybackButton>(find.byType(AppPlaybackButton))
         .toList();
     await positionAt(34800);
     expectTimes(34, 146);
     final updatedTransport = tester
-        .widgetList<SistrumPlaybackButton>(find.byType(SistrumPlaybackButton))
+        .widgetList<AppPlaybackButton>(find.byType(AppPlaybackButton))
         .toList();
     for (var i = 0; i < transport.length; i++) {
       expect(updatedTransport[i], same(transport[i]));
@@ -2118,13 +2118,13 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 700),
     );
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
-    final volume = find.byType(SistrumVolumeControl);
+    final volume = find.byType(AppVolumeControl);
     final lyricsButton = find.byIcon(CupertinoIcons.quote_bubble);
     final slider = find.descendant(of: volume, matching: find.byType(Slider));
     expect(
@@ -2149,7 +2149,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playback: PlaybackState(playing: true),
       );
@@ -2162,7 +2162,7 @@ void main() {
       await settlePlayer(tester);
 
       final artwork = find.byType(Hero);
-      final volume = find.byType(SistrumVolumeControl);
+      final volume = find.byType(AppVolumeControl);
       final artRect = tester.getRect(artwork);
       expect(artRect.width, closeTo(artRect.height, 0.1));
       expect(artRect.width, greaterThan(140));
@@ -2261,30 +2261,30 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       playerView: PlayerView.immersive,
     );
     mediaItems.add(item('first'));
     await settlePlayer(tester);
-    final background = tester.element(find.byType(SistrumPlayerBackground));
+    final background = tester.element(find.byType(AppPlayerBackground));
     expect(
       tester
-          .widget<SistrumPlayerBackground>(find.byType(SistrumPlayerBackground))
+          .widget<AppPlayerBackground>(find.byType(AppPlayerBackground))
           .fadeStart,
       .72,
     );
     tester.view.physicalSize = const Size(852, 393);
     await settlePlayer(tester);
     expect(
-      tester.element(find.byType(SistrumPlayerBackground)),
+      tester.element(find.byType(AppPlayerBackground)),
       same(background),
     );
     expect(find.byKey(const ValueKey('full-player-artwork')), findsOneWidget);
     tester.view.physicalSize = const Size(393, 852);
     await settlePlayer(tester);
     expect(
-      tester.element(find.byType(SistrumPlayerBackground)),
+      tester.element(find.byType(AppPlayerBackground)),
       same(background),
     );
     expect(
@@ -2299,7 +2299,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playerView: PlayerView.immersive,
       );
@@ -2337,7 +2337,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: size,
           playerView: PlayerView.immersive,
           playback: PlaybackState(playing: false),
@@ -2359,7 +2359,7 @@ void main() {
           );
           expect(
             find.descendant(
-              of: find.byType(SistrumPlayerBackground),
+              of: find.byType(AppPlayerBackground),
               matching: full,
             ),
             findsOneWidget,
@@ -2391,7 +2391,7 @@ void main() {
             find.byIcon(CupertinoIcons.list_bullet).hitTestable(),
           );
           await settlePlayer(tester);
-          expect(find.byType(SistrumPlayerQueue).hitTestable(), findsOneWidget);
+          expect(find.byType(AppPlayerQueue).hitTestable(), findsOneWidget);
           await tester.tap(
             find.byKey(const ValueKey('compact-player-artwork')),
           );
@@ -2412,7 +2412,7 @@ void main() {
         (tester) async {
           await pumpNowPlaying(
             tester,
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             playerView: view,
             size: const Size(393, 852),
             playback: PlaybackState(playing: true),
@@ -2456,7 +2456,7 @@ void main() {
           }
           final releasedCover = tester.getRect(fullCover);
           final releasedPanel = tester.getRect(
-            find.byType(SistrumPlayerBackground),
+            find.byType(AppPlayerBackground),
           );
           if (drag) {
             route.endDrag(DragEndDetails(primaryVelocity: 0), 852);
@@ -2498,7 +2498,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
         );
         mediaItems.add(item('first'));
@@ -2510,11 +2510,11 @@ void main() {
         final element = tester.element(header);
         final expandedBounds = tester.getRect(header);
         final play = find.widgetWithIcon(
-          SistrumPlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.play_fill,
         );
         final controlsBounds = tester.getRect(play);
-        final favorite = find.byType(SistrumPlayerFavoriteButton);
+        final favorite = find.byType(AppPlayerFavoriteButton);
         final favoriteState = tester.state(favorite);
         for (var visit = 0; visit < 2; visit++) {
           await tester.tap(toggle);
@@ -2584,7 +2584,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playback: PlaybackState(
             playing: playing,
@@ -2632,7 +2632,7 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
@@ -2672,7 +2672,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
     );
     mediaItems.add(item('first'));
@@ -2713,7 +2713,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       wrapPlayer: (player) => Builder(
         builder: (context) => MediaQuery(
@@ -2750,7 +2750,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 700),
     );
     mediaItems.add(item('first'));
@@ -2759,7 +2759,7 @@ void main() {
     final artwork = find.byType(Hero);
     final fullArtwork = tester.getRect(artwork);
     expect(fullArtwork.height, fullArtwork.width);
-    final volume = find.byType(SistrumVolumeControl);
+    final volume = find.byType(AppVolumeControl);
     final volumeRect = tester.getRect(volume);
     final play = find.byIcon(CupertinoIcons.play_fill);
     final playRect = tester.getRect(play);
@@ -2834,7 +2834,7 @@ void main() {
           '[by:\u0053\u0070\u006f\u0074\u0069\u0046\u004c\u0041\u0043-Mobile via Example Lyrics API (source: upstream)]\n[00:01]Last lyric';
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -2870,7 +2870,7 @@ void main() {
     ].join('\n');
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(390, 844),
       playback: PlaybackState(
         processingState: AudioProcessingState.ready,
@@ -2915,7 +2915,7 @@ void main() {
           '[00:01.009]Original';
       await pumpNowPlaying(
         tester,
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -2928,15 +2928,15 @@ void main() {
       } else {
         await tester.tap(options);
         await settlePlayer(tester);
-        final glass = tester.widget<SistrumGlassPanel>(
-          find.byType(SistrumGlassPanel).last,
+        final glass = tester.widget<AppGlassPanel>(
+          find.byType(AppGlassPanel).last,
         );
         // Over the player the menu draws from its artwork: no backdrop read.
-        final panel = find.byType(SistrumGlassPanel).last;
+        final panel = find.byType(AppGlassPanel).last;
         expect(
           find.descendant(
             of: panel,
-            matching: find.byType(SistrumArtworkGlassSurface),
+            matching: find.byType(AppArtworkGlassSurface),
           ),
           findsOneWidget,
         );
@@ -2970,7 +2970,7 @@ void main() {
             '[00:01.009]Original';
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(844, 390) : const Size(390, 844),
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -3031,7 +3031,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+          theme: sistrum ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
@@ -3084,7 +3084,7 @@ void main() {
           addTearDown(playback.close);
           await pumpNowPlaying(
             tester,
-            theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+            theme: sistrum ? AppTheme.build(Brightness.dark) : null,
             size: const Size(390, 1100),
             playbackEvents: playback.stream,
           );
@@ -3196,7 +3196,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+          theme: sistrum ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
@@ -3250,7 +3250,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+          theme: sistrum ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
@@ -3363,7 +3363,7 @@ void main() {
           '[00:01.01]Original text';
       await pumpNowPlaying(
         tester,
-        theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+        theme: sistrum ? AppTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -3405,7 +3405,7 @@ void main() {
         Future<void> openPlayer(String id) async {
           await pumpNowPlaying(
             tester,
-            theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+            theme: sistrum ? AppTheme.build(Brightness.dark) : null,
             size: const Size(390, 844),
             playback: PlaybackState(
               processingState: AudioProcessingState.ready,
@@ -3493,7 +3493,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+        theme: sistrum ? AppTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
         playbackEvents: playback.stream,
       );
@@ -3544,7 +3544,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+        theme: sistrum ? AppTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
         playbackEvents: playback.stream,
       );
@@ -3608,7 +3608,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: sistrum ? SistrumTheme.build(Brightness.dark) : null,
+          theme: sistrum ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 844),
           playbackEvents: playback.stream,
         );
@@ -3725,7 +3725,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(390, 844),
           playbackEvents: playback.stream,
           wrapPlayer: (player) => Builder(
@@ -3859,7 +3859,7 @@ void main() {
         '</p></div></body></tt>';
     await pumpNowPlaying(
       tester,
-      theme: SistrumTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(320, 844),
       playback: PlaybackState(
         processingState: AudioProcessingState.ready,

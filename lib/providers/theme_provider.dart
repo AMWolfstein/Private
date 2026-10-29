@@ -11,14 +11,14 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
     playerView: playerViewFromString(prefs.getString(kPlayerViewKey)),
-    sistrumAccent: sistrumAccentFromString(prefs.getString(kSistrumAccentKey)),
+    appAccent: appAccentFromString(prefs.getString(kAppAccentKey)),
     useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
     customFontId: prefs.getString(kCustomFontIdKey) ?? '',
     customFontName: prefs.getString(kCustomFontNameKey) ?? '',
     lyricsTextScale: normalizeLyricsTextScale(
       prefs.getDouble(kLyricsTextScaleKey),
     ),
-    sistrumGlassOutlines: prefs.getBool(kSistrumGlassOutlinesKey) ?? true,
+    appGlassOutlines: prefs.getBool(kAppGlassOutlinesKey) ?? true,
   );
 }
 
@@ -71,14 +71,14 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       final snapshot = state;
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
       await prefs.setString(kPlayerViewKey, snapshot.playerView.name);
-      await prefs.setString(kSistrumAccentKey, snapshot.sistrumAccent.name);
+      await prefs.setString(kAppAccentKey, snapshot.appAccent.name);
       await prefs.setBool(kUseSystemFontKey, snapshot.useSystemFont);
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
       await prefs.setBool(
-        kSistrumGlassOutlinesKey,
-        snapshot.sistrumGlassOutlines,
+        kAppGlassOutlinesKey,
+        snapshot.appGlassOutlines,
       );
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
@@ -95,8 +95,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     await _saveToStorage();
   }
 
-  Future<void> setSistrumAccent(SistrumAccent accent) async {
-    _editState((current) => current.copyWith(sistrumAccent: accent));
+  Future<void> setAppAccent(AppAccent accent) async {
+    _editState((current) => current.copyWith(appAccent: accent));
     await _saveToStorage();
   }
 
@@ -117,8 +117,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     if (persist) await _saveToStorage();
   }
 
-  Future<void> setSistrumGlassOutlines(bool value) async {
-    _editState((current) => current.copyWith(sistrumGlassOutlines: value));
+  Future<void> setAppGlassOutlines(bool value) async {
+    _editState((current) => current.copyWith(appGlassOutlines: value));
     await _saveToStorage();
   }
 }

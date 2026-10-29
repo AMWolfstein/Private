@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/theme/app_icons.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
 /// Background fill for grouped cards, matching the Settings group look. Blends a
@@ -410,7 +410,7 @@ class SettingsSwitchItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDisabled = !enabled || onChanged == null;
-    final showIcon = icon != null && !context.isSistrum;
+    final showIcon = icon != null && !context.isAppTheme;
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -679,7 +679,7 @@ class SettingsInfoCard extends StatelessWidget {
         children: [
           if (icon != null) ...[
             Icon(
-              useGlass ? sistrumIconFor(icon!) : icon,
+              useGlass ? appIconFor(icon!) : icon,
               size: 20,
               color: useGlass ? colorScheme.primary : foreground,
             ),
@@ -719,7 +719,7 @@ class SettingsInfoCard extends StatelessWidget {
             vertical: tokens.gapXs,
           ),
       child: useGlass
-          ? SistrumGlassPanel.overlay(child: content)
+          ? AppGlassPanel.overlay(child: content)
           : DecoratedBox(
               decoration: BoxDecoration(
                 color: background,

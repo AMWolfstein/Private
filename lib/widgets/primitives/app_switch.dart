@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoColors;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_thumb.dart';
+import 'package:sistrum/widgets/glass/app_glass_thumb.dart';
 
 /// One switch style for settings, extension controls and editing sheets.
 /// Sistrum keeps its wide oval thumb even when glass or motion is disabled.
@@ -22,7 +22,7 @@ class AppSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _SistrumSwitch(
+    return _AppSwitch(
       value: value,
       onChanged: onChanged,
       semanticLabel: semanticLabel,
@@ -30,8 +30,8 @@ class AppSwitch extends StatelessWidget {
   }
 }
 
-class _SistrumSwitch extends ConsumerStatefulWidget {
-  const _SistrumSwitch({
+class _AppSwitch extends ConsumerStatefulWidget {
+  const _AppSwitch({
     required this.value,
     required this.onChanged,
     required this.semanticLabel,
@@ -42,10 +42,10 @@ class _SistrumSwitch extends ConsumerStatefulWidget {
   final String? semanticLabel;
 
   @override
-  ConsumerState<_SistrumSwitch> createState() => _SistrumSwitchState();
+  ConsumerState<_AppSwitch> createState() => _AppSwitchState();
 }
 
-class _SistrumSwitchState extends ConsumerState<_SistrumSwitch> {
+class _AppSwitchState extends ConsumerState<_AppSwitch> {
   // Geometry shared by the painted thumb and the glass overlay. The box is
   // 48dp tall so the switch stays a full-size tap target.
   static const _box = Size(71, 48);
@@ -75,7 +75,7 @@ class _SistrumSwitchState extends ConsumerState<_SistrumSwitch> {
 
     // Glass follows the shared thumb gate, upstream Sistrum 9247b99a's
     // enabled/motion/contrast/liquid checks, and needs an enabled control.
-    final glassAllowed = enabled && sistrumGlassThumbsEnabled(context, ref);
+    final glassAllowed = enabled && appGlassThumbsEnabled(context, ref);
     final glass = _touchGlass ?? glassAllowed;
     final position = _dragPosition ?? (value ? 1.0 : 0.0);
     final thumbDuration = _dragPosition == null ? duration : Duration.zero;
@@ -130,13 +130,13 @@ class _SistrumSwitchState extends ConsumerState<_SistrumSwitch> {
                       if (Directionality.of(context) == TextDirection.rtl) {
                         x = _box.width - x;
                       }
-                      return SistrumGlassThumb(
+                      return AppGlassThumb(
                         center: Offset(x, _box.height / 2),
                         held: _touchGlass == true,
                         restSize: _thumb,
                         activeSize: const Size(58, 38.33),
-                        style: sistrumGlassThumbStyle(
-                          outlines: ref.watch(sistrumGlassOutlinesProvider),
+                        style: appGlassThumbStyle(
+                          outlines: ref.watch(appGlassOutlinesProvider),
                           dispersion: 1,
                         ),
                       );

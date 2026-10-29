@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'dart:io';
 import 'dart:ui' show ImageByteFormat, ImageFilter;
 
@@ -560,7 +560,7 @@ class _LineChoice extends StatelessWidget {
             decoration: BoxDecoration(
               color: selected
                   ? colors.secondaryContainer
-                  : SistrumTheme.controlFill(context),
+                  : AppTheme.controlFill(context),
               borderRadius: radius,
             ),
             child: Material(
@@ -861,7 +861,7 @@ class LyricsShareCard extends StatelessWidget {
           ],
         );
       case LyricsCardBackground.color:
-        final colors = coverColors ?? sistrumCoverColors(null);
+        final colors = coverColors ?? appCoverColors(null);
         return DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(

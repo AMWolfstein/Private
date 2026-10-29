@@ -11,7 +11,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/playback_settings_page.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 void main() {
@@ -34,8 +34,8 @@ void main() {
           container: container,
           child: MaterialApp(
             theme: sistrum
-                ? SistrumTheme.build(Brightness.dark, accent: SistrumAccent.blue)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+                : MaterialTestTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

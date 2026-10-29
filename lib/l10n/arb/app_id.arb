@@ -2370,15 +2370,15 @@
       }
     }
   },
-  "sistrumSearch": "Telusuri",
-  "sistrumContinuePlaying": "Lanjut Memutar",
-  "sistrumFavorite": "Favorit",
-  "@sistrumFavorite": {
+  "appSearch": "Telusuri",
+  "appContinuePlaying": "Lanjut Memutar",
+  "appFavorite": "Favorit",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Buka Artis",
-  "sistrumFavorited": "Terfavorit",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Buka Artis",
+  "appFavorited": "Terfavorit",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Padukan musik dengan pencocokan bit dan penyesuaian tempo. Menggunakan crossfade bila beat tidak dapat dicocokkan.",

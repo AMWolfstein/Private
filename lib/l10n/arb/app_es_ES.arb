@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "Álbumes incompletos",
   "libraryAlbumCompletenessUnknown": "Integridad del álbum desconocida",
   "libraryAlbumMissingTracks": "{present}/{expected} pistas · {missing} que faltan",
-  "sistrumSearch": "Buscar",
-  "sistrumContinuePlaying": "Seguir escuchando",
-  "sistrumFavorite": "Favorito",
-  "@sistrumFavorite": {
+  "appSearch": "Buscar",
+  "appContinuePlaying": "Seguir escuchando",
+  "appFavorite": "Favorito",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Ir a Artista",
-  "sistrumFavorited": "Agregado a favoritos",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Ir a Artista",
+  "appFavorited": "Agregado a favoritos",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Mezcla canciones con sincronización de ritmos y ajuste de tempo que conserva el tono. Utiliza fundido cruzado cuando no es posible sincronizar los ritmos.",

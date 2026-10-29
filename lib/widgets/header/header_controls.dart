@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/cover_palette.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
+import 'package:sistrum/theme/app_icons.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/app_floating_header.dart';
 
 class HeaderFilledButton extends StatelessWidget {
   const HeaderFilledButton({
@@ -26,8 +26,8 @@ class HeaderFilledButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     {
-      return SistrumHeaderButton(
-        icon: sistrumIconFor(icon),
+      return AppHeaderButton(
+        icon: appIconFor(icon),
         label: label,
         onPressed: onPressed,
         prominent: !tonal,
@@ -72,18 +72,18 @@ class HeaderCircleButton extends ConsumerWidget {
         return Tooltip(
           message: tooltip,
           child: SizedBox.square(
-            dimension: buttonSize ?? kSistrumHeaderControlSize,
+            dimension: buttonSize ?? kAppHeaderControlSize,
             child: CupertinoButton(
               padding: EdgeInsets.zero,
               borderRadius: BorderRadius.circular(
-                (buttonSize ?? kSistrumHeaderControlSize) / 2,
+                (buttonSize ?? kAppHeaderControlSize) / 2,
               ),
               color: scheme.onSurface.withValues(
                 alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
               ),
               onPressed: onPressed,
               child: Icon(
-                sistrumIconFor(icon),
+                appIconFor(icon),
                 size: iconSize,
                 color: onPressed == null
                     ? scheme.onSurfaceVariant
@@ -93,26 +93,26 @@ class HeaderCircleButton extends ConsumerWidget {
           ),
         );
       }
-      final blurEnabled = ref.watch(sistrumBlurEnabledProvider);
+      final blurEnabled = ref.watch(appBlurEnabledProvider);
       final button = IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        icon: Icon(sistrumIconFor(icon), size: iconSize),
+        icon: Icon(appIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
-          minimumSize: Size.square(buttonSize ?? kSistrumHeaderControlSize),
+          minimumSize: Size.square(buttonSize ?? kAppHeaderControlSize),
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
       return Center(
         widthFactor: 1,
-        child: SistrumGlass.navigation(
-          radius: (buttonSize ?? kSistrumHeaderControlSize) / 2,
+        child: AppGlass.navigation(
+          radius: (buttonSize ?? kAppHeaderControlSize) / 2,
           tintColor: scheme.brightness == Brightness.dark
               ? Colors.black
               : Colors.white,
           tintOpacity: scheme.brightness == Brightness.dark ? 0.45 : 0.55,
           blurEnabled: blurEnabled,
-          allowLens: sistrumLiquidChromeEnabled(context, ref),
+          allowLens: appLiquidChromeEnabled(context, ref),
           child: button,
         ),
       );
@@ -120,8 +120,8 @@ class HeaderCircleButton extends ConsumerWidget {
   }
 }
 
-class SistrumHeaderButton extends StatelessWidget {
-  const SistrumHeaderButton({
+class AppHeaderButton extends StatelessWidget {
+  const AppHeaderButton({
     super.key,
     required this.icon,
     required this.label,

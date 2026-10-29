@@ -109,7 +109,7 @@ class PlayerLyricsSection extends ConsumerWidget {
           ),
           if (options != null)
             PositionedDirectional(
-              start: sistrumLyricsContentInset,
+              start: appLyricsContentInset,
               bottom: 8,
               child: options!,
             ),

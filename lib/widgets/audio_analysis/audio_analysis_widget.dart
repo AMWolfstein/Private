@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_cache.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';

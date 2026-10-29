@@ -14,7 +14,7 @@ import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/user_profile_store.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
@@ -223,7 +223,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: SettingsTab()),

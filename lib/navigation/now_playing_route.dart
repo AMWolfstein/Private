@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/app_orientation.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 /// Hero tag shared by the mini player artwork and the full player artwork so
 /// the cover visually expands when the player opens.
@@ -232,7 +232,7 @@ class NowPlayingRoute extends PageRoute<void> {
     // Sistrum's full-bleed artwork travels with its panel. Material keeps the
     // independent cover flight back to the mini-player on button/back pop.
     final inPlacePop =
-        reversing && !_interactiveTransition && !context.isSistrum;
+        reversing && !_interactiveTransition && !context.isAppTheme;
     final slide = _interactiveTransition
         ? animation
         : animation.drive(CurveTween(curve: Easing.emphasizedDecelerate));

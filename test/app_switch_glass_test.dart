@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_thumb.dart';
+import 'package:sistrum/widgets/glass/app_glass_thumb.dart';
 
 import 'support/glass_controls.dart';
 
@@ -33,7 +33,7 @@ void main() {
         (setState) =>
             switchFor(setState, () => value, (v) => value = v, changes),
       );
-      expect(find.byType(SistrumGlassThumb), findsOneWidget);
+      expect(find.byType(AppGlassThumb), findsOneWidget);
       expect(glassLenses(), 0);
       expect(glassPills(), 0);
 
@@ -53,9 +53,9 @@ void main() {
     });
 
     for (final (name, level, clarity, touchGlass) in [
-      ('lite keeps the touch-only lens', SistrumGlassLevel.lite, 3, true),
-      ('Level 1 on full glass has none', SistrumGlassLevel.liquid, 1, false),
-      ('Level 1 on lite glass has none', SistrumGlassLevel.lite, 1, false),
+      ('lite keeps the touch-only lens', AppGlassLevel.lite, 3, true),
+      ('Level 1 on full glass has none', AppGlassLevel.liquid, 1, false),
+      ('Level 1 on lite glass has none', AppGlassLevel.lite, 1, false),
     ]) {
       testWidgets(name, (tester) async {
         var value = false;
@@ -98,7 +98,7 @@ void main() {
           reduceMotion: reduceMotion,
           highContrast: highContrast,
         );
-        expect(find.byType(SistrumGlassThumb), findsNothing);
+        expect(find.byType(AppGlassThumb), findsNothing);
         final gesture = await tester.startGesture(
           tester.getCenter(find.byType(AppSwitch)),
         );
@@ -116,7 +116,7 @@ void main() {
         tester,
         (_) => const Center(child: AppSwitch(value: true, onChanged: null)),
       );
-      expect(find.byType(SistrumGlassThumb), findsNothing);
+      expect(find.byType(AppGlassThumb), findsNothing);
       final opacity = tester.widget<Opacity>(
         find.descendant(
           of: find.byType(AppSwitch),
@@ -186,7 +186,7 @@ void main() {
           direction: direction,
         );
         return tester
-            .widget<SistrumGlassThumb>(find.byType(SistrumGlassThumb))
+            .widget<AppGlassThumb>(find.byType(AppGlassThumb))
             .center
             .dx;
       }

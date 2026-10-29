@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "Неполные альбомы",
   "libraryAlbumCompletenessUnknown": "Полнота альбома неизвестна",
   "libraryAlbumMissingTracks": "{present}/{expected} треков · не хватает {missing}",
-  "sistrumSearch": "Поиск",
-  "sistrumContinuePlaying": "Продолжить воспроизведение",
-  "sistrumFavorite": "В избранное",
-  "@sistrumFavorite": {
+  "appSearch": "Поиск",
+  "appContinuePlaying": "Продолжить воспроизведение",
+  "appFavorite": "В избранное",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Перейти к исполнителю",
-  "sistrumFavorited": "Избранное",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Перейти к исполнителю",
+  "appFavorited": "Избранное",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Плавный переход с подгонкой темпа и сохранением тональности. При невозможности синхронизации битов применяется кроссфейд.",

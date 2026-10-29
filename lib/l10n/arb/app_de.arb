@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "Unvollständige Alben",
   "libraryAlbumCompletenessUnknown": "Vollständigkeit des Albums unbekannt",
   "libraryAlbumMissingTracks": "{present}/{expected} Titel · {missing} fehlen",
-  "sistrumSearch": "Suche",
-  "sistrumContinuePlaying": "Continue Playing",
-  "sistrumFavorite": "Favorit",
-  "@sistrumFavorite": {
+  "appSearch": "Suche",
+  "appContinuePlaying": "Continue Playing",
+  "appFavorite": "Favorit",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Zum Künstler",
-  "sistrumFavorited": "Favorisiert",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Zum Künstler",
+  "appFavorited": "Favorisiert",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

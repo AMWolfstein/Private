@@ -9,7 +9,7 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/widgets/settings/automix_settings.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 
 void main() {
@@ -82,14 +82,14 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: sistrum
-                  ? SistrumTheme.build(
+                  ? AppTheme.build(
                       Brightness.dark,
-                      accent: SistrumAccent.blue,
+                      accent: AppAccent.blue,
                     )
-                  : AppTheme.light(seedColor: Colors.blue),
+                  : MaterialTestTheme.light(seedColor: Colors.blue),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: const SistrumSettingsTheme(
+              home: const AppSettingsTheme(
                 child: Scaffold(
                   body: SingleChildScrollView(child: AutoMixSettings()),
                 ),
@@ -103,7 +103,7 @@ void main() {
         expect(find.byType(AppBottomSheet), findsOneWidget);
         expect(find.byType(AppSheetOption), findsNWidgets(6));
         final context = tester.element(find.byType(AppBottomSheet));
-        expect(context.isSistrum, sistrum);
+        expect(context.isAppTheme, sistrum);
         final selected = tester
             .widgetList<AppSheetOption>(find.byType(AppSheetOption))
             .singleWhere((option) => option.trailing != null);

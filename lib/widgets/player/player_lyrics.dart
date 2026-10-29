@@ -13,7 +13,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/utils/lyrics_timeline.dart';
 import 'package:sistrum/utils/lyric_text_direction.dart';
@@ -22,11 +22,11 @@ import 'package:sistrum/widgets/lyrics/aligned_lyric_pronunciation.dart';
 import 'package:sistrum/widgets/lyrics/lyric_supplement_transition.dart';
 import 'package:sistrum/widgets/lyrics/lyric_scroll_motion.dart';
 import 'package:sistrum/widgets/lyrics/lyric_gap_indicator.dart';
-import 'package:sistrum/widgets/player/sistrum_player_slider.dart';
+import 'package:sistrum/widgets/player/app_player_slider.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';
 
-const _sistrumLyricFontSize = 34.0;
-const sistrumLyricsContentInset = 28.0 + SistrumPlayerSlider.horizontalInset;
+const _appLyricFontSize = 34.0;
+const appLyricsContentInset = 28.0 + AppPlayerSlider.horizontalInset;
 
 /// How much of the lyrics area's bottom the player's controls cover. The
 /// Sistrum phone player lays lyrics out under its controls so they can grow
@@ -498,8 +498,8 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     super.dispose();
   }
 
-  void _measureSistrumLines(BuildContext context, double width) {
-    final style = _sistrumLyricStyle(context);
+  void _measureAppLines(BuildContext context, double width) {
+    final style = _appLyricStyle(context);
     final scaler = MediaQuery.textScalerOf(context);
     final direction = Directionality.of(context);
     final locale = Localizations.maybeLocaleOf(context);
@@ -544,7 +544,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       painter.textDirection = lineDirection;
       painter.text = TextSpan(
         text: line.text,
-        style: _sistrumLyricStyle(context, background: line.isBackground),
+        style: _appLyricStyle(context, background: line.isBackground),
       );
       painter.layout(maxWidth: width);
       final padding = _linePadding(index).vertical;
@@ -564,7 +564,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
           pronunciationHeight = 6 + painter.height;
           final aligned = LyricPronunciationLayout.measure(
             line: line,
-            primaryStyle: _sistrumLyricStyle(
+            primaryStyle: _appLyricStyle(
               context,
               background: line.isBackground,
             ),
@@ -805,12 +805,12 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final loading = _visible
         ? ref.watch(playbackLoadingProvider)
         : ref.read(playbackLoadingProvider);
-    final sistrum = context.isSistrum;
+    final sistrum = context.isAppTheme;
     final highContrast = MediaQuery.highContrastOf(context);
     final blurLyrics =
         !highContrast &&
         // Every defocused line is filtered again on each playback frame.
-        ref.watch(sistrumLiquidGlassProvider);
+        ref.watch(appLiquidGlassProvider);
     final motion = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 420);
@@ -845,7 +845,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final inset = sistrum ? sistrumLyricsContentInset : 24.0;
+          final inset = sistrum ? appLyricsContentInset : 24.0;
           final contentWidth = (constraints.maxWidth - inset * 2).clamp(
             0.0,
             double.infinity,
@@ -873,7 +873,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 previousExtents?.offsetForRow(previousScrollAnchor) ?? 0;
             final previousFocusOffset =
                 previousExtents?.offsetForRow(focusAnchor) ?? 0;
-            _measureSistrumLines(context, layoutWidth);
+            _measureAppLines(context, layoutWidth);
             // Reuse text measurements; only interpolate row heights as the
             // supplements fade. Scrolling follows the same animation clock.
             final geometryKey = (
@@ -1052,7 +1052,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   // Focus changes paint scale, never font metrics or wrapping
                   // shared by the plain and word-timed line.
                   style: sistrum
-                      ? _sistrumLyricStyle(
+                      ? _appLyricStyle(
                           context,
                           background: line.isBackground,
                         ).copyWith(color: color)
@@ -1483,10 +1483,10 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
 
 // Merged over the ambient text style, as a Text widget would, so measured,
 // plain and word-timed lines share the same metrics and wrapping.
-TextStyle _sistrumLyricStyle(BuildContext context, {bool background = false}) =>
+TextStyle _appLyricStyle(BuildContext context, {bool background = false}) =>
     DefaultTextStyle.of(context).style.merge(
       (Theme.of(context).textTheme.headlineSmall ?? const TextStyle()).copyWith(
-        fontSize: _sistrumLyricFontSize * (background ? 0.68 : 1),
+        fontSize: _appLyricFontSize * (background ? 0.68 : 1),
         height: context.tokens.lyricsLineHeight,
         fontWeight: FontWeight.bold,
       ),
@@ -1559,7 +1559,7 @@ Widget _withLyricSupplements(
       line.romanization?.trim().isNotEmpty != true) {
     return withSupplements(primary);
   }
-  final primaryStyle = _sistrumLyricStyle(
+  final primaryStyle = _appLyricStyle(
     context,
     background: line.isBackground,
   );
@@ -1847,7 +1847,7 @@ class _WordHighlightedLyricLineState
 
   @override
   Widget build(BuildContext context) {
-    final style = _sistrumLyricStyle(
+    final style = _appLyricStyle(
       context,
       background: widget.line.isBackground,
     );

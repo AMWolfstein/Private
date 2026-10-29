@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 /// One inline surface, matching the metadata groups and dialog controls.
 class AppContentCard extends StatelessWidget {
@@ -23,13 +23,13 @@ class AppContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: preserveColor ? color : SistrumTheme.controlFill(context),
+      color: preserveColor ? color : AppTheme.controlFill(context),
       borderRadius: BorderRadius.circular(28),
       clipBehavior: Clip.antiAlias,
       child: DividerTheme(
         data: DividerTheme.of(
           context,
-        ).copyWith(color: SistrumTheme.metadataDividerColor(context)),
+        ).copyWith(color: AppTheme.metadataDividerColor(context)),
         child: child,
       ),
     );

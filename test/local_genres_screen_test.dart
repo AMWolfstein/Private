@@ -8,7 +8,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/screens/library/local_genres_screen.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -62,7 +62,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: SistrumTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LocalGenresScreen(),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 
@@ -29,8 +29,8 @@ void main() {
   for (final sistrum in [true]) {
     final name = sistrum ? 'Sistrum' : 'Material';
     final theme = sistrum
-        ? SistrumTheme.build(Brightness.light)
-        : AppTheme.light();
+        ? AppTheme.build(Brightness.light)
+        : MaterialTestTheme.light();
 
     testWidgets('$name: leaving a collection removes its selection bar', (
       tester,

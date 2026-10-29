@@ -4,7 +4,7 @@ import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/theme/app_icons.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
@@ -131,7 +131,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                       title: context.l10n.aboutRemeasureGlass,
                       subtitle: context.l10n.aboutRemeasureGlassSubtitle,
                       onTap: ref
-                          .read(sistrumGlassAutoResultProvider.notifier)
+                          .read(appGlassAutoResultProvider.notifier)
                           .clear,
                     ),
                     _AboutSettingsItem(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 /// The standard search field used by top-level app surfaces.
@@ -37,14 +37,14 @@ class AppSearchField extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
 
-  /// See [SistrumGlass.samplesBackdrop]: false where the field scrolls over
+  /// See [AppGlass.samplesBackdrop]: false where the field scrolls over
   /// the plain page background.
   final bool samplesBackdrop;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final sistrum = context.isSistrum;
+    final sistrum = context.isAppTheme;
     final radius = BorderRadius.circular(28);
 
     final field = ValueListenableBuilder<TextEditingValue>(
@@ -106,9 +106,9 @@ class AppSearchField extends StatelessWidget {
     );
 
     return Consumer(
-      builder: (context, ref, child) => SistrumGlass.navigation(
+      builder: (context, ref, child) => AppGlass.navigation(
         radius: 28,
-        blurEnabled: ref.watch(sistrumBlurEnabledProvider),
+        blurEnabled: ref.watch(appBlurEnabledProvider),
         samplesBackdrop: samplesBackdrop,
         child: child!,
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/player_queue_dismissible.dart';
 
 void main() {
@@ -14,7 +14,7 @@ void main() {
           var removals = 0;
           await tester.pumpWidget(
             MaterialApp(
-              theme: SistrumTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Directionality(
@@ -94,7 +94,7 @@ void main() {
     var removals = 0;
     await tester.pumpWidget(
       MaterialApp(
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
@@ -125,7 +125,7 @@ void main() {
   testWidgets('a disabled row offers no Remove action', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: SistrumTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(

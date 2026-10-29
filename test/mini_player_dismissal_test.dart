@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 
 class _Controller extends MusicPlayerController {
@@ -49,10 +49,10 @@ void main() {
                 playbackStateProvider.overrideWith((ref) => states.stream),
                 musicPlayerControllerProvider.overrideWithValue(controller),
                 lowEndDeviceProvider.overrideWithValue(true),
-                sistrumLiquidGlassProvider.overrideWithValue(false),
+                appLiquidGlassProvider.overrideWithValue(false),
               ],
               child: MaterialApp(
-                theme: SistrumTheme.build(Brightness.light),
+                theme: AppTheme.build(Brightness.light),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: const Scaffold(
@@ -147,10 +147,10 @@ void main() {
           playbackStateProvider.overrideWith((ref) => states.stream),
           musicPlayerControllerProvider.overrideWithValue(controller),
           lowEndDeviceProvider.overrideWithValue(true),
-          sistrumLiquidGlassProvider.overrideWithValue(false),
+          appLiquidGlassProvider.overrideWithValue(false),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(

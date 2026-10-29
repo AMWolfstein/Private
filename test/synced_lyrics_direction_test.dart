@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/player/player_lyrics.dart';
 
@@ -21,7 +21,7 @@ void main() {
     final seek = ValueNotifier<Duration?>(null);
     addTearDown(playback.close);
     addTearDown(seek.dispose);
-    final theme = SistrumTheme.build(Brightness.dark);
+    final theme = AppTheme.build(Brightness.dark);
     final lyrics = ParsedLyrics(
       synced: true,
       wordSynced: false,

@@ -14,7 +14,7 @@ import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -253,8 +253,8 @@ void main() {
             ],
             child: MaterialApp(
               theme: sistrum
-                  ? SistrumTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : MaterialTestTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(
@@ -315,7 +315,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(() => collections),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(
@@ -352,7 +352,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_EmptyCollections.new),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(
@@ -381,7 +381,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_SongsCollections.new),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: LibrarySectionTab(librarySection: 'all')),
@@ -411,7 +411,7 @@ void main() {
           libraryCollectionsProvider.overrideWith(_SongsCollections.new),
         ],
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => MediaQuery(

@@ -9,7 +9,7 @@ import 'package:audio_service/audio_service.dart' show MediaItem;
 import 'package:sistrum/services/library/deleted_library_files.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
@@ -36,7 +36,7 @@ import 'package:sistrum/widgets/library/library_selection_playback_actions.dart'
 import 'package:sistrum/widgets/status/disc_separator_chip.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/header/album_ken_burns.dart';
-import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
@@ -246,7 +246,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           ? albumCover
           : artworkTrack?.coverPath,
       filePath: artworkTrack?.filePath,
-      builder: (context, coverPath) => SistrumArtistSurface(
+      builder: (context, coverPath) => AppArtistSurface(
         imageSource: coverPath,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, coverPath)),
@@ -357,11 +357,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
               onPressed: exitSelectionMode,
             )
           : null,
-      immersive: context.isSistrum,
+      immersive: context.isAppTheme,
       squareArtwork: true,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
-      background: context.isSistrum && coverPath != null
+      background: context.isAppTheme && coverPath != null
           ? AlbumKenBurns(child: background)
           : background,
       paletteSource: coverPath,

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
@@ -24,7 +24,7 @@ double _contrast(Color a, Color b) {
 Widget _host(Widget child, {Brightness brightness = Brightness.light}) {
   return ProviderScope(
     child: MaterialApp(
-      theme: SistrumTheme.build(brightness),
+      theme: AppTheme.build(brightness),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: Center(child: child)),
@@ -103,7 +103,7 @@ void main() {
       await tester.pumpWidget(
         _host(
           ExplicitBadge(
-            colorScheme: SistrumTheme.build(brightness).colorScheme,
+            colorScheme: AppTheme.build(brightness).colorScheme,
           ),
           brightness: brightness,
         ),
@@ -231,7 +231,7 @@ void main() {
         SizedBox(
           width: 320,
           child: MetadataTextField(
-            SistrumTheme.build(Brightness.light).colorScheme,
+            AppTheme.build(Brightness.light).colorScheme,
             'Title',
             controller,
           ),

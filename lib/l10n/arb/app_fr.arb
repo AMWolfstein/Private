@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "Albums incomplets",
   "libraryAlbumCompletenessUnknown": "Complétude de l'album inconnue",
   "libraryAlbumMissingTracks": "{present}/{expected} pistes · {missing} manquante(s)",
-  "sistrumSearch": "Rechercher",
-  "sistrumContinuePlaying": "Continuer à lire",
-  "sistrumFavorite": "Favoris",
-  "@sistrumFavorite": {
+  "appSearch": "Rechercher",
+  "appContinuePlaying": "Continuer à lire",
+  "appFavorite": "Favoris",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Aller à la page de l'artiste",
-  "sistrumFavorited": "Ajouté aux favoris",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Aller à la page de l'artiste",
+  "appFavorited": "Ajouté aux favoris",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Mélangez des morceaux grâce à la synchronisation des rythmes et à l'ajustement du tempo tout en conservant la hauteur tonale. Utilise un fondu enchaîné lorsque les rythmes ne peuvent pas être synchronisés.",

@@ -10,12 +10,12 @@ import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/theme/sistrum_icons.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/theme/app_icons.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
-import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -259,7 +259,7 @@ class _LibraryCollectionTracksScreenState
     // Loved's heart has a neutral surface; playlist art is shared everywhere.
     final cover = loved ? null : preferred ?? local;
     {
-      return SistrumArtistSurface(
+      return AppArtistSurface(
         imageSource: cover,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, cover)),
@@ -586,7 +586,7 @@ class _LibraryCollectionTracksScreenState
 
     return AlbumDetailHeader(
       title: title,
-      immersive: context.isSistrum,
+      immersive: context.isAppTheme,
       squareArtwork: true,
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
@@ -636,13 +636,13 @@ class _LibraryCollectionTracksScreenState
       appBarActions: [
         if (!isSelectionMode && entries.isNotEmpty)
           IconButton(
-            icon: Icon(sistrumIconFor(Icons.ios_share)),
+            icon: Icon(appIconFor(Icons.ios_share)),
             tooltip: context.l10n.collectionExportM3u,
             onPressed: () => _exportAsM3u8(context, title, entries),
           ),
         if (isPlaylistMode && !isSelectionMode) ...[
           IconButton(
-            icon: Icon(sistrumIconFor(Icons.edit_outlined)),
+            icon: Icon(appIconFor(Icons.edit_outlined)),
             tooltip: context.l10n.collectionRenamePlaylist,
             onPressed: () {
               final id = widget.playlistId ?? playlist?.id;
@@ -651,7 +651,7 @@ class _LibraryCollectionTracksScreenState
             },
           ),
           IconButton(
-            icon: Icon(sistrumIconFor(Icons.camera_alt_outlined)),
+            icon: Icon(appIconFor(Icons.camera_alt_outlined)),
             tooltip: context.l10n.collectionPlaylistChangeCover,
             onPressed: () => _showCoverOptionsSheet(context, hasCustomCover),
           ),
@@ -717,7 +717,7 @@ class _LibraryCollectionTracksScreenState
                 vertical: 4,
               ),
               leading: Icon(
-                sistrumIconFor(Icons.image_outlined),
+                appIconFor(Icons.image_outlined),
                 color: colorScheme.primary,
               ),
               title: Text(context.l10n.collectionPlaylistChangeCover),
@@ -733,7 +733,7 @@ class _LibraryCollectionTracksScreenState
                   vertical: 4,
                 ),
                 leading: Icon(
-                  sistrumIconFor(Icons.delete_outline),
+                  appIconFor(Icons.delete_outline),
                   color: colorScheme.primary,
                 ),
                 title: Text(context.l10n.collectionPlaylistRemoveCover),

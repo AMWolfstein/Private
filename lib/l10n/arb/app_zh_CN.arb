@@ -2337,15 +2337,15 @@
   "libraryFilterIncompleteAlbums": "不完整的专辑",
   "libraryAlbumCompletenessUnknown": "专辑完整度未知",
   "libraryAlbumMissingTracks": "{present}/{expected} 首曲目 · 缺失 {missing} 首",
-  "sistrumSearch": "Search",
-  "sistrumContinuePlaying": "Continue Playing",
-  "sistrumFavorite": "Favorite",
-  "@sistrumFavorite": {
+  "appSearch": "Search",
+  "appContinuePlaying": "Continue Playing",
+  "appFavorite": "Favorite",
+  "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "sistrumGoToArtist": "Go to Artist",
-  "sistrumFavorited": "Favorited",
-  "@sistrumFavorited": {
+  "appGoToArtist": "Go to Artist",
+  "appFavorited": "Favorited",
+  "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "通过节拍匹配和保持音高的速度调整混合歌曲。使用交叉淡入淡出、回声、低通和音高效果。",

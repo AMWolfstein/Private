@@ -11,7 +11,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/library_settings_page.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'support/material_test_theme.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 class _Settings extends SettingsNotifier {
@@ -83,7 +83,7 @@ Future<void> _mount(
         localLibraryProvider.overrideWith(() => library),
       ],
       child: MaterialApp(
-        theme: sistrum ? SistrumTheme.build(Brightness.dark) : AppTheme.light(),
+        theme: sistrum ? AppTheme.build(Brightness.dark) : MaterialTestTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => MediaQuery(

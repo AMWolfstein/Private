@@ -5,7 +5,7 @@ import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
-import 'package:sistrum/widgets/primitives/sistrum_slider.dart';
+import 'package:sistrum/widgets/primitives/app_slider.dart';
 
 class AutoMixSettings extends ConsumerStatefulWidget {
   const AutoMixSettings({super.key});
@@ -99,7 +99,7 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
             Text(label),
             Semantics(
               label: semanticLabel,
-              child: SistrumSlider(
+              child: AppSlider(
                 value: value.clamp(min, max),
                 min: min,
                 max: max,

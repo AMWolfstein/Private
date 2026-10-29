@@ -7,8 +7,8 @@ import 'package:sistrum/providers/equalizer_provider.dart';
 import 'package:sistrum/screens/equalizer_screen.dart';
 import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'package:sistrum/models/equalizer_settings.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/glass/sistrum_level_slider.dart';
+import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/app_level_slider.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -25,7 +25,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: SistrumTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
@@ -55,7 +55,7 @@ void main() {
         expect(container.read(equalizerProvider).settings.gains.length, 5);
         final fader = find
             .byWidgetPredicate(
-              (widget) => widget is SistrumLevelSlider && widget.vertical,
+              (widget) => widget is AppLevelSlider && widget.vertical,
             )
             .first;
         await tester.ensureVisible(fader);
@@ -91,7 +91,7 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const EqualizerScreen(),

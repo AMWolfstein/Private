@@ -18,7 +18,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: MaterialTestTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: SettingsTab()),
@@ -179,7 +179,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.light(),
+        theme: MaterialTestTheme.light(),
         home: SettingsSearchHighlightScope(
           targetLabel: 'Target setting',
           child: Scaffold(

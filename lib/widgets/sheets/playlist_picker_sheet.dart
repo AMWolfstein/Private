@@ -6,13 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/glass/app_chrome.dart';
 
 final _log = AppLogger('PlaylistPicker');
 
@@ -38,7 +38,7 @@ Future<void> showAddTracksToPlaylistSheet(
   await showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
-    showDragHandle: !context.isSistrum,
+    showDragHandle: !context.isAppTheme,
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
     builder: (sheetContext) {
@@ -47,8 +47,8 @@ Future<void> showAddTracksToPlaylistSheet(
         playlistNamePrefill: playlistNamePrefill,
         preserveOccurrences: preserveOccurrences,
       );
-      return sheetContext.isSistrum
-          ? SistrumGlassPanel(tintOpacity: 0.78, child: content)
+      return sheetContext.isAppTheme
+          ? AppGlassPanel(tintOpacity: 0.78, child: content)
           : content;
     },
   );
@@ -283,7 +283,7 @@ class _PlaylistPickerSheetContentState
                       return _PlaylistPickerRow(
                         leading: _PlaylistPickerThumbnail(
                           playlist: playlist,
-                          isSelected: !context.isSistrum && isSelected,
+                          isSelected: !context.isAppTheme && isSelected,
                         ),
                         title: Text(playlist.name),
                         subtitle: Text(

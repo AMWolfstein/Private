@@ -1,8 +1,8 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/models/sistrum_glass.dart';
-import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/models/app_glass.dart';
+import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 
@@ -16,8 +16,8 @@ final lowEndDeviceProvider = Provider<bool>((ref) => false);
 final deviceSupportsLiquidGlassProvider = Provider<bool>((ref) => true);
 
 /// The Appearance glass quality choice.
-final sistrumGlassQualityProvider = Provider<SistrumGlassQuality>(
-  (ref) => sistrumGlassQualityFromString(
+final appGlassQualityProvider = Provider<AppGlassQuality>(
+  (ref) => appGlassQualityFromString(
     ref.watch(settingsProvider.select((s) => s.glassQuality)),
   ),
 );
@@ -26,14 +26,14 @@ final sistrumGlassQualityProvider = Provider<SistrumGlassQuality>(
 /// that request only while the device picks the glass quality; an explicit
 /// choice is used as is. This only controls decorative surfaces, never the
 /// inherited text or reduced-motion settings.
-final sistrumGlassContrastBlockedProvider = Provider.family<bool, bool>(
+final appGlassContrastBlockedProvider = Provider.family<bool, bool>(
   (ref, highContrast) =>
       highContrast &&
-      ref.watch(sistrumGlassQualityProvider) == SistrumGlassQuality.auto,
+      ref.watch(appGlassQualityProvider) == AppGlassQuality.auto,
 );
 
 /// How much of Sistrum's glass the device renders.
-enum SistrumGlassLevel {
+enum AppGlassLevel {
   /// Opaque surfaces; no backdrop sampling.
   flat,
 
@@ -45,35 +45,35 @@ enum SistrumGlassLevel {
 }
 
 /// What `auto` picks for a device class.
-SistrumGlassLevel sistrumAutoGlassLevel({
+AppGlassLevel appAutoGlassLevel({
   required bool lowEnd,
   required bool liquidCapable,
 }) => lowEnd
-    ? SistrumGlassLevel.flat
+    ? AppGlassLevel.flat
     : liquidCapable
-    ? SistrumGlassLevel.liquid
-    : SistrumGlassLevel.lite;
+    ? AppGlassLevel.liquid
+    : AppGlassLevel.lite;
 
 /// The device-class choice, before any measurement.
-final sistrumAutoDeviceGlassLevelProvider = Provider<SistrumGlassLevel>(
-  (ref) => sistrumAutoGlassLevel(
+final appAutoDeviceGlassLevelProvider = Provider<AppGlassLevel>(
+  (ref) => appAutoGlassLevel(
     lowEnd: ref.watch(lowEndDeviceProvider),
     liquidCapable: ref.watch(deviceSupportsLiquidGlassProvider),
   ),
 );
 
 /// The saved Auto measurement for this build, loaded in main.dart.
-final initialGlassAutoResultProvider = Provider<SistrumGlassAutoResult?>(
+final initialGlassAutoResultProvider = Provider<AppGlassAutoResult?>(
   (ref) => null,
 );
 
-/// Auto's measured step-down. Written by SistrumGlassAutoProbeHost; cleared
+/// Auto's measured step-down. Written by AppGlassAutoProbeHost; cleared
 /// from the developer options to measure again.
-class SistrumGlassAutoResultNotifier extends Notifier<SistrumGlassAutoResult?> {
+class AppGlassAutoResultNotifier extends Notifier<AppGlassAutoResult?> {
   @override
-  SistrumGlassAutoResult? build() => ref.watch(initialGlassAutoResultProvider);
+  AppGlassAutoResult? build() => ref.watch(initialGlassAutoResultProvider);
 
-  void record(SistrumGlassAutoResult result) {
+  void record(AppGlassAutoResult result) {
     state = result;
     saveGlassAutoResult(result);
   }
@@ -84,24 +84,24 @@ class SistrumGlassAutoResultNotifier extends Notifier<SistrumGlassAutoResult?> {
   }
 }
 
-final sistrumGlassAutoResultProvider =
-    NotifierProvider<SistrumGlassAutoResultNotifier, SistrumGlassAutoResult?>(
-      SistrumGlassAutoResultNotifier.new,
+final appGlassAutoResultProvider =
+    NotifierProvider<AppGlassAutoResultNotifier, AppGlassAutoResult?>(
+      AppGlassAutoResultNotifier.new,
     );
 
 /// The step Auto renders (and measures) now: the measured one, else the
 /// device class's own.
-final sistrumGlassAutoStepProvider = Provider<SistrumGlassAutoStep>((ref) {
-  final measured = ref.watch(sistrumGlassAutoResultProvider)?.step;
+final appGlassAutoStepProvider = Provider<AppGlassAutoStep>((ref) {
+  final measured = ref.watch(appGlassAutoResultProvider)?.step;
   if (measured != null) return measured;
-  return ref.watch(sistrumAutoDeviceGlassLevelProvider) ==
-          SistrumGlassLevel.liquid
-      ? SistrumGlassAutoStep.full
-      : SistrumGlassAutoStep.lite;
+  return ref.watch(appAutoDeviceGlassLevelProvider) ==
+          AppGlassLevel.liquid
+      ? AppGlassAutoStep.full
+      : AppGlassAutoStep.lite;
 });
 
 /// How Auto arrived at its level, for the HUD and Appearance.
-enum SistrumGlassAutoStatus {
+enum AppGlassAutoStatus {
   /// Not Auto, or Auto without glass (low-end or high contrast).
   device,
 
@@ -112,47 +112,47 @@ enum SistrumGlassAutoStatus {
   measured,
 }
 
-final sistrumGlassAutoStatusProvider =
-    Provider.family<SistrumGlassAutoStatus, bool>((ref, highContrast) {
-      if (ref.watch(sistrumGlassQualityProvider) != SistrumGlassQuality.auto ||
-          ref.watch(sistrumGlassContrastBlockedProvider(highContrast)) ||
-          ref.watch(sistrumAutoDeviceGlassLevelProvider) ==
-              SistrumGlassLevel.flat) {
-        return SistrumGlassAutoStatus.device;
+final appGlassAutoStatusProvider =
+    Provider.family<AppGlassAutoStatus, bool>((ref, highContrast) {
+      if (ref.watch(appGlassQualityProvider) != AppGlassQuality.auto ||
+          ref.watch(appGlassContrastBlockedProvider(highContrast)) ||
+          ref.watch(appAutoDeviceGlassLevelProvider) ==
+              AppGlassLevel.flat) {
+        return AppGlassAutoStatus.device;
       }
-      return ref.watch(sistrumGlassAutoResultProvider)?.done ?? false
-          ? SistrumGlassAutoStatus.measured
-          : SistrumGlassAutoStatus.measuring;
+      return ref.watch(appGlassAutoResultProvider)?.done ?? false
+          ? AppGlassAutoStatus.measured
+          : AppGlassAutoStatus.measuring;
     });
 
-final sistrumGlassLevelProvider = Provider<SistrumGlassLevel>((ref) {
-  return switch (ref.watch(sistrumGlassQualityProvider)) {
-    SistrumGlassQuality.auto =>
-      ref.watch(sistrumAutoDeviceGlassLevelProvider) == SistrumGlassLevel.flat
-          ? SistrumGlassLevel.flat
-          : ref.watch(sistrumGlassAutoStepProvider) == SistrumGlassAutoStep.full
-          ? ref.watch(sistrumAutoDeviceGlassLevelProvider)
-          : SistrumGlassLevel.lite,
-    SistrumGlassQuality.lite => SistrumGlassLevel.lite,
-    SistrumGlassQuality.full => SistrumGlassLevel.liquid,
-    SistrumGlassQuality.off => SistrumGlassLevel.flat,
+final appGlassLevelProvider = Provider<AppGlassLevel>((ref) {
+  return switch (ref.watch(appGlassQualityProvider)) {
+    AppGlassQuality.auto =>
+      ref.watch(appAutoDeviceGlassLevelProvider) == AppGlassLevel.flat
+          ? AppGlassLevel.flat
+          : ref.watch(appGlassAutoStepProvider) == AppGlassAutoStep.full
+          ? ref.watch(appAutoDeviceGlassLevelProvider)
+          : AppGlassLevel.lite,
+    AppGlassQuality.lite => AppGlassLevel.lite,
+    AppGlassQuality.full => AppGlassLevel.liquid,
+    AppGlassQuality.off => AppGlassLevel.flat,
   };
 });
 
 /// Whether the renderer supports backdrop shader filters (Impeller). Glass
 /// lenses need them; widget tests override this to exercise the glass path.
-final sistrumShaderFiltersSupportedProvider = Provider<bool>(
+final appShaderFiltersSupportedProvider = Provider<bool>(
   (ref) => ui.ImageFilter.isShaderFilterSupported,
 );
 
 /// Backdrop blur for Sistrum surfaces (frosted or liquid).
-final sistrumBlurEnabledProvider = Provider<bool>(
-  (ref) => ref.watch(sistrumGlassLevelProvider) != SistrumGlassLevel.flat,
+final appBlurEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(appGlassLevelProvider) != AppGlassLevel.flat,
 );
 
 /// Higher-quality glass and continuously filtered artwork / lyric effects.
-final sistrumLiquidGlassProvider = Provider<bool>(
-  (ref) => ref.watch(sistrumGlassLevelProvider) == SistrumGlassLevel.liquid,
+final appLiquidGlassProvider = Provider<bool>(
+  (ref) => ref.watch(appGlassLevelProvider) == AppGlassLevel.liquid,
 );
 
 /// Glass preferences stay out of ThemeData, so changing them repaints glass
@@ -160,18 +160,18 @@ final sistrumLiquidGlassProvider = Provider<bool>(
 ///
 /// The level glass renders at: the saved one, or Level 1 where Auto measured
 /// that this device needs it. Appearance edits the saved value.
-final sistrumGlassClarityLevelProvider = Provider<int>((ref) {
+final appGlassClarityLevelProvider = Provider<int>((ref) {
   final autoFrosted =
-      ref.watch(sistrumGlassQualityProvider) == SistrumGlassQuality.auto &&
-      ref.watch(sistrumAutoDeviceGlassLevelProvider) != SistrumGlassLevel.flat &&
-      ref.watch(sistrumGlassAutoStepProvider) == SistrumGlassAutoStep.liteFrosted;
+      ref.watch(appGlassQualityProvider) == AppGlassQuality.auto &&
+      ref.watch(appAutoDeviceGlassLevelProvider) != AppGlassLevel.flat &&
+      ref.watch(appGlassAutoStepProvider) == AppGlassAutoStep.liteFrosted;
   return autoFrosted
       ? 1
       : ref.watch(settingsProvider.select((s) => s.glassClarityLevel));
 });
 
 /// Developer A/B switches, only while the developer options are shown.
-final sistrumBarSamplerDisabledProvider = Provider<bool>(
+final appBarSamplerDisabledProvider = Provider<bool>(
   (ref) => ref.watch(
     settingsProvider.select(
       (s) => s.developerOptionsUnlocked && s.barSamplerDisabled,
@@ -179,7 +179,7 @@ final sistrumBarSamplerDisabledProvider = Provider<bool>(
   ),
 );
 
-final sistrumHeaderBandBlurDisabledProvider = Provider<bool>(
+final appHeaderBandBlurDisabledProvider = Provider<bool>(
   (ref) => ref.watch(
     settingsProvider.select(
       (s) => s.developerOptionsUnlocked && s.headerBandBlurDisabled,
@@ -187,6 +187,6 @@ final sistrumHeaderBandBlurDisabledProvider = Provider<bool>(
   ),
 );
 
-final sistrumGlassOutlinesProvider = Provider<bool>(
-  (ref) => ref.watch(themeProvider.select((s) => s.sistrumGlassOutlines)),
+final appGlassOutlinesProvider = Provider<bool>(
+  (ref) => ref.watch(themeProvider.select((s) => s.appGlassOutlines)),
 );

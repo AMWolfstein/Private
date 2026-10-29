@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/theme/sistrum_theme.dart';
+import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
@@ -17,7 +17,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: SistrumTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           home: MediaQuery(
             data: MediaQueryData(disableAnimations: reduceMotion),
             child: Scaffold(
