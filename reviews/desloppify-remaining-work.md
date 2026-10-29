@@ -618,3 +618,17 @@ Verification: `flutter analyze` reports "No issues found!"; the full serial `flu
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
 (1878 tests, exit 0).
+
+## Group C, resolved skips
+
+- log_page.dart: `_LogEntryTile` moved to log_entry_tile.dart as `LogEntryTile`. One assertion in
+  test/log_list_build_measurement_test.dart changed from `'_LogEntryTile'` to `'LogEntryTile'`.
+- app_selection_pill.dart: foreground family and shared helpers moved to app_selection_foreground.dart
+  and app_selection_shared.dart. The pill stays in its file.
+- album_detail_header.dart: four private helpers moved to a `part` file.
+- library_database.dart: non-overridden members moved to library_database_queries.dart as an
+  extension. Overridden members stay in the class. Extension members are not virtual, so the
+  overridden members remain in the class for that reason.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
+(1878 tests, exit 0).
