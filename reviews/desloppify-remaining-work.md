@@ -514,3 +514,17 @@ This entry supersedes those notes.
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (exit 0).
+
+## Task 5: audio analysis and part files (commits d97606e, da4721f)
+
+- design_coherence::audio_analysis_parsing_in_widget: FFmpeg log parsing (channel stats, astats
+  integers), total-sample estimation, codec and container labels, stored-bit-depth
+  classification, and the spectral cutoff estimate moved from the card widget to
+  `lib/services/audio_analysis/audio_analysis_parsing.dart`. The card keeps FFmpeg orchestration,
+  caching and presentation.
+- convention_outlier::part_file_split_style_mixed: the part-file rule is in AGENTS.md. Twelve
+  part files remain. Each shares private State or library members with its owner, so each stays a
+  part. Services use library modules.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0).

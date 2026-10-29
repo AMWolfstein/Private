@@ -1,10 +1,8 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T15:10:00+00:00",
+  "updated": "2026-10-29T15:42:06+00:00",
   "queue_order": [
-    "review::.::holistic::convention_outlier::part_file_split_style_mixed",
-    "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
     "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
     "review::.::holistic::mid_level_elegance::scattered_row_decoding",
     "review::.::holistic::naming_quality::queue_name_for_library_browser",
@@ -2991,6 +2989,86 @@
         "status": "fixed",
         "attestation": "I have actually made this change and I am not gaming the score."
       }
+    },
+    {
+      "timestamp": "2026-10-29T15:42:03+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:42:04+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ffmpeg log parsing, astats and channel stats, total-sample estimation, codec labels and the spectral cutoff estimate moved to services/audio_analysis; the card keeps FFmpeg orchestration, caching and presentation.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:42:04+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ffmpeg log parsing, astats and channel stats, total-sample estimation, codec labels and the spectral cutoff estimate moved to services/audio_analysis; the card keeps FFmpeg orchestration, caching and presentation.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:42:05+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::convention_outlier::part_file_split_style_mixed"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:42:06+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::convention_outlier::part_file_split_style_mixed"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Part-file rule is written in AGENTS.md. The remaining part files share private State or library members with their owner, so each stays a part; services use library modules.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:42:06+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::convention_outlier::part_file_split_style_mixed"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Part-file rule is written in AGENTS.md. The remaining part files share private State or library members with their owner, so each stays a part; services use library modules.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
     }
   ],
   "epic_triage_meta": {},
@@ -3054,7 +3132,9 @@
     "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
     "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
     "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
-    "review::.::holistic::mid_level_elegance::two_db_access_paths"
+    "review::.::holistic::mid_level_elegance::two_db_access_paths",
+    "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
+    "review::.::holistic::convention_outlier::part_file_split_style_mixed"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 5
