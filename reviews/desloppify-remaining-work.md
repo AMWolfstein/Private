@@ -317,3 +317,31 @@ the failure-convention doc, CoverPalette instance store, library DB row decoding
 `unified_library_item` importing `library_database_models`, the main-shell test, and the remaining
 services and widgets root files. Desloppify has 41 resolved items staged for commit; they are recorded
 once the queue is empty and `desloppify scan` runs.
+
+## Cover, download, backup and screen-seam pass
+
+Commits `8feb431` (cover palette), `17e07ea` (APK results), `9e01e2f` (backup parse failures),
+`37aa3b8` (screens seam).
+
+Done:
+- `CoverPalette` statics became `CoverPaletteCache`, an instance built with its store; the app shares
+  `coverPalette`, and tests create their own cache (no manual swap or clear).
+- `ApkDownloader.downloadApk` returns `ApkDownloaded` or `ApkDownloadFailed(reason)`, and
+  `installApk` returns an `ApkInstallOutcome`. The update dialog shows a message per reason.
+- `BackupService.parseFile` throws `BackupParseException` with a reason (not a backup, unsupported
+  version, corrupt archive, unreadable) instead of returning null. The restore page words each one.
+- Navigation no longer imports screens: `lib/navigation/app_screens.dart` defines `AppScreens`
+  (artist, album, collection and now-playing pages), installed through `appScreensProvider` in
+  `main.dart` and in the affected tests. The now-playing route moved to `lib/navigation`, the
+  metadata editor sheet to `lib/widgets/library`, and `LibraryCollectionMode` to the collections model.
+- No `lib/navigation`, `lib/widgets`, `lib/utils`, `lib/services`, `lib/providers`, `lib/theme`
+  or `lib/models` file imports `lib/screens`.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (1888 tests).
+
+Still open: the best-effort delete helper, the part-file style rule, the audio-analysis parsing
+extraction, the local library notifier and PlatformBridge splits, the failure-convention doc,
+supportsCoreBackend fallbacks, the library DB row decoding and database access paths, the
+QueryLibraryDb naming, `unified_library_item` importing `library_database_models`, the main-shell
+test, and the services and widgets root-file reorganisation.
