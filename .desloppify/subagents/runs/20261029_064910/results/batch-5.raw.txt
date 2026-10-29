@@ -1,0 +1,143 @@
+{
+  "batch": "naming_quality",
+  "batch_index": 5,
+  "assessments": {"naming_quality": 72.0},
+  "dimension_notes": {
+    "naming_quality": {
+      "evidence": [
+        "Most identifiers communicate intent: Flutter-idiomatic _handleX/handleScroll event handlers, run*/get* names that match their behaviour (getCurrentPosition, getMediaItem, getById, getCount are pure queries), and predicate-style is/has names all return bool. No is*/has* returning non-bool and no get* that mutates state were found in lib/.",
+        "lib/screens/library/queue_tab.dart declares class QueueTab (line 59), _QueueTabState, and seven part files named queue_tab_*.dart, but the widget is the Library browser (main_shell.dart:649 returns it from _LibraryTabRoot; librarySection drives SistrumLibraryScreen sections). The play queue is a different concept (sistrum_player_queue.dart). A new developer reading 'QueueTab' would expect the playback queue.",
+        "The 'queue' misnomer spreads into the data layer: lib/services/library/library_queue_store.dart (its header comment says 'SQL builders for the queue tab's local-library queries'), QueueLibraryDbQuery/QueueLibraryDbCursor/QueueLibraryDbPage/QueueLibraryCounts in library_database_models.dart, lib/screens/queue_library_refresh_policy.dart, and providers/library_browse_provider.dart. Vocabulary is inconsistent with the rest of the codebase, which uses 'library', 'collection' and 'playback queue' for these concepts.",
+        "lib/screens/library_tracks_folder_screen.dart: LibraryTracksFolderScreen (line 49), LibraryTracksFolderMode (loved | playlist), LibraryTracksFolderData, _folderData, and _EmptyFolderState are used for Loved Songs and playlist track lists. In this app 'folder' means a music directory (music-library folder selection, Files & Folders). The name does not match what the screen shows.",
+        "lib/screens/library/queue_tab.dart line 1066: class __AnimatedLibrarySliverGridState has a doubled leading underscore, while its widget is _AnimatedLibrarySliverGrid (line 1038) and the State naming convention is _XState. Looks like a typo that survived a rename.",
+        "lib/screens/library/queue_tab_helpers.dart line 12 declares searchKey on _GroupedLocalAlbum and line 23 initializes it, but nothing reads it (grep finds no other use). The name refers to a search feature that AGENTS.md says Library pages no longer have. A reader would assume it drives search filtering.",
+        "Generic-named locals and helpers such as val() in lib/widgets/local_song_menu.dart (line 256) are short-lived and scoped to one function. They are not a meaningful naming problem."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The 'queue' name for the Library browser is repeated across the screen, part files, DB query types and the store, so the mismatch is systemic and hurts how quickly a new developer can find the playback queue versus the library browser. The folder naming and the dead searchKey field add smaller points of confusion.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "naming_quality": {
+      "dimension_character": "Naming is mostly clear and idiomatic: handlers, queries and predicates match their behaviour, and no generic verb-only or mutating get* defects were found. The main weakness is a systemic misnomer where the Library browser is called 'queue' across a screen, its part files, DB types and a store, which conflicts with the separate playback queue. Smaller problems are a folder name used for playlists and Loved, a double-underscore class name and a dead searchKey field.",
+      "score_rationale": "The majority of names communicate intent, so the score is above the middle band. The repeated 'queue' vocabulary for the library browser is a clear defect that a new team member would stumble on, which holds the score at 72 rather than higher."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "naming_quality",
+      "identifier": "queue_name_for_library_browser",
+      "summary": "QueueTab and queue_tab_* files name the Library browser, not the playback queue",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_helpers.dart",
+        "lib/screens/main_shell.dart",
+        "lib/services/library/library_queue_store.dart",
+        "lib/services/library/library_database_models.dart",
+        "lib/screens/queue_library_refresh_policy.dart",
+        "lib/providers/library_browse_provider.dart"
+      ],
+      "evidence": [
+        "class QueueTab (queue_tab.dart:59) is returned by _LibraryTabRoot in main_shell.dart:649 and renders the Library sections via SistrumLibraryScreen",
+        "library_queue_store.dart header: 'SQL builders for the queue tab's local-library queries'",
+        "QueueLibraryDbQuery/Cursor/Page/Counts types in library_database_models.dart describe library browse paging, not the play queue"
+      ],
+      "suggestion": "Rename the Library-browser concept to LibraryTab / library_tab_*.dart and library_browse_* (QueryLibraryDb* -> LibraryBrowseDb*), keeping the playback queue under sistrum_player_queue / playback names. Behaviour is unchanged; the rename is mechanical.",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "library_browse_vocabulary",
+      "reasoning": ""
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "folder_name_for_playlist_screen",
+      "summary": "LibraryTracksFolderScreen uses 'folder' for Loved and playlist track lists",
+      "related_files": [
+        "lib/screens/library_tracks_folder_screen.dart",
+        "lib/screens/library_tracks_folder_data.dart",
+        "lib/screens/library/queue_tab_navigation.dart"
+      ],
+      "evidence": [
+        "LibraryTracksFolderScreen(mode: LibraryTracksFolderMode.playlist, ...) is pushed from queue_tab_navigation.dart:78",
+        "LibraryTracksFolderMode has only loved and playlist values; the screen icon is Icons.queue_music or Icons.favorite",
+        "_folderData, _EmptyFolderState and LibraryTracksFolderData all carry the folder name, while 'folder' elsewhere means a music directory"
+      ],
+      "suggestion": "Rename to CollectionTracksScreen / CollectionTracksMode / CollectionTracksData (matching CollectionTrackEntry and library_collections_provider) and drop the folder wording from the file names.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "library_browse_vocabulary",
+      "reasoning": ""
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "double_underscore_state_class",
+      "summary": "State class named __AnimatedLibrarySliverGridState with a doubled underscore",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart"
+      ],
+      "evidence": [
+        "queue_tab.dart:1066 class __AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>",
+        "Its widget class is _AnimatedLibrarySliverGrid (queue_tab.dart:1038) and createState at line 1062 returns __AnimatedLibrarySliverGridState()"
+      ],
+      "suggestion": "Rename to _AnimatedLibrarySliverGridState in both the class declaration and the createState return.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "",
+      "reasoning": ""
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "unused_search_key_field",
+      "summary": "_GroupedLocalAlbum.searchKey is set but never read, and its name refers to removed search",
+      "related_files": [
+        "lib/screens/library/queue_tab_helpers.dart"
+      ],
+      "evidence": [
+        "queue_tab_helpers.dart:12 final String searchKey; and :23 initializer lowercases albumName and artistName",
+        "grep for searchKey across lib/ finds no read site",
+        "AGENTS.md states Library pages have no search field"
+      ],
+      "suggestion": "Delete the searchKey field and its initializer. If a grouping key is still needed, use albumKey, which already exists.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "",
+      "reasoning": ""
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "The Library browser was built as the 'queue' tab and kept that name after the playback queue became a separate concept"
+    ],
+    "likely_symptoms": [
+      "QueueLibrary* type names",
+      "queue_library_refresh_policy.dart"
+    ],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "naming_quality": {
+      "add": [
+        {
+          "header": "Handle-prefixed event handlers are idiomatic",
+          "description": "_handleX and handleScroll names in widgets and the shell describe event handling in Flutter's usual way. They are not generic verbs that hide intent.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Query and predicate names match behaviour",
+          "description": "getCount, getById, getCurrentPosition and getMediaItem are side-effect-free queries, and is/has predicates return bool. This is a consistent pattern in the data and playback layers.",
+          "settled": true,
+          "positive": true
+        }
+      ],
+      "settle": []
+    }
+  }
+}

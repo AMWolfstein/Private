@@ -1,0 +1,86 @@
+{
+  "batch": "api_surface_coherence",
+  "batch_index": 11,
+  "assessments": {"api_surface_coherence": 72.0},
+  "dimension_notes": {
+    "api_surface_coherence": {
+      "evidence": [
+        "lib/services/library/library_database.dart: deleteByPath(String filePath) returns Future<void>, while the sibling deleteByPaths(List<String>) returns Future<int> with the deleted count; the single-path and batch variants of the same removal operation have different return contracts.",
+        "lib/services/library/library_database.dart: deleteByPath runs its own per-id transaction over library_path_keys and library, whereas deleteByPaths chunks at 500 and commits once; the two entry points do the same job by different mechanisms.",
+        "lib/services/library/library_database.dart: getQueueTrackPage returns Future<List<Map<String, dynamic>>> while its sibling getQueueTrackPageResult returns Future<QueueLibraryDbPage>; the Result suffix marks a different return shape rather than error-handling semantics.",
+        "lib/services/library/library_database.dart: getQueueAlbumPageResult returns QueueLibraryDbPage, but getQueueArtistPage, also a paged query taking a QueueLibraryDbQuery, returns a bare List<Map>, so the paged queue APIs do not share one return contract.",
+        "lib/services/library/library_database.dart: writeNativeFileModTimesSnapshot(sourceId, {requestId, isCancelled}) exports from the DB, while writeFileModTimesSnapshot(Map<String,int>) writes a temp file from caller data; the shared stem and adjacent placement make the two overloads easy to confuse.",
+        "lib/services/library/library_database.dart: getById/getByIsrc use get* while findExisting/findByTrackAndArtist use find*, a naming split for lookups with similar semantics."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The LibraryDatabase facade exposes several parallel APIs (delete, queue paging, snapshot writers) whose return shapes and naming diverge, so callers must read each signature to know what comes back.",
+      "sub_axes": {"abstraction_leverage": 60.0, "indirection_cost": 70.0, "interface_honesty": 65.0, "delegation_density": 70.0, "definition_directness": 70.0, "type_discipline": 80.0}
+    }
+  },
+  "dimension_judgment": {
+    "api_surface_coherence": {
+      "dimension_character": "The public surface of the library database layer is mostly well-typed and uses named parameters for its larger operations, and no public function in the wide-parameter census exceeds the parameter threshold. The defects are naming and return-shape drift among sibling operations (single vs batch delete, queue track/album/artist paging, and two snapshot writers), which forces callers to read signatures individually.",
+      "score_rationale": "Signatures are explicit and typed, but several sibling pairs break the same contract (deleteByPath vs deleteByPaths, getQueueTrackPage vs getQueueTrackPageResult, getQueueArtistPage returning a bare list despite the page naming). That is a real coherence cost but localized to one facade, so the score sits in the middle-high band."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "delete_by_path_return_contract_mismatch",
+      "summary": "deleteByPath returns void while deleteByPaths returns a deleted count",
+      "related_files": ["lib/services/library/library_database.dart"],
+      "evidence": [
+        "Future<void> deleteByPath(String filePath) async (line ~681) deletes library_path_keys and library rows in its own transaction and returns nothing.",
+        "Future<int> deleteByPaths(List<String> filePaths) async (line ~901) chunks at 500, commits once, and returns totalDeleted.",
+        "Both remove rows for a file path from the same table, so callers cannot treat the two as one consistent API."
+      ],
+      "suggestion": "Make deleteByPath delegate to deleteByPaths([filePath]) and return its count, or drop the single-path method if no caller needs it; align on one return type.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "library_db_delete_surface",
+      "reasoning": ""
+    },
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "queue_paging_return_shape_drift",
+      "summary": "Queue paging methods return a mix of records, pages and bare lists",
+      "related_files": ["lib/services/library/library_database.dart"],
+      "evidence": [
+        "getQueueTrackPage(QueueLibraryDbQuery) returns Future<List<Map<String, dynamic>>> by unwrapping getQueueTrackPageResult(...).rows.",
+        "getQueueTrackPageResult and getQueueAlbumPageResult both return Future<QueueLibraryDbPage>.",
+        "getQueueArtistPage(QueueLibraryDbQuery) takes the same query type but returns Future<List<Map<String, dynamic>>> with no page or count metadata."
+      ],
+      "suggestion": "Give every queue paging call the same return shape (QueueLibraryDbPage) or rename the list-returning variants so the Page/Result suffix predicts the return type; keep one name per paged operation.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "library_db_queue_paging",
+      "reasoning": ""
+    },
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "snapshot_writer_overload_by_name",
+      "summary": "Two snapshot writers share a stem but differ in inputs, mechanism and output",
+      "related_files": ["lib/services/library/library_database.dart"],
+      "evidence": [
+        "writeNativeFileModTimesSnapshot(String sourceId, {required String requestId, required bool Function() isCancelled}) delegates to LibraryNativeAdapter and exports from the database on the worker.",
+        "writeFileModTimesSnapshot(Map<String, int> fileModTimes) writes a temp TSV file from caller-supplied data using getTemporaryDirectory().",
+        "Both return Future<String> file paths, so the only signal distinguishing them is the Native infix."
+      ],
+      "suggestion": "Rename so each name states its input source (for example exportSourceModTimesNative and writeModTimesTsv), or make one private if no external caller needs it.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "library_db_snapshot_naming",
+      "reasoning": ""
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["LibraryDatabase grew as a facade that accumulated parallel entry points per feature, each with its own return shape and naming."],
+    "likely_symptoms": ["delete_by_path_return_contract_mismatch", "queue_paging_return_shape_drift"],
+    "possible_false_positives": []
+  }
+}

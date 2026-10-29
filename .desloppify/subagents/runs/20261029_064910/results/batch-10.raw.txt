@@ -1,0 +1,143 @@
+{
+  "batch": "test_strategy",
+  "batch_index": 10,
+  "assessments": {"test_strategy": 72.0},
+  "dimension_notes": {
+    "test_strategy": {
+      "evidence": [
+        "Suite is broad: 284 *_test.dart files under test/ and integration_test/, 124 files use testWidgets and 172 use test(), so most feature areas have some direct coverage.",
+        "No snapshot or golden tests: grep for matchesGoldenFile, toMatchSnapshot and expectLater golden patterns in test/ and integration_test/ returns 0 hits. The snapshot-overuse concern does not apply.",
+        "Shared widget lib/theme/sistrum_icons.dart has 8 lib importers and no test file references it by name (grep for sistrum_icons in test/ and integration_test/ is empty). Mechanical packet also flags it as 'No direct tests'.",
+        "lib/widgets/player/sistrum_player_slider.dart (4 importers) and lib/widgets/app_content_card.dart (3 importers) have no direct test references; the packet lists both under testing.critical_untested.",
+        "lib/screens/main_shell.dart (651 LOC, the shell that hosts tabs, bar and chrome) has no direct test reference; packet notes it is covered only indirectly.",
+        "Timing fragility: several widget tests use wall-clock busy-wait helpers, e.g. test/local_song_menu_actions_test.dart:142-150 (5 s DateTime.now() deadline loop with runAsync delays), test/local_album_cue_delete_test.dart:211-215 (same pattern, waits on a real file deletion), test/local_track_batch_delete_test.dart:102-103, and test/sistrum_artwork_contrast_test.dart:58-62. These depend on real platform event timing rather than fake-clock control.",
+        "About 43 test files reference Future.delayed or Duration(seconds...) and several more use DateTime.now() deadlines, so the timing-dependent pattern is a repeated test idiom rather than a single case.",
+        "Packet mechanical scan reports 37 test_coverage findings, most of them 'No direct tests' on small presentational widgets and helpers (for example lib/widgets/beta_badge.dart, lib/widgets/scroll_edge_fade.dart, lib/widgets/player/player_playback_controls.dart at 250 LOC) and a few large screens (lib/screens/listening_statistics_screen.dart at 492 LOC, lib/screens/local_guide_pages.dart at 424 LOC).",
+        "Several flagged files are reported as orphaned by the packet (for example lib/screens/library/queue_tab_helpers.dart, queue_tab_navigation.dart, queue_tab_selection.dart, lib/screens/home/home_tab_feed.dart). Their test_coverage findings are less meaningful until dead-code status is resolved, so they are not counted as test gaps here."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Shared UI primitives used across many screens (sistrum_icons, the player slider and content cards) have no direct tests, and the shell route has no direct test. Several widget tests rely on real wall-clock polling, which makes them slow and timing-sensitive.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "test_strategy": {
+      "dimension_character": "The test suite is large and spread across features, with widget and unit tests in most areas and no snapshot or golden-file dependence. Its weaknesses are concentrated in shared UI primitives with no direct tests (sistrum_icons, the player slider, app_content_card, the main shell) and in a repeated wall-clock polling idiom in widget tests that waits on real platform timing.",
+      "score_rationale": "Broad coverage and zero snapshot overuse keep the score above the midpoint. Untested shared widgets and timing-dependent busy-wait helpers hold it below the 80s, since a developer changing these primitives gets weaker feedback than the suite size suggests."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "test_strategy",
+      "identifier": "timing_polling_waits_in_widget_tests",
+      "summary": "Widget tests wait on wall-clock DateTime deadlines and real event-loop delays, making them timing-sensitive",
+      "related_files": [
+        "test/local_song_menu_actions_test.dart",
+        "test/local_album_cue_delete_test.dart",
+        "test/local_track_batch_delete_test.dart",
+        "test/sistrum_artwork_contrast_test.dart"
+      ],
+      "evidence": [
+        "local_song_menu_actions_test.dart:142-150 loops while DateTime.now() is before a 5 s deadline, calling runAsync(Future.delayed 5 ms) and pump(10 ms) until a condition holds.",
+        "local_album_cue_delete_test.dart:211-215 polls library.removedPaths against a 5 s DateTime.now() deadline because a real file deletion finishes on the platform event loop.",
+        "local_track_batch_delete_test.dart:102-103 uses the same deadline-loop idiom.",
+        "sistrum_artwork_contrast_test.dart:58-62 uses a 3 s DateTime.now() deadline loop."
+      ],
+      "suggestion": "Move the repeated polling into one shared test helper (for example in test/support/) with a single documented timeout, and replace file-deletion waits with an injectable fake or a Completer that the fake library completes, so the assertion does not depend on real I/O timing.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "test_timing_idiom"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "shared_icons_no_direct_tests",
+      "summary": "sistrum_icons.dart is imported by 8 lib files but has no direct test",
+      "related_files": [
+        "lib/theme/sistrum_icons.dart"
+      ],
+      "evidence": [
+        "Packet testing.critical_untested lists lib/theme/sistrum_icons.dart with 8 importers.",
+        "grep for sistrum_icons across test/ and integration_test/ returns no matches, and the packet lists it under test_coverage with 'No direct tests (99 LOC, 8 importers)'."
+      ],
+      "suggestion": "Add a small widget test that builds each exported icon and asserts it renders at the expected size and semantics label. This guards the shared icon set that 8 screens depend on.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": null
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "player_slider_and_content_card_untested",
+      "summary": "Shared player slider and content card widgets have no direct tests despite multiple importers",
+      "related_files": [
+        "lib/widgets/player/sistrum_player_slider.dart",
+        "lib/widgets/app_content_card.dart"
+      ],
+      "evidence": [
+        "Packet testing.critical_untested lists sistrum_player_slider.dart (4 importers) and app_content_card.dart (3 importers).",
+        "Packet test_coverage findings: sistrum_player_slider.dart 'No direct tests (50 LOC, 4 importers)' and app_content_card.dart 'No direct tests (37 LOC, 3 importers)'.",
+        "No test file in test/ or integration_test/ references either filename."
+      ],
+      "suggestion": "Add widget tests for the slider value/drag mapping and for the content card's tap and disabled states. These are small, high-reuse widgets where a regression would surface across several screens.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": null
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "main_shell_no_direct_test",
+      "summary": "The main shell route (tabs, bar and chrome host) has no direct test reference",
+      "related_files": [
+        "lib/screens/main_shell.dart"
+      ],
+      "evidence": [
+        "lib/screens/main_shell.dart is 651 LOC and the packet reports 'No direct tests (651 LOC, 1 importers) - covered only via imports from tested modules'.",
+        "grep for main_shell.dart across lib/ and test/ finds only its single importer; no test pumps the shell directly."
+      ],
+      "suggestion": "Add one widget test that pumps the shell and asserts tab switching and the bottom bar render. That gives the navigation root a direct regression test rather than relying on indirect imports.",
+      "confidence": "low",
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": null
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Coverage has grown around feature screens and providers, while shared primitives and the shell were not given direct tests."
+    ],
+    "likely_symptoms": [
+      "test_coverage findings on small widgets are symptoms of missing direct tests for shared primitives rather than separate defects."
+    ],
+    "possible_false_positives": [
+      "Orphaned queue_tab_* and home_tab_feed files may be dead code; their test_coverage findings should be resolved by dead-code removal, not by new tests."
+    ]
+  },
+  "context_updates": {
+    "test_strategy": {
+      "add": [
+        {
+          "header": "No snapshot or golden tests in the suite",
+          "description": "The suite asserts behavior with widget and unit tests and does not rely on golden files. This keeps tests tied to behavior rather than rendered pixels.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Broad feature-level test coverage",
+          "description": "About 284 test files span library, playback, settings, lyrics and glass UI. Most feature areas have at least one direct test file, which gives a developer a real safety net for feature changes.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Wall-clock polling helpers in widget tests",
+          "description": "Several tests wait on DateTime.now() deadlines with real delays because platform file operations and event loops are not driven by the fake clock. The pattern is repeated and worth consolidating.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

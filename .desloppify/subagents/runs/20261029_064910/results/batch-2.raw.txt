@@ -1,0 +1,150 @@
+{
+  "batch": "high_level_elegance",
+  "batch_index": 2,
+  "assessments": {
+    "high_level_elegance": 74.0
+  },
+  "dimension_notes": {
+    "high_level_elegance": {
+      "evidence": [
+        "Domain subtrees are clear and match their names: lib/services/library (17 files), lib/services/playback (21), lib/services/ffmpeg (6), lib/widgets/player (25), lib/widgets/glass (14), lib/screens/settings (13), lib/l10n holds the generated localizations plus one accessor.",
+        "lib/services/ is a flat catch-all: 41 top-level files (8255 LOC) covering backup, APK download, update checks, glass warmup, navigation state, statistics, playlists and font loading next to the domain subtrees.",
+        "Glass ownership is split: lib/services/sistrum_glass_warmup.dart and lib/services/sistrum_glass_auto_probe.dart are rendering code, while lib/widgets/glass/sistrum_glass_preparation.dart and lib/widgets/glass/sistrum_glass_auto_probe_host.dart consume them. The warmup service imports widgets/glass/sistrum_chrome.dart and liquid_glass_easy.",
+        "Two navigation owners: lib/services/app_navigation_service.dart holds the root navigator key, while lib/services/shell_navigation_service.dart holds the ShellTab enum and Brightness/Color ValueNotifiers for chrome.",
+        "Layer direction is not stable: utils, models, theme, and services import screens, widgets, and providers (see issues). A new engineer cannot state a single rule for what may depend on what.",
+        "lib/screens/library/ holds only the queue_tab files (QueueTab, a Library section page), which collides with the player queue at lib/widgets/player/sistrum_player_queue.dart.",
+        "Top-level lib/ has state and route homes split across controllers/ (2 files), providers/ (15), and routes/ (1 file)."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Flat services/ mixes UI glass and navigation with data services, the layer rule is violated in several directions (utils and models reaching upward), and one folder name (screens/library) points to the wrong owner. The domain subtrees are good, so the drag is at the top-level boundaries."
+    }
+  },
+  "dimension_judgment": {
+    "high_level_elegance": {
+      "dimension_character": "The domain subtrees (services/library, services/playback, widgets/player, widgets/glass, screens/settings) make most capabilities easy to locate and own, and the AGENTS.md ownership notes match the folder layout. The weak spots are concentrated at the top: a flat services/ catch-all, glass rendering and navigation state split between services and widgets, and utils/models importing upward, so ownership is predictable within a subtree but not across them.",
+      "score_rationale": "Strong domain subtrees and documented ownership pull the score up, while the flat services/ dumping ground, the upward imports from utils/models/theme, and the misleading screens/library name pull it down into the solid-but-uneven band. A new engineer can explain most of the decomposition but would hit recurring 'why is this here' moments at the boundaries, so 74.0."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "services_flat_catch_all_with_ui_glass",
+      "summary": "services/ is a 41-file catch-all that also owns glass rendering and UI navigation state",
+      "related_files": [
+        "lib/services/sistrum_glass_warmup.dart",
+        "lib/services/sistrum_glass_auto_probe.dart",
+        "lib/widgets/glass/sistrum_glass_preparation.dart",
+        "lib/widgets/glass/sistrum_glass_auto_probe_host.dart",
+        "lib/services/shell_navigation_service.dart",
+        "lib/services/app_navigation_service.dart"
+      ],
+      "evidence": [
+        "lib/services/ has 41 top-level .dart files (8255 LOC) with no subfolder for backup, updates, navigation, or glass, while library/, playback/ and ffmpeg/ are subfolders.",
+        "The glass probe and warmup logic is in services/ (sistrum_glass_warmup.dart, sistrum_glass_auto_probe.dart) but its consumers are widgets/glass/sistrum_glass_preparation.dart and widgets/glass/sistrum_glass_auto_probe_host.dart; sistrum_glass_warmup.dart imports widgets/glass/sistrum_chrome.dart and liquid_glass_easy.",
+        "services/shell_navigation_service.dart declares the ShellTab enum and static ValueNotifier<Color?> / ValueNotifier<Brightness?> chrome state, while services/app_navigation_service.dart holds only rootNavigatorKey. Two navigation owners sit in the same flat folder."
+      ],
+      "suggestion": "Move sistrum_glass_warmup.dart and sistrum_glass_auto_probe.dart into lib/widgets/glass/ beside their host and preparation widgets. Move the chrome ValueNotifiers from ShellNavigationService into a single navigation owner (for example lib/navigation/shell_navigation.dart holding both the root key and the tab state) so there is one place for navigation. Do not add new abstraction; this is a file move plus merge.",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "top_level_ownership_drift"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "lower_layers_import_upward",
+      "summary": "utils, models, theme and services import screens, widgets and providers, inverting the layer order",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/utils/confirm_and_delete_tracks.dart",
+        "lib/models/unified_library_item.dart",
+        "lib/theme/cover_palette.dart",
+        "lib/services/sistrum_glass_warmup.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "utils/clickable_metadata.dart imports screens/local_album_screen.dart, screens/local_artist_screen.dart and services/shell_navigation_service.dart; utils/confirm_and_delete_tracks.dart imports widgets/app_alert_dialog.dart.",
+        "models/unified_library_item.dart imports services/library/library_database_models.dart, so the model layer depends on a service.",
+        "theme/cover_palette.dart imports services/cover_analysis_store.dart, services/platform_bridge.dart and widgets/cached_cover_image.dart.",
+        "services/local_track_batch_actions.dart, services/batch_track_actions.dart and services/sistrum_glass_warmup.dart import widgets/, and widgets/local_song_menu.dart, widgets/library_search_results.dart and widgets/player/mini_player.dart import screens/."
+      ],
+      "suggestion": "Move utils/clickable_metadata.dart and utils/confirm_and_delete_tracks.dart into lib/widgets/ since they are UI helpers that open screens and dialogs; keep utils/ free of screen and widget imports. Make models/unified_library_item.dart depend only on models/ by moving the database-row mapping it needs into services/library/ next to library_row_mapper.dart. Document the order models <- utils <- services <- widgets <- screens in AGENTS.md so the next move has a rule to follow.",
+      "confidence": "medium",
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "top_level_ownership_drift"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "library_folder_holds_queue_tab",
+      "summary": "screens/library/ holds the Library section QueueTab, which reads as the player queue",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/widgets/player/sistrum_player_queue.dart",
+        "lib/services/library/library_queue_store.dart"
+      ],
+      "evidence": [
+        "screens/library/queue_tab.dart declares QueueTab, a Library section page constructed with a librarySection parameter (lines 59-62, 821), not the playback queue.",
+        "The playback queue is widgets/player/sistrum_player_queue.dart (SistrumPlayerQueue) and widgets/player/player_queue_dismissible.dart, and its persistence is services/library/library_queue_store.dart. The word 'queue' therefore names the Library section and the player queue at once.",
+        "screens/library/ has 8 files (2884 LOC) that are all queue_tab* files, so the directory name does not describe its contents."
+      ],
+      "suggestion": "Rename screens/library/queue_tab*.dart to a section-based name (for example screens/library_section/library_section_tab.dart) and rename QueueTab to LibrarySectionTab; keep queue naming for the player and library_queue_store. This is a rename across roughly eight files plus imports, with no behavior change.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "top_level_ownership_drift"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "state_and_route_homes_split_at_top_level",
+      "summary": "controllers/, routes/ and constants/ are one- or two-file top-level folders beside providers/",
+      "related_files": [
+        "lib/controllers/metadata_editor_controller.dart",
+        "lib/controllers/player_metadata_controller.dart",
+        "lib/providers/music_player_provider.dart",
+        "lib/routes/now_playing_route.dart",
+        "lib/constants/language_choices.dart"
+      ],
+      "evidence": [
+        "lib/controllers/ holds 2 files (394 LOC) for editor and player metadata state while lib/providers/ holds 15 files, so a developer must decide between two homes for state holders.",
+        "lib/routes/ holds one PageRoute file (now_playing_route.dart) that is used only by the now-playing screen, and lib/constants/ holds 2 files (52 LOC).",
+        "lib/widgets/player imports lib/controllers 5 times, so the player depends on a folder that is not part of its own subtree."
+      ],
+      "suggestion": "Move the two controllers into lib/providers/ (or lib/widgets/player/ if they only serve the player) and fold lib/routes/now_playing_route.dart into lib/screens/ beside now_playing_screen.dart. Leave constants/ alone unless more files join it.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "top_level_ownership_drift"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "No written layer rule for lib/: imports run in both directions between utils, models, theme, services, widgets and screens, so each new file picks its own home.",
+      "Historical moves left glass and navigation pieces split between services/ and widgets/glass/, and the queue naming was inherited from an earlier Library design."
+    ],
+    "likely_symptoms": [
+      "screens/library/queue_tab*.dart naming",
+      "services/ flat file list"
+    ],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "high_level_elegance": {
+      "add": [
+        {
+          "header": "Domain subtrees for library, playback and player",
+          "description": "services/library, services/playback, services/ffmpeg, widgets/player, widgets/glass and screens/settings each own one capability, so most changes stay inside one folder and a new engineer can find the owner by name.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Flat services/ catch-all",
+          "description": "Top-level services/ mixes data services with UI glass and navigation state; the subtrees are the intended owners, and the flat files are historical accretion rather than a deliberate boundary.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

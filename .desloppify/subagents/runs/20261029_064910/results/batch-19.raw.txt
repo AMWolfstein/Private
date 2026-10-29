@@ -1,0 +1,114 @@
+{
+  "batch": "logic_clarity",
+  "batch_index": 19,
+  "assessments": {"logic_clarity": 82.0},
+  "dimension_notes": {
+    "logic_clarity": {
+      "evidence": [
+        "lib/services/update_checker.dart:312-314: `if (!latestHasSuffix && currentHasSuffix) return true;` followed by a blank line and `return false;` - the final branch collapses to a single boolean expression.",
+        "lib/widgets/playlist_picker_sheet.dart:19-25: `showAddTrackToPlaylistSheet` is declared `async` but its only statement is `return showAddTracksToPlaylistSheet(context, ref, [track]);` with no await.",
+        "lib/widgets/update_dialog.dart:416-432: `showUpdateDialog` is `async` and only returns `showAppDialog<void>(...)`; no await anywhere in the body.",
+        "lib/services/library/library_collections_hydration.dart:121-131: `hydratePlaylistTracks` is `async` yet both branches are plain returns (a synchronous decode or a worker call returned directly); the async keyword adds no await.",
+        "lib/services/embedded_cover_resolver.dart:160-172: `resolveOrExtract` is `async` with no await; it returns cached values synchronously on one path and `_ensureCover(...)` on the other.",
+        "lib/utils/clickable_metadata.dart:46-56: `navigateToArtist` is `async` with no await, and its `artistId` parameter is accepted but never read.",
+        "lib/screens/main_shell.dart:83-88: the post-frame callback is an `async` closure whose body has no await; it only calls unawaited(...) twice.",
+        "Scan of lib/ for identical if/else bodies, identical ternary branches, code after unconditional return/throw/break, and `if (true)`/`if (false)` constants found no matches in production code; the ternary regex hit in audio_analysis_widget.dart:1657 was a false positive (the two branches differ).",
+        "Most control flow in the sampled hot paths (music_player_service, library_database, platform_bridge) is straightforward; the defects found are redundant async wrappers and one boolean-collapse rather than contradictory or dead logic."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Several async-without-await wrappers and one trailing if/return-true/return-false remain; each is small but they accumulate as noise that obscures which functions actually perform asynchronous work."
+    }
+  },
+  "dimension_judgment": {
+    "logic_clarity": {
+      "dimension_character": "Control flow in the Dart sources is largely direct: no identical branches, no dead code after unconditional exits, and no constant-condition checks surfaced by the scan. The recurring weakness is that a number of functions are declared async solely to return a Future, with no await, which blurs whether a function does asynchronous work. A few boolean tails also restate simple expressions.",
+      "score_rationale": "Logic is largely honest and free of dead or contradictory branches, which keeps it above the middle band. Several redundant async wrappers and one boolean simplification place it below the top band, so the score is 82."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "logic_clarity",
+      "identifier": "bool_tail_collapse_update_checker",
+      "summary": "Trailing if-return-true / return-false in version comparison should be one boolean expression",
+      "related_files": ["lib/services/update_checker.dart"],
+      "evidence": ["Line 312: `if (!latestHasSuffix && currentHasSuffix) return true;` then line 314: `return false;`"],
+      "suggestion": "Replace the two statements with `return !latestHasSuffix && currentHasSuffix;`.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_wrapper_playlist_picker",
+      "summary": "showAddTrackToPlaylistSheet is async but only forwards a Future with no await",
+      "related_files": ["lib/widgets/playlist_picker_sheet.dart"],
+      "evidence": ["Lines 19-25: `Future<void> showAddTrackToPlaylistSheet(...) async { return showAddTracksToPlaylistSheet(context, ref, [track]); }`"],
+      "suggestion": "Drop the `async` modifier and return the forwarded Future directly, or make the single-track helper a plain delegating function.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_wrapper_update_dialog",
+      "summary": "showUpdateDialog is async with no await and only returns showAppDialog",
+      "related_files": ["lib/widgets/update_dialog.dart"],
+      "evidence": ["Lines 416-432: `Future<void> showUpdateDialog(...) async { return showAppDialog<void>(...); }` with no await in the body"],
+      "suggestion": "Remove `async` and return the showAppDialog Future directly.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_no_await_resolve_or_extract",
+      "summary": "EmbeddedCoverResolver.resolveOrExtract is async yet has no await, mixing sync cache hits with a Future",
+      "related_files": ["lib/services/embedded_cover_resolver.dart"],
+      "evidence": ["Lines 160-172: the cache-hit path returns `cached.previewPath` synchronously inside an `async` method; the miss path returns `_ensureCover(...)` with no await"],
+      "suggestion": "Remove `async` and return Future values explicitly (e.g. Future.value(cached.previewPath)) so the signature states that the method does no asynchronous work of its own.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_no_await_hydrate_playlist_tracks",
+      "summary": "hydratePlaylistTracks is async although both branches are direct returns",
+      "related_files": ["lib/services/library/library_collections_hydration.dart"],
+      "evidence": ["Lines 121-131: `async` body contains only an `if` returning `_decodePlaylistTracks(request)` and a `return _hydrateRowsInWorker(...)`; no await"],
+      "suggestion": "Drop `async`; the function already returns a Future on both paths.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "navigate_to_artist_unused_param_and_async",
+      "summary": "navigateToArtist is async with no await and silently ignores its artistId parameter",
+      "related_files": ["lib/utils/clickable_metadata.dart"],
+      "evidence": ["Lines 46-56: `artistId` is declared as an optional named parameter but never read; the body is `if (artistName.isEmpty) return; pushViaPreferredNavigator(...)` with no await"],
+      "suggestion": "Remove the unused artistId parameter or use it for navigation, and drop the unnecessary async modifier.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_callback_no_await_post_frame",
+      "summary": "Post-frame callback is async with no await; errors surface as unobserved futures",
+      "related_files": ["lib/screens/main_shell.dart"],
+      "evidence": ["Lines 83-88: `WidgetsBinding.instance.addPostFrameCallback((_) async { if (!mounted) return; unawaited(...); unawaited(...); });`"],
+      "suggestion": "Make the callback synchronous, since both calls are already fire-and-forget via unawaited.",
+      "confidence": "low",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Async keyword applied to functions that only forward Futures, which reads as asynchronous work that does not exist"],
+    "likely_symptoms": ["async_wrapper_playlist_picker", "async_wrapper_update_dialog"],
+    "possible_false_positives": []
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "batch": "design_coherence",
+  "batch_index": 17,
+  "assessments": {"design_coherence": 62.0},
+  "dimension_notes": {
+    "design_coherence": {
+      "evidence": [
+        "lib/services/playback/music_player_service.dart is 2072 lines and holds the top complexity score (257) in scan_evidence.complexity_hotspots. MusicPlayerHandler (line ~110 onward) owns audio-session setup, headphone monitoring, audio focus, sleep timer, haptics, normalization, queue editing, session persistence, play-history recording, media-browser children, and source-deletion handling in one class. The split into music_player_automix.dart and music_player_autoplay.dart uses `part` files, which keeps one class spread across several files rather than separating responsibilities.",
+        "lib/providers/local_library_provider.dart (1837 lines) is one LocalLibraryNotifier spanning source management, scan orchestration, progress polling, scan-failure persistence, scan notifications (_show*/_queue*Notification methods around lines 1503-1600), cover-batch request types, and library cleanup. Notification presentation and progress polling are not domain state and sit inside the state notifier.",
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart (1921 lines) places ffmpeg astats and metadata log parsing (parseAudioAstatsSummary, parseAudioAnalysisMetadata), spectral percentile math (_spectralMedian, _sortedSpectralPercentile), and filter-string building next to the AudioAnalysisCard widget and its state. Pure parsing and DSP helpers are mixed into a presentation file.",
+        "lib/services/platform_bridge.dart (841 lines) is a single static facade over one MethodChannel. Its methods cover SAF tree access, media-file metadata editing, background work, library scan NDJSON streaming, JSON background decoding, install markers, and CUE parsing. These are separate native subsystems behind one class with shared private helpers.",
+        "lib/widgets/album_detail_header.dart defines shared header primitives (HeaderCircleButton, HeaderFilledButton, HeaderMetaRow, HeaderMetaItem, AlbumPlayActions) that are imported by about ten screens and widgets, including local_artist_screen.dart, queue_tab.dart, sistrum_artist_header.dart, sistrum_floating_header.dart, app_sliver_header.dart and local_collection_actions.dart. Generic header controls live in a file named for the album header, so their location does not match their ownership.",
+        "lib/services/playback/music_player_runtime.dart imports music_player_service.dart for MusicPlayerHandler, while music_player_service.dart exports music_player_runtime.dart (line 41). This two-file cycle means consumers must import the playback monolith to reach the runtime facade.",
+        "lib/services/playback/music_player_autoplay.dart and music_player_automix.dart are `part of 'music_player_service.dart'` and are included at lines 44-45 of that file. The orphaned-file detector is a false positive for these parts.",
+        "lib/providers/music_player_provider.dart seek(Duration) is a one-line forward that delegates through the handler, deck and service. The flagged signature variance is just async and non-async forms of the same operation across layers, which is an expected delegation chain.",
+        "lib/screens/listening_rewind_screen.dart (1844 lines) is a story-style presentation of one feature. Its many private widgets are slide components that serve that single purpose.",
+        "lib/utils/logger.dart groups redaction, LogEntry, LogBuffer, BufferedOutput and AppLogger. These form one cohesive logging subsystem.",
+        "lib/services/backup_service.dart groups BackupBundle, BackupTooLargeException and BackupService, which is a cohesive backup domain at 531 lines.",
+        "lib/screens/settings/log_screen.dart and lib/screens/main_shell.dart are each one screen or shell with small private widgets, a single coherent responsibility, and no mixed domains."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "design_coherence": {
+      "dimension_character": "The codebase has clear domain-level layering (providers, services, library databases, shared theme), but several large files absorb unrelated responsibilities. MusicPlayerHandler, LocalLibraryNotifier, PlatformBridge and the audio-analysis widget each combine state, native orchestration, parsing or presentation in one place. Several flagged files are cohesive despite their size: the logger, backup service, listening-rewind slides and log screen, and the playback part files.",
+      "score_rationale": "Concentration of mixed responsibilities in the playback handler, library notifier, native bridge and audio-analysis widget, plus misplaced shared header primitives and a service/runtime cycle, holds the score in the low 60s. Most of the codebase is organized by domain, so the score stays well above the poor range."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "design_coherence",
+      "identifier": "playback_handler_mixed_responsibilities",
+      "summary": "MusicPlayerHandler combines audio session, queue, persistence, history and sleep-timer duties in one class",
+      "related_files": ["lib/services/playback/music_player_service.dart", "lib/services/playback/music_player_automix.dart", "lib/services/playback/music_player_autoplay.dart"],
+      "evidence": [
+        "music_player_service.dart is 2072 lines with the top complexity score (257) in scan_evidence.complexity_hotspots.",
+        "MusicPlayerHandler contains _configureAudioSession, _startHeadphoneMonitoring, setSleepTimer, _recordPlayHistory, _persistSession, _shuffleQueue, getChildren and onSourceDeleted, among others.",
+        "The automix and autoplay files are `part` files, so the single class is spread across files without separating responsibilities."
+      ],
+      "suggestion": "Move session persistence and play-history recording behind collaborators that the handler calls (the handler already has a _sessionWriter). Move the sleep timer and headphone or focus monitoring into a small policy object. Keep the handler focused on transport and queue state.",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "local_library_notifier_mixed_concerns",
+      "summary": "LocalLibraryNotifier holds scan notifications, progress polling and cover batching alongside source state",
+      "related_files": ["lib/providers/local_library_provider.dart"],
+      "evidence": [
+        "The 1837-line file has one LocalLibraryNotifier running from line 113 to about line 1800.",
+        "_showScanPausedNotification, _showScanProgressNotification, _showScanCompleteNotification, _showScanFailedNotification and _queueScanNotification (lines 1503-1600) sit inside the state notifier.",
+        "_startProgressPolling and _handleLibraryScanProgress (lines 1309-1378) are presentation-adjacent polling loops inside the same class that owns source availability and scan recovery."
+      ],
+      "suggestion": "Extract the scan notification and progress-polling code into a scan-progress helper that the notifier calls. Leave the notifier responsible for source and library state.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "31feb63d9130a270"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "audio_analysis_parsing_in_widget",
+      "summary": "Audio analysis widget file mixes ffmpeg log parsing and spectral math with the card UI",
+      "related_files": ["lib/widgets/audio_analysis/audio_analysis_widget.dart"],
+      "evidence": [
+        "parseAudioAstatsSummary, parseAudioAnalysisMetadata and their helpers (_parseLastAudioAstatsValue, _parseLastMetadataValue) are top-level pure functions in the widget file.",
+        "_spectralMedian, _sortedSpectralWindow and _sortedSpectralPercentile (lines 594-612) are numeric helpers in the same file.",
+        "AudioAnalysisCard and its state start at line 618 in a 1921-line file."
+      ],
+      "suggestion": "Move parsing, codec support and spectral helpers into a service or utils file under audio_analysis/. Keep the widget file limited to presentation.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "c9a0d011f2cc3037"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "platform_bridge_facade_breadth",
+      "summary": "PlatformBridge is one static class spanning SAF, scanning, metadata, background jobs and CUE parsing",
+      "related_files": ["lib/services/platform_bridge.dart"],
+      "evidence": [
+        "The class has about 60 static methods on one MethodChannel, covering SAF (safExists, pickSafTree, writeTempToSafDetailed), media metadata (readFileMetadata, editFileMetadataResult), scanning (scanSafTreeIncremental, _scanToNDJSONFile), background work, and parseCueSheet.",
+        "JSON background decoding helpers (_decodeJsonResultAsync, _decodeRequiredMapResultAsync) are shared by unrelated call families."
+      ],
+      "suggestion": "Split by native subsystem into SAF, scan and metadata bridges that share one channel and decode helper. Keep callers' import paths stable through re-exports if needed.",
+      "confidence": "medium",
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "867281a3d4d47502"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "shared_header_primitives_in_album_file",
+      "summary": "Generic header controls live in album_detail_header.dart though ten-plus screens import them",
+      "related_files": ["lib/widgets/album_detail_header.dart", "lib/widgets/glass/sistrum_floating_header.dart", "lib/widgets/app_sliver_header.dart", "lib/widgets/sistrum_artist_header.dart", "lib/screens/local_artist_screen.dart"],
+      "evidence": [
+        "HeaderCircleButton, HeaderFilledButton, HeaderMetaRow, HeaderMetaItem and AlbumPlayActions are defined in album_detail_header.dart.",
+        "They are imported or used by local_album_screen.dart, local_artist_screen.dart, queue_tab.dart, listening_rewind_screen.dart, lyrics_share_screen.dart, library_tracks_folder_screen.dart, sistrum_artist_header.dart, sistrum_floating_header.dart, app_sliver_header.dart and local_collection_actions.dart."
+      ],
+      "suggestion": "Move the generic header primitives into a shared header-controls file (for example widgets/header_controls.dart). Leave album-specific layout in album_detail_header.dart.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "d4b77374d974e2e0"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "playback_runtime_service_cycle",
+      "summary": "music_player_runtime and music_player_service import each other through a re-export",
+      "related_files": ["lib/services/playback/music_player_runtime.dart", "lib/services/playback/music_player_service.dart"],
+      "evidence": [
+        "music_player_runtime.dart imports music_player_service.dart to reference MusicPlayerHandler.",
+        "music_player_service.dart line 41 exports music_player_runtime.dart, so the runtime is only reachable through the service file."
+      ],
+      "suggestion": "Remove the re-export from the service and have consumers import the runtime file directly. Alternatively, move the handler type the runtime needs into its own file so the runtime does not depend on the service.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "1d984e70dbcd6782"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "autoplay_part_file_false_orphan",
+      "summary": "Autoplay part file flagged as orphaned though it is included by the service",
+      "related_files": ["lib/services/playback/music_player_autoplay.dart"],
+      "evidence": ["music_player_autoplay.dart is `part of 'music_player_service.dart'` and is included by a part directive at line 45 of that file."],
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "1443a89360e6f83d",
+      "reasoning": "The file is a part of music_player_service.dart, so the orphan detector misses it."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "automix_part_file_false_orphan",
+      "summary": "Automix part file flagged as orphaned though it is included by the service",
+      "related_files": ["lib/services/playback/music_player_automix.dart"],
+      "evidence": ["music_player_automix.dart is `part of 'music_player_service.dart'` and is included by a part directive at line 44 of that file."],
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "4cb7d579dc562fdf",
+      "reasoning": "Same part-file inclusion as the autoplay file; the orphan signal is a false positive."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "music_player_provider_seek_layers",
+      "summary": "seek signature variance reflects the normal provider-to-handler delegation chain",
+      "related_files": ["lib/providers/music_player_provider.dart"],
+      "evidence": ["Each layer takes Duration position; the variance is async versus non-async forms across provider, deck and service."],
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "1da72046e8d609ba",
+      "reasoning": "The layers share one semantic operation; the signature detector counts forms, not meaningful divergence."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "listening_rewind_size_is_presentational",
+      "summary": "Listening rewind screen is large because it is a multi-slide presentation of one feature",
+      "related_files": ["lib/screens/listening_rewind_screen.dart"],
+      "evidence": ["The file's classes (_RewindStory, _RewindSlide, _MonthChart, _RankedRow, etc.) all serve the single rewind story presentation."],
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "e3e0d03aad175895",
+      "reasoning": "Size comes from one coherent feature with many slide widgets, not from mixed concerns."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "logger_cohesive_subsystem",
+      "summary": "Logger file bundles redaction, buffer and output for one logging subsystem",
+      "related_files": ["lib/utils/logger.dart"],
+      "evidence": ["Redaction helpers, LogEntry, LogBuffer, BufferedOutput and AppLogger all implement one logging pipeline."],
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "b2f8c34e14a92934",
+      "reasoning": "The parts form a single pipeline; splitting them would add indirection without a clear gain."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "backup_service_cohesive",
+      "summary": "Backup service file groups one backup domain at moderate size",
+      "related_files": ["lib/services/backup_service.dart"],
+      "evidence": ["BackupBundle, BackupTooLargeException and BackupService all serve backup export and import."],
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "3ec3ccdb139fe52d",
+      "reasoning": "Single domain, moderate size; the flagged signatures do not show mixed responsibilities."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "log_screen_single_screen",
+      "summary": "Log screen is one screen with its own tile and summary widgets",
+      "related_files": ["lib/screens/settings/log_screen.dart"],
+      "evidence": ["LogScreen, _LogScreenState, _LogEntryTile and _LogSummaryCard form one screen with a single responsibility."],
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "79f68b787833faff",
+      "reasoning": "Structural signal comes from file length alone; the screen has one responsibility."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "main_shell_single_responsibility",
+      "summary": "Main shell holds tab navigation only, with small supporting widgets",
+      "related_files": ["lib/screens/main_shell.dart"],
+      "evidence": ["MainShell, _MainShellState, _TabNavigator and _LibraryTabRoot are all tab-shell structure."],
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "3a69b985d0c12f05",
+      "reasoning": "The shell's responsibilities are coherent; the structural flag reflects length."
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Large stateful classes accumulate notification, polling, parsing and persistence work because there is no clear seam for those responsibilities.",
+      "Shared widget primitives were placed in the first screen-specific file that needed them."
+    ],
+    "likely_symptoms": [
+      "The line counts of the flagged files reflect mixed responsibilities in only some of them, not all."
+    ],
+    "possible_false_positives": [
+      "Part-file orphan signals for music_player_autoplay and music_player_automix.",
+      "Signature-variance signals for seek and unawaited, which count call forms rather than semantic divergence."
+    ]
+  },
+  "context_updates": {
+    "design_coherence": {
+      "add": [
+        {
+          "header": "Part files are not orphans",
+          "description": "music_player_automix.dart and music_player_autoplay.dart are included via part directives in music_player_service.dart. Orphan detection flags them falsely, so any cleanup should treat them as part of the service.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Domain-organized library and playback layers",
+          "description": "Services, providers and library databases are organized by domain, and most large files hold one coherent concern. Mixed responsibilities concentrate in a few hotspots rather than spreading across the codebase.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

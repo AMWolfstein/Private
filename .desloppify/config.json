@@ -1,0 +1,163 @@
+{
+  "target_strict_score": 85,
+  "review_max_age_days": 30,
+  "review_batch_max_files": 80,
+  "holistic_max_age_days": 30,
+  "generate_scorecard": true,
+  "badge_path": "scorecard.png",
+  "exclude": [],
+  "ignore": [
+    "orphaned::lib/services/playback/music_player_automix.dart",
+    "orphaned::lib/services/playback/music_player_autoplay.dart",
+    "orphaned::lib/screens/library/queue_tab_filter_widgets.dart",
+    "orphaned::lib/screens/library/queue_tab_helpers.dart",
+    "orphaned::lib/screens/library/queue_tab_selection.dart",
+    "orphaned::lib/screens/library/queue_tab_navigation.dart",
+    "orphaned::lib/screens/library/queue_tab_collection_items.dart",
+    "orphaned::lib/screens/library/queue_tab_batch_actions.dart",
+    "orphaned::lib/screens/library/queue_tab_item_widgets.dart",
+    "orphaned::lib/screens/home/home_tab_feed.dart",
+    "orphaned::lib/screens/home/home_tab_widgets.dart",
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_models.dart",
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart",
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart"
+  ],
+  "ignore_metadata": {
+    "orphaned::lib/services/playback/music_player_automix.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:03+00:00",
+      "fingerprints": [
+        "36f85dce9587b450"
+      ]
+    },
+    "orphaned::lib/services/playback/music_player_autoplay.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:04+00:00",
+      "fingerprints": [
+        "3dc4908e6033b11d"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_filter_widgets.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:06+00:00",
+      "fingerprints": [
+        "f787a29d23edddce"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_helpers.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:07+00:00",
+      "fingerprints": [
+        "4667b4882886ae2b"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_selection.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:08+00:00",
+      "fingerprints": [
+        "bf61e89038f73cc2"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_navigation.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:09+00:00",
+      "fingerprints": [
+        "331e94c6fb12b87f"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_collection_items.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:09+00:00",
+      "fingerprints": [
+        "63cd9d8ba567cd87"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_batch_actions.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:10+00:00",
+      "fingerprints": [
+        "e23e9786c33a1290"
+      ]
+    },
+    "orphaned::lib/screens/library/queue_tab_item_widgets.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:11+00:00",
+      "fingerprints": [
+        "3c8677fec4894ea7"
+      ]
+    },
+    "orphaned::lib/screens/home/home_tab_feed.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:12+00:00",
+      "fingerprints": [
+        "c354a7807f928856"
+      ]
+    },
+    "orphaned::lib/screens/home/home_tab_widgets.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:13+00:00",
+      "fingerprints": [
+        "f1d3f813bc112f84"
+      ]
+    },
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_models.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:14+00:00",
+      "fingerprints": [
+        "3c08fb50b91d2adb"
+      ]
+    },
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:15+00:00",
+      "fingerprints": [
+        "d66a68d3f765da61"
+      ]
+    },
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T06:09:16+00:00",
+      "fingerprints": [
+        "5b9e92e1ba7170a8"
+      ]
+    }
+  },
+  "zone_overrides": {
+    "lib/l10n/app_localizations.dart": "generated",
+    "lib/l10n/app_localizations_ar.dart": "generated",
+    "lib/l10n/app_localizations_de.dart": "generated",
+    "lib/l10n/app_localizations_en.dart": "generated",
+    "lib/l10n/app_localizations_es.dart": "generated",
+    "lib/l10n/app_localizations_fr.dart": "generated",
+    "lib/l10n/app_localizations_hi.dart": "generated",
+    "lib/l10n/app_localizations_id.dart": "generated",
+    "lib/l10n/app_localizations_it.dart": "generated",
+    "lib/l10n/app_localizations_ja.dart": "generated",
+    "lib/l10n/app_localizations_ko.dart": "generated",
+    "lib/l10n/app_localizations_nl.dart": "generated",
+    "lib/l10n/app_localizations_pt.dart": "generated",
+    "lib/l10n/app_localizations_ru.dart": "generated",
+    "lib/l10n/app_localizations_tr.dart": "generated",
+    "lib/l10n/app_localizations_uk.dart": "generated",
+    "lib/l10n/app_localizations_zh.dart": "generated"
+  },
+  "review_dimensions": [],
+  "large_files_threshold": 0,
+  "props_threshold": 0,
+  "issue_noise_budget": 10,
+  "issue_noise_global_budget": 0,
+  "execution_log_max_entries": 10000,
+  "needs_rescan": false,
+  "languages": {},
+  "commit_tracking_enabled": true,
+  "commit_pr": 0,
+  "commit_default_branch": "",
+  "commit_message_template": "desloppify: {status} {count} issue(s) \u2014 {summary}",
+  "trust_plugins": false,
+  "transition_messages": {},
+  "hermes_enabled": false,
+  "hermes_models": {
+    "execute": "openrouter:x-ai/grok-4.20-beta",
+    "review": "openrouter:google/gemini-3.1-pro-preview"
+  }
+}

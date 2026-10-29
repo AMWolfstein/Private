@@ -1,0 +1,115 @@
+{
+  "batch": "cross_module_architecture",
+  "batch_index": 1,
+  "assessments": {
+    "cross_module_architecture": 72.0
+  },
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Import cycle confirmed in source: lib/screens/local_artist_screen.dart imports lib/screens/local_album_screen.dart (local_artist_screen.dart:16), and lib/utils/clickable_metadata.dart imports both lib/screens/local_album_screen.dart (line 3) and lib/screens/local_artist_screen.dart (line 4), and lib/screens/local_album_screen.dart imports lib/utils/clickable_metadata.dart (line 42) and lib/widgets/local_song_menu.dart (line 27), which imports lib/utils/clickable_metadata.dart (line 8). Packet cycle_summaries lists a 4-file cycle for this group.",
+        "Import cycle confirmed in source: lib/services/playback/music_player_runtime.dart imports lib/services/playback/music_player_service.dart (line 12), while music_player_service.dart re-exports music_player_runtime.dart (line 41). Packet cycle_summaries lists a 2-file cycle for this pair, and the complexity hotspot list shows music_player_service.dart at 2072 LOC.",
+        "Layer inversion repeated across modules: lib/utils/clickable_metadata.dart (utils layer) and lib/widgets/library_search_results.dart and lib/widgets/player/mini_player.dart and lib/widgets/local_song_menu.dart import screen files (lib/screens/local_album_screen.dart, lib/screens/library_tracks_folder_screen.dart, lib/screens/now_playing_screen.dart, lib/screens/track_metadata_edit_sheet.dart). Six such import lines in total across utils, widgets, services, providers and models.",
+        "Lower layers depending upward on screens is what turns the utils/clickable_metadata edge into a cycle: a shared navigation helper lives in utils while the screens it navigates to import it back.",
+        "Hub modules lib/l10n/l10n.dart (138 importers), lib/theme/sistrum_theme.dart (123) and lib/providers/settings_provider.dart (72) are intentional shared facades/theme and l10n entry points; not counted as defects under the rubric skip list.",
+        "Package size census reports lib as 100% of LOC because the project has a single package; this carries no boundary signal and is not counted.",
+        "Deferred import density was not present in the blind packet, so no judgement is made on function-level import pressure."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Two confirmed import cycles (screen-to-screen-to-utils and the playback runtime/service pair) and a utils/widgets-to-screens layer inversion blur the dependency direction in the library and playback areas, so common changes to these files ripple across the cycle.",
+      "sub_axes": {
+        "abstraction_leverage": 70.0,
+        "indirection_cost": 35.0,
+        "interface_honesty": 65.0,
+        "delegation_density": 70.0,
+        "definition_directness": 70.0,
+        "type_discipline": 80.0
+      }
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "Dependency direction is mostly sound: shared hubs (l10n, theme, settings) are intentional and the lib tree is largely layered. The defects are concentrated in two places: a cycle between the album and artist screens through the utils clickable-metadata helper, and a barrel-export cycle between music_player_runtime and music_player_service, plus a few lower-layer imports reaching up into screens.",
+      "score_rationale": "Two confirmed cycles and a repeated utils/widgets-to-screens inversion are real but localized, not codebase-wide; the core hubs follow a deliberate facade pattern. This places the dimension in the 70s, below the 85 threshold, with no sweeping dependency-direction failure."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "album_artist_utils_screen_cycle",
+      "summary": "Album, artist and clickable-metadata form an import cycle through a utils helper that imports screens",
+      "related_files": [
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/local_artist_screen.dart",
+        "lib/utils/clickable_metadata.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "lib/utils/clickable_metadata.dart:3-4 imports lib/screens/local_album_screen.dart and lib/screens/local_artist_screen.dart.",
+        "lib/screens/local_album_screen.dart:42 imports lib/utils/clickable_metadata.dart and :27 imports lib/widgets/local_song_menu.dart, which imports lib/utils/clickable_metadata.dart (line 8).",
+        "lib/screens/local_artist_screen.dart:16 imports lib/screens/local_album_screen.dart; packet dependencies.cycle_summaries lists the 4-file cycle local_album_screen -> local_artist_screen -> clickable_metadata -> local_song_menu."
+      ],
+      "suggestion": "Move the album/artist navigation helpers out of utils/clickable_metadata.dart into a route or navigation module that depends only on route builders, and have the screens import that module. Then utils no longer imports screens and the cycle breaks.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "utils_depends_on_screens",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "playback_runtime_service_export_cycle",
+      "summary": "music_player_runtime and music_player_service import each other, with the service re-exporting the runtime",
+      "related_files": [
+        "lib/services/playback/music_player_runtime.dart",
+        "lib/services/playback/music_player_service.dart"
+      ],
+      "evidence": [
+        "lib/services/playback/music_player_runtime.dart:12 imports lib/services/playback/music_player_service.dart.",
+        "lib/services/playback/music_player_service.dart:25 imports lib/services/playback/music_player_runtime.dart and :41 re-exports it (export 'music_player_runtime.dart').",
+        "Packet dependencies.cycle_summaries lists the 2-file cycle; complexity_hotspots places music_player_service.dart at 2072 LOC, so the cycle sits on the largest playback file."
+      ],
+      "suggestion": "Move the types the runtime needs out of music_player_service.dart into a small shared file (for example playback_runtime_types.dart) that both files import, and drop the export of music_player_runtime.dart from the service, so the runtime depends on nothing that depends back on it.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "playback_runtime_service_cycle",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "lower_layers_import_screens",
+      "summary": "utils, widgets and player components import screen files, inverting the layer direction",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/widgets/library_search_results.dart",
+        "lib/widgets/player/mini_player.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "lib/widgets/library_search_results.dart:9-10 imports lib/screens/library_tracks_folder_screen.dart and lib/screens/local_album_screen.dart.",
+        "lib/widgets/player/mini_player.dart:11 imports lib/screens/now_playing_screen.dart.",
+        "lib/widgets/local_song_menu.dart:18 imports lib/screens/track_metadata_edit_sheet.dart. Six screen imports sit outside lib/screens in total."
+      ],
+      "suggestion": "Route the widget-to-screen navigation through the shared navigation service or route definitions (lib/routes/) instead of direct screen imports, so widgets and utils depend on routes and not on individual screen files. Address the utils case first, since it is what creates the cycle in the first issue.",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "utils_depends_on_screens"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Navigation helpers placed in utils rather than in a route layer, so utils imports screens and screens import utils back.",
+      "The playback runtime exports from the service barrel while the service imports the runtime, which creates a two-way edge."
+    ],
+    "likely_symptoms": [
+      "The cycle_summaries entries are symptoms of the utils-to-screens import and the export-from-service pattern."
+    ],
+    "possible_false_positives": [
+      "lib/l10n/l10n.dart and lib/theme/sistrum_theme.dart high importer counts are intentional shared facades and were not reported."
+    ]
+  }
+}

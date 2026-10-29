@@ -1,0 +1,93 @@
+{
+  "batch": "dependency_health",
+  "batch_index": 7,
+  "assessments": {"dependency_health": 78.0},
+  "dimension_notes": {
+    "dependency_health": {
+      "evidence": [
+        "pubspec.yaml declares about 35 runtime packages; every one except cupertino_icons has a direct package: import in lib/ or test/ (grep counts range from 1 file for logger, url_launcher, xml, unorm_dart, open_filex, volume_controller, json_annotation to 215 for flutter_riverpod). cupertino_icons is needed for CupertinoIcons used in lib/theme/sistrum_icons.dart.",
+        "No duplicate libraries for one purpose were found: http is used for update checks and APK download, url_launcher for the update dialog, archive for backup streams, xml for lyrics parsing, unorm_dart for Unicode normalisation in sqlite_helpers.dart.",
+        "Two import cycles are visible in the source: lib/services/playback/music_player_runtime.dart line 12 imports music_player_service.dart and music_player_service.dart line 25 imports music_player_runtime.dart; and lib/utils/clickable_metadata.dart lines 3-4 import local_album_screen.dart and local_artist_screen.dart, while local_artist_screen.dart line 16 imports local_album_screen.dart and local_album_screen.dart line 42 imports clickable_metadata.dart.",
+        "Exact version pins (liquid_glass_easy 5.0.0, ffmpeg_kit_flutter_new_audio 2.5.7, material_color_utilities 0.13.0) sit beside caret ranges with no rationale comment. Audio playback depends on audioplayers plus a path-overridden audioplayers_android and a vendored third_party/audio_service fork, which adds upkeep but is deliberate."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Two import cycles remain, one of them a utils file depending on screen files. Exact pins and vendored forks are undocumented, so upgrade paths are unclear.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "dependency_health": {
+      "dimension_character": "The declared dependency set is lean and each package has a clear, direct use, with no duplicated libraries for the same job. The weaknesses are structural rather than in the manifest: two import cycles, one of which runs from a utils file into screen files. Upgrade pressure is concentrated in a few exact pins and vendored forks that carry no rationale comment.",
+      "score_rationale": "Manifest hygiene is solid: no unused runtime packages and no competing libraries for one purpose, which pushes the score up. The two import cycles, including the utils-to-screens inversion, and the undocumented exact pins and forks pull it down into the solid-but-uneven band. The score is 78.0."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "dependency_health",
+      "identifier": "playback_runtime_service_import_cycle",
+      "summary": "music_player_runtime.dart and music_player_service.dart import each other",
+      "related_files": [
+        "lib/services/playback/music_player_runtime.dart",
+        "lib/services/playback/music_player_service.dart"
+      ],
+      "evidence": [
+        "music_player_runtime.dart line 12 imports music_player_service.dart",
+        "music_player_service.dart line 25 imports music_player_runtime.dart",
+        "music_player_service.dart is a 2072-LOC library that also owns the parts music_player_automix.dart and music_player_autoplay.dart, so the cycle sits inside the largest playback module"
+      ],
+      "suggestion": "Make one direction only. Move the types the runtime needs from the service into a small leaf file that both import, or have the runtime depend on an interface declared in its own file that the service implements. Keep the change to the import edges and the moved declarations.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "playback_service_entanglement"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "clickable_metadata_screen_import_cycle",
+      "summary": "utils/clickable_metadata.dart imports screens that import it back",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/local_artist_screen.dart"
+      ],
+      "evidence": [
+        "clickable_metadata.dart lines 3-4 import screens/local_album_screen.dart and screens/local_artist_screen.dart",
+        "local_artist_screen.dart line 16 imports local_album_screen.dart",
+        "local_album_screen.dart line 42 imports utils/clickable_metadata.dart, closing the cycle",
+        "The mechanical cycle detector reports a four-file cycle starting at local_album_screen.dart -> local_artist_screen.dart -> utils/clickable..."
+      ],
+      "suggestion": "Keep utils as a leaf. Have clickable_metadata accept navigation callbacks or a route-opening function supplied by the caller, or move the navigation helpers into a screens-level file, so that utils no longer imports screens.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "utils_depends_on_screens"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Shared navigation and playback helpers were placed in utils or next to the service that uses them, so dependencies point back toward their callers"
+    ],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "dependency_health": {
+      "add": [
+        {
+          "header": "Every declared runtime package is directly imported",
+          "description": "Each runtime dependency in pubspec.yaml has a direct package: import in lib/ or test/, and cupertino_icons backs CupertinoIcons used in sistrum_icons.dart. The manifest carries no dead runtime packages.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Exact pins and vendored audio forks",
+          "description": "liquid_glass_easy, ffmpeg_kit_flutter_new_audio and material_color_utilities are pinned exactly, and audio_service plus audioplayers_android are vendored or overridden by path. These are deliberate but undocumented, so upgrade decisions depend on reading the manifest comments.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "batch": "incomplete_migration",
+  "batch_index": 14,
+  "assessments": {"incomplete_migration": 86.0},
+  "dimension_notes": {
+    "incomplete_migration": {
+      "evidence": [
+        "No @deprecated, DEPRECATED, 'remove after' or migration-TODO markers in lib/ or android/app/src/main; the only @Deprecated hits are in vendored third_party/ code, which is out of scope.",
+        "Persisted legacy identities are encoded explicitly and documented in code: LocalLibraryItem.legacySourceId ('legacy') and the 'legacy://local-library' placeholder row in library_schema.dart and library_database.dart. These preserve stored data and are intentional.",
+        "Settings startup migrations are centralized in settings_provider.dart (the notifier runs migrations and validation after mount), which is an active, bounded migration rather than residue.",
+        "Two dual-path residues remain: library_collections_database.dart selects between a native reader and a Dart reader by a forceLegacy flag and a 64-row probe, and backup_service.dart and library_collections_database.dart keep Dart else-branches behind PlatformBridge.supportsCoreBackend (Platform.isAndroid) even though AGENTS.md declares the app Android-only."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The collection reader and backup code still carry a Dart fallback path plus a test-only forceLegacy switch in production signatures. A developer must learn which of two read paths runs for a given row count or platform, which is the kind of dual-path confusion this dimension penalises.",
+      "sub_axes": {"abstraction_leverage": 70.0, "indirection_cost": 72.0, "interface_honesty": 74.0, "delegation_density": 80.0, "definition_directness": 82.0, "type_discipline": 85.0}
+    }
+  },
+  "dimension_judgment": {
+    "incomplete_migration": {
+      "dimension_character": "Migration state is mostly clean: no deprecated symbols are called by active code, no stale migration TODOs exist in the app sources, and persisted legacy identifiers are encoded deliberately with their original values. The residue is structural rather than textual: a native-versus-Dart dual path in the library collections reader and in backup encode/parse, kept alive by a platform flag and a test-only switch. That residue is isolated to a few files and does not spread into the UI.",
+      "score_rationale": "The codebase sits in the 80-90 band: a developer would mostly know which path is current, but the Dart fallback under supportsCoreBackend and the forceLegacy parameter create recurring 'which one runs?' moments. Clean deprecation hygiene and explicit legacy-data handling keep the score well above 80. The score is held below 90 by the dual read paths that the Android-only target no longer needs outside host tests."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "incomplete_migration",
+      "identifier": "collections_forcelegacy_test_seam",
+      "summary": "Production collection readers take a test-only forceLegacy flag and choose a Dart path by row-count probe.",
+      "related_files": [
+        "lib/services/library/library_collections_database.dart",
+        "test/library_collections_database_read_test.dart"
+      ],
+      "evidence": [
+        "readDatabaseSnapshot(...) and readDatabasePlaylistTracks(...) both declare bool forceLegacy = false (library_collections_database.dart lines 230 and 308).",
+        "The gate `!forceLegacy && (nativeJobRunner != null || PlatformBridge.supportsCoreBackend)` plus a LIMIT 64 probe decides at runtime whether the native or the Dart reader runs, so the same query can take different paths depending on data size.",
+        "The only callers passing forceLegacy: true are in test/library_collections_database_read_test.dart (lines 153, 166, 359); no production caller uses it."
+      ],
+      "suggestion": "Remove forceLegacy from the production signatures. Have the tests call the Dart reader through a dedicated test-only function or a constructor-injected reader, and keep one production read path per platform so the 64-row probe is not a behavioural switch.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "dual_read_path_for_native_migration"
+    },
+    {
+      "dimension": "incomplete_migration",
+      "identifier": "supports_core_backend_dart_fallbacks",
+      "summary": "Android-only app keeps Dart fallback branches gated by supportsCoreBackend for backup encode/parse and collections.",
+      "related_files": [
+        "lib/services/platform_bridge.dart",
+        "lib/services/backup_service.dart",
+        "lib/services/library/library_collections_database.dart"
+      ],
+      "evidence": [
+        "PlatformBridge.supportsCoreBackend is `Platform.isAndroid` (platform_bridge.dart line 198), while AGENTS.md states the app targets Android and local files only.",
+        "backup_service.dart keeps an else-branch that calls _encodeArchiveInBackground (lines 254-256) and an else-branch that calls _parseFileInBackground (lines 314-317) beside the native archive calls.",
+        "The same flag gates the native collections reader in library_collections_database.dart (lines 233 and 311), so the Dart implementations are reachable on device only through the row-count probe and in host tests."
+      ],
+      "suggestion": "Decide whether the Dart archive and collection readers are a deliberate host-test seam. If yes, inject them explicitly as a test dependency. If no, delete the else-branches and the Dart encoder and parser so that the native path is the single implementation.",
+      "confidence": "low",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "dual_read_path_for_native_migration"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Native backend migration left parallel Dart implementations selected by a platform flag and a test seam rather than by a single owned path."
+    ],
+    "likely_symptoms": [
+      "forceLegacy parameters in production signatures"
+    ],
+    "possible_false_positives": [
+      "legacySourceId / legacy://local-library: intentional encoding of persisted identities, not residue"
+    ]
+  },
+  "context_updates": {
+    "incomplete_migration": {
+      "add": [
+        {
+          "header": "No deprecated symbols called in app sources",
+          "description": "Deprecated markers appear only in vendored third_party packages. The app's lib/ and android/app sources contain no @deprecated usages or stale migration TODOs, so deprecation hygiene is consistent.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Persisted legacy identifiers kept deliberately",
+          "description": "Legacy source ids and the legacy://local-library placeholder keep stored library rows and backups readable. They are encoded as named constants and are not migration residue.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Native backend and Dart fallback share platform flag",
+          "description": "PlatformBridge.supportsCoreBackend (Platform.isAndroid) selects native implementations, while Dart implementations remain as else-branches for backup and collection reads. Those branches are reachable on device only through a row-count probe and in host tests.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "batch": "convention_outlier",
+  "batch_index": 3,
+  "assessments": {
+    "convention_outlier": 78.0
+  },
+  "dimension_notes": {
+    "convention_outlier": {
+      "evidence": [
+        "Positive: all 15 files in lib/providers/ end in _provider.dart, and all 17 files in lib/services/library/ share the library_ prefix, so a developer can predict a file's role from its name in those areas.",
+        "Style island (part files): lib/screens/library/queue_tab.dart declares 7 part files (queue_tab_helpers, _selection, _navigation, _collection_items, _filter_widgets, _batch_actions, _item_widgets). lib/services/playback/music_player_service.dart declares 2 parts, lib/widgets/audio_analysis/audio_analysis_widget.dart 3, and lib/screens/home/home_tab.dart 2. Sibling services/library/ splits the same kind of work into separate library_* modules with explicit imports.",
+        "The scan's dead_code detector flags 9 part files (queue_tab_* helpers, music_player_autoplay.dart, music_player_automix.dart, audio_analysis_models.dart, home_tab_widgets.dart) as orphaned, because the import graph does not follow part directives.",
+        "Protocol drift: lib/screens/selection_mode_mixin.dart is used only by lib/screens/local_album_screen.dart and lib/screens/library_tracks_folder_screen.dart. The Songs/Playlists tab in lib/screens/library/queue_tab.dart keeps its own selection state (queue_tab_selection.dart) and does not use the mixin.",
+        "Suffix drift in settings: lib/screens/settings/ has ten *Page classes (PlaybackSettingsPage, LibrarySettingsPage, AboutPage, UpdatesPage, etc.) and one *Screen class, LogScreen in log_screen.dart. Top-level lib/screens/ uses *Screen for full pages.",
+        "Prefix drift in shared widgets: lib/widgets/ holds 10 app_*.dart files (app_switch, app_alert_dialog, app_bottom_sheet, app_search_field, etc.) and 5 sistrum_*.dart files (sistrum_slider, sistrum_context_menu, etc.) for the same kind of shared control. AGENTS.md names AppSwitch and SistrumSlider side by side, and no rule says which prefix a new shared widget takes.",
+        "Neutral: typed request and result shapes in providers and services are often Dart record typedefs (LibraryBrowseRequest, PlaylistSearchEntry, MetadataCoverDetails), while domain entities are classes in lib/models/. No documented rule explains the split."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "convention_outlier": {
+      "dimension_character": "Core areas follow clear, predictable naming: providers, library services and models each have a visible pattern. The drift is in the seams between areas, where the same kind of thing is named or split in two ways. A developer who learns the Settings page naming or the widget prefixes will still be surprised by the exceptions, and the part-file split in the library tab and playback service does not match how the services layer is organised.",
+      "score_rationale": "The strongest areas (providers, library_ services, models) hold their pattern across every file, which keeps the score near the solid band. Pulling it down are four concrete islands: LogScreen against the *Page convention in settings, two shared-widget prefixes with no rule, a selection protocol that the library tab does not share with its sibling screens, and mixed file-splitting styles. Together these are noticeable friction but not pervasive, so the score sits at 78.0 rather than lower."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "convention_outlier",
+      "identifier": "library_tab_selection_protocol",
+      "summary": "Songs/Playlists tab keeps its own selection state instead of using SelectionModeMixin used by sibling screens",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_selection.dart",
+        "lib/screens/selection_mode_mixin.dart",
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/library_tracks_folder_screen.dart"
+      ],
+      "evidence": [
+        "SelectionModeMixin is used by local_album_screen.dart and library_tracks_folder_screen.dart only.",
+        "queue_tab.dart and its part file queue_tab_selection.dart hold selection state directly and do not use the mixin.",
+        "A developer who learns selection behaviour from the album screen must relearn it for the library tab."
+      ],
+      "suggestion": "Move queue_tab selection state and handlers onto SelectionModeMixin, or if the tab's selection truly differs, add a one-line note in AGENTS.md or the mixin doc explaining why it does not use the mixin. Do not add a new abstraction.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "selection_protocol_drift"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "shared_widget_prefix_split",
+      "summary": "Shared widgets use both app_ and sistrum_ prefixes with no rule for choosing one",
+      "related_files": [
+        "lib/widgets/app_switch.dart",
+        "lib/widgets/app_alert_dialog.dart",
+        "lib/widgets/app_bottom_sheet.dart",
+        "lib/widgets/sistrum_slider.dart",
+        "lib/widgets/sistrum_context_menu.dart",
+        "AGENTS.md"
+      ],
+      "evidence": [
+        "lib/widgets/ top level holds 10 app_*.dart files and 5 sistrum_*.dart files.",
+        "AGENTS.md names AppSwitch and SistrumSlider together as the same kind of control.",
+        "No naming rule in the repo says which prefix a new shared widget should take."
+      ],
+      "suggestion": "Write one sentence in AGENTS.md stating which prefix means what (for example sistrum_ for theme-bound controls and app_ for generic ones), and follow it for new shared widgets. Do not rename the existing app_ files just for consistency; that adds churn without changing behaviour.",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "naming_prefix_drift"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "log_screen_suffix_island",
+      "summary": "LogScreen is the only *Screen subpage in settings/, where every other subpage is *Page",
+      "related_files": [
+        "lib/screens/settings/log_screen.dart",
+        "lib/screens/settings/about_page.dart",
+        "lib/screens/settings/updates_page.dart"
+      ],
+      "evidence": [
+        "lib/screens/settings/ defines ten *Page classes (PlaybackSettingsPage, LibrarySettingsPage, AboutPage, UpdatesPage, and others).",
+        "The only *Screen class in that directory is LogScreen, declared in log_screen.dart."
+      ],
+      "suggestion": "Rename LogScreen to LogPage and log_screen.dart to log_page.dart so the settings subpages share one suffix. This is a rename only, with no behaviour change.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "naming_prefix_drift"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "part_file_split_style_mixed",
+      "summary": "Large files split with Dart part files in some areas but with separate library modules in services/library",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/services/playback/music_player_service.dart",
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "lib/services/library/library_collections_hydration.dart",
+        "lib/services/library/library_native_adapter.dart"
+      ],
+      "evidence": [
+        "queue_tab.dart has 7 part directives, music_player_service.dart has 2, audio_analysis_widget.dart has 3, and home_tab.dart has 2.",
+        "services/library/ splits its work into 17 library_* files as separate libraries with explicit imports.",
+        "The dead_code scan lists 9 part files as orphaned because it does not follow part directives, so tooling sees these areas as disconnected."
+      ],
+      "suggestion": "Keep part only where library-private members must be shared, since Dart part is the only way to do that. For new splits, use separate libraries with explicit imports, and record the rule in AGENTS.md. Do not force-convert the existing part files without a reason.",
+      "confidence": "low",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "file_split_style_drift"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Areas were split and named by different authors or phases with no documented rule for file splitting, widget prefixes or screen suffixes, so each area picked its own style.",
+      "Renames during the rebrand left legacy app_ prefixes beside new sistrum_ prefixes and a Screen suffix in the Settings directory."
+    ],
+    "likely_symptoms": [
+      "The 9 orphaned-file findings in the dead_code scan are a symptom of the part-file style, not of dead code."
+    ],
+    "possible_false_positives": [
+      "queue_tab part files may be justified because they share library-private members; this is why the part-file issue is reported at low confidence."
+    ]
+  },
+  "context_updates": {
+    "convention_outlier": {
+      "add": [
+        {
+          "header": "Provider files consistently suffixed _provider",
+          "description": "All 15 files in lib/providers end in _provider.dart, so a developer can locate and recognise a Riverpod provider from its filename alone.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "services/library uses library_ module prefix",
+          "description": "All 17 files in lib/services/library share a library_ prefix, which makes the persistence and collection group easy to scan and keeps its modules as separate libraries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Record typedefs for request and result shapes",
+          "description": "Providers and services use Dart record typedefs for request and result shapes, while entities live as classes in lib/models. The split is not documented; treat it as a neutral choice.",
+          "settled": false,
+          "positive": false
+        },
+        {
+          "header": "Part files invisible to dead-code scan",
+          "description": "The dead_code detector flags part-split files as orphaned because it does not follow part directives. Treat those flags as a tooling blind spot.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

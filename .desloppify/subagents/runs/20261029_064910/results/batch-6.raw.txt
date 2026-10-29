@@ -1,0 +1,87 @@
+{
+  "batch": "abstraction_fitness",
+  "batch_index": 6,
+  "assessments": {"abstraction_fitness": 72.0},
+  "dimension_notes": {
+    "abstraction_fitness": {
+      "evidence": [
+        "Mechanical abstraction counts are zero for wrapper_rate, one_impl_interface_count, delegation_heavy_class_count, facade_module_count and typed_dict_violation_count, so no pass-through wrapper chains, single-implementation interface families, delegation-heavy classes or re-export facades were found in the packet.",
+        "lib/services/playback/music_player_service.dart splits the playback handler into part files: _MusicAutoMix (music_player_automix.dart, constructed at line 259 with `this`) and _MusicAutoplay (music_player_autoplay.dart, constructed at line 264 with `this`). Both receive the whole MusicPlayerHandler and reach into its privates: about 66 `handler.` references in automix and 40 in autoplay, including handler._player, handler._index, handler._media, handler._disposeDeck, handler._broadcastState and handler._settings.",
+        "Those helper classes are real collaborators with their own state (pins, prepared/outgoing decks, learning dismissals, pending loads), so they are not pass-through wrappers. The problem is the boundary: they share private state through a part-of file, so they are not independently testable and their contract is the handler's full private surface.",
+        "Injected seams are used well elsewhere: AutoMixAnalyzer and AutoMixEffectRenderer are passed in as constructor parameters, and autoplayLibraryLoader is a typed function typedef (AutoplayLibraryLoader). Helper functions such as _loadAutoplayLibrary take an explicit MusicPlayerRuntime rather than the handler.",
+        "Indirection depth is mild (max chain depth 3 to 4 in the mechanical hotspot list). Remaining one-line forwarders such as theme_provider.dart _editState copyWith calls and music_player_service.dart helpers forward to a single target and enforce or add nothing, but they are small and do not form chains.",
+        "Wide-parameter-bag signal (85 files) counts configuration-related mentions, not functions with wide signatures; wide_functions is 0 across the list, so it is not evidence of a leaky options bag."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The playback subsystem's extracted AutoMix and Autoplay collaborators depend on the full MusicPlayerHandler private surface (about 100 back-references), so the split reduces file size without creating real abstraction boundaries. Extracting narrow interfaces for deck, queue and session state would be needed to reach the top band.",
+      "sub_axes": {
+        "abstraction_leverage": 74.0,
+        "indirection_cost": 82.0,
+        "interface_honesty": 62.0,
+        "delegation_density": 90.0,
+        "definition_directness": 80.0,
+        "type_discipline": 85.0
+      }
+    }
+  },
+  "dimension_judgment": {
+    "abstraction_fitness": {
+      "dimension_character": "The codebase avoids most common abstraction smells: no delegation-heavy classes, facades, single-implementation interface families or pass-through chains, and collaborators are injected through typed parameters. The main defect is the playback handler's part-file split, where AutoMix and Autoplay are given the whole handler and reach into its private fields, so the boundary is in name only. The other large files are mostly size-driven rather than abstraction-driven.",
+      "score_rationale": "Clean, consistent abstraction use across most of the codebase with no systemic wrapper or interface bloat keeps this in the upper-middle band. The part-file collaborators that share the handler's private state pull it down to about 72, because the interface honesty of the playback subsystem is weak."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "playback_part_file_handler_leak",
+      "summary": "AutoMix and Autoplay helpers take the whole MusicPlayerHandler and reach into its privates",
+      "related_files": [
+        "lib/services/playback/music_player_service.dart",
+        "lib/services/playback/music_player_automix.dart",
+        "lib/services/playback/music_player_autoplay.dart"
+      ],
+      "evidence": [
+        "music_player_service.dart:259 constructs _MusicAutoMix(this, ...) and :264 constructs _MusicAutoplay(this, ...).",
+        "music_player_automix.dart holds `final MusicPlayerHandler handler;` and makes about 66 `handler.` accesses, including handler._player (9), handler._media (6), handler._disposeDeck (10) and handler._settings (3).",
+        "music_player_autoplay.dart holds `final MusicPlayerHandler handler;` and makes about 40 `handler.` accesses, including handler._media (15), handler._index (12) and handler._sessionQueueRevision (3).",
+        "Both files are `part of 'music_player_service.dart'`, so the helpers have no interface boundary and can only be exercised through the full handler."
+      ],
+      "suggestion": "Pass narrow collaborators instead of the handler: a deck/player port for AutoMix (play, pause, volume, dispose deck), a queue/session view for Autoplay (current media, index, queue items, mark-changed callback), and a settings/normalization function. Keep the helper classes but make them library-private classes in their own files that import those ports, and add unit tests against fakes.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "playback_god_object_split"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "The playback handler was split across part files for file-size reasons, which kept the private-state coupling and removed the boundary that a real interface would have enforced."
+    ],
+    "likely_symptoms": [
+      "complexity_hotspots for music_player_service.dart (loc 2072, complexity 257)"
+    ],
+    "possible_false_positives": [
+      "Wide param bag count (85 files), which measures configuration mentions and not wide function signatures."
+    ]
+  },
+  "context_updates": {
+    "abstraction_fitness": {
+      "add": [
+        {
+          "header": "Playback part-file collaborators share handler privates",
+          "description": "AutoMix and Autoplay are real stateful helpers, but they receive the whole MusicPlayerHandler and read its private fields. The split is structural rather than a true boundary, so it hides coupling behind file separation.",
+          "settled": false,
+          "positive": false
+        },
+        {
+          "header": "Injected analyzer, renderer and loader seams",
+          "description": "AutoMix analyzer and renderer and the Autoplay library loader are passed as typed constructor parameters, which keeps the heavy audio and database work replaceable in tests.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

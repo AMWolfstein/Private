@@ -1,0 +1,197 @@
+{
+  "batch": "package_organization",
+  "batch_index": 15,
+  "assessments": {"package_organization": 55.0},
+  "dimension_notes": {
+    "package_organization": {
+      "evidence": [
+        "lib/ root holds only app.dart and main.dart (fan_out 17.5, fan_in 1.0); both are genuine entry points, so the root itself is not a straggler problem.",
+        "lib/widgets/ has 68 .dart files directly at its top level (directory_profiles lists 65 entries plus audio_analysis/glass/player subfolders), mixing app_* primitives, library rows (local_song_row, library_section_list, library_track_selection_bar), lyric widgets (lyric_gap_indicator, lyric_scroll_motion, lyrics_size_setting), settings helpers (settings_group, music_haptics_settings, playback_normalization_settings), update_dialog and duplicate_review_sheet. Subfolders for glass/, player/ and audio_analysis/ already exist, so the pattern is partially applied and the remaining root is an overload.",
+        "lib/services/ has 41 top-level files (avg_fan_out 2.0) while lib/services/library/ (17), playback/ (21) and ffmpeg/ (6) already exist. Library-specific files remain at the root: deleted_library_files.dart, local_track_batch_actions.dart, batch_track_actions.dart, collection_track_batch.dart, cover_analysis_store.dart, embedded_cover_resolver.dart, metadata_index_reconciler.dart, metadata_persistence_service.dart, sqlite_helpers.dart, sqlite_native_snapshot.dart, app_state_database.dart.",
+        "Playback/audio-analysis files sit at the services root: replaygain_service.dart, audio_analysis_cache.dart, audio_analysis_jobs.dart, listening_rewind.dart, listening_statistics.dart, while lib/widgets/audio_analysis/ already holds the UI counterpart.",
+        "Glass infrastructure is split: sistrum_glass_auto_probe.dart and sistrum_glass_warmup.dart live in lib/services/ while lib/widgets/glass/ (14 files) holds the rest of the glass stack; sistrum_glass_warmup.dart imports widgets/glass/sistrum_chrome.dart and providers/runtime_profile_provider.dart.",
+        "Upward dependency from utils: lib/utils/clickable_metadata.dart imports screens/local_album_screen.dart and screens/local_artist_screen.dart; lib/utils/confirm_and_delete_tracks.dart imports widgets/app_alert_dialog.dart. lib/utils (31 files, avg_fan_in 7.9) is consumed by nine directories, so a leaf utility layer that reaches up into screens is a boundary failure.",
+        "Service-to-UI/provider edges: lib/services/batch_track_actions.dart imports providers/local_library_provider.dart and widgets/batch_progress_dialog.dart and widgets/app_alert_dialog.dart; lib/services/local_track_batch_actions.dart imports widgets/app_alert_dialog.dart; lib/services/deleted_library_files.dart imports providers/local_library_provider.dart; lib/services/library/library_folder_selection.dart imports providers/local_library_provider.dart. directory_profiles shows lib/services/library/ importing lib/providers/ once and lib/services/ importing lib/widgets/ 3 times.",
+        "Reciprocal coupling between services root and services/library: coupling_matrix shows lib/services/library/ -> lib/services/ at 21 edges, while lib/services/ -> lib/services/library/ is 5 edges. The library subfolder depends on root services files that should arguably be inside it.",
+        "lib/models/unified_library_item.dart imports services/library/library_database_models.dart, a model depending on the persistence layer (models otherwise have avg_fan_out 0.7).",
+        "lib/screens/ has 19 top-level files (avg_fan_out 13.3) mixing library section screens (local_album_screen.dart, local_artist_screen.dart, local_genres_screen.dart, favorite_artists_screen.dart, library_tracks_folder_screen.dart, sistrum_library_screen.dart), player (now_playing_screen.dart), setup and shell (setup_screen.dart, main_shell.dart) and mixins. lib/screens/library/ contains only the eight queue_tab*.dart files (avg_fan_in 0.4, imported solely from lib/screens/), so the folder name library does not describe the queue content and the library screens are split from it.",
+        "Thin subfolder lib/screens/home/ (3 files, imported only from lib/screens/ and tests) is a reasonable grouping, so not every subfolder is a problem."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Flat overload in lib/widgets/ (about 65 root files) and lib/services/ (41 root files) with library and playback concerns not grouped; utils and services reach upward into screens, widgets and providers; the library screens are split between screens root and screens/library/.",
+      "sub_axes": {"abstraction_leverage": 55.0, "indirection_cost": 60.0, "interface_honesty": 50.0, "delegation_density": 55.0, "definition_directness": 60.0, "type_discipline": 65.0}
+    }
+  },
+  "dimension_judgment": {
+    "package_organization": {
+      "dimension_character": "The layout is partly organized by purpose: lib/services/library, lib/services/playback, lib/services/ffmpeg, lib/widgets/glass, lib/widgets/player and lib/widgets/audio_analysis are focused packages with clear ownership. The remaining top-level directories (widgets, services, screens) still hold many unrelated files, and the layering is violated in a few measurable places (utils reaching into screens and widgets, services reaching into providers and widgets).",
+      "score_rationale": "The root is clean and several subfolders are well-scoped, but lib/widgets/ (about 65 root files) and lib/services/ (41 root files) are flat overloads with clear library, playback and glass stragglers. Upward and reciprocal dependencies at utils and services boundaries add measurable coupling defects, which keeps the score in the mid range rather than high."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "package_organization",
+      "identifier": "widgets_flat_overload",
+      "summary": "lib/widgets/ has about 65 top-level files spanning many unrelated concerns",
+      "related_files": ["lib/widgets/"],
+      "evidence": [
+        "directory_profiles lib/widgets/ file_count 65, total_loc 14082, avg_fan_out 3.6.",
+        "Top-level files include library rows and sections (local_song_row.dart, library_section_list.dart, library_track_selection_bar.dart, local_song_menu.dart), lyric widgets (lyric_gap_indicator.dart, lyric_scroll_motion.dart, lyric_supplement_transition.dart), settings helpers (settings_group.dart, music_haptics_settings.dart, playback_normalization_settings.dart), and app primitives (app_switch.dart, app_snack_bar.dart, app_bottom_sheet.dart).",
+        "Subfolders glass/, player/ and audio_analysis/ already exist, so the split is partial; coupling_matrix shows lib/screens/ -> lib/widgets/ at 93 edges, meaning these widgets are consumed by every screen area."
+      ],
+      "suggestion": "Staged reorg: (1) create lib/widgets/library/ and move local_song_row, local_song_menu, local_song_file_actions, library_section_list, library_search_results, library_fast_scroller, library_selection_playback_actions, library_track_selection_bar, local_collection_actions, local_library_artwork_builder, album_track_tile, track_card into it; (2) create lib/widgets/lyrics/ for lyric_* files, lyrics_size_setting, lyrics_text_scale, lyrics_screen_awake, synced-lyrics helpers; (3) create lib/widgets/settings/ for settings_group, music_haptics_settings, playback_normalization_settings, automix_settings, custom_font_setting, lyrics_size_setting if not already in lyrics; (4) create lib/widgets/common/ or lib/widgets/primitives/ for app_* and sistrum_* primitives (app_switch, app_snack_bar, app_bottom_sheet, app_alert_dialog, app_choice_chip, app_content_card, app_loading_indicator, app_search_field, app_sliver_header, sistrum_slider, sistrum_context_menu). Move one folder per commit, then update imports with: grep -rl \"package:sistrum/widgets/<old>\" lib test integration_test | xargs sed -i 's#package:sistrum/widgets/<old>#package:sistrum/widgets/<new>#g'. Validate after each step with flutter analyze and flutter test (serially, per repo rules).",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "flat_dirs_widgets"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "services_root_stragglers",
+      "summary": "Library, playback and glass services sit at lib/services/ root beside their existing subpackages",
+      "related_files": [
+        "lib/services/deleted_library_files.dart",
+        "lib/services/local_track_batch_actions.dart",
+        "lib/services/batch_track_actions.dart",
+        "lib/services/collection_track_batch.dart",
+        "lib/services/cover_analysis_store.dart",
+        "lib/services/embedded_cover_resolver.dart",
+        "lib/services/metadata_index_reconciler.dart",
+        "lib/services/metadata_persistence_service.dart",
+        "lib/services/sqlite_helpers.dart",
+        "lib/services/sqlite_native_snapshot.dart",
+        "lib/services/app_state_database.dart",
+        "lib/services/replaygain_service.dart",
+        "lib/services/audio_analysis_cache.dart",
+        "lib/services/audio_analysis_jobs.dart",
+        "lib/services/sistrum_glass_auto_probe.dart",
+        "lib/services/sistrum_glass_warmup.dart"
+      ],
+      "evidence": [
+        "lib/services/ has 41 top-level files while lib/services/library/ (17 files), lib/services/playback/ (21 files) and lib/services/ffmpeg/ (6 files) already exist.",
+        "Library-domain files at the root: deleted_library_files.dart, local_track_batch_actions.dart, batch_track_actions.dart, collection_track_batch.dart, cover_analysis_store.dart, metadata_index_reconciler.dart, sqlite_helpers.dart, sqlite_native_snapshot.dart.",
+        "sistrum_glass_auto_probe.dart and sistrum_glass_warmup.dart are glass UI infrastructure at services root, separated from lib/widgets/glass/ (14 files).",
+        "coupling_matrix lib/services/library/ -> lib/services/ 21 edges versus lib/services/ -> lib/services/library/ 5 edges: the subpackage depends on root services that belong with it."
+      ],
+      "suggestion": "Staged reorg: (1) move library-domain root files into lib/services/library/ (batch_track_actions, local_track_batch_actions, collection_track_batch, deleted_library_files, cover_analysis_store, metadata_index_reconciler, sqlite_helpers, sqlite_native_snapshot, app_state_database, embedded_cover_resolver); (2) move replaygain_service, audio_analysis_cache, audio_analysis_jobs into lib/services/playback/ or a new lib/services/audio/ package; (3) move sistrum_glass_auto_probe and sistrum_glass_warmup into lib/widgets/glass/ or lib/services/glass/ (decide with the glass owners so widgets are not imported from services). Update imports with grep -rl and sed as in the widgets issue; run flutter analyze and flutter test after each move.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "flat_dirs_services"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "utils_upward_dependency",
+      "summary": "lib/utils imports screens and widgets, inverting the layer direction",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/utils/confirm_and_delete_tracks.dart"
+      ],
+      "evidence": [
+        "lib/utils/clickable_metadata.dart line 3-4: import 'package:sistrum/screens/local_album_screen.dart' and import 'package:sistrum/screens/local_artist_screen.dart'.",
+        "lib/utils/confirm_and_delete_tracks.dart line 4: import 'package:sistrum/widgets/app_alert_dialog.dart'.",
+        "lib/utils is consumed by nine directories (avg_fan_in 7.9), so these are leaf-to-root edges that create a cycle with lib/screens/ -> lib/utils/ (27 edges)."
+      ],
+      "suggestion": "Move clickable_metadata.dart into lib/widgets/ (or lib/screens/library/) since it constructs navigation to screens, and move confirm_and_delete_tracks.dart into lib/widgets/ or lib/services/library/ next to the dialog it uses, or inject the dialog as a callback. Validate with grep -rn \"package:sistrum/screens\\|package:sistrum/widgets\" lib/utils returning nothing, then flutter analyze and flutter test.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "layer_inversion"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "services_depend_on_ui_and_providers",
+      "summary": "Service files import providers and widgets, so the service layer depends on UI",
+      "related_files": [
+        "lib/services/batch_track_actions.dart",
+        "lib/services/local_track_batch_actions.dart",
+        "lib/services/deleted_library_files.dart",
+        "lib/services/library/library_folder_selection.dart",
+        "lib/services/sistrum_glass_warmup.dart"
+      ],
+      "evidence": [
+        "lib/services/batch_track_actions.dart imports providers/local_library_provider.dart, widgets/app_alert_dialog.dart, widgets/batch_progress_dialog.dart.",
+        "lib/services/local_track_batch_actions.dart imports widgets/app_alert_dialog.dart.",
+        "lib/services/deleted_library_files.dart imports providers/local_library_provider.dart.",
+        "lib/services/library/library_folder_selection.dart imports providers/local_library_provider.dart.",
+        "lib/services/sistrum_glass_warmup.dart imports providers/runtime_profile_provider.dart and widgets/glass/sistrum_chrome.dart.",
+        "directory_profiles shows lib/services/ imports_from_dirs lib/widgets/: 3 and lib/providers/: 3; lib/services/library/ imports lib/providers/: 1."
+      ],
+      "suggestion": "Keep batch/delete logic in services by having it return results and let the caller (provider or screen) show dialogs and pass the provider state: remove app_alert_dialog and batch_progress_dialog imports from services, and replace the provider import in deleted_library_files.dart and library_folder_selection.dart with a small interface or a callback parameter. Then move batch_track_actions.dart and local_track_batch_actions.dart into lib/providers/ or a lib/services/library/ package that has no UI import. Verify with grep -rln \"package:sistrum/\\(widgets\\|providers\\)\" lib/services returning nothing, then flutter analyze and flutter test.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "layer_inversion"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "model_depends_on_persistence",
+      "summary": "unified_library_item model imports the library database models from services",
+      "related_files": [
+        "lib/models/unified_library_item.dart",
+        "lib/services/library/library_database_models.dart"
+      ],
+      "evidence": [
+        "lib/models/unified_library_item.dart line 3: import 'package:sistrum/services/library/library_database_models.dart'.",
+        "lib/models/ otherwise has avg_fan_out 0.7 and is depended on by 104 test files and 14 providers, so models are expected to be the lowest layer."
+      ],
+      "suggestion": "Move the shared row types that unified_library_item needs out of library_database_models.dart into lib/models/ (for example lib/models/library_row_types.dart), or have unified_library_item.dart own its types. Then re-point the import and run flutter analyze and flutter test.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "layer_inversion"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "library_screens_split_across_folders",
+      "summary": "lib/screens/library/ holds only queue tab files while library section screens sit at screens root",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/local_artist_screen.dart",
+        "lib/screens/local_genres_screen.dart",
+        "lib/screens/favorite_artists_screen.dart",
+        "lib/screens/library_tracks_folder_screen.dart",
+        "lib/screens/sistrum_library_screen.dart"
+      ],
+      "evidence": [
+        "lib/screens/library/ contains only queue_tab.dart and seven queue_tab_*.dart helpers (8 files, avg_fan_in 0.4), imported only by lib/screens/ and tests.",
+        "lib/screens/ root has 19 files; library-section screens (local_album, local_artist, local_genres, favorite_artists, library_tracks_folder, sistrum_library) are at root while the folder named library holds queue content.",
+        "lib/screens/ has avg_fan_out 13.3 and imports lib/widgets/ 93 times, so the root is the main navigation hub."
+      ],
+      "suggestion": "Rename lib/screens/library/ to lib/screens/queue/ to match its content, then create lib/screens/library/ and move local_album_screen, local_artist_screen, local_genres_screen, favorite_artists_screen, library_tracks_folder_screen, library_tracks_folder_data, sistrum_library_screen and the selection_mode_mixin/collapsing_header_scroll_mixin used only by them into it. Move order: rename queue first (git mv), then the library screens, updating imports with grep -rl and sed; validate with flutter analyze and flutter test.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "flat_dirs_screens"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Subpackages were added for some domains (library, playback, glass, player) but the older root-level files were not migrated, leaving flat overloads in widgets and services.",
+      "Utility and service layers reach into UI and provider code for convenience dialogs and state, inverting the intended dependency direction."
+    ],
+    "likely_symptoms": ["flat_dirs"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "package_organization": {
+      "add": [
+        {
+          "header": "Root entry files are genuine core",
+          "description": "lib/app.dart and lib/main.dart at the lib root are the entry points with high fan-out and are correctly placed. The root is not a straggler problem.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Focused subpackages exist for library, playback, ffmpeg, glass and player",
+          "description": "lib/services/library, lib/services/playback, lib/services/ffmpeg, lib/widgets/glass, lib/widgets/player and lib/widgets/audio_analysis show purpose-driven grouping that many files follow.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,2105 @@
+{
+  "assessments": {
+    "abstraction_fitness": {
+      "score": 72.0,
+      "components": [
+        "Abstraction Leverage",
+        "Indirection Cost",
+        "Interface Honesty",
+        "Delegation Density",
+        "Definition Directness",
+        "Type Discipline"
+      ],
+      "component_scores": {
+        "Abstraction Leverage": 74.0,
+        "Indirection Cost": 82.0,
+        "Interface Honesty": 62.0,
+        "Delegation Density": 90.0,
+        "Definition Directness": 80.0,
+        "Type Discipline": 85.0
+      }
+    },
+    "ai_generated_debt": 88.0,
+    "api_surface_coherence": 72.0,
+    "authorization_consistency": 90.0,
+    "contract_coherence": 84.0,
+    "convention_outlier": 78.0,
+    "cross_module_architecture": 72.0,
+    "dependency_health": 78.0,
+    "design_coherence": 62.0,
+    "error_consistency": 62.0,
+    "high_level_elegance": 74.0,
+    "incomplete_migration": 86.0,
+    "initialization_coupling": 72.0,
+    "logic_clarity": 82.0,
+    "low_level_elegance": 62.0,
+    "mid_level_elegance": 64.0,
+    "naming_quality": 72.0,
+    "package_organization": 55.0,
+    "test_strategy": 72.0,
+    "type_safety": 80.0
+  },
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Import cycle confirmed in source: lib/screens/local_artist_screen.dart imports lib/screens/local_album_screen.dart (local_artist_screen.dart:16), and lib/utils/clickable_metadata.dart imports both lib/screens/local_album_screen.dart (line 3) and lib/screens/local_artist_screen.dart (line 4), and lib/screens/local_album_screen.dart imports lib/utils/clickable_metadata.dart (line 42) and lib/widgets/local_song_menu.dart (line 27), which imports lib/utils/clickable_metadata.dart (line 8). Packet cycle_summaries lists a 4-file cycle for this group.",
+        "Import cycle confirmed in source: lib/services/playback/music_player_runtime.dart imports lib/services/playback/music_player_service.dart (line 12), while music_player_service.dart re-exports music_player_runtime.dart (line 41). Packet cycle_summaries lists a 2-file cycle for this pair, and the complexity hotspot list shows music_player_service.dart at 2072 LOC.",
+        "Layer inversion repeated across modules: lib/utils/clickable_metadata.dart (utils layer) and lib/widgets/library_search_results.dart and lib/widgets/player/mini_player.dart and lib/widgets/local_song_menu.dart import screen files (lib/screens/local_album_screen.dart, lib/screens/library_tracks_folder_screen.dart, lib/screens/now_playing_screen.dart, lib/screens/track_metadata_edit_sheet.dart). Six such import lines in total across utils, widgets, services, providers and models.",
+        "Lower layers depending upward on screens is what turns the utils/clickable_metadata edge into a cycle: a shared navigation helper lives in utils while the screens it navigates to import it back.",
+        "Hub modules lib/l10n/l10n.dart (138 importers), lib/theme/sistrum_theme.dart (123) and lib/providers/settings_provider.dart (72) are intentional shared facades/theme and l10n entry points; not counted as defects under the rubric skip list.",
+        "Package size census reports lib as 100% of LOC because the project has a single package; this carries no boundary signal and is not counted.",
+        "Deferred import density was not present in the blind packet, so no judgement is made on function-level import pressure."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Two confirmed import cycles (screen-to-screen-to-utils and the playback runtime/service pair) and a utils/widgets-to-screens layer inversion blur the dependency direction in the library and playback areas, so common changes to these files ripple across the cycle."
+    },
+    "high_level_elegance": {
+      "evidence": [
+        "Domain subtrees are clear and match their names: lib/services/library (17 files), lib/services/playback (21), lib/services/ffmpeg (6), lib/widgets/player (25), lib/widgets/glass (14), lib/screens/settings (13), lib/l10n holds the generated localizations plus one accessor.",
+        "lib/services/ is a flat catch-all: 41 top-level files (8255 LOC) covering backup, APK download, update checks, glass warmup, navigation state, statistics, playlists and font loading next to the domain subtrees.",
+        "Glass ownership is split: lib/services/sistrum_glass_warmup.dart and lib/services/sistrum_glass_auto_probe.dart are rendering code, while lib/widgets/glass/sistrum_glass_preparation.dart and lib/widgets/glass/sistrum_glass_auto_probe_host.dart consume them. The warmup service imports widgets/glass/sistrum_chrome.dart and liquid_glass_easy.",
+        "Two navigation owners: lib/services/app_navigation_service.dart holds the root navigator key, while lib/services/shell_navigation_service.dart holds the ShellTab enum and Brightness/Color ValueNotifiers for chrome.",
+        "Layer direction is not stable: utils, models, theme, and services import screens, widgets, and providers (see issues). A new engineer cannot state a single rule for what may depend on what.",
+        "lib/screens/library/ holds only the queue_tab files (QueueTab, a Library section page), which collides with the player queue at lib/widgets/player/sistrum_player_queue.dart.",
+        "Top-level lib/ has state and route homes split across controllers/ (2 files), providers/ (15), and routes/ (1 file)."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Flat services/ mixes UI glass and navigation with data services, the layer rule is violated in several directions (utils and models reaching upward), and one folder name (screens/library) points to the wrong owner. The domain subtrees are good, so the drag is at the top-level boundaries."
+    },
+    "convention_outlier": {
+      "evidence": [
+        "Positive: all 15 files in lib/providers/ end in _provider.dart, and all 17 files in lib/services/library/ share the library_ prefix, so a developer can predict a file's role from its name in those areas.",
+        "Style island (part files): lib/screens/library/queue_tab.dart declares 7 part files (queue_tab_helpers, _selection, _navigation, _collection_items, _filter_widgets, _batch_actions, _item_widgets). lib/services/playback/music_player_service.dart declares 2 parts, lib/widgets/audio_analysis/audio_analysis_widget.dart 3, and lib/screens/home/home_tab.dart 2. Sibling services/library/ splits the same kind of work into separate library_* modules with explicit imports.",
+        "The scan's dead_code detector flags 9 part files (queue_tab_* helpers, music_player_autoplay.dart, music_player_automix.dart, audio_analysis_models.dart, home_tab_widgets.dart) as orphaned, because the import graph does not follow part directives.",
+        "Protocol drift: lib/screens/selection_mode_mixin.dart is used only by lib/screens/local_album_screen.dart and lib/screens/library_tracks_folder_screen.dart. The Songs/Playlists tab in lib/screens/library/queue_tab.dart keeps its own selection state (queue_tab_selection.dart) and does not use the mixin.",
+        "Suffix drift in settings: lib/screens/settings/ has ten *Page classes (PlaybackSettingsPage, LibrarySettingsPage, AboutPage, UpdatesPage, etc.) and one *Screen class, LogScreen in log_screen.dart. Top-level lib/screens/ uses *Screen for full pages.",
+        "Prefix drift in shared widgets: lib/widgets/ holds 10 app_*.dart files (app_switch, app_alert_dialog, app_bottom_sheet, app_search_field, etc.) and 5 sistrum_*.dart files (sistrum_slider, sistrum_context_menu, etc.) for the same kind of shared control. AGENTS.md names AppSwitch and SistrumSlider side by side, and no rule says which prefix a new shared widget takes.",
+        "Neutral: typed request and result shapes in providers and services are often Dart record typedefs (LibraryBrowseRequest, PlaylistSearchEntry, MetadataCoverDetails), while domain entities are classes in lib/models/. No documented rule explains the split."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": ""
+    },
+    "error_consistency": {
+      "evidence": [
+        "lib/services/apk_downloader.dart downloadApk returns String? and collapses every failure to null: invalid ZIP/APK payload (lines 120-123), invalid digest format (126-131), SHA-256 mismatch (132-137), and any thrown network or IO error (148-150). The caller cannot tell a tampered download from a dropped connection.",
+        "lib/widgets/update_dialog.dart lines 109-137 treat any null as one generic 'download failed' path (showUpdateDownloadFailed), so the integrity failure is reported the same as a network failure.",
+        "lib/services/apk_downloader.dart installApk (lines 218-225) catches every exception, logs it at error level and returns void. The caller in update_dialog.dart line 129 does not check for failure, and for non-forced updates the dialog has already been popped at line 125, so an installer launch failure is invisible to the user.",
+        "lib/services/backup_service.dart native and Dart archive parsers (lines 377-384 and 494-501) return null for every failure, including I/O, corrupt archive and unsupported format, with only a warning log. The caller cannot distinguish these cases and cleans up staging directories with empty catch blocks (lines 379-381, 497-499).",
+        "Mechanical signals: review_packet holistic_context.errors.strategy_by_directory shows services/ with 113 try_catch and 86 returns_null, playback/ with 62 try_catch and 51 returns_null, and utils/ with 36 returns_null. The only result_type uses are in ffmpeg/ (1) and glass/ (1), and error_conventions totals try_catch 118, returns_null 78, result_type 2. Failure signalling is therefore mostly null-as-error, with exceptions used in parallel.",
+        "lib/providers/local_library_provider.dart around lines 291-294 and 554-556 show a sound pattern: catch with stack, log at error level, set an explicit loadFailed or state flag, and keep the failure visible to the UI. This is the model the other services should follow."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Failure signalling is split between null returns, bool returns, void swallowing and thrown exceptions across services and playback. Several I/O boundaries (update download, install, backup parse) lose the reason for failure before it reaches the UI, and the error-reporting approach is not uniform."
+    },
+    "naming_quality": {
+      "evidence": [
+        "Most identifiers communicate intent: Flutter-idiomatic _handleX/handleScroll event handlers, run*/get* names that match their behaviour (getCurrentPosition, getMediaItem, getById, getCount are pure queries), and predicate-style is/has names all return bool. No is*/has* returning non-bool and no get* that mutates state were found in lib/.",
+        "lib/screens/library/queue_tab.dart declares class QueueTab (line 59), _QueueTabState, and seven part files named queue_tab_*.dart, but the widget is the Library browser (main_shell.dart:649 returns it from _LibraryTabRoot; librarySection drives SistrumLibraryScreen sections). The play queue is a different concept (sistrum_player_queue.dart). A new developer reading 'QueueTab' would expect the playback queue.",
+        "The 'queue' misnomer spreads into the data layer: lib/services/library/library_queue_store.dart (its header comment says 'SQL builders for the queue tab's local-library queries'), QueueLibraryDbQuery/QueueLibraryDbCursor/QueueLibraryDbPage/QueueLibraryCounts in library_database_models.dart, lib/screens/queue_library_refresh_policy.dart, and providers/library_browse_provider.dart. Vocabulary is inconsistent with the rest of the codebase, which uses 'library', 'collection' and 'playback queue' for these concepts.",
+        "lib/screens/library_tracks_folder_screen.dart: LibraryTracksFolderScreen (line 49), LibraryTracksFolderMode (loved | playlist), LibraryTracksFolderData, _folderData, and _EmptyFolderState are used for Loved Songs and playlist track lists. In this app 'folder' means a music directory (music-library folder selection, Files & Folders). The name does not match what the screen shows.",
+        "lib/screens/library/queue_tab.dart line 1066: class __AnimatedLibrarySliverGridState has a doubled leading underscore, while its widget is _AnimatedLibrarySliverGrid (line 1038) and the State naming convention is _XState. Looks like a typo that survived a rename.",
+        "lib/screens/library/queue_tab_helpers.dart line 12 declares searchKey on _GroupedLocalAlbum and line 23 initializes it, but nothing reads it (grep finds no other use). The name refers to a search feature that AGENTS.md says Library pages no longer have. A reader would assume it drives search filtering.",
+        "Generic-named locals and helpers such as val() in lib/widgets/local_song_menu.dart (line 256) are short-lived and scoped to one function. They are not a meaningful naming problem."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The 'queue' name for the Library browser is repeated across the screen, part files, DB query types and the store, so the mismatch is systemic and hurts how quickly a new developer can find the playback queue versus the library browser. The folder naming and the dead searchKey field add smaller points of confusion."
+    },
+    "abstraction_fitness": {
+      "evidence": [
+        "Mechanical abstraction counts are zero for wrapper_rate, one_impl_interface_count, delegation_heavy_class_count, facade_module_count and typed_dict_violation_count, so no pass-through wrapper chains, single-implementation interface families, delegation-heavy classes or re-export facades were found in the packet.",
+        "lib/services/playback/music_player_service.dart splits the playback handler into part files: _MusicAutoMix (music_player_automix.dart, constructed at line 259 with `this`) and _MusicAutoplay (music_player_autoplay.dart, constructed at line 264 with `this`). Both receive the whole MusicPlayerHandler and reach into its privates: about 66 `handler.` references in automix and 40 in autoplay, including handler._player, handler._index, handler._media, handler._disposeDeck, handler._broadcastState and handler._settings.",
+        "Those helper classes are real collaborators with their own state (pins, prepared/outgoing decks, learning dismissals, pending loads), so they are not pass-through wrappers. The problem is the boundary: they share private state through a part-of file, so they are not independently testable and their contract is the handler's full private surface.",
+        "Injected seams are used well elsewhere: AutoMixAnalyzer and AutoMixEffectRenderer are passed in as constructor parameters, and autoplayLibraryLoader is a typed function typedef (AutoplayLibraryLoader). Helper functions such as _loadAutoplayLibrary take an explicit MusicPlayerRuntime rather than the handler.",
+        "Indirection depth is mild (max chain depth 3 to 4 in the mechanical hotspot list). Remaining one-line forwarders such as theme_provider.dart _editState copyWith calls and music_player_service.dart helpers forward to a single target and enforce or add nothing, but they are small and do not form chains.",
+        "Wide-parameter-bag signal (85 files) counts configuration-related mentions, not functions with wide signatures; wide_functions is 0 across the list, so it is not evidence of a leaky options bag."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The playback subsystem's extracted AutoMix and Autoplay collaborators depend on the full MusicPlayerHandler private surface (about 100 back-references), so the split reduces file size without creating real abstraction boundaries. Extracting narrow interfaces for deck, queue and session state would be needed to reach the top band.",
+      "sub_axes": {
+        "abstraction_leverage": 74.0,
+        "indirection_cost": 82.0,
+        "interface_honesty": 62.0,
+        "delegation_density": 90.0,
+        "definition_directness": 80.0,
+        "type_discipline": 85.0
+      }
+    },
+    "dependency_health": {
+      "evidence": [
+        "pubspec.yaml declares about 35 runtime packages; every one except cupertino_icons has a direct package: import in lib/ or test/ (grep counts range from 1 file for logger, url_launcher, xml, unorm_dart, open_filex, volume_controller, json_annotation to 215 for flutter_riverpod). cupertino_icons is needed for CupertinoIcons used in lib/theme/sistrum_icons.dart.",
+        "No duplicate libraries for one purpose were found: http is used for update checks and APK download, url_launcher for the update dialog, archive for backup streams, xml for lyrics parsing, unorm_dart for Unicode normalisation in sqlite_helpers.dart.",
+        "Two import cycles are visible in the source: lib/services/playback/music_player_runtime.dart line 12 imports music_player_service.dart and music_player_service.dart line 25 imports music_player_runtime.dart; and lib/utils/clickable_metadata.dart lines 3-4 import local_album_screen.dart and local_artist_screen.dart, while local_artist_screen.dart line 16 imports local_album_screen.dart and local_album_screen.dart line 42 imports clickable_metadata.dart.",
+        "Exact version pins (liquid_glass_easy 5.0.0, ffmpeg_kit_flutter_new_audio 2.5.7, material_color_utilities 0.13.0) sit beside caret ranges with no rationale comment. Audio playback depends on audioplayers plus a path-overridden audioplayers_android and a vendored third_party/audio_service fork, which adds upkeep but is deliberate."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Two import cycles remain, one of them a utils file depending on screen files. Exact pins and vendored forks are undocumented, so upgrade paths are unclear."
+    },
+    "low_level_elegance": {
+      "evidence": [
+        "lib/services/playback/music_player_service.dart `_loadIndex` (lines 1339-1499) is about 160 lines and mixes history recording, state reset, SAF lease acquisition, source resolution, normalization, audio-session activation, fallback playback, and error reporting in one body.",
+        "The same `if (!_isCurrentPlayRequest(generation, media)) return;` guard is repeated about 14 times inside `_loadIndex`; the file calls `_isCurrentPlayRequest` 32 times overall. The generation-token cancellation idea is sound, but at this density it reads as sprawl rather than a single checkpoint helper.",
+        "The lease-cleanup pattern `if (playbackLease != null) await PlatformBridge.closeContentUriPlaybackLease(playbackLease.token);` is copied at lines 1384, 1402, 1434-1437, 1446, 1492-1494, so the lease lifecycle is hand-maintained in four places instead of one owned helper.",
+        "The `catch (_) {}` at music_player_service.dart lines 1399-1400 swallows errors from `_runtime.exclusiveAudioHook` with no log, while neighbouring failures in the same function are logged via `_log.w`.",
+        "lib/services/embedded_cover_resolver.dart `_deleteCoverDirectory`-style cleanup (around lines 968-977) nests `try { await _deleteFileIfPresent(file); try { await file.parent.delete(recursive: true); } catch (_) {} } catch (_) {}`. `_deleteFileIfPresent` already wraps its own try/catch, so the outer try is redundant and both layers silently discard errors.",
+        "Across lib/, `catch (_) {}` appears about 52 times in 16 files, mostly on file-system cleanup paths (embedded_cover_resolver.dart has 10, audio_analysis_widget.dart 9, backup_service.dart 5). The style is consistent, but the repetition hides which failures are intentional best-effort cleanup.",
+        "Positive: the playback code uses explicit generation tokens (`_isCurrentPlayRequest`, `_serializeSourceChange`, `_switchingGeneration`) with a `finally` that resets the switching flag, so state mutation during async source switching is explicit and bounded."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Playback load logic is a long, guard-heavy function with a hand-copied lease lifecycle, and cleanup helpers nest redundant silent catches. These make the core playback path harder to verify than the design needs to be."
+    },
+    "mid_level_elegance": {
+      "evidence": [
+        "LibraryDatabase.getById and findByTrackAndArtist return bare decoded rows (library_database.dart:566-601), while getQueueTrackPageResult pages are wrapped as {source, item} envelopes (library_queue_store.dart:899). Consumers therefore decode two shapes: bare via LocalLibraryItem.fromJson in local_song_menu.dart:47, library_search_provider.dart:27, music_player_provider.dart:48,57, playback_provider.dart:173, and enveloped via row['item'] as Map in local_artist_provider.dart:127, local_home_feed_provider.dart:28, queue_tab.dart:156, queue_tab_helpers.dart:263, music_player_autoplay.dart:46. About 20 call sites translate DB rows to models with no single boundary.",
+        "Row-to-model translation for the same local-track concept is repeated in many screens and providers, so the seam has no one obvious place for data translation.",
+        "music_player_provider.dart:41-45 reads the DB through musicPlayerRuntimeProvider.dependencies.libraryDatabase, while local_song_menu.dart:39, library_search_provider.dart:24 and local_artist_provider.dart:17 use LibraryDatabase.instance directly. The same seam is reached by two access paths.",
+        "local_song_menu.dart:76-80 wraps the whole lookup and menu open in catch (_) and reports 'file not found' for every failure, so DB or native errors are reported as missing files. Error propagation across this boundary is lossy.",
+        "music_player_provider.dart:51-71 silently returns a synthetic Track with empty album and artist when both the id lookup and the path match fail, so the boundary degrades identity without signalling it.",
+        "local_artist_provider.dart has two independent paging loops (build/loadMore at lines 54-100 and playbackQueue at 103-123, plus localArtistPopularProvider at 167-203) that each repeat the seen-set dedupe and cursor handling, and use the magic page size 40. End-of-page detection differs: loadMore uses rows.length == 40 while playbackQueue and popular use rows.length < 40.",
+        "local_artist_provider.dart:145-146 exposes a Provider returning a mutable {} map, and line 191 mutates it through putIfAbsent from inside a FutureProvider. Shared mutable state crosses the provider boundary and its lifetime depends on autoDispose.",
+        "local_artist_provider.dart:186-190 contains glue logic that keys play counts by filePath or id with a conditional (item.id == item.filePath ? 0 : plays[item.id]) inside the ranking loop, so key translation is ad hoc rather than owned by the stats seam.",
+        "library_queue_store.dart centralizes SQL projection and cursor paging behind QueueLibraryDbPage and LibraryDatabase.getQueueTrackPageResult, which is a clean seam for the artist and queue screens."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": ""
+    },
+    "test_strategy": {
+      "evidence": [
+        "Suite is broad: 284 *_test.dart files under test/ and integration_test/, 124 files use testWidgets and 172 use test(), so most feature areas have some direct coverage.",
+        "No snapshot or golden tests: grep for matchesGoldenFile, toMatchSnapshot and expectLater golden patterns in test/ and integration_test/ returns 0 hits. The snapshot-overuse concern does not apply.",
+        "Shared widget lib/theme/sistrum_icons.dart has 8 lib importers and no test file references it by name (grep for sistrum_icons in test/ and integration_test/ is empty). Mechanical packet also flags it as 'No direct tests'.",
+        "lib/widgets/player/sistrum_player_slider.dart (4 importers) and lib/widgets/app_content_card.dart (3 importers) have no direct test references; the packet lists both under testing.critical_untested.",
+        "lib/screens/main_shell.dart (651 LOC, the shell that hosts tabs, bar and chrome) has no direct test reference; packet notes it is covered only indirectly.",
+        "Timing fragility: several widget tests use wall-clock busy-wait helpers, e.g. test/local_song_menu_actions_test.dart:142-150 (5 s DateTime.now() deadline loop with runAsync delays), test/local_album_cue_delete_test.dart:211-215 (same pattern, waits on a real file deletion), test/local_track_batch_delete_test.dart:102-103, and test/sistrum_artwork_contrast_test.dart:58-62. These depend on real platform event timing rather than fake-clock control.",
+        "About 43 test files reference Future.delayed or Duration(seconds...) and several more use DateTime.now() deadlines, so the timing-dependent pattern is a repeated test idiom rather than a single case.",
+        "Packet mechanical scan reports 37 test_coverage findings, most of them 'No direct tests' on small presentational widgets and helpers (for example lib/widgets/beta_badge.dart, lib/widgets/scroll_edge_fade.dart, lib/widgets/player/player_playback_controls.dart at 250 LOC) and a few large screens (lib/screens/listening_statistics_screen.dart at 492 LOC, lib/screens/local_guide_pages.dart at 424 LOC).",
+        "Several flagged files are reported as orphaned by the packet (for example lib/screens/library/queue_tab_helpers.dart, queue_tab_navigation.dart, queue_tab_selection.dart, lib/screens/home/home_tab_feed.dart). Their test_coverage findings are less meaningful until dead-code status is resolved, so they are not counted as test gaps here."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Shared UI primitives used across many screens (sistrum_icons, the player slider and content cards) have no direct tests, and the shell route has no direct test. Several widget tests rely on real wall-clock polling, which makes them slow and timing-sensitive."
+    },
+    "api_surface_coherence": {
+      "evidence": [
+        "lib/services/library/library_database.dart: deleteByPath(String filePath) returns Future<void>, while the sibling deleteByPaths(List<String>) returns Future<int> with the deleted count; the single-path and batch variants of the same removal operation have different return contracts.",
+        "lib/services/library/library_database.dart: deleteByPath runs its own per-id transaction over library_path_keys and library, whereas deleteByPaths chunks at 500 and commits once; the two entry points do the same job by different mechanisms.",
+        "lib/services/library/library_database.dart: getQueueTrackPage returns Future<List<Map<String, dynamic>>> while its sibling getQueueTrackPageResult returns Future<QueueLibraryDbPage>; the Result suffix marks a different return shape rather than error-handling semantics.",
+        "lib/services/library/library_database.dart: getQueueAlbumPageResult returns QueueLibraryDbPage, but getQueueArtistPage, also a paged query taking a QueueLibraryDbQuery, returns a bare List<Map>, so the paged queue APIs do not share one return contract.",
+        "lib/services/library/library_database.dart: writeNativeFileModTimesSnapshot(sourceId, {requestId, isCancelled}) exports from the DB, while writeFileModTimesSnapshot(Map<String,int>) writes a temp file from caller data; the shared stem and adjacent placement make the two overloads easy to confuse.",
+        "lib/services/library/library_database.dart: getById/getByIsrc use get* while findExisting/findByTrackAndArtist use find*, a naming split for lookups with similar semantics."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The LibraryDatabase facade exposes several parallel APIs (delete, queue paging, snapshot writers) whose return shapes and naming diverge, so callers must read each signature to know what comes back."
+    },
+    "authorization_consistency": {
+      "evidence": [
+        "The app is a local/offline Android music player with no user accounts, sessions, tokens, roles, or remote backend. The only remote call is the updater reading GitHub releases (lib/constants/app_info.dart githubRepo), so the rubric's route-handler, RLS, and service-role patterns have no subject here.",
+        "Grep of lib/ for Authorization, Bearer, api_key, isAdmin, serviceRole, hasPermission finds only log-redaction regexes in lib/utils/logger.dart (_authorizationBearerPattern, _sensitiveQueryPattern, _bearerTokenPattern) that scrub credentials from log output consistently, plus a storage-permission read in lib/screens/settings/library_settings_page.dart (Permission.storage.isGranted) used only to refresh UI state.",
+        "Android manifest (android/app/src/main/AndroidManifest.xml) marks the FileProvider used for APK install exported=false with grantUriPermissions, the scheduled-notification receivers and BackgroundWorkService exported=false, and the widget receiver PlayerWidgetProvider exported=false.",
+        "Components with exported=true are the expected entry points: MainActivity (launcher), PlayerWidgetConfigurationActivity (APPWIDGET_CONFIGURE), the audio_service MediaBrowserService and MediaButtonReceiver. These are standard media-app surfaces and are not sensitive data stores.",
+        "UsbDirectPlayback.kt gates USB audio on Android's UsbManager.hasPermission and a broadcast PendingIntent that is package-scoped (setPackage) and registered with RECEIVER_NOT_EXPORTED on API 33+, so the USB permission flow is consistently guarded.",
+        "MainActivitySafScan.kt checks persisted SAF tree-URI read permission before scanning, applying the same check on the scan path.",
+        "Restricted Android permissions (RECORD_AUDIO, BLUETOOTH, BLUETOOTH_CONNECT, FOREGROUND_SERVICE_MICROPHONE) are removed with tools:node=remove in the manifest, so the declared permission surface stays minimal and deliberate."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Scoring is held back only by the absence of a centralized policy for the few real trust boundaries: the GitHub-release updater's install path (UpdateDialog hands an APK to the system installer) and the SAF/USB permission checks are each guarded locally rather than through one shared helper. This is a minor consistency point rather than a defect."
+    },
+    "ai_generated_debt": {
+      "evidence": [
+        "Doc and inline comments in lib/providers/local_library_provider.dart (for example lines 237-238, 303-313, 397-420, 590-591, 639) explain non-obvious ordering, concurrency and platform constraints (why a publish happens before a probe, why a generation is invalidated, why decodePath must not double-decode). None restate the code.",
+        "Heuristic scan of lib/ for single-line comments that echo the following statement found zero restating comments. Doc comments on short functions (activity_attachment.dart, sqlite_helpers.dart ftsPhraseSearchQuery, music_player_service.dart _persistSession) carry WHY content such as the trigram tokenizer limitation or the ten-second write frequency.",
+        "debugPrint/_log usage is sparse (about 15 call sites across lib/). There is no entry/exit logging on every function and no object dumps to console.",
+        "Null and type guards in lib/services/backup_service.dart (guard density 16) sit on JSON-decoded backup archive data (rootRaw is! Map, manifestEntry.value is! Map, archiveEntry == null), which is a genuine trust boundary and is not overengineering.",
+        "lib/providers/local_library_provider.dart lines 1505-1580 contain five near-identical methods (_showScanPausedNotification, _showScanProgressNotification, _showScanCompleteNotification, _showScanFailedNotification, _showScanCancelledNotification). Each is `try { await _queueScanNotification(() => ...); } catch (e) { _log.w('Failed to show scan X notification: $e'); }`. Only the callee and the log label differ; a single helper taking a label and a closure would replace all five.",
+        "Best-effort delete blocks `try { ... delete ... } catch (_) {}` are repeated inline across lib/services/platform_bridge.dart (65-73, 770-773), backup_service.dart (95-98, 262-267, 378-381, 497-499), metadata_cover_resources.dart (63-66), replaygain_service.dart (232-235), metadata_persistence_service.dart (135-138) and embedded_cover_resolver.dart (785-788, 979-982). embedded_cover_resolver already has a private _deleteFileIfPresent helper, but the other files do not share a common one. These are file I/O cleanup boundaries, so the catches are justified; only the repetition is a cost.",
+        "lib/services/app_state_database.dart line 88 `Future<void> clearRestoredPlaybackState() => clearPlaybackSession();` is a pure rename alias. The doc comment gives it a distinct intent (retiring URIs from a previous install) and main.dart is its only caller, so it is borderline.",
+        "Private one-line delegators in lib/services/playback/music_player_service.dart (_cleanupPendingResolvedPaths, _markSessionQueueChanged) are used from part-file extensions. They are a deliberate access seam, not debt."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The five scan-notification wrappers in local_library_provider.dart are the clearest LLM-style boilerplate in the batch. Their repeated try/catch bodies, and the inline best-effort delete catches repeated across about six service files without a shared helper, keep the score below the 90s. Comment quality and guard placement are otherwise strong."
+    },
+    "incomplete_migration": {
+      "evidence": [
+        "No @deprecated, DEPRECATED, 'remove after' or migration-TODO markers in lib/ or android/app/src/main; the only @Deprecated hits are in vendored third_party/ code, which is out of scope.",
+        "Persisted legacy identities are encoded explicitly and documented in code: LocalLibraryItem.legacySourceId ('legacy') and the 'legacy://local-library' placeholder row in library_schema.dart and library_database.dart. These preserve stored data and are intentional.",
+        "Settings startup migrations are centralized in settings_provider.dart (the notifier runs migrations and validation after mount), which is an active, bounded migration rather than residue.",
+        "Two dual-path residues remain: library_collections_database.dart selects between a native reader and a Dart reader by a forceLegacy flag and a 64-row probe, and backup_service.dart and library_collections_database.dart keep Dart else-branches behind PlatformBridge.supportsCoreBackend (Platform.isAndroid) even though AGENTS.md declares the app Android-only."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The collection reader and backup code still carry a Dart fallback path plus a test-only forceLegacy switch in production signatures. A developer must learn which of two read paths runs for a given row count or platform, which is the kind of dual-path confusion this dimension penalises."
+    },
+    "package_organization": {
+      "evidence": [
+        "lib/ root holds only app.dart and main.dart (fan_out 17.5, fan_in 1.0); both are genuine entry points, so the root itself is not a straggler problem.",
+        "lib/widgets/ has 68 .dart files directly at its top level (directory_profiles lists 65 entries plus audio_analysis/glass/player subfolders), mixing app_* primitives, library rows (local_song_row, library_section_list, library_track_selection_bar), lyric widgets (lyric_gap_indicator, lyric_scroll_motion, lyrics_size_setting), settings helpers (settings_group, music_haptics_settings, playback_normalization_settings), update_dialog and duplicate_review_sheet. Subfolders for glass/, player/ and audio_analysis/ already exist, so the pattern is partially applied and the remaining root is an overload.",
+        "lib/services/ has 41 top-level files (avg_fan_out 2.0) while lib/services/library/ (17), playback/ (21) and ffmpeg/ (6) already exist. Library-specific files remain at the root: deleted_library_files.dart, local_track_batch_actions.dart, batch_track_actions.dart, collection_track_batch.dart, cover_analysis_store.dart, embedded_cover_resolver.dart, metadata_index_reconciler.dart, metadata_persistence_service.dart, sqlite_helpers.dart, sqlite_native_snapshot.dart, app_state_database.dart.",
+        "Playback/audio-analysis files sit at the services root: replaygain_service.dart, audio_analysis_cache.dart, audio_analysis_jobs.dart, listening_rewind.dart, listening_statistics.dart, while lib/widgets/audio_analysis/ already holds the UI counterpart.",
+        "Glass infrastructure is split: sistrum_glass_auto_probe.dart and sistrum_glass_warmup.dart live in lib/services/ while lib/widgets/glass/ (14 files) holds the rest of the glass stack; sistrum_glass_warmup.dart imports widgets/glass/sistrum_chrome.dart and providers/runtime_profile_provider.dart.",
+        "Upward dependency from utils: lib/utils/clickable_metadata.dart imports screens/local_album_screen.dart and screens/local_artist_screen.dart; lib/utils/confirm_and_delete_tracks.dart imports widgets/app_alert_dialog.dart. lib/utils (31 files, avg_fan_in 7.9) is consumed by nine directories, so a leaf utility layer that reaches up into screens is a boundary failure.",
+        "Service-to-UI/provider edges: lib/services/batch_track_actions.dart imports providers/local_library_provider.dart and widgets/batch_progress_dialog.dart and widgets/app_alert_dialog.dart; lib/services/local_track_batch_actions.dart imports widgets/app_alert_dialog.dart; lib/services/deleted_library_files.dart imports providers/local_library_provider.dart; lib/services/library/library_folder_selection.dart imports providers/local_library_provider.dart. directory_profiles shows lib/services/library/ importing lib/providers/ once and lib/services/ importing lib/widgets/ 3 times.",
+        "Reciprocal coupling between services root and services/library: coupling_matrix shows lib/services/library/ -> lib/services/ at 21 edges, while lib/services/ -> lib/services/library/ is 5 edges. The library subfolder depends on root services files that should arguably be inside it.",
+        "lib/models/unified_library_item.dart imports services/library/library_database_models.dart, a model depending on the persistence layer (models otherwise have avg_fan_out 0.7).",
+        "lib/screens/ has 19 top-level files (avg_fan_out 13.3) mixing library section screens (local_album_screen.dart, local_artist_screen.dart, local_genres_screen.dart, favorite_artists_screen.dart, library_tracks_folder_screen.dart, sistrum_library_screen.dart), player (now_playing_screen.dart), setup and shell (setup_screen.dart, main_shell.dart) and mixins. lib/screens/library/ contains only the eight queue_tab*.dart files (avg_fan_in 0.4, imported solely from lib/screens/), so the folder name library does not describe the queue content and the library screens are split from it.",
+        "Thin subfolder lib/screens/home/ (3 files, imported only from lib/screens/ and tests) is a reasonable grouping, so not every subfolder is a problem."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Flat overload in lib/widgets/ (about 65 root files) and lib/services/ (41 root files) with library and playback concerns not grouped; utils and services reach upward into screens, widgets and providers; the library screens are split between screens root and screens/library/."
+    },
+    "initialization_coupling": {
+      "evidence": [
+        "Top-level Dart variables and static fields are lazily initialised, so most module-level values in lib/ (for example _musicAudioContext in lib/services/playback/music_player_service.dart:88 and the static RegExps in lib/utils/logger.dart:14-34) are pure values with no I/O at import time.",
+        "Compile-time config is read only through String.fromEnvironment / bool.fromEnvironment (lib/constants/app_info.dart:7, lib/main.dart:35,183). These are const, not runtime environment reads, so they do not make tests fragile.",
+        "CoverPalette (lib/theme/cover_palette.dart:56-59) holds process-wide mutable static maps (_analyses, _schemes, _pending, _sourceKeys) and a public static seam `store` (line ~66) that defaults from Platform.isAndroid. Tests must swap and restore this global by hand (test/cover_colors_test.dart:199-215) and call debugClearMemory() to simulate a fresh session.",
+        "LibraryCoverAnalysisStore takes an optional injected LibraryDatabase and falls back to LibraryDatabase.instance (lib/services/cover_analysis_store.dart:20-21), a good constructor-injection seam that the static store slot does not use.",
+        "PlatformBridge keeps static mutable state at class level: a broadcast StreamController (lib/services/platform_bridge.dart:193-194), a _backendEventHandlerInstalled flag (line 196) and a static _nativeDataJobs map (line 129). The handler installation is guarded by a static flag rather than an explicit init/dispose lifecycle.",
+        "MusicPlaybackDeck keeps static channels plus a shared static stream and token counter (lib/services/playback/music_playback_deck.dart:108-111: _nativeEvents, _nextToken), so every deck instance shares the same native event plumbing and ordering state."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Process-wide static caches and singleton seams in CoverPalette and PlatformBridge rely on manual save/restore and flag guards, and the tests depend on that discipline."
+    },
+    "design_coherence": {
+      "evidence": [
+        "lib/services/playback/music_player_service.dart is 2072 lines and holds the top complexity score (257) in scan_evidence.complexity_hotspots. MusicPlayerHandler (line ~110 onward) owns audio-session setup, headphone monitoring, audio focus, sleep timer, haptics, normalization, queue editing, session persistence, play-history recording, media-browser children, and source-deletion handling in one class. The split into music_player_automix.dart and music_player_autoplay.dart uses `part` files, which keeps one class spread across several files rather than separating responsibilities.",
+        "lib/providers/local_library_provider.dart (1837 lines) is one LocalLibraryNotifier spanning source management, scan orchestration, progress polling, scan-failure persistence, scan notifications (_show*/_queue*Notification methods around lines 1503-1600), cover-batch request types, and library cleanup. Notification presentation and progress polling are not domain state and sit inside the state notifier.",
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart (1921 lines) places ffmpeg astats and metadata log parsing (parseAudioAstatsSummary, parseAudioAnalysisMetadata), spectral percentile math (_spectralMedian, _sortedSpectralPercentile), and filter-string building next to the AudioAnalysisCard widget and its state. Pure parsing and DSP helpers are mixed into a presentation file.",
+        "lib/services/platform_bridge.dart (841 lines) is a single static facade over one MethodChannel. Its methods cover SAF tree access, media-file metadata editing, background work, library scan NDJSON streaming, JSON background decoding, install markers, and CUE parsing. These are separate native subsystems behind one class with shared private helpers.",
+        "lib/widgets/album_detail_header.dart defines shared header primitives (HeaderCircleButton, HeaderFilledButton, HeaderMetaRow, HeaderMetaItem, AlbumPlayActions) that are imported by about ten screens and widgets, including local_artist_screen.dart, queue_tab.dart, sistrum_artist_header.dart, sistrum_floating_header.dart, app_sliver_header.dart and local_collection_actions.dart. Generic header controls live in a file named for the album header, so their location does not match their ownership.",
+        "lib/services/playback/music_player_runtime.dart imports music_player_service.dart for MusicPlayerHandler, while music_player_service.dart exports music_player_runtime.dart (line 41). This two-file cycle means consumers must import the playback monolith to reach the runtime facade.",
+        "lib/services/playback/music_player_autoplay.dart and music_player_automix.dart are `part of 'music_player_service.dart'` and are included at lines 44-45 of that file. The orphaned-file detector is a false positive for these parts.",
+        "lib/providers/music_player_provider.dart seek(Duration) is a one-line forward that delegates through the handler, deck and service. The flagged signature variance is just async and non-async forms of the same operation across layers, which is an expected delegation chain.",
+        "lib/screens/listening_rewind_screen.dart (1844 lines) is a story-style presentation of one feature. Its many private widgets are slide components that serve that single purpose.",
+        "lib/utils/logger.dart groups redaction, LogEntry, LogBuffer, BufferedOutput and AppLogger. These form one cohesive logging subsystem.",
+        "lib/services/backup_service.dart groups BackupBundle, BackupTooLargeException and BackupService, which is a cohesive backup domain at 531 lines.",
+        "lib/screens/settings/log_screen.dart and lib/screens/main_shell.dart are each one screen or shell with small private widgets, a single coherent responsibility, and no mixed domains."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": ""
+    },
+    "contract_coherence": {
+      "evidence": [
+        "lib/services/update_checker.dart:76-78 documents that checkForUpdate returns null only when a verified release list has no newer version, so callers can tell 'up to date' from 'could not check'. The implementation honors this on the main path: _throwUnverified() is called before every null return that depends on the release list (lines 195, 212, 233), and failures throw UpdateCheckException (lines 189, 276, 284).",
+        "lib/services/update_checker.dart:181-184 returns null unconditionally when !_isAndroid, without any verification or exception. This is the one null return that the documented contract does not cover.",
+        "lib/services/playback/music_player_service.dart:1873-1877 getMediaItem returns Future<MediaItem?> and indexes _queueItems with the index found in _media. _media and _queueItems are kept parallel by every mutator checked (reorder at 1201-1204, removeQueuedItem at 1227-1231), so the index lookup holds.",
+        "lib/services/native_log_source.dart:15-26 getSince declares Future<Map<String, dynamic>> and throws FormatException on any other decoded shape, including the empty-string case. The declared type and the throw path agree.",
+        "lib/services/platform_bridge.dart:714-724 and 726-734 separate required-map from nullable-map decoding (_decodeMapResult vs _decodeNullableMapResult), and the declared return types match those helpers.",
+        "lib/services/native_cache_maintenance.dart:9-21 documents 'Returns null on the desktop adapter' and the code returns null when !PlatformBridge.supportsCoreBackend, which matches. The doc is accurate.",
+        "lib/services/m3u_playlist_service.dart:54-60 documents null for empty input and for content URIs without a usable path; the code returns null for those cases and passes non-content paths through trimmed, as the doc describes.",
+        "lib/services/library/library_database.dart:566-576 getById returns Map<String, dynamic>? and yields null on an empty result set, consistent with its nullable signature.",
+        "lib/models/library_collections.dart:330-355 accessors are side-effect-free and named as queries (isLoved, containsLovedKey, playlistById), so no getter-name lies were found in the sampled set.",
+        "Across roughly 25 sampled get*/is* functions in lib/ and the doc comments that name null or throw behaviour, the contracts were honored except for the one update_checker divergence. Mechanical signature-variance signals were not used as evidence because they reflect repeated framework and override names, not contract breaks."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The update checker's documented 'null only when verified' contract is violated on the non-Android early return. Dart docs in lib/ also have some narrow mismatches that were not fully sampled, so the score is held below 85 until the rest of the doc-comment surface is checked."
+    },
+    "logic_clarity": {
+      "evidence": [
+        "lib/services/update_checker.dart:312-314: `if (!latestHasSuffix && currentHasSuffix) return true;` followed by a blank line and `return false;` - the final branch collapses to a single boolean expression.",
+        "lib/widgets/playlist_picker_sheet.dart:19-25: `showAddTrackToPlaylistSheet` is declared `async` but its only statement is `return showAddTracksToPlaylistSheet(context, ref, [track]);` with no await.",
+        "lib/widgets/update_dialog.dart:416-432: `showUpdateDialog` is `async` and only returns `showAppDialog<void>(...)`; no await anywhere in the body.",
+        "lib/services/library/library_collections_hydration.dart:121-131: `hydratePlaylistTracks` is `async` yet both branches are plain returns (a synchronous decode or a worker call returned directly); the async keyword adds no await.",
+        "lib/services/embedded_cover_resolver.dart:160-172: `resolveOrExtract` is `async` with no await; it returns cached values synchronously on one path and `_ensureCover(...)` on the other.",
+        "lib/utils/clickable_metadata.dart:46-56: `navigateToArtist` is `async` with no await, and its `artistId` parameter is accepted but never read.",
+        "lib/screens/main_shell.dart:83-88: the post-frame callback is an `async` closure whose body has no await; it only calls unawaited(...) twice.",
+        "Scan of lib/ for identical if/else bodies, identical ternary branches, code after unconditional return/throw/break, and `if (true)`/`if (false)` constants found no matches in production code; the ternary regex hit in audio_analysis_widget.dart:1657 was a false positive (the two branches differ).",
+        "Most control flow in the sampled hot paths (music_player_service, library_database, platform_bridge) is straightforward; the defects found are redundant async wrappers and one boolean-collapse rather than contradictory or dead logic."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Several async-without-await wrappers and one trailing if/return-true/return-false remain; each is small but they accumulate as noise that obscures which functions actually perform asynchronous work."
+    },
+    "type_safety": {
+      "evidence": [
+        "lib/services/metadata_edit_result.dart decodes the native channel map once into a MetadataEditOutcome enum plus typed fields; the stringly 'ffmpeg' and 'native_*' protocol values are compared only inside this decoder, so consumers see a typed outcome.",
+        "lib/models/playable_media.dart and lib/services/library/* use typed records (typedef ... = ({...})) and typed fields for request/response shapes, with explicit nullable types (String?, int?, Duration?) that match the fromJson parsing paths.",
+        "Domain enums exist for most closed sets: ShellTab, PlayerView, SistrumAccent, MetadataSaveCodec, MetadataSaveFailure, AutoMixEffect, AutoMixStatus, LibrarySearchKind, DuplicateFidelity, SistrumGlassQuality. Enum bypass count in holistic_context.abstractions.summary is 0.",
+        "lib/screens/library/queue_tab.dart line 95 declares the quality filter as String? _filterQuality and compares it with raw literals 'hires', 'cd' and 'lossy' (lines 459-473). The same value is passed as String? filterQuality through queue_tab_helpers.dart (lines 57, 67, 78, 92, 112). lib/utils/duplicate_quality_policy.dart already defines DuplicateFidelity { lossless, lossy, unknown }, so the quality vocabulary is split between an enum and free strings.",
+        "lib/services/library/library_collections_hydration.dart line 372-ish and the sendBatch closure use Object for isolate messages. This is a deliberate heterogeneous-message boundary and is not counted as a defect.",
+        "lib/widgets/glass/sistrum_performance_hud.dart line 191 has // ignore: invalid_use_of_protected_member with no comment saying why reaching a protected member is safe here.",
+        "Remaining Map<String, dynamic> parameters (Track.fromJson, AppSettings.fromJson, MetadataEditResult.decode, PlayableMedia.fromJson) sit at JSON or platform-channel boundaries and parse with as-casts or readPositiveInt helpers; they are not treated as defects."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The quality filter is a String? carried through several layers with literal comparisons, while a DuplicateFidelity enum already exists for the same concept. The one undocumented lint suppression is a small additional gap."
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "Dependency direction is mostly sound: shared hubs (l10n, theme, settings) are intentional and the lib tree is largely layered. The defects are concentrated in two places: a cycle between the album and artist screens through the utils clickable-metadata helper, and a barrel-export cycle between music_player_runtime and music_player_service, plus a few lower-layer imports reaching up into screens.",
+      "score_rationale": "Two confirmed cycles and a repeated utils/widgets-to-screens inversion are real but localized, not codebase-wide; the core hubs follow a deliberate facade pattern. This places the dimension in the 70s, below the 85 threshold, with no sweeping dependency-direction failure."
+    },
+    "high_level_elegance": {
+      "dimension_character": "The domain subtrees (services/library, services/playback, widgets/player, widgets/glass, screens/settings) make most capabilities easy to locate and own, and the AGENTS.md ownership notes match the folder layout. The weak spots are concentrated at the top: a flat services/ catch-all, glass rendering and navigation state split between services and widgets, and utils/models importing upward, so ownership is predictable within a subtree but not across them.",
+      "score_rationale": "Strong domain subtrees and documented ownership pull the score up, while the flat services/ dumping ground, the upward imports from utils/models/theme, and the misleading screens/library name pull it down into the solid-but-uneven band. A new engineer can explain most of the decomposition but would hit recurring 'why is this here' moments at the boundaries, so 74.0."
+    },
+    "convention_outlier": {
+      "dimension_character": "Core areas follow clear, predictable naming: providers, library services and models each have a visible pattern. The drift is in the seams between areas, where the same kind of thing is named or split in two ways. A developer who learns the Settings page naming or the widget prefixes will still be surprised by the exceptions, and the part-file split in the library tab and playback service does not match how the services layer is organised.",
+      "score_rationale": "The strongest areas (providers, library_ services, models) hold their pattern across every file, which keeps the score near the solid band. Pulling it down are four concrete islands: LogScreen against the *Page convention in settings, two shared-widget prefixes with no rule, a selection protocol that the library tab does not share with its sibling screens, and mixed file-splitting styles. Together these are noticeable friction but not pervasive, so the score sits at 78.0 rather than lower."
+    },
+    "error_consistency": {
+      "dimension_character": "Error handling is widespread but not designed as one strategy. The app mixes null-as-error returns, bool returns, void swallowing and thrown exceptions across services, playback and utils, and the most consequential I/O boundaries (update download and install, backup parsing) discard the failure reason. Logging is consistent and many cleanup paths are deliberately tolerant, and the local library provider shows the desired pattern of logging with stack and exposing an explicit failure state.",
+      "score_rationale": "The codebase has a clear, well-behaved failure pattern in the library provider, but the update and backup I/O boundaries lose failure context and the strategy varies by directory, with a single Result type in the whole codebase outside ffmpeg and glass. That fits the middle of the scale rather than the high end, so 62.0 with medium confidence."
+    },
+    "naming_quality": {
+      "dimension_character": "Naming is mostly clear and idiomatic: handlers, queries and predicates match their behaviour, and no generic verb-only or mutating get* defects were found. The main weakness is a systemic misnomer where the Library browser is called 'queue' across a screen, its part files, DB types and a store, which conflicts with the separate playback queue. Smaller problems are a folder name used for playlists and Loved, a double-underscore class name and a dead searchKey field.",
+      "score_rationale": "The majority of names communicate intent, so the score is above the middle band. The repeated 'queue' vocabulary for the library browser is a clear defect that a new team member would stumble on, which holds the score at 72 rather than higher."
+    },
+    "abstraction_fitness": {
+      "dimension_character": "The codebase avoids most common abstraction smells: no delegation-heavy classes, facades, single-implementation interface families or pass-through chains, and collaborators are injected through typed parameters. The main defect is the playback handler's part-file split, where AutoMix and Autoplay are given the whole handler and reach into its private fields, so the boundary is in name only. The other large files are mostly size-driven rather than abstraction-driven.",
+      "score_rationale": "Clean, consistent abstraction use across most of the codebase with no systemic wrapper or interface bloat keeps this in the upper-middle band. The part-file collaborators that share the handler's private state pull it down to about 72, because the interface honesty of the playback subsystem is weak."
+    },
+    "dependency_health": {
+      "dimension_character": "The declared dependency set is lean and each package has a clear, direct use, with no duplicated libraries for the same job. The weaknesses are structural rather than in the manifest: two import cycles, one of which runs from a utils file into screen files. Upgrade pressure is concentrated in a few exact pins and vendored forks that carry no rationale comment.",
+      "score_rationale": "Manifest hygiene is solid: no unused runtime packages and no competing libraries for one purpose, which pushes the score up. The two import cycles, including the utils-to-screens inversion, and the undocumented exact pins and forks pull it down into the solid-but-uneven band. The score is 78.0."
+    },
+    "low_level_elegance": {
+      "dimension_character": "Core playback and cleanup internals show deliberate concurrency handling through generation tokens and explicit finally blocks, but the central load routine is a long function that repeats cancellation guards and lease cleanup by hand. Best-effort cleanup is consistently written as silent catch blocks, some nested redundantly.",
+      "score_rationale": "The control flow is intention-revealing in most helpers, yet `_loadIndex` and the nested silent-catch cleanup add sprawl and duplicated lifecycle code. This sits in the middle band: clearly structured overall, with recurring local over-extraction and defensive repetition that a focused refactor would remove."
+    },
+    "mid_level_elegance": {
+      "dimension_character": "The seams between the library database, providers and screens are mostly explicit: a queue store returns typed pages and cursors. Translation is not centralized, however: the same envelope and bare row shapes are decoded at about twenty call sites, and two access paths reach the database. Error and lifecycle handling at the lookup boundaries is lossy, and some pagination and ranking glue is duplicated.",
+      "score_rationale": "The seams are readable and the core paging abstraction is sound, but row-shape translation is scattered, error propagation at the lookup boundary collapses failures into a missing-file message, and paging logic is duplicated. This sits in the mid-range of the global anchors, not at the high end."
+    },
+    "test_strategy": {
+      "dimension_character": "The test suite is large and spread across features, with widget and unit tests in most areas and no snapshot or golden-file dependence. Its weaknesses are concentrated in shared UI primitives with no direct tests (sistrum_icons, the player slider, app_content_card, the main shell) and in a repeated wall-clock polling idiom in widget tests that waits on real platform timing.",
+      "score_rationale": "Broad coverage and zero snapshot overuse keep the score above the midpoint. Untested shared widgets and timing-dependent busy-wait helpers hold it below the 80s, since a developer changing these primitives gets weaker feedback than the suite size suggests."
+    },
+    "api_surface_coherence": {
+      "dimension_character": "The public surface of the library database layer is mostly well-typed and uses named parameters for its larger operations, and no public function in the wide-parameter census exceeds the parameter threshold. The defects are naming and return-shape drift among sibling operations (single vs batch delete, queue track/album/artist paging, and two snapshot writers), which forces callers to read signatures individually.",
+      "score_rationale": "Signatures are explicit and typed, but several sibling pairs break the same contract (deleteByPath vs deleteByPaths, getQueueTrackPage vs getQueueTrackPageResult, getQueueArtistPage returning a bare list despite the page naming). That is a real coherence cost but localized to one facade, so the score sits in the middle-high band."
+    },
+    "authorization_consistency": {
+      "dimension_character": "Most of the authorization rubric (route guards, RLS, service-role bypass, magic permission strings across endpoints) does not apply to a local-only Android player with no accounts or backend. The real trust boundaries are Android permissions, exported components, USB and SAF access grants, and the APK install hand-off, and each is guarded consistently and locally. The one notable pattern is that these checks live where they are used rather than behind a shared policy.",
+      "score_rationale": "No sibling-inconsistent auth decorators, unguarded privileged paths, or bypass roles were found in the inspected code, and exported components are limited to standard launcher, widget, and media-session entry points. The score is high because the rubric's core concerns are largely out of scope for this app, with a small deduction for the lack of a shared permission-check helper."
+    },
+    "ai_generated_debt": {
+      "dimension_character": "The codebase avoids most LLM hallmarks: comments explain WHY (ordering, concurrency, platform quirks), there is almost no debug-log noise, and defensive checks sit at real boundaries such as decoded backup JSON and file I/O. The residual debt is localized repetition, mainly five near-identical scan-notification try/catch wrappers in one provider and inline best-effort-delete catches copied across several services, plus one pure rename alias. These are consistent with hand-maintained code that has accumulated some copy-paste rather than generated filler.",
+      "score_rationale": "The strong comment discipline, sparse logging and boundary-only guards push the score well above the solid band. The duplicated notification wrappers and repeated delete-catch idiom pull it down into the 80s-90 range. Score is 88.0 because the defects are real but small and local."
+    },
+    "incomplete_migration": {
+      "dimension_character": "Migration state is mostly clean: no deprecated symbols are called by active code, no stale migration TODOs exist in the app sources, and persisted legacy identifiers are encoded deliberately with their original values. The residue is structural rather than textual: a native-versus-Dart dual path in the library collections reader and in backup encode/parse, kept alive by a platform flag and a test-only switch. That residue is isolated to a few files and does not spread into the UI.",
+      "score_rationale": "The codebase sits in the 80-90 band: a developer would mostly know which path is current, but the Dart fallback under supportsCoreBackend and the forceLegacy parameter create recurring 'which one runs?' moments. Clean deprecation hygiene and explicit legacy-data handling keep the score well above 80. The score is held below 90 by the dual read paths that the Android-only target no longer needs outside host tests."
+    },
+    "package_organization": {
+      "dimension_character": "The layout is partly organized by purpose: lib/services/library, lib/services/playback, lib/services/ffmpeg, lib/widgets/glass, lib/widgets/player and lib/widgets/audio_analysis are focused packages with clear ownership. The remaining top-level directories (widgets, services, screens) still hold many unrelated files, and the layering is violated in a few measurable places (utils reaching into screens and widgets, services reaching into providers and widgets).",
+      "score_rationale": "The root is clean and several subfolders are well-scoped, but lib/widgets/ (about 65 root files) and lib/services/ (41 root files) are flat overloads with clear library, playback and glass stragglers. Upward and reciprocal dependencies at utils and services boundaries add measurable coupling defects, which keeps the score in the mid range rather than high."
+    },
+    "initialization_coupling": {
+      "dimension_character": "Module-level initialisation is mostly benign: Dart's lazy top-level and static initialisation avoids boot-order traps, and the environment reads are compile-time constants. The main coupling sits in process-wide mutable statics (CoverPalette caches and its swappable store seam, PlatformBridge event state, MusicPlaybackDeck native channels and counters) that are shared across callers and reset or swapped by hand.",
+      "score_rationale": "Boot order is safe and most constants are pure, which keeps the score above the midpoint. The static mutable singletons, and tests that must swap and restore them manually, keep it below a clean-registry design."
+    },
+    "design_coherence": {
+      "dimension_character": "The codebase has clear domain-level layering (providers, services, library databases, shared theme), but several large files absorb unrelated responsibilities. MusicPlayerHandler, LocalLibraryNotifier, PlatformBridge and the audio-analysis widget each combine state, native orchestration, parsing or presentation in one place. Several flagged files are cohesive despite their size: the logger, backup service, listening-rewind slides and log screen, and the playback part files.",
+      "score_rationale": "Concentration of mixed responsibilities in the playback handler, library notifier, native bridge and audio-analysis widget, plus misplaced shared header primitives and a service/runtime cycle, holds the score in the low 60s. Most of the codebase is organized by domain, so the score stays well above the poor range."
+    },
+    "contract_coherence": {
+      "dimension_character": "Most sampled functions honor their stated contracts: nullable returns are declared, doc comments on null and throw behaviour match the code, and getter-named accessors are read-only. The main defect is that the update checker's documented 'null only when verified' promise is broken by an unverified early return on non-Android platforms, which can make 'could not check' look like 'up to date'. The rest of the sampled surface is consistent.",
+      "score_rationale": "The sampled code is largely contract-honest, with one concrete doc-versus-behaviour divergence in a user-facing API. That keeps the score in the high-70s to mid-80s band of the global anchors rather than the top band, since the divergence is narrow and only reachable on non-Android builds."
+    },
+    "logic_clarity": {
+      "dimension_character": "Control flow in the Dart sources is largely direct: no identical branches, no dead code after unconditional exits, and no constant-condition checks surfaced by the scan. The recurring weakness is that a number of functions are declared async solely to return a Future, with no await, which blurs whether a function does asynchronous work. A few boolean tails also restate simple expressions.",
+      "score_rationale": "Logic is largely honest and free of dead or contradictory branches, which keeps it above the middle band. Several redundant async wrappers and one boolean simplification place it below the top band, so the score is 82."
+    },
+    "type_safety": {
+      "dimension_character": "Typing is generally strong: decoders convert untyped channel and JSON maps into typed models and enums at the boundary, and records describe request shapes. The weak spots are a few stringly-typed filter values that bypass an existing enum, and one lint suppression with no stated reason.",
+      "score_rationale": "Most closed sets are modelled as enums and decoded once, which fits the high end of the global anchors. The split quality vocabulary (String? with literals versus DuplicateFidelity) and the unexplained ignore keep the score out of the top band."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "album_artist_utils_screen_cycle",
+      "summary": "Album, artist and clickable-metadata form an import cycle through a utils helper that imports screens",
+      "confidence": "high",
+      "suggestion": "Move the album/artist navigation helpers out of utils/clickable_metadata.dart into a route or navigation module that depends only on route builders, and have the screens import that module. Then utils no longer imports screens and the cycle breaks.",
+      "related_files": [
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/local_artist_screen.dart",
+        "lib/utils/clickable_metadata.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "lib/utils/clickable_metadata.dart:3-4 imports lib/screens/local_album_screen.dart and lib/screens/local_artist_screen.dart.",
+        "lib/screens/local_album_screen.dart:42 imports lib/utils/clickable_metadata.dart and :27 imports lib/widgets/local_song_menu.dart, which imports lib/utils/clickable_metadata.dart (line 8).",
+        "lib/screens/local_artist_screen.dart:16 imports lib/screens/local_album_screen.dart; packet dependencies.cycle_summaries lists the 4-file cycle local_album_screen -> local_artist_screen -> clickable_metadata -> local_song_menu."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "playback_runtime_service_export_cycle",
+      "summary": "music_player_runtime and music_player_service import each other, with the service re-exporting the runtime",
+      "confidence": "high",
+      "suggestion": "Move the types the runtime needs out of music_player_service.dart into a small shared file (for example playback_runtime_types.dart) that both files import, and drop the export of music_player_runtime.dart from the service, so the runtime depends on nothing that depends back on it.",
+      "related_files": [
+        "lib/services/playback/music_player_runtime.dart",
+        "lib/services/playback/music_player_service.dart"
+      ],
+      "evidence": [
+        "lib/services/playback/music_player_runtime.dart:12 imports lib/services/playback/music_player_service.dart.",
+        "lib/services/playback/music_player_service.dart:25 imports lib/services/playback/music_player_runtime.dart and :41 re-exports it (export 'music_player_runtime.dart').",
+        "Packet dependencies.cycle_summaries lists the 2-file cycle; complexity_hotspots places music_player_service.dart at 2072 LOC, so the cycle sits on the largest playback file."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "lower_layers_import_screens",
+      "summary": "utils, widgets and player components import screen files, inverting the layer direction",
+      "confidence": "medium",
+      "suggestion": "Route the widget-to-screen navigation through the shared navigation service or route definitions (lib/routes/) instead of direct screen imports, so widgets and utils depend on routes and not on individual screen files. Address the utils case first, since it is what creates the cycle in the first issue.",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/widgets/library_search_results.dart",
+        "lib/widgets/player/mini_player.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "lib/widgets/library_search_results.dart:9-10 imports lib/screens/library_tracks_folder_screen.dart and lib/screens/local_album_screen.dart.",
+        "lib/widgets/player/mini_player.dart:11 imports lib/screens/now_playing_screen.dart.",
+        "lib/widgets/local_song_menu.dart:18 imports lib/screens/track_metadata_edit_sheet.dart. Six screen imports sit outside lib/screens in total."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "services_flat_catch_all_with_ui_glass",
+      "summary": "services/ is a 41-file catch-all that also owns glass rendering and UI navigation state",
+      "confidence": "medium",
+      "suggestion": "Move sistrum_glass_warmup.dart and sistrum_glass_auto_probe.dart into lib/widgets/glass/ beside their host and preparation widgets. Move the chrome ValueNotifiers from ShellNavigationService into a single navigation owner (for example lib/navigation/shell_navigation.dart holding both the root key and the tab state) so there is one place for navigation. Do not add new abstraction; this is a file move plus merge.",
+      "related_files": [
+        "lib/services/sistrum_glass_warmup.dart",
+        "lib/services/sistrum_glass_auto_probe.dart",
+        "lib/widgets/glass/sistrum_glass_preparation.dart",
+        "lib/widgets/glass/sistrum_glass_auto_probe_host.dart",
+        "lib/services/shell_navigation_service.dart",
+        "lib/services/app_navigation_service.dart"
+      ],
+      "evidence": [
+        "lib/services/ has 41 top-level .dart files (8255 LOC) with no subfolder for backup, updates, navigation, or glass, while library/, playback/ and ffmpeg/ are subfolders.",
+        "The glass probe and warmup logic is in services/ (sistrum_glass_warmup.dart, sistrum_glass_auto_probe.dart) but its consumers are widgets/glass/sistrum_glass_preparation.dart and widgets/glass/sistrum_glass_auto_probe_host.dart; sistrum_glass_warmup.dart imports widgets/glass/sistrum_chrome.dart and liquid_glass_easy.",
+        "services/shell_navigation_service.dart declares the ShellTab enum and static ValueNotifier<Color?> / ValueNotifier<Brightness?> chrome state, while services/app_navigation_service.dart holds only rootNavigatorKey. Two navigation owners sit in the same flat folder."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "lower_layers_import_upward",
+      "summary": "utils, models, theme and services import screens, widgets and providers, inverting the layer order",
+      "confidence": "medium",
+      "suggestion": "Move utils/clickable_metadata.dart and utils/confirm_and_delete_tracks.dart into lib/widgets/ since they are UI helpers that open screens and dialogs; keep utils/ free of screen and widget imports. Make models/unified_library_item.dart depend only on models/ by moving the database-row mapping it needs into services/library/ next to library_row_mapper.dart. Document the order models <- utils <- services <- widgets <- screens in AGENTS.md so the next move has a rule to follow.",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/utils/confirm_and_delete_tracks.dart",
+        "lib/models/unified_library_item.dart",
+        "lib/theme/cover_palette.dart",
+        "lib/services/sistrum_glass_warmup.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "utils/clickable_metadata.dart imports screens/local_album_screen.dart, screens/local_artist_screen.dart and services/shell_navigation_service.dart; utils/confirm_and_delete_tracks.dart imports widgets/app_alert_dialog.dart.",
+        "models/unified_library_item.dart imports services/library/library_database_models.dart, so the model layer depends on a service.",
+        "theme/cover_palette.dart imports services/cover_analysis_store.dart, services/platform_bridge.dart and widgets/cached_cover_image.dart.",
+        "services/local_track_batch_actions.dart, services/batch_track_actions.dart and services/sistrum_glass_warmup.dart import widgets/, and widgets/local_song_menu.dart, widgets/library_search_results.dart and widgets/player/mini_player.dart import screens/."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "library_folder_holds_queue_tab",
+      "summary": "screens/library/ holds the Library section QueueTab, which reads as the player queue",
+      "confidence": "medium",
+      "suggestion": "Rename screens/library/queue_tab*.dart to a section-based name (for example screens/library_section/library_section_tab.dart) and rename QueueTab to LibrarySectionTab; keep queue naming for the player and library_queue_store. This is a rename across roughly eight files plus imports, with no behavior change.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/widgets/player/sistrum_player_queue.dart",
+        "lib/services/library/library_queue_store.dart"
+      ],
+      "evidence": [
+        "screens/library/queue_tab.dart declares QueueTab, a Library section page constructed with a librarySection parameter (lines 59-62, 821), not the playback queue.",
+        "The playback queue is widgets/player/sistrum_player_queue.dart (SistrumPlayerQueue) and widgets/player/player_queue_dismissible.dart, and its persistence is services/library/library_queue_store.dart. The word 'queue' therefore names the Library section and the player queue at once.",
+        "screens/library/ has 8 files (2884 LOC) that are all queue_tab* files, so the directory name does not describe its contents."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "state_and_route_homes_split_at_top_level",
+      "summary": "controllers/, routes/ and constants/ are one- or two-file top-level folders beside providers/",
+      "confidence": "low",
+      "suggestion": "Move the two controllers into lib/providers/ (or lib/widgets/player/ if they only serve the player) and fold lib/routes/now_playing_route.dart into lib/screens/ beside now_playing_screen.dart. Leave constants/ alone unless more files join it.",
+      "related_files": [
+        "lib/controllers/metadata_editor_controller.dart",
+        "lib/controllers/player_metadata_controller.dart",
+        "lib/providers/music_player_provider.dart",
+        "lib/routes/now_playing_route.dart",
+        "lib/constants/language_choices.dart"
+      ],
+      "evidence": [
+        "lib/controllers/ holds 2 files (394 LOC) for editor and player metadata state while lib/providers/ holds 15 files, so a developer must decide between two homes for state holders.",
+        "lib/routes/ holds one PageRoute file (now_playing_route.dart) that is used only by the now-playing screen, and lib/constants/ holds 2 files (52 LOC).",
+        "lib/widgets/player imports lib/controllers 5 times, so the player depends on a folder that is not part of its own subtree."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "library_tab_selection_protocol",
+      "summary": "Songs/Playlists tab keeps its own selection state instead of using SelectionModeMixin used by sibling screens",
+      "confidence": "medium",
+      "suggestion": "Move queue_tab selection state and handlers onto SelectionModeMixin, or if the tab's selection truly differs, add a one-line note in AGENTS.md or the mixin doc explaining why it does not use the mixin. Do not add a new abstraction.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_selection.dart",
+        "lib/screens/selection_mode_mixin.dart",
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/library_tracks_folder_screen.dart"
+      ],
+      "evidence": [
+        "SelectionModeMixin is used by local_album_screen.dart and library_tracks_folder_screen.dart only.",
+        "queue_tab.dart and its part file queue_tab_selection.dart hold selection state directly and do not use the mixin.",
+        "A developer who learns selection behaviour from the album screen must relearn it for the library tab."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "shared_widget_prefix_split",
+      "summary": "Shared widgets use both app_ and sistrum_ prefixes with no rule for choosing one",
+      "confidence": "medium",
+      "suggestion": "Write one sentence in AGENTS.md stating which prefix means what (for example sistrum_ for theme-bound controls and app_ for generic ones), and follow it for new shared widgets. Do not rename the existing app_ files just for consistency; that adds churn without changing behaviour.",
+      "related_files": [
+        "lib/widgets/app_switch.dart",
+        "lib/widgets/app_alert_dialog.dart",
+        "lib/widgets/app_bottom_sheet.dart",
+        "lib/widgets/sistrum_slider.dart",
+        "lib/widgets/sistrum_context_menu.dart",
+        "AGENTS.md"
+      ],
+      "evidence": [
+        "lib/widgets/ top level holds 10 app_*.dart files and 5 sistrum_*.dart files.",
+        "AGENTS.md names AppSwitch and SistrumSlider together as the same kind of control.",
+        "No naming rule in the repo says which prefix a new shared widget should take."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "log_screen_suffix_island",
+      "summary": "LogScreen is the only *Screen subpage in settings/, where every other subpage is *Page",
+      "confidence": "medium",
+      "suggestion": "Rename LogScreen to LogPage and log_screen.dart to log_page.dart so the settings subpages share one suffix. This is a rename only, with no behaviour change.",
+      "related_files": [
+        "lib/screens/settings/log_screen.dart",
+        "lib/screens/settings/about_page.dart",
+        "lib/screens/settings/updates_page.dart"
+      ],
+      "evidence": [
+        "lib/screens/settings/ defines ten *Page classes (PlaybackSettingsPage, LibrarySettingsPage, AboutPage, UpdatesPage, and others).",
+        "The only *Screen class in that directory is LogScreen, declared in log_screen.dart."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "part_file_split_style_mixed",
+      "summary": "Large files split with Dart part files in some areas but with separate library modules in services/library",
+      "confidence": "low",
+      "suggestion": "Keep part only where library-private members must be shared, since Dart part is the only way to do that. For new splits, use separate libraries with explicit imports, and record the rule in AGENTS.md. Do not force-convert the existing part files without a reason.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/services/playback/music_player_service.dart",
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "lib/services/library/library_collections_hydration.dart",
+        "lib/services/library/library_native_adapter.dart"
+      ],
+      "evidence": [
+        "queue_tab.dart has 7 part directives, music_player_service.dart has 2, audio_analysis_widget.dart has 3, and home_tab.dart has 2.",
+        "services/library/ splits its work into 17 library_* files as separate libraries with explicit imports.",
+        "The dead_code scan lists 9 part files as orphaned because it does not follow part directives, so tooling sees these areas as disconnected."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "apk_download_null_hides_failure_reason",
+      "summary": "ApkDownloader.downloadApk returns null for SHA mismatch, invalid payload and network errors alike",
+      "confidence": "high",
+      "suggestion": "Return a small sealed result (success path, or failure kind: network, invalid payload, digest mismatch) so the dialog can show accurate messages and integrity failures are reported distinctly.",
+      "related_files": [
+        "lib/services/apk_downloader.dart",
+        "lib/widgets/update_dialog.dart"
+      ],
+      "evidence": [
+        "downloadApk returns String? and returns null at lines 122, 130, 136 (SHA-256 check and payload checks) and 150 (catch-all)",
+        "update_dialog.dart lines 109-137 handle null with a single generic failed-download path"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "apk_install_error_swallowed",
+      "summary": "ApkDownloader.installApk logs and swallows installer failures, so the caller cannot react",
+      "confidence": "high",
+      "suggestion": "Return a bool or result from installApk and surface a failure notification or retry affordance in the update dialog, or rethrow to the caller that owns the UI feedback.",
+      "related_files": [
+        "lib/services/apk_downloader.dart",
+        "lib/widgets/update_dialog.dart"
+      ],
+      "evidence": [
+        "installApk (apk_downloader.dart lines 218-225) catches all exceptions, logs them at error level and returns void",
+        "update_dialog.dart line 129 awaits installApk without checking for failure; for non-forced updates the dialog was already popped at line 125"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "backup_parse_failures_collapse_to_null",
+      "summary": "Backup archive parsing returns null for corrupt, unsupported and I/O failures alike",
+      "confidence": "medium",
+      "suggestion": "Return a typed failure (for example BackupParseFailure with a reason enum) so the restore UI can say whether the file is corrupt, from an unsupported version or unreadable, instead of a generic no-backup outcome.",
+      "related_files": [
+        "lib/services/backup_service.dart"
+      ],
+      "evidence": [
+        "Native parse path catches all errors, logs 'Backup archive native parse failed' and returns null (backup_service.dart lines 377-384)",
+        "Dart parse path does the same with 'Backup archive parse failed' (lines 494-501)",
+        "Both cleanup blocks swallow deletion errors with empty catch (lines 379-381, 497-499)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_null_bool_exception_failure_signalling",
+      "summary": "Services signal failure through null, bool, void and exceptions with no common convention",
+      "confidence": "medium",
+      "suggestion": "Pick a small shared failure type for service boundaries (Result or a sealed outcome) and document when services throw versus return it; apply it first to I/O boundaries (update, backup, SAF probes).",
+      "related_files": [
+        "lib/services/apk_downloader.dart",
+        "lib/services/backup_service.dart",
+        "lib/services/platform_bridge.dart",
+        "lib/services/ffmpeg/ffmpeg_support.dart"
+      ],
+      "evidence": [
+        "review_packet error_conventions: try_catch 118, returns_null 78, result_type 2",
+        "The only result_type uses are in ffmpeg/ and glass/; services/ has 113 try_catch and 86 returns_null, and playback/ has 62 try_catch and 51 returns_null",
+        "platform_bridge.dart probe returns null on failure (line 331) while the adjacent lease release only logs (line 373)"
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "architectural_change"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "queue_name_for_library_browser",
+      "summary": "QueueTab and queue_tab_* files name the Library browser, not the playback queue",
+      "confidence": "medium",
+      "suggestion": "Rename the Library-browser concept to LibraryTab / library_tab_*.dart and library_browse_* (QueryLibraryDb* -> LibraryBrowseDb*), keeping the playback queue under sistrum_player_queue / playback names. Behaviour is unchanged; the rename is mechanical.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_helpers.dart",
+        "lib/screens/main_shell.dart",
+        "lib/services/library/library_queue_store.dart",
+        "lib/services/library/library_database_models.dart",
+        "lib/screens/queue_library_refresh_policy.dart",
+        "lib/providers/library_browse_provider.dart"
+      ],
+      "evidence": [
+        "class QueueTab (queue_tab.dart:59) is returned by _LibraryTabRoot in main_shell.dart:649 and renders the Library sections via SistrumLibraryScreen",
+        "library_queue_store.dart header: 'SQL builders for the queue tab's local-library queries'",
+        "QueueLibraryDbQuery/Cursor/Page/Counts types in library_database_models.dart describe library browse paging, not the play queue"
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "folder_name_for_playlist_screen",
+      "summary": "LibraryTracksFolderScreen uses 'folder' for Loved and playlist track lists",
+      "confidence": "medium",
+      "suggestion": "Rename to CollectionTracksScreen / CollectionTracksMode / CollectionTracksData (matching CollectionTrackEntry and library_collections_provider) and drop the folder wording from the file names.",
+      "related_files": [
+        "lib/screens/library_tracks_folder_screen.dart",
+        "lib/screens/library_tracks_folder_data.dart",
+        "lib/screens/library/queue_tab_navigation.dart"
+      ],
+      "evidence": [
+        "LibraryTracksFolderScreen(mode: LibraryTracksFolderMode.playlist, ...) is pushed from queue_tab_navigation.dart:78",
+        "LibraryTracksFolderMode has only loved and playlist values; the screen icon is Icons.queue_music or Icons.favorite",
+        "_folderData, _EmptyFolderState and LibraryTracksFolderData all carry the folder name, while 'folder' elsewhere means a music directory"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "double_underscore_state_class",
+      "summary": "State class named __AnimatedLibrarySliverGridState with a doubled underscore",
+      "confidence": "high",
+      "suggestion": "Rename to _AnimatedLibrarySliverGridState in both the class declaration and the createState return.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart"
+      ],
+      "evidence": [
+        "queue_tab.dart:1066 class __AnimatedLibrarySliverGridState extends State<_AnimatedLibrarySliverGrid>",
+        "Its widget class is _AnimatedLibrarySliverGrid (queue_tab.dart:1038) and createState at line 1062 returns __AnimatedLibrarySliverGridState()"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "unused_search_key_field",
+      "summary": "_GroupedLocalAlbum.searchKey is set but never read, and its name refers to removed search",
+      "confidence": "medium",
+      "suggestion": "Delete the searchKey field and its initializer. If a grouping key is still needed, use albumKey, which already exists.",
+      "related_files": [
+        "lib/screens/library/queue_tab_helpers.dart"
+      ],
+      "evidence": [
+        "queue_tab_helpers.dart:12 final String searchKey; and :23 initializer lowercases albumName and artistName",
+        "grep for searchKey across lib/ finds no read site",
+        "AGENTS.md states Library pages have no search field"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "playback_part_file_handler_leak",
+      "summary": "AutoMix and Autoplay helpers take the whole MusicPlayerHandler and reach into its privates",
+      "confidence": "medium",
+      "suggestion": "Pass narrow collaborators instead of the handler: a deck/player port for AutoMix (play, pause, volume, dispose deck), a queue/session view for Autoplay (current media, index, queue items, mark-changed callback), and a settings/normalization function. Keep the helper classes but make them library-private classes in their own files that import those ports, and add unit tests against fakes.",
+      "related_files": [
+        "lib/services/playback/music_player_service.dart",
+        "lib/services/playback/music_player_automix.dart",
+        "lib/services/playback/music_player_autoplay.dart"
+      ],
+      "evidence": [
+        "music_player_service.dart:259 constructs _MusicAutoMix(this, ...) and :264 constructs _MusicAutoplay(this, ...).",
+        "music_player_automix.dart holds `final MusicPlayerHandler handler;` and makes about 66 `handler.` accesses, including handler._player (9), handler._media (6), handler._disposeDeck (10) and handler._settings (3).",
+        "music_player_autoplay.dart holds `final MusicPlayerHandler handler;` and makes about 40 `handler.` accesses, including handler._media (15), handler._index (12) and handler._sessionQueueRevision (3).",
+        "Both files are `part of 'music_player_service.dart'`, so the helpers have no interface boundary and can only be exercised through the full handler."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "playback_runtime_service_import_cycle",
+      "summary": "music_player_runtime.dart and music_player_service.dart import each other",
+      "confidence": "medium",
+      "suggestion": "Make one direction only. Move the types the runtime needs from the service into a small leaf file that both import, or have the runtime depend on an interface declared in its own file that the service implements. Keep the change to the import edges and the moved declarations.",
+      "related_files": [
+        "lib/services/playback/music_player_runtime.dart",
+        "lib/services/playback/music_player_service.dart"
+      ],
+      "evidence": [
+        "music_player_runtime.dart line 12 imports music_player_service.dart",
+        "music_player_service.dart line 25 imports music_player_runtime.dart",
+        "music_player_service.dart is a 2072-LOC library that also owns the parts music_player_automix.dart and music_player_autoplay.dart, so the cycle sits inside the largest playback module"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "dependency_health",
+      "identifier": "clickable_metadata_screen_import_cycle",
+      "summary": "utils/clickable_metadata.dart imports screens that import it back",
+      "confidence": "medium",
+      "suggestion": "Keep utils as a leaf. Have clickable_metadata accept navigation callbacks or a route-opening function supplied by the caller, or move the navigation helpers into a screens-level file, so that utils no longer imports screens.",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/local_artist_screen.dart"
+      ],
+      "evidence": [
+        "clickable_metadata.dart lines 3-4 import screens/local_album_screen.dart and screens/local_artist_screen.dart",
+        "local_artist_screen.dart line 16 imports local_album_screen.dart",
+        "local_album_screen.dart line 42 imports utils/clickable_metadata.dart, closing the cycle",
+        "The mechanical cycle detector reports a four-file cycle starting at local_album_screen.dart -> local_artist_screen.dart -> utils/clickable..."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "load_index_guard_and_lease_sprawl",
+      "summary": "_loadIndex is a 160-line function with repeated cancellation guards and hand-copied SAF lease cleanup",
+      "confidence": "medium",
+      "suggestion": "Split _loadIndex into named steps (acquire source, apply audio setup, start with fallback), and move the lease lifecycle into one owned helper that releases on every exit. Consider a single stale-check helper or a guard that runs between steps instead of repeating the same return after each await.",
+      "related_files": [
+        "lib/services/playback/music_player_service.dart"
+      ],
+      "evidence": [
+        "_loadIndex (lines 1339-1499) combines history, state reset, lease open, source resolve, normalization, session activation, fallback retry and error reporting.",
+        "About 14 `if (!_isCurrentPlayRequest(generation, media)) return;` checks appear inside this one function.",
+        "`closeContentUriPlaybackLease(playbackLease.token)` with a null check is written at lines 1384, 1402, 1434-1437, 1446 and 1492-1494."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "redundant_nested_silent_cover_cleanup",
+      "summary": "Cover directory cleanup nests a second silent try/catch around a helper that already swallows errors",
+      "confidence": "medium",
+      "suggestion": "Remove the redundant outer try, keep one best-effort delete helper that is the only place errors are swallowed, and log at debug level there so cleanup faults remain diagnosable.",
+      "related_files": [
+        "lib/services/embedded_cover_resolver.dart"
+      ],
+      "evidence": [
+        "Around lines 968-977, `try { await _deleteFileIfPresent(file); try { await file.parent.delete(recursive: true); } catch (_) {} } catch (_) {}`.",
+        "`_deleteFileIfPresent` (lines 979-982) already wraps its body in `try { ... } catch (_) {}`, so the outer try adds no recovery path.",
+        "Cleanup failures are discarded silently at every level, so a real permission or disk fault during cover eviction produces no log."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "scattered_row_decoding",
+      "summary": "Library DB rows decoded at ~20 sites in two shapes (bare and {source,item} envelope)",
+      "confidence": "high",
+      "suggestion": "Pick one shape at the repository boundary. Expose typed methods such as LibraryDatabase.getLocalItem and queuePage returning List<LocalLibraryItem>, so the envelope unwrap and fromJson conversion happen once.",
+      "related_files": [
+        "lib/services/library/library_queue_store.dart",
+        "lib/providers/local_artist_provider.dart",
+        "lib/providers/local_home_feed_provider.dart",
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_helpers.dart",
+        "lib/services/playback/music_player_autoplay.dart",
+        "lib/providers/music_player_provider.dart",
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "getById and findByTrackAndArtist return bare rows; getQueueTrackPageResult rows are {source, item} envelopes (library_queue_store.dart:899)",
+        "Envelope unwrapped by hand via row['item'] as Map in five consumers",
+        "Bare rows passed to LocalLibraryItem.fromJson directly in at least four other places"
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "two_db_access_paths",
+      "summary": "Same database reached via runtime dependency in one provider and singleton elsewhere",
+      "confidence": "medium",
+      "suggestion": "Route all these reads through one provider (for example a libraryDatabaseProvider) so the seam is injected consistently or not at all.",
+      "related_files": [
+        "lib/providers/music_player_provider.dart",
+        "lib/widgets/local_song_menu.dart",
+        "lib/providers/library_search_provider.dart",
+        "lib/providers/local_artist_provider.dart"
+      ],
+      "evidence": [
+        "music_player_provider.dart:41-45 uses musicPlayerRuntimeProvider.dependencies.libraryDatabase",
+        "local_song_menu.dart:39, library_search_provider.dart:24 and local_artist_provider.dart:17 use LibraryDatabase.instance"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "lookup_catch_all_missing_file",
+      "summary": "Song menu lookup maps every exception to a file-not-found message",
+      "confidence": "high",
+      "suggestion": "Catch only the expected not-found case (item == null, already handled) and let other failures surface through the app's error logging with a distinct message.",
+      "related_files": [
+        "lib/widgets/local_song_menu.dart"
+      ],
+      "evidence": [
+        "showCollectionSongMenu wraps the lookup and menu open in catch (_) at lines 76-80",
+        "The snackbar reports snackbarFileNotFound for any error, including DB failures"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "silent_synthetic_track_fallback",
+      "summary": "Player collection lookup silently fabricates a Track when the library match fails",
+      "confidence": "low",
+      "suggestion": "Log the fallback at debug level or return a typed result that tells callers the track is not in the library, so favorite and identity logic can branch explicitly.",
+      "related_files": [
+        "lib/providers/music_player_provider.dart"
+      ],
+      "evidence": [
+        "playerCollectionTrackProvider returns a Track with empty albumName and artistName when neither id nor path match (lines 63-71)",
+        "No log or flag marks that the fallback was used"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "duplicated_paging_loops",
+      "summary": "Three artist paging loops repeat dedupe and cursor logic with inconsistent end detection",
+      "confidence": "medium",
+      "suggestion": "Extract one paginate helper that yields deduplicated items and a hasMore flag from the page size, and use it in all three places.",
+      "related_files": [
+        "lib/providers/local_artist_provider.dart"
+      ],
+      "evidence": [
+        "build/loadMore compute hasMore with rows.length == 40 (lines 65, 91)",
+        "playbackQueue and localArtistPopularProvider break on rows.length < 40 (lines 118, 200)",
+        "Each loop repeats the seen-set dedupe and cursor assignment"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "shared_mutable_priority_map",
+      "summary": "Mutable priority map held in a Provider and mutated by a consumer",
+      "confidence": "medium",
+      "suggestion": "Own the random tie-breaks inside the notifier or in a small keyed cache with explicit reset, rather than mutating a map returned from a Provider.",
+      "related_files": [
+        "lib/providers/local_artist_provider.dart"
+      ],
+      "evidence": [
+        "_localArtistPopularPrioritiesProvider returns a fresh {} map (lines 145-146)",
+        "localArtistPopularProvider mutates it via priorities.putIfAbsent (line 191)"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "ad_hoc_play_count_keying",
+      "summary": "Play-count key translation inlined in the artist ranking loop",
+      "confidence": "medium",
+      "suggestion": "Move key construction and summing into ListeningStatisticsStore.playsForTracks or a helper that accepts a LocalLibraryItem and returns its count, so the boundary has one translation point.",
+      "related_files": [
+        "lib/providers/local_artist_provider.dart"
+      ],
+      "evidence": [
+        "plays is computed as plays[item.filePath] plus a conditional on item.id == item.filePath (lines 186-190)",
+        "Keys are built separately at lines 179-181 with a remove of empty strings"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "timing_polling_waits_in_widget_tests",
+      "summary": "Widget tests wait on wall-clock DateTime deadlines and real event-loop delays, making them timing-sensitive",
+      "confidence": "medium",
+      "suggestion": "Move the repeated polling into one shared test helper (for example in test/support/) with a single documented timeout, and replace file-deletion waits with an injectable fake or a Completer that the fake library completes, so the assertion does not depend on real I/O timing.",
+      "related_files": [
+        "test/local_song_menu_actions_test.dart",
+        "test/local_album_cue_delete_test.dart",
+        "test/local_track_batch_delete_test.dart",
+        "test/sistrum_artwork_contrast_test.dart"
+      ],
+      "evidence": [
+        "local_song_menu_actions_test.dart:142-150 loops while DateTime.now() is before a 5 s deadline, calling runAsync(Future.delayed 5 ms) and pump(10 ms) until a condition holds.",
+        "local_album_cue_delete_test.dart:211-215 polls library.removedPaths against a 5 s DateTime.now() deadline because a real file deletion finishes on the platform event loop.",
+        "local_track_batch_delete_test.dart:102-103 uses the same deadline-loop idiom.",
+        "sistrum_artwork_contrast_test.dart:58-62 uses a 3 s DateTime.now() deadline loop."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "shared_icons_no_direct_tests",
+      "summary": "sistrum_icons.dart is imported by 8 lib files but has no direct test",
+      "confidence": "medium",
+      "suggestion": "Add a small widget test that builds each exported icon and asserts it renders at the expected size and semantics label. This guards the shared icon set that 8 screens depend on.",
+      "related_files": [
+        "lib/theme/sistrum_icons.dart"
+      ],
+      "evidence": [
+        "Packet testing.critical_untested lists lib/theme/sistrum_icons.dart with 8 importers.",
+        "grep for sistrum_icons across test/ and integration_test/ returns no matches, and the packet lists it under test_coverage with 'No direct tests (99 LOC, 8 importers)'."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "player_slider_and_content_card_untested",
+      "summary": "Shared player slider and content card widgets have no direct tests despite multiple importers",
+      "confidence": "medium",
+      "suggestion": "Add widget tests for the slider value/drag mapping and for the content card's tap and disabled states. These are small, high-reuse widgets where a regression would surface across several screens.",
+      "related_files": [
+        "lib/widgets/player/sistrum_player_slider.dart",
+        "lib/widgets/app_content_card.dart"
+      ],
+      "evidence": [
+        "Packet testing.critical_untested lists sistrum_player_slider.dart (4 importers) and app_content_card.dart (3 importers).",
+        "Packet test_coverage findings: sistrum_player_slider.dart 'No direct tests (50 LOC, 4 importers)' and app_content_card.dart 'No direct tests (37 LOC, 3 importers)'.",
+        "No test file in test/ or integration_test/ references either filename."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "main_shell_no_direct_test",
+      "summary": "The main shell route (tabs, bar and chrome host) has no direct test reference",
+      "confidence": "low",
+      "suggestion": "Add one widget test that pumps the shell and asserts tab switching and the bottom bar render. That gives the navigation root a direct regression test rather than relying on indirect imports.",
+      "related_files": [
+        "lib/screens/main_shell.dart"
+      ],
+      "evidence": [
+        "lib/screens/main_shell.dart is 651 LOC and the packet reports 'No direct tests (651 LOC, 1 importers) - covered only via imports from tested modules'.",
+        "grep for main_shell.dart across lib/ and test/ finds only its single importer; no test pumps the shell directly."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "delete_by_path_return_contract_mismatch",
+      "summary": "deleteByPath returns void while deleteByPaths returns a deleted count",
+      "confidence": "medium",
+      "suggestion": "Make deleteByPath delegate to deleteByPaths([filePath]) and return its count, or drop the single-path method if no caller needs it; align on one return type.",
+      "related_files": [
+        "lib/services/library/library_database.dart"
+      ],
+      "evidence": [
+        "Future<void> deleteByPath(String filePath) async (line ~681) deletes library_path_keys and library rows in its own transaction and returns nothing.",
+        "Future<int> deleteByPaths(List<String> filePaths) async (line ~901) chunks at 500, commits once, and returns totalDeleted.",
+        "Both remove rows for a file path from the same table, so callers cannot treat the two as one consistent API."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "queue_paging_return_shape_drift",
+      "summary": "Queue paging methods return a mix of records, pages and bare lists",
+      "confidence": "medium",
+      "suggestion": "Give every queue paging call the same return shape (QueueLibraryDbPage) or rename the list-returning variants so the Page/Result suffix predicts the return type; keep one name per paged operation.",
+      "related_files": [
+        "lib/services/library/library_database.dart"
+      ],
+      "evidence": [
+        "getQueueTrackPage(QueueLibraryDbQuery) returns Future<List<Map<String, dynamic>>> by unwrapping getQueueTrackPageResult(...).rows.",
+        "getQueueTrackPageResult and getQueueAlbumPageResult both return Future<QueueLibraryDbPage>.",
+        "getQueueArtistPage(QueueLibraryDbQuery) takes the same query type but returns Future<List<Map<String, dynamic>>> with no page or count metadata."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "snapshot_writer_overload_by_name",
+      "summary": "Two snapshot writers share a stem but differ in inputs, mechanism and output",
+      "confidence": "medium",
+      "suggestion": "Rename so each name states its input source (for example exportSourceModTimesNative and writeModTimesTsv), or make one private if no external caller needs it.",
+      "related_files": [
+        "lib/services/library/library_database.dart"
+      ],
+      "evidence": [
+        "writeNativeFileModTimesSnapshot(String sourceId, {required String requestId, required bool Function() isCancelled}) delegates to LibraryNativeAdapter and exports from the database on the worker.",
+        "writeFileModTimesSnapshot(Map<String, int> fileModTimes) writes a temp TSV file from caller-supplied data using getTemporaryDirectory().",
+        "Both return Future<String> file paths, so the only signal distinguishing them is the Native infix."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "scan_notification_wrapper_boilerplate",
+      "summary": "Five near-identical try/catch wrappers for scan notifications in local_library_provider.dart",
+      "confidence": "medium",
+      "suggestion": "Add one private helper such as `Future<void> _postScanNotification(String label, Future<void> Function() show)` that wraps _queueScanNotification in the single try/catch and logs `Failed to show scan $label notification`. Each of the five methods then becomes a one-line call.",
+      "related_files": [
+        "lib/providers/local_library_provider.dart"
+      ],
+      "evidence": [
+        "Lines ~1505-1580 define _showScanPausedNotification, _showScanProgressNotification, _showScanCompleteNotification, _showScanFailedNotification and _showScanCancelledNotification.",
+        "Each body is `try { await _queueScanNotification(() => _notificationService.showLibraryScanX(...)); } catch (e) { _log.w('Failed to show scan X notification: $e'); }`, differing only in the callee arguments and the log label.",
+        "The catch line appears at 1511, 1542, 1558, 1568 and 1578 with identical structure."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "repeated_inline_best_effort_delete",
+      "summary": "Best-effort file delete try/catch(_) idiom is copied inline across many services without a shared helper",
+      "confidence": "low",
+      "suggestion": "Introduce one shared best-effort delete helper (for example in a small io utility) that takes a FileSystemEntity and optional recursive flag, and replace the inline copies. Keep the catches; they are intentional cleanup boundaries, but the repetition is avoidable.",
+      "related_files": [
+        "lib/services/platform_bridge.dart",
+        "lib/services/backup_service.dart",
+        "lib/services/metadata_cover_resources.dart",
+        "lib/services/replaygain_service.dart",
+        "lib/services/metadata_persistence_service.dart",
+        "lib/services/embedded_cover_resolver.dart"
+      ],
+      "evidence": [
+        "backup_service.dart has the pattern `try { if (await x.exists()) await x.delete(...); } catch (_) {}` at lines 95-98, 262-267, 378-381 and 497-499.",
+        "metadata_cover_resources.dart 63-66, replaygain_service.dart 232-235, metadata_persistence_service.dart 135-138 and platform_bridge.dart 65-73 repeat the same shape.",
+        "embedded_cover_resolver.dart already defines a private _deleteFileIfPresent helper (line 979) and still inlines the same try/catch at 785-788 and 975-976, so the helper is not shared even within one file."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "incomplete_migration",
+      "identifier": "collections_forcelegacy_test_seam",
+      "summary": "Production collection readers take a test-only forceLegacy flag and choose a Dart path by row-count probe.",
+      "confidence": "medium",
+      "suggestion": "Remove forceLegacy from the production signatures. Have the tests call the Dart reader through a dedicated test-only function or a constructor-injected reader, and keep one production read path per platform so the 64-row probe is not a behavioural switch.",
+      "related_files": [
+        "lib/services/library/library_collections_database.dart",
+        "test/library_collections_database_read_test.dart"
+      ],
+      "evidence": [
+        "readDatabaseSnapshot(...) and readDatabasePlaylistTracks(...) both declare bool forceLegacy = false (library_collections_database.dart lines 230 and 308).",
+        "The gate `!forceLegacy && (nativeJobRunner != null || PlatformBridge.supportsCoreBackend)` plus a LIMIT 64 probe decides at runtime whether the native or the Dart reader runs, so the same query can take different paths depending on data size.",
+        "The only callers passing forceLegacy: true are in test/library_collections_database_read_test.dart (lines 153, 166, 359); no production caller uses it."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "incomplete_migration",
+      "identifier": "supports_core_backend_dart_fallbacks",
+      "summary": "Android-only app keeps Dart fallback branches gated by supportsCoreBackend for backup encode/parse and collections.",
+      "confidence": "low",
+      "suggestion": "Decide whether the Dart archive and collection readers are a deliberate host-test seam. If yes, inject them explicitly as a test dependency. If no, delete the else-branches and the Dart encoder and parser so that the native path is the single implementation.",
+      "related_files": [
+        "lib/services/platform_bridge.dart",
+        "lib/services/backup_service.dart",
+        "lib/services/library/library_collections_database.dart"
+      ],
+      "evidence": [
+        "PlatformBridge.supportsCoreBackend is `Platform.isAndroid` (platform_bridge.dart line 198), while AGENTS.md states the app targets Android and local files only.",
+        "backup_service.dart keeps an else-branch that calls _encodeArchiveInBackground (lines 254-256) and an else-branch that calls _parseFileInBackground (lines 314-317) beside the native archive calls.",
+        "The same flag gates the native collections reader in library_collections_database.dart (lines 233 and 311), so the Dart implementations are reachable on device only through the row-count probe and in host tests."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "widgets_flat_overload",
+      "summary": "lib/widgets/ has about 65 top-level files spanning many unrelated concerns",
+      "confidence": "high",
+      "suggestion": "Staged reorg: (1) create lib/widgets/library/ and move local_song_row, local_song_menu, local_song_file_actions, library_section_list, library_search_results, library_fast_scroller, library_selection_playback_actions, library_track_selection_bar, local_collection_actions, local_library_artwork_builder, album_track_tile, track_card into it; (2) create lib/widgets/lyrics/ for lyric_* files, lyrics_size_setting, lyrics_text_scale, lyrics_screen_awake, synced-lyrics helpers; (3) create lib/widgets/settings/ for settings_group, music_haptics_settings, playback_normalization_settings, automix_settings, custom_font_setting, lyrics_size_setting if not already in lyrics; (4) create lib/widgets/common/ or lib/widgets/primitives/ for app_* and sistrum_* primitives (app_switch, app_snack_bar, app_bottom_sheet, app_alert_dialog, app_choice_chip, app_content_card, app_loading_indicator, app_search_field, app_sliver_header, sistrum_slider, sistrum_context_menu). Move one folder per commit, then update imports with: grep -rl \"package:sistrum/widgets/<old>\" lib test integration_test | xargs sed -i 's#package:sistrum/widgets/<old>#package:sistrum/widgets/<new>#g'. Validate after each step with flutter analyze and flutter test (serially, per repo rules).",
+      "related_files": [
+        "lib/widgets/"
+      ],
+      "evidence": [
+        "directory_profiles lib/widgets/ file_count 65, total_loc 14082, avg_fan_out 3.6.",
+        "Top-level files include library rows and sections (local_song_row.dart, library_section_list.dart, library_track_selection_bar.dart, local_song_menu.dart), lyric widgets (lyric_gap_indicator.dart, lyric_scroll_motion.dart, lyric_supplement_transition.dart), settings helpers (settings_group.dart, music_haptics_settings.dart, playback_normalization_settings.dart), and app primitives (app_switch.dart, app_snack_bar.dart, app_bottom_sheet.dart).",
+        "Subfolders glass/, player/ and audio_analysis/ already exist, so the split is partial; coupling_matrix shows lib/screens/ -> lib/widgets/ at 93 edges, meaning these widgets are consumed by every screen area."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "services_root_stragglers",
+      "summary": "Library, playback and glass services sit at lib/services/ root beside their existing subpackages",
+      "confidence": "high",
+      "suggestion": "Staged reorg: (1) move library-domain root files into lib/services/library/ (batch_track_actions, local_track_batch_actions, collection_track_batch, deleted_library_files, cover_analysis_store, metadata_index_reconciler, sqlite_helpers, sqlite_native_snapshot, app_state_database, embedded_cover_resolver); (2) move replaygain_service, audio_analysis_cache, audio_analysis_jobs into lib/services/playback/ or a new lib/services/audio/ package; (3) move sistrum_glass_auto_probe and sistrum_glass_warmup into lib/widgets/glass/ or lib/services/glass/ (decide with the glass owners so widgets are not imported from services). Update imports with grep -rl and sed as in the widgets issue; run flutter analyze and flutter test after each move.",
+      "related_files": [
+        "lib/services/deleted_library_files.dart",
+        "lib/services/local_track_batch_actions.dart",
+        "lib/services/batch_track_actions.dart",
+        "lib/services/collection_track_batch.dart",
+        "lib/services/cover_analysis_store.dart",
+        "lib/services/embedded_cover_resolver.dart",
+        "lib/services/metadata_index_reconciler.dart",
+        "lib/services/metadata_persistence_service.dart",
+        "lib/services/sqlite_helpers.dart",
+        "lib/services/sqlite_native_snapshot.dart",
+        "lib/services/app_state_database.dart",
+        "lib/services/replaygain_service.dart",
+        "lib/services/audio_analysis_cache.dart",
+        "lib/services/audio_analysis_jobs.dart",
+        "lib/services/sistrum_glass_auto_probe.dart",
+        "lib/services/sistrum_glass_warmup.dart"
+      ],
+      "evidence": [
+        "lib/services/ has 41 top-level files while lib/services/library/ (17 files), lib/services/playback/ (21 files) and lib/services/ffmpeg/ (6 files) already exist.",
+        "Library-domain files at the root: deleted_library_files.dart, local_track_batch_actions.dart, batch_track_actions.dart, collection_track_batch.dart, cover_analysis_store.dart, metadata_index_reconciler.dart, sqlite_helpers.dart, sqlite_native_snapshot.dart.",
+        "sistrum_glass_auto_probe.dart and sistrum_glass_warmup.dart are glass UI infrastructure at services root, separated from lib/widgets/glass/ (14 files).",
+        "coupling_matrix lib/services/library/ -> lib/services/ 21 edges versus lib/services/ -> lib/services/library/ 5 edges: the subpackage depends on root services that belong with it."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "utils_upward_dependency",
+      "summary": "lib/utils imports screens and widgets, inverting the layer direction",
+      "confidence": "high",
+      "suggestion": "Move clickable_metadata.dart into lib/widgets/ (or lib/screens/library/) since it constructs navigation to screens, and move confirm_and_delete_tracks.dart into lib/widgets/ or lib/services/library/ next to the dialog it uses, or inject the dialog as a callback. Validate with grep -rn \"package:sistrum/screens\\|package:sistrum/widgets\" lib/utils returning nothing, then flutter analyze and flutter test.",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart",
+        "lib/utils/confirm_and_delete_tracks.dart"
+      ],
+      "evidence": [
+        "lib/utils/clickable_metadata.dart line 3-4: import 'package:sistrum/screens/local_album_screen.dart' and import 'package:sistrum/screens/local_artist_screen.dart'.",
+        "lib/utils/confirm_and_delete_tracks.dart line 4: import 'package:sistrum/widgets/app_alert_dialog.dart'.",
+        "lib/utils is consumed by nine directories (avg_fan_in 7.9), so these are leaf-to-root edges that create a cycle with lib/screens/ -> lib/utils/ (27 edges)."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "services_depend_on_ui_and_providers",
+      "summary": "Service files import providers and widgets, so the service layer depends on UI",
+      "confidence": "high",
+      "suggestion": "Keep batch/delete logic in services by having it return results and let the caller (provider or screen) show dialogs and pass the provider state: remove app_alert_dialog and batch_progress_dialog imports from services, and replace the provider import in deleted_library_files.dart and library_folder_selection.dart with a small interface or a callback parameter. Then move batch_track_actions.dart and local_track_batch_actions.dart into lib/providers/ or a lib/services/library/ package that has no UI import. Verify with grep -rln \"package:sistrum/\\(widgets\\|providers\\)\" lib/services returning nothing, then flutter analyze and flutter test.",
+      "related_files": [
+        "lib/services/batch_track_actions.dart",
+        "lib/services/local_track_batch_actions.dart",
+        "lib/services/deleted_library_files.dart",
+        "lib/services/library/library_folder_selection.dart",
+        "lib/services/sistrum_glass_warmup.dart"
+      ],
+      "evidence": [
+        "lib/services/batch_track_actions.dart imports providers/local_library_provider.dart, widgets/app_alert_dialog.dart, widgets/batch_progress_dialog.dart.",
+        "lib/services/local_track_batch_actions.dart imports widgets/app_alert_dialog.dart.",
+        "lib/services/deleted_library_files.dart imports providers/local_library_provider.dart.",
+        "lib/services/library/library_folder_selection.dart imports providers/local_library_provider.dart.",
+        "lib/services/sistrum_glass_warmup.dart imports providers/runtime_profile_provider.dart and widgets/glass/sistrum_chrome.dart.",
+        "directory_profiles shows lib/services/ imports_from_dirs lib/widgets/: 3 and lib/providers/: 3; lib/services/library/ imports lib/providers/: 1."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "model_depends_on_persistence",
+      "summary": "unified_library_item model imports the library database models from services",
+      "confidence": "medium",
+      "suggestion": "Move the shared row types that unified_library_item needs out of library_database_models.dart into lib/models/ (for example lib/models/library_row_types.dart), or have unified_library_item.dart own its types. Then re-point the import and run flutter analyze and flutter test.",
+      "related_files": [
+        "lib/models/unified_library_item.dart",
+        "lib/services/library/library_database_models.dart"
+      ],
+      "evidence": [
+        "lib/models/unified_library_item.dart line 3: import 'package:sistrum/services/library/library_database_models.dart'.",
+        "lib/models/ otherwise has avg_fan_out 0.7 and is depended on by 104 test files and 14 providers, so models are expected to be the lowest layer."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "library_screens_split_across_folders",
+      "summary": "lib/screens/library/ holds only queue tab files while library section screens sit at screens root",
+      "confidence": "medium",
+      "suggestion": "Rename lib/screens/library/ to lib/screens/queue/ to match its content, then create lib/screens/library/ and move local_album_screen, local_artist_screen, local_genres_screen, favorite_artists_screen, library_tracks_folder_screen, library_tracks_folder_data, sistrum_library_screen and the selection_mode_mixin/collapsing_header_scroll_mixin used only by them into it. Move order: rename queue first (git mv), then the library screens, updating imports with grep -rl and sed; validate with flutter analyze and flutter test.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/local_album_screen.dart",
+        "lib/screens/local_artist_screen.dart",
+        "lib/screens/local_genres_screen.dart",
+        "lib/screens/favorite_artists_screen.dart",
+        "lib/screens/library_tracks_folder_screen.dart",
+        "lib/screens/sistrum_library_screen.dart"
+      ],
+      "evidence": [
+        "lib/screens/library/ contains only queue_tab.dart and seven queue_tab_*.dart helpers (8 files, avg_fan_in 0.4), imported only by lib/screens/ and tests.",
+        "lib/screens/ root has 19 files; library-section screens (local_album, local_artist, local_genres, favorite_artists, library_tracks_folder, sistrum_library) are at root while the folder named library holds queue content.",
+        "lib/screens/ has avg_fan_out 13.3 and imports lib/widgets/ 93 times, so the root is the main navigation hub."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "cover_palette_global_store_seam",
+      "summary": "CoverPalette exposes a mutable static store and static caches that tests must swap and clear by hand",
+      "confidence": "medium",
+      "suggestion": "Pass a CoverPalette instance (or a registry/context object) that owns the caches and store, and inject it through a provider override. Tests would then construct their own instance without mutating a global.",
+      "related_files": [
+        "lib/theme/cover_palette.dart",
+        "lib/services/cover_analysis_store.dart",
+        "test/cover_colors_test.dart"
+      ],
+      "evidence": [
+        "lib/theme/cover_palette.dart:56-59 declares static mutable maps _analyses, _schemes, _pending, _sourceKeys shared process-wide.",
+        "lib/theme/cover_palette.dart static `store` defaults to LibraryCoverAnalysisStore() when Platform.isAndroid, bypassing the constructor-injected database seam in cover_analysis_store.dart:20-21.",
+        "test/cover_colors_test.dart:199-215 saves CoverPalette.store, assigns a fake, and restores it in finally; debugClearMemory() is needed to simulate a new session."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "platform_bridge_static_event_state",
+      "summary": "PlatformBridge keeps class-level event stream, handler-installed flag and job map with no explicit lifecycle",
+      "confidence": "low",
+      "suggestion": "Move the controller, flag and job map behind an instance owned by a provider, with an explicit init and dispose called from app startup. Keep the static API as a thin facade only if call sites need it.",
+      "related_files": [
+        "lib/services/platform_bridge.dart"
+      ],
+      "evidence": [
+        "lib/services/platform_bridge.dart:193-194 static final StreamController<void> _libraryStorageEvents = StreamController<void>.broadcast().",
+        "lib/services/platform_bridge.dart:196 static bool _backendEventHandlerInstalled guards handler installation, and line 129 keeps a static _nativeDataJobs map.",
+        "No install/dispose pair is visible, so the stream and handler state persist for the whole process."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "music_playback_deck_shared_native_channel_state",
+      "summary": "MusicPlaybackDeck shares static native event stream and token counter across all deck instances",
+      "confidence": "low",
+      "suggestion": "Hold the shared native event stream and token sequence in one injected native-bridge object that the decks receive in their constructor, so each deck's ordering and lifetime are explicit.",
+      "related_files": [
+        "lib/services/playback/music_playback_deck.dart"
+      ],
+      "evidence": [
+        "lib/services/playback/music_playback_deck.dart:108-111 declares static const MethodChannel/EventChannel plus static Stream<dynamic>? _nativeEvents and static int _nextToken.",
+        "Multiple deck instances (primary and automix effect decks, per music_player_automix.dart) therefore share event subscription and token state through class-level variables."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "playback_handler_mixed_responsibilities",
+      "summary": "MusicPlayerHandler combines audio session, queue, persistence, history and sleep-timer duties in one class",
+      "confidence": "medium",
+      "suggestion": "Move session persistence and play-history recording behind collaborators that the handler calls (the handler already has a _sessionWriter). Move the sleep timer and headphone or focus monitoring into a small policy object. Keep the handler focused on transport and queue state.",
+      "related_files": [
+        "lib/services/playback/music_player_service.dart",
+        "lib/services/playback/music_player_automix.dart",
+        "lib/services/playback/music_player_autoplay.dart"
+      ],
+      "evidence": [
+        "music_player_service.dart is 2072 lines with the top complexity score (257) in scan_evidence.complexity_hotspots.",
+        "MusicPlayerHandler contains _configureAudioSession, _startHeadphoneMonitoring, setSleepTimer, _recordPlayHistory, _persistSession, _shuffleQueue, getChildren and onSourceDeleted, among others.",
+        "The automix and autoplay files are `part` files, so the single class is spread across files without separating responsibilities."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "local_library_notifier_mixed_concerns",
+      "summary": "LocalLibraryNotifier holds scan notifications, progress polling and cover batching alongside source state",
+      "confidence": "medium",
+      "suggestion": "Extract the scan notification and progress-polling code into a scan-progress helper that the notifier calls. Leave the notifier responsible for source and library state.",
+      "related_files": [
+        "lib/providers/local_library_provider.dart"
+      ],
+      "evidence": [
+        "The 1837-line file has one LocalLibraryNotifier running from line 113 to about line 1800.",
+        "_showScanPausedNotification, _showScanProgressNotification, _showScanCompleteNotification, _showScanFailedNotification and _queueScanNotification (lines 1503-1600) sit inside the state notifier.",
+        "_startProgressPolling and _handleLibraryScanProgress (lines 1309-1378) are presentation-adjacent polling loops inside the same class that owns source availability and scan recovery."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "audio_analysis_parsing_in_widget",
+      "summary": "Audio analysis widget file mixes ffmpeg log parsing and spectral math with the card UI",
+      "confidence": "high",
+      "suggestion": "Move parsing, codec support and spectral helpers into a service or utils file under audio_analysis/. Keep the widget file limited to presentation.",
+      "related_files": [
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart"
+      ],
+      "evidence": [
+        "parseAudioAstatsSummary, parseAudioAnalysisMetadata and their helpers (_parseLastAudioAstatsValue, _parseLastMetadataValue) are top-level pure functions in the widget file.",
+        "_spectralMedian, _sortedSpectralWindow and _sortedSpectralPercentile (lines 594-612) are numeric helpers in the same file.",
+        "AudioAnalysisCard and its state start at line 618 in a 1921-line file."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "platform_bridge_facade_breadth",
+      "summary": "PlatformBridge is one static class spanning SAF, scanning, metadata, background jobs and CUE parsing",
+      "confidence": "medium",
+      "suggestion": "Split by native subsystem into SAF, scan and metadata bridges that share one channel and decode helper. Keep callers' import paths stable through re-exports if needed.",
+      "related_files": [
+        "lib/services/platform_bridge.dart"
+      ],
+      "evidence": [
+        "The class has about 60 static methods on one MethodChannel, covering SAF (safExists, pickSafTree, writeTempToSafDetailed), media metadata (readFileMetadata, editFileMetadataResult), scanning (scanSafTreeIncremental, _scanToNDJSONFile), background work, and parseCueSheet.",
+        "JSON background decoding helpers (_decodeJsonResultAsync, _decodeRequiredMapResultAsync) are shared by unrelated call families."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "shared_header_primitives_in_album_file",
+      "summary": "Generic header controls live in album_detail_header.dart though ten-plus screens import them",
+      "confidence": "high",
+      "suggestion": "Move the generic header primitives into a shared header-controls file (for example widgets/header_controls.dart). Leave album-specific layout in album_detail_header.dart.",
+      "related_files": [
+        "lib/widgets/album_detail_header.dart",
+        "lib/widgets/glass/sistrum_floating_header.dart",
+        "lib/widgets/app_sliver_header.dart",
+        "lib/widgets/sistrum_artist_header.dart",
+        "lib/screens/local_artist_screen.dart"
+      ],
+      "evidence": [
+        "HeaderCircleButton, HeaderFilledButton, HeaderMetaRow, HeaderMetaItem and AlbumPlayActions are defined in album_detail_header.dart.",
+        "They are imported or used by local_album_screen.dart, local_artist_screen.dart, queue_tab.dart, listening_rewind_screen.dart, lyrics_share_screen.dart, library_tracks_folder_screen.dart, sistrum_artist_header.dart, sistrum_floating_header.dart, app_sliver_header.dart and local_collection_actions.dart."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "playback_runtime_service_cycle",
+      "summary": "music_player_runtime and music_player_service import each other through a re-export",
+      "confidence": "medium",
+      "suggestion": "Remove the re-export from the service and have consumers import the runtime file directly. Alternatively, move the handler type the runtime needs into its own file so the runtime does not depend on the service.",
+      "related_files": [
+        "lib/services/playback/music_player_runtime.dart",
+        "lib/services/playback/music_player_service.dart"
+      ],
+      "evidence": [
+        "music_player_runtime.dart imports music_player_service.dart to reference MusicPlayerHandler.",
+        "music_player_service.dart line 41 exports music_player_runtime.dart, so the runtime is only reachable through the service file."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "1443a89360e6f83d",
+      "reasoning": "The file is a part of music_player_service.dart, so the orphan detector misses it."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "4cb7d579dc562fdf",
+      "reasoning": "Same part-file inclusion as the autoplay file; the orphan signal is a false positive."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "1da72046e8d609ba",
+      "reasoning": "The layers share one semantic operation; the signature detector counts forms, not meaningful divergence."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "e3e0d03aad175895",
+      "reasoning": "Size comes from one coherent feature with many slide widgets, not from mixed concerns."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "b2f8c34e14a92934",
+      "reasoning": "The parts form a single pipeline; splitting them would add indirection without a clear gain."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "3ec3ccdb139fe52d",
+      "reasoning": "Single domain, moderate size; the flagged signatures do not show mixed responsibilities."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "79f68b787833faff",
+      "reasoning": "Structural signal comes from file length alone; the screen has one responsibility."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "3a69b985d0c12f05",
+      "reasoning": "The shell's responsibilities are coherent; the structural flag reflects length."
+    },
+    {
+      "dimension": "contract_coherence",
+      "identifier": "update_check_unverified_null_non_android",
+      "summary": "checkForUpdate returns null without verification on non-Android, contradicting its documented contract",
+      "confidence": "medium",
+      "suggestion": "Either throw UpdateCheckException on the non-Android path, or narrow the doc comment to say that the Android-only guard returns null and that null from a verified list means no newer version. Choosing one keeps 'up to date' and 'could not check' distinguishable for callers.",
+      "related_files": [
+        "lib/services/update_checker.dart"
+      ],
+      "evidence": [
+        "Doc comment on UpdateCheckException (lines 76-78): 'checkForUpdate returns null only when a verified release list has no newer version'.",
+        "checkForUpdate lines 181-184: 'if (!_isAndroid) { return null; }' runs before any fetch or verification and returns null silently.",
+        "Every other null return in checkForUpdate is guarded by _throwUnverified() when snapshot.verified is false (lines 195, 212, 233), so the early return is the sole exception."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "bool_tail_collapse_update_checker",
+      "summary": "Trailing if-return-true / return-false in version comparison should be one boolean expression",
+      "confidence": "high",
+      "suggestion": "Replace the two statements with `return !latestHasSuffix && currentHasSuffix;`.",
+      "related_files": [
+        "lib/services/update_checker.dart"
+      ],
+      "evidence": [
+        "Line 312: `if (!latestHasSuffix && currentHasSuffix) return true;` then line 314: `return false;`"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_wrapper_playlist_picker",
+      "summary": "showAddTrackToPlaylistSheet is async but only forwards a Future with no await",
+      "confidence": "high",
+      "suggestion": "Drop the `async` modifier and return the forwarded Future directly, or make the single-track helper a plain delegating function.",
+      "related_files": [
+        "lib/widgets/playlist_picker_sheet.dart"
+      ],
+      "evidence": [
+        "Lines 19-25: `Future<void> showAddTrackToPlaylistSheet(...) async { return showAddTracksToPlaylistSheet(context, ref, [track]); }`"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_wrapper_update_dialog",
+      "summary": "showUpdateDialog is async with no await and only returns showAppDialog",
+      "confidence": "high",
+      "suggestion": "Remove `async` and return the showAppDialog Future directly.",
+      "related_files": [
+        "lib/widgets/update_dialog.dart"
+      ],
+      "evidence": [
+        "Lines 416-432: `Future<void> showUpdateDialog(...) async { return showAppDialog<void>(...); }` with no await in the body"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_no_await_resolve_or_extract",
+      "summary": "EmbeddedCoverResolver.resolveOrExtract is async yet has no await, mixing sync cache hits with a Future",
+      "confidence": "medium",
+      "suggestion": "Remove `async` and return Future values explicitly (e.g. Future.value(cached.previewPath)) so the signature states that the method does no asynchronous work of its own.",
+      "related_files": [
+        "lib/services/embedded_cover_resolver.dart"
+      ],
+      "evidence": [
+        "Lines 160-172: the cache-hit path returns `cached.previewPath` synchronously inside an `async` method; the miss path returns `_ensureCover(...)` with no await"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_no_await_hydrate_playlist_tracks",
+      "summary": "hydratePlaylistTracks is async although both branches are direct returns",
+      "confidence": "medium",
+      "suggestion": "Drop `async`; the function already returns a Future on both paths.",
+      "related_files": [
+        "lib/services/library/library_collections_hydration.dart"
+      ],
+      "evidence": [
+        "Lines 121-131: `async` body contains only an `if` returning `_decodePlaylistTracks(request)` and a `return _hydrateRowsInWorker(...)`; no await"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "navigate_to_artist_unused_param_and_async",
+      "summary": "navigateToArtist is async with no await and silently ignores its artistId parameter",
+      "confidence": "medium",
+      "suggestion": "Remove the unused artistId parameter or use it for navigation, and drop the unnecessary async modifier.",
+      "related_files": [
+        "lib/utils/clickable_metadata.dart"
+      ],
+      "evidence": [
+        "Lines 46-56: `artistId` is declared as an optional named parameter but never read; the body is `if (artistName.isEmpty) return; pushViaPreferredNavigator(...)` with no await"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "async_callback_no_await_post_frame",
+      "summary": "Post-frame callback is async with no await; errors surface as unobserved futures",
+      "confidence": "low",
+      "suggestion": "Make the callback synchronous, since both calls are already fire-and-forget via unawaited.",
+      "related_files": [
+        "lib/screens/main_shell.dart"
+      ],
+      "evidence": [
+        "Lines 83-88: `WidgetsBinding.instance.addPostFrameCallback((_) async { if (!mounted) return; unawaited(...); unawaited(...); });`"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "quality_filter_string_literals",
+      "summary": "Library quality filter is String? with 'hires'/'cd'/'lossy' literals, parallel to DuplicateFidelity enum",
+      "confidence": "medium",
+      "suggestion": "Introduce an enum for the quality filter (for example LibraryQualityFilter { hires, cd, lossy }) with a single mapping to the native query value, and type the filter fields and request as that enum. Reuse DuplicateFidelity where the concepts overlap. Verify the native value set before changing the mapping.",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_helpers.dart",
+        "lib/utils/duplicate_quality_policy.dart"
+      ],
+      "evidence": [
+        "queue_tab.dart:95 String? _filterQuality; and the sheet compares tempQuality == 'hires' / 'cd' / 'lossy' at lines 459-473.",
+        "queue_tab_helpers.dart:57,67,78,92,112 carry filterQuality as String? into the query request.",
+        "duplicate_quality_policy.dart:5 defines enum DuplicateFidelity { lossless, lossy, unknown } for the same lossless/lossy concept."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "ignore_without_explanation_hud_protected_member",
+      "summary": "invalid_use_of_protected_member suppression has no explanation",
+      "confidence": "medium",
+      "suggestion": "Add a one-line comment stating why the protected member use is safe (for example the diagnostic reads a debug-only counter on the render layer), or expose the count through a non-protected accessor.",
+      "related_files": [
+        "lib/widgets/glass/sistrum_performance_hud.dart"
+      ],
+      "evidence": [
+        "sistrum_performance_hud.dart:191 // ignore: invalid_use_of_protected_member directly above sistrumCountBackdropReads(view.layer).total with no comment on why the access is acceptable."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "review_quality": {
+    "batch_count": 20,
+    "dimension_coverage": 0.05,
+    "evidence_density": 2.987,
+    "high_score_missing_issue_note": 0
+  },
+  "context_updates": {
+    "high_level_elegance": {
+      "add": [
+        {
+          "header": "Domain subtrees for library, playback and player",
+          "description": "services/library, services/playback, services/ffmpeg, widgets/player, widgets/glass and screens/settings each own one capability, so most changes stay inside one folder and a new engineer can find the owner by name.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Flat services/ catch-all",
+          "description": "Top-level services/ mixes data services with UI glass and navigation state; the subtrees are the intended owners, and the flat files are historical accretion rather than a deliberate boundary.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    },
+    "convention_outlier": {
+      "add": [
+        {
+          "header": "Provider files consistently suffixed _provider",
+          "description": "All 15 files in lib/providers end in _provider.dart, so a developer can locate and recognise a Riverpod provider from its filename alone.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "services/library uses library_ module prefix",
+          "description": "All 17 files in lib/services/library share a library_ prefix, which makes the persistence and collection group easy to scan and keeps its modules as separate libraries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Record typedefs for request and result shapes",
+          "description": "Providers and services use Dart record typedefs for request and result shapes, while entities live as classes in lib/models. The split is not documented; treat it as a neutral choice.",
+          "settled": false,
+          "positive": false
+        },
+        {
+          "header": "Part files invisible to dead-code scan",
+          "description": "The dead_code detector flags part-split files as orphaned because it does not follow part directives. Treat those flags as a tooling blind spot.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    },
+    "error_consistency": {
+      "add": [
+        {
+          "header": "Cleanup catches are deliberately tolerant",
+          "description": "Empty catch blocks around staging, part-file and lease cleanup in backup_service and platform_bridge are intentional: a failed delete must not mask the primary result. They are not silent failures of user-visible work.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "naming_quality": {
+      "add": [
+        {
+          "header": "Handle-prefixed event handlers are idiomatic",
+          "description": "_handleX and handleScroll names in widgets and the shell describe event handling in Flutter's usual way. They are not generic verbs that hide intent.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Query and predicate names match behaviour",
+          "description": "getCount, getById, getCurrentPosition and getMediaItem are side-effect-free queries, and is/has predicates return bool. This is a consistent pattern in the data and playback layers.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "abstraction_fitness": {
+      "add": [
+        {
+          "header": "Playback part-file collaborators share handler privates",
+          "description": "AutoMix and Autoplay are real stateful helpers, but they receive the whole MusicPlayerHandler and read its private fields. The split is structural rather than a true boundary, so it hides coupling behind file separation.",
+          "settled": false,
+          "positive": false
+        },
+        {
+          "header": "Injected analyzer, renderer and loader seams",
+          "description": "AutoMix analyzer and renderer and the Autoplay library loader are passed as typed constructor parameters, which keeps the heavy audio and database work replaceable in tests.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "dependency_health": {
+      "add": [
+        {
+          "header": "Every declared runtime package is directly imported",
+          "description": "Each runtime dependency in pubspec.yaml has a direct package: import in lib/ or test/, and cupertino_icons backs CupertinoIcons used in sistrum_icons.dart. The manifest carries no dead runtime packages.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Exact pins and vendored audio forks",
+          "description": "liquid_glass_easy, ffmpeg_kit_flutter_new_audio and material_color_utilities are pinned exactly, and audio_service plus audioplayers_android are vendored or overridden by path. These are deliberate but undocumented, so upgrade decisions depend on reading the manifest comments.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    },
+    "mid_level_elegance": {
+      "add": [
+        {
+          "header": "Paged queue store with typed cursor pages",
+          "description": "LibraryDatabase.getQueueTrackPageResult returns QueueLibraryDbPage with a cursor, so artist and queue screens share one bounded paging seam over SQLite.",
+          "settled": false,
+          "positive": true
+        }
+      ]
+    },
+    "test_strategy": {
+      "add": [
+        {
+          "header": "No snapshot or golden tests in the suite",
+          "description": "The suite asserts behavior with widget and unit tests and does not rely on golden files. This keeps tests tied to behavior rather than rendered pixels.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Broad feature-level test coverage",
+          "description": "About 284 test files span library, playback, settings, lyrics and glass UI. Most feature areas have at least one direct test file, which gives a developer a real safety net for feature changes.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Wall-clock polling helpers in widget tests",
+          "description": "Several tests wait on DateTime.now() deadlines with real delays because platform file operations and event loops are not driven by the fake clock. The pattern is repeated and worth consolidating.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    },
+    "authorization_consistency": {
+      "add": [
+        {
+          "header": "No accounts or backend, so no route auth",
+          "description": "The app is a local/offline Android player with no user sessions, tokens or remote API. Auth-decorator and RLS concerns from the rubric do not apply, and the only remote call is the GitHub release check.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Exported Android components are standard entry points",
+          "description": "Only the launcher activity, widget configuration, media browser service and media button receiver are exported. Internal receivers, the APK FileProvider and the background service are exported=false.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "ai_generated_debt": {
+      "add": [
+        {
+          "header": "WHY-focused comments on concurrency and platform rules",
+          "description": "Comments in local_library_provider and sqlite_helpers explain ordering, single-flight joins, trigram limits and SAF quirks. They describe constraints a new reader would otherwise miss.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Sparse logging, no entry/exit traces",
+          "description": "debugPrint and AppLogger calls are limited to failure paths, so the log output stays signal rather than noise.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Guards concentrated at decode and file boundaries",
+          "description": "Type and null checks in backup_service and collection restore codec sit on untrusted decoded JSON and file I/O, which is where they belong.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Scan notification try/catch duplication",
+          "description": "Five scan notification methods repeat the same try/catch and differ only by callee and label. Known debt, candidate for one helper.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    },
+    "incomplete_migration": {
+      "add": [
+        {
+          "header": "No deprecated symbols called in app sources",
+          "description": "Deprecated markers appear only in vendored third_party packages. The app's lib/ and android/app sources contain no @deprecated usages or stale migration TODOs, so deprecation hygiene is consistent.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Persisted legacy identifiers kept deliberately",
+          "description": "Legacy source ids and the legacy://local-library placeholder keep stored library rows and backups readable. They are encoded as named constants and are not migration residue.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Native backend and Dart fallback share platform flag",
+          "description": "PlatformBridge.supportsCoreBackend (Platform.isAndroid) selects native implementations, while Dart implementations remain as else-branches for backup and collection reads. Those branches are reachable on device only through a row-count probe and in host tests.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    },
+    "package_organization": {
+      "add": [
+        {
+          "header": "Root entry files are genuine core",
+          "description": "lib/app.dart and lib/main.dart at the lib root are the entry points with high fan-out and are correctly placed. The root is not a straggler problem.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Focused subpackages exist for library, playback, ffmpeg, glass and player",
+          "description": "lib/services/library, lib/services/playback, lib/services/ffmpeg, lib/widgets/glass, lib/widgets/player and lib/widgets/audio_analysis show purpose-driven grouping that many files follow.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "design_coherence": {
+      "add": [
+        {
+          "header": "Part files are not orphans",
+          "description": "music_player_automix.dart and music_player_autoplay.dart are included via part directives in music_player_service.dart. Orphan detection flags them falsely, so any cleanup should treat them as part of the service.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Domain-organized library and playback layers",
+          "description": "Services, providers and library databases are organized by domain, and most large files hold one coherent concern. Mixed responsibilities concentrate in a few hotspots rather than spreading across the codebase.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "contract_coherence": {
+      "add": [
+        {
+          "header": "Update checker keeps null distinct from unverified failure",
+          "description": "checkForUpdate routes every release-list-dependent null through _throwUnverified, so a stale or unverifiable cache cannot be reported as up to date. The UpdateCheckException doc states this as the contract, which makes the rule explicit for callers.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "type_safety": {
+      "add": [
+        {
+          "header": "Native edit responses decoded once into an enum",
+          "description": "MetadataEditResult.decode turns the native channel map into MetadataEditOutcome and typed fields, so consumers never interpret protocol strings. This keeps the boundary typed and in one place.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  },
+  "review_scope": {
+    "reviewed_files_count": 0,
+    "successful_batch_count": 20,
+    "full_sweep_included": false,
+    "total_files": 311,
+    "imported_dimensions": [
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "contract_coherence",
+      "convention_outlier",
+      "cross_module_architecture",
+      "dependency_health",
+      "design_coherence",
+      "error_consistency",
+      "high_level_elegance",
+      "incomplete_migration",
+      "initialization_coupling",
+      "logic_clarity",
+      "low_level_elegance",
+      "mid_level_elegance",
+      "naming_quality",
+      "package_organization",
+      "test_strategy",
+      "type_safety"
+    ]
+  },
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "dry-run",
+    "run_stamp": "20261029_064910",
+    "created_at": "2026-10-29T06:58:25+00:00",
+    "batch_count": 20,
+    "batch_indexes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "packet_path": "/home/user/Private/.desloppify/review_packet_blind.json",
+    "packet_sha256": "a5b050d26dd26a525da09bc5f8f554fb0997eaf64c2a4f3590e574457ae7912d"
+  },
+  "assessment_coverage": {
+    "scored_dimensions": [
+      "naming_quality",
+      "logic_clarity",
+      "type_safety",
+      "contract_coherence",
+      "error_consistency",
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "high_level_elegance",
+      "mid_level_elegance",
+      "low_level_elegance",
+      "cross_module_architecture",
+      "initialization_coupling",
+      "convention_outlier",
+      "dependency_health",
+      "test_strategy",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "incomplete_migration",
+      "package_organization",
+      "design_coherence"
+    ],
+    "selected_dimensions": [
+      "naming_quality",
+      "logic_clarity",
+      "type_safety",
+      "contract_coherence",
+      "error_consistency",
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "high_level_elegance",
+      "mid_level_elegance",
+      "low_level_elegance",
+      "cross_module_architecture",
+      "initialization_coupling",
+      "convention_outlier",
+      "dependency_health",
+      "test_strategy",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "incomplete_migration",
+      "package_organization",
+      "design_coherence"
+    ],
+    "imported_dimensions": [
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "contract_coherence",
+      "convention_outlier",
+      "cross_module_architecture",
+      "dependency_health",
+      "design_coherence",
+      "error_consistency",
+      "high_level_elegance",
+      "incomplete_migration",
+      "initialization_coupling",
+      "logic_clarity",
+      "low_level_elegance",
+      "mid_level_elegance",
+      "naming_quality",
+      "package_organization",
+      "test_strategy",
+      "type_safety"
+    ],
+    "missing_dimensions": []
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "batch": "error_consistency",
+  "batch_index": 4,
+  "assessments": {"error_consistency": 62.0},
+  "dimension_notes": {
+    "error_consistency": {
+      "evidence": [
+        "lib/services/apk_downloader.dart downloadApk returns String? and collapses every failure to null: invalid ZIP/APK payload (lines 120-123), invalid digest format (126-131), SHA-256 mismatch (132-137), and any thrown network or IO error (148-150). The caller cannot tell a tampered download from a dropped connection.",
+        "lib/widgets/update_dialog.dart lines 109-137 treat any null as one generic 'download failed' path (showUpdateDownloadFailed), so the integrity failure is reported the same as a network failure.",
+        "lib/services/apk_downloader.dart installApk (lines 218-225) catches every exception, logs it at error level and returns void. The caller in update_dialog.dart line 129 does not check for failure, and for non-forced updates the dialog has already been popped at line 125, so an installer launch failure is invisible to the user.",
+        "lib/services/backup_service.dart native and Dart archive parsers (lines 377-384 and 494-501) return null for every failure, including I/O, corrupt archive and unsupported format, with only a warning log. The caller cannot distinguish these cases and cleans up staging directories with empty catch blocks (lines 379-381, 497-499).",
+        "Mechanical signals: review_packet holistic_context.errors.strategy_by_directory shows services/ with 113 try_catch and 86 returns_null, playback/ with 62 try_catch and 51 returns_null, and utils/ with 36 returns_null. The only result_type uses are in ffmpeg/ (1) and glass/ (1), and error_conventions totals try_catch 118, returns_null 78, result_type 2. Failure signalling is therefore mostly null-as-error, with exceptions used in parallel.",
+        "lib/providers/local_library_provider.dart around lines 291-294 and 554-556 show a sound pattern: catch with stack, log at error level, set an explicit loadFailed or state flag, and keep the failure visible to the UI. This is the model the other services should follow."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Failure signalling is split between null returns, bool returns, void swallowing and thrown exceptions across services and playback. Several I/O boundaries (update download, install, backup parse) lose the reason for failure before it reaches the UI, and the error-reporting approach is not uniform.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "error_consistency": {
+      "dimension_character": "Error handling is widespread but not designed as one strategy. The app mixes null-as-error returns, bool returns, void swallowing and thrown exceptions across services, playback and utils, and the most consequential I/O boundaries (update download and install, backup parsing) discard the failure reason. Logging is consistent and many cleanup paths are deliberately tolerant, and the local library provider shows the desired pattern of logging with stack and exposing an explicit failure state.",
+      "score_rationale": "The codebase has a clear, well-behaved failure pattern in the library provider, but the update and backup I/O boundaries lose failure context and the strategy varies by directory, with a single Result type in the whole codebase outside ffmpeg and glass. That fits the middle of the scale rather than the high end, so 62.0 with medium confidence."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "error_consistency",
+      "identifier": "apk_download_null_hides_failure_reason",
+      "summary": "ApkDownloader.downloadApk returns null for SHA mismatch, invalid payload and network errors alike",
+      "related_files": ["lib/services/apk_downloader.dart", "lib/widgets/update_dialog.dart"],
+      "evidence": [
+        "downloadApk returns String? and returns null at lines 122, 130, 136 (SHA-256 check and payload checks) and 150 (catch-all)",
+        "update_dialog.dart lines 109-137 handle null with a single generic failed-download path"
+      ],
+      "suggestion": "Return a small sealed result (success path, or failure kind: network, invalid payload, digest mismatch) so the dialog can show accurate messages and integrity failures are reported distinctly.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "null_as_error_at_io_boundaries",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "apk_install_error_swallowed",
+      "summary": "ApkDownloader.installApk logs and swallows installer failures, so the caller cannot react",
+      "related_files": ["lib/services/apk_downloader.dart", "lib/widgets/update_dialog.dart"],
+      "evidence": [
+        "installApk (apk_downloader.dart lines 218-225) catches all exceptions, logs them at error level and returns void",
+        "update_dialog.dart line 129 awaits installApk without checking for failure; for non-forced updates the dialog was already popped at line 125"
+      ],
+      "suggestion": "Return a bool or result from installApk and surface a failure notification or retry affordance in the update dialog, or rethrow to the caller that owns the UI feedback.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "silent_swallow_at_user_visible_boundary",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "backup_parse_failures_collapse_to_null",
+      "summary": "Backup archive parsing returns null for corrupt, unsupported and I/O failures alike",
+      "related_files": ["lib/services/backup_service.dart"],
+      "evidence": [
+        "Native parse path catches all errors, logs 'Backup archive native parse failed' and returns null (backup_service.dart lines 377-384)",
+        "Dart parse path does the same with 'Backup archive parse failed' (lines 494-501)",
+        "Both cleanup blocks swallow deletion errors with empty catch (lines 379-381, 497-499)"
+      ],
+      "suggestion": "Return a typed failure (for example BackupParseFailure with a reason enum) so the restore UI can say whether the file is corrupt, from an unsupported version or unreadable, instead of a generic no-backup outcome.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "null_as_error_at_io_boundaries",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "mixed_null_bool_exception_failure_signalling",
+      "summary": "Services signal failure through null, bool, void and exceptions with no common convention",
+      "related_files": ["lib/services/apk_downloader.dart", "lib/services/backup_service.dart", "lib/services/platform_bridge.dart", "lib/services/ffmpeg/ffmpeg_support.dart"],
+      "evidence": [
+        "review_packet error_conventions: try_catch 118, returns_null 78, result_type 2",
+        "The only result_type uses are in ffmpeg/ and glass/; services/ has 113 try_catch and 86 returns_null, and playback/ has 62 try_catch and 51 returns_null",
+        "platform_bridge.dart probe returns null on failure (line 331) while the adjacent lease release only logs (line 373)"
+      ],
+      "suggestion": "Pick a small shared failure type for service boundaries (Result or a sealed outcome) and document when services throw versus return it; apply it first to I/O boundaries (update, backup, SAF probes).",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "architectural_change",
+      "root_cause_cluster": "no_shared_failure_convention",
+      "concern_verdict": "confirmed"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["No shared failure-signalling convention for service boundaries, so each file chose null, bool, void or rethrow independently"],
+    "likely_symptoms": ["apk_downloader.dart null returns", "backup_service.dart parse null returns"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "error_consistency": {
+      "add": [
+        {
+          "header": "Cleanup catches are deliberately tolerant",
+          "description": "Empty catch blocks around staging, part-file and lease cleanup in backup_service and platform_bridge are intentional: a failed delete must not mask the primary result. They are not silent failures of user-visible work.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

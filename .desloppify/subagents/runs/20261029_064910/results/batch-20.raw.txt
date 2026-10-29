@@ -1,0 +1,91 @@
+{
+  "batch": "type_safety",
+  "batch_index": 20,
+  "assessments": {"type_safety": 80.0},
+  "dimension_notes": {
+    "type_safety": {
+      "evidence": [
+        "lib/services/metadata_edit_result.dart decodes the native channel map once into a MetadataEditOutcome enum plus typed fields; the stringly 'ffmpeg' and 'native_*' protocol values are compared only inside this decoder, so consumers see a typed outcome.",
+        "lib/models/playable_media.dart and lib/services/library/* use typed records (typedef ... = ({...})) and typed fields for request/response shapes, with explicit nullable types (String?, int?, Duration?) that match the fromJson parsing paths.",
+        "Domain enums exist for most closed sets: ShellTab, PlayerView, SistrumAccent, MetadataSaveCodec, MetadataSaveFailure, AutoMixEffect, AutoMixStatus, LibrarySearchKind, DuplicateFidelity, SistrumGlassQuality. Enum bypass count in holistic_context.abstractions.summary is 0.",
+        "lib/screens/library/queue_tab.dart line 95 declares the quality filter as String? _filterQuality and compares it with raw literals 'hires', 'cd' and 'lossy' (lines 459-473). The same value is passed as String? filterQuality through queue_tab_helpers.dart (lines 57, 67, 78, 92, 112). lib/utils/duplicate_quality_policy.dart already defines DuplicateFidelity { lossless, lossy, unknown }, so the quality vocabulary is split between an enum and free strings.",
+        "lib/services/library/library_collections_hydration.dart line 372-ish and the sendBatch closure use Object for isolate messages. This is a deliberate heterogeneous-message boundary and is not counted as a defect.",
+        "lib/widgets/glass/sistrum_performance_hud.dart line 191 has // ignore: invalid_use_of_protected_member with no comment saying why reaching a protected member is safe here.",
+        "Remaining Map<String, dynamic> parameters (Track.fromJson, AppSettings.fromJson, MetadataEditResult.decode, PlayableMedia.fromJson) sit at JSON or platform-channel boundaries and parse with as-casts or readPositiveInt helpers; they are not treated as defects."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The quality filter is a String? carried through several layers with literal comparisons, while a DuplicateFidelity enum already exists for the same concept. The one undocumented lint suppression is a small additional gap.",
+      "sub_axes": {"abstraction_leverage": 78.0, "indirection_cost": 20.0, "interface_honesty": 80.0, "delegation_density": 75.0, "definition_directness": 82.0, "type_discipline": 80.0}
+    }
+  },
+  "dimension_judgment": {
+    "type_safety": {
+      "dimension_character": "Typing is generally strong: decoders convert untyped channel and JSON maps into typed models and enums at the boundary, and records describe request shapes. The weak spots are a few stringly-typed filter values that bypass an existing enum, and one lint suppression with no stated reason.",
+      "score_rationale": "Most closed sets are modelled as enums and decoded once, which fits the high end of the global anchors. The split quality vocabulary (String? with literals versus DuplicateFidelity) and the unexplained ignore keep the score out of the top band."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "type_safety",
+      "identifier": "quality_filter_string_literals",
+      "summary": "Library quality filter is String? with 'hires'/'cd'/'lossy' literals, parallel to DuplicateFidelity enum",
+      "related_files": [
+        "lib/screens/library/queue_tab.dart",
+        "lib/screens/library/queue_tab_helpers.dart",
+        "lib/utils/duplicate_quality_policy.dart"
+      ],
+      "evidence": [
+        "queue_tab.dart:95 String? _filterQuality; and the sheet compares tempQuality == 'hires' / 'cd' / 'lossy' at lines 459-473.",
+        "queue_tab_helpers.dart:57,67,78,92,112 carry filterQuality as String? into the query request.",
+        "duplicate_quality_policy.dart:5 defines enum DuplicateFidelity { lossless, lossy, unknown } for the same lossless/lossy concept."
+      ],
+      "suggestion": "Introduce an enum for the quality filter (for example LibraryQualityFilter { hires, cd, lossy }) with a single mapping to the native query value, and type the filter fields and request as that enum. Reuse DuplicateFidelity where the concepts overlap. Verify the native value set before changing the mapping.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "stringly_typed_filters",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "ignore_without_explanation_hud_protected_member",
+      "summary": "invalid_use_of_protected_member suppression has no explanation",
+      "related_files": [
+        "lib/widgets/glass/sistrum_performance_hud.dart"
+      ],
+      "evidence": [
+        "sistrum_performance_hud.dart:191 // ignore: invalid_use_of_protected_member directly above sistrumCountBackdropReads(view.layer).total with no comment on why the access is acceptable."
+      ],
+      "suggestion": "Add a one-line comment stating why the protected member use is safe (for example the diagnostic reads a debug-only counter on the render layer), or expose the count through a non-protected accessor.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "Filter vocabularies were added as plain strings alongside enums that model the same concept, so the type system does not link them."
+    ],
+    "likely_symptoms": [
+      "queue_tab quality literals"
+    ],
+    "possible_false_positives": [
+      "Object-typed isolate send callback in library_collections_hydration.dart (heterogeneous message boundary, intentional)",
+      "Map<String, dynamic> JSON and platform-channel parameters (boundary decoders, intentional)"
+    ]
+  },
+  "context_updates": {
+    "type_safety": {
+      "add": [
+        {
+          "header": "Native edit responses decoded once into an enum",
+          "description": "MetadataEditResult.decode turns the native channel map into MetadataEditOutcome and typed fields, so consumers never interpret protocol strings. This keeps the boundary typed and in one place.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

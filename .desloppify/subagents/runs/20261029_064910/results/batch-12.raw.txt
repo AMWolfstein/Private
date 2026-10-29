@@ -1,0 +1,53 @@
+{
+  "batch": "authorization_consistency",
+  "batch_index": 12,
+  "assessments": {"authorization_consistency": 90.0},
+  "dimension_notes": {
+    "authorization_consistency": {
+      "evidence": [
+        "The app is a local/offline Android music player with no user accounts, sessions, tokens, roles, or remote backend. The only remote call is the updater reading GitHub releases (lib/constants/app_info.dart githubRepo), so the rubric's route-handler, RLS, and service-role patterns have no subject here.",
+        "Grep of lib/ for Authorization, Bearer, api_key, isAdmin, serviceRole, hasPermission finds only log-redaction regexes in lib/utils/logger.dart (_authorizationBearerPattern, _sensitiveQueryPattern, _bearerTokenPattern) that scrub credentials from log output consistently, plus a storage-permission read in lib/screens/settings/library_settings_page.dart (Permission.storage.isGranted) used only to refresh UI state.",
+        "Android manifest (android/app/src/main/AndroidManifest.xml) marks the FileProvider used for APK install exported=false with grantUriPermissions, the scheduled-notification receivers and BackgroundWorkService exported=false, and the widget receiver PlayerWidgetProvider exported=false.",
+        "Components with exported=true are the expected entry points: MainActivity (launcher), PlayerWidgetConfigurationActivity (APPWIDGET_CONFIGURE), the audio_service MediaBrowserService and MediaButtonReceiver. These are standard media-app surfaces and are not sensitive data stores.",
+        "UsbDirectPlayback.kt gates USB audio on Android's UsbManager.hasPermission and a broadcast PendingIntent that is package-scoped (setPackage) and registered with RECEIVER_NOT_EXPORTED on API 33+, so the USB permission flow is consistently guarded.",
+        "MainActivitySafScan.kt checks persisted SAF tree-URI read permission before scanning, applying the same check on the scan path.",
+        "Restricted Android permissions (RECORD_AUDIO, BLUETOOTH, BLUETOOTH_CONNECT, FOREGROUND_SERVICE_MICROPHONE) are removed with tools:node=remove in the manifest, so the declared permission surface stays minimal and deliberate."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Scoring is held back only by the absence of a centralized policy for the few real trust boundaries: the GitHub-release updater's install path (UpdateDialog hands an APK to the system installer) and the SAF/USB permission checks are each guarded locally rather than through one shared helper. This is a minor consistency point rather than a defect.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "authorization_consistency": {
+      "dimension_character": "Most of the authorization rubric (route guards, RLS, service-role bypass, magic permission strings across endpoints) does not apply to a local-only Android player with no accounts or backend. The real trust boundaries are Android permissions, exported components, USB and SAF access grants, and the APK install hand-off, and each is guarded consistently and locally. The one notable pattern is that these checks live where they are used rather than behind a shared policy.",
+      "score_rationale": "No sibling-inconsistent auth decorators, unguarded privileged paths, or bypass roles were found in the inspected code, and exported components are limited to standard launcher, widget, and media-session entry points. The score is high because the rubric's core concerns are largely out of scope for this app, with a small deduction for the lack of a shared permission-check helper."
+    }
+  },
+  "issues": [],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "authorization_consistency": {
+      "add": [
+        {
+          "header": "No accounts or backend, so no route auth",
+          "description": "The app is a local/offline Android player with no user sessions, tokens or remote API. Auth-decorator and RLS concerns from the rubric do not apply, and the only remote call is the GitHub release check.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Exported Android components are standard entry points",
+          "description": "Only the launcher activity, widget configuration, media browser service and media button receiver are exported. Internal receivers, the APK FileProvider and the background service are exported=false.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

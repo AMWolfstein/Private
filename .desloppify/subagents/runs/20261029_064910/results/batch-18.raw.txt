@@ -1,0 +1,68 @@
+{
+  "batch": "contract_coherence",
+  "batch_index": 18,
+  "assessments": {"contract_coherence": 84.0},
+  "dimension_notes": {
+    "contract_coherence": {
+      "evidence": [
+        "lib/services/update_checker.dart:76-78 documents that checkForUpdate returns null only when a verified release list has no newer version, so callers can tell 'up to date' from 'could not check'. The implementation honors this on the main path: _throwUnverified() is called before every null return that depends on the release list (lines 195, 212, 233), and failures throw UpdateCheckException (lines 189, 276, 284).",
+        "lib/services/update_checker.dart:181-184 returns null unconditionally when !_isAndroid, without any verification or exception. This is the one null return that the documented contract does not cover.",
+        "lib/services/playback/music_player_service.dart:1873-1877 getMediaItem returns Future<MediaItem?> and indexes _queueItems with the index found in _media. _media and _queueItems are kept parallel by every mutator checked (reorder at 1201-1204, removeQueuedItem at 1227-1231), so the index lookup holds.",
+        "lib/services/native_log_source.dart:15-26 getSince declares Future<Map<String, dynamic>> and throws FormatException on any other decoded shape, including the empty-string case. The declared type and the throw path agree.",
+        "lib/services/platform_bridge.dart:714-724 and 726-734 separate required-map from nullable-map decoding (_decodeMapResult vs _decodeNullableMapResult), and the declared return types match those helpers.",
+        "lib/services/native_cache_maintenance.dart:9-21 documents 'Returns null on the desktop adapter' and the code returns null when !PlatformBridge.supportsCoreBackend, which matches. The doc is accurate.",
+        "lib/services/m3u_playlist_service.dart:54-60 documents null for empty input and for content URIs without a usable path; the code returns null for those cases and passes non-content paths through trimmed, as the doc describes.",
+        "lib/services/library/library_database.dart:566-576 getById returns Map<String, dynamic>? and yields null on an empty result set, consistent with its nullable signature.",
+        "lib/models/library_collections.dart:330-355 accessors are side-effect-free and named as queries (isLoved, containsLovedKey, playlistById), so no getter-name lies were found in the sampled set.",
+        "Across roughly 25 sampled get*/is* functions in lib/ and the doc comments that name null or throw behaviour, the contracts were honored except for the one update_checker divergence. Mechanical signature-variance signals were not used as evidence because they reflect repeated framework and override names, not contract breaks."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The update checker's documented 'null only when verified' contract is violated on the non-Android early return. Dart docs in lib/ also have some narrow mismatches that were not fully sampled, so the score is held below 85 until the rest of the doc-comment surface is checked.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "contract_coherence": {
+      "dimension_character": "Most sampled functions honor their stated contracts: nullable returns are declared, doc comments on null and throw behaviour match the code, and getter-named accessors are read-only. The main defect is that the update checker's documented 'null only when verified' promise is broken by an unverified early return on non-Android platforms, which can make 'could not check' look like 'up to date'. The rest of the sampled surface is consistent.",
+      "score_rationale": "The sampled code is largely contract-honest, with one concrete doc-versus-behaviour divergence in a user-facing API. That keeps the score in the high-70s to mid-80s band of the global anchors rather than the top band, since the divergence is narrow and only reachable on non-Android builds."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "contract_coherence",
+      "identifier": "update_check_unverified_null_non_android",
+      "summary": "checkForUpdate returns null without verification on non-Android, contradicting its documented contract",
+      "related_files": ["lib/services/update_checker.dart"],
+      "evidence": [
+        "Doc comment on UpdateCheckException (lines 76-78): 'checkForUpdate returns null only when a verified release list has no newer version'.",
+        "checkForUpdate lines 181-184: 'if (!_isAndroid) { return null; }' runs before any fetch or verification and returns null silently.",
+        "Every other null return in checkForUpdate is guarded by _throwUnverified() when snapshot.verified is false (lines 195, 212, 233), so the early return is the sole exception."
+      ],
+      "suggestion": "Either throw UpdateCheckException on the non-Android path, or narrow the doc comment to say that the Android-only guard returns null and that null from a verified list means no newer version. Choosing one keeps 'up to date' and 'could not check' distinguishable for callers.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "unverified_null_return",
+      "reasoning": ""
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Doc contracts on nullable returns are written at the top of the class or file, and an early platform guard added later was not checked against them."],
+    "likely_symptoms": ["update_check_unverified_null_non_android"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "contract_coherence": {
+      "add": [
+        {
+          "header": "Update checker keeps null distinct from unverified failure",
+          "description": "checkForUpdate routes every release-list-dependent null through _throwUnverified, so a stale or unverifiable cache cannot be reported as up to date. The UpdateCheckException doc states this as the contract, which makes the rule explicit for callers.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

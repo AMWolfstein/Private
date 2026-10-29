@@ -1,0 +1,108 @@
+{
+  "batch": "ai_generated_debt",
+  "batch_index": 13,
+  "assessments": {"ai_generated_debt": 88.0},
+  "dimension_notes": {
+    "ai_generated_debt": {
+      "evidence": [
+        "Doc and inline comments in lib/providers/local_library_provider.dart (for example lines 237-238, 303-313, 397-420, 590-591, 639) explain non-obvious ordering, concurrency and platform constraints (why a publish happens before a probe, why a generation is invalidated, why decodePath must not double-decode). None restate the code.",
+        "Heuristic scan of lib/ for single-line comments that echo the following statement found zero restating comments. Doc comments on short functions (activity_attachment.dart, sqlite_helpers.dart ftsPhraseSearchQuery, music_player_service.dart _persistSession) carry WHY content such as the trigram tokenizer limitation or the ten-second write frequency.",
+        "debugPrint/_log usage is sparse (about 15 call sites across lib/). There is no entry/exit logging on every function and no object dumps to console.",
+        "Null and type guards in lib/services/backup_service.dart (guard density 16) sit on JSON-decoded backup archive data (rootRaw is! Map, manifestEntry.value is! Map, archiveEntry == null), which is a genuine trust boundary and is not overengineering.",
+        "lib/providers/local_library_provider.dart lines 1505-1580 contain five near-identical methods (_showScanPausedNotification, _showScanProgressNotification, _showScanCompleteNotification, _showScanFailedNotification, _showScanCancelledNotification). Each is `try { await _queueScanNotification(() => ...); } catch (e) { _log.w('Failed to show scan X notification: $e'); }`. Only the callee and the log label differ; a single helper taking a label and a closure would replace all five.",
+        "Best-effort delete blocks `try { ... delete ... } catch (_) {}` are repeated inline across lib/services/platform_bridge.dart (65-73, 770-773), backup_service.dart (95-98, 262-267, 378-381, 497-499), metadata_cover_resources.dart (63-66), replaygain_service.dart (232-235), metadata_persistence_service.dart (135-138) and embedded_cover_resolver.dart (785-788, 979-982). embedded_cover_resolver already has a private _deleteFileIfPresent helper, but the other files do not share a common one. These are file I/O cleanup boundaries, so the catches are justified; only the repetition is a cost.",
+        "lib/services/app_state_database.dart line 88 `Future<void> clearRestoredPlaybackState() => clearPlaybackSession();` is a pure rename alias. The doc comment gives it a distinct intent (retiring URIs from a previous install) and main.dart is its only caller, so it is borderline.",
+        "Private one-line delegators in lib/services/playback/music_player_service.dart (_cleanupPendingResolvedPaths, _markSessionQueueChanged) are used from part-file extensions. They are a deliberate access seam, not debt."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "The five scan-notification wrappers in local_library_provider.dart are the clearest LLM-style boilerplate in the batch. Their repeated try/catch bodies, and the inline best-effort delete catches repeated across about six service files without a shared helper, keep the score below the 90s. Comment quality and guard placement are otherwise strong.",
+      "sub_axes": {}
+    }
+  },
+  "dimension_judgment": {
+    "ai_generated_debt": {
+      "dimension_character": "The codebase avoids most LLM hallmarks: comments explain WHY (ordering, concurrency, platform quirks), there is almost no debug-log noise, and defensive checks sit at real boundaries such as decoded backup JSON and file I/O. The residual debt is localized repetition, mainly five near-identical scan-notification try/catch wrappers in one provider and inline best-effort-delete catches copied across several services, plus one pure rename alias. These are consistent with hand-maintained code that has accumulated some copy-paste rather than generated filler.",
+      "score_rationale": "The strong comment discipline, sparse logging and boundary-only guards push the score well above the solid band. The duplicated notification wrappers and repeated delete-catch idiom pull it down into the 80s-90 range. Score is 88.0 because the defects are real but small and local."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "scan_notification_wrapper_boilerplate",
+      "summary": "Five near-identical try/catch wrappers for scan notifications in local_library_provider.dart",
+      "related_files": ["lib/providers/local_library_provider.dart"],
+      "evidence": [
+        "Lines ~1505-1580 define _showScanPausedNotification, _showScanProgressNotification, _showScanCompleteNotification, _showScanFailedNotification and _showScanCancelledNotification.",
+        "Each body is `try { await _queueScanNotification(() => _notificationService.showLibraryScanX(...)); } catch (e) { _log.w('Failed to show scan X notification: $e'); }`, differing only in the callee arguments and the log label.",
+        "The catch line appears at 1511, 1542, 1558, 1568 and 1578 with identical structure."
+      ],
+      "suggestion": "Add one private helper such as `Future<void> _postScanNotification(String label, Future<void> Function() show)` that wraps _queueScanNotification in the single try/catch and logs `Failed to show scan $label notification`. Each of the five methods then becomes a one-line call.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "copy_paste_error_handling",
+      "concern_verdict": "confirmed"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "repeated_inline_best_effort_delete",
+      "summary": "Best-effort file delete try/catch(_) idiom is copied inline across many services without a shared helper",
+      "related_files": [
+        "lib/services/platform_bridge.dart",
+        "lib/services/backup_service.dart",
+        "lib/services/metadata_cover_resources.dart",
+        "lib/services/replaygain_service.dart",
+        "lib/services/metadata_persistence_service.dart",
+        "lib/services/embedded_cover_resolver.dart"
+      ],
+      "evidence": [
+        "backup_service.dart has the pattern `try { if (await x.exists()) await x.delete(...); } catch (_) {}` at lines 95-98, 262-267, 378-381 and 497-499.",
+        "metadata_cover_resources.dart 63-66, replaygain_service.dart 232-235, metadata_persistence_service.dart 135-138 and platform_bridge.dart 65-73 repeat the same shape.",
+        "embedded_cover_resolver.dart already defines a private _deleteFileIfPresent helper (line 979) and still inlines the same try/catch at 785-788 and 975-976, so the helper is not shared even within one file."
+      ],
+      "suggestion": "Introduce one shared best-effort delete helper (for example in a small io utility) that takes a FileSystemEntity and optional recursive flag, and replace the inline copies. Keep the catches; they are intentional cleanup boundaries, but the repetition is avoidable.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "copy_paste_error_handling",
+      "concern_verdict": "confirmed"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Scan-notification and cleanup code was extended by copying the nearest existing try/catch rather than extracting a helper."],
+    "likely_symptoms": ["_showScanPausedNotification and siblings in local_library_provider.dart"],
+    "possible_false_positives": ["clearRestoredPlaybackState alias in app_state_database.dart: the name carries a distinct retirement intent, so it was not reported."]
+  },
+  "context_updates": {
+    "ai_generated_debt": {
+      "add": [
+        {
+          "header": "WHY-focused comments on concurrency and platform rules",
+          "description": "Comments in local_library_provider and sqlite_helpers explain ordering, single-flight joins, trigram limits and SAF quirks. They describe constraints a new reader would otherwise miss.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Sparse logging, no entry/exit traces",
+          "description": "debugPrint and AppLogger calls are limited to failure paths, so the log output stays signal rather than noise.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Guards concentrated at decode and file boundaries",
+          "description": "Type and null checks in backup_service and collection restore codec sit on untrusted decoded JSON and file I/O, which is where they belong.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Scan notification try/catch duplication",
+          "description": "Five scan notification methods repeat the same try/catch and differ only by callee and label. Known debt, candidate for one helper.",
+          "settled": false,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

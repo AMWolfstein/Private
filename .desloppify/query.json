@@ -1,0 +1,961 @@
+{
+  "command": "next",
+  "items": [
+    {
+      "id": "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
+      "confidence": "low",
+      "detector": "review",
+      "file": ".",
+      "summary": "Best-effort file delete try/catch(_) idiom is copied inline across many services without a shared helper",
+      "detail": {
+        "holistic": true,
+        "dimension": "ai_generated_debt",
+        "related_files": [
+          "lib/services/platform_bridge.dart",
+          "lib/services/backup_service.dart",
+          "lib/services/metadata_cover_resources.dart",
+          "lib/services/replaygain_service.dart",
+          "lib/services/metadata_persistence_service.dart",
+          "lib/services/embedded_cover_resolver.dart"
+        ],
+        "evidence": [
+          "backup_service.dart has the pattern `try { if (await x.exists()) await x.delete(...); } catch (_) {}` at lines 95-98, 262-267, 378-381 and 497-499.",
+          "metadata_cover_resources.dart 63-66, replaygain_service.dart 232-235, metadata_persistence_service.dart 135-138 and platform_bridge.dart 65-73 repeat the same shape.",
+          "embedded_cover_resolver.dart already defines a private _deleteFileIfPresent helper (line 979) and still inlines the same try/catch at 785-788 and 975-976, so the helper is not shared even within one file."
+        ],
+        "suggestion": "Introduce one shared best-effort delete helper (for example in a small io utility) that takes a FileSystemEntity and optional recursive flag, and replace the inline copies. Keep the catches; they are intentional cleanup boundaries, but the repetition is avoidable.",
+        "reasoning": "",
+        "summary_hash": "6eacebc8"
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete\" --note \"<what you did>\" --confirm",
+      "queue_position": 1
+    }
+  ],
+  "queue": {
+    "total": 1,
+    "mode": "execution"
+  },
+  "narrative": {
+    "phase": "middle_grind",
+    "headline": "323 issues open. Structure nav (55.0%) needs attention \u2014 run `desloppify next` to start. (26 review work items \u2014 run `desloppify show review --status open`)",
+    "dimensions": {
+      "lowest_dimensions": [
+        {
+          "name": "Structure nav",
+          "strict": 55.0,
+          "failing": 5,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        },
+        {
+          "name": "Design coherence",
+          "strict": 62.0,
+          "failing": 3,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        },
+        {
+          "name": "Error consistency",
+          "strict": 62.0,
+          "failing": 4,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        }
+      ],
+      "biggest_gap_dimensions": [
+        {
+          "name": "Test health",
+          "lenient": 90.3,
+          "strict": 89.0,
+          "gap": 1.3,
+          "wontfix_count": 0
+        }
+      ],
+      "stagnant_dimensions": [
+        {
+          "name": "Security",
+          "strict": 99.7,
+          "stuck_scans": 5
+        },
+        {
+          "name": "File health",
+          "strict": 90.8,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Duplication",
+          "strict": 99.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Test health",
+          "strict": 89.0,
+          "stuck_scans": 5
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "reorganize",
+        "detector": "flat_dirs",
+        "count": 8,
+        "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
+        "command": "desloppify show flat_dirs --status open",
+        "impact": 0.0,
+        "dimension": "Code quality",
+        "priority": 1,
+        "lane": "restructure"
+      },
+      {
+        "type": "reorganize",
+        "detector": "single_use",
+        "count": 1,
+        "description": "1 single_use issues \u2014 inline or relocate with `desloppify move`",
+        "command": "desloppify show single_use --status open",
+        "impact": 0.0,
+        "dimension": "Code quality",
+        "priority": 2,
+        "lane": "restructure"
+      },
+      {
+        "type": "reorganize",
+        "detector": "cycles",
+        "count": 2,
+        "description": "2 cycles issues \u2014 break cycles by extracting shared code or using `desloppify move`",
+        "command": "desloppify show cycles --status open",
+        "impact": 0.0,
+        "dimension": "Security",
+        "priority": 3,
+        "lane": "restructure"
+      },
+      {
+        "type": "refactor",
+        "detector": "structural",
+        "count": 82,
+        "description": "82 structural work items \u2014 review large files \u2014 split only when responsibilities are clearly separable",
+        "command": "desloppify show structural --status open",
+        "impact": 0.0,
+        "dimension": "File health",
+        "priority": 4,
+        "lane": "refactor_0"
+      },
+      {
+        "type": "refactor",
+        "detector": "dupes",
+        "count": 46,
+        "description": "46 dupes work items \u2014 extract shared utility or consolidate duplicates",
+        "command": "desloppify show dupes --status open",
+        "impact": 0.0,
+        "dimension": "Duplication",
+        "priority": 5,
+        "lane": "refactor_0"
+      },
+      {
+        "type": "refactor",
+        "detector": "test_coverage",
+        "count": 37,
+        "description": "37 test_coverage issues in 2 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
+        "impact": 0.0,
+        "dimension": "Test health",
+        "priority": 6,
+        "clusters": [
+          "auto/test_coverage-untested_module",
+          "auto/test_coverage-transitive_only"
+        ],
+        "cluster_count": 2,
+        "lane": "test_coverage"
+      },
+      {
+        "type": "refactor",
+        "detector": "signature",
+        "count": 97,
+        "description": "97 signature work items \u2014 consolidate inconsistent function signatures",
+        "command": "desloppify show signature --status open",
+        "impact": 0.0,
+        "dimension": "Unknown",
+        "priority": 7,
+        "lane": "refactor_0"
+      },
+      {
+        "type": "refactor",
+        "detector": "boilerplate_duplication",
+        "count": 24,
+        "description": "24 boilerplate_duplication work items \u2014 extract shared boilerplate into reusable helpers or base classes",
+        "command": "desloppify show boilerplate_duplication --status open",
+        "impact": 0.0,
+        "dimension": "Duplication",
+        "priority": 8,
+        "lane": "refactor_0"
+      },
+      {
+        "type": "refactor",
+        "detector": "review",
+        "count": 26,
+        "description": "26 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
+        "command": "desloppify show review --status open",
+        "impact": 0.0,
+        "dimension": "Unknown",
+        "priority": 9,
+        "lane": "refactor_1"
+      }
+    ],
+    "strategy": {
+      "fixer_leverage": {
+        "auto_fixable_count": 0,
+        "total_count": 375,
+        "coverage": 0.0,
+        "impact_ratio": 0.0,
+        "recommendation": "none"
+      },
+      "lanes": {
+        "restructure": {
+          "actions": [
+            1,
+            2,
+            3
+          ],
+          "file_count": 11,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "refactor_0": {
+          "actions": [
+            4,
+            5,
+            7,
+            8
+          ],
+          "file_count": 144,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "refactor_1": {
+          "actions": [
+            9
+          ],
+          "file_count": 1,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "test_coverage": {
+          "actions": [
+            6
+          ],
+          "file_count": 37,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        }
+      },
+      "can_parallelize": true,
+      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 26 issue(s) \u2014 `desloppify show review --status open`."
+    },
+    "tools": {
+      "fixers": [],
+      "move": {
+        "available": true,
+        "relevant": true,
+        "reason": "1 single-use files + 8 flat directories",
+        "usage": "desloppify move <source> <dest> [--dry-run]"
+      },
+      "plan": {
+        "command": "desloppify plan",
+        "description": "Generate prioritized markdown cleanup plan"
+      },
+      "badge": {
+        "generated": false,
+        "in_readme": false,
+        "path": "scorecard.png",
+        "recommendation": null
+      }
+    },
+    "debt": {
+      "overall_gap": 0.1,
+      "wontfix_count": 0,
+      "worst_dimension": "Test health",
+      "worst_gap": 1.3,
+      "trend": "stable"
+    },
+    "milestone": null,
+    "primary_action": {
+      "command": "desloppify show flat_dirs --status open",
+      "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
+    },
+    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 26 issue(s) \u2014 `desloppify show review --status open`.",
+    "verification_step": {
+      "command": "desloppify scan",
+      "reason": "revalidate after changes"
+    },
+    "risk_flags": [],
+    "strict_target": {
+      "target": 85.0,
+      "current": 77.0,
+      "gap": 8.0,
+      "state": "below",
+      "warning": null
+    },
+    "reminders": [
+      {
+        "type": "review_issues_pending",
+        "message": "26 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
+        "command": "desloppify show review --status open",
+        "priority": 1,
+        "severity": "high"
+      }
+    ],
+    "reminder_history": {
+      "zone_classification": 3,
+      "report_scores": 5,
+      "feedback_nudge": 3,
+      "stagnant_nudge": 22,
+      "review_issues_pending": 1
+    }
+  },
+  "agent_notes": [
+    "Do NOT use `desloppify plan skip` unless the user explicitly asks you to skip an item.",
+    "If you cannot fix an item, report it and move to the next one.",
+    "For cluster items: if the autofix_hint finds 0 results, drill into individual issues with the primary_command."
+  ],
+  "plan": {
+    "active": true,
+    "focus": null,
+    "clusters": [
+      {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 11 test coverage issues",
+        "item_count": 11
+      },
+      {
+        "name": "auto/test_coverage-transitive_only",
+        "description": "Fix 26 test coverage issues",
+        "item_count": 26
+      },
+      {
+        "name": "auto/initial-review",
+        "description": "Initial review of 20 unscored subjective dimensions",
+        "item_count": 0
+      }
+    ],
+    "total_ordered": 26,
+    "total_skipped": 0,
+    "plan_overrides_narrative": true
+  },
+  "overall_score": 77.1,
+  "objective_score": 94.8,
+  "strict_score": 77.0,
+  "scorecard_dimensions": [
+    {
+      "name": "File health",
+      "score": 90.8,
+      "strict": 90.8,
+      "checks": 311,
+      "failing": 41,
+      "tier": 3,
+      "subjective": false
+    },
+    {
+      "name": "AI generated debt",
+      "score": 88.0,
+      "strict": 88.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "ai_generated_debt"
+      ]
+    },
+    {
+      "name": "API coherence",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "api_surface_coherence"
+      ]
+    },
+    {
+      "name": "Abstraction fit",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "abstraction_fitness"
+      ]
+    },
+    {
+      "name": "Auth consistency",
+      "score": 90.0,
+      "strict": 90.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "authorization_consistency"
+      ]
+    },
+    {
+      "name": "Code quality",
+      "score": 98.3,
+      "strict": 98.3,
+      "checks": 339,
+      "failing": 8,
+      "tier": 3,
+      "subjective": false
+    },
+    {
+      "name": "Convention drift",
+      "score": 78.0,
+      "strict": 78.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "convention_outlier"
+      ]
+    },
+    {
+      "name": "Cross-module arch",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "cross_module_architecture"
+      ]
+    },
+    {
+      "name": "Dep health",
+      "score": 78.0,
+      "strict": 78.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "dependency_health"
+      ]
+    },
+    {
+      "name": "Design coherence",
+      "score": 62.0,
+      "strict": 62.0,
+      "checks": 10,
+      "failing": 3,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "design_coherence"
+      ]
+    },
+    {
+      "name": "Duplication",
+      "score": 99.0,
+      "strict": 99.0,
+      "checks": 3150,
+      "failing": 70,
+      "tier": 3,
+      "subjective": false
+    },
+    {
+      "name": "Elegance",
+      "score": 66.7,
+      "strict": 66.7,
+      "checks": 30,
+      "failing": 4,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "high_level_elegance",
+        "low_level_elegance",
+        "mid_level_elegance"
+      ]
+    },
+    {
+      "name": "Error consistency",
+      "score": 62.0,
+      "strict": 62.0,
+      "checks": 10,
+      "failing": 4,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "error_consistency"
+      ]
+    },
+    {
+      "name": "Init coupling",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "initialization_coupling"
+      ]
+    },
+    {
+      "name": "Naming quality",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "naming_quality"
+      ]
+    },
+    {
+      "name": "Security",
+      "score": 99.7,
+      "strict": 99.7,
+      "checks": 622,
+      "failing": 2,
+      "tier": 4,
+      "subjective": false
+    },
+    {
+      "name": "Stale migration",
+      "score": 86.0,
+      "strict": 86.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "incomplete_migration"
+      ]
+    },
+    {
+      "name": "Structure nav",
+      "score": 55.0,
+      "strict": 55.0,
+      "checks": 10,
+      "failing": 5,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "package_organization"
+      ]
+    },
+    {
+      "name": "Test health",
+      "score": 90.3,
+      "strict": 89.0,
+      "checks": 4432,
+      "failing": 37,
+      "tier": 4,
+      "subjective": false
+    },
+    {
+      "name": "Test strategy",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "test_strategy"
+      ]
+    }
+  ],
+  "subjective_measures": [
+    {
+      "name": "AI generated debt",
+      "score": 88.0,
+      "strict": 88.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "ai_generated_debt"
+      ]
+    },
+    {
+      "name": "API coherence",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "api_surface_coherence"
+      ]
+    },
+    {
+      "name": "Abstraction fit",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "abstraction_fitness"
+      ]
+    },
+    {
+      "name": "Auth consistency",
+      "score": 90.0,
+      "strict": 90.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "authorization_consistency"
+      ]
+    },
+    {
+      "name": "Convention drift",
+      "score": 78.0,
+      "strict": 78.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "convention_outlier"
+      ]
+    },
+    {
+      "name": "Cross-module arch",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "cross_module_architecture"
+      ]
+    },
+    {
+      "name": "Dep health",
+      "score": 78.0,
+      "strict": 78.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "dependency_health"
+      ]
+    },
+    {
+      "name": "Design coherence",
+      "score": 62.0,
+      "strict": 62.0,
+      "checks": 10,
+      "failing": 3,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "design_coherence"
+      ]
+    },
+    {
+      "name": "Elegance",
+      "score": 66.7,
+      "strict": 66.7,
+      "checks": 30,
+      "failing": 4,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "high_level_elegance",
+        "low_level_elegance",
+        "mid_level_elegance"
+      ]
+    },
+    {
+      "name": "Error consistency",
+      "score": 62.0,
+      "strict": 62.0,
+      "checks": 10,
+      "failing": 4,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "error_consistency"
+      ]
+    },
+    {
+      "name": "Init coupling",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "initialization_coupling"
+      ]
+    },
+    {
+      "name": "Naming quality",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "naming_quality"
+      ]
+    },
+    {
+      "name": "Stale migration",
+      "score": 86.0,
+      "strict": 86.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "incomplete_migration"
+      ]
+    },
+    {
+      "name": "Structure nav",
+      "score": 55.0,
+      "strict": 55.0,
+      "checks": 10,
+      "failing": 5,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "package_organization"
+      ]
+    },
+    {
+      "name": "Test strategy",
+      "score": 72.0,
+      "strict": 72.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "subjective": true,
+      "placeholder": false,
+      "cli_keys": [
+        "test_strategy"
+      ]
+    }
+  ],
+  "config": {
+    "target_strict_score": 85,
+    "review_max_age_days": 30,
+    "review_batch_max_files": 80,
+    "holistic_max_age_days": 30,
+    "generate_scorecard": true,
+    "badge_path": "scorecard.png",
+    "exclude": [],
+    "ignore": [
+      "orphaned::lib/services/playback/music_player_automix.dart",
+      "orphaned::lib/services/playback/music_player_autoplay.dart",
+      "orphaned::lib/screens/library/queue_tab_filter_widgets.dart",
+      "orphaned::lib/screens/library/queue_tab_helpers.dart",
+      "orphaned::lib/screens/library/queue_tab_selection.dart",
+      "orphaned::lib/screens/library/queue_tab_navigation.dart",
+      "orphaned::lib/screens/library/queue_tab_collection_items.dart",
+      "orphaned::lib/screens/library/queue_tab_batch_actions.dart",
+      "orphaned::lib/screens/library/queue_tab_item_widgets.dart",
+      "orphaned::lib/screens/home/home_tab_feed.dart",
+      "orphaned::lib/screens/home/home_tab_widgets.dart",
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_models.dart",
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart",
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart"
+    ],
+    "ignore_metadata": {
+      "orphaned::lib/services/playback/music_player_automix.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:03+00:00",
+        "fingerprints": [
+          "36f85dce9587b450"
+        ]
+      },
+      "orphaned::lib/services/playback/music_player_autoplay.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:04+00:00",
+        "fingerprints": [
+          "3dc4908e6033b11d"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_filter_widgets.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:06+00:00",
+        "fingerprints": [
+          "f787a29d23edddce"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_helpers.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:07+00:00",
+        "fingerprints": [
+          "4667b4882886ae2b"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_selection.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:08+00:00",
+        "fingerprints": [
+          "bf61e89038f73cc2"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_navigation.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:09+00:00",
+        "fingerprints": [
+          "331e94c6fb12b87f"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_collection_items.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:09+00:00",
+        "fingerprints": [
+          "63cd9d8ba567cd87"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_batch_actions.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:10+00:00",
+        "fingerprints": [
+          "e23e9786c33a1290"
+        ]
+      },
+      "orphaned::lib/screens/library/queue_tab_item_widgets.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:11+00:00",
+        "fingerprints": [
+          "3c8677fec4894ea7"
+        ]
+      },
+      "orphaned::lib/screens/home/home_tab_feed.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:12+00:00",
+        "fingerprints": [
+          "c354a7807f928856"
+        ]
+      },
+      "orphaned::lib/screens/home/home_tab_widgets.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:13+00:00",
+        "fingerprints": [
+          "f1d3f813bc112f84"
+        ]
+      },
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_models.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:14+00:00",
+        "fingerprints": [
+          "3c08fb50b91d2adb"
+        ]
+      },
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:15+00:00",
+        "fingerprints": [
+          "d66a68d3f765da61"
+        ]
+      },
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T06:09:16+00:00",
+        "fingerprints": [
+          "5b9e92e1ba7170a8"
+        ]
+      }
+    },
+    "zone_overrides": {
+      "lib/l10n/app_localizations.dart": "generated",
+      "lib/l10n/app_localizations_ar.dart": "generated",
+      "lib/l10n/app_localizations_de.dart": "generated",
+      "lib/l10n/app_localizations_en.dart": "generated",
+      "lib/l10n/app_localizations_es.dart": "generated",
+      "lib/l10n/app_localizations_fr.dart": "generated",
+      "lib/l10n/app_localizations_hi.dart": "generated",
+      "lib/l10n/app_localizations_id.dart": "generated",
+      "lib/l10n/app_localizations_it.dart": "generated",
+      "lib/l10n/app_localizations_ja.dart": "generated",
+      "lib/l10n/app_localizations_ko.dart": "generated",
+      "lib/l10n/app_localizations_nl.dart": "generated",
+      "lib/l10n/app_localizations_pt.dart": "generated",
+      "lib/l10n/app_localizations_ru.dart": "generated",
+      "lib/l10n/app_localizations_tr.dart": "generated",
+      "lib/l10n/app_localizations_uk.dart": "generated",
+      "lib/l10n/app_localizations_zh.dart": "generated"
+    },
+    "review_dimensions": [],
+    "large_files_threshold": 0,
+    "props_threshold": 0,
+    "issue_noise_budget": 10,
+    "issue_noise_global_budget": 0,
+    "execution_log_max_entries": 10000,
+    "needs_rescan": false,
+    "languages": {},
+    "commit_tracking_enabled": true,
+    "commit_pr": 0,
+    "commit_default_branch": "",
+    "commit_message_template": "desloppify: {status} {count} issue(s) \u2014 {summary}",
+    "trust_plugins": false,
+    "transition_messages": {},
+    "hermes_enabled": false,
+    "hermes_models": {
+      "execute": "openrouter:x-ai/grok-4.20-beta",
+      "review": "openrouter:google/gemini-3.1-pro-preview"
+    }
+  }
+}

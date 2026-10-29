@@ -1,0 +1,82 @@
+{
+  "batch": "initialization_coupling",
+  "batch_index": 16,
+  "assessments": {"initialization_coupling": 72.0},
+  "dimension_notes": {
+    "initialization_coupling": {
+      "evidence": [
+        "Top-level Dart variables and static fields are lazily initialised, so most module-level values in lib/ (for example _musicAudioContext in lib/services/playback/music_player_service.dart:88 and the static RegExps in lib/utils/logger.dart:14-34) are pure values with no I/O at import time.",
+        "Compile-time config is read only through String.fromEnvironment / bool.fromEnvironment (lib/constants/app_info.dart:7, lib/main.dart:35,183). These are const, not runtime environment reads, so they do not make tests fragile.",
+        "CoverPalette (lib/theme/cover_palette.dart:56-59) holds process-wide mutable static maps (_analyses, _schemes, _pending, _sourceKeys) and a public static seam `store` (line ~66) that defaults from Platform.isAndroid. Tests must swap and restore this global by hand (test/cover_colors_test.dart:199-215) and call debugClearMemory() to simulate a fresh session.",
+        "LibraryCoverAnalysisStore takes an optional injected LibraryDatabase and falls back to LibraryDatabase.instance (lib/services/cover_analysis_store.dart:20-21), a good constructor-injection seam that the static store slot does not use.",
+        "PlatformBridge keeps static mutable state at class level: a broadcast StreamController (lib/services/platform_bridge.dart:193-194), a _backendEventHandlerInstalled flag (line 196) and a static _nativeDataJobs map (line 129). The handler installation is guarded by a static flag rather than an explicit init/dispose lifecycle.",
+        "MusicPlaybackDeck keeps static channels plus a shared static stream and token counter (lib/services/playback/music_playback_deck.dart:108-111: _nativeEvents, _nextToken), so every deck instance shares the same native event plumbing and ordering state."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "Process-wide static caches and singleton seams in CoverPalette and PlatformBridge rely on manual save/restore and flag guards, and the tests depend on that discipline.",
+      "sub_axes": {"abstraction_leverage": 70.0, "indirection_cost": 65.0, "interface_honesty": 72.0, "delegation_density": 70.0, "definition_directness": 75.0, "type_discipline": 78.0}
+    }
+  },
+  "dimension_judgment": {
+    "initialization_coupling": {
+      "dimension_character": "Module-level initialisation is mostly benign: Dart's lazy top-level and static initialisation avoids boot-order traps, and the environment reads are compile-time constants. The main coupling sits in process-wide mutable statics (CoverPalette caches and its swappable store seam, PlatformBridge event state, MusicPlaybackDeck native channels and counters) that are shared across callers and reset or swapped by hand.",
+      "score_rationale": "Boot order is safe and most constants are pure, which keeps the score above the midpoint. The static mutable singletons, and tests that must swap and restore them manually, keep it below a clean-registry design."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "cover_palette_global_store_seam",
+      "summary": "CoverPalette exposes a mutable static store and static caches that tests must swap and clear by hand",
+      "related_files": ["lib/theme/cover_palette.dart", "lib/services/cover_analysis_store.dart", "test/cover_colors_test.dart"],
+      "evidence": [
+        "lib/theme/cover_palette.dart:56-59 declares static mutable maps _analyses, _schemes, _pending, _sourceKeys shared process-wide.",
+        "lib/theme/cover_palette.dart static `store` defaults to LibraryCoverAnalysisStore() when Platform.isAndroid, bypassing the constructor-injected database seam in cover_analysis_store.dart:20-21.",
+        "test/cover_colors_test.dart:199-215 saves CoverPalette.store, assigns a fake, and restores it in finally; debugClearMemory() is needed to simulate a new session."
+      ],
+      "suggestion": "Pass a CoverPalette instance (or a registry/context object) that owns the caches and store, and inject it through a provider override. Tests would then construct their own instance without mutating a global.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "global_mutable_singletons"
+    },
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "platform_bridge_static_event_state",
+      "summary": "PlatformBridge keeps class-level event stream, handler-installed flag and job map with no explicit lifecycle",
+      "related_files": ["lib/services/platform_bridge.dart"],
+      "evidence": [
+        "lib/services/platform_bridge.dart:193-194 static final StreamController<void> _libraryStorageEvents = StreamController<void>.broadcast().",
+        "lib/services/platform_bridge.dart:196 static bool _backendEventHandlerInstalled guards handler installation, and line 129 keeps a static _nativeDataJobs map.",
+        "No install/dispose pair is visible, so the stream and handler state persist for the whole process."
+      ],
+      "suggestion": "Move the controller, flag and job map behind an instance owned by a provider, with an explicit init and dispose called from app startup. Keep the static API as a thin facade only if call sites need it.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "global_mutable_singletons"
+    },
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "music_playback_deck_shared_native_channel_state",
+      "summary": "MusicPlaybackDeck shares static native event stream and token counter across all deck instances",
+      "related_files": ["lib/services/playback/music_playback_deck.dart"],
+      "evidence": [
+        "lib/services/playback/music_playback_deck.dart:108-111 declares static const MethodChannel/EventChannel plus static Stream<dynamic>? _nativeEvents and static int _nextToken.",
+        "Multiple deck instances (primary and automix effect decks, per music_player_automix.dart) therefore share event subscription and token state through class-level variables."
+      ],
+      "suggestion": "Hold the shared native event stream and token sequence in one injected native-bridge object that the decks receive in their constructor, so each deck's ordering and lifetime are explicit.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "global_mutable_singletons"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Several subsystems use class-level mutable statics as their service locator instead of constructor injection or a provider-scoped registry."],
+    "likely_symptoms": ["debugClearMemory and manual store save/restore in tests"],
+    "possible_false_positives": []
+  }
+}
