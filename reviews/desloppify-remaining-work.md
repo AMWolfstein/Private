@@ -419,3 +419,26 @@ The four items still open after the code-health pass:
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (1889 tests, exit 0).
+
+## supportsCoreBackend removal (commit 3955d5e)
+
+- incomplete_migration::supports_core_backend_dart_fallbacks: resolved. The
+  `PlatformBridge.supportsCoreBackend` getter and every gate on it are gone. Android always runs
+  the native backend, so the Dart branches were reachable only on the host. Removed with them:
+  Dart ZIP archive reading and writing, Dart scan ingestion and mod-time snapshots, the desktop
+  cover-prune worker, the Dart collection restore, the incremental scan wrappers, and the
+  `prepareCollectionRestoreCommands` builder.
+- Host tests keep the Dart collection reader below the native row threshold. Archive round
+  trips (direct JSON, large collections, and the rejection cases) moved to
+  `integration_test/native_backup_archive_test.dart`. The stale host tests for the removed Dart
+  paths were deleted: `backup_service_v2_test.dart`, `library_scan_snapshot_test.dart`, and three
+  cover-prune cases in `library_cleanup_test.dart`. Native coverage for those lives in
+  `integration_test/native_cache_maintenance_test.dart` and `native_library_staging_test.dart`.
+- The incremental-scan channel handlers in `MainActivity.kt` are removed. The core-backend scan
+  stays for the native `library_scan_incremental` job and the instrumentation stress test.
+- `archive` moved from runtime to dev dependencies; only test fixtures use it.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0). `scripts/check_android.sh` could not run in this environment (no Gradle wrapper
+or Android SDK), so the Kotlin change is verified by reading only. The Android unit checks and
+the device integration suite still need a run on a machine with the SDK.
