@@ -140,29 +140,41 @@ final listeningFlushProvider = Provider<Future<void> Function()>(
 
 final localArtistPopularRandomProvider = Provider<Random>((ref) => Random());
 
+/// Random tie-break draws for one artist page, keyed by track ID.
+class _ArtistPopularTieBreaks {
+  _ArtistPopularTieBreaks(this._random);
+
+  final Random _random;
+  final _draws = <String, double>{};
+
+  /// The draw for [id], made once and then reused for the page's lifetime.
+  double drawFor(String id) => _draws.putIfAbsent(id, _random.nextDouble);
+}
+
 // Keep independent random draws by ID across index refreshes, releasing them
 // when the artist page's last listener leaves.
-final _localArtistPopularPrioritiesProvider = Provider.autoDispose
-    .family<Map<String, double>, String>((ref, artist) => {});
+final _localArtistPopularTieBreaksProvider = Provider.autoDispose
+    .family<_ArtistPopularTieBreaks, String>(
+      (ref, artist) => _ArtistPopularTieBreaks(
+        ref.watch(localArtistPopularRandomProvider),
+      ),
+    );
 
-/// Select at most 20 from the entire artist, rather than only the first page.
-/// Random priorities give an unbiased, stable selection while this page is open
-/// when there is no history; played tracks always outrank unplayed tracks.
 /// Recorded plays for a track. Play counts are stored under the file path and,
 /// for tracks saved under a library id, under that id too; both are summed.
 int _playsFor(Map<String, int> plays, LocalLibraryItem item) =>
     (plays[item.filePath] ?? 0) +
     (item.id == item.filePath ? 0 : plays[item.id] ?? 0);
 
+/// Select at most 20 from the entire artist, rather than only the first page.
+/// Random priorities give an unbiased, stable selection while this page is open
+/// when there is no history; played tracks always outrank unplayed tracks.
 final localArtistPopularProvider = FutureProvider.autoDispose
     .family<LocalArtistTracks, String>((ref, artist) async {
-      final priorities = ref.watch(
-        _localArtistPopularPrioritiesProvider(artist),
-      );
+      final tieBreaks = ref.watch(_localArtistPopularTieBreaksProvider(artist));
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
       final load = ref.watch(localArtistTrackLoaderProvider);
       final counts = ref.watch(localArtistPlayCountsLoaderProvider);
-      final random = ref.watch(localArtistPopularRandomProvider);
       // Persisted plays must be visible to every page, not only the first;
       // flushing once before the loop is free when nothing is buffered.
       await ref.watch(listeningFlushProvider)();
@@ -192,7 +204,7 @@ final localArtistPopularProvider = FutureProvider.autoDispose
             (item) => (
               item: item,
               plays: _playsFor(plays, item),
-              tie: priorities.putIfAbsent(item.id, random.nextDouble),
+              tie: tieBreaks.drawFor(item.id),
             ),
           ),
         );
