@@ -67,34 +67,6 @@ class LibraryScanBridge {
     );
   }
 
-  static Future<Map<String, dynamic>> scanLibraryFolderIncremental(
-    String folderPath,
-    Map<String, int> existingFiles,
-  ) async {
-    final result = await nativeBackendChannel.invokeMethod(
-      'scanLibraryFolderIncremental',
-      {'folder_path': folderPath, 'existing_files': jsonEncode(existingFiles)},
-    );
-    return nativeDecodeRequiredMapResultAsync(
-      result,
-      'scanLibraryFolderIncremental',
-    );
-  }
-
-  static Future<Map<String, dynamic>> scanLibraryFolderIncrementalFromSnapshot(
-    String folderPath,
-    String snapshotPath,
-  ) async {
-    final result = await nativeBackendChannel.invokeMethod(
-      'scanLibraryFolderIncrementalFromSnapshot',
-      {'folder_path': folderPath, 'snapshot_path': snapshotPath},
-    );
-    return nativeDecodeRequiredMapResultAsync(
-      result,
-      'scanLibraryFolderIncrementalFromSnapshot',
-    );
-  }
-
   static Future<LibraryScanNDJSONFile> scanSafTreeToNDJSONFile(
     String treeUri, {
     bool forceFullScan = false,
@@ -199,33 +171,6 @@ class LibraryScanBridge {
       // Keep partial output; native SAF scan resumes from its sidecar.
       rethrow;
     }
-  }
-
-  static Future<Map<String, dynamic>> scanSafTreeIncremental(
-    String treeUri,
-    Map<String, int> existingFiles,
-  ) async {
-    NativeBackendEvents.ensureInstalled();
-    final result = await nativeBackendChannel.invokeMethod(
-      'scanSafTreeIncremental',
-      {'tree_uri': treeUri, 'existing_files': jsonEncode(existingFiles)},
-    );
-    return nativeDecodeRequiredMapResultAsync(result, 'scanSafTreeIncremental');
-  }
-
-  static Future<Map<String, dynamic>> scanSafTreeIncrementalFromSnapshot(
-    String treeUri,
-    String snapshotPath,
-  ) async {
-    NativeBackendEvents.ensureInstalled();
-    final result = await nativeBackendChannel.invokeMethod(
-      'scanSafTreeIncrementalFromSnapshot',
-      {'tree_uri': treeUri, 'snapshot_path': snapshotPath},
-    );
-    return nativeDecodeRequiredMapResultAsync(
-      result,
-      'scanSafTreeIncrementalFromSnapshot',
-    );
   }
 
   static Future<Map<String, dynamic>> getLibraryScanProgress() async {

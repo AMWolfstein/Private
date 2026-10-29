@@ -73,13 +73,6 @@ Iterable<Map<String, dynamic>> collectionRestoreCommands(
   }
 }
 
-Future<List<Map<String, dynamic>>> prepareCollectionRestoreCommands(
-  Map<String, dynamic> collections,
-  String nowIso,
-) => Isolate.run(
-  () => collectionRestoreCommands(collections, nowIso).toList(growable: false),
-);
-
 Future<int> writeCollectionRestoreCommands(
   String path,
   Map<String, dynamic> collections,

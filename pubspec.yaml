@@ -35,8 +35,6 @@ dependencies:
   url_launcher: ^6.3.3
   open_filex: ^4.7.0
 
-  # Streaming backup archives
-  archive: ^4.5.0
 
   # UI Components
   liquid_glass_easy: 5.0.0
@@ -84,6 +82,8 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  # Integration fixtures build raw ZIPs to exercise the native backup parser.
+  archive: ^4.5.0
   analyzer: ^14.5.0
   flutter_lints: ^6.0.0
   build_runner: ^2.16.2

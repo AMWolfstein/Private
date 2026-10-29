@@ -9,6 +9,8 @@ import 'package:sistrum/services/library/embedded_cover_resolver.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const backendChannel = MethodChannel('com.amwolfstein.sistrum/backend');
+  // Media-directory scopes wrap every file call; these tests assert cover work.
+  const mediaScopeMethods = {'acquireMediaDirectory', 'releaseMediaDirectory'};
   final sourcePaths = <String>[];
   final tempDirectories = <Directory>[];
 
@@ -65,6 +67,7 @@ void main() {
         var extractions = 0;
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(backendChannel, (call) async {
+              if (mediaScopeMethods.contains(call.method)) return '';
               if (call.method == 'getSafFileModTimes') {
                 return jsonEncode({source: 1234});
               }
@@ -105,6 +108,7 @@ void main() {
       final changed = Completer<void>();
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(backendChannel, (call) async {
+            if (mediaScopeMethods.contains(call.method)) return '';
             expect(call.method, 'extractCoverToFile');
             extractionCalls++;
             final arguments = call.arguments as Map<Object?, Object?>;
@@ -136,6 +140,7 @@ void main() {
     var callbacks = 0;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(backendChannel, (call) async {
+          if (mediaScopeMethods.contains(call.method)) return '';
           expect(call.method, 'extractCoverToFile');
           extractionCalls++;
           final arguments = call.arguments as Map<Object?, Object?>;
@@ -188,6 +193,7 @@ void main() {
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(backendChannel, (call) async {
+            if (mediaScopeMethods.contains(call.method)) return '';
             expect(call.method, 'extractCoverToFile');
             calls++;
             active++;
@@ -244,6 +250,7 @@ void main() {
       var modTimeCalls = 0;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(backendChannel, (call) async {
+            if (mediaScopeMethods.contains(call.method)) return '';
             if (call.method == 'getSafFileModTimes') {
               modTimeCalls++;
               return jsonEncode({path: modTime});
@@ -294,6 +301,7 @@ void main() {
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(backendChannel, (call) async {
+          if (mediaScopeMethods.contains(call.method)) return '';
           expect(call.method, 'extractCoverToFile');
           final arguments = call.arguments as Map<Object?, Object?>;
           final audioPath = arguments['audio_path']! as String;
@@ -348,6 +356,7 @@ void main() {
       var extractionCalls = 0;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(backendChannel, (call) async {
+            if (mediaScopeMethods.contains(call.method)) return '';
             expect(call.method, 'extractCoverToFile');
             extractionCalls++;
             final arguments = call.arguments as Map<Object?, Object?>;
@@ -388,6 +397,7 @@ void main() {
     var extractions = 0;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(backendChannel, (call) async {
+          if (mediaScopeMethods.contains(call.method)) return '';
           expect(call.method, 'extractCoverToFile');
           extractions++;
           await File(
@@ -411,6 +421,7 @@ void main() {
       var extractions = 0;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(backendChannel, (call) async {
+            if (mediaScopeMethods.contains(call.method)) return '';
             if (call.method == 'getSafFileModTimes') {
               return jsonEncode({source: 1234});
             }
@@ -445,6 +456,7 @@ void main() {
     ]);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(backendChannel, (call) async {
+          if (mediaScopeMethods.contains(call.method)) return '';
           final arguments = call.arguments as Map<Object?, Object?>;
           await File(
             arguments['output_path']! as String,
@@ -492,6 +504,7 @@ void main() {
       });
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(backendChannel, (call) async {
+            if (mediaScopeMethods.contains(call.method)) return '';
             if (!started.isCompleted) started.complete();
             await release.future;
             final arguments = call.arguments as Map<Object?, Object?>;

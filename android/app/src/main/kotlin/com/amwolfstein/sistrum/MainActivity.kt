@@ -74,11 +74,7 @@ class MainActivity: FlutterFragmentActivity() {
 
         "setLibraryCoverCacheDir",
         "scanLibraryFolderToNDJSONFile",
-        "scanLibraryFolderIncremental",
-        "scanLibraryFolderIncrementalFromSnapshot",
         "scanSafTreeToNDJSONFile",
-        "scanSafTreeIncremental",
-        "scanSafTreeIncrementalFromSnapshot",
         "getLibraryScanProgress",
         "getLibraryScanExitInfo",
         "cancelLibraryScan",
@@ -1061,55 +1057,12 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
-                        "scanLibraryFolderIncremental" -> {
-                            val folderPath = call.argument<String>("folder_path") ?: ""
-                            val existingFiles = call.argument<String>("existing_files") ?: "{}"
-                            val response = withContext(Dispatchers.IO) {
-                                safScanActive = false
-                                bridgeJsonResult(
-                                    coreBackend.scanLibraryFolderIncremental(folderPath, existingFiles)
-                                )
-                            }
-                            result.success(response)
-                        }
-                        "scanLibraryFolderIncrementalFromSnapshot" -> {
-                            val folderPath = call.argument<String>("folder_path") ?: ""
-                            val snapshotPath = call.argument<String>("snapshot_path") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                safScanActive = false
-                                bridgeJsonResult(
-                                    coreBackend.scanLibraryFolderIncrementalFromSnapshot(
-                                        folderPath,
-                                        snapshotPath,
-                                    )
-                                )
-                            }
-                            result.success(response)
-                        }
                         "scanSafTreeToNDJSONFile" -> {
                             val treeUri = call.argument<String>("tree_uri") ?: ""
                             val outputPath = call.argument<String>("output_path") ?: ""
                             val sourceHasRows = call.argument<Boolean>("has_indexed_rows") ?: false
                             val response = withContext(Dispatchers.IO) {
                                 scanSafTree(treeUri, outputPath, sourceHasRows)
-                            }
-                            result.success(response)
-                        }
-                        "scanSafTreeIncremental" -> {
-                            val treeUri = call.argument<String>("tree_uri") ?: ""
-                            val existingFiles = call.argument<String>("existing_files") ?: "{}"
-                            val response = withContext(Dispatchers.IO) {
-                                scanSafTreeIncremental(treeUri, existingFiles)
-                            }
-                            result.success(response)
-                        }
-                        "scanSafTreeIncrementalFromSnapshot" -> {
-                            val treeUri = call.argument<String>("tree_uri") ?: ""
-                            val snapshotPath = call.argument<String>("snapshot_path") ?: ""
-                            val response = withContext(Dispatchers.IO) {
-                                val existingFiles =
-                                    loadExistingFilesFromSnapshot(snapshotPath)
-                                scanSafTreeIncremental(treeUri, existingFiles)
                             }
                             result.success(response)
                         }

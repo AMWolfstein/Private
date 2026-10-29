@@ -6,9 +6,8 @@ typedef NativeCacheJobRunner =
       String? requestId,
     });
 
-/// Returns null on the desktop adapter. Mobile filesystem work uses the
-/// existing cancellable native worker without changing the public FFI API.
-Future<Map<String, dynamic>?> runNativeCacheMaintenance(
+/// Filesystem cache work runs in the native backend's cancellable worker.
+Future<Map<String, dynamic>> runNativeCacheMaintenance(
   Map<String, dynamic> request, {
   String? requestId,
   NativeCacheJobRunner? nativeJobRunner,
@@ -16,7 +15,6 @@ Future<Map<String, dynamic>?> runNativeCacheMaintenance(
   if (nativeJobRunner != null) {
     return nativeJobRunner(request, requestId: requestId);
   }
-  if (!PlatformBridge.supportsCoreBackend) return null;
   return PlatformBridge.runNativeDataJob(request, requestId: requestId);
 }
 

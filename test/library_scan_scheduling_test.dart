@@ -12,9 +12,20 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/utils/local_library_scan_prefs.dart';
+
+/// Scan jobs reach the backend as `runNativeDataJob` requests; these tests
+/// hold them open through their own channel handler.
+bool _isScanJob(MethodCall call) =>
+    call.method == 'runNativeDataJob' &&
+    _jobRequest(call)['operation'] == 'library_scan_incremental';
+
+Map<String, dynamic> _jobRequest(MethodCall call) =>
+    jsonDecode((call.arguments as Map)['request_json'] as String)
+        as Map<String, dynamic>;
 
 class _Settings extends SettingsNotifier {
   @override
@@ -65,12 +76,28 @@ class _Database implements LibraryDatabase {
   }) => fullReplacement!();
 
   @override
-  Future<int> getSourceCount(String sourceId) async => 1;
+  Future<String> exportNativeFileModTimesSnapshot(
+    String sourceId, {
+    required String requestId,
+    required bool Function() isCancelled,
+  }) async => 'library-scan-snapshot.tsv';
 
   @override
-  Future<Map<String, int>> getFileModTimes({String? sourceId}) async => {
-    '/music/song.flac': 1,
-  };
+  Future<Map<String, dynamic>> scanIncrementalNative(
+    String sourceId,
+    String folderPath,
+    String snapshotPath, {
+    required bool isSaf,
+    required String requestId,
+    required bool Function() isCancelled,
+  }) => PlatformBridge.runNativeDataJob({
+    'operation': 'library_scan_incremental',
+    'folder_path': folderPath,
+    'snapshot_path': snapshotPath,
+  }, requestId: requestId);
+
+  @override
+  Future<int> getSourceCount(String sourceId) async => 1;
 
   @override
   Future<void> removeSource(String sourceId) async {
@@ -165,9 +192,9 @@ void main() {
     });
     messenger.setMockMethodCallHandler(backend, (call) async {
       calls.add(call.method);
-      if (call.method == 'scanLibraryFolderIncremental') {
+      if (_isScanJob(call)) {
         final result = Completer<String>();
-        scans.add(((call.arguments as Map)['folder_path'] as String, result));
+        scans.add((_jobRequest(call)['folder_path'] as String, result));
         return result.future;
       }
       if (call.method == 'cancelLibraryScan' && completeOnCancel) {
@@ -368,10 +395,10 @@ void main() {
         return call.method == 'initialize' ? true : null;
       });
       messenger.setMockMethodCallHandler(backend, (call) async {
-        if (call.method == 'scanLibraryFolderIncremental') {
+        if (_isScanJob(call)) {
           final response = Completer<String>();
           scans.add((
-            (call.arguments as Map)['folder_path'] as String,
+            _jobRequest(call)['folder_path'] as String,
             response,
           ));
           return response.future;
@@ -506,8 +533,8 @@ void main() {
       ],
     };
     messenger.setMockMethodCallHandler(backend, (call) async {
-      if (call.method == 'scanLibraryFolderIncremental') {
-        return '{"files":[],"totalFiles":4,"skippedCount":1}';
+      if (_isScanJob(call)) {
+        return '{"committed":true,"scanned_count":0,"deleted_count":0,"totalFiles":4,"skippedCount":1}';
       }
       if (call.method == 'getLibraryScanProgress') return progress;
       return null;
@@ -606,7 +633,7 @@ void main() {
       await library.startSourceScan('reconnect');
       expect(scans, hasLength(1));
       database.countOverride = 7;
-      scans.single.$2.complete(jsonEncode({'committed': true}));
+      scans.single.$2.complete(jsonEncode({'committed': true, 'scanned_count': 0, 'deleted_count': 0}));
       await active;
       await clearing;
       await Future<void>.delayed(Duration.zero);
@@ -684,7 +711,7 @@ void main() {
       await _waitFor(() => scans.length == 1);
       await library.cancelScan();
       database.countOverride = 7;
-      scans.single.$2.complete(jsonEncode({'committed': true}));
+      scans.single.$2.complete(jsonEncode({'committed': true, 'scanned_count': 0, 'deleted_count': 0}));
       await active;
       final state = container.read(localLibraryProvider);
       expect(state.totalCount, 7);

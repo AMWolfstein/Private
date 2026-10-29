@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:archive/archive_io.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -264,21 +263,17 @@ class BackupService {
           store: true,
         ));
       }
-      if (PlatformBridge.supportsCoreBackend) {
-        final result = await PlatformBridge.runNativeDataJob({
-          'operation': 'backup_archive_write',
-          'output_path': partFile.path,
-          'files': [
-            for (final file in archiveFiles)
-              {'path': file.path, 'name': file.name, 'store': file.store},
-          ],
-        });
-        if (result['published'] != true ||
-            result['count'] != archiveFiles.length) {
-          throw const FormatException('Incomplete native backup archive');
-        }
-      } else {
-        await _encodeArchiveInBackground(partFile.path, archiveFiles);
+      final result = await PlatformBridge.runNativeDataJob({
+        'operation': 'backup_archive_write',
+        'output_path': partFile.path,
+        'files': [
+          for (final file in archiveFiles)
+            {'path': file.path, 'name': file.name, 'store': file.store},
+        ],
+      });
+      if (result['published'] != true ||
+          result['count'] != archiveFiles.length) {
+        throw const FormatException('Incomplete native backup archive');
       }
       if (await output.exists()) await output.delete();
       await partFile.rename(output.path);
@@ -289,26 +284,6 @@ class BackupService {
       await deleteBestEffort(partFile);
     }
   }
-
-  // archive's file-backed encoder still performs compression and writes
-  // synchronously. Pass only paths to the worker.
-  static Future<void> _encodeArchiveInBackground(
-    String outputPath,
-    List<({String path, String name, bool store})> files,
-  ) => Isolate.run(() async {
-    final encoder = ZipFileEncoder()..create(outputPath);
-    try {
-      for (final file in files) {
-        await encoder.addFile(
-          File(file.path),
-          file.name,
-          file.store ? ZipFileEncoder.store : null,
-        );
-      }
-    } finally {
-      await encoder.close();
-    }
-  });
 
   static Future<File> _newBackupFile([Directory? outputDirectory]) async {
     final dir = outputDirectory ?? await getApplicationDocumentsDirectory();
@@ -340,10 +315,7 @@ class BackupService {
     if (!isZip) {
       throw const BackupParseException(BackupParseFailure.notBackupArchive);
     }
-    if (PlatformBridge.supportsCoreBackend) {
-      return _parseArchiveNative(path, tempRoot);
-    }
-    return _parseFileInBackground(path, tempRoot.path);
+    return _parseArchiveNative(path, tempRoot);
   }
 
   static Future<bool> _hasZipHeader(File file) async {
@@ -409,146 +381,6 @@ class BackupService {
             : BackupParseFailure.unreadable,
         error,
       );
-    }
-  }
-
-  static Future<BackupBundle> _parseFileInBackground(
-    String path,
-    String temporaryPath,
-  ) => Isolate.run(() => _parseFile(path, temporaryPath));
-
-  static Future<BackupBundle> _parseFile(String path, String temporaryPath) =>
-      _parseArchive(File(path), temporaryDirectory: Directory(temporaryPath));
-
-  static Future<BackupBundle> _parseArchive(
-    File file, {
-    required Directory temporaryDirectory,
-  }) async {
-    InputFileStream? input;
-    Archive? archive;
-    Directory? extractionDir;
-    try {
-      input = InputFileStream(file.path);
-      archive = ZipDecoder().decodeStream(input);
-      final metadataEntry = archive.find('metadata.json');
-      if (metadataEntry == null || metadataEntry.size > _maxMetadataBytes) {
-        throw const BackupParseException(BackupParseFailure.corruptArchive);
-      }
-      final rootRaw = jsonDecode(utf8.decode(metadataEntry.content));
-      if (rootRaw is! Map) {
-        throw const BackupParseException(BackupParseFailure.corruptArchive);
-      }
-      final root = Map<String, dynamic>.from(rootRaw);
-      final version = root['format_version'];
-      if (root['magic'] != magic) {
-        throw const BackupParseException(BackupParseFailure.notBackupArchive);
-      }
-      if (version != formatVersion) {
-        throw const BackupParseException(BackupParseFailure.unsupportedVersion);
-      }
-      final dataRaw = root['data'];
-      if (dataRaw is! Map) {
-        throw const BackupParseException(BackupParseFailure.corruptArchive);
-      }
-      final data = Map<String, dynamic>.from(dataRaw);
-
-      extractionDir = await Directory(
-        p.join(
-          temporaryDirectory.path,
-          'sistrum_restore_${DateTime.now().microsecondsSinceEpoch}',
-        ),
-      ).create(recursive: true);
-      final restoredCovers = <String, dynamic>{};
-      final coverManifest = data['playlist_covers'];
-      if (coverManifest is Map) {
-        var index = 0;
-        var extractedCoverBytes = 0;
-        for (final manifestEntry in coverManifest.entries) {
-          if (manifestEntry.value is! Map) continue;
-          final cover = Map<String, dynamic>.from(manifestEntry.value as Map);
-          final archiveName = cover['file']?.toString() ?? '';
-          if (!archiveName.startsWith('covers/') ||
-              archiveName.contains('..')) {
-            continue;
-          }
-          final archiveEntry = archive.find(archiveName);
-          if (archiveEntry == null || archiveEntry.size > _maxCoverBytes) {
-            continue;
-          }
-          if (extractedCoverBytes + archiveEntry.size > _maxAllCoversBytes) {
-            break;
-          }
-          var ext = cover['ext']?.toString() ?? '.jpg';
-          if (!RegExp(r'^\.[a-z0-9]{1,8}$').hasMatch(ext)) ext = '.jpg';
-          final coverPath = p.join(extractionDir.path, 'cover_${index++}$ext');
-          writeArchiveEntry(archiveEntry, OutputFileStream(coverPath));
-          extractedCoverBytes += archiveEntry.size;
-          restoredCovers[manifestEntry.key.toString()] = {
-            'ext': ext,
-            'path': coverPath,
-          };
-        }
-      }
-
-      UserProfile? profile;
-      if (data.containsKey('profile')) {
-        final rawProfile = data['profile'];
-        if (rawProfile is! Map || rawProfile['name'] is! String) {
-          throw const FormatException('Invalid profile');
-        }
-        String? photoPath;
-        if (rawProfile['photo'] != null) {
-          if (rawProfile['photo'] != _profilePhotoEntry) {
-            throw const FormatException('Invalid profile photo entry');
-          }
-          final photoEntry = archive.find(_profilePhotoEntry);
-          if (photoEntry == null ||
-              !photoEntry.isFile ||
-              photoEntry.size > _maxProfilePhotoBytes) {
-            throw const FormatException('Missing or oversized profile photo');
-          }
-          photoPath = p.join(extractionDir.path, 'profile.png');
-          writeArchiveEntry(photoEntry, OutputFileStream(photoPath));
-        }
-        profile = UserProfile(
-          name: rawProfile['name'] as String,
-          photoPath: photoPath,
-        );
-      }
-
-      return BackupBundle(
-        formatVersion: version as int,
-        createdAt: DateTime.tryParse(root['created_at'] as String? ?? ''),
-        settings: _mapOrNull(data['settings']),
-        profile: profile,
-        collections: _mapOrEmpty(data['collections']),
-        playlistCovers: restoredCovers,
-        temporaryDirectoryPath: extractionDir.path,
-      );
-    } catch (e) {
-      _log.w('Backup archive parse failed: $e');
-      if (extractionDir != null) {
-        await deleteBestEffort(extractionDir, recursive: true);
-      }
-      if (e is BackupParseException) rethrow;
-      throw BackupParseException(
-        e is FormatException
-            ? BackupParseFailure.corruptArchive
-            : BackupParseFailure.unreadable,
-        e,
-      );
-    } finally {
-      if (input != null) await input.close();
-    }
-  }
-
-  /// Consumes and closes the output even when an archive payload cannot be read.
-  @visibleForTesting
-  static void writeArchiveEntry(ArchiveFile entry, OutputFileStream output) {
-    try {
-      entry.writeContent(output);
-    } finally {
-      output.closeSync();
     }
   }
 

@@ -34,6 +34,9 @@ void main() {
     applyEdits = true;
     saveSaf = true;
     messenger.setMockMethodCallHandler(channel, (call) async {
+      // Media-directory scopes are plumbing; these tests assert file work.
+      if (call.method == 'acquireMediaDirectory') return '';
+      if (call.method == 'releaseMediaDirectory') return null;
       calls.add(call.method);
       final args = Map<String, dynamic>.from(call.arguments as Map);
       switch (call.method) {

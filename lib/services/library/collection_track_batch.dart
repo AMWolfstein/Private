@@ -45,13 +45,11 @@ Future<PreparedCollectionTrackBatch> prepareCollectionTrackBatch({
   required Set<String> existingKeys,
   required DateTime addedAt,
   bool preserveOccurrences = false,
-  bool? useNative,
   Directory? temporaryDirectory,
 }) async {
   final snapshot = tracks.toList(growable: false);
   String? inputDirectory;
-  if (snapshot.length >= _nativeThreshold &&
-      (useNative ?? PlatformBridge.supportsCoreBackend)) {
+  if (snapshot.length >= _nativeThreshold) {
     inputDirectory =
         (await (temporaryDirectory ?? await getTemporaryDirectory()).createTemp(
           'playlist-input-',

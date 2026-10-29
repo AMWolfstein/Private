@@ -41,7 +41,6 @@ void main() {
           tracks: tracks,
           existingKeys: keys,
           addedAt: now,
-          useNative: true,
           temporaryDirectory: root,
         );
         try {
@@ -105,7 +104,6 @@ void main() {
       tracks: [for (var index = 0; index < 256; index++) ...fixture],
       existingKeys: const {},
       addedAt: now,
-      useNative: true,
       temporaryDirectory: root,
     );
     expect(prepared.rowsPath, isNull);
@@ -122,7 +120,6 @@ void main() {
         tracks: [...fixture, _InvalidTrack()],
         existingKeys: const {},
         addedAt: now,
-        useNative: true,
         temporaryDirectory: root,
       ),
       throwsA(anything),

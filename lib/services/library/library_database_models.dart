@@ -4,15 +4,6 @@
 const libraryAudioMetadataScanVersion = 4;
 const libraryLyricsMetadataScanVersion = 3;
 
-int libraryIncrementalSnapshotModTime({
-  required int storedModTime,
-  required int storedScanVersion,
-}) {
-  return storedScanVersion >= libraryAudioMetadataScanVersion
-      ? storedModTime
-      : -1;
-}
-
 class LocalLibrarySource {
   final String id;
   final String path;

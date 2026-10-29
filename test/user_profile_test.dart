@@ -115,17 +115,22 @@ void main() {
         photo: withPhoto ? photo : null,
         removePhoto: !withPhoto,
       );
-      final file = await BackupService.writeBackupArchive(
+      // The native archive reader is covered on device; this test pins the
+      // profile restore for the bundle a parsed archive would produce.
+      final staging = await Directory(
+        p.join(directory.path, 'staging-$withPhoto'),
+      ).create();
+      final stagedPhoto = withPhoto
+          ? await File(p.join(staging.path, 'profile.png')).writeAsBytes(photo)
+          : null;
+      final bundle = BackupBundle(
+        formatVersion: BackupService.formatVersion,
+        createdAt: null,
         settings: {'theme': 'dark'},
-        profile: source,
+        profile: UserProfile(name: source.name, photoPath: stagedPhoto?.path),
         collections: {},
-        playlistCoverFiles: {},
-        outputDirectory: directory,
-        temporaryDirectory: directory,
-      );
-      final bundle = await BackupService.parseFile(
-        file.path,
-        temporaryDirectory: directory,
+        playlistCovers: {},
+        temporaryDirectoryPath: staging.path,
       );
       final restoredPhoto = bundle.profile!.photoPath;
       expect(restoredPhoto != null, withPhoto);

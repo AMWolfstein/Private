@@ -805,7 +805,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
       final result = await _db.replaceSourceScanFile(
         sourceId,
         scanFile,
-        requestId: _nativeLibraryRequestId ?? 'desktop-library-scan',
+        requestId: _nativeLibraryRequestId!,
         isCancelled: () => _scanCancelRequested || !ref.mounted,
       );
       _log.i(
@@ -840,9 +840,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
     if (sourceId != null) _pendingReconnectScans.remove(sourceId);
     _scanCancelRequested = false;
     _scanPauseRequested = false;
-    _nativeLibraryRequestId = PlatformBridge.supportsCoreBackend
-        ? 'library-scan-${DateTime.now().microsecondsSinceEpoch}'
-        : null;
+    _nativeLibraryRequestId =
+        'library-scan-${DateTime.now().microsecondsSinceEpoch}';
     try {
       await _runScan(
         folderPath,
@@ -1013,27 +1012,11 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
           errorCount: state.scanErrorCount,
         );
       } else {
-        final nativeIngestion = PlatformBridge.supportsCoreBackend;
-        final existingFiles = nativeIngestion
-            ? const <String, int>{}
-            : await _db.getFileModTimes(sourceId: activeSourceId);
-        if (!nativeIngestion) {
-          _log.i(
-            'Incremental scan: ${existingFiles.length} existing files in database',
-          );
-        }
-
-        final useSnapshotBridge =
-            Platform.isAndroid && existingFiles.isNotEmpty;
-        final snapshotPath = nativeIngestion
-            ? await _db.exportNativeFileModTimesSnapshot(
-                activeSourceId,
-                requestId: _nativeLibraryRequestId!,
-                isCancelled: () => _scanCancelRequested || !ref.mounted,
-              )
-            : useSnapshotBridge
-            ? await _db.writeFileModTimesTsv(existingFiles)
-            : null;
+        final snapshotPath = await _db.exportNativeFileModTimesSnapshot(
+          activeSourceId,
+          requestId: _nativeLibraryRequestId!,
+          isCancelled: () => _scanCancelRequested || !ref.mounted,
+        );
 
         Map<String, dynamic> result;
         try {
@@ -1042,40 +1025,16 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
               !ref.mounted) {
             return;
           }
-          if (nativeIngestion) {
-            result = await _db.scanIncrementalNative(
-              activeSourceId,
-              folderPath,
-              snapshotPath!,
-              isSaf: isSaf,
-              requestId: _nativeLibraryRequestId!,
-              isCancelled: () => _scanCancelRequested || !ref.mounted,
-            );
-          } else if (isSaf) {
-            result = useSnapshotBridge && snapshotPath != null
-                ? await LibraryScanBridge.scanSafTreeIncrementalFromSnapshot(
-                    folderPath,
-                    snapshotPath,
-                  )
-                : await LibraryScanBridge.scanSafTreeIncremental(
-                    folderPath,
-                    existingFiles,
-                  );
-          } else {
-            result = useSnapshotBridge && snapshotPath != null
-                ? await LibraryScanBridge.scanLibraryFolderIncrementalFromSnapshot(
-                    folderPath,
-                    snapshotPath,
-                  )
-                : await LibraryScanBridge.scanLibraryFolderIncremental(
-                    folderPath,
-                    existingFiles,
-                  );
-          }
+          result = await _db.scanIncrementalNative(
+            activeSourceId,
+            folderPath,
+            snapshotPath,
+            isSaf: isSaf,
+            requestId: _nativeLibraryRequestId!,
+            isCancelled: () => _scanCancelRequested || !ref.mounted,
+          );
         } finally {
-          if (snapshotPath != null) {
-            await deleteBestEffort(File(snapshotPath));
-          }
+          await deleteBestEffort(File(snapshotPath));
         }
 
         if (!ref.mounted) return;
@@ -1100,27 +1059,11 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
           scanCurrentFile: null,
         );
 
-        final scannedList =
-            (result['files'] as List<dynamic>?) ??
-            (result['scanned'] as List<dynamic>?) ??
-            [];
-        final deletedPaths =
-            (result['removedUris'] as List<dynamic>?)
-                ?.map((e) => e as String)
-                .toList() ??
-            (result['deletedPaths'] as List<dynamic>?)
-                ?.map((e) => e as String)
-                .toList() ??
-            [];
         final skippedCount = result['skippedCount'] as int? ?? 0;
+        final scannedCount = (result['scanned_count'] as num).toInt();
+        final deletedCount = (result['deleted_count'] as num).toInt();
         final totalFiles = result['totalFiles'] as int? ?? 0;
-        final scannedCount = nativeIngestion
-            ? (result['scanned_count'] as num).toInt()
-            : scannedList.length;
-        final deletedCount = nativeIngestion
-            ? (result['deleted_count'] as num).toInt()
-            : deletedPaths.length;
-        if (nativeIngestion && result['committed'] != true) {
+        if (result['committed'] != true) {
           throw StateError('Native Library scan did not commit its index');
         }
 
@@ -1128,27 +1071,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
           'Incremental result: $scannedCount scanned, '
           '$skippedCount skipped, $deletedCount deleted, $totalFiles total',
         );
-
-        final updatedItems = <LocalLibraryItem>[];
-        if (!nativeIngestion && scannedList.isNotEmpty) {
-          for (final json in scannedList) {
-            final map = json as Map<String, dynamic>;
-            final item = LocalLibraryItem.fromJson(map);
-            updatedItems.add(item);
-          }
-          if (updatedItems.isNotEmpty) {
-            await _db.upsertBatch(
-              updatedItems.map((e) => e.toJson()).toList(),
-              sourceId: activeSourceId,
-            );
-            _log.i('Upserted ${updatedItems.length} items');
-          }
-        }
-
-        if (!nativeIngestion && deletedPaths.isNotEmpty) {
-          final deleteCount = await _db.deleteByPaths(deletedPaths);
-          _log.i('Deleted $deleteCount items from database');
-        }
 
         if (!await _finishScanSuccess(activeSourceId)) return;
 

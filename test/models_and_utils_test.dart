@@ -86,23 +86,6 @@ void main() {
   });
 
   group('local library incremental scan', () {
-    test('rescans legacy metadata rows exactly once', () {
-      expect(
-        libraryIncrementalSnapshotModTime(
-          storedModTime: 1234,
-          storedScanVersion: 0,
-        ),
-        -1,
-      );
-      expect(
-        libraryIncrementalSnapshotModTime(
-          storedModTime: 1234,
-          storedScanVersion: LibraryDatabase.audioMetadataScanVersion,
-        ),
-        1234,
-      );
-    });
-
     test('recognizes a retained external source index', () {
       final offlineSource = LocalLibrarySource(
         id: 'external-ssd',

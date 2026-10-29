@@ -1,9 +1,6 @@
-import 'dart:io';
 
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/audio_format_utils.dart';
@@ -16,7 +13,6 @@ import 'package:sistrum/services/library/library_duplicates.dart';
 import 'package:sistrum/services/library/library_native_adapter.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 export 'library_database_models.dart';
@@ -34,8 +30,6 @@ class LibraryDatabase {
   static const String legacySourceId = LocalLibraryItem.legacySourceId;
   static const String visibleLibraryView = LibrarySchema.visibleView;
   static const String searchFtsTable = LibrarySchema.searchFtsTable;
-  static const String _scanStageTable = 'library_scan_stage';
-  static const String _scanStagePathKeysTable = 'library_scan_path_keys_stage';
   // v4 records ReplayGain availability; older rows rescan once.
   static const int audioMetadataScanVersion = libraryAudioMetadataScanVersion;
 
@@ -74,7 +68,7 @@ class LibraryDatabase {
   bool get searchFtsAvailable => _searchFtsAvailable ?? false;
 
   /// Keeps native scan output native through parsing, indexing and the atomic
-  /// source swap. The stream implementation remains the desktop/test adapter.
+  /// source swap.
   Future<({int inserted})> replaceSourceScanFile(
     String sourceId,
     LibraryScanNDJSONFile scan, {
@@ -82,39 +76,15 @@ class LibraryDatabase {
     required bool Function() isCancelled,
   }) async {
     if (isCancelled()) throw StateError('Library scan cancelled');
-    if (PlatformBridge.supportsCoreBackend) {
-      final db = await database;
+    final db = await database;
 
-      final result = await LibraryNativeAdapter(db).importScanFile(
-        sourceId,
-        scan,
-        requestId: requestId,
-        isCancelled: isCancelled,
-      );
-      return (inserted: (result['inserted'] as num).toInt());
-    }
-    Stream<Map<String, dynamic>> validatedRows() async* {
-      var count = 0;
-      await for (final row in scan.rows()) {
-        if (isCancelled()) {
-          throw StateError('Library scan cancelled during ingestion');
-        }
-        count++;
-        yield row;
-      }
-      if (count != scan.expectedCount) {
-        throw FormatException(
-          'Library scan row count mismatch: decoded $count, '
-          'expected ${scan.expectedCount}',
-        );
-      }
-    }
-
-    return replaceSourceStream(
+    final result = await LibraryNativeAdapter(db).importScanFile(
       sourceId,
-      validatedRows(),
-      preserveMissing: scan.errorCount > 0,
+      scan,
+      requestId: requestId,
+      isCancelled: isCancelled,
     );
+    return (inserted: (result['inserted'] as num).toInt());
   }
 
   /// Exports timestamps directly from the DB on the worker. Android's adapter
@@ -252,134 +222,6 @@ class LibraryDatabase {
       await batch.commit(noResult: true);
     });
     _log.i('Replaced library with ${items.length} items');
-  }
-
-  /// Stages scan rows in bounded, independently committed batches, then swaps
-  /// only this source in one short transaction.
-  Future<({int inserted})> replaceSourceStream(
-    String sourceId,
-    Stream<Map<String, dynamic>> items, {
-    int batchSize = 300,
-    bool preserveMissing = false,
-  }) async {
-    if (batchSize <= 0) {
-      throw ArgumentError.value(batchSize, 'batchSize', 'Must be positive');
-    }
-    final db = await database;
-    await db.execute('DROP TABLE IF EXISTS $_scanStageTable');
-    await db.execute('DROP TABLE IF EXISTS $_scanStagePathKeysTable');
-    await db.execute(
-      'CREATE TEMP TABLE $_scanStageTable AS SELECT * FROM library WHERE 0',
-    );
-    await db.execute(
-      'CREATE UNIQUE INDEX idx_${_scanStageTable}_id '
-      'ON $_scanStageTable(id)',
-    );
-    await db.execute(
-      'CREATE UNIQUE INDEX idx_${_scanStageTable}_path '
-      'ON $_scanStageTable(file_path)',
-    );
-    await db.execute('''
-      CREATE TEMP TABLE $_scanStagePathKeysTable (
-        item_id TEXT NOT NULL,
-        path_key TEXT NOT NULL,
-        PRIMARY KEY (item_id, path_key)
-      )
-    ''');
-    await db.execute(
-      'CREATE INDEX idx_${_scanStagePathKeysTable}_key '
-      'ON $_scanStagePathKeysTable(path_key)',
-    );
-
-    var streamed = 0;
-    try {
-      var batch = db.batch();
-      var pending = 0;
-      Future<void> flush() async {
-        if (pending == 0) return;
-        await batch.commit(noResult: true);
-        batch = db.batch();
-        pending = 0;
-      }
-
-      final stagedIds = <String>{};
-      await for (final json in items) {
-        final id = json['id'] as String?;
-        if (id == null || id.trim().isEmpty) {
-          throw const FormatException('Library scan row has no valid id');
-        }
-        batch.insert(
-          _scanStageTable,
-          LibraryRowMapper.encode(json, sourceId: sourceId),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-        sqlite.putPathKeysInBatch(
-          batch,
-          _scanStagePathKeysTable,
-          id,
-          json['filePath'] as String?,
-          // The stage starts empty: only a repeated id has keys to replace.
-          replaceExisting: !stagedIds.add(id),
-        );
-        streamed++;
-        pending++;
-        if (pending >= batchSize) await flush();
-      }
-      await flush();
-
-      final stagedRows = await db.rawQuery(
-        'SELECT COUNT(*) AS count FROM $_scanStageTable',
-      );
-      final staged = Sqflite.firstIntValue(stagedRows) ?? 0;
-      final columns = (await db.rawQuery(
-        'PRAGMA table_info(library)',
-      )).map((row) => row['name'] as String).toList(growable: false);
-      final columnList = columns.join(', ');
-      final selectedColumns = columns.map((column) => 's.$column').join(', ');
-
-      await sqlite.transactionWithBusyRetry(db, (txn) async {
-        await sqlite.preserveLibraryScanIds(
-          txn,
-          sourceId: sourceId,
-          stageTable: _scanStageTable,
-          keysTable: _scanStagePathKeysTable,
-        );
-        await deleteReplacedLibraryScanRows(
-          txn,
-          sourceId,
-          stageTable: _scanStageTable,
-          preserveMissing: preserveMissing,
-        );
-        await txn.rawDelete('''
-          DELETE FROM library_path_keys
-          WHERE item_id IN (
-            SELECT s.id FROM $_scanStageTable s
-          )
-        ''');
-        await txn.rawInsert('''
-          INSERT OR REPLACE INTO library ($columnList)
-          SELECT $selectedColumns FROM $_scanStageTable s
-
-        ''');
-        await txn.rawInsert('''
-          INSERT OR IGNORE INTO library_path_keys(item_id, path_key)
-          SELECT sk.item_id, sk.path_key
-          FROM $_scanStagePathKeysTable sk
-          JOIN $_scanStageTable s ON s.id = sk.item_id
-
-        ''');
-      });
-      final inserted = staged;
-      _log.i(
-        'Streamed $streamed rows, staged $staged unique rows, and swapped '
-        '$inserted into Library source '
-        '$sourceId',
-      );
-      return (inserted: inserted);
-    } finally {
-      await db.execute('DROP TABLE IF EXISTS $_scanStagePathKeysTable');
-      await db.execute('DROP TABLE IF EXISTS $_scanStageTable');
-    }
   }
 
   Future<List<LocalLibrarySource>> getSources() async {
@@ -809,67 +651,6 @@ class LibraryDatabase {
     _database.reset();
     _fileSizes = null;
     _searchFtsAvailable = null;
-  }
-
-  Future<Map<String, int>> getFileModTimes({String? sourceId}) async {
-    final db = await database;
-    final rows = await db.rawQuery(
-      'SELECT file_path, COALESCE(file_mod_time, 0) AS file_mod_time, '
-      'audio_metadata_scan_version FROM library '
-      '${sourceId == null ? '' : 'WHERE source_id = ?'}',
-      sourceId == null ? const [] : [sourceId],
-    );
-    final result = <String, int>{};
-    for (final row in rows) {
-      final path = row['file_path'] as String;
-      final modTime = (row['file_mod_time'] as num?)?.toInt() ?? 0;
-      final scanVersion =
-          (row['audio_metadata_scan_version'] as num?)?.toInt() ?? 0;
-      // A sentinel timestamp keeps the path in deletion/dedup checks while
-      // making the incremental scanner treat a legacy row as changed once.
-      result[path] = libraryIncrementalSnapshotModTime(
-        storedModTime: modTime,
-        storedScanVersion: scanVersion,
-      );
-    }
-    return result;
-  }
-
-  /// Uses the already normalized, backfilled timestamps from the scan caller.
-  /// Bounded writes avoid a second query and a library-sized StringBuffer.
-  Future<String> writeFileModTimesTsv(Map<String, int> fileModTimes) async {
-    final tempDir = await getTemporaryDirectory();
-    final file = File(
-      join(
-        tempDir.path,
-        'library_file_mod_times_${DateTime.now().microsecondsSinceEpoch}.tsv',
-      ),
-    );
-    try {
-      final output = await file.open(mode: FileMode.write);
-      try {
-        final buffer = StringBuffer();
-        for (final entry in fileModTimes.entries) {
-          if (entry.key.isEmpty) continue;
-          buffer
-            ..write(entry.value)
-            ..write('\t')
-            ..writeln(entry.key);
-          if (buffer.length >= 64 * 1024) {
-            await output.writeString(buffer.toString());
-            buffer.clear();
-          }
-        }
-        if (buffer.isNotEmpty) await output.writeString(buffer.toString());
-        await output.flush();
-      } finally {
-        await output.close();
-      }
-    } catch (_) {
-      if (await file.exists()) await file.delete();
-      rethrow;
-    }
-    return file.path;
   }
 
   Future<int> deleteByPaths(List<String> filePaths) async {

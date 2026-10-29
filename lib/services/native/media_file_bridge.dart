@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/services/native/native_channel.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('PlatformBridge');
@@ -40,7 +39,6 @@ class ContentUriPlaybackLease {
 class MediaFileBridge {
   /// Holds local backend access until the media operation finishes.
   static Future<String> acquireMediaDirectory(String path) async {
-    if (!PlatformBridge.supportsCoreBackend) return '';
     return await nativeBackendChannel.invokeMethod<String>(
           'acquireMediaDirectory',
           {'path': path},
@@ -49,7 +47,7 @@ class MediaFileBridge {
   }
 
   static Future<void> releaseMediaDirectory(String token) async {
-    if (!PlatformBridge.supportsCoreBackend || token.isEmpty) return;
+    if (token.isEmpty) return;
     await nativeBackendChannel.invokeMethod('releaseMediaDirectory', {
       'token': token,
     });

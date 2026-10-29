@@ -203,10 +203,10 @@ void main() {
                 ),
                 throwsA(isA<DatabaseException>()),
               );
-              return (await runNativeCacheMaintenance(
+              return await runNativeCacheMaintenance(
                 request,
                 requestId: requestId,
-              ))!;
+              );
             },
           ),
           1,

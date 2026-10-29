@@ -21,10 +21,6 @@ void main() {
         collectionRestoreCommands(input, now).toList(),
         fixture['commands'],
       );
-      expect(
-        await prepareCollectionRestoreCommands(input, now),
-        fixture['commands'],
-      );
       final temporary = await Directory.systemTemp.createTemp(
         'collection-codec-',
       );
@@ -38,10 +34,10 @@ void main() {
     },
   );
 
-  test('empty or omitted categories produce an empty replacement', () async {
-    expect(await prepareCollectionRestoreCommands({}, 'now'), isEmpty);
+  test('empty or omitted categories produce an empty replacement', () {
+    expect(collectionRestoreCommands({}, 'now'), isEmpty);
     expect(
-      await prepareCollectionRestoreCommands({
+      collectionRestoreCommands({
         'loved': <String, dynamic>{},
         'playlists': [
           null,
@@ -57,7 +53,7 @@ void main() {
 
   test(
     'invalid typed fields still reject the restore before publication',
-    () async {
+    () {
       for (final input in <Map<String, dynamic>>[
         {
           'loved': [
@@ -75,8 +71,8 @@ void main() {
           ],
         },
       ]) {
-        await expectLater(
-          prepareCollectionRestoreCommands(input, 'now'),
+        expect(
+          () => collectionRestoreCommands(input, 'now').toList(),
           throwsA(isA<TypeError>()),
         );
       }

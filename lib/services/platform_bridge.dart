@@ -52,8 +52,6 @@ class PlatformBridge {
   static int _nativeDataJobSerial = 0;
   static final _nativeDataJobs = <String, Set<_NativeDataJobState>>{};
 
-  static bool get supportsCoreBackend => Platform.isAndroid;
-
   /// A single background native operation. Binary inputs never become base64
   /// JSON, and large request/result codecs stay off the UI isolate.
   static Future<Map<String, dynamic>> runNativeDataJob(

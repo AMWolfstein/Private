@@ -229,26 +229,24 @@ class LibraryCollectionsDatabase {
     NativeCollectionsJobRunner? nativeJobRunner,
     Directory? temporaryDirectory,
   }) async {
-    if (nativeJobRunner != null || PlatformBridge.supportsCoreBackend) {
-      final probe = await db.rawQuery('''
-        SELECT 1 FROM $_tableLoved
-        UNION ALL SELECT 1 FROM $_tablePlaylists
-        UNION ALL SELECT 1 FROM $_tablePlaylistTracks
-        UNION ALL SELECT 1 FROM $_tableFavoriteArtists LIMIT 64
-      ''');
-      if (probe.length == 64) {
-        return _readNativeRows(
-          db,
-          nativeJobRunner: nativeJobRunner,
-          temporaryDirectory: temporaryDirectory,
-        );
-      }
+    final probe = await db.rawQuery('''
+      SELECT 1 FROM $_tableLoved
+      UNION ALL SELECT 1 FROM $_tablePlaylists
+      UNION ALL SELECT 1 FROM $_tablePlaylistTracks
+      UNION ALL SELECT 1 FROM $_tableFavoriteArtists LIMIT 64
+    ''');
+    if (probe.length == 64) {
+      return _readNativeRows(
+        db,
+        nativeJobRunner: nativeJobRunner,
+        temporaryDirectory: temporaryDirectory,
+      );
     }
     return _readDartSnapshot(db);
   }
 
-  /// Pins the Dart reader for tests; production picks it through
-  /// [readDatabaseSnapshot] when the native backend is unavailable.
+  /// Pins the Dart reader for tests; production uses it below the native row
+  /// threshold in [readDatabaseSnapshot].
   @visibleForTesting
   static Future<LibraryCollectionsSnapshot> readDartSnapshotForTesting(
     Database db,
@@ -316,24 +314,22 @@ class LibraryCollectionsDatabase {
     NativeCollectionsJobRunner? nativeJobRunner,
     Directory? temporaryDirectory,
   }) async {
-    if (nativeJobRunner != null || PlatformBridge.supportsCoreBackend) {
-      final probe = await db.rawQuery(
-        'SELECT 1 FROM $_tablePlaylistTracks WHERE playlist_id=? LIMIT 64',
-        [playlistId],
+    final probe = await db.rawQuery(
+      'SELECT 1 FROM $_tablePlaylistTracks WHERE playlist_id=? LIMIT 64',
+      [playlistId],
+    );
+    if (probe.length == 64) {
+      final snapshot = await _readNativeRows(
+        db,
+        playlistId: playlistId,
+        nativeJobRunner: nativeJobRunner,
+        temporaryDirectory: temporaryDirectory,
       );
-      if (probe.length == 64) {
-        final snapshot = await _readNativeRows(
-          db,
-          playlistId: playlistId,
-          nativeJobRunner: nativeJobRunner,
-          temporaryDirectory: temporaryDirectory,
-        );
-        return LibraryPlaylistTracksSnapshot(
-          nativeRowsPath: snapshot.nativeRowsPath,
-          nativeRowsDirectory: snapshot.nativeRowsDirectory,
-          nativeRowCount: snapshot.nativeRowCount,
-        );
-      }
+      return LibraryPlaylistTracksSnapshot(
+        nativeRowsPath: snapshot.nativeRowsPath,
+        nativeRowsDirectory: snapshot.nativeRowsDirectory,
+        nativeRowCount: snapshot.nativeRowCount,
+      );
     }
     return _readDartPlaylistTracks(db, playlistId);
   }
@@ -875,136 +871,97 @@ class LibraryCollectionsDatabase {
     String? nowIso,
   }) async {
     final restoreTime = nowIso ?? DateTime.now().toIso8601String();
-    if (PlatformBridge.supportsCoreBackend) {
-      final temporary = await Directory(
-        (await getTemporaryDirectory()).path,
-      ).createTemp('collection-restore-');
-      var detached = true;
+    final temporary = await Directory(
+      (await getTemporaryDirectory()).path,
+    ).createTemp('collection-restore-');
+    var detached = true;
+    try {
+      final path = '${temporary.path}/commands.ndjson';
+      final count = await writeCollectionRestoreCommands(
+        path,
+        collectionsJson,
+        restoreTime,
+      );
+      // The native backend bundles its own SQLite. Give it a private file
+      // after sqflite closes that file; only the database owner publishes
+      // into the live database, preserving its WAL and connection caches.
+      final stagedPath = '${temporary.path}/$_dbFileName';
+      final stagedDatabase = await openDatabase(
+        stagedPath,
+        version: _dbVersion,
+        onConfigure: (staged) => staged.execute('PRAGMA foreign_keys=ON'),
+        onCreate: instance._createDb,
+      );
+      detached = false;
+      await stagedDatabase.close();
+      detached = true;
+      final result = await PlatformBridge.runNativeDataJob({
+        'operation': 'backup_collections_import',
+        'collections_path': stagedPath,
+        'ndjson_path': path,
+        'expected_count': count,
+      });
+      if (result['committed'] != true) {
+        throw const FormatException('Incomplete collection restore');
+      }
+      final alias = 'collection_restore_${_restoreAttachmentSequence++}';
+      await db.execute('ATTACH DATABASE ? AS $alias', [stagedPath]);
+      var committed = false;
       try {
-        final path = '${temporary.path}/commands.ndjson';
-        final count = await writeCollectionRestoreCommands(
-          path,
-          collectionsJson,
-          restoreTime,
-        );
-        // The native backend bundles its own SQLite. Give it a private file
-        // after sqflite closes that file; only the database owner publishes
-        // into the live database, preserving its WAL and connection caches.
-        final stagedPath = '${temporary.path}/$_dbFileName';
-        final stagedDatabase = await openDatabase(
-          stagedPath,
-          version: _dbVersion,
-          onConfigure: (staged) => staged.execute('PRAGMA foreign_keys=ON'),
-          onCreate: instance._createDb,
-        );
-        detached = false;
-        await stagedDatabase.close();
-        detached = true;
-        final result = await PlatformBridge.runNativeDataJob({
-          'operation': 'backup_collections_import',
-          'collections_path': stagedPath,
-          'ndjson_path': path,
-          'expected_count': count,
-        });
-        if (result['committed'] != true) {
-          throw const FormatException('Incomplete collection restore');
-        }
-        final alias = 'collection_restore_${_restoreAttachmentSequence++}';
-        await db.execute('ATTACH DATABASE ? AS $alias', [stagedPath]);
-        var committed = false;
-        try {
-          await db.transaction((txn) async {
-            for (final table in [
-              _tablePlaylistTracks,
+        await db.transaction((txn) async {
+          for (final table in [
+            _tablePlaylistTracks,
+            _tablePlaylists,
+            _tableLoved,
+            _tableFavoriteArtists,
+          ]) {
+            await txn.delete(table);
+          }
+          for (final (table, columns) in [
+            (_tableLoved, 'track_key,track_json,added_at'),
+            (_tableFavoriteArtists, 'artist_key,artist_json,added_at'),
+            (
               _tablePlaylists,
-              _tableLoved,
-              _tableFavoriteArtists,
-            ]) {
-              await txn.delete(table);
-            }
-            for (final (table, columns) in [
-              (_tableLoved, 'track_key,track_json,added_at'),
-              (_tableFavoriteArtists, 'artist_key,artist_json,added_at'),
-              (
-                _tablePlaylists,
-                'id,name,cover_image_path,created_at,updated_at',
-              ),
-              (
-                _tablePlaylistTracks,
-                'playlist_id,track_key,track_json,added_at',
-              ),
-            ]) {
-              await txn.execute(
-                'INSERT INTO main.$table($columns) '
-                'SELECT $columns FROM $alias.$table ORDER BY rowid',
-              );
-            }
-          });
-          committed = true;
-        } finally {
-          try {
-            await detachNativeSqliteSnapshot(db, alias, stagedPath);
-          } on NativeSqliteSnapshotDetachException {
-            detached = false;
-            if (!committed) rethrow;
-            _log.w(
-              'Collections restored; retaining staging after a failed database detach',
+              'id,name,cover_image_path,created_at,updated_at',
+            ),
+            (
+              _tablePlaylistTracks,
+              'playlist_id,track_key,track_json,added_at',
+            ),
+          ]) {
+            await txn.execute(
+              'INSERT INTO main.$table($columns) '
+              'SELECT $columns FROM $alias.$table ORDER BY rowid',
             );
           }
-        }
-      } on NativeSqliteSnapshotDetachException {
-        detached = false;
-        _log.w(
-          'Retaining collection restore staging after a failed database detach',
-        );
-        rethrow;
+        });
+        committed = true;
       } finally {
-        if (detached) {
-          try {
-            await temporary.delete(recursive: true);
-          } on FileSystemException catch (error) {
-            _log.w('Could not remove collection restore staging: $error');
-          }
+        try {
+          await detachNativeSqliteSnapshot(db, alias, stagedPath);
+        } on NativeSqliteSnapshotDetachException {
+          detached = false;
+          if (!committed) rethrow;
+          _log.w(
+            'Collections restored; retaining staging after a failed database detach',
+          );
         }
       }
-      _log.i('Restored collections from backup');
-      return;
+    } on NativeSqliteSnapshotDetachException {
+      detached = false;
+      _log.w(
+        'Retaining collection restore staging after a failed database detach',
+      );
+      rethrow;
+    } finally {
+      if (detached) {
+        try {
+          await temporary.delete(recursive: true);
+        } on FileSystemException catch (error) {
+          _log.w('Could not remove collection restore staging: $error');
+        }
+      }
     }
-
-    final commands = await prepareCollectionRestoreCommands(
-      collectionsJson,
-      restoreTime,
-    );
-    await db.transaction((txn) async {
-      await txn.delete(_tablePlaylistTracks);
-      await txn.delete(_tablePlaylists);
-      await txn.delete(_tableLoved);
-      await txn.delete(_tableFavoriteArtists);
-
-      var batch = txn.batch();
-      var pending = 0;
-      for (final command in commands) {
-        final table = switch (command['kind']) {
-          'loved' => _tableLoved,
-          'artist' => _tableFavoriteArtists,
-          'playlist' => _tablePlaylists,
-          'playlist_track' => _tablePlaylistTracks,
-          _ => throw const FormatException('Unknown collection command'),
-        };
-        batch.insert(
-          table,
-          command['values'] as Map<String, dynamic>,
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-        if (++pending == 500) {
-          await batch.commit(noResult: true);
-          batch = txn.batch();
-          pending = 0;
-        }
-      }
-      if (pending > 0) await batch.commit(noResult: true);
-    });
-
     _log.i('Restored collections from backup');
   }
 }

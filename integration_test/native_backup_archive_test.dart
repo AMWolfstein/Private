@@ -6,7 +6,6 @@ import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:sistrum/services/backup_service.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 
 Future<void> _dartWrite(String path, List<Map<String, dynamic>> files) =>
@@ -116,9 +115,126 @@ void main() {
   });
 
   testWidgets(
+    'direct JSON archive round trips and retains category presence',
+    (tester) async {
+      for (final collections in <Map<String, dynamic>>[
+        {'playlists': <dynamic>[], 'favoriteArtists': <dynamic>[]},
+        {
+          'loved': [
+            {'opaque': '日本語 🎵 \\ "\n', 'nil': null},
+          ],
+          'future': {'value': true},
+        },
+      ]) {
+        final archiveFile = await BackupService.writeBackupArchive(
+          settings: const {'theme': 'sistrum'},
+          collections: const {},
+          collectionsJson: jsonEncode(collections),
+          playlistCoverFiles: const {},
+          outputDirectory: root,
+          temporaryDirectory: root,
+        );
+        final archive = ZipDecoder().decodeBytes(
+          await archiveFile.readAsBytes(),
+        );
+        final metadata =
+            jsonDecode(utf8.decode(archive.find('metadata.json')!.content))
+                as Map<String, dynamic>;
+        expect(metadata['app'], 'Sistrum');
+        expect(metadata['magic'], 'sistrum-backup');
+        expect(
+          archiveFile.uri.pathSegments.last,
+          startsWith('sistrum_mobile_backup_'),
+        );
+        final data = metadata['data'] as Map<String, dynamic>;
+        expect(data.keys, ['settings', 'collections']);
+        expect(data['collections'], collections);
+        final bundle = await BackupService.parseFile(
+          archiveFile.path,
+          temporaryDirectory: root,
+        );
+        expect(bundle, isNotNull);
+        expect(bundle.hasCollections, isTrue);
+        expect(bundle.collections, collections);
+        await bundle.cleanup();
+      }
+    },
+  );
+
+  testWidgets('collections above 8 MiB still round trip', (tester) async {
+    final collections = {'padding': 'x' * ((8 << 20) + 1024)};
+    final archiveFile = await BackupService.writeBackupArchive(
+      settings: null,
+      collections: const {},
+      collectionsJson: jsonEncode(collections),
+      playlistCoverFiles: const {},
+      outputDirectory: root,
+      temporaryDirectory: root,
+    );
+    final bundle = await BackupService.parseFile(
+      archiveFile.path,
+      temporaryDirectory: root,
+    );
+    expect(bundle, isNotNull);
+    expect(bundle.collections, collections);
+    await bundle.cleanup();
+  });
+
+  testWidgets('native parser rejects foreign or older envelopes', (
+    tester,
+  ) async {
+    for (final (magic, version) in [
+      (BackupService.magic, 2),
+      ('other-backup', BackupService.formatVersion),
+    ]) {
+      final metadata = await File('${root.path}/metadata.json').writeAsString(
+        jsonEncode({
+          'magic': magic,
+          'format_version': version,
+          'data': <String, dynamic>{},
+        }),
+      );
+      final path = '${root.path}/rejected-$version.sbk';
+      await _dartWrite(path, [
+        {'path': metadata.path, 'name': 'metadata.json', 'store': false},
+      ]);
+      await expectLater(
+        BackupService.parseFile(path, temporaryDirectory: root),
+        throwsA(isA<BackupParseException>()),
+      );
+    }
+  });
+
+  testWidgets('native parser rejects foreign profile photo paths', (
+    tester,
+  ) async {
+    for (final (index, photo) in [
+      '../avatar.png',
+      'profile/avatar.png',
+    ].indexed) {
+      final metadata = await File('${root.path}/metadata.json').writeAsString(
+        jsonEncode({
+          'magic': BackupService.magic,
+          'format_version': BackupService.formatVersion,
+          'data': {
+            'profile': {'name': 'Listener', 'photo': photo},
+          },
+        }),
+      );
+      final path = '${root.path}/profile-$index.sbk';
+      await _dartWrite(path, [
+        {'path': metadata.path, 'name': 'metadata.json', 'store': false},
+      ]);
+      await expectLater(
+        BackupService.parseFile(path, temporaryDirectory: root),
+        throwsA(isA<BackupParseException>()),
+      );
+    }
+  });
+
+  testWidgets(
     'direct collection JSON round trips through production native ZIP',
     (tester) async {
-      expect(PlatformBridge.supportsCoreBackend, isTrue);
       final cover = await File(
         '${root.path}/raw-cover.jpg',
       ).writeAsBytes([255, 216, 255, 217]);

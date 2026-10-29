@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/backup_service.dart';
 
@@ -80,53 +79,6 @@ void main() {
     },
   );
 
-  test(
-    'direct JSON archive round trips and retains category presence',
-    () async {
-      for (final collections in <Map<String, dynamic>>[
-        {'playlists': <dynamic>[], 'favoriteArtists': <dynamic>[]},
-        {
-          'loved': [
-            {'opaque': '日本語 🎵 \\ "\n', 'nil': null},
-          ],
-          'future': {'value': true},
-        },
-      ]) {
-        final archiveFile = await BackupService.writeBackupArchive(
-          settings: const {'theme': 'sistrum'},
-          collections: const {},
-          collectionsJson: jsonEncode(collections),
-          playlistCoverFiles: const {},
-          outputDirectory: directory,
-          temporaryDirectory: directory,
-        );
-        final archive = ZipDecoder().decodeBytes(
-          await archiveFile.readAsBytes(),
-        );
-        final metadata =
-            jsonDecode(utf8.decode(archive.find('metadata.json')!.content))
-                as Map<String, dynamic>;
-        expect(metadata['app'], 'Sistrum');
-        expect(metadata['magic'], 'sistrum-backup');
-        expect(
-          archiveFile.uri.pathSegments.last,
-          startsWith('sistrum_mobile_backup_'),
-        );
-        final data = metadata['data'] as Map<String, dynamic>;
-        expect(data.keys, ['settings', 'collections']);
-        expect(data['collections'], collections);
-        final bundle = await BackupService.parseFile(
-          archiveFile.path,
-          temporaryDirectory: directory,
-        );
-        expect(bundle, isNotNull);
-        expect(bundle.hasCollections, isTrue);
-        expect(bundle.collections, collections);
-        await bundle.cleanup();
-      }
-    },
-  );
-
   test('oversized metadata cannot publish an unrestorable archive', () async {
     await expectLater(
       BackupService.writeBackupArchive(
@@ -140,25 +92,6 @@ void main() {
       throwsA(isA<BackupTooLargeException>()),
     );
     expect(await directory.list().toList(), isEmpty);
-  });
-
-  test('collections above 8 MiB still round trip', () async {
-    final collections = {'padding': 'x' * ((8 << 20) + 1024)};
-    final archiveFile = await BackupService.writeBackupArchive(
-      settings: null,
-      collections: const {},
-      collectionsJson: jsonEncode(collections),
-      playlistCoverFiles: const {},
-      outputDirectory: directory,
-      temporaryDirectory: directory,
-    );
-    final bundle = await BackupService.parseFile(
-      archiveFile.path,
-      temporaryDirectory: directory,
-    );
-    expect(bundle, isNotNull);
-    expect(bundle.collections, collections);
-    await bundle.cleanup();
   });
 
   test('map and encoded collections are mutually exclusive', () async {

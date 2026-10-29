@@ -24,7 +24,6 @@ void main() {
                 tracks: tracks,
                 existingKeys: const {},
                 addedAt: DateTime.utc(2026, 10, 8),
-                useNative: true,
                 temporaryDirectory: root,
               ),
             );
