@@ -15,7 +15,6 @@ import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/status/beta_badge.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/services/playback/equalizer_preset_io.dart';
 import 'package:sistrum/widgets/glass/app_level_slider.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
@@ -470,4 +469,23 @@ class EqualizerScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Bound preset input before accumulation, including providers with no size.
+Future<String> readEqualizerPreset(
+  Stream<List<int>> chunks, {
+  int? declaredSize,
+}) async {
+  const limit = 65536;
+  if (declaredSize != null && declaredSize > limit) {
+    throw const FormatException('Equalizer preset exceeds 64 KB');
+  }
+  final bytes = BytesBuilder(copy: false);
+  await for (final chunk in chunks) {
+    if (bytes.length + chunk.length > limit) {
+      throw const FormatException('Equalizer preset exceeds 64 KB');
+    }
+    bytes.add(chunk);
+  }
+  return utf8.decode(bytes.takeBytes());
 }

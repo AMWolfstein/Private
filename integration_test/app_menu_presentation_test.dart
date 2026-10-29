@@ -11,7 +11,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/custom_font_service.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
-import 'package:sistrum/widgets/glass/app_glass_preparation.dart';
+import 'package:sistrum/app.dart';
 
 import 'performance_probe.dart';
 

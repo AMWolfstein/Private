@@ -9,7 +9,6 @@ import 'package:sistrum/screens/setup_screen.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/navigation/app_navigation.dart';
 import 'package:sistrum/services/app_orientation.dart';
-import 'package:sistrum/widgets/shell/app_theme_wrapper.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
@@ -17,8 +16,15 @@ import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/app_glass_auto_probe_host.dart';
 import 'package:sistrum/widgets/glass/app_performance_hud.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/glass/app_glass_preparation.dart';
 import 'package:sistrum/widgets/player/playback_feedback.dart';
+import 'dart:async';
+import 'package:sistrum/theme/app_glass_levels.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/widgets/glass/app_glass_warmup.dart';
+import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
+import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/providers/custom_font_provider.dart';
+import 'package:sistrum/theme/app_theme.dart';
 
 String initialLocationForAppState({
   required bool isFirstLaunch,
@@ -253,6 +259,74 @@ class SistrumApp extends ConsumerWidget {
           supportedLocales: filteredSupportedLocales,
         );
       },
+    );
+  }
+}
+
+/// Starts the one-time preparation when the full glass theme is enabled,
+/// including switching to Sistrum or enabling blur after the app has started.
+class AppGlassPreparation extends ConsumerWidget {
+  const AppGlassPreparation({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // The artwork glass program loads at start whatever the level, so the
+    // first menu over the player has nothing left to load.
+    unawaited(AppArtworkGlassProgram.load());
+    // Lenses appear on full glass above Level 1, and as touch-only thumbs
+    // and segment pills under lite.
+    if (ref.watch(appBlurEnabledProvider) &&
+        !appGlassClarity(
+          ref.watch(appGlassClarityLevelProvider),
+        ).plainBlur &&
+        !ref.watch(
+          appGlassContrastBlockedProvider(
+            MediaQuery.highContrastOf(context),
+          ),
+        )) {
+      unawaited(AppGlassWarmup.prepare(View.of(context)));
+      // Its pipeline too, where it can refract.
+      if (ref.watch(appShaderFiltersSupportedProvider)) {
+        unawaited(AppArtworkGlassProgram.prepare());
+      }
+    }
+    return child;
+  }
+}
+
+class AppThemeWrapper extends ConsumerWidget {
+  final Widget Function(ThemeData light, ThemeData dark, ThemeMode mode)
+  builder;
+
+  const AppThemeWrapper({super.key, required this.builder});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Select only what ThemeData needs; glass preferences have their own
+    // providers so the clarity slider does not rebuild MaterialApp.
+    final accent = ref.watch(themeProvider.select((s) => s.appAccent));
+    final useSystemFont = ref.watch(
+      themeProvider.select((s) => s.useSystemFont),
+    );
+    final themeMode = ref.watch(themeProvider.select((s) => s.themeMode));
+    final fontFamily = ref.watch(customFontFamilyProvider).asData?.value;
+
+    return builder(
+      AppTheme.build(
+        Brightness.light,
+        accent: accent,
+        useSystemFont: useSystemFont,
+        fontFamily: fontFamily,
+      ),
+      AppTheme.build(
+        Brightness.dark,
+        accent: accent,
+        useSystemFont: useSystemFont,
+        fontFamily: fontFamily,
+      ),
+      themeMode,
     );
   }
 }

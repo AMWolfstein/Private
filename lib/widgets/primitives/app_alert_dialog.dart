@@ -175,6 +175,32 @@ class AppAlertDialog extends StatelessWidget {
   }
 }
 
+/// Cancel and destructive confirm pair for delete, clear and remove dialogs.
+/// Cancel pops `false` and confirm pops `true` from [context].
+List<Widget> appDestructiveConfirmActions(
+  BuildContext context, {
+  required String cancelLabel,
+  required String confirmLabel,
+  bool cancelIsDefault = false,
+}) {
+  return [
+    AppDialogAction(
+      isDefault: cancelIsDefault,
+      onPressed: () => Navigator.pop(context, false),
+      child: Text(cancelLabel),
+    ),
+    AppDialogAction(
+      filled: true,
+      isDestructive: true,
+      onPressed: () => Navigator.pop(context, true),
+      style: FilledButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+      child: Text(confirmLabel),
+    ),
+  ];
+}
+
 class AppDialogAction extends StatelessWidget {
   const AppDialogAction({
     super.key,

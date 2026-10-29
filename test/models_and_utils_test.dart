@@ -8,10 +8,10 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/utils/artist_utils.dart';
+import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/utils/audio_format_utils.dart';
 import 'package:sistrum/utils/file_access.dart';
-import 'package:sistrum/utils/mime_utils.dart';
+import 'package:sistrum/widgets/library/local_song_file_actions.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sistrum/utils/string_utils.dart';
 

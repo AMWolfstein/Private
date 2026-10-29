@@ -177,22 +177,12 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       builder: (context) => AppAlertDialog(
         title: Text(context.l10n.libraryClearConfirmTitle),
         content: Text(context.l10n.libraryClearConfirmMessage),
-        actions: [
-          AppDialogAction(
-            isDefault: true,
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: Text(context.l10n.dialogClear),
-          ),
-        ],
+        actions: appDestructiveConfirmActions(
+          context,
+          cancelLabel: context.l10n.dialogCancel,
+          confirmLabel: context.l10n.dialogClear,
+          cancelIsDefault: true,
+        ),
       ),
     );
 
@@ -242,22 +232,12 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       builder: (context) => AppAlertDialog(
         title: Text(context.l10n.libraryRemoveFolder),
         content: Text(context.l10n.libraryRemoveFolderMessage),
-        actions: [
-          AppDialogAction(
-            isDefault: true,
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: Text(context.l10n.dialogRemove),
-          ),
-        ],
+        actions: appDestructiveConfirmActions(
+          context,
+          cancelLabel: context.l10n.dialogCancel,
+          confirmLabel: context.l10n.dialogRemove,
+          cancelIsDefault: true,
+        ),
       ),
     );
     if (confirmed != true) return;

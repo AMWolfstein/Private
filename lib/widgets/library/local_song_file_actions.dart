@@ -19,7 +19,6 @@ import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/services/library/metadata_edit_result.dart';
-import 'package:sistrum/utils/mime_utils.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
@@ -402,5 +401,34 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
     if (staging != null) {
       await deleteBestEffort(staging, recursive: true);
     }
+  }
+}
+
+String audioMimeTypeForPath(String filePath) {
+  final dotIndex = filePath.lastIndexOf('.');
+  if (dotIndex == -1 || dotIndex == filePath.length - 1) {
+    return 'audio/*';
+  }
+
+  final ext = filePath.substring(dotIndex + 1).toLowerCase();
+  switch (ext) {
+    case 'flac':
+      return 'audio/flac';
+    case 'm4a':
+      return 'audio/mp4';
+    case 'mp3':
+      return 'audio/mpeg';
+    case 'ogg':
+      return 'audio/ogg';
+    case 'wav':
+      return 'audio/wav';
+    case 'aiff':
+    case 'aif':
+    case 'aifc':
+      return 'audio/aiff';
+    case 'aac':
+      return 'audio/aac';
+    default:
+      return 'audio/*';
   }
 }

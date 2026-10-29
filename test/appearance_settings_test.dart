@@ -12,7 +12,7 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/screens/settings/appearance_settings_page.dart';
-import 'package:sistrum/widgets/shell/app_theme_wrapper.dart';
+import 'package:sistrum/app.dart';
 import 'package:sistrum/theme/app_theme.dart';
 
 void main() {

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/app.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/native/native_installation.dart';
+import 'package:sistrum/main.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

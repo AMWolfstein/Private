@@ -191,22 +191,12 @@ extension _LibrarySectionTabSelectionActions on _LibrarySectionTabState {
       builder: (ctx) => AppAlertDialog(
         title: Text(ctx.l10n.collectionDeletePlaylist),
         content: Text(ctx.l10n.collectionDeletePlaylistsMessage(count)),
-        actions: [
-          AppDialogAction(
-            isDefault: true,
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(ctx.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: Text(ctx.l10n.dialogDelete),
-          ),
-        ],
+        actions: appDestructiveConfirmActions(
+          ctx,
+          cancelLabel: ctx.l10n.dialogCancel,
+          confirmLabel: ctx.l10n.dialogDelete,
+          cancelIsDefault: true,
+        ),
       ),
     );
 

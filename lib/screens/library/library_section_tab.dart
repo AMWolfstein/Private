@@ -419,6 +419,12 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       builder: (context) => AppScrollableSheet(
         builder: (context, scrollController) => StatefulBuilder(
           builder: (context, setSheetState) {
+            Widget sortChip(String label, String mode) => AppChoiceChip(
+              label: Text(label),
+              selected: tempSortMode == mode,
+              onSelected: (_) => setSheetState(() => tempSortMode = mode),
+            );
+
             return AppBottomSheet(
               title: context.l10n.libraryFilterTitle,
               titleTrailing: TextButton(
@@ -692,99 +698,23 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
                     Wrap(
                       spacing: 8,
                       children: [
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterSortLatest),
-                          selected: tempSortMode == 'latest',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'latest'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterSortOldest),
-                          selected: tempSortMode == 'oldest',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'oldest'),
-                        ),
+                        sortChip(context.l10n.libraryFilterSortLatest, 'latest'),
+                        sortChip(context.l10n.libraryFilterSortOldest, 'oldest'),
                         // Playlists have no file size of their own.
                         if (widget.librarySection != 'playlists') ...[
-                          AppChoiceChip(
-                            label: Text(
-                              context.l10n.libraryFilterSortSizeLargest,
-                            ),
-                            selected: tempSortMode == 'size-desc',
-                            onSelected: (_) =>
-                                setSheetState(() => tempSortMode = 'size-desc'),
-                          ),
-                          AppChoiceChip(
-                            label: Text(
-                              context.l10n.libraryFilterSortSizeSmallest,
-                            ),
-                            selected: tempSortMode == 'size-asc',
-                            onSelected: (_) =>
-                                setSheetState(() => tempSortMode = 'size-asc'),
-                          ),
+                          sortChip(context.l10n.libraryFilterSortSizeLargest, 'size-desc'),
+                          sortChip(context.l10n.libraryFilterSortSizeSmallest, 'size-asc'),
                         ],
-                        AppChoiceChip(
-                          label: Text(context.l10n.searchSortTitleAZ),
-                          selected: tempSortMode == 'a-z',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'a-z'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.searchSortTitleZA),
-                          selected: tempSortMode == 'z-a',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'z-a'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.searchSortArtistAZ),
-                          selected: tempSortMode == 'artist-asc',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'artist-asc'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.searchSortArtistZA),
-                          selected: tempSortMode == 'artist-desc',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'artist-desc'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterSortAlbumAsc),
-                          selected: tempSortMode == 'album-asc',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'album-asc'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterSortAlbumDesc),
-                          selected: tempSortMode == 'album-desc',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'album-desc'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.searchSortDateNewest),
-                          selected: tempSortMode == 'release-newest',
-                          onSelected: (_) => setSheetState(
-                            () => tempSortMode = 'release-newest',
-                          ),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.searchSortDateOldest),
-                          selected: tempSortMode == 'release-oldest',
-                          onSelected: (_) => setSheetState(
-                            () => tempSortMode = 'release-oldest',
-                          ),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterSortGenreAsc),
-                          selected: tempSortMode == 'genre-asc',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'genre-asc'),
-                        ),
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterSortGenreDesc),
-                          selected: tempSortMode == 'genre-desc',
-                          onSelected: (_) =>
-                              setSheetState(() => tempSortMode = 'genre-desc'),
-                        ),
+                        sortChip(context.l10n.searchSortTitleAZ, 'a-z'),
+                        sortChip(context.l10n.searchSortTitleZA, 'z-a'),
+                        sortChip(context.l10n.searchSortArtistAZ, 'artist-asc'),
+                        sortChip(context.l10n.searchSortArtistZA, 'artist-desc'),
+                        sortChip(context.l10n.libraryFilterSortAlbumAsc, 'album-asc'),
+                        sortChip(context.l10n.libraryFilterSortAlbumDesc, 'album-desc'),
+                        sortChip(context.l10n.searchSortDateNewest, 'release-newest'),
+                        sortChip(context.l10n.searchSortDateOldest, 'release-oldest'),
+                        sortChip(context.l10n.libraryFilterSortGenreAsc, 'genre-asc'),
+                        sortChip(context.l10n.libraryFilterSortGenreDesc, 'genre-desc'),
                       ],
                     ),
                     const SizedBox(height: 24),

@@ -105,21 +105,11 @@ class _DuplicateReviewSheetState extends ConsumerState<DuplicateReviewSheet> {
       builder: (ctx) => AppAlertDialog(
         title: Text(ctx.l10n.dialogDeleteSelectedTitle),
         content: Text(message),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(ctx.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(ctx).colorScheme.error,
-            ),
-            child: Text(ctx.l10n.dialogDelete),
-          ),
-        ],
+        actions: appDestructiveConfirmActions(
+          ctx,
+          cancelLabel: ctx.l10n.dialogCancel,
+          confirmLabel: ctx.l10n.dialogDelete,
+        ),
       ),
     );
     return confirmed == true && mounted;

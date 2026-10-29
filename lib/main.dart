@@ -21,7 +21,6 @@ import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/native/native_device.dart';
-import 'package:sistrum/services/native/native_installation.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/navigation/app_navigation.dart';
 import 'package:sistrum/services/app_orientation.dart';
@@ -31,6 +30,7 @@ import 'package:sistrum/services/playback/player_widget_service.dart';
 import 'package:sistrum/screens/now_playing_screen.dart';
 import 'package:sistrum/utils/local_library_scan_prefs.dart';
 import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/services/native/native_channel.dart';
 
 final _log = AppLogger('Main');
 _StartupBenchmark? _startupBenchmark;
@@ -490,5 +490,50 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+}
+
+class InstallationState {
+  final bool markerExisted;
+  final bool markerCreated;
+  final bool freshPackageInstall;
+
+  const InstallationState({
+    required this.markerExisted,
+    required this.markerCreated,
+    required this.freshPackageInstall,
+  });
+
+  const InstallationState.unsupported()
+    : markerExisted = true,
+      markerCreated = true,
+      freshPackageInstall = false;
+
+  factory InstallationState.fromMap(Map<String, dynamic> map) {
+    return InstallationState(
+      markerExisted: map['marker_existed'] == true,
+      markerCreated: map['marker_created'] == true,
+      freshPackageInstall: map['fresh_package_install'] == true,
+    );
+  }
+}
+
+bool shouldResetRestoredInstallation({
+  required bool hasPersistedSettings,
+  required InstallationState installState,
+}) {
+  return hasPersistedSettings &&
+      !installState.markerExisted &&
+      installState.markerCreated &&
+      installState.freshPackageInstall;
+}
+
+final class NativeInstallation {
+  NativeInstallation._();
+
+  static Future<InstallationState> ensureMarker() async {
+    if (!Platform.isAndroid) return const InstallationState.unsupported();
+    final result = await nativeInvokeMap('ensureInstallMarker');
+    return InstallationState.fromMap(result);
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/backup/backup_service.dart';
-import 'package:sistrum/utils/isrc_utils.dart';
+import 'package:sistrum/widgets/player/player_details_sheet.dart';
 import 'package:sistrum/utils/ordered_range_selection.dart';
 
 void main() {

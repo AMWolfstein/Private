@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' show TextDirection;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/lyric_text_direction.dart';
+import 'package:sistrum/widgets/player/player_lyrics.dart';
 
 void main() {
   test('Arabic, Persian and Hebrew lines run right to left', () {

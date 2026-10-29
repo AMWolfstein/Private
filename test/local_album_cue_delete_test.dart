@@ -12,7 +12,6 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
-import 'package:sistrum/widgets/selection/destructive_selection_button.dart';
 import 'support/pump_until.dart';
 
 class _Local extends LocalLibraryNotifier {

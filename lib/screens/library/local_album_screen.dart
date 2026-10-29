@@ -18,7 +18,6 @@ import 'package:sistrum/widgets/selection/confirm_and_delete_tracks.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/image_cache_utils.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
-import 'package:sistrum/models/album_track_order.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
@@ -29,11 +28,9 @@ import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/selection/destructive_selection_button.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
-import 'package:sistrum/widgets/status/disc_separator_chip.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/header/album_ken_burns.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
@@ -44,6 +41,8 @@ import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
+import 'dart:collection';
+import 'package:sistrum/widgets/primitives/app_action_button.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -664,5 +663,112 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         ),
       ],
     );
+  }
+}
+
+/// Album order shared by playback, metadata navigation, and disc sections.
+/// Missing disc tags belong to disc 1; missing track tags use 999.
+class AlbumTrackOrder<T> {
+  final List<T> tracks;
+  final Map<int, List<T>> discGroups;
+  final List<int> discNumbers;
+
+  AlbumTrackOrder._(this.tracks, this.discGroups, this.discNumbers);
+
+  factory AlbumTrackOrder(
+    Iterable<T> items, {
+    required int? Function(T) discNumber,
+    required int? Function(T) trackNumber,
+    required String Function(T) trackName,
+  }) {
+    final tracks = items.toList();
+    tracks.sort((a, b) {
+      final disc = (discNumber(a) ?? 1).compareTo(discNumber(b) ?? 1);
+      if (disc != 0) return disc;
+      final number = (trackNumber(a) ?? 999).compareTo(trackNumber(b) ?? 999);
+      return number != 0 ? number : trackName(a).compareTo(trackName(b));
+    });
+    final discGroups = <int, List<T>>{};
+    for (final track in tracks) {
+      discGroups.putIfAbsent(discNumber(track) ?? 1, () => []).add(track);
+    }
+    return AlbumTrackOrder._(
+      UnmodifiableListView(tracks),
+      UnmodifiableMapView({
+        for (final entry in discGroups.entries)
+          entry.key: UnmodifiableListView(entry.value),
+      }),
+      UnmodifiableListView(discGroups.keys.toList()..sort()),
+    );
+  }
+}
+
+/// Full-width delete action for selection-mode bottom bars: destructive
+/// (error) styling once at least one item is selected, disabled/neutral
+/// otherwise.
+class DestructiveSelectionButton extends StatelessWidget {
+  const DestructiveSelectionButton({
+    super.key,
+    required this.count,
+    required this.colorScheme,
+    required this.onPressed,
+  });
+
+  final int count;
+  final ColorScheme colorScheme;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: AppActionButton(
+        isDestructive: true,
+        onPressed: count > 0 ? onPressed : null,
+        icon: const Icon(Icons.delete_outline),
+        label: Text(
+          count > 0
+              ? context.l10n.collectionDeleteCount(count)
+              : context.l10n.collectionSelectToDelete,
+        ),
+        style: FilledButton.styleFrom(
+          backgroundColor: count > 0
+              ? colorScheme.error
+              : colorScheme.surfaceContainerHighest,
+          foregroundColor: count > 0
+              ? colorScheme.onError
+              : colorScheme.onSurfaceVariant,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Disc N" chip with a trailing hairline, shown between disc groups in
+/// album track lists.
+class DiscSeparatorChip extends StatelessWidget {
+  const DiscSeparatorChip({super.key, required this.discNumber});
+
+  final int discNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+        child: Text(
+          context.l10n.collectionDiscHeader(discNumber),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+    }
   }
 }
