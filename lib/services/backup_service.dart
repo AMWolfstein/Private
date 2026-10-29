@@ -92,10 +92,7 @@ class BackupBundle {
   Future<void> cleanup() async {
     final path = _temporaryDirectoryPath;
     if (path == null || path.isEmpty) return;
-    try {
-      final directory = Directory(path);
-      if (await directory.exists()) await directory.delete(recursive: true);
-    } catch (_) {}
+    await deleteBestEffort(Directory(path), recursive: true);
   }
 
   int _collectionListCount(String key) {

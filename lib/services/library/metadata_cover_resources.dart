@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});
 
@@ -60,10 +61,7 @@ class MetadataCoverResources {
     }
     _directories.remove(directory);
     _deferredReleases.remove(directory);
-    try {
-      final dir = Directory(directory);
-      if (await dir.exists()) await dir.delete(recursive: true);
-    } catch (_) {}
+    await deleteBestEffort(Directory(directory), recursive: true);
   }
 
   Future<MetadataCoverDetails?> readDetails(String path) async {

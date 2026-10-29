@@ -11,6 +11,7 @@ import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/library/library_collections_hydration.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/logger.dart';
 
 export 'package:sistrum/models/library_collections.dart';
@@ -749,11 +750,8 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       published = true;
       return destPath;
     } finally {
-      try {
-        final temp = File(tempPath);
-        if (await temp.exists()) await temp.delete();
-        if (!published) await version.delete(recursive: true);
-      } catch (_) {}
+      await deleteBestEffort(File(tempPath));
+      if (!published) await deleteBestEffort(version, recursive: true);
     }
   }
 
@@ -878,11 +876,7 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
                   newCoverPath = await _normalizePlaylistCoverFile(sourcePath);
                   prepared.add(newCoverPath);
                 } finally {
-                  try {
-                    if (await staging.exists()) {
-                      await staging.delete(recursive: true);
-                    }
-                  } catch (_) {}
+                  await deleteBestEffort(staging, recursive: true);
                 }
               } catch (_) {
                 newCoverPath = null;
