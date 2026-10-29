@@ -12,8 +12,8 @@
     "auto_resolved": 49,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 69,
-    "open": 315,
+    "fixed": 73,
+    "open": 311,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 10,
-        "open": 6,
+        "fixed": 12,
+        "open": 4,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -30,8 +30,8 @@
         "auto_resolved": 11,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 33,
-        "open": 12,
+        "fixed": 34,
+        "open": 11,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -39,8 +39,8 @@
         "auto_resolved": 38,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 6,
-        "open": 296,
+        "fixed": 7,
+        "open": 295,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -12630,11 +12630,11 @@
         "reasoning": "",
         "summary_hash": "36911a27"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "ApkDownloader.downloadApk already returns ApkDownloadResult with a specific ApkDownloadFailure on every path; the update dialog branches on it.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:39+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12642,7 +12642,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:39+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::apk_install_error_swallowed": {
       "id": "review::.::holistic::error_consistency::apk_install_error_swallowed",
@@ -12666,11 +12672,11 @@
         "reasoning": "",
         "summary_hash": "4dbef4cc"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "ApkDownloader.installApk returns ApkInstallOutcome (opened, noInstaller, failed) and the update dialog reacts to each outcome.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:41+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12678,7 +12684,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:41+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null": {
       "id": "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
@@ -12702,11 +12714,11 @@
         "reasoning": "",
         "summary_hash": "91167b06"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "BackupService.parseFile throws BackupParseException with a BackupParseFailure reason; no path returns null for a failed parse.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12714,7 +12726,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling": {
       "id": "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
@@ -13794,11 +13812,11 @@
         "reasoning": "",
         "summary_hash": "6eacebc8"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Replaced the exact delete-if-exists try/catch sites with deleteBestEffort in backup_service, metadata_cover_resources, library_scan_bridge and the collections provider; the remaining catch blocks guard parsing or callbacks, not deletes.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:09:12+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -13806,7 +13824,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:09:12+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::incomplete_migration::collections_forcelegacy_test_seam": {
       "id": "review::.::holistic::incomplete_migration::collections_forcelegacy_test_seam",
@@ -14986,7 +15010,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T07:21:49+00:00"
+      "stale_since": "2026-10-29T14:09:12+00:00"
     },
     "api_surface_coherence": {
       "score": 72.0,
@@ -15044,7 +15068,10 @@
     "error_consistency": {
       "score": 62.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-29T14:32:43+00:00"
     },
     "high_level_elegance": {
       "score": 74.0,
@@ -38025,13 +38052,13 @@
       "strict": 88.0,
       "verified_strict_score": 88.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.88,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.2,
           "assessment_score": 88.0,
           "placeholder": false,
@@ -38193,13 +38220,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 4,
+      "failing": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 4,
+          "failing": 1,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,

@@ -12,8 +12,8 @@
     "auto_resolved": 49,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 70,
-    "open": 314,
+    "fixed": 74,
+    "open": 310,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 10,
-        "open": 6,
+        "fixed": 12,
+        "open": 4,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -30,8 +30,8 @@
         "auto_resolved": 11,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 33,
-        "open": 12,
+        "fixed": 35,
+        "open": 10,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -12630,11 +12630,11 @@
         "reasoning": "",
         "summary_hash": "36911a27"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "ApkDownloader.downloadApk already returns ApkDownloadResult with a specific ApkDownloadFailure on every path; the update dialog branches on it.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:39+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12642,7 +12642,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:39+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::apk_install_error_swallowed": {
       "id": "review::.::holistic::error_consistency::apk_install_error_swallowed",
@@ -12666,11 +12672,11 @@
         "reasoning": "",
         "summary_hash": "4dbef4cc"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "ApkDownloader.installApk returns ApkInstallOutcome (opened, noInstaller, failed) and the update dialog reacts to each outcome.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:41+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12678,7 +12684,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:41+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null": {
       "id": "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
@@ -12702,11 +12714,11 @@
         "reasoning": "",
         "summary_hash": "91167b06"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "BackupService.parseFile throws BackupParseException with a BackupParseFailure reason; no path returns null for a failed parse.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12714,7 +12726,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling": {
       "id": "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
@@ -12741,11 +12759,11 @@
         "reasoning": "",
         "summary_hash": "ddaa2619"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "User-visible ReplayGain writes return ReplayGainWriteResult with a failure reason; FFmpeg tag writers and the playlist cover resize throw FFmpegMetadataFailure. Internal probes keep bool.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:32:44+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12753,7 +12771,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:32:44+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::naming_quality::queue_name_for_library_browser": {
       "id": "review::.::holistic::naming_quality::queue_name_for_library_browser",
@@ -15050,7 +15074,10 @@
     "error_consistency": {
       "score": 62.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-29T14:32:44+00:00"
     },
     "high_level_elegance": {
       "score": 74.0,
@@ -38199,13 +38226,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 4,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 4,
+          "failing": 0,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,

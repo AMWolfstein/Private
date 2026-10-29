@@ -459,3 +459,19 @@ the device integration suite still need a run on a machine with the SDK.
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (exit 0).
+
+## Task 1: failure signalling (commits 6092677, e556ae9)
+
+- error_consistency::apk_download_null_hides_failure_reason and
+  apk_install_error_swallowed: already fixed. `ApkDownloader.downloadApk` returns
+  `ApkDownloadResult` with a specific `ApkDownloadFailure`, and `installApk` returns
+  `ApkInstallOutcome`. The update dialog branches on both.
+- error_consistency::backup_parse_failures_collapse_to_null: already fixed. `BackupService.parseFile`
+  throws `BackupParseException` with a reason.
+- error_consistency::mixed_null_bool_exception_failure_signalling: user-visible ReplayGain writes
+  return `ReplayGainWriteResult` with a `ReplayGainWriteFailure`. FFmpeg tag writers and the
+  playlist cover resize throw `FFmpegMetadataFailure`. Internal probes such as the trigram FTS
+  check keep `bool`, because the user never sees their failure.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0).

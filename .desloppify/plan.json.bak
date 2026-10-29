@@ -1,17 +1,13 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T14:09:12+00:00",
+  "updated": "2026-10-29T14:32:44+00:00",
   "queue_order": [
-    "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
+    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
     "review::.::holistic::convention_outlier::part_file_split_style_mixed",
     "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
     "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
     "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
-    "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason",
-    "review::.::holistic::error_consistency::apk_install_error_swallowed",
-    "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
-    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
     "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
     "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
     "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
@@ -686,7 +682,9 @@
       "candidates": []
     }
   },
-  "promoted_ids": [],
+  "promoted_ids": [
+    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling"
+  ],
   "plan_start_scores": {
     "strict": 23.7,
     "overall": 23.7,
@@ -2627,6 +2625,166 @@
       "actor": "user",
       "note": "Replaced the exact delete-if-exists try/catch sites with deleteBestEffort in backup_service, metadata_cover_resources, library_scan_bridge and the collections provider; the remaining catch blocks guard parsing or callbacks, not deletes.",
       "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:09:12+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Replaced the exact delete-if-exists try/catch sites with deleteBestEffort in backup_service, metadata_cover_resources, library_scan_bridge and the collections provider; the remaining catch blocks guard parsing or callbacks, not deletes.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:38+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:39+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ApkDownloader.downloadApk already returns ApkDownloadResult with a specific ApkDownloadFailure on every path; the update dialog branches on it.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:32:39+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ApkDownloader.downloadApk already returns ApkDownloadResult with a specific ApkDownloadFailure on every path; the update dialog branches on it.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:40+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::apk_install_error_swallowed"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:41+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::apk_install_error_swallowed"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ApkDownloader.installApk returns ApkInstallOutcome (opened, noInstaller, failed) and the update dialog reacts to each outcome.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:32:41+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::apk_install_error_swallowed"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ApkDownloader.installApk returns ApkInstallOutcome (opened, noInstaller, failed) and the update dialog reacts to each outcome.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:42+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:43+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "BackupService.parseFile throws BackupParseException with a BackupParseFailure reason; no path returns null for a failed parse.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:32:43+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "BackupService.parseFile throws BackupParseException with a BackupParseFailure reason; no path returns null for a failed parse.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:43+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:32:44+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "User-visible ReplayGain writes return ReplayGainWriteResult with a failure reason; FFmpeg tag writers and the playlist cover resize throw FFmpegMetadataFailure. Internal probes keep bool.",
+      "detail": {}
     }
   ],
   "epic_triage_meta": {},
@@ -2680,7 +2838,11 @@
     "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle",
     "review::.::holistic::high_level_elegance::lower_layers_import_upward",
     "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
-    "review::.::holistic::package_organization::model_depends_on_persistence"
+    "review::.::holistic::package_organization::model_depends_on_persistence",
+    "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
+    "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason",
+    "review::.::holistic::error_consistency::apk_install_error_swallowed",
+    "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 5
