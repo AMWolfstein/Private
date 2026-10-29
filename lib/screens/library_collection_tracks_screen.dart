@@ -35,6 +35,7 @@ import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/selection_action_button.dart';
 import 'package:sistrum/widgets/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/playlist_picker_sheet.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 String? _resolveRawCoverUrl(Track track) {
   final rawCover = track.coverUrl?.trim();

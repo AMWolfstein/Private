@@ -11,6 +11,7 @@ import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 void main() {
   testWidgets(

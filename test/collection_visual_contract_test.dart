@@ -13,6 +13,7 @@ import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/local_collection_actions.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 const _track = Track(
   id: '1',

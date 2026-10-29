@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/audio_quality_badge_policy.dart';
-import 'package:sistrum/utils/confirm_and_delete_tracks.dart';
+import 'package:sistrum/widgets/confirm_and_delete_tracks.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/image_cache_utils.dart';
 import 'package:sistrum/services/library/library_database.dart';
@@ -39,8 +39,9 @@ import 'package:sistrum/widgets/album_ken_burns.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/local_collection_actions.dart';
 import 'package:sistrum/widgets/local_library_artwork_builder.dart';
-import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/screens/detail_navigation.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;

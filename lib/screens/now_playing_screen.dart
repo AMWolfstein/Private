@@ -19,7 +19,7 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/screens/now_playing_route.dart';
 import 'package:sistrum/screens/local_album_screen.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/screens/detail_navigation.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';

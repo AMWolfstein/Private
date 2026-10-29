@@ -18,6 +18,7 @@ import 'package:sistrum/widgets/album_track_tile.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/local_song_row.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 class _Library extends LocalLibraryNotifier {
   @override

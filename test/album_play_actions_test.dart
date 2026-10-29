@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));

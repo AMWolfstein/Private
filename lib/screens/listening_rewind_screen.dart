@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
-import 'package:sistrum/widgets/album_detail_header.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
@@ -23,6 +22,7 @@ import 'package:sistrum/widgets/app_content_card.dart';
 import 'package:sistrum/widgets/app_loading_indicator.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 final listeningRewindProvider = FutureProvider.autoDispose
     .family<ListeningRewind, ListeningRewindPeriod>((ref, period) async {

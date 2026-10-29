@@ -7,12 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/app_choice_chip.dart';
 import 'package:sistrum/widgets/app_switch.dart';
 import 'package:sistrum/widgets/audio_quality_badges.dart';
 import 'package:sistrum/widgets/local_song_row.dart';
 import 'package:sistrum/widgets/metadata_text_field.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 /// WCAG 2.1 relative-contrast ratio between two opaque colours.
 double _contrast(Color a, Color b) {

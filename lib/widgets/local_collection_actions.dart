@@ -9,6 +9,7 @@ import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
 import 'package:sistrum/widgets/playlist_picker_sheet.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 /// Sistrum album/playlist action row: Loved, Play, Shuffle, Add to playlist.
 /// The primary action plays local files in place of the retired download action.

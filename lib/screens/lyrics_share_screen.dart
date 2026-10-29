@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'dart:io';
 import 'dart:ui' show ImageByteFormat, ImageFilter;
@@ -14,6 +13,7 @@ import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 /// Story-sized lyric cards stay short, like quoting a song rather than
 /// reproducing its lyrics.

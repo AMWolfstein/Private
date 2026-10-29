@@ -5,7 +5,7 @@ import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/services/batch_track_actions.dart';
-import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/screens/detail_navigation.dart';
 import 'package:sistrum/widgets/local_song_file_actions.dart';
 import 'package:sistrum/services/metadata_index_reconciler.dart';
 import 'package:sistrum/utils/logger.dart';

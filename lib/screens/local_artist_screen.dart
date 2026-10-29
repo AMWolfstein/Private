@@ -18,10 +18,10 @@ import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/local_song_row.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/header_controls.dart';
 
 /// Sistrum's former artist detail composition, backed entirely by local music.
 class LocalArtistScreen extends ConsumerStatefulWidget {

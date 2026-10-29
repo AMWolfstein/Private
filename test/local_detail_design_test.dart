@@ -18,7 +18,7 @@ import 'package:sistrum/screens/local_artist_screen.dart';
 import 'package:sistrum/screens/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/utils/clickable_metadata.dart';
+import 'package:sistrum/screens/detail_navigation.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
