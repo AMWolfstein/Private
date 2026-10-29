@@ -277,3 +277,17 @@ beside the handler it configures, and the shared audio context moved to the deck
 
 The large-file part-file item still covers the Library, audio-analysis and collection files that keep
 their parts, so it stays open for those.
+
+## Layer and header pass
+
+- `lib/utils` has no screen or widget imports now. `clickable_metadata.dart` moved to
+  `screens/detail_navigation.dart`, and `confirm_and_delete_tracks.dart` moved to `widgets/`.
+- The generic header primitives moved to `widgets/header_controls.dart`. `AlbumPlayActions` stays with the
+  album header.
+
+Still open, with reasons:
+- The album and artist screens import `detail_navigation.dart`, and it builds those screens, so the cycle
+  remains. Breaking it needs a route-builder design, which is a decision.
+- `audio_analysis_widget.dart` mixes ffmpeg parsing with the card UI, and it uses part files for its
+  models, info card and spectrogram. Splitting it changes its library structure and touches four
+  importers, so it is a separate pass.
