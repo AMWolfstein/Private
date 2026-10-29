@@ -221,7 +221,7 @@ class MediaFileBridge {
     });
   }
 
-  static Future<Map<String, dynamic>> editFileMetadata(
+  static Future<Map<String, dynamic>> _editFileMetadataRaw(
     String filePath,
     Map<String, String> metadata,
   ) {
@@ -234,11 +234,12 @@ class MediaFileBridge {
   }
 
   /// Typed variant of [editFileMetadata] for callers that act on the outcome.
-  static Future<MetadataEditResult> editFileMetadataResult(
+  static Future<MetadataEditResult> editFileMetadata(
     String filePath,
     Map<String, String> metadata,
-  ) async =>
-      MetadataEditResult.decode(await editFileMetadata(filePath, metadata));
+  ) async => MetadataEditResult.decode(
+    await _editFileMetadataRaw(filePath, metadata),
+  );
 
   static Future<T> _withMediaFileAccess<T>(
     Iterable<String> paths,
@@ -265,10 +266,6 @@ class MediaFileBridge {
         }
       }
     }
-  }
-
-  static Future<bool> writeTempToSaf(String tempPath, String safUri) async {
-    return (await writeTempToSafDetailed(tempPath, safUri)).success;
   }
 
   /// Writes a completed temporary file back to its SAF document and reports

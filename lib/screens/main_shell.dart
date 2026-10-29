@@ -32,7 +32,11 @@ import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
 class MainShell extends ConsumerStatefulWidget {
-  const MainShell({super.key});
+  /// Builds the Search tab in the background after the first frame. Tests turn
+  /// this off so the idle preload does not build every tab.
+  const MainShell({super.key, this.preloadTabs = true});
+
+  final bool preloadTabs;
 
   @override
   ConsumerState<MainShell> createState() => _MainShellState();
@@ -436,7 +440,7 @@ class _MainShellState extends ConsumerState<MainShell>
       key: _pageViewKey,
       child: LazyTabView(
         index: selectedDestination,
-        preloadKeys: {const ValueKey('tab-search')},
+        preloadKeys: widget.preloadTabs ? {const ValueKey('tab-search')} : const {},
         children: [
           for (var index = 0; index < tabs.length; index++)
             KeyedSubtree(

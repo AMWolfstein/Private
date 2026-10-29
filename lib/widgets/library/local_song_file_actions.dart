@@ -18,6 +18,7 @@ import 'package:sistrum/services/native/cue_sheet_bridge.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/utils/mime_utils.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
@@ -42,8 +43,14 @@ Future<int> exportCueSplitOutputs(
 }) async {
   final embed =
       embedCover ??
-      (path, cover) =>
-          MediaFileBridge.editFileMetadata(path, {'cover_path': cover});
+      (path, cover) async {
+        final result = await MediaFileBridge.editFileMetadata(path, {
+          'cover_path': cover,
+        });
+        if (result.outcome == MetadataEditOutcome.failed) {
+          throw StateError(result.error ?? 'Cover could not be embedded');
+        }
+      };
   final create =
       createFile ??
       (path) => MediaFileBridge.createSafFileFromPath(

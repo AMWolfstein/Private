@@ -47,7 +47,7 @@ typedef MetadataEmbed =
 /// Writes tags without widget state, and owns resources until every writer ends.
 class MetadataPersistenceService {
   final MetadataCoverResources covers;
-  final Future<Map<String, dynamic>> Function(String, Map<String, String>) edit;
+  final Future<MetadataEditResult> Function(String, Map<String, String>) edit;
   final Future<Map<String, dynamic>> Function(String) read;
   final MetadataEmbed embed;
   final Future<SafWriteBackResult> Function(String, String) writeBack;
@@ -68,9 +68,7 @@ class MetadataPersistenceService {
       final coverPath = request.selectedCoverPath;
 
       final metadata = {...request.metadata, 'cover_path': coverPath ?? ''};
-      final edit = MetadataEditResult.decode(
-        await this.edit(request.filePath, metadata),
-      );
+      final edit = await this.edit(request.filePath, metadata);
       stagedPath = edit.tempPath;
       if (edit.outcome == MetadataEditOutcome.failed) {
         return MetadataSaveResult.failed(

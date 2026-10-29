@@ -119,7 +119,7 @@ class ReplayGainService {
       'replaygain_album_gain': '',
       'replaygain_album_peak': '',
     };
-    final result = await MediaFileBridge.editFileMetadataResult(path, fields);
+    final result = await MediaFileBridge.editFileMetadata(path, fields);
     if (result.outcome != MetadataEditOutcome.completed ||
         !result.isNativeMethod) {
       return false;
@@ -141,7 +141,7 @@ class ReplayGainService {
     final scope = album ? 'album' : 'track';
     var written = false;
     if (_isNativeWritableFormat(path)) {
-      final result = await MediaFileBridge.editFileMetadataResult(path, {
+      final result = await MediaFileBridge.editFileMetadata(path, {
         'replaygain_${scope}_gain': gain,
         'replaygain_${scope}_peak': peak,
       });
@@ -216,9 +216,15 @@ class ReplayGainService {
       if (!await update(workingPath)) return false;
 
       if (isSaf) {
-        final ok = await MediaFileBridge.writeTempToSaf(workingPath, filePath);
-        if (!ok) {
-          _log.w('Failed to write ReplayGain temp file back to SAF document');
+        final written = await MediaFileBridge.writeTempToSafDetailed(
+          workingPath,
+          filePath,
+        );
+        if (!written.success) {
+          _log.w(
+            'Failed to write ReplayGain temp file back to SAF document: '
+            '${written.error ?? 'unknown error'}',
+          );
           return false;
         }
       }

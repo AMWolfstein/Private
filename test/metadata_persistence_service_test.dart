@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/services/library/metadata_persistence_service.dart';
@@ -42,7 +43,7 @@ void main() {
     () async {
       final cover = await covers.create();
       final entered = Completer<void>();
-      final completed = Completer<Map<String, dynamic>>();
+      final completed = Completer<MetadataEditResult>();
       final tags = {'title': 'Song', 'lyrics': ''};
       final input = request(tags: tags, selectedCover: cover.path);
       tags['title'] = 'Changed';
@@ -64,7 +65,9 @@ void main() {
       await entered.future;
       await covers.dispose();
       expect(await File(cover.path).exists(), isTrue);
-      completed.complete({'success': true, 'method': 'native'});
+      completed.complete(
+        MetadataEditResult.decode({'success': true, 'method': 'native'}),
+      );
       expect((await pending).failure, isNull);
       expect(await Directory(cover.tempDir).exists(), isFalse);
     },
@@ -80,7 +83,7 @@ void main() {
           covers: covers,
           edit: (_, metadata) async {
             expect(metadata['cover_path'], '');
-            return {'method': 'ffmpeg'};
+            return MetadataEditResult.decode({'method': 'ffmpeg'});
           },
           read: (path) async {
             expect(path, 'song.$extension');
@@ -149,7 +152,7 @@ void main() {
       ]) {
         final service = MetadataPersistenceService(
           covers: covers,
-          edit: (_, _) async => {'method': 'ffmpeg'},
+          edit: (_, _) async => MetadataEditResult.decode({'method': 'ffmpeg'}),
           read: (_) async => throw StateError('Reader unavailable'),
           embed: (_, path, _, metadata) async {
             expect(metadata['LYRICS'], '');
@@ -196,7 +199,7 @@ void main() {
         edit: (_, metadata) async {
           expect(metadata['artist'], 'A, B');
           expect(metadata['artist_separator'], ' / ');
-          return {'method': 'ffmpeg'};
+          return MetadataEditResult.decode({'method': 'ffmpeg'});
         },
         read: (_) async => throw StateError('Reader unavailable'),
         embed: (_, path, _, metadata) async {
@@ -234,13 +237,13 @@ void main() {
         covers.extractCover = true;
         final service = MetadataPersistenceService(
           covers: covers,
-          edit: (_, _) async => {
+          edit: (_, _) async => MetadataEditResult.decode({
             'method': 'ffmpeg',
             'temp_path': staged.path,
             'saf_uri': 'content://library/song.mp3',
             if (failure == MetadataSaveFailure.backend)
               'error': 'Backend failed',
-          },
+          }),
           read: (_) async => {},
           embed: (_, path, coverPath, _) async {
             expect(path, staged.path);
@@ -288,7 +291,7 @@ void main() {
     );
     final service = MetadataPersistenceService(
       covers: covers,
-      edit: (_, _) async => {'method': 'ffmpeg'},
+      edit: (_, _) async => MetadataEditResult.decode({'method': 'ffmpeg'}),
       read: (_) async => {},
       embed: (_, _, _, _) async => throw failure,
     );

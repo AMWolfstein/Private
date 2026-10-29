@@ -5,7 +5,7 @@ enum MetadataEditOutcome {
   completed,
 
   /// The native writer staged a temp file: Dart must run FFmpeg on it and write
-  /// the result back through `writeTempToSaf` (or promote it in place).
+  /// the result back through `writeTempToSafDetailed` (or promote it in place).
   ffmpegStaged,
 
   /// The edit did not happen.
