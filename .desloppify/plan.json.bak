@@ -833,6 +833,16 @@
           "issue_refs": [
             "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only"
           ]
+        },
+        {
+          "title": "Add behavioural tests for listening_statistics_screen, local_guide_pages and duplicate_review_sheet",
+          "detail": "Test visible statistics, guide-page and duplicate-review behaviour; no stubs. Track Test health strict score after the cluster.",
+          "effort": "large",
+          "issue_refs": [
+            "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+            "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+            "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
+          ]
         }
       ]
     }
@@ -4336,6 +4346,17 @@
       "actor": "user",
       "note": null,
       "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T20:35:50+00:00",
+      "action": "cluster_update",
+      "issue_ids": [],
+      "cluster_name": "transitive-behaviour-tests",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": null
+      }
     },
     {
       "timestamp": "2026-10-29T20:35:50+00:00",
