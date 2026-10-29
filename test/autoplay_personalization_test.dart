@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player_autoplay.dart';
 
 final _at = DateTime(2026, 10, 11, 9);
 const _rock = AutoplayLearningTrack(

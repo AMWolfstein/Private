@@ -18,6 +18,7 @@ import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/services/playback/automix_effect_renderer.dart';
 import 'package:sistrum/services/playback/automix_status.dart';
 import 'package:sistrum/services/system_volume_service.dart';
+import 'package:sistrum/services/playback/music_player_autoplay.dart';
 
 class _EffectRenderer extends AutoMixEffectRenderer {
   final tails = <RenderedMixTail>[];

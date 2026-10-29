@@ -1,4 +1,18 @@
-part of 'music_player_service.dart';
+import 'dart:async';
+
+import 'package:audio_service/audio_service.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:sistrum/models/playable_media.dart';
+import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/playback/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix_analyzer.dart';
+import 'package:sistrum/services/playback/automix_effect_renderer.dart';
+import 'package:sistrum/services/playback/automix_phase_lock.dart';
+import 'package:sistrum/services/playback/automix_status.dart';
+import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/utils/logger.dart';
+
+final _log = AppLogger('MusicPlayer');
 
 /// What AutoMix needs from the handler: the live queue, the playing deck and the
 /// transition commit. [_HandlerAutoMixHost] supplies it, so AutoMix does not
@@ -38,87 +52,8 @@ abstract interface class AutoMixHost {
   });
 }
 
-/// The only place AutoMix's reads and writes meet the handler's private state.
-class _HandlerAutoMixHost implements AutoMixHost {
-  _HandlerAutoMixHost(this._handler);
-
-  final MusicPlayerHandler _handler;
-
-  @override
-  AppSettings get settings => _handler._settings;
-  @override
-  bool get isDisposed => _handler._disposed;
-  @override
-  bool get sourceReady => _handler._sourceReady;
-  @override
-  bool get userPaused => _handler._userPaused;
-  @override
-  bool get interruptionActive => _handler._focus.active;
-  @override
-  bool get isLiveHandler => identical(musicPlayerRuntime.handler, _handler);
-  @override
-  AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
-  @override
-  int get mediaCount => _handler._media.length;
-  @override
-  PlayableMedia mediaAt(int index) => _handler._media[index];
-  @override
-  int get index => _handler._index;
-  @override
-  int get playRequestGeneration => _handler._playRequestGeneration;
-  @override
-  int get sessionQueueRevision => _handler._sessionQueueRevision;
-  @override
-  double get normalizationVolume => _handler._normalizationVolume;
-  @override
-  MusicPlaybackDeck get player => _handler._player;
-  @override
-  Duration? get currentDuration => _handler.mediaItem.value?.duration;
-  @override
-  Future<String?> resolveSource(PlayableMedia media) =>
-      _handler._resolveSource(media);
-  @override
-  Future<double> normalizationVolumeFor(String path, {String? cacheKey}) =>
-      _handler._normalizationVolumeFor(path, cacheKey: cacheKey);
-  @override
-  MusicPlaybackDeck createDeck(String playerId) =>
-      _handler._dependencies.createDeck(playerId);
-  @override
-  void listenToPlayer(MusicPlaybackDeck deck) => _handler._listenToPlayer(deck);
-  @override
-  Future<void> disposeDeck(MusicPlaybackDeck deck) =>
-      _handler._disposeDeck(deck);
-  @override
-  Future<void> cleanupPendingResolvedPaths() =>
-      _handler._cleanupPendingResolvedPaths();
-  @override
-  void broadcastState({PlayerState? playerState}) =>
-      _handler._broadcastState(playerState: playerState);
-  @override
-  void broadcastPosition(Duration position, {bool force = false}) =>
-      _handler._broadcastPosition(position, force: force);
-  @override
-  void commitTransition({
-    required MusicPlaybackDeck incoming,
-    required int index,
-    required PlayableMedia next,
-    required String? nextPath,
-    required Duration? nextDuration,
-    required double normalizationVolume,
-    required Duration audiblePosition,
-  }) => _handler._commitAutoMixTransition(
-    incoming: incoming,
-    index: index,
-    next: next,
-    nextPath: nextPath,
-    nextDuration: nextDuration,
-    normalizationVolume: normalizationVolume,
-    audiblePosition: audiblePosition,
-  );
-}
-
-class _MusicAutoMix {
-  _MusicAutoMix(this.host, this.analyzer, this.renderer);
+class MusicAutoMix {
+  MusicAutoMix(this.host, this.analyzer, this.renderer);
 
   final AutoMixHost host;
   final AutoMixAnalyzer analyzer;
@@ -239,7 +174,7 @@ class _MusicAutoMix {
       );
       host.listenToPlayer(deck);
       await deck.setReleaseMode(ReleaseMode.stop);
-      await deck.setAudioContext(_musicAudioContext);
+      await deck.setAudioContext(musicAudioContext);
       await deck.setVolume(0);
       if (!_current(generation)) return;
       await deck.setSource(DeviceFileSource(nextPath));
@@ -289,7 +224,7 @@ class _MusicAutoMix {
           host.listenToPlayer(effectDeck);
           try {
             await effectDeck.setReleaseMode(ReleaseMode.stop);
-            await effectDeck.setAudioContext(_musicAudioContext);
+            await effectDeck.setAudioContext(musicAudioContext);
             await effectDeck.setVolume(0);
             await effectDeck.setSource(DeviceFileSource(effectTail.path));
           } catch (error) {

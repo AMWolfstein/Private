@@ -1,45 +1,37 @@
 import 'package:sistrum/services/playback/playback_session_prepare.dart';
 import 'package:sistrum/services/playback/music_haptics.dart';
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/foundation.dart' show compute;
 import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show AudioSession, AudioSessionConfiguration, AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:sistrum/services/listening_statistics.dart' show ListeningTrack;
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/sqlite_helpers.dart' show normalizeLookupText;
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/playback/playback_normalization.dart';
 import 'package:sistrum/services/playback/playback_automation.dart';
 import 'package:sistrum/services/playback/playback_session_writer.dart';
 import 'package:sistrum/services/playback/content_uri_playback_cache.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/playback/music_player_autoplay.dart';
+import 'package:sistrum/services/playback/music_player_automix.dart';
 import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/services/playback/playback_policies.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/automix_analysis.dart';
-import 'package:sistrum/services/playback/automix_phase_lock.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/automix_analyzer.dart';
 import 'package:sistrum/models/playable_media.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/playback/automix_effect_renderer.dart';
 import 'package:sistrum/services/playback/automix_status.dart';
-import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
 import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/logger.dart';
 
 export 'package:sistrum/models/playable_media.dart';
 export 'playback_metadata.dart';
-
-part 'music_player_automix.dart';
-part 'music_player_autoplay.dart';
 
 final _log = AppLogger('MusicPlayer');
 
@@ -64,15 +56,6 @@ List<int> buildShuffledQueueOrder({
   ];
 }
 
-final AudioContext _musicAudioContext = AudioContext(
-  android: const AudioContextAndroid(
-    audioFocus: AndroidAudioFocus.none,
-    contentType: AndroidContentType.music,
-    usageType: AndroidUsageType.media,
-    stayAwake: true,
-  ),
-);
-
 /// Returns a safe source-start position for restored playback. A completed
 /// snapshot starts over instead of immediately completing again on resume.
 Duration normalizedPlaybackResumePosition(
@@ -91,7 +74,7 @@ class MusicPlayerHandler extends PlaybackHandler {
   PlaybackDependencies get _dependencies => _runtime.dependencies;
   AppSettings get _settings => _runtime.settings;
   late MusicPlaybackDeck _player;
-  late final _MusicAutoMix _autoMix;
+  late final MusicAutoMix _autoMix;
   late final MusicAutoplay _autoplay;
   late final MusicHaptics _haptics;
   bool _completing = false;
@@ -235,14 +218,14 @@ class MusicPlayerHandler extends PlaybackHandler {
       isDisposed: () => _disposed,
       log: _log,
     );
-    _autoMix = _MusicAutoMix(
+    _autoMix = MusicAutoMix(
       _HandlerAutoMixHost(this),
       autoMixAnalyzer ?? AutoMixAnalyzer(),
       autoMixEffectRenderer ?? AutoMixEffectRenderer(),
     );
     _autoplay = MusicAutoplay(
       _HandlerAutoplayQueue(this),
-      autoplayLibraryLoader ?? (seed) => _loadAutoplayLibrary(seed, _runtime),
+      autoplayLibraryLoader ?? (seed) => loadAutoplayLibrary(seed, _runtime),
     );
     try {
       _init();
@@ -322,7 +305,7 @@ class MusicPlayerHandler extends PlaybackHandler {
       unawaited(_dependencies.recorder.flush());
     });
     _player.setReleaseMode(ReleaseMode.stop);
-    unawaited(_player.setAudioContext(_musicAudioContext));
+    unawaited(_player.setAudioContext(musicAudioContext));
     unawaited(_configureAudioSession());
     _refreshPlaybackAutomation();
 
@@ -354,7 +337,7 @@ class MusicPlayerHandler extends PlaybackHandler {
     final enabled = _settings.autoplayPersonalization;
     _runtime.personalization.setEnabled(enabled);
     if (enabled && _index >= 0 && _index < _media.length) {
-      _runtime.personalization.begin(_learningTrack(_media[_index]));
+      _runtime.personalization.begin(autoplayLearningTrack(_media[_index]));
       final state = playbackState.value;
       _runtime.personalization.updatePlayback(
         source: mediaItem.value?.extras?['source'] as String?,
@@ -872,7 +855,7 @@ class MusicPlayerHandler extends PlaybackHandler {
     _normalizationVolume = normalizationVolume;
     _activeResolvedPath = resolvedSource;
     _pendingRestorePosition = null;
-    _runtime.personalization.begin(_learningTrack(next));
+    _runtime.personalization.begin(autoplayLearningTrack(next));
     mediaItem.add(
       _toMediaItem(
         next,
@@ -1408,7 +1391,7 @@ class MusicPlayerHandler extends PlaybackHandler {
 
   /// Shows the track to listeners before its source resolves.
   void _announceTrack(PlayableMedia media, Duration effectiveStartPosition) {
-    _runtime.personalization.begin(_learningTrack(media));
+    _runtime.personalization.begin(autoplayLearningTrack(media));
     mediaItem.add(_toMediaItem(media));
     _lastBroadcastPosition = Duration.zero;
     _lastPositionBroadcastAt = null;
@@ -1440,7 +1423,7 @@ class MusicPlayerHandler extends PlaybackHandler {
     double normalizationVolume,
     bool Function() isCurrent,
   ) async {
-    await _player.setAudioContext(_musicAudioContext);
+    await _player.setAudioContext(musicAudioContext);
     if (!isCurrent()) return false;
     await _activateAudioSession();
     if (!isCurrent()) return false;
@@ -2065,3 +2048,133 @@ const defaultPlaybackDependencies = PlaybackDependencies(
 final musicPlayerRuntime = MusicPlayerRuntime(
   dependencies: defaultPlaybackDependencies,
 );
+
+Future<void> resetAutoplayLearning({MusicPlayerRuntime? runtime}) async {
+  final target = runtime ?? musicPlayerRuntime;
+  await target.personalization.reset();
+  final handler = _concreteHandler(target);
+  if (handler == null || handler.isDisposed) return;
+  handler._configurePersonalization();
+  handler._autoplay.updateMode();
+}
+
+/// The only place AutoMix's reads and writes meet the handler's private state.
+class _HandlerAutoMixHost implements AutoMixHost {
+  _HandlerAutoMixHost(this._handler);
+
+  final MusicPlayerHandler _handler;
+
+  @override
+  AppSettings get settings => _handler._settings;
+  @override
+  bool get isDisposed => _handler._disposed;
+  @override
+  bool get sourceReady => _handler._sourceReady;
+  @override
+  bool get userPaused => _handler._userPaused;
+  @override
+  bool get interruptionActive => _handler._focus.active;
+  @override
+  bool get isLiveHandler => identical(musicPlayerRuntime.handler, _handler);
+  @override
+  AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
+  @override
+  int get mediaCount => _handler._media.length;
+  @override
+  PlayableMedia mediaAt(int index) => _handler._media[index];
+  @override
+  int get index => _handler._index;
+  @override
+  int get playRequestGeneration => _handler._playRequestGeneration;
+  @override
+  int get sessionQueueRevision => _handler._sessionQueueRevision;
+  @override
+  double get normalizationVolume => _handler._normalizationVolume;
+  @override
+  MusicPlaybackDeck get player => _handler._player;
+  @override
+  Duration? get currentDuration => _handler.mediaItem.value?.duration;
+  @override
+  Future<String?> resolveSource(PlayableMedia media) =>
+      _handler._resolveSource(media);
+  @override
+  Future<double> normalizationVolumeFor(String path, {String? cacheKey}) =>
+      _handler._normalizationVolumeFor(path, cacheKey: cacheKey);
+  @override
+  MusicPlaybackDeck createDeck(String playerId) =>
+      _handler._dependencies.createDeck(playerId);
+  @override
+  void listenToPlayer(MusicPlaybackDeck deck) => _handler._listenToPlayer(deck);
+  @override
+  Future<void> disposeDeck(MusicPlaybackDeck deck) =>
+      _handler._disposeDeck(deck);
+  @override
+  Future<void> cleanupPendingResolvedPaths() =>
+      _handler._cleanupPendingResolvedPaths();
+  @override
+  void broadcastState({PlayerState? playerState}) =>
+      _handler._broadcastState(playerState: playerState);
+  @override
+  void broadcastPosition(Duration position, {bool force = false}) =>
+      _handler._broadcastPosition(position, force: force);
+  @override
+  void commitTransition({
+    required MusicPlaybackDeck incoming,
+    required int index,
+    required PlayableMedia next,
+    required String? nextPath,
+    required Duration? nextDuration,
+    required double normalizationVolume,
+    required Duration audiblePosition,
+  }) => _handler._commitAutoMixTransition(
+    incoming: incoming,
+    index: index,
+    next: next,
+    nextPath: nextPath,
+    nextDuration: nextDuration,
+    normalizationVolume: normalizationVolume,
+    audiblePosition: audiblePosition,
+  );
+}
+
+/// The only place Autoplay's reads and writes meet the handler's private state.
+class _HandlerAutoplayQueue implements AutoplayQueueView {
+  _HandlerAutoplayQueue(this._handler);
+
+  final MusicPlayerHandler _handler;
+
+  @override
+  bool get autoplaySetting => _handler._settings.autoplay;
+  @override
+  bool get isDisposed => _handler._disposed;
+  @override
+  AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
+  @override
+  int get index => _handler._index;
+  @override
+  int get mediaCount => _handler._media.length;
+  @override
+  PlayableMedia mediaAt(int i) => _handler._media[i];
+  @override
+  MediaItem queueItemAt(int i) => _handler._queueItems[i];
+  @override
+  List<PlayableMedia> upcoming() =>
+      _handler._media.skip(_handler._index + 1).toList();
+  @override
+  List<PlayableMedia> recentlyPlayed() => _handler._playHistory.entries
+      .where((i) => i >= 0 && i < _handler._media.length)
+      .map((i) => _handler._media[i])
+      .toList();
+  @override
+  AutoplayPreferenceModel? get preferenceModel =>
+      _handler._runtime.personalization.rankingSnapshot;
+  @override
+  Random get random => _handler._random;
+  @override
+  int get sessionQueueRevision => _handler._sessionQueueRevision;
+  @override
+  void appendAutoplayTracks(List<PlayableMedia> additions) =>
+      _handler._appendAutoplayTracks(additions);
+  @override
+  void removeQueuedItem(MediaItem item) => _handler.removeQueuedItem(item);
+}

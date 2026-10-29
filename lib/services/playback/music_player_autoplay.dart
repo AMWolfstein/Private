@@ -1,18 +1,23 @@
-part of 'music_player_service.dart';
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+
+import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart' show compute;
+import 'package:sistrum/models/playable_media.dart';
+import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/playback/autoplay_personalization.dart';
+import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/sqlite_helpers.dart' show normalizeLookupText;
+import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/logger.dart';
+
+final _log = AppLogger('MusicPlayer');
 
 typedef AutoplayLibraryLoader =
     Future<List<PlayableMedia>> Function(PlayableMedia seed);
 
-Future<void> resetAutoplayLearning({MusicPlayerRuntime? runtime}) async {
-  final target = runtime ?? musicPlayerRuntime;
-  await target.personalization.reset();
-  final handler = _concreteHandler(target);
-  if (handler == null || handler.isDisposed) return;
-  handler._configurePersonalization();
-  handler._autoplay.updateMode();
-}
-
-AutoplayLearningTrack _learningTrack(PlayableMedia media) =>
+AutoplayLearningTrack autoplayLearningTrack(PlayableMedia media) =>
     AutoplayLearningTrack(
       source: media.source,
       title: media.title,
@@ -24,7 +29,7 @@ AutoplayLearningTrack _learningTrack(PlayableMedia media) =>
 
 /// Bounded database pages keep recommendation work independent of Library
 /// size. Enabled scanned sources are local files.
-Future<List<PlayableMedia>> _loadAutoplayLibrary(
+Future<List<PlayableMedia>> loadAutoplayLibrary(
   PlayableMedia seed,
   MusicPlayerRuntime runtime,
 ) async {
@@ -174,48 +179,6 @@ abstract interface class AutoplayQueueView {
   int get sessionQueueRevision;
   void appendAutoplayTracks(List<PlayableMedia> additions);
   void removeQueuedItem(MediaItem item);
-}
-
-/// The only place Autoplay's reads and writes meet the handler's private state.
-class _HandlerAutoplayQueue implements AutoplayQueueView {
-  _HandlerAutoplayQueue(this._handler);
-
-  final MusicPlayerHandler _handler;
-
-  @override
-  bool get autoplaySetting => _handler._settings.autoplay;
-  @override
-  bool get isDisposed => _handler._disposed;
-  @override
-  AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
-  @override
-  int get index => _handler._index;
-  @override
-  int get mediaCount => _handler._media.length;
-  @override
-  PlayableMedia mediaAt(int i) => _handler._media[i];
-  @override
-  MediaItem queueItemAt(int i) => _handler._queueItems[i];
-  @override
-  List<PlayableMedia> upcoming() =>
-      _handler._media.skip(_handler._index + 1).toList();
-  @override
-  List<PlayableMedia> recentlyPlayed() => _handler._playHistory.entries
-      .where((i) => i >= 0 && i < _handler._media.length)
-      .map((i) => _handler._media[i])
-      .toList();
-  @override
-  AutoplayPreferenceModel? get preferenceModel =>
-      _handler._runtime.personalization.rankingSnapshot;
-  @override
-  Random get random => _handler._random;
-  @override
-  int get sessionQueueRevision => _handler._sessionQueueRevision;
-  @override
-  void appendAutoplayTracks(List<PlayableMedia> additions) =>
-      _handler._appendAutoplayTracks(additions);
-  @override
-  void removeQueuedItem(MediaItem item) => _handler.removeQueuedItem(item);
 }
 
 class MusicAutoplay {
@@ -379,7 +342,7 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     at,
     limit,
   ) = input;
-  final learningSeed = _learningTrack(seed);
+  final learningSeed = autoplayLearningTrack(seed);
   return selectAutoplayTracks(
     seed: seed,
     candidates: candidates,
@@ -389,7 +352,7 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     random: Random(randomSeed),
     limit: limit,
     preferenceAdjustment: (track) => model.rankAdjustment(
-      _learningTrack(track),
+      autoplayLearningTrack(track),
       previous: learningSeed,
       at: at,
     ),

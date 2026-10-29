@@ -4,6 +4,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player_autoplay.dart';
 
 PlayableMedia _song(String id, {bool autoplay = false}) => PlayableMedia(
   id: id,

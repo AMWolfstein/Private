@@ -478,3 +478,13 @@ class MusicPlaybackDeck {
     await _completions.close();
   }
 }
+
+/// Audio context for every music deck: media stream, stays awake while playing.
+final musicAudioContext = AudioContext(
+  android: const AudioContextAndroid(
+    audioFocus: AndroidAudioFocus.none,
+    contentType: AndroidContentType.music,
+    usageType: AndroidUsageType.media,
+    stayAwake: true,
+  ),
+);
