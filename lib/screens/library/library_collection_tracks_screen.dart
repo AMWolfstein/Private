@@ -26,6 +26,7 @@ import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/local_library_cover_providers.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/screens/library/collapsing_header_scroll_mixin.dart';
 import 'package:sistrum/screens/library/selection_mode_mixin.dart';

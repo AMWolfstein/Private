@@ -155,9 +155,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         );
         for (final row in page.rows) {
           if (row['source'] != 'local') continue;
-          final item = LocalLibraryItem.fromJson(
-            Map<String, dynamic>.from(row['item'] as Map),
-          );
+          final item = LocalLibraryItem.fromEnvelope(row);
           if (isCueVirtualPath(item.filePath)) continue;
           tracks.add(UnifiedLibraryItem.fromLocalLibrary(item).toTrack());
         }
