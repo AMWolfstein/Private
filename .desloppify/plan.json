@@ -1,11 +1,10 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T19:02:16+00:00",
+  "updated": "2026-10-29T19:02:33+00:00",
   "queue_order": [
     "workflow::create-plan",
     "triage::strategize",
-    "triage::observe",
     "triage::reflect",
     "triage::organize",
     "triage::enrich",
@@ -4059,6 +4058,17 @@
           "Structure nav"
         ]
       }
+    },
+    {
+      "timestamp": "2026-10-29T19:02:33+00:00",
+      "action": "triage_confirm_observe",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "attestation": "I have actually read the observe report and checked its claims against the source: the part-of files, the 0-importer results and the delete-confirm duplication. I am not gaming the score by confirming without reading."
+      }
     }
   ],
   "epic_triage_meta": {
@@ -4085,7 +4095,9 @@
         "timestamp": "2026-10-29T19:02:16+00:00",
         "issue_count": 0,
         "dimension_names": [],
-        "dimension_counts": {}
+        "dimension_counts": {},
+        "confirmed_at": "2026-10-29T19:02:33+00:00",
+        "confirmed_text": "I have actually read the observe report and checked its claims against the source: the part-of files, the 0-importer results and the delete-confirm duplication. I am not gaming the score by confirming without reading."
       }
     },
     "active_triage_issue_ids": [],
