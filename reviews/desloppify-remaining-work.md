@@ -171,3 +171,18 @@ Fixed and resolved in the queue:
 
 Queue after this pass: 48 items. The next items are the layer and package moves, the playback cycles,
 updater and backup error handling, the row-decoding consolidation, and the test-environment items.
+
+## Fourth pass
+
+Fixed and resolved in the queue:
+- mid_level_elegance::shared_mutable_priority_map: the artist Popular random tie-breaks live in a
+  small per-page class with a `drawFor` method; the provider no longer returns a mutable map that its
+  consumer mutates. Behaviour is unchanged (draws still persist across index refreshes and are
+  released with the page's last listener).
+
+Left open with reasons:
+- low_level_elegance best-effort delete `catch (_) {}` idiom: it appears at dozens of sites, several
+  of which are deliberate best-effort cleanup. A shared helper would touch most of the library and
+  audio-analysis files for no behaviour change, so it is not pursued in this pass.
+
+Queue after this pass: 47 items.
