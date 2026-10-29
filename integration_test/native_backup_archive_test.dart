@@ -5,7 +5,7 @@ import 'dart:isolate';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 
 Future<void> _dartWrite(String path, List<Map<String, dynamic>> files) =>

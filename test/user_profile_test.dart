@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
-import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';

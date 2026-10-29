@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/services/cover_palette.dart';
+import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';

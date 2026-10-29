@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/playable_media.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
@@ -49,7 +50,7 @@ Future<List<PlayableMedia>> loadAutoplayLibrary(
   ];
   final result = <PlayableMedia>[];
   for (final row in rows) {
-    final data = (row['item'] as Map).cast<String, dynamic>();
+    final data = LocalLibraryItem.envelopeItem(row);
     final source = data['filePath'] as String? ?? '';
     if (source.isEmpty) continue;
     // Do not interpret remote URLs as streamable Library items.

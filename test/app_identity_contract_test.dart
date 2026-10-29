@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/services/playback/playback_notification.dart';
 

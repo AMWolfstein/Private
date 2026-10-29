@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
-import 'package:sistrum/services/cover_palette.dart';
+import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/utils/logger.dart';
 
 class PlayerWidgetArtwork {

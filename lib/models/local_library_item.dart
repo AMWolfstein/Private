@@ -97,8 +97,13 @@ class LocalLibraryItem {
 
   /// Decodes a `{source, item}` library row, the envelope the database returns
   /// for mixed Library collections. Bare track maps use [fromJson] directly.
+  /// The item map inside a `{source, item}` query row. Only this constructor
+  /// family knows the envelope key.
+  static Map<String, dynamic> envelopeItem(Map<String, dynamic> row) =>
+      Map<String, dynamic>.from(row['item'] as Map);
+
   factory LocalLibraryItem.fromEnvelope(Map<String, dynamic> row) =>
-      LocalLibraryItem.fromJson(Map<String, dynamic>.from(row['item'] as Map));
+      LocalLibraryItem.fromJson(envelopeItem(row));
 
   factory LocalLibraryItem.fromJson(Map<String, dynamic> json) =>
       LocalLibraryItem(

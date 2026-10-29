@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/cover_palette.dart';
+import 'package:sistrum/services/library/cover_palette.dart';
 
 void main() {
   final palette = CoverPaletteCache();

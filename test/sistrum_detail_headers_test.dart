@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/services/cover_palette.dart';
+import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/header/sistrum_artist_header.dart';

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/services/cover_palette.dart';
+import 'package:sistrum/services/library/cover_palette.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/services/library/cover_analysis_store.dart';
 

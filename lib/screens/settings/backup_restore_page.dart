@@ -7,7 +7,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
-import 'package:sistrum/services/backup_service.dart';
+import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
