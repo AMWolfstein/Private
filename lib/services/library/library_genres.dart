@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
-import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 /// Split multi-value tags without treating names such as Hip-Hop/Rap as two genres.
 /// The visible view respects disabled/disconnected library sources.

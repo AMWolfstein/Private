@@ -12,7 +12,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/sistrum_library_screen.dart';
+import 'package:sistrum/screens/library/sistrum_library_screen.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 
 import '../test/support/library_paging_fixture.dart';

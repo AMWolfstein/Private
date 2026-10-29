@@ -12,7 +12,7 @@ import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
-import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';

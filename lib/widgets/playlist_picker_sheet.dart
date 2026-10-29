@@ -8,9 +8,9 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/widgets/app_action_button.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_action_button.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 

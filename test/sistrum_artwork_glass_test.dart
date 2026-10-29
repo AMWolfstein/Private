@@ -10,7 +10,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
 import 'package:sistrum/widgets/player/sistrum_player_ground.dart';
 

@@ -11,7 +11,7 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/app_action_button.dart';
+import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/playlist_picker_sheet.dart';
 
 const _track = Track(

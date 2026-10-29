@@ -5,7 +5,7 @@ import 'package:sistrum/services/library/library_queue_store.dart';
 import 'package:sistrum/services/library/library_genres.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/library/library_search.dart';
-import 'package:sistrum/services/sqlite_helpers.dart';
+import 'package:sistrum/services/library/sqlite_helpers.dart';
 
 import 'support/sqlite_process_database.dart';
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
-import 'package:sistrum/widgets/app_switch.dart';
+import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';

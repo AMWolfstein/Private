@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_color_utilities/hct/hct.dart';
-import 'package:sistrum/services/cover_analysis_store.dart';
+import 'package:sistrum/services/library/cover_analysis_store.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 
 double contrast(Color a, Color b) {

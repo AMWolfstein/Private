@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/custom_font_service.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'package:sistrum/widgets/glass/sistrum_glass_preparation.dart';
 
 import 'performance_probe.dart';

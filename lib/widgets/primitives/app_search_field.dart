@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
 
 /// The standard search field used by top-level app surfaces.
 ///

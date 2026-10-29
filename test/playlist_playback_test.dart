@@ -12,12 +12,12 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library_collection_tracks_screen.dart';
+import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/track_card.dart';
+import 'package:sistrum/widgets/library/track_card.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 
 final _tracks = [

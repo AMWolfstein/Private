@@ -1,4 +1,4 @@
-import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/utils/audio_format_utils.dart';
 
 // Row models and query descriptors for the local library database.

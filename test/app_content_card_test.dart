@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/app_content_card.dart';
+import 'package:sistrum/widgets/primitives/app_content_card.dart';
 
 Future<void> _pump(WidgetTester tester, Widget card) => tester.pumpWidget(
   MaterialApp(

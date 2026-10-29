@@ -26,7 +26,7 @@ import 'package:sistrum/screens/now_playing_screen.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/player/sistrum_volume_control.dart';
-import 'package:sistrum/widgets/lyric_gap_indicator.dart';
+import 'package:sistrum/widgets/lyrics/lyric_gap_indicator.dart';
 import 'package:sistrum/widgets/player/sistrum_player_queue.dart';
 import 'package:sistrum/widgets/player/sistrum_playback_button.dart';
 import 'package:sistrum/widgets/player/sistrum_playback_time.dart';

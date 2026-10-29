@@ -7,10 +7,10 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/widgets/app_action_button.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_action_button.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/profile_avatar.dart';
-import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
 
 class ProfileSettingsPage extends ConsumerStatefulWidget {
   const ProfileSettingsPage({super.key, required this.profile});

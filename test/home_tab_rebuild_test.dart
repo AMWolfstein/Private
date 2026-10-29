@@ -10,7 +10,7 @@ import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/library_search_results.dart';
+import 'package:sistrum/widgets/library/library_search_results.dart';
 
 /// PERF-603: a Loved toggle or playlist edit must not rebuild the whole Home
 /// feed. The dirty-rebuild log names every rebuilt widget, so HomeTab should

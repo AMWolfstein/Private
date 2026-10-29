@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'package:sistrum/widgets/glass/sistrum_squircle_border.dart';
 
 void main() {

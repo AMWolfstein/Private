@@ -10,7 +10,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/screens/settings/appearance_settings_page.dart';
-import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';

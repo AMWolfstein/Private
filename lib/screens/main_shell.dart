@@ -13,7 +13,7 @@ import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/listening_statistics.dart';
 import 'package:sistrum/services/notification_service.dart';

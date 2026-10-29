@@ -9,15 +9,15 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/equalizer_settings.dart';
 import 'package:sistrum/providers/equalizer_provider.dart';
 import 'package:sistrum/services/playback/playback_equalizer.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/app_choice_chip.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/beta_badge.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/services/equalizer_preset_io.dart';
 import 'package:sistrum/widgets/glass/sistrum_level_slider.dart';
-import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
 
 /// The retained Sistrum Settings surfaces around the upstream per-player DSP.
 class EqualizerScreen extends ConsumerWidget {

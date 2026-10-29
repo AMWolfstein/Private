@@ -10,7 +10,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 
 class _Settings extends SettingsNotifier {
   _Settings(this._forceBlur);

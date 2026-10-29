@@ -1,6 +1,6 @@
 import 'package:sistrum/screens/equalizer_screen.dart';
-import 'package:sistrum/widgets/music_haptics_settings.dart';
-import 'package:sistrum/widgets/playback_normalization_settings.dart';
+import 'package:sistrum/widgets/settings/music_haptics_settings.dart';
+import 'package:sistrum/widgets/settings/playback_normalization_settings.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,12 +13,12 @@ import 'package:sistrum/services/playback/music_player_service.dart'
 import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/beta_badge.dart';
 import 'package:sistrum/widgets/player/sistrum_volume_control.dart';
-import 'package:sistrum/widgets/settings_group.dart';
-import 'package:sistrum/widgets/automix_settings.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/settings/automix_settings.dart';
 
 class PlaybackSettingsPage extends ConsumerStatefulWidget {
   const PlaybackSettingsPage({super.key});

@@ -5,8 +5,8 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/update_checker.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
-import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/update_dialog.dart';
 
 class UpdatesPage extends ConsumerStatefulWidget {

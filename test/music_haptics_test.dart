@@ -7,7 +7,7 @@ import 'dart:typed_data';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/audio_analysis_jobs.dart';
+import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
 import 'package:sistrum/services/playback/music_haptics.dart';
 
 Uint8List _pcm(double seconds, double Function(double time) sample) {

@@ -177,7 +177,7 @@ void main() {
 
   group('app state database migrations', () {
     final source = File(
-      'lib/services/app_state_database.dart',
+      'lib/services/storage/app_state_database.dart',
     ).readAsStringSync();
 
     test('v6 drops the retired download queue and recent-access tables', () {

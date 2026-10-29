@@ -1,7 +1,5 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/services/library/library_mutation_ports.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 /// Decodes a SAF tree URI into a readable folder path for display.
@@ -29,12 +27,10 @@ String libraryFolderDisplayPath(String path) {
 ///
 /// Returns true when a library source was added.
 Future<bool> selectLibraryFolder(
-  BuildContext context,
-  WidgetRef ref, {
+  LibrarySourceSink library, {
   required int androidSdkVersion,
   void Function(String message)? onFailure,
 }) async {
-  final library = ref.read(localLibraryProvider.notifier);
   if (androidSdkVersion >= 29) {
     final result = await PlatformBridge.pickSafTree(onFailure: onFailure);
     if (result == null) return false;

@@ -7,8 +7,8 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/settings_group.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 
 class AboutPage extends ConsumerStatefulWidget {
   const AboutPage({super.key});

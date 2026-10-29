@@ -7,10 +7,10 @@ import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/automix_settings.dart';
+import 'package:sistrum/widgets/settings/automix_settings.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 
 void main() {
   testWidgets(

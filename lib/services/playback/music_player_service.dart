@@ -27,7 +27,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/playback/automix_effect_renderer.dart';
 import 'package:sistrum/services/playback/automix_status.dart';
 import 'package:sistrum/utils/playback_artwork.dart';
-import 'package:sistrum/services/embedded_cover_resolver.dart';
+import 'package:sistrum/services/library/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/logger.dart';
 
 export 'package:sistrum/models/playable_media.dart';

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/lyric_supplement_transition.dart';
+import 'package:sistrum/widgets/lyrics/lyric_supplement_transition.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 
 /// Keeps each pronunciation phrase under the lyric with the same start time.

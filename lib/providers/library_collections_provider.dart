@@ -10,7 +10,7 @@ import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/library/library_collections_hydration.dart';
-import 'package:sistrum/services/collection_track_batch.dart';
+import 'package:sistrum/services/library/collection_track_batch.dart';
 import 'package:sistrum/utils/logger.dart';
 
 export 'package:sistrum/models/library_collections.dart';

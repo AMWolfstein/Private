@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/services/deleted_library_files.dart';
+import 'package:sistrum/services/library/deleted_library_files.dart';
 import 'package:sistrum/widgets/confirm_and_delete_tracks.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
 
 /// Confirms, then deletes the files behind [selected] and removes their
 /// local-index rows. Files that cannot be deleted keep their rows.
@@ -44,9 +45,10 @@ Future<void> deleteLibraryTracks(
   final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
-  final result = await deleteLocalLibraryTracks(container, [
-    for (final item in selected) item.localItem,
-  ]);
+  final result = await deleteLocalLibraryTracks(
+    container.read(localLibraryProvider.notifier),
+    [for (final item in selected) item.localItem],
+  );
   if (!isActive() || !context.mounted) return;
   onComplete();
   messenger.showSnackBar(

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/navigation/shell_navigation.dart';
 
 /// The shell bar's light/dark verdict, sampled from the page behind it.
 ///

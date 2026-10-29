@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/deleted_library_files.dart';
+import 'package:sistrum/services/library/deleted_library_files.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_cue.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/library/library_database.dart';
@@ -17,7 +17,7 @@ import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/mime_utils.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 bool isCueSong(LocalLibraryItem item) =>
     isCueBackedRow(item.filePath, item.format);
@@ -242,7 +242,7 @@ Future<bool> deleteLocalSong(
   );
   if (confirmed != true) return false;
   // A CUE row only drops its virtual row; the shared sheet and audio stay.
-  final result = await deleteLocalLibraryTracks(container, [item]);
+  final result = await deleteLocalLibraryTracks(container.read(localLibraryProvider.notifier), [item]);
   final deleted = result.deletedCount > 0;
   if (!deleted && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(

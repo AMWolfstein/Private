@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 class _BatchProgress {
   final int current;

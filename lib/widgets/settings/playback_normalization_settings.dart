@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/app_choice_chip.dart';
-import 'package:sistrum/widgets/sistrum_slider.dart';
+import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
+import 'package:sistrum/widgets/primitives/sistrum_slider.dart';
 
 /// Gain mode and pre-amp shown under the volume normalization switch.
 class PlaybackNormalizationSettings extends ConsumerStatefulWidget {

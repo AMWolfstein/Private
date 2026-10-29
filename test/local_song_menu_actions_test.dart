@@ -11,13 +11,13 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/screens/track_metadata_edit_sheet.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/local_song_menu.dart';
-import 'package:sistrum/widgets/local_song_row.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/library/local_song_menu.dart';
+import 'package:sistrum/widgets/library/local_song_row.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'support/pump_until.dart';
 
 class _Settings extends SettingsNotifier {

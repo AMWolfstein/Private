@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/models/sistrum_glass.dart';
-import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 

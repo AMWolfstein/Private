@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('AppStateDb');

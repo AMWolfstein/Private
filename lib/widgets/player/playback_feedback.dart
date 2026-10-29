@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 
 /// Receives transient playback feedback across all foreground app routes.
 class PlaybackFeedback extends ConsumerStatefulWidget {

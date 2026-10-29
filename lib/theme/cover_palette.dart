@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
-import 'package:sistrum/services/cover_analysis_store.dart';
+import 'package:sistrum/services/library/cover_analysis_store.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/theme/cover_colors.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';

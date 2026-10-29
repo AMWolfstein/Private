@@ -6,7 +6,7 @@ import 'package:sistrum/services/apk_downloader.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/update_checker.dart';
 import 'package:sistrum/utils/string_utils.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 class UpdateDialog extends StatefulWidget {
   final UpdateInfo updateInfo;

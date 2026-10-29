@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/app_state_database.dart';
+import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/playback_session_writer.dart';
 
 class _Database extends Fake implements AppStateDatabase {

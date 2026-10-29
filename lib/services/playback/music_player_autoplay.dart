@@ -8,7 +8,7 @@ import 'package:sistrum/models/playable_media.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
-import 'package:sistrum/services/sqlite_helpers.dart' show normalizeLookupText;
+import 'package:sistrum/services/library/sqlite_helpers.dart' show normalizeLookupText;
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/logger.dart';
 

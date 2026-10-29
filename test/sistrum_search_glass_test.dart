@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/app_choice_chip.dart';
+import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 
 void main() {
   for (final brightness in Brightness.values) {

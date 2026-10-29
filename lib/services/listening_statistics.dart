@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sqflite/sqflite.dart';

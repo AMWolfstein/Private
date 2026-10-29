@@ -12,7 +12,7 @@ import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';

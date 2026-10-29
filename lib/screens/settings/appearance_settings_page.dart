@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/constants/language_choices.dart';
@@ -7,15 +7,15 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/sistrum_glass.dart';
-import 'package:sistrum/services/sistrum_glass_auto_probe.dart';
+import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/settings_group.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
-import 'package:sistrum/widgets/custom_font_setting.dart';
-import 'package:sistrum/widgets/sistrum_slider.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
+import 'package:sistrum/widgets/settings/custom_font_setting.dart';
+import 'package:sistrum/widgets/primitives/sistrum_slider.dart';
 
 class AppearanceSettingsPage extends ConsumerWidget {
   const AppearanceSettingsPage({super.key});

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/embedded_cover_resolver.dart';
+import 'package:sistrum/services/library/embedded_cover_resolver.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

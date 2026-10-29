@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus;
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/widgets/settings_group.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
-import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_search_field.dart';
 import 'package:sistrum/utils/ordered_range_selection.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 

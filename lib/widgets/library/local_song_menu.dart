@@ -1,13 +1,13 @@
 import 'package:sistrum/theme/sistrum_icons.dart';
-import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/screens/detail_navigation.dart';
-import 'package:sistrum/widgets/local_song_file_actions.dart';
-import 'package:sistrum/services/metadata_index_reconciler.dart';
+import 'package:sistrum/widgets/library/local_song_file_actions.dart';
+import 'package:sistrum/services/library/metadata_index_reconciler.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,8 +21,8 @@ import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 
 final localSongLookupProvider = FutureProvider.autoDispose
     .family<

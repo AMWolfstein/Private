@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_genres.dart';
-import 'package:sistrum/services/sqlite_helpers.dart';
+import 'package:sistrum/services/library/sqlite_helpers.dart';
 import 'support/sqlite_process_database.dart';
 
 void main() {

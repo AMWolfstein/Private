@@ -12,7 +12,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 

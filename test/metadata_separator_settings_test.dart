@@ -7,8 +7,8 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
 
 class _Settings extends SettingsNotifier {
   @override

@@ -1,11 +1,11 @@
 import 'package:sistrum/utils/release_date_display.dart';
 import 'package:sistrum/widgets/error_card.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'dart:io';
 import 'dart:math';
 import 'package:sistrum/widgets/track_detail_actions.dart';
 import 'package:audio_service/audio_service.dart' show MediaItem;
-import 'package:sistrum/services/deleted_library_files.dart';
+import 'package:sistrum/services/library/deleted_library_files.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
@@ -17,31 +17,32 @@ import 'package:sistrum/widgets/confirm_and_delete_tracks.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/image_cache_utils.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/batch_track_actions.dart';
+import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/models/album_track_order.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/screens/collapsing_header_scroll_mixin.dart';
-import 'package:sistrum/screens/selection_mode_mixin.dart';
-import 'package:sistrum/widgets/local_song_menu.dart';
+import 'package:sistrum/screens/library/collapsing_header_scroll_mixin.dart';
+import 'package:sistrum/screens/library/selection_mode_mixin.dart';
+import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
-import 'package:sistrum/widgets/album_track_tile.dart';
+import 'package:sistrum/widgets/library/album_track_tile.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/app_snack_bar.dart';
+import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/destructive_selection_button.dart';
 import 'package:sistrum/widgets/selection_action_button.dart';
 import 'package:sistrum/widgets/selection_bottom_bar.dart';
-import 'package:sistrum/widgets/library_selection_playback_actions.dart';
+import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/disc_separator_chip.dart';
 import 'package:sistrum/widgets/album_detail_header.dart';
 import 'package:sistrum/widgets/album_ken_burns.dart';
 import 'package:sistrum/widgets/sistrum_artist_header.dart';
-import 'package:sistrum/widgets/local_collection_actions.dart';
-import 'package:sistrum/widgets/local_library_artwork_builder.dart';
+import 'package:sistrum/widgets/library/local_collection_actions.dart';
+import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/screens/detail_navigation.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -156,7 +157,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       context: context,
       ids: selectedIds.toList(),
       deleteItems: (ids) async {
-        final deleted = await deleteLocalLibraryTracks(container, [
+        final deleted = await deleteLocalLibraryTracks(container.read(localLibraryProvider.notifier), [
           for (final id in ids) ?tracksById[id],
         ]);
         deletedIds.addAll(deleted.deletedIds);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/widgets/glass/sistrum_glass_thumb.dart';
 import 'package:sistrum/widgets/glass/sistrum_level_slider.dart';
-import 'package:sistrum/widgets/sistrum_slider.dart';
+import 'package:sistrum/widgets/primitives/sistrum_slider.dart';
 
 import 'support/glass_controls.dart';
 

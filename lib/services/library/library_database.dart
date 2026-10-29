@@ -15,7 +15,7 @@ import 'package:sistrum/services/library/library_native_adapter.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 export 'library_database_models.dart';
 

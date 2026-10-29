@@ -1,26 +1,26 @@
-import 'package:sistrum/widgets/library_fast_scroller.dart';
-import 'package:sistrum/widgets/library_section_list.dart';
+import 'package:sistrum/widgets/library/library_fast_scroller.dart';
+import 'package:sistrum/widgets/library/library_section_list.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'dart:async';
-import 'package:sistrum/screens/local_genres_screen.dart';
+import 'package:sistrum/screens/library/local_genres_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/screens/local_album_screen.dart';
-import 'package:sistrum/screens/library_collection_tracks_screen.dart';
-import 'package:sistrum/screens/favorite_artists_screen.dart';
-import 'package:sistrum/screens/local_artist_screen.dart';
+import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
+import 'package:sistrum/screens/library/favorite_artists_screen.dart';
+import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/services/album_completeness.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/local_library_artwork_builder.dart';
+import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 
 enum SistrumLibraryPage { overview, albums, artists }
 

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
 import 'package:sistrum/services/metadata_cover_resources.dart';
-import 'package:sistrum/services/metadata_persistence_service.dart';
+import 'package:sistrum/services/library/metadata_persistence_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 void main() {

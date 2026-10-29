@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/app_state_database.dart';
+import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/listening_statistics.dart';

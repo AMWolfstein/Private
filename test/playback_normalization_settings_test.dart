@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/playback_normalization_settings.dart';
+import 'package:sistrum/widgets/settings/playback_normalization_settings.dart';
 
 void main() {
   Future<ProviderContainer> pump(

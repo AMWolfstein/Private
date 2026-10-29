@@ -14,8 +14,8 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_search.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/library_search_results.dart';
-import 'package:sistrum/widgets/track_card.dart';
+import 'package:sistrum/widgets/library/library_search_results.dart';
+import 'package:sistrum/widgets/library/track_card.dart';
 
 class _PlaybackRecorder extends PlaybackController {
   final paths = <String>[];

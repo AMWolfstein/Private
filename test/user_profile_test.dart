@@ -12,11 +12,11 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/backup_service.dart';
-import 'package:sistrum/services/shell_navigation_service.dart';
+import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/profile_avatar.dart';
-import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

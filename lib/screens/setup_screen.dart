@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +16,7 @@ import 'package:sistrum/constants/language_choices.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/widgets/scroll_edge_fade.dart';
 import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
 
 final _log = AppLogger('SetupScreen');
 
@@ -178,8 +179,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
         // Scoped folder access: the user picks a music folder instead of
         // granting all-files access.
         final added = await selectLibraryFolder(
-          context,
-          ref,
+          ref.read(localLibraryProvider.notifier),
           androidSdkVersion: _androidSdkVersion,
           onFailure: (message) {
             if (mounted) {

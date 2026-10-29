@@ -7,8 +7,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/services/sqlite_helpers.dart' as sqlite;
-import 'package:sistrum/services/sqlite_native_snapshot.dart';
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/sqlite_native_snapshot.dart';
 import 'package:sistrum/utils/logger.dart';
 
 // Small selections cost less inline; reserve worker setup for larger lists.

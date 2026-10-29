@@ -7,7 +7,7 @@ import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/theme/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 
 /// Navigation for the title/artist, separate from playback and file actions.
 class SistrumPlayerNavigationMenu extends StatelessWidget {

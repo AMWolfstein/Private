@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/app_alert_dialog.dart';
-import 'package:sistrum/widgets/app_switch.dart';
+import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
+import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -13,9 +13,9 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_folder_selection.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/widgets/duplicate_review_sheet.dart';
-import 'package:sistrum/widgets/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/settings_group.dart';
-import 'package:sistrum/widgets/app_sliver_header.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
@@ -125,8 +125,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     }
     final messenger = ScaffoldMessenger.of(context);
     await selectLibraryFolder(
-      context,
-      ref,
+      ref.read(localLibraryProvider.notifier),
       androidSdkVersion: _androidSdkVersion,
       onFailure: (message) {
         if (mounted) {

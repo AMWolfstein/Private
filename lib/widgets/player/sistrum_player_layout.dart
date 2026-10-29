@@ -8,7 +8,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/now_playing_route.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
-import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'package:sistrum/widgets/player/sistrum_landscape_player.dart';
 import 'package:sistrum/widgets/player/sistrum_player_favorite_button.dart';
 import 'package:sistrum/widgets/player/sistrum_player_queue.dart';

@@ -8,6 +8,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/services/library/library_cleanup.dart';
 import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/library_mutation_ports.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -110,7 +111,8 @@ class LocalLibraryState {
 
 typedef LocalLibraryAvailabilityProbe = Future<bool?> Function(String path);
 
-class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
+class LocalLibraryNotifier extends Notifier<LocalLibraryState>
+    implements LibrarySourceSink, LibraryRemovalSink {
   LocalLibraryNotifier({
     LibraryDatabase? database,
     LocalLibraryAvailabilityProbe? availabilityProbe,
@@ -315,6 +317,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     await _ensureLoadedFromDatabase();
   }
 
+  @override
   Future<LocalLibrarySource> addSource({
     required String path,
     required String displayName,
@@ -488,6 +491,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     await _scanSourcesSequentially(sourceIds, forceFullScan: forceFullScan);
   }
 
+  @override
   Future<void> startSourceScan(
     String sourceId, {
     bool forceFullScan = false,
@@ -1688,10 +1692,12 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     }
   }
 
+  @override
   Future<void> removePhysicalFiles(Iterable<String> filePaths) async {
     await removeItems(await _db.getPhysicalFileIds(filePaths));
   }
 
+  @override
   Future<void> removeItems(Iterable<String> ids) async {
     final selected = ids.toSet();
     if (selected.isEmpty) return;

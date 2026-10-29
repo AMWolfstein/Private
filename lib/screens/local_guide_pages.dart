@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/scroll_edge_fade.dart';
-import 'package:sistrum/widgets/app_search_field.dart';
+import 'package:sistrum/widgets/primitives/app_search_field.dart';
 
 const localGuidePageCount = 5;
 
