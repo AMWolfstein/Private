@@ -291,3 +291,29 @@ Still open, with reasons:
 - `audio_analysis_widget.dart` mixes ffmpeg parsing with the card UI, and it uses part files for its
   models, info card and spectrogram. Splitting it changes its library structure and touches four
   importers, so it is a separate pass.
+
+## Library and navigation move pass
+
+Code commit `580f8e4`, graphify commit `197e07d`.
+
+Done:
+- Navigation services moved to `lib/navigation/` (`shell_navigation.dart`, `app_navigation.dart`).
+- Library-only helpers moved under `lib/services/library/`; playback helpers under
+  `lib/services/playback/`; audio-analysis cache and jobs under `lib/services/audio_analysis/`.
+- Library batch and track action widgets moved from services into `lib/widgets/library/`.
+- Library folder selection, file deletion and source removal depend on the new
+  `LibrarySourceSink` and `LibraryRemovalSink` interfaces (`lib/services/library/library_mutation_ports.dart`),
+  which `LocalLibraryNotifier` implements. No `lib/services` file imports providers or widgets.
+- No `lib/utils` file imports screens or widgets.
+
+Verification: `flutter analyze` reports "No issues found!"; full `flutter test` passes (serial run).
+A stale path in `test/models_and_utils_test.dart` (`lib/services/app_state_database.dart`) was found
+by the first run and fixed to `lib/services/storage/app_state_database.dart`.
+
+Still open in the queue (26 items at the end of this pass): the best-effort delete helper, part-file
+style rule, the album/artist/detail navigation cycle, audio-analysis parsing in the widget, the
+library notifier and PlatformBridge splits, APK downloader failure types, backup parse failures,
+the failure-convention doc, CoverPalette instance store, library DB row decoding, QueryLibraryDb naming,
+`unified_library_item` importing `library_database_models`, the main-shell test, and the remaining
+services and widgets root files. Desloppify has 41 resolved items staged for commit; they are recorded
+once the queue is empty and `desloppify scan` runs.
