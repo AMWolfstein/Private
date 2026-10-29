@@ -18,8 +18,8 @@ import 'package:sistrum/widgets/primitives/app_search_field.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
-import 'package:sistrum/widgets/selection_action_button.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/selection_action_button.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
 

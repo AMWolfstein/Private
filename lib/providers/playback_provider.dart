@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';
 
@@ -112,7 +113,9 @@ class PlaybackController extends Notifier<PlaybackState> {
     for (final item in await resolveLocalTracks(tracks)) item?.filePath,
   ];
 
-  Future<List<LocalLibraryItem?>> _resolveLocalTracks(List<Track> tracks) async {
+  Future<List<LocalLibraryItem?>> _resolveLocalTracks(
+    List<Track> tracks,
+  ) async {
     if (tracks.isEmpty) return const [];
     final localFuture = _library.findExistingBatch([
       for (final track in tracks)
@@ -141,7 +144,7 @@ class PlaybackController extends Notifier<PlaybackState> {
         (start + 64).clamp(0, safPaths.length),
       );
       try {
-        final checks = await PlatformBridge.safExistsBatch(batch);
+        final checks = await MediaFileBridge.safExistsBatch(batch);
         for (final path in batch) {
           final exists = checks[path];
           if (exists != null) {

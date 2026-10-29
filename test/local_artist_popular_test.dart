@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'support/sqlite_process_database.dart';
 
 class _Settings extends SettingsNotifier {
@@ -64,7 +65,7 @@ void main() {
             events.add('flush');
           }),
           localArtistTrackLoaderProvider.overrideWithValue((request) async {
-            return QueueLibraryDbPage(
+            return LibraryBrowseDbPage(
               rows: [
                 for (
                   var i = request.offset;
@@ -73,7 +74,7 @@ void main() {
                 )
                   {'source': 'local', 'item': item(i).toJson()},
               ],
-              nextCursor: QueueLibraryDbCursor([request.offset + 40]),
+              nextCursor: LibraryBrowseDbCursor([request.offset + 40]),
             );
           }),
           localArtistPlayCountsLoaderProvider.overrideWithValue((keys) async {
@@ -108,7 +109,7 @@ void main() {
             localArtistTrackLoaderProvider.overrideWithValue((request) async {
               offsets.add(request.offset);
               expect(request.artist, 'Artist');
-              return QueueLibraryDbPage(
+              return LibraryBrowseDbPage(
                 rows: [
                   for (
                     var i = request.offset;
@@ -117,7 +118,7 @@ void main() {
                   )
                     {'source': 'local', 'item': item(i).toJson()},
                 ],
-                nextCursor: QueueLibraryDbCursor([request.offset + 40]),
+                nextCursor: LibraryBrowseDbCursor([request.offset + 40]),
               );
             }),
             localArtistPlayCountsLoaderProvider.overrideWithValue((keys) async {
@@ -173,13 +174,13 @@ void main() {
             localLibraryProvider.overrideWith(_Library.new),
             localArtistPopularRandomProvider.overrideWithValue(random),
             localArtistTrackLoaderProvider.overrideWithValue((request) async {
-              return QueueLibraryDbPage(
+              return LibraryBrowseDbPage(
                 rows: tracks
                     .skip(request.offset)
                     .take(40)
                     .map((track) => {'source': 'local', 'item': track.toJson()})
                     .toList(),
-                nextCursor: QueueLibraryDbCursor([request.offset + 40]),
+                nextCursor: LibraryBrowseDbCursor([request.offset + 40]),
               );
             }),
             localArtistPlayCountsLoaderProvider.overrideWithValue(
@@ -255,7 +256,7 @@ void main() {
         settingsProvider.overrideWith(_Settings.new),
         localLibraryProvider.overrideWith(_Library.new),
         localArtistTrackLoaderProvider.overrideWithValue(
-          (request) async => QueueLibraryDbPage(
+          (request) async => LibraryBrowseDbPage(
             rows: [
               for (var i = 0; i < 3; i++)
                 {'source': 'local', 'item': item(i).toJson()},

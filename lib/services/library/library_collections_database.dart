@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/services/collection_restore_codec.dart';
+import 'package:sistrum/services/library/collection_restore_codec.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;

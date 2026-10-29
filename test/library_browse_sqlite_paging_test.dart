@@ -7,8 +7,8 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/album_completeness.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 
 import 'support/library_paging_fixture.dart';
 import 'support/sqlite_process_database.dart';
@@ -27,7 +27,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   // The subprocess-backed 4,000-row fixture is intentionally built once.
   late SqliteProcessDatabase db;
-  late LibraryQueueStore store;
+  late LibraryBrowseStore store;
   setUpAll(() async {
     db = await SqliteProcessDatabase.open();
     store = await createLibraryPagingFixture(db);

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/batch_progress_dialog.dart';
+import 'package:sistrum/widgets/selection/batch_progress_dialog.dart';
 
 void main() {
   late GlobalKey<NavigatorState> navigator;

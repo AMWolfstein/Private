@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:sistrum/services/audio_metadata_mapper.dart';
+import 'package:sistrum/services/ffmpeg/audio_metadata_mapper.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/utils/logger.dart';

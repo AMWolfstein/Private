@@ -1,13 +1,13 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 
 /// Real schema17 local rows, album ties and an unavailable source. The history
 /// read fixture keeps the same named columns and covering album index as the
 /// app so the completeness join stays exercised; no network or production DB
 /// is touched.
-Future<LibraryQueueStore> createLibraryPagingFixture(
+Future<LibraryBrowseStore> createLibraryPagingFixture(
   Database db, {
   int albumsPerSource = 1000,
   String cover = '',
@@ -75,11 +75,11 @@ Future<LibraryQueueStore> createLibraryPagingFixture(
     'scanned_at': '2026-10-07T00:00:00Z',
   });
   await batch.commit(noResult: true);
-  return LibraryQueueStore(db, localFts: false);
+  return LibraryBrowseStore(db, localFts: false);
 }
 
 Future<LibraryBrowsePage> readLibraryPagingFixture(
-  LibraryQueueStore store,
+  LibraryBrowseStore store,
   LibraryBrowsePageRequest request,
 ) async {
   final query = libraryBrowseQuery(request);

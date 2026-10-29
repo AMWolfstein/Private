@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 

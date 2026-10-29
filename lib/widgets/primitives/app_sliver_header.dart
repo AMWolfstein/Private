@@ -5,7 +5,7 @@ import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/app_bar_layout.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
 /// sub-page.

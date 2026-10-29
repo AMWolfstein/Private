@@ -13,7 +13,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/cache_management_page.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/string_utils.dart';
-import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
 
 class _Settings extends SettingsNotifier {
   @override

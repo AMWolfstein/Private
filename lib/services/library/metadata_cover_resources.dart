@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});
 
@@ -116,7 +116,7 @@ class MetadataCoverResources {
       return await _create('metadata_embedded_cover_', 'cover.jpg', (
         path,
       ) async {
-        final result = await PlatformBridge.extractCoverToFile(filePath, path);
+        final result = await MediaFileBridge.extractCoverToFile(filePath, path);
         if (result['error'] != null) {
           throw StateError(result['error'].toString());
         }

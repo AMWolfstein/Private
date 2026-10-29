@@ -8,7 +8,7 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
+import 'package:sistrum/widgets/shell/sistrum_theme_wrapper.dart';
 
 int _themeBuilds = 0;
 int _glassBuilds = 0;

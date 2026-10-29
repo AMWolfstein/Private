@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
 import 'package:sistrum/widgets/player/sistrum_player_ground.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// Share the same artwork-derived dark surface while loading and after the
 /// artist metadata arrives, including when the app itself uses light mode.

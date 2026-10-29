@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
@@ -16,7 +17,7 @@ import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
 
 /// Slivers shared by Material's Library and Sistrum's Library/Songs screens.
@@ -245,7 +246,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           );
         case LibrarySearchKind.albums:
           final rows = await LibraryDatabase.instance
-              .getQueueLocalAlbumRowsByKey(hit.id);
+              .getBrowseLocalAlbumRowsByKey(hit.id);
           if (!mounted) return;
           await Navigator.of(context).push(
             MaterialPageRoute<void>(

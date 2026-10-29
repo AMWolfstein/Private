@@ -1,26 +1,26 @@
 import 'package:sistrum/services/library/library_database.dart';
 
-bool queueLibraryCountsHaveContent(QueueLibraryCounts counts) =>
+bool browseLibraryCountsHaveContent(LibraryBrowseCounts counts) =>
     counts.allTrackCount > 0 ||
     counts.albumCount > 0 ||
     counts.singleTrackCount > 0;
 
-QueueLibraryCounts resolveQueueLibraryCountsSnapshot({
-  required QueueLibraryCounts current,
-  QueueLibraryCounts? cached,
-  QueueLibraryCounts? activeDownloadFallback,
+LibraryBrowseCounts resolveLibraryBrowseCountsSnapshot({
+  required LibraryBrowseCounts current,
+  LibraryBrowseCounts? cached,
+  LibraryBrowseCounts? activeDownloadFallback,
 }) {
-  if (queueLibraryCountsHaveContent(current) ||
+  if (browseLibraryCountsHaveContent(current) ||
       activeDownloadFallback == null) {
     return current;
   }
-  if (cached != null && queueLibraryCountsHaveContent(cached)) {
+  if (cached != null && browseLibraryCountsHaveContent(cached)) {
     return cached;
   }
   return activeDownloadFallback;
 }
 
-bool shouldRetainQueueLibraryPageSnapshot({
+bool shouldRetainLibraryBrowsePageSnapshot({
   required bool currentIsEmpty,
   required bool cachedHasContent,
   required bool activeDownloadFallbackAvailable,

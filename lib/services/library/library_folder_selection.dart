@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:sistrum/services/library/library_mutation_ports.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 
 /// Decodes a SAF tree URI into a readable folder path for display.
 String libraryFolderDisplayPath(String path) {
@@ -32,7 +32,7 @@ Future<bool> selectLibraryFolder(
   void Function(String message)? onFailure,
 }) async {
   if (androidSdkVersion >= 29) {
-    final result = await PlatformBridge.pickSafTree(onFailure: onFailure);
+    final result = await MediaFileBridge.pickSafTree(onFailure: onFailure);
     if (result == null) return false;
     final treeUri = result['tree_uri'] as String? ?? '';
     if (treeUri.isEmpty) return false;

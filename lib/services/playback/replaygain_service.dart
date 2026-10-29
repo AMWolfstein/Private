@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
-import 'package:sistrum/services/metadata_edit_result.dart';
+import 'package:sistrum/services/library/metadata_edit_result.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';
 
@@ -118,12 +119,12 @@ class ReplayGainService {
       'replaygain_album_gain': '',
       'replaygain_album_peak': '',
     };
-    final result = await PlatformBridge.editFileMetadataResult(path, fields);
+    final result = await MediaFileBridge.editFileMetadataResult(path, fields);
     if (result.outcome != MetadataEditOutcome.completed ||
         !result.isNativeMethod) {
       return false;
     }
-    final metadata = await PlatformBridge.readFileMetadata(path);
+    final metadata = await MediaFileBridge.readFileMetadata(path);
     return metadata['error'] == null &&
         metadata['audio_codec'] != null &&
         fields.keys.every(
@@ -140,7 +141,7 @@ class ReplayGainService {
     final scope = album ? 'album' : 'track';
     var written = false;
     if (_isNativeWritableFormat(path)) {
-      final result = await PlatformBridge.editFileMetadataResult(path, {
+      final result = await MediaFileBridge.editFileMetadataResult(path, {
         'replaygain_${scope}_gain': gain,
         'replaygain_${scope}_peak': peak,
       });
@@ -164,7 +165,7 @@ class ReplayGainService {
     }
     if (!written) return false;
 
-    final metadata = await PlatformBridge.readFileMetadata(path);
+    final metadata = await MediaFileBridge.readFileMetadata(path);
     final expectedGain = _gainDb(gain);
     final actualGain = _gainDb(metadata['replaygain_${scope}_gain']);
     final expectedPeak = double.tryParse(peak);
@@ -204,7 +205,7 @@ class ReplayGainService {
 
     try {
       if (isSaf) {
-        safTempPath = await PlatformBridge.copyContentUriToTemp(filePath);
+        safTempPath = await MediaFileBridge.copyContentUriToTemp(filePath);
         if (safTempPath == null || safTempPath.isEmpty) {
           _log.w('Failed to copy SAF file to temp for ReplayGain update');
           return false;
@@ -215,7 +216,7 @@ class ReplayGainService {
       if (!await update(workingPath)) return false;
 
       if (isSaf) {
-        final ok = await PlatformBridge.writeTempToSaf(workingPath, filePath);
+        final ok = await MediaFileBridge.writeTempToSaf(workingPath, filePath);
         if (!ok) {
           _log.w('Failed to write ReplayGain temp file back to SAF document');
           return false;
@@ -230,9 +231,7 @@ class ReplayGainService {
       return false;
     } finally {
       if (safTempPath != null) {
-        try {
-          await File(safTempPath).delete();
-        } catch (_) {}
+        await deleteBestEffort(File(safTempPath));
       }
     }
   }

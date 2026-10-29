@@ -262,7 +262,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
           artistName: entry.artist,
           coverPath: entry.cover,
           loadTracks: () async =>
-              (await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
+              (await LibraryDatabase.instance.getBrowseLocalAlbumRowsByKey(
                 entry.key,
               )).map(LocalLibraryItem.fromJson).toList(),
         ),

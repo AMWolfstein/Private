@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/library/library_database.dart';
@@ -22,8 +23,8 @@ Future<void> navigateToArtistCredits(
     // A comma can belong to the name ("Tyler, The Creator"). Keep the whole
     // credit when the scanned library knows it as one artist.
     try {
-      final rows = await LibraryDatabase.instance.getQueueArtistRows(
-        QueueLibraryDbQuery(searchQuery: raw, limit: 20),
+      final rows = await LibraryDatabase.instance.getBrowseArtistRows(
+        LibraryBrowseDbQuery(searchQuery: raw, limit: 20),
       );
       for (final row in rows) {
         final artist = (row['artist_name'] as String? ?? '').trim();
@@ -66,7 +67,7 @@ Future<void> navigateToAlbum(
 
   List<Map<String, dynamic>> rows = const [];
   try {
-    rows = await LibraryDatabase.instance.getQueueLocalAlbumRows(
+    rows = await LibraryDatabase.instance.getBrowseLocalAlbumRows(
       albumName,
       (artistName ?? '').trim(),
     );

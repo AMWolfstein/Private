@@ -5,7 +5,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 
 void main() {
   for (final sistrum in [true]) {

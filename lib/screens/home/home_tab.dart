@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
@@ -24,8 +25,8 @@ import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/release_date_display.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/error_card.dart';
-import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
+import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 
 part 'home_tab_feed.dart';
 part 'home_tab_widgets.dart';

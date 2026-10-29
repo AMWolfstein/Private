@@ -7,7 +7,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
 

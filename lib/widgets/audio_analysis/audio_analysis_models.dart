@@ -112,40 +112,6 @@ class AudioAnalysisData {
   }
 }
 
-class ChannelAnalysisStats {
-  final int channel;
-  final double? peakDb;
-  final double? rmsDb;
-  final double? dynamicRangeDb;
-  final int peakCount;
-
-  const ChannelAnalysisStats({
-    required this.channel,
-    this.peakDb,
-    this.rmsDb,
-    this.dynamicRangeDb,
-    this.peakCount = 0,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'channel': channel,
-    'peakDb': peakDb,
-    'rmsDb': rmsDb,
-    'dynamicRangeDb': dynamicRangeDb,
-    'peakCount': peakCount,
-  };
-
-  factory ChannelAnalysisStats.fromJson(Map<dynamic, dynamic> json) {
-    return ChannelAnalysisStats(
-      channel: (json['channel'] as num?)?.toInt() ?? 0,
-      peakDb: (json['peakDb'] as num?)?.toDouble(),
-      rmsDb: (json['rmsDb'] as num?)?.toDouble(),
-      dynamicRangeDb: (json['dynamicRangeDb'] as num?)?.toDouble(),
-      peakCount: (json['peakCount'] as num?)?.toInt() ?? 0,
-    );
-  }
-}
-
 class _GeneratedSpectrogram {
   final ui.Image image;
   final Uint8List rgba;

@@ -41,15 +41,15 @@ extension _LibrarySectionTabNavigation on _LibrarySectionTabState {
   void _navigateToLocalAlbum(_GroupedLocalAlbum album) {
     Future<List<LocalLibraryItem>> loadTracks() async {
       var rows = album.albumKey.isNotEmpty
-          ? await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
+          ? await LibraryDatabase.instance.getBrowseLocalAlbumRowsByKey(
               album.albumKey,
             )
-          : await LibraryDatabase.instance.getQueueLocalAlbumRows(
+          : await LibraryDatabase.instance.getBrowseLocalAlbumRows(
               album.albumName,
               album.artistName,
             );
       if (rows.isEmpty && album.albumKey.isNotEmpty) {
-        rows = await LibraryDatabase.instance.getQueueLocalAlbumRows(
+        rows = await LibraryDatabase.instance.getBrowseLocalAlbumRows(
           album.albumName,
           album.artistName,
         );

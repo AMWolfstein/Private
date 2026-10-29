@@ -7,10 +7,10 @@ import 'package:flutter/rendering.dart' show RenderProxySliver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// Collapsing album-detail header shared by the album and local-album
 /// screens: full-bleed [background] (optionally blurred and

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 
 import 'support/library_paging_fixture.dart';
 import 'support/sqlite_process_database.dart';
@@ -56,10 +56,10 @@ void main() {
       final names = <String>[];
       final dates = <String>[];
       final displayedDates = <String?>[];
-      QueueLibraryDbCursor? cursor;
+      LibraryBrowseDbCursor? cursor;
       do {
         final page = await store.albumPage(
-          QueueLibraryDbQuery(
+          LibraryBrowseDbQuery(
             sortMode: 'release-date-newest',
             includeSingleTrackAlbums: true,
             limit: 2,
@@ -97,7 +97,7 @@ void main() {
       expect(displayedDates[6], '2026-09');
       expect(displayedDates[7], '2026');
       final added = await store.trackPage(
-        const QueueLibraryDbQuery(sortMode: 'latest', limit: 1),
+        const LibraryBrowseDbQuery(sortMode: 'latest', limit: 1),
       );
       expect((added.rows.single['item'] as Map)['albumName'], 'Old');
 
@@ -105,7 +105,7 @@ void main() {
         "UPDATE library SET release_date='2027-03-01' WHERE id='Old'",
       );
       final refreshed = await store.albumPage(
-        const QueueLibraryDbQuery(
+        const LibraryBrowseDbQuery(
           sortMode: 'release-date-newest',
           includeSingleTrackAlbums: true,
           limit: 1,

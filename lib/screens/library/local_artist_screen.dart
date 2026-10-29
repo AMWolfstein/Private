@@ -1,6 +1,7 @@
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/utils/release_date_display.dart';
-import 'package:sistrum/widgets/audio_quality_badges.dart';
-import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/status/audio_quality_badges.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 import 'dart:math';
@@ -19,9 +20,9 @@ import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// Sistrum's former artist detail composition, backed entirely by local music.
 class LocalArtistScreen extends ConsumerStatefulWidget {
@@ -103,7 +104,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
           artistName: album.artist,
           coverPath: album.cover,
           loadTracks: () async =>
-              (await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
+              (await LibraryDatabase.instance.getBrowseLocalAlbumRowsByKey(
                 album.key,
               )).map(LocalLibraryItem.fromJson).toList(),
         ),

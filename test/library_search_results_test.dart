@@ -7,10 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_search.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
@@ -273,7 +273,9 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: sistrum ? SistrumTheme.build(Brightness.dark) : ThemeData(),
+              theme: sistrum
+                  ? SistrumTheme.build(Brightness.dark)
+                  : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/listening_rewind.dart';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_rewind.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
@@ -22,7 +22,7 @@ import 'package:sistrum/widgets/primitives/app_content_card.dart';
 import 'package:sistrum/widgets/primitives/app_loading_indicator.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 final listeningRewindProvider = FutureProvider.autoDispose
     .family<ListeningRewind, ListeningRewindPeriod>((ref, period) async {

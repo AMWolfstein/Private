@@ -1,5 +1,5 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
@@ -65,7 +65,7 @@ Future<Map<String, dynamic>> readPlaybackFileMetadataWithRetry(
     Duration(milliseconds: 750),
   ],
 }) async {
-  final read = reader ?? PlatformBridge.readFileMetadata;
+  final read = reader ?? MediaFileBridge.readFileMetadata;
   final delays = retryDelays.isEmpty ? const [Duration.zero] : retryDelays;
   Object? lastError;
   var lastStack = StackTrace.current;

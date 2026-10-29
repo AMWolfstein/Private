@@ -11,7 +11,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/string_utils.dart';
-import 'package:sistrum/widgets/audio_quality_badges.dart';
+import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/overflow_marquee.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';

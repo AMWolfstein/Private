@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';
-import 'package:sistrum/services/listening_rewind.dart';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_rewind.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 
 import 'support/sqlite_process_database.dart';

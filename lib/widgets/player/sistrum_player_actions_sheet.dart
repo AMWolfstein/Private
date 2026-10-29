@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
 

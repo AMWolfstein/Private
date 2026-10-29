@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/widgets/album_ken_burns.dart';
+import 'package:sistrum/widgets/header/album_ken_burns.dart';
 
 class _Settings extends SettingsNotifier {
   _Settings(this.initial);

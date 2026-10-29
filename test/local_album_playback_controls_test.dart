@@ -7,13 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
 
 class _Playing extends Notifier<bool> {
@@ -268,7 +268,9 @@ void main() {
         await tester.tap(
           find.descendant(
             of: header,
-            matching: sistrum ? find.text('Shuffle') : find.byTooltip('Shuffle'),
+            matching: sistrum
+                ? find.text('Shuffle')
+                : find.byTooltip('Shuffle'),
           ),
         );
         await tester.pumpAndSettle();

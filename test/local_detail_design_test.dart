@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/screens/app_screens.dart';
@@ -21,9 +22,9 @@ import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
-import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -129,7 +130,7 @@ void main() {
               ),
               listeningFlushProvider.overrideWithValue(() async {}),
               localArtistTrackLoaderProvider.overrideWithValue(
-                (request) async => QueueLibraryDbPage(
+                (request) async => LibraryBrowseDbPage(
                   rows: [
                     for (
                       var i = request.offset;
@@ -138,7 +139,7 @@ void main() {
                     )
                       {'source': 'local', 'item': _item(i).toJson()},
                   ],
-                  nextCursor: QueueLibraryDbCursor([request.offset + 40]),
+                  nextCursor: LibraryBrowseDbCursor([request.offset + 40]),
                 ),
               ),
               libraryBrowsePageLoaderProvider.overrideWithValue(

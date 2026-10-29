@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +16,7 @@ void main() {
       expect(call.arguments, {'tree_uri': tree});
       return true;
     });
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isTrue);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isTrue);
   });
 
   test('a transient empty root recovers before being marked offline', () async {
@@ -25,7 +25,7 @@ void main() {
       expect(call.method, 'probeSafTreeReadAccess');
       return ++calls > 1;
     });
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isTrue);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isTrue);
     expect(calls, 2);
   });
 
@@ -35,7 +35,7 @@ void main() {
       calls++;
       return false;
     });
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isFalse);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isFalse);
     expect(calls, 2);
   });
 
@@ -45,15 +45,15 @@ void main() {
       if (++calls == 1) return null;
       return true;
     });
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isNull);
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isTrue);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isNull);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isTrue);
   });
 
   test('channel failure cannot confirm that a Library is offline', () async {
     messenger.setMockMethodCallHandler(channel, (call) async {
       throw PlatformException(code: 'provider_busy');
     });
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isNull);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isNull);
   });
 
   test('failed confirmation is inconclusive, not a lost grant', () async {
@@ -62,6 +62,6 @@ void main() {
       if (++calls == 1) return false;
       throw PlatformException(code: 'provider_busy');
     });
-    expect(await PlatformBridge.probeSafTreeReadAccess(tree), isNull);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isNull);
   });
 }

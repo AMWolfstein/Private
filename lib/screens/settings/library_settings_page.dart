@@ -12,7 +12,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_folder_selection.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/widgets/duplicate_review_sheet.dart';
+import 'package:sistrum/widgets/sheets/duplicate_review_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';

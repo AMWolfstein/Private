@@ -1,4 +1,4 @@
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sqflite/sqflite.dart';
 

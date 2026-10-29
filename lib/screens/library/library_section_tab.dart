@@ -1,3 +1,4 @@
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
 import 'dart:async';
@@ -9,11 +10,12 @@ import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
-import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/album_detail_header.dart' show AlbumPlayActions;
+import 'package:sistrum/widgets/header/album_detail_header.dart'
+    show AlbumPlayActions;
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
@@ -34,7 +36,7 @@ import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
@@ -43,10 +45,10 @@ import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/sistrum_library_screen.dart';
-import 'package:sistrum/screens/queue_library_refresh_policy.dart';
+import 'package:sistrum/screens/library/library_browse_refresh_policy.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 
 part 'library_section_tab_helpers.dart';
 part 'library_section_tab_selection.dart';
@@ -103,16 +105,16 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   final Map<String, int> _libraryPageOffsetByFilter = {};
   bool _libraryPageLoadScheduled = false;
-  final Map<_QueueLibraryCountsRequest, QueueLibraryCounts>
-  _queueLibraryCountsCache = {};
-  final Map<_QueueLibraryPageRequest, _QueueLibraryPageData>
-  _queueLibraryPageDataCache = {};
+  final Map<_LibraryBrowseCountsRequest, LibraryBrowseCounts>
+  _browseLibraryCountsCache = {};
+  final Map<_LibraryBrowsePageRequest, _LibraryBrowsePageData>
+  _browseLibraryPageDataCache = {};
 
   // OPT-PERF-001: combined multi-page data is rebuilt per build otherwise,
   // which would defeat the page data's filtered-list memo. Reuse the combined
   // instance while its pages are the identical cached instances.
-  List<_QueueLibraryPageData>? _combinedQueueLibraryPages;
-  _QueueLibraryPageData? _combinedQueueLibraryData;
+  List<_LibraryBrowsePageData>? _combinedLibraryBrowsePages;
+  _LibraryBrowsePageData? _combinedLibraryBrowseData;
 
   double get _libraryAlbumGridExtent =>
       (_libraryGridExtent * 1.45).clamp(150.0, 300.0);
@@ -138,11 +140,11 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
   /// shuffled, paging through the library with the cursor the list uses.
   Future<void> _playAllSongs({bool shuffle = false}) async {
     final tracks = <Track>[];
-    QueueLibraryDbCursor? cursor;
+    LibraryBrowseDbCursor? cursor;
     try {
       do {
-        final page = await LibraryDatabase.instance.getQueueTrackPage(
-          QueueLibraryDbQuery(
+        final page = await LibraryDatabase.instance.getBrowseTrackPage(
+          LibraryBrowseDbQuery(
             limit: 500,
             quality: _filterQuality,
             format: _filterFormat,
@@ -179,7 +181,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   void _resetLibraryPaging() {
     _resetLibraryOffsets();
-    _queueLibraryPageDataCache.clear();
+    _browseLibraryPageDataCache.clear();
     _isSelectionMode = false;
     _selectedIds.clear();
     _selectionAnchorId = null;
@@ -203,27 +205,27 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
     });
   }
 
-  QueueLibraryCounts _resolveQueueLibraryCounts(
-    AsyncValue<QueueLibraryCounts> value,
-    _QueueLibraryCountsRequest request, {
-    QueueLibraryCounts? nonEmptyFallback,
+  LibraryBrowseCounts _resolveLibraryBrowseCounts(
+    AsyncValue<LibraryBrowseCounts> value,
+    _LibraryBrowseCountsRequest request, {
+    LibraryBrowseCounts? nonEmptyFallback,
   }) {
     return value.maybeWhen(
       data: (counts) {
-        final cached = _queueLibraryCountsCache[request];
-        final resolved = resolveQueueLibraryCountsSnapshot(
+        final cached = _browseLibraryCountsCache[request];
+        final resolved = resolveLibraryBrowseCountsSnapshot(
           current: counts,
           cached: cached,
           activeDownloadFallback: nonEmptyFallback,
         );
-        _queueLibraryCountsCache[request] = resolved;
-        _trimQueueLibraryCountsCache();
+        _browseLibraryCountsCache[request] = resolved;
+        _trimLibraryBrowseCountsCache();
         return resolved;
       },
       orElse: () =>
-          _queueLibraryCountsCache[request] ??
+          _browseLibraryCountsCache[request] ??
           nonEmptyFallback ??
-          const QueueLibraryCounts(
+          const LibraryBrowseCounts(
             allTrackCount: 0,
             albumCount: 0,
             singleTrackCount: 0,
@@ -233,33 +235,33 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   /// [nonEmptyFallback] is non-null when an in-memory snapshot is available;
   /// it is only invoked when no cached or live page has content.
-  _QueueLibraryPageData _resolveQueueLibraryPageData(
-    AsyncValue<_QueueLibraryPageData>? value,
-    _QueueLibraryPageRequest request, {
-    _QueueLibraryPageData Function()? nonEmptyFallback,
+  _LibraryBrowsePageData _resolveLibraryBrowsePageData(
+    AsyncValue<_LibraryBrowsePageData>? value,
+    _LibraryBrowsePageRequest request, {
+    _LibraryBrowsePageData Function()? nonEmptyFallback,
   }) {
-    void storePage(_QueueLibraryPageData data) {
-      final cached = _cachedQueueLibraryPageAt(request, request.offset);
-      if (shouldRetainQueueLibraryPageSnapshot(
+    void storePage(_LibraryBrowsePageData data) {
+      final cached = _cachedLibraryBrowsePageAt(request, request.offset);
+      if (shouldRetainLibraryBrowsePageSnapshot(
         currentIsEmpty: data.isEmpty,
         cachedHasContent: cached != null && !cached.isEmpty,
         activeDownloadFallbackAvailable: nonEmptyFallback != null,
       )) {
         return;
       }
-      final staleRequests = _queueLibraryPageDataCache.keys
+      final staleRequests = _browseLibraryPageDataCache.keys
           .where(
             (cachedRequest) =>
                 cachedRequest.offset == request.offset &&
                 cachedRequest != request &&
-                _sameQueueLibraryPageScope(cachedRequest, request),
+                _sameLibraryBrowsePageScope(cachedRequest, request),
           )
           .toList(growable: false);
       for (final staleRequest in staleRequests) {
-        _queueLibraryPageDataCache.remove(staleRequest);
+        _browseLibraryPageDataCache.remove(staleRequest);
       }
-      _queueLibraryPageDataCache[request] = data;
-      _trimQueueLibraryPageDataCache(protectedRequest: request);
+      _browseLibraryPageDataCache[request] = data;
+      _trimLibraryBrowsePageDataCache(protectedRequest: request);
     }
 
     if (value != null) {
@@ -270,13 +272,13 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       value.whenOrNull(data: storePage);
     }
 
-    final pages = <_QueueLibraryPageData>[];
+    final pages = <_LibraryBrowsePageData>[];
     for (var offset = 0; offset <= request.offset; offset += _libraryPageSize) {
-      final page = _cachedQueueLibraryPageAt(request, offset);
+      final page = _cachedLibraryBrowsePageAt(request, offset);
       if (page != null) pages.add(page);
     }
 
-    final combined = _combinedQueueLibraryDataFor(pages);
+    final combined = _combinedLibraryBrowseDataFor(pages);
     if (combined.isEmpty && nonEmptyFallback != null) {
       return nonEmptyFallback();
     }
@@ -285,10 +287,10 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   /// Reuses the combined instance while its pages are the identical cached
   /// instances, keeping the filtered-list memo stable across builds.
-  _QueueLibraryPageData _combinedQueueLibraryDataFor(
-    List<_QueueLibraryPageData> pages,
+  _LibraryBrowsePageData _combinedLibraryBrowseDataFor(
+    List<_LibraryBrowsePageData> pages,
   ) {
-    final cachedKey = _combinedQueueLibraryPages;
+    final cachedKey = _combinedLibraryBrowsePages;
     var identicalPages = cachedKey != null && cachedKey.length == pages.length;
     if (identicalPages) {
       for (var i = 0; i < pages.length; i++) {
@@ -298,32 +300,32 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         }
       }
     }
-    if (identicalPages) return _combinedQueueLibraryData!;
-    final combined = _QueueLibraryPageData.combine(pages);
-    _combinedQueueLibraryPages = List.of(pages);
-    _combinedQueueLibraryData = combined;
+    if (identicalPages) return _combinedLibraryBrowseData!;
+    final combined = _LibraryBrowsePageData.combine(pages);
+    _combinedLibraryBrowsePages = List.of(pages);
+    _combinedLibraryBrowseData = combined;
     return combined;
   }
 
-  void _trimQueueLibraryCountsCache() {
+  void _trimLibraryBrowseCountsCache() {
     const maxCountEntries = 24;
-    while (_queueLibraryCountsCache.length > maxCountEntries) {
-      _queueLibraryCountsCache.remove(_queueLibraryCountsCache.keys.first);
+    while (_browseLibraryCountsCache.length > maxCountEntries) {
+      _browseLibraryCountsCache.remove(_browseLibraryCountsCache.keys.first);
     }
   }
 
-  bool _isProtectedQueueLibraryPage(
-    _QueueLibraryPageRequest request,
-    _QueueLibraryPageRequest protectedRequest,
+  bool _isProtectedLibraryBrowsePage(
+    _LibraryBrowsePageRequest request,
+    _LibraryBrowsePageRequest protectedRequest,
   ) {
-    return _sameQueueLibraryPageScope(request, protectedRequest) &&
+    return _sameLibraryBrowsePageScope(request, protectedRequest) &&
         request.limit == protectedRequest.limit &&
         request.offset <= protectedRequest.offset;
   }
 
-  bool _sameQueueLibraryPageScope(
-    _QueueLibraryPageRequest a,
-    _QueueLibraryPageRequest b,
+  bool _sameLibraryBrowsePageScope(
+    _LibraryBrowsePageRequest a,
+    _LibraryBrowsePageRequest b,
   ) {
     return a.filterMode == b.filterMode &&
         a.limit == b.limit &&
@@ -333,32 +335,32 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         a.sortMode == b.sortMode;
   }
 
-  _QueueLibraryPageData? _cachedQueueLibraryPageAt(
-    _QueueLibraryPageRequest request,
+  _LibraryBrowsePageData? _cachedLibraryBrowsePageAt(
+    _LibraryBrowsePageRequest request,
     int offset,
   ) {
-    for (final entry in _queueLibraryPageDataCache.entries) {
+    for (final entry in _browseLibraryPageDataCache.entries) {
       if (entry.key.offset == offset &&
-          _sameQueueLibraryPageScope(entry.key, request)) {
+          _sameLibraryBrowsePageScope(entry.key, request)) {
         return entry.value;
       }
     }
     return null;
   }
 
-  void _trimQueueLibraryPageDataCache({
-    required _QueueLibraryPageRequest protectedRequest,
+  void _trimLibraryBrowsePageDataCache({
+    required _LibraryBrowsePageRequest protectedRequest,
   }) {
     const maxPageEntries = 96;
-    while (_queueLibraryPageDataCache.length > maxPageEntries) {
-      final removableKey = _queueLibraryPageDataCache.keys
+    while (_browseLibraryPageDataCache.length > maxPageEntries) {
+      final removableKey = _browseLibraryPageDataCache.keys
           .where(
             (request) =>
-                !_isProtectedQueueLibraryPage(request, protectedRequest),
+                !_isProtectedLibraryBrowsePage(request, protectedRequest),
           )
           .firstOrNull;
       if (removableKey == null) break;
-      _queueLibraryPageDataCache.remove(removableKey);
+      _browseLibraryPageDataCache.remove(removableKey);
     }
   }
 
@@ -863,17 +865,17 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         widget.librarySection ??
         ref.watch<String>(settingsProvider.select((s) => s.libraryFilterMode));
     final colorScheme = Theme.of(context).colorScheme;
-    final countsRequest = _QueueLibraryCountsRequest(
+    final countsRequest = _LibraryBrowseCountsRequest(
       filterQuality: _filterQuality,
       filterFormat: _filterFormat,
       filterMetadata: _filterMetadata,
     );
-    final countsValue = ref.watch(_queueLibraryCountsProvider(countsRequest));
-    final queueCounts = _resolveQueueLibraryCounts(countsValue, countsRequest);
+    final countsValue = ref.watch(_browseLibraryCountsProvider(countsRequest));
+    final queueCounts = _resolveLibraryBrowseCounts(countsValue, countsRequest);
 
-    _QueueLibraryPageRequest pageRequest(String filterMode) {
+    _LibraryBrowsePageRequest pageRequest(String filterMode) {
       final offset = _libraryPageOffsetFor(filterMode);
-      final baseRequest = _QueueLibraryPageRequest(
+      final baseRequest = _LibraryBrowsePageRequest(
         filterMode: filterMode,
         limit: _libraryPageSize,
         offset: offset,
@@ -883,11 +885,11 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         sortMode: _sortMode,
       );
       if (offset == 0) return baseRequest;
-      final previousPage = _cachedQueueLibraryPageAt(
+      final previousPage = _cachedLibraryBrowsePageAt(
         baseRequest,
         offset - _libraryPageSize,
       );
-      return _QueueLibraryPageRequest(
+      return _LibraryBrowsePageRequest(
         filterMode: baseRequest.filterMode,
         limit: baseRequest.limit,
         offset: baseRequest.offset,
@@ -901,14 +903,14 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
     final activePageRequest = pageRequest(libraryFilterMode);
     final activePageValue = ref.watch(
-      _queueLibraryPageProvider(activePageRequest),
+      _browseLibraryPageProvider(activePageRequest),
     );
 
-    _QueueLibraryPageData pageData(String filterMode) {
+    _LibraryBrowsePageData pageData(String filterMode) {
       final request = filterMode == libraryFilterMode
           ? activePageRequest
           : pageRequest(filterMode);
-      return _resolveQueueLibraryPageData(
+      return _resolveLibraryBrowsePageData(
         filterMode == libraryFilterMode ? activePageValue : null,
         request,
       );
@@ -1027,8 +1029,8 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
                 error: libraryError,
                 onRetry: () {
                   _resetLibraryOffsets();
-                  ref.invalidate(_queueLibraryCountsProvider(countsRequest));
-                  ref.invalidate(_queueLibraryPageProvider(activePageRequest));
+                  ref.invalidate(_browseLibraryCountsProvider(countsRequest));
+                  ref.invalidate(_browseLibraryPageProvider(activePageRequest));
                 },
               ),
             ),

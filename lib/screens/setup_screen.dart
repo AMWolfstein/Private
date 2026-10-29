@@ -14,7 +14,7 @@ import 'package:sistrum/screens/local_guide_pages.dart';
 import 'package:sistrum/services/library/library_folder_selection.dart';
 import 'package:sistrum/constants/language_choices.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/widgets/scroll_edge_fade.dart';
+import 'package:sistrum/widgets/shell/scroll_edge_fade.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 

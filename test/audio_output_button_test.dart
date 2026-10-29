@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/widgets/audio_output_button.dart';
+import 'package:sistrum/widgets/status/audio_output_button.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

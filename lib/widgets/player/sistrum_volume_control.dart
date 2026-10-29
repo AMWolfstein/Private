@@ -8,7 +8,7 @@ import 'package:sistrum/widgets/player/sistrum_player_slider.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/system_volume_service.dart';
+import 'package:sistrum/services/playback/system_volume_service.dart';
 
 final usbVolumeProvider = StreamProvider.autoDispose<UsbVolumeState?>((ref) {
   final events = StreamController<UsbVolumeState?>();

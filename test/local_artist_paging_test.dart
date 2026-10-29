@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
@@ -28,9 +29,9 @@ Map<String, dynamic> row(int i) => {
     scannedAt: DateTime(2026),
   ).toJson(),
 };
-QueueLibraryDbPage page(int start, int count) => QueueLibraryDbPage(
+LibraryBrowseDbPage page(int start, int count) => LibraryBrowseDbPage(
   rows: List.generate(count, (i) => row(start + i)),
-  nextCursor: QueueLibraryDbCursor([start + count]),
+  nextCursor: LibraryBrowseDbCursor([start + count]),
 );
 
 void main() {
@@ -64,7 +65,7 @@ void main() {
       await notifier.loadMore();
       expect(container.read(provider).requireValue.items.length, 45);
       expect(container.read(provider).requireValue.hasMore, false);
-      expect(requests.last.cursor, const QueueLibraryDbCursor([40]));
+      expect(requests.last.cursor, const LibraryBrowseDbCursor([40]));
       requests.clear();
       expect(
         (await notifier.playbackQueue()).map((t) => t.id),
@@ -77,7 +78,7 @@ void main() {
   test(
     'closing artist while loading more does not publish a late page',
     () async {
-      final pending = Completer<QueueLibraryDbPage>();
+      final pending = Completer<LibraryBrowseDbPage>();
       final container = ProviderContainer(
         overrides: [
           settingsProvider.overrideWith(_Settings.new),

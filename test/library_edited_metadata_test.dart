@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/services/library/library_edited_metadata.dart';
 
 void main() {

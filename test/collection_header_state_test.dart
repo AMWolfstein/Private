@@ -5,20 +5,20 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 class _Library extends LocalLibraryNotifier {
   @override

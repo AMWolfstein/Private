@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ void main() {
           });
           return jsonEncode({'replaygain_track_gain': '-6.00 dB'});
         });
-    final result = await PlatformBridge.readFileMetadata(
+    final result = await MediaFileBridge.readFileMetadata(
       '/proc/self/fd/42',
       displayName: 'Song.opus',
     );

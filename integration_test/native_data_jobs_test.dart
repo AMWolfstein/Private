@@ -8,11 +8,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/playback/automix_analysis.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
@@ -124,7 +125,7 @@ void main() {
     root = await Directory.systemTemp.createTemp('native-data-jobs-');
   });
   tearDown(() async {
-    await PlatformBridge.setLibraryCoverCacheDir('');
+    await LibraryScanBridge.setLibraryCoverCacheDir('');
     await root.delete(recursive: true);
   });
 

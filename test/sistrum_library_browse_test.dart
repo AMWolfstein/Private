@@ -14,7 +14,7 @@ import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/favorite_artists_screen.dart';
 import 'package:sistrum/screens/library/local_genres_screen.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 
 class _Settings extends SettingsNotifier {
@@ -145,7 +145,7 @@ void main() {
               genrePageLoaderProvider.overrideWithValue((_) async => []),
               localArtistTrackLoaderProvider.overrideWithValue(
                 (_) async =>
-                    const QueueLibraryDbPage(rows: [], nextCursor: null),
+                    const LibraryBrowseDbPage(rows: [], nextCursor: null),
               ),
               listeningFlushProvider.overrideWithValue(() async {}),
               localArtistPlayCountsLoaderProvider.overrideWithValue(

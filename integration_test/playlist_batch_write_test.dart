@@ -8,6 +8,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
 
@@ -70,7 +71,7 @@ void main() {
 
   tearDown(() async {
     await db.close();
-    await PlatformBridge.setLibraryCoverCacheDir('');
+    await LibraryScanBridge.setLibraryCoverCacheDir('');
     await root.delete(recursive: true);
   });
 

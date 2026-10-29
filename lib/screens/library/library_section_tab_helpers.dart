@@ -49,7 +49,7 @@ class _FilterContentData {
       totalAlbumCountOverride ?? filteredGroupedLocalAlbums.length;
 }
 
-class _QueueLibraryPageRequest {
+class _LibraryBrowsePageRequest {
   final String filterMode;
   final int limit;
   final int offset;
@@ -57,9 +57,9 @@ class _QueueLibraryPageRequest {
   final String? filterFormat;
   final String? filterMetadata;
   final String sortMode;
-  final QueueLibraryDbCursor? cursor;
+  final LibraryBrowseDbCursor? cursor;
 
-  const _QueueLibraryPageRequest({
+  const _LibraryBrowsePageRequest({
     required this.filterMode,
     required this.limit,
     required this.offset,
@@ -70,7 +70,7 @@ class _QueueLibraryPageRequest {
     this.cursor,
   });
 
-  QueueLibraryDbQuery toDbQuery() => QueueLibraryDbQuery(
+  LibraryBrowseDbQuery toDbQuery() => LibraryBrowseDbQuery(
     limit: limit,
     offset: offset,
     filterMode: filterMode,
@@ -84,7 +84,7 @@ class _QueueLibraryPageRequest {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _QueueLibraryPageRequest &&
+      other is _LibraryBrowsePageRequest &&
           filterMode == other.filterMode &&
           limit == other.limit &&
           offset == other.offset &&
@@ -107,18 +107,18 @@ class _QueueLibraryPageRequest {
   );
 }
 
-class _QueueLibraryCountsRequest {
+class _LibraryBrowseCountsRequest {
   final String? filterQuality;
   final String? filterFormat;
   final String? filterMetadata;
 
-  const _QueueLibraryCountsRequest({
+  const _LibraryBrowseCountsRequest({
     required this.filterQuality,
     required this.filterFormat,
     required this.filterMetadata,
   });
 
-  QueueLibraryDbQuery toDbQuery() => QueueLibraryDbQuery(
+  LibraryBrowseDbQuery toDbQuery() => LibraryBrowseDbQuery(
     quality: filterQuality,
     format: filterFormat,
     metadata: filterMetadata,
@@ -127,7 +127,7 @@ class _QueueLibraryCountsRequest {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _QueueLibraryCountsRequest &&
+      other is _LibraryBrowseCountsRequest &&
           filterQuality == other.filterQuality &&
           filterFormat == other.filterFormat &&
           filterMetadata == other.filterMetadata;
@@ -136,17 +136,17 @@ class _QueueLibraryCountsRequest {
   int get hashCode => Object.hash(filterQuality, filterFormat, filterMetadata);
 }
 
-class _QueueLibraryPageData {
+class _LibraryBrowsePageData {
   final List<UnifiedLibraryItem> items;
   final List<LocalLibraryItem> localItems;
   final List<_GroupedLocalAlbum> groupedLocalAlbums;
-  final QueueLibraryDbCursor? nextCursor;
+  final LibraryBrowseDbCursor? nextCursor;
 
   // Memo of the playlist-excluded list for the newest collections state.
   LibraryCollectionsState? _filteredFrom;
   List<UnifiedLibraryItem>? _filteredItems;
 
-  _QueueLibraryPageData({
+  _LibraryBrowsePageData({
     this.items = const [],
     this.localItems = const [],
     this.groupedLocalAlbums = const [],
@@ -156,8 +156,8 @@ class _QueueLibraryPageData {
   bool get isEmpty =>
       items.isEmpty && localItems.isEmpty && groupedLocalAlbums.isEmpty;
 
-  factory _QueueLibraryPageData.combine(List<_QueueLibraryPageData> pages) {
-    if (pages.isEmpty) return _QueueLibraryPageData();
+  factory _LibraryBrowsePageData.combine(List<_LibraryBrowsePageData> pages) {
+    if (pages.isEmpty) return _LibraryBrowsePageData();
     if (pages.length == 1) return pages.first;
 
     final items = <UnifiedLibraryItem>[];
@@ -170,7 +170,7 @@ class _QueueLibraryPageData {
       groupedLocalAlbums.addAll(page.groupedLocalAlbums);
     }
 
-    return _QueueLibraryPageData(
+    return _LibraryBrowsePageData(
       items: items,
       localItems: localItems,
       groupedLocalAlbums: groupedLocalAlbums,
@@ -211,8 +211,8 @@ class _QueueLibraryPageData {
   }
 }
 
-final _queueLibraryPageProvider = FutureProvider.autoDispose
-    .family<_QueueLibraryPageData, _QueueLibraryPageRequest>((
+final _browseLibraryPageProvider = FutureProvider.autoDispose
+    .family<_LibraryBrowsePageData, _LibraryBrowsePageRequest>((
       ref,
       request,
     ) async {
@@ -221,11 +221,11 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
       );
       // Playlists render from libraryCollectionsProvider, not the DB.
       if (request.filterMode == 'playlists') {
-        return _QueueLibraryPageData();
+        return _LibraryBrowsePageData();
       }
       final dbQuery = request.toDbQuery();
       if (request.filterMode == 'albums') {
-        final page = await LibraryDatabase.instance.getQueueAlbumPage(dbQuery);
+        final page = await LibraryDatabase.instance.getBrowseAlbumPage(dbQuery);
         final rows = page.rows;
         final groupedLocalAlbums = <_GroupedLocalAlbum>[];
         for (final row in rows) {
@@ -243,32 +243,31 @@ final _queueLibraryPageProvider = FutureProvider.autoDispose
             ),
           );
         }
-        return _QueueLibraryPageData(
+        return _LibraryBrowsePageData(
           groupedLocalAlbums: groupedLocalAlbums,
           nextCursor: page.nextCursor,
         );
       }
 
-      final page = await LibraryDatabase.instance.getQueueTrackPage(dbQuery);
+      final page = await LibraryDatabase.instance.getBrowseTrackPage(dbQuery);
       final rows = page.rows;
       final items = <UnifiedLibraryItem>[];
       final localItems = <LocalLibraryItem>[];
       for (final row in rows) {
         if (row['source'] != 'local') continue;
-        final itemJson = Map<String, dynamic>.from(row['item'] as Map);
-        final item = LocalLibraryItem.fromJson(itemJson);
+        final item = LocalLibraryItem.fromEnvelope(row);
         localItems.add(item);
         items.add(UnifiedLibraryItem.fromLocalLibrary(item));
       }
-      return _QueueLibraryPageData(
+      return _LibraryBrowsePageData(
         items: items,
         localItems: localItems,
         nextCursor: page.nextCursor,
       );
     });
 
-final _queueLibraryCountsProvider = FutureProvider.autoDispose
-    .family<QueueLibraryCounts, _QueueLibraryCountsRequest>((
+final _browseLibraryCountsProvider = FutureProvider.autoDispose
+    .family<LibraryBrowseCounts, _LibraryBrowseCountsRequest>((
       ref,
       request,
     ) async {

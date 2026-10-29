@@ -6,13 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
-import 'package:sistrum/widgets/destructive_selection_button.dart';
+import 'package:sistrum/widgets/selection/destructive_selection_button.dart';
 import 'support/pump_until.dart';
 
 class _Local extends LocalLibraryNotifier {

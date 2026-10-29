@@ -9,7 +9,7 @@ import 'package:sistrum/screens/setup_screen.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/navigation/app_navigation.dart';
 import 'package:sistrum/services/app_orientation.dart';
-import 'package:sistrum/theme/sistrum_theme_wrapper.dart';
+import 'package:sistrum/widgets/shell/sistrum_theme_wrapper.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';

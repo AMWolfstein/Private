@@ -50,17 +50,17 @@ void main() {
       await release('EP', '2025-01-01', 4);
       await release('Unknown total', null, null);
       await release('One track per disc', '2024-01-01', 1, discs: 2);
-      const request = QueueLibraryDbQuery(
+      const request = LibraryBrowseDbQuery(
         albumArtist: 'Test Artist',
         includeSingleTrackAlbums: true,
         sortMode: 'artist-releases-newest',
         limit: 2,
       );
       final all = <LibraryBrowseEntry>[];
-      QueueLibraryDbCursor? cursor;
+      LibraryBrowseDbCursor? cursor;
       do {
         final page = await store.albumPage(
-          QueueLibraryDbQuery(
+          LibraryBrowseDbQuery(
             albumArtist: request.albumArtist,
             includeSingleTrackAlbums: true,
             sortMode: request.sortMode,

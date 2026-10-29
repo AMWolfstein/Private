@@ -7,17 +7,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/selection_action_button.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
-import 'package:sistrum/widgets/destructive_selection_button.dart';
+import 'package:sistrum/widgets/selection/selection_action_button.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/destructive_selection_button.dart';
 
 Widget _app(
   Widget child, {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 
 /// Height of the player's full-bleed artwork on a [screen]: [aspectRatio]
 /// (immersive) up to 0.75 of the height, else square or 0.66 of the height.

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/m3u_playlist_service.dart';
+import 'package:sistrum/services/library/m3u_playlist_service.dart';
 
 void main() {
   group('buildM3u8Content', () {

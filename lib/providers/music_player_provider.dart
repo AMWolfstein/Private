@@ -1,8 +1,8 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/models/unified_library_item.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
@@ -179,7 +179,7 @@ class MusicPlayerController {
     final row = await database.getById(mediaId);
     if (row == null) return null;
     final item = LocalLibraryItem.fromJson(row);
-    final rows = await database.getQueueLocalAlbumRowsByKey(item.albumKey);
+    final rows = await database.getBrowseLocalAlbumRowsByKey(item.albumKey);
     final tracks = rows.map(LocalLibraryItem.fromJson).toList(growable: false);
     return tracks.isEmpty ? null : (item: item, tracks: tracks);
   }
@@ -225,7 +225,7 @@ class MusicPlayerController {
   Future<void> addToQueue(PlayableMedia item) async =>
       (await ensureInitialized())?.enqueue(item);
 
-  Future<void> enqueueLibraryItems(
+  Future<void> enbrowseLibraryItems(
     List<UnifiedLibraryItem> items, {
     bool playNext = false,
   }) async {

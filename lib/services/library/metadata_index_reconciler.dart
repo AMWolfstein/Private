@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_edited_metadata.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 
 /// Why a saved file's fresh tags did not reach the browse index.
@@ -15,7 +16,10 @@ class MetadataIndexResult {
   final Object? error;
 
   const MetadataIndexResult.indexed() : failure = null, error = null;
-  const MetadataIndexResult.stale(MetadataIndexFailure this.failure, this.error);
+  const MetadataIndexResult.stale(
+    MetadataIndexFailure this.failure,
+    this.error,
+  );
 
   bool get indexed => failure == null;
 }
@@ -37,8 +41,8 @@ class MetadataIndexReconciler {
   upsert;
 
   const MetadataIndexReconciler({
-    this.read = PlatformBridge.readFileMetadata,
-    this.extractCover = PlatformBridge.extractCoverToFile,
+    this.read = MediaFileBridge.readFileMetadata,
+    this.extractCover = MediaFileBridge.extractCoverToFile,
     this.supportDirectory = getApplicationSupportDirectory,
     this.upsert = _upsert,
   });

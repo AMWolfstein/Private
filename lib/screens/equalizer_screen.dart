@@ -13,7 +13,7 @@ import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/beta_badge.dart';
+import 'package:sistrum/widgets/status/beta_badge.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/services/equalizer_preset_io.dart';
 import 'package:sistrum/widgets/glass/sistrum_level_slider.dart';

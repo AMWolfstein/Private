@@ -1,3 +1,4 @@
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'dart:io';
 import 'dart:math' as math;
@@ -8,11 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/audio_route_info.dart';
+import 'package:sistrum/services/playback/audio_route_info.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/playback_handler.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/int_utils.dart';
@@ -90,7 +90,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
     if (path == null || path.isEmpty) return null;
     try {
       if (path.startsWith('content://')) {
-        final size = (await PlatformBridge.safStat(path))['size'];
+        final size = (await MediaFileBridge.safStat(path))['size'];
         return size is num && size > 0 ? size.toInt() : null;
       }
       if (!path.startsWith('/')) return null;

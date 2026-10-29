@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +14,7 @@ import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
 
 class CacheManagementPage extends ConsumerStatefulWidget {
   const CacheManagementPage({super.key});
@@ -146,9 +147,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
         final chunk = entities.sublist(i, end);
         await Future.wait(
           chunk.map((entity) async {
-            try {
-              await entity.delete(recursive: true);
-            } catch (_) {}
+            await deleteBestEffort(entity, recursive: true);
           }),
         );
       }

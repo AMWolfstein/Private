@@ -1,8 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/services/library/library_database.dart';
 
 typedef LibraryBrowseRequest = ({
@@ -73,19 +74,19 @@ class LibraryBrowseEntry {
 typedef LibraryBrowsePageRequest = ({
   LibraryBrowseRequest browse,
   int offset,
-  QueueLibraryDbCursor? cursor,
+  LibraryBrowseDbCursor? cursor,
 });
 
 class LibraryBrowsePage {
   final List<LibraryBrowseEntry> entries;
-  final QueueLibraryDbCursor? nextCursor;
+  final LibraryBrowseDbCursor? nextCursor;
 
   const LibraryBrowsePage(this.entries, {this.nextCursor});
 
   factory LibraryBrowsePage.fromRows(
     List<Map<String, dynamic>> rows, {
     required bool artists,
-    QueueLibraryDbCursor? nextCursor,
+    LibraryBrowseDbCursor? nextCursor,
   }) => LibraryBrowsePage(
     rows
         .map((row) => LibraryBrowseEntry.fromRow(row, isArtist: artists))
@@ -108,8 +109,8 @@ class LibraryBrowseState {
   });
 }
 
-QueueLibraryDbQuery libraryBrowseQuery(LibraryBrowsePageRequest request) =>
-    QueueLibraryDbQuery(
+LibraryBrowseDbQuery libraryBrowseQuery(LibraryBrowsePageRequest request) =>
+    LibraryBrowseDbQuery(
       limit: request.browse.limit,
       offset: request.offset,
       cursor: request.cursor,
@@ -127,11 +128,13 @@ final libraryBrowsePageLoaderProvider =
         final query = libraryBrowseQuery(request);
         if (request.browse.artists) {
           return LibraryBrowsePage.fromRows(
-            await LibraryDatabase.instance.getQueueArtistRows(query),
+            await ref.read(libraryDatabaseProvider).getBrowseArtistRows(query),
             artists: true,
           );
         }
-        final page = await LibraryDatabase.instance.getQueueAlbumPage(query);
+        final page = await ref
+            .read(libraryDatabaseProvider)
+            .getBrowseAlbumPage(query);
         return LibraryBrowsePage.fromRows(
           page.rows,
           artists: false,
@@ -150,14 +153,14 @@ class LibraryBrowseNotifier extends AsyncNotifier<LibraryBrowseState> {
 
   final LibraryBrowseRequest request;
   List<LibraryBrowseEntry> _rows = const [];
-  QueueLibraryDbCursor? _cursor;
+  LibraryBrowseDbCursor? _cursor;
   bool _hasMore = false;
   bool _loadingMore = false;
   int _generation = 0;
 
   LibraryBrowsePageRequest _pageRequest(
     int offset,
-    QueueLibraryDbCursor? cursor,
+    LibraryBrowseDbCursor? cursor,
   ) => (
     browse: request,
     offset: offset,
@@ -175,7 +178,7 @@ class LibraryBrowseNotifier extends AsyncNotifier<LibraryBrowseState> {
     // until its replacement is ready, preserving the user's scroll position.
     final target = math.max(request.limit, _rows.length);
     final rows = <LibraryBrowseEntry>[];
-    QueueLibraryDbCursor? cursor;
+    LibraryBrowseDbCursor? cursor;
     late LibraryBrowsePage page;
     do {
       page = await loadPage(_pageRequest(rows.length, cursor));

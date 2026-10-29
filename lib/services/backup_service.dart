@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/user_profile_store.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/logger.dart';
 
 Future<void> _writeBackupMetadataInBackground(
@@ -284,12 +285,8 @@ class BackupService {
       _log.i('Streaming backup written to ${output.path}');
       return output;
     } finally {
-      try {
-        if (await staging.exists()) await staging.delete(recursive: true);
-      } catch (_) {}
-      try {
-        if (await partFile.exists()) await partFile.delete();
-      } catch (_) {}
+      await deleteBestEffort(staging, recursive: true);
+      await deleteBestEffort(partFile);
     }
   }
 
@@ -403,9 +400,7 @@ class BackupService {
       });
     } catch (error) {
       if (stagingPath != null) {
-        try {
-          await Directory(stagingPath).delete(recursive: true);
-        } catch (_) {}
+        await deleteBestEffort(Directory(stagingPath), recursive: true);
       }
       _log.w('Backup archive native parse failed: $error');
       throw BackupParseException(
@@ -533,9 +528,7 @@ class BackupService {
     } catch (e) {
       _log.w('Backup archive parse failed: $e');
       if (extractionDir != null) {
-        try {
-          await extractionDir.delete(recursive: true);
-        } catch (_) {}
+        await deleteBestEffort(extractionDir, recursive: true);
       }
       if (e is BackupParseException) rethrow;
       throw BackupParseException(

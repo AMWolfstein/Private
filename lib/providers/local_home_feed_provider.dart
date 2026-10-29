@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
 
@@ -7,15 +9,17 @@ const localHomeShelfLimit = 12;
 
 /// The feed never hydrates the whole library. Ordering and limits run in SQLite.
 final localHomeTrackLoaderProvider =
-    Provider<Future<QueueLibraryDbPage> Function()>(
+    Provider<Future<LibraryBrowseDbPage> Function()>(
       (ref) =>
-          () => LibraryDatabase.instance.getQueueTrackPage(
-            const QueueLibraryDbQuery(
-              limit: localHomeShelfLimit,
-              sortMode: 'latest',
-              includeSingleTrackAlbums: true,
-            ),
-          ),
+          () => ref
+              .read(libraryDatabaseProvider)
+              .getBrowseTrackPage(
+                const LibraryBrowseDbQuery(
+                  limit: localHomeShelfLimit,
+                  sortMode: 'latest',
+                  includeSingleTrackAlbums: true,
+                ),
+              ),
     );
 
 final localHomeTracksProvider = FutureProvider<List<LocalLibraryItem>>((
@@ -24,11 +28,7 @@ final localHomeTracksProvider = FutureProvider<List<LocalLibraryItem>>((
   ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
   final page = await ref.watch(localHomeTrackLoaderProvider)();
   return page.rows
-      .map(
-        (row) => LocalLibraryItem.fromJson(
-          Map<String, dynamic>.from(row['item'] as Map),
-        ),
-      )
+      .map(LocalLibraryItem.fromEnvelope)
       .where((item) => item.filePath.trim().isNotEmpty)
       .toList(growable: false);
 });

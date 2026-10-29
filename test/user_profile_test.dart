@@ -15,7 +15,7 @@ import 'package:sistrum/services/backup_service.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/profile_avatar.dart';
+import 'package:sistrum/widgets/header/profile_avatar.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 void main() {

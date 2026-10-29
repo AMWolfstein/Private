@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
 
 void main() {
   test(

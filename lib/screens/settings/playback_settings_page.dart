@@ -15,7 +15,7 @@ import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/beta_badge.dart';
+import 'package:sistrum/widgets/status/beta_badge.dart';
 import 'package:sistrum/widgets/player/sistrum_volume_control.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/automix_settings.dart';

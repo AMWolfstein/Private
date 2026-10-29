@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart' show AppLogger;
 
@@ -280,7 +280,7 @@ class MusicHapticsAnalyzer {
         // A document URI is not a filesystem path. Unknown modification times
         // still allow analysis, but cannot safely identify a cached revision.
         try {
-          final modified = (await PlatformBridge.getSafFileModTimes([
+          final modified = (await MediaFileBridge.getSafFileModTimes([
             path,
           ]))[path];
           if (modified != null && modified > 0) key = '$path:$modified';

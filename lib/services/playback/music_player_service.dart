@@ -1,3 +1,4 @@
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/playback_session_prepare.dart';
 import 'package:sistrum/services/playback/music_haptics.dart';
 import 'dart:async';
@@ -8,8 +9,8 @@ import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show AudioSession, AudioSessionConfiguration, AudioInterruptionType;
 import 'package:audioplayers/audioplayers.dart';
-import 'package:sistrum/services/listening_statistics.dart' show ListeningTrack;
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart'
+    show ListeningTrack;
 import 'package:sistrum/services/playback/playback_normalization.dart';
 import 'package:sistrum/services/playback/playback_automation.dart';
 import 'package:sistrum/services/playback/playback_session_writer.dart';
@@ -182,7 +183,7 @@ class MusicPlayerHandler extends PlaybackHandler {
       pulse: hapticPulse,
     );
     _sourceCache = ContentUriPlaybackCache(
-      copy: PlatformBridge.copyContentUriToTemp,
+      copy: MediaFileBridge.copyContentUriToTemp,
       isDisposed: () => _disposed,
       isPinned: (path) =>
           path == _activeResolvedPath || _autoMix.pinnedPaths.contains(path),
@@ -797,7 +798,7 @@ class MusicPlayerHandler extends PlaybackHandler {
       ContentUriPlaybackLease? playbackLease;
       if (resolved == null && media.isContentUri) {
         try {
-          playbackLease = await PlatformBridge.openContentUriPlaybackLease(
+          playbackLease = await MediaFileBridge.openContentUriPlaybackLease(
             media.source,
           );
           resolved = playbackLease?.path;
@@ -811,7 +812,7 @@ class MusicPlayerHandler extends PlaybackHandler {
         displayName: playbackLease?.displayName,
       );
       if (playbackLease != null) {
-        await PlatformBridge.closeContentUriPlaybackLease(playbackLease.token);
+        await MediaFileBridge.closeContentUriPlaybackLease(playbackLease.token);
       }
       if (_index != index ||
           generation != _playRequestGeneration ||
@@ -1404,7 +1405,7 @@ class MusicPlayerHandler extends PlaybackHandler {
   ) async {
     if (!_dependencies.isAndroid || !media.isContentUri) return null;
     try {
-      return await PlatformBridge.openContentUriPlaybackLease(media.source);
+      return await MediaFileBridge.openContentUriPlaybackLease(media.source);
     } catch (e) {
       _log.w('Failed to open direct SAF playback lease: $e');
       return null;
@@ -1413,7 +1414,7 @@ class MusicPlayerHandler extends PlaybackHandler {
 
   Future<void> _releaseLease(ContentUriPlaybackLease? lease) async {
     if (lease != null) {
-      await PlatformBridge.closeContentUriPlaybackLease(lease.token);
+      await MediaFileBridge.closeContentUriPlaybackLease(lease.token);
     }
   }
 

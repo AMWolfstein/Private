@@ -8,7 +8,8 @@ import 'package:sistrum/models/playable_media.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/music_player_runtime.dart';
-import 'package:sistrum/services/library/sqlite_helpers.dart' show normalizeLookupText;
+import 'package:sistrum/services/library/sqlite_helpers.dart'
+    show normalizeLookupText;
 import 'package:sistrum/utils/int_utils.dart';
 import 'package:sistrum/utils/logger.dart';
 
@@ -34,16 +35,16 @@ Future<List<PlayableMedia>> loadAutoplayLibrary(
   MusicPlayerRuntime runtime,
 ) async {
   final database = runtime.dependencies.libraryDatabase;
-  const query = QueueLibraryDbQuery();
+  const query = LibraryBrowseDbQuery();
   final count = (await database.getQueueCounts(query)).allTrackCount;
   final offset = count > 256 ? Random().nextInt(count - 255) : 0;
   final rows = [
     if (seed.artist.trim().isNotEmpty)
-      ...(await database.getQueueTrackPage(
-        QueueLibraryDbQuery(searchQuery: seed.artist, limit: 128),
+      ...(await database.getBrowseTrackPage(
+        LibraryBrowseDbQuery(searchQuery: seed.artist, limit: 128),
       )).rows,
-    ...(await database.getQueueTrackPage(
-      QueueLibraryDbQuery(offset: offset, limit: 256),
+    ...(await database.getBrowseTrackPage(
+      LibraryBrowseDbQuery(offset: offset, limit: 256),
     )).rows,
   ];
   final result = <PlayableMedia>[];

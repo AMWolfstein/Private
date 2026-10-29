@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
@@ -13,12 +14,11 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 
 final _tracks = [
   for (final name in ['First', 'Unavailable', 'Selected', 'Last'])
@@ -243,9 +243,10 @@ void main() {
                         body: TextButton(
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute<void>(
-                              builder: (_) => const LibraryCollectionTracksScreen(
-                                mode: LibraryCollectionMode.loved,
-                              ),
+                              builder: (_) =>
+                                  const LibraryCollectionTracksScreen(
+                                    mode: LibraryCollectionMode.loved,
+                                  ),
                             ),
                           ),
                           child: const Text('Open Loved'),
@@ -553,30 +554,33 @@ void main() {
     expect(player.queue[player.index!].title, 'Selected');
   });
 
-  test('library playback keeps the resolved row identity and audio facts', () async {
-    const track = Track(
-      id: 'Selected',
-      name: 'Selected',
-      artistName: 'Artist',
-      albumName: 'Album',
-      coverUrl: 'https://remote.example/cover.jpg',
-      duration: 180,
-    );
-    await container
-        .read(playbackProvider.notifier)
-        .playTrackList([track], startIndex: 0);
+  test(
+    'library playback keeps the resolved row identity and audio facts',
+    () async {
+      const track = Track(
+        id: 'Selected',
+        name: 'Selected',
+        artistName: 'Artist',
+        albumName: 'Album',
+        coverUrl: 'https://remote.example/cover.jpg',
+        duration: 180,
+      );
+      await container.read(playbackProvider.notifier).playTrackList([
+        track,
+      ], startIndex: 0);
 
-    final media = player.queue.single;
-    expect(media.id, 'Selected');
-    expect(media.source, 'content://library/selected');
-    expect(media.bitDepth, 24);
-    expect(media.sampleRate, 96000);
-    expect(media.bitrate, 1411);
-    expect(media.format, 'flac');
-    expect(media.genre, 'Jazz');
-    // Remote artwork is never adopted as local playback artwork.
-    expect(media.artUri, isNull);
-  });
+      final media = player.queue.single;
+      expect(media.id, 'Selected');
+      expect(media.source, 'content://library/selected');
+      expect(media.bitDepth, 24);
+      expect(media.sampleRate, 96000);
+      expect(media.bitrate, 1411);
+      expect(media.format, 'flac');
+      expect(media.genre, 'Jazz');
+      // Remote artwork is never adopted as local playback artwork.
+      expect(media.artUri, isNull);
+    },
+  );
 
   test('empty playlist leaves existing playback alone', () async {
     await container.read(playbackProvider.notifier).playTrackList([]);

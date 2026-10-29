@@ -1,5 +1,7 @@
 import 'dart:math';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
@@ -7,7 +9,7 @@ import 'package:sistrum/services/library/library_database.dart';
 typedef ArtistTrackRequest = ({
   String artist,
   int offset,
-  QueueLibraryDbCursor? cursor,
+  LibraryBrowseDbCursor? cursor,
 });
 
 /// Tracks per bounded page read from the library database.
@@ -15,18 +17,20 @@ const _artistPageSize = 40;
 
 /// Bounded local reads shared by the artist page and its complete playback queue.
 final localArtistTrackLoaderProvider =
-    Provider<Future<QueueLibraryDbPage> Function(ArtistTrackRequest)>(
+    Provider<Future<LibraryBrowseDbPage> Function(ArtistTrackRequest)>(
       (ref) =>
-          (request) => LibraryDatabase.instance.getQueueTrackPage(
-            QueueLibraryDbQuery(
-              albumArtist: request.artist,
-              limit: _artistPageSize,
-              offset: request.offset,
-              cursor: request.cursor,
-              sortMode: 'a-z',
-              includeSingleTrackAlbums: true,
-            ),
-          ),
+          (request) => ref
+              .read(libraryDatabaseProvider)
+              .getBrowseTrackPage(
+                LibraryBrowseDbQuery(
+                  albumArtist: request.artist,
+                  limit: _artistPageSize,
+                  offset: request.offset,
+                  cursor: request.cursor,
+                  sortMode: 'a-z',
+                  includeSingleTrackAlbums: true,
+                ),
+              ),
     );
 
 class LocalArtistTracks {
@@ -50,7 +54,7 @@ final localArtistTracksProvider = AsyncNotifierProvider.autoDispose
 class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
   LocalArtistTracksNotifier(this.artist);
   final String artist;
-  QueueLibraryDbCursor? _cursor;
+  LibraryBrowseDbCursor? _cursor;
   int _generation = 0;
 
   @override
@@ -118,18 +122,18 @@ class LocalArtistTracksNotifier extends AsyncNotifier<LocalArtistTracks> {
 }
 
 LocalLibraryItem _decodeArtistTrack(Map<String, dynamic> row) =>
-    LocalLibraryItem.fromJson(Map<String, dynamic>.from(row["item"] as Map));
+    LocalLibraryItem.fromEnvelope(row);
 
 /// Walks every page of [artist]'s tracks in order, yielding each page's rows
 /// that are new to the walk. Stops at a short page, at an all-duplicate page,
 /// or once [keepGoing] turns false.
 Stream<List<LocalLibraryItem>> _artistTrackPages(
-  Future<QueueLibraryDbPage> Function(ArtistTrackRequest) load,
+  Future<LibraryBrowseDbPage> Function(ArtistTrackRequest) load,
   String artist,
   bool Function() keepGoing,
 ) async* {
   final seen = <String>{};
-  QueueLibraryDbCursor? cursor;
+  LibraryBrowseDbCursor? cursor;
   var offset = 0;
   while (keepGoing()) {
     final page = await load((artist: artist, offset: offset, cursor: cursor));

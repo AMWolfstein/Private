@@ -1,5 +1,5 @@
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/services/library/embedded_cover_resolver.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/library/library_mutation_ports.dart';
 import 'package:sistrum/utils/file_access.dart';
 

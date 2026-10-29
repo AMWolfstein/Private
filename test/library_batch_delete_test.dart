@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/services/library/deleted_library_files.dart';
 import 'package:sistrum/services/library/library_cleanup.dart';
-import 'package:sistrum/widgets/confirm_and_delete_tracks.dart';
+import 'package:sistrum/widgets/selection/confirm_and_delete_tracks.dart';
 import 'package:sqflite/sqflite.dart';
 
 class _DeleteDatabase implements Database, Transaction {

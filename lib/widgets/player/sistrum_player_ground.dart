@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/utils/cover_file_image.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/widgets/player/sistrum_player_background.dart';
 
@@ -56,7 +56,8 @@ class SistrumPlayerGround extends ConsumerStatefulWidget {
   final Widget child;
 
   @override
-  ConsumerState<SistrumPlayerGround> createState() => _SistrumPlayerGroundState();
+  ConsumerState<SistrumPlayerGround> createState() =>
+      _SistrumPlayerGroundState();
 }
 
 class _SistrumPlayerGroundState extends ConsumerState<SistrumPlayerGround>

@@ -9,10 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:sistrum/services/library/cover_analysis_store.dart';
 import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/theme/cover_colors.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/utils/cover_colors.dart';
+import 'package:sistrum/utils/cover_file_image.dart';
 
-export 'package:sistrum/theme/cover_colors.dart'
+export 'package:sistrum/utils/cover_colors.dart'
     show
         CoverAnalysis,
         CoverColors,
@@ -89,8 +89,7 @@ class CoverPaletteCache {
 
   /// The last analysis for [source], possibly of a previous file version;
   /// null before the first resolution or when the cover is unreadable.
-  CoverAnalysis? peekAnalysis(String source) =>
-      _analyses[_sourceKeys[source]];
+  CoverAnalysis? peekAnalysis(String source) => _analyses[_sourceKeys[source]];
 
   /// Sistrum's colours for [source]; neutral gray while unknown or without a
   /// cover.
@@ -122,10 +121,7 @@ class CoverPaletteCache {
 
   /// Resolves the scheme for [source] (a network URL or a local file path).
   /// Returns null when the image cannot be decoded.
-  Future<ColorScheme?> resolve(
-    String source,
-    Brightness brightness,
-  ) async {
+  Future<ColorScheme?> resolve(String source, Brightness brightness) async {
     final analysis = await resolveAnalysis(source);
     final key = _sourceKeys[source];
     if (analysis == null || key == null) return null;
@@ -143,8 +139,7 @@ class CoverPaletteCache {
 
   /// Last known [topLightness] for [source], possibly from a previous file
   /// version; null before the first resolution.
-  double? peekTopLightness(String source) =>
-      peekAnalysis(source)?.topLightness;
+  double? peekTopLightness(String source) => peekAnalysis(source)?.topLightness;
 
   /// One analysis per cover version, shared by every caller.
   Future<CoverAnalysis?> resolveAnalysis(String source) {
@@ -207,10 +202,7 @@ class CoverPaletteCache {
     }
   }
 
-  Future<CoverAnalysis?> _analyzeUntimed(
-    String source,
-    String key,
-  ) async {
+  Future<CoverAnalysis?> _analyzeUntimed(String source, String key) async {
     final store = _store;
     if (store != null && !_isNetworkSource(source)) {
       final stored = await store.read(key);

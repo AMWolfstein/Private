@@ -7,6 +7,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_native_adapter.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 import '../test/support/library_native_fixture.dart';
@@ -84,7 +85,7 @@ void main() {
     );
   });
   tearDown(() async {
-    await PlatformBridge.setLibraryCoverCacheDir('');
+    await LibraryScanBridge.setLibraryCoverCacheDir('');
     await database.close();
     await root.delete(recursive: true);
   });

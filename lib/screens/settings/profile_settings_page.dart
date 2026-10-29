@@ -9,7 +9,7 @@ import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/profile_avatar.dart';
+import 'package:sistrum/widgets/header/profile_avatar.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 class ProfileSettingsPage extends ConsumerStatefulWidget {

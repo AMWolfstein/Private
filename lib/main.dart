@@ -23,7 +23,7 @@ import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/navigation/app_navigation.dart';
 import 'package:sistrum/services/app_orientation.dart';
-import 'package:sistrum/services/activity_attachment.dart';
+import 'package:sistrum/services/playback/activity_attachment.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
 import 'package:sistrum/services/playback/player_widget_service.dart';
 import 'package:sistrum/screens/now_playing_screen.dart';

@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/library/library_file_sizes.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 
 import 'support/library_paging_fixture.dart';
 import 'support/sqlite_process_database.dart';
 
-List<String> _ids(QueueLibraryDbPage page) => [
+List<String> _ids(LibraryBrowseDbPage page) => [
   for (final row in page.rows) (row['item'] as Map)['id'] as String,
 ];
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late SqliteProcessDatabase db;
-  late LibraryQueueStore store;
+  late LibraryBrowseStore store;
   late LibraryFileSizes index;
   late Map<String, int?> sizes;
   late List<String> probes;
@@ -46,7 +46,7 @@ void main() {
       () async {
         await index.refresh();
         final full = await store.trackPage(
-          QueueLibraryDbQuery(limit: 100, sortMode: sort),
+          LibraryBrowseDbQuery(limit: 100, sortMode: sort),
         );
         expect(full.rows, hasLength(6));
         final values = [
@@ -60,10 +60,10 @@ void main() {
           sort == 'size-asc' ? expected : expected.reversed.toList(),
         );
         final pages = <String>[];
-        QueueLibraryDbCursor? cursor;
+        LibraryBrowseDbCursor? cursor;
         do {
           final page = await store.trackPage(
-            QueueLibraryDbQuery(limit: 2, cursor: cursor, sortMode: sort),
+            LibraryBrowseDbQuery(limit: 2, cursor: cursor, sortMode: sort),
           );
           if (page.rows.isEmpty) break;
           pages.addAll(_ids(page));
@@ -76,7 +76,7 @@ void main() {
     test('$sort orders albums by total bytes, incomplete last', () async {
       await index.refresh();
       final full = await store.albumPage(
-        QueueLibraryDbQuery(limit: 100, sortMode: sort),
+        LibraryBrowseDbQuery(limit: 100, sortMode: sort),
       );
       expect(full.rows, hasLength(3));
       expect(full.rows.last['sort_size_unknown'], 1);
@@ -113,7 +113,7 @@ void main() {
     await index.refresh();
     expect(probes, [path]);
     final page = await store.trackPage(
-      const QueueLibraryDbQuery(limit: 1, sortMode: 'size-asc'),
+      const LibraryBrowseDbQuery(limit: 1, sortMode: 'size-asc'),
     );
     expect((page.rows.single['item'] as Map)['fileSize'], 20);
   });

@@ -6,7 +6,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/file_access.dart';
 
 class _EmbeddedCoverCacheEntry {
@@ -115,7 +116,7 @@ class EmbeddedCoverResolver {
 
     if (isContentUri(cleanPath)) {
       try {
-        final modTimes = await PlatformBridge.getSafFileModTimes([cleanPath]);
+        final modTimes = await MediaFileBridge.getSafFileModTimes([cleanPath]);
         final modTime = modTimes[cleanPath];
         return modTime != null && modTime > 0 ? modTime : null;
       } catch (_) {
@@ -342,7 +343,7 @@ class EmbeddedCoverResolver {
         Map<String, int> safModTimes = const {};
         if (safPaths.isNotEmpty) {
           try {
-            safModTimes = await PlatformBridge.getSafFileModTimes(safPaths);
+            safModTimes = await MediaFileBridge.getSafFileModTimes(safPaths);
           } catch (_) {
             // An unavailable provider is not evidence of changed artwork.
           }
@@ -584,7 +585,7 @@ class EmbeddedCoverResolver {
         outputPath = p.join(tempDir.path, 'cover_preview.jpg');
       }
 
-      final result = await PlatformBridge.extractCoverToFile(
+      final result = await MediaFileBridge.extractCoverToFile(
         cleanPath,
         outputPath,
       );
@@ -973,16 +974,12 @@ class EmbeddedCoverResolver {
     try {
       final file = File(coverPath);
       await _deleteFileIfPresent(file);
-      try {
-        await file.parent.delete(recursive: true);
-      } catch (_) {}
+      await deleteBestEffort(file.parent, recursive: true);
     } catch (_) {}
   }
 
   static Future<void> _deleteFileIfPresent(File file) async {
-    try {
-      if (await file.exists()) await file.delete();
-    } catch (_) {}
+    await deleteBestEffort(file);
   }
 
   static Future<void> _clearDirectoryContents(Directory directory) async {
@@ -992,9 +989,7 @@ class EmbeddedCoverResolver {
     }
     try {
       await for (final entity in directory.list(followLinks: false)) {
-        try {
-          await entity.delete(recursive: true);
-        } catch (_) {}
+        await deleteBestEffort(entity, recursive: true);
       }
     } catch (_) {}
     if (!await directory.exists()) await directory.create(recursive: true);

@@ -14,13 +14,13 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_artist_header.dart';
-import 'package:sistrum/widgets/sistrum_bottom_bar.dart';
+import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/shell/sistrum_bottom_bar.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 
 void main() {
@@ -483,7 +483,9 @@ void main() {
         chrome.expand();
         await tester.pumpAndSettle();
         expect(
-          tester.widget<SistrumTabBar>(find.byType(SistrumTabBar)).selectedIndex,
+          tester
+              .widget<SistrumTabBar>(find.byType(SistrumTabBar))
+              .selectedIndex,
           index,
         );
       }
@@ -493,7 +495,9 @@ void main() {
       'edge icons travel continuously without fading (glass: $blur)',
       (tester) async {
         await pumpShell(tester, blur: blur);
-        final homeButton = find.byKey(const ValueKey('sistrum-compact-leading'));
+        final homeButton = find.byKey(
+          const ValueKey('sistrum-compact-leading'),
+        );
         final icon = find.descendant(
           of: homeButton,
           matching: find.byIcon(Icons.home),
@@ -728,7 +732,10 @@ void main() {
     await tester.tap(find.byTooltip('Home'));
     await tester.pumpAndSettle();
     expect(chrome.value, isFalse);
-    expect(tester.getSize(find.byType(SistrumBottomBar)).height, expandedHeight);
+    expect(
+      tester.getSize(find.byType(SistrumBottomBar)).height,
+      expandedHeight,
+    );
     expect(tester.takeException(), isNull);
   });
 

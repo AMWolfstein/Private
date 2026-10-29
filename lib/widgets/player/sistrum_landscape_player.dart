@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/widgets/audio_output_button.dart';
+import 'package:sistrum/widgets/status/audio_output_button.dart';
 
 /// Landscape opens on the player. Lyrics can hide their bottom actions until
 /// the user touches the player, while the cover and header stay in place.

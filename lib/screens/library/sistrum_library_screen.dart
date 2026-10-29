@@ -1,4 +1,5 @@
 import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';
@@ -14,7 +15,7 @@ import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/favorite_artists_screen.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
-import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
@@ -124,7 +125,7 @@ class _SistrumLibraryScreenState extends ConsumerState<SistrumLibraryScreen> {
 
   Future<void> _openAlbum(LibraryBrowseEntry entry) async {
     Future<List<LocalLibraryItem>> loadTracks() async {
-      final rows = await LibraryDatabase.instance.getQueueLocalAlbumRowsByKey(
+      final rows = await LibraryDatabase.instance.getBrowseLocalAlbumRowsByKey(
         entry.key,
       );
       return rows.map(LocalLibraryItem.fromJson).toList(growable: false);

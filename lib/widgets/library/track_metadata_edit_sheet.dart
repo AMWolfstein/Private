@@ -9,7 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:sistrum/providers/metadata_editor_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/services/metadata_cover_resources.dart';
+import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/services/library/metadata_persistence_service.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
@@ -17,7 +17,7 @@ import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
-import 'package:sistrum/widgets/metadata_text_field.dart';
+import 'package:sistrum/widgets/sheets/metadata_text_field.dart';
 
 class EditMetadataSheet extends StatefulWidget {
   final ColorScheme colorScheme;

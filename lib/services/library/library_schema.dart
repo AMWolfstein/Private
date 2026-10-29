@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/utils/logger.dart';
 

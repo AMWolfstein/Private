@@ -1,13 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 
-List<String> _tracks(QueueLibraryDbPage page) => [
+List<String> _tracks(LibraryBrowseDbPage page) => [
   for (final row in page.rows) '${row['source']}:${(row['item'] as Map)['id']}',
 ];
 
@@ -35,7 +36,7 @@ class _AlbumQueryDatabase implements Database {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late SqliteProcessDatabase db;
-  late LibraryQueueStore store;
+  late LibraryBrowseStore store;
 
   Future<void> addLocal(
     String id,
@@ -86,7 +87,7 @@ void main() {
       'available': 0,
     });
     await addLocal('hidden', 1, source: 'offline');
-    store = LibraryQueueStore(db, localFts: false);
+    store = LibraryBrowseStore(db, localFts: false);
   });
   tearDown(() => db.close());
 
@@ -114,7 +115,7 @@ void main() {
       });
       await addLocal('explicit', 1, source: 'music', explicit: true);
 
-      final page = await store.trackPage(const QueueLibraryDbQuery());
+      final page = await store.trackPage(const LibraryBrowseDbQuery());
       final item = LocalLibraryItem.fromJson(
         Map<String, dynamic>.from(
           page.rows.singleWhere(
@@ -145,7 +146,7 @@ void main() {
     );
 
     for (final quality in [null, 'unrecognized']) {
-      final query = QueueLibraryDbQuery(quality: quality);
+      final query = LibraryBrowseDbQuery(quality: quality);
       final counts = await store.counts(query);
       expect(
         [counts.allTrackCount, counts.albumCount, counts.singleTrackCount],
@@ -159,7 +160,7 @@ void main() {
         'Conflicting Album',
       });
       final singles = await store.trackPage(
-        QueueLibraryDbQuery(filterMode: 'singles', quality: quality),
+        LibraryBrowseDbQuery(filterMode: 'singles', quality: quality),
       );
       expect(_tracks(singles).toSet(), {
         'local:single-copy-1',
@@ -167,12 +168,12 @@ void main() {
       });
     }
     final filtered = await store.counts(
-      const QueueLibraryDbQuery(searchQuery: 'Song', quality: 'unrecognized'),
+      const LibraryBrowseDbQuery(searchQuery: 'Song', quality: 'unrecognized'),
     );
     expect(filtered.albumCount, 4);
     expect(filtered.singleTrackCount, 2);
     final allReleases = await store.albumPage(
-      const QueueLibraryDbQuery(includeSingleTrackAlbums: true),
+      const LibraryBrowseDbQuery(includeSingleTrackAlbums: true),
     );
     expect(allReleases.rows, hasLength(5));
   });
@@ -207,7 +208,7 @@ void main() {
       releaseDate: '2026-99-99',
     );
 
-    final query = const QueueLibraryDbQuery(
+    final query = const LibraryBrowseDbQuery(
       albumArtist: 'Chronology',
       sortMode: 'artist-releases-newest',
       includeSingleTrackAlbums: true,
@@ -216,7 +217,7 @@ void main() {
     final first = await store.albumPage(query);
     expect(first.rows.map((row) => row['album_name']), ['ISO', 'Compact']);
     final second = await store.albumPage(
-      QueueLibraryDbQuery(
+      LibraryBrowseDbQuery(
         albumArtist: 'Chronology',
         sortMode: 'artist-releases-newest',
         includeSingleTrackAlbums: true,
@@ -245,13 +246,13 @@ void main() {
         'genre-desc',
       ]) {
         final expected = _tracks(
-          await store.trackPage(QueueLibraryDbQuery(sortMode: sort)),
+          await store.trackPage(LibraryBrowseDbQuery(sortMode: sort)),
         );
         final actual = <String>[];
-        QueueLibraryDbCursor? cursor;
+        LibraryBrowseDbCursor? cursor;
         do {
           final page = await store.trackPage(
-            QueueLibraryDbQuery(sortMode: sort, limit: 2, cursor: cursor),
+            LibraryBrowseDbQuery(sortMode: sort, limit: 2, cursor: cursor),
           );
           actual.addAll(_tracks(page));
           cursor = page.nextCursor;
@@ -274,13 +275,13 @@ void main() {
         'release-newest',
       ]) {
         final expected = (await store.albumPage(
-          QueueLibraryDbQuery(sortMode: sort),
+          LibraryBrowseDbQuery(sortMode: sort),
         )).rows;
         final first = await store.albumPage(
-          QueueLibraryDbQuery(sortMode: sort, limit: 1),
+          LibraryBrowseDbQuery(sortMode: sort, limit: 1),
         );
         final second = await store.albumPage(
-          QueueLibraryDbQuery(
+          LibraryBrowseDbQuery(
             sortMode: sort,
             limit: 1,
             cursor: first.nextCursor,
@@ -288,11 +289,11 @@ void main() {
         );
         expect([...first.rows, ...second.rows], expected, reason: sort);
         final fallback = await store.albumPage(
-          QueueLibraryDbQuery(
+          LibraryBrowseDbQuery(
             sortMode: sort,
             offset: 0,
             limit: 1,
-            cursor: const QueueLibraryDbCursor(['wrong length']),
+            cursor: const LibraryBrowseDbCursor(['wrong length']),
           ),
         );
         expect(fallback.rows, [expected.first], reason: sort);
@@ -326,9 +327,9 @@ void main() {
             'release-newest',
           ]) {
             for (final offset in [0, 1]) {
-              Future<QueueLibraryDbPage> page(String? quality) =>
+              Future<LibraryBrowseDbPage> page(String? quality) =>
                   store.albumPage(
-                    QueueLibraryDbQuery(
+                    LibraryBrowseDbQuery(
                       includeSingleTrackAlbums: singles,
                       sortMode: sort,
                       offset: offset,
@@ -346,7 +347,7 @@ void main() {
           }
         }
       }
-      final albums = (await store.albumPage(const QueueLibraryDbQuery())).rows;
+      final albums = (await store.albumPage(const LibraryBrowseDbQuery())).rows;
       expect(albums, hasLength(3));
       expect(
         albums.singleWhere(
@@ -357,12 +358,12 @@ void main() {
       );
       expect(
         (await store.albumPage(
-          const QueueLibraryDbQuery(includeSingleTrackAlbums: true),
+          const LibraryBrowseDbQuery(includeSingleTrackAlbums: true),
         )).rows,
         hasLength(3),
       );
       final filtered = (await store.albumPage(
-        const QueueLibraryDbQuery(metadata: 'missing-replaygain'),
+        const LibraryBrowseDbQuery(metadata: 'missing-replaygain'),
       )).rows;
       final local = filtered.singleWhere(
         (row) => row['album_key'] == 'local|artist',
@@ -390,12 +391,14 @@ void main() {
       SELECT id, file_path FROM library WHERE id LIKE 'bulk-%'
     ''');
       final recorded = _AlbumQueryDatabase(db);
-      final albums = LibraryQueueStore(recorded, localFts: false);
-      final fast = await albums.albumPage(const QueueLibraryDbQuery(limit: 40));
+      final albums = LibraryBrowseStore(recorded, localFts: false);
+      final fast = await albums.albumPage(
+        const LibraryBrowseDbQuery(limit: 40),
+      );
       final fastSql = recorded.sql;
       final fastArgs = recorded.args;
       final original = await albums.albumPage(
-        const QueueLibraryDbQuery(limit: 40, quality: 'unrecognized'),
+        const LibraryBrowseDbQuery(limit: 40, quality: 'unrecognized'),
       );
       final originalSql = recorded.sql;
       final originalArgs = recorded.args;
@@ -425,9 +428,9 @@ void main() {
   test(
     'fast counts agree with filtered counts and deduplicate visible paths',
     () async {
-      final fast = await store.counts(const QueueLibraryDbQuery());
+      final fast = await store.counts(const LibraryBrowseDbQuery());
       final filtered = await store.counts(
-        const QueueLibraryDbQuery(quality: 'cd'),
+        const LibraryBrowseDbQuery(quality: 'cd'),
       );
       expect(
         [fast.allTrackCount, fast.albumCount, fast.singleTrackCount],
@@ -441,10 +444,10 @@ void main() {
         ],
         [3, 1, 0],
       );
-      final local = await store.counts(const QueueLibraryDbQuery());
+      final local = await store.counts(const LibraryBrowseDbQuery());
       expect(local.allTrackCount, 3);
       final gain = await store.trackPage(
-        const QueueLibraryDbQuery(metadata: 'missing-replaygain'),
+        const LibraryBrowseDbQuery(metadata: 'missing-replaygain'),
       );
       expect(_tracks(gain).toSet(), {'local:l2'});
     },
@@ -452,7 +455,7 @@ void main() {
 
   test('artist counts use the same filter as the track query', () async {
     for (final artist in ['Artist', 'Another Artist', 'Missing Artist']) {
-      final query = QueueLibraryDbQuery(albumArtist: artist);
+      final query = LibraryBrowseDbQuery(albumArtist: artist);
       final counts = await store.counts(query);
       final tracks = await store.trackPage(query);
       expect(counts.allTrackCount, tracks.rows.length, reason: artist);
@@ -495,14 +498,14 @@ void main() {
           'format': null,
           'file_path': '/track.${sample.extension}',
         }, where: "id = 'l2'");
-        final request = QueueLibraryDbQuery(format: sample.filter);
+        final request = LibraryBrowseDbQuery(format: sample.filter);
         expect(_tracks(await store.trackPage(request)).toSet(), {
           'local:l1',
           'local:l2',
         }, reason: sample.filter);
         expect((await store.counts(request)).allTrackCount, 2);
         expect((await store.albumPage(request)).rows, hasLength(1));
-        final tagged = QueueLibraryDbQuery(
+        final tagged = LibraryBrowseDbQuery(
           format: sample.filter,
           metadata: 'has-replaygain',
           quality: 'cd',
@@ -515,10 +518,10 @@ void main() {
   );
 
   test('ReplayGain presence follows tag updates and paging', () async {
-    const request = QueueLibraryDbQuery(metadata: 'has-replaygain', limit: 1);
+    const request = LibraryBrowseDbQuery(metadata: 'has-replaygain', limit: 1);
     final first = await store.trackPage(request);
     final second = await store.trackPage(
-      QueueLibraryDbQuery(
+      LibraryBrowseDbQuery(
         metadata: 'has-replaygain',
         limit: 1,
         cursor: first.nextCursor,
@@ -534,12 +537,12 @@ void main() {
     await db.update('library', {'has_replaygain': 0}, where: "id = 'l1'");
     await db.update('library', {'has_replaygain': 1}, where: "id = 'l2'");
     final updated = await store.trackPage(
-      const QueueLibraryDbQuery(metadata: 'has-replaygain'),
+      const LibraryBrowseDbQuery(metadata: 'has-replaygain'),
     );
     expect(_tracks(updated).toSet(), {'local:l2', 'local:mirror'});
     expect((await store.counts(request)).allTrackCount, 2);
     final missing = await store.trackPage(
-      const QueueLibraryDbQuery(metadata: 'missing-replaygain'),
+      const LibraryBrowseDbQuery(metadata: 'missing-replaygain'),
     );
     expect(_tracks(missing).toSet(), {'local:l1'});
   });
@@ -548,18 +551,20 @@ void main() {
     'local FTS input matches LIKE fallback and escapes literal search',
     () async {
       final expected = _tracks(
-        await store.trackPage(const QueueLibraryDbQuery(searchQuery: 'Artist')),
+        await store.trackPage(
+          const LibraryBrowseDbQuery(searchQuery: 'Artist'),
+        ),
       );
-      const search = QueueLibraryDbQuery(searchQuery: 'Artist');
+      const search = LibraryBrowseDbQuery(searchQuery: 'Artist');
       final expectedAlbums = (await store.albumPage(search)).rows;
       final expectedCounts = await store.counts(search);
       final expectedArtists = await store.artistPage(search);
       for (final localFts in [false, true]) {
-        final indexed = LibraryQueueStore(db, localFts: localFts);
+        final indexed = LibraryBrowseStore(db, localFts: localFts);
         expect(
           _tracks(
             await indexed.trackPage(
-              const QueueLibraryDbQuery(searchQuery: 'Artist'),
+              const LibraryBrowseDbQuery(searchQuery: 'Artist'),
             ),
           ),
           expected,
@@ -585,7 +590,7 @@ void main() {
       );
       expect(
         _tracks(
-          await store.trackPage(const QueueLibraryDbQuery(searchQuery: '%')),
+          await store.trackPage(const LibraryBrowseDbQuery(searchQuery: '%')),
         ),
         ['local:literal'],
       );
@@ -595,7 +600,7 @@ void main() {
   test(
     'artist pages aggregate visible inventory without loading track models',
     () async {
-      final artists = await store.artistPage(const QueueLibraryDbQuery());
+      final artists = await store.artistPage(const LibraryBrowseDbQuery());
       expect(artists.map((row) => row['artist_name']), ['Artist']);
       expect(artists.map((row) => row['track_count']), [3]);
     },

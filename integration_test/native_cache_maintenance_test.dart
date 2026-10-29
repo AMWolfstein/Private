@@ -7,7 +7,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_cleanup.dart';
 import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/services/native_cache_maintenance.dart';
+import 'package:sistrum/services/library/native_cache_maintenance.dart';
 
 Future<File> _payload(
   Directory directory,

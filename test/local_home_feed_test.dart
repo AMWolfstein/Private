@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
@@ -76,7 +77,7 @@ void main() {
           localLibraryProvider.overrideWith(_Library.new),
           localHomeTrackLoaderProvider.overrideWithValue(() async {
             reads++;
-            return QueueLibraryDbPage(
+            return LibraryBrowseDbPage(
               nextCursor: null,
               rows: [
                 {
@@ -197,7 +198,7 @@ void main() {
               listeningFlushProvider.overrideWithValue(() async {}),
               localArtistTrackLoaderProvider.overrideWithValue(
                 (request) async =>
-                    const QueueLibraryDbPage(rows: [], nextCursor: null),
+                    const LibraryBrowseDbPage(rows: [], nextCursor: null),
               ),
             ],
             child: MaterialApp(

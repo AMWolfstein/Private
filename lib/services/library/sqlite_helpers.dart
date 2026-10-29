@@ -1,9 +1,12 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/lookup_text.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:unorm_dart/unorm_dart.dart' as unicode;
+
+export 'package:sistrum/utils/lookup_text.dart' show normalizeLookupText;
 
 final _log = AppLogger('AppSqlite');
 
@@ -98,10 +101,6 @@ Future<Database> openAppDatabase(
     onUpgrade: onUpgrade,
     onOpen: onOpen,
   );
-}
-
-String normalizeLookupText(String? value) {
-  return (value ?? '').trim().toLowerCase();
 }
 
 /// Canonical search text is independent of persisted Library identity keys.

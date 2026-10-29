@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart' show Theme, Text;
-import 'package:sistrum/widgets/track_detail_actions.dart'
+import 'package:sistrum/widgets/sheets/track_detail_actions.dart'
     show loveAllTracks;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/playlist_picker_sheet.dart';
-import 'package:sistrum/widgets/header_controls.dart';
+import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
+import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// Sistrum album/playlist action row: Loved, Play, Shuffle, Add to playlist.
 /// The primary action plays local files in place of the retired download action.

@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/album_completeness.dart';
+import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/library/library_file_sizes.dart';
 import 'package:sistrum/services/library/library_schema.dart';
@@ -56,11 +56,11 @@ class _QueueOrderTerm {
 }
 
 /// Queue reads against an already opened local library.
-class LibraryQueueStore {
+class LibraryBrowseStore {
   final Database _db;
   final bool localFts;
 
-  const LibraryQueueStore(this._db, {required this.localFts});
+  const LibraryBrowseStore(this._db, {required this.localFts});
 
   Future<List<Map<String, dynamic>>> localAlbumTracks(
     String albumName,
@@ -82,7 +82,7 @@ class LibraryQueueStore {
     return rows.map(LibraryRowMapper.decode).toList(growable: false);
   }
 
-  Future<QueueLibraryDbPage> trackPage(QueueLibraryDbQuery request) async {
+  Future<LibraryBrowseDbPage> trackPage(LibraryBrowseDbQuery request) async {
     final args = <Object?>[];
     final orderTerms = _queueTrackOrderTerms(request.sortMode);
     final usesCursor =
@@ -103,20 +103,20 @@ class LibraryQueueStore {
       ''',
       [...args, request.limit, if (!usesCursor) request.offset],
     );
-    return QueueLibraryDbPage(
+    return LibraryBrowseDbPage(
       rows: rows.map(_queueTrackRowToJson).toList(growable: false),
       nextCursor: _queueCursorFromRow(rows.lastOrNull, orderTerms),
     );
   }
 
-  Future<QueueLibraryCounts> counts(QueueLibraryDbQuery request) async {
+  Future<LibraryBrowseCounts> counts(LibraryBrowseDbQuery request) async {
     final fastCounts = await _getUnfilteredQueueCounts(request);
     if (fastCounts != null) return fastCounts;
     final parts = <String>[];
     final args = <Object?>[];
 
     final where = <String>[];
-    _appendQueueLocalFilters(where, args, request);
+    _appendBrowseLocalFilters(where, args, request);
     parts.add('''
         SELECT
           COUNT(*) AS all_count,
@@ -140,7 +140,7 @@ class LibraryQueueStore {
       ''', args);
     final row = rows.isNotEmpty ? rows.first : const <String, Object?>{};
 
-    return QueueLibraryCounts(
+    return LibraryBrowseCounts(
       allTrackCount: (row['all_count'] as num?)?.toInt() ?? 0,
       albumCount: (row['album_count'] as num?)?.toInt() ?? 0,
       singleTrackCount: (row['single_count'] as num?)?.toInt() ?? 0,
@@ -150,8 +150,8 @@ class LibraryQueueStore {
   /// The default Library badges do not need a row-by-row join against album
   /// counts. Aggregate the covering album-key indexes directly and reserve the
   /// more expensive filtered query for active search/quality/metadata filters.
-  Future<QueueLibraryCounts?> _getUnfilteredQueueCounts(
-    QueueLibraryDbQuery request,
+  Future<LibraryBrowseCounts?> _getUnfilteredQueueCounts(
+    LibraryBrowseDbQuery request,
   ) async {
     if (sqlite.normalizeLookupText(request.searchQuery).isNotEmpty ||
         request.albumArtist != null ||
@@ -183,14 +183,14 @@ class LibraryQueueStore {
       FROM (${parts.join(' UNION ALL ')})
     ''');
     final row = rows.isEmpty ? const <String, Object?>{} : rows.first;
-    return QueueLibraryCounts(
+    return LibraryBrowseCounts(
       allTrackCount: (row['all_count'] as num?)?.toInt() ?? 0,
       albumCount: (row['album_count'] as num?)?.toInt() ?? 0,
       singleTrackCount: (row['single_count'] as num?)?.toInt() ?? 0,
     );
   }
 
-  Future<QueueLibraryDbPage> albumPage(QueueLibraryDbQuery request) async {
+  Future<LibraryBrowseDbPage> albumPage(LibraryBrowseDbQuery request) async {
     final args = <Object?>[];
     final orderTerms = _queueAlbumOrderTerms(request.sortMode);
     final usesCursor =
@@ -211,7 +211,7 @@ class LibraryQueueStore {
       ''',
       [...args, request.limit, if (!usesCursor) request.offset],
     );
-    return QueueLibraryDbPage(
+    return LibraryBrowseDbPage(
       rows: rows.toList(growable: false),
       nextCursor: _queueCursorFromRow(rows.lastOrNull, orderTerms),
     );
@@ -220,7 +220,7 @@ class LibraryQueueStore {
   /// Album artists across the scanned local library, without loading tracks
   /// into Dart.
   Future<List<Map<String, dynamic>>> artistPage(
-    QueueLibraryDbQuery request,
+    LibraryBrowseDbQuery request,
   ) async {
     final search = sqlite.normalizeLookupText(request.searchQuery);
     return _db.rawQuery(
@@ -257,14 +257,14 @@ class LibraryQueueStore {
   }
 
   String _queueTrackUnionSql(
-    QueueLibraryDbQuery request,
+    LibraryBrowseDbQuery request,
     List<Object?> args, {
     required List<_QueueOrderTerm> orderTerms,
     required bool usesCursor,
   }) {
     final parts = <String>[];
     final where = <String>[];
-    _appendQueueLocalFilters(where, args, request);
+    _appendBrowseLocalFilters(where, args, request);
     if (request.filterMode == 'singles') {
       where.add('''
           l.album_key IN (
@@ -336,7 +336,7 @@ class LibraryQueueStore {
   }
 
   String _queueAlbumUnionSql(
-    QueueLibraryDbQuery request,
+    LibraryBrowseDbQuery request,
     List<Object?> args, {
     required List<_QueueOrderTerm> orderTerms,
     required bool usesCursor,
@@ -364,7 +364,7 @@ class LibraryQueueStore {
     final parts = <String>[];
     final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
     final where = <String>[];
-    _appendQueueLocalFilters(
+    _appendBrowseLocalFilters(
       where,
       args,
       request,
@@ -421,10 +421,10 @@ class LibraryQueueStore {
     return parts.join(' UNION ALL ');
   }
 
-  void _appendQueueLocalFilters(
+  void _appendBrowseLocalFilters(
     List<String> where,
     List<Object?> args,
-    QueueLibraryDbQuery request, {
+    LibraryBrowseDbQuery request, {
     bool hasCompletenessJoin = false,
   }) {
     _appendAlbumCompletenessFilter(
@@ -482,7 +482,7 @@ class LibraryQueueStore {
 
   void _appendAlbumCompletenessFilter(
     List<String> where,
-    QueueLibraryDbQuery request, {
+    LibraryBrowseDbQuery request, {
     required String albumKey,
     required bool hasJoin,
   }) {
@@ -503,7 +503,7 @@ class LibraryQueueStore {
   void _appendQueueCommonFilters(
     List<String> where,
     List<Object?> args,
-    QueueLibraryDbQuery request, {
+    LibraryBrowseDbQuery request, {
     required String filePathExpr,
     required String? formatExpr,
     required String qualityExpr,
@@ -634,7 +634,7 @@ class LibraryQueueStore {
 
   String _boundedQueuePart(
     String selectSql,
-    QueueLibraryDbQuery request,
+    LibraryBrowseDbQuery request,
     List<Object?> args,
     List<_QueueOrderTerm> orderTerms, {
     required bool usesCursor,
@@ -821,7 +821,7 @@ class LibraryQueueStore {
       .join(', ');
 
   String _queueCursorPredicate(
-    QueueLibraryDbCursor? cursor,
+    LibraryBrowseDbCursor? cursor,
     List<_QueueOrderTerm> terms,
     List<Object?> args,
   ) {
@@ -845,7 +845,7 @@ class LibraryQueueStore {
     return '(${first.column} $coarseOperator ?) AND (${clauses.join(' OR ')})';
   }
 
-  QueueLibraryDbCursor? _queueCursorFromRow(
+  LibraryBrowseDbCursor? _queueCursorFromRow(
     Map<String, dynamic>? row,
     List<_QueueOrderTerm> terms,
   ) {
@@ -856,7 +856,7 @@ class LibraryQueueStore {
       if (value is! Object) return null;
       values.add(value);
     }
-    return QueueLibraryDbCursor(List<Object>.unmodifiable(values));
+    return LibraryBrowseDbCursor(List<Object>.unmodifiable(values));
   }
 
   Map<String, dynamic> _queueTrackRowToJson(Map<String, dynamic> row) {

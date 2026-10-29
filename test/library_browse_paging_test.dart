@@ -73,7 +73,9 @@ void main() {
               )
                 _entry(i, prefix: prefix),
             ],
-            nextCursor: QueueLibraryDbCursor([page.offset + page.browse.limit]),
+            nextCursor: LibraryBrowseDbCursor([
+              page.offset + page.browse.limit,
+            ]),
           );
         }),
       ],
@@ -105,7 +107,7 @@ void main() {
       pending!.complete(
         LibraryBrowsePage(
           List.generate(40, (i) => _entry(i + 40)),
-          nextCursor: const QueueLibraryDbCursor([80]),
+          nextCursor: const LibraryBrowseDbCursor([80]),
         ),
       );
       await loading;
@@ -114,8 +116,8 @@ void main() {
       await notifier.loadMore();
       expect(requests.map((page) => page.offset), [0, 40, 80]);
       expect(requests.map((page) => page.browse.limit), [40, 40, 40]);
-      expect(requests[1].cursor, const QueueLibraryDbCursor([40]));
-      expect(requests[2].cursor, const QueueLibraryDbCursor([80]));
+      expect(requests[1].cursor, const LibraryBrowseDbCursor([40]));
+      expect(requests[2].cursor, const LibraryBrowseDbCursor([80]));
       final result = container.read(provider).requireValue;
       expect(
         result.entries.map((entry) => entry.key),

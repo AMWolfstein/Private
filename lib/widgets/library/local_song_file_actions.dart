@@ -7,13 +7,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/deleted_library_files.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_cue.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/cue_sheet_bridge.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/mime_utils.dart';
 import 'package:sistrum/utils/path_match_keys.dart';
@@ -40,10 +43,10 @@ Future<int> exportCueSplitOutputs(
   final embed =
       embedCover ??
       (path, cover) =>
-          PlatformBridge.editFileMetadata(path, {'cover_path': cover});
+          MediaFileBridge.editFileMetadata(path, {'cover_path': cover});
   final create =
       createFile ??
-      (path) => PlatformBridge.createSafFileFromPath(
+      (path) => MediaFileBridge.createSafFileFromPath(
         treeUri: tree,
         relativeDir: '',
         fileName: path.split(Platform.pathSeparator).last,
@@ -198,7 +201,7 @@ Future<void> copyLocalSongPath(
 Future<void> shareLocalSong(BuildContext context, LocalLibraryItem item) async {
   final title = '${item.trackName} - ${item.artistName}';
   if (isContentUri(item.filePath)) {
-    if (!await PlatformBridge.shareContentUri(item.filePath, title: title)) {
+    if (!await MediaFileBridge.shareContentUri(item.filePath, title: title)) {
       throw StateError('Could not share the audio file');
     }
   } else {
@@ -242,7 +245,10 @@ Future<bool> deleteLocalSong(
   );
   if (confirmed != true) return false;
   // A CUE row only drops its virtual row; the shared sheet and audio stay.
-  final result = await deleteLocalLibraryTracks(container.read(localLibraryProvider.notifier), [item]);
+  final result = await deleteLocalLibraryTracks(
+    container.read(localLibraryProvider.notifier),
+    [item],
+  );
   final deleted = result.deletedCount > 0;
   if (!deleted && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -271,7 +277,7 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
   }
 
   try {
-    final info = await PlatformBridge.parseCueSheet(cuePath);
+    final info = await CueSheetBridge.parseCueSheet(cuePath);
     if (!context.mounted) return;
     final audioPath = info['audio_path'] as String? ?? '';
     final tracks = [
@@ -304,7 +310,7 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    final destination = await PlatformBridge.pickSafTree(
+    final destination = await MediaFileBridge.pickSafTree(
       onFailure: (message) {
         if (context.mounted) {
           messenger.showSnackBar(SnackBar(content: Text(message)));
@@ -316,7 +322,7 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
     staging = await (await getTemporaryDirectory()).createTemp('cue_split_');
     var workingAudio = audioPath;
     if (isContentUri(audioPath)) {
-      copiedAudio = await PlatformBridge.copyContentUriToTemp(audioPath);
+      copiedAudio = await MediaFileBridge.copyContentUriToTemp(audioPath);
       if (copiedAudio == null || copiedAudio.isEmpty) {
         throw StateError('Could not read CUE audio');
       }
@@ -325,7 +331,7 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
     String? coverPath;
     final coverOutput = '${staging.path}/cover.jpg';
     try {
-      final coverResult = await PlatformBridge.extractCoverToFile(
+      final coverResult = await MediaFileBridge.extractCoverToFile(
         workingAudio,
         coverOutput,
       );
@@ -384,14 +390,10 @@ Future<void> splitLocalCue(BuildContext context, LocalLibraryItem item) async {
   } finally {
     _cueSplitsInFlight.remove(cuePath);
     if (copiedAudio != null) {
-      try {
-        await File(copiedAudio).delete();
-      } catch (_) {}
+      await deleteBestEffort(File(copiedAudio));
     }
     if (staging != null) {
-      try {
-        await staging.delete(recursive: true);
-      } catch (_) {}
+      await deleteBestEffort(staging, recursive: true);
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 import 'package:sistrum/services/library/library_genres.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/library/library_search.dart';
@@ -67,8 +67,8 @@ void main() {
               kind: LibrarySearchKind.songs,
             );
             expect(hits.single.id, 'unicode');
-            final queue = LibraryQueueStore(db, localFts: fts);
-            final request = QueueLibraryDbQuery(searchQuery: query);
+            final queue = LibraryBrowseStore(db, localFts: fts);
+            final request = LibraryBrowseDbQuery(searchQuery: query);
             final tracks = await queue.trackPage(request);
             expect((tracks.rows.single['item'] as Map)['id'], 'unicode');
             expect((await queue.counts(request)).allTrackCount, 1);

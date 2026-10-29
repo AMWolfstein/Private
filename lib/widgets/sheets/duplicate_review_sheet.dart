@@ -11,8 +11,8 @@ import 'package:sistrum/services/library/embedded_cover_resolver.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/duplicate_cleanup_policy.dart';
 import 'package:sistrum/utils/file_access.dart';
-import 'package:sistrum/widgets/audio_quality_badges.dart';
-import 'package:sistrum/widgets/error_card.dart';
+import 'package:sistrum/widgets/status/audio_quality_badges.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 /// Bottom sheet listing tracks that exist more than once (same ISRC) across

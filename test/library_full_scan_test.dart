@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 
 void main() {
@@ -49,7 +49,7 @@ void main() {
       return {'path': output.path, 'count': 0, 'error_count': 1};
     });
 
-    final scan = await PlatformBridge.scanSafTreeToNDJSONFile(
+    final scan = await LibraryScanBridge.scanSafTreeToNDJSONFile(
       'content://library/tree/music',
     );
     expect(scan.errorCount, 1);
@@ -66,12 +66,12 @@ void main() {
       bool force = false,
       bool Function()? isCancelled,
     }) => saf
-        ? PlatformBridge.scanSafTreeToNDJSONFile(
+        ? LibraryScanBridge.scanSafTreeToNDJSONFile(
             'content://library/tree/music',
             forceFullScan: force,
             isCancelled: isCancelled,
           )
-        : PlatformBridge.scanLibraryFolderToNDJSONFile(
+        : LibraryScanBridge.scanLibraryFolderToNDJSONFile(
             '/music',
             forceFullScan: force,
             isCancelled: isCancelled,
@@ -157,8 +157,10 @@ void main() {
 
   for (final saf in [false, true]) {
     Future<LibraryScanNDJSONFile> scan() => saf
-        ? PlatformBridge.scanSafTreeToNDJSONFile('content://library/tree/music')
-        : PlatformBridge.scanLibraryFolderToNDJSONFile('/music');
+        ? LibraryScanBridge.scanSafTreeToNDJSONFile(
+            'content://library/tree/music',
+          )
+        : LibraryScanBridge.scanLibraryFolderToNDJSONFile('/music');
 
     for (final count in [0, 2]) {
       test(
@@ -218,11 +220,11 @@ void main() {
       return {'path': output.path, 'count': 0, 'error_count': 0};
     });
 
-    await PlatformBridge.scanSafTreeToNDJSONFile(
+    await LibraryScanBridge.scanSafTreeToNDJSONFile(
       'content://library/tree/music',
       hasIndexedRows: true,
     );
-    await PlatformBridge.scanSafTreeToNDJSONFile(
+    await LibraryScanBridge.scanSafTreeToNDJSONFile(
       'content://library/tree/music',
     );
     expect(forwarded, [true, false]);
@@ -235,7 +237,7 @@ void main() {
       throw PlatformException(code: 'cache-unavailable');
     });
     await expectLater(
-      PlatformBridge.scanSafTreeToNDJSONFile(
+      LibraryScanBridge.scanSafTreeToNDJSONFile(
         'content://library/tree/music',
         forceFullScan: true,
       ),

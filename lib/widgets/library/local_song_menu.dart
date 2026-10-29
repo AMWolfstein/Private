@@ -1,3 +1,5 @@
+import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/theme/sistrum_icons.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +19,6 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
@@ -246,7 +247,7 @@ Future<bool> editLocalSongMetadata(
   final metadataSeparators = ref.read(settingsProvider).metadataSeparators;
   Map<String, dynamic> tags = {};
   try {
-    tags = await PlatformBridge.readFileMetadata(item.filePath);
+    tags = await MediaFileBridge.readFileMetadata(item.filePath);
   } catch (_) {
     /* Use stored tags if reading fails. */
   }

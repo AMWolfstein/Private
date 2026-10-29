@@ -4,7 +4,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:sistrum/services/audio_metadata_mapper.dart';
+import 'package:sistrum/services/ffmpeg/audio_metadata_mapper.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/services/platform_bridge.dart';

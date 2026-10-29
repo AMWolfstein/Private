@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
-import 'package:sistrum/widgets/selection_action_button.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/selection_action_button.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 
 /// Shared Library toolbar for playlist/queue actions and audio file operations.
 class LibraryTrackSelectionBar extends StatelessWidget {

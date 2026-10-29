@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 
 const _one = ListeningTrack(
   key: 'one',

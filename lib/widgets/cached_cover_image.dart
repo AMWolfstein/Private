@@ -287,7 +287,3 @@ class _FittedLocalFileImage extends FileImage {
   @override
   int get hashCode => Object.hash(super.hashCode, width, height, fit);
 }
-
-FileImage cachedCoverImageProvider(String path) => FileImage(
-  File(path.startsWith('file://') ? Uri.parse(path).toFilePath() : path),
-);

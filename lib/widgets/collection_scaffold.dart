@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/album_detail_header.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 
 /// Shared shell for every track-collection screen: album, playlist, local
 /// album and library folders.

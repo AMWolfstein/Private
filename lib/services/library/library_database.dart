@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/audio_format_utils.dart';
-import 'package:sistrum/services/library/library_queue_store.dart';
+import 'package:sistrum/services/library/library_browse_store.dart';
 import 'package:sistrum/services/library/library_file_sizes.dart';
 import 'package:sistrum/services/library/library_cleanup.dart';
 import 'package:sistrum/services/library/library_search.dart';
@@ -19,7 +21,7 @@ import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 export 'library_database_models.dart';
 
-export 'library_queue_store.dart'
+export 'library_browse_store.dart'
     show confirmedMissingLyricsSqlPredicate, missingReplayGainSqlPredicate;
 
 final _log = AppLogger('LibraryDatabase');
@@ -523,37 +525,39 @@ class LibraryDatabase {
     });
   }
 
-  Future<LibraryQueueStore> _queueStore([QueueLibraryDbQuery? request]) async {
+  Future<LibraryBrowseStore> _queueStore([
+    LibraryBrowseDbQuery? request,
+  ]) async {
     final db = await database;
     if (request != null && isLibrarySizeSort(request.sortMode)) {
       await (_fileSizes ??= LibraryFileSizes(db)).refresh();
     }
-    return LibraryQueueStore(db, localFts: searchFtsAvailable);
+    return LibraryBrowseStore(db, localFts: searchFtsAvailable);
   }
 
-  Future<QueueLibraryDbPage> getQueueTrackPage(
-    QueueLibraryDbQuery request,
+  Future<LibraryBrowseDbPage> getBrowseTrackPage(
+    LibraryBrowseDbQuery request,
   ) async => (await _queueStore(request)).trackPage(request);
 
-  Future<QueueLibraryCounts> getQueueCounts(
-    QueueLibraryDbQuery request,
+  Future<LibraryBrowseCounts> getQueueCounts(
+    LibraryBrowseDbQuery request,
   ) async => (await _queueStore()).counts(request);
 
-  Future<QueueLibraryDbPage> getQueueAlbumPage(
-    QueueLibraryDbQuery request,
+  Future<LibraryBrowseDbPage> getBrowseAlbumPage(
+    LibraryBrowseDbQuery request,
   ) async => (await _queueStore(request)).albumPage(request);
 
   /// Album artists across scanned music, excluding duplicate paths.
-  Future<List<Map<String, dynamic>>> getQueueArtistRows(
-    QueueLibraryDbQuery request,
+  Future<List<Map<String, dynamic>>> getBrowseArtistRows(
+    LibraryBrowseDbQuery request,
   ) async => (await _queueStore()).artistPage(request);
 
-  Future<List<Map<String, dynamic>>> getQueueLocalAlbumRows(
+  Future<List<Map<String, dynamic>>> getBrowseLocalAlbumRows(
     String albumName,
     String artistName,
   ) async => (await _queueStore()).localAlbumTracks(albumName, artistName);
 
-  Future<List<Map<String, dynamic>>> getQueueLocalAlbumRowsByKey(
+  Future<List<Map<String, dynamic>>> getBrowseLocalAlbumRowsByKey(
     String albumKey,
   ) async => (await _queueStore()).localAlbumTracksByKey(albumKey);
 

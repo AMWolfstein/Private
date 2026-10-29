@@ -15,20 +15,20 @@ import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/update_checker.dart';
-import 'package:sistrum/widgets/update_dialog.dart';
+import 'package:sistrum/widgets/sheets/update_dialog.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
-import 'package:sistrum/widgets/lazy_tab_view.dart';
+import 'package:sistrum/widgets/shell/lazy_tab_view.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_bottom_bar.dart';
+import 'package:sistrum/widgets/shell/sistrum_bottom_bar.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome_adaptivity.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/selection_bottom_bar.dart';
+import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
 class MainShell extends ConsumerStatefulWidget {

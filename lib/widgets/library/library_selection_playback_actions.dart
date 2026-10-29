@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/widgets/playlist_picker_sheet.dart';
-import 'package:sistrum/widgets/selection_action_button.dart';
+import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
+import 'package:sistrum/widgets/selection/selection_action_button.dart';
 
 /// Collection actions stay separate from actions that modify audio files.
 class LibrarySelectionPlaybackActions extends ConsumerWidget {
@@ -49,7 +49,10 @@ class LibrarySelectionPlaybackActions extends ConsumerWidget {
               : () async {
                   try {
                     final controller = ref.read(musicPlayerControllerProvider);
-                    await controller.enqueueLibraryItems(items, playNext: next);
+                    await controller.enbrowseLibraryItems(
+                      items,
+                      playNext: next,
+                    );
                   } catch (error) {
                     if (!context.mounted) return;
                     final messenger = ScaffoldMessenger.of(context);

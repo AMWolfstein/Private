@@ -1,4 +1,4 @@
-import 'package:sistrum/widgets/audio_info_sheet.dart';
+import 'package:sistrum/widgets/sheets/audio_info_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +8,7 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/utils/playback_seek_preview.dart';
 import 'package:sistrum/utils/string_utils.dart';
-import 'package:sistrum/widgets/automix_status_badge.dart';
+import 'package:sistrum/widgets/status/automix_status_badge.dart';
 import 'package:sistrum/widgets/player/sistrum_playback_button.dart';
 import 'package:sistrum/widgets/player/sistrum_playback_time.dart';
 import 'package:sistrum/widgets/player/sistrum_player_slider.dart';

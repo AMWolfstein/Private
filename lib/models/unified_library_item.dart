@@ -1,6 +1,6 @@
 import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
 
 /// A local-library track in the shape shared by library lists, selection and
 /// batch actions. The scan record is the single source of track metadata; only

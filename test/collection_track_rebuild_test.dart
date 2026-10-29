@@ -6,7 +6,7 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/track_detail_actions.dart';
+import 'package:sistrum/widgets/sheets/track_detail_actions.dart';
 
 const _track = Track(
   id: 'example-track',
@@ -38,16 +38,19 @@ class _Collections extends LibraryCollectionsNotifier {
   }
 }
 
-Widget _app(ProviderContainer container, Widget child, {bool sistrum = false}) =>
-    UncontrolledProviderScope(
-      container: container,
-      child: MaterialApp(
-        theme: sistrum ? SistrumTheme.build(Brightness.light) : AppTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(body: child),
-      ),
-    );
+Widget _app(
+  ProviderContainer container,
+  Widget child, {
+  bool sistrum = false,
+}) => UncontrolledProviderScope(
+  container: container,
+  child: MaterialApp(
+    theme: sistrum ? SistrumTheme.build(Brightness.light) : AppTheme.light(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(body: child),
+  ),
+);
 
 void main() {
   for (final sistrum in [true]) {

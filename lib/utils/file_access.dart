@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:sistrum/services/platform_bridge.dart';
-import 'package:sistrum/services/source_deletion_events.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
+import 'package:sistrum/services/library/source_deletion_events.dart';
 
 class FileAccessStat {
   final int? size;
@@ -53,7 +53,7 @@ Future<bool> fileExists(String? path) async {
   if (path == null || path.isEmpty) return false;
   final realPath = isCueVirtualPath(path) ? stripCueTrackSuffix(path) : path;
   if (isContentUri(realPath)) {
-    return PlatformBridge.safExists(realPath);
+    return MediaFileBridge.safExists(realPath);
   }
   return File(realPath).exists();
 }
@@ -70,7 +70,7 @@ Future<Map<String, bool?>> fileExistenceByPath(List<String> paths) async {
     final end = start + batchSize < saf.length ? start + batchSize : saf.length;
     final batch = saf.sublist(start, end);
     try {
-      results.addAll(await PlatformBridge.safExistsBatch(batch));
+      results.addAll(await MediaFileBridge.safExistsBatch(batch));
     } catch (_) {
       // Missing native method on an older build is also inconclusive.
     }
@@ -125,7 +125,7 @@ Future<bool> deleteFile(
   bool confirmedAbsent;
   try {
     if (isContentUri(path)) {
-      final deleted = await PlatformBridge.safDelete(path);
+      final deleted = await MediaFileBridge.safDelete(path);
       confirmedAbsent =
           deleted || (await fileExistenceByPath([path]))[path] == false;
     } else {
@@ -151,7 +151,7 @@ Future<FileAccessStat?> fileStat(String? path) async {
   if (path == null || path.isEmpty) return null;
   final realPath = isCueVirtualPath(path) ? stripCueTrackSuffix(path) : path;
   if (isContentUri(realPath)) {
-    final stat = await PlatformBridge.safStat(realPath);
+    final stat = await MediaFileBridge.safStat(realPath);
     final exists = stat['exists'] as bool? ?? true;
     if (!exists) return null;
     return FileAccessStat(

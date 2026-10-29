@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';

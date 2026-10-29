@@ -8,7 +8,7 @@ import 'package:sistrum/services/playback/replaygain_service.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/batch_progress_dialog.dart';
+import 'package:sistrum/widgets/selection/batch_progress_dialog.dart';
 
 final _batchActionsLog = AppLogger('BatchActions');
 

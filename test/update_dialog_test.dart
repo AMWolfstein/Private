@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/services/update_checker.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
-import 'package:sistrum/widgets/update_dialog.dart';
+import 'package:sistrum/widgets/sheets/update_dialog.dart';
 
 void main() {
   Future<void> open(

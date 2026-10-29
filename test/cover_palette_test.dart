@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 
 void main() {
   final palette = CoverPaletteCache();
@@ -46,10 +46,7 @@ void main() {
           await file.setLastModified(
             DateTime.now().add(const Duration(seconds: 1)),
           );
-          final second = await palette.resolve(
-            file.path,
-            Brightness.light,
-          );
+          final second = await palette.resolve(file.path, Brightness.light);
           expect(second, isNot(same(first)));
           expect(
             palette.peekAnalysis(file.path)?.dominant,
@@ -139,10 +136,7 @@ void main() {
         final file = File('${directory.path}/monochrome.png');
         await file.writeAsBytes(bytes!.buffer.asUint8List());
 
-        expect(
-          await palette.resolve(file.path, Brightness.dark),
-          isNotNull,
-        );
+        expect(await palette.resolve(file.path, Brightness.dark), isNotNull);
         // The navy-black half has no visible hue: the colours stay gray.
         final colors = palette.colors(file.path);
         expect(colors.chroma == 0, isTrue);

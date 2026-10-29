@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
-import 'package:sistrum/services/metadata_cover_resources.dart';
-import 'package:sistrum/services/metadata_edit_result.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/library/metadata_cover_resources.dart';
+import 'package:sistrum/services/library/metadata_edit_result.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
+import 'package:sistrum/utils/best_effort_delete.dart';
 
 enum MetadataSaveFailure { backend, ffmpeg, storage, unexpected }
 
@@ -53,10 +54,10 @@ class MetadataPersistenceService {
 
   const MetadataPersistenceService({
     required this.covers,
-    this.edit = PlatformBridge.editFileMetadata,
-    this.read = PlatformBridge.readFileMetadata,
+    this.edit = MediaFileBridge.editFileMetadata,
+    this.read = MediaFileBridge.readFileMetadata,
     this.embed = _embed,
-    this.writeBack = PlatformBridge.writeTempToSafDetailed,
+    this.writeBack = MediaFileBridge.writeTempToSafDetailed,
   });
 
   Future<MetadataSaveResult> save(MetadataSaveRequest request) async {
@@ -133,9 +134,7 @@ class MetadataPersistenceService {
     } finally {
       // Android also deletes on writeback; failed FFmpeg never reaches it.
       if (stagedPath != null && stagedPath != request.filePath) {
-        try {
-          await File(stagedPath).delete();
-        } catch (_) {}
+        await deleteBestEffort(File(stagedPath));
       }
       await covers.release(extractedCoverDir);
       await releaseLease();

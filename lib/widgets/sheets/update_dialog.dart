@@ -58,7 +58,10 @@ class _UpdateDialogState extends State<UpdateDialog> {
     if (mounted && !widget.forced) Navigator.pop(context);
   }
 
-  static String _failureMessage(BuildContext context, ApkDownloadFailure reason) {
+  static String _failureMessage(
+    BuildContext context,
+    ApkDownloadFailure reason,
+  ) {
     final l10n = context.l10n;
     return switch (reason) {
       ApkDownloadFailure.invalidDigest ||

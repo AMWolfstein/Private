@@ -8,17 +8,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/sistrum_library_screen.dart';
 import 'package:sistrum/services/library/embedded_cover_resolver.dart';
-import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
-import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
 
 class _Settings extends SettingsNotifier {
   // The cover drift repeats forever and would keep pumpAndSettle waiting.

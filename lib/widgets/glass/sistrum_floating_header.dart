@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/cover_palette.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
-import 'package:sistrum/widgets/profile_avatar.dart';
+import 'package:sistrum/widgets/header/profile_avatar.dart';
 
 /// Every pinned header control (back circle, action capsule, profile photo)
 /// is this tall; the player keeps its own controls.
@@ -40,13 +40,18 @@ enum SistrumHeaderMaterial {
 bool sistrumLiquidChromeEnabled(BuildContext context, WidgetRef ref) =>
     ref.watch(sistrumShaderFiltersSupportedProvider) &&
     ref.watch(sistrumLiquidGlassProvider) &&
-    !sistrumGlassClarity(ref.watch(sistrumGlassClarityLevelProvider)).plainBlur &&
+    !sistrumGlassClarity(
+      ref.watch(sistrumGlassClarityLevelProvider),
+    ).plainBlur &&
     !MediaQuery.disableAnimationsOf(context) &&
     !ref.watch(
       sistrumGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
 
-SistrumHeaderMaterial sistrumHeaderMaterial(BuildContext context, WidgetRef ref) {
+SistrumHeaderMaterial sistrumHeaderMaterial(
+  BuildContext context,
+  WidgetRef ref,
+) {
   final translucent =
       ref.watch(sistrumGlassLevelProvider) != SistrumGlassLevel.flat &&
       !ref.watch(
@@ -93,7 +98,9 @@ class SistrumHeaderBacking extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final material = sistrumHeaderMaterial(context, ref);
-    if (material == SistrumHeaderMaterial.opaque) return const SizedBox.shrink();
+    if (material == SistrumHeaderMaterial.opaque) {
+      return const SizedBox.shrink();
+    }
     final shown =
         visible ??
         context
@@ -323,7 +330,8 @@ class SistrumHeaderBrightness extends StatefulWidget {
   final Widget child;
 
   @override
-  State<SistrumHeaderBrightness> createState() => _SistrumHeaderBrightnessState();
+  State<SistrumHeaderBrightness> createState() =>
+      _SistrumHeaderBrightnessState();
 }
 
 class _SistrumHeaderBrightnessState extends State<SistrumHeaderBrightness> {

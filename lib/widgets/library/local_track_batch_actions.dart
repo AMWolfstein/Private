@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/services/library/deleted_library_files.dart';
-import 'package:sistrum/widgets/confirm_and_delete_tracks.dart';
+import 'package:sistrum/widgets/selection/confirm_and_delete_tracks.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 
 /// Confirms, then deletes the files behind [selected] and removes their

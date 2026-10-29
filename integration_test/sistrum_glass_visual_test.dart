@@ -19,7 +19,7 @@ import 'package:sistrum/services/playback/music_player_runtime.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
-import 'package:sistrum/widgets/sistrum_bottom_bar.dart';
+import 'package:sistrum/widgets/shell/sistrum_bottom_bar.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/glass/sistrum_liquid_backdrop.dart';
 

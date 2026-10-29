@@ -4,17 +4,17 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay_personalization.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/listening_statistics.dart';
+import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/playback_handler.dart';
-import 'package:sistrum/services/platform_bridge.dart';
 import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:sistrum/services/playback/player_widget_service.dart';
-import 'package:sistrum/services/source_deletion_events.dart';
-import 'package:sistrum/services/system_volume_service.dart';
+import 'package:sistrum/services/library/source_deletion_events.dart';
+import 'package:sistrum/services/playback/system_volume_service.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('MusicPlayerRuntime');
@@ -35,7 +35,7 @@ class PlaybackDependencies {
     required this.restoreSession,
     this.createDeck = _createDeck,
     this.audioSession = _getAudioSession,
-    this.readMetadata = PlatformBridge.readFileMetadata,
+    this.readMetadata = MediaFileBridge.readFileMetadata,
     this.initializeHandler = _initializeAudioHandler,
     this.createPersonalization = AutoplayPersonalization.new,
     AppStateDatabase? sessionDatabase,

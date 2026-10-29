@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/theme/cover_colors.dart';
+import 'package:sistrum/utils/cover_colors.dart';
 import 'package:sistrum/utils/logger.dart';
 
 /// Persists cover analyses, so a cover analysed once shows its colours

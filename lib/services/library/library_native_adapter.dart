@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/platform_bridge.dart';

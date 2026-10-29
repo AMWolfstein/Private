@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/sistrum_artist_header.dart';
+import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
 
 void main() {
   for (final brightness in Brightness.values) {

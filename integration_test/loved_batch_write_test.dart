@@ -8,6 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
+import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/platform_bridge.dart';
 
 import '../test/support/library_collections_benchmark.dart';
@@ -209,7 +210,7 @@ void main() {
         completed++;
       } finally {
         await db.close();
-        await PlatformBridge.setLibraryCoverCacheDir('');
+        await LibraryScanBridge.setLibraryCoverCacheDir('');
         await root.delete(recursive: true);
       }
     });
