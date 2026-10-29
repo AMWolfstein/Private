@@ -475,3 +475,20 @@ passed (exit 0).
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (exit 0).
+
+## Task 2: bridges and static state (commits 52a5c86, e659392)
+
+- design_coherence::platform_bridge_facade_breadth: `PlatformBridge` is split into
+  `NativeDataJobs` (run, cancel), `NativeDevice` (screen wake, exit, backend identity, memory),
+  `NativeBackgroundWork` (foreground-service start, update, stop) and `NativeInstallation`
+  (install marker). The facade file is removed.
+- initialization_coupling::platform_bridge_static_event_state: the job map and serial moved into
+  `NativeDataJobs`, with an `activeJobCount` hook. `NativeBackendEvents` gained
+  `debugResetHandler`, so a test that replaces the channel mock can reinstall the handler.
+- initialization_coupling::cover_palette_global_store_seam: the global `coverPalette` is now
+  `coverPaletteProvider` in `lib/providers`. Widgets read it through `paletteOf(context)` or `ref`.
+  `CoverPaletteBuilder` takes its cache as a parameter, and `PlayerWidgetService` receives it at
+  `initialize`. `main.dart` runs an explicit `ProviderContainer` so that service can share it.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0).

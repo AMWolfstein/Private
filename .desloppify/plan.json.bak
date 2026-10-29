@@ -1,16 +1,13 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T14:32:44+00:00",
+  "updated": "2026-10-29T15:00:44+00:00",
   "queue_order": [
-    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
+    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
     "review::.::holistic::convention_outlier::part_file_split_style_mixed",
     "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
     "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
-    "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
     "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
-    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
-    "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
     "review::.::holistic::mid_level_elegance::scattered_row_decoding",
     "review::.::holistic::mid_level_elegance::two_db_access_paths",
     "review::.::holistic::naming_quality::queue_name_for_library_browser",
@@ -683,7 +680,7 @@
     }
   },
   "promoted_ids": [
-    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling"
+    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
   ],
   "plan_start_scores": {
     "strict": 23.7,
@@ -2785,6 +2782,126 @@
       "actor": "user",
       "note": "User-visible ReplayGain writes return ReplayGainWriteResult with a failure reason; FFmpeg tag writers and the playlist cover resize throw FFmpegMetadataFailure. Internal probes keep bool.",
       "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:32:44+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "User-visible ReplayGain writes return ReplayGainWriteResult with a failure reason; FFmpeg tag writers and the playlist cover resize throw FFmpegMetadataFailure. Internal probes keep bool.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:00:40+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::platform_bridge_facade_breadth"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:00:40+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::platform_bridge_facade_breadth"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "PlatformBridge is split into NativeDataJobs, NativeDevice, NativeBackgroundWork and NativeInstallation; the old facade file is removed.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:00:40+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::platform_bridge_facade_breadth"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "PlatformBridge is split into NativeDataJobs, NativeDevice, NativeBackgroundWork and NativeInstallation; the old facade file is removed.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:00:41+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::initialization_coupling::platform_bridge_static_event_state"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:00:42+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::initialization_coupling::platform_bridge_static_event_state"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Job map and serial moved into NativeDataJobs with an activeJobCount hook; NativeBackendEvents gained debugResetHandler so tests can reinstall its handler.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:00:43+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::initialization_coupling::platform_bridge_static_event_state"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Job map and serial moved into NativeDataJobs with an activeJobCount hook; NativeBackendEvents gained debugResetHandler so tests can reinstall its handler.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:00:44+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:00:44+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "The global coverPalette is now coverPaletteProvider; widgets read it through paletteOf(context) or ref, and tests override the provider.",
+      "detail": {}
     }
   ],
   "epic_triage_meta": {},
@@ -2842,7 +2959,10 @@
     "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
     "review::.::holistic::error_consistency::apk_download_null_hides_failure_reason",
     "review::.::holistic::error_consistency::apk_install_error_swallowed",
-    "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null"
+    "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
+    "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
+    "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
+    "review::.::holistic::initialization_coupling::platform_bridge_static_event_state"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 5

@@ -12,8 +12,8 @@
     "auto_resolved": 49,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 74,
-    "open": 310,
+    "fixed": 77,
+    "open": 307,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -30,8 +30,8 @@
         "auto_resolved": 11,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 35,
-        "open": 10,
+        "fixed": 37,
+        "open": 8,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -39,8 +39,8 @@
         "auto_resolved": 38,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 7,
-        "open": 295,
+        "fixed": 8,
+        "open": 294,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -14213,11 +14213,11 @@
         "reasoning": "",
         "summary_hash": "4d9b0e6a"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "The global coverPalette is now coverPaletteProvider; widgets read it through paletteOf(context) or ref, and tests override the provider.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T15:00:45+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -14225,7 +14225,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T15:00:45+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::initialization_coupling::platform_bridge_static_event_state": {
       "id": "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
@@ -14249,11 +14255,11 @@
         "reasoning": "",
         "summary_hash": "9232c539"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Job map and serial moved into NativeDataJobs with an activeJobCount hook; NativeBackendEvents gained debugResetHandler so tests can reinstall its handler.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T15:00:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -14261,7 +14267,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T15:00:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::initialization_coupling::music_playback_deck_shared_native_channel_state": {
       "id": "review::.::holistic::initialization_coupling::music_playback_deck_shared_native_channel_state",
@@ -14441,11 +14453,11 @@
         "reasoning": "",
         "summary_hash": "4fc0e2d0"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "PlatformBridge is split into NativeDataJobs, NativeDevice, NativeBackgroundWork and NativeInstallation; the old facade file is removed.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T15:00:40+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -14453,7 +14465,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T15:00:40+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::shared_header_primitives_in_album_file": {
       "id": "review::.::holistic::design_coherence::shared_header_primitives_in_album_file",
@@ -15069,7 +15087,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T10:53:19+00:00"
+      "stale_since": "2026-10-29T15:00:40+00:00"
     },
     "error_consistency": {
       "score": 62.0,
@@ -15101,7 +15119,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T10:13:15+00:00"
+      "stale_since": "2026-10-29T15:00:45+00:00"
     },
     "logic_clarity": {
       "score": 82.0,
@@ -38205,13 +38223,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 2,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 3,
+          "failing": 2,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,
@@ -38289,13 +38307,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
