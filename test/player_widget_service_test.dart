@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/services/playback/player_widget_service.dart';
 import 'package:sistrum/services/playback/playback_notification.dart';
 
@@ -114,7 +115,7 @@ void main() {
     'no widgets skips artwork and first installed widget loads current cover',
     () async {
       installedWidgets = 0;
-      await service.initialize((_) async {});
+      await service.initialize((_) async {}, palette: CoverPaletteCache());
       player.mediaItem.add(item('one'));
       await settle();
       expect(images, isEmpty);
@@ -315,6 +316,7 @@ void main() {
       player.mediaItem.add(item('one'));
       await service.initialize(
         (action) => PlayerWidgetService.control(player, action),
+        palette: CoverPaletteCache(),
       );
       expect(await command('toggle'), isTrue);
       expect(updates.last['playing'], isTrue);
@@ -334,10 +336,13 @@ void main() {
     'rapid widget commands remain in order during player initialization',
     () async {
       final startup = Completer<void>();
-      await service.initialize((action) async {
-        await startup.future;
-        await PlayerWidgetService.control(player, action);
-      });
+      await service.initialize(
+        (action) async {
+          await startup.future;
+          await PlayerWidgetService.control(player, action);
+        },
+        palette: CoverPaletteCache(),
+      );
       final first = command('play');
       final second = command('pause');
       await settle();

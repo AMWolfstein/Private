@@ -1,4 +1,4 @@
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 
 typedef NativeCacheJobRunner =
     Future<Map<String, dynamic>> Function(
@@ -15,7 +15,7 @@ Future<Map<String, dynamic>> runNativeCacheMaintenance(
   if (nativeJobRunner != null) {
     return nativeJobRunner(request, requestId: requestId);
   }
-  return PlatformBridge.runNativeDataJob(request, requestId: requestId);
+  return NativeDataJobs.run(request, requestId: requestId);
 }
 
 int cacheMaintenanceDeletedCount(Map<String, dynamic> result) {

@@ -11,6 +11,7 @@ import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Collapsing album-detail header shared by the album and local-album
 /// screens: full-bleed [background] (optionally blurred and
@@ -108,6 +109,7 @@ class AlbumDetailHeader extends StatelessWidget {
       );
     }
     return CoverPaletteBuilder(
+      palette: paletteOf(context),
       imageSource: paletteSource,
       builder: (context, headerScheme) => _buildAppBar(context, headerScheme),
     );
@@ -615,11 +617,11 @@ class _ArtworkBrightnessState extends State<_ArtworkBrightness> {
     if (source == null) return widget.builder(context, null);
     if (source != _source) {
       _source = source;
-      _lightness = coverPalette.topLightness(source);
+      _lightness = paletteOf(context).topLightness(source);
     }
     return FutureBuilder<double?>(
       future: _lightness,
-      initialData: coverPalette.peekTopLightness(source),
+      initialData: paletteOf(context).peekTopLightness(source),
       builder: (context, snapshot) =>
           widget.builder(context, sistrumArtworkBrightness(snapshot.data)),
     );

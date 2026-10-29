@@ -14,6 +14,7 @@ import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Story-sized lyric cards stay short, like quoting a song rather than
 /// reproducing its lyrics.
@@ -232,6 +233,7 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
                       borderRadius: BorderRadius.circular(28),
                       child: FittedBox(
                         child: CoverPaletteBuilder(
+                          palette: paletteOf(context),
                           imageSource: source,
                           builder: (context, _) => RepaintBoundary(
                             key: _cardKey,
@@ -241,7 +243,7 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
                               artUri: widget.mediaItem.artUri?.toString(),
                               lines: _quoted,
                               background: _background,
-                              coverColors: coverPalette.colors(source),
+                              coverColors: paletteOf(context).colors(source),
                               placeholder: l10n.lyricsShareSelectHint(
                                 lyricsShareMaxLines,
                               ),
@@ -859,7 +861,7 @@ class LyricsShareCard extends StatelessWidget {
           ],
         );
       case LyricsCardBackground.color:
-        final colors = coverColors ?? coverPalette.colors(null);
+        final colors = coverColors ?? sistrumCoverColors(null);
         return DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(

@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/collection_restore_codec.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 
 import '../test/support/caller_yield_probe.dart';
 
@@ -171,7 +171,7 @@ void main() {
       await _legacyRestore(isolatedDatabase, input);
       await isolatedDatabase.close();
       await expectLater(
-        PlatformBridge.runNativeDataJob({
+        NativeDataJobs.run({
           'operation': 'backup_collections_import',
           'collections_path': isolatedPath,
           'ndjson_path': spool,

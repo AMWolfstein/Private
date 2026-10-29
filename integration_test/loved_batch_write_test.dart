@@ -9,7 +9,7 @@ import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_device.dart';
 
 import '../test/support/library_collections_benchmark.dart';
 import '../test/support/playlist_batch_benchmark.dart';
@@ -94,7 +94,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('loved-batch-device-');
 
       expect(
-        (await PlatformBridge.getBackendImplementations())['library'],
+        (await NativeDevice.getBackendImplementations())['library'],
         'rust',
       );
       final db = await openDatabase(

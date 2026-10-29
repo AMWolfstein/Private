@@ -17,11 +17,13 @@ import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/glass/sistrum_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/sistrum_chrome.dart';
 import 'package:sistrum/widgets/glass/sistrum_floating_header.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 Widget maybeGroups(bool groups, Widget child) =>
     groups ? SistrumChromeBatch(child: child) : child;
 
 void main() {
+  final palette = CoverPaletteCache();
   final backing = find.byKey(const ValueKey('sistrum-header-backing'));
 
   Future<ScrollController> pumpHeader(
@@ -46,6 +48,7 @@ void main() {
       ProviderScope(
         key: UniqueKey(),
         overrides: [
+          coverPaletteProvider.overrideWithValue(palette),
           sistrumGlassLevelProvider.overrideWithValue(level),
           sistrumShaderFiltersSupportedProvider.overrideWithValue(shaders),
           sistrumGlassClarityLevelProvider.overrideWithValue(clarityLevel),
@@ -263,13 +266,14 @@ void main() {
       image.dispose();
       picture.dispose();
       await cover.writeAsBytes(bytes!.buffer.asUint8List());
-      expect(await coverPalette.topLightness(cover.path), lessThan(0.2));
+      expect(await palette.topLightness(cover.path), lessThan(0.2));
     });
     final controller = ScrollController();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          coverPaletteProvider.overrideWithValue(palette),
           sistrumGlassLevelProvider.overrideWithValue(SistrumGlassLevel.liquid),
           sistrumShaderFiltersSupportedProvider.overrideWithValue(true),
         ],

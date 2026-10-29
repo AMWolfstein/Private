@@ -12,8 +12,10 @@ import 'package:sistrum/widgets/collection_scaffold.dart';
 import 'package:sistrum/widgets/header/sistrum_artist_header.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 void main() {
+  final palette = CoverPaletteCache();
   testWidgets(
     'local and online album actions share the neutral cover surface',
     (tester) async {
@@ -36,12 +38,13 @@ void main() {
         image.dispose();
         picture.dispose();
         await cover.writeAsBytes(bytes!.buffer.asUint8List());
-        await coverPalette.resolve(cover.path, Brightness.dark);
+        await palette.resolve(cover.path, Brightness.dark);
       });
       for (final online in [false, true]) {
         final label = online ? 'Download' : 'Play';
         await tester.pumpWidget(
           ProviderScope(
+            overrides: [coverPaletteProvider.overrideWithValue(palette)],
             child: MaterialApp(
               theme: SistrumTheme.build(Brightness.light),
               home: SistrumArtistSurface(
@@ -120,6 +123,7 @@ void main() {
     const artworkKey = ValueKey('artist-artwork');
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [coverPaletteProvider.overrideWithValue(palette)],
         child: MaterialApp(
           theme: SistrumTheme.build(Brightness.dark),
           home: Scaffold(
@@ -191,6 +195,7 @@ void main() {
     const artworkKey = ValueKey('stretch-artwork');
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [coverPaletteProvider.overrideWithValue(palette)],
         child: MaterialApp(
           theme: SistrumTheme.build(Brightness.dark),
           home: Scaffold(
@@ -257,6 +262,7 @@ void main() {
           var plays = 0;
           await tester.pumpWidget(
             ProviderScope(
+              overrides: [coverPaletteProvider.overrideWithValue(palette)],
               child: MaterialApp(
                 theme: SistrumTheme.build(Brightness.dark),
                 scrollBehavior: const MaterialScrollBehavior().copyWith(
@@ -358,6 +364,7 @@ void main() {
           var backs = 0;
           await tester.pumpWidget(
             ProviderScope(
+              overrides: [coverPaletteProvider.overrideWithValue(palette)],
               child: MaterialApp(
                 theme: SistrumTheme.build(brightness),
                 builder: (context, child) => MediaQuery(
@@ -449,6 +456,7 @@ void main() {
     var downloads = 0;
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [coverPaletteProvider.overrideWithValue(palette)],
         child: MaterialApp(
           theme: SistrumTheme.build(Brightness.dark),
           home: CollectionScaffold(
@@ -509,6 +517,7 @@ void main() {
       var favorites = 0;
       await tester.pumpWidget(
         ProviderScope(
+          overrides: [coverPaletteProvider.overrideWithValue(palette)],
           child: MaterialApp(
             theme: SistrumTheme.build(Brightness.dark),
             builder: (context, child) => MediaQuery(

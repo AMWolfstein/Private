@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/services/library/sqlite_native_snapshot.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -27,7 +27,7 @@ class LibraryNativeAdapter {
     NativeLibraryJobRunner? nativeJobRunner,
     this.temporaryDirectory,
     String? platform,
-  }) : _run = nativeJobRunner ?? PlatformBridge.runNativeDataJob,
+  }) : _run = nativeJobRunner ?? NativeDataJobs.run,
        _platform = platform ?? 'android';
 
   final Database database;

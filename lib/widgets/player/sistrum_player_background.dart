@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/cover_palette.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Height of the player's full-bleed artwork on a [screen]: [aspectRatio]
 /// (immersive) up to 0.75 of the height, else square or 0.66 of the height.
@@ -49,11 +50,12 @@ class SistrumPlayerBackground extends StatelessWidget {
         ),
       ),
       child: CoverPaletteBuilder(
+        palette: paletteOf(context),
         imageSource: source,
         builder: (context, _) {
           // Continue the artwork's bottom edge; lyrics and the queue use a
           // deeper two-tone gradient of the same colour.
-          final colors = coverPalette.colors(source);
+          final colors = paletteOf(context).colors(source);
           final motion = MediaQuery.disableAnimationsOf(context)
               ? Duration.zero
               : const Duration(milliseconds: 380);

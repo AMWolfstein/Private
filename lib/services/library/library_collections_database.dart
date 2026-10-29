@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/services/library/collection_restore_codec.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/services/library/sqlite_native_snapshot.dart';
@@ -429,7 +429,7 @@ class LibraryCollectionsDatabase {
         'output_path': path,
         'playlist_id': ?playlistId,
       };
-      final result = await (nativeJobRunner ?? PlatformBridge.runNativeDataJob)(
+      final result = await (nativeJobRunner ?? NativeDataJobs.run)(
         request,
       );
       final counts = result['counts'];
@@ -895,7 +895,7 @@ class LibraryCollectionsDatabase {
       detached = false;
       await stagedDatabase.close();
       detached = true;
-      final result = await PlatformBridge.runNativeDataJob({
+      final result = await NativeDataJobs.run({
         'operation': 'backup_collections_import',
         'collections_path': stagedPath,
         'ndjson_path': path,

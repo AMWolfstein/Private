@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ void main() {
     'cancel before encoding completes never dispatches an idle job',
     () async {
       final expectation = expectLater(
-        PlatformBridge.runNativeDataJob({
+        NativeDataJobs.run({
           'operation': 'hash_file',
           'path': '/unused',
         }, requestId: 'encoding'),
@@ -33,11 +33,11 @@ void main() {
           isA<PlatformException>().having((e) => e.code, 'code', 'CANCELLED'),
         ),
       );
-      await PlatformBridge.cancelNativeDataJob('encoding');
+      await NativeDataJobs.cancel('encoding');
       await expectation;
       expect(calls, isEmpty);
       expect(
-        await PlatformBridge.runNativeDataJob({
+        await NativeDataJobs.run({
           'operation': 'hash_file',
           'path': '/unused',
         }, requestId: 'encoding'),
@@ -59,31 +59,31 @@ void main() {
         }
         return null;
       });
-      final job = PlatformBridge.runNativeDataJob({
+      final job = NativeDataJobs.run({
         'operation': 'library_import',
       }, requestId: 'active');
       await started.future;
-      await PlatformBridge.cancelNativeDataJob('active');
+      await NativeDataJobs.cancel('active');
       finished.complete('{"committed":true}');
       expect(await job, {'committed': true});
       expect(calls, ['runNativeDataJob', 'cancelNativeDataJob']);
-      await PlatformBridge.cancelNativeDataJob('active');
-      await PlatformBridge.cancelNativeDataJob('unknown');
+      await NativeDataJobs.cancel('active');
+      await NativeDataJobs.cancel('unknown');
       expect(calls, ['runNativeDataJob', 'cancelNativeDataJob']);
     },
   );
 
   test('failed encoding releases its request identity', () async {
     await expectLater(
-      PlatformBridge.runNativeDataJob({
+      NativeDataJobs.run({
         'operation': Object(),
       }, requestId: 'invalid'),
       throwsA(isA<Object>()),
     );
-    await PlatformBridge.cancelNativeDataJob('invalid');
+    await NativeDataJobs.cancel('invalid');
     expect(calls, isEmpty);
     expect(
-      await PlatformBridge.runNativeDataJob({
+      await NativeDataJobs.run({
         'operation': 'palette',
       }, requestId: 'invalid'),
       {'value': 1},

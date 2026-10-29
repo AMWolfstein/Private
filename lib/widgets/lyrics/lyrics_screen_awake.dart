@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('LyricsScreenAwake');
@@ -46,7 +46,7 @@ class _LyricsScreenAwakeState extends ConsumerState<LyricsScreenAwake>
 
   Future<void> _setAwake(bool enabled) async {
     try {
-      await PlatformBridge.setScreenAwake(enabled);
+      await NativeDevice.setScreenAwake(enabled);
     } catch (error) {
       _log.w('Could not update screen timeout: $error');
     }

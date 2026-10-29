@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:sistrum/services/library/cover_analysis_store.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/cover_colors.dart';
 import 'package:sistrum/utils/cover_file_image.dart';
 
@@ -220,7 +220,7 @@ class CoverPaletteCache {
       final (bytes, width, height) = await _readSample(_sampleOf(provider));
       late final List<List<int>> colors;
       try {
-        final response = await PlatformBridge.runNativeDataJob({
+        final response = await NativeDataJobs.run({
           'operation': 'palette',
         }, bytes: bytes);
         colors = [
@@ -333,18 +333,17 @@ class HeaderPalette extends InheritedWidget {
 }
 
 /// Resolves [imageSource] into a [ColorScheme] and rebuilds when it arrives.
-/// The app's cover palette cache, shared by every screen and background.
-final coverPalette = CoverPaletteCache(
-  store: Platform.isAndroid ? LibraryCoverAnalysisStore() : null,
-);
-
-/// The builder reads the same cover's [coverPalette.colors] for surfaces.
+/// The builder reads the same cover's palette colours for surfaces.
 class CoverPaletteBuilder extends StatefulWidget {
   const CoverPaletteBuilder({
     super.key,
+    required this.palette,
     required this.imageSource,
     required this.builder,
   });
+
+  /// The app's shared cache; callers pass `paletteOf(context)`.
+  final CoverPaletteCache palette;
 
   /// Cover URL or local path. Null disables palette extraction.
   final String? imageSource;
@@ -389,10 +388,10 @@ class _CoverPaletteBuilderState extends State<CoverPaletteBuilder> {
     if (_resolvedSource != source || _resolvedBrightness != brightness) {
       _resolvedSource = source;
       _resolvedBrightness = brightness;
-      _scheme = coverPalette.peek(source, brightness);
+      _scheme = widget.palette.peek(source, brightness);
     }
 
-    coverPalette.resolve(source, brightness).then((scheme) {
+    widget.palette.resolve(source, brightness).then((scheme) {
       if (!mounted) return;
       if (_resolveGeneration != requestGeneration) {
         return;

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:sistrum/services/ffmpeg/audio_metadata_mapper.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
@@ -205,7 +205,7 @@ abstract final class FFmpegMetadata {
 
   static Future<String?> _createMetadataBlockPicture(String imagePath) async {
     try {
-      final result = await PlatformBridge.runNativeDataJob({
+      final result = await NativeDataJobs.run({
         'operation': 'build_metadata_picture',
         'file_path': imagePath,
       });

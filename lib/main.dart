@@ -13,13 +13,15 @@ import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/screens/app_screens.dart';
 import 'package:sistrum/app.dart';
 import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/widgets/glass/sistrum_glass_auto_probe.dart';
 import 'package:sistrum/services/notification_service.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_device.dart';
+import 'package:sistrum/services/native/native_installation.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/navigation/app_navigation.dart';
 import 'package:sistrum/services/app_orientation.dart';
@@ -106,9 +108,8 @@ void main() {
       _configureImageCache(runtimeProfile);
       await orientation;
 
-      runApp(
-        ProviderScope(
-          overrides: [
+      final container = ProviderContainer(
+        overrides: [
             appScreensProvider.overrideWithValue(const AppScreenBuilders()),
             lowEndDeviceProvider.overrideWithValue(
               runtimeProfile.disableOverscrollEffects,
@@ -123,7 +124,11 @@ void main() {
             initialGlassAutoResultProvider.overrideWithValue(
               loadGlassAutoResult(prefs, build: sistrumGlassAutoBuild()),
             ),
-          ],
+        ],
+      );
+      runApp(
+        UncontrolledProviderScope(
+          container: container,
           child: EagerInitialization(
             child: SistrumApp(
               disableOverscrollEffects: runtimeProfile.disableOverscrollEffects,
@@ -150,7 +155,7 @@ void main() {
             } else {
               await PlayerWidgetService.control(handler, command);
             }
-          }),
+          }, palette: container.read(coverPaletteProvider)),
         );
       }
     },
@@ -182,7 +187,7 @@ class _StartupBenchmark {
     try {
       if (!kReleaseMode) throw StateError('Startup benchmark requires release');
       final firstFrame = await _firstFrame.timeout(const Duration(seconds: 30));
-      final backends = await PlatformBridge.getBackendImplementations();
+      final backends = await NativeDevice.getBackendImplementations();
       const backend = String.fromEnvironment('EXPECTED_CORE_BACKEND');
       if (backend != 'rust' ||
           backends.length != 3 ||
@@ -231,7 +236,7 @@ Future<void> _prepareAndroidInstallationState(SharedPreferences prefs) async {
 
   try {
     final hasPersistedSettings = hasPersistedAppSettings(prefs);
-    final installState = await PlatformBridge.ensureInstallMarker();
+    final installState = await NativeInstallation.ensureMarker();
     final shouldReset = shouldResetRestoredInstallation(
       hasPersistedSettings: hasPersistedSettings,
       installState: installState,
@@ -390,7 +395,7 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
       }
     } else if (state == AppLifecycleState.paused) {
       // Backgrounded: release idle native runtimes and connections.
-      unawaited(PlatformBridge.releaseNativeMemory());
+      unawaited(NativeDevice.releaseMemory());
     }
   }
 
@@ -401,7 +406,7 @@ class _EagerInitializationState extends ConsumerState<EagerInitialization>
     final imageCache = PaintingBinding.instance.imageCache;
     imageCache.clear();
     imageCache.clearLiveImages();
-    unawaited(PlatformBridge.releaseNativeMemory(underPressure: true));
+    unawaited(NativeDevice.releaseMemory(underPressure: true));
   }
 
   void _initializeDeferredProviders() {

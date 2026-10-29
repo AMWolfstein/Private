@@ -24,7 +24,7 @@ import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
@@ -120,7 +120,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
 
   Future<void> _cancelNativeAnalysisRequest(String request) async {
     try {
-      await PlatformBridge.cancelNativeDataJob(request);
+      await NativeDataJobs.cancel(request);
     } catch (_) {
       // Await the owned worker before temp cleanup even if cancellation fails.
     }
@@ -729,7 +729,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
         _nativeAnalysisRequests.add(nativeRequest);
         try {
           try {
-            final result = await PlatformBridge.runNativeDataJob({
+            final result = await NativeDataJobs.run({
               'operation': 'spectral_cutoff',
               'path': cutoffPath,
               'width': audioSpectralAnalysisWidth,

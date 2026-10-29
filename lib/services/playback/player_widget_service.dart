@@ -24,12 +24,14 @@ class PlayerWidgetService {
     ),
     Future<PlayerWidgetArtwork?> Function(Uri?)? loadArtwork,
   }) : _channel = channel,
-       _loadArtwork = loadArtwork ?? _readArtwork;
+       _loadArtworkOverride = loadArtwork;
 
   static final instance = PlayerWidgetService();
   static final _log = AppLogger('PlayerWidget');
   final MethodChannel _channel;
-  final Future<PlayerWidgetArtwork?> Function(Uri?) _loadArtwork;
+  final Future<PlayerWidgetArtwork?> Function(Uri?)? _loadArtworkOverride;
+  // The app's shared cover palette, handed over in [initialize].
+  CoverPaletteCache? _palette;
   final _subscriptions = <StreamSubscription<dynamic>>[];
   AudioHandler? _handler;
   Uri? _artUri;
@@ -43,7 +45,11 @@ class PlayerWidgetService {
   Future<void> _commands = Future.value();
   bool _initialized = false;
 
-  Future<void> initialize(Future<void> Function(String) onCommand) async {
+  Future<void> initialize(
+    Future<void> Function(String) onCommand, {
+    required CoverPaletteCache palette,
+  }) async {
+    _palette = palette;
     if (_initialized) return;
     _initialized = true;
     _channel.setMethodCallHandler((call) async {
@@ -156,7 +162,7 @@ class PlayerWidgetService {
 
   Future<void> _updateArtwork(Uri? uri, int generation) async {
     try {
-      final artwork = await _loadArtwork(uri);
+      final artwork = await (_loadArtworkOverride ?? _readArtwork)(uri);
       if (generation != _artworkGeneration || _installedWidgetCount == 0) {
         return;
       }
@@ -248,8 +254,9 @@ class PlayerWidgetService {
     _channel.setMethodCallHandler(null);
   }
 
-  static Future<PlayerWidgetArtwork?> _readArtwork(Uri? uri) async {
-    if (uri == null) return null;
+  Future<PlayerWidgetArtwork?> _readArtwork(Uri? uri) async {
+    final palette = _palette;
+    if (uri == null || palette == null) return null;
     final File file;
     if (uri.scheme == 'http' || uri.scheme == 'https') {
       return null;
@@ -274,7 +281,7 @@ class PlayerWidgetService {
         );
         if (png == null) return null;
         // The widget shares the player's and detail pages' cover colour.
-        final background = (await coverPalette.resolveColors(
+        final background = (await palette.resolveColors(
           file.path,
         )).surface;
         return PlayerWidgetArtwork(

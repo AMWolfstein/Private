@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/library_native_adapter.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 
 import '../test/support/library_native_fixture.dart';
 
@@ -69,7 +69,7 @@ void main() {
           isEmpty,
         );
         privatePaths.add(private);
-        final result = await PlatformBridge.runNativeDataJob(
+        final result = await NativeDataJobs.run(
           request,
           requestId: requestId,
         );

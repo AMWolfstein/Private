@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
 import 'package:sistrum/services/playback/automix_analysis.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/logger.dart';
 
 /// Only short head/tail windows are decoded. Summaries are bounded in memory;
@@ -46,7 +46,7 @@ class AutoMixAnalyzer {
 
   Future<void> _cancelNativeRequest(String request) async {
     try {
-      await PlatformBridge.cancelNativeDataJob(request);
+      await NativeDataJobs.cancel(request);
     } catch (_) {
       // Completion still owns temp cleanup; unsupported hosts have no lease.
     }
@@ -188,7 +188,7 @@ class AutoMixAnalyzer {
       late final AutoMixBeatGrid grid;
       try {
         try {
-          final result = await PlatformBridge.runNativeDataJob({
+          final result = await NativeDataJobs.run({
             'operation': 'automix',
             'path': output.path,
           }, requestId: request);

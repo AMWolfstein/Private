@@ -115,6 +115,11 @@ final class NativeBackendEvents {
     return _libraryStorageChanges.stream;
   }
 
+  /// Forgets that the handler is installed. Tests replace the channel mock,
+  /// so the next [ensureInstalled] must install on the new channel.
+  @visibleForTesting
+  static void debugResetHandler() => _handlerInstalled = false;
+
   /// Installs the backend channel handler once; later calls do nothing.
   static void ensureInstalled() {
     if (_handlerInstalled) return;

@@ -12,7 +12,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/utils/local_library_scan_prefs.dart';
@@ -90,7 +90,7 @@ class _Database implements LibraryDatabase {
     required bool isSaf,
     required String requestId,
     required bool Function() isCancelled,
-  }) => PlatformBridge.runNativeDataJob({
+  }) => NativeDataJobs.run({
     'operation': 'library_scan_incremental',
     'folder_path': folderPath,
     'snapshot_path': snapshotPath,

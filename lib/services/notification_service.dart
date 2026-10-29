@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_background_work.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
 class NotificationService {
@@ -40,7 +40,7 @@ class NotificationService {
   Future<void> beginBackgroundWork(String kind, {required String title}) async {
     if (!Platform.isAndroid) return;
     try {
-      final started = await PlatformBridge.startBackgroundWork(
+      final started = await NativeBackgroundWork.start(
         kind,
         title: title,
       );
@@ -54,7 +54,7 @@ class NotificationService {
     if (!Platform.isAndroid) return;
     _serviceNotificationKinds.remove(kind);
     try {
-      await PlatformBridge.stopBackgroundWork(kind);
+      await NativeBackgroundWork.stop(kind);
     } catch (e) {
       debugPrint('Background work $kind could not stop: $e');
     }
@@ -81,7 +81,7 @@ class NotificationService {
   }) async {
     if (!_serviceNotificationKinds.contains(kind)) return false;
     try {
-      await PlatformBridge.updateBackgroundWork(
+      await NativeBackgroundWork.update(
         kind,
         title: title,
         text: body,

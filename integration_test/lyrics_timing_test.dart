@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 
 void main() {
@@ -59,7 +59,7 @@ void main() {
     testWidgets('actual native parser: ${entry.key}', (tester) async {
       final (raw, synced, wordSynced) = entry.value;
       // Call the real worker directly: missing/stale bindings must fail here.
-      final native = await PlatformBridge.runNativeDataJob({
+      final native = await NativeDataJobs.run({
         'operation': 'parse_lyrics',
       }, bytes: Uint8List.fromList(utf8.encode(raw)));
       expect(native['synced'], synced);

@@ -14,7 +14,7 @@ import 'package:sistrum/services/library/library_scan_notifications.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/notification_service.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/logger.dart';
 import 'package:sistrum/utils/file_access.dart';
@@ -186,7 +186,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
         final requestId = _nativeLibraryRequestId;
         if (requestId != null) {
           unawaited(
-            PlatformBridge.cancelNativeDataJob(requestId).catchError((
+            NativeDataJobs.cancel(requestId).catchError((
               Object error,
             ) {
               _log.w('Failed to cancel disposed library ingestion: $error');
@@ -1319,7 +1319,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
     final requestId = _nativeLibraryRequestId;
     if (requestId != null) {
       try {
-        await PlatformBridge.cancelNativeDataJob(requestId);
+        await NativeDataJobs.cancel(requestId);
       } catch (error) {
         _log.w('Failed to cancel library data job: $error');
       }

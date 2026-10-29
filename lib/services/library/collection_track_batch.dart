@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 import 'package:sistrum/services/library/sqlite_native_snapshot.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -197,7 +197,7 @@ Future<void> _publishTrackBatch({
   final stagedPath = '${directory.path}/playlist_additions.db';
   var detached = true;
   try {
-    final result = await (nativeJobRunner ?? PlatformBridge.runNativeDataJob)({
+    final result = await (nativeJobRunner ?? NativeDataJobs.run)({
       'operation': 'collections_stage_playlist_additions',
       'rows_path': rowsPath,
       'output_path': stagedPath,

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/constants/app_info.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/user_profile_store.dart';
 import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -260,7 +260,7 @@ class BackupService {
           store: true,
         ));
       }
-      final result = await PlatformBridge.runNativeDataJob({
+      final result = await NativeDataJobs.run({
         'operation': 'backup_archive_write',
         'output_path': partFile.path,
         'files': [
@@ -333,7 +333,7 @@ class BackupService {
     String? stagingPath;
     try {
       await temporary.create(recursive: true);
-      final result = await PlatformBridge.runNativeDataJob({
+      final result = await NativeDataJobs.run({
         'operation': 'backup_archive_read',
         'input_path': path,
         'temporary_directory': temporary.path,

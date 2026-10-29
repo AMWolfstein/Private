@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/library/library_collections_hydration.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 
 import '../test/support/library_collections_benchmark.dart';
 
@@ -165,7 +165,7 @@ void main() {
             await db.execute('UPDATE projection_write_probe SET value=value+1');
             writes++;
           }
-          return PlatformBridge.runNativeDataJob(request);
+          return NativeDataJobs.run(request);
         }
 
         final expectedDigest = await _digest(await _legacyRead(db));

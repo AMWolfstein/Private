@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/services/library/library_collections_database.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/services/library/collection_track_batch.dart';
 
 import '../test/support/library_collections_benchmark.dart';
@@ -34,7 +34,7 @@ void main() {
   setUp(() async {
     root = await Directory.systemTemp.createTemp('playlist-device-');
 
-    final implementations = await PlatformBridge.getBackendImplementations();
+    final implementations = await NativeDevice.getBackendImplementations();
     expect(implementations['library'], 'rust');
     db = await openDatabase(
       '${root.path}/library_collections.db',

@@ -46,13 +46,14 @@ class _MemoryStore implements CoverAnalysisStore {
 
 void main() {
   final analyses = <String, CoverAnalysis>{};
+  final palette = CoverPaletteCache();
 
   setUpAll(() async {
     final binding = TestWidgetsFlutterBinding.ensureInitialized();
     await binding.runAsync(() async {
       for (final name in fixtures) {
         final path = File('test/fixtures/covers/$name.png').absolute.path;
-        analyses[name] = (await coverPalette.resolveAnalysis(path))!;
+        analyses[name] = (await palette.resolveAnalysis(path))!;
       }
     });
   });

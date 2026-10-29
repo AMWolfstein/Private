@@ -8,6 +8,7 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/primitives/sistrum_context_menu.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Navigation for the title/artist, separate from playback and file actions.
 class SistrumPlayerNavigationMenu extends StatelessWidget {
@@ -176,9 +177,10 @@ class _SistrumPlayerMenuSurface extends StatelessWidget {
     final art = mediaItem.artUri;
     final source = art?.scheme == 'file' ? art!.toFilePath() : art?.toString();
     return CoverPaletteBuilder(
+      palette: paletteOf(context),
       imageSource: source,
       builder: (context, _) {
-        final surface = coverPalette.colors(source).menuSurface;
+        final surface = paletteOf(context).colors(source).menuSurface;
         return Theme(
           data: SistrumTheme.fromContext(
             context,

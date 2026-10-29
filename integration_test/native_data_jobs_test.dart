@@ -12,7 +12,7 @@ import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/playback/automix_analysis.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/cover_palette.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
@@ -24,7 +24,7 @@ Future<Map<String, dynamic>> _job(
   Map<String, dynamic> request, {
   Uint8List? bytes,
   String? requestId,
-}) => PlatformBridge.runNativeDataJob(
+}) => NativeDataJobs.run(
   {'operation': operation, ...request},
   bytes: bytes,
   requestId: requestId,

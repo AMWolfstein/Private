@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 
 String _buildM3uInBackground(List<Map<String, dynamic>> entries) =>
     M3uPlaylistService.buildM3u8Content(
@@ -107,7 +107,7 @@ class M3uPlaylistService {
         )
         .toList(growable: false);
     try {
-      await PlatformBridge.runNativeDataJob({
+      await NativeDataJobs.run({
         'operation': 'build_m3u',
         'output_path': file.path,
         'entries': rows,

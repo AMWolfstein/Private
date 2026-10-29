@@ -10,6 +10,7 @@ import 'package:sistrum/widgets/player/sistrum_player_ground.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_glass.dart';
 import 'package:sistrum/theme/sistrum_glass_levels.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Share the same artwork-derived dark surface while loading and after the
 /// artist metadata arrives, including when the app itself uses light mode.
@@ -51,11 +52,12 @@ class _SistrumArtistSurfaceState extends State<SistrumArtistSurface> {
         colorScheme: darkTheme.colorScheme.copyWith(primary: Colors.grey),
       ),
       child: CoverPaletteBuilder(
+        palette: paletteOf(context),
         imageSource: widget.imageSource,
         builder: (context, _) {
           // Album and artist pages share the cover's base colour; only the
           // accent differs (white controls on albums and neutral covers).
-          final colors = coverPalette.colors(widget.imageSource);
+          final colors = paletteOf(context).colors(widget.imageSource);
           final surface = colors.surface;
           final route = ModalRoute.of(context);
           if (route != null) {

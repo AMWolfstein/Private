@@ -12,7 +12,7 @@ import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/screens/library/library_section_tab.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/listening_statistics.dart';
@@ -290,7 +290,7 @@ class _MainShellState extends ConsumerState<MainShell>
     final now = DateTime.now();
     if (_lastBackPress != null &&
         now.difference(_lastBackPress!) < const Duration(seconds: 2)) {
-      unawaited(PlatformBridge.exitApp());
+      unawaited(NativeDevice.exitApp());
     } else {
       _lastBackPress = now;
       ScaffoldMessenger.of(context).showSnackBar(

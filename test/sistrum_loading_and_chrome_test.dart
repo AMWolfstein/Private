@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
@@ -44,13 +45,15 @@ void main() {
       ShellNavigationService.syncState(currentTabIndex: 0);
       addTearDown(observer.detach);
       await tester.pumpWidget(
-        MaterialApp(
-          theme: SistrumTheme.build(Brightness.light),
-          home: Navigator(
-            key: key,
-            observers: [observer],
-            onGenerateRoute: (_) => MaterialPageRoute<void>(
-              builder: (_) => const Scaffold(body: Text('Home')),
+        ProviderScope(
+          child: MaterialApp(
+            theme: SistrumTheme.build(Brightness.light),
+            home: Navigator(
+              key: key,
+              observers: [observer],
+              onGenerateRoute: (_) => MaterialPageRoute<void>(
+                builder: (_) => const Scaffold(body: Text('Home')),
+              ),
             ),
           ),
         ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:sistrum/services/platform_bridge.dart';
+import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:xml/xml.dart';
 
 Uint8List _encodeLyricsInBackground(String raw) =>
@@ -243,7 +243,7 @@ class LyricsParser {
     Map<String, dynamic> result;
     try {
       final bytes = await compute(_encodeLyricsInBackground, raw);
-      result = await PlatformBridge.runNativeDataJob({
+      result = await NativeDataJobs.run({
         'operation': 'parse_lyrics',
       }, bytes: bytes);
     } on MissingPluginException {
