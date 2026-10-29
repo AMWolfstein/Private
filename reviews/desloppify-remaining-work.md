@@ -267,3 +267,13 @@ Resolved in the queue (commits d64dac6, the bridge commit and the graph refresh)
 Not in this pass:
 - initialization_coupling::platform_bridge_static_event_state: `PlatformBridge` is the app-wide native
   bridge for SAF, scanning and metadata, not a playback class. It needs its own pass.
+
+## Playback library split
+
+AutoMix and Autoplay are libraries now, not part files of the service. Their adapters
+(`_HandlerAutoMixHost`, `_HandlerAutoplayQueue`) live in the service library, which is the only code that
+touches the handler's privates, and the service has no `part` directives. `resetAutoplayLearning` moved
+beside the handler it configures, and the shared audio context moved to the deck library.
+
+The large-file part-file item still covers the Library, audio-analysis and collection files that keep
+their parts, so it stays open for those.
