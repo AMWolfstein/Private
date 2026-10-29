@@ -632,3 +632,17 @@ Verification: `flutter analyze` reports "No issues found!"; the full serial `flu
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
 (1878 tests, exit 0).
+
+## Desloppify clusters: playback, collections and behaviour tests
+
+- playback-service-split: music_player_service.dart went from 2185 to 885 lines. MusicPlayerHandler is split
+  across part files as extension blocks (queue, session, playback, events, source, media, hooks, lifecycle).
+  Members with overrides stay in the class.
+- collections-provider-bundle: library_collections_provider.dart went from 924 to 792 lines. Cover file
+  helpers and the backup cover rewrite moved out. The notifier stays in one file, because Riverpod's state
+  setter is protected and cannot be used from an extension.
+- transitive-behaviour-tests: 42 behaviour tests added for audio_analysis_parsing, listening_statistics_screen,
+  local_guide_pages and duplicate_review_sheet.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
+(1920 tests, exit 0).
