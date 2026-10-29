@@ -1,13 +1,9 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T10:53:19+00:00",
+  "updated": "2026-10-29T14:09:12+00:00",
   "queue_order": [
-    "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
     "review::.::holistic::convention_outlier::part_file_split_style_mixed",
-    "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle",
-    "review::.::holistic::cross_module_architecture::lower_layers_import_screens",
-    "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle",
     "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
     "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
     "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
@@ -15,20 +11,15 @@
     "review::.::holistic::error_consistency::apk_install_error_swallowed",
     "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
     "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
-    "review::.::holistic::high_level_elegance::lower_layers_import_upward",
     "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
-    "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks",
     "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
     "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
     "review::.::holistic::mid_level_elegance::scattered_row_decoding",
     "review::.::holistic::mid_level_elegance::two_db_access_paths",
     "review::.::holistic::naming_quality::queue_name_for_library_browser",
     "review::.::holistic::package_organization::library_screens_split_across_folders",
-    "review::.::holistic::package_organization::model_depends_on_persistence",
-    "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
     "review::.::holistic::package_organization::services_root_stragglers",
-    "review::.::holistic::package_organization::widgets_flat_overload",
-    "review::.::holistic::test_strategy::main_shell_no_direct_test"
+    "review::.::holistic::package_organization::widgets_flat_overload"
   ],
   "deferred": [],
   "skipped": {},
@@ -2117,6 +2108,538 @@
         "status": "fixed",
         "attestation": "I have actually verified this by reading the code and running the tests, and I am not gaming the score."
       }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:07+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "album_artist_utils_screen_cycle: no lib/ file outside screens/app/main imports screens; the cycle through utils is gone",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:07+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "no utils, widgets or player file imports lib/screens",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:08+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils/clickable_metadata.dart no longer exists; no screen cycle",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:09+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils, models, theme, services and navigation import no widgets, providers or screens",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:11+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::model_depends_on_persistence"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "UnifiedLibraryItem imports models only; LocalLibraryItem moved to models",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:11+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "supportsCoreBackend removed (3955d5e); Dart fallbacks deleted",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:12+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::main_shell_no_direct_test"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "test/main_shell_test.dart mounts MainShell under a router",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:21+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No file outside lib/screens, app.dart and main.dart imports a screen now; the utils cycle through screens is gone, verified by grep.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:22+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No utils, widgets or player file imports a lib/screens file any more; verified by grep over those folders.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:23+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils/clickable_metadata.dart no longer exists and no screen imports it back; verified in the tree.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:23+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils, models, theme, services and navigation import no widgets, providers or screens; verified by grep over those folders.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:24+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_depend_on_ui_and_providers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/services imports no providers or widgets; verified by grep over lib/services.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:25+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::model_depends_on_persistence"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "UnifiedLibraryItem now imports only models; LocalLibraryItem was moved into lib/models in an earlier pass.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:26+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "supportsCoreBackend and its Dart fallbacks were removed in commit 3955d5e; host tests use native channel doubles or the device suite.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:26+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::main_shell_no_direct_test"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "test/main_shell_test.dart mounts MainShell under a router and checks it settles without exceptions.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:37+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::main_shell_no_direct_test"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "test/main_shell_test.dart mounts MainShell under a router and checks it settles without exceptions.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:48+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:49+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "supportsCoreBackend and its Dart fallbacks were removed in commit 3955d5e; host tests use native channel doubles or the device suite.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:49+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "supportsCoreBackend and its Dart fallbacks were removed in commit 3955d5e; host tests use native channel doubles or the device suite.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:50+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::main_shell_no_direct_test"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:51+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::main_shell_no_direct_test"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "test/main_shell_test.dart mounts MainShell under a router and checks it settles without exceptions.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:51+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::main_shell_no_direct_test"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "test/main_shell_test.dart mounts MainShell under a router and checks it settles without exceptions.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:52+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:53+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No file outside lib/screens, app.dart and main.dart imports a screen now; the utils cycle through screens is gone, verified by grep.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:53+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No file outside lib/screens, app.dart and main.dart imports a screen now; the utils cycle through screens is gone, verified by grep.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:54+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:54+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No utils, widgets or player file imports a lib/screens file any more; verified by grep over those folders.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:54+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::lower_layers_import_screens"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "No utils, widgets or player file imports a lib/screens file any more; verified by grep over those folders.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:55+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:56+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils/clickable_metadata.dart no longer exists and no screen imports it back; verified in the tree.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:56+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils/clickable_metadata.dart no longer exists and no screen imports it back; verified in the tree.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:57+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:58+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils, models, theme, services and navigation import no widgets, providers or screens; verified by grep over those folders.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:07:58+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::lower_layers_import_upward"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "utils, models, theme, services and navigation import no widgets, providers or screens; verified by grep over those folders.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:59+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_depend_on_ui_and_providers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:07:59+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_depend_on_ui_and_providers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/services imports no providers or widgets; verified by grep over lib/services.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:08:00+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::package_organization::services_depend_on_ui_and_providers"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "lib/services imports no providers or widgets; verified by grep over lib/services.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:08:00+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::package_organization::model_depends_on_persistence"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:08:01+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::model_depends_on_persistence"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "UnifiedLibraryItem now imports only models; LocalLibraryItem was moved into lib/models in an earlier pass.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:08:01+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::package_organization::model_depends_on_persistence"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "UnifiedLibraryItem now imports only models; LocalLibraryItem was moved into lib/models in an earlier pass.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T14:08:07+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "supportsCoreBackend and its Dart fallbacks were removed in commit 3955d5e; host tests use native channel doubles or the device suite.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:09:12+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Replaced the exact delete-if-exists try/catch sites with deleteBestEffort in backup_service, metadata_cover_resources, library_scan_bridge and the collections provider; the remaining catch blocks guard parsing or callbacks, not deletes.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T14:09:12+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Replaced the exact delete-if-exists try/catch sites with deleteBestEffort in backup_service, metadata_cover_resources, library_scan_bridge and the collections provider; the remaining catch blocks guard parsing or callbacks, not deletes.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
     }
   ],
   "epic_triage_meta": {},
@@ -2162,7 +2685,16 @@
     "review::.::holistic::initialization_coupling::music_playback_deck_shared_native_channel_state",
     "review::.::holistic::low_level_elegance::load_index_guard_and_lease_sprawl",
     "review::.::holistic::design_coherence::shared_header_primitives_in_album_file",
-    "review::.::holistic::package_organization::utils_upward_dependency"
+    "review::.::holistic::package_organization::utils_upward_dependency",
+    "review::.::holistic::incomplete_migration::supports_core_backend_dart_fallbacks",
+    "review::.::holistic::test_strategy::main_shell_no_direct_test",
+    "review::.::holistic::cross_module_architecture::album_artist_utils_screen_cycle",
+    "review::.::holistic::cross_module_architecture::lower_layers_import_screens",
+    "review::.::holistic::dependency_health::clickable_metadata_screen_import_cycle",
+    "review::.::holistic::high_level_elegance::lower_layers_import_upward",
+    "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
+    "review::.::holistic::package_organization::model_depends_on_persistence",
+    "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 5

@@ -442,3 +442,20 @@ Verification: `flutter analyze` reports "No issues found!"; the full serial `flu
 passed (exit 0). `scripts/check_android.sh` could not run in this environment (no Gradle wrapper
 or Android SDK), so the Kotlin change is verified by reading only. The Android unit checks and
 the device integration suite still need a run on a machine with the SDK.
+
+## Best-effort delete cleanup (commit 4df8207)
+
+- ai_generated_debt::repeated_inline_best_effort_delete: resolved. Exact delete-if-exists
+  try/catch blocks in `backup_service`, `metadata_cover_resources`, `library_scan_bridge` and
+  the collections provider now call `deleteBestEffort`. The catch blocks left in `lib/` guard
+  parsing or callbacks, not deletes.
+- The desloppify state files were updated and are committed with this entry. Resolving items
+  through `plan resolve` (with notes and attestations) took the queue from 26 items to 17:
+  the layer-inversion, import-cycle, services-to-UI, unified model, supportsCoreBackend and
+  main-shell items, each checked against the code by grep before resolving.
+- Remaining queue (17 items), grouped into five tasks: failure signalling (4), bridges and
+  static state (3), library data access (3), layout and naming (5), audio analysis and part
+  files (2).
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0).

@@ -2,34 +2,33 @@
   "command": "next",
   "items": [
     {
-      "id": "review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete",
+      "id": "review::.::holistic::convention_outlier::part_file_split_style_mixed",
       "confidence": "low",
       "detector": "review",
       "file": ".",
-      "summary": "Best-effort file delete try/catch(_) idiom is copied inline across many services without a shared helper",
+      "summary": "Large files split with Dart part files in some areas but with separate library modules in services/library",
       "detail": {
         "holistic": true,
-        "dimension": "ai_generated_debt",
+        "dimension": "convention_outlier",
         "related_files": [
-          "lib/services/platform_bridge.dart",
-          "lib/services/backup_service.dart",
-          "lib/services/metadata_cover_resources.dart",
-          "lib/services/replaygain_service.dart",
-          "lib/services/metadata_persistence_service.dart",
-          "lib/services/embedded_cover_resolver.dart"
+          "lib/screens/library/queue_tab.dart",
+          "lib/services/playback/music_player_service.dart",
+          "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+          "lib/services/library/library_collections_hydration.dart",
+          "lib/services/library/library_native_adapter.dart"
         ],
         "evidence": [
-          "backup_service.dart has the pattern `try { if (await x.exists()) await x.delete(...); } catch (_) {}` at lines 95-98, 262-267, 378-381 and 497-499.",
-          "metadata_cover_resources.dart 63-66, replaygain_service.dart 232-235, metadata_persistence_service.dart 135-138 and platform_bridge.dart 65-73 repeat the same shape.",
-          "embedded_cover_resolver.dart already defines a private _deleteFileIfPresent helper (line 979) and still inlines the same try/catch at 785-788 and 975-976, so the helper is not shared even within one file."
+          "queue_tab.dart has 7 part directives, music_player_service.dart has 2, audio_analysis_widget.dart has 3, and home_tab.dart has 2.",
+          "services/library/ splits its work into 17 library_* files as separate libraries with explicit imports.",
+          "The dead_code scan lists 9 part files as orphaned because it does not follow part directives, so tooling sees these areas as disconnected."
         ],
-        "suggestion": "Introduce one shared best-effort delete helper (for example in a small io utility) that takes a FileSystemEntity and optional recursive flag, and replace the inline copies. Keep the catches; they are intentional cleanup boundaries, but the repetition is avoidable.",
+        "suggestion": "Keep part only where library-private members must be shared, since Dart part is the only way to do that. For new splits, use separate libraries with explicit imports, and record the rule in AGENTS.md. Do not force-convert the existing part files without a reason.",
         "reasoning": "",
-        "summary_hash": "6eacebc8"
+        "summary_hash": "a05197df"
       },
       "status": "open",
       "kind": "issue",
-      "primary_command": "desloppify plan resolve \"review::.::holistic::ai_generated_debt::repeated_inline_best_effort_delete\" --note \"<what you did>\" --confirm",
+      "primary_command": "desloppify plan resolve \"review::.::holistic::convention_outlier::part_file_split_style_mixed\" --note \"<what you did>\" --confirm",
       "queue_position": 1
     }
   ],
@@ -39,13 +38,13 @@
   },
   "narrative": {
     "phase": "middle_grind",
-    "headline": "323 issues open. Structure nav (55.0%) needs attention \u2014 run `desloppify next` to start. (26 review work items \u2014 run `desloppify show review --status open`)",
+    "headline": "314 issues open. Structure nav (55.0%) needs attention \u2014 run `desloppify next` to start. (17 review work items \u2014 run `desloppify show review --status open`)",
     "dimensions": {
       "lowest_dimensions": [
         {
           "name": "Structure nav",
           "strict": 55.0,
-          "failing": 5,
+          "failing": 3,
           "impact": 0.0,
           "subjective": true,
           "impact_description": "re-review to improve"
@@ -196,8 +195,8 @@
       {
         "type": "refactor",
         "detector": "review",
-        "count": 26,
-        "description": "26 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
+        "count": 17,
+        "description": "17 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
         "command": "desloppify show review --status open",
         "impact": 0.0,
         "dimension": "Unknown",
@@ -208,7 +207,7 @@
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 375,
+        "total_count": 348,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -257,7 +256,7 @@
         }
       },
       "can_parallelize": true,
-      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 26 issue(s) \u2014 `desloppify show review --status open`."
+      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 17 issue(s) \u2014 `desloppify show review --status open`."
     },
     "tools": {
       "fixers": [],
@@ -290,7 +289,7 @@
       "command": "desloppify show flat_dirs --status open",
       "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
     },
-    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 26 issue(s) \u2014 `desloppify show review --status open`.",
+    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 17 issue(s) \u2014 `desloppify show review --status open`.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -306,7 +305,7 @@
     "reminders": [
       {
         "type": "review_issues_pending",
-        "message": "26 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
+        "message": "17 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
         "command": "desloppify show review --status open",
         "priority": 1,
         "severity": "high"
@@ -345,7 +344,7 @@
         "item_count": 0
       }
     ],
-    "total_ordered": 26,
+    "total_ordered": 17,
     "total_skipped": 0,
     "plan_overrides_narrative": true
   },
@@ -367,7 +366,7 @@
       "score": 88.0,
       "strict": 88.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -441,7 +440,7 @@
       "score": 72.0,
       "strict": 72.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -454,7 +453,7 @@
       "score": 78.0,
       "strict": 78.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -489,7 +488,7 @@
       "score": 66.7,
       "strict": 66.7,
       "checks": 30,
-      "failing": 4,
+      "failing": 3,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -552,7 +551,7 @@
       "score": 86.0,
       "strict": 86.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -565,7 +564,7 @@
       "score": 55.0,
       "strict": 55.0,
       "checks": 10,
-      "failing": 5,
+      "failing": 3,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -587,7 +586,7 @@
       "score": 72.0,
       "strict": 72.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -602,7 +601,7 @@
       "score": 88.0,
       "strict": 88.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -667,7 +666,7 @@
       "score": 72.0,
       "strict": 72.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -680,7 +679,7 @@
       "score": 78.0,
       "strict": 78.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -706,7 +705,7 @@
       "score": 66.7,
       "strict": 66.7,
       "checks": 30,
-      "failing": 4,
+      "failing": 3,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -760,7 +759,7 @@
       "score": 86.0,
       "strict": 86.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -773,7 +772,7 @@
       "score": 55.0,
       "strict": 55.0,
       "checks": 10,
-      "failing": 5,
+      "failing": 3,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -786,7 +785,7 @@
       "score": 72.0,
       "strict": 72.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "subjective": true,
       "placeholder": false,

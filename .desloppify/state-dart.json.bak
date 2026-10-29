@@ -12,8 +12,8 @@
     "auto_resolved": 49,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 60,
-    "open": 324,
+    "fixed": 69,
+    "open": 315,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 7,
-        "open": 9,
+        "fixed": 10,
+        "open": 6,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -30,8 +30,8 @@
         "auto_resolved": 11,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 29,
-        "open": 16,
+        "fixed": 33,
+        "open": 12,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -39,8 +39,8 @@
         "auto_resolved": 38,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 4,
-        "open": 298,
+        "fixed": 6,
+        "open": 296,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -12145,11 +12145,11 @@
         "reasoning": "",
         "summary_hash": "99397145"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "No file outside lib/screens, app.dart and main.dart imports a screen now; the utils cycle through screens is gone, verified by grep.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:07:53+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12157,7 +12157,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:07:53+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::cross_module_architecture::playback_runtime_service_export_cycle": {
       "id": "review::.::holistic::cross_module_architecture::playback_runtime_service_export_cycle",
@@ -12227,11 +12233,11 @@
         "reasoning": "",
         "summary_hash": "2eea41d5"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "No utils, widgets or player file imports a lib/screens file any more; verified by grep over those folders.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:07:54+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12239,7 +12245,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:07:54+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass": {
       "id": "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
@@ -12310,11 +12322,11 @@
         "reasoning": "",
         "summary_hash": "d4e76c2f"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "utils, models, theme, services and navigation import no widgets, providers or screens; verified by grep over those folders.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:07:58+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -12322,7 +12334,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:07:58+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::high_level_elegance::library_folder_holds_queue_tab": {
       "id": "review::.::holistic::high_level_elegance::library_folder_holds_queue_tab",
@@ -13019,11 +13037,11 @@
         "reasoning": "",
         "summary_hash": "d1830f40"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "utils/clickable_metadata.dart no longer exists and no screen imports it back; verified in the tree.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:07:56+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -13031,7 +13049,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:07:56+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::low_level_elegance::load_index_guard_and_lease_sprawl": {
       "id": "review::.::holistic::low_level_elegance::load_index_guard_and_lease_sprawl",
@@ -13555,11 +13579,11 @@
         "reasoning": "",
         "summary_hash": "8829e218"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "test/main_shell_test.dart mounts MainShell under a router and checks it settles without exceptions.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:07:51+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -13567,7 +13591,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:07:51+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::api_surface_coherence::delete_by_path_return_contract_mismatch": {
       "id": "review::.::holistic::api_surface_coherence::delete_by_path_return_contract_mismatch",
@@ -13845,11 +13875,11 @@
         "reasoning": "",
         "summary_hash": "496c7d32"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "supportsCoreBackend and its Dart fallbacks were removed in commit 3955d5e; host tests use native channel doubles or the device suite.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:07:49+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -13857,7 +13887,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:07:49+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::package_organization::widgets_flat_overload": {
       "id": "review::.::holistic::package_organization::widgets_flat_overload",
@@ -13970,11 +14006,11 @@
         "reasoning": "",
         "summary_hash": "e0eb5deb"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "lib/utils no longer imports screens or widgets: clickable_metadata moved to screens/detail_navigation.dart and confirm_and_delete_tracks moved to widgets/. The album/artist cycle through detail_navigation remains and is tracked separately.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T10:53:19+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -13982,7 +14018,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually verified this by reading the code and running the tests, and I am not gaming the score.",
+        "attested_at": "2026-10-29T10:53:19+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::package_organization::services_depend_on_ui_and_providers": {
       "id": "review::.::holistic::package_organization::services_depend_on_ui_and_providers",
@@ -14013,11 +14055,11 @@
         "reasoning": "",
         "summary_hash": "85004a32"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "lib/services imports no providers or widgets; verified by grep over lib/services.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:08:00+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -14025,7 +14067,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:08:00+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::package_organization::model_depends_on_persistence": {
       "id": "review::.::holistic::package_organization::model_depends_on_persistence",
@@ -14049,11 +14097,11 @@
         "reasoning": "",
         "summary_hash": "050cb8b1"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "UnifiedLibraryItem now imports only models; LocalLibraryItem was moved into lib/models in an earlier pass.",
       "first_seen": "2026-10-29T06:58:25+00:00",
       "last_seen": "2026-10-29T06:58:25+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-29T14:08:01+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -14061,7 +14109,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually made this change and I am not gaming the score.",
+        "attested_at": "2026-10-29T14:08:01+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::package_organization::library_screens_split_across_folders": {
       "id": "review::.::holistic::package_organization::library_screens_split_across_folders",
@@ -14969,7 +15023,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T10:13:13+00:00"
+      "stale_since": "2026-10-29T14:07:54+00:00"
     },
     "dependency_health": {
       "score": 78.0,
@@ -14977,7 +15031,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T10:13:14+00:00"
+      "stale_since": "2026-10-29T14:07:56+00:00"
     },
     "design_coherence": {
       "score": 62.0,
@@ -14998,7 +15052,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T09:21:57+00:00"
+      "stale_since": "2026-10-29T14:07:58+00:00"
     },
     "incomplete_migration": {
       "score": 86.0,
@@ -15006,7 +15060,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T09:14:44+00:00"
+      "stale_since": "2026-10-29T14:07:49+00:00"
     },
     "initialization_coupling": {
       "score": 72.0,
@@ -15051,7 +15105,10 @@
     "package_organization": {
       "score": 55.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-29T14:08:01+00:00"
     },
     "test_strategy": {
       "score": 72.0,
@@ -15059,7 +15116,7 @@
       "assessed_at": "2026-10-29T06:58:25+00:00",
       "needs_review_refresh": true,
       "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T09:21:49+00:00"
+      "stale_since": "2026-10-29T14:07:51+00:00"
     },
     "type_safety": {
       "score": 80.0,
@@ -38073,13 +38130,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -38094,13 +38151,13 @@
       "strict": 78.0,
       "verified_strict_score": 78.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.78,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 2.2,
           "assessment_score": 78.0,
           "placeholder": false,
@@ -38157,13 +38214,13 @@
       "strict": 74.0,
       "verified_strict_score": 74.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.74,
-          "failing": 2,
+          "failing": 1,
           "weighted_failures": 2.6,
           "assessment_score": 74.0,
           "placeholder": false,
@@ -38178,13 +38235,13 @@
       "strict": 86.0,
       "verified_strict_score": 86.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.86,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.4,
           "assessment_score": 86.0,
           "placeholder": false,
@@ -38304,13 +38361,13 @@
       "strict": 55.0,
       "verified_strict_score": 55.0,
       "checks": 10,
-      "failing": 6,
+      "failing": 3,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.55,
-          "failing": 6,
+          "failing": 3,
           "weighted_failures": 4.5,
           "assessment_score": 55.0,
           "placeholder": false,
@@ -38325,13 +38382,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
