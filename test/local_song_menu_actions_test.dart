@@ -18,6 +18,7 @@ import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/local_song_menu.dart';
 import 'package:sistrum/widgets/local_song_row.dart';
 import 'package:sistrum/widgets/sistrum_context_menu.dart';
+import 'support/pump_until.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -139,15 +140,7 @@ void main() {
     bool Function() condition, {
     String description = 'condition',
   }) async {
-    final deadline = DateTime.now().add(const Duration(seconds: 5));
-    while (DateTime.now().isBefore(deadline)) {
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 5)),
-      );
-      await tester.pump(const Duration(milliseconds: 10));
-      if (condition()) return;
-    }
-    fail('Timed out waiting for $description');
+    await pumpUntilTrue(tester, condition, description: description);
   }
 
   /// Pumps until [finder] matches instead of guessing a fixed delay.

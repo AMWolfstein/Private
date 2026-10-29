@@ -13,6 +13,7 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/sistrum_theme.dart';
 import 'package:sistrum/widgets/album_track_tile.dart';
 import 'package:sistrum/widgets/destructive_selection_button.dart';
+import 'support/pump_until.dart';
 
 class _Local extends LocalLibraryNotifier {
   final removedIds = <String>[];
@@ -208,13 +209,11 @@ void main() {
     await tester.pumpAndSettle();
     // Deleting a real file finishes on the platform event loop, not the fake
     // test clock, so wait for the recorded cleanup before asserting.
-    final deadline = DateTime.now().add(const Duration(seconds: 5));
-    while (library.removedPaths.isEmpty && DateTime.now().isBefore(deadline)) {
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 5)),
-      );
-      await tester.pump(const Duration(milliseconds: 10));
-    }
+    await pumpUntilTrue(
+      tester,
+      () => library.removedPaths.isNotEmpty,
+      description: 'the recorded file cleanup',
+    );
     await tester.pumpAndSettle();
 
     expect(firstFile.existsSync(), isFalse);

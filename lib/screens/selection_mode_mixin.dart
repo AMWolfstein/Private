@@ -4,7 +4,11 @@ import 'package:flutter/services.dart';
 /// Shared multi-select state for list screens: enter/exit selection mode,
 /// toggle individual items, select all, and prune ids that fell out of the
 /// current item list. Mix into a `State<T>` alongside the screen's own
-/// per-item lookups (e.g. library_section_tab, library_folder, artist screens).
+/// per-item lookups (e.g. library_collection_tracks, artist screens).
+///
+/// The Library section tab does not use this mixin: it also keeps a range
+/// selection anchor, a separate playlist selection mode and its own overlay.
+/// Move those into this mixin before switching it over.
 mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
   bool isSelectionMode = false;
   final Set<String> selectedIds = {};

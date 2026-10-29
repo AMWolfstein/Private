@@ -9,6 +9,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/app_alert_dialog.dart';
+import 'support/pump_until.dart';
 
 class _Local extends LocalLibraryNotifier {
   final removedPaths = <String>[];
@@ -19,7 +20,8 @@ class _Local extends LocalLibraryNotifier {
   Future<void> removePhysicalFiles(Iterable<String> paths) async =>
       removedPaths.addAll(paths);
   @override
-  Future<void> removeItems(Iterable<String> ids) async => removedIds.addAll(ids);
+  Future<void> removeItems(Iterable<String> ids) async =>
+      removedIds.addAll(ids);
 }
 
 void main() {
@@ -99,13 +101,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(AppDialogAction, 'Delete'));
     // Give the real file I/O time to finish, flushing fake-zone continuations.
-    final deadline = DateTime.now().add(const Duration(seconds: 5));
-    while (!completed && DateTime.now().isBefore(deadline)) {
-      await tester.pump();
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 5)),
-      );
-    }
+    await pumpUntilTrue(
+      tester,
+      () => completed,
+      description: 'the batch delete to complete',
+    );
     await tester.pumpAndSettle();
 
     expect(completed, isTrue);

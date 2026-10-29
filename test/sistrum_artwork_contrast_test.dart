@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/widgets/glass/sistrum_artwork_contrast.dart';
+import 'support/pump_until.dart';
 
 void main() {
   for (final interruption in ['none', 'disabled', 'background']) {
@@ -54,17 +55,16 @@ void main() {
         Future<void> finishReadback() => tester.runAsync(
           () => Future<void>.delayed(const Duration(milliseconds: 30)),
         );
-        Future<void> waitForLatestPixels() async {
-          final deadline = DateTime.now().add(const Duration(seconds: 3));
-          // Native toByteData completion is real asynchronous work. Advance
-          // coalescing timers without submitting a new scene until it settles.
-          while (colors['header'] != Colors.black &&
-              DateTime.now().isBefore(deadline)) {
-            await finishReadback();
-            await tester.pump(const Duration(milliseconds: 334));
-          }
-          expect(colors['header'], Colors.black);
-        }
+        // Native toByteData completion is real asynchronous work. Advance
+        // coalescing timers without submitting a new scene until it settles.
+        Future<void> waitForLatestPixels() => pumpUntilTrue(
+          tester,
+          () => colors['header'] == Colors.black,
+          description: 'the header to read back black pixels',
+          timeout: const Duration(seconds: 3),
+          realDelay: const Duration(milliseconds: 30),
+          pumpStep: const Duration(milliseconds: 334),
+        );
 
         await tester.pumpWidget(app(Colors.black));
         await tester.runAsync(() => captured.future);
