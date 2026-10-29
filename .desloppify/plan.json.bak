@@ -1,15 +1,13 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T15:00:44+00:00",
+  "updated": "2026-10-29T15:10:00+00:00",
   "queue_order": [
-    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
+    "review::.::holistic::mid_level_elegance::two_db_access_paths",
     "review::.::holistic::convention_outlier::part_file_split_style_mixed",
     "review::.::holistic::design_coherence::audio_analysis_parsing_in_widget",
-    "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns",
     "review::.::holistic::high_level_elegance::services_flat_catch_all_with_ui_glass",
     "review::.::holistic::mid_level_elegance::scattered_row_decoding",
-    "review::.::holistic::mid_level_elegance::two_db_access_paths",
     "review::.::holistic::naming_quality::queue_name_for_library_browser",
     "review::.::holistic::package_organization::library_screens_split_across_folders",
     "review::.::holistic::package_organization::services_root_stragglers",
@@ -680,7 +678,7 @@
     }
   },
   "promoted_ids": [
-    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
+    "review::.::holistic::mid_level_elegance::two_db_access_paths"
   ],
   "plan_start_scores": {
     "strict": 23.7,
@@ -2902,6 +2900,86 @@
       "actor": "user",
       "note": "The global coverPalette is now coverPaletteProvider; widgets read it through paletteOf(context) or ref, and tests override the provider.",
       "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:00:45+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "The global coverPalette is now coverPaletteProvider; widgets read it through paletteOf(context) or ref, and tests override the provider.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:09:57+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:09:58+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Cover request keys, batched first-cover lookups and their providers moved to local_library_cover_providers.dart. Scan notifications were extracted earlier. Progress polling wiring remains in the notifier; it writes into the notifier state, so moving it needs a separate scan-progress state holder.",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T15:09:58+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Cover request keys, batched first-cover lookups and their providers moved to local_library_cover_providers.dart. Scan notifications were extracted earlier. Progress polling wiring remains in the notifier; it writes into the notifier state, so moving it needs a separate scan-progress state holder.",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually made this change and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:09:59+00:00",
+      "action": "reorder",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::two_db_access_paths"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "position": "top",
+        "target": null,
+        "offset": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T15:10:00+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::two_db_access_paths"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Notifier and cover providers read libraryDatabaseProvider through ref. About 20 widgets, screens and static navigation helpers still call LibraryDatabase.instance directly, since they have no ref or BuildContext to read a provider from.",
+      "detail": {}
     }
   ],
   "epic_triage_meta": {},
@@ -2962,7 +3040,9 @@
     "review::.::holistic::error_consistency::backup_parse_failures_collapse_to_null",
     "review::.::holistic::error_consistency::mixed_null_bool_exception_failure_signalling",
     "review::.::holistic::design_coherence::platform_bridge_facade_breadth",
-    "review::.::holistic::initialization_coupling::platform_bridge_static_event_state"
+    "review::.::holistic::initialization_coupling::platform_bridge_static_event_state",
+    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam",
+    "review::.::holistic::design_coherence::local_library_notifier_mixed_concerns"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 5

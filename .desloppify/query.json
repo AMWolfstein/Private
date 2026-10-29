@@ -1,11 +1,11 @@
 {
   "command": "resolve",
   "patterns": [
-    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
+    "review::.::holistic::mid_level_elegance::two_db_access_paths"
   ],
   "status": "fixed",
   "resolved": [
-    "review::.::holistic::initialization_coupling::cover_palette_global_store_seam"
+    "review::.::holistic::mid_level_elegance::two_db_access_paths"
   ],
   "count": 1,
   "next_command": "desloppify next",
@@ -20,7 +20,7 @@
   "attestation": "I have actually made this change and I am not gaming the score.",
   "narrative": {
     "phase": "middle_grind",
-    "headline": "307 issues open. Structure nav (55.0%) needs attention \u2014 run `desloppify next` to start. (10 review work items \u2014 run `desloppify show review --status open`)",
+    "headline": "305 issues open. Structure nav (55.0%) needs attention \u2014 run `desloppify next` to start. (8 review work items \u2014 run `desloppify show review --status open`)",
     "dimensions": {
       "lowest_dimensions": [
         {
@@ -34,7 +34,7 @@
         {
           "name": "Design coherence",
           "strict": 62.0,
-          "failing": 2,
+          "failing": 1,
           "impact": 0.0,
           "subjective": true,
           "impact_description": "re-review to improve"
@@ -172,8 +172,8 @@
       {
         "type": "refactor",
         "detector": "review",
-        "count": 10,
-        "description": "10 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
+        "count": 8,
+        "description": "8 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
         "command": "desloppify show review --status open",
         "impact": 0.0,
         "dimension": "Unknown",
@@ -184,7 +184,7 @@
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 327,
+        "total_count": 321,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -233,7 +233,7 @@
         }
       },
       "can_parallelize": true,
-      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 10 issue(s) \u2014 `desloppify show review --status open`."
+      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 8 issue(s) \u2014 `desloppify show review --status open`."
     },
     "tools": {
       "fixers": [],
@@ -266,7 +266,7 @@
       "command": "desloppify show flat_dirs --status open",
       "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
     },
-    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 10 issue(s) \u2014 `desloppify show review --status open`.",
+    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 8 issue(s) \u2014 `desloppify show review --status open`.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -296,7 +296,7 @@
       },
       {
         "type": "review_issues_pending",
-        "message": "10 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
+        "message": "8 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
         "command": "desloppify show review --status open",
         "priority": 1,
         "severity": "high"

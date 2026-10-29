@@ -492,3 +492,25 @@ passed (exit 0).
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
 passed (exit 0).
+
+## Task 3: library data access (commits c7d0c9c, 23c882c, 5dc5be1, 69cb40a)
+
+- design_coherence::local_library_notifier_mixed_concerns: the scan progress decisions are a pure
+  function, `readLibraryScanProgress`, and the stream-then-poll timing lives in
+  `LibraryScanProgressPolling`. Both are in `lib/services/library/library_scan_progress.dart`. The
+  notifier applies the sample and posts the notice. Cover request keys and batched first-cover
+  lookups live in `lib/providers/local_library_cover_providers.dart`.
+- mid_level_elegance::two_db_access_paths: database access goes through `libraryDatabaseProvider`.
+  Widgets and notifiers read it through `ref`. Helpers without a `ref` take the database as a
+  parameter: `runBatchReplayGain`, `navigateToAlbum`, `navigateToArtistCredits`,
+  `MetadataIndexReconciler.upsert`, the cover analysis store, and `PlaybackDependencies`. The one
+  remaining direct `LibraryDatabase.instance` is the composition root of the background audio
+  service (`music_player_service.dart`), which runs outside the widget tree.
+- mid_level_elegance::scattered_row_decoding (item 12): the `{source, item}` envelope decode goes
+  through `LocalLibraryItem.fromEnvelope` in the section tab.
+
+The desloppify notes recorded for items 3 and 13 in an earlier pass described them as partial.
+This entry supersedes those notes.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` run
+passed (exit 0).
