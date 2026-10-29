@@ -121,10 +121,11 @@ typedef _PlaylistHydrationRequest = ({
 Future<HydratedPlaylistTracks> hydratePlaylistTracks(
   List<Map<String, dynamic>> rows, {
   required Set<String> knownKeys,
-}) async {
+}) {
   final request = (rows: rows, knownKeys: knownKeys);
   if (rows.length < _workerRowThreshold && !_hasLargeJson(rows)) {
-    return _decodePlaylistTracks(request);
+    // Future.sync keeps a decode failure on the future, as the async body did.
+    return Future.sync(() => _decodePlaylistTracks(request));
   }
   return _hydrateRowsInWorker<HydratedPlaylistTracks>(
     rows: {_CollectionRows.playlistTracks: rows},

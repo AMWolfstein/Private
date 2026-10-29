@@ -47,14 +47,14 @@ Future<void> navigateToArtist(
   BuildContext context, {
   required String artistName,
   String? coverUrl,
-}) async {
+}) => Future.sync(() {
   if (artistName.isEmpty) return;
   pushViaPreferredNavigator(
     context,
     (_) =>
         LocalArtistScreen(artistName: artistName.trim(), coverPath: coverUrl),
   );
-}
+});
 
 Future<void> navigateToAlbum(
   BuildContext context, {

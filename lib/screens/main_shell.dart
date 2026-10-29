@@ -83,7 +83,7 @@ class _MainShellState extends ConsumerState<MainShell>
       handler: _onShellTabRequested,
     );
     ShellNavigationService.syncState(currentTabIndex: _currentIndex);
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       unawaited(ref.read(musicPlayerRuntimeProvider).restoreSession());
       unawaited(_checkForUpdates());

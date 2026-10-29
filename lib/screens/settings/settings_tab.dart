@@ -13,7 +13,7 @@ import 'package:sistrum/screens/settings/appearance_settings_page.dart';
 import 'package:sistrum/screens/settings/backup_restore_page.dart';
 import 'package:sistrum/screens/settings/cache_management_page.dart';
 import 'package:sistrum/screens/settings/library_settings_page.dart';
-import 'package:sistrum/screens/settings/log_screen.dart';
+import 'package:sistrum/screens/settings/log_page.dart';
 import 'package:sistrum/screens/settings/lyrics_settings_page.dart';
 import 'package:sistrum/screens/settings/playback_settings_page.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
@@ -187,7 +187,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             subtitle: l10n.settingsLogsSubtitle,
             keywords: const ['debug', 'error', 'report'],
             searchEntries: searchCatalog.logs,
-            pageBuilder: () => const LogScreen(),
+            pageBuilder: () => const LogPage(),
           ),
           _Destination(
             icon: Icons.system_update,

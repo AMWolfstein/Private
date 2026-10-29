@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/screens/settings/log_screen.dart';
+import 'package:sistrum/screens/settings/log_page.dart';
 import 'package:sistrum/utils/logger.dart';
 
 void main() {
@@ -128,7 +128,7 @@ void main() {
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const LogScreen(),
+          home: const LogPage(),
         ),
       ),
     );

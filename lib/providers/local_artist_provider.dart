@@ -148,6 +148,12 @@ final _localArtistPopularPrioritiesProvider = Provider.autoDispose
 /// Select at most 20 from the entire artist, rather than only the first page.
 /// Random priorities give an unbiased, stable selection while this page is open
 /// when there is no history; played tracks always outrank unplayed tracks.
+/// Recorded plays for a track. Play counts are stored under the file path and,
+/// for tracks saved under a library id, under that id too; both are summed.
+int _playsFor(Map<String, int> plays, LocalLibraryItem item) =>
+    (plays[item.filePath] ?? 0) +
+    (item.id == item.filePath ? 0 : plays[item.id] ?? 0);
+
 final localArtistPopularProvider = FutureProvider.autoDispose
     .family<LocalArtistTracks, String>((ref, artist) async {
       final priorities = ref.watch(
@@ -185,9 +191,7 @@ final localArtistPopularProvider = FutureProvider.autoDispose
           items.map(
             (item) => (
               item: item,
-              plays:
-                  (plays[item.filePath] ?? 0) +
-                  (item.id == item.filePath ? 0 : plays[item.id] ?? 0),
+              plays: _playsFor(plays, item),
               tie: priorities.putIfAbsent(item.id, random.nextDouble),
             ),
           ),

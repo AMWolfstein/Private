@@ -13,14 +13,14 @@ import 'package:sistrum/widgets/app_search_field.dart';
 import 'package:sistrum/utils/ordered_range_selection.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 
-class LogScreen extends ConsumerStatefulWidget {
-  const LogScreen({super.key});
+class LogPage extends ConsumerStatefulWidget {
+  const LogPage({super.key});
 
   @override
-  ConsumerState<LogScreen> createState() => _LogScreenState();
+  ConsumerState<LogPage> createState() => _LogPageState();
 }
 
-class _LogScreenState extends ConsumerState<LogScreen> {
+class _LogPageState extends ConsumerState<LogPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   String _selectedLevel = 'ALL';

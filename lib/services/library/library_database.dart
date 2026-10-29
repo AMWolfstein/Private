@@ -678,30 +678,8 @@ class LibraryDatabase {
   Future<List<String>> getPhysicalFileIds(Iterable<String> filePaths) async =>
       sqlite.findPhysicalFileRowIds(await database, 'library', filePaths);
 
-  Future<void> deleteByPath(String filePath) async {
-    final db = await database;
-    final rows = await db.query(
-      'library',
-      columns: ['id'],
-      where: 'file_path = ?',
-      whereArgs: [filePath],
-    );
-    final ids = rows.map((row) => row['id'] as String).toList(growable: false);
-    await sqlite.transactionWithBusyRetry(db, (txn) async {
-      for (final id in ids) {
-        await txn.delete(
-          'library_path_keys',
-          where: 'item_id = ?',
-          whereArgs: [id],
-        );
-      }
-      await txn.delete(
-        'library',
-        where: 'file_path = ?',
-        whereArgs: [filePath],
-      );
-    });
-  }
+  /// Removes one row; shares the batched delete so both paths stay identical.
+  Future<int> deleteByPath(String filePath) => deleteByPaths([filePath]);
 
   Future<void> updateAudioMetadata(
     String id, {

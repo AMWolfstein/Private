@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/screens/settings/log_screen.dart';
+import 'package:sistrum/screens/settings/log_page.dart';
 import 'package:sistrum/utils/logger.dart';
 
 import 'support/material_test_theme.dart';
@@ -33,7 +33,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const LogScreen(),
+          home: const LogPage(),
         ),
       ),
     );
@@ -102,7 +102,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const LogScreen(),
+          home: const LogPage(),
         ),
       ),
     );
@@ -153,7 +153,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const LogScreen(),
+          home: const LogPage(),
         ),
       ),
     );
