@@ -228,9 +228,9 @@
     "semantic_hash": ""
   },
   "lib/providers/library_collections_provider.dart": {
-    "mtime": 1793282923.2430956,
-    "seen": 1793283564.1528068,
-    "ast_hash": "01f2eb627de00ce2cdb9fcb1b52b72b3",
+    "mtime": 1793283760.9006748,
+    "seen": 1793284349.596034,
+    "ast_hash": "80e7246a75b1777f6cb2282ae4709e4b",
     "semantic_hash": ""
   },
   "lib/providers/library_search_provider.dart": {
@@ -4134,9 +4134,9 @@
     "semantic_hash": ""
   },
   "test/replaygain_service_test.dart": {
-    "mtime": 1793280391.1821532,
-    "seen": 1793281769.4668121,
-    "ast_hash": "490dbd7db54069f448e18e78d5117412",
+    "mtime": 1793283724.2431717,
+    "seen": 1793284349.6623368,
+    "ast_hash": "17e310b3716ab0b65f71e02bf8526355",
     "semantic_hash": ""
   },
   "test/saf_path_identity_test.dart": {
@@ -6234,9 +6234,9 @@
     "semantic_hash": ""
   },
   "test/playlist_cover_restore_safety_test.dart": {
-    "mtime": 1793274378.3842435,
-    "seen": 1793275758.0430589,
-    "ast_hash": "cd104a1270e8d7ccfd1b02c86849eefb",
+    "mtime": 1793283760.9011433,
+    "seen": 1793284349.6620195,
+    "ast_hash": "f0ef24b11050aa919111fd871c58e526",
     "semantic_hash": ""
   },
   "docs/AUDIO_ENGINE_MIGRATION.md": {
@@ -7320,9 +7320,9 @@
     "semantic_hash": ""
   },
   "lib/services/ffmpeg/ffmpeg_metadata.dart": {
-    "mtime": 1793275995.4840906,
-    "seen": 1793277684.5787187,
-    "ast_hash": "e56e7c07a146a192ad200004942c9de9",
+    "mtime": 1793283760.8990815,
+    "seen": 1793284349.600172,
+    "ast_hash": "a748f0958167f1b7a68a44bca4907308",
     "semantic_hash": ""
   },
   "lib/services/ffmpeg/ffmpeg_models.dart": {
@@ -7338,9 +7338,9 @@
     "semantic_hash": ""
   },
   "lib/services/ffmpeg/ffmpeg_replaygain.dart": {
-    "mtime": 1793274378.2809505,
-    "seen": 1793275758.0407732,
-    "ast_hash": "ae9baebadd320bf6db1cba3cbe2a3bf1",
+    "mtime": 1793283654.1317308,
+    "seen": 1793284349.6002877,
+    "ast_hash": "d9da0023f84991c0450da7ba3fc89e42",
     "semantic_hash": ""
   },
   "lib/services/ffmpeg/ffmpeg_support.dart": {
@@ -8010,9 +8010,9 @@
     "semantic_hash": ""
   },
   "reviews/desloppify-remaining-work.md": {
-    "mtime": 1793281784.895961,
-    "seen": 1793283564.2003028,
-    "ast_hash": "b94995b35163ab26b9ac50ec778dc3b3",
+    "mtime": 1793283571.8719916,
+    "seen": 1793284349.67802,
+    "ast_hash": "ebfeffdb929b3156f22aed293fe81a67",
     "semantic_hash": ""
   },
   "scripts/dead_code_allowlist.txt": {
@@ -8154,9 +8154,9 @@
     "semantic_hash": ""
   },
   "lib/services/playback/replaygain_service.dart": {
-    "mtime": 1793278780.3175032,
-    "seen": 1793279534.5103295,
-    "ast_hash": "b04a873b39299a6681e4db347452322b",
+    "mtime": 1793283680.885084,
+    "seen": 1793284349.6044302,
+    "ast_hash": "116984706b8c82f22bc27c44cbffc769",
     "semantic_hash": ""
   },
   "lib/services/storage/app_state_database.dart": {
@@ -8184,9 +8184,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/library/batch_track_actions.dart": {
-    "mtime": 1793276009.7196178,
-    "seen": 1793277684.5821667,
-    "ast_hash": "4b5b82c8c5a39489f8522f21af3195a1",
+    "mtime": 1793283680.8857048,
+    "seen": 1793284349.6089635,
+    "ast_hash": "738e48c5e80476ad22cca705d4d1f81d",
     "semantic_hash": ""
   },
   "lib/widgets/library/library_fast_scroller.dart": {
@@ -9189,6 +9189,12 @@
     "mtime": 1793278648.9357038,
     "seen": 1793279534.5474124,
     "ast_hash": "0ec7df7d5f486d1842c92845568df21d",
+    "semantic_hash": ""
+  },
+  "lib/services/playback/replaygain_write_result.dart": {
+    "mtime": 1793283654.0954301,
+    "seen": 1793284349.6044374,
+    "ast_hash": "fcae9e4c92b7804215a927ea1d705516",
     "semantic_hash": ""
   }
 }
