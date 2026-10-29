@@ -1500,82 +1500,64 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     await _releaseNativeScanPause();
   }
 
-  Future<void> _showScanPausedNotification(int scannedFiles) async {
-    try {
-      await _queueScanNotification(
+  Future<void> _showScanPausedNotification(int scannedFiles) =>
+      _notifyBestEffort(
         () => _notificationService.showLibraryScanPaused(
           scannedFiles: scannedFiles,
         ),
+        'Failed to show scan paused notification',
       );
-    } catch (e) {
-      _log.w('Failed to show scan paused notification: $e');
-    }
-  }
 
-  Future<void> _cancelScanPausedNotification() async {
-    try {
-      await _queueScanNotification(
-        _notificationService.cancelLibraryScanNotification,
-      );
-    } catch (e) {
-      _log.w('Failed to clear scan paused notification: $e');
-    }
-  }
+  Future<void> _cancelScanPausedNotification() => _notifyBestEffort(
+    _notificationService.cancelLibraryScanNotification,
+    'Failed to clear scan paused notification',
+  );
 
   Future<void> _showScanProgressNotification({
     required double progress,
     required int scannedFiles,
     required int totalFiles,
     required String? currentFile,
-  }) async {
-    try {
-      await _queueScanNotification(() async {
-        if (!ref.mounted || !state.isScanning || state.scanIsPaused) return;
-        await _notificationService.showLibraryScanProgress(
-          progress: progress,
-          scannedFiles: scannedFiles,
-          totalFiles: totalFiles,
-          currentFile: _shortenFileForNotification(currentFile),
-        );
-      });
-    } catch (e) {
-      _log.w('Failed to show scan progress notification: $e');
-    }
-  }
+  }) => _notifyBestEffort(() async {
+    if (!ref.mounted || !state.isScanning || state.scanIsPaused) return;
+    await _notificationService.showLibraryScanProgress(
+      progress: progress,
+      scannedFiles: scannedFiles,
+      totalFiles: totalFiles,
+      currentFile: _shortenFileForNotification(currentFile),
+    );
+  }, 'Failed to show scan progress notification');
 
   Future<void> _showScanCompleteNotification({
     required int totalTracks,
     required int errorCount,
-  }) async {
-    try {
-      await _queueScanNotification(
-        () => _notificationService.showLibraryScanComplete(
-          totalTracks: totalTracks,
-          errorCount: errorCount,
-        ),
-      );
-    } catch (e) {
-      _log.w('Failed to show scan complete notification: $e');
-    }
-  }
+  }) => _notifyBestEffort(
+    () => _notificationService.showLibraryScanComplete(
+      totalTracks: totalTracks,
+      errorCount: errorCount,
+    ),
+    'Failed to show scan complete notification',
+  );
 
-  Future<void> _showScanFailedNotification(String message) async {
-    try {
-      await _queueScanNotification(
-        () => _notificationService.showLibraryScanFailed(message),
-      );
-    } catch (e) {
-      _log.w('Failed to show scan failure notification: $e');
-    }
-  }
+  Future<void> _showScanFailedNotification(String message) => _notifyBestEffort(
+    () => _notificationService.showLibraryScanFailed(message),
+    'Failed to show scan failure notification',
+  );
 
-  Future<void> _showScanCancelledNotification() async {
+  Future<void> _showScanCancelledNotification() => _notifyBestEffort(
+    _notificationService.showLibraryScanCancelled,
+    'Failed to show scan cancelled notification',
+  );
+
+  /// Queues a scan notice whose failure must never stop the scan or cleanup.
+  Future<void> _notifyBestEffort(
+    Future<void> Function() notify,
+    String failure,
+  ) async {
     try {
-      await _queueScanNotification(
-        _notificationService.showLibraryScanCancelled,
-      );
+      await _queueScanNotification(notify);
     } catch (e) {
-      _log.w('Failed to show scan cancelled notification: $e');
+      _log.w('$failure: $e');
     }
   }
 
