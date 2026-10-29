@@ -38,7 +38,6 @@ import 'package:sistrum/services/embedded_cover_resolver.dart';
 import 'package:sistrum/utils/logger.dart';
 
 export 'package:sistrum/models/playable_media.dart';
-export 'music_player_runtime.dart';
 export 'playback_metadata.dart';
 
 part 'music_player_automix.dart';

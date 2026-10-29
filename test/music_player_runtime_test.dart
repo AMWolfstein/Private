@@ -18,6 +18,7 @@ import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:sistrum/services/source_deletion_events.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/services/playback/music_player_runtime.dart';
 
 class _Deck implements MusicPlaybackDeck {
   @override

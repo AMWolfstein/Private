@@ -19,6 +19,7 @@ import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 import 'package:sistrum/widgets/settings_group.dart';
+import 'package:sistrum/services/playback/music_player_runtime.dart';
 
 /// Technical details of the playing track, from the file through the
 /// processing chain to the output device.
