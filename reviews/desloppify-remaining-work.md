@@ -158,3 +158,16 @@ provider that `LazyTabView` reads), or give the shell a fake Search tab. Either 
 seam, so it needs a decision before it is added.
 
 `main_shell_test.dart` was removed, not committed.
+
+## Third pass (main shell test skipped)
+
+Fixed and resolved in the queue:
+- mid_level_elegance::lookup_catch_all_missing_file: only a missing row reports "file not found".
+- low_level_elegance::redundant_nested_silent_cover_cleanup: the cache-trim try wraps only the delete.
+- type_safety::quality_filter_string_literals: `LibraryQualityFilter` constants. The query keeps the
+  string at its boundary, since unknown values must still be ignored (test covers this).
+- naming_quality::folder_name_for_playlist_screen: `LibraryTracksFolderScreen` renamed to
+  `LibraryCollectionTracksScreen` (only Loved and playlist modes exist).
+
+Queue after this pass: 48 items. The next items are the layer and package moves, the playback cycles,
+updater and backup error handling, the row-decoding consolidation, and the test-environment items.
