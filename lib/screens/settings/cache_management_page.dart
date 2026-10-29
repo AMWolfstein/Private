@@ -147,19 +147,12 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       builder: (context) => AppAlertDialog(
         title: Text(context.l10n.cacheClearConfirmTitle),
         content: Text(context.l10n.cacheClearConfirmMessage(target)),
-        actions: [
-          AppDialogAction(
-            isDefault: true,
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(context.l10n.dialogClear),
-          ),
-        ],
+        actions: appDestructiveConfirmActions(
+          context,
+          cancelLabel: context.l10n.dialogCancel,
+          confirmLabel: context.l10n.dialogClear,
+          cancelIsDefault: true,
+        ),
       ),
     );
     return confirm == true;
@@ -171,19 +164,12 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       builder: (context) => AppAlertDialog(
         title: Text(context.l10n.cacheClearAllConfirmTitle),
         content: Text(context.l10n.cacheClearAllConfirmMessage),
-        actions: [
-          AppDialogAction(
-            isDefault: true,
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.dialogCancel),
-          ),
-          AppDialogAction(
-            filled: true,
-            isDestructive: true,
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(context.l10n.dialogClear),
-          ),
-        ],
+        actions: appDestructiveConfirmActions(
+          context,
+          cancelLabel: context.l10n.dialogCancel,
+          confirmLabel: context.l10n.dialogClear,
+          cancelIsDefault: true,
+        ),
       ),
     );
     return confirm == true;

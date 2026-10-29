@@ -22,22 +22,12 @@ Future<void> deleteLibraryTracks(
     builder: (ctx) => AppAlertDialog(
       title: Text(context.l10n.dialogDeleteSelectedTitle),
       content: Text(context.l10n.dialogDeleteSelectedMessage(selected.length)),
-      actions: [
-        AppDialogAction(
-          isDefault: true,
-          onPressed: () => Navigator.pop(ctx, false),
-          child: Text(context.l10n.dialogCancel),
-        ),
-        AppDialogAction(
-          filled: true,
-          isDestructive: true,
-          onPressed: () => Navigator.pop(ctx, true),
-          style: FilledButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-          child: Text(context.l10n.dialogDelete),
-        ),
-      ],
+      actions: appDestructiveConfirmActions(
+        ctx,
+        cancelLabel: context.l10n.dialogCancel,
+        confirmLabel: context.l10n.dialogDelete,
+        cancelIsDefault: true,
+      ),
     ),
   );
   if (confirmed != true || !isActive() || !context.mounted) return;
