@@ -19000,6 +19000,70 @@
       "suppressed": false,
       "suppressed_at": null,
       "suppression_pattern": null
+    },
+    "strategy::test-health-decline": {
+      "status": "open",
+      "detector": "strategy",
+      "tier": 2,
+      "priority": "high",
+      "summary": "Test health fell from 89.0 to 83.7 with 38 coverage failures and the largest weighted failure load.",
+      "recommendation": "Target test_coverage failures in modules that changed in recent commits first. Add behavioural tests rather than stubs, and track the Test health strict score after each batch.",
+      "dimensions_affected": [
+        "Test health",
+        "Test strategy"
+      ],
+      "detail": {
+        "dimension": "Test health",
+        "recommendation": "Target test_coverage failures in modules that changed in recent commits first. Add behavioural tests rather than stubs, and track the Test health strict score after each batch.",
+        "source": "strategist"
+      },
+      "created_at": "2026-10-29T19:00:45+00:00",
+      "id": "strategy::test-health-decline",
+      "work_item_kind": "mechanical_defect",
+      "issue_kind": "mechanical_defect",
+      "origin": "scan",
+      "file": "",
+      "confidence": "low",
+      "note": null,
+      "first_seen": "2026-10-29T06:01:11+00:00",
+      "last_seen": "2026-10-29T06:01:11+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "strategy::file-health-and-code-quality-decline": {
+      "status": "open",
+      "detector": "strategy",
+      "tier": 3,
+      "priority": "medium",
+      "summary": "File health and Code quality both declined as structural and single_use findings returned in the same few files.",
+      "recommendation": "Fix structural and single_use findings per file, in one batch per file, in library_collections_provider.dart, equalizer_screen.dart and listening_statistics_screen.dart. Do not split the same file across several batches.",
+      "dimensions_affected": [
+        "File health",
+        "Code quality"
+      ],
+      "detail": {
+        "dimension": "File health",
+        "recommendation": "Fix structural and single_use findings per file, in one batch per file, in library_collections_provider.dart, equalizer_screen.dart and listening_statistics_screen.dart. Do not split the same file across several batches.",
+        "source": "strategist"
+      },
+      "created_at": "2026-10-29T19:00:45+00:00",
+      "id": "strategy::file-health-and-code-quality-decline",
+      "work_item_kind": "mechanical_defect",
+      "issue_kind": "mechanical_defect",
+      "origin": "scan",
+      "file": "",
+      "confidence": "low",
+      "note": null,
+      "first_seen": "2026-10-29T06:01:11+00:00",
+      "last_seen": "2026-10-29T06:01:11+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
     }
   },
   "scan_coverage": {

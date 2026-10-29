@@ -1,9 +1,18 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T18:55:17+00:00",
+  "updated": "2026-10-29T19:00:45+00:00",
   "queue_order": [
     "workflow::create-plan",
+    "triage::strategize",
+    "triage::observe",
+    "triage::reflect",
+    "triage::organize",
+    "triage::enrich",
+    "triage::sense-check",
+    "triage::commit",
+    "strategy::test-health-decline",
+    "strategy::file-health-and-code-quality-decline",
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
     "subjective::api_surface_coherence",
@@ -4012,9 +4021,241 @@
       "detail": {
         "scan_count": 8
       }
+    },
+    {
+      "timestamp": "2026-10-29T18:59:48+00:00",
+      "action": "triage_auto_start",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "source": "runner_auto_start",
+        "runner": "claude",
+        "injected_stage_ids": [
+          "strategize",
+          "observe",
+          "reflect",
+          "organize",
+          "enrich",
+          "sense-check"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-29T19:00:45+00:00",
+      "action": "triage_strategize",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "reuse": false,
+        "score_trend": "improving",
+        "focus_dimensions": [
+          "Test health",
+          "File health",
+          "Code quality",
+          "Structure nav"
+        ]
+      }
     }
   ],
-  "epic_triage_meta": {},
+  "epic_triage_meta": {
+    "triage_stages": {
+      "strategize": {
+        "stage": "strategize",
+        "report": "{\n  \"computed_at\": \"2026-10-29T00:00:00Z\",\n  \"lookback_scans\": 8,\n  \"focus_dimensions\": [\n    {\n      \"name\": \"Test health\",\n      \"reason\": \"Strict score fell from 89.0 to 83.7 across recent scans; 38 test_coverage failures carry the largest weighted failure load (about 437) of any detector.\",\n      \"headroom\": 16.3,\n      \"trend\": \"declining\"\n    },\n    {\n      \"name\": \"File health\",\n      \"reason\": \"Strict score fell from 90.8 to 87.0; 40 structural failures, with recurring structural findings in the same provider and screen files.\",\n      \"headroom\": 13.0,\n      \"trend\": \"declining\"\n    },\n    {\n      \"name\": \"Code quality\",\n      \"reason\": \"Strict score fell from 98.3 to 94.9; single_use (23 failing) and flat_dirs (6 failing) drive the decline.\",\n      \"headroom\": 5.1,\n      \"trend\": \"declining\"\n    },\n    {\n      \"name\": \"Structure nav\",\n      \"reason\": \"Lowest subjective score (55.0) with the largest headroom (45.0) and no recent investment; the dimension is improving only because it was first scored.\",\n      \"headroom\": 45.0,\n      \"trend\": \"improving\"\n    }\n  ],\n  \"avoid_areas\": [\n    {\n      \"name\": \"lib/l10n/app_localizations_*.dart (generated localization files)\",\n      \"reason\": \"These generated files recur in file churn with orphaned, structural and test_coverage findings each scan. They are regenerated from the arb sources, so hand edits are wasted effort and get overwritten.\",\n      \"type\": \"generated-code\"\n    },\n    {\n      \"name\": \"auto/test_coverage-transitive_only and auto/test_coverage-untested_module clusters\",\n      \"reason\": \"Cluster-level test-coverage work is recurring in cluster names without completed clusters, so new test stubs risk churn without moving the Test health score.\",\n      \"type\": \"low-yield-cluster\"\n    },\n    {\n      \"name\": \"lib/providers/music_player_provider.dart\",\n      \"reason\": \"Six resolved findings against only two open ones: repeated fixes in this file have not held, which is score-neutral churn.\",\n      \"type\": \"churn-hotspot\"\n    }\n  ],\n  \"rework_warnings\": [\n    {\n      \"dimension\": \"Code quality\",\n      \"resolved\": 3,\n      \"new_open\": 6,\n      \"files\": [\n        \"lib/providers/library_collections_provider.dart\"\n      ]\n    },\n    {\n      \"dimension\": \"Code quality\",\n      \"resolved\": 1,\n      \"new_open\": 8,\n      \"files\": [\n        \"lib/screens/equalizer_screen.dart\"\n      ]\n    }\n  ],\n  \"file_churn_hotspots\": [\n    {\n      \"file\": \"lib/providers/music_player_provider.dart\",\n      \"count\": 8,\n      \"detectors\": [\"signature\"]\n    },\n    {\n      \"file\": \"lib/providers/library_collections_provider.dart\",\n      \"count\": 9,\n      \"detectors\": [\"dupes\", \"signature\", \"structural\"]\n    },\n    {\n      \"file\": \"lib/screens/equalizer_screen.dart\",\n      \"count\": 9,\n      \"detectors\": [\"dupes\", \"signature\"]\n    },\n    {\n      \"file\": \"lib/screens/library/library_section_tab_filter_widgets.dart\",\n      \"count\": 5,\n      \"detectors\": [\"dupes\", \"orphaned\", \"signature\", \"structural\", \"test_coverage\"]\n    },\n    {\n      \"file\": \"lib/screens/listening_statistics_screen.dart\",\n      \"count\": 4,\n      \"detectors\": [\"boilerplate_duplication\", \"dupes\", \"signature\", \"test_coverage\"]\n    }\n  ],\n  \"stagnant_dimensions\": [\n    \"Duplication\",\n    \"Security\"\n  ],\n  \"debt_trend\": \"growing\",\n  \"score_trend\": \"improving\",\n  \"momentum_dimensions\": [\n    \"AI generated debt\",\n    \"Auth consistency\",\n    \"Contracts\",\n    \"Logic clarity\",\n    \"Type safety\",\n    \"Dep health\"\n  ],\n  \"executive_summary\": \"The strict score is 76.3, close to the all-time high of 77.0, and the trend over eight scans is improving. Most subjective dimensions were first scored in the last few scans and have held steady since, so their current values are a baseline rather than proof of sustained progress. The execution history shows 92 items done and 67 resolved with zero skips and no rework loops, so triage has been clean in execution. The open backlog of 288 issues is large and unclassified by dimension, and wontfix is at zero while the debt trend is growing.\\n\\nThe real risk is the declining dimensions: Test health (89.0 to 83.7), File health (90.8 to 87.0) and Code quality (98.3 to 94.9). Each fell while no dimension received recent investment, so the score is slipping where no one is working. Test health carries the largest weighted failure load. Duplication and Security are stagnant near their ceilings and should not absorb effort.\",\n  \"observe_guidance\": \"Verify test-coverage findings against the modules that actually changed, not only the untested-module cluster. Per-module coverage gains are likely to be wasted if they only add stubs to modules nobody touches. Confirm that the structural and single_use findings in the churn hotspots still reproduce after each fix, since those files have repeated open findings.\",\n  \"reflect_guidance\": \"Focus on Test health, File health and Code quality, which are declining. Structure nav has the most headroom and should get a deliberate investment rather than waiting on drift. Avoid the generated localization files and the music_player_provider churn hotspot unless a finding is confirmed to persist. Recurring-loop constraint: do not reopen the same provider or screen files in multiple small batches; group the work per file.\",\n  \"organize_guidance\": \"Order work by declining-dimension impact: Test health first, then File health structural findings, then Code quality single_use findings. Put Structure nav and low elegance subjective work next, and leave Duplication and Security alone. Do not churn library_collections_provider.dart, equalizer_screen.dart or music_player_provider.dart in separate batches; bundle each file's findings into one change.\",\n  \"sense_check_guidance\": \"Watch for value traps: test additions that raise coverage counts without covering changed behaviour, single_use refactors that move code without removing a duplicate, and l10n edits to generated files that will be overwritten. Treat a score gain that depends on a generated file as a trap. Any change to the three churn hotspots needs a rework check against the resolved counts above.\",\n  \"anti_patterns\": [\n    {\n      \"type\": \"dimension neglect\",\n      \"description\": \"Declining dimensions received no recent investment while the score was still reported as improving overall.\",\n      \"evidence\": \"recent_investment is 0 for every dimension; Test health, File health and Code quality trends are declining.\"\n    },\n    {\n      \"type\": \"neglected high-headroom dimensions\",\n      \"description\": \"Subjective dimensions with the most headroom are scored low and untouched.\",\n      \"evidence\": \"Structure nav 55.0 (headroom 45.0), Low elegance 62.0 (headroom 38.0), Design coherence 62.0 (headroom 38.0), Error consistency 62.0 (headroom 38.0).\"\n    },\n    {\n      \"type\": \"score-neutral churn\",\n      \"description\": \"Files repeatedly resolved without the open count falling, suggesting findings return after each fix.\",\n      \"evidence\": \"lib/providers/music_player_provider.dart has 6 resolved findings and 2 open; lib/providers/library_collections_provider.dart has 3 resolved and 6 open.\"\n    },\n    {\n      \"type\": \"growing wontfix debt\",\n      \"description\": \"The debt trend is growing with 288 open issues, though wontfix itself is zero and the 288 open issues are unclassified by dimension.\",\n      \"evidence\": \"debt_trajectory trend is growing; backlog_by_dimension is unknown: 288.\"\n    }\n  ],\n  \"strategic_issues\": [\n    {\n      \"identifier\": \"test-health-decline\",\n      \"summary\": \"Test health fell from 89.0 to 83.7 with 38 coverage failures and the largest weighted failure load.\",\n      \"priority\": \"high\",\n      \"recommendation\": \"Target test_coverage failures in modules that changed in recent commits first. Add behavioural tests rather than stubs, and track the Test health strict score after each batch.\",\n      \"dimensions_affected\": [\"Test health\", \"Test strategy\"]\n    },\n    {\n      \"identifier\": \"file-health-and-code-quality-decline\",\n      \"summary\": \"File health and Code quality both declined as structural and single_use findings returned in the same few files.\",\n      \"priority\": \"medium\",\n      \"recommendation\": \"Fix structural and single_use findings per file, in one batch per file, in library_collections_provider.dart, equalizer_screen.dart and listening_statistics_screen.dart. Do not split the same file across several batches.\",\n      \"dimensions_affected\": [\"File health\", \"Code quality\"]\n    }\n  ]\n}\n",
+        "timestamp": "2026-10-29T19:00:45+00:00",
+        "score_trend": "improving",
+        "focus_dimensions": [
+          "Test health",
+          "File health",
+          "Code quality",
+          "Structure nav"
+        ],
+        "anti_pattern_count": 4,
+        "confirmed_at": "2026-10-29T19:00:45+00:00",
+        "confirmed_text": "auto-confirmed"
+      }
+    },
+    "active_triage_issue_ids": [],
+    "strategist_briefing": {
+      "computed_at": "2026-10-29T00:00:00Z",
+      "lookback_scans": 8,
+      "focus_dimensions": [
+        {
+          "name": "Test health",
+          "reason": "Strict score fell from 89.0 to 83.7 across recent scans; 38 test_coverage failures carry the largest weighted failure load (about 437) of any detector.",
+          "headroom": 16.3,
+          "trend": "declining"
+        },
+        {
+          "name": "File health",
+          "reason": "Strict score fell from 90.8 to 87.0; 40 structural failures, with recurring structural findings in the same provider and screen files.",
+          "headroom": 13.0,
+          "trend": "declining"
+        },
+        {
+          "name": "Code quality",
+          "reason": "Strict score fell from 98.3 to 94.9; single_use (23 failing) and flat_dirs (6 failing) drive the decline.",
+          "headroom": 5.1,
+          "trend": "declining"
+        },
+        {
+          "name": "Structure nav",
+          "reason": "Lowest subjective score (55.0) with the largest headroom (45.0) and no recent investment; the dimension is improving only because it was first scored.",
+          "headroom": 45.0,
+          "trend": "improving"
+        }
+      ],
+      "avoid_areas": [
+        {
+          "name": "lib/l10n/app_localizations_*.dart (generated localization files)",
+          "reason": "These generated files recur in file churn with orphaned, structural and test_coverage findings each scan. They are regenerated from the arb sources, so hand edits are wasted effort and get overwritten.",
+          "type": "generated-code"
+        },
+        {
+          "name": "auto/test_coverage-transitive_only and auto/test_coverage-untested_module clusters",
+          "reason": "Cluster-level test-coverage work is recurring in cluster names without completed clusters, so new test stubs risk churn without moving the Test health score.",
+          "type": "low-yield-cluster"
+        },
+        {
+          "name": "lib/providers/music_player_provider.dart",
+          "reason": "Six resolved findings against only two open ones: repeated fixes in this file have not held, which is score-neutral churn.",
+          "type": "churn-hotspot"
+        }
+      ],
+      "rework_warnings": [
+        {
+          "dimension": "Code quality",
+          "resolved": 3,
+          "new_open": 6,
+          "files": [
+            "lib/providers/library_collections_provider.dart"
+          ]
+        },
+        {
+          "dimension": "Code quality",
+          "resolved": 1,
+          "new_open": 8,
+          "files": [
+            "lib/screens/equalizer_screen.dart"
+          ]
+        }
+      ],
+      "file_churn_hotspots": [
+        {
+          "file": "lib/providers/music_player_provider.dart",
+          "count": 8,
+          "detectors": [
+            "signature"
+          ]
+        },
+        {
+          "file": "lib/providers/library_collections_provider.dart",
+          "count": 9,
+          "detectors": [
+            "dupes",
+            "signature",
+            "structural"
+          ]
+        },
+        {
+          "file": "lib/screens/equalizer_screen.dart",
+          "count": 9,
+          "detectors": [
+            "dupes",
+            "signature"
+          ]
+        },
+        {
+          "file": "lib/screens/library/library_section_tab_filter_widgets.dart",
+          "count": 5,
+          "detectors": [
+            "dupes",
+            "orphaned",
+            "signature",
+            "structural",
+            "test_coverage"
+          ]
+        },
+        {
+          "file": "lib/screens/listening_statistics_screen.dart",
+          "count": 4,
+          "detectors": [
+            "boilerplate_duplication",
+            "dupes",
+            "signature",
+            "test_coverage"
+          ]
+        }
+      ],
+      "stagnant_dimensions": [
+        "Duplication",
+        "Security"
+      ],
+      "debt_trend": "growing",
+      "score_trend": "improving",
+      "momentum_dimensions": [
+        "AI generated debt",
+        "Auth consistency",
+        "Contracts",
+        "Logic clarity",
+        "Type safety",
+        "Dep health"
+      ],
+      "executive_summary": "The strict score is 76.3, close to the all-time high of 77.0, and the trend over eight scans is improving. Most subjective dimensions were first scored in the last few scans and have held steady since, so their current values are a baseline rather than proof of sustained progress. The execution history shows 92 items done and 67 resolved with zero skips and no rework loops, so triage has been clean in execution. The open backlog of 288 issues is large and unclassified by dimension, and wontfix is at zero while the debt trend is growing.\n\nThe real risk is the declining dimensions: Test health (89.0 to 83.7), File health (90.8 to 87.0) and Code quality (98.3 to 94.9). Each fell while no dimension received recent investment, so the score is slipping where no one is working. Test health carries the largest weighted failure load. Duplication and Security are stagnant near their ceilings and should not absorb effort.",
+      "observe_guidance": "Verify test-coverage findings against the modules that actually changed, not only the untested-module cluster. Per-module coverage gains are likely to be wasted if they only add stubs to modules nobody touches. Confirm that the structural and single_use findings in the churn hotspots still reproduce after each fix, since those files have repeated open findings.",
+      "reflect_guidance": "Focus on Test health, File health and Code quality, which are declining. Structure nav has the most headroom and should get a deliberate investment rather than waiting on drift. Avoid the generated localization files and the music_player_provider churn hotspot unless a finding is confirmed to persist. Recurring-loop constraint: do not reopen the same provider or screen files in multiple small batches; group the work per file.",
+      "organize_guidance": "Order work by declining-dimension impact: Test health first, then File health structural findings, then Code quality single_use findings. Put Structure nav and low elegance subjective work next, and leave Duplication and Security alone. Do not churn library_collections_provider.dart, equalizer_screen.dart or music_player_provider.dart in separate batches; bundle each file's findings into one change.",
+      "sense_check_guidance": "Watch for value traps: test additions that raise coverage counts without covering changed behaviour, single_use refactors that move code without removing a duplicate, and l10n edits to generated files that will be overwritten. Treat a score gain that depends on a generated file as a trap. Any change to the three churn hotspots needs a rework check against the resolved counts above.",
+      "anti_patterns": [
+        {
+          "type": "dimension neglect",
+          "description": "Declining dimensions received no recent investment while the score was still reported as improving overall.",
+          "evidence": "recent_investment is 0 for every dimension; Test health, File health and Code quality trends are declining."
+        },
+        {
+          "type": "neglected high-headroom dimensions",
+          "description": "Subjective dimensions with the most headroom are scored low and untouched.",
+          "evidence": "Structure nav 55.0 (headroom 45.0), Low elegance 62.0 (headroom 38.0), Design coherence 62.0 (headroom 38.0), Error consistency 62.0 (headroom 38.0)."
+        },
+        {
+          "type": "score-neutral churn",
+          "description": "Files repeatedly resolved without the open count falling, suggesting findings return after each fix.",
+          "evidence": "lib/providers/music_player_provider.dart has 6 resolved findings and 2 open; lib/providers/library_collections_provider.dart has 3 resolved and 6 open."
+        },
+        {
+          "type": "growing wontfix debt",
+          "description": "The debt trend is growing with 288 open issues, though wontfix itself is zero and the 288 open issues are unclassified by dimension.",
+          "evidence": "debt_trajectory trend is growing; backlog_by_dimension is unknown: 288."
+        }
+      ],
+      "strategic_issues": [
+        {
+          "identifier": "test-health-decline",
+          "summary": "Test health fell from 89.0 to 83.7 with 38 coverage failures and the largest weighted failure load.",
+          "priority": "high",
+          "recommendation": "Target test_coverage failures in modules that changed in recent commits first. Add behavioural tests rather than stubs, and track the Test health strict score after each batch.",
+          "dimensions_affected": [
+            "Test health",
+            "Test strategy"
+          ]
+        },
+        {
+          "identifier": "file-health-and-code-quality-decline",
+          "summary": "File health and Code quality both declined as structural and single_use findings returned in the same few files.",
+          "priority": "medium",
+          "recommendation": "Fix structural and single_use findings per file, in one batch per file, in library_collections_provider.dart, equalizer_screen.dart and listening_statistics_screen.dart. Do not split the same file across several batches.",
+          "dimensions_affected": [
+            "File health",
+            "Code quality"
+          ]
+        }
+      ]
+    }
+  },
   "commit_log": [
     {
       "sha": "55af2a388d86",
