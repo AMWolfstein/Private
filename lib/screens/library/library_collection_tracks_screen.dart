@@ -31,22 +31,12 @@ import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/screens/library/collapsing_header_scroll_mixin.dart';
 import 'package:sistrum/screens/library/selection_mode_mixin.dart';
 import 'package:sistrum/screens/library/library_tracks_folder_data.dart';
-import 'package:sistrum/widgets/library/local_song_row.dart';
-import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
-
-String? _resolveRawCoverUrl(Track track) {
-  final rawCover = track.coverUrl?.trim();
-  if (rawCover != null &&
-      rawCover.isNotEmpty &&
-      !rawCover.startsWith('content://')) {
-    return rawCover;
-  }
-  return null;
-}
+import 'package:sistrum/screens/library/collection_track_tile.dart';
+import 'package:sistrum/screens/library/collection_empty_folder_state.dart';
 
 class LibraryCollectionTracksScreen extends ConsumerStatefulWidget {
   final LibraryCollectionMode mode;
@@ -147,7 +137,7 @@ class _LibraryCollectionTracksScreenState
   /// Find the first available cover URL from entries.
   String? _firstRawCoverUrl(List<CollectionTrackEntry> entries) {
     for (final entry in entries) {
-      final cover = _resolveRawCoverUrl(entry.track);
+      final cover = resolveRawCoverUrl(entry.track);
       if (cover != null && cover.isNotEmpty) {
         return cover;
       }
@@ -348,7 +338,7 @@ class _LibraryCollectionTracksScreenState
         else if (entries.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: _EmptyFolderState(
+            child: CollectionEmptyFolderState(
               title: emptyTitle,
               subtitle: emptySubtitle,
             ),
@@ -364,7 +354,7 @@ class _LibraryCollectionTracksScreenState
                   key: ValueKey(entry.key),
                   // Collection contents must remain visible even when route
                   // or tab transitions pause animation tickers.
-                  child: _CollectionTrackTile(
+                  child: CollectionTrackTile(
                     entry: entry,
                     mode: widget.mode,
                     playlistId: widget.playlistId,
@@ -825,143 +815,6 @@ class _LibraryCollectionTracksScreenState
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(context.l10n.collectionPlaylistRenamed)),
-    );
-  }
-}
-
-class _CollectionTrackTile extends ConsumerWidget {
-  final CollectionTrackEntry entry;
-  final LibraryCollectionMode mode;
-  final String? playlistId;
-  final List<Track> folderTracks;
-  final int trackIndex;
-  final bool isSelectionMode;
-  final bool isSelected;
-  final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
-
-  const _CollectionTrackTile({
-    required this.entry,
-    required this.mode,
-    required this.playlistId,
-    required this.folderTracks,
-    required this.trackIndex,
-    this.isSelectionMode = false,
-    this.isSelected = false,
-    this.onTap,
-    this.onLongPress,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final track = entry.track;
-    final rawCoverUrl = _resolveRawCoverUrl(track);
-    final localCoverUrl = rawCoverUrl == null
-        ? ref
-              .watch(
-                localLibraryCoverProvider(
-                  LocalLibraryCoverRequest(
-                    isrc: track.isrc?.trim(),
-                    trackName: track.name,
-                    artistName: track.artistName,
-                  ),
-                ),
-              )
-              .maybeWhen(data: (cover) => cover, orElse: () => null)
-        : null;
-    final effectiveCoverUrl = rawCoverUrl ?? localCoverUrl;
-
-    final fresh = ref
-        .watch(
-          localSongLookupProvider((
-            id: track.id,
-            name: track.name,
-            artist: track.artistName,
-            isrc: track.isrc,
-          )),
-        )
-        .asData
-        ?.value;
-    final current = ref.watch(currentMediaItemProvider).asData?.value;
-    final source = current?.extras?['source'];
-    final isCurrent =
-        current != null &&
-        (current.id == track.id ||
-            source == track.id ||
-            fresh != null &&
-                (current.id == fresh.id ||
-                    current.id == fresh.filePath ||
-                    source == fresh.filePath));
-    final playing = isCurrent && ref.watch(playbackPlayingProvider);
-    return LocalSongRow(
-      isPlaying: playing,
-      title: fresh?.trackName ?? track.name,
-      artist: fresh?.artistName ?? track.artistName,
-      cover: fresh?.coverPath ?? effectiveCoverUrl,
-      explicit: fresh?.explicit ?? track.isExplicit,
-      isSelectionMode: isSelectionMode,
-      isSelected: isSelected,
-      onSelect: onTap,
-      onLongPress: isSelectionMode ? onTap : onLongPress,
-      onPlay: isCurrent
-          ? () =>
-                ref.read(musicPlayerControllerProvider).togglePlayPause(playing)
-          : () => _playFromHere(context, ref),
-      onMenu: (anchor) => fresh != null
-          ? showLocalSongMenu(context, ref, fresh, anchor: anchor)
-          : showCollectionSongMenu(context, ref, track, anchor: anchor),
-    );
-  }
-
-  Future<void> _playFromHere(BuildContext context, WidgetRef ref) async {
-    try {
-      await ref
-          .read(playbackProvider.notifier)
-          .playTrackList(folderTracks, startIndex: trackIndex);
-    } catch (error) {
-      if (!context.mounted) return;
-      showCannotOpenFileSnackBar(context, error);
-    }
-  }
-}
-
-class _EmptyFolderState extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const _EmptyFolderState({required this.title, required this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.folder_open,
-              size: 60,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

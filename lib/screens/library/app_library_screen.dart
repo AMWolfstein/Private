@@ -20,9 +20,8 @@ import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
-import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/screens/library/library_browse_artwork.dart';
 
 enum AppLibraryPage { overview, albums, artists }
 
@@ -407,7 +406,7 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                           leading: ClipOval(
                             child: SizedBox.square(
                               dimension: 56,
-                              child: _LibraryBrowseArtwork(entry: entry),
+                              child: LibraryBrowseArtwork(entry: entry),
                             ),
                           ),
                           title: Text(entry.artist),
@@ -475,7 +474,7 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                                           borderRadius: BorderRadius.circular(
                                             8,
                                           ),
-                                          child: _LibraryBrowseArtwork(
+                                          child: LibraryBrowseArtwork(
                                             entry: entry,
                                           ),
                                         ),
@@ -554,32 +553,6 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                   : _rows[(fraction * (_rows.length - 1)).round()].name,
             ),
       child: content,
-    );
-  }
-}
-
-class _LibraryBrowseArtwork extends StatelessWidget {
-  const _LibraryBrowseArtwork({required this.entry});
-  final LibraryBrowseEntry entry;
-
-  @override
-  Widget build(BuildContext context) {
-    Widget fallback(BuildContext context) => ColoredBox(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: Center(
-        child: Icon(
-          Icons.album_outlined,
-          size: 40,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-    return LocalLibraryArtworkBuilder(
-      coverPath: entry.cover,
-      filePath: entry.samplePath,
-      builder: (context, cover) => cover == null
-          ? fallback(context)
-          : LocalCoverImage(url: cover, placeholder: fallback),
     );
   }
 }

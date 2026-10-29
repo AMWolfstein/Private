@@ -56,6 +56,8 @@ part 'library_section_tab_selection.dart';
 part 'library_section_tab_navigation.dart';
 part 'library_section_tab_collection_items.dart';
 part 'library_section_tab_filter_widgets.dart';
+part 'library_section_tab_album_grid.dart';
+part 'library_section_tab_empty_state.dart';
 part 'library_section_tab_batch_actions.dart';
 part 'library_section_tab_item_widgets.dart';
 
