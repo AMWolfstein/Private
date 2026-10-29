@@ -8,12 +8,12 @@
   "strict_score": 76.3,
   "verified_strict_score": 94.8,
   "stats": {
-    "total": 495,
+    "total": 494,
     "auto_resolved": 193,
     "deferred": 0,
     "false_positive": 0,
     "fixed": 87,
-    "open": 215,
+    "open": 214,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -40,7 +40,7 @@
         "deferred": 0,
         "false_positive": 0,
         "fixed": 9,
-        "open": 210,
+        "open": 209,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -16335,9 +16335,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T18:58:14+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_batch_actions.dart"
     },
     "signature::lib/screens/library/library_section_tab.dart::signature_variance::AnimatedBuilder": {
       "id": "signature::lib/screens/library/library_section_tab.dart::signature_variance::AnimatedBuilder",
@@ -33377,18 +33377,18 @@
   },
   "dimension_scores": {
     "Code quality": {
-      "score": 95.5,
-      "strict": 94.6,
-      "verified_strict_score": 95.5,
+      "score": 95.7,
+      "strict": 94.8,
+      "verified_strict_score": 95.7,
       "checks": 484,
-      "failing": 31,
+      "failing": 30,
       "tier": 3,
       "detectors": {
         "orphaned": {
           "potential": 335,
-          "pass_rate": 0.9958208955223882,
-          "failing": 2,
-          "weighted_failures": 1.4
+          "pass_rate": 0.9979104477611941,
+          "failing": 1,
+          "weighted_failures": 0.7
         },
         "flat_dirs": {
           "potential": 33,
@@ -33912,10 +33912,10 @@
   },
   "reminder_history": {
     "zone_classification": 3,
-    "report_scores": 6,
+    "report_scores": 7,
     "feedback_nudge": 3,
     "stagnant_nudge": 22,
-    "wontfix_growing": 1
+    "wontfix_growing": 2
   },
   "attestation_log": [
     {
@@ -34014,6 +34014,13 @@
       "command": "suppress",
       "pattern": "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart",
       "attestation": "I have actually verified this is a false positive: the file is a Dart part of a library that declares it with a part directive, and I am not gaming the score by resolving without fixing.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:55:17+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/library_section_tab_batch_actions.dart",
+      "attestation": "I have actually verified these are part files of library_section_tab.dart whose symbols are referenced elsewhere, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
       "affected": 1
     }
   ],

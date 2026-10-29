@@ -2,43 +2,8 @@
   "command": "show",
   "query": "orphaned",
   "status_filter": "open",
-  "total": 2,
-  "summary": {
-    "by_tier": {
-      "T3": 2
-    },
-    "by_detector": {
-      "orphaned": 2
-    },
-    "files": 2
-  },
-  "by_file": {
-    "lib/screens/library/library_section_tab_batch_actions.dart": [
-      {
-        "id": "orphaned::lib/screens/library/library_section_tab_batch_actions.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (37 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 37
-        }
-      }
-    ],
-    "lib/screens/library/library_section_tab_helpers.dart": [
-      {
-        "id": "orphaned::lib/screens/library/library_section_tab_helpers.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (278 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 278
-        }
-      }
-    ]
-  },
-  "total_matching": 2,
-  "noise_budget": 10,
-  "noise_global_budget": 0,
+  "total": 0,
+  "issues": [],
   "narrative": {
     "phase": "middle_grind",
     "headline": "All T1 items cleared!",
@@ -101,24 +66,13 @@
     "actions": [
       {
         "type": "reorganize",
-        "detector": "orphaned",
-        "count": 2,
-        "description": "2 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
-        "command": "desloppify show orphaned --status open",
-        "impact": 0.0,
-        "dimension": "Code quality",
-        "priority": 1,
-        "lane": "restructure"
-      },
-      {
-        "type": "reorganize",
         "detector": "flat_dirs",
         "count": 6,
         "description": "6 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
         "command": "desloppify show flat_dirs --status open",
         "impact": 0.0,
         "dimension": "Code quality",
-        "priority": 2,
+        "priority": 1,
         "lane": "restructure"
       },
       {
@@ -129,7 +83,7 @@
         "command": "desloppify show single_use --status open",
         "impact": 0.0,
         "dimension": "Code quality",
-        "priority": 3,
+        "priority": 2,
         "lane": "restructure"
       },
       {
@@ -140,7 +94,7 @@
         "command": "desloppify show structural --status open",
         "impact": 0.0,
         "dimension": "File health",
-        "priority": 4,
+        "priority": 3,
         "lane": "refactor"
       },
       {
@@ -151,7 +105,7 @@
         "command": "desloppify show dupes --status open",
         "impact": 0.0,
         "dimension": "Duplication",
-        "priority": 5,
+        "priority": 4,
         "lane": "refactor"
       },
       {
@@ -162,7 +116,7 @@
         "command": "desloppify show test_coverage --status open",
         "impact": 0.0,
         "dimension": "Test health",
-        "priority": 6,
+        "priority": 5,
         "lane": "test_coverage"
       },
       {
@@ -173,14 +127,14 @@
         "command": "desloppify show signature --status open",
         "impact": 0.0,
         "dimension": "Unknown",
-        "priority": 7,
+        "priority": 6,
         "lane": "refactor"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 215,
+        "total_count": 213,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -189,19 +143,18 @@
         "restructure": {
           "actions": [
             1,
-            2,
-            3
+            2
           ],
-          "file_count": 31,
+          "file_count": 29,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         },
         "refactor": {
           "actions": [
+            3,
             4,
-            5,
-            7
+            6
           ],
           "file_count": 95,
           "total_impact": 0.0,
@@ -210,7 +163,7 @@
         },
         "test_coverage": {
           "actions": [
-            6
+            5
           ],
           "file_count": 38,
           "total_impact": 0.0,
@@ -226,7 +179,7 @@
       "move": {
         "available": true,
         "relevant": true,
-        "reason": "2 orphaned files + 23 single-use files + 6 flat directories",
+        "reason": "23 single-use files + 6 flat directories",
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -249,8 +202,8 @@
     },
     "milestone": "All T1 items cleared!",
     "primary_action": {
-      "command": "desloppify show orphaned --status open",
-      "description": "2 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
+      "command": "desloppify show flat_dirs --status open",
+      "description": "6 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
     },
     "why_now": "3 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
     "verification_step": {
@@ -304,7 +257,9 @@
       "orphaned::lib/screens/home/home_tab_widgets.dart",
       "orphaned::lib/widgets/audio_analysis/audio_analysis_models.dart",
       "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart",
-      "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart"
+      "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart",
+      "orphaned::lib/screens/library/library_section_tab_batch_actions.dart",
+      "orphaned::lib/screens/library/library_section_tab_helpers.dart"
     ],
     "ignore_metadata": {
       "orphaned::lib/services/playback/music_player_automix.dart": {
@@ -404,6 +359,20 @@
         "fingerprints": [
           "5b9e92e1ba7170a8"
         ]
+      },
+      "orphaned::lib/screens/library/library_section_tab_batch_actions.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T18:58:14+00:00",
+        "fingerprints": [
+          "8f5769c35cbf17ce"
+        ]
+      },
+      "orphaned::lib/screens/library/library_section_tab_helpers.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T18:58:14+00:00",
+        "fingerprints": [
+          "62756acb893aa97e"
+        ]
       }
     },
     "zone_overrides": {
@@ -431,7 +400,7 @@
     "issue_noise_budget": 10,
     "issue_noise_global_budget": 0,
     "execution_log_max_entries": 10000,
-    "needs_rescan": false,
+    "needs_rescan": true,
     "languages": {},
     "commit_tracking_enabled": true,
     "commit_pr": 0,

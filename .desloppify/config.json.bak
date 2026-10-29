@@ -20,7 +20,8 @@
     "orphaned::lib/screens/home/home_tab_widgets.dart",
     "orphaned::lib/widgets/audio_analysis/audio_analysis_models.dart",
     "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart",
-    "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart"
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart",
+    "orphaned::lib/screens/library/library_section_tab_batch_actions.dart"
   ],
   "ignore_metadata": {
     "orphaned::lib/services/playback/music_player_automix.dart": {
@@ -119,6 +120,13 @@
       "added_at": "2026-10-29T06:09:16+00:00",
       "fingerprints": [
         "5b9e92e1ba7170a8"
+      ]
+    },
+    "orphaned::lib/screens/library/library_section_tab_batch_actions.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T18:58:14+00:00",
+      "fingerprints": [
+        "8f5769c35cbf17ce"
       ]
     }
   },
