@@ -15,6 +15,7 @@ import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/playback_handler.dart';
 import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player_session_restore.dart';
 import 'package:sistrum/services/playback/playback_notification.dart';
 import 'package:sistrum/services/library/source_deletion_events.dart';
 import 'package:sistrum/utils/file_access.dart';
