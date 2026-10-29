@@ -202,6 +202,17 @@ repositories or renamed remote artifacts. Historic copyright attribution remains
 original authors. Historical reports normalize names mechanically, not evidence of new runs.
 For later upstream ports, do not import unrelated upstream branding.
 
+## Shared widget names
+
+Shared widgets in `lib/widgets/` take one of two prefixes, chosen by what the widget is for, not
+by which theme styles it:
+- `sistrum_` for pieces that carry a Sistrum feature or its own design: the bottom bar, the
+  Sistrum-styled slider and context menu, the artist header and metadata rows.
+- `app_` for generic building blocks any screen could use, even when the Sistrum theme styles
+  them (switches, dialogs, sheets, snack bars, chips, cards, headers, loading indicators).
+
+Apply the rule to new shared widgets. Do not rename existing files just to change a prefix.
+
 ## Commit conventions
 
 The workflow ends in **three separate commits** — never mix them:

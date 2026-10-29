@@ -230,3 +230,17 @@ Left open with reasons:
 - main_shell_no_direct_test: blocked as recorded above.
 
 Queue after this pass: 36 items.
+
+## Shared widget names
+
+The rule is in AGENTS.md under "Shared widget names". Classification of the 15 prefixed widgets:
+
+- `sistrum_` (Sistrum's own pieces): `sistrum_bottom_bar`, `sistrum_slider`,
+  `sistrum_context_menu`, `sistrum_metadata_row`, `sistrum_artist_header`.
+- `app_` (generic building blocks, themed by Sistrum): `app_switch`, `app_alert_dialog`,
+  `app_bottom_sheet`, `app_snack_bar`, `app_search_field`, `app_action_button`, `app_choice_chip`,
+  `app_content_card`, `app_loading_indicator`, `app_sliver_header`.
+
+No files were renamed. `app_switch`, `app_alert_dialog` and `app_bottom_sheet` read Sistrum theme
+values, which the rule treats as styling, not as a reason for the Sistrum prefix. `app_sliver_header`
+is the header every tab and settings page uses, and `app_content_card` is a plain surface.
