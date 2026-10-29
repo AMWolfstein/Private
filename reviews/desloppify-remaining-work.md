@@ -586,3 +586,16 @@ Verification: `flutter analyze` reports "No issues found!"; the full serial `flu
 
 Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
 (1878 tests, exit 0). Group C (the 30 large-file splits) remains.
+
+## Group C, batch 2: large screens and settings split
+
+- lyrics_share_screen.dart split into lyrics_share_card.dart and lyrics_share_controls.dart.
+- main_shell.dart split into main_shell_tabs.dart (TabNavigator, LibraryTabRoot).
+- appearance_settings_page.dart split into appearance_glass_clarity_slider.dart and
+  appearance_settings_selectors.dart.
+- cache_management_page.dart split into cache_management_models.dart and cache_directory_tools.dart.
+- library_settings_page.dart split into library_settings_source_item.dart and
+  library_settings_scan_widgets.dart.
+
+Verification: `flutter analyze` reports "No issues found!"; the full serial `flutter test` passed
+(1878 tests, exit 0). Batches 3 to 6 remain.
