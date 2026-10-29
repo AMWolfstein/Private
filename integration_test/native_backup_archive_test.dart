@@ -67,7 +67,7 @@ void main() {
         temporaryDirectory: root,
       );
       expect(bundle, isNotNull, reason: 'mask $mask');
-      expect(bundle!.formatVersion, 3);
+      expect(bundle.formatVersion, 3);
       expect(bundle.hasSettings, hasSettings);
       expect(bundle.hasCollections, hasCollections);
       expect(bundle.profile!.name, 'Listener');
@@ -110,7 +110,7 @@ void main() {
       temporaryDirectory: root,
     );
     expect(bundle, isNotNull);
-    expect(bundle!.formatVersion, 3);
+    expect(bundle.formatVersion, 3);
     expect(bundle.settings, {'theme': 'light'});
     await bundle.cleanup();
   });
@@ -171,7 +171,7 @@ void main() {
           temporaryDirectory: root,
         );
         expect(bundle, isNotNull);
-        expect(bundle!.formatVersion, 3);
+        expect(bundle.formatVersion, 3);
         expect(bundle.hasCollections, isTrue);
         expect(bundle.collections, collections);
         expect(bundle.profile!.name, '日本語 🎵');

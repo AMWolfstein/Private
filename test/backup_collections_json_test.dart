@@ -120,7 +120,7 @@ void main() {
           temporaryDirectory: directory,
         );
         expect(bundle, isNotNull);
-        expect(bundle!.hasCollections, isTrue);
+        expect(bundle.hasCollections, isTrue);
         expect(bundle.collections, collections);
         await bundle.cleanup();
       }
@@ -157,7 +157,7 @@ void main() {
       temporaryDirectory: directory,
     );
     expect(bundle, isNotNull);
-    expect(bundle!.collections, collections);
+    expect(bundle.collections, collections);
     await bundle.cleanup();
   });
 

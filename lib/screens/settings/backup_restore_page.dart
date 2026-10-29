@@ -91,11 +91,21 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
     }
   }
 
+  static String _parseFailureMessage(
+    AppLocalizations l10n,
+    BackupParseFailure reason,
+  ) => switch (reason) {
+    BackupParseFailure.unsupportedVersion => l10n.backupUnsupportedVersion,
+    BackupParseFailure.unreadable => l10n.backupReadFailed,
+    BackupParseFailure.notBackupArchive ||
+    BackupParseFailure.corruptArchive => l10n.backupInvalidFile,
+  };
+
   Future<void> _runRestore() async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
 
-    BackupBundle? bundle;
+    final BackupBundle bundle;
     try {
       // Android may not know our custom extension's MIME type, so filtering
       // by extension would hide our own backups. Validate contents
@@ -103,14 +113,16 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
       final picked = await FilePicker.pickFile(type: FileType.any);
       if (picked == null) return;
       final path = picked.path;
-      bundle = path != null ? await BackupService.parseFile(path) : null;
+      if (path == null) return;
+      bundle = await BackupService.parseFile(path);
+    } on BackupParseException catch (e) {
+      _log.w('Backup file rejected: ${e.reason.name}');
+      messenger.showSnackBar(
+        SnackBar(content: Text(_parseFailureMessage(l10n, e.reason))),
+      );
+      return;
     } catch (e) {
       _log.e('Failed to read backup file: $e');
-      messenger.showSnackBar(SnackBar(content: Text(l10n.backupInvalidFile)));
-      return;
-    }
-
-    if (bundle == null) {
       messenger.showSnackBar(SnackBar(content: Text(l10n.backupInvalidFile)));
       return;
     }

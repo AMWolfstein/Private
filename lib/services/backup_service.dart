@@ -126,6 +126,31 @@ class BackupTooLargeException implements Exception {
   String toString() => 'BackupTooLargeException: $message';
 }
 
+/// Why a backup file could not be restored; the restore page words each one.
+enum BackupParseFailure {
+  /// Not a Sistrum backup archive at all.
+  notBackupArchive,
+
+  /// A backup written by a different format version.
+  unsupportedVersion,
+
+  /// A Sistrum archive whose metadata is missing, too large or malformed.
+  corruptArchive,
+
+  /// The file could not be read from storage or extracted.
+  unreadable,
+}
+
+class BackupParseException implements Exception {
+  const BackupParseException(this.reason, [this.cause]);
+
+  final BackupParseFailure reason;
+  final Object? cause;
+
+  @override
+  String toString() => 'BackupParseException: ${reason.name}';
+}
+
 class BackupService {
   static final _log = AppLogger('BackupService');
 
@@ -303,23 +328,25 @@ class BackupService {
     );
   }
 
-  static Future<BackupBundle?> parseFile(
+  /// Throws [BackupParseException] when [path] cannot be restored.
+  static Future<BackupBundle> parseFile(
     String path, {
     Directory? temporaryDirectory,
   }) async {
     final tempRoot = temporaryDirectory ?? await getTemporaryDirectory();
-    final BackupBundle? bundle;
-    if (!await _hasZipHeader(File(path))) {
-      bundle = null;
-    } else if (PlatformBridge.supportsCoreBackend) {
-      bundle = await _parseArchiveNative(path, tempRoot);
-    } else {
-      bundle = await _parseFileInBackground(path, tempRoot.path);
+    final bool isZip;
+    try {
+      isZip = await _hasZipHeader(File(path));
+    } on FileSystemException catch (error) {
+      throw BackupParseException(BackupParseFailure.unreadable, error);
     }
-    if (bundle == null) {
-      _log.w('Backup file could not be read: invalid or unsupported contents');
+    if (!isZip) {
+      throw const BackupParseException(BackupParseFailure.notBackupArchive);
     }
-    return bundle;
+    if (PlatformBridge.supportsCoreBackend) {
+      return _parseArchiveNative(path, tempRoot);
+    }
+    return _parseFileInBackground(path, tempRoot.path);
   }
 
   static Future<bool> _hasZipHeader(File file) async {
@@ -333,7 +360,7 @@ class BackupService {
         header[3] == 0x04;
   }
 
-  static Future<BackupBundle?> _parseArchiveNative(
+  static Future<BackupBundle> _parseArchiveNative(
     String path,
     Directory temporary,
   ) async {
@@ -381,19 +408,24 @@ class BackupService {
         } catch (_) {}
       }
       _log.w('Backup archive native parse failed: $error');
-      return null;
+      throw BackupParseException(
+        error is FormatException
+            ? BackupParseFailure.corruptArchive
+            : BackupParseFailure.unreadable,
+        error,
+      );
     }
   }
 
-  static Future<BackupBundle?> _parseFileInBackground(
+  static Future<BackupBundle> _parseFileInBackground(
     String path,
     String temporaryPath,
   ) => Isolate.run(() => _parseFile(path, temporaryPath));
 
-  static Future<BackupBundle?> _parseFile(String path, String temporaryPath) =>
+  static Future<BackupBundle> _parseFile(String path, String temporaryPath) =>
       _parseArchive(File(path), temporaryDirectory: Directory(temporaryPath));
 
-  static Future<BackupBundle?> _parseArchive(
+  static Future<BackupBundle> _parseArchive(
     File file, {
     required Directory temporaryDirectory,
   }) async {
@@ -405,17 +437,24 @@ class BackupService {
       archive = ZipDecoder().decodeStream(input);
       final metadataEntry = archive.find('metadata.json');
       if (metadataEntry == null || metadataEntry.size > _maxMetadataBytes) {
-        return null;
+        throw const BackupParseException(BackupParseFailure.corruptArchive);
       }
       final rootRaw = jsonDecode(utf8.decode(metadataEntry.content));
-      if (rootRaw is! Map) return null;
+      if (rootRaw is! Map) {
+        throw const BackupParseException(BackupParseFailure.corruptArchive);
+      }
       final root = Map<String, dynamic>.from(rootRaw);
       final version = root['format_version'];
-      if (root['magic'] != magic || version != formatVersion) {
-        return null;
+      if (root['magic'] != magic) {
+        throw const BackupParseException(BackupParseFailure.notBackupArchive);
+      }
+      if (version != formatVersion) {
+        throw const BackupParseException(BackupParseFailure.unsupportedVersion);
       }
       final dataRaw = root['data'];
-      if (dataRaw is! Map) return null;
+      if (dataRaw is! Map) {
+        throw const BackupParseException(BackupParseFailure.corruptArchive);
+      }
       final data = Map<String, dynamic>.from(dataRaw);
 
       extractionDir = await Directory(
@@ -498,7 +537,13 @@ class BackupService {
           await extractionDir.delete(recursive: true);
         } catch (_) {}
       }
-      return null;
+      if (e is BackupParseException) rethrow;
+      throw BackupParseException(
+        e is FormatException
+            ? BackupParseFailure.corruptArchive
+            : BackupParseFailure.unreadable,
+        e,
+      );
     } finally {
       if (input != null) await input.close();
     }

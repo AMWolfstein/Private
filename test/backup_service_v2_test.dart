@@ -64,7 +64,7 @@ void main() {
       temporaryDirectory: temporary,
     );
     expect(bundle, isNotNull);
-    expect(bundle!.formatVersion, 3);
+    expect(bundle.formatVersion, 3);
     final restoredCover = bundle.playlistCovers['playlist-1'];
     expect(restoredCover, isA<Map<String, dynamic>>());
     final restoredCoverPath =
@@ -98,9 +98,9 @@ void main() {
         ..addFile(ArchiveFile('metadata.json', metadata.length, metadata));
       final file = File(p.join(root.path, 'old.sbk'));
       await file.writeAsBytes(ZipEncoder().encode(archive));
-      expect(
-        await BackupService.parseFile(file.path, temporaryDirectory: root),
-        isNull,
+      await expectLater(
+        BackupService.parseFile(file.path, temporaryDirectory: root),
+        throwsA(isA<BackupParseException>()),
       );
     }
   });
@@ -122,9 +122,9 @@ void main() {
         ..addFile(ArchiveFile('metadata.json', metadata.length, metadata));
       final file = File(p.join(root.path, 'invalid.sbk'));
       await file.writeAsBytes(ZipEncoder().encode(archive));
-      expect(
-        await BackupService.parseFile(file.path, temporaryDirectory: root),
-        isNull,
+      await expectLater(
+        BackupService.parseFile(file.path, temporaryDirectory: root),
+        throwsA(isA<BackupParseException>()),
       );
       expect(
         await root.list().where((entry) => entry is Directory).isEmpty,

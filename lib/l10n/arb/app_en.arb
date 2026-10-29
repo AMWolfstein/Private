@@ -1668,6 +1668,14 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
+  "backupUnsupportedVersion": "This backup was made by a different version of Sistrum",
+  "@backupUnsupportedVersion": {
+    "description": "Snackbar when a backup file uses a format version this app cannot restore"
+  },
+  "backupReadFailed": "The backup file could not be read. Check that it is still available",
+  "@backupReadFailed": {
+    "description": "Snackbar when the chosen backup file cannot be read from storage"
+  },
   "backupInvalidFile": "This file is not a valid Sistrum backup",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"

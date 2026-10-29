@@ -123,10 +123,10 @@ void main() {
         outputDirectory: directory,
         temporaryDirectory: directory,
       );
-      final bundle = (await BackupService.parseFile(
+      final bundle = await BackupService.parseFile(
         file.path,
         temporaryDirectory: directory,
-      ))!;
+      );
       final restoredPhoto = bundle.profile!.photoPath;
       expect(restoredPhoto != null, withPhoto);
       final previousPhoto = (await destinationStore.read()).photoPath;
