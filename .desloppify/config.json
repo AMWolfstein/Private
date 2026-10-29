@@ -22,7 +22,20 @@
     "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart",
     "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart",
     "orphaned::lib/screens/library/library_section_tab_batch_actions.dart",
-    "orphaned::lib/screens/library/library_section_tab_helpers.dart"
+    "orphaned::lib/screens/library/library_section_tab_helpers.dart",
+    "orphaned::lib/screens/library/library_section_tab_album_grid.dart",
+    "orphaned::lib/screens/library/library_section_tab_empty_state.dart",
+    "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart",
+    "orphaned::lib/screens/library/local_album_screen_header.dart",
+    "orphaned::lib/screens/library/local_album_screen_selection.dart",
+    "orphaned::lib/screens/library/local_album_screen_track_list.dart",
+    "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
+    "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart",
+    "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
+    "orphaned::lib/services/library/library_database_queries.dart",
+    "orphaned::lib/utils/lyrics_parser_ttml.dart",
+    "orphaned::lib/widgets/header/album_detail_header_parts.dart",
+    "orphaned::lib/widgets/library/track_metadata_edit_cover.dart"
   ],
   "ignore_metadata": {
     "orphaned::lib/services/playback/music_player_automix.dart": {
@@ -136,6 +149,97 @@
       "fingerprints": [
         "62756acb893aa97e"
       ]
+    },
+    "orphaned::lib/screens/library/library_section_tab_album_grid.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:18+00:00",
+      "fingerprints": [
+        "4753297e39223188"
+      ]
+    },
+    "orphaned::lib/screens/library/library_section_tab_empty_state.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:19+00:00",
+      "fingerprints": [
+        "65ac204dda7cfe6b"
+      ]
+    },
+    "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:19+00:00",
+      "fingerprints": [
+        "561a43cd44cd4e8c"
+      ]
+    },
+    "orphaned::lib/screens/library/local_album_screen_header.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:19+00:00",
+      "fingerprints": [
+        "b9981adfbd55471c"
+      ]
+    },
+    "orphaned::lib/screens/library/local_album_screen_selection.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:20+00:00",
+      "fingerprints": [
+        "ffda743c2a2e9a60"
+      ]
+    },
+    "orphaned::lib/screens/library/local_album_screen_track_list.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:20+00:00",
+      "fingerprints": [
+        "0cccb23fa51a7b89"
+      ]
+    },
+    "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:21+00:00",
+      "fingerprints": [
+        "9900f2ca85f695e6"
+      ]
+    },
+    "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:21+00:00",
+      "fingerprints": [
+        "a2a8d40225134398"
+      ]
+    },
+    "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:22+00:00",
+      "fingerprints": [
+        "10e170b1557a1df7"
+      ]
+    },
+    "orphaned::lib/services/library/library_database_queries.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:22+00:00",
+      "fingerprints": [
+        "bf29570071276f9d"
+      ]
+    },
+    "orphaned::lib/utils/lyrics_parser_ttml.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:31+00:00",
+      "fingerprints": [
+        "e6002cd157309308"
+      ]
+    },
+    "orphaned::lib/widgets/header/album_detail_header_parts.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:31+00:00",
+      "fingerprints": [
+        "acec53d18e9cf1ac"
+      ]
+    },
+    "orphaned::lib/widgets/library/track_metadata_edit_cover.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:31+00:00",
+      "fingerprints": [
+        "a23748db765a409d"
+      ]
     }
   },
   "zone_overrides": {
@@ -163,7 +267,7 @@
   "issue_noise_budget": 10,
   "issue_noise_global_budget": 0,
   "execution_log_max_entries": 10000,
-  "needs_rescan": false,
+  "needs_rescan": true,
   "languages": {},
   "commit_tracking_enabled": true,
   "commit_pr": 0,

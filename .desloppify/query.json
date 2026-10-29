@@ -2,137 +2,8 @@
   "command": "show",
   "query": "orphaned",
   "status_filter": "open",
-  "total": 10,
-  "summary": {
-    "by_tier": {
-      "T3": 10
-    },
-    "by_detector": {
-      "orphaned": 10
-    },
-    "files": 10
-  },
-  "by_file": {
-    "lib/screens/library/library_section_tab_album_grid.dart": [
-      {
-        "id": "orphaned::lib/screens/library/library_section_tab_album_grid.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (155 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 155
-        }
-      }
-    ],
-    "lib/screens/library/library_section_tab_empty_state.dart": [
-      {
-        "id": "orphaned::lib/screens/library/library_section_tab_empty_state.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (56 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 56
-        }
-      }
-    ],
-    "lib/screens/library/library_section_tab_filter_widgets.dart": [
-      {
-        "id": "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (393 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 393
-        }
-      }
-    ],
-    "lib/screens/library/local_album_screen_header.dart": [
-      {
-        "id": "orphaned::lib/screens/library/local_album_screen_header.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (172 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 172
-        }
-      }
-    ],
-    "lib/screens/library/local_album_screen_selection.dart": [
-      {
-        "id": "orphaned::lib/screens/library/local_album_screen_selection.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (98 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 98
-        }
-      }
-    ],
-    "lib/screens/library/local_album_screen_track_list.dart": [
-      {
-        "id": "orphaned::lib/screens/library/local_album_screen_track_list.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (85 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 85
-        }
-      }
-    ],
-    "lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart": [
-      {
-        "id": "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (178 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 178
-        }
-      }
-    ],
-    "lib/services/audio_analysis/audio_analysis_log_parsing.dart": [
-      {
-        "id": "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (190 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 190
-        }
-      }
-    ],
-    "lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart": [
-      {
-        "id": "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (270 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 270
-        }
-      }
-    ],
-    "lib/services/library/library_database_queries.dart": [
-      {
-        "id": "orphaned::lib/services/library/library_database_queries.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Orphaned file (353 LOC): zero importers, not an entry point",
-        "detail": {
-          "loc": 353
-        }
-      }
-    ]
-  },
-  "total_matching": 13,
-  "hidden": {
-    "by_detector": {
-      "orphaned": 3
-    },
-    "total": 3
-  },
-  "noise_budget": 10,
-  "noise_global_budget": 0,
+  "total": 0,
+  "issues": [],
   "narrative": {
     "phase": "stagnation",
     "headline": "All T1 items cleared!",
@@ -180,8 +51,8 @@
         },
         {
           "name": "Code quality",
-          "lenient": 96.7,
-          "strict": 93.2,
+          "lenient": 98.4,
+          "strict": 94.9,
           "gap": 3.5,
           "wontfix_count": 0
         }
@@ -302,24 +173,13 @@
     "actions": [
       {
         "type": "reorganize",
-        "detector": "orphaned",
-        "count": 13,
-        "description": "13 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
-        "command": "desloppify show orphaned --status open",
-        "impact": 0.0,
-        "dimension": "Code quality",
-        "priority": 1,
-        "lane": "restructure"
-      },
-      {
-        "type": "reorganize",
         "detector": "flat_dirs",
         "count": 8,
         "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
         "command": "desloppify show flat_dirs --status open",
         "impact": 0.0,
         "dimension": "Code quality",
-        "priority": 2,
+        "priority": 1,
         "lane": "restructure"
       },
       {
@@ -330,7 +190,7 @@
         "command": "desloppify show single_use --status open",
         "impact": 0.0,
         "dimension": "Code quality",
-        "priority": 3,
+        "priority": 2,
         "lane": "restructure"
       },
       {
@@ -341,7 +201,7 @@
         "command": "desloppify show structural --status open",
         "impact": 0.0,
         "dimension": "File health",
-        "priority": 4,
+        "priority": 3,
         "lane": "refactor"
       },
       {
@@ -352,7 +212,7 @@
         "command": "desloppify show dupes --status open",
         "impact": 0.0,
         "dimension": "Duplication",
-        "priority": 5,
+        "priority": 4,
         "lane": "refactor"
       },
       {
@@ -363,7 +223,7 @@
         "command": "desloppify show test_coverage --status open",
         "impact": 0.0,
         "dimension": "Test health",
-        "priority": 6,
+        "priority": 5,
         "lane": "test_coverage"
       },
       {
@@ -374,14 +234,14 @@
         "command": "desloppify show signature --status open",
         "impact": 0.0,
         "dimension": "Unknown",
-        "priority": 7,
+        "priority": 6,
         "lane": "refactor"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 236,
+        "total_count": 223,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -390,19 +250,18 @@
         "restructure": {
           "actions": [
             1,
-            2,
-            3
+            2
           ],
-          "file_count": 25,
+          "file_count": 12,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         },
         "refactor": {
           "actions": [
+            3,
             4,
-            5,
-            7
+            6
           ],
           "file_count": 88,
           "total_impact": 0.0,
@@ -411,7 +270,7 @@
         },
         "test_coverage": {
           "actions": [
-            6
+            5
           ],
           "file_count": 79,
           "total_impact": 0.0,
@@ -427,7 +286,7 @@
       "move": {
         "available": true,
         "relevant": true,
-        "reason": "13 orphaned files + 4 single-use files + 8 flat directories",
+        "reason": "4 single-use files + 8 flat directories",
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -442,7 +301,7 @@
       }
     },
     "debt": {
-      "overall_gap": 0.6,
+      "overall_gap": 0.7,
       "wontfix_count": 0,
       "worst_dimension": "File health",
       "worst_gap": 7.3,
@@ -450,8 +309,8 @@
     },
     "milestone": "All T1 items cleared!",
     "primary_action": {
-      "command": "desloppify show orphaned --status open",
-      "description": "13 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
+      "command": "desloppify show flat_dirs --status open",
+      "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
     },
     "why_now": "3 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
     "verification_step": {
@@ -499,7 +358,20 @@
       "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart",
       "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart",
       "orphaned::lib/screens/library/library_section_tab_batch_actions.dart",
-      "orphaned::lib/screens/library/library_section_tab_helpers.dart"
+      "orphaned::lib/screens/library/library_section_tab_helpers.dart",
+      "orphaned::lib/screens/library/library_section_tab_album_grid.dart",
+      "orphaned::lib/screens/library/library_section_tab_empty_state.dart",
+      "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart",
+      "orphaned::lib/screens/library/local_album_screen_header.dart",
+      "orphaned::lib/screens/library/local_album_screen_selection.dart",
+      "orphaned::lib/screens/library/local_album_screen_track_list.dart",
+      "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
+      "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart",
+      "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
+      "orphaned::lib/services/library/library_database_queries.dart",
+      "orphaned::lib/utils/lyrics_parser_ttml.dart",
+      "orphaned::lib/widgets/header/album_detail_header_parts.dart",
+      "orphaned::lib/widgets/library/track_metadata_edit_cover.dart"
     ],
     "ignore_metadata": {
       "orphaned::lib/services/playback/music_player_automix.dart": {
@@ -613,6 +485,97 @@
         "fingerprints": [
           "62756acb893aa97e"
         ]
+      },
+      "orphaned::lib/screens/library/library_section_tab_album_grid.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:18+00:00",
+        "fingerprints": [
+          "4753297e39223188"
+        ]
+      },
+      "orphaned::lib/screens/library/library_section_tab_empty_state.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:19+00:00",
+        "fingerprints": [
+          "65ac204dda7cfe6b"
+        ]
+      },
+      "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:19+00:00",
+        "fingerprints": [
+          "561a43cd44cd4e8c"
+        ]
+      },
+      "orphaned::lib/screens/library/local_album_screen_header.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:19+00:00",
+        "fingerprints": [
+          "b9981adfbd55471c"
+        ]
+      },
+      "orphaned::lib/screens/library/local_album_screen_selection.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:20+00:00",
+        "fingerprints": [
+          "ffda743c2a2e9a60"
+        ]
+      },
+      "orphaned::lib/screens/library/local_album_screen_track_list.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:20+00:00",
+        "fingerprints": [
+          "0cccb23fa51a7b89"
+        ]
+      },
+      "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:21+00:00",
+        "fingerprints": [
+          "9900f2ca85f695e6"
+        ]
+      },
+      "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:21+00:00",
+        "fingerprints": [
+          "a2a8d40225134398"
+        ]
+      },
+      "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:22+00:00",
+        "fingerprints": [
+          "10e170b1557a1df7"
+        ]
+      },
+      "orphaned::lib/services/library/library_database_queries.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:22+00:00",
+        "fingerprints": [
+          "bf29570071276f9d"
+        ]
+      },
+      "orphaned::lib/utils/lyrics_parser_ttml.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:31+00:00",
+        "fingerprints": [
+          "e6002cd157309308"
+        ]
+      },
+      "orphaned::lib/widgets/header/album_detail_header_parts.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:31+00:00",
+        "fingerprints": [
+          "acec53d18e9cf1ac"
+        ]
+      },
+      "orphaned::lib/widgets/library/track_metadata_edit_cover.dart": {
+        "note": "Path-independent suppression fingerprints captured by suppress.",
+        "added_at": "2026-10-29T22:07:31+00:00",
+        "fingerprints": [
+          "a23748db765a409d"
+        ]
       }
     },
     "zone_overrides": {
@@ -640,7 +603,7 @@
     "issue_noise_budget": 10,
     "issue_noise_global_budget": 0,
     "execution_log_max_entries": 10000,
-    "needs_rescan": false,
+    "needs_rescan": true,
     "languages": {},
     "commit_tracking_enabled": true,
     "commit_pr": 0,

@@ -3,17 +3,17 @@
   "created": "2026-10-29T06:01:11+00:00",
   "last_scan": "2026-10-29T22:05:45+00:00",
   "scan_count": 10,
-  "overall_score": 77.0,
-  "objective_score": 94.7,
+  "overall_score": 77.1,
+  "objective_score": 94.9,
   "strict_score": 76.0,
-  "verified_strict_score": 94.7,
+  "verified_strict_score": 94.9,
   "stats": {
-    "total": 573,
+    "total": 560,
     "auto_resolved": 250,
     "deferred": 0,
     "false_positive": 0,
     "fixed": 87,
-    "open": 236,
+    "open": 223,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -40,7 +40,7 @@
         "deferred": 0,
         "false_positive": 0,
         "fixed": 9,
-        "open": 232,
+        "open": 219,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -16179,9 +16179,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:19+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_navigation.dart": {
       "id": "orphaned::lib/screens/library/library_section_tab_navigation.dart",
@@ -19223,9 +19223,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:18+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_album_grid.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_empty_state.dart": {
       "id": "orphaned::lib/screens/library/library_section_tab_empty_state.dart",
@@ -19248,9 +19248,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:19+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_empty_state.dart"
     },
     "signature::lib/screens/equalizer_screen.dart::signature_variance::paint": {
       "id": "signature::lib/screens/equalizer_screen.dart::signature_variance::paint",
@@ -19652,9 +19652,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:31+00:00",
+      "suppression_pattern": "orphaned::lib/widgets/library/track_metadata_edit_cover.dart"
     },
     "orphaned::lib/services/library/library_database_queries.dart": {
       "id": "orphaned::lib/services/library/library_database_queries.dart",
@@ -19677,9 +19677,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:22+00:00",
+      "suppression_pattern": "orphaned::lib/services/library/library_database_queries.dart"
     },
     "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart": {
       "id": "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
@@ -19702,9 +19702,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:22+00:00",
+      "suppression_pattern": "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart"
     },
     "orphaned::lib/utils/lyrics_parser_ttml.dart": {
       "id": "orphaned::lib/utils/lyrics_parser_ttml.dart",
@@ -19727,9 +19727,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:31+00:00",
+      "suppression_pattern": "orphaned::lib/utils/lyrics_parser_ttml.dart"
     },
     "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart": {
       "id": "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart",
@@ -19752,9 +19752,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:21+00:00",
+      "suppression_pattern": "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart"
     },
     "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart": {
       "id": "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
@@ -19777,9 +19777,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:21+00:00",
+      "suppression_pattern": "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart"
     },
     "orphaned::lib/screens/library/local_album_screen_header.dart": {
       "id": "orphaned::lib/screens/library/local_album_screen_header.dart",
@@ -19802,9 +19802,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:19+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/local_album_screen_header.dart"
     },
     "orphaned::lib/widgets/header/album_detail_header_parts.dart": {
       "id": "orphaned::lib/widgets/header/album_detail_header_parts.dart",
@@ -19827,9 +19827,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:31+00:00",
+      "suppression_pattern": "orphaned::lib/widgets/header/album_detail_header_parts.dart"
     },
     "orphaned::lib/screens/library/local_album_screen_selection.dart": {
       "id": "orphaned::lib/screens/library/local_album_screen_selection.dart",
@@ -19852,9 +19852,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:20+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/local_album_screen_selection.dart"
     },
     "orphaned::lib/screens/library/local_album_screen_track_list.dart": {
       "id": "orphaned::lib/screens/library/local_album_screen_track_list.dart",
@@ -19877,9 +19877,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:20+00:00",
+      "suppression_pattern": "orphaned::lib/screens/library/local_album_screen_track_list.dart"
     },
     "signature::lib/services/library/library_collections_rows.dart::signature_variance::add": {
       "id": "signature::lib/services/library/library_collections_rows.dart::signature_variance::add",
@@ -35765,18 +35765,18 @@
   },
   "dimension_scores": {
     "Code quality": {
-      "score": 96.7,
-      "strict": 93.2,
-      "verified_strict_score": 96.7,
+      "score": 98.4,
+      "strict": 94.9,
+      "verified_strict_score": 98.4,
       "checks": 533,
-      "failing": 25,
+      "failing": 12,
       "tier": 3,
       "detectors": {
         "orphaned": {
           "potential": 377,
-          "pass_rate": 0.9758620689655172,
-          "failing": 13,
-          "weighted_failures": 9.1
+          "pass_rate": 1.0,
+          "failing": 0,
+          "weighted_failures": 0.0
         },
         "flat_dirs": {
           "potential": 33,
@@ -36416,6 +36416,97 @@
       "command": "suppress",
       "pattern": "orphaned::lib/screens/library/library_section_tab_helpers.dart",
       "attestation": "I have actually verified these are part files of library_section_tab.dart whose symbols are referenced elsewhere, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/library_section_tab_album_grid.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/library_section_tab_empty_state.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/local_album_screen_header.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/local_album_screen_selection.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/screens/library/local_album_screen_track_list.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/services/library/library_database_queries.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries or re-exported by audio_analysis_parsing.dart, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/utils/lyrics_parser_ttml.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/widgets/header/album_detail_header_parts.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/widgets/library/track_metadata_edit_cover.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
       "affected": 1
     }
   ],
