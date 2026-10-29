@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
-import 'package:sistrum/utils/lyrics_timeline.dart';
+import 'package:sistrum/widgets/player/player_lyrics.dart';
 
 void main() {
   test('indexed starts follow the line times', () {

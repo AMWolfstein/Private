@@ -1,29 +1,28 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/navigation/app_screens.dart';
-import 'package:sistrum/navigation/detail_navigation.dart';
-import 'package:sistrum/screens/app_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/track.dart';
+import 'package:sistrum/navigation/app_screens.dart';
+import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/app_screens.dart';
+import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
-import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 
 class _Settings extends SettingsNotifier {

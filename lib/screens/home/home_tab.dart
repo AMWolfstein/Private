@@ -4,29 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/providers/local_home_feed_provider.dart';
+import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
-import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/navigation/shell_navigation.dart';
+import 'package:sistrum/screens/settings/library_settings_page.dart';
+import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/primitives/app_search_field.dart';
-import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
+import 'package:sistrum/utils/release_date_display.dart';
+import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/library_search_results.dart';
-
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/screens/settings/library_settings_page.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/utils/release_date_display.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
-import 'package:sistrum/widgets/status/error_card.dart';
+import 'package:sistrum/widgets/primitives/app_search_field.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
+import 'package:sistrum/widgets/status/error_card.dart';
 
 part 'home_tab_feed.dart';
 part 'home_tab_widgets.dart';
@@ -263,3 +262,43 @@ class _HomeTabState extends ConsumerState<HomeTab>
     );
   }
 }
+
+const localHomeShelfLimit = 12;
+
+/// The feed never hydrates the whole library. Ordering and limits run in SQLite.
+final localHomeTrackLoaderProvider =
+    Provider<Future<LibraryBrowseDbPage> Function()>(
+      (ref) =>
+          () => ref
+              .read(libraryDatabaseProvider)
+              .getBrowseTrackPage(
+                const LibraryBrowseDbQuery(
+                  limit: localHomeShelfLimit,
+                  sortMode: 'latest',
+                  includeSingleTrackAlbums: true,
+                ),
+              ),
+    );
+
+final localHomeTracksProvider = FutureProvider<List<LocalLibraryItem>>((
+  ref,
+) async {
+  ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
+  final page = await ref.watch(localHomeTrackLoaderProvider)();
+  return page.rows
+      .map(LocalLibraryItem.fromEnvelope)
+      .where((item) => item.filePath.trim().isNotEmpty)
+      .toList(growable: false);
+});
+
+LibraryBrowseRequest localHomeBrowseRequest({
+  bool artists = false,
+  String sort = 'latest',
+}) => (
+  artists: artists,
+  artist: null,
+  search: '',
+  sort: sort,
+  limit: localHomeShelfLimit,
+  completeness: null,
+);

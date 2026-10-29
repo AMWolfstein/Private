@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/local_artist_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/library/local_artist_screen.dart';
 import 'package:sistrum/services/library/library_database.dart';
 
 class _Settings extends SettingsNotifier {

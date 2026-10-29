@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/screens/equalizer_screen.dart';
 import 'package:sistrum/widgets/glass/app_glass_thumb.dart';
-import 'package:sistrum/widgets/glass/app_level_slider.dart';
 import 'package:sistrum/widgets/primitives/app_slider.dart';
 
 import 'support/glass_controls.dart';

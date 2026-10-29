@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:path/path.dart' as p;
-import 'package:sistrum/services/apk_downloader.dart';
+import 'package:sistrum/widgets/sheets/update_dialog.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

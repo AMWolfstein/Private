@@ -70,7 +70,7 @@ def subsystem(path):
                 'library_schema.dart', 'backup_service.dart', 'user_profile_store.dart',
                 'listening_statistics.dart', 'library_queue_store.dart'):
             return 'storage'
-        if any(x in name for x in ('metadata', 'cover', 'lyrics')) or name.startswith(('ffmpeg_', 'audio_analysis_', 're_enrich_')) or name == 'replaygain_service.dart':
+        if any(x in name for x in ('metadata', 'cover', 'lyrics')) or name.startswith(('ffmpeg_', 'audio_analysis_', 're_enrich_')):
             return 'metadata'
         if name.startswith('library_') or name in ('deleted_library_files.dart', 'source_deletion_events.dart',
                 'file_access_check.dart', 'local_library_scan_prefs.dart', 'file_access.dart',

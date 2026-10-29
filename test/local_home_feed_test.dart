@@ -7,14 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/local_home_feed_provider.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
-import 'package:sistrum/providers/local_artist_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/theme/app_theme.dart';
 
