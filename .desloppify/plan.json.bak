@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T20:25:19+00:00",
+  "updated": "2026-10-29T20:35:50+00:00",
   "queue_order": [
     "workflow::create-plan",
     "triage::strategize",
@@ -9,8 +9,6 @@
     "triage::enrich",
     "triage::sense-check",
     "triage::commit",
-    "strategy::test-health-decline",
-    "strategy::file-health-and-code-quality-decline",
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
     "subjective::api_surface_coherence",
@@ -29,7 +27,15 @@
     "subjective::naming_quality",
     "subjective::package_organization",
     "subjective::test_strategy",
-    "subjective::type_safety"
+    "subjective::type_safety",
+    "strategy::test-health-decline",
+    "strategy::file-health-and-code-quality-decline",
+    "structural::lib/services/playback/music_player_service.dart",
+    "structural::lib/providers/library_collections_provider.dart",
+    "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+    "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+    "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+    "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
   ],
   "deferred": [],
   "skipped": {},
@@ -224,8 +230,8 @@
     "test_coverage::lib/screens/local_guide_pages.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-29T20:35:50+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
@@ -266,8 +272,8 @@
     "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-29T20:35:50+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
@@ -440,20 +446,20 @@
     "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-29T20:35:50+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-29T20:31:23+00:00"
     },
     "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-29T20:35:50+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
@@ -634,6 +640,18 @@
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
       "updated_at": "2026-10-29T18:55:17+00:00"
+    },
+    "structural::lib/services/playback/music_player_service.dart": {
+      "issue_id": "structural::lib/services/playback/music_player_service.dart",
+      "created_at": "2026-10-29T20:35:47+00:00",
+      "cluster": "playback-service-split",
+      "updated_at": "2026-10-29T20:35:47+00:00"
+    },
+    "structural::lib/providers/library_collections_provider.dart": {
+      "issue_id": "structural::lib/providers/library_collections_provider.dart",
+      "created_at": "2026-10-29T20:35:48+00:00",
+      "cluster": "collections-provider-bundle",
+      "updated_at": "2026-10-29T20:35:48+00:00"
     }
   },
   "clusters": {
@@ -687,7 +705,6 @@
         "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
         "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
         "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
-        "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
         "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
         "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
         "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only",
@@ -737,6 +754,87 @@
       "user_modified": false,
       "action_type": "manual_fix",
       "execution_policy": "planned_only"
+    },
+    "playback-service-split": {
+      "name": "playback-service-split",
+      "description": "Split lib/services/playback/music_player_service.dart (2185 lines, complexity 235) into cohesive library modules that follow the existing music_player_runtime/autoplay/automix import pattern; behaviour unchanged",
+      "issue_ids": [
+        "structural::lib/services/playback/music_player_service.dart"
+      ],
+      "created_at": "2026-10-29T20:35:47+00:00",
+      "updated_at": "2026-10-29T20:35:47+00:00",
+      "auto": false,
+      "cluster_key": "",
+      "action": null,
+      "action_type": "manual_fix",
+      "execution_policy": "planned_only",
+      "execution_status": "active",
+      "user_modified": true,
+      "action_steps": [
+        {
+          "title": "Extract cohesive groups out of music_player_service.dart into explicit library modules",
+          "detail": "No part files for this split. Keep playback-error retry and same-ID duration/artwork update invariants. Then flutter analyze, full flutter test, graphify update.",
+          "effort": "large",
+          "issue_refs": [
+            "structural::lib/services/playback/music_player_service.dart"
+          ]
+        }
+      ]
+    },
+    "collections-provider-bundle": {
+      "name": "collections-provider-bundle",
+      "description": "Bundle the structural refactor of lib/providers/library_collections_provider.dart (924 lines, complexity 82) into one change; persisted collection keys and backup format stay unchanged",
+      "issue_ids": [
+        "structural::lib/providers/library_collections_provider.dart"
+      ],
+      "created_at": "2026-10-29T20:35:48+00:00",
+      "updated_at": "2026-10-29T20:35:49+00:00",
+      "auto": false,
+      "cluster_key": "",
+      "action": null,
+      "action_type": "manual_fix",
+      "execution_policy": "planned_only",
+      "execution_status": "active",
+      "user_modified": true,
+      "action_steps": [
+        {
+          "title": "Apply the single bundled file-size reduction to library_collections_provider.dart",
+          "detail": "Do not touch the five false-positive items (three _mutate dupes, matches and restoreFromBackup signatures). Keep Loved UI-only rename, Wishlist removal and schema v3 behaviour.",
+          "effort": "medium",
+          "issue_refs": [
+            "structural::lib/providers/library_collections_provider.dart"
+          ]
+        }
+      ]
+    },
+    "transitive-behaviour-tests": {
+      "name": "transitive-behaviour-tests",
+      "description": "Add behavioural tests for four transitive-only files with no pending quality item: audio_analysis_parsing, listening_statistics_screen, local_guide_pages and duplicate_review_sheet",
+      "issue_ids": [
+        "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+        "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+        "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+        "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
+      ],
+      "created_at": "2026-10-29T20:35:49+00:00",
+      "updated_at": "2026-10-29T20:35:50+00:00",
+      "auto": false,
+      "cluster_key": "",
+      "action": null,
+      "action_type": "manual_fix",
+      "execution_policy": "planned_only",
+      "execution_status": "active",
+      "user_modified": true,
+      "action_steps": [
+        {
+          "title": "Add behavioural parse-rule tests for audio_analysis_parsing.dart",
+          "detail": "Test the parse rules directly; no stubs.",
+          "effort": "medium",
+          "issue_refs": [
+            "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only"
+          ]
+        }
+      ]
     }
   },
   "superseded": {
@@ -1181,19 +1279,24 @@
       "superseded_at": "2026-10-29T15:54:00+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/status/disc_separator_chip.dart",
+      "original_summary": "No direct tests (27 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-29T20:31:23+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 76.3,
-    "overall": 77.0,
-    "objective": 94.8,
-    "verified": 94.8
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 8,
+    "postflight_scan_completed_at_scan_count": 9,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -4102,6 +4205,147 @@
       "note": null,
       "detail": {
         "attestation": "I have actually read the reflect report's cluster blueprint and checked its file references and skip reasons against the repo; the blueprint names specific clusters, files and reasons, and I am not gaming the score by confirming without reading."
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:31:23+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 1,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:31:23+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T20:31:23+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 9
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:35:47+00:00",
+      "action": "cluster_create",
+      "issue_ids": [],
+      "cluster_name": "playback-service-split",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": "Split lib/services/playback/music_player_service.dart (2185 lines, complexity 235) into cohesive library modules that follow the existing music_player_runtime/autoplay/automix import pattern; behaviour unchanged",
+        "action": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:35:47+00:00",
+      "action": "cluster_add",
+      "issue_ids": [
+        "structural::lib/services/playback/music_player_service.dart"
+      ],
+      "cluster_name": "playback-service-split",
+      "actor": "user",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T20:35:47+00:00",
+      "action": "cluster_update",
+      "issue_ids": [],
+      "cluster_name": "playback-service-split",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:35:48+00:00",
+      "action": "cluster_create",
+      "issue_ids": [],
+      "cluster_name": "collections-provider-bundle",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": "Bundle the structural refactor of lib/providers/library_collections_provider.dart (924 lines, complexity 82) into one change; persisted collection keys and backup format stay unchanged",
+        "action": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:35:48+00:00",
+      "action": "cluster_add",
+      "issue_ids": [
+        "structural::lib/providers/library_collections_provider.dart"
+      ],
+      "cluster_name": "collections-provider-bundle",
+      "actor": "user",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T20:35:49+00:00",
+      "action": "cluster_update",
+      "issue_ids": [],
+      "cluster_name": "collections-provider-bundle",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:35:49+00:00",
+      "action": "cluster_create",
+      "issue_ids": [],
+      "cluster_name": "transitive-behaviour-tests",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": "Add behavioural tests for four transitive-only files with no pending quality item: audio_analysis_parsing, listening_statistics_screen, local_guide_pages and duplicate_review_sheet",
+        "action": null
+      }
+    },
+    {
+      "timestamp": "2026-10-29T20:35:50+00:00",
+      "action": "cluster_add",
+      "issue_ids": [
+        "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+        "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+        "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+        "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
+      ],
+      "cluster_name": "transitive-behaviour-tests",
+      "actor": "user",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-29T20:35:50+00:00",
+      "action": "cluster_update",
+      "issue_ids": [],
+      "cluster_name": "transitive-behaviour-tests",
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "description": null
       }
     }
   ],
