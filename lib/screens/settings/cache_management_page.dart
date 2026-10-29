@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/embedded_cover_resolver.dart';
+import 'package:sistrum/screens/settings/cache_management_models.dart';
+import 'package:sistrum/screens/settings/cache_directory_tools.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/utils/string_utils.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
@@ -25,7 +26,7 @@ class CacheManagementPage extends ConsumerStatefulWidget {
 }
 
 class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
-  _CacheOverview? _overview;
+  CacheOverview? _overview;
   bool _isLoading = true;
   Object? _loadError;
   String? _busyAction;
@@ -66,7 +67,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     }
   }
 
-  Future<_CacheOverview> _buildOverview() async {
+  Future<CacheOverview> _buildOverview() async {
     final appCacheDirFuture = getApplicationCacheDirectory();
     final tempDirFuture = getTemporaryDirectory();
     final appSupportDirFuture = getApplicationSupportDirectory();
@@ -77,16 +78,16 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     final tempPath = p.normalize(tempDir.path);
     final tempIsSameAsAppCache = appCachePath == tempPath;
 
-    final appCacheStatsFuture = _scanDirectory(Directory(appCachePath));
+    final appCacheStatsFuture = scanCacheDirectory(Directory(appCachePath));
     final tempStatsFuture = tempIsSameAsAppCache
-        ? Future<_DirectoryStats?>.value(null)
-        : _scanDirectory(Directory(tempPath));
+        ? Future<DirectoryStats?>.value(null)
+        : scanCacheDirectory(Directory(tempPath));
 
     final appSupportDir = await appSupportDirFuture;
-    final libraryCoverStatsFuture = _scanDirectory(
+    final libraryCoverStatsFuture = scanCacheDirectory(
       Directory('${appSupportDir.path}/library_covers'),
     );
-    final audioAnalysisStatsFuture = _scanDirectory(
+    final audioAnalysisStatsFuture = scanCacheDirectory(
       Directory('${appSupportDir.path}/audio_analysis_cache'),
     );
 
@@ -95,7 +96,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     final libraryCoverStats = await libraryCoverStatsFuture;
     final audioAnalysisStats = await audioAnalysisStatsFuture;
 
-    return _CacheOverview(
+    return CacheOverview(
       appCachePath: appCachePath,
       appCacheStats: appCacheStats,
       tempPath: tempIsSameAsAppCache ? null : tempPath,
@@ -106,79 +107,27 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     );
   }
 
-  Future<_DirectoryStats> _scanDirectory(Directory directory) async {
-    if (!await directory.exists()) {
-      return const _DirectoryStats(fileCount: 0, totalSizeBytes: 0);
-    }
-
-    var fileCount = 0;
-    var totalSize = 0;
-
-    try {
-      await for (final entity in directory.list(
-        recursive: true,
-        followLinks: false,
-      )) {
-        if (entity is File) {
-          fileCount++;
-          totalSize += await entity.length();
-        }
-      }
-    } catch (_) {}
-
-    return _DirectoryStats(fileCount: fileCount, totalSizeBytes: totalSize);
-  }
-
-  Future<void> _clearDirectoryContents(String path) async {
-    final directory = Directory(path);
-    if (!await directory.exists()) return;
-
-    try {
-      final entities = <FileSystemEntity>[];
-      await for (final entity in directory.list(followLinks: false)) {
-        entities.add(entity);
-      }
-
-      const deleteChunkSize = 24;
-      for (var i = 0; i < entities.length; i += deleteChunkSize) {
-        final end = (i + deleteChunkSize < entities.length)
-            ? i + deleteChunkSize
-            : entities.length;
-        final chunk = entities.sublist(i, end);
-        await Future.wait(
-          chunk.map((entity) async {
-            await deleteBestEffort(entity, recursive: true);
-          }),
-        );
-      }
-    } catch (_) {}
-
-    try {
-      await directory.create(recursive: true);
-    } catch (_) {}
-  }
-
   Future<void> _clearAppCache() async {
     await EmbeddedCoverResolver.clearPersistentCache();
     final cacheDir = await getApplicationCacheDirectory();
-    await _clearDirectoryContents(cacheDir.path);
+    await clearCacheDirectoryContents(cacheDir.path);
   }
 
   Future<void> _clearTempCache() async {
     final tempDir = await getTemporaryDirectory();
-    await _clearDirectoryContents(tempDir.path);
+    await clearCacheDirectoryContents(tempDir.path);
   }
 
   Future<void> _clearLibraryCoverCache() async {
     final appSupportDir = await getApplicationSupportDirectory();
     final libraryCoverDir = Directory('${appSupportDir.path}/library_covers');
-    await _clearDirectoryContents(libraryCoverDir.path);
+    await clearCacheDirectoryContents(libraryCoverDir.path);
   }
 
   Future<void> _clearAudioAnalysisCache() async {
     final appSupportDir = await getApplicationSupportDirectory();
     final analysisDir = Directory('${appSupportDir.path}/audio_analysis_cache');
-    await _clearDirectoryContents(analysisDir.path);
+    await clearCacheDirectoryContents(analysisDir.path);
   }
 
   Future<void> _clearAllCaches() async {
@@ -303,7 +252,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
     });
   }
 
-  String _formatDirectorySize(_DirectoryStats stats) {
+  String _formatDirectorySize(DirectoryStats stats) {
     if (stats.fileCount == 0 || stats.totalSizeBytes == 0) {
       return context.l10n.cacheNoData;
     }
@@ -596,42 +545,4 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
       ),
     );
   }
-}
-
-class _CacheOverview {
-  final String appCachePath;
-  final _DirectoryStats appCacheStats;
-  final String? tempPath;
-  final _DirectoryStats? tempStats;
-  final bool tempIsSameAsAppCache;
-  final _DirectoryStats libraryCoverStats;
-  final _DirectoryStats audioAnalysisStats;
-
-  const _CacheOverview({
-    required this.appCachePath,
-    required this.appCacheStats,
-    this.tempPath,
-    this.tempStats,
-    required this.tempIsSameAsAppCache,
-    required this.libraryCoverStats,
-    required this.audioAnalysisStats,
-  });
-
-  int get totalKnownDiskCacheBytes {
-    return appCacheStats.totalSizeBytes +
-        (tempStats?.totalSizeBytes ?? 0) +
-        libraryCoverStats.totalSizeBytes +
-        // The row can be cleared, so its bytes belong in the total too.
-        audioAnalysisStats.totalSizeBytes;
-  }
-}
-
-class _DirectoryStats {
-  final int fileCount;
-  final int totalSizeBytes;
-
-  const _DirectoryStats({
-    required this.fileCount,
-    required this.totalSizeBytes,
-  });
 }

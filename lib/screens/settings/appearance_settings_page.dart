@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/constants/language_choices.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/app_glass.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
-import 'package:sistrum/models/theme_settings.dart';
-import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/custom_font_setting.dart';
-import 'package:sistrum/widgets/primitives/app_slider.dart';
+import 'package:sistrum/screens/settings/appearance_glass_clarity_slider.dart';
+import 'package:sistrum/screens/settings/appearance_settings_selectors.dart';
 
 class AppearanceSettingsPage extends ConsumerWidget {
   const AppearanceSettingsPage({super.key});
@@ -50,23 +44,19 @@ class AppearanceSettingsPage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: SettingsGroup(
                   children: [
-                    _AppAccentPicker(
+                    AppAccentPicker(
                       selected: themeSettings.appAccent,
-                      onChanged: ref
-                          .read(themeProvider.notifier)
-                          .setAppAccent,
+                      onChanged: ref.read(themeProvider.notifier).setAppAccent,
                     ),
-                    _GlassQualitySelector(
-                      current: appGlassQualityFromString(
-                        settings.glassQuality,
-                      ),
+                    GlassQualitySelector(
+                      current: appGlassQualityFromString(settings.glassQuality),
                       onChanged: ref
                           .read(settingsProvider.notifier)
                           .setGlassQuality,
                     ),
                     SettingsSearchTarget(
                       label: context.l10n.appearanceGlassClarity,
-                      child: const _AppGlassClaritySlider(),
+                      child: const AppGlassClaritySlider(),
                     ),
                     SettingsSwitchItem(
                       key: const ValueKey('sistrum-glass-outlines'),
@@ -90,7 +80,7 @@ class AppearanceSettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  _ThemeModeSelector(
+                  ThemeModeSelector(
                     currentMode: themeSettings.themeMode,
                     onChanged: (mode) =>
                         ref.read(themeProvider.notifier).setThemeMode(mode),
@@ -143,7 +133,7 @@ class AppearanceSettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  _LanguageSelector(
+                  LanguageSelector(
                     currentLocale: settings.locale,
                     onChanged: (locale) =>
                         ref.read(settingsProvider.notifier).setLocale(locale),
@@ -160,7 +150,7 @@ class AppearanceSettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  _PlayerViewSelector(
+                  PlayerViewSelector(
                     currentView: themeSettings.playerView,
                     onChanged: ref.read(themeProvider.notifier).setPlayerView,
                   ),
@@ -172,447 +162,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
             const NavBarSliverSpacer(),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _AppGlassClaritySlider extends ConsumerStatefulWidget {
-  const _AppGlassClaritySlider();
-
-  @override
-  ConsumerState<_AppGlassClaritySlider> createState() =>
-      _AppGlassClaritySliderState();
-}
-
-class _AppGlassClaritySliderState
-    extends ConsumerState<_AppGlassClaritySlider> {
-  /// Only the preview follows a drag; the rest of the app updates on release.
-  int? _dragLevel;
-
-  @override
-  Widget build(BuildContext context) {
-    // The saved level; glass may render lower where Auto measured it.
-    final int level =
-        _dragLevel ??
-        ref.watch(settingsProvider.select((s) => s.glassClarityLevel));
-    final notifier = ref.read(settingsProvider.notifier);
-    final theme = Theme.of(context);
-    final l10n = context.l10n;
-    // Match the renderer's policy without changing the stored clarity value.
-    final contrastBlocked = ref.watch(
-      appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
-    );
-    final quality = ref.watch(appGlassQualityProvider);
-    // Auto measured that this device needs Level 1.
-    final autoFrosted =
-        quality == AppGlassQuality.auto &&
-        ref.watch(appGlassClarityLevelProvider) == 1 &&
-        ref.watch(appGlassAutoStepProvider) ==
-            AppGlassAutoStep.liteFrosted;
-    final adjustable =
-        !contrastBlocked &&
-        ref.watch(appBlurEnabledProvider) &&
-        !autoFrosted;
-    final levelNames = [
-      l10n.appearanceGlassLevelFrosted,
-      l10n.appearanceGlassLevelSoft,
-      l10n.appearanceGlassLevelBalanced,
-      l10n.appearanceGlassLevelClear,
-      l10n.appearanceGlassLevelCrystal,
-    ];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.appearanceGlassClarity, style: theme.textTheme.titleMedium),
-          const SizedBox(height: 4),
-          Text(
-            l10n.appearanceGlassClaritySubtitle,
-            style: theme.textTheme.bodySmall,
-          ),
-          if (!adjustable) ...[
-            const SizedBox(height: 8),
-            Text(
-              contrastBlocked
-                  ? l10n.appearanceGlassClarityContrast
-                  : autoFrosted
-                  ? l10n.appearanceGlassClarityAutoFrosted
-                  : quality == AppGlassQuality.off
-                  ? l10n.appearanceGlassClarityOff
-                  : l10n.appearanceGlassClarityDeviceOpaque,
-              key: const ValueKey('sistrum-glass-clarity-unavailable'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-          const SizedBox(height: 16),
-          // Separate layers: the thumb animation must not repaint the glass
-          // preview, and preview blur must not repaint the slider.
-          RepaintBoundary(
-            child: ExcludeSemantics(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        for (final color in [
-                          theme.colorScheme.primary,
-                          const Color(0xff277f94),
-                          const Color(0xffc69756),
-                        ])
-                          // Preview light glass over a light backdrop, as in the
-                          // app. Dense sample colors make white glass look gray.
-                          theme.brightness == Brightness.light
-                              ? Color.lerp(Colors.white, color, 0.4)!
-                              : color,
-                      ],
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: AppGlassPanel(
-                      radius: 22,
-                      clarityLevel: level,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 14,
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.music_note_rounded),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                'Sistrum',
-                                style: theme.textTheme.titleMedium,
-                              ),
-                            ),
-                            const Icon(Icons.play_arrow_rounded),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          RepaintBoundary(
-            child: Semantics(
-              label: l10n.appearanceGlassClarity,
-              child: AppSlider(
-                key: const ValueKey('sistrum-glass-clarity'),
-                value: level.toDouble(),
-                min: 1,
-                max: 5,
-                divisions: 4,
-                label: levelNames[level - 1],
-                semanticFormatterCallback: (value) =>
-                    levelNames[value.round().clamp(1, 5) - 1],
-                onChanged: adjustable
-                    ? (value) => setState(() => _dragLevel = value.round())
-                    : null,
-                onChangeEnd: adjustable
-                    ? (value) {
-                        // Commit, persist and update the app in a single step.
-                        notifier.setGlassClarityLevel(value.round());
-                        setState(() => _dragLevel = null);
-                      }
-                    : null,
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.appearanceGlassTinted,
-                style: theme.textTheme.bodySmall,
-              ),
-              Text(l10n.appearanceGlassClear, style: theme.textTheme.bodySmall),
-            ],
-          ),
-          // Only full Crystal glass costs noticeably more to render.
-          if (adjustable &&
-              level == 5 &&
-              ref.watch(appGlassLevelProvider) ==
-                  AppGlassLevel.liquid) ...[
-            const SizedBox(height: 8),
-            Text(
-              l10n.appearanceGlassClearPerformance,
-              key: const ValueKey('sistrum-glass-clear-performance'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Auto / Lite / Full / Off, in the same control as System / Light / Dark.
-class _GlassQualitySelector extends ConsumerWidget {
-  const _GlassQualitySelector({required this.current, required this.onChanged});
-
-  final AppGlassQuality current;
-  final ValueChanged<AppGlassQuality> onChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final measured =
-        ref.watch(
-          appGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
-        ) ==
-        AppGlassAutoStatus.measured;
-    final measuredQuality = switch (ref.watch(appGlassAutoStepProvider)) {
-      AppGlassAutoStep.full =>
-        ref.watch(appGlassLevelProvider) == AppGlassLevel.liquid
-            ? l10n.appearanceGlassQualityFull
-            : l10n.appearanceGlassQualityLite,
-      AppGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
-      AppGlassAutoStep.liteFrosted =>
-        '${l10n.appearanceGlassQualityLite} · '
-            '${l10n.appearanceGlassLevelFrosted}',
-    };
-    final labels = {
-      AppGlassQuality.auto: l10n.appearanceGlassQualityAuto,
-      AppGlassQuality.lite: l10n.appearanceGlassQualityLite,
-      AppGlassQuality.full: l10n.appearanceGlassQualityFull,
-      AppGlassQuality.off: l10n.appearanceGlassQualityOff,
-    };
-    return SettingsSearchTarget(
-      label: l10n.appearanceGlassQuality,
-      child: Padding(
-        key: const ValueKey('sistrum-glass-quality'),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.appearanceGlassQuality,
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              l10n.appearanceGlassQualitySubtitle,
-              style: theme.textTheme.bodySmall,
-            ),
-            AppSegmentedControl(
-              labels: labels.values.toList(),
-              selectedIndex: labels.keys.toList().indexOf(current),
-              onChanged: (index) => onChanged(labels.keys.elementAt(index)),
-            ),
-            if (measured)
-              Text(
-                l10n.appearanceGlassAutoMeasured(measuredQuality),
-                key: const ValueKey('sistrum-glass-auto-measured'),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AppAccentPicker extends StatelessWidget {
-  const _AppAccentPicker({required this.selected, required this.onChanged});
-
-  final AppAccent selected;
-  final ValueChanged<AppAccent> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final labels = {
-      AppAccent.red: l10n.appearanceAccentRed,
-      AppAccent.orange: l10n.appearanceAccentOrange,
-      AppAccent.green: l10n.appearanceAccentGreen,
-      AppAccent.teal: l10n.appearanceAccentTeal,
-      AppAccent.blue: l10n.appearanceAccentBlue,
-      AppAccent.purple: l10n.appearanceAccentPurple,
-      AppAccent.pink: l10n.appearanceAccentPink,
-    };
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (final accent in AppAccent.values)
-            Builder(
-              builder: (context) {
-                final color = AppTheme.accentColor(
-                  accent,
-                  Theme.of(context).brightness,
-                );
-                final foreground =
-                    ThemeData.estimateBrightnessForColor(color) ==
-                        Brightness.dark
-                    ? Colors.white
-                    : Colors.black;
-                return Semantics(
-                  selected: selected == accent,
-                  child: IconButton(
-                    tooltip: labels[accent],
-                    onPressed: () => onChanged(accent),
-                    style: IconButton.styleFrom(
-                      backgroundColor: color,
-                      foregroundColor: foreground,
-                      minimumSize: const Size.square(48),
-                    ),
-                    icon: selected == accent
-                        ? const Icon(Icons.check)
-                        : const SizedBox.square(dimension: 24),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ThemeModeSelector extends StatelessWidget {
-  final ThemeMode currentMode;
-  final ValueChanged<ThemeMode> onChanged;
-  const _ThemeModeSelector({
-    required this.currentMode,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    {
-      final labels = {
-        ThemeMode.system: context.l10n.appearanceThemeSystem,
-        ThemeMode.light: context.l10n.appearanceThemeLight,
-        ThemeMode.dark: context.l10n.appearanceThemeDark,
-      };
-      return Padding(
-        padding: const EdgeInsets.all(12),
-        child: AppSegmentedControl(
-          labels: labels.values.toList(),
-          selectedIndex: labels.keys.toList().indexOf(currentMode),
-          onChanged: (index) => onChanged(labels.keys.elementAt(index)),
-        ),
-      );
-    }
-  }
-}
-
-class _PlayerViewSelector extends StatelessWidget {
-  final PlayerView currentView;
-  final ValueChanged<PlayerView> onChanged;
-  const _PlayerViewSelector({
-    required this.currentView,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) => SettingsSearchTarget(
-    label: context.l10n.appearancePlayerView,
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          for (final view in PlayerView.values) ...[
-            if (view != PlayerView.normal) const SizedBox(width: 8),
-            SettingsChoiceChip(
-              expand: true,
-              layout: SettingsChipLayout.column,
-              icon: view == PlayerView.normal
-                  ? Icons.crop_square
-                  : Icons.fullscreen,
-              label: view == PlayerView.normal
-                  ? context.l10n.appearancePlayerViewNormal
-                  : context.l10n.appearancePlayerViewImmersive,
-              isSelected: currentView == view,
-              onTap: () => onChanged(view),
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
-}
-
-class _LanguageSelector extends StatelessWidget {
-  final String currentLocale;
-  final ValueChanged<String> onChanged;
-  const _LanguageSelector({
-    required this.currentLocale,
-    required this.onChanged,
-  });
-
-  String _getLanguageName(String code) {
-    for (final lang in appLanguageChoices) {
-      if (lang.$1 == code) return lang.$2;
-    }
-    return code;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final content = ListTile(
-      leading: null,
-      title: Text(context.l10n.appearanceLanguage),
-      subtitle: Text(_getLanguageName(currentLocale)),
-      trailing: Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
-      onTap: () => _showLanguagePicker(context),
-    );
-    return SettingsSearchTarget(
-      label: context.l10n.appearanceLanguage,
-      child: content,
-    );
-  }
-
-  void _showLanguagePicker(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    showAppScrollableBottomSheet<void>(
-      context: context,
-      title: context.l10n.appearanceLanguage,
-      builder: (context, controller) => ListView.builder(
-        controller: controller,
-        shrinkWrap: true,
-        itemCount: supportedLanguageChoices.length,
-        itemBuilder: (context, index) {
-          final lang = supportedLanguageChoices[index];
-          final isSelected = currentLocale == lang.$1;
-          return AppSheetOption.choice(
-            leading: Icon(
-              lang.$3,
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.onSurfaceVariant,
-            ),
-            title: Text(
-              lang.$2,
-              style: TextStyle(
-                color: isSelected ? colorScheme.primary : colorScheme.onSurface,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-            ),
-            selected: isSelected,
-            onTap: () {
-              onChanged(lang.$1);
-              Navigator.pop(context);
-            },
-          );
-        },
       ),
     );
   }

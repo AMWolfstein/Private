@@ -10,7 +10,7 @@ import 'package:sistrum/providers/playback_notification_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/screens/listening_statistics_screen.dart';
-import 'package:sistrum/screens/library/library_section_tab.dart';
+import 'package:sistrum/screens/main_shell_tabs.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
@@ -342,7 +342,7 @@ class _MainShellState extends ConsumerState<MainShell>
     );
 
     final tabs = <Widget>[
-      _TabNavigator(
+      TabNavigator(
         key: const ValueKey('tab-home'),
         navigatorKey: _homeTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
@@ -353,20 +353,20 @@ class _MainShellState extends ConsumerState<MainShell>
           ),
         ),
       ),
-      _TabNavigator(
+      TabNavigator(
         key: const ValueKey('tab-stats'),
         navigatorKey: _statsTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
         child: const ListeningStatisticsScreen(asTab: true),
       ),
-      _TabNavigator(
+      TabNavigator(
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
-        child: const _LibraryTabRoot(),
+        child: const LibraryTabRoot(),
       ),
       ...[],
-      _TabNavigator(
+      TabNavigator(
         key: const ValueKey('tab-search'),
         navigatorKey: _searchTabNavigatorKey,
         heroAnimationsEnabled: heroAnimationsEnabled,
@@ -440,7 +440,9 @@ class _MainShellState extends ConsumerState<MainShell>
       key: _pageViewKey,
       child: LazyTabView(
         index: selectedDestination,
-        preloadKeys: widget.preloadTabs ? {const ValueKey('tab-search')} : const {},
+        preloadKeys: widget.preloadTabs
+            ? {const ValueKey('tab-search')}
+            : const {},
         children: [
           for (var index = 0; index < tabs.length; index++)
             KeyedSubtree(
@@ -571,19 +573,15 @@ class _MainShellState extends ConsumerState<MainShell>
                           ? const MiniPlayer()
                           : ValueListenableBuilder<bool>(
                               valueListenable: _appChrome,
-                              builder: (context, collapsed, _) =>
-                                  AppBottomBar(
-                                    collapsed: canMinimizeChrome && collapsed,
-                                    destinations: destinations,
-                                    selectedIndex: selectedDestination,
-                                    onSelected: _onNavTap,
-                                    onHome: () => _onNavTap(0),
-                                    onSearch:
-                                        ShellNavigationService.requestSearch,
-                                    blurEnabled: ref.watch(
-                                      appBlurEnabledProvider,
-                                    ),
-                                  ),
+                              builder: (context, collapsed, _) => AppBottomBar(
+                                collapsed: canMinimizeChrome && collapsed,
+                                destinations: destinations,
+                                selectedIndex: selectedDestination,
+                                onSelected: _onNavTap,
+                                onHome: () => _onNavTap(0),
+                                onSearch: ShellNavigationService.requestSearch,
+                                blurEnabled: ref.watch(appBlurEnabledProvider),
+                              ),
                             ),
                     ),
                   );
@@ -595,61 +593,5 @@ class _MainShellState extends ConsumerState<MainShell>
       ),
     );
     return shell;
-  }
-}
-
-class _TabNavigator extends StatefulWidget {
-  final GlobalKey<NavigatorState> navigatorKey;
-  final Widget child;
-  final bool heroAnimationsEnabled;
-
-  const _TabNavigator({
-    super.key,
-    required this.navigatorKey,
-    required this.child,
-    required this.heroAnimationsEnabled,
-  });
-
-  @override
-  State<_TabNavigator> createState() => _TabNavigatorState();
-}
-
-class _TabNavigatorState extends State<_TabNavigator> {
-  late final ShellChromeObserver _chromeObserver = ShellChromeObserver(
-    widget.navigatorKey,
-  );
-  // Nested navigators get no HeroController from MaterialApp; without one,
-  // Hero widgets on routes pushed inside a tab never fly.
-  final HeroController _heroController =
-      MaterialApp.createMaterialHeroController();
-
-  @override
-  void dispose() {
-    _chromeObserver.detach();
-    _heroController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: widget.navigatorKey,
-      observers: [
-        _chromeObserver,
-        if (widget.heroAnimationsEnabled) _heroController,
-      ],
-      onGenerateInitialRoutes: (_, _) => [
-        MaterialPageRoute<void>(builder: (_) => widget.child),
-      ],
-    );
-  }
-}
-
-class _LibraryTabRoot extends ConsumerWidget {
-  const _LibraryTabRoot();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return const LibrarySectionTab();
   }
 }

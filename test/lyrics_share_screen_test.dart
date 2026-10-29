@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/screens/lyrics_share_screen.dart';
+import 'package:sistrum/screens/lyrics_share_card.dart';
 import 'package:sistrum/utils/lyrics_parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
