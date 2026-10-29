@@ -1305,150 +1305,180 @@ class MusicPlayerHandler extends PlaybackHandler {
       _pendingRestorePosition ?? startPosition,
       duration: media.duration,
     );
-    _runtime.personalization.begin(_learningTrack(media));
-    mediaItem.add(_toMediaItem(media));
-    _lastBroadcastPosition = Duration.zero;
-    _lastPositionBroadcastAt = null;
-    _broadcastPosition(effectiveStartPosition, force: true);
+    _announceTrack(media, effectiveStartPosition);
     // Claim the playing state up front (while the app is still in the
     // foreground window) so audio_service can start its foreground service
     // before the async source resolve below.
-    _broadcastState(playerState: PlayerState.playing, loading: true);
     await _claimHardwareMediaButtons();
-    if (!_isCurrentPlayRequest(generation, media)) return;
+    bool isCurrent() => _isCurrentPlayRequest(generation, media);
+    if (!isCurrent()) return;
     unawaited(_recoverEmbeddedArtwork(media, generation));
 
     // Android opens SAF files through a short-lived file-descriptor lease.
     // MediaPlayer duplicates that descriptor, so the original can be closed
     // immediately after play() without retaining a full-file cache copy.
-    ContentUriPlaybackLease? playbackLease;
-    if (_dependencies.isAndroid && media.isContentUri) {
-      try {
-        playbackLease = await PlatformBridge.openContentUriPlaybackLease(
-          media.source,
+    var playbackLease = await _openPlaybackLease(media);
+    try {
+      var resolved = playbackLease?.path ?? await _resolveSource(media);
+      var usingLocalSafCopy = media.isContentUri && playbackLease == null;
+      if (!isCurrent()) return;
+      if (resolved == null) {
+        _reportPlaybackError(
+          _player,
+          StateError('Audio file is unavailable'),
+          StackTrace.current,
         );
-      } catch (e) {
-        _log.w('Failed to open direct SAF playback lease: $e');
+        return;
       }
-    }
-    var resolved = playbackLease?.path ?? await _resolveSource(media);
-    var usingLocalSafCopy = media.isContentUri && playbackLease == null;
-    if (!_isCurrentPlayRequest(generation, media)) {
-      if (playbackLease != null) {
-        await PlatformBridge.closeContentUriPlaybackLease(playbackLease.token);
-      }
-      return;
-    }
-    if (resolved == null) {
-      _reportPlaybackError(
-        _player,
-        StateError('Audio file is unavailable'),
-        StackTrace.current,
-      );
-      return;
-    }
 
-    try {
-      await _runtime.exclusiveAudioHook?.call();
-    } catch (_) {}
-    if (!_isCurrentPlayRequest(generation, media)) {
-      if (playbackLease != null) {
-        await PlatformBridge.closeContentUriPlaybackLease(playbackLease.token);
-      }
-      return;
-    }
-
-    _switchingGeneration = generation;
-    try {
-      // Set before play() so the track never starts at the wrong loudness;
-      // always set (1.0 when disabled/untagged) so a previous track's
-      // attenuation can't leak into the next one.
-      var normalizationVolume = await _normalizationVolumeFor(
-        resolved,
-        cacheKey: media.isContentUri ? media.source : null,
-        displayName: playbackLease?.displayName,
-      );
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      await _player.setAudioContext(_musicAudioContext);
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      await _activateAudioSession();
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      await _player.stop();
-      _sourceReady = false;
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      await _player.setVolume(normalizationVolume);
-      _normalizationVolume = normalizationVolume;
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      final startAt = effectiveStartPosition > Duration.zero
-          ? effectiveStartPosition
-          : null;
       try {
-        await _startResolvedSource(resolved, generation, media, startAt);
-        if (playbackLease != null) {
-          await PlatformBridge.closeContentUriPlaybackLease(
-            playbackLease.token,
-          );
+        await _runtime.exclusiveAudioHook?.call();
+      } catch (_) {}
+      if (!isCurrent()) return;
+
+      _switchingGeneration = generation;
+      try {
+        // Set before play() so the track never starts at the wrong loudness;
+        // always set (1.0 when disabled/untagged) so a previous track's
+        // attenuation can't leak into the next one.
+        var normalizationVolume = await _normalizationVolumeFor(
+          resolved,
+          cacheKey: media.isContentUri ? media.source : null,
+          displayName: playbackLease?.displayName,
+        );
+        if (!isCurrent()) return;
+        if (!await _prepareOutput(normalizationVolume, isCurrent)) return;
+
+        final startAt = effectiveStartPosition > Duration.zero
+            ? effectiveStartPosition
+            : null;
+        try {
+          await _startResolvedSource(resolved, generation, media, startAt);
+          await _releaseLease(playbackLease);
           playbackLease = null;
+        } catch (directError) {
+          if (directError is UsbOutputUnavailable ||
+              playbackLease == null ||
+              !isCurrent()) {
+            rethrow;
+          }
+          await _releaseLease(playbackLease);
+          playbackLease = null;
+          _log.w(
+            'Direct SAF playback unavailable; using bounded local fallback: '
+            '$directError',
+          );
+          final fallback = await _resolveSource(media);
+          if (fallback == null || !isCurrent()) rethrow;
+          resolved = fallback;
+          usingLocalSafCopy = true;
+          normalizationVolume = await _normalizationVolumeFor(
+            fallback,
+            cacheKey: media.source,
+          );
+          if (!isCurrent()) return;
+          await _player.setVolume(normalizationVolume);
+          if (!isCurrent()) return;
+          _normalizationVolume = normalizationVolume;
+          await _startResolvedSource(fallback, generation, media, startAt);
         }
-      } catch (directError) {
-        if (directError is UsbOutputUnavailable ||
-            playbackLease == null ||
-            !_isCurrentPlayRequest(generation, media)) {
-          rethrow;
-        }
-        await PlatformBridge.closeContentUriPlaybackLease(playbackLease.token);
+        if (!isCurrent()) return;
+        await _publishLoaded(
+          media,
+          generation,
+          resolved,
+          usingLocalSafCopy,
+          effectiveStartPosition,
+        );
+      } catch (e, stackTrace) {
+        if (!isCurrent()) return;
+        _reportPlaybackError(_player, e, stackTrace);
+      } finally {
+        await _releaseLease(playbackLease);
         playbackLease = null;
-        _log.w(
-          'Direct SAF playback unavailable; using bounded local fallback: '
-          '$directError',
-        );
-        final fallback = await _resolveSource(media);
-        if (fallback == null || !_isCurrentPlayRequest(generation, media)) {
-          rethrow;
+        if (_switchingGeneration == generation) {
+          _switchingGeneration = 0;
         }
-        resolved = fallback;
-        usingLocalSafCopy = true;
-        normalizationVolume = await _normalizationVolumeFor(
-          fallback,
-          cacheKey: media.source,
-        );
-        if (!_isCurrentPlayRequest(generation, media)) return;
-        await _player.setVolume(normalizationVolume);
-        if (!_isCurrentPlayRequest(generation, media)) return;
-        _normalizationVolume = normalizationVolume;
-        await _startResolvedSource(fallback, generation, media, startAt);
       }
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      _sourceReady = true;
-      _pendingRestorePosition = null;
-      _activeResolvedPath = usingLocalSafCopy ? resolved : null;
-      await _cleanupPendingResolvedPaths();
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      // Plain file paths were already published before loading. Re-publishing
-      // them with an identical resolved path made Now Playing clear and probe
-      // the same metadata twice on every Next. SAF needs this second event so
-      // the UI can inspect its temporary local copy.
-      if (usingLocalSafCopy) {
-        mediaItem.add(_toMediaItem(_media[_index], resolvedSource: resolved));
-      }
-      _broadcastPosition(effectiveStartPosition, force: true);
-      _broadcastState();
-      _lastPeriodicPersistAt = DateTime.now();
-      unawaited(_persistSession(position: effectiveStartPosition));
-      // Some files do not emit onDurationChanged reliably (stuck at 0:00);
-      // poll the engine for the real duration as a fallback.
-      unawaited(_ensureDurationKnown(media, generation));
-    } catch (e, stackTrace) {
-      if (!_isCurrentPlayRequest(generation, media)) return;
-      _reportPlaybackError(_player, e, stackTrace);
     } finally {
-      if (playbackLease != null) {
-        await PlatformBridge.closeContentUriPlaybackLease(playbackLease.token);
-      }
-      if (_switchingGeneration == generation) {
-        _switchingGeneration = 0;
-      }
+      // Covers the early returns that happen before the inner try.
+      await _releaseLease(playbackLease);
     }
+  }
+
+  /// Shows the track to listeners before its source resolves.
+  void _announceTrack(PlayableMedia media, Duration effectiveStartPosition) {
+    _runtime.personalization.begin(_learningTrack(media));
+    mediaItem.add(_toMediaItem(media));
+    _lastBroadcastPosition = Duration.zero;
+    _lastPositionBroadcastAt = null;
+    _broadcastPosition(effectiveStartPosition, force: true);
+    _broadcastState(playerState: PlayerState.playing, loading: true);
+  }
+
+  Future<ContentUriPlaybackLease?> _openPlaybackLease(
+    PlayableMedia media,
+  ) async {
+    if (!_dependencies.isAndroid || !media.isContentUri) return null;
+    try {
+      return await PlatformBridge.openContentUriPlaybackLease(media.source);
+    } catch (e) {
+      _log.w('Failed to open direct SAF playback lease: $e');
+      return null;
+    }
+  }
+
+  Future<void> _releaseLease(ContentUriPlaybackLease? lease) async {
+    if (lease != null) {
+      await PlatformBridge.closeContentUriPlaybackLease(lease.token);
+    }
+  }
+
+  /// Applies gain, audio focus and the audio context before the source starts.
+  /// Returns false when a newer request has taken over.
+  Future<bool> _prepareOutput(
+    double normalizationVolume,
+    bool Function() isCurrent,
+  ) async {
+    await _player.setAudioContext(_musicAudioContext);
+    if (!isCurrent()) return false;
+    await _activateAudioSession();
+    if (!isCurrent()) return false;
+    await _player.stop();
+    _sourceReady = false;
+    if (!isCurrent()) return false;
+    await _player.setVolume(normalizationVolume);
+    _normalizationVolume = normalizationVolume;
+    return isCurrent();
+  }
+
+  /// Marks the source ready and publishes what the listeners need after a load.
+  Future<void> _publishLoaded(
+    PlayableMedia media,
+    int generation,
+    String resolved,
+    bool usingLocalSafCopy,
+    Duration effectiveStartPosition,
+  ) async {
+    _sourceReady = true;
+    _pendingRestorePosition = null;
+    _activeResolvedPath = usingLocalSafCopy ? resolved : null;
+    await _cleanupPendingResolvedPaths();
+    if (!_isCurrentPlayRequest(generation, media)) return;
+    // Plain file paths were already published before loading. Re-publishing
+    // them with an identical resolved path made Now Playing clear and probe
+    // the same metadata twice on every Next. SAF needs this second event so
+    // the UI can inspect its temporary local copy.
+    if (usingLocalSafCopy) {
+      mediaItem.add(_toMediaItem(_media[_index], resolvedSource: resolved));
+    }
+    _broadcastPosition(effectiveStartPosition, force: true);
+    _broadcastState();
+    _lastPeriodicPersistAt = DateTime.now();
+    unawaited(_persistSession(position: effectiveStartPosition));
+    // Some files do not emit onDurationChanged reliably (stuck at 0:00);
+    // poll the engine for the real duration as a fallback.
+    unawaited(_ensureDurationKnown(media, generation));
   }
 
   Future<void> _recoverEmbeddedArtwork(

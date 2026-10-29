@@ -1,10 +1,11 @@
-import 'package:sistrum/services/playback/playback_equalizer.dart';
 import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:sistrum/services/playback/playback_equalizer.dart';
+import 'package:sistrum/services/playback/usb_pcm_bridge.dart';
 import 'package:sistrum/utils/logger.dart';
 
 final _log = AppLogger('AudioOutput');
@@ -41,7 +42,7 @@ class UsbVolumeState {
 Future<void> setUsbHardwareVolume(double fraction) async {
   final state = usbHardwareVolume.value;
   if (state == null || !state.available) return;
-  final result = await MusicPlaybackDeck._channel
+  final result = await usbPcmBridge.channel
       .invokeMapMethod<String, dynamic>('volume', {
         'token': state.token,
         'db': state.minDb + fraction.clamp(0, 1) * (state.maxDb - state.minDb),
@@ -76,9 +77,11 @@ class MusicPlaybackDeck {
     required String playerId,
     bool? nativeAvailable,
     bool? equalizerAvailable,
+    UsbPcmBridge? usbPcm,
   }) : _ordinary = AudioPlayer(playerId: playerId),
        _equalizerAvailable = equalizerAvailable ?? Platform.isAndroid,
-       _nativeAvailable = nativeAvailable ?? Platform.isAndroid {
+       _nativeAvailable = nativeAvailable ?? Platform.isAndroid,
+       _usb = usbPcm ?? usbPcmBridge {
     playbackEqualizer.addListener(_equalizerChanged);
     _subscriptions.addAll([
       _ordinary.onPlayerStateChanged.listen((value) {
@@ -105,10 +108,7 @@ class MusicPlaybackDeck {
     ]);
   }
 
-  static const _channel = MethodChannel('com.amwolfstein.sistrum/usb_pcm');
-  static const _events = EventChannel('com.amwolfstein.sistrum/usb_pcm/events');
-  static Stream<dynamic>? _nativeEvents;
-  static int _nextToken = 0;
+  final UsbPcmBridge _usb;
   final AudioPlayer _ordinary;
   final bool _equalizerAvailable;
   bool _equalizerDisposed = false;
@@ -225,24 +225,23 @@ class MusicPlaybackDeck {
     _routeLost = false;
     _nativeStarted = false;
     if (preferBitPerfect && _nativeAvailable) {
-      _token = ++_nextToken;
+      _token = _usb.nextTicket();
       final preparingToken = _token;
       _preparing = true;
-      _nativeSubscription ??=
-          (_nativeEvents ??= _events.receiveBroadcastStream()).listen(
-            _onNativeEvent,
-            onError: (Object error) {
-              if (_direct && !_disposed) {
-                _routeLost = true;
-                unawaited(pause().catchError((Object _) {}));
-                usbAudioStatus.value = const UsbAudioStatus(
-                  reason: 'route_changed',
-                );
-              }
-            },
-          );
+      _nativeSubscription ??= _usb.events.listen(
+        _onNativeEvent,
+        onError: (Object error) {
+          if (_direct && !_disposed) {
+            _routeLost = true;
+            unawaited(pause().catchError((Object _) {}));
+            usbAudioStatus.value = const UsbAudioStatus(
+              reason: 'route_changed',
+            );
+          }
+        },
+      );
       try {
-        final response = await _channel
+        final response = await _usb.channel
             .invokeMapMethod<String, dynamic>('prepare', {
               'path': source.path,
               'token': _token,
@@ -364,7 +363,7 @@ class MusicPlaybackDeck {
     // reconnect through the handler to obtain a fresh lease for the same song.
     try {
       if (_routeLost) throw PlatformException(code: 'route_changed');
-      await _channel.invokeMethod<void>('resume');
+      await _usb.channel.invokeMethod<void>('resume');
     } on PlatformException {
       if (token != _token || !_direct || _disposed) return;
       if (_preparedStatus.driver == 'usb_direct') {
@@ -423,14 +422,14 @@ class MusicPlaybackDeck {
     if (!_direct) return _ordinary.pause();
     final token = _token;
     _timer?.cancel();
-    await _channel.invokeMethod<void>('pause');
+    await _usb.channel.invokeMethod<void>('pause');
     if (token == _token && _direct) _setState(PlayerState.paused);
   }
 
   Future<void> seek(Duration position) async {
     if (!_direct) return _ordinary.seek(position);
     final token = _token;
-    await _channel.invokeMethod<void>('seek', {
+    await _usb.channel.invokeMethod<void>('seek', {
       'position': position.inMilliseconds,
     });
     if (!_disposed && token == _token && _direct) _positions.add(position);
@@ -438,7 +437,7 @@ class MusicPlaybackDeck {
 
   Future<Duration?> getCurrentPosition() async {
     if (!_direct) return _ordinary.getCurrentPosition();
-    final milliseconds = await _channel.invokeMethod<int>('position');
+    final milliseconds = await _usb.channel.invokeMethod<int>('position');
     return milliseconds == null ? null : Duration(milliseconds: milliseconds);
   }
 
@@ -448,9 +447,9 @@ class MusicPlaybackDeck {
   Future<void> stop() async {
     _timer?.cancel();
     if (_direct || _preparing) {
-      _token = ++_nextToken;
+      _token = _usb.nextTicket();
       _preparing = false;
-      await _channel.invokeMethod<void>('stop');
+      await _usb.channel.invokeMethod<void>('stop');
       _setState(PlayerState.stopped);
       _direct = false;
       _volumeBlocked = false;
