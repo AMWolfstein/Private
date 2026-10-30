@@ -33,11 +33,11 @@ dependencies:
   # In-app updates from GitHub releases
   http: ^1.6.0
   url_launcher: ^6.3.3
-  open_filex: ^4.7.0
+  open_filex: ^5.0.0
 
 
   # UI Components
-  liquid_glass_easy: 5.0.0
+  liquid_glass_easy: ^5.1.0
   cupertino_icons: ^2.0.0
   volume_controller: ^3.7.1
 

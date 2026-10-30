@@ -1,10 +1,10 @@
 # Rustix Android compatibility patch
 
-`rustix-1.1.5` is vendored from the pinned crates.io package using `cargo vendor`.
+`rustix-1.1.6` is vendored from the pinned crates.io package using `cargo vendor`.
 Its upstream license files are retained. Cargo's workspace patch applies to both
 direct users and transitive dependencies such as `cap-std`.
 The original package checksum is
-`891efababe418670775f199f0d233d84843c227a0949a883ce15b37c78d6629d`.
+`e5e76742e5294153d4dde1207dbec5bdd81eef6fabdc0d2118babadabfd858aa`.
 
 The sole upstream source change is in `src/backend/libc/fs/syscalls.rs`: Android
 uses `weakcall!` for `statx`, rather than `weak_or_syscall!`. Bionic exports this

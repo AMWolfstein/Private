@@ -23,9 +23,9 @@ url.workspace = true
 chrono.workspace = true
 regex.workspace = true
 zip.workspace = true
-unicode-normalization = "=0.1.22"
-roxmltree = "=0.21.1"
-rusqlite = { version = "=0.40.2", features = ["bundled", "modern_sqlite", "hooks"] }
+unicode-normalization = "=0.1.26"
+roxmltree = "=0.21.2"
+rusqlite = { version = "=0.41.1", features = ["bundled", "modern_sqlite", "hooks"] }
 
 [target.'cfg(target_os = "android")'.dependencies]
 libusb1-sys = { version = "=0.7.0", features = ["vendored"] }
