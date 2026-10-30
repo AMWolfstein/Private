@@ -276,7 +276,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                   seekPreview: _seekPreview,
                   colorScheme: colorScheme,
                   page: _currentPage,
-                  motionArtwork: artwork(),
+                  motionArtwork: AlbumKenBurns(
+                    active: _currentPage == 0,
+                    child: artwork(),
+                  ),
                   insetArtwork: !immersive,
                   artworkAspectRatio: artworkRatio,
                   artworkTopInset: MediaQuery.paddingOf(context).top + 48,
