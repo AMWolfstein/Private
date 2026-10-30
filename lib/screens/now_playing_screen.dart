@@ -440,24 +440,20 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     artworkAspectRatio: artworkRatio,
                     fadeStart: immersive ? .72 : .58,
                     showArtwork: _currentPage == 0,
+                    // The background fades this cover, then drifts it.
                     artwork: immersive
-                        ? AlbumKenBurns(
-                            active: _currentPage == 0,
-                            // The background fades this cover with a mask.
-                            ownLayer: false,
-                            child: PlayerArtworkDragRegion(
-                              child: PlayerTransitionArtwork(
-                                artworkKey: _immersiveArtworkKey,
-                                child: Hero(
-                                  tag: kNowPlayingArtworkHeroTag,
-                                  child: PlayerArtwork(
-                                    artUri: mediaItem.artUri?.toString(),
-                                    colorScheme: colorScheme,
-                                    cacheWidth:
-                                        PlayerArtwork.transitionCacheWidth(
-                                          context,
-                                        ),
-                                  ),
+                        ? PlayerArtworkDragRegion(
+                            child: PlayerTransitionArtwork(
+                              artworkKey: _immersiveArtworkKey,
+                              child: Hero(
+                                tag: kNowPlayingArtworkHeroTag,
+                                child: PlayerArtwork(
+                                  artUri: mediaItem.artUri?.toString(),
+                                  colorScheme: colorScheme,
+                                  cacheWidth:
+                                      PlayerArtwork.transitionCacheWidth(
+                                        context,
+                                      ),
                                 ),
                               ),
                             ),

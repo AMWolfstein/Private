@@ -5,6 +5,7 @@ import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/widgets/header/album_ken_burns.dart';
+import 'package:sistrum/widgets/player/artwork/app_player_background.dart';
 
 class _Settings extends SettingsNotifier {
   _Settings(this.initial);
@@ -78,6 +79,57 @@ void main() {
     }
   });
 
+  test(
+    'the player fade is clear at the box bottom through the whole drift',
+    () {
+      // The background fades the still cover, then the drift moves it. The
+      // cover point that lands on the box's bottom edge must be in the fully
+      // clear part of the fade, or a hard edge shows.
+      const size = Size(400, 700);
+      for (var i = 0; i <= 2000; i++) {
+        final m = kenBurnsMatrix(i / 2000 * 4 * 3.14159265, size);
+        final scale = m.storage[0];
+        final dy = m.storage[13];
+        final centre = size.height / 2;
+        final coverY = centre + (size.height - centre - dy) / scale;
+        expect(coverY / size.height, greaterThanOrEqualTo(kAppPlayerFadeEnd));
+      }
+    },
+  );
+
+  testWidgets('the player fades the still cover inside the drift', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(() => _Settings(const AppSettings())),
+        ],
+        child: const MaterialApp(
+          home: AppPlayerBackground(
+            artUri: null,
+            squareArtwork: false,
+            artworkAspectRatio: 0.9,
+            fadeStart: .72,
+            artwork: ColoredBox(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 2));
+    expect(
+      find.descendant(
+        of: find.byType(AlbumKenBurns),
+        matching: find.byType(ShaderMask),
+      ),
+      findsOneWidget,
+    );
+    expect(_transform(tester), isNotNull);
+  });
+
   testWidgets('drifts while enabled', (tester) async {
     await tester.pumpWidget(_host(settings: const AppSettings()));
     await tester.pump(const Duration(seconds: 2));
@@ -136,36 +188,6 @@ void main() {
     await tester.pumpWidget(host(active: true));
     await tester.pump(const Duration(seconds: 2));
     expect(_transform(tester), isNotNull);
-  });
-
-  testWidgets('drifts without its own layer when asked, under a fade mask', (
-    tester,
-  ) async {
-    Widget host({required bool ownLayer}) => ProviderScope(
-      overrides: [
-        settingsProvider.overrideWith(() => _Settings(const AppSettings())),
-      ],
-      child: MaterialApp(
-        home: Scaffold(
-          body: AlbumKenBurns(
-            ownLayer: ownLayer,
-            child: const ColoredBox(color: Colors.red),
-          ),
-        ),
-      ),
-    );
-    Finder layer() => find.descendant(
-      of: find.byType(AlbumKenBurns),
-      matching: find.byType(RepaintBoundary),
-    );
-    await tester.pumpWidget(host(ownLayer: true));
-    await tester.pump(const Duration(seconds: 2));
-    expect(layer(), findsWidgets);
-
-    await tester.pumpWidget(host(ownLayer: false));
-    await tester.pump(const Duration(seconds: 2));
-    expect(_transform(tester), isNotNull);
-    expect(layer(), findsNothing);
   });
 
   testWidgets('stops once the page is scrolled past the cover', (tester) async {

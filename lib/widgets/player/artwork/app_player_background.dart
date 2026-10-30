@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/header/album_ken_burns.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 
@@ -13,6 +14,11 @@ double appPlayerArtworkHeight(
     : square
     ? screen.width
     : screen.height * 0.66;
+
+/// Where the full-bleed artwork is fully faded out. The Ken Burns drift
+/// zooms to 1.06 and pans up to 80% of the extra cover, moving the bottom
+/// edge at most 5.4% of the height, so 0.94 keeps the box edge clear.
+const kAppPlayerFadeEnd = 0.94;
 
 /// Opaque cover-derived surface, with full-bleed artwork on the player page
 /// and a muted two-tone gradient behind lyrics and the queue.
@@ -95,31 +101,42 @@ class AppPlayerBackground extends StatelessWidget {
                       child: AnimatedOpacity(
                         opacity: showArtwork ? 1 : 0,
                         duration: motion,
-                        child: ShaderMask(
-                          blendMode: BlendMode.dstIn,
-                          shaderCallback: (bounds) => LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [0, fadeStart, 1],
-                            colors: const [
-                              Colors.white,
-                              Colors.white,
-                              Colors.transparent,
-                            ],
-                          ).createShader(bounds),
-                          child: HeroMode(
-                            // The compact header owns the route hero while the
-                            // full cover is fading out behind the lyrics.
-                            enabled: artwork != null && showArtwork,
-                            // Opacity above owns panel fades. Do not retain an
-                            // outgoing globally keyed artwork during rotation
-                            // or rapid Normal/Immersive preference changes.
-                            child: artwork == null
-                                ? const SizedBox.shrink()
-                                : KeyedSubtree(
-                                    key: const ValueKey('full-player-artwork'),
-                                    child: artwork!,
-                                  ),
+                        // The fade is applied to the still cover and the
+                        // drift moves the faded result; a mask over moving
+                        // content left a hard edge at the bottom on device.
+                        child: AlbumKenBurns(
+                          active: showArtwork,
+                          child: ShaderMask(
+                            blendMode: BlendMode.dstIn,
+                            shaderCallback: (bounds) => LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              // Fully clear before the bottom, so the drift's
+                              // zoom and pan never bring a visible edge in.
+                              stops: [0, fadeStart, kAppPlayerFadeEnd, 1],
+                              colors: const [
+                                Colors.white,
+                                Colors.white,
+                                Colors.transparent,
+                                Colors.transparent,
+                              ],
+                            ).createShader(bounds),
+                            child: HeroMode(
+                              // The compact header owns the route hero while the
+                              // full cover is fading out behind the lyrics.
+                              enabled: artwork != null && showArtwork,
+                              // Opacity above owns panel fades. Do not retain an
+                              // outgoing globally keyed artwork during rotation
+                              // or rapid Normal/Immersive preference changes.
+                              child: artwork == null
+                                  ? const SizedBox.shrink()
+                                  : KeyedSubtree(
+                                      key: const ValueKey(
+                                        'full-player-artwork',
+                                      ),
+                                      child: artwork!,
+                                    ),
+                            ),
                           ),
                         ),
                       ),
