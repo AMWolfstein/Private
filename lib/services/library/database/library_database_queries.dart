@@ -147,7 +147,8 @@ extension LibraryDatabaseQueries on LibraryDatabase {
     LibraryBrowseDbQuery request,
   ) async => (await _queueStore(request)).albumPage(request);
 
-  /// Album artists across scanned music, excluding duplicate paths.
+  /// Track artists, or album artists when [LibraryBrowseDbQuery.albumArtistsOnly]
+  /// is set, across scanned music.
   Future<List<Map<String, dynamic>>> getBrowseArtistRows(
     LibraryBrowseDbQuery request,
   ) async => (await _queueStore()).artistPage(request);

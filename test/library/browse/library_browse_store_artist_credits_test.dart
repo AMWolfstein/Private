@@ -122,4 +122,31 @@ void main() {
       expect(keys, containsAll(['a', 'b', 'c', 'd']));
     },
   );
+
+  test(
+    'the Artists list reads track artists and Album Artists reads album artists',
+    () async {
+      await addTrack(
+        'z1',
+        album: 'Album Z',
+        albumArtist: 'Z',
+        artist: 'W',
+        number: 1,
+      );
+      Future<List<Object?>> keysOf({required bool albumArtistsOnly}) async {
+        final page = await store.artistPage(
+          LibraryBrowseDbQuery(limit: 100, albumArtistsOnly: albumArtistsOnly),
+        );
+        return [for (final row in page) row['artist_key']];
+      }
+
+      final artists = await keysOf(albumArtistsOnly: false);
+      final albumArtists = await keysOf(albumArtistsOnly: true);
+      expect(artists, containsAll(['a', 'b', 'c', 'd', 'w']));
+      expect(artists, isNot(contains('z')));
+      expect(albumArtists, containsAll(['a', 'd', 'z']));
+      expect(albumArtists, isNot(contains('w')));
+      expect(albumArtists, isNot(contains('b')));
+    },
+  );
 }

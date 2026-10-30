@@ -40,6 +40,7 @@ void main() {
       for (final scenario in [
         (
           artists: false,
+          albumArtists: false,
           sort: 'a-z',
           search: '',
           artist: null,
@@ -48,6 +49,7 @@ void main() {
         ),
         (
           artists: false,
+          albumArtists: false,
           sort: 'latest',
           search: '',
           artist: null,
@@ -56,6 +58,7 @@ void main() {
         ),
         (
           artists: true,
+          albumArtists: false,
           sort: 'a-z',
           search: '',
           artist: null,
@@ -64,6 +67,7 @@ void main() {
         ),
         (
           artists: false,
+          albumArtists: false,
           sort: 'a-z',
           search: 'Album 00',
           artist: null,
@@ -72,6 +76,7 @@ void main() {
         ),
         (
           artists: false,
+          albumArtists: false,
           sort: 'latest',
           search: '',
           artist: 'Artist 0001',
@@ -80,6 +85,7 @@ void main() {
         ),
         (
           artists: false,
+          albumArtists: false,
           sort: 'a-z',
           search: '',
           artist: null,
@@ -88,6 +94,7 @@ void main() {
         ),
         (
           artists: false,
+          albumArtists: false,
           sort: 'latest',
           search: 'Album',
           artist: null,
@@ -97,6 +104,7 @@ void main() {
       ]) {
         final request = (
           artists: scenario.artists,
+          albumArtists: false,
           sort: scenario.sort,
           search: scenario.search,
           artist: scenario.artist,
@@ -131,6 +139,7 @@ void main() {
           final expected = await readLibraryPagingFixture(store, (
             browse: (
               artists: request.artists,
+              albumArtists: request.albumArtists,
               sort: request.sort,
               search: request.search,
               artist: request.artist,

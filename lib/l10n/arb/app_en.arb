@@ -642,6 +642,10 @@
   "@searchSongs": {
     "description": "Search result category - songs"
   },
+  "searchAlbumArtists": "Album Artists",
+  "@searchAlbumArtists": {
+    "description": "Library list of album artist names, separate from track artists"
+  },
   "searchArtists": "Artists",
   "@searchArtists": {
     "description": "Search result category - artists"

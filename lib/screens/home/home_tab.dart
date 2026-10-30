@@ -296,6 +296,7 @@ LibraryBrowseRequest localHomeBrowseRequest({
   String sort = 'latest',
 }) => (
   artists: artists,
+  albumArtists: false,
   artist: null,
   credit: null,
   search: '',

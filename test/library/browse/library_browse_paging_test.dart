@@ -35,6 +35,7 @@ LibraryBrowseEntry _entry(int index, {String prefix = ''}) =>
 
 const _request = (
   artists: false,
+  albumArtists: false,
   artist: null,
   credit: null,
   search: '',
@@ -241,6 +242,7 @@ void main() {
   test('artists use bounded offsets and new search resets paging', () async {
     const artists = (
       artists: true,
+      albumArtists: false,
       artist: null,
       credit: null,
       search: 'Artist',
@@ -257,6 +259,7 @@ void main() {
     expect(requests.last.browse.search, 'Artist');
     const search = (
       artists: false,
+      albumArtists: false,
       artist: 'Artist 1',
       credit: null,
       search: 'New query',

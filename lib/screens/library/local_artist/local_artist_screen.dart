@@ -47,6 +47,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   Set<String> _queueIdentities = {};
   LibraryBrowseRequest get _albumsRequest => (
     artists: false,
+    albumArtists: false,
     artist: widget.artistName,
     credit: LibraryArtistCredit.albumArtist,
     search: '',
@@ -58,6 +59,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   /// Releases where the artist is only a track artist, shown below Singles.
   LibraryBrowseRequest get _appearsRequest => (
     artists: false,
+    albumArtists: false,
     artist: widget.artistName,
     credit: LibraryArtistCredit.appearsOn,
     search: '',

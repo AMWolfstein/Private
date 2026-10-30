@@ -23,7 +23,7 @@ import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/screens/library/shared/library_browse_artwork.dart';
 
-enum AppLibraryPage { overview, albums, artists }
+enum AppLibraryPage { overview, albums, artists, albumArtists }
 
 class AppLibraryScreen extends ConsumerStatefulWidget {
   const AppLibraryScreen({
@@ -49,9 +49,14 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   bool _loading = true;
 
   bool get _overview => widget.page == AppLibraryPage.overview;
-  bool get _artists => widget.page == AppLibraryPage.artists;
+  /// Both artist lists show one name per row; they differ in the credits read.
+  bool get _artists =>
+      widget.page == AppLibraryPage.artists ||
+      widget.page == AppLibraryPage.albumArtists;
+  bool get _albumArtists => widget.page == AppLibraryPage.albumArtists;
   LibraryBrowseRequest get _request => (
     artists: _artists,
+    albumArtists: _albumArtists,
     artist: widget.artist,
     credit: null,
     search: '',
@@ -251,6 +256,8 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
         widget.artist ??
         (_overview
             ? context.l10n.navLibrary
+            : _albumArtists
+            ? context.l10n.searchAlbumArtists
             : _artists
             ? context.l10n.searchArtists
             : context.l10n.searchAlbums);
@@ -318,6 +325,11 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                         Icons.mic_none,
                         context.l10n.searchArtists,
                         () => _openPage(AppLibraryPage.artists),
+                      ),
+                      (
+                        Icons.people_outline,
+                        context.l10n.searchAlbumArtists,
+                        () => _openPage(AppLibraryPage.albumArtists),
                       ),
                       (
                         Icons.album_outlined,

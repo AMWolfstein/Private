@@ -20,6 +20,7 @@ import 'performance_probe.dart';
 
 const _request = (
   artists: false,
+  albumArtists: false,
   artist: null,
   credit: null,
   search: '',
@@ -50,6 +51,7 @@ class _PrefixBrowse extends LibraryBrowseNotifier {
     final page = await readPage((
       browse: (
         artists: request.artists,
+        albumArtists: request.albumArtists,
         artist: request.artist,
         credit: null,
         search: request.search,
@@ -283,6 +285,7 @@ void main() {
       final expected = await readLibraryPagingFixture(store, (
         browse: (
           artists: false,
+          albumArtists: false,
           artist: null,
           credit: null,
           search: '',

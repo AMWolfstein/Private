@@ -150,7 +150,12 @@ class LibraryBrowseDbQuery {
   /// The credits table to read for artist filters. Null builds a private one.
   final TagCreditScope? credits;
 
+  /// Lists album-artist credits instead of track-artist credits in the artist
+  /// list, so the Artists and Album Artists lists stay separate.
+  final bool albumArtistsOnly;
+
   const LibraryBrowseDbQuery({
+    this.albumArtistsOnly = false,
     this.artistCredit,
     this.credits,
     this.includeSingleTrackAlbums = false,

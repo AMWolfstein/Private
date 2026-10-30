@@ -10,6 +10,7 @@ import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 typedef LibraryBrowseRequest = ({
   bool artists,
+  bool albumArtists,
   String? artist,
   LibraryArtistCredit? credit,
   String search,
@@ -121,6 +122,7 @@ LibraryBrowseDbQuery libraryBrowseQuery(
   cursor: request.cursor,
   includeSingleTrackAlbums: true,
   albumArtist: request.browse.artist,
+  albumArtistsOnly: request.browse.albumArtists,
   artistCredit: request.browse.credit,
   credits: credits,
   searchQuery: request.browse.search,

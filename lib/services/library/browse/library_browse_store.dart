@@ -175,6 +175,9 @@ class LibraryBrowseStore {
     await _ensureCredits(request, always: true);
     final search = sqlite.normalizeSearchText(request.searchQuery);
     const table = LibraryTagCreditsCache.tempTable;
+    final fields = request.albumArtistsOnly
+        ? "'album_artist'"
+        : "'artist'";
     final args = <Object?>[
       if (search.isNotEmpty) '%${escapeLikePattern(search)}%',
       request.limit,
@@ -186,7 +189,7 @@ class LibraryBrowseStore {
           SELECT NULLIF(newest.cover_path, '')
           FROM $table c
           JOIN ${LibrarySchema.visibleView} newest ON newest.id = c.item_id
-          WHERE c.field IN ('album_artist', 'artist')
+          WHERE c.field IN ($fields)
             AND c.name_key = g.artist_key
             AND NULLIF(newest.cover_path, '') IS NOT NULL
           ORDER BY newest.sort_added DESC LIMIT 1
@@ -195,7 +198,7 @@ class LibraryBrowseStore {
           SELECT newest.file_path
           FROM $table c
           JOIN ${LibrarySchema.visibleView} newest ON newest.id = c.item_id
-          WHERE c.field IN ('album_artist', 'artist')
+          WHERE c.field IN ($fields)
             AND c.name_key = g.artist_key
           ORDER BY newest.sort_added DESC LIMIT 1
         ) AS sample_file_path,
@@ -204,7 +207,7 @@ class LibraryBrowseStore {
         SELECT name_key AS artist_key, MIN(name) AS artist_name,
           COUNT(DISTINCT item_id) AS track_count
         FROM $table
-        WHERE field IN ('album_artist', 'artist') AND name_key != ''
+        WHERE field IN ($fields) AND name_key != ''
           ${search.isEmpty ? '' : "AND name_key LIKE ? ESCAPE '\\'"}
         GROUP BY name_key
         ORDER BY name_key
