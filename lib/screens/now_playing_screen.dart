@@ -10,6 +10,7 @@ import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
@@ -220,10 +221,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           ),
           fullBleed: immersive && _currentPage == 0,
           child: Theme(
-            data: AppTheme.fromContext(
-              context,
-              brightness: Brightness.dark,
-            ),
+            data: AppTheme.fromContext(context, brightness: Brightness.dark),
             child: key == _compactArtworkKey || immersive
                 ? PlayerArtwork(
                     artUri: mediaItem.artUri?.toString(),
@@ -766,7 +764,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   }
 
   Future<void> _goToCurrentArtist(MediaItem mediaItem) async {
-    await navigateToArtist(context, artistName: mediaItem.artist ?? '');
+    await navigateToArtistCredits(
+      context,
+      artistNames: mediaItem.artist ?? '',
+      rules: ref.read(tagCreditRulesProvider),
+    );
   }
 
   Future<void> _updatePlayerCollection(

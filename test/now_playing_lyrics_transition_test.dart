@@ -368,9 +368,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: AppTheme.build(
-            sistrum ? Brightness.dark : Brightness.light,
-          ),
+          theme: AppTheme.build(sistrum ? Brightness.dark : Brightness.light),
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
             updatePosition: const Duration(seconds: 30),
@@ -1435,6 +1433,26 @@ void main() {
     },
   );
 
+  testWidgets('Go to Artist offers each artist of a split credit', (
+    tester,
+  ) async {
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      size: const Size(393, 780),
+    );
+    mediaItems.add(item('first').copyWith(artist: 'Tamer، Khaled, Balti'));
+    await settlePlayer(tester);
+    await tester.tap(find.text('First').hitTestable());
+    await settlePlayer(tester);
+    await tester.tap(find.text('Go to Artist'));
+    await settlePlayer(tester);
+    for (final name in ['Tamer', 'Khaled', 'Balti']) {
+      expect(find.widgetWithText(ListTile, name), findsOneWidget);
+    }
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Android Details reads full tags from a restored content URI', (
     tester,
   ) async {
@@ -1634,9 +1652,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: layout == 'material'
-            ? null
-            : AppTheme.build(Brightness.dark),
+        theme: layout == 'material' ? null : AppTheme.build(Brightness.dark),
         size: layout == 'landscape'
             ? const Size(852, 393)
             : const Size(393, 852),
@@ -2059,10 +2075,7 @@ void main() {
     final elapsed = find.byKey(const ValueKey('elapsed:first'));
     final remaining = find.byKey(const ValueKey('remaining:first'));
     void expectTimes(int elapsedSeconds, int remainingSeconds) {
-      expect(
-        tester.widget<AppPlaybackTime>(elapsed).seconds,
-        elapsedSeconds,
-      );
+      expect(tester.widget<AppPlaybackTime>(elapsed).seconds, elapsedSeconds);
       expect(
         tester.widget<AppPlaybackTime>(remaining).seconds,
         remainingSeconds,
@@ -2278,17 +2291,11 @@ void main() {
     );
     tester.view.physicalSize = const Size(852, 393);
     await settlePlayer(tester);
-    expect(
-      tester.element(find.byType(AppPlayerBackground)),
-      same(background),
-    );
+    expect(tester.element(find.byType(AppPlayerBackground)), same(background));
     expect(find.byKey(const ValueKey('full-player-artwork')), findsOneWidget);
     tester.view.physicalSize = const Size(393, 852);
     await settlePlayer(tester);
-    expect(
-      tester.element(find.byType(AppPlayerBackground)),
-      same(background),
-    );
+    expect(tester.element(find.byType(AppPlayerBackground)), same(background));
     expect(
       tester.getRect(find.byKey(const ValueKey('full-player-artwork'))).width,
       393,
