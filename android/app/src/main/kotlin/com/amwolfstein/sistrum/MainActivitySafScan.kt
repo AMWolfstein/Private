@@ -651,6 +651,14 @@ internal fun MainActivity.scanSafTree(
         treeUriStr: String,
         ndjsonOutputPath: String? = null,
         sourceHasRows: Boolean = false,
+    ): Any = synchronized(MainActivity.safScanRunLock) {
+        scanSafTreeOnce(treeUriStr, ndjsonOutputPath, sourceHasRows)
+    }
+
+private fun MainActivity.scanSafTreeOnce(
+        treeUriStr: String,
+        ndjsonOutputPath: String?,
+        sourceHasRows: Boolean,
     ): Any {
         fun cancelledResult(): Any {
             updateSafScanProgress { it.isComplete = true }
@@ -1133,6 +1141,14 @@ internal fun MainActivity.scanSafTreeIncremental(
         treeUriStr: String,
         existingFiles: Map<String, Long>,
         cancelled: () -> Boolean = { false },
+    ): Any = synchronized(MainActivity.safScanRunLock) {
+        scanSafTreeIncrementalOnce(treeUriStr, existingFiles, cancelled)
+    }
+
+private fun MainActivity.scanSafTreeIncrementalOnce(
+        treeUriStr: String,
+        existingFiles: Map<String, Long>,
+        cancelled: () -> Boolean,
     ): Any {
         val (_, root, rootChildren) = resolveReadableSafTreeOrThrow(treeUriStr)
 

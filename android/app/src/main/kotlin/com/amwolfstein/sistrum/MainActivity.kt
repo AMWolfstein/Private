@@ -285,6 +285,9 @@ class MainActivity: FlutterFragmentActivity() {
         // its progress stream must survive with it, or a recreated Activity
         // reports an idle backend while the scan is still running.
         internal val safScanLock = Any()
+        // Held for a whole SAF scan: a cancelled scan can still be appending to
+        // its NDJSON output, and a new scan must wait for it to finish.
+        internal val safScanRunLock = Any()
         internal var safScanProgress = SafScanProgress()
         @Volatile internal var safScanCancel = false
         @Volatile internal var safScanPaused = false
