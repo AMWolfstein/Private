@@ -24,13 +24,12 @@ Future<void> _pumpGuide(
         supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
           builder: (context) => Scaffold(
-            body: Column(
-              children: buildLocalGuidePages(
-                context,
-                firstIndex: firstIndex,
-                currentIndex: currentIndex,
-              ),
-            ),
+            body: buildLocalGuidePages(
+              context,
+              firstIndex: firstIndex,
+              currentIndex: currentIndex,
+            ).single,
+          ),
           ),
         ),
       ),
