@@ -2715,7 +2715,15 @@
   "profilePhotoError": "Choose a valid image smaller than 20 MB.",
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Animated artwork",
-  "motionArtworkSubtitle": "Slowly drift album covers on album pages",
+  "motionArtworkSubtitle": "Slowly drift album covers and the player cover",
+  "lyricsAboveSeekBar": "Lyrics above seek bar",
+  "@lyricsAboveSeekBar": {
+    "description": "Appearance switch that shows the current sung lyric line above the player's seek bar"
+  },
+  "lyricsAboveSeekBarSubtitle": "Show the line being sung above the progress bar in the player",
+  "@lyricsAboveSeekBarSubtitle": {
+    "description": "Subtitle for the lyrics above seek bar switch"
+  },
   "listeningStats": "Insights",
   "listeningStatsDescription": "Stored only on this device, starting now. Records the built-in player only; pauses, buffering and seeking add no listening time. A play counts after 30 seconds.",
   "listeningStatsEmpty": "Play music with the built-in player to start your listening recap. Earlier listening cannot be recovered.",

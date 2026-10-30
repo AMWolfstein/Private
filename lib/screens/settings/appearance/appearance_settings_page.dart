@@ -121,6 +121,15 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         .read(settingsProvider.notifier)
                         .setAnimatedAlbumArtwork(value),
                   ),
+                  SettingsSwitchItem(
+                    icon: Icons.lyrics_outlined,
+                    title: context.l10n.lyricsAboveSeekBar,
+                    subtitle: context.l10n.lyricsAboveSeekBarSubtitle,
+                    value: settings.lyricsAboveSeekBar,
+                    onChanged: (value) => ref
+                        .read(settingsProvider.notifier)
+                        .setLyricsAboveSeekBar(value),
+                  ),
                   SettingsSearchTarget(
                     label: context.l10n.appearanceCustomFont,
                     child: const CustomFontSetting(),

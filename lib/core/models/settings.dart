@@ -80,6 +80,9 @@ class AppSettings {
   /// Slow Ken Burns drift on album cover headers.
   final bool animatedAlbumArtwork;
 
+  /// Show the sung lyric line above the player's seek bar.
+  final bool lyricsAboveSeekBar;
+
   /// Offer new GitHub releases at startup. Versions far behind still prompt.
   final bool checkForUpdates;
 
@@ -149,6 +152,7 @@ class AppSettings {
     this.libraryFilterMode = 'all',
     this.heroAnimationsEnabled = true,
     this.animatedAlbumArtwork = true,
+    this.lyricsAboveSeekBar = false,
     this.checkForUpdates = true,
     this.updateChannel = 'stable',
     this.developerOptionsUnlocked = false,
@@ -196,6 +200,7 @@ class AppSettings {
     String? libraryFilterMode,
     bool? heroAnimationsEnabled,
     bool? animatedAlbumArtwork,
+    bool? lyricsAboveSeekBar,
     bool? checkForUpdates,
     String? updateChannel,
     bool? developerOptionsUnlocked,
@@ -249,6 +254,7 @@ class AppSettings {
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       animatedAlbumArtwork: animatedAlbumArtwork ?? this.animatedAlbumArtwork,
+      lyricsAboveSeekBar: lyricsAboveSeekBar ?? this.lyricsAboveSeekBar,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,
       updateChannel: updateChannel ?? this.updateChannel,
       developerOptionsUnlocked:

@@ -372,6 +372,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
+  void setLyricsAboveSeekBar(bool enabled) {
+    state = state.copyWith(lyricsAboveSeekBar: enabled);
+    _saveSettings();
+  }
+
   void setCheckForUpdates(bool enabled) {
     state = state.copyWith(checkForUpdates: enabled);
     _saveSettings();

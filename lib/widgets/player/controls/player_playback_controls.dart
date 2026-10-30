@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/widgets/player/lyrics/player_lyric_strip.dart';
 import 'package:sistrum/widgets/sheets/audio_info_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
@@ -61,12 +63,20 @@ class PlayerPlaybackControls extends ConsumerWidget {
               builder: (context, ref, quality) {
                 final position = ref.watch(playbackPositionProvider);
                 final elapsedSeconds = (preview ?? position).inSeconds;
+                final showLyrics = ref.watch(
+                  settingsProvider.select((s) => s.lyricsAboveSeekBar),
+                );
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: sistrum ? _appTimelinePadding : 16,
                   ),
                   child: Column(
                     children: [
+                      if (showLyrics)
+                        PlayerLyricStrip(
+                          lyrics: metadata.lyrics,
+                          color: colorScheme.onSurface.withValues(alpha: 0.8),
+                        ),
                       SliderTheme(
                         data: SliderThemeData(
                           trackHeight: 4,
