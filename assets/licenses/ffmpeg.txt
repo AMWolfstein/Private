@@ -1,7 +1,7 @@
 FFmpeg
 Copyright (c) the FFmpeg developers. https://ffmpeg.org/
 
-This app uses FFmpeg through FFmpegKit (ffmpeg_kit_flutter_new_audio,
+This app uses FFmpeg through FFmpegKit (ffmpeg_kit_flutter_new_min,
 https://github.com/arthenica/ffmpeg-kit) for audio analysis, tagging,
 ReplayGain, CUE splitting and artwork handling. The Android libraries are
 built without GPL or nonfree components. FFmpegKit is licensed under the GNU
@@ -21,7 +21,7 @@ more details.
 
 Source code: the complete corresponding source code of FFmpeg is available
 from https://ffmpeg.org/download.html, and the FFmpegKit build sources from
-https://github.com/arthenica/ffmpeg-kit and the ffmpeg_kit_flutter_new_audio
+https://github.com/arthenica/ffmpeg-kit and the ffmpeg_kit_flutter_new_min
 package. You may replace the bundled libraries with your own build of FFmpeg.
 
 -------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_new_min/ffmpeg_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_runner.dart';
