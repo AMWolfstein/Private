@@ -3,43 +3,41 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/utils/logger.dart';
 
+/// Opens the artist named by a credit. A comma, "&" or "feat." splits the
+/// credit into artists (see [TagCreditRules]); one artist opens directly,
+/// several open a picker.
 Future<void> navigateToArtistCredits(
   BuildContext context, {
-  required LibraryDatabase database,
   required String artistNames,
-  String? artistIds,
+  required TagCreditRules rules,
 }) async {
-  final raw = artistNames.trim();
-  if (raw.isEmpty) return;
-  final names = splitArtistNames(raw);
-  if (names.isEmpty) return;
-
-  var name = names.first;
-  if (names.length > 1) {
-    // A comma can belong to the name ("Tyler, The Creator"). Keep the whole
-    // credit when the scanned library knows it as one artist.
-    try {
-      final rows = await database.getBrowseArtistRows(
-        LibraryBrowseDbQuery(searchQuery: raw, limit: 20),
-      );
-      for (final row in rows) {
-        final artist = (row['artist_name'] as String? ?? '').trim();
-        if (artist.toLowerCase() == raw.toLowerCase()) {
-          name = artist;
-          break;
-        }
-      }
-    } catch (error) {
-      AppLogger(
-        'ClickableMetadata',
-      ).w('Artist match lookup failed, using the first credit: $error');
-    }
+  final names = splitTagCredits(artistNames, TagCreditField.artist, rules);
+  if (names.isEmpty || !context.mounted) return;
+  if (names.length == 1) {
+    await navigateToArtist(context, artistName: names.single);
+    return;
   }
-  if (name.isEmpty || !context.mounted) return;
+  final name = await showAppBottomSheet<String>(
+    context: context,
+    title: context.l10n.appGoToArtist,
+    builder: (sheetContext) => Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final name in names)
+          ListTile(
+            title: Text(name),
+            onTap: () => Navigator.pop(sheetContext, name),
+          ),
+      ],
+    ),
+  );
+  if (name == null || !context.mounted) return;
   await navigateToArtist(context, artistName: name);
 }
 
@@ -181,33 +179,4 @@ class ClickableArtistName extends StatelessWidget {
       ),
     );
   }
-}
-
-final RegExp _artistNameSplitPattern = RegExp(
-  r'\s*(?:,|;|&|\bx\b)\s*|\s+\b(?:feat(?:uring|ured|ure)?|ft|with)\.?(?=\s|$)\s*',
-  caseSensitive: false,
-);
-
-List<String> splitArtistNames(String rawArtists, {int? creditedArtistCount}) {
-  final raw = rawArtists.trim();
-  if (raw.isEmpty) return const [];
-
-  final names = raw
-      .split(_artistNameSplitPattern)
-      .map((part) => part.trim())
-      .where((part) => part.isNotEmpty)
-      .toList(growable: false);
-  // "and" can be part of a band's name. Only treat it as a separator when
-  // the provider's separate artist IDs confirm that many credited artists.
-  if (creditedArtistCount != null && creditedArtistCount > names.length) {
-    final expanded = names
-        .expand(
-          (name) => name.split(RegExp(r'\s+and\s+', caseSensitive: false)),
-        )
-        .map((name) => name.trim())
-        .where((name) => name.isNotEmpty)
-        .toList(growable: false);
-    if (expanded.length == creditedArtistCount) return expanded;
-  }
-  return names;
 }

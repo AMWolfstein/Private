@@ -8,7 +8,6 @@ import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/navigation/detail_navigation.dart';
 import 'package:sistrum/utils/audio_format_utils.dart';
 import 'package:sistrum/utils/file_access.dart';
 import 'package:sistrum/widgets/library/local_song_file_actions.dart';
@@ -311,19 +310,6 @@ void main() {
         ThemeSettings.fromJson({'theme_style': 'invalid'}).themeMode,
         ThemeMode.system,
       );
-    });
-  });
-
-  group('artist utils', () {
-    test('splits common artist separators and removes duplicates for tags', () {
-      expect(splitArtistNames(' A, B & C feat. D x E with F '), [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-      ]);
     });
   });
 

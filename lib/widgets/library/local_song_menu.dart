@@ -158,8 +158,8 @@ Future<bool> showLocalSongMenu(
       case 'artist':
         await navigateToArtistCredits(
           context,
-          database: ref.read(libraryDatabaseProvider),
           artistNames: item.artistName,
+          rules: ref.read(tagCreditRulesProvider),
         );
       case 'album':
         await navigateToAlbum(
