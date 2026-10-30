@@ -1,6 +1,7 @@
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
+import 'package:sistrum/widgets/library/playlist_name_dialog.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' show Random;

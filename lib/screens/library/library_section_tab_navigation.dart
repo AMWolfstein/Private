@@ -41,18 +41,16 @@ extension _LibrarySectionTabNavigation on _LibrarySectionTabState {
   void _navigateToLocalAlbum(_GroupedLocalAlbum album) {
     Future<List<LocalLibraryItem>> loadTracks() async {
       var rows = album.albumKey.isNotEmpty
-          ? await ref.read(libraryDatabaseProvider).getBrowseLocalAlbumRowsByKey(
-              album.albumKey,
-            )
-          : await ref.read(libraryDatabaseProvider).getBrowseLocalAlbumRows(
-              album.albumName,
-              album.artistName,
-            );
+          ? await ref
+                .read(libraryDatabaseProvider)
+                .getBrowseLocalAlbumRowsByKey(album.albumKey)
+          : await ref
+                .read(libraryDatabaseProvider)
+                .getBrowseLocalAlbumRows(album.albumName, album.artistName);
       if (rows.isEmpty && album.albumKey.isNotEmpty) {
-        rows = await ref.read(libraryDatabaseProvider).getBrowseLocalAlbumRows(
-          album.albumName,
-          album.artistName,
-        );
+        rows = await ref
+            .read(libraryDatabaseProvider)
+            .getBrowseLocalAlbumRows(album.albumName, album.artistName);
       }
       return rows.map(LocalLibraryItem.fromJson).toList(growable: false);
     }
@@ -84,58 +82,7 @@ extension _LibrarySectionTabNavigation on _LibrarySectionTabState {
   }
 
   Future<void> _showCreatePlaylistDialog(BuildContext context) async {
-    final controller = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    final String? playlistName;
-    try {
-      playlistName = await showAppDialog<String>(
-        context: context,
-        builder: (dialogContext) {
-          return AppAlertDialog(
-            title: Text(dialogContext.l10n.collectionCreatePlaylist),
-            content: Form(
-              key: formKey,
-              child: TextFormField(
-                controller: controller,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: dialogContext.l10n.collectionPlaylistNameHint,
-                ),
-                validator: (value) {
-                  final trimmed = value?.trim() ?? '';
-                  if (trimmed.isEmpty) {
-                    return dialogContext.l10n.collectionPlaylistNameRequired;
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) {
-                  if (formKey.currentState?.validate() != true) return;
-                  Navigator.of(dialogContext).pop(controller.text.trim());
-                },
-              ),
-            ),
-            actions: [
-              AppDialogAction(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text(dialogContext.l10n.dialogCancel),
-              ),
-              AppDialogAction(
-                filled: true,
-                isDefault: true,
-                onPressed: () {
-                  if (formKey.currentState?.validate() != true) return;
-                  Navigator.of(dialogContext).pop(controller.text.trim());
-                },
-                child: Text(dialogContext.l10n.actionCreate),
-              ),
-            ],
-          );
-        },
-      );
-    } finally {
-      controller.dispose();
-    }
+    final playlistName = await showPlaylistNameDialog(context);
 
     if (playlistName == null || playlistName.isEmpty || !context.mounted) {
       return;
