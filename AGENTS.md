@@ -91,9 +91,11 @@ Artwork probing and FFmpeg processing for those retained features remain support
 Tag separators live under Local Library settings as a list of rows: Artists (artist,
 album artist, composer), Genre and Keep together, each of the first two opening a sheet with
 its chips and Keep together opening a sheet of names that are never split. Each row opens a sheet with a grid of separator chips (four
-per row) with defaults, All (selects every chip; when all are selected it resets to the
-defaults), and an Add separator field that Save adds; a section is never empty. A Save with
-group (Artists, Genre) picks the separator that joins names when Edit Metadata saves tags. Keep together lists names that are never split.
+per row) with defaults (Artists: every chip, so All is on by default), All (selects every chip;
+when all are selected it resets to the defaults), and an Add separator field that Save adds; a
+section is never empty. There is no Save with group or save-time join: Edit Metadata saves
+names as typed. Keep together lists names that are never split; it is the fix for a name a
+default chip splits wrongly (for example AC/DC or Malcolm X).
 The library reads credits through a derived TEMP table `library_tag_credits` (item_id, field,
 name, name_key, position, built by `LibraryTagCreditsCache` from the visible view with the
 same rules), so artist and genre pages, search, and the discography shelves agree with the
