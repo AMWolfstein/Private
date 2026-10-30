@@ -58,11 +58,17 @@ LibraryCollectionsState playlistsNamed(List<String> names) =>
       ],
     );
 
+/// An album row served to the Albums section.
+typedef LibraryTestAlbum = ({String name, String artist, int tracks});
+
 /// Installs an sqflite mock that serves [songs] as the visible local library.
 ///
 /// Call from `setUp` in a test file. The mock answers the browse count and
 /// queue queries the Songs tab issues; every other query returns no rows.
-void installLibrarySongsDatabase({required List<String> songs}) {
+void installLibrarySongsDatabase({
+  required List<String> songs,
+  List<LibraryTestAlbum> albums = const [],
+}) {
   SharedPreferences.setMockInitialValues({});
   final previousFactory = databaseFactoryOrNull;
   databaseFactory = databaseFactorySqflitePlugin;
@@ -101,6 +107,40 @@ void installLibrarySongsDatabase({required List<String> songs}) {
         'columns': ['all_count', 'single_count', 'album_count'],
         'rows': [
           [songs.length, songs.length, 0],
+        ],
+      };
+    }
+    if (albums.isNotEmpty &&
+        sql.contains('album_key') &&
+        sql.contains('LIMIT ?') &&
+        !sql.contains('track_name')) {
+      return {
+        'columns': [
+          'queue_source',
+          'album_key',
+          'album_name',
+          'artist_name',
+          'cover_path',
+          'sample_file_path',
+          'track_count',
+          'album_completeness',
+          'album_present_tracks',
+          'album_expected_tracks',
+        ],
+        'rows': [
+          for (final album in albums)
+            [
+              'local',
+              album.name.toLowerCase(),
+              album.name,
+              album.artist,
+              null,
+              '',
+              album.tracks,
+              null,
+              null,
+              null,
+            ],
         ],
       };
     }
