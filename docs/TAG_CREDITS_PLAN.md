@@ -2,7 +2,8 @@
 
 Goal: a tag such as `artist1, artist2` shows up in the library as two artists, each
 with its own page and songs. The same applies to album artist, composer and genre.
-Files are never rewritten by this feature; splitting happens when the library is read.
+The library splits names when it reads them; files change only when the user saves
+tags from Edit Metadata.
 
 Executor: follow the phases in order, one code commit per phase. Do not start a
 phase until the previous one passes its checks.
@@ -13,109 +14,157 @@ phase until the previous one passes its checks.
    (featured artists too). On an artist page, releases where the artist only
    appears as a track artist go in a third shelf, **Appears On**, directly below
    Singles.
-2. Settings get a **Keep together** list now. Any name the user adds there is never
-   split (`Tyler, The Creator`, `Earth, Wind & Fire`).
-3. Genres do not split on `,`.
+2. Settings get a **Keep together** list. Any name the user adds is never split
+   (`Tyler, The Creator`, `Earth, Wind & Fire`).
+3. Genres do not split on `,` by default.
 4. The song menu gets **Go to composer**.
-5. The Tag separators page has two rows instead of four: **Artists** (one value
-   shared by artist, album artist and composer) and **Genre**.
+5. The Tag separators page has two sections: **Artists** (shared by artist, album
+   artist and composer) and **Genre**.
+6. Each section shows its separators as chips only, in the Library Filters sheet
+   style, four per row in equal cells: **All** first, then the separators, then
+   **Add separator**. Selected chips are the separators the library splits on.
+   Defaults are selected from the start, tinted with the Appearance accent.
+7. Under each grid a **Save with** row picks the single separator used to join
+   names when tags are saved from Edit Metadata.
+8. Tapping **All** when every chip is already selected returns the section to its
+   defaults. A section can never have no separator selected.
 
 ## Ground rules
 
-- Do not touch the Rust scanner (`rust_backend/`) or the `library` table schema
-  (`LibrarySchema.version` stays 20). Split names live in a derived TEMP table
-  that Dart rebuilds; a rescan is never needed when the rules change.
-- One splitter for every caller. Delete the ad-hoc splitters it replaces
-  (`libraryGenreTagsSql`, `_artistNameSplitPattern`/`splitArtistNames`).
+- Do not touch the Rust scanner or the `library` table schema
+  (`LibrarySchema.version` stays 20). Split names live in a derived TEMP table that
+  Dart rebuilds; a rescan is never needed when the settings change.
+- One splitter for every caller, including the save path. Delete the ad-hoc
+  splitters it replaces (`libraryGenreTagsSql`, `_artistNameSplitPattern` /
+  `splitArtistNames`, the `,`/`;` split in `formatMetadataTagValue`).
 - Keys use `sqlite.normalizeLookupText` (the same normalisation as the current
   `album_artist_norm` lookups), so `Amr Diab` and `amr diab` are one artist.
 - Persisted keys stay compatible: `metadataSeparators` keeps its four JSON fields
-  (`artist`, `album_artist`, `composer`, `genre`) so old backups and the Rust
-  writer keep working. Only the UI and the model's setters merge them.
+  (`artist`, `album_artist`, `composer`, `genre`); old backups still load.
 - Follow AGENTS.md: `flutter analyze` prints `No issues found!`, explicit
   `git add <paths>`, commit order code -> graphify -> docs. `graphify` may be
   missing in the container; if so, say so in the report and skip that commit.
 - Run only the tests named in each phase. Do not run the full `flutter test`
   unless the owner asks for it.
 
-## Splitting rules
+## Separators and rules
 
-`List<String> splitTagCredits(String? raw, TagCreditField field, {String userSeparator = '', List<String> keepTogether = const []})`
+Two delimiter lists live in settings, one per section.
 
-| Field | Splits on | Never splits on |
+| Section | Chips offered (in this order) | Selected by default |
 |---|---|---|
-| artist | `;` `,` `،` newline, word-delimited `feat.` `ft.` `featuring`, the Artists separator | `&` `/` `x` `and` `with` |
-| albumArtist | `;` `,` `،` newline, the Artists separator | same as artist, and no `feat.` |
-| composer | `;` `,` `،` newline, the Artists separator | `&` `/` `and` |
-| genre | `;` `،` newline, the Genre separator | `,` `/` `&` (R&B/Soul, Hip-Hop/Rap stay whole) |
+| Artists | `;` `,` `،` `feat.` `ft.` `featuring` `/` `&` `x` `with` | `;` `,` `،` `feat.` `ft.` `featuring` |
+| Genre | `;` `،` `,` `/` `&` | `;` `،` |
 
-- Keep together first: every Keep-together name found in `raw` (case-insensitive,
-  whole name: not preceded or followed by a letter or digit) is swapped for a
-  placeholder before splitting and restored afterwards, using the user's spelling
-  from the tag. It applies to artist, album artist and composer, not genre.
-- `userSeparator` comes from settings (Phase 1): the Artists value for the three
-  name fields, the Genre value for genre. Empty means no extra delimiter. Match it
-  literally (escape it for RegExp) and trim spaces around it.
-- `feat.` family: case-insensitive, matched only as a whole word with whitespace
-  before it (`Daft Punk feat. Pharrell` splits, `Featurette` does not). Strip
-  wrapping brackets left behind: `A (feat. B)` -> `A`, `B`.
-- Trim each part, drop empty parts, de-duplicate by key, keep first-seen order
+- A newline always separates, whether or not it is selected (it has no chip).
+- Word delimiters (`feat.`, `ft.`, `featuring`, `x`, `with`, and any added
+  separator made of letters) match case-insensitively and only as whole words: no
+  letter or digit directly before or after (`Daft Punk feat. Pharrell` splits;
+  `Featurette`, `Xavier` and `Lift Up` do not). Symbol delimiters match anywhere.
+  For the feat. family, strip wrapping brackets left behind:
+  `A (feat. B)` -> `A`, `B`.
+- Keep together runs first: every Keep-together name found in the value
+  (case-insensitive, whole name) is swapped for a placeholder before splitting
+  and restored afterwards with the spelling from the tag. Applies to the Artists
+  section only, not genre.
+- Trim each part, drop empty parts, de-duplicate by key, and keep first-seen order
   (position 0 is the main credit).
-- Album artist: when the tag is empty, use the track artist (matches what the
-  scanner stores in `album_artist_norm`).
+- Album artist: when the tag is empty, use the track artist (as the scanner does
+  for `album_artist_norm`).
 
-## Phase 1 - settings: two separators and Keep together
+`List<String> splitTagCredits(String? raw, TagCreditField field, TagCreditRules rules)`
 
-Model, `lib/models/metadata_separators.dart`:
-- Add `String get names` (the shared Artists value) and
-  `MetadataSeparators withNames(String separator)` that writes the same value to
-  `artist`, `albumArtist` and `composer`. Keep `genre` and `withField` for genre.
+## Phase 1 - settings model and page
+
+Model, new `lib/models/tag_credit_settings.dart`:
+- `class TagCreditSettings` with `List<String> artistDelimiters`,
+  `List<String> genreDelimiters`, `List<String> keepTogether`; `toJson`/`fromJson`,
+  `copyWith`, `==`/`hashCode`.
+- Constants `kArtistDelimiterChoices`, `kArtistDelimiterDefaults`,
+  `kGenreDelimiterChoices`, `kGenreDelimiterDefaults` from the table above.
+- `fromJson`: an empty or missing list falls back to the defaults; trim and
+  de-duplicate entries; a delimiter is 1-16 characters with no control
+  characters; Keep together entries are trimmed, de-duplicated case-insensitively,
+  at most 100 characters each and 200 in total.
+- `AppSettings` (`lib/models/settings.dart`) gets
+  `final TagCreditSettings tagCredits` (JSON key `tagCredits`, default
+  `const TagCreditSettings()`). Regenerate `settings.g.dart` with
+  `dart run build_runner build --delete-conflicting-outputs`.
+
+Save separator, `lib/models/metadata_separators.dart`:
+- Add `String get names` and `MetadataSeparators withNames(String separator)` that
+  writes one value to `artist`, `albumArtist` and `composer`; `genre` stays its own.
 - `fromJson`: when the three name fields differ (settings saved before this
   change), use the first non-empty of artist, album artist, composer for all three.
-- `writerFields` and the Rust writer are unchanged.
 
-Keep together, `lib/models/settings.dart`:
-- New field `final List<String> tagKeepTogether` (JSON key `tagKeepTogether`,
-  default empty). Regenerate `settings.g.dart` with
-  `dart run build_runner build --delete-conflicting-outputs`.
-- `fromJson` drops blank entries, trims, de-duplicates case-insensitively, and
-  caps each entry at 100 characters and the list at 200 entries.
-- `settings_provider.dart`: `setMetadataNamesSeparator(String)`,
-  `addTagKeepTogether(String)`, `removeTagKeepTogether(String)`.
+Provider, `lib/providers/settings_provider.dart`:
+- `toggleArtistDelimiter(String)`, `toggleGenreDelimiter(String)`,
+  `selectAllArtistDelimiters()`, `selectAllGenreDelimiters()` (when everything is
+  already selected, reset that section to its defaults),
+  `addArtistDelimiter(String)`, `addGenreDelimiter(String)` (adds and selects),
+  `removeCustomDelimiter(...)` for user-added ones, `addKeepTogether(String)`,
+  `removeKeepTogether(String)`, `setMetadataNamesSeparator(String)`. Toggling off
+  the last selected chip does nothing (a section never ends up empty).
+- Custom delimiters are stored in the same list as the selected ones plus a
+  separate `customArtistDelimiters` / `customGenreDelimiters` list in
+  `TagCreditSettings`, so an added chip stays visible when it is deselected.
 
-UI, `lib/screens/settings/metadata_separator_settings_page.dart`:
-- Two rows: **Artists** (subtitle: "Artist, Album Artist, Composer" plus the
-  preview of the current choice) and **Genre**. Both open the existing
-  `_SeparatorPicker`; Artists saves through `setMetadataNamesSeparator`.
-- Below them a **Keep together** section: a short explanation, one row per name
-  with a delete button, and a text field with an Add button. Reuse
-  `SettingsSectionHeader`, `SettingsGroup` and the existing row widgets; match the
-  page's current look.
-- l10n keys in `lib/l10n/arb/app_en.arb` only (`tagSeparatorsArtists`,
-  `tagSeparatorsArtistsFields`, `tagKeepTogether`, `tagKeepTogetherDescription`,
-  `tagKeepTogetherHint`, `tagKeepTogetherAdd`, `tagKeepTogetherRemove`).
-- Settings search (`settings_search_catalog.dart`): one entry for Keep together.
+Page, rewrite `lib/screens/settings/metadata_separator_settings_page.dart` (keep the
+`AppSliverHeader.page` header, description text, `NavBarSliverSpacer` and the
+current spacing):
+- Section **Artists**: `SettingsSectionHeader`, a one-line caption
+  "Artist, Album Artist, Composer", then the chip grid, then a `SettingsGroup`
+  with one **Save with** row (subtitle = current choice or "Keep source
+  formatting") that opens the existing `_SeparatorPicker` sheet and saves through
+  `setMetadataNamesSeparator`.
+- Section **Genre**: same layout; its Save with row uses
+  `setMetadataSeparator('genre', ...)`.
+- Section **Keep together**: a short description, one row per name with a delete
+  button, and a text field with an Add button.
+- Chip grid widget (private to the page): a `LayoutBuilder` that gives every cell
+  the same width, `(maxWidth - 3 * 8) / 4`, laid out with `Wrap(spacing: 8,
+  runSpacing: 8)` inside 16 px side padding (the `SettingsGroup` inset). Each cell
+  is an `AppChoiceChip` (`lib/widgets/primitives/app_choice_chip.dart`, the
+  Filters sheet chip) stretched to the cell, label centred and ellipsised.
+  Order: **All**, then the section's choices, then its custom delimiters, then
+  **Add separator**. All is selected when every chip is selected. Custom chips are
+  removed with a long press (confirm with the existing `AppAlertDialog`).
+  **Add separator** opens a small `showAppBottomSheet` with one field
+  (1-16 characters, same validation as `MetadataSeparators.validSeparator`) and a
+  Save button, in the `_SeparatorPicker` layout.
+- Show symbols readably on chips: `,` `;` `/` `&` `،` as is; the word delimiters
+  as words.
+- l10n keys in `lib/l10n/arb/app_en.arb` only: `tagSeparatorsArtists`,
+  `tagSeparatorsArtistsFields`, `tagSeparatorsGenre`, `tagSeparatorsAll`,
+  `tagSeparatorsAdd`, `tagSeparatorsAddHint`, `tagSeparatorsRemoveTitle`,
+  `tagSeparatorsSaveWith`, `tagKeepTogether`, `tagKeepTogetherDescription`,
+  `tagKeepTogetherHint`, `tagKeepTogetherAdd`.
+- Settings search (`settings_search_catalog.dart`): entries for Tag separators and
+  Keep together.
 
 Tests:
-- `test/metadata_separator_settings_test.dart`: rewrite for two rows. Saving
-  Artists sets all three fields; Genre stays independent; dismissing the sheet
-  keeps the saved value; adding and removing a Keep-together name.
-- `test/models_and_utils_test.dart` (or a new model test): old JSON with three
-  different name separators loads as one value; `tagKeepTogether` round-trips and
-  is cleaned.
+- Rewrite `test/metadata_separator_settings_test.dart`: defaults are selected; a
+  chip toggles; the last selected chip cannot be turned off; All selects every
+  chip and a second tap restores the defaults; Add separator adds a selected chip
+  that a long press removes; Save with on Artists sets all three name fields and
+  Genre stays independent; Keep together add and remove; four equal cells per row
+  at 390 px and 844 px wide.
+- Model test (`test/models_and_utils_test.dart` or new): round trip, empty lists
+  fall back to defaults, old JSON with three different name separators loads as
+  one value.
 - `test/settings_bottom_inset_test.dart` if it targets this page.
 
-Commit: `feat(settings): merge name tag separators and add Keep together`.
+Commit: `feat(settings): tag separator chips with Save with and Keep together`.
 
-## Phase 2 - splitter and credits table
+## Phase 2 - splitter, save path and credits table
 
 New file `lib/services/library/library_tag_credits.dart`:
-
 - `enum TagCreditField { artist, albumArtist, composer, genre }` with a stable
   `dbName` (`artist`, `album_artist`, `composer`, `genre`).
+- `class TagCreditRules` (artist delimiters, genre delimiters, keep together;
+  `==`/`hashCode`), built from `AppSettings.tagCredits`; a
+  `tagCreditRulesProvider` selects it from `settingsProvider`.
 - `splitTagCredits(...)` as described above, pure Dart, no Flutter imports.
-- `class TagCreditRules` holding `namesSeparator`, `genreSeparator` and
-  `keepTogether`, with `==`/`hashCode`, built from `AppSettings`.
 - `class LibraryTagCreditsCache`, modelled on `LibraryGenreTagCache` in
   `library_genres.dart` (serialised `ensure`, one transaction, rebuild only when
   the signature changes):
@@ -123,25 +172,39 @@ New file `lib/services/library/library_tag_credits.dart`:
     name TEXT NOT NULL, name_key TEXT NOT NULL, position INTEGER NOT NULL)`,
     indexes on `(field, name_key)` and `(item_id)`.
   - `Future<void> ensure(Database db, {required int libraryVersion,
-    required TagCreditRules rules})`. Signature = `libraryVersion` + `rules`.
-    Rebuild by reading `id, artist_name, album_artist, composer, genre` from
-    `LibrarySchema.visibleView` in pages of 2000 rows, inserting with a batch.
-  - `void invalidate()` for callers that change rows without a scan (metadata
-    edits).
-- One shared instance via a Riverpod provider next to `libraryDatabaseProvider`,
-  plus `tagCreditRulesProvider` that selects the rules from `settingsProvider`.
+    required TagCreditRules rules})`; signature = version + rules. Rebuild by
+    reading `id, artist_name, album_artist, composer, genre` from
+    `LibrarySchema.visibleView` in pages of 2000 rows and inserting with a batch.
+  - `void invalidate()` for metadata edits.
+- One shared instance via a Riverpod provider next to `libraryDatabaseProvider`.
+
+Save path (Edit Metadata):
+- `formatMetadataTagValue(value, separator)` becomes
+  `formatTagCreditsForSave(value, field, rules, separator)`: split with
+  `splitTagCredits`, join with the Save with separator; an empty separator keeps
+  the value unchanged.
+- `lib/widgets/library/track_metadata_persistence.dart` and
+  `lib/providers/metadata_editor_controller.dart`: format the four fields in Dart
+  with the function above and stop adding `MetadataSeparators.writerFields` to the
+  writer map, so the Rust writer stores the Dart result as is (otherwise it splits
+  again on `,`/`;` and breaks Keep-together names). Leave the Rust code unchanged.
+- After a successful save, call `LibraryTagCreditsCache.invalidate()`.
 
 Tests, new `test/library_tag_credits_test.dart`:
-- every row of the rules table: `AC/DC`, `R&B/Soul`, Arabic comma, newline,
-  `A (feat. B)`, separator ` | `, duplicates, empty and null input;
-- Keep together: `Tyler, The Creator, Kali Uchis` with `Tyler, The Creator` kept
-  -> 2 names; case-insensitive match; a kept name inside a longer word is not
-  matched; genre ignores the list;
-- cache: in-memory sqflite DB (see `test/library_genres_test.dart` for setup). One
-  row per credit; a new version, separator or Keep-together list rebuilds, an
-  unchanged signature does not.
+- every rule: `AC/DC`, `R&B/Soul`, Arabic comma, newline, `A (feat. B)`,
+  `Lift Up` with `with` selected, `x` only as a word, an added letters-only
+  separator, duplicates, empty and null input, a deselected `,` keeps
+  `A, B` whole;
+- Keep together: `Tyler, The Creator, Kali Uchis` -> 2 names; case-insensitive;
+  not matched inside a longer word; genre ignores it;
+- save: `A, B` with Save with `; ` -> `A; B`; a Keep-together name survives;
+  empty Save with keeps the value; the writer map has no `*_separator` keys;
+- cache with an in-memory sqflite DB (see `test/library_genres_test.dart`): one row
+  per credit; a new version or new rules rebuilds; an unchanged signature does not.
+- Update the tests that covered `formatMetadataTagValue` and `writerFields`
+  (`grep -rln "formatMetadataTagValue\|writerFields" test`).
 
-Commit: `feat(library): split tag credits into a derived table`.
+Commit: `feat(library): split tag credits for the library and saving`.
 
 ## Phase 3 - genres use the credits table
 
@@ -154,8 +217,8 @@ Commit: `feat(library): split tag credits into a derived table`.
 - `local_genres_screen.dart`: `genrePageLoaderProvider` watches
   `tagCreditRulesProvider` and the shared cache.
 - Tests: update `test/library_genres_test.dart` and
-  `test/local_genres_screen_test.dart`; add a case where Genre separator `/` splits
-  `Hip-Hop/Rap` and the default keeps it whole.
+  `test/local_genres_screen_test.dart`; add a case where selecting `/` for Genre
+  splits `Hip-Hop/Rap` and the default keeps it whole.
 
 Commit: `feat(library): genres read split credits`.
 
@@ -175,33 +238,32 @@ cache before each query below):
 - Albums and Singles shelves: a release belongs to the artist when any of its
   tracks has an `album_artist` credit with that key. Find the album query used by
   `local_artist_screen.dart` / `local_artist_providers.dart` and apply the filter
-  with `field = 'album_artist'` only. Keep the existing Singles rule (explicit
-  total-tracks tag of 1) and release-date ordering.
+  with `field = 'album_artist'` only. Keep the Singles rule (explicit total-tracks
+  tag of 1) and release-date ordering.
 - **Appears On** shelf (`local_artist_screen.dart`), directly below Singles:
   releases where some track has an `artist` credit with that key and no track of
   the release has an `album_artist` credit with that key. Same album cards,
-  release-date order, and swipe-to-load-more paging as the other discography
+  release-date order and swipe-to-load-more paging as the other discography
   shelves; hidden when empty; no Show-more control. l10n key `artistAppearsOn`.
-- Popular stays capped at 20 and ranked by play counts; full-artist playback
-  plays every credited song.
+- Popular stays capped at 20 and ranked by play counts; full-artist playback plays
+  every credited song.
 - `library_search.dart`: artist results come from the same credits, so `artist2`
   is findable on its own.
 - Tests: update `test/app_library_browse_test.dart` and the local artist screen
-  tests (`grep -l local_artist test/`). Add: a track tagged `A, B` lists both A
-  and B; a featured-only artist C (`Song feat. C`) is listed, C's page shows the
-  release under Appears On and not under Albums or Singles; A's Albums shelf has
-  the release.
+  tests (`grep -l local_artist test/`). Add: a track tagged `A, B` lists both A and
+  B; a featured-only artist C (`Song feat. C`) is listed and C's page shows the
+  release under Appears On, not under Albums or Singles; A's Albums shelf has the
+  release.
 
 Commit: `feat(library): artists split on credits with Appears On`.
 
 ## Phase 5 - opening an artist from a song
 
 - `lib/navigation/detail_navigation.dart`: `navigateToArtistCredits` uses
-  `splitTagCredits(raw, TagCreditField.artist, ...)` with the current rules. One
-  name opens that artist; several names open a small `showAppBottomSheet` listing
-  each name; tapping one opens `local_artist_screen.dart`. Remove the
-  `getBrowseArtistRows` exact-match lookup and `splitArtistNames` with its tests
-  in `test/artist_utils_test.dart`.
+  `splitTagCredits(raw, TagCreditField.artist, rules)`. One name opens that artist;
+  several names open a small `showAppBottomSheet` listing each name; tapping one
+  opens `local_artist_screen.dart`. Remove the `getBrowseArtistRows` exact-match
+  lookup and `splitArtistNames` with its tests in `test/artist_utils_test.dart`.
 - Callers: `grep -rn navigateToArtistCredits lib` (song menu, player, headers).
 - Test: a song tagged `A, B` -> Go to artist shows a sheet with A and B; picking B
   opens B's page. With `A, B` in Keep together it opens `A, B` directly.
@@ -222,14 +284,14 @@ Commit: `feat(library): browse songs by composer`.
 
 ## Phase 7 - docs and wording
 
-- `metadataSeparatorsDescription` (app_en.arb): the chosen separators are used
-  when saving tags and to split names in the library; Keep together names are
+- `metadataSeparatorsDescription` (app_en.arb): selected separators split names in
+  the library; Save with joins them when tags are saved; Keep together names are
   never split.
 - AGENTS.md: replace "There is no read-side tag splitting: tags are shown as
-  stored." with: the rules table summary, the two separator rows, Keep together,
-  the derived TEMP table, Appears On below Singles, the artist picker, and Go to
-  composer in the song-menu action list. Update the earlier "Per-field tag
-  separators" sentence to describe the two rows.
+  stored." and the "Per-field tag separators" sentence with: the two sections and
+  chip grid (All, defaults, Add separator, never empty, All resets), Save with,
+  Keep together, the rules table summary, the derived TEMP table, Appears On below
+  Singles, the artist picker, and Go to composer in the song-menu action list.
 - `graphify update .` and its commit if graphify is installed.
 
 Commits: `chore(graphify): refresh code graph after tag credits`, then
