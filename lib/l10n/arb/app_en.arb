@@ -1255,6 +1255,14 @@
       }
     }
   },
+  "tutorialGuideTitle": "Getting Started",
+  "@tutorialGuideTitle": {
+    "description": "Title of the single local-player guide page in first-run setup"
+  },
+  "tutorialGuideDesc": "Quick tips for finding, playing and organizing your local music.",
+  "@tutorialGuideDesc": {
+    "description": "Description under the local-player guide title"
+  },
   "tutorialSearchTitle": "Finding Music",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"

@@ -3,9 +3,10 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/shell/scroll_edge_fade.dart';
 import 'package:sistrum/widgets/primitives/app_search_field.dart';
 
-const localGuidePageCount = 5;
+const localGuidePageCount = 1;
 
-/// Local playback tips embedded in the single first-run setup flow.
+/// Local playback tips embedded in the single first-run setup flow. The tips
+/// share one page, so the setup counter moves by one for the whole guide.
 List<Widget> buildLocalGuidePages(
   BuildContext context, {
   required int firstIndex,
@@ -16,66 +17,103 @@ List<Widget> buildLocalGuidePages(
     _TutorialPage(
       index: firstIndex,
       currentIndex: currentIndex,
-      icon: Icons.search_rounded,
-      title: l10n.tutorialSearchTitle,
-      description: l10n.tutorialSearchDesc,
-      content: const _InteractiveSearchExample(),
-    ),
-    _TutorialPage(
-      index: firstIndex + 1,
-      currentIndex: currentIndex,
-      icon: Icons.play_arrow_rounded,
-      title: l10n.tutorialPlaybackTitle,
-      description: l10n.tutorialPlaybackDesc,
-      content: _buildFeatureList(context, [
-        (Icons.play_arrow, l10n.tutorialPlaybackTip1),
-        (Icons.queue_music, l10n.tutorialPlaybackTip2),
-        (Icons.lyrics_outlined, l10n.tutorialPlaybackTip3),
-      ]),
-    ),
-    _TutorialPage(
-      index: firstIndex + 2,
-      currentIndex: currentIndex,
       icon: Icons.library_music_rounded,
-      title: l10n.tutorialLibraryTitle,
-      description: l10n.tutorialLibraryDesc,
-      content: _buildFeatureList(context, [
-        (Icons.queue_music_rounded, l10n.tutorialLibraryTip1),
-        (Icons.play_circle_fill, l10n.tutorialLibraryTip2),
-        (Icons.grid_view_rounded, l10n.tutorialLibraryTip3),
-      ]),
-    ),
-    _TutorialPage(
-      index: firstIndex + 3,
-      currentIndex: currentIndex,
-      icon: Icons.folder_open_rounded,
-      title: l10n.tutorialStorageTitle,
-      description: l10n.tutorialStorageDesc,
-      content: _buildFeatureList(context, [
-        (Icons.folder_open_rounded, l10n.tutorialStorageTip1),
-        (Icons.add_circle_outline_rounded, l10n.tutorialStorageTip2),
-        (Icons.sync_rounded, l10n.tutorialStorageTip3),
-      ]),
-    ),
-    _TutorialPage(
-      index: firstIndex + 4,
-      currentIndex: currentIndex,
-      icon: Icons.settings_rounded,
-      title: l10n.tutorialSettingsTitle,
-      description: l10n.tutorialSettingsDesc,
+      title: l10n.tutorialGuideTitle,
+      description: l10n.tutorialGuideDesc,
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildFeatureList(context, [
-            (Icons.folder_open_rounded, l10n.tutorialSettingsTip1),
-            (Icons.tune_rounded, l10n.tutorialSettingsTip2),
-            (Icons.palette_rounded, l10n.tutorialSettingsTip3),
-          ]),
-          const SizedBox(height: 24),
+          _GuideSection(
+            title: l10n.tutorialSearchTitle,
+            description: l10n.tutorialSearchDesc,
+            child: const _InteractiveSearchExample(),
+          ),
+          _GuideSection(
+            title: l10n.tutorialPlaybackTitle,
+            description: l10n.tutorialPlaybackDesc,
+            child: _buildFeatureList(context, [
+              (Icons.play_arrow, l10n.tutorialPlaybackTip1),
+              (Icons.queue_music, l10n.tutorialPlaybackTip2),
+              (Icons.lyrics_outlined, l10n.tutorialPlaybackTip3),
+            ]),
+          ),
+          _GuideSection(
+            title: l10n.tutorialLibraryTitle,
+            description: l10n.tutorialLibraryDesc,
+            child: _buildFeatureList(context, [
+              (Icons.queue_music_rounded, l10n.tutorialLibraryTip1),
+              (Icons.play_circle_fill, l10n.tutorialLibraryTip2),
+              (Icons.grid_view_rounded, l10n.tutorialLibraryTip3),
+            ]),
+          ),
+          _GuideSection(
+            title: l10n.tutorialStorageTitle,
+            description: l10n.tutorialStorageDesc,
+            child: _buildFeatureList(context, [
+              (Icons.folder_open_rounded, l10n.tutorialStorageTip1),
+              (Icons.add_circle_outline_rounded, l10n.tutorialStorageTip2),
+              (Icons.sync_rounded, l10n.tutorialStorageTip3),
+            ]),
+          ),
+          _GuideSection(
+            title: l10n.tutorialSettingsTitle,
+            description: l10n.tutorialSettingsDesc,
+            child: _buildFeatureList(context, [
+              (Icons.folder_open_rounded, l10n.tutorialSettingsTip1),
+              (Icons.tune_rounded, l10n.tutorialSettingsTip2),
+              (Icons.palette_rounded, l10n.tutorialSettingsTip3),
+            ]),
+          ),
+          const SizedBox(height: 8),
           _AnimatedReadyCard(text: l10n.tutorialReadyMessage),
         ],
       ),
     ),
   ];
+}
+
+/// One topic on the guide page: its heading, a short description, then the
+/// topic's own content.
+class _GuideSection extends StatelessWidget {
+  const _GuideSection({
+    required this.title,
+    required this.description,
+    required this.child,
+  });
+
+  final String title;
+  final String description;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 28),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            description,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    );
+  }
 }
 
 Widget _buildFeatureList(
