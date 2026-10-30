@@ -1,4 +1,4 @@
-import 'package:ffmpeg_kit_flutter_new_min/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter_new_audio/ffprobe_kit.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('FFmpeg');

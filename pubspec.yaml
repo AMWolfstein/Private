@@ -59,7 +59,7 @@ dependencies:
   logger: ^2.7.0
 
   # FFmpeg for local tag editing, ReplayGain and CUE splitting
-  ffmpeg_kit_flutter_new_min: 3.6.7
+  ffmpeg_kit_flutter_new_audio: 2.5.7
 
 
   xml: ^7.1.0
