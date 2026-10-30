@@ -273,7 +273,6 @@
   "tagSeparatorsGenre": "Genre",
   "tagSeparatorsAll": "All",
   "tagSeparatorsAdd": "Add separator",
-  "tagSeparatorsAddTitle": "Add separator",
   "tagSeparatorsAddHint": "Separator",
   "tagSeparatorsDuplicate": "This separator is already in the list.",
   "tagSeparatorsRemoveTitle": "Remove separator?",

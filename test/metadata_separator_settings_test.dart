@@ -70,7 +70,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   for (final size in [const Size(390, 844), const Size(844, 390)]) {
-    testWidgets('chips, All, Save with and Keep together ($size)', (
+    testWidgets('section sheets, Save with and Keep together ($size)', (
       tester,
     ) async {
       tester.view.physicalSize = size;
@@ -100,31 +100,55 @@ void main() {
       expect(credits().artistDelimiters, kArtistDelimiterDefaults);
       expect(credits().genreDelimiters, kGenreDelimiterDefaults);
 
-      // A selected chip turns off; an unselected one turns on.
-      await _showSection(tester, 'Artists');
-      await _tap(tester, _chip(','));
-      expect(credits().artistDelimiters, isNot(contains(',')));
-      await _tap(tester, _chip('/'));
-      expect(credits().artistDelimiters, contains('/'));
+      final sheet = find.byType(AppBottomSheet);
+      Finder inSheet(Finder finder) =>
+          find.descendant(of: sheet, matching: finder);
 
-      // The last selected genre delimiter cannot be turned off. Genre sits
-      // below Artists, so its chips are the last matches for shared symbols.
-      await _showSection(tester, 'Genre');
-      await _tap(tester, _chip('،'), last: true);
-      expect(credits().genreDelimiters, [';']);
-      await _tap(tester, _chip(';'), last: true);
-      expect(credits().genreDelimiters, [';']);
+      // The page lists one row per section; Artists opens its chip sheet.
+      await _tap(tester, find.text('Artists'));
+      expect(sheet, findsOneWidget);
+      expect(
+        inSheet(find.text('Artist, Album Artist, Composer')),
+        findsOneWidget,
+      );
+
+      // A selected chip turns off; an unselected one turns on.
+      await _tap(tester, inSheet(_chip(',')));
+      expect(credits().artistDelimiters, isNot(contains(',')));
+      await _tap(tester, inSheet(_chip('/')));
+      expect(credits().artistDelimiters, contains('/'));
 
       // All selects every offered artist delimiter; a second tap restores the
       // defaults.
-      await _showSection(tester, 'Artists');
-      await _tap(tester, _chip('All'));
+      await _tap(tester, inSheet(_chip('All')));
       expect(credits().artistDelimiters, kArtistDelimiterChoices);
-      await _tap(tester, _chip('All'));
+      await _tap(tester, inSheet(_chip('All')));
       expect(credits().artistDelimiters, kArtistDelimiterDefaults);
 
+      // Add separator: Save adds the typed separator, selected, and closes.
+      final sheetField = inSheet(find.byType(TextField));
+      await _tap(tester, sheetField);
+      await tester.enterText(sheetField, '|');
+      await tester.pump();
+      await _tap(tester, inSheet(find.text('Save')));
+      expect(sheet, findsNothing);
+      expect(credits().customArtistDelimiters, ['|']);
+      expect(credits().artistDelimiters, contains('|'));
+
+      // The last selected genre delimiter cannot be turned off; Save with an
+      // empty field just closes the sheet.
+      await _tap(tester, find.text('Genre'));
+      await _tap(tester, inSheet(_chip('،')));
+      expect(credits().genreDelimiters, [';']);
+      await _tap(tester, inSheet(_chip(';')));
+      expect(credits().genreDelimiters, [';']);
+      await _tap(tester, inSheet(find.text('Save')));
+      expect(sheet, findsNothing);
+      expect(credits().customGenreDelimiters, isEmpty);
+
       // Save with on Artists writes one value to the three name fields.
-      await _tap(tester, find.text('Save with'));
+      await _showSection(tester, 'Save with');
+      await _tap(tester, find.text('Artists'), last: true);
       await _tap(tester, find.text('Semicolon (;)'));
       await _tap(tester, find.text('Save'), last: true);
       final separators = container.read(settingsProvider).metadataSeparators;
@@ -143,19 +167,6 @@ void main() {
       expect(credits().keepTogether, ['Tyler, The Creator']);
       await _tap(tester, find.byTooltip('Remove name'));
       expect(credits().keepTogether, isEmpty);
-
-      // Add separator: the new chip is selected straight away.
-      await _showSection(tester, 'Artists');
-      await _tap(tester, _chip('Add separator'));
-      final sheetField = find.descendant(
-        of: find.byType(AppBottomSheet),
-        matching: find.byType(TextField),
-      );
-      await tester.enterText(sheetField, '|');
-      await tester.pump();
-      await _tap(tester, find.text('Save'), last: true);
-      expect(credits().customArtistDelimiters, ['|']);
-      expect(credits().artistDelimiters, contains('|'));
       expect(tester.takeException(), isNull);
     });
   }
@@ -183,7 +194,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await _tap(tester, find.text('Save with'));
+    await _tap(tester, find.text('Artists'), last: true);
     await _tap(tester, find.text('Slash (/)'));
     await tester.fling(find.byType(AppSheetHandle), const Offset(0, 600), 1200);
     await tester.pumpAndSettle();

@@ -14,8 +14,9 @@ import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
-/// Tag separators: which delimiters split credits in the library, the separator
-/// that joins names when tags are saved, and names that are never split.
+/// Tag separators: one row per section (Artists, Genre) opens its chip
+/// sheet; Save with picks the separator that joins names when tags are
+/// saved; Keep together lists names that are never split.
 class MetadataSeparatorSettingsPage extends ConsumerWidget {
   const MetadataSeparatorSettingsPage({super.key});
 
@@ -39,43 +40,58 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: SettingsSectionHeader(title: l10n.tagSeparatorsArtists),
-          ),
-          SliverToBoxAdapter(
-            child: _DelimiterSection(
-              caption: l10n.tagSeparatorsArtistsFields,
-              field: TagCreditField.artist,
-              rules: rules,
-              choices: kArtistDelimiterChoices,
-              custom: credits.customArtistDelimiters,
-              selected: credits.artistDelimiters,
-              saveWithLabel: l10n.editMetadataFieldArtist,
-              saveWith: separators.names,
-              onToggle: notifier.toggleArtistDelimiter,
-              onToggleAll: notifier.toggleAllArtistDelimiters,
-              onAdd: notifier.addArtistDelimiter,
-              onRemoveCustom: notifier.removeCustomArtistDelimiter,
-              onSaveWith: notifier.setMetadataNamesSeparator,
+            child: SettingsGroup(
+              children: [
+                SettingsItem(
+                  title: l10n.tagSeparatorsArtists,
+                  subtitle: _summary(credits.artistDelimiters),
+                  onTap: () => _openSection(context, artists: true),
+                ),
+                SettingsItem(
+                  title: l10n.tagSeparatorsGenre,
+                  subtitle: _summary(credits.genreDelimiters),
+                  showDivider: false,
+                  onTap: () => _openSection(context, artists: false),
+                ),
+              ],
             ),
           ),
           SliverToBoxAdapter(
-            child: SettingsSectionHeader(title: l10n.tagSeparatorsGenre),
+            child: SettingsSectionHeader(title: l10n.tagSeparatorsSaveWith),
           ),
           SliverToBoxAdapter(
-            child: _DelimiterSection(
-              field: TagCreditField.genre,
-              rules: rules,
-              choices: kGenreDelimiterChoices,
-              custom: credits.customGenreDelimiters,
-              selected: credits.genreDelimiters,
-              saveWithLabel: l10n.editMetadataFieldGenre,
-              saveWith: separators.genre,
-              onToggle: notifier.toggleGenreDelimiter,
-              onToggleAll: notifier.toggleAllGenreDelimiters,
-              onAdd: notifier.addGenreDelimiter,
-              onRemoveCustom: notifier.removeCustomGenreDelimiter,
-              onSaveWith: (value) =>
-                  notifier.setMetadataSeparator('genre', value),
+            child: SettingsGroup(
+              children: [
+                _saveWithItem(
+                  context,
+                  title: l10n.tagSeparatorsArtists,
+                  label: l10n.editMetadataFieldArtist,
+                  field: TagCreditField.artist,
+                  rules: rules,
+                  value: separators.names,
+                  onSaved: notifier.setMetadataNamesSeparator,
+                ),
+                _saveWithItem(
+                  context,
+                  title: l10n.tagSeparatorsGenre,
+                  label: l10n.editMetadataFieldGenre,
+                  field: TagCreditField.genre,
+                  rules: rules,
+                  value: separators.genre,
+                  onSaved: (value) =>
+                      notifier.setMetadataSeparator('genre', value),
+                  last: true,
+                ),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+              child: Text(
+                l10n.tagSeparatorsSaveWithDescription,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
           ),
           SliverToBoxAdapter(
@@ -91,136 +107,193 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
       ),
     );
   }
+
+  static String _summary(List<String> delimiters) => delimiters.join('   ');
+
+  Future<void> _openSection(BuildContext context, {required bool artists}) {
+    final l10n = context.l10n;
+    return showAppBottomSheet<void>(
+      context: context,
+      useRootNavigator: true,
+      title: artists ? l10n.tagSeparatorsArtists : l10n.tagSeparatorsGenre,
+      subtitle: artists ? l10n.tagSeparatorsArtistsFields : null,
+      builder: (_) => _DelimiterSheet(artists: artists),
+    );
+  }
+
+  SettingsItem _saveWithItem(
+    BuildContext context, {
+    required String title,
+    required String label,
+    required TagCreditField field,
+    required TagCreditRules rules,
+    required String value,
+    required ValueChanged<String> onSaved,
+    bool last = false,
+  }) {
+    final l10n = context.l10n;
+    return SettingsItem(
+      title: title,
+      subtitle: value.isEmpty
+          ? l10n.metadataSeparatorSource
+          : formatTagCreditsForSave('$label A, $label B', field, rules, value),
+      showDivider: !last,
+      onTap: () async {
+        final picked = await showAppBottomSheet<String>(
+          context: context,
+          useRootNavigator: true,
+          title: l10n.tagSeparatorsSaveWith,
+          builder: (_) => _SeparatorPicker(
+            label: label,
+            current: value,
+            field: field,
+            rules: rules,
+          ),
+        );
+        if (picked != null && context.mounted) onSaved(picked);
+      },
+    );
+  }
 }
 
-/// One section: a chip grid of delimiters followed by the Save with row.
-class _DelimiterSection extends StatelessWidget {
-  const _DelimiterSection({
-    this.caption,
-    required this.field,
-    required this.rules,
-    required this.choices,
-    required this.custom,
-    required this.selected,
-    required this.saveWithLabel,
-    required this.saveWith,
-    required this.onToggle,
-    required this.onToggleAll,
-    required this.onAdd,
-    required this.onRemoveCustom,
-    required this.onSaveWith,
-  });
+/// One section's sheet: the chip grid, applied as it is tapped, and Add
+/// separator, which Save adds (selected) before closing the sheet.
+class _DelimiterSheet extends ConsumerStatefulWidget {
+  const _DelimiterSheet({required this.artists});
 
-  /// The fields a section covers, when its header alone does not say.
-  final String? caption;
-  final TagCreditField field;
-  final TagCreditRules rules;
-  final List<String> choices;
-  final List<String> custom;
-  final List<String> selected;
-  final String saveWithLabel;
-  final String saveWith;
-  final ValueChanged<String> onToggle;
-  final VoidCallback onToggleAll;
-  final ValueChanged<String> onAdd;
-  final ValueChanged<String> onRemoveCustom;
-  final ValueChanged<String> onSaveWith;
+  /// The Artists section; otherwise Genre.
+  final bool artists;
+
+  @override
+  ConsumerState<_DelimiterSheet> createState() => _DelimiterSheetState();
+}
+
+class _DelimiterSheetState extends ConsumerState<_DelimiterSheet> {
+  final _field = TextEditingController();
+
+  @override
+  void dispose() {
+    _field.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final credits = ref.watch(settingsProvider.select((s) => s.tagCredits));
+    final notifier = ref.read(settingsProvider.notifier);
+    final artists = widget.artists;
+    final choices = artists ? kArtistDelimiterChoices : kGenreDelimiterChoices;
+    final custom = artists
+        ? credits.customArtistDelimiters
+        : credits.customGenreDelimiters;
+    final selected = artists
+        ? credits.artistDelimiters
+        : credits.genreDelimiters;
     final offered = [...choices, ...custom];
-    final allSelected = offered.every(selected.contains);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (caption case final caption?)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-            child: Text(caption, style: Theme.of(context).textTheme.bodyMedium),
-          ),
-        _ChipGrid(
+    final token = _field.text.trim();
+    final valid = TagCreditSettings.isValidDelimiter(token, offered);
+    final duplicate =
+        token.isNotEmpty &&
+        !valid &&
+        MetadataSeparators.validSeparator(token) == token;
+    final error = token.isEmpty || valid
+        ? null
+        : duplicate
+        ? l10n.tagSeparatorsDuplicate
+        : l10n.metadataSeparatorInvalid;
+
+    void save() {
+      if (token.isNotEmpty) {
+        if (!valid) return;
+        artists
+            ? notifier.addArtistDelimiter(token)
+            : notifier.addGenreDelimiter(token);
+      }
+      Navigator.of(context).pop();
+    }
+
+    Widget chip(String token, {required bool custom}) {
+      final chip = AppChoiceChip(
+        label: _ChipLabel(token),
+        selected: selected.contains(token),
+        onSelected: (_) => artists
+            ? notifier.toggleArtistDelimiter(token)
+            : notifier.toggleGenreDelimiter(token),
+      );
+      if (!custom) return chip;
+      // A custom chip is removed by long press, after confirming.
+      return GestureDetector(
+        onLongPress: () => _confirmRemove(token),
+        child: chip,
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppChoiceChip(
-              label: _ChipLabel(l10n.tagSeparatorsAll),
-              selected: allSelected,
-              onSelected: (_) => onToggleAll(),
+            _ChipGrid(
+              children: [
+                AppChoiceChip(
+                  label: _ChipLabel(l10n.tagSeparatorsAll),
+                  selected: offered.every(selected.contains),
+                  onSelected: (_) => artists
+                      ? notifier.toggleAllArtistDelimiters()
+                      : notifier.toggleAllGenreDelimiters(),
+                ),
+                for (final token in choices) chip(token, custom: false),
+                for (final token in custom) chip(token, custom: true),
+              ],
             ),
-            for (final token in choices)
-              _delimiterChip(context, token: token, custom: false),
-            for (final token in custom)
-              _delimiterChip(context, token: token, custom: true),
-            AppChoiceChip(
-              label: _ChipLabel(l10n.tagSeparatorsAdd),
-              icon: const Icon(Icons.add, size: 18),
-              selected: false,
-              onSelected: (_) => _openAddSheet(context, offered),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        SettingsGroup(
-          children: [
-            SettingsItem(
-              icon: Icons.save_alt_outlined,
-              title: l10n.tagSeparatorsSaveWith,
-              subtitle: saveWith.isEmpty
-                  ? l10n.metadataSeparatorSource
-                  : formatTagCreditsForSave(
-                      '$saveWithLabel A, $saveWithLabel B',
-                      field,
-                      rules,
-                      saveWith,
-                    ),
-              showDivider: false,
-              onTap: () async {
-                final value = await showAppBottomSheet<String>(
-                  context: context,
-                  useRootNavigator: true,
-                  title: l10n.tagSeparatorsSaveWith,
-                  builder: (_) =>
-                      _SeparatorPicker(
-                        label: saveWithLabel,
-                        current: saveWith,
-                        field: field,
-                        rules: rules,
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: AppContentCard(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        l10n.tagSeparatorsAdd,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
-                );
-                if (value != null && context.mounted) onSaveWith(value);
-              },
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _field,
+                        maxLength: 16,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          hintText: l10n.tagSeparatorsAddHint,
+                          errorText: error,
+                        ),
+                        onChanged: (_) => setState(() {}),
+                        onSubmitted: (_) => save(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FilledButton(
+                onPressed: error == null ? save : null,
+                child: Text(l10n.dialogSave),
+              ),
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
-          child: Text(
-            l10n.tagSeparatorsSaveWithDescription,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _delimiterChip(
-    BuildContext context, {
-    required String token,
-    required bool custom,
-  }) {
-    final chip = AppChoiceChip(
-      label: _ChipLabel(token),
-      selected: selected.contains(token),
-      onSelected: (_) => onToggle(token),
-    );
-    if (!custom) return chip;
-    // A custom chip is removed by long press, after confirming.
-    return GestureDetector(
-      onLongPress: () => _confirmRemove(context, token),
-      child: chip,
-    );
-  }
-
-  Future<void> _confirmRemove(BuildContext context, String token) async {
+  Future<void> _confirmRemove(String token) async {
     final l10n = context.l10n;
     final remove = await showAppDialog<bool>(
       context: context,
@@ -242,17 +315,11 @@ class _DelimiterSection extends StatelessWidget {
         ],
       ),
     );
-    if (remove == true) onRemoveCustom(token);
-  }
-
-  Future<void> _openAddSheet(BuildContext context, List<String> offered) async {
-    final value = await showAppBottomSheet<String>(
-      context: context,
-      useRootNavigator: true,
-      title: context.l10n.tagSeparatorsAddTitle,
-      builder: (_) => _AddDelimiterSheet(existing: offered),
-    );
-    if (value != null && context.mounted) onAdd(value);
+    if (remove != true || !mounted) return;
+    final notifier = ref.read(settingsProvider.notifier);
+    widget.artists
+        ? notifier.removeCustomArtistDelimiter(token)
+        : notifier.removeCustomGenreDelimiter(token);
   }
 }
 
@@ -380,70 +447,6 @@ class _KeepTogetherSectionState extends State<_KeepTogetherSection> {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Asks for one new delimiter and returns it trimmed.
-class _AddDelimiterSheet extends StatefulWidget {
-  const _AddDelimiterSheet({required this.existing});
-
-  final List<String> existing;
-
-  @override
-  State<_AddDelimiterSheet> createState() => _AddDelimiterSheetState();
-}
-
-class _AddDelimiterSheetState extends State<_AddDelimiterSheet> {
-  final _field = TextEditingController();
-
-  @override
-  void dispose() {
-    _field.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final token = _field.text.trim();
-    final valid = TagCreditSettings.isValidDelimiter(token, widget.existing);
-    final duplicate =
-        token.isNotEmpty &&
-        !valid &&
-        MetadataSeparators.validSeparator(token) == token;
-    final error = token.isEmpty || valid
-        ? null
-        : duplicate
-        ? l10n.tagSeparatorsDuplicate
-        : l10n.metadataSeparatorInvalid;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextField(
-            controller: _field,
-            autofocus: true,
-            maxLength: 16,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              hintText: l10n.tagSeparatorsAddHint,
-              errorText: error,
-            ),
-            onChanged: (_) => setState(() {}),
-            onSubmitted: (_) {
-              if (valid) Navigator.of(context).pop(token);
-            },
-          ),
-          const SizedBox(height: 16),
-          FilledButton(
-            onPressed: valid ? () => Navigator.of(context).pop(token) : null,
-            child: Text(l10n.dialogSave),
-          ),
-        ],
-      ),
     );
   }
 }
