@@ -1,7 +1,7 @@
 # Graph Report - Private  (2026-10-30)
 
 ## Corpus Check
-- 1607 files · ~1,476,041 words
+- 1607 files · ~1,476,130 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 131 file(s) not represented in the graph (top: .xml 39, .arb 20, (none) 16)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `df62fa15`
+- Built from commit: `a73ce459`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1109,7 +1109,7 @@ Nodes (39): addToScene, alwaysNeedsCompositing, AppBackdropLayer, AppBackdropRea
 
 ### Community 63 - "dependencies"
 Cohesion: 0.07
-Nodes (28): dependencies, audio_session, audioplayers, crypto, cupertino_icons, device_info_plus, ffmpeg_kit_flutter_new_audio, file_picker (+20 more)
+Nodes (28): dependencies, audio_session, audioplayers, crypto, cupertino_icons, device_info_plus, ffmpeg_kit_flutter_new_min, file_picker (+20 more)
 
 ### Community 64 - "selection_bottom_bar.dart"
 Cohesion: 0.04
