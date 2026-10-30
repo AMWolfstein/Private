@@ -2,111 +2,215 @@
   "command": "next",
   "items": [
     {
-      "id": "auto/test_coverage-untested_module",
-      "action_type": "refactor",
-      "summary": "Fix 10 test coverage issues",
-      "member_count": 9,
-      "members": [
-        {
-          "id": "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/home/home_tab_feed.dart",
-          "summary": "Untested module (423 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/home/home_tab_feed.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/home/home_tab_widgets.dart",
-          "summary": "Untested module (49 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_batch_actions.dart",
-          "summary": "Untested module (37 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_collection_items.dart",
-          "summary": "Untested module (94 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_filter_widgets.dart",
-          "summary": "Untested module (393 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_helpers.dart",
-          "summary": "Untested module (278 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_item_widgets.dart",
-          "summary": "Untested module (135 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_navigation.dart",
-          "summary": "Untested module (298 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module\" --note \"<what you did>\" --confirm"
-        },
-        {
-          "id": "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
-          "confidence": "high",
-          "detector": "test_coverage",
-          "file": "lib/screens/library/library_section_tab_selection.dart",
-          "summary": "Untested module (278 LOC, 0 importers)",
-          "status": "open",
-          "kind": "issue",
-          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module\" --note \"<what you did>\" --confirm"
-        }
-      ],
-      "cluster_name": "auto/test_coverage-untested_module",
-      "cluster_auto": true,
+      "id": "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
+      "confidence": "high",
       "detector": "test_coverage",
-      "kind": "cluster",
-      "primary_command": "review test coverage gaps"
+      "file": "lib/screens/home/home_tab_feed.dart",
+      "summary": "Untested module (423 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 423,
+        "importer_count": 0,
+        "loc_weight": 20.566963801203133
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/home/home_tab_feed.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 1,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/home/home_tab_widgets.dart",
+      "summary": "Untested module (49 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 49,
+        "importer_count": 0,
+        "loc_weight": 7.0
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 2,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_batch_actions.dart",
+      "summary": "Untested module (37 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 37,
+        "importer_count": 0,
+        "loc_weight": 6.082762530298219
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 4,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_collection_items.dart",
+      "summary": "Untested module (94 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 94,
+        "importer_count": 0,
+        "loc_weight": 9.695359714832659
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 5,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_filter_widgets.dart",
+      "summary": "Untested module (393 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 393,
+        "importer_count": 0,
+        "loc_weight": 19.82422760159901
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 7,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_helpers.dart",
+      "summary": "Untested module (278 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 278,
+        "importer_count": 0,
+        "loc_weight": 16.673332000533065
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 8,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_item_widgets.dart",
+      "summary": "Untested module (135 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 135,
+        "importer_count": 0,
+        "loc_weight": 11.61895003862225
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 9,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_navigation.dart",
+      "summary": "Untested module (298 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 298,
+        "importer_count": 0,
+        "loc_weight": 17.26267650163207
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 10,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
+    },
+    {
+      "id": "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
+      "confidence": "high",
+      "detector": "test_coverage",
+      "file": "lib/screens/library/library_section_tab_selection.dart",
+      "summary": "Untested module (278 LOC, 0 importers)",
+      "detail": {
+        "kind": "untested_module",
+        "loc": 278,
+        "importer_count": 0,
+        "loc_weight": 16.673332000533065
+      },
+      "status": "open",
+      "kind": "issue",
+      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module\" --note \"<what you did>\" --confirm",
+      "queue_position": 11,
+      "plan_cluster": {
+        "name": "auto/test_coverage-untested_module",
+        "description": "Fix 10 test coverage issues",
+        "total_items": 9,
+        "action_steps": []
+      }
     }
   ],
   "queue": {
-    "total": 1,
+    "total": 9,
     "mode": "execution"
   },
   "narrative": {
