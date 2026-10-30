@@ -90,7 +90,8 @@ void main() {
             query: 'ÉLISE',
             kind: LibrarySearchKind.artists,
           );
-          expect(artists.single.id, 'e\u0301lise');
+          // Artist keys are NFC, like genre keys, so both spellings match.
+          expect(artists.single.id, '\u00e9lise');
         }
       },
     );

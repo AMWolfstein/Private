@@ -38,8 +38,7 @@ class AppLibraryScreen extends ConsumerStatefulWidget {
   final String? artist;
 
   @override
-  ConsumerState<AppLibraryScreen> createState() =>
-      _AppLibraryScreenState();
+  ConsumerState<AppLibraryScreen> createState() => _AppLibraryScreenState();
 }
 
 class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
@@ -54,6 +53,7 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   LibraryBrowseRequest get _request => (
     artists: _artists,
     artist: widget.artist,
+    credit: null,
     search: '',
     sort: _sort,
     limit: 40,
@@ -124,9 +124,9 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
 
   Future<void> _openAlbum(LibraryBrowseEntry entry) async {
     Future<List<LocalLibraryItem>> loadTracks() async {
-      final rows = await ref.read(libraryDatabaseProvider).getBrowseLocalAlbumRowsByKey(
-        entry.key,
-      );
+      final rows = await ref
+          .read(libraryDatabaseProvider)
+          .getBrowseLocalAlbumRowsByKey(entry.key);
       return rows.map(LocalLibraryItem.fromJson).toList(growable: false);
     }
 

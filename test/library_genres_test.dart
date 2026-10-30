@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/models/tag_credit_settings.dart';
 import 'package:sistrum/services/library/library_genres.dart';
 import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart';

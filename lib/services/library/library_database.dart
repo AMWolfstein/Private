@@ -1,4 +1,3 @@
-
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/local_library_item.dart';
@@ -13,6 +12,7 @@ import 'package:sistrum/services/library/library_duplicates.dart';
 import 'package:sistrum/services/library/library_native_adapter.dart';
 import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 export 'library_database_models.dart';

@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/album_completeness.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/library_browse_filters.dart';
 import 'package:sistrum/services/library/library_browse_order.dart';
 import 'package:sistrum/services/library/library_browse_rows.dart';
@@ -35,7 +36,18 @@ class LibraryBrowseStore {
     return rows.map(LibraryRowMapper.decode).toList(growable: false);
   }
 
+  /// Brings the credits table up to date when a query filters by artist. A
+  /// query without a scope builds a private one, which is correct but slower.
+  Future<void> _ensureCredits(
+    LibraryBrowseDbQuery request, {
+    bool always = false,
+  }) async {
+    if (!always && request.albumArtist == null) return;
+    await (request.credits ?? privateTagCreditScope()).ensure(_db);
+  }
+
   Future<LibraryBrowseDbPage> trackPage(LibraryBrowseDbQuery request) async {
+    await _ensureCredits(request);
     final args = <Object?>[];
     final orderTerms = queueTrackOrderTerms(request.sortMode);
     final usesCursor =
@@ -63,6 +75,7 @@ class LibraryBrowseStore {
   }
 
   Future<LibraryBrowseCounts> counts(LibraryBrowseDbQuery request) async {
+    await _ensureCredits(request);
     final fastCounts = await _getUnfilteredQueueCounts(request);
     if (fastCounts != null) return fastCounts;
     final parts = <String>[];
@@ -144,6 +157,7 @@ class LibraryBrowseStore {
   }
 
   Future<LibraryBrowseDbPage> albumPage(LibraryBrowseDbQuery request) async {
+    await _ensureCredits(request);
     final args = <Object?>[];
     final orderTerms = queueAlbumOrderTerms(request.sortMode);
     final usesCursor =
@@ -170,42 +184,52 @@ class LibraryBrowseStore {
     );
   }
 
-  /// Album artists across the scanned local library, without loading tracks
-  /// into Dart.
+  /// Artists from the credits table: album artists and track artists alike,
+  /// so a featured artist has a page. The cover and sample come from the newest
+  /// song credited to the artist.
   Future<List<Map<String, dynamic>>> artistPage(
     LibraryBrowseDbQuery request,
   ) async {
-    final search = sqlite.normalizeLookupText(request.searchQuery);
-    return _db.rawQuery(
-      '''
-      SELECT artist_key, MIN(artist_name) AS artist_name,
-        MAX(NULLIF(cover_url, '')) AS cover_url,
+    await _ensureCredits(request, always: true);
+    final search = sqlite.normalizeSearchText(request.searchQuery);
+    const table = LibraryTagCreditsCache.tempTable;
+    final args = <Object?>[
+      if (search.isNotEmpty) '%${escapeLikePattern(search)}%',
+      request.limit,
+      request.offset,
+    ];
+    return _db.rawQuery('''
+      SELECT g.artist_key, g.artist_name, NULL AS cover_url,
         (
           SELECT NULLIF(newest.cover_path, '')
-          FROM ${LibrarySchema.visibleView} newest
-          WHERE newest.album_artist_norm = artist_key
+          FROM $table c
+          JOIN ${LibrarySchema.visibleView} newest ON newest.id = c.item_id
+          WHERE c.field IN ('album_artist', 'artist')
+            AND c.name_key = g.artist_key
             AND NULLIF(newest.cover_path, '') IS NOT NULL
           ORDER BY newest.sort_added DESC LIMIT 1
         ) AS cover_path,
-        MAX(sample_file_path) AS sample_file_path,
-        COUNT(*) AS track_count
+        (
+          SELECT newest.file_path
+          FROM $table c
+          JOIN ${LibrarySchema.visibleView} newest ON newest.id = c.item_id
+          WHERE c.field IN ('album_artist', 'artist')
+            AND c.name_key = g.artist_key
+          ORDER BY newest.sort_added DESC LIMIT 1
+        ) AS sample_file_path,
+        g.track_count
       FROM (
-        SELECT album_artist_norm AS artist_key,
-          COALESCE(NULLIF(album_artist, ''), artist_name) AS artist_name,
-          NULL AS cover_url, cover_path, file_path AS sample_file_path
-        FROM ${LibrarySchema.visibleView} l
-      )
-      WHERE artist_key != '' ${search.isEmpty ? '' : "AND artist_key LIKE ? ESCAPE '\\'"}
-      GROUP BY artist_key
-      ORDER BY artist_key
-      LIMIT ? OFFSET ?
-    ''',
-      [
-        if (search.isNotEmpty) '%${escapeLikePattern(search)}%',
-        request.limit,
-        request.offset,
-      ],
-    );
+        SELECT name_key AS artist_key, MIN(name) AS artist_name,
+          COUNT(DISTINCT item_id) AS track_count
+        FROM $table
+        WHERE field IN ('album_artist', 'artist') AND name_key != ''
+          ${search.isEmpty ? '' : "AND name_key LIKE ? ESCAPE '\\'"}
+        GROUP BY name_key
+        ORDER BY name_key
+        LIMIT ? OFFSET ?
+      ) g
+      ORDER BY g.artist_key
+    ''', args);
   }
 
   String _queueTrackUnionSql(
@@ -386,8 +410,37 @@ class LibraryBrowseStore {
       hasJoin: hasCompletenessJoin,
     );
     if (request.albumArtist != null) {
-      where.add('l.album_artist_norm = ?');
-      args.add(sqlite.normalizeLookupText(request.albumArtist));
+      final key = sqlite.normalizeSearchText(request.albumArtist);
+      const table = LibraryTagCreditsCache.tempTable;
+      switch (request.artistCredit ?? LibraryArtistCredit.anyCredit) {
+        case LibraryArtistCredit.albumArtist:
+          where.add(
+            "l.id IN (SELECT item_id FROM $table "
+            "WHERE field = 'album_artist' AND name_key = ?)",
+          );
+          args.add(key);
+        case LibraryArtistCredit.anyCredit:
+          where.add(
+            "l.id IN (SELECT item_id FROM $table "
+            "WHERE field IN ('album_artist', 'artist') AND name_key = ?)",
+          );
+          args.add(key);
+        case LibraryArtistCredit.appearsOn:
+          // Only track credits, and no track of the release credits the artist
+          // as album artist: the release belongs to someone else.
+          where.add(
+            "l.id IN (SELECT item_id FROM $table "
+            "WHERE field = 'artist' AND name_key = ?)",
+          );
+          where.add(
+            'l.album_key NOT IN (SELECT owner.album_key '
+            'FROM ${LibrarySchema.visibleView} owner '
+            "JOIN $table owned ON owned.item_id = owner.id "
+            "WHERE owned.field = 'album_artist' AND owned.name_key = ?)",
+          );
+          args.add(key);
+          args.add(key);
+      }
     }
     final query = sqlite.normalizeSearchText(request.searchQuery);
     if (query.isNotEmpty) {

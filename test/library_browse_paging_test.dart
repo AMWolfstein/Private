@@ -36,6 +36,7 @@ LibraryBrowseEntry _entry(int index, {String prefix = ''}) =>
 const _request = (
   artists: false,
   artist: null,
+  credit: null,
   search: '',
   sort: 'a-z',
   limit: 40,
@@ -241,6 +242,7 @@ void main() {
     const artists = (
       artists: true,
       artist: null,
+      credit: null,
       search: 'Artist',
       sort: 'a-z',
       limit: 40,
@@ -256,6 +258,7 @@ void main() {
     const search = (
       artists: false,
       artist: 'Artist 1',
+      credit: null,
       search: 'New query',
       sort: 'latest',
       limit: 40,

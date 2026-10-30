@@ -1,5 +1,7 @@
 // Row models and query descriptors for the local library database.
 
+import 'package:sistrum/services/library/library_tag_credits.dart';
+
 // v4 records ReplayGain availability; older rows rescan once.
 const libraryAudioMetadataScanVersion = 4;
 const libraryLyricsMetadataScanVersion = 3;
@@ -114,6 +116,19 @@ abstract final class LibraryQualityFilter {
   static const lossy = 'lossy';
 }
 
+/// Which tag credits an artist filter matches.
+enum LibraryArtistCredit {
+  /// Releases and songs where the artist is the album artist.
+  albumArtist,
+
+  /// Songs where the artist is the album artist or a track artist, including
+  /// featured appearances.
+  anyCredit,
+
+  /// Releases where the artist is only a track artist, never the album artist.
+  appearsOn,
+}
+
 class LibraryBrowseDbQuery {
   final bool includeSingleTrackAlbums;
   final String? albumArtist;
@@ -129,7 +144,15 @@ class LibraryBrowseDbQuery {
   final String sortMode;
   final LibraryBrowseDbCursor? cursor;
 
+  /// Which credits [albumArtist] matches; null means [LibraryArtistCredit.anyCredit].
+  final LibraryArtistCredit? artistCredit;
+
+  /// The credits table to read for artist filters. Null builds a private one.
+  final TagCreditScope? credits;
+
   const LibraryBrowseDbQuery({
+    this.artistCredit,
+    this.credits,
     this.includeSingleTrackAlbums = false,
     this.albumArtist,
     this.limit = 100,

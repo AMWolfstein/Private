@@ -8,8 +8,12 @@ extension LibraryDatabaseQueries on LibraryDatabase {
     required LibrarySearchKind kind,
     int limit = 40,
     int offset = 0,
+    TagCreditScope? credits,
   }) async {
     final db = await database;
+    if (kind == LibrarySearchKind.artists) {
+      await (credits ?? privateTagCreditScope()).ensure(db);
+    }
     return LibrarySearchStore(
       db,
       localFts: searchFtsAvailable,

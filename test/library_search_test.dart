@@ -62,6 +62,11 @@ query = json.loads(sys.argv[1])
 for extra in query['extra_tracks']:
     track(extra['id'], extra['title'], 'Artist', extra['album'], path=extra['path'])
     db.executemany('INSERT INTO library_path_keys VALUES (?, ?)', [(extra['id'], key) for key in extra['keys']])
+# The artist search reads the credits table; these fixtures have one name each.
+db.execute('CREATE TABLE library_tag_credits (item_id TEXT, field TEXT, name TEXT, name_key TEXT, position INTEGER)')
+for row in db.execute('SELECT id, artist_name FROM library_visible').fetchall():
+    for field in ('artist', 'album_artist'):
+        db.execute('INSERT INTO library_tag_credits VALUES (?, ?, ?, ?, 0)', (row[0], field, row[1], row[1].lower()))
 print(json.dumps([dict(row) for row in db.execute(query['sql'], query['args'])]))
 ''',
       jsonEncode({'sql': sql, 'args': arguments, 'extra_tracks': extraTracks}),

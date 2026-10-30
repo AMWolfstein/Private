@@ -48,6 +48,18 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   LibraryBrowseRequest get _albumsRequest => (
     artists: false,
     artist: widget.artistName,
+    credit: LibraryArtistCredit.albumArtist,
+    search: '',
+    sort: 'artist-releases-newest',
+    limit: 40,
+    completeness: null,
+  );
+
+  /// Releases where the artist is only a track artist, shown below Singles.
+  LibraryBrowseRequest get _appearsRequest => (
+    artists: false,
+    artist: widget.artistName,
+    credit: LibraryArtistCredit.appearsOn,
     search: '',
     sort: 'artist-releases-newest',
     limit: 40,
@@ -143,6 +155,10 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   Widget build(BuildContext context) {
     final albumsAsync = ref.watch(libraryBrowseProvider(_albumsRequest));
     final albums = albumsAsync.asData?.value;
+    final appears = ref
+        .watch(libraryBrowseProvider(_appearsRequest))
+        .asData
+        ?.value;
     final tracksAsync = ref.watch(
       localArtistPopularProvider(widget.artistName),
     );
@@ -425,6 +441,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     SliverToBoxAdapter(
                       child: _albumSection(
                         context,
+                        _albumsRequest,
                         context.l10n.searchAlbums,
                         albums.entries
                             .where((release) => !release.isSingleRelease)
@@ -435,10 +452,20 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     SliverToBoxAdapter(
                       child: _albumSection(
                         context,
+                        _albumsRequest,
                         context.l10n.libraryKindSingles,
                         albums.entries
                             .where((release) => release.isSingleRelease)
                             .toList(),
+                      ),
+                    ),
+                  if (appears != null && appears.entries.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: _albumSection(
+                        context,
+                        _appearsRequest,
+                        context.l10n.artistAppearsOn,
+                        appears.entries,
                       ),
                     ),
                   if (albums.loadMoreError != null)
@@ -539,6 +566,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
 
   Widget _albumSection(
     BuildContext context,
+    LibraryBrowseRequest request,
     String title,
     List<LibraryBrowseEntry> releases,
   ) {
@@ -564,7 +592,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
             onNotification: (notification) {
               if (notification.metrics.axis == Axis.horizontal &&
                   notification.metrics.extentAfter < 400) {
-                final provider = libraryBrowseProvider(_albumsRequest);
+                final provider = libraryBrowseProvider(request);
                 if (ref.read(provider).asData?.value.loadMoreError == null) {
                   ref.read(provider.notifier).loadMore();
                 }

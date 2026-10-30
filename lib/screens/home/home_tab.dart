@@ -297,6 +297,7 @@ LibraryBrowseRequest localHomeBrowseRequest({
 }) => (
   artists: artists,
   artist: null,
+  credit: null,
   search: '',
   sort: sort,
   limit: localHomeShelfLimit,

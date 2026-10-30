@@ -43,6 +43,7 @@ void main() {
           sort: 'a-z',
           search: '',
           artist: null,
+          credit: null,
           completeness: null,
         ),
         (
@@ -50,6 +51,7 @@ void main() {
           sort: 'latest',
           search: '',
           artist: null,
+          credit: null,
           completeness: null,
         ),
         (
@@ -57,6 +59,7 @@ void main() {
           sort: 'a-z',
           search: '',
           artist: null,
+          credit: null,
           completeness: null,
         ),
         (
@@ -64,6 +67,7 @@ void main() {
           sort: 'a-z',
           search: 'Album 00',
           artist: null,
+          credit: null,
           completeness: null,
         ),
         (
@@ -71,6 +75,7 @@ void main() {
           sort: 'latest',
           search: '',
           artist: 'Artist 0001',
+          credit: null,
           completeness: null,
         ),
         (
@@ -78,6 +83,7 @@ void main() {
           sort: 'a-z',
           search: '',
           artist: null,
+          credit: null,
           completeness: incompleteAlbumFilter,
         ),
         (
@@ -85,6 +91,7 @@ void main() {
           sort: 'latest',
           search: 'Album',
           artist: null,
+          credit: null,
           completeness: unknownAlbumCompletenessFilter,
         ),
       ]) {
@@ -93,6 +100,7 @@ void main() {
           sort: scenario.sort,
           search: scenario.search,
           artist: scenario.artist,
+          credit: null,
           completeness: scenario.completeness,
           limit: 40,
         );
@@ -126,6 +134,7 @@ void main() {
               sort: request.sort,
               search: request.search,
               artist: request.artist,
+              credit: null,
               completeness: request.completeness,
               limit: 2000,
             ),

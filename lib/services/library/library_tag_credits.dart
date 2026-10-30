@@ -267,3 +267,28 @@ class LibraryTagCreditsCache {
   static String? _nonEmpty(String? value) =>
       value == null || value.trim().isEmpty ? null : value;
 }
+
+/// The credits table a query reads: the cache, the rules it must reflect, and
+/// the library version it is built from.
+class TagCreditScope {
+  const TagCreditScope({
+    required this.cache,
+    required this.rules,
+    required this.libraryVersion,
+  });
+
+  final LibraryTagCreditsCache cache;
+  final TagCreditRules rules;
+  final int libraryVersion;
+
+  Future<void> ensure(Database db) =>
+      cache.ensure(db, libraryVersion: libraryVersion, rules: rules);
+}
+
+/// A scope for a query that was not given one: correct, but it rebuilds the
+/// table on every call, so production callers pass the shared scope.
+TagCreditScope privateTagCreditScope() => TagCreditScope(
+  cache: LibraryTagCreditsCache(),
+  rules: const TagCreditRules(),
+  libraryVersion: 0,
+);

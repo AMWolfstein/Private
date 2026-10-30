@@ -21,6 +21,7 @@ import 'performance_probe.dart';
 const _request = (
   artists: false,
   artist: null,
+  credit: null,
   search: '',
   sort: 'a-z',
   limit: 40,
@@ -50,6 +51,7 @@ class _PrefixBrowse extends LibraryBrowseNotifier {
       browse: (
         artists: request.artists,
         artist: request.artist,
+        credit: null,
         search: request.search,
         sort: request.sort,
         limit: _limit,
@@ -282,6 +284,7 @@ void main() {
         browse: (
           artists: false,
           artist: null,
+          credit: null,
           search: '',
           sort: 'a-z',
           limit: 1000,

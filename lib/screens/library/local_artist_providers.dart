@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/services/playback/listening_statistics.dart';
@@ -18,21 +19,23 @@ const _artistPageSize = 40;
 
 /// Bounded local reads shared by the artist page and its complete playback queue.
 final localArtistTrackLoaderProvider =
-    Provider<Future<LibraryBrowseDbPage> Function(ArtistTrackRequest)>(
-      (ref) =>
-          (request) => ref
-              .read(libraryDatabaseProvider)
-              .getBrowseTrackPage(
-                LibraryBrowseDbQuery(
-                  albumArtist: request.artist,
-                  limit: _artistPageSize,
-                  offset: request.offset,
-                  cursor: request.cursor,
-                  sortMode: 'a-z',
-                  includeSingleTrackAlbums: true,
-                ),
-              ),
-    );
+    Provider<Future<LibraryBrowseDbPage> Function(ArtistTrackRequest)>((ref) {
+      final credits = ref.watch(tagCreditScopeProvider);
+      return (request) => ref
+          .read(libraryDatabaseProvider)
+          .getBrowseTrackPage(
+            LibraryBrowseDbQuery(
+              albumArtist: request.artist,
+              artistCredit: LibraryArtistCredit.anyCredit,
+              credits: credits,
+              limit: _artistPageSize,
+              offset: request.offset,
+              cursor: request.cursor,
+              sortMode: 'a-z',
+              includeSingleTrackAlbums: true,
+            ),
+          );
+    });
 
 class LocalArtistTracks {
   const LocalArtistTracks(
@@ -52,11 +55,14 @@ class LocalArtistTracks {
 final localArtistCoverProvider = FutureProvider.autoDispose
     .family<String?, String>((ref, artist) async {
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
+      final credits = ref.watch(tagCreditScopeProvider);
       final page = await ref
           .read(libraryDatabaseProvider)
           .getBrowseTrackPage(
             LibraryBrowseDbQuery(
               albumArtist: artist,
+              artistCredit: LibraryArtistCredit.anyCredit,
+              credits: credits,
               limit: _artistPageSize,
               sortMode: 'added',
               includeSingleTrackAlbums: true,

@@ -285,6 +285,7 @@
   "tagKeepTogetherHint": "Name, for example Tyler, The Creator",
   "tagKeepTogetherAdd": "Add name",
   "tagKeepTogetherRemoveTooltip": "Remove name",
+  "artistAppearsOn": "Appears On",
   "tagKeepTogetherDuplicate": "This name is already in the list.",
   "settingDisabled": "Disabled",
   "@settingDisabled": {

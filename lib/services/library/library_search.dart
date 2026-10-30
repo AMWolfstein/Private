@@ -1,4 +1,6 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 enum LibrarySearchKind { songs, albums, artists, playlists }
@@ -122,6 +124,9 @@ class LibrarySearchStore {
   }) async {
     final search = LibrarySearchQuery(query);
     if (search.terms.isEmpty || kind == LibrarySearchKind.playlists) return [];
+    if (kind == LibrarySearchKind.artists) {
+      return _searchArtists(search, limit: limit, offset: offset);
+    }
     final args = <Object?>[];
     const alias = 'l';
     const table = 'library_visible';
@@ -168,13 +173,7 @@ class LibrarySearchStore {
           MAX(sample_path) AS sample_path, COUNT(*) AS track_count,
           MIN(album_sort) AS title_key
         FROM ($rows) WHERE album_sort != '' GROUP BY source, album_key''',
-      LibrarySearchKind.artists =>
-        '''
-        SELECT '' AS source, artist_key AS id, MIN(album_artist) AS title,
-          MIN(album_artist) AS artist, MAX(NULLIF(cover, '')) AS cover,
-          MAX(sample_path) AS sample_path, COUNT(*) AS track_count,
-          MIN(artist_search) AS title_key
-        FROM ($rows) WHERE artist_key != '' GROUP BY artist_key''',
+      LibrarySearchKind.artists => throw StateError('Searched through credits'),
       LibrarySearchKind.playlists => throw StateError('Not a track index'),
     };
     final rank = search.orderBy('title_key', args);
@@ -187,5 +186,38 @@ class LibrarySearchStore {
       [...args, limit, offset],
     );
     return result.map((row) => LibrarySearchHit.fromRow(kind, row)).toList();
+  }
+
+  /// Artists are matched by their credited names, so a featured artist such as
+  /// the second name in `A, B` is found on its own. The caller keeps the credits
+  /// table current before searching.
+  Future<List<LibrarySearchHit>> _searchArtists(
+    LibrarySearchQuery search, {
+    required int limit,
+    required int offset,
+  }) async {
+    final args = <Object?>[];
+    final predicate = search.predicate('c.name_key', args);
+    final select =
+        '''
+      SELECT '' AS source, c.name_key AS id, MIN(c.name) AS title,
+        MIN(c.name) AS artist, NULL AS cover, MIN(l.file_path) AS sample_path,
+        COUNT(DISTINCT c.item_id) AS track_count, MIN(c.name) AS title_key
+      FROM ${LibraryTagCreditsCache.tempTable} c
+      JOIN ${LibrarySchema.visibleView} l ON l.id = c.item_id
+      WHERE c.field IN ('album_artist', 'artist') AND $predicate
+      GROUP BY c.name_key''';
+    final rank = search.orderBy('title_key', args);
+    final result = await db.rawQuery(
+      '''
+      SELECT * FROM ($select)
+      ORDER BY $rank, title_key, artist, source, id
+      LIMIT ? OFFSET ?
+    ''',
+      [...args, limit, offset],
+    );
+    return result
+        .map((row) => LibrarySearchHit.fromRow(LibrarySearchKind.artists, row))
+        .toList();
   }
 }
