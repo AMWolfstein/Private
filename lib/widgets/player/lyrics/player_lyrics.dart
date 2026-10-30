@@ -1993,7 +1993,11 @@ class _SweepingTimedLyricTextState extends State<_SweepingTimedLyricText> {
     _cachedHighlightedColor = widget.highlightedColor;
   }
 
-  List<List<Rect>> _segmentBoxes(double minWidth, double maxWidth) {
+  List<List<Rect>> _segmentBoxes(
+    double minWidth,
+    double maxWidth,
+    bool rightToLeft,
+  ) {
     if (_cachedSegmentBoxes != null &&
         _cachedMinWidth == minWidth &&
         _cachedMaxWidth == maxWidth &&
@@ -2014,9 +2018,13 @@ class _SweepingTimedLyricTextState extends State<_SweepingTimedLyricText> {
           )
           .map((box) => box.toRect())
           .toList();
+      // Boxes run in reading order: right to left on an RTL line.
       boxes.sort((a, b) {
         final row = a.top.compareTo(b.top);
-        return row == 0 ? a.left.compareTo(b.left) : row;
+        if (row != 0) return row;
+        return rightToLeft
+            ? b.left.compareTo(a.left)
+            : a.left.compareTo(b.left);
       });
       segmentBoxes.add(boxes);
       segmentOffset = segmentEnd;
@@ -2058,7 +2066,8 @@ class _SweepingTimedLyricTextState extends State<_SweepingTimedLyricText> {
             ? constraints.maxWidth
             : pendingPainter.width;
         final height = pendingPainter.height;
-        final segmentBoxes = _segmentBoxes(minWidth, maxWidth);
+        final rightToLeft = textDirection == TextDirection.rtl;
+        final segmentBoxes = _segmentBoxes(minWidth, maxWidth, rightToLeft);
 
         return Semantics(
           label: widget.semanticsLabel,
@@ -2079,6 +2088,7 @@ class _SweepingTimedLyricTextState extends State<_SweepingTimedLyricText> {
               glowSigma: widget.liftEnabled
                   ? textScaler.scale(widget.style.fontSize ?? 24) * 0.2
                   : 0,
+              rightToLeft: rightToLeft,
             ),
           ),
         );
@@ -2099,6 +2109,9 @@ class _TimedLyricSweepPainter extends CustomPainter {
   /// Blur radius of the glow behind held words; 0 disables it.
   final double glowSigma;
 
+  /// The sweep starts at each word's right edge on an RTL line.
+  final bool rightToLeft;
+
   _TimedLyricSweepPainter({
     required this.segmentBoxes,
     required this.starts,
@@ -2109,6 +2122,7 @@ class _TimedLyricSweepPainter extends CustomPainter {
     required this.highlightedPainter,
     required this.highlightLift,
     required this.glowSigma,
+    required this.rightToLeft,
   }) : super(repaint: repaint);
 
   @override
@@ -2161,13 +2175,21 @@ class _TimedLyricSweepPainter extends CustomPainter {
         );
         // Only the sung part glows, so unsung letters never light up early.
         if (glowPath != null && revealWidth > 0) {
+          final sungWidth = revealWidth.clamp(0.0, box.width);
           glowPath.addRect(
-            Rect.fromLTRB(
-              box.left,
-              box.top,
-              box.left + revealWidth.clamp(0.0, box.width),
-              box.bottom,
-            ),
+            rightToLeft
+                ? Rect.fromLTRB(
+                    box.right - sungWidth,
+                    box.top,
+                    box.right,
+                    box.bottom,
+                  )
+                : Rect.fromLTRB(
+                    box.left,
+                    box.top,
+                    box.left + sungWidth,
+                    box.bottom,
+                  ),
           );
         }
         if (value > 0 && revealWidth >= box.width) {
@@ -2217,14 +2239,16 @@ class _TimedLyricSweepPainter extends CustomPainter {
     for (final (box, value, lift, feather) in partialBoxes) {
       // Feather the leading edge so the highlight flows through each letter
       // while the word rises as a single unit.
-      final boundary = box.left + box.width * value;
-      final revealRight = (boundary + feather).clamp(box.left, box.right);
-      final revealRect = Rect.fromLTRB(
-        box.left,
-        box.top,
-        revealRight,
-        box.bottom,
-      );
+      // The sung part is left of the boundary, or right of it on RTL.
+      final boundary = rightToLeft
+          ? box.right - box.width * value
+          : box.left + box.width * value;
+      final revealEdge = rightToLeft
+          ? (boundary - feather).clamp(box.left, box.right)
+          : (boundary + feather).clamp(box.left, box.right);
+      final revealRect = rightToLeft
+          ? Rect.fromLTRB(revealEdge, box.top, box.right, box.bottom)
+          : Rect.fromLTRB(box.left, box.top, revealEdge, box.bottom);
       canvas.save();
       canvas.translate(0, -lift);
       canvas.clipRect(revealRect);
@@ -2234,9 +2258,23 @@ class _TimedLyricSweepPainter extends CustomPainter {
         ..blendMode = BlendMode.dstIn
         ..shader =
             LinearGradient(
-              colors: const [Colors.white, Colors.transparent],
+              colors: rightToLeft
+                  ? const [Colors.transparent, Colors.white]
+                  : const [Colors.white, Colors.transparent],
             ).createShader(
-              Rect.fromLTRB(boundary, box.top, boundary + feather, box.bottom),
+              rightToLeft
+                  ? Rect.fromLTRB(
+                      boundary - feather,
+                      box.top,
+                      boundary,
+                      box.bottom,
+                    )
+                  : Rect.fromLTRB(
+                      boundary,
+                      box.top,
+                      boundary + feather,
+                      box.bottom,
+                    ),
             );
       canvas.drawRect(revealRect, mask);
       canvas.restore();
@@ -2265,6 +2303,7 @@ class _TimedLyricSweepPainter extends CustomPainter {
         oldDelegate.currentPosition != currentPosition ||
         oldDelegate.highlightLift != highlightLift ||
         oldDelegate.glowSigma != glowSigma ||
+        oldDelegate.rightToLeft != rightToLeft ||
         oldDelegate.pendingPainter != pendingPainter ||
         oldDelegate.highlightedPainter != highlightedPainter;
   }
