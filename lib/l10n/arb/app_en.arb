@@ -260,7 +260,7 @@
   "@metadataSeparators": {
     "description": "Local Library settings entry and page title for per-field tag separators"
   },
-  "metadataSeparatorsDescription": "Choose how comma- or semicolon-separated values are joined when you save tags with Edit Metadata. Custom artist separators write one joined tag. Names containing & or / are preserved.",
+  "metadataSeparatorsDescription": "Choose the separators that split artist and genre names in your library. Save with joins the names again when Edit Metadata saves tags. Keep together names are never split.",
   "metadataSeparatorSource": "Keep source formatting",
   "metadataSeparatorComma": "Comma (,)",
   "metadataSeparatorSemicolon": "Semicolon (;)",
